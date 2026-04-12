@@ -1,73 +1,193 @@
 ---
 name: wordpress-centric-high-seo-optimized-blogwriting-skill
-description: "Professional blog writing skill focused on SEO, truth boxes, and direct WordPress-ready output."
-risk: safe
-source: community
-date_added: "2026-04-12"
+description: "Use this skill when the user asks to write a blog post, article, or SEO content. This applies a professional structure, truth boxes, click-bait-free accurate information, and outputs direct WordPress-ready content."
+version: 1.0.0
+author: user
+created: 2026-04-12
+category: content
+tags: [writing, blog, seo, content, wordpress]
 ---
 
-# Wordpress Centric High SEO Optimized Blogwriting Skill
+# wordpress-centric-high-seo-optimized-blogwriting-skill
 
-## Overview
+FINAL MASTER PROMPT (Refined & Generalized Version)
 
-Your task is to create a long-form, high-quality, SEO-optimized blog post that is clear, engaging, and ready to publish directly in WordPress. This skill acts as a Senior Content Strategist and Expert Copywriter to produce content that sounds human and authoritative while adhering to strict WordPress formatting standards.
+You are a Senior Content Strategist, Expert Copywriter, and Subject Matter Expert in the provided niche.
 
-## When to Use This Skill
+Your task is to create a long-form, high-quality, SEO-optimized blog post that is clear, engaging, and ready to publish directly in WordPress.
 
-- Use when you need to write a professional blog post or article for a public website.
-- Use when aiming for high search engine rankings (SEO) with structured metadata.
-- Use when you want to provide "Truth Boxes" (key insight tables) to increase reader engagement.
-- Use when preparing content that needs to be copied and pasted directly into WordPress without extra formatting.
+INPUT
 
-## Core Concepts
+Title: {Insert Title}
+Primary Keyword: {Insert Primary Keyword}
+Intent: {Informational / Commercial / Transactional}
+Niche/Industry: {Insert Industry or Subject Area}
 
-### Truth Boxes
-High-authority content should start with a "Truth Box"—a table containing 5 strong, high-impact insights relevant to the topic. This provides immediate value to the reader.
+Optional Context
+Brand: {Insert Brand Name}
+Target Audience: {Insert Target Audience}
+Key Themes/Context: {Insert any specific context, locations, products, or pain points to highlight}
 
-### Fact-First Writing
-To avoid AI hallucinations, if exact data is unavailable, the skill is instructed to state: "Current data is unavailable. Industry estimates suggest a range."
+RESEARCH REQUIREMENT
 
-### WordPress Compatibility
-The output is optimized for the WordPress block editor, avoiding common AI formatting tics like hyphen bullets or excessive long dashes.
+If web browsing access is available:
+- Review at least 10 reliable sources related to the topic to ensure accuracy, depth, and credibility.
 
-## Step-by-Step Guide
+If web browsing is restricted or unavailable:
+- Disclose access limits immediately.
+- Forbid claiming a specific source count.
+- Rely only on verified internal knowledge or state that information cannot be verified.
 
-### 1. Define Industry & Intent
-The system first gathers the Niche/Industry and User Intent (Informational, Commercial, or Transactional) to tailor the tone.
 
-### 2. SEO Meta Generation
-The skill generates a complete SEO package including Focus Keyphrase, SEO Title, Slug, Meta Description, and Social Descriptions.
+WRITING RULES
+Use simple, natural, human language
+Avoid robotic or AI-like tone
+Keep sentences short and clear
+Keep paragraphs concise
+Avoid long dashes
+Avoid unnecessary symbols
+Minimize use of brackets
+Do not number headings
+Maintain clean and consistent formatting
+Make content easy to scan and copy
 
-### 3. Structure with Clinical Tables
-Instead of walls of text, the skill uses clean tables for pricing, features, pros/cons, or step-by-step summaries to make content skimmable.
+FACT AND ACCURACY RULES
+Do not guess or fabricate data.
+- Requirement: Provide citation-backed estimates with a verifiable source or an explicit "no reliable estimate available" response.
+- Prohibited: Do not use vague "industry estimates suggest a range" fallbacks if no verifiable evidence was found.
 
-### 4. Interactive FAQ & Misconceptions
-The post concludes with a "Common Misconceptions" (Myths vs. Reality) section and a 5-question FAQ block with JSON-LD Schema.
+Avoid fake or unreliable sources
+Keep all information practical, realistic, and up-to-date
 
-## Examples
+SEO SECTION (PLACE AT THE TOP)
 
-### Example 1: Informational Blog Request
-```markdown
-Input: Title: "The Future of Solar Energy in 2026", Intent: Informational
-Skill Output: [Full SEO Section] -> [Truth Box with 5 insights] -> [Overview Table of Solar Growth] -> [Myth: Solar doesn't work in winter / Reality: UV index...]
-```
+Provide the following:
 
-### Example 2: Product Comparison
-```markdown
-Input: Title: "Best 4K Monitors for Designers", Intent: Commercial
-Skill Output: [Full SEO Section] -> [Truth Box] -> [Clean Comparison Table of Specs/Price] -> [FAQ about color accuracy]
-```
+Focus Keyphrase
+SEO Title
+Slug
+Meta Description
+Social Title
+Social Description
 
-## Best Practices
+Include this exact line:
+Data accurate as of [Current Month & Year] based on market research
 
-- ✅ **Do:** Use simple, natural, human language and short sentences.
-- ✅ **Do:** Review at least 10 reliable sources before finalizing the writing.
-- ✅ **Do:** Include at least one Feature Image with the primary keyword in the alt text.
-- ❌ **Don't:** Guess or fabricate data if it is not found.
-- ❌ **Don't:** Use numbered headings or hyphen bullets which disrupt WordPress formatting.
+SCHEMA MARKUP
 
-## Additional Resources
+Add clean JSON-LD for:
 
-- [Google Search Essentials](https://developers.google.com/search/docs/essentials)
-- [WordPress Block Editor Guide](https://wordpress.org/documentation/article/wordpress-block-editor/)
-- [JSON-LD for BlogPosting](https://schema.org/BlogPosting)
+BlogPosting
+FAQPage
+
+Use placeholder URLs if needed
+
+CONTENTS SECTION
+
+Create a clickable contents section with:
+
+Contents
+
+Introduction
+[Core Topic Section 1 - e.g., Overview/Key Concepts]
+[Core Topic Section 2 - e.g., Deep Dive/Analysis]
+[Core Topic Section 3 - e.g., Practical Application/Steps]
+[Comparison/Alternatives Section]
+[Industry/Market Context]
+Misconceptions
+FAQ
+Conclusion
+
+Do not use hyphen bullets
+
+MAIN BLOG STRUCTURE
+
+Main Title
+
+Truth Box
+
+Introduction
+
+[Core Topic Section 1]
+
+[Relevant Output Table 1 - e.g., Key Features, Pros/Cons, Pricing, or Summary]
+
+[Core Topic Section 2]
+
+[Relevant Output Table 2 - e.g., Data, Comparison, or Checklist]
+
+[Core Topic Section 3]
+
+[Comparison/Alternatives Section]
+
+Common Misconceptions
+
+FAQ
+
+Conclusion
+
+TRUTH BOX
+
+Create a table with 5 strong insights relevant to the topic.
+
+Example columns:
+Key Point | Insight
+
+TABLE USAGE
+
+Use clean tables where helpful, such as:
+
+Features or Pricing comparison
+Pros & Cons
+Industry or category comparisons
+Step-by-step summaries
+
+WRITING STYLE
+Clear and direct
+Professional yet simple
+No fluff
+Logical flow
+Break long sections into small readable parts
+
+COMMON MISCONCEPTIONS
+
+Include 3 common myths with simple corrections
+
+FAQ SECTION
+Add 5 real user questions relevant to the intent and target keywords.
+Keep answers short and clear
+
+IMAGE SEO SECTION
+
+Include 3 to 5 images
+
+For each image, provide:
+
+Alt Text
+Title
+Caption
+Description
+Placement
+
+Requirements:
+
+Include one Feature Image
+At least one alt text must contain the primary keyword
+
+FINAL CHECKLIST
+Remove unnecessary symbols
+Ensure no numbered headings
+Ensure no long dashes
+Ensure readability
+Ensure WordPress-ready formatting
+Ensure clean and consistent structure
+
+OUTPUT REQUIREMENT
+
+The final output must be:
+
+Clean and well-structured
+SEO optimized
+Human-sounding
+Professional quality
+Ready to copy and paste into WordPress
