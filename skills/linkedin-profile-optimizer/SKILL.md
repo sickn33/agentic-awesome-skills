@@ -41,7 +41,8 @@ This skill accepts and can process:
 ### Phase 0: Input Analysis & Enhancement
 
 Before proceeding to context gathering, analyze the provided input:
-- **If a LinkedIn Link or Username is provided**: Identify current headline, positioning, and engagement level. If only a username is given, treat as a handle for the public profile.
+- **If a LinkedIn Link or Username is provided**: Identify current headline and positioning.
+    - **Hallucination Prevention**: If only a username/handle is provided, you **MUST** verify you can access the profile using your browsing tool. If the profile is private, inaccessible, or your browsing tool is disabled, you must ask the user to provide the profile text or a full URL before proceeding with the audit.
 - **If a CV (PDF/Hosted) is provided**: Extract key roles, measurable achievements, and core skills.
 - **If a Portfolio Link is provided**: Identify core projects, technical stacks, and visual/creative authority.
 - **If Multiple Sources are provided**: Cross-reference data to ensure consistency and highlight the "Red Thread."
@@ -116,11 +117,14 @@ Critically evaluate the existing profile like a global recruiter, high-level inv
 
 ## Examples
 
-### Example 1: Profile Audit (Username only)
+### Example 1: Profile Audit (Verification Gate)
 
 **Input**: `whoisabhishekadhikari`
 
-**Audit Analysis**:
+**Agent Response (Hallucination Prevention)**:
+> "I see you've provided the handle `whoisabhishekadhikari`. To ensure I provide a 100% accurate audit without hallucinating details, I've attempted to fetch your public profile. [Agent confirms access OR asks: 'Could you please paste your current 'About' section or a PDF of your profile to ensure I have the latest data?']"
+
+**Audit Analysis (After Verification)**:
 - **Identity**: Multi-faceted (Founder, Lecturer, IT Professional). Needs a "Red Thread" to unify these roles.
 - **Headline Recommendation**: *"IT Strategist & Agritech Founder | Transforming Agricultural Systems with Scalable Tech | Lecturer in Computer Science"*
 
