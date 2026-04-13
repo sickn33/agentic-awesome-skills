@@ -1,6 +1,6 @@
 ---
 name: axiom
-description: "First-principles assumption auditor. Deconstructs any decision or belief into irreducible premises, classifies each assumption (fact / convention / belief / interest-driven), ranks them by fragility × impact, and rebuilds conclusions from verified ground truth. Bilingual: responds in the user's language (Chinese or English). 第一性原理拆解器：拆解任何问题或决策，强制分类每个隐含假设，输出最危险假设排行，再从验证过的前提重建结论。"
+description: "First-principles assumption auditor. Classifies each hidden assumption (fact / convention / belief / interest-driven), ranks by fragility × impact, and rebuilds conclusions from verified premises. Bilingual: auto-detects Chinese or English."
 risk: safe
 source: community
 date_added: "2026-04-13"
