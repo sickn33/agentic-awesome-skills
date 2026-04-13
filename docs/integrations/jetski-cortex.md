@@ -1,9 +1,9 @@
 ---
 title: Jetski/Cortex + Gemini Integration Guide
-description: "Use antigravity-awesome-skills with Jetski/Cortex without hitting context-window overflow with 1.404+ skills."
+description: "Use antigravity-awesome-skills with Jetski/Cortex without hitting context-window overflow with 1.407+ skills."
 ---
 
-# Jetski/Cortex + Gemini: safe integration with 1,1.404+ skills
+# Jetski/Cortex + Gemini: safe integration with 1,1.407+ skills
 
 This guide shows how to integrate the `antigravity-awesome-skills` repository with an agent based on **Jetski/Cortex + Gemini** (or similar frameworks) **without exceeding the model context window**.
 
@@ -23,7 +23,7 @@ Never do:
 - concatenate all `SKILL.md` content into a single system prompt;
 - re-inject the entire library for **every** request.
 
-With over 1,1.404 skills, this approach fills the context window before user messages are even added, causing truncation.
+With over 1,1.407 skills, this approach fills the context window before user messages are even added, causing truncation.
 
 ---
 

@@ -69,7 +69,7 @@ For manual updates, you need:
 The update process refreshes:
 - Skills index (`skills_index.json`)
 - Web app skills data (`apps\web-app\public\skills.json`)
-- All 1,404+ skills from the skills directory
+- All 1,407+ skills from the skills directory
 
 ## When to Update
 

@@ -2433,6 +2433,25 @@
       "runtime_files": []
     },
     {
+      "id": "axiom",
+      "path": "skills/axiom",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "azd-deployment",
       "path": "skills/azd-deployment",
       "targets": {
@@ -14740,6 +14759,25 @@
       "runtime_files": []
     },
     {
+      "id": "linkedin-profile-optimizer",
+      "path": "skills/linkedin-profile-optimizer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linkerd-patterns",
       "path": "skills/linkerd-patterns",
       "targets": {
@@ -26773,6 +26811,25 @@
       "runtime_files": []
     },
     {
+      "id": "zipai-optimizer",
+      "path": "skills/zipai-optimizer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "zod-validation-expert",
       "path": "skills/zod-validation-expert",
       "targets": {
@@ -26850,10 +26907,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1404,
+    "total_skills": 1407,
     "supported": {
-      "codex": 1373,
-      "claude": 1388
+      "codex": 1376,
+      "claude": 1391
     },
     "blocked": {
       "codex": 31,

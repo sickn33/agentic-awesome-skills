@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1404,
+  "total": 1407,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3148,6 +3148,30 @@
         "scenarios"
       ],
       "path": "skills/awt-e2e-testing/SKILL.md"
+    },
+    {
+      "id": "axiom",
+      "name": "axiom",
+      "description": "First-principles assumption auditor. Classifies each hidden assumption (fact / convention / belief / interest-driven), ranks by fragility × impact, and rebuilds conclusions from verified premises. Bilingual: auto-detects Chinese or English.",
+      "category": "general",
+      "tags": [
+        "axiom"
+      ],
+      "triggers": [
+        "axiom",
+        "first",
+        "principles",
+        "assumption",
+        "auditor",
+        "classifies",
+        "each",
+        "hidden",
+        "fact",
+        "convention",
+        "belief",
+        "interest"
+      ],
+      "path": "skills/axiom/SKILL.md"
     },
     {
       "id": "azd-deployment",
@@ -18993,6 +19017,34 @@
       "path": "skills/linkedin-cli/SKILL.md"
     },
     {
+      "id": "linkedin-profile-optimizer",
+      "name": "linkedin-profile-optimizer",
+      "description": "High-intent expert for LinkedIn profile checks, authority building, and SEO optimization. Invoke to audit, rewrite, and enhance profiles for top 1% positioning.",
+      "category": "business",
+      "tags": [
+        "linkedin",
+        "branding",
+        "career",
+        "growth",
+        "personal-brand"
+      ],
+      "triggers": [
+        "linkedin",
+        "branding",
+        "career",
+        "growth",
+        "personal-brand",
+        "profile",
+        "optimizer",
+        "high",
+        "intent",
+        "checks",
+        "authority",
+        "building"
+      ],
+      "path": "skills/linkedin-profile-optimizer/SKILL.md"
+    },
+    {
       "id": "linkerd-patterns",
       "name": "linkerd-patterns",
       "description": "Production patterns for Linkerd service mesh - the lightweight, security-first service mesh for Kubernetes.",
@@ -34436,6 +34488,31 @@
         "compiler"
       ],
       "path": "skills/zeroize-audit/SKILL.md"
+    },
+    {
+      "id": "zipai-optimizer",
+      "name": "zipai-optimizer",
+      "description": "Behavioral protocol engineered for extreme AI agent token optimization, eliminating I/O noise via context-aware truncation and strict conciseness.",
+      "category": "data-ai",
+      "tags": [
+        "zipai",
+        "optimizer"
+      ],
+      "triggers": [
+        "zipai",
+        "optimizer",
+        "behavioral",
+        "protocol",
+        "engineered",
+        "extreme",
+        "ai",
+        "agent",
+        "token",
+        "optimization",
+        "eliminating",
+        "noise"
+      ],
+      "path": "skills/zipai-optimizer/SKILL.md"
     },
     {
       "id": "zod-validation-expert",

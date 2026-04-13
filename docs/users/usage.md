@@ -14,7 +14,7 @@ If you came in through a **Claude Code** or **Codex** plugin instead of a full l
 
 When you ran `npx antigravity-awesome-skills` or cloned the repository, you:
 
-✅ **Downloaded 1,404+ skill files** to your computer (default: `~/.gemini/antigravity/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)  
+✅ **Downloaded 1,407+ skill files** to your computer (default: `~/.gemini/antigravity/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)  
 ✅ **Made them available** to your AI assistant  
 ❌ **Did NOT enable them all automatically** (they're just sitting there, waiting)
 
@@ -34,7 +34,7 @@ Bundles are **curated groups** of skills organized by role. They help you decide
 
 **Analogy:**
 
-- You installed a toolbox with 1,404+ tools (✅ done)
+- You installed a toolbox with 1,407+ tools (✅ done)
 - Bundles are like **labeled organizer trays** saying: "If you're a carpenter, start with these 10 tools"
 - You can either **pick skills from the tray** or install that tray as a focused marketplace bundle plugin
 
@@ -212,7 +212,7 @@ Let's actually use a skill right now. Follow these steps:
 
 ## Step 5: Picking Your First Skills (Practical Advice)
 
-Don't try to use all 1,404+ skills at once. Here's a sensible approach:
+Don't try to use all 1,407+ skills at once. Here's a sensible approach:
 
 If you want a tool-specific starting point before choosing skills, use:
 
@@ -343,7 +343,7 @@ Usually no, but if your AI doesn't recognize a skill:
 
 ### "Can I load all skills into the model at once?"
 
-No. Even though you have 1,404+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
+No. Even though you have 1,407+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
 
 The intended pattern is:
 

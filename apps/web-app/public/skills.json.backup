@@ -2898,6 +2898,28 @@
     }
   },
   {
+    "id": "axiom",
+    "path": "skills/axiom",
+    "category": "uncategorized",
+    "name": "axiom",
+    "description": "First-principles assumption auditor. Classifies each hidden assumption (fact / convention / belief / interest-driven), ranks by fragility \u00d7 impact, and rebuilds conclusions from verified premises. Bilingual: auto-detects Chinese or English.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-04-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "azd-deployment",
     "path": "skills/azd-deployment",
     "category": "cloud",
@@ -16932,6 +16954,28 @@
     }
   },
   {
+    "id": "linkedin-profile-optimizer",
+    "path": "skills/linkedin-profile-optimizer",
+    "category": "growth",
+    "name": "linkedin-profile-optimizer",
+    "description": "High-intent expert for LinkedIn profile checks, authority building, and SEO optimization. Invoke to audit, rewrite, and enhance profiles for top 1% positioning.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-04-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "linkerd-patterns",
     "path": "skills/linkerd-patterns",
     "category": "uncategorized",
@@ -30852,6 +30896,28 @@
     "description": "Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and control-flow verification. Use for auditing C/C++/Rust code handling secrets, keys, passwords, or other sensitive data.",
     "risk": "unknown",
     "source": "community",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "zipai-optimizer",
+    "path": "skills/zipai-optimizer",
+    "category": "agent-behavior",
+    "name": "zipai-optimizer",
+    "description": "Behavioral protocol engineered for extreme AI agent token optimization, eliminating I/O noise via context-aware truncation and strict conciseness.",
+    "risk": "safe",
+    "source": "unknown",
     "date_added": null,
     "plugin": {
       "targets": {
