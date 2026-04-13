@@ -112,5 +112,5 @@ For every audit, you MUST generate a table in this exact format:
 
 - `@seo-structure-architect` - For detailed header hierarchy and schema markup.
 - `@security-auditor` - For server-side security and vulnerability checks.
-- `@performance-profiler` - For deep lighthouse and speed optimization.
+- `@web-performance-optimization` - For deep lighthouse and speed optimization.
 
