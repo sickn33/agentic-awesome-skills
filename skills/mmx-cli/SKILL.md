@@ -183,3 +183,11 @@ mmx video download --task-id "$TASK" --out robot.mp4
 | 4 | Quota exceeded |
 | 5 | Timeout |
 | 10 | Content filter triggered |
+
+---
+
+## Limitations
+
+- Requires a configured MiniMax account and valid authentication before any API-backed command will work.
+- Media-generation tasks can be async, quota-limited, or region-constrained; agents should handle delayed completion and provider-side failures explicitly.
+- This skill documents CLI usage only and does not replace provider policy review, content-safety checks, or downstream file validation.
