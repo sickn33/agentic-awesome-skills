@@ -53,6 +53,25 @@ Create a post that is easy to understand, useful, and encourages engagement.
 
 ---
 
+## Examples
+
+### Example: New Product Launch
+- **Topic**: Solar Powered Coffee Mug
+- **Keyword**: eco-friendly coffee
+- **Target**: Commuters
+- **Platform**: Instagram
+- **Tone**: Insightful
+
+**Output**:
+☕️ Your morning coffee just got a clean energy upgrade! 
+Did you know commuters throw away billions of cups annually? 
+The SolMug keeps your brew hot using only sunlight. 
+A small change for your bag, a big win for the planet. 
+Check the link in bio to pre-order! 
+#ecofriendly #coffee #sustainability #tech #morningroutine
+
+---
+
 ## Limitations
 - This skill does not generate image or video assets.
 - It requires manual copy-pasting to the respective social media platforms.
