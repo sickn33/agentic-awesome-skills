@@ -315,7 +315,8 @@ function installSkillsIntoTarget(tempDir, target, installEntries) {
       return;
     }
     const src = path.join(repoSkills, name);
-    const dest = path.join(target, name);
+    const destName = name.startsWith("skills/") ? name.slice("skills/".length) : name;
+    const dest = path.join(target, destName);
     copyRecursiveSync(src, dest, repoSkills);
   });
 }
