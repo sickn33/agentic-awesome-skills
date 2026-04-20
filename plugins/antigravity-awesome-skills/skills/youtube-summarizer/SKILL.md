@@ -330,6 +330,7 @@ echo "[████████████████████] 100% - Step
 ## 📌 Conclusion
 
 [Final synthesis and takeaways]
+```
 
 
 ### **Example 2: Missing Dependency**
