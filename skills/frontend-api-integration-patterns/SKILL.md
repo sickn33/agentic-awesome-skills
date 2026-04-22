@@ -64,7 +64,11 @@ export const apiClient = async (url, options = {}) => {
     );
   }
 
-  return res.json();
+  // handle empty responses safely (e.g. 204 No Content)
+  if (res.status === 204) return null;
+
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 };
 ```
 
