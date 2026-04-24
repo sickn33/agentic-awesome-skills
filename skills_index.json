@@ -16686,6 +16686,28 @@
     }
   },
   {
+    "id": "lambda-lang",
+    "path": "skills/lambda-lang",
+    "category": "ai-agents",
+    "name": "lambda-lang",
+    "description": "Native agent-to-agent language for compact multi-agent messaging. A shared tongue agents speak directly, not a translation layer. 340+ atoms across 7 domains; 3x smaller than natural language.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-04-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "lambdatest-agent-skills",
     "path": "skills/lambdatest-agent-skills",
     "category": "testing",
@@ -26291,6 +26313,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "skyvern-browser-automation",
+    "path": "skills/skyvern-browser-automation",
+    "category": "browser-automation",
+    "name": "skyvern-browser-automation",
+    "description": "AI-powered browser automation \u2014 navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-04-23",
     "plugin": {
       "targets": {
         "codex": "supported",

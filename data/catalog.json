@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1431,
+  "total": 1433,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -18629,6 +18629,34 @@
       "path": "skills/kubernetes-deployment/SKILL.md"
     },
     {
+      "id": "lambda-lang",
+      "name": "lambda-lang",
+      "description": "Native agent-to-agent language for compact multi-agent messaging. A shared tongue agents speak directly, not a translation layer. 340+ atoms across 7 domains; 3x smaller than natural language.",
+      "category": "general",
+      "tags": [
+        "agent-to-agent",
+        "communication",
+        "protocol",
+        "compression",
+        "multi-agent"
+      ],
+      "triggers": [
+        "agent-to-agent",
+        "communication",
+        "protocol",
+        "compression",
+        "multi-agent",
+        "lambda",
+        "lang",
+        "native",
+        "agent",
+        "language",
+        "compact",
+        "multi"
+      ],
+      "path": "skills/lambda-lang/SKILL.md"
+    },
+    {
       "id": "lambdatest-agent-skills",
       "name": "lambdatest-agent-skills",
       "description": "Production-grade test automation skills for 46 frameworks across E2E, unit, mobile, BDD, visual, and cloud testing in 15+ languages.",
@@ -29584,6 +29612,35 @@
         "analysis"
       ],
       "path": "skills/skin-health-analyzer/SKILL.md"
+    },
+    {
+      "id": "skyvern-browser-automation",
+      "name": "skyvern-browser-automation",
+      "description": "AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows.",
+      "category": "data-ai",
+      "tags": [
+        "browser-automation",
+        "mcp",
+        "web-scraping",
+        "form-filling",
+        "ai-agents",
+        "workflow-automation"
+      ],
+      "triggers": [
+        "browser-automation",
+        "mcp",
+        "web-scraping",
+        "form-filling",
+        "ai-agents",
+        "workflow-automation",
+        "skyvern",
+        "browser",
+        "automation",
+        "ai",
+        "powered",
+        "navigate"
+      ],
+      "path": "skills/skyvern-browser-automation/SKILL.md"
     },
     {
       "id": "slack-automation",

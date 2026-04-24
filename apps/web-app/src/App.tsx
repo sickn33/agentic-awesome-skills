@@ -11,7 +11,7 @@ function App(): React.ReactElement {
   return (
     <Router basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <div className="app-shell min-h-screen bg-[var(--surface-canvas)] text-[var(--text-primary)]">
-        <header className="sticky top-0 z-50 border-b border-[var(--stroke-subtle)] bg-[color-mix(in_oklab,var(--surface-card)_88%,transparent)] backdrop-blur-md">
+        <header className="sticky top-0 z-50 border-b border-[var(--stroke-subtle)] bg-[var(--surface-card)]">
           <div className="mx-auto flex h-16 w-full max-w-screen-2xl items-center justify-between px-4 lg:px-6">
             <Link to="/" className="group inline-flex items-center gap-3 rounded-[var(--radius-sm)] px-1 py-1">
               <img

@@ -14428,6 +14428,25 @@
       "runtime_files": []
     },
     {
+      "id": "lambda-lang",
+      "path": "skills/lambda-lang",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "lambdatest-agent-skills",
       "path": "skills/lambdatest-agent-skills",
       "targets": {
@@ -22913,6 +22932,25 @@
       "runtime_files": []
     },
     {
+      "id": "skyvern-browser-automation",
+      "path": "skills/skyvern-browser-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "slack-automation",
       "path": "skills/slack-automation",
       "targets": {
@@ -27363,10 +27401,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1431,
+    "total_skills": 1433,
     "supported": {
-      "codex": 1400,
-      "claude": 1415
+      "codex": 1402,
+      "claude": 1417
     },
     "blocked": {
       "codex": 31,

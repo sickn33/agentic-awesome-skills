@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { SkillStarButton } from './SkillStarButton';
 import { Icon } from './ui/Icon';
 import type { Skill } from '../types';
@@ -12,14 +11,7 @@ interface SkillCardProps {
 
 export const SkillCard = React.memo(({ skill, starCount }: SkillCardProps) => {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.2 }}
-      className="h-full"
-    >
+    <div className="h-full">
       <Link
         to={`/skill/${skill.id}`}
         className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-[0_20px_40px_-34px_rgba(15,23,42,0.85)] transition-all hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_28px_56px_-34px_rgba(15,23,42,0.7)] dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
@@ -66,7 +58,7 @@ export const SkillCard = React.memo(({ skill, starCount }: SkillCardProps) => {
           <Icon name="arrowRight" size={16} className="ml-1 h-4 w-4" />
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 });
 

@@ -159,7 +159,7 @@ export function Home(): React.ReactElement {
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_20%_12%,rgba(15,23,42,0.12),transparent_48%),radial-gradient(circle_at_84%_8%,rgba(99,102,241,0.16),transparent_54%)] dark:bg-[radial-gradient(circle_at_20%_12%,rgba(148,163,184,0.15),transparent_45%),radial-gradient(circle_at_84%_8%,rgba(129,140,248,0.2),transparent_52%)]" />
 
       <div className="mb-9 space-y-8">
-        <section className="rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-[0_20px_55px_-32px_rgba(15,23,42,0.55)] backdrop-blur sm:p-8 dark:border-slate-800/80 dark:bg-slate-900/85">
+        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_55px_-32px_rgba(15,23,42,0.55)] sm:p-8 dark:border-slate-800/80 dark:bg-slate-900">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
             Skills Library
           </p>
@@ -204,7 +204,7 @@ export function Home(): React.ReactElement {
           </div>
         </section>
 
-        <div className="relative overflow-hidden rounded-2xl border border-slate-300/70 bg-[color-mix(in_oklab,var(--surface-elevated)_92%,white_8%)] p-4 shadow-[0_14px_30px_-24px_rgba(15,23,42,0.8)] backdrop-blur md:p-5 dark:border-slate-700/80 dark:bg-[color-mix(in_oklab,var(--surface-elevated)_85%,transparent)]">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-300/70 bg-[color-mix(in_oklab,var(--surface-elevated)_92%,white_8%)] p-4 shadow-[0_14px_30px_-24px_rgba(15,23,42,0.8)] md:p-5 dark:border-slate-700/80 dark:bg-[var(--surface-elevated)]">
           <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-[var(--accent-solid)]/65" />
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
@@ -249,7 +249,7 @@ export function Home(): React.ReactElement {
           </p>
         )}
 
-        <div className="sticky top-0 z-40 rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="sticky top-0 z-40 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-3">
             <div className="relative flex-1">
               <Icon name="search" size={16} className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
