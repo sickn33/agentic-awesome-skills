@@ -220,8 +220,10 @@ Meta Description
 Social Title
 Social Description
 
-Include this exact line:
-Data accurate as of [Current Month & Year] based on market research
+If the user provided or approved reliable market sources, include this line with the actual month and year:
+Data accurate as of [Month Year] based on cited market research.
+
+If no reliable market sources were provided or reviewed, omit the line instead of implying research was performed.
 
 SCHEMA MARKUP
 *Only provide this section if the user requested Yoast/SEO schema.*
