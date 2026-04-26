@@ -68,10 +68,15 @@ withTempDir((root) => {
     path.join("nested", "metadata-tags"),
     'name: metadata-tags\ncategory: backend\nrisk: none\nmetadata:\n  tags: "api,saas"',
   );
+  writeSkill(
+    repoRoot,
+    path.join("skills", "x402-express-wrapper"),
+    'name: x402-express-wrapper\ncategory: backend\nrisk: unknown\ntags: [payments]',
+  );
 
   assert.deepStrictEqual(
     installer.getInstallEntries(repoRoot, installer.buildInstallSelectors({})),
-    ["nested/metadata-tags", "offensive-tool", "safe-debugger", "docs"],
+    ["nested/metadata-tags", "offensive-tool", "safe-debugger", "skills/x402-express-wrapper", "docs"],
     "full installs should return recursive skill paths plus docs",
   );
 
@@ -95,8 +100,8 @@ withTempDir((root) => {
         tagsArg: "pentest-",
       }),
     ),
-    ["nested/metadata-tags", "safe-debugger", "docs"],
-    "exclude-only tag filters should remove matching skills",
+    ["nested/metadata-tags", "safe-debugger", "skills/x402-express-wrapper", "docs"],
+    "exclude-only tag filters should remove only matching skills",
   );
 
   assert.strictEqual(
@@ -142,5 +147,27 @@ withTempDir((root) => {
     filteredOpenCodeMessages.some((message) => message.includes("Example:")),
     false,
     "OpenCode guidance should skip the example once selectors are already active",
+  );
+
+  const installTarget = path.join(root, "target");
+  installer.installSkillsIntoTarget(repoRoot, installTarget, [
+    "nested/metadata-tags",
+    "skills/x402-express-wrapper",
+  ]);
+
+  assert.strictEqual(
+    fs.existsSync(path.join(installTarget, "nested", "metadata-tags", "SKILL.md")),
+    true,
+    "valid nested skill paths should keep their nested install destination",
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(installTarget, "x402-express-wrapper", "SKILL.md")),
+    true,
+    "accidental skills/ prefixed entries should install at the target root",
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(installTarget, "skills", "x402-express-wrapper", "SKILL.md")),
+    false,
+    "accidental skills/ prefixed entries should not create target/skills/*",
   );
 });
