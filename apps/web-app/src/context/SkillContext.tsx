@@ -89,10 +89,8 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
                 }
             }
 
-            // Finally set the full set of skills if we did incremental load
+            // Promote the full skill list after the incremental first-render
             if (!silent && data.length > 50) {
-                setSkills(data);
-            } else if (silent) {
                 setSkills(data);
             }
 
