@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/sickn33-antigravity-awesome-skills-badge.png)](https://mseep.ai/app/sickn33-antigravity-awesome-skills)
+
 <!-- registry-sync: version=10.7.0; skills=1436; stars=35188; updated_at=2026-04-26T14:16:16+00:00 -->
 # 🌌 Antigravity Awesome Skills: 1,436+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More
 
