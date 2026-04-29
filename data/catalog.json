@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1436,
+  "total": 1439,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -7159,6 +7159,34 @@
         "top"
       ],
       "path": "skills/broken-authentication/SKILL.md"
+    },
+    {
+      "id": "brooks-lint",
+      "name": "brooks-lint",
+      "description": "AI code reviewer grounded in classic software engineering books for catching design smells, coupling issues, and architectural risks.",
+      "category": "data-ai",
+      "tags": [
+        "code-review",
+        "architecture",
+        "software-design",
+        "refactoring",
+        "claude-code"
+      ],
+      "triggers": [
+        "code-review",
+        "architecture",
+        "software-design",
+        "refactoring",
+        "claude-code",
+        "brooks",
+        "lint",
+        "ai",
+        "code",
+        "reviewer",
+        "grounded",
+        "classic"
+      ],
+      "path": "skills/brooks-lint/SKILL.md"
     },
     {
       "id": "browser-automation",
@@ -18685,6 +18713,36 @@
       "path": "skills/kubernetes-deployment/SKILL.md"
     },
     {
+      "id": "kubestellar-console",
+      "name": "kubestellar-console",
+      "description": "Multi-cluster Kubernetes dashboard with AI-powered operations via MCP server and 10+ built-in agent skills",
+      "category": "infrastructure",
+      "tags": [
+        "kubernetes",
+        "multi-cluster",
+        "mcp",
+        "dashboard",
+        "cncf",
+        "devops",
+        "observability"
+      ],
+      "triggers": [
+        "kubernetes",
+        "multi-cluster",
+        "mcp",
+        "dashboard",
+        "cncf",
+        "devops",
+        "observability",
+        "kubestellar",
+        "console",
+        "multi",
+        "cluster",
+        "ai"
+      ],
+      "path": "skills/kubestellar-console/SKILL.md"
+    },
+    {
       "id": "lambda-lang",
       "name": "lambda-lang",
       "description": "Native agent-to-agent language for compact multi-agent messaging. A shared tongue agents speak directly, not a translation layer. 340+ atoms across 7 domains; 3x smaller than natural language.",
@@ -19925,6 +19983,34 @@
         "vllm"
       ],
       "path": "skills/local-llm-expert/SKILL.md"
+    },
+    {
+      "id": "logic-lens",
+      "name": "logic-lens",
+      "description": "AI-powered Claude Code skill that performs deep code review using formal logic and reasoning frameworks to detect bugs, anti-patterns, and security risks beyond what linters catch.",
+      "category": "security",
+      "tags": [
+        "code-review",
+        "logic-analysis",
+        "debugging",
+        "security-review",
+        "claude-code"
+      ],
+      "triggers": [
+        "code-review",
+        "logic-analysis",
+        "debugging",
+        "security-review",
+        "claude-code",
+        "logic",
+        "lens",
+        "ai",
+        "powered",
+        "claude",
+        "code",
+        "skill"
+      ],
+      "path": "skills/logic-lens/SKILL.md"
     },
     {
       "id": "logistics-exception-management",
