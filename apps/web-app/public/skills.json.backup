@@ -16730,6 +16730,28 @@
     }
   },
   {
+    "id": "kubestellar-console",
+    "path": "skills/kubestellar-console",
+    "category": "devops",
+    "name": "kubestellar-console",
+    "description": "Multi-cluster Kubernetes dashboard with AI-powered operations via MCP server and 10+ built-in agent skills",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-04-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Requires kc-agent binary (brew tap kubestellar/tap && brew install kc-agent)",
+        "docs": "https://github.com/kubestellar/console#quick-start"
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "lambda-lang",
     "path": "skills/lambda-lang",
     "category": "ai-agents",

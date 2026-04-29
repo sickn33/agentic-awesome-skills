@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1436,
+  "total": 1437,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -18683,6 +18683,36 @@
         "configurations"
       ],
       "path": "skills/kubernetes-deployment/SKILL.md"
+    },
+    {
+      "id": "kubestellar-console",
+      "name": "kubestellar-console",
+      "description": "Multi-cluster Kubernetes dashboard with AI-powered operations via MCP server and 10+ built-in agent skills",
+      "category": "infrastructure",
+      "tags": [
+        "kubernetes",
+        "multi-cluster",
+        "mcp",
+        "dashboard",
+        "cncf",
+        "devops",
+        "observability"
+      ],
+      "triggers": [
+        "kubernetes",
+        "multi-cluster",
+        "mcp",
+        "dashboard",
+        "cncf",
+        "devops",
+        "observability",
+        "kubestellar",
+        "console",
+        "multi",
+        "cluster",
+        "ai"
+      ],
+      "path": "skills/kubestellar-console/SKILL.md"
     },
     {
       "id": "lambda-lang",

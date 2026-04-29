@@ -14466,6 +14466,25 @@
       "runtime_files": []
     },
     {
+      "id": "kubestellar-console",
+      "path": "skills/kubestellar-console",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Requires kc-agent binary (brew tap kubestellar/tap && brew install kc-agent)",
+        "docs": "https://github.com/kubestellar/console#quick-start"
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "lambda-lang",
       "path": "skills/lambda-lang",
       "targets": {
@@ -27458,15 +27477,15 @@
     }
   ],
   "summary": {
-    "total_skills": 1436,
+    "total_skills": 1437,
     "supported": {
-      "codex": 1405,
-      "claude": 1420
+      "codex": 1406,
+      "claude": 1421
     },
     "blocked": {
       "codex": 31,
       "claude": 16
     },
-    "manual_setup": 1
+    "manual_setup": 2
   }
 }
