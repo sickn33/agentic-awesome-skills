@@ -4,10 +4,10 @@ description: "Use BuyWhere's MCP and API surfaces to add product search, price c
 category: ecommerce
 risk: safe
 source: official
-source_repo: BuyWhere/buywhere-cursor-plugin
+source_repo: BuyWhere/buywhere-mcp
 source_type: official
 license: "Not declared"
-license_source: "https://github.com/BuyWhere/buywhere-cursor-plugin"
+license_source: "https://github.com/BuyWhere/buywhere-mcp"
 date_added: "2026-04-29"
 author: BuyWhere
 tags: [buywhere, ecommerce, shopping, mcp, api, product-catalog]
