@@ -1353,6 +1353,25 @@
       "runtime_files": []
     },
     {
+      "id": "aomi-transact",
+      "path": "skills/aomi-transact",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "api-design-principles",
       "path": "skills/api-design-principles",
       "targets": {
@@ -27629,10 +27648,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1445,
+    "total_skills": 1446,
     "supported": {
-      "codex": 1414,
-      "claude": 1429
+      "codex": 1415,
+      "claude": 1430
     },
     "blocked": {
       "codex": 31,

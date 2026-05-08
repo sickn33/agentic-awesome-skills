@@ -12,7 +12,7 @@ Install into the Gemini skills path, then ask Gemini to apply one skill at a tim
 
 - It installs directly into the expected Gemini skills path.
 - It includes both core software engineering skills and deeper agent/LLM-oriented skills.
-- It helps new users get started with bundles and workflows rather than forcing a cold start from 1,445+ files.
+- It helps new users get started with bundles and workflows rather than forcing a cold start from 1,446+ files.
 - It is useful whether you want a broad internal skill library or a single repo to test many workflows quickly.
 
 ## Install Gemini CLI Skills

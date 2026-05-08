@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1445
+Total skills: 1446
 
 ## architecture (95)
 
@@ -685,7 +685,7 @@ Total skills: 1445
 | `zod-validation-expert` | Expert in Zod — TypeScript-first schema validation. Covers parsing, custom errors, refinements, type inference, and integration with React Hook Form, Next.js... | zod, validation | zod, validation, typescript, first, schema, covers, parsing, custom, errors, refinements, type, inference |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
-## general (348)
+## general (349)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -700,6 +700,7 @@ Total skills: 1445
 | `angular-best-practices` | Angular performance optimization and best practices guide. Use when writing, reviewing, or refactoring Angular code for optimal performance, bundle size, and... | angular, best, practices | angular, best, practices, performance, optimization, writing, reviewing, refactoring, code, optimal, bundle, size |
 | `angular-migration` | Master AngularJS to Angular migration, including hybrid apps, component conversion, dependency injection changes, and routing migration. | angular, migration | angular, migration, angularjs, including, hybrid, apps, component, conversion, dependency, injection, changes, routing |
 | `antigravity-design-expert` | Core UI/UX engineering skill for building highly interactive, spatial, weightless, and glassmorphism-based web interfaces using GSAP and 3D CSS. | antigravity | antigravity, core, ui, ux, engineering, skill, building, highly, interactive, spatial, weightless, glassmorphism |
+| `aomi-transact` | Build natural-language crypto/DeFi agents and EVM MCP plugins (Claude Code, Cursor, Codex, Gemini). Aomi turns prompts into wallet-signed txs on Ethereum, Ba... | defi, wallet, account-abstraction, cli, eip-712, onchain, agent, intent | defi, wallet, account-abstraction, cli, eip-712, onchain, agent, intent, aomi, transact, natural, language |
 | `apify-actorization` | Actorization converts existing software into reusable serverless applications compatible with the Apify platform. Actors are programs packaged as Docker imag... | apify, actorization | apify, actorization, converts, existing, software, reusable, serverless, applications, compatible, platform, actors, programs |
 | `apify-lead-generation` | Scrape leads from multiple platforms using Apify Actors. | apify, lead, generation | apify, lead, generation, scrape, leads, multiple, platforms, actors |
 | `apify-trend-analysis` | Discover and track emerging trends across Google Trends, Instagram, Facebook, YouTube, and TikTok to inform content strategy. | apify, trend | apify, trend, analysis, discover, track, emerging, trends, google, instagram, facebook, youtube, tiktok |

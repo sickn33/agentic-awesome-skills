@@ -19,7 +19,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Antigravity Awesome Skills",
-    "shortDescription": "1,414 plugin-safe skills for coding, security, product, and ops workflows.",
+    "shortDescription": "1,415 plugin-safe skills for coding, security, product, and ops workflows.",
     "longDescription": "Install a plugin-safe Codex distribution of Antigravity Awesome Skills. Skills that still need hardening or target-specific setup remain available in the repo but are excluded from this plugin.",
     "developerName": "sickn33 and contributors",
     "category": "Productivity",

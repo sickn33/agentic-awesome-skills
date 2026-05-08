@@ -12,7 +12,7 @@ Install the library into Claude Code, then invoke focused skills directly in the
 
 ## Why use this repo for Claude Code
 
-- It includes 1,445+ skills instead of a narrow single-domain starter pack.
+- It includes 1,446+ skills instead of a narrow single-domain starter pack.
 - It supports the standard `.claude/skills/` path and the Claude Code plugin marketplace flow.
 - It also ships generated bundle plugins so teams can install focused packs like `Essentials` or `Security Developer` from the marketplace metadata.
 - It includes onboarding docs, bundles, and workflows so new users do not need to guess where to begin.

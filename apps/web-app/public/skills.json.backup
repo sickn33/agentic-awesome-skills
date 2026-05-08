@@ -1594,6 +1594,28 @@
     }
   },
   {
+    "id": "aomi-transact",
+    "path": "skills/aomi-transact",
+    "category": "ai-ml",
+    "name": "aomi-transact",
+    "description": "Build natural-language crypto/DeFi agents and EVM MCP plugins (Claude Code, Cursor, Codex, Gemini). Aomi turns prompts into wallet-signed txs on Ethereum, Base, Arbitrum, Optimism, Polygon, Linea \u2014 non-custodial, fork-simulated. 40+ apps: Uniswap, Aave, Lido, Morpho, GMX, Hyperliquid, Polymarket.",
+    "risk": "critical",
+    "source": "aomi-labs/skills (MIT)",
+    "date_added": "2026-05-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "api-design-principles",
     "path": "skills/api-design-principles",
     "category": "backend",
