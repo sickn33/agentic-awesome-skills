@@ -1,10 +1,10 @@
 ---
 name: x-twitter-scraper
-description: "X (Twitter) API skill for tweet search, advanced Twitter search, profile tweets, follower export, media download, posting, replies, DMs, webhooks, MCP, official SDKs, and Twitter API alternative workflows."
+description: "X/Twitter automation skill for tweet search, follower export, media download, posting, replies, DMs, webhooks, MCP, SDKs, and the TweetClaw OpenClaw plugin."
 category: data
 risk: safe
 source: community
-tags: "[twitter, x-api, tweet-search, twitter-api, twitter-scraper, follower-export, automation, mcp, sdk, webhooks]"
+tags: "[twitter, x-api, tweet-search, twitter-api, twitter-scraper, follower-export, automation, mcp, sdk, webhooks, openclaw, tweetclaw]"
 date_added: "2026-02-28"
 ---
 
@@ -12,7 +12,7 @@ date_added: "2026-02-28"
 
 ## Overview
 
-Gives AI agents X (Twitter) data and automation workflows through the Xquik platform. Covers tweet search, advanced Twitter search, profile tweets, user lookup, follower export, media download, posting, replies, DMs, giveaway draws, account monitoring, webhooks, 23 bulk extraction tools, MCP, and official SDKs.
+Gives AI agents X (Twitter) data and automation workflows through the Xquik platform. Covers tweet search, advanced Twitter search, profile tweets, user lookup, follower export, media download, posting, replies, DMs, giveaway draws, account monitoring, webhooks, 23 bulk extraction tools, MCP, official SDKs, and the TweetClaw OpenClaw plugin.
 
 ## When to Use This Skill
 
@@ -27,6 +27,7 @@ Gives AI agents X (Twitter) data and automation workflows through the Xquik plat
 - User wants to run a giveaway draw from tweet replies
 - User needs real-time monitoring of an X account (new tweets, follower changes)
 - User wants webhook delivery of monitored events
+- User wants the TweetClaw OpenClaw plugin instead of direct REST or MCP setup
 - User asks about trending topics on X
 
 ## Setup
@@ -46,6 +47,16 @@ git clone https://github.com/Xquik-dev/x-twitter-scraper.git .claude/skills/x-tw
 # Cursor / Codex / Gemini CLI / Copilot
 git clone https://github.com/Xquik-dev/x-twitter-scraper.git .agents/skills/x-twitter-scraper
 ```
+
+### Use the OpenClaw Plugin
+
+For OpenClaw runtime tools, install TweetClaw. It wraps the same Xquik API with `explore` for endpoint discovery and `tweetclaw` for approved calls.
+
+```bash
+openclaw plugins install @xquik/tweetclaw
+```
+
+Use TweetClaw when the agent should search tweets, post tweets, post replies, send DMs, export followers, download media, create monitors, deliver webhooks, or run giveaway draws from OpenClaw.
 
 ### Get an API Key
 
@@ -73,6 +84,7 @@ export XQUIK_API_KEY="xq_YOUR_KEY_HERE"
 | Write Actions | Send tweets, post replies, like, repost, follow, unfollow, and send DMs after explicit approval |
 | SDKs | Official TypeScript, Python, Ruby, Go, Kotlin, Java, PHP, C#, CLI, and Terraform clients |
 | MCP Server | StreamableHTTP endpoint for AI-native integrations |
+| TweetClaw OpenClaw Plugin | Installable `@xquik/tweetclaw` runtime with `explore` and `tweetclaw` tools |
 
 ## Examples
 
@@ -137,6 +149,8 @@ export XQUIK_API_KEY="xq_YOUR_KEY_HERE"
 ## Repository
 
 https://github.com/Xquik-dev/x-twitter-scraper
+
+TweetClaw OpenClaw plugin: https://github.com/Xquik-dev/tweetclaw
 
 **Maintained By:** [Xquik](https://xquik.com)
 
