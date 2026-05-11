@@ -704,6 +704,7 @@
         "acceptance-orchestrator",
         "agent-evaluation",
         "agentflow",
+        "agenttrace-session-audit",
         "ai-engineering-toolkit",
         "airflow-dag-patterns",
         "api-testing-observability-api-mock",

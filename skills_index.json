@@ -774,6 +774,28 @@
     }
   },
   {
+    "id": "agenttrace-session-audit",
+    "path": "skills/agenttrace-session-audit",
+    "category": "development",
+    "name": "agenttrace-session-audit",
+    "description": "Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ai-agent-development",
     "path": "skills/ai-agent-development",
     "category": "granular-workflow-bundle",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1450,
+  "total": 1451,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -841,6 +841,33 @@
         "custom"
       ],
       "path": "skills/agents-v2-py/SKILL.md"
+    },
+    {
+      "id": "agenttrace-session-audit",
+      "name": "agenttrace-session-audit",
+      "description": "Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates.",
+      "category": "infrastructure",
+      "tags": [
+        "ai-coding",
+        "observability",
+        "cost-tracking",
+        "session-analysis"
+      ],
+      "triggers": [
+        "ai-coding",
+        "observability",
+        "cost-tracking",
+        "session-analysis",
+        "agenttrace",
+        "session",
+        "audit",
+        "local",
+        "ai",
+        "coding",
+        "agent",
+        "sessions"
+      ],
+      "path": "skills/agenttrace-session-audit/SKILL.md"
     },
     {
       "id": "ai-agent-development",

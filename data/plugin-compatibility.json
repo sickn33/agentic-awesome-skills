@@ -636,6 +636,25 @@
       "runtime_files": []
     },
     {
+      "id": "agenttrace-session-audit",
+      "path": "skills/agenttrace-session-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-agent-development",
       "path": "skills/ai-agent-development",
       "targets": {
@@ -27724,10 +27743,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1450,
+    "total_skills": 1451,
     "supported": {
-      "codex": 1419,
-      "claude": 1434
+      "codex": 1420,
+      "claude": 1435
     },
     "blocked": {
       "codex": 31,
