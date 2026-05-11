@@ -67,7 +67,7 @@ In any Claude Code session:
 
 Then run `/tokenwise:install` and follow the guided prompts.
 
-## Honest limitations
+## Limitations
 
 - Token counts approximate to ±2% vs Anthropic billing
 - A/B test mode costs extra tokens (one task × N tiers) — intentional one-time validation
