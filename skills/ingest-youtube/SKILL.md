@@ -88,6 +88,13 @@ If `yt-dlp --list-subs` returns no manual or auto subtitles, the script writes a
 
 For a manual fallback today, download audio with `yt-dlp`, transcribe it with your local Whisper workflow, and add captions or transcript text before rerunning the ingest.
 
+## Limitations
+
+- Ingests one YouTube video URL per run; channel handles, playlists, and `--days` windows are out of scope.
+- Depends on subtitles returned by `yt-dlp`; videos without subtitles produce a metadata stub, not a transcript.
+- Does not download video files or perform built-in Whisper transcription in this version.
+- Network availability, YouTube subtitle access, and local `yt-dlp` behavior determine whether ingest succeeds.
+
 ## Acceptance test
 
 Run against the first YouTube video ever uploaded:
