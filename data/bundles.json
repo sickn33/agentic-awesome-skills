@@ -692,7 +692,6 @@
         "using-neon",
         "vector-database-engineer",
         "wellally-tech",
-        "x-twitter-scraper",
         "xvary-stock-research",
         "youtube-automation",
         "zeroize-audit"
@@ -800,8 +799,7 @@
         "squirrel",
         "temporal-python-pro",
         "unity-developer",
-        "vercel-deployment",
-        "x-twitter-scraper"
+        "vercel-deployment"
       ]
     },
     "automation-core": {
@@ -999,6 +997,7 @@
         "workflow-orchestration-patterns",
         "workflow-patterns",
         "wrike-automation",
+        "x-twitter-scraper",
         "yes-md",
         "youtube-automation",
         "zapier-make-patterns",

@@ -31531,7 +31531,7 @@
     "path": "skills/x-twitter-scraper",
     "category": "data",
     "name": "x-twitter-scraper",
-    "description": "X (Twitter) data platform skill \u2014 tweet search, user lookup, follower extraction, engagement metrics, giveaway draws, monitoring, webhooks, 19 extraction tools, MCP server.",
+    "description": "X/Twitter automation skill for tweet search, follower export, media download, posting, replies, DMs, webhooks, MCP, SDKs, and the TweetClaw OpenClaw plugin.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-28",

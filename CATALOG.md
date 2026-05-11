@@ -1043,7 +1043,7 @@ Total skills: 1450
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware. | zipai, optimizer | zipai, optimizer, adaptive, token, intelligent, filtering, surgical, output, ambiguity, first, context, window |
 
-## infrastructure (132)
+## infrastructure (131)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1178,7 +1178,6 @@ Total skills: 1450
 | `vercel-deployment` | Expert knowledge for deploying to Vercel with Next.js | vercel, deployment | vercel, deployment, knowledge, deploying, next, js |
 | `whatsapp-cloud-api` | Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhooks HMAC-SHA256, automacao de atendimento. Boilerplates Node.js e Python. | messaging, whatsapp, meta, webhooks | messaging, whatsapp, meta, webhooks, cloud, api, integracao, com, business, mensagens, hmac, sha256 |
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
-| `x-twitter-scraper` | X (Twitter) data platform skill — tweet search, user lookup, follower extraction, engagement metrics, giveaway draws, monitoring, webhooks, 19 extraction too... | twitter, x-api, scraping, mcp, social-media, data-extraction, giveaway, monitoring, webhooks | twitter, x-api, scraping, mcp, social-media, data-extraction, giveaway, monitoring, webhooks, scraper, data, platform |
 
 ## security (174)
 
@@ -1395,7 +1394,7 @@ Total skills: 1450
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (99)
+## workflow (100)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1495,6 +1494,7 @@ Total skills: 1450
 | `web-scraper` | Web scraping inteligente multi-estrategia. Extrai dados estruturados de paginas web (tabelas, listas, precos). Paginacao, monitoramento e export CSV/JSON. | scraping, data-extraction, automation, csv | scraping, data-extraction, automation, csv, web, scraper, inteligente, multi, estrategia, extrai, dados, estruturados |
 | `webflow-automation` | Automate Webflow CMS collections, site publishing, page management, asset uploads, and ecommerce orders via Rube MCP (Composio). Always search tools first fo... | webflow | webflow, automation, automate, cms, collections, site, publishing, page, asset, uploads, ecommerce, orders |
 | `wrike-automation` | Automate Wrike project management via Rube MCP (Composio): create tasks/folders, manage projects, assign work, and track progress. Always search tools first ... | wrike | wrike, automation, automate, via, rube, mcp, composio, tasks, folders, assign, work, track |
+| `x-twitter-scraper` | X/Twitter automation skill for tweet search, follower export, media download, posting, replies, DMs, webhooks, MCP, SDKs, and the TweetClaw OpenClaw plugin. | twitter, x-api, tweet-search, twitter-api, twitter-scraper, follower-export, automation, mcp, sdk, webhooks, openclaw, tweetclaw | twitter, x-api, tweet-search, twitter-api, twitter-scraper, follower-export, automation, mcp, sdk, webhooks, openclaw, tweetclaw |
 | `zendesk-automation` | Automate Zendesk tasks via Rube MCP (Composio): tickets, users, organizations, replies. Always search tools first for current schemas. | zendesk | zendesk, automation, automate, tasks, via, rube, mcp, composio, tickets, users, organizations, replies |
 | `zoho-crm-automation` | Automate Zoho CRM tasks via Rube MCP (Composio): create/update records, search contacts, manage leads, and convert leads. Always search tools first for curre... | zoho, crm | zoho, crm, automation, automate, tasks, via, rube, mcp, composio, update, records, search |
 | `zoom-automation` | Automate Zoom meeting creation, management, recordings, webinars, and participant tracking via Rube MCP (Composio). Always search tools first for current sch... | zoom | zoom, automation, automate, meeting, creation, recordings, webinars, participant, tracking, via, rube, mcp |
