@@ -581,6 +581,12 @@ We officially thank the following contributors for their help in making this rep
 - [@flyingsquirrel0419](https://github.com/flyingsquirrel0419)
 - [@hyhmrright](https://github.com/hyhmrright)
 - [@kench001](https://github.com/kench001)
+- [@CeciliaZ030](https://github.com/CeciliaZ030)
+- [@commitshow](https://github.com/commitshow)
+- [@CyberZenithX](https://github.com/CyberZenithX)
+- [@Mann-Makhecha](https://github.com/Mann-Makhecha)
+- [@memurcie](https://github.com/memurcie)
+- [@pravin-python](https://github.com/pravin-python)
 
 ## Star History
 
