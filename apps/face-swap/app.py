@@ -40,9 +40,9 @@ def get_face_analyzer():
         _face_app = insightface.app.FaceAnalysis(
             name="buffalo_l",
             root=str(MODELS_DIR),
-            providers=["CUDAExecutionProvider", "CPUExecutionProvider"],
+            providers=["CPUExecutionProvider"],
         )
-        _face_app.prepare(ctx_id=0, det_size=(640, 640))
+        _face_app.prepare(ctx_id=-1, det_size=(640, 640))
     return _face_app
 
 
@@ -57,7 +57,7 @@ def get_swapper():
             )
         _swapper = insightface.model_zoo.get_model(
             str(model_path),
-            providers=["CUDAExecutionProvider", "CPUExecutionProvider"],
+            providers=["CPUExecutionProvider"],
         )
     return _swapper
 
@@ -281,21 +281,6 @@ async def download(filename: str):
 async def system_info():
     import shutil
 
-    gpu_info = "No GPU"
-    try:
-        import subprocess
-        result = subprocess.run(
-            ["nvidia-smi", "--query-gpu=name,memory.total,memory.used,utilization.gpu",
-             "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, timeout=5
-        )
-        if result.returncode == 0:
-            parts = result.stdout.strip().split(", ")
-            if len(parts) >= 4:
-                gpu_info = f"{parts[0]} | VRAM: {parts[2]}/{parts[1]} MB | Load: {parts[3]}%"
-    except Exception:
-        pass
-
     disk = shutil.disk_usage(str(BASE_DIR))
     return {
         "cpu_percent": psutil.cpu_percent(interval=0.5),
@@ -303,7 +288,7 @@ async def system_info():
         "ram_used_gb": round(psutil.virtual_memory().used / 1e9, 1),
         "ram_total_gb": round(psutil.virtual_memory().total / 1e9, 1),
         "disk_free_gb": round(disk.free / 1e9, 1),
-        "gpu": gpu_info,
+        "gpu": "CPU mode",
         "model_ready": (MODELS_DIR / "inswapper_128.onnx").exists(),
     }
 
