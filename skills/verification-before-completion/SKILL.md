@@ -140,7 +140,7 @@ Run the command. Read the output. THEN claim the result.
 
 This is non-negotiable.
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations

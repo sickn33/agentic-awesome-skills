@@ -129,6 +129,32 @@ class PluginCompatibilityTests(unittest.TestCase):
             self.assertEqual(entry["targets"]["claude"], "supported")
             self.assertEqual(entry["setup"]["type"], "manual")
 
+    def test_explicit_target_restrictions_block_plugin_targets(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skills_dir = pathlib.Path(temp_dir) / "skills"
+            self._write_skill(
+                skills_dir,
+                "active-browser-skill",
+                (
+                    "---\n"
+                    "name: active-browser-skill\n"
+                    "description: Example\n"
+                    "plugin:\n"
+                    "  targets:\n"
+                    "    codex: blocked\n"
+                    "    claude: blocked\n"
+                    "---\n"
+                    "Click live page controls only after explicit approval.\n"
+                ),
+            )
+
+            report = plugin_compatibility.build_report(skills_dir)
+            entry = report["skills"][0]
+            self.assertEqual(entry["targets"]["codex"], "blocked")
+            self.assertEqual(entry["targets"]["claude"], "blocked")
+            self.assertIn("explicit_target_restriction", entry["blocked_reasons"]["codex"])
+            self.assertIn("explicit_target_restriction", entry["blocked_reasons"]["claude"])
+
     def test_repo_sample_skills_have_expected_status(self):
         report = plugin_compatibility.build_report(REPO_ROOT / "skills")
         entries = plugin_compatibility.compatibility_by_skill_id(report)

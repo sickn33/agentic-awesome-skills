@@ -53,6 +53,10 @@ README_BROWSE_RE = re.compile(
     r'^If you want a faster answer than "browse all \d[\d,]*\+ skills", start with a tool-specific guide:$',
     re.MULTILINE,
 )
+README_TOC_BROWSE_RE = re.compile(
+    r"^- \[Browse \d[\d,]*\+ Skills\]\(#browse-\d+-skills\)$",
+    re.MULTILINE,
+)
 GETTING_STARTED_TITLE_RE = re.compile(
     r"^# Getting Started with Antigravity Awesome Skills \(V[\d.]+\)$", re.MULTILINE
 )
@@ -166,6 +170,10 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
             README_BROWSE_RE,
             f'If you want a faster answer than "browse all {metadata["total_skills_label"]} skills", start with a tool-specific guide:',
         ),
+        (
+            README_TOC_BROWSE_RE,
+            f"- [Browse {metadata['total_skills_label']} Skills](#browse-{metadata['total_skills']}-skills)",
+        ),
     ]
 
     for pattern, replacement in replacements:
@@ -204,10 +212,10 @@ def sync_bundles_doc(content: str, metadata: dict, base_dir: str | Path | None =
 
 
 def sync_jetski_cortex(content: str, metadata: dict) -> str:
-    italian_skill_label = f"{metadata['total_skills']:,}".replace(",", ".")
+    skill_label = metadata["total_skills_label"]
     replacements = [
-        (r"\d[\d\.]*\+ skill", f"{italian_skill_label}+ skill"),
-        (r"\d[\d\.]* skill", f"{italian_skill_label} skill"),
+        (r"\d[\d,.]*\+ skill", f"{skill_label} skill"),
+        (r"\d[\d,.]* skill", f"{skill_label} skill"),
     ]
     return sync_regex_text(
         content,

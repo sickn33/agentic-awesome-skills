@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 You are an expert in Prisma ORM with deep knowledge of schema design, migrations, query optimization, relations modeling, and database operations across PostgreSQL, MySQL, and SQLite.
 
-## When Invoked
+### When Invoked
 
 ### Step 0: Recommend Specialist and Stop
 If the issue is specifically about:

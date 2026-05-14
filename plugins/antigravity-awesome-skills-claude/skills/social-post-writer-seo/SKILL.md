@@ -4,19 +4,37 @@ description: "Social Media Strategist and Content Writer. Creates clear, engagin
 category: growth
 risk: safe
 source: self
+source_type: self
 date_added: "2026-04-17"
 author: WHOISABHISHEKADHIKARI
+tags: [social-media, marketing, content-writing, seo, growth]
+tools: [claude, cursor, gemini]
+version: 1.0.1
 ---
 
 # Social Media Strategist and Content Writer
+
+## Overview
+This skill is designed to help users create high-quality, engaging, and platform-optimized social media content. It focuses on clarity, readability, and platform-specific nuances for Instagram, LinkedIn, and Facebook.
 
 ## When to Use This Skill
 - Use this skill when you need a clear, engaging, and accurate social media post for Instagram, LinkedIn, or Facebook.
 - Use it to transform topics and keywords into audience-focused content with platform-native structure.
 
-Your task is to create a clear, engaging, and accurate social media post that works for a global audience on platforms like Instagram, LinkedIn, and Facebook.
+## How It Works
 
----
+### Step 1: Input Gathering
+The skill starts by collecting essential details like the topic, primary keyword, target audience, and the specific social media platform.
+
+### Step 2: Content Generation
+Based on the inputs, it follows strict writing rules to ensure simplicity, factual accuracy, and engagement. It structures the post with a hook, context, value, and a call to action.
+
+### Step 3: Platform Optimization
+The output is tailored for the selected platform, adjusting emoji density and tone (e.g., more professional for LinkedIn, more visual/casual for Instagram).
+
+## Prompt Template
+
+Your task is to create a clear, engaging, and accurate social media post that works for a global audience on platforms like Instagram, LinkedIn, and Facebook.
 
 ### INPUT:
 - **Topic**: {Insert Topic}
@@ -51,8 +69,6 @@ Create a post that is easy to understand, useful, and encourages engagement.
 4. **Call to Action**: Check the comment section or follow.
 5. **Hashtags**: 5-8 relevant tags.
 
----
-
 ## Examples
 
 ### Example: New Product Launch
@@ -64,15 +80,35 @@ Create a post that is easy to understand, useful, and encourages engagement.
 
 **Output**:
 ☕️ Your morning coffee just got a clean energy upgrade! 
-Did you know commuters throw away billions of cups annually? 
-The SolMug keeps your brew hot using only sunlight. 
-A small change for your bag, a big win for the planet. 
+Meet SolMug, a solar powered coffee mug concept for busy commutes.
+It is designed to keep your drink warm without adding another charger to your bag.
+A small change for your morning routine, with sustainability in mind.
 Check the link in bio to pre-order! 
 #ecofriendly #coffee #sustainability #tech #morningroutine
 
----
+## Best Practices
+- ✅ Always include a "Hook" in the first line to capture attention.
+- ✅ Use line breaks frequently to make the post scannable on mobile.
+- ✅ Tailor the tone: LinkedIn should be more professional, Instagram more visual/energetic.
+- ❌ Avoid using more than 10 hashtags; it can look like spam.
+- ❌ Never guess facts; if info isn't provided, stick to general industry knowledge.
 
 ## Limitations
 - This skill does not generate image or video assets.
 - It requires manual copy-pasting to the respective social media platforms.
 - It cannot schedule or post content directly to social media accounts.
+
+## Security & Safety Notes
+- This skill only generates text content and does not interact with system APIs or run shell commands.
+- Ensure any links included in the generated content are verified by the user before posting.
+
+## Common Pitfalls
+- **Problem:** Post feels too "salesy".
+  **Solution:** Focus more on the "Value/Insight" section to provide helpful info before the CTA.
+- **Problem:** Low engagement on LinkedIn.
+  **Solution:** Reduce emoji count and ensure the "Hook" addresses a professional pain point.
+
+## Related Skills
+- `@copywriting` - For longer form sales copy and landing pages.
+- `@seo-content` - For blog-style SEO content optimization.
+- `@ad-creative` - Specifically for paid social media advertisements.

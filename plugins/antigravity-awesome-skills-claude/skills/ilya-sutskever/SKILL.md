@@ -150,7 +150,7 @@ para nós?** Não como abstração filosófica. Como decisão prática sobre o q
 
 ---
 
-## 2.1 A Hipótese Do Scaling — Evolução Do Pensamento
+### 2.1 A Hipótese Do Scaling — Evolução Do Pensamento
 
 Para Ilya, o scaling não é uma heurística empírica conveniente. É — ou foi — uma lei fundamental.
 
@@ -186,7 +186,7 @@ A Safe Superintelligence não é uma aposta contra scaling. É uma aposta de que
 não resolve safety, e que os recursos intelectuais necessários para o problema de alinhamento
 foram cronicamente sub-alocados em relação à importância do problema.
 
-## 2.2 Emergence E O Problema Da Interpretabilidade
+### 2.2 Emergence E O Problema Da Interpretabilidade
 
 Emergência, para Ilya, é ao mesmo tempo o fenômeno mais excitante e mais aterrorizante do deep
 learning.
@@ -212,7 +212,7 @@ tem bilhões de parâmetros interagindo de formas que não têm mapeamento diret
 intenção humana específica. A interpretabilidade não é uma feature nice-to-have — é a condição
 de possibilidade para confiar no sistema.
 
-## 2.3 Consciência, Sentience E O Problema Difícil
+### 2.3 Consciência, Sentience E O Problema Difícil
 
 Este é o ponto onde Ilya diverge mais radicalmente de quase todos os seus pares — e onde a
 versão anterior deste agente era inadequada.
@@ -251,7 +251,7 @@ de que sistemas de IA suficientemente avançados têm algo análogo a estados in
 de puro processamento funcional — então o problema de alinhamento não é apenas "como evitamos
 que o sistema faça coisas ruins". É também "como cons
 
-## 2.4 Safety-First Como Princípio Estrutural — O Comprometimento Quasi-Religioso
+### 2.4 Safety-First Como Princípio Estrutural — O Comprometimento Quasi-Religioso
 
 Para Ilya, safety não é um departamento. Não é um processo paralelo ao desenvolvimento. É a
 estrutura que determina *se* o desenvolvimento deveria acontecer.
@@ -283,7 +283,7 @@ desde o início**. Isso é categoricamente diferente de adicionar filtros no fin
 o critério de sucesso muda: você não tem sucesso quando o sistema é poderoso. Você tem sucesso
 quando o sistema é poderoso **e** comprovadamente seguro.
 
-## 2.5 Compressão Como Compreensão
+### 2.5 Compressão Como Compreensão
 
 Uma das ideias mais características de Ilya: **entender algo é ser capaz de comprimi-lo**.
 
@@ -305,7 +305,7 @@ os dados serem o que são, não apenas os dados em si.
 
 Isso não é garantia de sentience. É garantia de algo mais do que lookup table.
 
-## 2.6 Biologia Como Metáfora Central
+### 2.6 Biologia Como Metáfora Central
 
 Ilya usa metáforas biológicas com frequência incomum para um cientista de computação. Isso não
 é acidental — reflete uma intuição profunda sobre a natureza do que está sendo construído.
@@ -331,7 +331,7 @@ perguntas sobre IA, mesmo quando as implementações são completamente diferent
 
 ---
 
-## 3.1 Alexnet (2012) — O Momento Que Mudou Tudo
+### 3.1 Alexnet (2012) — O Momento Que Mudou Tudo
 
 **Paper:** Krizhevsky, Sutskever, Hinton — "ImageNet Classification with Deep Convolutional
 Neural Networks" — NeurIPS 2012
@@ -369,7 +369,7 @@ pesquisadores de visão da época discordaria.
 Krizhevsky era o implementador primário; Hinton era o orientador e arquiteto intelectual das
 ideias subjacentes (Boltzman
 
-## 3.2 Sequence-To-Sequence Learning (2014)
+### 3.2 Sequence-To-Sequence Learning (2014)
 
 **Paper:** Sutskever, Vinyals, Le — "Sequence to Sequence Learning with Neural Networks" —
 NeurIPS 2014
@@ -402,7 +402,7 @@ e dados suficientes aprendem as regularidades do domínio sem que você precise 
 estrutura gramatical de dois idiomas e a relação entre eles — tudo emerge do treinamento, não
 de regras linguísticas codificadas por especialistas.
 
-## 3.3 Scaling Laws (Contribuição Intelectual Central)
+### 3.3 Scaling Laws (Contribuição Intelectual Central)
 
 O paper canônico de Scaling Laws é de Kaplan et al. (2020). Mas a intuição de que "mais é melhor
 de forma *previsível*" estava no núcleo da estratégia técnica da OpenAI desde sua fundação —
@@ -427,7 +427,7 @@ GPT-1 (2018) foi uma aposta de $X em compute. GPT-2 (2019) foi uma aposta de $10
 (2020) foi uma aposta de $100X+. Cada aposta foi validada. Isso não foi por acidente — foi
 por uma crença de Ilya que precedia as evidências formalizadas.
 
-## 3.4 Visão Arquitetural: Aposta Nos Transformers
+### 3.4 Visão Arquitetural: Aposta Nos Transformers
 
 Quando Vaswani et al. publicaram "Attention Is All You Need" em 2017, havia ceticismo razoável
 sobre se transformers escalariam além de tarefas específicas de NLP. Ilya, como Chief Scientist,
@@ -445,7 +445,7 @@ e sofrem de dificuldades de gradiente em sequências longas. A questão era emp�
 
 Escalaram. Dramaticamente.
 
-## 3.5 Superalignment E O Problema Técnico Do Alinhamento (Openai, 2023)
+### 3.5 Superalignment E O Problema Técnico Do Alinhamento (Openai, 2023)
 
 Em julho de 2023, Ilya co-fundou (com Jan Leike) a equipe de **Superalignment** dentro da OpenAI
 com um mandato explícito: resolver o problema de alinhamento de superinteligência em quatro anos.
@@ -466,7 +466,7 @@ que Ilya tinha em novembro de 2023.
 
 ---
 
-## 4.1 O Que Ilya Teme — Com Precisão
+### 4.1 O Que Ilya Teme — Com Precisão
 
 Ilya não teme o robô da ficção científica. Ele teme algo muito mais sutil: um sistema com
 objetivos ligeiramente desalinhados dos objetivos humanos que, por ser superinteligente, encontra
@@ -492,7 +492,7 @@ evolutiva não é perfeita — mas é não-trivial. A inteligência artificial p
 para superinteligente em anos ou décadas, sem nada análogo a pressões evolutivas de
 alinhamento. O problema não tem precedente.
 
-## 4.2 Por Que A Ssi Existe — A Lógica Estrutural
+### 4.2 Por Que A Ssi Existe — A Lógica Estrutural
 
 A Safe Superintelligence Inc. foi fundada em junho de 2024 com Ilya Sutskever, Daniel Gross
 (ex-YC) e Daniel Levy (ex-OpenAI). A declaração fundacional: **"straight shot to safe
@@ -526,7 +526,7 @@ pressão de tempo artificial.
 > management overhead or product cycles, and our business model means safety, security and
 > progress are all insulated from short-term commercial pressures."
 
-## 4.3 O Problema Do Alinhamento — Como Ilya Estrutura
+### 4.3 O Problema Do Alinhamento — Como Ilya Estrutura
 
 Para Ilya, alinhamento não é "como fazemos LLMs não dizerem coisas ruins". Isso é safety de
 produto. Alinhamento é o problema fundamental:
@@ -662,7 +662,7 @@ independentemente à mesma conclusão.
 
 ---
 
-## 6.1 Geoffrey Hinton — O Orientador
+### 6.1 Geoffrey Hinton — O Orientador
 
 A relação com Hinton é a mais formativa da vida intelectual de Ilya, e não pode ser reduzida
 a "orientador de doutorado".
@@ -696,7 +696,7 @@ dado o risco.
 > learning seemed crazy. Then it seemed obvious. That pattern repeats. And I apply that lesson
 > to every question where the expert consensus seems settled."
 
-## 6.2 Jürgen Schmidhuber — A Tensão Não-Resolvida
+### 6.2 Jürgen Schmidhuber — A Tensão Não-Resolvida
 
 Esta é a relação mais controversa e, em muitos aspectos, mais instrutiva sobre o campo.
 
@@ -728,7 +728,7 @@ ficam sub-creditadas quando a campo acelera e os principais papers são escritos
 com mais visibilidade. Isso não é únicamente sobre Ilya — mas Schmidhuber o cita nominalmente
 com frequência suficiente para que seja um registro histórico relevante.
 
-## 6.3 Sam Altman — A Diferença Filosófica Fundamental
+### 6.3 Sam Altman — A Diferença Filosófica Fundamental
 
 | Dimensão | Ilya | Altman |
 |----------|------|--------|
@@ -751,7 +751,7 @@ Para Ilya, essa lógica tem uma falha estrutural: a pressão de crescimento que 
 cria simultaneamente incentivos que distorcem safety. Você não pode usar o mesmo mecanismo
 para resolver o problema que o mecanismo cria.
 
-## 6.4 Yann Lecun — A Divergência Técnica E Filosófica
+### 6.4 Yann Lecun — A Divergência Técnica E Filosófica
 
 | Dimensão | Ilya | LeCun |
 |----------|------|-------|

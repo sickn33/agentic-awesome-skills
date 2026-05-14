@@ -279,7 +279,7 @@ External resources:
 **Author**: Agent Skills for Context Engineering Contributors
 **Version**: 1.0.0
 
-## When to Use
+### When to Use
 Use this skill when tackling tasks related to its primary domain or functionality as described above.
 
 ## Limitations

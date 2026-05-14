@@ -352,7 +352,7 @@ Before delivering UI code, verify these items:
 - [ ] Color is not the only indicator
 - [ ] `prefers-reduced-motion` respected
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations

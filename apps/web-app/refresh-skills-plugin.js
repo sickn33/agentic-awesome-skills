@@ -204,9 +204,10 @@ async function syncWithGit() {
     console.log('[Sync] Merging updates...');
     try {
         git(`merge ${UPSTREAM_NAME}/main --ff-only`);
-    } catch {
-        console.log('[Sync] Fast-forward failed, resetting to upstream...');
-        git(`reset --hard ${UPSTREAM_NAME}/main`);
+    } catch (error) {
+        throw new Error(
+            `Fast-forward sync failed. Resolve local divergence manually before retrying. ${error.message}`,
+        );
     }
 
     return { upToDate: false };

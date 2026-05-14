@@ -814,7 +814,7 @@ Broad permissions + autonomy + goal optimization = danger.
 
 Recommended fix:
 
-## Least privilege principle
+### Least privilege principle
 PERMISSIONS = {
     "research_agent": ["read_web", "read_docs"],
     "code_agent": ["read_file", "write_file", "run_tests"],

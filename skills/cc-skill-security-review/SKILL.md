@@ -495,7 +495,7 @@ Before ANY production deployment:
 
 **Remember**: Security is not optional. One vulnerability can compromise the entire platform. When in doubt, err on the side of caution.
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations

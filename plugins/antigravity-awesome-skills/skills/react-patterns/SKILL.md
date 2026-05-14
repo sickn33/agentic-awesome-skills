@@ -197,6 +197,14 @@ date_added: "2026-02-27"
 
 ---
 
+## 11. File Structure
+
+<img width="1150" height="1438" alt="image" src="https://github.com/user-attachments/assets/10369698-472c-4695-a494-2c0672103aa1" />
+
+Use this image as a reference for a better file structure of the project
+
+---
+
 > **Remember:** React is about composition. Build small, combine thoughtfully.
 
 ## When to Use

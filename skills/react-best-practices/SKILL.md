@@ -122,7 +122,7 @@ Each rule file contains:
 
 For the complete guide with all rules expanded: `AGENTS.md`
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations

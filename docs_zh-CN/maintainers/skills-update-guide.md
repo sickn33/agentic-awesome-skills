@@ -69,7 +69,7 @@ copy skills_index.json apps\web-app\public\skills.json
 更新过程会刷新:
 - 技能索引 (`skills_index.json`)
 - Web 应用程序技能数据 (`apps\web-app\public\skills.json`)
-- 技能目录中的所有 1,328+ 技能
+- 技能目录中的所有 1,436+ 技能
 
 ## 更新时机
 

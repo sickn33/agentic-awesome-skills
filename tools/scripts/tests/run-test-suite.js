@@ -25,6 +25,8 @@ const LOCAL_TEST_COMMANDS = [
     [path.join(TOOL_TESTS, "jetski_gemini_loader.test.cjs")],
     [path.join(TOOL_TESTS, "merge_batch.test.js")],
     [path.join(TOOL_TESTS, "npm_package_contents.test.js")],
+    [path.join(TOOL_TESTS, "repo_hygiene_security.test.js")],
+    [path.join(TOOL_TESTS, "copy_security.test.js")],
     [path.join(TOOL_TESTS, "setup_web_sync.test.js")],
     [path.join(TOOL_TESTS, "skill_filter.test.js")],
     [path.join(TOOL_TESTS, "validate_skills_headings.test.js")],
@@ -50,6 +52,7 @@ const LOCAL_TEST_COMMANDS = [
   [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_whatsapp_config_logging_security.py")],
   [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_maintainer_audit.py")],
   [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_validate_skills_headings.py")],
+  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_validate_skills_strict.py")],
 ];
 const NETWORK_TEST_COMMANDS = [
   [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "inspect_microsoft_repo.py")],

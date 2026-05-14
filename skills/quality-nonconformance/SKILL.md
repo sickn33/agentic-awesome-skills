@@ -227,7 +227,7 @@ Track these metrics weekly and trend monthly:
 - For the comprehensive edge case library with full analysis, see [edge-cases.md](references/edge-cases.md)
 - For complete communication templates with variables and tone guidance, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you need to **run or improve non‑conformance and CAPA processes in regulated manufacturing**:
 
 - Investigating NCRs, selecting root‑cause methods, and defining MRB dispositions and CAPA actions.

@@ -301,7 +301,7 @@ node --test src/**/*.test.ts
 
 ---
 
-## 10. Anti-Patterns to Avoid
+## 9. Anti-Patterns to Avoid
 
 ### ❌ DON'T:
 - Use Express for new edge projects (use Hono)
@@ -322,7 +322,7 @@ node --test src/**/*.test.ts
 
 ---
 
-## 11. Decision Checklist
+## 10. Decision Checklist
 
 Before implementing:
 

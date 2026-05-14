@@ -21,6 +21,10 @@ KNOWN_UPSTREAM_COLLISIONS = {
         ".github/plugins/azure-sdk-typescript/skills/applicationinsights-web-ts",
         ".github/skills/applicationinsights-web-ts",
     },
+    "entra-agent-id": {
+        ".github/plugins/azure-skills/skills/entra-agent-id",
+        ".github/skills/entra-agent-id",
+    },
 }
 
 

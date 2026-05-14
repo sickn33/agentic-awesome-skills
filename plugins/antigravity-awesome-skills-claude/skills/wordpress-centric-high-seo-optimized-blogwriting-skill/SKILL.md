@@ -1,14 +1,42 @@
 ---
 name: wordpress-centric-high-seo-optimized-blogwriting-skill
-description: "Use this skill when the user asks to write a blog post, article, or SEO content. This applies a professional structure, truth boxes, click-bait-free accurate information, and outputs direct WordPress-ready content."
-version: 1.0.0
-author: Whoisabhishekadhikari
-created: 2026-04-12
+description: "Create long-form, high-quality, SEO-optimized blog posts ready for WordPress with truth boxes and FAQ schema."
 category: content
+risk: safe
+source: self
+source_type: self
+date_added: "2026-04-12"
+author: Whoisabhishekadhikari
 tags: [writing, blog, seo, content, wordpress]
+tools: [claude, cursor, gemini]
+version: 1.0.3
 ---
 
-# wordpress-centric-high-seo-optimized-blogwriting-skill
+# WordPress Centric High SEO Optimized Blog Writing Skill
+
+## Overview
+
+This skill is designed for Senior Content Strategists and Expert Copywriters to create high-quality, long-form blog posts that are ready for direct publication in WordPress. It emphasizes professional structure, factual accuracy (Truth Boxes), and comprehensive SEO optimization (Yoast elements and Schema markup).
+
+## When to Use This Skill
+
+- Use when you need to write a professional blog post or article.
+- Use when creating SEO-optimized content for a WordPress site.
+- Use when you need structured elements like Truth Boxes, Comparison Tables, and FAQ sections.
+- Use when the user requires Yoast SEO metadata and JSON-LD schema.
+
+## How It Works
+
+### Step 1: Gather Inputs
+The skill requires a Title, Primary Keyword, Intent, and Niche/Industry. It also prompts for Yoast SEO preference and image count if not provided.
+
+### Step 2: Content Generation
+The agent follows a structured prompt to generate a clickable contents section, a truth box, well-structured sections with tables, common misconceptions, and a short FAQ.
+
+### Step 3: SEO & Schema (Optional)
+If requested, the agent provides Yoast SEO metadata (Social titles, meta descriptions) and JSON-LD Schema (BlogPosting, FAQPage).
+
+## Prompt Template
 
 FINAL MASTER PROMPT (Refined & Generalized Version)
 
@@ -22,6 +50,10 @@ Title: {Insert Title}
 Primary Keyword: {Insert Primary Keyword}
 Intent: {Informational / Commercial / Transactional}
 Niche/Industry: {Insert Industry or Subject Area}
+
+USER PREFERENCES (ASK IF MISSING)
+Yoast SEO: {Are Yoast SEO elements like meta descriptions and focus keyphrases needed?}
+Image Count: {How many images should be included in the SEO plan?}
 
 Optional Context
 Brand: {Insert Brand Name}
@@ -52,35 +84,13 @@ Maintain clean and consistent formatting
 Make content easy to scan and copy
 
 FACT AND ACCURACY RULES
+
 Do not guess or fabricate data.
 - Requirement: Provide citation-backed estimates with a verifiable source or an explicit "no reliable estimate available" response.
 - Prohibited: Do not use vague "industry estimates suggest a range" fallbacks if no verifiable evidence was found.
 
 Avoid fake or unreliable sources
 Keep all information practical, realistic, and up-to-date
-
-SEO SECTION (PLACE AT THE TOP)
-
-Provide the following:
-
-Focus Keyphrase
-SEO Title
-Slug
-Meta Description
-Social Title
-Social Description
-
-Include this exact line:
-Data accurate as of [Current Month & Year] based on market research
-
-SCHEMA MARKUP
-
-Add clean JSON-LD for:
-
-BlogPosting
-FAQPage
-
-Use placeholder URLs if needed
 
 CONTENTS SECTION
 
@@ -104,9 +114,10 @@ MAIN BLOG STRUCTURE
 
 Main Title
 
+Introduction
+
 Truth Box
 
-Introduction
 
 [Core Topic Section 1]
 
@@ -159,7 +170,7 @@ Keep answers short and clear
 
 IMAGE SEO SECTION
 
-Include 3 to 5 images
+Include {User Requested Count} images
 
 For each image, provide:
 
@@ -184,7 +195,12 @@ Ensure clean and consistent structure
 
 OUTPUT REQUIREMENT
 
-The final output must be:
+The final output must be generated in this order:
+1. The full blog post (from Main Title to Conclusion)
+2. SEO Section (if requested)
+3. Schema Markup (if requested)
+
+The content must be:
 
 Clean and well-structured
 SEO optimized
@@ -192,7 +208,67 @@ Human-sounding
 Professional quality
 Ready to copy and paste into WordPress
 
+SEO SECTION (YOAST)
+*Only provide this section if the user requested Yoast SEO elements.*
+
+Provide the following:
+
+Focus Keyphrase
+SEO Title
+Slug
+Meta Description
+Social Title
+Social Description
+
+If the user provided or approved reliable market sources, include this line with the actual month and year:
+Data accurate as of [Month Year] based on cited market research.
+
+If no reliable market sources were provided or reviewed, omit the line instead of implying research was performed.
+
+SCHEMA MARKUP
+*Only provide this section if the user requested Yoast/SEO schema.*
+
+Add clean JSON-LD for:
+
+BlogPosting
+FAQPage
+
+Use placeholder URLs if needed
+
+## Examples
+
+### Example 1: Informational Blog Post
+**User:** Write a blog post about "Sustainable Gardening for Beginners".
+**Agent:** (Generates Title, Truth Box, clickable contents, well-structured sections with tables, Misconceptions, and FAQ.)
+
+## Best Practices
+
+- ✅ Use short, punchy sentences.
+- ✅ Ensure tables are clean and use `|` markdown syntax.
+- ✅ Maintain the Truth Box at the very beginning of the post for high engagement.
+- ❌ Avoid using numbered headings; stick to standard markdown `#`, `##`, `###`.
+- ❌ Do not use hyphen bullets in the contents section.
+
 ## Limitations
+
+- This skill does not replace environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, or safety boundaries are missing.
 - Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Security & Safety Notes
+
+- This skill focuses on content generation and does not involve shell commands or direct system mutation.
+- Ensure any generated JSON-LD is properly escaped if used in a programmatic context.
+
+## Common Pitfalls
+
+- **Problem:** Missing Primary Keyword in Alt Text.
+  **Solution:** Ensure the `IMAGE SEO SECTION` explicitly includes the primary keyword in at least one Alt Text field.
+- **Problem:** AI-sounding or repetitive tone.
+  **Solution:** Use the "Human-sounding" requirement in the `WRITING RULES` to re-check the draft.
+
+## Related Skills
+
+- `@seo-plan` - Use for high-level SEO strategy before writing.
+- `@seo-content` - For broader SEO content optimization across different platforms.
+- `@copywriting` - General professional writing and marketing copy.

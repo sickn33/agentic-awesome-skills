@@ -35,7 +35,7 @@ Answer repository questions grounded entirely in source code evidence.
 - NEVER invent, guess, or use external knowledge
 - Think step by step before answering
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations

@@ -41,6 +41,33 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
                     child.unlink()
                 outside.rmdir()
 
+    def test_find_skills_ignores_symlinked_skill_markdown(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skills_dir = root / "skills"
+            skills_dir.mkdir()
+
+            safe_skill = skills_dir / "safe-skill"
+            safe_skill.mkdir()
+            (safe_skill / "SKILL.md").write_text("---\nname: safe-skill\n---\n", encoding="utf-8")
+
+            linked_skill = skills_dir / "linked-skill"
+            linked_skill.mkdir()
+
+            outside = Path(tempfile.mkdtemp())
+            try:
+                target = outside / "SKILL.md"
+                target.write_text("---\nname: escaped\n---\n", encoding="utf-8")
+                (linked_skill / "SKILL.md").symlink_to(target)
+
+                entries = sms.find_skills_in_directory(root)
+                relative_paths = {str(entry["relative_path"]) for entry in entries}
+
+                self.assertEqual(relative_paths, {"safe-skill"})
+            finally:
+                target.unlink()
+                outside.rmdir()
+
     def test_find_github_skills_ignores_symlinked_directories(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -121,6 +148,43 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
             finally:
                 target.unlink()
                 outside.rmdir()
+
+    def test_copy_license_ignores_symlinked_license(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = root / "source"
+            docs = root / "docs"
+            source.mkdir()
+
+            outside = root / "outside-license.txt"
+            outside.write_text("secret license payload", encoding="utf-8")
+            (source / "LICENSE").symlink_to(outside)
+
+            previous_docs_dir = sms.DOCS_DIR
+            sms.DOCS_DIR = docs
+            try:
+                sms.copy_license(source)
+            finally:
+                sms.DOCS_DIR = previous_docs_dir
+
+            self.assertFalse((docs / "LICENSE-MICROSOFT").exists())
+
+    def test_copy_license_copies_regular_license(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = root / "source"
+            docs = root / "docs"
+            source.mkdir()
+            (source / "LICENSE").write_text("regular license", encoding="utf-8")
+
+            previous_docs_dir = sms.DOCS_DIR
+            sms.DOCS_DIR = docs
+            try:
+                sms.copy_license(source)
+            finally:
+                sms.DOCS_DIR = previous_docs_dir
+
+            self.assertEqual((docs / "LICENSE-MICROSOFT").read_text(encoding="utf-8"), "regular license")
 
 
 if __name__ == "__main__":

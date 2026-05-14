@@ -528,21 +528,21 @@ Recommended fix:
 
 # ALWAYS use idempotency keys for external calls:
 
-## Stripe example:
+### Stripe example:
 await stripe.paymentIntents.create({
   amount: 1000,
   currency: 'usd',
   idempotency_key: `order-${orderId}-payment`  # Critical!
 });
 
-## Email example:
+### Email example:
 await step.run("send-confirmation", async () => {
   const alreadySent = await checkEmailSent(orderId);
   if (alreadySent) return { skipped: true };
   return sendEmail(customer, orderId);
 });
 
-## Database example:
+### Database example:
 await db.query(`
   INSERT INTO orders (id, ...) VALUES ($1, ...)
   ON CONFLICT (id) DO NOTHING
@@ -569,14 +569,14 @@ Recommended fix:
 
 # Break long workflows into checkpointed steps:
 
-## WRONG - one long step:
+### WRONG - one long step:
 await step.run("process-all", async () => {
   for (const item of thousandItems) {
     await processItem(item);  // Hours of work, one checkpoint
   }
 });
 
-## CORRECT - many small steps:
+### CORRECT - many small steps:
 for (const item of thousandItems) {
   await step.run(`process-${item.id}`, async () => {
     return processItem(item);  // Checkpoint after each
@@ -613,7 +613,7 @@ Recommended fix:
 
 # ALWAYS set timeouts on activities:
 
-## Temporal:
+### Temporal:
 const activities = proxyActivities<typeof activitiesType>({
   startToCloseTimeout: '30 seconds',  # Required!
   scheduleToCloseTimeout: '5 minutes',
@@ -624,7 +624,7 @@ const activities = proxyActivities<typeof activitiesType>({
   }
 });
 
-## Inngest:
+### Inngest:
 await step.run("call-api", { timeout: "30s" }, async () => {
   return fetch(url, { signal: AbortSignal.timeout(25000) });
 });
@@ -700,7 +700,7 @@ Recommended fix:
 
 # ALWAYS use exponential backoff:
 
-## Temporal:
+### Temporal:
 const activities = proxyActivities({
   retry: {
     initialInterval: '1 second',
@@ -710,13 +710,13 @@ const activities = proxyActivities({
   }
 });
 
-## Inngest (built-in backoff):
+### Inngest (built-in backoff):
 {
   id: "my-function",
   retries: 5,  # Uses exponential backoff by default
 }
 
-## Manual backoff:
+### Manual backoff:
 const backoff = (attempt) => {
   const base = 1000;
   const max = 60000;

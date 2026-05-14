@@ -636,6 +636,25 @@
       "runtime_files": []
     },
     {
+      "id": "agenttrace-session-audit",
+      "path": "skills/agenttrace-session-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-agent-development",
       "path": "skills/ai-agent-development",
       "targets": {
@@ -1336,6 +1355,25 @@
     {
       "id": "antigravity-workflows",
       "path": "skills/antigravity-workflows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "aomi-transact",
+      "path": "skills/aomi-transact",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -5407,6 +5445,25 @@
       "runtime_files": []
     },
     {
+      "id": "brooks-lint",
+      "path": "skills/brooks-lint",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "browser-automation",
       "path": "skills/browser-automation",
       "targets": {
@@ -5618,6 +5675,25 @@
     {
       "id": "busybox-on-windows",
       "path": "skills/busybox-on-windows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "buywhere-product-catalog",
+      "path": "skills/buywhere-product-catalog",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -9484,6 +9560,25 @@
       "runtime_files": []
     },
     {
+      "id": "ejentum-reasoning-harness",
+      "path": "skills/ejentum-reasoning-harness",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Install the ejentum-mcp MCP server (`npx -y ejentum-mcp`) and provide an EJENTUM_API_KEY env var (free tier: 100 calls, no card, at https://ejentum.com/pricing). Add the server to your client's mcpServers config (Claude Code, Cursor, Cline, Windsurf, Codex CLI, Gemini CLI, Antigravity, or VS Code Copilot Chat).",
+        "docs": "https://github.com/ejentum/ejentum-mcp#installation"
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "electron-development",
       "path": "skills/electron-development",
       "targets": {
@@ -11859,6 +11954,25 @@
       "runtime_files": []
     },
     {
+      "id": "git-pr-review",
+      "path": "skills/git-pr-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "git-pr-workflows-git-workflow",
       "path": "skills/git-pr-workflows-git-workflow",
       "targets": {
@@ -13687,6 +13801,25 @@
       "runtime_files": []
     },
     {
+      "id": "ingest-youtube",
+      "path": "skills/ingest-youtube",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "inngest",
       "path": "skills/inngest",
       "targets": {
@@ -14457,6 +14590,25 @@
         "type": "none",
         "summary": "",
         "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "kubestellar-console",
+      "path": "skills/kubestellar-console",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Requires kc-agent binary (brew tap kubestellar/tap && brew install kc-agent)",
+        "docs": "https://github.com/kubestellar/console#quick-start"
       },
       "reasons": [],
       "blocked_reasons": {
@@ -15405,6 +15557,25 @@
       "runtime_files": []
     },
     {
+      "id": "logic-lens",
+      "path": "skills/logic-lens",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "logistics-exception-management",
       "path": "skills/logistics-exception-management",
       "targets": {
@@ -16122,6 +16293,25 @@
       "runtime_files": []
     },
     {
+      "id": "mcp-tool-developer",
+      "path": "skills/mcp-tool-developer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "memory-forensics",
       "path": "skills/memory-forensics",
       "targets": {
@@ -16540,6 +16730,31 @@
       "runtime_files": []
     },
     {
+      "id": "mock-hunter",
+      "path": "skills/mock-hunter",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "modern-javascript-patterns",
       "path": "skills/modern-javascript-patterns",
       "targets": {
@@ -16795,6 +17010,25 @@
     {
       "id": "multi-advisor",
       "path": "skills/multi-advisor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "multi-agent-architect",
+      "path": "skills/multi-agent-architect",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -17213,6 +17447,25 @@
     {
       "id": "new-rails-project",
       "path": "skills/new-rails-project",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "news-sentiment-engine",
+      "path": "skills/news-sentiment-engine",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -18230,6 +18483,25 @@
     {
       "id": "openclaw-github-repo-commander",
       "path": "skills/openclaw-github-repo-commander",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "options-flow-analyzer",
+      "path": "skills/options-flow-analyzer",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19370,6 +19642,25 @@
       "runtime_files": []
     },
     {
+      "id": "production-audit",
+      "path": "skills/production-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "production-code-audit",
       "path": "skills/production-code-audit",
       "targets": {
@@ -20343,6 +20634,25 @@
       "runtime_files": []
     },
     {
+      "id": "recursive-context-pruning-token-budgeting",
+      "path": "skills/recursive-context-pruning-token-budgeting",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "red-team-tactics",
       "path": "skills/red-team-tactics",
       "targets": {
@@ -20592,6 +20902,25 @@
     {
       "id": "revops",
       "path": "skills/revops",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "rich-elicitation",
+      "path": "skills/rich-elicitation",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -22665,6 +22994,25 @@
       "runtime_files": []
     },
     {
+      "id": "skill-audit",
+      "path": "skills/skill-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "skill-check",
       "path": "skills/skill-check",
       "targets": {
@@ -22915,25 +23263,6 @@
     {
       "id": "skill-writer",
       "path": "skills/skill-writer",
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": [],
-      "blocked_reasons": {
-        "codex": [],
-        "claude": []
-      },
-      "runtime_files": []
-    },
-    {
-      "id": "skills/x402-express-wrapper",
-      "path": "skills/skills/x402-express-wrapper",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -23421,6 +23750,25 @@
     {
       "id": "square-automation",
       "path": "skills/square-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "squirrel",
+      "path": "skills/squirrel",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -25015,6 +25363,25 @@
       "runtime_files": []
     },
     {
+      "id": "tokenwise",
+      "path": "skills/tokenwise",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tool-design",
       "path": "skills/tool-design",
       "targets": {
@@ -25604,6 +25971,25 @@
       "runtime_files": []
     },
     {
+      "id": "unity-ai-game-creator",
+      "path": "skills/unity-ai-game-creator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "unity-developer",
       "path": "skills/unity-developer",
       "targets": {
@@ -25644,6 +26030,25 @@
     {
       "id": "unreal-engine-cpp-pro",
       "path": "skills/unreal-engine-cpp-pro",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "unslop",
+      "path": "skills/unslop",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -26564,6 +26969,25 @@
       "runtime_files": []
     },
     {
+      "id": "wechat-official-account-strategist",
+      "path": "skills/wechat-official-account-strategist",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "weightloss-analyzer",
       "path": "skills/weightloss-analyzer",
       "targets": {
@@ -27096,6 +27520,44 @@
       "runtime_files": []
     },
     {
+      "id": "x402-express-wrapper",
+      "path": "skills/x402-express-wrapper",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "xiaohongshu-content-strategist",
+      "path": "skills/xiaohongshu-content-strategist",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "xlsx-official",
       "path": "skills/xlsx-official",
       "targets": {
@@ -27439,15 +27901,15 @@
     }
   ],
   "summary": {
-    "total_skills": 1435,
+    "total_skills": 1459,
     "supported": {
-      "codex": 1404,
-      "claude": 1419
+      "codex": 1427,
+      "claude": 1442
     },
     "blocked": {
-      "codex": 31,
-      "claude": 16
+      "codex": 32,
+      "claude": 17
     },
-    "manual_setup": 1
+    "manual_setup": 3
   }
 }

@@ -47,7 +47,7 @@ Agente que simula Bill Gates — cofundador da Microsoft, arquiteto da industria
 
 ---
 
-## 1.1 Quem E Bill Gates — A Pessoa Real
+### 1.1 Quem E Bill Gates — A Pessoa Real
 
 William Henry Gates III nasceu em 28 de outubro de 1955 em Seattle, Washington.
 Filho de William H. Gates Sr. (advogado proeminente e filantropo) e Mary Maxwell Gates
@@ -75,7 +75,7 @@ achavam que o dinheiro estava no hardware.
 "The question is not whether we can solve the problem. It's whether we can measure
 whether we're solving it."
 
-## 1.2 Linha Do Tempo Estrategica (Camadas De Resposta)
+### 1.2 Linha Do Tempo Estrategica (Camadas De Resposta)
 
 ```
 GATES 1975-1986 | FUNDADOR AGRESSIVO

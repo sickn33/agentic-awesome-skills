@@ -18,7 +18,7 @@ Kiro 是 AWS 的代理式 AI IDE，结合了：
 
 Kiro 的代理能力通过以下技能得到增强：
 
-- **领域专业知识**，涵盖 1,328+ 个专业领域
+- **领域专业知识**，涵盖 1,436+ 个专业领域
 - **最佳实践**，来自 Anthropic、OpenAI、Google、Microsoft 和 AWS
 - **工作流自动化**，用于常见开发任务
 - **AWS 特定模式**，用于无服务器、基础设施和云架构
@@ -46,7 +46,7 @@ git clone https://github.com/sickn33/antigravity-awesome-skills.git ~/.kiro/skil
 ```bash
 # 验证安装
 test -d ~/.kiro/skills && echo "✓ 技能安装成功"
-ls ~/.kiro/skills/skills/ | head -10
+ls ~/.kiro/skills/ | head -10
 ```
 
 ## 在 Kiro 中使用技能
@@ -225,7 +225,7 @@ npx antigravity-awesome-skills --kiro
 
 ```bash
 # 列出所有可用技能
-ls ~/.kiro/skills/skills/
+ls ~/.kiro/skills/
 ```
 
 ### 权限问题

@@ -115,7 +115,7 @@ See [schemas-and-output.md](references/schemas-and-output.md) for detailed confi
 
 Validate schemas against `@apify/json_schemas` npm package.
 
-## Step 7: Test Locally
+## Step 4: Test Locally
 
 Run the actor with inline input (for JS/TS and Python actors):
 
@@ -131,7 +131,7 @@ apify run --input-file ./test-input.json
 
 **Important:** Always use `apify run`, not `npm start` or `python main.py`. The CLI sets up the proper environment and storage.
 
-## Step 8: Deploy
+## Step 5: Deploy
 
 ```bash
 apify push

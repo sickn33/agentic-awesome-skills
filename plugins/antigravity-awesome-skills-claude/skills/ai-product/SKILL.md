@@ -227,7 +227,7 @@ Recommended fix:
 
 # Defense layers:
 
-## 1. Separate user input:
+### 1. Separate user input:
 ```typescript
 // BAD - injection possible
 const prompt = `Analyze this text: ${userInput}`;
@@ -239,16 +239,16 @@ const messages = [
 ];
 ```
 
-## 2. Input sanitization:
+### 2. Input sanitization:
 - Limit input length
 - Strip control characters
 - Detect prompt injection patterns
 
-## 3. Output filtering:
+### 3. Output filtering:
 - Check for system prompt leakage
 - Validate against expected patterns
 
-## 4. Least privilege:
+### 4. Least privilege:
 - LLM should not have dangerous capabilities
 - Limit tool access
 
@@ -607,17 +607,17 @@ Recommended fix:
 
 # Try in order:
 
-## 1. Better prompts:
+### 1. Better prompts:
 - Few-shot examples
 - Clearer instructions
 - Output format specification
 
-## 2. RAG:
+### 2. RAG:
 - Document retrieval
 - Knowledge base integration
 - Updates in real-time
 
-## 3. Fine-tuning (last resort):
+### 3. Fine-tuning (last resort):
 - When you need specific tone/style
 - When context window isn't enough
 - When latency matters (smaller fine-tuned model)

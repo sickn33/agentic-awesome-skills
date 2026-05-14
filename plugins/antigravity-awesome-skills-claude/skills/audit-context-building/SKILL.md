@@ -37,7 +37,7 @@ Do **not** use for:
 
 ---
 
-## 3. How This Skill Behaves
+## 2. How This Skill Behaves
 
 When active, Claude will:
 - Default to **ultra-granular analysis** of each block and line.
@@ -64,7 +64,7 @@ Goal: **deep, accurate understanding**, not conclusions.
 
 ---
 
-## 4. Phase 1 — Initial Orientation (Bottom-Up Scan)
+## 3. Phase 1 — Initial Orientation (Bottom-Up Scan)
 
 Before deep analysis, Claude performs a minimal mapping:
 
@@ -78,7 +78,7 @@ This establishes anchors for detailed analysis.
 
 ---
 
-## 5. Phase 2 — Ultra-Granular Function Analysis (Default Mode)
+## 4. Phase 2 — Ultra-Granular Function Analysis (Default Mode)
 
 Every non-trivial function receives full micro analysis.
 
@@ -199,7 +199,7 @@ Analysis is complete when all checklist items are satisfied and no unresolved "u
 
 ---
 
-## 6. Phase 3 — Global System Understanding
+## 5. Phase 3 — Global System Understanding
 
 After sufficient micro-analysis:
 
@@ -227,7 +227,7 @@ These clusters help guide the vulnerability-hunting phase.
 
 ---
 
-## 7. Stability & Consistency Rules
+## 6. Stability & Consistency Rules
 *(Anti-Hallucination, Anti-Contradiction)*
 
 Claude must:
@@ -255,7 +255,7 @@ Claude must:
 
 ---
 
-## 8. Subagent Usage
+## 7. Subagent Usage
 
 Claude may spawn subagents for:
 - Dense or complex functions.
@@ -275,7 +275,7 @@ Subagents must:
 
 ---
 
-## 9. Relationship to Other Phases
+## 8. Relationship to Other Phases
 
 This skill runs **before**:
 - Vulnerability discovery
@@ -291,7 +291,7 @@ It exists solely to build:
 
 ---
 
-## 10. Non-Goals
+## 9. Non-Goals
 
 While active, Claude should NOT:
 - Identify vulnerabilities

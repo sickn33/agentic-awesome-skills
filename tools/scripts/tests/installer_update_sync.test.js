@@ -80,6 +80,38 @@ try {
     "install manifest should mirror the latest filtered install entries",
   );
 
+  const legacyTargetDir = path.join(tmpRoot, "legacy-target");
+  fs.mkdirSync(path.join(legacyTargetDir, "removed-skill"), { recursive: true });
+  fs.writeFileSync(
+    path.join(legacyTargetDir, ".antigravity-install-manifest.json"),
+    JSON.stringify(
+      {
+        schemaVersion: 1,
+        updatedAt: new Date().toISOString(),
+        entries: ["skills/removed-skill", "skills/nested/skill-c"],
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
+
+  installer.installForTarget(
+    repoV2,
+    { name: "LegacyManifest", path: legacyTargetDir },
+    installer.buildInstallSelectors({ categoryArg: "backend" }),
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(legacyTargetDir, "removed-skill")),
+    false,
+    "legacy skills/<name> manifest entries should prune the flattened installed path",
+  );
+  assert.deepStrictEqual(
+    readManifestEntries(legacyTargetDir),
+    ["docs", "nested/skill-c"],
+    "legacy manifest entries should be normalized after update",
+  );
+
   const badTargetPath = path.join(tmpRoot, "bad-target");
   fs.writeFileSync(badTargetPath, "not-a-directory", "utf8");
   const badTargetCheck = spawnSync(

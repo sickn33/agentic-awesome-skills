@@ -181,6 +181,9 @@ def find_skills_in_directory(source_dir: Path):
         if skill_md is None:
             continue
 
+        if not is_safe_regular_file(skill_md, source_root):
+            continue
+
         try:
             relative_path = PurePosixPath(item.relative_to(skills_source).as_posix())
         except ValueError:
@@ -424,8 +427,9 @@ def save_attribution(metadata: list):
 def copy_license(source_dir: Path):
     """Copy the Microsoft LICENSE to docs/."""
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    if (source_dir / "LICENSE").exists():
-        shutil.copy2(source_dir / "LICENSE", DOCS_DIR / "LICENSE-MICROSOFT")
+    license_file = source_dir / "LICENSE"
+    if is_safe_regular_file(license_file, source_dir):
+        shutil.copy2(license_file.resolve(), DOCS_DIR / "LICENSE-MICROSOFT")
 
 
 def main():

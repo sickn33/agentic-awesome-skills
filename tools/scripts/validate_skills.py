@@ -34,6 +34,7 @@ WHEN_TO_USE_PATTERNS = [
     re.compile(r"^##\s+When\s+to\s+Use", re.MULTILINE | re.IGNORECASE),
     re.compile(r"^##\s+Use\s+this\s+skill\s+when", re.MULTILINE | re.IGNORECASE),
     re.compile(r"^##\s+When\s+to\s+Use\s+This\s+Skill", re.MULTILINE | re.IGNORECASE),
+    re.compile(r"^##\s+When\s+to\s+activate\s+this\s+skill", re.MULTILINE | re.IGNORECASE),
 ]
 SOURCE_REPO_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 VALID_SOURCE_TYPES = {"official", "community", "self"}
@@ -82,6 +83,7 @@ def parse_frontmatter(content, rel_path=None):
 def collect_validation_results(skills_dir, strict_mode=False):
     errors = []
     warnings = []
+    advisories = []
     skill_count = 0
 
     # Pre-compiled regex
@@ -165,12 +167,12 @@ def collect_validation_results(skills_dir, strict_mode=False):
 
             # Date Added Validation (optional field)
             if "date_added" in metadata:
-                if not date_pattern.match(metadata["date_added"]):
+                date_added = metadata["date_added"]
+                if not isinstance(date_added, str) or not date_pattern.match(date_added):
                     errors.append(f"❌ {rel_path}: Invalid 'date_added' format. Must be YYYY-MM-DD (e.g., '2024-01-15'), got '{metadata['date_added']}'")
             else:
                 msg = f"ℹ️  {rel_path}: Missing 'date_added' field (optional, but recommended)"
-                if strict_mode: warnings.append(msg)
-                # In normal mode, we just silently skip this
+                advisories.append(msg)
 
             # 3. Content Checks (Triggers)
             if not has_when_to_use_section(content):
@@ -202,6 +204,7 @@ def collect_validation_results(skills_dir, strict_mode=False):
     return {
         "skill_count": skill_count,
         "warnings": warnings,
+        "advisories": advisories,
         "errors": errors,
         "strict_mode": strict_mode,
     }
@@ -215,6 +218,7 @@ def validate_skills(skills_dir, strict_mode=False):
 
     results = collect_validation_results(skills_dir, strict_mode=strict_mode)
     warnings = results["warnings"]
+    advisories = results["advisories"]
     errors = results["errors"]
     skill_count = results["skill_count"]
 
@@ -225,6 +229,11 @@ def validate_skills(skills_dir, strict_mode=False):
         print(f"\n⚠️  Found {len(warnings)} Warnings:")
         for w in warnings:
             print(w)
+
+    if advisories:
+        print(f"\nℹ️  Found {len(advisories)} Advisories:")
+        for advisory in advisories:
+            print(advisory)
 
     if errors:
         print(f"\n❌ Found {len(errors)} Critical Errors:")

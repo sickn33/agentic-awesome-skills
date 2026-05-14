@@ -108,6 +108,7 @@
     "performance-testing-ai": "performance-testing-review-ai-review",
     "performance-testing-agent": "performance-testing-review-multi-agent-review",
     "python-development-scaffold": "python-development-python-scaffold",
+    "recursive-context-budgeting": "recursive-context-pruning-token-budgeting",
     "sankhya-dashboard-pratices": "sankhya-dashboard-html-jsp-custom-best-pratices",
     "security-compliance-check": "security-compliance-compliance-check",
     "security-scanning-dependencies": "security-scanning-security-dependencies",
@@ -121,12 +122,12 @@
     "seo-aeo-auditor": "seo-aeo-content-quality-auditor",
     "seo-aeo-generator": "seo-aeo-meta-description-generator",
     "seo-forensic-response": "seo-forensic-incident-response",
-    "x402-express-wrapper": "skills/x402-express-wrapper",
     "startup-business-case": "startup-business-analyst-business-case",
     "startup-business-projections": "startup-business-analyst-financial-projections",
     "startup-business-opportunity": "startup-business-analyst-market-opportunity",
     "systems-programming-project": "systems-programming-rust-project",
     "team-collaboration-notes": "team-collaboration-standup-notes",
+    "wechat-official-strategist": "wechat-official-account-strategist",
     "wordpress-centric-skill": "wordpress-centric-high-seo-optimized-blogwriting-skill",
     "shopify—development": "shopify-development"
   }

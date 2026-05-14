@@ -195,7 +195,7 @@ Track these metrics weekly and trend monthly:
 - For the comprehensive edge case library with full analysis, see [edge-cases.md](references/edge-cases.md)
 - For complete communication templates with variables and tone guidance, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you need to **triage and resolve logistics exceptions or design exception-handling playbooks**:
 
 - Handling delays, damages, shortages, misdeliveries, and claims across LTL, FTL, parcel, intermodal, ocean, or air.

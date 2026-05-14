@@ -78,7 +78,7 @@ Scan the repository for build files to determine the primary language for code e
 - Use Mermaid for workflow diagrams (dark-mode colors)
 - Ground all claims in actual code — cite `(file_path:line_number)`
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations

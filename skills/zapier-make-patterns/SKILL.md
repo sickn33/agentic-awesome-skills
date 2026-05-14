@@ -111,7 +111,7 @@ Todoist Module:
   - Due String: tomorrow
 """
 
-## Best Practices:
+### Best Practices:
 - Use descriptive Zap/Scenario names
 - Test with real sample data
 - Use filters to prevent unwanted runs
@@ -209,7 +209,7 @@ Zap: "Route Support Tickets"
 # Make's visual router makes complex branching clear
 """
 
-## Best Practices:
+### Best Practices:
 - Always have a fallback/else path
 - Test each path independently
 - Document which conditions trigger which path
@@ -265,7 +265,7 @@ Math:
   {{round(1.price * 0.8; 2)}}  # 20% discount, 2 decimals
 """
 
-## Best Practices:
+### Best Practices:
 - Transform early in the workflow
 - Use filters to skip invalid data
 - Log transformations for debugging
@@ -317,7 +317,7 @@ Example:
            → Continue scenario
 """
 
-## Best Practices:
+### Best Practices:
 - Always add error handlers for external APIs
 - Log errors to a spreadsheet/database
 - Set up Slack/email alerts for critical failures
@@ -364,7 +364,7 @@ Aggregator combines results back together.
 Use Array Aggregator for collecting processed items.
 """
 
-## Best Practices:
+### Best Practices:
 - Use aggregators to combine results
 - Consider batch limits (some APIs limit to 100)
 - Watch operation/task counts for cost
@@ -411,7 +411,7 @@ Scenario Schedule Options:
 [Gmail: Send Report]
 """
 
-## Best Practices:
+### Best Practices:
 - Consider timezone differences
 - Add buffer time for long-running jobs
 - Log execution times for monitoring
@@ -441,7 +441,7 @@ Recommended fix:
 
 # If you need dynamic values:
 
-## Zapier approach:
+### Zapier approach:
 1. Add a "Find" or "Search" action first
    - HubSpot: Find Contact → returns contact_id
    - Slack: Find User by Email → returns user_id
@@ -450,7 +450,7 @@ Recommended fix:
    - Dropdown: Use Custom Value
    - Select the ID from the search step
 
-## Make approach:
+### Make approach:
 1. Add a Search module first
    - Search Contacts: filter by email
    - Returns: contact_id
@@ -672,7 +672,7 @@ Recommended fix:
    - Store processed IDs
    - Skip if ID exists
 
-## Zapier example:
+### Zapier example:
 [Webhook Trigger]
    ↓
 [Airtable: Find Records] - search by event_id
@@ -783,7 +783,7 @@ Recommended fix:
    - Don't schedule at exactly midnight
    - Avoid on-the-hour (busy periods)
 
-## Make timezone handling:
+### Make timezone handling:
 - Scenarios use account timezone setting
 - formatDate() function respects timezone
 - Use parseDate() with explicit timezone

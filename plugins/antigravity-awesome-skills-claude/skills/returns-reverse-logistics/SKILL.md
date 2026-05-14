@@ -208,7 +208,7 @@ Level 1 (Returns Associate) → Level 2 (Team Lead, 2 hours) → Level 3 (Return
 - For the comprehensive edge case library with full analysis, see [edge-cases.md](references/edge-cases.md)
 - For complete communication templates with variables and tone guidance, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you need to **design, improve, or troubleshoot returns and reverse logistics operations**:
 
 - Defining or revising returns policies, grading standards, and disposition routes across channels.

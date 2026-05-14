@@ -108,7 +108,7 @@ A combinação que Karpathy representa é genuinamente rara:
 
 ---
 
-## 2.1 — Software 2.0
+### 2.1 — Software 2.0
 
 Publicado no Medium em 2017, este é o ensaio mais original e influente de Karpathy.
 A tese central mudou como a comunidade pensa sobre o que é programação:
@@ -147,7 +147,7 @@ the training data and curate the dataset. We are reprogramming computers with da
 **Com LLMs (2023):** Dataset = internet inteira. Loss = cross-entropy no próximo token.
 Emergência de capacidades que ninguém especificou explicitamente. Software 2.0 em escala máxima.
 
-## 2.2 — Llms Como Sistema Operacional
+### 2.2 — Llms Como Sistema Operacional
 
 Esta analogia, desenvolvida em 2023 (especialmente na palestra "State of GPT" no
 Microsoft Build), reframeu como pensar em LLMs como plataforma:
@@ -182,7 +182,7 @@ entendem linguagem natural e podem executar tarefas complexas quando instruídos
 em inglês, então inglês se tornou literalmente uma linguagem de programação —
 uma que qualquer falante nativo já "sabe", sem precisar aprender sintaxe especial.
 
-## 2.3 — Bottom-Up Learning (Filosofia Pedagógica Central)
+### 2.3 — Bottom-Up Learning (Filosofia Pedagógica Central)
 
 A regra mais importante: construa do zero antes de usar a biblioteca. Entenda a
 abstração antes de depender dela.
@@ -205,7 +205,7 @@ o estudante entende cada componente de qualquer LLM moderno.
 **Citação:** "The library is just convenience; the math is the substance. Once you
 understand how backprop works, you can use PyTorch with full confidence."
 
-## 2.4 — Vibe Coding
+### 2.4 — Vibe Coding
 
 Termo cunhado por Karpathy em fevereiro de 2025 em um tweet que viralizou na
 comunidade de programação. Define uma nova modalidade de desenvolvimento de
@@ -243,7 +243,7 @@ pequenos e exploratórios: superpotência. Para engenharia séria: ainda precisa
 pessoas que entendem o código. Mesmo "vibers" se beneficiam de fundamentos sólidos —
 para reconhecer quando o LLM gerou algo incorreto.
 
-## 2.5 — Scaling Laws E Emergência
+### 2.5 — Scaling Laws E Emergência
 
 **O que são scaling laws:** Relações empíricas mostrando que performance melhora
 previsível e regularmente com mais parâmetros (N), mais dados (D), mais compute (C).
@@ -264,7 +264,7 @@ teoricamente melhor que não escala em hardware disponível.
 
 ---
 
-## 3.1 — Contexto E Missão
+### 3.1 — Contexto E Missão
 
 Karpathy entrou na Tesla em junho de 2017 como Director of AI, assumindo
 responsabilidade pela equipe de visão e machine learning do Autopilot.
@@ -276,7 +276,7 @@ faixa para uma arquitetura de visão end-to-end capaz de condução autônoma em
 condições gerais. A stack construída foi a mais complexa e sofisticada de visão
 computacional já deployada em escala de produção massiva.
 
-## 3.2 — A Decisão Cameras-Only (Vs Lidar)
+### 3.2 — A Decisão Cameras-Only (Vs Lidar)
 
 Este é talvez o debate técnico mais importante da carreira de Karpathy, e ele
 articulou o argumento com precisão cirúrgica:
@@ -314,7 +314,7 @@ articulou o argumento com precisão cirúrgica:
 - A abordagem cameras-only coloca peso enorme na rede neural — funciona se e
   somente se a rede for suficientemente boa, o que é uma aposta high-stakes.
 
-## 3.3 — Hydranet: Uma Rede Para Tudo
+### 3.3 — Hydranet: Uma Rede Para Tudo
 
 Apresentado no Tesla AI Day (agosto 2021), o HydraNet é a arquitetura central
 de visão da Tesla descrita por Karpathy:
@@ -351,7 +351,7 @@ Backbone ──────────┼─── Head: Velocity Estimation (v
    um espaço de features compartilhado — o modelo "vê" o mundo 360° como um único
    volume de features, não como imagens separadas.
 
-## 3.4 — A Data Engine: O Produto Real
+### 3.4 — A Data Engine: O Produto Real
 
 O conceito mais sofisticado que Karpathy desenvolveu e articulou na Tesla.
 Sua tese: o modelo de produção não é o produto. A data engine — o sistema de
@@ -392,7 +392,7 @@ loop fechado entre frota, anotação e treinamento — é o produto.
 
 **Citação:** "The data engi
 
-## 3.5 — Dojo: Supercomputador Para Visão
+### 3.5 — Dojo: Supercomputador Para Visão
 
 Anunciado no Tesla AI Day 2021, Dojo foi o supercomputador proprietário da Tesla
 para treinamento de modelos de visão. Karpathy foi central na visão técnica:
@@ -403,7 +403,7 @@ para treinamento de modelos de visão. Karpathy foi central na visão técnica:
 - A decisão de construir hardware próprio reflete a filosofia de controle da stack
   que tanto Karpathy quanto Musk defendem
 
-## 3.6 — O Que Karpathy Aprendeu Na Tesla
+### 3.6 — O Que Karpathy Aprendeu Na Tesla
 
 Em entrevistas e tweets após sair, Karpathy articulou as lições mais importantes:
 
@@ -424,7 +424,7 @@ Em entrevistas e tweets após sair, Karpathy articulou as lições mais importan
 
 ---
 
-## 4.1 — Micrograd
+### 4.1 — Micrograd
 
 **Repositório:** github.com/karpathy/micrograd
 **Tamanho:** ~100 linhas de Python puro

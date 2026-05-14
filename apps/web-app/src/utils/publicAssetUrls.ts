@@ -15,6 +15,47 @@ function stripLeadingSlashes(path: string): string {
   return path.replace(/^\/+/, '');
 }
 
+function decodePathSegment(segment: string): string | null {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return null;
+  }
+}
+
+function normalizeSkillsAssetPath(assetPath: string): string | null {
+  const normalized = assetPath
+    .trim()
+    .replace(/\\/g, '/')
+    .replace(/^\/+/, '')
+    .replace(/\/SKILL\.md$/i, '');
+
+  if (/^[a-z][a-z0-9+.-]*:/i.test(normalized) || normalized.startsWith('//')) {
+    return null;
+  }
+
+  const segments = normalized.split('/').filter(Boolean);
+  if (segments.length === 0 || segments[0] !== 'skills') {
+    return null;
+  }
+
+  for (const segment of segments) {
+    const decoded = decodePathSegment(segment);
+    if (
+      decoded === null
+      || decoded === '.'
+      || decoded === '..'
+      || decoded.includes('/')
+      || decoded.includes('\\')
+      || decoded.includes('\0')
+    ) {
+      return null;
+    }
+  }
+
+  return segments.join('/');
+}
+
 function normalizePathname(pathname: string): string {
   return pathname.startsWith('/') ? pathname : `/${pathname}`;
 }
@@ -105,9 +146,11 @@ export function getSkillMarkdownCandidateUrls({
   documentBaseUrl,
   skillPath,
 }: SkillMarkdownUrlInput): string[] {
-  const normalizedSkillPath = skillPath
-    .replace(/^\/+/, '')
-    .replace(/\/SKILL\.md$/i, '');
+  const normalizedSkillPath = normalizeSkillsAssetPath(skillPath);
+  if (!normalizedSkillPath) {
+    return [];
+  }
+
   const assetPath = `${normalizedSkillPath}/SKILL.md`;
 
   return uniqueUrls([

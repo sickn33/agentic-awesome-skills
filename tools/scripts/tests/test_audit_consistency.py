@@ -98,7 +98,7 @@ If you want a faster answer than "browse all {count_label} skills", start with a
             encoding="utf-8",
         )
         (root / "docs" / "integrations" / "jetski-cortex.md").write_text(
-            "1.304+ skill\nOver 1.304 skills, this approach\n",
+            f"{count_label} skill\nWith {count_label} skills, this approach\n",
             encoding="utf-8",
         )
         (root / "docs" / "integrations" / "jetski-gemini-loader" / "README.md").write_text(

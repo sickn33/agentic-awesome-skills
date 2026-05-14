@@ -197,6 +197,46 @@ describe('refresh-skills plugin security', () => {
     expect(JSON.parse(res.body).success).toBe(true);
   });
 
+  it('does not reset local repository state when fast-forward sync fails', async () => {
+    execSync.mockImplementation((command) => {
+      if (command === 'git --version') return '';
+      if (command === 'git rev-parse --git-dir') return '.git';
+      if (command === 'git remote') return 'origin\nupstream\n';
+      if (command === 'git rev-parse HEAD') return 'abc123';
+      if (command === 'git fetch upstream main') return '';
+      if (command === 'git rev-parse upstream/main') return 'def456';
+      if (command === 'git merge upstream/main --ff-only') {
+        throw new Error('Not possible to fast-forward');
+      }
+      if (command.startsWith('git reset --hard')) {
+        throw new Error('reset should not be called');
+      }
+      return '';
+    });
+
+    const handler = await loadRefreshHandler();
+    const req = {
+      method: 'POST',
+      headers: {
+        host: 'localhost:5173',
+        origin: 'http://localhost:5173',
+      },
+      socket: {
+        remoteAddress: '127.0.0.1',
+      },
+    };
+    const res = createResponse();
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(500);
+    expect(JSON.parse(res.body).error).toMatch('Fast-forward sync failed');
+    expect(execSync).not.toHaveBeenCalledWith(
+      expect.stringContaining('git reset --hard'),
+      expect.anything(),
+    );
+  });
+
   it('rejects POST requests with missing host/origin headers', async () => {
     const handler = await loadRefreshHandler();
     const req = {

@@ -16,6 +16,26 @@ const audioExample = fs.readFileSync(
   path.join(repoRoot, 'skills', 'audio-transcriber', 'examples', 'basic-transcription.sh'),
   'utf8',
 );
+const aomiSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'aomi-transact', 'SKILL.md'),
+  'utf8',
+);
+const mockHunterSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'mock-hunter', 'SKILL.md'),
+  'utf8',
+);
+
+function fencedBlocks(content, language) {
+  const blocks = [];
+  const blockRe = new RegExp(`^\\\`\\\`\\\`${language}\\n([\\s\\S]*?)^\\\`\\\`\\\``, 'gm');
+  let match;
+
+  while ((match = blockRe.exec(content)) !== null) {
+    blocks.push(match[1]);
+  }
+
+  return blocks;
+}
 
 function findSkillFiles(skillsRoot) {
   const files = [];
@@ -170,6 +190,14 @@ assert.strictEqual(/\|\s*(bash|sh)\b/.test(apifySkill), false, 'SKILL.md must no
 assert.strictEqual(/\|\s*iex\b/i.test(apifySkill), false, 'SKILL.md must not recommend PowerShell pipe-to-iex installs');
 assert.strictEqual(/apify login -t\b/.test(apifySkill), false, 'SKILL.md must not put tokens on the command line');
 assert.strictEqual(/\bcurl\b[\s\S]*?\|\s*(?:bash|sh)\b/i.test(apifyCliReference), false, 'cli reference must not recommend pipe-to-shell installs');
+assert.strictEqual(
+  fencedBlocks(aomiSkill, 'bash').some((block) => /\baomi\s+tx\s+sign\b/.test(block)),
+  false,
+  'Aomi runnable bash examples must stop before signing',
+);
+assert.match(mockHunterSkill, /^risk:\s*critical$/m, 'MockHunter must not be classified as plugin-safe');
+assert.match(mockHunterSkill, /^\s+codex:\s*blocked$/m, 'MockHunter must be blocked from Codex plugin bundle');
+assert.match(mockHunterSkill, /^\s+claude:\s*blocked$/m, 'MockHunter must be blocked from Claude plugin bundle');
 
 function violationCount(list) {
   return list.length;

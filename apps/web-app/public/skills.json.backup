@@ -774,6 +774,28 @@
     }
   },
   {
+    "id": "agenttrace-session-audit",
+    "path": "skills/agenttrace-session-audit",
+    "category": "development",
+    "name": "agenttrace-session-audit",
+    "description": "Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ai-agent-development",
     "path": "skills/ai-agent-development",
     "category": "granular-workflow-bundle",
@@ -1580,6 +1602,28 @@
     "risk": "none",
     "source": "self",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "aomi-transact",
+    "path": "skills/aomi-transact",
+    "category": "ai-ml",
+    "name": "aomi-transact",
+    "description": "Build natural-language crypto/DeFi agents and EVM MCP plugins (Claude Code, Cursor, Codex, Gemini). Aomi turns prompts into wallet-signed txs on Ethereum, Base, Arbitrum, Optimism, Polygon, Linea \u2014 non-custodial, fork-simulated. 40+ apps: Uniswap, Aave, Lido, Morpho, GMX, Hyperliquid, Polymarket.",
+    "risk": "critical",
+    "source": "aomi-labs/skills (MIT)",
+    "date_added": "2026-05-06",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -6356,6 +6400,28 @@
     }
   },
   {
+    "id": "brooks-lint",
+    "path": "skills/brooks-lint",
+    "category": "development",
+    "name": "brooks-lint",
+    "description": "AI code reviewer grounded in classic software engineering books for catching design smells, coupling issues, and architectural risks.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-04-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "browser-automation",
     "path": "skills/browser-automation",
     "category": "test-automation",
@@ -6606,6 +6672,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "buywhere-product-catalog",
+    "path": "skills/buywhere-product-catalog",
+    "category": "ecommerce",
+    "name": "buywhere-product-catalog",
+    "description": "Use BuyWhere's MCP and API surfaces to add product search, price comparison, and deal discovery to AI shopping agents.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-04-29",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -11096,6 +11184,28 @@
     }
   },
   {
+    "id": "ejentum-reasoning-harness",
+    "path": "skills/ejentum-reasoning-harness",
+    "category": "ai-ml",
+    "name": "ejentum-reasoning-harness",
+    "description": "MCP server exposing four cognitive harness modes (reasoning, code, anti-deception, memory). Each call returns an engineered scaffold (failure pattern, procedure, suppression vectors, falsification test) the agent ingests before generating.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Install the ejentum-mcp MCP server (`npx -y ejentum-mcp`) and provide an EJENTUM_API_KEY env var (free tier: 100 calls, no card, at https://ejentum.com/pricing). Add the server to your client's mcpServers config (Claude Code, Cursor, Cline, Windsurf, Codex CLI, Gemini CLI, Antigravity, or VS Code Copilot Chat).",
+        "docs": "https://github.com/ejentum/ejentum-mcp#installation"
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "electron-development",
     "path": "skills/electron-development",
     "category": "development",
@@ -13692,6 +13802,28 @@
     }
   },
   {
+    "id": "git-pr-review",
+    "path": "skills/git-pr-review",
+    "category": "workflow",
+    "name": "git-pr-review",
+    "description": "Generate a concise and structured PR description from commit history with minimal token usage",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "git-pr-workflows-git-workflow",
     "path": "skills/git-pr-workflows-git-workflow",
     "category": "workflow",
@@ -15828,6 +15960,28 @@
     }
   },
   {
+    "id": "ingest-youtube",
+    "path": "skills/ingest-youtube",
+    "category": "uncategorized",
+    "name": "ingest-youtube",
+    "description": "Pull a YouTube video transcript into a queryable markdown vault with yt-dlp subtitle discovery, VTT cleanup, metadata frontmatter, and capture-seed stubs.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "inngest",
     "path": "skills/inngest",
     "category": "workflow",
@@ -16725,6 +16879,28 @@
         "type": "none",
         "summary": "",
         "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "kubestellar-console",
+    "path": "skills/kubestellar-console",
+    "category": "devops",
+    "name": "kubestellar-console",
+    "description": "Multi-cluster Kubernetes dashboard with AI-powered operations via MCP server and 10+ built-in agent skills",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-04-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Requires kc-agent binary (brew tap kubestellar/tap && brew install kc-agent)",
+        "docs": "https://github.com/kubestellar/console#quick-start"
       },
       "reasons": []
     }
@@ -17702,6 +17878,28 @@
     }
   },
   {
+    "id": "logic-lens",
+    "path": "skills/logic-lens",
+    "category": "development",
+    "name": "logic-lens",
+    "description": "AI-powered Claude Code skill that performs deep code review using formal logic and reasoning frameworks to detect bugs, anti-patterns, and security risks beyond what linters catch.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-04-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "logistics-exception-management",
     "path": "skills/logistics-exception-management",
     "category": "uncategorized",
@@ -18303,8 +18501,8 @@
     "category": "ai-ml",
     "name": "manage-skills",
     "description": "Discover, list, create, edit, toggle, copy, move, and delete AI agent skills across 11 tools (Cursor, Claude, Agents, Windsurf, Copilot, Codex, Cline, Aider, Continue, Roo Code, Augment)",
-    "risk": "unknown",
-    "source": "unknown",
+    "risk": "critical",
+    "source": "community",
     "date_added": null,
     "plugin": {
       "targets": {
@@ -18508,6 +18706,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "mcp-tool-developer",
+    "path": "skills/mcp-tool-developer",
+    "category": "developer-tools",
+    "name": "mcp-tool-developer",
+    "description": "Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publishing.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-13",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19028,6 +19248,30 @@
     }
   },
   {
+    "id": "mock-hunter",
+    "path": "skills/mock-hunter",
+    "category": "testing",
+    "name": "mock-hunter",
+    "description": "Audit a live web page in five phases (catalog, click, trace, classify, report) to identify mock data, hardcoded values, LLM-generated metrics, and broken endpoints. Outputs a markdown report with REAL/MOCK/LLM/HARDCODED/BROKEN/UNKNOWN verdicts per visible value.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-07",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    }
+  },
+  {
     "id": "modern-javascript-patterns",
     "path": "skills/modern-javascript-patterns",
     "category": "development",
@@ -19324,6 +19568,28 @@
     "risk": "none",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "multi-agent-architect",
+    "path": "skills/multi-agent-architect",
+    "category": "ai-ml",
+    "name": "multi-agent-architect",
+    "description": "Design and optimize production-grade multi-agent systems with LangGraph, LangChain, and DeepAgents for complex AI workflows.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19830,6 +20096,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "news-sentiment-engine",
+    "path": "skills/news-sentiment-engine",
+    "category": "research",
+    "name": "news-sentiment-engine",
+    "description": "Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-13",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20999,6 +21287,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "options-flow-analyzer",
+    "path": "skills/options-flow-analyzer",
+    "category": "finance",
+    "name": "options-flow-analyzer",
+    "description": "Real vs lottery call separation for options P/C ratio analysis \u2014 prevents signal inversion from deep OTM noise",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-13",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22333,6 +22643,28 @@
     }
   },
   {
+    "id": "production-audit",
+    "path": "skills/production-audit",
+    "category": "security",
+    "name": "production-audit",
+    "description": "Audit a shipped repo for production-readiness gaps across RLS, webhooks, secrets, grants, Stripe idempotency, mobile UX, and deployment health.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "production-code-audit",
     "path": "skills/production-code-audit",
     "category": "architecture",
@@ -23457,6 +23789,28 @@
     }
   },
   {
+    "id": "recursive-context-pruning-token-budgeting",
+    "path": "skills/recursive-context-pruning-token-budgeting",
+    "category": "prompt-engineering",
+    "name": "recursive-context-pruning-token-budgeting",
+    "description": "Optimizes AI agent performance by pruning redundant context, managing token usage, and enforcing ultra-concise, direct-to-value responses.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-05-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "red-team-tactics",
     "path": "skills/red-team-tactics",
     "category": "security",
@@ -23751,6 +24105,28 @@
     "risk": "unknown",
     "source": "https://github.com/coreyhaines31/marketingskills",
     "date_added": "2026-03-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "rich-elicitation",
+    "path": "skills/rich-elicitation",
+    "category": "productivity",
+    "name": "rich-elicitation",
+    "description": "Asks clarifying questions in multiple rounds before starting ambiguous tasks. Fires when 2+ task dimensions each have 3+ viable answers.",
+    "risk": "none",
+    "source": "self",
+    "date_added": "2026-05-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26055,6 +26431,28 @@
     }
   },
   {
+    "id": "skill-audit",
+    "path": "skills/skill-audit",
+    "category": "security",
+    "name": "skill-audit",
+    "description": "Pre-install security scanner for AI agent skills. 7.5% of 14,706 skills are malicious. Audit before you trust.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "skill-check",
     "path": "skills/skill-check",
     "category": "development",
@@ -26889,6 +27287,28 @@
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "squirrel",
+    "path": "skills/squirrel",
+    "category": "development",
+    "name": "squirrel",
+    "description": "Full-cycle AI coding skill: plans, builds, tests, lints, fixes bugs, and writes production-grade docs. Auto-detects project state and adapts its 8-phase pipeline.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-04-29",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -28751,6 +29171,28 @@
     }
   },
   {
+    "id": "tokenwise",
+    "path": "skills/tokenwise",
+    "category": "developer-tools",
+    "name": "tokenwise",
+    "description": "Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper tiers before you trust the savings.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "tool-design",
     "path": "skills/tool-design",
     "category": "ai-ml",
@@ -29433,6 +29875,28 @@
     }
   },
   {
+    "id": "unity-ai-game-creator",
+    "path": "skills/unity-ai-game-creator",
+    "category": "game-development",
+    "name": "unity-ai-game-creator",
+    "description": "Transform raw game ideas into complete Unity projects with AI-powered asset generation, scene blueprints, music/SFX prompts, and step-by-step development procedures using Unity 6+ and modern AI tools.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "unity-developer",
     "path": "skills/unity-developer",
     "category": "game-development",
@@ -29485,6 +29949,28 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "unslop",
+    "path": "skills/unslop",
+    "category": "writing",
+    "name": "unslop",
+    "description": "Post-process AI-generated text through the unslop CLI to strip AI writing patterns before publishing",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-04-25",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -30581,6 +31067,28 @@
     }
   },
   {
+    "id": "wechat-official-account-strategist",
+    "path": "skills/wechat-official-account-strategist",
+    "category": "marketing",
+    "name": "wechat-official-account-strategist",
+    "description": "Grow WeChat Official Accounts (\u5fae\u4fe1\u516c\u4f17\u53f7) with high-conversion content strategy, title formulas, article architecture, and Mini-Program integration.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "weightloss-analyzer",
     "path": "skills/weightloss-analyzer",
     "category": "health",
@@ -30915,10 +31423,10 @@
     "path": "skills/wordpress-centric-high-seo-optimized-blogwriting-skill",
     "category": "content",
     "name": "wordpress-centric-high-seo-optimized-blogwriting-skill",
-    "description": "Use this skill when the user asks to write a blog post, article, or SEO content. This applies a professional structure, truth boxes, click-bait-free accurate information, and outputs direct WordPress-ready content.",
-    "risk": "unknown",
-    "source": "unknown",
-    "date_added": null,
+    "description": "Create long-form, high-quality, SEO-optimized blog posts ready for WordPress with truth boxes and FAQ schema.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-04-12",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31201,7 +31709,7 @@
     "path": "skills/x-twitter-scraper",
     "category": "data",
     "name": "x-twitter-scraper",
-    "description": "X (Twitter) data platform skill \u2014 tweet search, user lookup, follower extraction, engagement metrics, giveaway draws, monitoring, webhooks, 19 extraction tools, MCP server.",
+    "description": "X/Twitter automation skill for tweet search, follower export, posting, DMs, webhooks, MCP, SDKs, Hermes Tweet, and TweetClaw.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-28",
@@ -31220,13 +31728,35 @@
   },
   {
     "id": "x402-express-wrapper",
-    "path": "skills/skills/x402-express-wrapper",
+    "path": "skills/x402-express-wrapper",
     "category": "backend",
     "name": "x402-express-wrapper",
     "description": "Wrapper oficial de M2MCent (Node.js) para inyectar muros de pago x402 en APIs o servidores Model Context Protocol (MCP). Usar al construir nuevos servicios que requieran monetizaci\u00f3n m\u00e1quina a m\u00e1quina.",
-    "risk": "unknown",
-    "source": "unknown",
+    "risk": "critical",
+    "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "xiaohongshu-content-strategist",
+    "path": "skills/xiaohongshu-content-strategist",
+    "category": "marketing",
+    "name": "xiaohongshu-content-strategist",
+    "description": "Create viral Xiaohongshu (\u5c0f\u7ea2\u4e66) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platform.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-13",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31531,9 +32061,9 @@
     "path": "skills/zipai-optimizer",
     "category": "agent-behavior",
     "name": "zipai-optimizer",
-    "description": "Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware.",
+    "description": "Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware.",
     "risk": "safe",
-    "source": "unknown",
+    "source": "community",
     "date_added": null,
     "plugin": {
       "targets": {
