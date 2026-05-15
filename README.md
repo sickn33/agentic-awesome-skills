@@ -635,3 +635,5 @@ Original code and tooling are licensed under the MIT License. See [LICENSE](LICE
 Original documentation and other non-code written content are licensed under [CC BY 4.0](LICENSE-CONTENT), unless a more specific upstream notice says otherwise. See [docs/sources/sources.md](docs/sources/sources.md) for attributions and third-party license details.
 
 ---
+
+- [marcomnit/truenex-memory](https://github.com/marcomnit/truenex-memory) - Local-first, persistent memory store for AI agents with global search and project context.
