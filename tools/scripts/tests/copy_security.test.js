@@ -14,12 +14,15 @@ async function main() {
     const safeRoot = path.join(root, "safe-root");
     const destRoot = path.join(root, "dest-root");
     const outsideDir = path.join(root, "outside");
+    const symlinkDestination = path.join(root, "symlink-dest.txt");
 
     fs.mkdirSync(path.join(safeRoot, "nested"), { recursive: true });
     fs.mkdirSync(outsideDir, { recursive: true });
 
     fs.writeFileSync(path.join(safeRoot, "nested", "ok.txt"), "ok");
     fs.writeFileSync(path.join(outsideDir, "secret.txt"), "secret");
+    fs.writeFileSync(path.join(outsideDir, "symlink-secret.txt"), "do-not-touch");
+    fs.symlinkSync(path.join(outsideDir, "symlink-secret.txt"), symlinkDestination);
     fs.symlinkSync(outsideDir, path.join(safeRoot, "escape-link"));
 
     copyRecursiveSync(safeRoot, path.join(destRoot, "install-copy"), safeRoot);
@@ -42,6 +45,20 @@ async function main() {
     assert.strictEqual(
       fs.readFileSync(path.join(destRoot, "web-copy", "nested", "ok.txt"), "utf8"),
       "ok",
+    );
+    assert.throws(
+      () =>
+        copyRecursiveSync(
+          path.join(safeRoot, "nested", "ok.txt"),
+          symlinkDestination,
+          safeRoot,
+        ),
+      /Skipping unsafe destination symlink/i,
+      "installer copy should refuse writing into existing destination symlinks",
+    );
+    assert.strictEqual(
+      fs.readFileSync(path.join(outsideDir, "symlink-secret.txt"), "utf8"),
+      "do-not-touch",
     );
 
     const indexSource = path.join(root, "skills_index.json");

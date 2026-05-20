@@ -19,6 +19,7 @@ This release hardens the npm installer after reviewing Socket.dev's AI-detected 
 
 - **release-pinned installs** - default `npx antigravity-awesome-skills` installs now clone the matching package release tag instead of the repository tip, reducing drift between npm package contents and installed skills.
 - **git ref validation** - `--tag` and `--version` refs are validated before invoking `git clone`, while still allowing explicit branch installs such as `--tag main`.
+- **destination symlink guard** - installer copy operations now refuse to write through pre-existing destination symlinks.
 - **installer docs and regression coverage** - documents the release-pinned default and adds installer tests for release-tag resolution and unsafe ref rejection.
 
 ## Who should care

@@ -269,6 +269,9 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
 
   const resolvedStats = fs.statSync(resolvedSource);
   if (resolvedStats.isDirectory()) {
+    if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
+      throw new Error(`Skipping unsafe destination symlink: ${dest}`);
+    }
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest, { recursive: true });
     }
@@ -277,6 +280,9 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
       copyRecursiveSync(path.join(resolvedSource, child), path.join(dest, child), rootDir, skipGit);
     });
   } else {
+    if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
+      throw new Error(`Skipping unsafe destination symlink: ${dest}`);
+    }
     fs.copyFileSync(resolvedSource, dest);
   }
 }
@@ -564,7 +570,6 @@ function main() {
   }
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-skills-"));
-  const originalCwd = process.cwd();
 
   try {
     console.log("Cloning repository…");
