@@ -16,14 +16,14 @@ const SKILL_NAME = 'subagent-orchestrator';
 
 // Antigravity global skills path per OS
 const INSTALL_PATHS = {
-  win32:  path.join(os.homedir(), 'AppData', 'Roaming', '.gemini', 'antigravity', 'skills'),
-  darwin: path.join(os.homedir(), '.gemini', 'antigravity', 'skills'),
-  linux:  path.join(os.homedir(), '.gemini', 'antigravity', 'skills'),
+  win32:  path.join(os.homedir(), '.agents', 'skills'),
+  darwin: path.join(os.homedir(), '.agents', 'skills'),
+  linux:  path.join(os.homedir(), '.agents', 'skills'),
 };
 
 const targetBase = INSTALL_PATHS[process.platform] || INSTALL_PATHS.linux;
 const targetDir  = path.join(targetBase, SKILL_NAME);
-const sourceDir  = path.join(__dirname);
+const sourceDir  = path.join(__dirname, '..');
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });

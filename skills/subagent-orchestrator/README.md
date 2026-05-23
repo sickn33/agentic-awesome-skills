@@ -26,8 +26,8 @@ node scripts/install.js
 
 **Manual install — copy this folder to:**
 ```
-Windows: %APPDATA%\.gemini\antigravity\skills\subagent-orchestrator\
-Mac/Linux: ~/.gemini/antigravity/skills/subagent-orchestrator/
+Windows: %USERPROFILE%\.agents\skills\subagent-orchestrator\
+Mac/Linux: ~/.agents/skills/subagent-orchestrator/
 ```
 
 Then restart your Antigravity session.

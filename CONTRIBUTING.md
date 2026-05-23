@@ -214,7 +214,7 @@ More examples...
 
 1. **Copy it to your AI tool's skills directory:**
    ```bash
-   cp -r skills/my-awesome-skill ~/.gemini/antigravity/skills/
+   cp -r skills/my-awesome-skill ~/.agents/skills/
    ```
 
    Or copy it into the specific tool path you are testing against, such as `~/.claude/skills/`, `~/.cursor/skills/`, or a custom workspace path like `.agent/skills/`.
