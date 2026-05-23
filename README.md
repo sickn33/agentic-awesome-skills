@@ -59,7 +59,7 @@ Most users should start with the full library install and use bundles or workflo
 ### Full library install
 
 ```bash
-# Default: ~/.gemini/antigravity/skills (Antigravity global). Use --path for other locations.
+# Default: ~/.agents/skills (Antigravity 2.0 global). Use --path for other locations.
 npx antigravity-awesome-skills
 ```
 
@@ -68,7 +68,7 @@ The npm installer uses a shallow, release-pinned clone by default so first-run i
 ### Verify the install
 
 ```bash
-test -d ~/.gemini/antigravity/skills && echo "Skills installed in ~/.gemini/antigravity/skills"
+test -d ~/.agents/skills && echo "Skills installed in ~/.agents/skills"
 ```
 
 ### Run your first skill

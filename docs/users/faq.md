@@ -123,7 +123,7 @@ _Always check the Risk label and review the code._
 It depends on how you install:
 
 - **Using the installer CLI (`npx antigravity-awesome-skills`)**:
-  The default install target is `~/.gemini/antigravity/skills/` for Antigravity's global library.
+  The default install target is `~/.agents/skills/` for Antigravity's global library.
 - **Using a tool-specific flag**:
   Use `--claude`, `--cursor`, `--gemini`, `--codex`, `--kiro`, or `--antigravity` to target the matching tool path automatically.
 - **Using a manual clone or custom workspace path**:
@@ -230,7 +230,7 @@ If Antigravity becomes unstable only when the full skills library is active, swi
 
 - [agent-overload-recovery.md](agent-overload-recovery.md)
 
-That guide shows how to run `scripts/activate-skills.sh` from a cloned copy of this repository so only the bundles or skill ids you need stay active in `~/.gemini/antigravity/skills`.
+That guide shows how to run `scripts/activate-skills.sh` from a cloned copy of this repository so only the bundles or skill ids you need stay active in `~/.agents/skills`.
 
 ### I use OpenCode with `.agents/skills`. Should I install the whole library?
 

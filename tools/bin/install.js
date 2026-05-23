@@ -128,10 +128,10 @@ function getTargets(opts) {
     targets.push({ name: "Kiro", path: path.join(HOME, ".kiro", "skills") });
   }
   if (opts.antigravity) {
-    targets.push({ name: "Antigravity", path: path.join(HOME, ".gemini", "antigravity", "skills") });
+    targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
   }
   if (targets.length === 0) {
-    targets.push({ name: "Antigravity", path: path.join(HOME, ".gemini", "antigravity", "skills") });
+    targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
   }
   return targets;
 }
@@ -150,8 +150,8 @@ Options:
   --gemini       Install to ~/.gemini/skills (Gemini CLI)
   --codex        Install to ~/.codex/skills (Codex CLI)
   --kiro         Install to ~/.kiro/skills (Kiro CLI)
-  --antigravity  Install to ~/.gemini/antigravity/skills (Antigravity)
-  --path <dir>   Install to <dir> (default: ~/.gemini/antigravity/skills)
+  --antigravity  Install to ~/.agents/skills (Antigravity 2.0)
+  --path <dir>   Install to <dir> (default: ~/.agents/skills)
   --risk <csv>     Install only skills matching these risk labels
   --category <csv> Install only skills matching these categories
   --tags <csv>     Install only skills matching these tags
@@ -539,7 +539,7 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
 
   if (targets.some((target) => isOpenCodeStylePath(target.path))) {
     const baseMessage =
-      "For OpenCode or other .agents/skills installs, prefer a reduced install with --risk, --category, or --tags to avoid context overload.";
+      "For Antigravity 2.0, OpenCode, or other .agents/skills installs, prefer a reduced install with --risk, --category, or --tags to avoid context overload.";
     messages.push(baseMessage);
     if (!hasInstallSelectors(selectors)) {
       messages.push(

@@ -46,7 +46,7 @@ assert.throws(
 );
 
 const antigravityMessages = installer.getPostInstallMessages([
-  { name: "Antigravity", path: "/tmp/.gemini/antigravity/skills" },
+  { name: "Antigravity", path: "/tmp/.agents/skills" },
 ]);
 
 assert.ok(

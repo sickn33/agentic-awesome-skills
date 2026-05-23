@@ -14,7 +14,7 @@ If you came in through a **Claude Code** or **Codex** plugin instead of a full l
 
 When you ran `npx antigravity-awesome-skills` or cloned the repository, you:
 
-✅ **Downloaded 1,464+ skill files** to your computer (default: `~/.gemini/antigravity/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
+✅ **Downloaded 1,464+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
 ✅ **Made them available** to your AI assistant  
 ❌ **Did NOT enable them all automatically** (they're just sitting there, waiting)
 
@@ -330,7 +330,7 @@ AI: [Creates tests, sets up CI/CD, deploys to Vercel]
 Yes! Three ways:
 
 1. Browse [CATALOG.md](../../CATALOG.md) (searchable list)
-2. Run `ls ~/.gemini/antigravity/skills/` (or your actual install path)
+2. Run `ls ~/.agents/skills/` (or your actual install path)
 3. Ask your AI: "What skills do you have for [topic]?"
 
 ### "Do I need to restart my IDE after installing?"
@@ -370,7 +370,7 @@ Use @skill-creator to help me build a custom skill for [your task]
 
 ### "What if a skill doesn't work as expected?"
 
-1. Check the skill's `SKILL.md` file directly in your installed path, for example: `~/.gemini/antigravity/skills/[skill-name]/SKILL.md`
+1. Check the skill's `SKILL.md` file directly in your installed path, for example: `~/.agents/skills/[skill-name]/SKILL.md`
 2. Read the description to ensure you're using it correctly
 3. [Open an issue](https://github.com/sickn33/antigravity-awesome-skills/issues) with details
 

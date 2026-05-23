@@ -12,7 +12,7 @@
 
 当你运行 `npx antigravity-awesome-skills` 或克隆仓库时，你：
 
-✅ **下载了 1,436+ 个技能文件**到你的计算机（默认路径：`~/.gemini/antigravity/skills/`；如果你使用了 `--path`，则是自定义路径如 `~/.agent/skills/`）
+✅ **下载了 1,436+ 个技能文件**到你的计算机（默认路径：`~/.agents/skills/`；如果你使用了 `--path`，则是自定义路径如 `~/.agent/skills/`）
 ✅ **使它们对你的 AI 助手可用**
 ❌ **并未自动启用所有技能**（它们只是在那里等待使用）
 
@@ -320,7 +320,7 @@ AI: [创建测试，设置 CI/CD，部署到 Vercel]
 可以！三种方式：
 
 1. 浏览 [CATALOG.md](../../CATALOG.md)（可搜索列表）
-2. 运行 `ls ~/.gemini/antigravity/skills/`（或你的实际安装路径）
+2. 运行 `ls ~/.agents/skills/`（或你的实际安装路径）
 3. 询问你的 AI："你有哪些关于[主题]的技能？"
 
 ### "安装后我需要重启 IDE 吗？"
@@ -354,7 +354,7 @@ Use @skill-creator to help me build a custom skill for [your task]
 
 ### "如果技能没有按预期工作怎么办？"
 
-1. 直接在安装路径中检查技能的 `SKILL.md` 文件，例如：`~/.gemini/antigravity/skills/[skill-name]/SKILL.md`
+1. 直接在安装路径中检查技能的 `SKILL.md` 文件，例如：`~/.agents/skills/[skill-name]/SKILL.md`
 2. 阅读描述以确保你正确使用它
 3. [打开问题](https://github.com/sickn33/antigravity-awesome-skills/issues)并提供详细信息
 

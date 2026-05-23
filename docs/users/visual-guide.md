@@ -186,7 +186,7 @@ antigravity-awesome-skills/
 │ $ npx antigravity-awesome-skills        │
 │                                         │
 │ ✓ Installing to                         │
-│   ~/.gemini/antigravity/skills/         │
+│   ~/.agents/skills/                     │
 └─────────────────────────────────────────┘
 ```
 
@@ -197,7 +197,7 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 ┌─────────────────────────────────────────┐
 │ File Explorer                           │
 ├─────────────────────────────────────────┤
-│ 📁 ~/.gemini/antigravity/skills/        │
+│ 📁 ~/.agents/skills/                    │
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
