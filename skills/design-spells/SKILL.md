@@ -1,4 +1,4 @@
---- 
+---
 name: design-spells
 description: Curated micro-interactions and design details that add "magic" and personality to websites and apps.
 risk: safe

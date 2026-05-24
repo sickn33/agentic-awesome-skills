@@ -18,6 +18,9 @@ tools:
 author: 'emanueleodierna'
 ---
 
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.
+
 # Common RE scripting environments
 
 ## When to Use This Skill

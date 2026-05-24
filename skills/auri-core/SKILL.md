@@ -371,7 +371,7 @@ Metricas customizadas publicadas:
 | Hardware proprio | Usa Echo | Echo | HomePod | Nest | App only |
 | Modelo base | Claude Opus 4 | Alexa LLM | Apple LLM | Gemini | GPT-4o |
 | Privacidade | Alta | Media | Maxima | Baixa | Media |
-| Preco | R\/usr/bin/bash-99/mes | Gratis | Gratis | Gratis | R /mes |
+| Preco | R\/usr/bin/bash-99/mes | Gratis | Gratis | Gratis | R/mes |
 | Disponivel no Brasil | Sim | Sim | Sim | Sim | Sim |
 
 ## Posicionamento No Mapa Competitivo

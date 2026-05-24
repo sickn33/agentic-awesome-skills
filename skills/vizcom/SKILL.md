@@ -1,4 +1,4 @@
---- 
+---
 name: vizcom
 description: AI-powered product design tool for transforming sketches into full-fidelity 3D renders.
 risk: safe
