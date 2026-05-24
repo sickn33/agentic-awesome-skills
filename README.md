@@ -22,6 +22,9 @@ You can use this repo to install a broad multi-tool skill library, start from ro
 [![Copilot](https://img.shields.io/badge/Copilot-GitHub-lightblue?style=for-the-badge)](https://github.com/features/copilot)
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/antigravity-awesome-skills)
+[![Tests](https://img.shields.io/badge/Tests-149%20Passing-brightgreen?style=for-the-badge&logo=checkmarx)](https://github.com/emanueleodierna729-ship-it/antigravity-awesome-skills)
+[![Skills Validated](https://img.shields.io/badge/Skills%20Validated-1465%20%E2%9C%85-blue?style=for-the-badge)](https://github.com/emanueleodierna729-ship-it/antigravity-awesome-skills)
+[![CI Strict](https://img.shields.io/badge/CI%20Strict-PASS-success?style=for-the-badge&logo=github-actions)](https://github.com/emanueleodierna729-ship-it/antigravity-awesome-skills)
 
 **Current release: V11.6.0.** Trusted by 38k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
 
