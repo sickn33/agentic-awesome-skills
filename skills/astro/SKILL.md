@@ -1,7 +1,8 @@
 ---
+id: 'astro'
 name: astro
 description: "Build content-focused websites with Astro — zero JS by default, islands architecture, multi-framework components, and Markdown/MDX support."
-category: frontend
+category: cloud
 risk: safe
 source: community
 date_added: "2026-03-18"

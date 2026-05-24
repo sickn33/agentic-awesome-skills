@@ -1,7 +1,8 @@
 ---
+id: 'clarity-gate'
 # agentskills.io compliant frontmatter
 name: clarity-gate
-risk: unknown
+risk: critical
 source: community
 version: 2.1.3
 description: >
@@ -31,6 +32,17 @@ outputs:
     extension: .cgd.md
     spec: docs/CLARITY_GATE_FORMAT_SPEC.md
 spec_version: "2.1"
+category: devops
+tags:
+- api
+- design
+- graphql
+- html
+- rest
+- ui
+tools:
+- claude-code
+date_added: '2026-05-23'
 ---
 
 # Clarity Gate v2.1
@@ -711,3 +723,14 @@ Reply "confirmed" or flag any I misread.
 **Spec Version:** 2.1
 **Author:** Francesco Marinoni Moretto
 **License:** CC-BY-4.0
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

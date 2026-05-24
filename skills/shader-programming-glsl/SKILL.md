@@ -1,9 +1,21 @@
 ---
+id: 'shader-programming-glsl'
 name: shader-programming-glsl
 description: "Expert guide for writing efficient GLSL shaders (Vertex/Fragment) for web and game engines, covering syntax, uniforms, and common effects."
 risk: safe
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- ai
+- ci
+- component
+- orm
+- pipeline
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Shader Programming GLSL

@@ -1,9 +1,21 @@
 ---
+id: 'avoid-ai-writing'
 name: avoid-ai-writing
 description: "Audit and rewrite content to remove 21 categories of AI writing patterns with a 43-entry replacement table"
 risk: none
 source: https://github.com/conorbronsdon/avoid-ai-writing
 date_added: "2026-03-06"
+category: frontend-frameworks
+tags:
+- ai
+- api
+- ci
+- orm
+- rag
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Avoid AI Writing — Audit & Rewrite
@@ -42,3 +54,14 @@ Audit this for AI writing patterns:
 - Pattern matching is guideline-based, not absolute — some flagged words are fine in context
 - The replacement table suggests alternatives but the best choice depends on context
 - Cannot verify factual claims or find real citations to replace vague attributions
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

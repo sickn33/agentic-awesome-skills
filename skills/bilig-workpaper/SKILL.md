@@ -1,7 +1,8 @@
 ---
+id: 'bilig-workpaper'
 name: bilig-workpaper
 description: "Use formula-backed WorkPaper JSON and MCP tools for agent spreadsheet tasks without driving Excel or a browser UI."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-05-21"
 tags:
@@ -10,6 +11,10 @@ tags:
   - mcp
   - xlsx
   - typescript
+category: frontend-frameworks
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Bilig WorkPaper
@@ -143,3 +148,14 @@ If any proof step fails, report the blocker instead of saying the workbook was u
 - MCP server guide: https://proompteng.github.io/bilig/mcp-workpaper-tool-server.html
 - XLSX formula clinic: https://proompteng.github.io/bilig/formula-bug-clinic.html
 - Compatibility limits: https://proompteng.github.io/bilig/where-bilig-is-not-excel-compatible-yet.html
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

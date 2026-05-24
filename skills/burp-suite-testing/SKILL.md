@@ -1,10 +1,21 @@
 ---
+id: 'burp-suite-testing'
 name: burp-suite-testing
 description: "Execute comprehensive web application security testing using Burp Suite's integrated toolset, including HTTP traffic interception and modification, request analysis and replay, automated vulnerability scanning, and manual testing workflows."
 risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- attack
+- firewall
+- security
+- ui
+- ux
+- vuln
+tools:
+- claude-code
 ---
 
 > AUTHORIZED USE ONLY: Use this skill only for authorized security assessments, defensive validation, or controlled educational environments.

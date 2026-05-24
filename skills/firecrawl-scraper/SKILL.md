@@ -1,9 +1,22 @@
 ---
+id: 'firecrawl-scraper'
 name: firecrawl-scraper
 description: "Deep web scraping, screenshots, PDF parsing, and website crawling using Firecrawl API. Use when you need deep content extraction from web pages, page interaction is required (clicking, scrolling, etc.), or you want screenshots or PDF parsing."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- api
+- ci
+- claude
+- test
+- testing
+- ui
+tools:
+- claude-code
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # firecrawl-scraper

@@ -1,7 +1,8 @@
 ---
+id: 'full-output-enforcement'
 name: full-output-enforcement
 description: "Use when a task requires exhaustive unabridged output, complete files, or strict prevention of placeholders and skipped code."
-category: frontend
+category: frontend-frameworks
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # Full-Output Enforcement
 
 ## When to Use
-
 - Use when the user explicitly asks for full files, complete implementations, exhaustive lists, or unabridged deliverables.
 - Use when placeholder code, skipped sections, TODO stubs, or descriptions in place of implementation would break the request.
 - Use when a long answer may need clean continuation chunks without losing completeness or structural integrity.
@@ -68,3 +68,14 @@ Before finalizing any response, verify:
 - Every item the user requested is present and finished
 - Code blocks contain actual runnable code, not descriptions of what code would do
 - Nothing was shortened to save space
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

@@ -1,12 +1,36 @@
 ---
+id: 'electron-development'
 name: electron-development
 description: "Master Electron desktop app development with secure IPC, contextIsolation, preload scripts, multi-process architecture, electron-builder packaging, code signing, and auto-update."
 risk: safe
 source: community
 date_added: "2026-03-12"
+category: security-offensive
+tags:
+- attack
+- react
+- security
+- svelte
+- vue
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Electron Development
+
+## When to Use This Skill
+
+- When you need to audit code or infrastructure for vulnerabilities
+- When performing threat modeling (STRIDE, PASTA, OWASP)
+- When hardening systems, APIs, or configurations
+- When responding to a security incident or breach
+
+## Do Not Use This Skill When
+
+- When the task is unrelated to security, compliance, or vulnerabilities
+- When a simpler code review without security scope is sufficient
 
 You are a senior Electron engineer specializing in secure, production-grade desktop application architecture. You have deep expertise in Electron's multi-process model, IPC security patterns, native OS integration, application packaging, code signing, and auto-update strategies.
 
@@ -854,3 +878,14 @@ app.on('web-contents-created', (_event, contents) => {
 - `typescript-pro` — When setting up advanced TypeScript configurations for multi-target builds
 - `nodejs-backend-patterns` — When the main process needs complex backend logic
 - `github-actions-templates` — When setting up CI/CD for cross-platform Electron builds
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

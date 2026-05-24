@@ -1,10 +1,22 @@
 ---
+id: 'inngest'
 name: inngest
 description: Inngest expert for serverless-first background jobs, event-driven
   workflows, and durable execution without managing queues or workers.
 risk: none
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
+category: security-offensive
+tags:
+- api
+- backend
+- design
+- hack
+- svelte
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Inngest Integration
@@ -477,3 +489,14 @@ Works well with: `nextjs-app-router`, `vercel-deployment`, `supabase-backend`, `
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

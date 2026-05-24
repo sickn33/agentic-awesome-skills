@@ -1,8 +1,21 @@
 ---
+id: 'project-development'
 name: project-development
 description: "This skill covers the principles for identifying tasks suited to LLM processing, designing effective project architectures, and iterating rapidly using agent-assisted development."
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- api
+- ci
+- component
+- design
+- html
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Project Development Methodology

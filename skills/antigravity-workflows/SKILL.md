@@ -1,9 +1,22 @@
 ---
+id: 'antigravity-workflows'
 name: antigravity-workflows
 description: "Orchestrate multiple Antigravity skills through guided workflows for SaaS MVP delivery, security audits, AI agent builds, and browser QA."
 risk: none
 source: self
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- ai
+- ci
+- design
+- orm
+- security
+- ui
+tools:
+- claude-code
+- antigravity
+author: 'emanueleodierna'
 ---
 
 # Antigravity Workflows
@@ -84,3 +97,14 @@ Use @antigravity-workflows to execute the "Design a DDD Core Domain" workflow fo
 - `brainstorming`
 - `workflow-automation`
 - `verification-before-completion`
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

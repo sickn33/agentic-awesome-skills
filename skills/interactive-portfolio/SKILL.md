@@ -1,12 +1,25 @@
 ---
+id: 'interactive-portfolio'
 name: interactive-portfolio
 description: Expert in building portfolios that actually land jobs and clients -
   not just showing work, but creating memorable experiences. Covers developer
   portfolios, designer portfolios, creative portfolios, and portfolios that
   convert visitors into opportunities.
-risk: unknown
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
+category: frontend-frameworks
+tags:
+- css
+- design
+- frontend
+- rest
+- ui
+- ux
+tools:
+- claude-code
+- cursor
+author: 'emanueleodierna'
 ---
 
 # Interactive Portfolio
@@ -528,3 +541,14 @@ Works well with: `scroll-experience`, `3d-web-experience`, `landing-page-design`
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

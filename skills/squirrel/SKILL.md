@@ -1,7 +1,8 @@
 ---
+id: 'squirrel'
 name: squirrel
 description: "Full-cycle AI coding skill: plans, builds, tests, lints, fixes bugs, and writes production-grade docs. Auto-detects project state and adapts its 8-phase pipeline."
-category: development
+category: devops
 risk: safe
 source: community
 source_repo: flyingsquirrel0419/squirrel-skill

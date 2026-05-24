@@ -1,10 +1,21 @@
 ---
+id: 'api-endpoint-builder'
 name: api-endpoint-builder
 description: "Builds production-ready REST API endpoints with validation, error handling, authentication, and documentation. Follows best practices for security and scalability."
-category: development
+category: security-offensive
 risk: safe
 source: community
 date_added: "2026-03-05"
+tags:
+- api
+- backend
+- design
+- rest
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # API Endpoint Builder
@@ -327,3 +338,14 @@ describe('POST /api/users', () => {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

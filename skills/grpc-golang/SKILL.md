@@ -1,9 +1,21 @@
 ---
+id: 'grpc-golang'
 name: grpc-golang
 description: "Build production-ready gRPC services in Go with mTLS, streaming, and observability. Use when designing Protobuf contracts with Buf or implementing secure service-to-service transport."
 risk: safe
 source: self
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- design
+- grpc
+- rest
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # gRPC Golang (gRPC-Go)
@@ -12,6 +24,18 @@ date_added: "2026-02-27"
 
 Comprehensive guide for designing and implementing production-grade gRPC services in Go. Covers contract standardization with Buf, transport layer security via mTLS, and deep observability with OpenTelemetry interceptors.
 
+
+## When to Use This Skill
+
+- When you need to audit code or infrastructure for vulnerabilities
+- When performing threat modeling (STRIDE, PASTA, OWASP)
+- When hardening systems, APIs, or configurations
+- When responding to a security incident or breach
+
+## Do Not Use This Skill When
+
+- When the task is unrelated to security, compliance, or vulnerabilities
+- When a simpler code review without security scope is sufficient
 ## Use this skill when
 
 - Designing microservices communication with gRPC in Go.

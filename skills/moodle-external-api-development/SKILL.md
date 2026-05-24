@@ -1,9 +1,21 @@
 ---
+id: 'moodle-external-api-development'
 name: moodle-external-api-development
 description: "This skill guides you through creating custom external web service APIs for Moodle LMS, following Moodle's external API framework and coding standards."
-risk: unknown
+risk: offensive
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- backend
+- html
+- security
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Moodle External API Development
@@ -603,3 +615,5 @@ See attached `create_quiz_from_categories.php` for a comprehensive example inclu
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

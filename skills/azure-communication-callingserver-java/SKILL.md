@@ -1,9 +1,21 @@
 ---
+id: 'azure-communication-callingserver-java'
 name: azure-communication-callingserver-java
 description: "⚠️ DEPRECATED: This SDK has been renamed to Call Automation. For new projects, use azure-communication-callautomation instead. This skill is for maintaining legacy code only."
 risk: safe
 source: community
 date_added: "2026-02-27"
+category: cloud
+tags:
+- ai
+- ci
+- migration
+- server
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Azure Communication CallingServer (Java) - DEPRECATED
@@ -99,3 +111,14 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

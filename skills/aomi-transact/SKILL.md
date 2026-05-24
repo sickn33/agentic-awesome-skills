@@ -1,4 +1,5 @@
 ---
+id: 'aomi-transact'
 name: aomi-transact
 description: "Build natural-language crypto/DeFi agents and EVM MCP plugins (Claude Code, Cursor, Codex, Gemini). Aomi turns prompts into wallet-signed txs on Ethereum, Base, Arbitrum, Optimism, Polygon, Linea — non-custodial, fork-simulated. 40+ apps: Uniswap, Aave, Lido, Morpho, GMX, Hyperliquid, Polymarket."
 risk: critical
@@ -16,6 +17,10 @@ tags:
   - onchain
   - agent
   - intent
+category: security-offensive
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Aomi Transact

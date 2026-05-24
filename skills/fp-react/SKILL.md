@@ -1,11 +1,16 @@
 ---
+id: 'fp-react'
 name: fp-react
 description: Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Works with React 18/19, Next.js 14/15.
-risk: unknown
+risk: critical
 source: community
 version: 2.0.0
 author: fp-ts-skills
 tags: [fp-ts, react, typescript, hooks, state-management, forms, data-fetching, remote-data, react-19, next-js]
+category: security-offensive
+tools:
+- claude-code
+date_added: '2026-05-23'
 ---
 
 # Functional Programming in React
@@ -795,3 +800,14 @@ const modalProps = {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

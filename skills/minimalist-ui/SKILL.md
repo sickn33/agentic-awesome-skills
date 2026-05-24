@@ -1,7 +1,8 @@
 ---
+id: 'minimalist-ui'
 name: minimalist-ui
 description: "Use when creating clean editorial interfaces with warm monochrome palettes, crisp borders, restrained motion, and flat bento layouts."
-category: frontend
+category: frontend-frameworks
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # Protocol: Premium Utilitarian Minimalism UI Architect
 
 ## When to Use
-
 - Use when the user wants a refined minimalist UI inspired by tools like Notion, Linear, or editorial workspace products.
 - Use when designing warm monochrome interfaces with crisp borders, generous whitespace, muted pastel accents, and quiet motion.
 - Use when the task should avoid gradients, heavy shadows, saturated colors, pill-heavy components, and generic SaaS visuals.
@@ -104,3 +104,14 @@ When tasked with writing frontend code (HTML, React, Tailwind, Vue) or designing
 5. Add scroll-entry animations to all major content blocks.
 6. Ensure sections have visual depth through imagery, ambient gradients, or subtle textures — no empty flat backgrounds.
 7. Provide code that reflects this high-end, uncluttered, editorial aesthetic natively without requiring manual adjustments.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

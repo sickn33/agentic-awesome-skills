@@ -1,9 +1,22 @@
 ---
+id: 'tcm-constitution-analyzer'
 name: tcm-constitution-analyzer
 description: 分析中医体质数据、识别体质类型、评估体质特征,并提供个性化养生建议。支持与营养、运动、睡眠等健康数据的关联分析。
 allowed-tools: Read, Grep, Glob, Write
-risk: unknown
+risk: safe
 source: community
+category: cloud
+tags:
+- ai
+- ci
+- data
+- test
+- testing
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # 中医体质辨识分析器技能
@@ -674,3 +687,14 @@ def determine_constitution_type(scores):
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

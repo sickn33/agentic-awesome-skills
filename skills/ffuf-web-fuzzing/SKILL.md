@@ -1,8 +1,21 @@
 ---
+id: 'ffuf-web-fuzzing'
 name: ffuf-web-fuzzing
 description: Expert guidance for ffuf web fuzzing during penetration testing, including authenticated fuzzing with raw requests, auto-calibration, and result analysis
-risk: unknown
+risk: offensive
 source: community
+category: security-offensive
+tags:
+- design
+- html
+- pentest
+- security
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # FFUF (Fuzz Faster U Fool) Skill
@@ -508,3 +521,15 @@ When helping users with ffuf:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

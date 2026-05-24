@@ -1,4 +1,5 @@
 ---
+id: 'tool-use-guardian'
 name: tool-use-guardian
 description: "FREE — Intelligent tool-call reliability wrapper. Monitors, retries, fixes, and learns from tool failures. Auto-recovers from truncated JSON, timeouts, rate limits, and mid-chain failures."
 category: reliability
@@ -87,3 +88,14 @@ Guardian tracks failure patterns per tool. After 3+ failures of the same type, i
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

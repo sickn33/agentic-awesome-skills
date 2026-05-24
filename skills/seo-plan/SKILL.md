@@ -1,11 +1,12 @@
 ---
+id: 'seo-plan'
 name: seo-plan
 description: >
   Strategic SEO planning for new or existing websites. Industry-specific
   templates, competitive analysis, content strategy, and implementation
   roadmap. Use when user says "SEO plan", "SEO strategy", "content strategy",
   "site architecture", or "SEO roadmap".
-risk: unknown
+risk: critical
 source: "https://github.com/AgriciDaniel/claude-seo"
 date_added: "2026-03-21"
 user-invokable: true
@@ -17,6 +18,17 @@ allowed-tools:
   - Bash
   - WebFetch
   - Write
+category: frontend-frameworks
+tags:
+- ai
+- ci
+- design
+- orm
+- schema
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Strategic SEO Planning
@@ -138,3 +150,14 @@ If DataForSEO MCP tools are available, use `dataforseo_labs_google_competitors_d
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

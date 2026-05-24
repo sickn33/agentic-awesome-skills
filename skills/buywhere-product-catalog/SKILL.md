@@ -1,4 +1,5 @@
 ---
+id: 'buywhere-product-catalog'
 name: buywhere-product-catalog
 description: "Use BuyWhere's MCP and API surfaces to add product search, price comparison, and deal discovery to AI shopping agents."
 category: ecommerce

@@ -1,4 +1,5 @@
 ---
+id: 'monte-carlo-push-ingestion'
 name: monte-carlo-push-ingestion
 description: "Expert guide for pushing metadata, lineage, and query logs to Monte Carlo from any data warehouse."
 category: data
@@ -27,7 +28,6 @@ between non-warehouse assets, or customers who already have this data and want t
 directly.
 
 ## When to Use
-
 Use this skill when the user needs to collect metadata, lineage, freshness, volume, or query-log data from a warehouse or adjacent system and push it into Monte Carlo through the push-ingestion API.
 
 Push data travels through the integration gateway → dedicated Kinesis streams → thin
@@ -370,3 +370,14 @@ Additionally, when fetching query history:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Clean a messy CSV dataset
+
+Remove duplicate rows, normalize date formats to ISO 8601, fill missing `country` values from the `zip_code` column.
+
+### Example 2: Build a dbt model for monthly revenue
+
+Create a `revenue_monthly` model that joins `orders` and `payments`, grouping by month and currency.
+

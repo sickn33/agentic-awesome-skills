@@ -1,8 +1,21 @@
 ---
+id: 'commit'
 name: commit
 description: ALWAYS use this skill when committing code changes — never commit directly without it. Creates commits following Sentry conventions with proper conventional commit format and issue references. Trigger on any commit, git commit, save changes, or commit message task.
 risk: critical
 source: community
+category: auth-identity
+tags:
+- ai
+- api
+- ci
+- endpoint
+- orm
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Sentry Commit Messages

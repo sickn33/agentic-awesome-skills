@@ -1,10 +1,21 @@
 ---
+id: 'privilege-escalation-methods'
 name: privilege-escalation-methods
 description: "Provide comprehensive techniques for escalating privileges from a low-privileged user to root/administrator access on compromised Linux and Windows systems. Essential for penetration testing post-exploitation phase and red team operations."
-risk: unknown
+risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- attack
+- cd
+- ci
+- ui
+- ux
+- vuln
+tools:
+- claude-code
 ---
 
 # Privilege Escalation Methods
@@ -335,3 +346,5 @@ For detailed enumeration scripts, use:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

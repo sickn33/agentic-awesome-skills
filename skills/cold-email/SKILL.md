@@ -1,11 +1,23 @@
 ---
+id: 'cold-email'
 name: cold-email
 description: "Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, subject lines, CTAs, and multi-touch follow-up sequences."
-risk: unknown
+risk: critical
 source: "https://github.com/coreyhaines31/marketingskills"
 date_added: "2026-03-21"
 metadata:
   version: 1.1.0
+category: devops
+tags:
+- ci
+- html
+- orm
+- pipeline
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Cold Email Writing
@@ -169,3 +181,14 @@ Use this data to inform your writing — not as a checklist to satisfy.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

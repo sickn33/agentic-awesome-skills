@@ -1,9 +1,21 @@
 ---
+id: 'seo-aeo-meta-description-generator'
 name: seo-aeo-meta-description-generator
 description: "Writes 3 title tag variants and 3 meta description variants per page with SERP preview, OG tags, and Twitter Card tags. Activate when the user wants to write meta tags, title tags, or social sharing tags for any page."
 risk: safe
 source: community
 date_added: "2026-04-01"
+category: ai-ml
+tags:
+- agent
+- ai
+- ci
+- test
+- testing
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # SEO-AEO Meta Description Generator

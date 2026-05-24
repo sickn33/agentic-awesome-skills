@@ -1,8 +1,21 @@
 ---
+id: 'hugging-face-paper-publisher'
 source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-paper-publisher"
 name: hugging-face-paper-publisher
 description: Publish and manage research papers on Hugging Face Hub. Supports creating paper pages, linking papers to models/datasets, claiming authorship, and generating professional markdown-based research articles.
-risk: unknown
+risk: critical
+category: frontend-frameworks
+tags:
+- api
+- cd
+- ci
+- design
+- html
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Overview
@@ -632,3 +645,14 @@ Planned features for future versions:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

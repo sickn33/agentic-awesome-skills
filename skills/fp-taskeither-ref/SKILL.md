@@ -1,10 +1,16 @@
 ---
+id: 'fp-taskeither-ref'
 name: fp-taskeither-ref
 description: Quick reference for TaskEither. Use when user needs async error handling, API calls, or Promise-based operations that can fail.
-risk: unknown
+risk: critical
 source: community
 version: 1.0.0
 tags: [fp-ts, taskeither, async, promise, error-handling, quick-reference]
+category: devops
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # TaskEither Quick Reference
@@ -113,3 +119,14 @@ Use TaskEither when you need **typed errors** for async operations.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

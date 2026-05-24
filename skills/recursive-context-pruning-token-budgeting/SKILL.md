@@ -1,4 +1,5 @@
 ---
+id: 'recursive-context-pruning-token-budgeting'
 name: recursive-context-pruning-token-budgeting
 description: "Optimizes AI agent performance by pruning redundant context, managing token usage, and enforcing ultra-concise, direct-to-value responses."
 category: prompt-engineering

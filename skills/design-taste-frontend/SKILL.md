@@ -1,7 +1,8 @@
 ---
+id: 'design-taste-frontend'
 name: design-taste-frontend
 description: "Use when building high-agency frontend interfaces with strict design taste, calibrated color, responsive layout, and motion rules."
-category: frontend
+category: cloud
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # High-Agency Frontend Skill
 
 ## When to Use
-
 - Use when the user asks to create, improve, or review frontend UI with strong design taste and anti-generic constraints.
 - Use when React, Next.js, Tailwind, motion, component states, typography, spacing, color, or responsive behavior need senior-level design judgment.
 - Use when the output must override common LLM UI biases such as centered heroes, purple gradients, card overuse, poor states, and fragile layouts.
@@ -245,3 +245,14 @@ Evaluate your code against this matrix before outputting. This is the **last** f
 - [ ] Are empty, loading, and error states provided?
 - [ ] Are cards omitted in favor of spacing where possible?
 - [ ] Did you strictly isolate CPU-heavy perpetual animations in their own Client Components?
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

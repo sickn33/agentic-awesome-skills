@@ -1,13 +1,30 @@
 ---
+id: 'database-migrations-migration-observability'
 name: database-migrations-migration-observability
 description: "Migration monitoring, CDC, and observability infrastructure"
-risk: unknown
+risk: offensive
 source: community
 tags: "database, cdc, debezium, kafka, prometheus, grafana, monitoring"
 date_added: "2026-02-27"
+category: devops
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Migration Observability and Real-time Monitoring
+
+## When to Use This Skill
+
+- When building or reviewing UI components, layouts, or design systems
+- When you need help with HTML, CSS, or JavaScript/TypeScript frontend code
+- When auditing for accessibility, performance, or responsiveness
+- When migrating or refactoring a frontend framework
+
+## Do Not Use This Skill When
+
+- When the task is purely backend or infrastructure-related
+- When no UI, design, or browser environment is involved
 
 You are a database observability expert specializing in Change Data Capture, real-time migration monitoring, and enterprise-grade observability infrastructure. Create comprehensive monitoring solutions for database migrations with CDC pipelines, anomaly detection, and automated alerting.
 
@@ -423,3 +440,15 @@ This plugin integrates with:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

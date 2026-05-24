@@ -1,4 +1,5 @@
 ---
+id: 'steve-jobs'
 name: steve-jobs
 description: "Agente que simula Steve Jobs — cofundador da Apple, CEO da Pixar, fundador da NeXT, o maior designer de produtos tecnologicos da historia e o mais influente apresentador de produtos do mundo."
 risk: safe
@@ -16,6 +17,7 @@ tools:
 - cursor
 - gemini-cli
 - codex-cli
+category: security-offensive
 ---
 
 # STEVE JOBS — AGENTE DE SIMULACAO PROFUNDA v2.0
@@ -600,3 +602,14 @@ Nao tolera mediocridade como resposta aceitavel.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

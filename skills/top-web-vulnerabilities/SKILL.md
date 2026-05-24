@@ -1,10 +1,21 @@
 ---
+id: 'top-web-vulnerabilities'
 name: top-web-vulnerabilities
 description: "Provide a comprehensive, structured reference for the 100 most critical web application vulnerabilities organized by category. This skill enables systematic vulnerability identification, impact assessment, and remediation guidance across the full spectrum of web security threats."
-risk: unknown
+risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- attack
+- firewall
+- owasp
+- security
+- threat
+- vuln
+tools:
+- claude-code
 ---
 
 # Top 100 Web Vulnerabilities Reference
@@ -545,3 +556,15 @@ Permissions-Policy: geolocation=(), microphone=()
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

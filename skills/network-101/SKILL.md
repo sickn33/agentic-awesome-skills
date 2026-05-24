@@ -1,10 +1,21 @@
 ---
+id: 'network-101'
 name: network-101
 description: "Configure and test common network services (HTTP, HTTPS, SNMP, SMB) for penetration testing lab environments. Enable hands-on practice with service enumeration, log analysis, and security testing against properly configured target systems."
-risk: unknown
+risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- firewall
+- html
+- security
+- ui
+- ux
+- vuln
+tools:
+- claude-code
 ---
 
 # Network 101
@@ -344,3 +355,5 @@ smbclient //localhost/anonymous -N
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

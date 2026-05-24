@@ -1,9 +1,21 @@
 ---
+id: 'oss-hunter'
 name: oss-hunter
 description: "Automatically hunt for high-impact OSS contribution opportunities in trending repositories."
 risk: safe
 source: "https://github.com/jackjin1997/ClawForge"
 date_added: "2026-02-27"
+category: frontend-frameworks
+tags:
+- agent
+- ai
+- api
+- ci
+- langchain
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # OSS Hunter 🎯
@@ -72,3 +84,14 @@ Generate a structured report for the human:
 Build a better hunter by adding new heuristics to Phase 3. Submit your improvements to the [ClawForge](https://github.com/jackjin1997/ClawForge).
 
 *Powered by OpenClaw & ClawForge.*
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

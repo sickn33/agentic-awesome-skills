@@ -1,7 +1,8 @@
 ---
+id: 'skill-audit'
 name: skill-audit
 description: "Pre-install security scanner for AI agent skills. 7.5% of 14,706 skills are malicious. Audit before you trust."
-category: security
+category: security-offensive
 risk: safe
 source: community
 source_repo: aptratcn/skill-audit

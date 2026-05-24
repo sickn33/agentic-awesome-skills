@@ -1,10 +1,21 @@
 ---
+id: 'windows-privilege-escalation'
 name: windows-privilege-escalation
 description: "Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements."
 risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- attack
+- security
+- ui
+- ux
+- vuln
+tools:
+- claude-code
 ---
 
 > AUTHORIZED USE ONLY: Use this skill only for authorized security assessments, defensive validation, or controlled educational environments.

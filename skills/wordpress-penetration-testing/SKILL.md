@@ -1,10 +1,21 @@
 ---
+id: 'wordpress-penetration-testing'
 name: wordpress-penetration-testing
 description: "Assess WordPress installations for common vulnerabilities and WordPress 7.0 attack surfaces."
 risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- attack
+- css
+- html
+- owasp
+- security
+- vuln
+tools:
+- claude-code
 ---
 
 > AUTHORIZED USE ONLY: Use this skill only for authorized security assessments, defensive validation, or controlled educational environments.
@@ -594,3 +605,14 @@ curl -s http://target.com/wp-json/wp/v2/settings | grep -i connector
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

@@ -1,9 +1,21 @@
 ---
+id: 'mcp-builder'
 name: mcp-builder
 description: "Create MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. The quality of an MCP server is measured by how well it enables LLMs to accomplish real-world tasks."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- design
+- endpoint
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # MCP Server Development Guide
@@ -244,3 +256,14 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

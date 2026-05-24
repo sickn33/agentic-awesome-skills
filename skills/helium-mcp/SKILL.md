@@ -1,4 +1,5 @@
 ---
+id: 'helium-mcp'
 name: helium-mcp
 description: "Connect to Helium's MCP server for news research, media bias analysis, balanced perspectives, stock/options data, and semantic meme search across 3.2M+ articles and 5,000+ sources"
 risk: safe
@@ -9,6 +10,7 @@ date_added: "2026-04-13"
 author: connerlambden
 tags: [mcp, news, media-bias, stocks, options, finance, research]
 tools: [claude, cursor, gemini]
+category: auth-identity
 ---
 
 # Helium MCP

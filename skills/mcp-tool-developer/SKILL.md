@@ -1,4 +1,5 @@
 ---
+id: 'mcp-tool-developer'
 name: mcp-tool-developer
 description: "Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publishing."
 category: developer-tools

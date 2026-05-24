@@ -1,8 +1,9 @@
 ---
+id: 'daily-gift'
 name: daily-gift
 description: "Relationship-aware daily gift engine with five-stage creative pipeline — editorial judgment, synthesis, concept generation, visual strategy, and rendering in H5, image, or video"
 category: productivity
-risk: unknown
+risk: safe
 source: community
 source_repo: openclaw/skills
 source_type: community
@@ -92,3 +93,14 @@ Produce the final artifact. H5 gifts use p5.js/canvas with a quality floor set b
 
 - Image generation skills — for standalone image creation without the gift pipeline
 - Cron/scheduling skills — for understanding the daily trigger mechanism
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

@@ -1,8 +1,21 @@
 ---
+id: 'odoo-purchase-workflow'
 name: odoo-purchase-workflow
 description: "Expert guide for Odoo Purchase: RFQ → PO → Receipt → Vendor Bill workflow, purchase agreements, vendor price lists, and 3-way matching."
 risk: safe
 source: "self"
+category: auth-identity
+tags:
+- ai
+- ci
+- email
+- integration
+- ui
+- unit
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Odoo Purchase Workflow

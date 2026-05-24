@@ -1,10 +1,21 @@
 ---
+id: 'office-productivity'
 name: office-productivity
 description: "Office productivity workflow covering document creation, spreadsheet automation, presentation generation, and integration with LibreOffice and Microsoft Office formats."
 category: workflow-bundle
 risk: safe
 source: personal
 date_added: "2026-02-27"
+tags:
+- ci
+- database
+- design
+- frontend
+- html
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Office Productivity Workflow Bundle
@@ -221,3 +232,14 @@ Formats: Google Docs, Sheets, Slides
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Automate a daily report workflow
+
+Fetch data from a REST API, format it as a Markdown table, and post it to a Slack channel via webhook every morning.
+
+### Example 2: Orchestrate a multi-agent coding task
+
+Use a planner agent to decompose a feature request, dispatch sub-tasks to specialist agents, and merge results.
+

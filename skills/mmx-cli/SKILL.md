@@ -1,9 +1,21 @@
 ---
+id: 'mmx-cli'
 name: mmx-cli
 description: "Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax models, perform web search, or manage MiniMax API resources from the terminal."
 risk: safe
 source: "https://github.com/MiniMax-AI/cli"
 date_added: "2026-04-14"
+category: frontend-frameworks
+tags:
+- agent
+- ai
+- api
+- ci
+- orm
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # MiniMax CLI — Agent Skill Guide
@@ -11,7 +23,6 @@ date_added: "2026-04-14"
 Use `mmx` to generate text, images, video, speech, music, and perform web search via the MiniMax AI platform.
 
 ## When to Use
-
 Use this skill when the user wants to generate or inspect text, images, video, speech, music, web-search results, or MiniMax API resources through the `mmx` terminal CLI.
 
 ## Prerequisites
@@ -195,3 +206,14 @@ mmx video download --task-id "$TASK" --out robot.mp4
 - Requires a configured MiniMax account and valid authentication before any API-backed command will work.
 - Media-generation tasks can be async, quota-limited, or region-constrained; agents should handle delayed completion and provider-side failures explicitly.
 - This skill documents CLI usage only and does not replace provider policy review, content-safety checks, or downstream file validation.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

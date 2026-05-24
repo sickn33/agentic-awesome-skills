@@ -1,14 +1,27 @@
 ---
+id: 'new-rails-project'
 name: new-rails-project
 argument-hint: [project name]
 description: Create a new Rails project
 allowed-tools: Bash(rails *), Bash(bundle *), Bash(bin/*), Bash(npm *), Bash(yarn *)
 context: fork
-risk: unknown
+risk: critical
 source: community
 metadata:
   author: Shpigford
   version: "1.0"
+category: security-offensive
+tags:
+- css
+- frontend
+- react
+- security
+- tailwind
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 Generate a new Rails project named $1 in the current directory. You may reference @CLAUDE.md for general guidance, though the guidance here takes precedence.
@@ -68,3 +81,14 @@ Verify the boilerplate is working by running `bin/rails server` and accessing th
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

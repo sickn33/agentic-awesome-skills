@@ -1,9 +1,21 @@
 ---
+id: 'saas-mvp-launcher'
 name: saas-mvp-launcher
 description: "Use when planning or building a SaaS MVP from scratch. Provides a structured roadmap covering tech stack, architecture, auth, payments, and launch checklist."
 risk: safe
 source: community
 date_added: "2026-03-04"
+category: security-offensive
+tags:
+- css
+- frontend
+- react
+- security
+- tailwind
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # SaaS MVP Launcher
@@ -221,3 +233,14 @@ export async function createCheckoutSession(userId: string, priceId: string) {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

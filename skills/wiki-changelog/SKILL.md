@@ -1,9 +1,21 @@
 ---
+id: 'wiki-changelog'
 name: wiki-changelog
 description: "Generate structured changelogs from git history. Use when user asks \"what changed recently\", \"generate a changelog\", \"summarize commits\" or user wants to understand recent development activity."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: 'devops'
+tags:
+- ai
+- ci
+- docs
+- git
+- migration
+- readme
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Wiki Changelog
@@ -30,3 +42,14 @@ Generate structured changelogs from git history.
 
 ### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Examples
+
+### Example 1: Set up a GitHub Actions CI pipeline
+
+Create `.github/workflows/ci.yml` that runs lint, tests, and Docker build on every pull request.
+
+### Example 2: Dockerize a Python FastAPI app
+
+Write a multi-stage `Dockerfile` with a slim base image and a `docker-compose.yml` for local development.
+

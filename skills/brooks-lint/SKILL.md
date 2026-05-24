@@ -1,7 +1,8 @@
 ---
+id: 'brooks-lint'
 name: brooks-lint
 description: "AI code reviewer grounded in classic software engineering books for catching design smells, coupling issues, and architectural risks."
-category: development
+category: devops
 risk: safe
 source: community
 source_repo: hyhmrright/brooks-lint

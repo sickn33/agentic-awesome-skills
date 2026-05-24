@@ -1,8 +1,21 @@
 ---
+id: 'odoo-orm-expert'
 name: odoo-orm-expert
 description: "Master Odoo ORM patterns: search, browse, create, write, domain filters, computed fields, and performance-safe query techniques."
 risk: safe
 source: "self"
+category: database
+tags:
+- api
+- ci
+- security
+- server
+- sql
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Odoo ORM Expert

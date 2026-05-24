@@ -1,9 +1,21 @@
 ---
+id: 'logistics-exception-management'
 name: logistics-exception-management
 description: Codified expertise for handling freight exceptions, shipment delays, damages, losses, and carrier disputes. Informed by logistics professionals with 15+ years operational experience.
 risk: safe
 source: https://github.com/ai-evos/agent-skills
 date_added: '2026-02-27'
+category: security-offensive
+tags:
+- ci
+- design
+- orm
+- rest
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 ## When to Use
@@ -206,3 +218,14 @@ Use this skill when you need to **triage and resolve logistics exceptions or des
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

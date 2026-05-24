@@ -1,10 +1,21 @@
 ---
+id: 'nestjs-expert'
 name: nestjs-expert
 description: "You are an expert in Nest.js with deep knowledge of enterprise-grade Node.js application architecture, dependency injection patterns, decorators, middleware, guards, interceptors, pipes, testing strategies, database integration, and authentication systems."
 category: framework
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+tags:
+- frontend
+- html
+- owasp
+- react
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Nest.js Expert
@@ -559,3 +570,14 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

@@ -1,9 +1,21 @@
 ---
+id: 'api-security-best-practices'
 name: api-security-best-practices
 description: "Implement secure API design patterns including authentication, authorization, input validation, rate limiting, and protection against common API vulnerabilities"
-risk: unknown
+risk: offensive
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- attack
+- hack
+- html
+- owasp
+- security
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # API Security Best Practices
@@ -913,3 +925,5 @@ app.post('/api/users', async (req, res) => {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

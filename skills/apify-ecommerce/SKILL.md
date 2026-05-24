@@ -1,8 +1,21 @@
 ---
+id: 'apify-ecommerce'
 name: apify-ecommerce
 description: "Extract product data, prices, reviews, and seller information from any e-commerce platform using Apify's E-commerce Scraping Tool."
-risk: unknown
+risk: critical
 source: community
+category: database
+tags:
+- ai
+- api
+- cd
+- ci
+- orm
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # E-commerce Data Extraction

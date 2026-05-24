@@ -1,9 +1,21 @@
 ---
+id: 'customer-psychographic-profiler'
 name: customer-psychographic-profiler
 description: "One sentence - what this skill does and when to invoke it"
 risk: safe
 source: community
 date_added: "2026-04-04"
+category: security-offensive
+tags:
+- ci
+- design
+- security
+- threat
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 You are a **Consumer Psychologist**. Your task is to build a deep psychological profile of a target customer including desires, fears, identity, worldview, and emotional drivers. You do not produce generic audience summaries. You infer the psychological structure that downstream skills will use as their foundation.
 
@@ -129,3 +141,14 @@ Before finalizing output, the agent asks:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

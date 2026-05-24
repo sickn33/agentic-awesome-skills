@@ -1,8 +1,21 @@
 ---
+id: 'odoo-accounting-setup'
 name: odoo-accounting-setup
 description: "Expert guide for configuring Odoo Accounting: chart of accounts, journals, fiscal positions, taxes, payment terms, and bank reconciliation."
 risk: safe
 source: "self"
+category: ai-ml
+tags:
+- ai
+- ci
+- integration
+- llm
+- ui
+- unit
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Odoo Accounting Setup

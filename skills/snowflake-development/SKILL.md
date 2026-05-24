@@ -1,10 +1,21 @@
 ---
+id: 'snowflake-development'
 name: snowflake-development
 description: "Comprehensive Snowflake development assistant covering SQL best practices, data pipeline design (Dynamic Tables, Streams, Tasks, Snowpipe), Cortex AI functions, Cortex Agents, Snowpark Python, dbt integration, performance tuning, and security hardening."
 category: data-engineering
 risk: safe
 source: community
 date_added: "2026-03-24"
+tags:
+- cd
+- ci
+- pipeline
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Snowflake Development
@@ -235,3 +246,14 @@ Snowflake-specific configs (combine with any materialization):
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Clean a messy CSV dataset
+
+Remove duplicate rows, normalize date formats to ISO 8601, fill missing `country` values from the `zip_code` column.
+
+### Example 2: Build a dbt model for monthly revenue
+
+Create a `revenue_monthly` model that joins `orders` and `payments`, grouping by month and currency.
+

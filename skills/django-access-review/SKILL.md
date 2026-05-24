@@ -1,8 +1,21 @@
 ---
+id: 'django-access-review'
 name: django-access-review
 description: django-access-review
-risk: unknown
+risk: critical
 source: community
+category: security-offensive
+tags:
+- attack
+- component
+- owasp
+- security
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 ---

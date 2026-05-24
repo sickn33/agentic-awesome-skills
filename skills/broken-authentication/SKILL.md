@@ -1,10 +1,21 @@
 ---
+id: 'broken-authentication'
 name: broken-authentication
 description: "Identify and exploit authentication and session management vulnerabilities in web applications. Broken authentication consistently ranks in the OWASP Top 10 and can lead to account takeover, identity theft, and unauthorized access to sensitive systems."
-risk: unknown
+risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- attack
+- component
+- owasp
+- security
+- ui
+- vuln
+tools:
+- claude-code
 ---
 
 # Broken Authentication Testing
@@ -478,3 +489,5 @@ https://target.com/reset?token=a1b2c3d4e5f6&email=admin@example.com
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

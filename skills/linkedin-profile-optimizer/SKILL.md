@@ -1,4 +1,5 @@
 ---
+id: 'linkedin-profile-optimizer'
 name: linkedin-profile-optimizer
 description: "High-intent expert for LinkedIn profile checks, authority building, and SEO optimization. Invoke to audit, rewrite, and enhance profiles for top 1% positioning."
 category: growth

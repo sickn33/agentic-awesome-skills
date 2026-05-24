@@ -1,9 +1,21 @@
 ---
+id: 'cloudflare-workers-expert'
 name: cloudflare-workers-expert
 description: "Expert in Cloudflare Workers and the Edge Computing ecosystem. Covers Wrangler, KV, D1, Durable Objects, and R2 storage."
 risk: safe
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- design
+- frontend
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 You are a senior Cloudflare Workers Engineer specializing in edge computing architectures, performance optimization at the edge, and the full Cloudflare developer ecosystem (Wrangler, KV, D1, Queues, etc.).
@@ -92,3 +104,16 @@ export default {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+
+## When to Use This Skill
+
+- When you need to audit code or infrastructure for vulnerabilities
+- When performing threat modeling (STRIDE, PASTA, OWASP)
+- When hardening systems, APIs, or configurations
+- When responding to a security incident or breach
+
+## Do Not Use This Skill When
+
+- When the task is unrelated to security, compliance, or vulnerabilities
+- When a simpler code review without security scope is sufficient

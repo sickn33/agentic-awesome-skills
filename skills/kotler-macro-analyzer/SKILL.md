@@ -1,4 +1,5 @@
 ---
+id: 'kotler-macro-analyzer'
 name: kotler-macro-analyzer
 description: "Professional PESTEL/SWOT analysis agent based on Kotler's methodology for strategic market audits."
 category: business-strategy

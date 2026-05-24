@@ -1,4 +1,5 @@
 ---
+id: 'google-sheets-automation'
 name: google-sheets-automation
 description: "Lightweight Google Sheets integration with standalone OAuth authentication. No MCP server required. Full read/write access."
 risk: critical
@@ -7,6 +8,18 @@ license: Apache-2.0
 metadata:
   author: sanjay3290
   version: "1.0"
+category: frontend-frameworks
+tags:
+- api
+- ci
+- orm
+- server
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Google Sheets
@@ -147,3 +160,14 @@ Use this skill when tackling tasks related to its primary domain or functionalit
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

@@ -1,8 +1,21 @@
 ---
+id: 'context-compression'
 name: context-compression
 description: "When agent sessions generate millions of tokens of conversation history, compression becomes mandatory. The naive approach is aggressive compression to minimize tokens per request."
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- api
+- ci
+- component
+- design
+- endpoint
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Context Compression Strategies

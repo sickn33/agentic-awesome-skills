@@ -1,10 +1,23 @@
 ---
+id: 'semgrep-rule-variant-creator'
 name: semgrep-rule-variant-creator
 description: Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languages as input, produces independent rule+test directories for each language.
 allowed-tools:
  ...
-risk: unknown
+risk: critical
 source: community
+category: security-offensive
+tags:
+- ai
+- api
+- ci
+- sql
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Semgrep Rule Variant Creator
@@ -203,3 +216,14 @@ See workflow.md for detailed workflow and troubleshooting.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

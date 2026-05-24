@@ -1,7 +1,8 @@
 ---
+id: 'gpt-taste'
 name: gpt-taste
 description: "Use when generating elite GSAP-heavy frontend pages with strict AIDA structure, wide hero typography, and gapless bento grids."
-category: frontend
+category: frontend-frameworks
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # CORE DIRECTIVE: AWWWARDS-LEVEL DESIGN ENGINEERING
 
 ## When to Use
-
 - Use when the user asks for an award-level landing page, marketing page, or creative frontend with cinematic motion.
 - Use when GSAP, pinned scroll, scrubbing, card stacking, horizontal motion, or other advanced animation is appropriate.
 - Use when the output must avoid narrow six-line hero headings, cheap meta labels, empty bento cells, and generic left-right sections.
@@ -94,3 +94,14 @@ Before writing ANY React/UI code, you MUST output a `<design_plan>` block contai
 4. **Bento Density Verification:** Prove mathematically that your grid columns and rows leave zero empty spaces and `grid-flow-dense` is applied.
 5. **Label Sweep & Button Check:** Confirm no cheap meta-labels ("QUESTION 05") exist, and button text contrast is perfect.
 Only output the UI code after this rigorous verification is complete.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

@@ -1,10 +1,21 @@
 ---
+id: 'typescript-expert'
 name: typescript-expert
 description: TypeScript and JavaScript expert with deep knowledge of type-level programming, performance optimization, monorepo management, migration strategies, and modern tooling.
 category: framework
 risk: critical
 source: community
 date_added: '2026-02-27'
+tags:
+- api
+- html
+- rest
+- server
+- ui
+- vue
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # TypeScript Expert
@@ -429,3 +440,14 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

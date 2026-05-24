@@ -1,4 +1,5 @@
 ---
+id: 'lex'
 name: lex
 description: "Centralized 'Truth Engine' for cross-jurisdictional legal context (US, EU, CA) and contract scaffolding."
 category: business

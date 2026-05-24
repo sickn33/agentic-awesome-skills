@@ -1,9 +1,22 @@
 ---
+id: 'goal-analyzer'
 name: goal-analyzer
 description: 分析健康目标数据、识别目标模式、评估目标进度,并提供个性化目标管理建议。支持与营养、运动、睡眠等健康数据的关联分析。
 allowed-tools: Read, Grep, Glob, Write
-risk: unknown
+risk: critical
 source: community
+category: frontend-frameworks
+tags:
+- cd
+- ci
+- css
+- html
+- orm
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # 健康目标分析器技能
@@ -615,3 +628,14 @@ def validate_smart_goal(goal):
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

@@ -1,4 +1,5 @@
 ---
+id: 'itil-expert'
 name: itil-expert
 description: Expert advisor for ITIL 4 and ITIL 5 (2026 digital product paradigm), specialized in AI-native governance, sustainability, and value co-creation.
 risk: safe
@@ -11,6 +12,17 @@ triggers:
   - "design service value stream"
   - "ai governance guidance"
   - "digital product management itil"
+category: devops
+tags:
+- cd
+- ci
+- design
+- devops
+- pipeline
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # ITIL Expert (ITIL 4 & 5)
@@ -86,3 +98,14 @@ Sustainability is a primary metric of success in ITIL 5.
 - [ITIL 5 Evolution Guide](./references/itil-5-evolution.md)
 - [Real-World Usage Scenarios](./examples/itil-usage.md)
 - [ITIL 5 Extension Modules (2026 Edition)](https://www.peoplecert.org)
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

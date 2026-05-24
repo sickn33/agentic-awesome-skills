@@ -1,4 +1,5 @@
 ---
+id: 'rayden-use'
 name: rayden-use
 description: Build and maintain Rayden UI components and screens in Figma via Figma MCP with full design token enforcement
 category: design

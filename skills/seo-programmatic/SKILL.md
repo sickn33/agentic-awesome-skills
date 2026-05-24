@@ -1,7 +1,8 @@
 ---
+id: 'seo-programmatic'
 name: seo-programmatic
 description: "Plan and audit programmatic SEO pages generated at scale from structured data. Use when designing templates, URL systems, internal linking, quality gates, and index-bloat safeguards for pages at scale."
-risk: unknown
+risk: critical
 source: "https://github.com/AgriciDaniel/claude-seo"
 date_added: "2026-03-21"
 user-invokable: true
@@ -13,6 +14,17 @@ allowed-tools:
   - Bash
   - WebFetch
   - Write
+category: security-offensive
+tags:
+- api
+- ci
+- database
+- design
+- endpoint
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Programmatic SEO Analysis & Planning
@@ -186,3 +198,14 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

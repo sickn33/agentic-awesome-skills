@@ -1,4 +1,5 @@
 ---
+id: 'satori'
 name: satori
 description: "Clinically informed wisdom companion blending psychology and philosophy into a structured thinking partner"
 category: personal-development

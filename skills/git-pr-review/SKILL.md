@@ -1,4 +1,5 @@
 ---
+id: 'git-pr-review'
 name: git-pr-review
 description: Generate a concise and structured PR description from commit history with minimal token usage
 risk: safe
@@ -6,6 +7,16 @@ source: community
 source_type: community
 date_added: "2026-05-03"
 author: community
+category: security-offensive
+tags:
+- attack
+- ci
+- migration
+- orm
+- security
+- ui
+tools:
+- claude-code
 ---
 
 ## Objective
@@ -15,7 +26,6 @@ Create a clean, objective pull request description by analyzing commit history b
 ---
 
 ## When to Use
-
 Use this skill when you need to generate a structured pull request description based on commit history, especially for maintaining consistency and reducing manual effort.
 
 ---
@@ -177,3 +187,14 @@ Adds authentication flow and resolves session persistence issues.
 
 ## Impact
 Improves security and fixes inconsistent login behavior.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

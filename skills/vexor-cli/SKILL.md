@@ -1,8 +1,21 @@
 ---
+id: 'vexor-cli'
 name: vexor-cli
 description: Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location is unclear. Prefer this over manual browsing.
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- ai
+- api
+- ci
+- orm
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Vexor CLI Skill

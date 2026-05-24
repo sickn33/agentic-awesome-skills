@@ -1,9 +1,21 @@
 ---
+id: 'tool-design'
 name: tool-design
 description: "Build tools that agents can use effectively, including architectural reduction patterns. Use when creating new tools for agent systems, debugging tool-related failures or misuse, or optimizing existing tool sets for better agent performance."
 risk: safe
 source: "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/tool-design"
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- api
+- ci
+- database
+- design
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 ## When to Use This Skill

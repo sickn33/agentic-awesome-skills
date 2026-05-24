@@ -1,9 +1,21 @@
 ---
+id: 'dotnet-backend'
 name: dotnet-backend
 description: "Build ASP.NET Core 8+ backend services with EF Core, auth, background jobs, and production API patterns."
 risk: safe
 source: self
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- backend
+- design
+- frontend
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # .NET Backend Agent - ASP.NET Core & Enterprise API Expert
@@ -262,3 +274,14 @@ public class EmailSenderService : BackgroundService
 - Assumes modern .NET (ASP.NET Core 8+); older .NET Framework projects may require different patterns.
 - Does not cover client-side/frontend implementations.
 - Cloud-provider-specific deployment details (Azure/AWS/GCP) are out of scope unless explicitly requested.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

@@ -1,8 +1,22 @@
 ---
+id: 'filesystem-context'
 name: filesystem-context
 description: Use for file-based context management, dynamic context discovery, and reducing context window bloat. Offload context to files for just-in-time loading.
-risk: unknown
+risk: critical
 source: community
+category: backend-frameworks
+tags:
+- api
+- design
+- endpoint
+- graphql
+- rest
+- ui
+tools:
+- claude-code
+- cursor
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Filesystem-Based Context Engineering

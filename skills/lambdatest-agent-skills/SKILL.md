@@ -1,4 +1,5 @@
 ---
+id: 'lambdatest-agent-skills'
 name: lambdatest-agent-skills
 description: "Production-grade test automation skills for 46 frameworks across E2E, unit, mobile, BDD, visual, and cloud testing in 15+ languages."
 category: testing

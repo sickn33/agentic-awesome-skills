@@ -1,4 +1,5 @@
 ---
+id: 'viboscope'
 name: viboscope
 description: "Psychological compatibility matching — find cofounders, collaborators, and friends through validated psychometrics"
 category: collaboration

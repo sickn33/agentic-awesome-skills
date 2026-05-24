@@ -1,9 +1,21 @@
 ---
+id: 'team-composition-analysis'
 name: team-composition-analysis
 description: "Design optimal team structures, hiring plans, compensation strategies, and equity allocation for early-stage startups from pre-seed through Series A."
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
+category: devops
+tags:
+- backend
+- design
+- devops
+- frontend
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Team Composition Analysis
@@ -31,6 +43,18 @@ Design optimal team structures, hiring plans, compensation strategies, and equit
 
 Build the right team at the right time with appropriate compensation and equity. Plan role-by-role hiring aligned with revenue milestones, budget constraints, and market benchmarks.
 
+
+## When to Use This Skill
+
+- When building or reviewing UI components, layouts, or design systems
+- When you need help with HTML, CSS, or JavaScript/TypeScript frontend code
+- When auditing for accessibility, performance, or responsiveness
+- When migrating or refactoring a frontend framework
+
+## Do Not Use This Skill When
+
+- When the task is purely backend or infrastructure-related
+- When no UI, design, or browser environment is involved
 ## Team Structure by Stage
 
 ### Pre-Seed (0-$500K ARR)

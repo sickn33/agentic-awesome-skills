@@ -1,7 +1,8 @@
 ---
+id: 'high-end-visual-design'
 name: high-end-visual-design
 description: "Use when designing expensive agency-grade interfaces with premium fonts, spatial rhythm, soft depth, and fluid microinteractions."
-category: frontend
+category: frontend-frameworks
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)
 
 ## When to Use
-
 - Use when the user wants a high-end agency, Awwwards-tier, Apple-like, Linear-like, luxury, or polished visual design.
 - Use when building a landing page, portfolio, SaaS UI, consumer product page, or app surface that needs premium depth and motion.
 - Use when the design must avoid generic fonts, harsh shadows, static layouts, default navbars, and ordinary Bootstrap-style grids.
@@ -117,3 +117,14 @@ Evaluate your code against this matrix before delivering. This is the last filte
 - [ ] All animations use only `transform` and `opacity` — no layout-triggering properties
 - [ ] `backdrop-blur` is only applied to fixed/sticky elements, never to scrolling content
 - [ ] The overall impression reads as "$150k agency build", not "template with nice fonts"
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

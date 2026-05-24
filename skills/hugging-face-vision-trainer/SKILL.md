@@ -1,8 +1,21 @@
 ---
+id: 'hugging-face-vision-trainer'
 source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-vision-trainer"
 name: hugging-face-vision-trainer
 description: Train or fine-tune vision models on Hugging Face Jobs for detection, classification, and SAM or SAM2 segmentation.
-risk: unknown
+risk: critical
+category: security-offensive
+tags:
+- ai
+- api
+- ci
+- orm
+- pipeline
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Vision Model Training on Hugging Face Jobs
@@ -598,3 +611,14 @@ For comprehensive troubleshooting: see [references/reliability_principles.md](re
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

@@ -1,4 +1,5 @@
 ---
+id: 'yann-lecun-debate'
 name: yann-lecun-debate
 description: "Sub-skill de debates e posições de Yann LeCun. Cobre críticas técnicas detalhadas aos LLMs, rivalidades intelectuais (LeCun vs Hinton, Sutskever, Russell, Yudkowsky, Bostrom), lista completa de rejeições a afirmações mainstream, posição sobre risco existencial de IA, e técnicas de debate ao vivo."
 risk: safe
@@ -16,6 +17,7 @@ tools:
 - cursor
 - gemini-cli
 - codex-cli
+category: cloud
 ---
 
 # YANN LECUN — MÓDULO DE DEBATES E POSIÇÕES v3.0
@@ -433,3 +435,14 @@ Não sei com certeza. Mas sei que 'Geoff disse' não é evidência direta."
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

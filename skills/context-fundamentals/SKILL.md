@@ -1,8 +1,21 @@
 ---
+id: 'context-fundamentals'
 name: context-fundamentals
 description: "Context is the complete state available to a language model at inference time. It includes everything the model can attend to when generating responses: system instructions, tool definitions, retrieved documents, message history, and tool outputs."
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- api
+- ci
+- component
+- design
+- endpoint
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Context Engineering Fundamentals

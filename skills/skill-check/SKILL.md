@@ -1,7 +1,8 @@
 ---
+id: 'skill-check'
 name: skill-check
 description: "Validate Claude Code skills against the agentskills specification. Catches structural, semantic, and naming issues before users do."
-category: development
+category: security-offensive
 risk: safe
 source: https://github.com/olgasafonova/SkillCheck-Free
 date_added: "2026-03-11"

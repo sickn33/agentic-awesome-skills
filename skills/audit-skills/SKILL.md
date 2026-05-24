@@ -1,7 +1,8 @@
 ---
+id: 'audit-skills'
 name: audit-skills
 description: "Expert security auditor for AI Skills and Bundles. Performs non-intrusive static analysis to identify malicious patterns, data leaks, system stability risks, and obfuscated payloads across Windows, macOS, Linux/Unix, and Mobile (Android/iOS)."
-category: security
+category: security-offensive
 risk: safe
 source: community
 date_added: "2026-03-07"

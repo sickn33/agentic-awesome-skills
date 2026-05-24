@@ -1,9 +1,21 @@
 ---
+id: 'local-legal-seo-audit'
 name: local-legal-seo-audit
 description: "Audit and improve local SEO for law firms, attorneys, forensic experts and legal/professional services sites with local presence, focusing on GBP, directories, E-E-A-T and practice/location pages."
 risk: safe
 source: original
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- ai
+- ci
+- orm
+- schema
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Local Legal SEO Audit
@@ -350,3 +362,14 @@ Same format
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

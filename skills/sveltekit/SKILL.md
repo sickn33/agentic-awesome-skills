@@ -1,7 +1,8 @@
 ---
+id: 'sveltekit'
 name: sveltekit
 description: "Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework."
-category: frontend
+category: frontend-frameworks
 risk: safe
 source: community
 date_added: "2026-03-18"

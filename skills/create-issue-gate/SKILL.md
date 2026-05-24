@@ -1,9 +1,21 @@
 ---
+id: 'create-issue-gate'
 name: create-issue-gate
 description: Use when starting a new implementation task and an issue must be created with strict acceptance criteria gating before execution.
 risk: safe
 source: community
 date_added: "2026-03-12"
+category: cloud
+tags:
+- ai
+- ci
+- test
+- testing
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Create Issue Gate
@@ -97,3 +109,14 @@ If issue is `draft`, stop and request user-provided acceptance criteria.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

@@ -1,8 +1,21 @@
 ---
+id: 'code-simplifier'
 name: code-simplifier
 description: Simplifies and refines code for clarity, consistency, and maintainability while preserving all functionality. Use when asked to "simplify code", "clean up code", "refactor for clarity", "improve readability", or review recently modified code for elegance. Focuses on project-specific best practices.
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- ai
+- ci
+- claude
+- component
+- react
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 <!--

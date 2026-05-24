@@ -1,4 +1,5 @@
 ---
+id: 'uniprot-database'
 name: uniprot-database
 description: Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bioservices (unified interface to 40+ services). Use this for direct HTTP/REST work or UniProt-specific control.
 license: Unknown
@@ -6,6 +7,18 @@ metadata:
     skill-author: K-Dense Inc.
 risk: safe
 source: community
+category: frontend-frameworks
+tags:
+- api
+- ci
+- database
+- endpoint
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # UniProt Database
@@ -197,3 +210,14 @@ See `/references/query_syntax.md` for comprehensive syntax documentation.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

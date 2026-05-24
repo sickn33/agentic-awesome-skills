@@ -1,11 +1,24 @@
 ---
+id: 'burpsuite-project-parser'
 name: burpsuite-project-parser
 description: Searches and explores Burp Suite project files (.burp) from the command line. Use when searching response headers or bodies with regex patterns, extracting security audit findings, dumping proxy history or site map data, or analyzing HTTP traffic captured in a Burp project.
 allowed-tools:
   - Bash
   - Read
-risk: unknown
+risk: offensive
 source: community
+category: security-offensive
+tags:
+- attack
+- html
+- security
+- threat
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Burp Project Parser
@@ -362,3 +375,5 @@ If not using the wrapper script, invoke directly:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

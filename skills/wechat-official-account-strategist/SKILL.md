@@ -1,4 +1,5 @@
 ---
+id: 'wechat-official-account-strategist'
 name: wechat-official-account-strategist
 description: "Grow WeChat Official Accounts (微信公众号) with high-conversion content strategy, title formulas, article architecture, and Mini-Program integration."
 category: marketing

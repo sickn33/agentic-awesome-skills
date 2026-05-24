@@ -1,9 +1,22 @@
 ---
+id: 'codex-review'
 name: codex-review
 description: "Professional code review with auto CHANGELOG generation, integrated with Codex AI. Use when you want professional code review before commits, you need automatic CHANGELOG generation, or reviewing large-scale refactoring."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- ai
+- ci
+- git
+- test
+- testing
+- ui
+tools:
+- claude-code
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # codex-review

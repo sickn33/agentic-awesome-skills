@@ -1,9 +1,22 @@
 ---
+id: 'hugging-face-jobs'
 source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-jobs"
 name: hugging-face-jobs
 description: Run workloads on Hugging Face Jobs with managed CPUs, GPUs, TPUs, secrets, and Hub persistence.
 license: Complete terms in LICENSE.txt
-risk: unknown
+risk: offensive
+category: security-offensive
+tags:
+- api
+- ci
+- docker
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Running Workloads on Hugging Face Jobs
@@ -1048,3 +1061,15 @@ Add to PEP 723 header:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

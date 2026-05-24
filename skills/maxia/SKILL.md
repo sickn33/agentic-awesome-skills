@@ -1,12 +1,17 @@
 ---
+id: 'maxia'
 name: maxia
 description: Connect to MAXIA AI-to-AI marketplace on Solana. Discover, buy, sell AI services. Earn USDC. 13 MCP tools, A2A protocol, DeFi yields, sentiment analysis, rug detection.
-risk: unknown
+risk: critical
 source: community
 tags: [solana, crypto, marketplace, ai-agents, mcp, defi, usdc, web3, a2a]
 author: MAXIA
 version: 1.0.0
 homepage: https://maxiaworld.app
+category: security-offensive
+tools:
+- claude-code
+date_added: '2026-05-23'
 ---
 
 # MAXIA — AI-to-AI Marketplace on Solana
@@ -112,3 +117,14 @@ Tools: maxia_discover, maxia_register, maxia_sell, maxia_execute, maxia_negotiat
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

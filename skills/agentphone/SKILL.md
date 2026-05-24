@@ -1,4 +1,5 @@
 ---
+id: 'agentphone'
 name: agentphone
 version: 0.3.0
 description: Build AI phone agents with AgentPhone API. Use when the user wants to make phone calls, send/receive SMS, manage phone numbers, create voice agents, set up webhooks, or check usage — anything related to telephony, phone numbers, or voice AI.
@@ -7,6 +8,18 @@ source: community
 homepage: https://agentphone.to
 docs: https://docs.agentphone.to
 metadata: {"api_base": "https://api.agentphone.to/v1"}
+category: cloud
+tags:
+- api
+- backend
+- endpoint
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # AgentPhone

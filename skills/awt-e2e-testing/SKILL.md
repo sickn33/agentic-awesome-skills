@@ -1,8 +1,22 @@
 ---
+id: 'awt-e2e-testing'
 name: awt-e2e-testing
 description: "AI-powered E2E web testing — eyes and hands for AI coding tools. Declarative YAML scenarios, Playwright execution, visual matching (OpenCV + OCR), platform auto-detection (Flutter/React/Vue), learning DB. Install: npx skills add ksgisang/awt-skill --skill awt -g"
-risk: unknown
+risk: critical
 source: "https://github.com/ksgisang/awt-skill"
+category: cloud
+tags:
+- css
+- design
+- react
+- svelte
+- ui
+- vue
+tools:
+- claude-code
+- gemini-cli
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # AWT — AI-Powered E2E Testing (Beta)
@@ -38,3 +52,14 @@ Actively developed by a solo developer at AILoopLab. Feedback welcome!
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

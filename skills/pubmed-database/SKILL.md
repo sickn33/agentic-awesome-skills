@@ -1,11 +1,24 @@
 ---
+id: 'pubmed-database'
 name: pubmed-database
 description: Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopython (Bio.Entrez). Use this for direct HTTP/REST work or custom API implementations.
 license: Unknown
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: critical
 source: community
+category: frontend-frameworks
+tags:
+- api
+- design
+- endpoint
+- rest
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # PubMed Database
@@ -457,4 +470,14 @@ Load reference files into context as needed based on the specific task. For brie
 - **NLM Help Desk**: 1-888-FIND-NLM (1-888-346-3656)
 - **Technical Support**: vog.hin.mln.ibcn@seitilitue
 - **Mailing List**: utilities-announce@ncbi.nlm.nih.gov
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
 

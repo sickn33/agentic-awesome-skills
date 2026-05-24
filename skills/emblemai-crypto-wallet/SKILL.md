@@ -1,9 +1,21 @@
 ---
+id: 'emblemai-crypto-wallet'
 name: emblemai-crypto-wallet
 description: "Crypto wallet management across 7 blockchains via EmblemAI Agent Hustle API. Balance checks, token swaps, portfolio analysis, and transaction execution for Solana, Ethereum, Base, BSC, Polygon, Hedera, and Bitcoin."
 risk: critical
 source: "EmblemCompany/Agent-skills (MIT)"
 date_added: "2026-03-06"
+category: frontend-frameworks
+tags:
+- api
+- ci
+- endpoint
+- orm
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # EmblemAI Crypto Wallet
@@ -75,3 +87,14 @@ Authentication requires an API key passed as `x-api-key` header.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

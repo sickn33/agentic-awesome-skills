@@ -1,9 +1,21 @@
 ---
+id: 'marketing-ideas'
 name: marketing-ideas
 description: "Provide proven marketing strategies and growth ideas for SaaS and software products, prioritized using a marketing feasibility scoring system."
 risk: safe
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- ai
+- ci
+- orm
+- rag
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 # Marketing Ideas for SaaS (with Feasibility Scoring)
 

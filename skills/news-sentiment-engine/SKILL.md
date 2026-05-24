@@ -1,4 +1,5 @@
 ---
+id: 'news-sentiment-engine'
 name: news-sentiment-engine
 description: Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output
 category: research
@@ -20,7 +21,6 @@ plugin:
 Collect and analyze AI/tech news from multiple sources with Claude-powered sentiment analysis. Open source lite version.
 
 ## When to Use
-
 - Use when preparing a concise AI or technology news briefing from multiple RSS sources.
 - Use when you need ranked article summaries with sentiment, tags, and impact scoring.
 - Use when monitoring industry changes across product launches, policy moves, and infrastructure shifts.
@@ -110,3 +110,14 @@ Free tier covers news collection and basic analysis.
 ## Author
 
 Core module from a production news analysis engine processing 50+ articles daily since 2026.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

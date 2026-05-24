@@ -1,8 +1,21 @@
 ---
+id: 'sred-project-organizer'
 name: sred-project-organizer
 description: Take a list of projects and their related documentation, and organize them into the SRED format for submission.
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- ai
+- ci
+- claude
+- html
+- orm
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # SRED Project Organization

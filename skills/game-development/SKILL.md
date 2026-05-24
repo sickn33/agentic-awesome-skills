@@ -1,9 +1,21 @@
 ---
+id: 'game-development'
 name: game-development
 description: "Game development orchestrator. Routes to platform-specific skills based on project needs."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- ci
+- design
+- html
+- pipeline
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Game Development

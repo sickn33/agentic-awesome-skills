@@ -1,9 +1,21 @@
 ---
+id: 'app-store-optimization'
 name: app-store-optimization
 description: "Complete App Store Optimization (ASO) toolkit for researching, optimizing, and tracking mobile app performance on Apple App Store and Google Play Store"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: frontend-frameworks
+tags:
+- ai
+- ci
+- design
+- orm
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # App Store Optimization (ASO) Skill
@@ -407,3 +419,14 @@ This skill is based on current Apple App Store and Google Play Store requirement
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

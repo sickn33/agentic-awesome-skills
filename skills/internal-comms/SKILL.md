@@ -1,10 +1,22 @@
 ---
+id: 'internal-comms'
 name: internal-comms
 description: "Write internal communications such as status reports, leadership updates, 3P updates, newsletters, FAQs, incident reports, and project updates using repeatable internal formats."
-risk: unknown
+risk: critical
 source: "https://github.com/anthropics/skills"
 date_added: "2026-03-21"
 license: Complete terms in LICENSE.txt
+category: frontend-frameworks
+tags:
+- ci
+- newsletter
+- orm
+- test
+- testing
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 ## When to use this skill
@@ -38,3 +50,14 @@ If the communication type doesn't match any existing guideline, ask for clarific
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

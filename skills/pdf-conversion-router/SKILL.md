@@ -1,4 +1,5 @@
 ---
+id: 'pdf-conversion-router'
 name: pdf-conversion-router
 description: Use when converting a PDF into another format such as Markdown, HTML, text, JSON, DOCX, or structured notes and the agent must choose the best extraction route, settings, and cleanup strategy for maximum fidelity and readability.
 risk: safe
@@ -7,6 +8,17 @@ date_added: "2026-05-23"
 metadata:
   category: technique
   triggers: pdf conversion, convert pdf, pdf to markdown, pdf to html, pdf to text, pdf to json, pdf to docx, OCR pdf, slide deck pdf, medical pdf, scanned pdf
+category: 'frontend'
+tags:
+- ci
+- html
+- orm
+- pipeline
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # PDF Conversion Router
@@ -20,7 +32,6 @@ The goal is not "extract the most text". The goal is:
 - avoid noisy defaults when a better route exists
 
 ## When to Use
-
 - The user wants a PDF converted into another format.
 - The requested output is `.md`, `.html`, `.txt`, `.json`, `.docx`, or structured notes.
 - The PDF may be scanned, OCR-heavy, table-heavy, slide-based, medical, academic, or multi-column.
@@ -401,3 +412,14 @@ When reporting back, prefer saying:
 Do not deliver raw extractor output without a cleanup and validation pass when fidelity matters.
 
 If the document is complex, say which route was chosen and why.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

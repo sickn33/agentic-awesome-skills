@@ -1,4 +1,5 @@
 ---
+id: 'bulletmind'
 name: bulletmind
 description: "Convert input into clean, structured, hierarchical bullet points for summarization, note-taking, and structured thinking."
 category: writing

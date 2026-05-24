@@ -1,9 +1,22 @@
 ---
+id: 'context7-auto-research'
 name: context7-auto-research
 description: "Automatically fetch latest library/framework documentation for Claude Code via Context7 API. Use when you need up-to-date documentation for libraries and frameworks or asking about React, Next.js, Prisma, or any other popular library."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- ai
+- api
+- ci
+- claude
+- react
+- ui
+tools:
+- claude-code
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # context7-auto-research

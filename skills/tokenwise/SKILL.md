@@ -1,4 +1,5 @@
 ---
+id: 'tokenwise'
 name: tokenwise
 description: "Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper tiers before you trust the savings."
 category: developer-tools
@@ -26,8 +27,7 @@ A Claude Code skill that auto-routes subtasks to the cheapest model that can han
 
 Anthropic's own bug tracker (Issue #27665) reports 93.8% of Max-subscriber Claude Code tokens flow to Opus. Existing routers (claude-router, wshobson, VoltAgent) either pin models statically or route by vibes-based heuristics with no measurement. TokenWise fills the measurement gap.
 
-## When to use
-
+## When to Use
 - Cutting Claude Code token spend without sacrificing output quality
 - Validating whether Haiku/Sonnet is "good enough" for a specific task class before trusting auto-routing
 - Auditing where Opus tokens are actually being burned
@@ -83,3 +83,14 @@ Then run `/tokenwise:install` and follow the guided prompts.
 - Repo: https://github.com/CodeShuX/tokenwise
 - License: MIT
 - Author: CodeShuX
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

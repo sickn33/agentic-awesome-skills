@@ -1,8 +1,21 @@
 ---
+id: 'context-optimization'
 name: context-optimization
 description: "Context optimization extends the effective capacity of limited context windows through strategic compression, masking, caching, and partitioning. The goal is not to magically increase context windows but to make better use of available capacity."
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- ai
+- ci
+- component
+- design
+- orm
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Context Optimization Techniques

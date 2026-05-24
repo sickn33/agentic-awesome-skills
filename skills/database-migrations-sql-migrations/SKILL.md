@@ -1,9 +1,21 @@
 ---
+id: 'database-migrations-sql-migrations'
 name: database-migrations-sql-migrations
 description: "SQL database migrations with zero-downtime strategies for PostgreSQL, MySQL, and SQL Server. Focus on data integrity and rollback plans."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: devops
+tags:
+- ci
+- database
+- deploy
+- design
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # SQL Database Migration Strategy and Implementation
@@ -52,3 +64,14 @@ The user needs SQL database migrations that ensure data integrity, minimize down
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

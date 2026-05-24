@@ -1,11 +1,24 @@
 ---
+id: 'seo'
 name: seo
 description: "Run a broad SEO audit across technical SEO, on-page SEO, schema, sitemaps, content quality, AI search readiness, and GEO. Use as the umbrella skill when the user asks for a full SEO analysis or strategy."
-risk: unknown
+risk: critical
 source: "https://github.com/AgriciDaniel/claude-seo"
 date_added: "2026-03-21"
 user-invokable: true
 argument-hint: "[command] [url]"
+category: security-offensive
+tags:
+- ci
+- orm
+- rest
+- schema
+- security
+- ui
+tools:
+- claude-code
+- gemini-cli
+author: 'emanueleodierna'
 ---
 
 # SEO: Universal SEO Analysis Skill
@@ -141,3 +154,14 @@ For parallel analysis during audits:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

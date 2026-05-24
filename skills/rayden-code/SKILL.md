@@ -1,7 +1,8 @@
 ---
+id: 'rayden-code'
 name: rayden-code
 description: Generate React code with Rayden UI components using correct props, tokens, and premium layout patterns
-category: development
+category: frontend-frameworks
 risk: safe
 source: https://github.com/playbookTV/rayden-ui-design-skill
 source_type: community

@@ -1,10 +1,16 @@
 ---
+id: 'fp-types-ref'
 name: fp-types-ref
 description: Quick reference for fp-ts types. Use when user asks which type to use, needs Option/Either/Task decision help, or wants fp-ts imports.
 risk: safe
 source: community
 version: 1.0.0
 tags: [fp-ts, typescript, quick-reference, option, either, task]
+category: frontend-frameworks
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # fp-ts Quick Reference
@@ -76,3 +82,14 @@ pipe(result, E.match(
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

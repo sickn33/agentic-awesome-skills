@@ -1,9 +1,21 @@
 ---
+id: 'api-documentation-generator'
 name: api-documentation-generator
 description: "Generate comprehensive, developer-friendly API documentation from code, including endpoints, parameters, examples, and best practices"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: database
+tags:
+- api
+- component
+- design
+- rest
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # API Documentation Generator

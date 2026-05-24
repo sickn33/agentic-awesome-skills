@@ -1,9 +1,21 @@
 ---
+id: 'mcp-builder-ms'
 name: mcp-builder-ms
 description: "Use this skill when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK)."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- design
+- endpoint
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # MCP Server Development Guide
@@ -312,3 +324,14 @@ Load these resources as needed during development:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

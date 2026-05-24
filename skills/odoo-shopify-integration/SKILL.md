@@ -1,8 +1,21 @@
 ---
+id: 'odoo-shopify-integration'
 name: odoo-shopify-integration
 description: "Connect Odoo with Shopify: sync products, inventory, orders, and customers using the Shopify API and Odoo's external API or connector modules."
-risk: unknown
+risk: offensive
 source: community
+category: cloud
+tags:
+- api
+- ci
+- design
+- rest
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Odoo ↔ Shopify Integration
@@ -104,3 +117,5 @@ def shopify_order_webhook():
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

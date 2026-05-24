@@ -1,9 +1,21 @@
 ---
+id: 'kotlin-coroutines-expert'
 name: kotlin-coroutines-expert
 description: "Expert patterns for Kotlin Coroutines and Flow, covering structured concurrency, error handling, and testing."
 risk: safe
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- api
+- ci
+- design
+- orm
+- react
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Kotlin Coroutines Expert

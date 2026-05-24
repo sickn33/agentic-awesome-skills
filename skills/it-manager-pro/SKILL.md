@@ -1,4 +1,5 @@
 ---
+id: 'it-manager-pro'
 name: it-manager-pro
 description: Elite IT Management Advisor specializing in data-driven strategy, executive communication, and human-centric leadership for the 2026 digital era.
 risk: safe
@@ -15,6 +16,17 @@ triggers:
   - "cobit 2019 governance"
   - "togaf architecture advice"
   - "it framework selection"
+category: security-offensive
+tags:
+- ai
+- ci
+- design
+- orm
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # IT Manager Pro (Elite Leadership Advisor)
@@ -93,3 +105,14 @@ Leadership in a VUCA environment requires radical empathy and adaptability.
 - This skill provides strategic advisory and is not a substitute for legal, HR, or financial auditing specialized services.
 - Data-driven advice is only as good as the telemetry data provided by the user.
 - Always cross-reference AI-generated governance advice with local regulations.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

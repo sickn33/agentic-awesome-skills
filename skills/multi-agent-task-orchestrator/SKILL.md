@@ -1,4 +1,5 @@
 ---
+id: 'multi-agent-task-orchestrator'
 name: multi-agent-task-orchestrator
 description: "Route tasks to specialized AI agents with anti-duplication, quality gates, and 30-minute heartbeat monitoring"
 category: agent-orchestration

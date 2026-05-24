@@ -1,8 +1,22 @@
 ---
+id: 'context-degradation'
 name: context-degradation
 description: "Language models exhibit predictable degradation patterns as context length increases. Understanding these patterns is essential for diagnosing failures and designing resilient systems."
-risk: unknown
+risk: critical
 source: community
+category: security-offensive
+tags:
+- api
+- ci
+- design
+- rest
+- ui
+- vuln
+tools:
+- claude-code
+- gemini-cli
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Context Degradation Patterns

@@ -1,11 +1,23 @@
 ---
+id: 'discord-bot-architect'
 name: discord-bot-architect
 description: Specialized skill for building production-ready Discord bots.
   Covers Discord.js (JavaScript) and Pycord (Python), gateway intents, slash
   commands, interactive components, rate limiting, and sharding.
-risk: unknown
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
+category: security-offensive
+tags:
+- attack
+- component
+- design
+- react
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Discord Bot Architect
@@ -1457,3 +1469,14 @@ Use this skill when the request clearly matches the capabilities and patterns de
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

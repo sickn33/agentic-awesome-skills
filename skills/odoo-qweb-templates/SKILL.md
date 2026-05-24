@@ -1,8 +1,21 @@
 ---
+id: 'odoo-qweb-templates'
 name: odoo-qweb-templates
 description: "Expert in Odoo QWeb templating for PDF reports, email templates, and website pages. Covers t-if, t-foreach, t-field, and report actions."
 risk: safe
 source: "self"
+category: auth-identity
+tags:
+- ai
+- design
+- html
+- orm
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Odoo QWeb Templates

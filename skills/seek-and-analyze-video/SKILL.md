@@ -1,4 +1,5 @@
 ---
+id: 'seek-and-analyze-video'
 name: seek-and-analyze-video
 description: "Seek and analyze video content using Memories.ai Large Visual Memory Model for persistent video intelligence"
 category: data-ai

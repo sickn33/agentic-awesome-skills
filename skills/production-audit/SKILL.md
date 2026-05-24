@@ -1,7 +1,8 @@
 ---
+id: 'production-audit'
 name: production-audit
 description: "Audit a shipped repo for production-readiness gaps across RLS, webhooks, secrets, grants, Stripe idempotency, mobile UX, and deployment health."
-category: security
+category: security-offensive
 risk: critical
 source: community
 source_repo: commitshow/production-audit

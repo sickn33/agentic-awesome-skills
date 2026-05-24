@@ -1,10 +1,21 @@
 ---
+id: 'bash-scripting'
 name: bash-scripting
 description: "Bash scripting workflow for creating production-ready shell scripts with defensive patterns, error handling, and testing."
 category: granular-workflow-bundle
 risk: safe
 source: personal
 date_added: "2026-02-27"
+tags:
+- cd
+- ci
+- design
+- devops
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Bash Scripting Workflow
@@ -199,3 +210,14 @@ main "$@"
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Automate a daily report workflow
+
+Fetch data from a REST API, format it as a Markdown table, and post it to a Slack channel via webhook every morning.
+
+### Example 2: Orchestrate a multi-agent coding task
+
+Use a planner agent to decompose a feature request, dispatch sub-tasks to specialist agents, and merge results.
+

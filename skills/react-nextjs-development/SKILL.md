@@ -1,10 +1,21 @@
 ---
+id: 'react-nextjs-development'
 name: react-nextjs-development
 description: "React and Next.js 14+ application development with App Router, Server Components, TypeScript, Tailwind CSS, and modern frontend patterns."
 category: granular-workflow-bundle
 risk: safe
 source: personal
 date_added: "2026-02-27"
+tags:
+- css
+- design
+- frontend
+- react
+- tailwind
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # React/Next.js Development Workflow
@@ -231,3 +242,14 @@ Use @vercel-deployment to deploy Next.js app to production
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Automate a daily report workflow
+
+Fetch data from a REST API, format it as a Markdown table, and post it to a Slack channel via webhook every morning.
+
+### Example 2: Orchestrate a multi-agent coding task
+
+Use a planner agent to decompose a feature request, dispatch sub-tasks to specialist agents, and merge results.
+

@@ -1,7 +1,8 @@
 ---
+id: 'stitch-design-taste'
 name: stitch-design-taste
 description: "Use when generating Google Stitch DESIGN.md systems for premium typography, color, layout, motion intent, and anti-generic UI rules."
-category: frontend
+category: security-offensive
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # Stitch Design Taste — Semantic Design System Skill
 
 ## When to Use
-
 - Use when the user wants a Google Stitch-compatible DESIGN.md or semantic design system for AI screen generation.
 - Use when translating premium frontend taste rules into Stitch-friendly visual descriptions, color roles, typography specs, and component behavior.
 - Use when the design system must prevent generic AI UI patterns before screens are generated.
@@ -203,3 +203,14 @@ no generic placeholder names, no broken image links.)
 - Being too vague in atmosphere descriptions
 - Ignoring the anti-pattern list — these are what make the output premium
 - Defaulting to generic "safe" designs instead of enforcing the curated aesthetic
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

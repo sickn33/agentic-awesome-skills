@@ -1,10 +1,21 @@
 ---
+id: 'codebase-audit-pre-push'
 name: codebase-audit-pre-push
 description: "Deep audit before GitHub push: removes junk files, dead code, security holes, and optimization issues. Checks every file line-by-line for production readiness."
-category: development
+category: security-offensive
 risk: safe
 source: community
 date_added: "2026-03-05"
+tags:
+- design
+- frontend
+- html
+- security
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Pre-Push Codebase Audit
@@ -243,3 +254,14 @@ Overall: 9/10
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

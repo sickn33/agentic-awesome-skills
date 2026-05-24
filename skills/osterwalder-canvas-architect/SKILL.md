@@ -1,4 +1,5 @@
 ---
+id: 'osterwalder-canvas-architect'
 name: osterwalder-canvas-architect
 description: "Iterative consultant agent for building and validating logically consistent 9-block Business Model Canvases."
 category: business-strategy

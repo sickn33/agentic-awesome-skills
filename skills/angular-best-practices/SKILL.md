@@ -1,9 +1,21 @@
 ---
+id: 'angular-best-practices'
 name: angular-best-practices
 description: "Angular performance optimization and best practices guide. Use when writing, reviewing, or refactoring Angular code for optimal performance, bundle size, and rendering efficiency."
 risk: safe
 source: self
 date_added: "2026-02-27"
+category: frontend-frameworks
+tags:
+- api
+- component
+- frontend
+- html
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Angular Best Practices
@@ -561,3 +573,14 @@ export class Component implements OnInit, OnDestroy {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

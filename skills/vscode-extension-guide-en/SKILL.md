@@ -1,4 +1,5 @@
 ---
+id: 'vscode-extension-guide-en'
 name: vscode-extension-guide-en
 description: "Guide for VS Code extension development from scaffolding to Marketplace publication"
 category: core-dev
@@ -103,3 +104,14 @@ npx skills add lewiswigmore/agent-skills --skill vscode-extension-guide-en
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

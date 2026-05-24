@@ -1,10 +1,21 @@
 ---
+id: 'shodan-reconnaissance'
 name: shodan-reconnaissance
 description: "Provide systematic methodologies for leveraging Shodan as a reconnaissance tool during penetration testing engagements."
-risk: unknown
+risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- component
+- html
+- pentest
+- ui
+- ux
+- vuln
+tools:
+- claude-code
 ---
 
 # Shodan Reconnaissance and Pentesting
@@ -505,3 +516,5 @@ shodan download network_scan.json.gz 'net:192.168.1.0/24'
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

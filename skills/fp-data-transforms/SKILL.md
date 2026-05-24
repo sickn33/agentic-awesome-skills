@@ -1,7 +1,8 @@
 ---
+id: 'fp-data-transforms'
 name: fp-data-transforms
 description: Everyday data transformations using functional patterns - arrays, objects, grouping, aggregation, and null-safe access
-risk: unknown
+risk: critical
 source: community
 version: 1.0.0
 author: Claude
@@ -15,6 +16,10 @@ tags:
   - grouping
   - aggregation
   - null-safety
+category: auth-identity
+tools:
+- claude-code
+date_added: '2026-05-23'
 ---
 
 # Practical Data Transformations

@@ -1,8 +1,21 @@
 ---
+id: 'evolution'
 name: evolution
 description: "This skill enables makepad-skills to self-improve continuously during development."
 risk: critical
 source: community
+category: auth-identity
+tags:
+- api
+- ci
+- component
+- deploy
+- design
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Makepad Skills Evolution

@@ -1,11 +1,24 @@
 ---
+id: 'citation-management'
 name: citation-management
 description: "Manage citations systematically throughout the research and writing process."
 license: MIT License
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: critical
 source: community
+category: database
+tags:
+- api
+- cd
+- ci
+- database
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Citation Management

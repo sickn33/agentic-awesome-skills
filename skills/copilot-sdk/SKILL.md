@@ -1,9 +1,22 @@
 ---
+id: 'copilot-sdk'
 name: copilot-sdk
 description: "Build applications that programmatically interact with GitHub Copilot. The SDK wraps the Copilot CLI via JSON-RPC, providing session management, custom tools, hooks, MCP server integration, and streaming across Node.js, Python, Go, and .NET."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: cloud
+tags:
+- api
+- endpoint
+- rest
+- security
+- server
+- ui
+tools:
+- claude-code
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # GitHub Copilot SDK

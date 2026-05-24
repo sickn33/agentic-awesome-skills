@@ -1,4 +1,5 @@
 ---
+id: 'ejentum-reasoning-harness'
 name: ejentum-reasoning-harness
 description: "MCP server exposing four cognitive harness modes (reasoning, code, anti-deception, memory). Each call returns an engineered scaffold (failure pattern, procedure, suppression vectors, falsification test) the agent ingests before generating."
 risk: critical
@@ -16,6 +17,20 @@ plugin:
     type: manual
     summary: "Install the ejentum-mcp MCP server (`npx -y ejentum-mcp`) and provide an EJENTUM_API_KEY env var (free tier: 100 calls, no card, at https://ejentum.com/pricing). Add the server to your client's mcpServers config (Claude Code, Cursor, Cline, Windsurf, Codex CLI, Gemini CLI, Antigravity, or VS Code Copilot Chat)."
     docs: "https://github.com/ejentum/ejentum-mcp#installation"
+category: database
+tags:
+- api
+- graphql
+- rest
+- security
+- server
+- ui
+tools:
+- claude-code
+- cursor
+- antigravity
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # Ejentum Reasoning Harness

@@ -1,12 +1,36 @@
 ---
+id: 'hr-pro'
 name: hr-pro
 description: Professional, ethical HR partner for hiring, onboarding/offboarding, PTO and leave, performance, compliant policies, and employee relations.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
+category: security-offensive
+tags:
+- ci
+- design
+- migration
+- orm
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 ## Use this skill when
+
+## When to Use This Skill
+
+- When you need to audit code or infrastructure for vulnerabilities
+- When performing threat modeling (STRIDE, PASTA, OWASP)
+- When hardening systems, APIs, or configurations
+- When responding to a security incident or breach
+
+## Do Not Use This Skill When
+
+- When the task is unrelated to security, compliance, or vulnerabilities
+- When a simpler code review without security scope is sufficient
 
 - Working on hr pro tasks or workflows
 - Needing guidance, best practices, or checklists for hr pro

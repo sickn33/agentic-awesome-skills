@@ -1,12 +1,36 @@
 ---
+id: 'postgresql'
 name: postgresql
 description: "Design a PostgreSQL-specific schema. Covers best-practices, data types, indexing, constraints, performance patterns, and advanced features"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- ci
+- design
+- rest
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # PostgreSQL Table Design 
+
+## When to Use This Skill
+
+- When you need to audit code or infrastructure for vulnerabilities
+- When performing threat modeling (STRIDE, PASTA, OWASP)
+- When hardening systems, APIs, or configurations
+- When responding to a security incident or breach
+
+## Do Not Use This Skill When
+
+- When the task is unrelated to security, compliance, or vulnerabilities
+- When a simpler code review without security scope is sufficient
 
 ## Use this skill when
 

@@ -1,4 +1,5 @@
 ---
+id: 'youtube-summarizer'
 name: youtube-summarizer
 description: "Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks"
 category: content
@@ -6,6 +7,9 @@ risk: safe
 source: community
 tags: "[video, summarization, transcription, youtube, content-analysis]"
 date_added: "2026-02-27"
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # youtube-summarizer
@@ -412,3 +416,14 @@ Welcome to this comprehensive tutorial on machine learning fundamentals. In toda
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Write a README for a CLI tool
+
+Document installation, usage, flags, examples, and contribution guidelines for the `antigravity` CLI.
+
+### Example 2: Edit a blog post for clarity
+
+Shorten sentences over 30 words, replace jargon with plain language, and add subheadings every 300 words.
+

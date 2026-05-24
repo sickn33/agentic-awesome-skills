@@ -1,4 +1,5 @@
 ---
+id: 'trpc-fullstack'
 name: trpc-fullstack
 description: "Build end-to-end type-safe APIs with tRPC — routers, procedures, middleware, subscriptions, and Next.js/React integration patterns."
 category: framework

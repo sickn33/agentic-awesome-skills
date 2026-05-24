@@ -1,4 +1,5 @@
 ---
+id: 'it-manager-hospital'
 name: it-manager-hospital
 description: World-class Hospital IT Management Advisor specializing in clinical safety, digital maturity (HIMSS/ONA/JCI), and HIS/PEP ecosystems.
 risk: safe
@@ -13,6 +14,17 @@ triggers:
   - "his integration advice"
   - "pep mv soul tasy"
   - "hl7 fhir standards"
+category: security-offensive
+tags:
+- cd
+- ci
+- database
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Hospital IT Manager (Healthcare Digital Leader)
@@ -93,3 +105,14 @@ Everything in Hospital IT starts with "Do No Harm."
 ## Limitations
 - Provides strategic and operational advice, but is not a substitute for formal clinical, legal, or financial auditing.
 - Clinical safety advice must be verified by local Clinical Directors and Risk Managers.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

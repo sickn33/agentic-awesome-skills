@@ -1,12 +1,24 @@
 ---
+id: 'viral-generator-builder'
 name: viral-generator-builder
 description: Expert in building shareable generator tools that go viral - name
   generators, quiz makers, avatar creators, personality tests, and calculator
   tools. Covers the psychology of sharing, viral mechanics, and building tools
   people can't resist sharing with friends.
-risk: unknown
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
+category: frontend-frameworks
+tags:
+- design
+- frontend
+- react
+- rest
+- ui
+- vue
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Viral Generator Builder
@@ -301,3 +313,14 @@ Works well with: `viral-hooks`, `landing-page-design`, `seo`, `frontend`
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

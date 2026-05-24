@@ -1,8 +1,21 @@
 ---
+id: 'fda-food-safety-auditor'
 name: fda-food-safety-auditor
 description: "Expert AI auditor for FDA Food Safety (FSMA), HACCP, and PCQI compliance. Reviews food facility records and preventive controls."
 risk: safe
 source: community
+category: database
+tags:
+- ai
+- ci
+- design
+- orm
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # FDA Food Safety Auditor

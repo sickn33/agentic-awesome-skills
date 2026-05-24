@@ -1,9 +1,22 @@
 ---
+id: 'convex'
 name: convex
 description: "Convex reactive backend expert: schema design, TypeScript functions, real-time subscriptions, auth, file storage, scheduling, and deployment."
 risk: safe
 source: "https://docs.convex.dev"
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- frontend
+- html
+- react
+- svelte
+- ui
+- vue
+tools:
+- claude-code
+- cursor
+author: 'emanueleodierna'
 ---
 
 # Convex
@@ -795,3 +808,14 @@ npx convex logs
 - [GitHub](https://github.com/get-convex/convex-backend)
 - [Discord Community](https://convex.dev/community)
 - [Convex Chef (AI Starter)](https://chef.convex.dev)
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

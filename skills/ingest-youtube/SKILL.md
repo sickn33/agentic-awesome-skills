@@ -1,4 +1,5 @@
 ---
+id: 'ingest-youtube'
 name: ingest-youtube
 description: "Pull a YouTube video transcript into a queryable markdown vault with yt-dlp subtitle discovery, VTT cleanup, metadata frontmatter, and capture-seed stubs."
 risk: safe
@@ -14,6 +15,17 @@ plugin:
     type: manual
     summary: "Install yt-dlp locally before running ingest.py; the script only accepts http(s) YouTube video URLs and writes markdown into the selected vault."
     docs: "SKILL.md"
+category: frontend-frameworks
+tags:
+- agent
+- ai
+- ci
+- orm
+- rag
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # ingest-youtube — YouTube-to-vault connector
@@ -22,8 +34,7 @@ Pulls YouTube transcripts into a markdown vault as queryable typed-memory entrie
 
 Same pattern as ingest-slack, ingest-whatsapp, ingest-notion, ingest-linear, ingest-github, ingest-gmail. Adding YouTube means a new normalizer, not a new architecture.
 
-## When to use
-
+## When to Use
 - User pastes a YouTube URL and asks for a transcript or summary
 - User says `/ingest-youtube <url>` for a single video
 - User asks to capture, sync, ingest, transcribe, or pull a talk/podcast/keynote into the vault
@@ -123,3 +134,14 @@ The output file contains valid frontmatter and a clean prose body.
 ## Source
 
 Bundled in [adelaidasofia/ai-brain-starter](https://github.com/adelaidasofia/ai-brain-starter), a verification harness around an AI agent so memory compounds instead of corrupts. The skill is part of the ingest-* family of vault connectors.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

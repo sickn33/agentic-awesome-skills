@@ -38,3 +38,11 @@ Trigger this skill when:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Apply this skill to a design or animation task
+Describe your visual or interaction goal and the skill will guide you through the implementation step by step.
+
+### Example 2: Integrate with an existing project
+Share your current codebase or design system and the skill will suggest how to integrate its capabilities seamlessly.

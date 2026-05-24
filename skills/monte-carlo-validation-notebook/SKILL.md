@@ -1,4 +1,5 @@
 ---
+id: 'monte-carlo-validation-notebook'
 name: monte-carlo-validation-notebook
 description: "Generates SQL validation notebooks for dbt PR changes with before/after comparison queries."
 category: data
@@ -19,7 +20,6 @@ Generate a SQL Notebook with validation queries for dbt changes.
 **Arguments:** $ARGUMENTS
 
 ## When to Use
-
 Use this skill when the user wants to validate dbt model or snapshot changes with Monte Carlo SQL Notebook queries, either from a GitHub PR or a local dbt repository.
 
 Parse the arguments:
@@ -692,3 +692,14 @@ Focus on: how to install, configure connections, and run MC Bridge. Don't dump t
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Clean a messy CSV dataset
+
+Remove duplicate rows, normalize date formats to ISO 8601, fill missing `country` values from the `zip_code` column.
+
+### Example 2: Build a dbt model for monthly revenue
+
+Create a `revenue_monthly` model that joins `orders` and `payments`, grouping by month and currency.
+

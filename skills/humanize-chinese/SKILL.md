@@ -1,4 +1,5 @@
 ---
+id: 'humanize-chinese'
 name: humanize-chinese
 description: Detect and rewrite AI-like Chinese text with a practical workflow for scoring, humanization, academic AIGC reduction, and style conversion. Use when the user asks to 去AI味, 降AIGC, 去除AI痕迹, 论文降重, 知网检测, 维普检测, humanize chinese, detect AI text, or make Chinese text sound more natural.
 category: content
@@ -12,6 +13,9 @@ tags:
   - academic
   - style-transfer
 date_added: "2026-04-03"
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Humanize Chinese
@@ -148,3 +152,14 @@ Adapted from the `voidborne-d/humanize-chinese` project and its CLI/script workf
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Write a README for a CLI tool
+
+Document installation, usage, flags, examples, and contribution guidelines for the `antigravity` CLI.
+
+### Example 2: Edit a blog post for clarity
+
+Shorten sentences over 30 words, replace jargon with plain language, and add subheadings every 300 words.
+

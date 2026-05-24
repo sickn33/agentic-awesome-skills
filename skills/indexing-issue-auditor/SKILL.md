@@ -1,4 +1,5 @@
 ---
+id: 'indexing-issue-auditor'
 name: indexing-issue-auditor
 description: "High-level technical SEO and site architecture auditor. Invoke to scan local or live environments for indexing, crawl budget, and structural errors."
 category: growth

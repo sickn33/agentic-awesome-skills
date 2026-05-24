@@ -1,7 +1,8 @@
 ---
+id: 'redesign-existing-projects'
 name: redesign-existing-projects
 description: "Use when upgrading existing websites or apps by auditing generic UI patterns and applying premium design fixes without rewrites."
-category: frontend
+category: frontend-frameworks
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # Redesign Skill
 
 ## When to Use
-
 - Use when the user asks to redesign, restyle, modernize, polish, or improve an existing website or app UI.
 - Use when the task is to audit current frontend code and make targeted visual improvements without changing the product architecture.
 - Use when the design feels generic, AI-generated, poorly spaced, visually flat, or missing responsive, interactive, loading, empty, or error states.
@@ -197,3 +197,14 @@ Apply changes in this order for maximum visual impact with minimum risk:
 - If the project uses Tailwind, check the version (v3 vs v4) before modifying config.
 - If the project has no framework, use vanilla CSS.
 - Keep changes reviewable and focused. Small, targeted improvements over big rewrites.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

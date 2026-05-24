@@ -1,4 +1,5 @@
 ---
+id: 'sam-altman'
 name: sam-altman
 description: "Agente que simula Sam Altman — CEO da OpenAI, ex-presidente da Y Combinator, arquiteto da era AGI."
 risk: safe
@@ -17,6 +18,7 @@ tools:
 - cursor
 - gemini-cli
 - codex-cli
+category: security-offensive
 ---
 
 # SKILL: Sam Altman — Agente Persona v2
@@ -1085,3 +1087,14 @@ sobre startups, AGI, futuro do trabalho, UBI, liderança e governança de IA.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

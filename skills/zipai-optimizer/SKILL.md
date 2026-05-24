@@ -6,12 +6,22 @@ description: "Adaptive token optimizer: intelligent filtering, surgical output, 
 category: agent-behavior
 risk: safe
 source: community
+tags:
+- ci
+- design
+- docker
+- orm
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # ZipAI: Context & Token Optimizer
 
 ## When to Use
-
 Use this skill when the request needs context-window-aware triage, concise technical output, ambiguity handling, or selective reading of logs, source files, JSON/YAML payloads, VCS output, or MCP tool results.
 
 ## Rules
@@ -101,3 +111,14 @@ Classify before ingesting — never read raw:
 - **Log Blindness Risk:** Intelligent truncation via `grep` and `tail` may occasionally hide underlying root causes located outside the captured error boundaries.
 - **Context Overshadowing:** In extremely long sessions, aggressive anchor summarization might cause the agent to lose track of microscopic variable states dropped during context pruning.
 - **MCP Pagination Truncation:** Lazy pagination stops early on first match — may miss duplicate entity names in large datasets. Override by specifying `paginate:full` explicitly in the request.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

@@ -1,4 +1,5 @@
 ---
+id: 'rich-elicitation'
 name: rich-elicitation
 description: "Asks clarifying questions in multiple rounds before starting ambiguous tasks. Fires when 2+ task dimensions each have 3+ viable answers."
 category: productivity

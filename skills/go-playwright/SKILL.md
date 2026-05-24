@@ -1,9 +1,21 @@
 ---
+id: 'go-playwright'
 name: go-playwright
 description: "Expert capability for robust, stealthy, and efficient browser automation using Playwright Go."
 risk: safe
 source: "https://github.com/playwright-community/playwright-go"
 date_added: "2026-02-27"
+category: cloud
+tags:
+- api
+- ci
+- design
+- react
+- ui
+- vue
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Playwright Go Automation Expert
@@ -74,3 +86,14 @@ To bypass anti-bot systems (Cloudflare, Akamai), the generated code must **imita
  - Is it a new user identity? -> `NewContext`, apply new Proxy, rotate `User-Agent`.
  - Is the action critical? -> Wrap in `SafeAction` with Zap logging.
  - Is the target guarded (Cloudflare/Akamai)? -> Enable `HumanType`, `BezierMouse`, and Stealth Scripts.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

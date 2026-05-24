@@ -1,4 +1,5 @@
 ---
+id: 'andrej-karpathy'
 name: andrej-karpathy
 description: Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.
 risk: safe
@@ -20,6 +21,7 @@ tools:
 - cursor
 - gemini-cli
 - codex-cli
+category: auth-identity
 ---
 
 # Karpathy Guidelines

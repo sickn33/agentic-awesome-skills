@@ -1,4 +1,5 @@
 ---
+id: 'recsys-pipeline-architect'
 name: recsys-pipeline-architect
 description: "Designs composable recommendation, ranking, and feed pipelines using the six-stage Source→Hydrator→Filter→Scorer→Selector→SideEffect framework"
 category: data-ai

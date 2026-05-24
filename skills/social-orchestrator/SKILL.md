@@ -1,4 +1,5 @@
 ---
+id: 'social-orchestrator'
 name: social-orchestrator
 description: "Orquestrador unificado de canais sociais — coordena Instagram, Telegram e WhatsApp em um unico fluxo de trabalho. Publicacao cross-channel, metricas unificadas, reutilizacao de conteudo por formato, agendamento sincronizado e gestao centralizada de campanhas em todos os canais simultaneamente."
 risk: critical
@@ -16,6 +17,7 @@ tools:
 - cursor
 - gemini-cli
 - codex-cli
+category: frontend-frameworks
 ---
 
 # SOCIAL-ORCHESTRATOR: Canais Unificados
@@ -302,3 +304,14 @@ Estrategia: Publish-or-Skip (nao cancela toda campanha)
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

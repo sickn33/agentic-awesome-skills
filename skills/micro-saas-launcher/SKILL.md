@@ -1,12 +1,24 @@
 ---
+id: 'micro-saas-launcher'
 name: micro-saas-launcher
 description: Expert in launching small, focused SaaS products fast - the indie
   hacker approach to building profitable software. Covers idea validation, MVP
   development, pricing, launch strategies, and growing to sustainable revenue.
   Ship in weeks, not months.
-risk: unknown
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
+category: security-offensive
+tags:
+- backend
+- component
+- design
+- frontend
+- hack
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Micro-SaaS Launcher
@@ -518,3 +530,14 @@ Works well with: `landing-page-design`, `backend`, `stripe`, `seo`
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

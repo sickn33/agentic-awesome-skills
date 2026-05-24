@@ -1,9 +1,22 @@
 ---
+id: 'create-branch'
 name: create-branch
 description: Create a git branch following Sentry naming conventions. Use when asked to "create a branch", "new branch", "start a branch", "make a branch", "switch to a new branch", or when starting new work on the default branch.
 argument-hint: '[optional description of the work]'
 risk: critical
 source: community
+category: auth-identity
+tags:
+- api
+- component
+- css
+- react
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Create Branch

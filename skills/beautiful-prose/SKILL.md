@@ -1,8 +1,21 @@
 ---
+id: 'beautiful-prose'
 name: beautiful-prose
 description: A hard-edged writing style contract for timeless, forceful English prose without modern AI tics. Use when users ask for prose or rewrites that must be clean, exact, concrete, and free of AI cadence, filler, or therapeutic tone.
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- ai
+- ci
+- claude
+- orm
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Beautiful Prose (Claude Skill)

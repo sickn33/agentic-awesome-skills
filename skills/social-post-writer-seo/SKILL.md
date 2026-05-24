@@ -1,4 +1,5 @@
 ---
+id: 'social-post-writer-seo'
 name: social-post-writer-seo
 description: "Social Media Strategist and Content Writer. Creates clear, engaging social media posts for Instagram, LinkedIn, and Facebook."
 category: growth

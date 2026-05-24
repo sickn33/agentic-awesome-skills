@@ -1,9 +1,21 @@
 ---
+id: 'seo-aeo-keyword-research'
 name: seo-aeo-keyword-research
 description: "Researches and prioritises SEO keywords with AEO question queries, difficulty tiers, cannibalization checks, and a content map. Activate when the user wants to find keywords, research search terms, or build a keyword strategy."
 risk: safe
 source: community
 date_added: "2026-04-01"
+category: auth-identity
+tags:
+- agent
+- ai
+- ci
+- orm
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # SEO-AEO Keyword Research

@@ -1,10 +1,21 @@
 ---
+id: 'writing-skills'
 name: writing-skills
 description: "Use when creating, updating, or improving agent skills."
 category: meta
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+tags:
+- ci
+- component
+- deploy
+- design
+- orm
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Writing Skills (Excellence)

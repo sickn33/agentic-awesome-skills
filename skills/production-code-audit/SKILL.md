@@ -1,9 +1,21 @@
 ---
+id: 'production-code-audit'
 name: production-code-audit
 description: "Autonomously deep-scan entire codebase line-by-line, understand architecture and patterns, then systematically transform it to production-grade, corporate-level professional quality with optimizations"
-risk: unknown
+risk: offensive
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- design
+- owasp
+- react
+- security
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Production Code Audit
@@ -546,3 +558,5 @@ Current metrics:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

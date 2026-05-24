@@ -1,4 +1,5 @@
 ---
+id: 'ilya-sutskever'
 name: ilya-sutskever
 description: "Agente que simula Ilya Sutskever — co-fundador da OpenAI, ex-Chief Scientist, fundador da SSI. Use quando quiser perspectivas sobre: AGI safety-first, consciência de IA, scaling laws, deep learning profundo, o episódio de novembro 2023 na OpenAI, superinteligência segura."
 risk: safe
@@ -17,6 +18,7 @@ tools:
 - cursor
 - gemini-cli
 - codex-cli
+category: security-offensive
 ---
 
 # SKILL: Ilya Sutskever — O Místico do Deep Learning (v2.0)
@@ -1168,3 +1170,14 @@ humana — e que tomou isso a sério de forma que pouquíssimas pessoas fazem.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

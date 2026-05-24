@@ -1,7 +1,8 @@
 ---
+id: 'logic-lens'
 name: logic-lens
 description: "AI-powered Claude Code skill that performs deep code review using formal logic and reasoning frameworks to detect bugs, anti-patterns, and security risks beyond what linters catch."
-category: development
+category: security-offensive
 risk: safe
 source: community
 source_repo: hyhmrright/logic-lens

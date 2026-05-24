@@ -1,9 +1,21 @@
 ---
+id: 'android-jetpack-compose-expert'
 name: android-jetpack-compose-expert
 description: "Expert guidance for building modern Android UIs with Jetpack Compose, covering state management, navigation, performance, and Material Design 3."
 risk: safe
 source: community
 date_added: "2026-02-27"
+category: auth-identity
+tags:
+- ai
+- ci
+- component
+- orm
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Android Jetpack Compose Expert

@@ -1,12 +1,25 @@
 ---
+id: 'comprehensive-review-pr-enhance'
 name: comprehensive-review-pr-enhance
 description: >
   Generate structured PR descriptions from diffs, add review checklists,
   risk assessments, and test coverage summaries. Use when the user says
   "write a PR description", "improve this PR", "summarize my changes",
   "PR review", "pull request", or asks to document a diff for reviewers.
-risk: unknown
+risk: critical
 source: community
+category: security-offensive
+tags:
+- ci
+- migration
+- rag
+- security
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Pull Request Enhancement
@@ -80,3 +93,14 @@ git cherry-pick <commits-for-part-1>
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

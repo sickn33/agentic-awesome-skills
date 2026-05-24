@@ -1,4 +1,5 @@
 ---
+id: 'kubestellar-console'
 name: kubestellar-console
 description: "Multi-cluster Kubernetes dashboard with AI-powered operations via MCP server and 10+ built-in agent skills"
 category: devops
@@ -103,3 +104,14 @@ The project ships with agent skills accessible via `CLAUDE.md` and `AGENTS.md`:
 - [Website](https://console.kubestellar.io)
 - [CLAUDE.md](https://github.com/kubestellar/console/blob/main/CLAUDE.md)
 - [AGENTS.md](https://github.com/kubestellar/console/blob/main/AGENTS.md)
+
+## Examples
+
+### Example 1: Set up a GitHub Actions CI pipeline
+
+Create `.github/workflows/ci.yml` that runs lint, tests, and Docker build on every pull request.
+
+### Example 2: Dockerize a Python FastAPI app
+
+Write a multi-stage `Dockerfile` with a slim base image and a `docker-compose.yml` for local development.
+

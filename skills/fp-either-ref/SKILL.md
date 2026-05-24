@@ -1,10 +1,16 @@
 ---
+id: 'fp-either-ref'
 name: fp-either-ref
 description: Quick reference for Either type. Use when user needs error handling, validation, or operations that can fail with typed errors.
-risk: unknown
+risk: critical
 source: community
 version: 1.0.0
 tags: [fp-ts, either, error-handling, validation, quick-reference]
+category: frontend-frameworks
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Either Quick Reference
@@ -93,3 +99,14 @@ Use Either when **error type matters** and you want to chain operations.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

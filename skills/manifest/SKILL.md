@@ -1,12 +1,36 @@
 ---
+id: 'manifest'
 name: manifest
 description: "Install and configure the Manifest observability plugin for your agents. Use when setting up telemetry, configuring API keys, or troubleshooting the plugin."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: devops
+tags:
+- api
+- ci
+- design
+- endpoint
+- pipeline
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Manifest Setup
+
+## When to Use This Skill
+
+- When building or reviewing UI components, layouts, or design systems
+- When you need help with HTML, CSS, or JavaScript/TypeScript frontend code
+- When auditing for accessibility, performance, or responsiveness
+- When migrating or refactoring a frontend framework
+
+## Do Not Use This Skill When
+
+- When the task is purely backend or infrastructure-related
+- When no UI, design, or browser environment is involved
 
 Follow these steps **in order**. Do not skip ahead.
 

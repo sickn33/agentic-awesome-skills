@@ -1,9 +1,21 @@
 ---
+id: 'loki-mode'
 name: loki-mode
 description: "Version 2.35.0 | PRD to Production | Zero Human Intervention > Research-enhanced: OpenAI SDK, DeepMind, Anthropic, AWS Bedrock, Agent SDK, HN Production (2025)"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- design
+- frontend
+- hack
+- security
+- threat
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Loki Mode - Multi-Agent Autonomous Startup System
@@ -725,3 +737,14 @@ Detailed documentation is split into reference files for progressive loading:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

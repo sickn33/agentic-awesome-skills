@@ -1,4 +1,5 @@
 ---
+id: 'monte-carlo-prevent'
 name: monte-carlo-prevent
 description: "Surfaces Monte Carlo data observability context (table health, alerts, lineage, blast radius) before SQL/dbt edits."
 category: data
@@ -13,6 +14,18 @@ tools: [claude, cursor, codex]
 ---
 
 # Monte Carlo Prevent Skill
+
+## When to Use This Skill
+
+- When building ETL pipelines or data transformations
+- When analyzing datasets, cleaning data, or building dashboards
+- When integrating data sources or warehouses
+- When working with Pandas, Spark, dbt, or similar tools
+
+## Do Not Use This Skill When
+
+- When the task involves no data processing, analysis, or transformation
+- When working with live systems without a data engineering component
 
 This skill brings Monte Carlo's data observability context directly into your editor. When you're modifying a dbt model or SQL pipeline, use it to surface table health, lineage, active alerts, and to generate monitors-as-code without leaving Claude Code.
 
@@ -255,3 +268,14 @@ not for general table-level monitor absence.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Clean a messy CSV dataset
+
+Remove duplicate rows, normalize date formats to ISO 8601, fill missing `country` values from the `zip_code` column.
+
+### Example 2: Build a dbt model for monthly revenue
+
+Create a `revenue_monthly` model that joins `orders` and `payments`, grouping by month and currency.
+

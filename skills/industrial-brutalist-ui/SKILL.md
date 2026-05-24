@@ -1,7 +1,8 @@
 ---
+id: 'industrial-brutalist-ui'
 name: industrial-brutalist-ui
 description: "Use when creating raw industrial or tactical telemetry UIs with rigid grids, stark typography, CRT effects, and high-density data."
-category: frontend
+category: devops
 risk: safe
 source: community
 source_repo: Leonxlnx/taste-skill
@@ -14,7 +15,6 @@ tools: [claude, cursor, codex, antigravity]
 # SKILL: Industrial Brutalism & Tactical Telemetry UI
 
 ## When to Use
-
 - Use when the user wants a brutalist, industrial, Swiss-print, CRT terminal, or tactical telemetry interface.
 - Use when building data-heavy dashboards, portfolios, editorial pages, or command-center UIs that should feel raw and mechanical.
 - Use when a design must reject soft gradients, rounded consumer UI, glassmorphism, and generic SaaS card layouts.
@@ -111,3 +111,14 @@ To prevent the design from appearing purely digital, simulated analog degradatio
 1.  **Grid Determinism:** Utilize `display: grid; gap: 1px;` with contrasting parent/child background colors to generate mathematically perfect, razor-thin dividing lines without complex border declarations.
 2.  **Semantic Rigidity:** Construct the DOM using precise semantic tags (`<data>`, `<samp>`, `<kbd>`, `<output>`, `<dl>`) to accurately reflect the technical nature of the telemetry.
 3.  **Typography Clamping:** Implement CSS `clamp()` functions exclusively for macro-typography to ensure massive text scales aggressively while maintaining structural integrity across viewports.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

@@ -1,9 +1,21 @@
 ---
+id: 'temporal-golang-pro'
 name: temporal-golang-pro
 description: "Use when building durable distributed systems with Temporal Go SDK. Covers deterministic workflow rules, mTLS worker configs, and advanced patterns."
 risk: safe
 source: self
 date_added: "2026-02-27"
+category: database
+tags:
+- api
+- design
+- grpc
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Temporal Go SDK (temporal-golang-pro)

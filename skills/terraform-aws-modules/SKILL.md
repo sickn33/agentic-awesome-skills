@@ -1,9 +1,21 @@
 ---
+id: 'terraform-aws-modules'
 name: terraform-aws-modules
 description: "Terraform module creation for AWS — reusable modules, state management, and HCL best practices. Use when building or reviewing Terraform AWS infrastructure."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- backend
+- cd
+- ci
+- design
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 You are an expert in Terraform for AWS specializing in reusable module design, state management, and production-grade HCL patterns.
 
@@ -81,3 +93,16 @@ terraform {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+
+## When to Use This Skill
+
+- When you need to audit code or infrastructure for vulnerabilities
+- When performing threat modeling (STRIDE, PASTA, OWASP)
+- When hardening systems, APIs, or configurations
+- When responding to a security incident or breach
+
+## Do Not Use This Skill When
+
+- When the task is unrelated to security, compliance, or vulnerabilities
+- When a simpler code review without security scope is sufficient

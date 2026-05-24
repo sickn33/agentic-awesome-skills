@@ -1,9 +1,21 @@
 ---
+id: 'seo-aeo-schema-generator'
 name: seo-aeo-schema-generator
 description: "Generates valid JSON-LD structured data for 10 schema types with rich result eligibility validation and implementation-ready script blocks. Activate when the user wants to generate schema markup, JSON-LD, or structured data for any page."
 risk: safe
 source: community
 date_added: "2026-04-01"
+category: devops
+tags:
+- ci
+- deploy
+- html
+- orm
+- schema
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # SEO-AEO Schema Generator

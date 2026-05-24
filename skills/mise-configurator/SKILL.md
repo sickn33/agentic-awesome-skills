@@ -1,4 +1,5 @@
 ---
+id: 'mise-configurator'
 name: mise-configurator
 description: "Generate production-ready mise.toml setups for local development, CI/CD pipelines, and toolchain standardization."
 category: devops

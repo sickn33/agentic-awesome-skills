@@ -1,9 +1,21 @@
 ---
+id: 'radix-ui-design-system'
 name: radix-ui-design-system
 description: "Build accessible design systems with Radix UI primitives. Headless component customization, theming strategies, and compound component patterns for production-grade UI libraries."
 risk: safe
 source: self
 date_added: "2026-02-27"
+category: frontend-frameworks
+tags:
+- css
+- frontend
+- html
+- react
+- tailwind
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Radix UI Design System

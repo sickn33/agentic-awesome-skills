@@ -1,15 +1,28 @@
 ---
+id: 'transformers-js'
 source: "https://github.com/huggingface/skills/tree/main/skills/transformers-js"
 name: transformers-js
 description: Run Hugging Face models in JavaScript or TypeScript with Transformers.js in Node.js or the browser.
 license: Apache-2.0
-risk: unknown
+risk: critical
 metadata:
   author: huggingface
   version: "3.8.1"
   category: machine-learning
   repository: https://github.com/huggingface/transformers.js
 compatibility: Requires Node.js 18+ or modern browser with ES modules support. WebGPU support requires compatible browser/environment. Internet access needed for downloading models from Hugging Face Hub (optional if using local models).
+category: 'frontend'
+tags:
+- api
+- backend
+- component
+- react
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Transformers.js - Machine Learning for JavaScript

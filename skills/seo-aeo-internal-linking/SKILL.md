@@ -1,9 +1,21 @@
 ---
+id: 'seo-aeo-internal-linking'
 name: seo-aeo-internal-linking
 description: "Maps internal link opportunities between pages with anchor text, placement instructions, orphan page detection, and cannibalization checks. Activate when the user wants to build an internal linking strategy or find link opportunities."
 risk: safe
 source: community
 date_added: "2026-04-01"
+category: ai-ml
+tags:
+- agent
+- ai
+- ci
+- schema
+- test
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # SEO-AEO Internal Linking

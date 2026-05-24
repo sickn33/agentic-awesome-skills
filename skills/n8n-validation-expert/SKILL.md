@@ -1,8 +1,21 @@
 ---
+id: 'n8n-validation-expert'
 name: n8n-validation-expert
 description: "Expert guide for interpreting and fixing n8n validation errors."
-risk: unknown
+risk: critical
 source: community
+category: devops
+tags:
+- api
+- ci
+- rest
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # n8n Validation Expert

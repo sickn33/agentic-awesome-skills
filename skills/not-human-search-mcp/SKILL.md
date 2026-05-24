@@ -1,4 +1,5 @@
 ---
+id: 'not-human-search-mcp'
 name: not-human-search-mcp
 description: "Search AI-ready websites, inspect indexed site details, verify MCP endpoints, and discover tools and APIs using the Not Human Search MCP server"
 category: mcp

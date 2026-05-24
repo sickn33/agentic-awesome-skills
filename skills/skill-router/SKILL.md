@@ -1,8 +1,22 @@
 ---
+id: 'skill-router'
 name: skill-router
 description: "Use when the user is unsure which skill to use or where to start. Interviews the user with targeted questions and recommends the best skill(s) from the installed library for their goal."
 risk: safe
 source: self
+category: security-offensive
+tags:
+- frontend
+- hack
+- pentest
+- react
+- security
+- vuln
+tools:
+- claude-code
+- antigravity
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # Skill Router
@@ -250,3 +264,14 @@ Agent: ✅ Primary Skill: @brainstorming
   must invoke the skill themselves.
 - The routing reference covers the most common skills but does not include
   every skill in the library.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+

@@ -1,9 +1,23 @@
 ---
+id: 'mercury-mcp'
 name: mercury-mcp
 description: "Cheatsheet for the Mercury (proton) MCP tools. Use when connected to the Mercury MCP server to look up which mercury_* tool to call for messaging teammates, threads, tasks, automations, or admin team-graph edits."
 risk: safe
 source: community
 date_added: "2026-05-19"
+category: auth-identity
+tags:
+- ai
+- api
+- ci
+- endpoint
+- server
+- ui
+tools:
+- claude-code
+- cursor
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # Mercury MCP tool cheatsheet

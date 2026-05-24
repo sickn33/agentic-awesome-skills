@@ -1,4 +1,5 @@
 ---
+id: 'progressive-web-app'
 name: progressive-web-app
 description: "Build Progressive Web Apps (PWAs) with offline support, installability, and caching strategies. Trigger whenever the user mentions PWA, service workers, web app manifests, Workbox, 'add to home screen', or wants their web app to work offline, feel native, or be installable."
 risk: safe
@@ -6,6 +7,8 @@ source: community
 date_added: "2026-03-17"
 tags: [pwa, web-dev, service-worker, frontend, offline, caching]
 tools: [gemini, cursor, claude]
+category: devops
+author: 'emanueleodierna'
 ---
 
 # Progressive Web Apps (PWAs)
@@ -355,3 +358,14 @@ registerRoute(({ request }) => request.destination === 'script', new StaleWhileR
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

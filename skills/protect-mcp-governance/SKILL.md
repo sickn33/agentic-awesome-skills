@@ -1,4 +1,5 @@
 ---
+id: 'protect-mcp-governance'
 name: protect-mcp-governance
 description: "Agent governance skill for MCP tool calls — Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification."
 risk: safe
@@ -6,6 +7,17 @@ source: community
 source_repo: scopeblind/scopeblind-gateway
 source_type: official
 date_added: "2026-04-05"
+category: security-offensive
+tags:
+- design
+- rest
+- security
+- server
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # MCP Agent Governance with protect-mcp

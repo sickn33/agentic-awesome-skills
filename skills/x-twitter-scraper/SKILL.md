@@ -1,4 +1,5 @@
 ---
+id: 'x-twitter-scraper'
 name: x-twitter-scraper
 description: "X/Twitter automation skill for tweet search, follower export, posting, DMs, webhooks, MCP, SDKs, Hermes Tweet, and TweetClaw."
 category: data
@@ -10,6 +11,12 @@ plugin:
   targets:
     codex: blocked
     claude: blocked
+tools:
+- claude-code
+- cursor
+- gemini-cli
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # X (Twitter) Scraper - Xquik

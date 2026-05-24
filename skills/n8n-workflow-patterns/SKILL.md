@@ -1,8 +1,21 @@
 ---
+id: 'n8n-workflow-patterns'
 name: n8n-workflow-patterns
 description: "Proven architectural patterns for building n8n workflows."
-risk: unknown
+risk: offensive
 source: community
+category: devops
+tags:
+- api
+- component
+- design
+- endpoint
+- rest
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # n8n Workflow Patterns
@@ -421,3 +434,5 @@ Use `search_templates` and `get_template` from n8n-mcp tools to find examples!
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

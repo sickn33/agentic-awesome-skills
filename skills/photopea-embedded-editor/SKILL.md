@@ -1,4 +1,5 @@
 ---
+id: 'photopea-embedded-editor'
 name: photopea-embedded-editor
 description: Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and the full Photoshop-compatible API.
 risk: safe
@@ -8,6 +9,17 @@ source_type: community
 license: MIT
 license_source: "https://github.com/yikuansun/PhotopeaAPI/blob/master/LICENSE"
 date_added: 2026-05-20
+category: frontend-frameworks
+tags:
+- css
+- design
+- html
+- react
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Photopea Embedded Editor Skill
@@ -1397,3 +1409,14 @@ app.echoToOE(JSON.stringify(getLayerInfo(app.activeDocument)));
 - Photopea Script reference: https://www.photopea.com/learn/scripts
 - Photoshop JS Scripting reference (compatible): https://theiviaxx.github.io/photoshop-docs/Photoshop/index.html
 - Plugin dev gists (addImageAndWait, getDocumentAsImage): https://gist.github.com/yikuansun/c0f1a602b4e9d4e344a41c4f49ded3bf
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

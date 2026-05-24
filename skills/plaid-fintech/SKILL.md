@@ -1,11 +1,24 @@
 ---
+id: 'plaid-fintech'
 name: plaid-fintech
 description: Expert patterns for Plaid API integration including Link token
   flows, transactions sync, identity verification, Auth for ACH, balance checks,
   webhook handling, and fintech compliance best practices.
-risk: unknown
+risk: offensive
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
+category: security-offensive
+tags:
+- component
+- design
+- frontend
+- react
+- security
+- ui
+tools:
+- claude-code
+- cursor
+author: 'emanueleodierna'
 ---
 
 # Plaid Fintech
@@ -860,3 +873,15 @@ Message: Transaction sync without cursor persistence. Store cursor for increment
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

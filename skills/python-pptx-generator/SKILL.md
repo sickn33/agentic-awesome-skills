@@ -1,7 +1,8 @@
 ---
+id: 'python-pptx-generator'
 name: python-pptx-generator
 description: "Generate complete Python scripts that build polished PowerPoint decks with python-pptx and real slide content."
-category: development
+category: devops
 risk: safe
 source: self
 source_type: self

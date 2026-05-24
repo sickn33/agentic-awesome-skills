@@ -1,8 +1,21 @@
 ---
+id: 'n8n-node-configuration'
 name: n8n-node-configuration
 description: Operation-aware node configuration guidance. Use when configuring nodes, understanding property dependencies, determining required fields, choosing between get_node detail levels, or learning common configuration patterns by node type.
-risk: unknown
+risk: critical
 source: community
+category: auth-identity
+tags:
+- api
+- ci
+- database
+- deploy
+- endpoint
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # n8n Node Configuration

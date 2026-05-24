@@ -6,6 +6,16 @@ category: andruia
 risk: safe
 source: personal
 date_added: "2026-02-27"
+tags:
+- ci
+- security
+- test
+- testing
+- ui
+- ux
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 ## When to Use
@@ -63,3 +73,14 @@ Para ambos escenarios, tras recibir las respuestas:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Use this skill for a domain-specific task
+
+Describe your task and let the skill guide you through the appropriate steps and best practices.
+
+### Example 2: Get expert guidance on a complex problem
+
+Share your context and constraints, and the skill will provide structured recommendations.
+

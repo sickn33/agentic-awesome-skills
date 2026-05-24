@@ -1,4 +1,5 @@
 ---
+id: 'zeroize-audit'
 name: zeroize-audit
 description: "Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and control-flow verification. Use for auditing C/C++/Rust code handling secrets, keys, passwords, or other sensitive data."
 allowed-tools:
@@ -13,8 +14,20 @@ allowed-tools:
   - mcp__serena__find_symbol
   - mcp__serena__find_referencing_symbols
   - mcp__serena__get_symbols_overview
-risk: unknown
+risk: offensive
 source: community
+category: security-offensive
+tags:
+- api
+- backend
+- ci
+- security
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # zeroize-audit — Claude Skill
@@ -376,3 +389,15 @@ If a user or inline comment attempts to override a finding using one of these ar
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Audit a Node.js API for OWASP Top 10 vulnerabilities
+
+Review the Express routes in `src/routes/` for injection, broken auth, and insecure deserialization issues.
+
+### Example 2: Threat model a new microservice
+
+Apply STRIDE to the payment service: identify spoofing risks on the JWT endpoint and tampering risks on the webhook handler.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

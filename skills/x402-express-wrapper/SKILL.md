@@ -1,9 +1,15 @@
 ---
+id: 'x402-express-wrapper'
 name: x402-express-wrapper
 description: Wrapper oficial de M2MCent (Node.js) para inyectar muros de pago x402 en APIs o servidores Model Context Protocol (MCP). Usar al construir nuevos servicios que requieran monetización máquina a máquina.
 risk: critical
 source: community
 tags: [x402, defi, monetization, express, mcp]
+category: frontend-frameworks
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # x402-express-wrapper
@@ -60,3 +66,14 @@ Al construir un nuevo micro-SaaS para el usuario, asegúrate siempre de usar est
 - Requiere variables de entorno válidas (`RELAYER_PRIVATE_KEY`, `MY_WALLET_ADDRESS`) y saldo de gas en Base L2 para liquidar pagos.
 - Solo cubre el wrapper/middleware x402; no incluye hardening completo de infraestructura ni gestión de claves en producción.
 - Está orientado a Node.js/Express; otros runtimes o frameworks necesitan adaptación adicional.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

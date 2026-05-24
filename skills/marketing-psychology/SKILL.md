@@ -1,9 +1,21 @@
 ---
+id: 'marketing-psychology'
 name: marketing-psychology
 description: "Apply behavioral science and mental models to marketing decisions, prioritized using a psychological leverage and feasibility scoring system."
-risk: unknown
+risk: offensive
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- ci
+- design
+- helm
+- orm
+- ui
+- vuln
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 # Marketing Psychology & Mental Models
 
@@ -264,3 +276,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

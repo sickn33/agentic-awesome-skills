@@ -1,4 +1,5 @@
 ---
+id: 'leiloeiro-risco'
 name: leiloeiro-risco
 description: Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco.
 risk: safe
@@ -16,6 +17,7 @@ tools:
 - cursor
 - gemini-cli
 - codex-cli
+category: frontend-frameworks
 ---
 
 # SKILL DE RISCO — AUDITOR DE RISCO EM LEILÕES
@@ -498,3 +500,14 @@ Fontes normativas e referências de risco:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

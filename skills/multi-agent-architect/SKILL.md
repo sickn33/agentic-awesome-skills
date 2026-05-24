@@ -1,4 +1,5 @@
 ---
+id: 'multi-agent-architect'
 name: multi-agent-architect
 description: "Design and optimize production-grade multi-agent systems with LangGraph, LangChain, and DeepAgents for complex AI workflows."
 risk: safe
@@ -13,6 +14,18 @@ metadata:
   tools: [claude, cursor, gemini]
   license: "MIT"
   license_source: "https://github.com/pravin-python/antigravity-awesome-skills/blob/main/LICENSE"
+category: 'security'
+tags:
+- api
+- backend
+- design
+- rest
+- security
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 

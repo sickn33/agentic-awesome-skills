@@ -1,10 +1,21 @@
 ---
+id: 'wireshark-analysis'
 name: wireshark-analysis
 description: "Execute comprehensive network traffic analysis using Wireshark to capture, filter, and examine network packets for security investigations, performance optimization, and troubleshooting."
-risk: unknown
+risk: offensive
 source: community
 author: zebbern
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- attack
+- rest
+- security
+- server
+- ui
+- ux
+tools:
+- claude-code
 ---
 
 # Wireshark Network Traffic Analysis
@@ -499,3 +510,5 @@ File > Export Packet Dissections   # Export as text/CSV
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+> ⚠️ **AUTHORIZED USE ONLY** — This skill is intended for authorized security testing, research, and educational purposes only. Misuse may violate laws and regulations.

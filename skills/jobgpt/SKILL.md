@@ -1,9 +1,21 @@
 ---
+id: 'jobgpt'
 name: jobgpt
 description: "Job search automation, auto apply, resume generation, application tracking, salary intelligence, and recruiter outreach using the JobGPT MCP server."
 risk: safe
 source: community
 date_added: "2026-03-23"
+category: auth-identity
+tags:
+- api
+- ci
+- pipeline
+- react
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # JobGPT - Job Search Automation

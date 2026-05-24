@@ -1,8 +1,21 @@
 ---
+id: 'wellally-tech'
 name: wellally-tech
 description: "Integrate multiple digital health data sources, connect to [WellAlly.tech](https://www.wellally.tech/) knowledge base, providing data import and knowledge reference for personal health management systems."
-risk: unknown
+risk: critical
 source: community
+category: database
+tags:
+- api
+- ci
+- rest
+- security
+- server
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
+date_added: '2026-05-23'
 ---
 
 # WellAlly Digital Health Integration

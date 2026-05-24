@@ -1,10 +1,22 @@
 ---
+id: 'shadcn'
 name: shadcn
 description: Manages shadcn/ui components and projects, providing context, documentation, and usage patterns for building modern design systems.
 user-invocable: false
 risk: safe
 source: https://github.com/shadcn-ui/ui/tree/main/skills/shadcn
 date_added: "2026-03-07"
+category: frontend-frameworks
+tags:
+- css
+- design
+- html
+- react
+- tailwind
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # shadcn/ui
@@ -252,3 +264,14 @@ npx shadcn@latest view @shadcn/button
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

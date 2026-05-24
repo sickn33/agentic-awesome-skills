@@ -1,10 +1,21 @@
 ---
+id: 'content-creator'
 name: content-creator
 description: "Professional-grade brand voice analysis, SEO optimization, and platform-specific content frameworks."
 category: marketing
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+tags:
+- ai
+- ci
+- design
+- orm
+- rag
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 
 # Content Creator
@@ -249,3 +260,14 @@ cp assets/content_calendar_template.md this_month_calendar.md
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Write ad copy for a product launch
+
+Draft 3 variants of a Facebook ad for a SaaS tool launch: one benefit-focused, one pain-point-focused, one social-proof-focused.
+
+### Example 2: Analyze email campaign performance
+
+Compare open rates, CTR, and conversions across 5 campaigns and recommend subject line improvements.
+

@@ -1,9 +1,22 @@
 ---
+id: 'autonomous-agent-patterns'
 name: autonomous-agent-patterns
 description: "Design patterns for building autonomous coding agents, inspired by [Cline](https://github.com/cline/cline) and [OpenAI Codex](https://github.com/openai/codex)."
 risk: critical
 source: community
 date_added: "2026-02-27"
+category: security-offensive
+tags:
+- api
+- design
+- html
+- rest
+- ui
+- ux
+tools:
+- claude-code
+- codex-cli
+author: 'emanueleodierna'
 ---
 
 # 🕹️ Autonomous Agent Patterns
@@ -767,3 +780,14 @@ class MCPAgent:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a responsive card component in React
+
+Create a `<ProductCard>` component with Tailwind CSS, supporting dark mode and a loading skeleton state.
+
+### Example 2: Audit a landing page for accessibility
+
+Check `index.html` for missing alt attributes, focus traps, and contrast ratio violations per WCAG 2.1 AA.
+

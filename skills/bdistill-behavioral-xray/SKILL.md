@@ -1,4 +1,5 @@
 ---
+id: 'bdistill-behavioral-xray'
 name: bdistill-behavioral-xray
 description: "X-ray any AI model's behavioral patterns — refusal boundaries, hallucination tendencies, reasoning style, formatting defaults. No API key needed."
 category: ai-testing
@@ -89,3 +90,14 @@ A styled HTML report showing:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Examples
+
+### Example 1: Build a RAG pipeline over internal docs
+
+Chunk markdown files, embed with `text-embedding-3-small`, store in Pinecone, and retrieve context for a Claude completion.
+
+### Example 2: Evaluate prompt output quality
+
+Define an eval rubric for factual accuracy, tone, and length, then run 50 samples and compute pass rates.
+

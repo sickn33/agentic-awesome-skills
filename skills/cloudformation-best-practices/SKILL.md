@@ -1,9 +1,21 @@
 ---
+id: 'cloudformation-best-practices'
 name: cloudformation-best-practices
 description: "CloudFormation template optimization, nested stacks, drift detection, and production-ready patterns. Use when writing or reviewing CF templates."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
+category: devops
+tags:
+- cd
+- ci
+- deploy
+- design
+- pipeline
+- ui
+tools:
+- claude-code
+author: 'emanueleodierna'
 ---
 You are an expert in AWS CloudFormation specializing in template optimization, stack architecture, and production-grade infrastructure deployment.
 
@@ -82,3 +94,16 @@ Outputs:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+
+## When to Use This Skill
+
+- When building or reviewing UI components, layouts, or design systems
+- When you need help with HTML, CSS, or JavaScript/TypeScript frontend code
+- When auditing for accessibility, performance, or responsiveness
+- When migrating or refactoring a frontend framework
+
+## Do Not Use This Skill When
+
+- When the task is purely backend or infrastructure-related
+- When no UI, design, or browser environment is involved

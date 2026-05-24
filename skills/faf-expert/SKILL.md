@@ -1,4 +1,5 @@
 ---
+id: 'faf-expert'
 name: faf-expert
 description: "Advanced .faf (Foundational AI-context Format) specialist. IANA-registered format, MCP server config, championship scoring, bi-directional sync."
 category: coding
