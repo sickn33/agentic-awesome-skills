@@ -447,7 +447,6 @@ We officially thank the following contributors for their help in making this rep
 - [@Enreign](https://github.com/Enreign)
 - [@sohamganatra](https://github.com/sohamganatra)
 - [@Silverov](https://github.com/Silverov)
-- [@conspirafi](https://github.com/conspirafi)
 - [@shubhamdevx](https://github.com/shubhamdevx)
 - [@ronanguilloux](https://github.com/ronanguilloux)
 - [@sraphaz](https://github.com/sraphaz)
@@ -592,6 +591,10 @@ We officially thank the following contributors for their help in making this rep
 - [@luoyuctl](https://github.com/luoyuctl)
 - [@mturac](https://github.com/mturac)
 - [@tellmefrankie](https://github.com/tellmefrankie)
+- [@bulkmockupsfiller-ai](https://github.com/bulkmockupsfiller-ai)
+- [@gregkonush](https://github.com/gregkonush)
+- [@Karthikeya-Meesala](https://github.com/Karthikeya-Meesala)
+- [@sulavmgr456-byte](https://github.com/sulavmgr456-byte)
 
 ## Star History
 
