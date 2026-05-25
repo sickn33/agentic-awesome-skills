@@ -1,0 +1,13 @@
+{
+    "name": "jira-sprint-workflow",
+    "version": "1.0.0",
+    "description": "Scripts for managing Jira tickets from sprint planning documents",
+    "scripts": {
+        "parse": "node scripts/parse_sprint_plan.js",
+        "create-links": "node scripts/create_issue_links.js",
+        "compare": "node scripts/compare_tickets.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5"
+    }
+}

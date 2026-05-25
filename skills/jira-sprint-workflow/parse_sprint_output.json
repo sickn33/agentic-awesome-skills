@@ -1,0 +1,378 @@
+{
+  "epic": {
+    "summary": "[Login Page Improvement] [Sprint-Planning][20260205] Login Page Improvement",
+    "description": "Tasks extracted from [Sprint-Planning][20260205] Login Page Improvement."
+  },
+  "stories": [
+    {
+      "summary": "[SPIKE] WhatsApp Business Providers",
+      "sp": 4,
+      "description": "2. Context: need to evaluate available WhatsApp Business API providers (e.g. Twilio and alternatives) to determine the most suitable option for our system  \n   3. Todo:  \n      1. research available WAB providers (personal accounts may be used for evaluation)  \n      2. compare based on:  \n         1. SLA and uptime guarantees  \n         2. reliability and message delivery  \n         3. pricing and cost model  \n         4. API documentation quality (must be accessible via HTTPS)  \n         5. ease of integration with our existing system  \n      3. investigate fallback mechanisms (if a primary provider becomes unavailable, whether multiple providers can be used)  \n      4. list env needed for next tasks (e.g. auth token, SID for account identifier, etc)  \n      5. Can check [PRD \\[US-9\\] WhatsApp OTP](https://docs.google.com/document/d/11fFbFR2WBKDAV1jecko91HeUJThTYNxjdEcQuFU0tAQ/edit?disco=AAABzUbzLDo) for further requirements  \n   4. AC:  \n      1. SPIKE docs  \n   5. Deps:  \n      1. \\-"
+    },
+    {
+      "summary": "[FIREBASE] Enable sign in via magic link for all envs",
+      "sp": 0,
+      "description": "2. Context: currently only dev has magic link enabled  \n   3. Todo:  \n      1. Enable sign in magic link in staging and prod  \n      2. Need Ka SamΓÇÖs due to access  \n      3. See here for how: [\\[SPIKE\\]\\[20250219\\] Firebase Magic Link Login](https://docs.google.com/document/d/1PmcIjTSlQhFo6VB21E4z3qLN2Z2FSNpd49B_BUza4MQ/edit?tab=t.0#heading=h.lfjkepjpogea)  \n   4. AC:  \n      1. Able to implement sign in link for staging & prod as well  \n   5. Deps:  \n      1. \\-"
+    },
+    {
+      "summary": "[REDIS] Configure redis eviction policy",
+      "sp": 0,
+      "description": "2. Context: with the things we store in this sprint, redis might end up consuming all memory. hence we need to adjust redis config they have maxmemory config and maxmemory-policy config  \n   3. Todo:  \n      1. Implement volatile-ttl (evict keys with an associated expiration, TTL, that have the shortest remaining TTL value)  \n      2. Refer to [docs](https://redis.io/docs/latest/develop/reference/eviction/)  \n   4. AC:  \n      1. Able to implement eviction of keys based on shortest TTL  \n   5. Deps:  \n      1. \\-"
+    },
+    {
+      "summary": "[FUSION] Migration and package initialization",
+      "sp": 1,
+      "description": "2. Context: need to create tables and package  \n   3. Todo:  \n      1. Create migration based on [technical breakdown](?tab=t.ih3v4ftggs44)  \n         1. Create blacklisted\\_login\\_logs table  \n         2. Adjust user table  \n         3. Adjust companies table  \n         4. Populate last\\_password\\_reminder\\_at with updated\\_at  \n      2. Initialize auth package  \n         1. Separate all layers into different packages (authhandler, authmodel, etc)  \n         2. Create the constructors for each layers  \n   4. AC:  \n      1. Tables created accordingly  \n      2. Package created accordingly  \n   5. Deps  \n      1. \\-"
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create login OTP email template",
+      "sp": 1,
+      "description": "![][image2]\n\n   2. Context: need to create new email template  \n   3. Todo:  \n      1. Create dynamic template in sendgrid  \n         1. Refer to this [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1182-5363&t=AJ6YMYSWARGjpgZ9-4)  \n         2. Params  \n            1. {{user\\_name}}  \n            2. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n            3. {{otp\\_code}}  \n      2. Add template to our [email template repo](https://github.com/Match-Made/email-template-generator)   \n      3. Add env var to fusion and populate the value in github actions  w/ sendgrid Template ID (APP\\_EMAIL\\_LOGIN\\_OTP\\_TEMPLATE\\_ID)  \n   4. AC:  \n      1. Login OTP email template created  \n      2. Template ID is ready to use in fusion  \n   5. Deps  \n      1. \\-"
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create successful login email template",
+      "sp": 1,
+      "description": "![][image3]\n\n   2. Context: need to create new email template  \n   3. Todo:  \n      1. Create dynamic template in sendgrid  \n         1. Refer to this [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1235-5117&t=AJ6YMYSWARGjpgZ9-4)  \n         2. Params:  \n            1. {{user\\_name}}  \n            2. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n            3. {{date\\_time}}  \n            4. {{location}}  \n            5. {{device\\_type}}  \n            6. {{ip\\_address}}  \n            7. {{reset\\_password\\_link}}  \n      2. Add template to our [email template repo](https://github.com/Match-Made/email-template-generator)   \n      3. Add env var to fusion and populate the value in github actions  w/ sendgrid Template ID (APP\\_EMAIL\\_SUCCESSFUL\\_LOGIN\\_TEMPLATE\\_ID)  \n   4. AC:  \n      1. Successful login email template created  \n      2. Template ID is ready to use in fusion  \n   5. Deps  \n      1. \\-"
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create account locked email template",
+      "sp": 1,
+      "description": "![][image4]\n\n   2. Context: need to create new email template  \n   3. Todo:  \n      1. Create dynamic template in sendgrid  \n         1. Refer to [this design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1235-5720&t=AJ6YMYSWARGjpgZ9-4)  \n         2. Params:  \n            1. {{user\\_name}}  \n            2. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n            3. {{date\\_time}}  \n      2. Add template to our [email template repo](https://github.com/Match-Made/email-template-generator)   \n      3. Add env var to fusion and populate the value in github actions  w/ sendgrid Template ID (APP\\_EMAIL\\_ACCOUNT\\_LOCKED\\_TEMPLATE\\_ID)  \n   4. AC:  \n      1. Account locked email template created  \n      2. Template ID is ready to use in fusion  \n   5. Deps  \n      1. \\-"
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create magic link email template",
+      "sp": 1,
+      "description": "![][image5]\n\n   2. Context: need to create new email template  \n   3. Todo:  \n      1. Create dynamic template in sendgrid  \n         1. Refer to [this design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1181-6586&t=AJ6YMYSWARGjpgZ9-4)  \n         2. Params:  \n            1. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n            2. {{magic\\_link}}  \n      2. Add template to our [email template repo](https://github.com/Match-Made/email-template-generator)   \n      3. Add env var to fusion and populate the value in github actions  w/ sendgrid Template ID (APP\\_EMAIL\\_MAGIC\\_LINK\\_TEMPLATE\\_ID)  \n   4. AC:  \n      1. Magic link email template created  \n      2. Template ID is ready to use in fusion  \n   5. Deps  \n      1. \\-"
+    },
+    {
+      "summary": "[HOLA] Login with email password endpoint",
+      "sp": 1,
+      "description": "2. Context: we need to enable passwordless sign in  \n   3. Todo  \n      1. Endpoint: POST /login  \n      2. Request:\n\n         {\n\n           \"email\": \"user@example.com\",\n\n           \"password\": \"string\"\n\n         }\n\n      3. Response: { firebase user obj }  \n      4. Hit firebase for sign in with password ([docs](https://docs.cloud.google.com/identity-platform/docs/reference/rest/v1/accounts/signInWithPassword))  \n      5. Adjust hola\\_client package as well  \n   4. AC:  \n      1. Able to login using email and password  \n   5. Deps:  \n      1. \\-"
+    },
+    {
+      "summary": "[FUSION] Login with email password endpoint",
+      "sp": 2,
+      "description": "2. Context: we currently hit firebase endpoint directly from FE. now, we need to have an endpoint to handle login to replace that flow  \n    3. Todo  \n       1. Endpoint: POST /auth/v1/login  \n       2. Request: \n\n          {\n\n            \"email\": \"user@example.com\",\n\n            \"password\": \"string\"\n\n          }\n\n       3. Success response:: \n\n          {\n\n            \"mfa\\_required\": \\<APP\\_FT\\_MFA\\_REQUIRED\\> and user.mfa\\_required,\n\n            \"token\\_id\": \"\", ΓåÆ only if mfaRequired \\= true\n\n             ΓÇ£firebase\\_userΓÇ¥: {user obj} ΓåÆ only if mfaRequired \\= false\n\n          }\n\n       4. Failed response:\n\n          {\n\n            \"error\": \"\",\n\n            \"failed\\_count\": 3\n\n          }\n\n       5. Details:  \n          1. Hit hola POST /login  \n             1. If APP\\_FT\\_MFA\\_REQUIRED \\= false OR user.mfa\\_required \\= false, return resp immediately (skip steps below)  \n          2. On success login  \n             1. Generate random token\\_id  \n             2. Store firebase resp object in redis  \n                1. Key: **auth:login:token:{token\\_id}**  \n                2. TTL: APP\\_FIREBASE\\_USER\\_OBJECT\\_TTL (10 minutes)  \n             3. Reset failed login counter **auth:login:fail:{email}**  \n          3. On failed login  \n             1. Get failed counter  \n                1. Key: **auth:login:fail:{email}**  \n             2. If counter \\= 10  \n                1. Return 403 id blocked  \n             3. If counter not exists OR counter \\< 10  \n                1. Increment failed counter in redis  \n                2. Reset TTL using APP\\_FAILED\\_LOGIN\\_COUNTER\\_TTL (30 minutes)  \n             4. Return current failed count to FE  \n             5. If failed count after incremented \\== 10:  \n                1. Call RevokeRefreshTokens function to force log out  \n                2. Send email (use APP\\_EMAIL\\_ACCOUNT\\_LOCKED\\_TEMPLATE\\_ID)  \n                   1. Params:  \n                      1. {{user\\_name}}  \n                      2. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n                      3. {{date\\_time}}  \n                3. Log to blacklisted\\_login\\_logs (ip addr, email)  \n          4. Error codes & messages:  \n             1. Counter \\>= 10  \n                1. 403 \\- ID Blocked  \n             2. Wrong email pass combo  \n                1. 400 \\- Invalid Creds  \n       6. Refer to [flow diagram](?tab=t.ih3v4ftggs44) for overall flow and handling both success & error cases  \n    4. AC:  \n       1. Able to successfully login all types of user using password and email  \n       2. Able to increment failed counter on error  \n       3. Able to lock user and send email on 10th err  \n       4. When FT is false returns firebase object for direct login  \n    5. Deps:"
+    },
+    {
+      "summary": "[FUSION] Migration and package initialization",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[HOLA] Login with email password endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create account locked email template",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Generate OTP endpoint (email)",
+      "sp": 2,
+      "description": "2. Context: we need to generate OTP using email and be able to send them to user  \n    3. Todo:  \n       1. Endpoint: POST /auth/v1/otp  \n       2. Request: \n\n          {\n\n             ΓÇ£emailΓÇ¥: ΓÇ£ΓÇ¥,\n\n             ΓÇ£phone\\_numberΓÇ¥: ΓÇ£ΓÇ¥,\n\n             ΓÇ£mfa\\_channelΓÇ¥: ΓÇ£emailΓÇ¥\n\n             ΓÇ£token\\_idΓÇ¥: ΓÇ£ΓÇ¥, ΓåÆ optional\n\n          }\n\n       3. Response:\n\n          {\n\n            \"token\\_id\": \"\", \n\n          }\n\n       4. For email  \n          1. Mfa\\_channel \\= ΓÇ£emailΓÇ¥  \n          2. Email is required  \n          3. Phone\\_number is not needed  \n       5. Details:  \n          1. Enforce daily OTP limit counter  \n             1. Key: **auth:otp:daily:{email}**  \n             2. TTL: end of day  \n             3. If \\>20 return 429  \n             4. If not, increment and continue steps below  \n          2. Generate OTP for email  \n             1. 6-digit numeric code  \n          3. If token\\_id is not in request, generate random token\\_id  \n          4. Store OTP in redis using token\\_id  \n             1. Key: **auth:otp:{token\\_id}**  \n             2. TTL: 2 minutes  \n             3. Overwrite existing OTP if any to invalidate old ones  \n          5. Send OTP to email (use APP\\_EMAIL\\_LOGIN\\_OTP\\_TEMPLATE\\_ID)  \n             1. Params:  \n                1. {{user\\_name}}  \n                2. {{otp\\_code}}  \n                3. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n          6. Return token\\_id  \n       6. This task should only handle email  \n       7. Make sure that the c.iii functions are reusable so that we can use them in login with email pass endpoint  \n    4. AC:  \n       1. Able to generate OTP and send them to user  \n       2. Able to enforce 20 OTP per day per account limit  \n    5. Deps"
+    },
+    {
+      "summary": "[FUSION] Migration and package initialization",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create login OTP email template",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Generate OTP endpoint (WhatsApp)",
+      "sp": 0,
+      "description": "2. Context: we need to send OTP to user whatsapp  \n    3. Todo:  \n       1. Request: \n\n          {\n\n             ΓÇ£emailΓÇ¥: ΓÇ£ΓÇ¥,\n\n             ΓÇ£phone\\_numberΓÇ¥: ΓÇ£ΓÇ¥, \n\n             ΓÇ£mfa\\_channelΓÇ¥: ΓÇ£whatsappΓÇ¥\n\n          }\n\n       2. For whatsapp  \n          1. Mfa\\_channel \\= ΓÇ£whatsappΓÇ¥  \n          2. Phone\\_number is required  \n          3. Email is not needed  \n       3. Flow is similar to email, but send the OTP to whatsapp using XXX  \n       4. Adjust generate OTP endpoint depending on SPIKE result  \n    4. AC:  \n       1. Able to send OTP using chosen WhatsApp Business provider  \n    5. Deps:"
+    },
+    {
+      "summary": "[SPIKE] WhatsApp Business Providers",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Generate OTP endpoint (email)",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Send OTP on login with email password endpoint",
+      "sp": 1,
+      "description": "2. Context: we need to adjust login with email password endpoint to also generate and send OTP on success  \n    3. Todo:  \n       1. On success login  \n          1. Use previously created functions to generate and send OTP before returning  \n          2. Always use email first after login  \n    4. AC:  \n       1. Able to generate OTP and send them to user when login using valid email/pass  \n    5. Deps"
+    },
+    {
+      "summary": "[FUSION] Generate OTP endpoint (email)",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Login with email password endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Verify Login OTP endpoint",
+      "sp": 2,
+      "description": "2. Context: we need to be able to verify OTPs based on previously generated ones  \n    3. Todo:  \n       1. Endpoint: POST /auth/v1/login/verify-otp  \n       2. Request: \n\n          {\n\n            \"token\\_id\": \"\",\n\n            \"otp\": \"123456\",\n\n            ΓÇ£mfa\\_channelΓÇ¥: ΓÇ£emailΓÇ¥/ΓÇ¥whatsappΓÇ¥,\n\n          }\n\n       3. Response: \n\n          {\n\n              \"kind\": ΓÇ£\"\n\n              \"localId\": ΓÇ£ΓÇ¥\n\n              \"email\": ΓÇ£ΓÇ¥\n\n              \"displayName\": ΓÇ£ΓÇ¥\n\n              \"idToken\": ΓÇ£ΓÇ¥\n\n              \"registered\": ΓÇ£ΓÇ¥\n\n              \"refreshToken\": \"\",\n\n              \"expiresIn\": \"\"\n\n          }\n\n       4. Details:  \n          1. Retrieve OTP  \n             1. Key: **auth:otp:{token\\_id}**  \n          2. Verify  \n             1. Check OTP matches stored OTP  \n          3. Get stored user obj  \n             1. Key: **auth:login:token:{token\\_id}**  \n          4. On success  \n             1. Delete:  \n                1. Previously fetched **auth:otp:{token\\_id}**  \n                2. All auth:login:\\*  \n                   1. **auth:login:token:{token\\_id}**  \n                   2. **auth:login:fail:{email}**  \n             2. If mfa\\_channel \\= ΓÇ£whatsappΓÇ¥, send email (use APP\\_EMAIL\\_SUCCESSFUL\\_LOGIN\\_TEMPLATE\\_ID)  \n                1. Params:  \n                   1. {{user\\_name}}  \n                   2. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n                   3. {{date\\_time}}  \n                   4. {{location}}  \n                   5. {{device\\_type}}  \n                   6. {{ip\\_address}}  \n                   7. {{reset\\_password\\_link}} ΓåÆ use holaclient  \n             3. Return obj from (iv.3)  \n          5. Make sure that the c.iv.1 and c.iv.2 functions are reusable so that we can use them in verify otp for update phone number  \n    4. AC:  \n       1. Able to verify OTP  \n    5. Deps"
+    },
+    {
+      "summary": "[FUSION] Migration and package initialization",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create successful login email template",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[REACTOR] Login page (submit OTP) ΓÇô UI",
+      "sp": 2,
+      "description": "![][image6]\n\n    2. Context: need to add new submit OTP page on our reactor  \n    3. Todo:  \n       1. Refer to [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1182-1580&t=AJ6YMYSWARGjpgZ9-4)  \n       2. Should consist:  \n          1. Error states  \n          2. Microinteractions (hover, disable, etc)  \n          3. Request new OTP timer (2 minutes) after clicking  \n       3. Does not consist:  \n          1. Endpoint integration  \n          2. Flow integration (due to this, please create a separate temporary button in login modal as entry point for QA testing)  \n       4. Use [shadcn input OTP](https://ui.shadcn.com/docs/components/radix/input-otp) (user should be able to copy paste OTP directly)  \n       5. For contact support use VITE\\_WHATSAPP\\_NUMBER (copy from ForgotPasswordForm)  \n    4. AC:  \n       1. Page styling and microinteractions are according to Figma  \n    5. Deps  \n       1. \\-"
+    },
+    {
+      "summary": "[REACTOR] Login page ΓÇô integration",
+      "sp": 1,
+      "description": "2. Context: need to adjust the behavior of our login page to hit BE instead of directly hitting firebase  \n    3. Todo  \n       1. Implement FT to protect route VITE\\_FT\\_LOGIN\\_IMPROVEMENT  \n          1. If false, use the current flow (reactor hit firebase directly)  \n          2. If true, proceed with flow below  \n       2. Hit POST /auth/v1/login  \n          1. On error, show labels/toast accordingly  \n          2. On success  \n             1. If mfaRequired \\= true redirect to OTP page  \n             2. Else redirect to dashboard and set user based on firebaseUser  \n       3. Hit POST /auth/v1/otp  \n          1. When click request new OTP  \n          2. Use token\\_id from (c.ii)  \n       4. Hit POST /auth/v1/login/verify-otp  \n          1. Req: submitted otp, mfa\\_channel, and token\\_id from (c.ii)  \n          2. Set user based on response  \n       5. Need to adjust the way we store our user object  \n          1. Make sure post-login analytics is not removed  \n    4. AC:  \n       1. Able to login with new flow using email password  \n    5. Deps:"
+    },
+    {
+      "summary": "[REACTOR] Login page (submit OTP) ΓÇô UI",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Login with email password endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Generate OTP endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Verify OTP endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[UTILITY-SCRIPT] Verify emails firebase",
+      "sp": 1,
+      "description": "2. Context: some prod users have unverified emails in firebase, seen [here](https://docs.google.com/spreadsheets/d/1YdcxSDDgp5kM3pGCaUo3G3OIeR9SgPPnMcUxj-qo5qk/edit?usp=sharing). We need to set emailVerified \\= true for these existing users so they can use both magic link and email pass login  \n    3. Todo:  \n       1. For each user in our firebase project  \n          1. Check the emailVerified value  \n          2. If false, then update the user so that emailVerified \\= true  \n    4. AC:  \n       1. Able to set emailVerified \\= true for all users in a firebase project   \n    5. Deps  \n       1. \\-"
+    },
+    {
+      "summary": "[MIGRATION] Verify emails for existing firebase account",
+      "sp": 0,
+      "description": "2. Context: we need to run the created script to set emailVerified \\= true for existing users  \n    3. Todo:  \n       1. Run script in all env projects  \n          1. Devlab  \n          2. Staging  \n          3. Prod: make sure it is done exactly before deployment to avoid newly created accounts not being migrated  \n    4. AC:  \n       1. Able to set emailVerified \\= true for all users in a firebase project   \n    5. Deps"
+    },
+    {
+      "summary": "[UTILITY-SCRIPT] Force Verify Firebase Account Emails",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[HOLA] Magic link login endpoint",
+      "sp": 1,
+      "description": "2. Context: we need to enable passwordless sign in  \n    3. Todo  \n       1. Endpoint: POST /magic-link  \n       2. Request: { email: ΓÇ£ΓÇ¥ }  \n       3. Response: { data: ΓÇ£ΓÇ¥ }  \n       4. Use firebase EmailSignInLink function  \n       5. Adjust hola\\_client package as well  \n       6. Reference:"
+    },
+    {
+      "summary": "[[SPIKE][20250219] Magic Link Login](https://docs.google.com/document/d/1PmcIjTSlQhFo6VB21E4z3qLN2Z2FSNpd49B_BUza4MQ/edit?tab=t.0#heading=h.6jynaot9cbnq)",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[https://github.com/Match-Made/hola/pull/49](https://github.com/Match-Made/hola/pull/49)",
+      "sp": 0,
+      "description": "4. AC:  \n       1. Able to generate sign in link using email  \n    5. Deps:  \n       1. \\-"
+    },
+    {
+      "summary": "[FUSION] Magic link login endpoint",
+      "sp": 1,
+      "description": "2. Context: we need to enable passwordless sign in  \n    3. Todo  \n       1. Endpoint: POST /auth/v1/magic-link  \n       2. Request: { email: ΓÇ£ΓÇ¥ }   \n       3. Call hola endpoint  \n       4. Use sendgrid to send email (use APP\\_EMAIL\\_MAGIC\\_LINK\\_TEMPLATE\\_ID for template)  \n          1. Params:  \n             1. {{whatsapp\\_number}} ΓåÆ construct [wa.me](http://wa.me) link from here  \n             2. {{magic\\_link}}  \n       5. Reference:"
+    },
+    {
+      "summary": "[[SPIKE][20250219] Magic Link Login](https://docs.google.com/document/d/1PmcIjTSlQhFo6VB21E4z3qLN2Z2FSNpd49B_BUza4MQ/edit?tab=t.0#heading=h.6jynaot9cbnq)",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[https://github.com/Match-Made/fusion/pull/894](https://github.com/Match-Made/fusion/pull/894)",
+      "sp": 0,
+      "description": "4. AC:  \n       1. Able to send sign in link to email  \n    5. Deps:"
+    },
+    {
+      "summary": "[HOLA] Magic link login endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[EMAIL-TEMPLATE] Create magic link email template",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Reset failed login counter endpoint",
+      "sp": 1,
+      "description": "2. Context: we need to reset counter after successful magic link sign in  \n    3. Todo  \n       1. Endpoint: POST /auth/v1/reset-failed-login-counter  \n       2. Deletes **auth:login:fail:{email}** entry from redis  \n    4. AC:  \n       1. Able to delete failed login counter for a user  \n    5. Deps:  \n       1. \\-"
+    },
+    {
+      "summary": "[FUSION][ADMIN][LOW PRIO] Adjust admin create user endpoint",
+      "sp": 1,
+      "description": "2. Context: we need to make sure that users created via the admin endpoint have emailVerified \\= true  \n    3. Todo  \n       1. Adjust endpoint: POST /admin-api/v1/users  \n       2. After creating user, set EmailVerified to true for newly created user using holaclientΓÇÖs UpdateUser function  \n    4. AC:  \n       1. Able to auto set newly created userΓÇÖs EmailVerified attribute to be true  \n    5. Deps:  \n       1. \\-"
+    },
+    {
+      "summary": "[REACTOR] Magic link login ΓÇô UI",
+      "sp": 2,
+      "description": "![][image7]![][image8]\n\n    2. Context: we need UI tweaks to accommodate new magic link feature  \n    3. Todo  \n       1. Entry point button & sent modal ([design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1181-5794&t=AJ6YMYSWARGjpgZ9-4))  \n       2. Bumper page ([design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1298-13786&t=AJ6YMYSWARGjpgZ9-4))  \n       3. Error state  \n       4. For cases where there are no entry point, create temporary button in login modal so that QA can test  \n    4. AC:  \n       1. Styling and microinteractions are according to Figma  \n    5. Deps:"
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Magic link login endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[REACTOR] Magic link login ΓÇô Integration",
+      "sp": 1,
+      "description": "2. Context: we need to enable passwordless sign in through our web  \n    3. Todo  \n       1. Details:  \n          1. Hit POST /auth/v1/magic-link  \n          2. Store the email in local storage  \n          3. After user redirected to dashboard from magic link, try signing in using email stored in local storage  \n             1. If no email in local storage, show modal to re-fill email  \n          4. On successful login  \n             1. Hit POST /auth/v1/reset-failed-login-counter  \n       2. Reference:"
+    },
+    {
+      "summary": "[[SPIKE][20250219] Magic Link Login](https://docs.google.com/document/d/1PmcIjTSlQhFo6VB21E4z3qLN2Z2FSNpd49B_BUza4MQ/edit?tab=t.0#heading=h.6jynaot9cbnq)",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[https://github.com/Match-Made/mm-web/pull/593](https://github.com/Match-Made/mm-web/pull/593)",
+      "sp": 0,
+      "description": "4. AC:  \n       1. Able to login using magic link through reactor  \n    5. Deps:"
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Reset failed login counter endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Magic link login endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[REACTOR] Magic link login ΓÇô UI",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][USER] Get user detail endpoint",
+      "sp": 1,
+      "description": "2. Context: need to get user details based on uid  \n    3. Todo:  \n       1. Endpoint: GET /api/v1/users/:id  \n       2. Response:\n\n          {\n\n            \"id\": ΓÇ£ΓÇ¥\n\n            \"name\": ΓÇ£ΓÇ¥,\n\n            \"email\": ΓÇ£ΓÇ¥,\n\n            \"type\": ΓÇ£ΓÇ¥,\n\n             \"is\\_active\": ΓÇ£ΓÇ¥,\n\n             \"company\\_name\": ΓÇ£ΓÇ¥,\n\n            \"phone\\_number\": ΓÇ£ΓÇ¥\n\n          }\n\n       3. Should also return the userΓÇÖs   \n    4. AC:  \n       1. Able to get user details accordingly  \n    5. Deps"
+    },
+    {
+      "summary": "[FUSION] Migration and package initialization",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][USER] Update user endpoint",
+      "sp": 2,
+      "description": "2. Context: need to be able to update user details  \n    3. Todo:  \n       1. Endpoint: PATCH /api/v1/users/:id  \n       2. Request: \n\n          {\n\n              verification: {\n\n                  current\\_password: ΓÇ£ΓÇ¥,\n\n                  otp: ΓÇ£ΓÇ¥,\n\n                  token\\_id: ΓÇ£ΓÇ¥,\n\n              },\n\n              updated\\_data: {\n\n                  phone\\_number: ΓÇ£ΓÇ¥,    \n\n                  password: ΓÇ£ΓÇ¥,    \n\n                  last\\_password\\_reminder\\_at: ΓÇ£ΓÇ¥,    \n\n              }\n\n          }\n\n       3. Response: { user object }  \n       4. Verification object  \n          1. current\\_password: used to try signing in to check legitimacy  \n          2. token\\_id: used to get stored otp  \n          3. otp: used to compare with the stored otp  \n       5. On change phone number  \n          1. All verification fields are required  \n             1. Try signing in using current\\_password  \n             2. Try comparing the submitted otp with the stored otp (get auth:otp:{token\\_id})  \n          2. Update phone\\_number\\_changed\\_at  \n          3. Will use 62 (or \\+62) ΓåÆ based off of SPIKE  \n       6. On change password  \n          1. Only current\\_password field is required in verification  \n             1. Try signing in using current\\_password  \n          2. Hit holaclient UpdateUser  \n          3. Update password\\_changed\\_at  \n          4. If successfully updated, call RevokeRefreshTokens function to force log out  \n       7. Updates can be partial  \n    4. AC:  \n       1. Able to update user details accordingly  \n    5. Deps"
+    },
+    {
+      "summary": "[FUSION] Migration and package initialization",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Verify Login OTP endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[REACTOR] Account detail - UI",
+      "sp": 4,
+      "description": "![][image9]\n\n    2. Context: we need to add new account detail UI  \n    3. Todo:  \n       1. Refer to this [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1235-8705&t=yN5kpijod8E1Aqa3-4)  \n       2. Should include:  \n          1. Entry point, account page, password modal, WA modal  \n          2. Microinteractions  \n          3. Error states \\+ form validation  \n          4. Confirmation modal when leaving WA modal  \n       3. Add \\+62 as prefix for phone number  \n       4. Make sure this is only shown to user-typed user  \n    4. AC:  \n       1. Styling and microinteractions are according to Figma  \n    5. Deps  \n       1. \\-"
+    },
+    {
+      "summary": "[REACTOR] Account detail - Integration",
+      "sp": 2,
+      "description": "2. Context: we need to be able to update user account from web  \n    3. Todo:  \n       1. Show user info in the account page  \n          1. Hit GET /users/:id  \n       2. Upon requesting OTP  \n          1. Hit POST /auth/v1/otp  \n             1. Use phone\\_number  \n             2. If user re-request OTP, make sure to use the firstly received token\\_id from this endpoint in request body  \n       3. Upon changing phone number  \n          1. Hit PATCH /users/:id  \n          2. Fill the verification object  \n             1. current\\_password  \n             2. OTP  \n             3. token\\_id (from [c.ii](http://c.ii))  \n       4. Upon changing password  \n          1. Hit PATCH /users/:id  \n          2. Fill the verification object  \n             1. current\\_password  \n       5. Make sure this is only shown to user-typed user  \n    4. AC:  \n       1. Able to change password  \n       2. Able to change phone number and verify it  \n    5. Deps"
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Get user detail endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Update user endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][DELIVERY/USER] Generate OTP endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[REACTOR] Update Password reminder pop up modal ΓÇô UI",
+      "sp": 1,
+      "description": "![][image10]\n\n    2. Context: need to know when the last time a user has been updated  \n    3. Todo:  \n       1. Should include microinteractions (hover, disable, etc)  \n       2. Refer to [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1186-13927&t=AJ6YMYSWARGjpgZ9-4) (can use confirmation modal)  \n    4. AC:  \n       1. Styling and microinteractions are according to Figma  \n    5. Deps  \n       1. \\-"
+    },
+    {
+      "summary": "[REACTOR] Update Password reminder pop up modal ΓÇô Integration",
+      "sp": 1,
+      "description": "2. Context: need to know when the last time a user has been updated  \n    3. Todo:  \n       1. Upon opening web/after logging in, hit GET /users/:id  \n       2. If last\\_password\\_reminder\\_at is \\>= 90 days ago, show modal  \n       3. This modal will persist like TnC until user clicks ΓÇ£Remind me laterΓÇ¥  \n       4. Upon clicking ΓÇ£Update passwordΓÇ¥  \n          1. Hit PATCH /users/:id  \n             1. last\\_password\\_reminder\\_at \\= today  \n          2. Redirect to account detail page with password change pane opened  \n       5. On click ΓÇ£remind me laterΓÇ¥  \n          1. Hit PATCH /users/:id  \n             1. last\\_password\\_reminder\\_at \\= today  \n       6. Make sure this is only shown to user-typed user  \n    4. AC:  \n       1.   \n    5. Deps"
+    },
+    {
+      "summary": "[REACTOR] Password reminder pop up modal ΓÇô UI",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[REACTOR] Account detail - UI",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Get user detail endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION] Update user endpoint",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[FUSION][LOW PRIO] Implement cloudflare in login endpoint",
+      "sp": 1,
+      "description": "2. Context: we need to be able to implement bot checks  \n    3. Todo:  \n       1. Adjust request to accept cloudflare token  \n       2. In both magic link endpoint and email/pass endpoint, test the token first by hitting sitesverify  \n       3. Reference:"
+    },
+    {
+      "summary": "[https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/)",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[https://developers.cloudflare.com/turnstile/get-started/server-side-validation/](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)",
+      "sp": 0,
+      "description": "4. Make sure weΓÇÖre able to handle case when cloudflare is down so it doesnΓÇÖt block login flow  \n    4. AC:  \n       1. Able to detect bot using cloudflare turnstile  \n    5. Deps  \n       1. \\-"
+    },
+    {
+      "summary": "[REACTOR][LOW PRIO] Implement cloudflare token",
+      "sp": 1,
+      "description": "2. Context: we need to be able to implement bot checks  \n    3. Todo:  \n       1. Need to generate token and pass it to the magic link endpoint and email/pass endpoint  \n       2. Reference:"
+    },
+    {
+      "summary": "[https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/)",
+      "sp": 0,
+      "description": ""
+    },
+    {
+      "summary": "[https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/)",
+      "sp": 0,
+      "description": "3. Make sure weΓÇÖre able to handle case when cloudflare is down so it doesnΓÇÖt block login flow  \n    4. AC:  \n       1. Able to detect bot using cloudflare turnstile  \n    5. Deps  \n       1. \\-\n\n# Environment Variables\n\n| Key | Description |\n| :---- | :---- |\n| APP\\_FAILED\\_LOGIN\\_COUNTER\\_TTL | 1800 seconds (30 mins) |\n| APP\\_FIREBASE\\_USER\\_TTL | 600 seconds (10 mins) |\n\n# Feature Toggles\n\n| Key | Description |\n| :---- | :---- |\n| APP\\_FT\\_MFA\\_REQUIRED |  |\n| VITE\\_FT\\_LOGIN\\_IMPROVEMENT |  |\n\n# Deployers\n\nPerson\n\nPerson\n\n# On-Leaves\n\nPerson \n\n1st-2nd January 2025 (2 days)\n\n[Felix Winangun](mailto:felix.winangun@matchmade.io)\n\n18 January 2026 (1 days)\n\nNotes\n\n- [x] ~~OTP no need for max retry, but lower the expiry to 2 minutes~~  \n- [x] ~~Company table flag for whatsapp\\_option~~  \n- [x] ~~Add column user ΓåÆ mfa\\_required~~  \n- [x] ~~Apus whatsapp\\_link ΓåÆ janlup adjust biar construct link based on whatsapp\\_number~~  \n- [x] ~~Will have fill password before change phone number & OTP~~  \n      - [x] ~~Verify current password \\+ verify OTP \\+ update phone number~~  \n      - [x] ~~Tambahin preAuthToken juga buat si update phone number~~  \n- [ ] Cloudflare need FT for automation?   \n- [ ] Magic link email ΓåÆ append user email instead\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]\n\n[Image/Content removed due to size]"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-08T00:00:00.000Z",
+  "generatedAt": "2026-05-25T00:55:02.580Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -60,6 +60,7 @@
         "go-concurrency-patterns",
         "go-playwright",
         "golang-pro",
+        "google-calendar",
         "graphql",
         "hubspot-integration",
         "hugging-face-jobs",
@@ -201,6 +202,7 @@
         "pci-compliance",
         "pentest-checklist",
         "plaid-fintech",
+        "pm-ai-pol-probe-advisor",
         "quant-analyst",
         "red-team-tools",
         "reverse-engineer",
@@ -302,6 +304,7 @@
         "legal-advisor",
         "loki-mode",
         "mailchimp-automation",
+        "mixpanel-insights",
         "ml-pipeline-workflow",
         "moodle-external-api-development",
         "neon-postgres",

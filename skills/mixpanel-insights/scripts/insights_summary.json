@@ -1,0 +1,2593 @@
+{
+  "report_generated_at": "2026-04-24T11:28:33.202620",
+  "period_start": "2026-04-10",
+  "period_end": "2026-04-24",
+  "metrics": {
+    "REJUVE": {
+      "2026-04-12": {
+        "data_update_finish": 5,
+        "file_finish": 195
+      },
+      "2026-04-13": {
+        "data_update_finish": 5,
+        "file_finish": 215,
+        "table_get_record": 5
+      },
+      "2026-04-14": {
+        "data_update_finish": 5,
+        "file_finish": 240
+      },
+      "2026-04-15": {
+        "data_update_finish": 15,
+        "file_finish": 265,
+        "table_get_record": 5
+      },
+      "2026-04-16": {
+        "data_update_finish": 15,
+        "file_finish": 265,
+        "table_get_record": 10
+      },
+      "2026-04-17": {
+        "data_update_finish": 5,
+        "file_finish": 305
+      },
+      "2026-04-18": {
+        "data_update_finish": 5,
+        "file_finish": 220
+      },
+      "2026-04-19": {
+        "data_update_finish": 5,
+        "file_finish": 190
+      },
+      "2026-04-20": {
+        "data_update_finish": 5,
+        "file_finish": 205
+      },
+      "2026-04-21": {
+        "data_update_finish": 20,
+        "file_finish": 235
+      },
+      "2026-04-23": {
+        "data_update_finish": 10,
+        "file_finish": 275
+      },
+      "2026-04-10": {
+        "data_update_finish": 2,
+        "file_finish": 240
+      },
+      "2026-04-11": {
+        "data_update_finish": 1,
+        "file_finish": 205
+      },
+      "2026-04-22": {
+        "data_update_finish": 15,
+        "file_finish": 390
+      },
+      "2026-04-24": {
+        "file_finish": 6
+      }
+    },
+    "Unknown Company": {
+      "2026-04-22": {
+        "file_finish": 1918,
+        "data_update_finish": 34,
+        "table_get_record": 355
+      },
+      "2026-04-23": {
+        "file_finish": 2535,
+        "table_get_record": 215,
+        "data_update_finish": 25
+      },
+      "2026-04-24": {
+        "file_finish": 877,
+        "table_get_record": 70,
+        "data_update_finish": 5
+      },
+      "2026-04-21": {
+        "file_finish": 1105,
+        "table_get_record": 340,
+        "data_update_finish": 25
+      },
+      "2026-04-15": {
+        "file_finish": 785,
+        "data_update_finish": 35,
+        "table_get_record": 6120
+      },
+      "2026-04-16": {
+        "file_finish": 296,
+        "data_update_finish": 20,
+        "table_get_record": 500
+      },
+      "2026-04-17": {
+        "file_finish": 420,
+        "table_get_record": 335
+      },
+      "2026-04-18": {
+        "file_finish": 220,
+        "table_get_record": 35
+      },
+      "2026-04-19": {
+        "file_finish": 210,
+        "table_get_record": 105
+      },
+      "2026-04-20": {
+        "file_finish": 387,
+        "table_get_record": 465,
+        "data_update_finish": 15
+      },
+      "2026-04-13": {
+        "table_get_record": 1310,
+        "data_update_finish": 65,
+        "file_finish": 512
+      },
+      "2026-04-14": {
+        "table_get_record": 695,
+        "data_update_finish": 37,
+        "file_finish": 800
+      },
+      "2026-04-10": {
+        "table_get_record": 525,
+        "file_finish": 173,
+        "data_update_finish": 5
+      },
+      "2026-04-11": {
+        "file_finish": 135
+      },
+      "2026-04-12": {
+        "file_finish": 150
+      }
+    },
+    "WINGSTOP": {
+      "2026-04-10": {
+        "table_get_record": 20,
+        "file_finish": 135
+      },
+      "2026-04-13": {
+        "table_get_record": 18,
+        "file_finish": 100
+      },
+      "2026-04-14": {
+        "table_get_record": 17,
+        "file_finish": 155,
+        "data_update_finish": 7
+      },
+      "2026-04-15": {
+        "table_get_record": 15,
+        "file_finish": 110,
+        "data_update_finish": 5
+      },
+      "2026-04-16": {
+        "table_get_record": 20,
+        "file_finish": 110,
+        "data_update_finish": 5
+      },
+      "2026-04-17": {
+        "table_get_record": 26,
+        "file_finish": 180,
+        "data_update_finish": 5
+      },
+      "2026-04-20": {
+        "table_get_record": 8,
+        "file_finish": 85
+      },
+      "2026-04-21": {
+        "table_get_record": 25,
+        "file_finish": 150,
+        "data_update_finish": 5
+      },
+      "2026-04-22": {
+        "table_get_record": 20,
+        "file_finish": 110,
+        "data_update_finish": 5
+      },
+      "2026-04-23": {
+        "table_get_record": 16,
+        "file_finish": 120
+      },
+      "2026-04-24": {
+        "table_get_record": 4,
+        "file_finish": 40
+      },
+      "2026-04-11": {
+        "file_finish": 70
+      },
+      "2026-04-12": {
+        "file_finish": 65
+      },
+      "2026-04-18": {
+        "file_finish": 65
+      },
+      "2026-04-19": {
+        "file_finish": 65
+      }
+    },
+    "CNF-IZONE": {
+      "2026-04-10": {
+        "file_finish": 202,
+        "table_get_record": 12,
+        "data_update_finish": 20
+      },
+      "2026-04-11": {
+        "file_finish": 65,
+        "data_update_finish": 5
+      },
+      "2026-04-12": {
+        "file_finish": 85,
+        "data_update_finish": 5
+      },
+      "2026-04-13": {
+        "file_finish": 371,
+        "table_get_record": 1,
+        "data_update_finish": 21
+      },
+      "2026-04-14": {
+        "file_finish": 450,
+        "data_update_finish": 25,
+        "table_get_record": 1
+      },
+      "2026-04-15": {
+        "file_finish": 60,
+        "data_update_finish": 5
+      },
+      "2026-04-16": {
+        "file_finish": 330,
+        "data_update_finish": 15,
+        "table_get_record": 10
+      },
+      "2026-04-17": {
+        "file_finish": 206,
+        "data_update_finish": 40,
+        "table_get_record": 6
+      },
+      "2026-04-18": {
+        "file_finish": 60,
+        "data_update_finish": 1
+      },
+      "2026-04-19": {
+        "file_finish": 75,
+        "data_update_finish": 1
+      },
+      "2026-04-20": {
+        "file_finish": 515,
+        "data_update_finish": 41,
+        "table_get_record": 32
+      },
+      "2026-04-21": {
+        "file_finish": 180,
+        "data_update_finish": 20
+      },
+      "2026-04-22": {
+        "file_finish": 170,
+        "table_get_record": 2,
+        "data_update_finish": 15
+      },
+      "2026-04-23": {
+        "file_finish": 160,
+        "table_get_record": 8,
+        "data_update_finish": 25
+      },
+      "2026-04-24": {
+        "file_finish": 41,
+        "data_update_finish": 6
+      }
+    },
+    "MATCHA": {
+      "2026-04-10": {
+        "file_finish": 35,
+        "table_get_record": 260,
+        "data_update_finish": 10
+      },
+      "2026-04-14": {
+        "file_finish": 20,
+        "table_get_record": 40
+      },
+      "2026-04-15": {
+        "file_finish": 20,
+        "table_get_record": 25
+      },
+      "2026-04-17": {
+        "table_get_record": 50,
+        "file_finish": 40
+      },
+      "2026-04-20": {
+        "file_finish": 20,
+        "table_get_record": 60
+      },
+      "2026-04-21": {
+        "file_finish": 40,
+        "table_get_record": 100
+      },
+      "2026-04-22": {
+        "table_get_record": 20
+      },
+      "2026-04-23": {
+        "file_finish": 40,
+        "table_get_record": 35,
+        "data_update_finish": 5
+      }
+    },
+    "Company 08976d92": {
+      "2026-04-10": {
+        "table_get_record": 2266
+      },
+      "2026-04-13": {
+        "table_get_record": 1456,
+        "file_finish": 5
+      },
+      "2026-04-14": {
+        "table_get_record": 1518,
+        "data_update_finish": 9,
+        "file_finish": 95
+      },
+      "2026-04-15": {
+        "table_get_record": 1370
+      },
+      "2026-04-16": {
+        "table_get_record": 2873
+      },
+      "2026-04-17": {
+        "table_get_record": 1844,
+        "file_finish": 15
+      },
+      "2026-04-19": {
+        "table_get_record": 285
+      },
+      "2026-04-20": {
+        "table_get_record": 4161,
+        "file_finish": 60,
+        "data_update_finish": 10
+      },
+      "2026-04-21": {
+        "table_get_record": 2169,
+        "data_update_finish": 15,
+        "file_finish": 20
+      },
+      "2026-04-22": {
+        "table_get_record": 2471,
+        "data_update_finish": 10,
+        "file_finish": 65
+      },
+      "2026-04-23": {
+        "table_get_record": 3576,
+        "data_update_finish": 10
+      },
+      "2026-04-24": {
+        "table_get_record": 486,
+        "data_update_finish": 5,
+        "file_finish": 23
+      },
+      "2026-04-11": {
+        "table_get_record": 5
+      },
+      "2026-04-12": {
+        "table_get_record": 25
+      }
+    },
+    "Audy Dental": {
+      "2026-04-10": {
+        "table_get_record": 173,
+        "data_update_finish": 11,
+        "file_finish": 181
+      },
+      "2026-04-15": {
+        "file_finish": 599,
+        "data_update_finish": 83,
+        "table_get_record": 2129
+      },
+      "2026-04-16": {
+        "table_get_record": 510,
+        "data_update_finish": 11,
+        "file_finish": 165
+      },
+      "2026-04-17": {
+        "file_finish": 179,
+        "data_update_finish": 15,
+        "table_get_record": 242
+      },
+      "2026-04-22": {
+        "file_finish": 622,
+        "data_update_finish": 115,
+        "table_get_record": 3907
+      },
+      "2026-04-23": {
+        "file_finish": 12,
+        "data_update_finish": 16,
+        "table_get_record": 330
+      },
+      "2026-04-11": {
+        "file_finish": 150
+      },
+      "2026-04-12": {
+        "file_finish": 189,
+        "table_get_record": 10
+      },
+      "2026-04-13": {
+        "file_finish": 171
+      },
+      "2026-04-14": {
+        "file_finish": 162
+      },
+      "2026-04-18": {
+        "file_finish": 171
+      },
+      "2026-04-19": {
+        "file_finish": 174
+      },
+      "2026-04-20": {
+        "file_finish": 174
+      },
+      "2026-04-21": {
+        "file_finish": 153,
+        "table_get_record": 20
+      },
+      "2026-04-24": {
+        "file_finish": 54
+      }
+    },
+    "Company 797c5f70": {
+      "2026-04-13": {
+        "file_finish": 74,
+        "data_update_finish": 3,
+        "table_get_record": 90
+      },
+      "2026-04-14": {
+        "table_get_record": 25,
+        "file_finish": 55
+      },
+      "2026-04-15": {
+        "table_get_record": 10,
+        "file_finish": 65
+      },
+      "2026-04-17": {
+        "table_get_record": 20,
+        "file_finish": 80
+      },
+      "2026-04-19": {
+        "table_get_record": 10,
+        "file_finish": 70
+      },
+      "2026-04-21": {
+        "table_get_record": 80,
+        "file_finish": 65
+      },
+      "2026-04-22": {
+        "table_get_record": 100,
+        "data_update_finish": 5,
+        "file_finish": 65
+      },
+      "2026-04-23": {
+        "table_get_record": 65,
+        "data_update_finish": 5,
+        "file_finish": 70
+      },
+      "2026-04-10": {
+        "file_finish": 50
+      },
+      "2026-04-11": {
+        "file_finish": 40
+      },
+      "2026-04-12": {
+        "file_finish": 55
+      },
+      "2026-04-16": {
+        "file_finish": 65
+      },
+      "2026-04-18": {
+        "file_finish": 55
+      },
+      "2026-04-20": {
+        "file_finish": 70
+      },
+      "2026-04-24": {
+        "file_finish": 51
+      }
+    },
+    "LIGHT-HOUSE": {
+      "2026-04-15": {
+        "file_finish": 36,
+        "table_get_record": 340,
+        "data_update_finish": 15
+      },
+      "2026-04-16": {
+        "file_finish": 32
+      },
+      "2026-04-17": {
+        "file_finish": 105,
+        "data_update_finish": 15,
+        "table_get_record": 125
+      },
+      "2026-04-18": {
+        "file_finish": 36
+      },
+      "2026-04-19": {
+        "file_finish": 36
+      },
+      "2026-04-20": {
+        "file_finish": 80,
+        "data_update_finish": 5,
+        "table_get_record": 5
+      },
+      "2026-04-21": {
+        "file_finish": 80,
+        "table_get_record": 135,
+        "data_update_finish": 10
+      },
+      "2026-04-22": {
+        "file_finish": 36,
+        "table_get_record": 40
+      },
+      "2026-04-23": {
+        "file_finish": 51,
+        "table_get_record": 80,
+        "data_update_finish": 10
+      },
+      "2026-04-10": {
+        "table_get_record": 60,
+        "file_finish": 118,
+        "data_update_finish": 35
+      },
+      "2026-04-12": {
+        "file_finish": 19,
+        "data_update_finish": 5,
+        "table_get_record": 75
+      },
+      "2026-04-13": {
+        "file_finish": 168,
+        "data_update_finish": 10,
+        "table_get_record": 80
+      },
+      "2026-04-14": {
+        "file_finish": 31,
+        "data_update_finish": 5,
+        "table_get_record": 35
+      },
+      "2026-04-24": {
+        "file_finish": 45,
+        "data_update_finish": 1,
+        "table_get_record": 1
+      },
+      "2026-04-11": {
+        "file_finish": 20
+      }
+    },
+    "Company 1c0a2de6": {
+      "2026-04-10": {
+        "file_finish": 10,
+        "table_get_record": 25
+      },
+      "2026-04-13": {
+        "table_get_record": 75
+      },
+      "2026-04-14": {
+        "table_get_record": 45
+      },
+      "2026-04-15": {
+        "table_get_record": 30,
+        "file_finish": 50,
+        "data_update_finish": 10
+      },
+      "2026-04-17": {
+        "table_get_record": 20
+      },
+      "2026-04-21": {
+        "table_get_record": 5,
+        "file_finish": 25
+      },
+      "2026-04-23": {
+        "table_get_record": 5,
+        "file_finish": 15
+      }
+    },
+    "Bri Life": {
+      "2026-04-23": {
+        "table_get_record": 16
+      },
+      "2026-04-15": {
+        "table_get_record": 104,
+        "file_finish": 40,
+        "data_update_finish": 5
+      },
+      "2026-04-16": {
+        "table_get_record": 54
+      },
+      "2026-04-21": {
+        "table_get_record": 5
+      }
+    },
+    "Passion Abadi Korpora": {
+      "2026-04-10": {
+        "table_get_record": 11,
+        "file_finish": 144,
+        "data_update_finish": 1
+      },
+      "2026-04-13": {
+        "data_update_finish": 10,
+        "table_get_record": 30,
+        "file_finish": 190
+      },
+      "2026-04-14": {
+        "table_get_record": 625,
+        "file_finish": 50,
+        "data_update_finish": 10
+      },
+      "2026-04-15": {
+        "table_get_record": 90,
+        "file_finish": 170,
+        "data_update_finish": 10
+      },
+      "2026-04-16": {
+        "table_get_record": 130,
+        "file_finish": 165,
+        "data_update_finish": 20
+      },
+      "2026-04-17": {
+        "table_get_record": 80,
+        "file_finish": 60,
+        "data_update_finish": 5
+      },
+      "2026-04-20": {
+        "table_get_record": 735,
+        "data_update_finish": 35,
+        "file_finish": 95
+      },
+      "2026-04-21": {
+        "table_get_record": 840,
+        "data_update_finish": 20,
+        "file_finish": 160
+      },
+      "2026-04-22": {
+        "table_get_record": 45,
+        "file_finish": 180,
+        "data_update_finish": 10
+      },
+      "2026-04-23": {
+        "table_get_record": 250,
+        "file_finish": 160,
+        "data_update_finish": 5
+      },
+      "2026-04-24": {
+        "table_get_record": 145,
+        "file_finish": 56
+      },
+      "2026-04-11": {
+        "file_finish": 125
+      },
+      "2026-04-12": {
+        "file_finish": 130
+      },
+      "2026-04-18": {
+        "file_finish": 35
+      },
+      "2026-04-19": {
+        "file_finish": 125
+      }
+    },
+    "Company 5cba2493": {
+      "2026-04-10": {
+        "table_get_record": 1155
+      },
+      "2026-04-11": {
+        "table_get_record": 210
+      },
+      "2026-04-13": {
+        "table_get_record": 2960
+      },
+      "2026-04-14": {
+        "table_get_record": 750
+      },
+      "2026-04-15": {
+        "table_get_record": 1155
+      },
+      "2026-04-16": {
+        "table_get_record": 775
+      },
+      "2026-04-17": {
+        "table_get_record": 1125
+      },
+      "2026-04-20": {
+        "table_get_record": 5290
+      },
+      "2026-04-21": {
+        "table_get_record": 1460
+      },
+      "2026-04-22": {
+        "table_get_record": 1965,
+        "data_update_finish": 5
+      },
+      "2026-04-23": {
+        "table_get_record": 1580
+      },
+      "2026-04-24": {
+        "table_get_record": 122
+      },
+      "2026-04-19": {
+        "table_get_record": 7030
+      }
+    },
+    "Bank Neo Commerce": {
+      "2026-04-10": {
+        "file_finish": 68,
+        "table_get_record": 72,
+        "data_update_finish": 6
+      },
+      "2026-04-13": {
+        "file_finish": 198,
+        "table_get_record": 194,
+        "data_update_finish": 11
+      },
+      "2026-04-23": {
+        "file_finish": 64,
+        "data_update_finish": 8
+      },
+      "2026-04-22": {
+        "file_finish": 67,
+        "data_update_finish": 17,
+        "table_get_record": 75
+      },
+      "2026-04-14": {
+        "table_get_record": 55,
+        "file_finish": 66,
+        "data_update_finish": 9
+      },
+      "2026-04-15": {
+        "table_get_record": 65,
+        "file_finish": 80,
+        "data_update_finish": 10
+      },
+      "2026-04-16": {
+        "table_get_record": 61,
+        "file_finish": 67,
+        "data_update_finish": 6
+      },
+      "2026-04-17": {
+        "table_get_record": 60,
+        "file_finish": 70,
+        "data_update_finish": 11
+      },
+      "2026-04-20": {
+        "table_get_record": 100,
+        "file_finish": 205,
+        "data_update_finish": 21
+      },
+      "2026-04-21": {
+        "table_get_record": 185,
+        "file_finish": 74,
+        "data_update_finish": 18
+      },
+      "2026-04-24": {
+        "file_finish": 55,
+        "data_update_finish": 5
+      }
+    },
+    "Company 487842b7": {
+      "2026-04-13": {
+        "table_get_record": 6,
+        "file_finish": 10
+      },
+      "2026-04-23": {
+        "table_get_record": 1
+      },
+      "2026-04-14": {
+        "table_get_record": 29
+      },
+      "2026-04-17": {
+        "table_get_record": 130
+      },
+      "2026-04-15": {
+        "table_get_record": 9
+      },
+      "2026-04-19": {
+        "table_get_record": 12
+      },
+      "2026-04-20": {
+        "table_get_record": 6
+      }
+    },
+    "ISMAYA (NEW)": {
+      "2026-04-10": {
+        "file_finish": 119,
+        "data_update_finish": 12
+      },
+      "2026-04-11": {
+        "file_finish": 9
+      },
+      "2026-04-12": {
+        "file_finish": 9
+      },
+      "2026-04-13": {
+        "file_finish": 93,
+        "data_update_finish": 15
+      },
+      "2026-04-14": {
+        "file_finish": 115,
+        "data_update_finish": 19
+      },
+      "2026-04-15": {
+        "file_finish": 54,
+        "data_update_finish": 9
+      },
+      "2026-04-16": {
+        "file_finish": 60,
+        "data_update_finish": 6
+      },
+      "2026-04-17": {
+        "file_finish": 107,
+        "data_update_finish": 14
+      },
+      "2026-04-18": {
+        "file_finish": 9
+      },
+      "2026-04-19": {
+        "file_finish": 6
+      },
+      "2026-04-20": {
+        "file_finish": 33,
+        "data_update_finish": 6
+      },
+      "2026-04-21": {
+        "file_finish": 109,
+        "data_update_finish": 17
+      },
+      "2026-04-22": {
+        "file_finish": 39,
+        "data_update_finish": 6
+      },
+      "2026-04-23": {
+        "file_finish": 30,
+        "data_update_finish": 3
+      },
+      "2026-04-24": {
+        "file_finish": 46,
+        "data_update_finish": 4
+      }
+    },
+    "TUKU": {
+      "2026-04-20": {
+        "table_get_record": 3
+      }
+    },
+    "Union Group": {
+      "2026-04-10": {
+        "table_get_record": 34
+      },
+      "2026-04-13": {
+        "table_get_record": 44,
+        "file_finish": 630,
+        "data_update_finish": 6
+      },
+      "2026-04-14": {
+        "table_get_record": 553,
+        "file_finish": 75,
+        "data_update_finish": 11
+      },
+      "2026-04-15": {
+        "table_get_record": 18
+      },
+      "2026-04-16": {
+        "table_get_record": 17,
+        "file_finish": 484,
+        "data_update_finish": 8
+      },
+      "2026-04-17": {
+        "table_get_record": 90,
+        "file_finish": 25
+      },
+      "2026-04-20": {
+        "table_get_record": 80,
+        "file_finish": 6,
+        "data_update_finish": 3
+      },
+      "2026-04-21": {
+        "file_finish": 475,
+        "data_update_finish": 8,
+        "table_get_record": 3
+      },
+      "2026-04-22": {
+        "table_get_record": 78,
+        "file_finish": 145,
+        "data_update_finish": 5
+      },
+      "2026-04-23": {
+        "table_get_record": 100,
+        "file_finish": 40
+      },
+      "2026-04-24": {
+        "file_finish": 11
+      }
+    },
+    "Amartha Awf": {
+      "2026-04-16": {
+        "table_get_record": 15
+      },
+      "2026-04-21": {
+        "file_finish": 10,
+        "data_update_finish": 5,
+        "table_get_record": 15
+      },
+      "2026-04-22": {
+        "table_get_record": 15
+      },
+      "2026-04-15": {
+        "table_get_record": 5
+      }
+    },
+    "ARYA-NOBLE-ECI": {
+      "2026-04-20": {
+        "table_get_record": 2833,
+        "file_finish": 90,
+        "data_update_finish": 5
+      },
+      "2026-04-14": {
+        "table_get_record": 971,
+        "file_finish": 130,
+        "data_update_finish": 5
+      },
+      "2026-04-15": {
+        "table_get_record": 152,
+        "file_finish": 150,
+        "data_update_finish": 5
+      },
+      "2026-04-16": {
+        "table_get_record": 319,
+        "file_finish": 130,
+        "data_update_finish": 5
+      },
+      "2026-04-17": {
+        "table_get_record": 2453,
+        "file_finish": 125,
+        "data_update_finish": 10
+      },
+      "2026-04-21": {
+        "table_get_record": 3629,
+        "file_finish": 200,
+        "data_update_finish": 10
+      },
+      "2026-04-22": {
+        "table_get_record": 230,
+        "file_finish": 125,
+        "data_update_finish": 5
+      },
+      "2026-04-13": {
+        "table_get_record": 225,
+        "file_finish": 300,
+        "data_update_finish": 10
+      },
+      "2026-04-10": {
+        "file_finish": 5,
+        "data_update_finish": 5
+      },
+      "2026-04-12": {
+        "file_finish": 15
+      },
+      "2026-04-18": {
+        "file_finish": 10
+      },
+      "2026-04-19": {
+        "file_finish": 10,
+        "data_update_finish": 5
+      },
+      "2026-04-23": {
+        "file_finish": 125,
+        "table_get_record": 5,
+        "data_update_finish": 5
+      },
+      "2026-04-24": {
+        "data_update_finish": 5
+      }
+    },
+    "AMARTHA-AFA": {
+      "2026-04-23": {
+        "table_get_record": 91,
+        "file_finish": 45,
+        "data_update_finish": 5
+      },
+      "2026-04-14": {
+        "table_get_record": 93,
+        "file_finish": 50,
+        "data_update_finish": 10
+      },
+      "2026-04-15": {
+        "table_get_record": 442,
+        "file_finish": 50,
+        "data_update_finish": 5
+      },
+      "2026-04-16": {
+        "table_get_record": 177,
+        "file_finish": 50,
+        "data_update_finish": 10
+      },
+      "2026-04-17": {
+        "table_get_record": 184,
+        "file_finish": 50,
+        "data_update_finish": 10
+      },
+      "2026-04-20": {
+        "table_get_record": 136,
+        "file_finish": 70,
+        "data_update_finish": 5
+      },
+      "2026-04-21": {
+        "table_get_record": 66,
+        "file_finish": 45,
+        "data_update_finish": 5
+      },
+      "2026-04-22": {
+        "table_get_record": 71,
+        "file_finish": 50,
+        "data_update_finish": 10
+      },
+      "2026-04-10": {
+        "file_finish": 50,
+        "data_update_finish": 5,
+        "table_get_record": 3
+      },
+      "2026-04-13": {
+        "file_finish": 70,
+        "data_update_finish": 5,
+        "table_get_record": 32
+      },
+      "2026-04-24": {
+        "file_finish": 45,
+        "data_update_finish": 5,
+        "table_get_record": 5
+      }
+    },
+    "Company 32e44cd2": {
+      "2026-04-10": {
+        "table_get_record": 208,
+        "data_update_finish": 18,
+        "file_finish": 29
+      },
+      "2026-04-12": {
+        "table_get_record": 110
+      },
+      "2026-04-13": {
+        "table_get_record": 396,
+        "file_finish": 74,
+        "data_update_finish": 9
+      },
+      "2026-04-14": {
+        "table_get_record": 790,
+        "file_finish": 112,
+        "data_update_finish": 17
+      },
+      "2026-04-15": {
+        "table_get_record": 1175,
+        "data_update_finish": 39,
+        "file_finish": 227
+      },
+      "2026-04-16": {
+        "table_get_record": 1360,
+        "file_finish": 100,
+        "data_update_finish": 9
+      },
+      "2026-04-17": {
+        "table_get_record": 345,
+        "file_finish": 80,
+        "data_update_finish": 4
+      },
+      "2026-04-18": {
+        "table_get_record": 20
+      },
+      "2026-04-20": {
+        "table_get_record": 575,
+        "data_update_finish": 5,
+        "file_finish": 220
+      },
+      "2026-04-21": {
+        "table_get_record": 255,
+        "data_update_finish": 9,
+        "file_finish": 176
+      },
+      "2026-04-22": {
+        "table_get_record": 853,
+        "file_finish": 80
+      },
+      "2026-04-23": {
+        "table_get_record": 637,
+        "file_finish": 56
+      },
+      "2026-04-24": {
+        "table_get_record": 395,
+        "file_finish": 56
+      },
+      "2026-04-11": {
+        "table_get_record": 5
+      }
+    },
+    "Company 19e7bc3b": {
+      "2026-04-10": {
+        "table_get_record": 6
+      },
+      "2026-04-23": {
+        "table_get_record": 5
+      }
+    },
+    "JULO": {
+      "2026-04-14": {
+        "table_get_record": 181,
+        "file_finish": 118,
+        "data_update_finish": 17
+      },
+      "2026-04-15": {
+        "table_get_record": 117,
+        "file_finish": 121,
+        "data_update_finish": 13
+      },
+      "2026-04-16": {
+        "table_get_record": 101,
+        "file_finish": 102,
+        "data_update_finish": 17
+      },
+      "2026-04-17": {
+        "table_get_record": 92,
+        "file_finish": 106,
+        "data_update_finish": 18
+      },
+      "2026-04-20": {
+        "table_get_record": 97,
+        "file_finish": 125,
+        "data_update_finish": 13
+      },
+      "2026-04-21": {
+        "table_get_record": 136,
+        "file_finish": 131,
+        "data_update_finish": 13
+      },
+      "2026-04-22": {
+        "table_get_record": 212,
+        "file_finish": 119,
+        "data_update_finish": 13
+      },
+      "2026-04-23": {
+        "table_get_record": 91,
+        "file_finish": 102,
+        "data_update_finish": 13
+      },
+      "2026-04-24": {
+        "table_get_record": 48,
+        "file_finish": 49,
+        "data_update_finish": 5
+      },
+      "2026-04-10": {
+        "table_get_record": 61,
+        "file_finish": 63,
+        "data_update_finish": 8
+      },
+      "2026-04-13": {
+        "table_get_record": 53,
+        "file_finish": 91,
+        "data_update_finish": 7
+      }
+    },
+    "AEON-INDONESIA": {
+      "2026-04-14": {
+        "file_finish": 358,
+        "table_get_record": 8,
+        "data_update_finish": 2
+      },
+      "2026-04-19": {
+        "table_get_record": 20,
+        "file_finish": 344,
+        "data_update_finish": 4
+      },
+      "2026-04-20": {
+        "table_get_record": 18,
+        "data_update_finish": 6,
+        "file_finish": 485
+      },
+      "2026-04-21": {
+        "table_get_record": 21,
+        "file_finish": 381,
+        "data_update_finish": 9
+      },
+      "2026-04-22": {
+        "file_finish": 374,
+        "table_get_record": 12,
+        "data_update_finish": 4
+      },
+      "2026-04-23": {
+        "file_finish": 390,
+        "table_get_record": 13,
+        "data_update_finish": 4
+      },
+      "2026-04-24": {
+        "table_get_record": 11,
+        "file_finish": 238
+      },
+      "2026-04-10": {
+        "file_finish": 355,
+        "table_get_record": 7,
+        "data_update_finish": 1
+      },
+      "2026-04-11": {
+        "file_finish": 215
+      },
+      "2026-04-12": {
+        "file_finish": 470
+      },
+      "2026-04-13": {
+        "file_finish": 355,
+        "table_get_record": 8,
+        "data_update_finish": 2
+      },
+      "2026-04-15": {
+        "file_finish": 390,
+        "table_get_record": 8
+      },
+      "2026-04-16": {
+        "file_finish": 365,
+        "data_update_finish": 11,
+        "table_get_record": 8
+      },
+      "2026-04-17": {
+        "file_finish": 370,
+        "table_get_record": 16,
+        "data_update_finish": 2
+      },
+      "2026-04-18": {
+        "file_finish": 300
+      }
+    },
+    "Orins": {
+      "2026-04-23": {
+        "table_get_record": 7,
+        "file_finish": 355,
+        "data_update_finish": 11
+      },
+      "2026-04-22": {
+        "table_get_record": 6,
+        "data_update_finish": 12,
+        "file_finish": 113
+      },
+      "2026-04-16": {
+        "file_finish": 154,
+        "data_update_finish": 9
+      },
+      "2026-04-17": {
+        "file_finish": 107,
+        "data_update_finish": 4
+      },
+      "2026-04-14": {
+        "file_finish": 295,
+        "data_update_finish": 5
+      },
+      "2026-04-15": {
+        "file_finish": 99
+      },
+      "2026-04-13": {
+        "file_finish": 111,
+        "data_update_finish": 5
+      },
+      "2026-04-24": {
+        "file_finish": 56,
+        "data_update_finish": 5
+      },
+      "2026-04-21": {
+        "data_update_finish": 10,
+        "file_finish": 99
+      },
+      "2026-04-19": {
+        "file_finish": 98
+      },
+      "2026-04-18": {
+        "file_finish": 97
+      },
+      "2026-04-20": {
+        "file_finish": 92
+      },
+      "2026-04-10": {
+        "file_finish": 99
+      },
+      "2026-04-12": {
+        "file_finish": 95
+      },
+      "2026-04-11": {
+        "file_finish": 94
+      }
+    },
+    "Company dc8f84de": {
+      "2026-04-13": {
+        "table_get_record": 695,
+        "data_update_finish": 10,
+        "file_finish": 5
+      },
+      "2026-04-15": {
+        "table_get_record": 1700,
+        "data_update_finish": 5
+      },
+      "2026-04-16": {
+        "table_get_record": 481
+      },
+      "2026-04-17": {
+        "table_get_record": 805,
+        "file_finish": 75
+      },
+      "2026-04-18": {
+        "table_get_record": 43
+      },
+      "2026-04-20": {
+        "table_get_record": 365,
+        "file_finish": 720
+      },
+      "2026-04-21": {
+        "table_get_record": 50,
+        "file_finish": 20
+      },
+      "2026-04-22": {
+        "table_get_record": 36,
+        "file_finish": 25
+      },
+      "2026-04-23": {
+        "table_get_record": 1324,
+        "file_finish": 165
+      },
+      "2026-04-24": {
+        "table_get_record": 209
+      },
+      "2026-04-10": {
+        "table_get_record": 1908,
+        "file_finish": 120
+      },
+      "2026-04-12": {
+        "table_get_record": 200
+      },
+      "2026-04-14": {
+        "table_get_record": 406,
+        "file_finish": 10
+      }
+    },
+    "Lion Parcel": {
+      "2026-04-14": {
+        "table_get_record": 850,
+        "data_update_finish": 20,
+        "file_finish": 130
+      },
+      "2026-04-22": {
+        "table_get_record": 665
+      },
+      "2026-04-23": {
+        "table_get_record": 1135
+      },
+      "2026-04-10": {
+        "table_get_record": 10
+      },
+      "2026-04-13": {
+        "table_get_record": 1340
+      },
+      "2026-04-16": {
+        "table_get_record": 210,
+        "file_finish": 10
+      },
+      "2026-04-17": {
+        "table_get_record": 65,
+        "file_finish": 10
+      },
+      "2026-04-20": {
+        "table_get_record": 3685
+      },
+      "2026-04-15": {
+        "table_get_record": 1200,
+        "file_finish": 5,
+        "data_update_finish": 10
+      },
+      "2026-04-21": {
+        "table_get_record": 940
+      }
+    },
+    "FITHUB": {
+      "2026-04-14": {
+        "file_finish": 180,
+        "data_update_finish": 20
+      },
+      "2026-04-10": {
+        "file_finish": 127,
+        "data_update_finish": 15
+      },
+      "2026-04-11": {
+        "file_finish": 55
+      },
+      "2026-04-12": {
+        "file_finish": 70
+      },
+      "2026-04-13": {
+        "file_finish": 160,
+        "data_update_finish": 20
+      },
+      "2026-04-15": {
+        "file_finish": 115,
+        "data_update_finish": 20
+      },
+      "2026-04-16": {
+        "file_finish": 105,
+        "data_update_finish": 15
+      },
+      "2026-04-17": {
+        "file_finish": 115,
+        "data_update_finish": 15
+      },
+      "2026-04-18": {
+        "file_finish": 65
+      },
+      "2026-04-19": {
+        "file_finish": 70
+      },
+      "2026-04-20": {
+        "file_finish": 190,
+        "data_update_finish": 5
+      },
+      "2026-04-21": {
+        "file_finish": 130,
+        "data_update_finish": 10
+      },
+      "2026-04-22": {
+        "file_finish": 110,
+        "data_update_finish": 10
+      },
+      "2026-04-23": {
+        "file_finish": 130,
+        "data_update_finish": 15
+      },
+      "2026-04-24": {
+        "file_finish": 102,
+        "data_update_finish": 6
+      }
+    },
+    "FORECOFFEE": {
+      "2026-04-10": {
+        "file_finish": 52,
+        "data_update_finish": 6
+      },
+      "2026-04-13": {
+        "file_finish": 94,
+        "data_update_finish": 6
+      },
+      "2026-04-14": {
+        "file_finish": 52,
+        "data_update_finish": 3
+      },
+      "2026-04-15": {
+        "file_finish": 49,
+        "data_update_finish": 3
+      },
+      "2026-04-16": {
+        "file_finish": 70,
+        "data_update_finish": 14
+      },
+      "2026-04-17": {
+        "file_finish": 64,
+        "data_update_finish": 3
+      },
+      "2026-04-19": {
+        "file_finish": 46
+      },
+      "2026-04-20": {
+        "file_finish": 67,
+        "data_update_finish": 3
+      },
+      "2026-04-21": {
+        "data_update_finish": 3,
+        "file_finish": 40
+      },
+      "2026-04-22": {
+        "file_finish": 74,
+        "data_update_finish": 6
+      },
+      "2026-04-23": {
+        "file_finish": 48,
+        "data_update_finish": 4
+      },
+      "2026-04-24": {
+        "file_finish": 27
+      },
+      "2026-04-11": {
+        "file_finish": 25
+      },
+      "2026-04-12": {
+        "file_finish": 25
+      },
+      "2026-04-18": {
+        "file_finish": 25
+      }
+    },
+    "Company 2f539431": {
+      "2026-04-14": {
+        "table_get_record": 1235
+      },
+      "2026-04-16": {
+        "table_get_record": 197
+      },
+      "2026-04-15": {
+        "table_get_record": 190
+      },
+      "2026-04-17": {
+        "table_get_record": 95
+      },
+      "2026-04-20": {
+        "table_get_record": 55
+      },
+      "2026-04-21": {
+        "table_get_record": 630
+      },
+      "2026-04-22": {
+        "table_get_record": 10
+      },
+      "2026-04-23": {
+        "table_get_record": 35
+      },
+      "2026-04-13": {
+        "table_get_record": 665
+      },
+      "2026-04-24": {
+        "table_get_record": 2
+      }
+    },
+    "Company c4b2df87": {
+      "2026-04-24": {
+        "table_get_record": 126,
+        "data_update_finish": 5
+      },
+      "2026-04-11": {
+        "table_get_record": 30
+      },
+      "2026-04-13": {
+        "table_get_record": 40,
+        "file_finish": 80
+      },
+      "2026-04-14": {
+        "table_get_record": 125
+      },
+      "2026-04-15": {
+        "file_finish": 10,
+        "table_get_record": 75
+      },
+      "2026-04-16": {
+        "table_get_record": 10
+      },
+      "2026-04-17": {
+        "table_get_record": 30
+      },
+      "2026-04-20": {
+        "table_get_record": 400
+      },
+      "2026-04-21": {
+        "table_get_record": 65
+      },
+      "2026-04-22": {
+        "table_get_record": 125
+      },
+      "2026-04-23": {
+        "table_get_record": 240
+      }
+    },
+    "Company 9318e731": {
+      "2026-04-14": {
+        "table_get_record": 85
+      },
+      "2026-04-15": {
+        "table_get_record": 20
+      },
+      "2026-04-22": {
+        "table_get_record": 35
+      }
+    },
+    "Company 5b0cbae6": {
+      "2026-04-21": {
+        "table_get_record": 246,
+        "data_update_finish": 3
+      },
+      "2026-04-10": {
+        "table_get_record": 582,
+        "data_update_finish": 3
+      },
+      "2026-04-11": {
+        "table_get_record": 33
+      },
+      "2026-04-13": {
+        "table_get_record": 156,
+        "data_update_finish": 3,
+        "file_finish": 3
+      },
+      "2026-04-14": {
+        "table_get_record": 27
+      },
+      "2026-04-15": {
+        "table_get_record": 693,
+        "data_update_finish": 18,
+        "file_finish": 3
+      },
+      "2026-04-16": {
+        "table_get_record": 138,
+        "file_finish": 13,
+        "data_update_finish": 6
+      },
+      "2026-04-17": {
+        "table_get_record": 516,
+        "data_update_finish": 3
+      },
+      "2026-04-20": {
+        "table_get_record": 237,
+        "data_update_finish": 3
+      },
+      "2026-04-22": {
+        "table_get_record": 607,
+        "data_update_finish": 6,
+        "file_finish": 3
+      },
+      "2026-04-23": {
+        "table_get_record": 573
+      },
+      "2026-04-24": {
+        "table_get_record": 34
+      }
+    },
+    "PAXEL-ONPREM": {
+      "2026-04-12": {
+        "file_finish": 15
+      },
+      "2026-04-13": {
+        "file_finish": 29,
+        "data_update_finish": 1
+      },
+      "2026-04-14": {
+        "file_finish": 15
+      },
+      "2026-04-15": {
+        "file_finish": 15
+      },
+      "2026-04-16": {
+        "file_finish": 15
+      },
+      "2026-04-17": {
+        "file_finish": 15
+      },
+      "2026-04-18": {
+        "file_finish": 15
+      },
+      "2026-04-19": {
+        "file_finish": 15
+      },
+      "2026-04-20": {
+        "file_finish": 29,
+        "data_update_finish": 1
+      },
+      "2026-04-21": {
+        "file_finish": 15
+      },
+      "2026-04-22": {
+        "file_finish": 15
+      },
+      "2026-04-23": {
+        "file_finish": 15
+      },
+      "2026-04-24": {
+        "file_finish": 15
+      },
+      "2026-04-10": {
+        "file_finish": 3
+      },
+      "2026-04-11": {
+        "file_finish": 3
+      }
+    },
+    "PEGADAIAN-2": {
+      "2026-04-12": {
+        "data_update_finish": 5,
+        "file_finish": 25
+      },
+      "2026-04-13": {
+        "data_update_finish": 10,
+        "file_finish": 80
+      },
+      "2026-04-14": {
+        "data_update_finish": 5,
+        "file_finish": 25
+      },
+      "2026-04-15": {
+        "data_update_finish": 5,
+        "file_finish": 25
+      },
+      "2026-04-16": {
+        "data_update_finish": 5,
+        "file_finish": 25
+      },
+      "2026-04-17": {
+        "data_update_finish": 5,
+        "file_finish": 35
+      },
+      "2026-04-18": {
+        "data_update_finish": 5,
+        "file_finish": 15
+      },
+      "2026-04-19": {
+        "data_update_finish": 5,
+        "file_finish": 15
+      },
+      "2026-04-20": {
+        "data_update_finish": 5,
+        "file_finish": 35
+      },
+      "2026-04-21": {
+        "data_update_finish": 10,
+        "file_finish": 65
+      },
+      "2026-04-22": {
+        "data_update_finish": 5,
+        "file_finish": 25
+      },
+      "2026-04-23": {
+        "data_update_finish": 5,
+        "file_finish": 15
+      },
+      "2026-04-24": {
+        "data_update_finish": 5,
+        "file_finish": 3
+      },
+      "2026-04-10": {
+        "data_update_finish": 1,
+        "file_finish": 30
+      },
+      "2026-04-11": {
+        "data_update_finish": 1,
+        "file_finish": 10
+      }
+    },
+    "Pesonna Indonesia Jaya": {
+      "2026-04-14": {
+        "file_finish": 130,
+        "data_update_finish": 5,
+        "table_get_record": 290
+      },
+      "2026-04-15": {
+        "table_get_record": 15
+      },
+      "2026-04-16": {
+        "file_finish": 180,
+        "data_update_finish": 30,
+        "table_get_record": 235
+      },
+      "2026-04-17": {
+        "table_get_record": 105,
+        "data_update_finish": 5
+      },
+      "2026-04-19": {
+        "table_get_record": 100
+      },
+      "2026-04-20": {
+        "table_get_record": 220,
+        "file_finish": 5,
+        "data_update_finish": 5
+      },
+      "2026-04-22": {
+        "table_get_record": 35,
+        "file_finish": 20,
+        "data_update_finish": 5
+      },
+      "2026-04-23": {
+        "file_finish": 195,
+        "data_update_finish": 15,
+        "table_get_record": 995
+      },
+      "2026-04-24": {
+        "table_get_record": 25
+      },
+      "2026-04-10": {
+        "table_get_record": 27,
+        "file_finish": 55,
+        "data_update_finish": 5
+      },
+      "2026-04-13": {
+        "table_get_record": 205,
+        "file_finish": 40,
+        "data_update_finish": 15
+      },
+      "2026-04-21": {
+        "table_get_record": 50,
+        "file_finish": 45,
+        "data_update_finish": 15
+      }
+    },
+    "Company 576b14fc": {
+      "2026-04-17": {
+        "table_get_record": 115
+      },
+      "2026-04-20": {
+        "file_finish": 5
+      },
+      "2026-04-21": {
+        "table_get_record": 46
+      },
+      "2026-04-23": {
+        "table_get_record": 12
+      },
+      "2026-04-22": {
+        "file_finish": 5
+      },
+      "2026-04-15": {
+        "table_get_record": 17
+      },
+      "2026-04-14": {
+        "table_get_record": 33
+      },
+      "2026-04-13": {
+        "table_get_record": 23,
+        "file_finish": 3
+      }
+    },
+    "SATUDENTAL": {
+      "2026-04-10": {
+        "file_finish": 285
+      },
+      "2026-04-11": {
+        "file_finish": 245
+      },
+      "2026-04-12": {
+        "file_finish": 265
+      },
+      "2026-04-13": {
+        "file_finish": 302,
+        "data_update_finish": 6
+      },
+      "2026-04-14": {
+        "file_finish": 411,
+        "table_get_record": 3,
+        "data_update_finish": 3
+      },
+      "2026-04-15": {
+        "file_finish": 291,
+        "data_update_finish": 3
+      },
+      "2026-04-16": {
+        "file_finish": 255
+      },
+      "2026-04-17": {
+        "file_finish": 435
+      },
+      "2026-04-18": {
+        "file_finish": 255
+      },
+      "2026-04-19": {
+        "file_finish": 235
+      },
+      "2026-04-20": {
+        "file_finish": 278,
+        "data_update_finish": 6
+      },
+      "2026-04-21": {
+        "file_finish": 287,
+        "data_update_finish": 3
+      },
+      "2026-04-22": {
+        "file_finish": 225
+      },
+      "2026-04-23": {
+        "file_finish": 230
+      },
+      "2026-04-24": {
+        "file_finish": 140
+      }
+    },
+    "Sour Sally": {
+      "2026-04-20": {
+        "table_get_record": 21,
+        "file_finish": 488,
+        "data_update_finish": 3
+      },
+      "2026-04-10": {
+        "file_finish": 394,
+        "data_update_finish": 3,
+        "table_get_record": 3
+      },
+      "2026-04-11": {
+        "file_finish": 320
+      },
+      "2026-04-12": {
+        "file_finish": 345
+      },
+      "2026-04-13": {
+        "file_finish": 403
+      },
+      "2026-04-14": {
+        "file_finish": 429,
+        "table_get_record": 10
+      },
+      "2026-04-15": {
+        "file_finish": 330,
+        "table_get_record": 45
+      },
+      "2026-04-16": {
+        "file_finish": 462
+      },
+      "2026-04-17": {
+        "file_finish": 335
+      },
+      "2026-04-18": {
+        "file_finish": 360
+      },
+      "2026-04-19": {
+        "file_finish": 430
+      },
+      "2026-04-21": {
+        "file_finish": 360
+      },
+      "2026-04-22": {
+        "file_finish": 436
+      },
+      "2026-04-23": {
+        "file_finish": 420,
+        "table_get_record": 10
+      },
+      "2026-04-24": {
+        "file_finish": 57
+      }
+    },
+    "Delamibrands": {
+      "2026-04-17": {
+        "table_get_record": 40
+      },
+      "2026-04-14": {
+        "table_get_record": 25
+      },
+      "2026-04-16": {
+        "table_get_record": 120
+      },
+      "2026-04-20": {
+        "table_get_record": 45
+      },
+      "2026-04-21": {
+        "table_get_record": 45
+      },
+      "2026-04-22": {
+        "table_get_record": 65
+      },
+      "2026-04-23": {
+        "table_get_record": 70
+      },
+      "2026-04-10": {
+        "table_get_record": 65
+      },
+      "2026-04-24": {
+        "table_get_record": 2
+      }
+    },
+    "Jiwa Group": {
+      "2026-04-22": {
+        "table_get_record": 15,
+        "file_finish": 100,
+        "data_update_finish": 5
+      },
+      "2026-04-23": {
+        "file_finish": 175,
+        "table_get_record": 15
+      },
+      "2026-04-24": {
+        "file_finish": 37
+      },
+      "2026-04-10": {
+        "file_finish": 35,
+        "table_get_record": 10,
+        "data_update_finish": 5
+      },
+      "2026-04-11": {
+        "file_finish": 10
+      },
+      "2026-04-12": {
+        "file_finish": 10
+      },
+      "2026-04-13": {
+        "file_finish": 15
+      },
+      "2026-04-14": {
+        "file_finish": 60,
+        "table_get_record": 10,
+        "data_update_finish": 5
+      },
+      "2026-04-15": {
+        "file_finish": 145,
+        "table_get_record": 45,
+        "data_update_finish": 5
+      },
+      "2026-04-16": {
+        "file_finish": 25
+      },
+      "2026-04-17": {
+        "file_finish": 15
+      },
+      "2026-04-18": {
+        "file_finish": 10
+      },
+      "2026-04-19": {
+        "file_finish": 10
+      },
+      "2026-04-20": {
+        "file_finish": 40
+      },
+      "2026-04-21": {
+        "file_finish": 165,
+        "data_update_finish": 10
+      }
+    },
+    "PIZZAHUT": {
+      "2026-04-13": {
+        "table_get_record": 2,
+        "file_finish": 65,
+        "data_update_finish": 6
+      },
+      "2026-04-10": {
+        "file_finish": 34,
+        "table_get_record": 11,
+        "data_update_finish": 6
+      },
+      "2026-04-21": {
+        "file_finish": 63,
+        "table_get_record": 42,
+        "data_update_finish": 1
+      },
+      "2026-04-22": {
+        "file_finish": 28
+      },
+      "2026-04-15": {
+        "file_finish": 18
+      },
+      "2026-04-14": {
+        "table_get_record": 19,
+        "file_finish": 29,
+        "data_update_finish": 1
+      },
+      "2026-04-12": {
+        "file_finish": 13
+      },
+      "2026-04-11": {
+        "file_finish": 10
+      },
+      "2026-04-19": {
+        "file_finish": 11
+      },
+      "2026-04-20": {
+        "file_finish": 13
+      },
+      "2026-04-18": {
+        "file_finish": 11
+      },
+      "2026-04-24": {
+        "file_finish": 9
+      },
+      "2026-04-16": {
+        "file_finish": 19
+      },
+      "2026-04-17": {
+        "file_finish": 13
+      },
+      "2026-04-23": {
+        "file_finish": 12
+      }
+    },
+    "Tribina": {
+      "2026-04-10": {
+        "file_finish": 1120
+      },
+      "2026-04-11": {
+        "file_finish": 1115
+      },
+      "2026-04-12": {
+        "file_finish": 1105
+      },
+      "2026-04-13": {
+        "file_finish": 1165
+      },
+      "2026-04-14": {
+        "file_finish": 1170,
+        "table_get_record": 44,
+        "data_update_finish": 6
+      },
+      "2026-04-15": {
+        "file_finish": 20,
+        "table_get_record": 74
+      },
+      "2026-04-16": {
+        "file_finish": 20,
+        "table_get_record": 40
+      },
+      "2026-04-17": {
+        "file_finish": 965,
+        "table_get_record": 60
+      },
+      "2026-04-18": {
+        "file_finish": 25
+      },
+      "2026-04-19": {
+        "file_finish": 25
+      },
+      "2026-04-20": {
+        "file_finish": 20,
+        "table_get_record": 2
+      },
+      "2026-04-21": {
+        "file_finish": 15,
+        "table_get_record": 1
+      },
+      "2026-04-22": {
+        "file_finish": 6115
+      },
+      "2026-04-23": {
+        "file_finish": 1085,
+        "table_get_record": 15
+      },
+      "2026-04-24": {
+        "file_finish": 145
+      }
+    },
+    "daYA group": {
+      "2026-04-13": {
+        "table_get_record": 94,
+        "file_finish": 72,
+        "data_update_finish": 3
+      },
+      "2026-04-10": {
+        "file_finish": 356,
+        "table_get_record": 398,
+        "data_update_finish": 6
+      },
+      "2026-04-11": {
+        "file_finish": 12
+      },
+      "2026-04-12": {
+        "file_finish": 18,
+        "table_get_record": 1
+      },
+      "2026-04-14": {
+        "file_finish": 321,
+        "table_get_record": 308,
+        "data_update_finish": 3
+      },
+      "2026-04-15": {
+        "file_finish": 303,
+        "table_get_record": 340,
+        "data_update_finish": 3
+      },
+      "2026-04-16": {
+        "file_finish": 322,
+        "data_update_finish": 8,
+        "table_get_record": 335
+      },
+      "2026-04-17": {
+        "file_finish": 289,
+        "table_get_record": 326,
+        "data_update_finish": 6
+      },
+      "2026-04-18": {
+        "file_finish": 18
+      },
+      "2026-04-19": {
+        "file_finish": 18
+      },
+      "2026-04-20": {
+        "file_finish": 551,
+        "table_get_record": 656,
+        "data_update_finish": 3
+      },
+      "2026-04-21": {
+        "file_finish": 318,
+        "table_get_record": 296,
+        "data_update_finish": 6
+      },
+      "2026-04-22": {
+        "file_finish": 290,
+        "table_get_record": 316,
+        "data_update_finish": 3
+      },
+      "2026-04-23": {
+        "file_finish": 312,
+        "table_get_record": 324,
+        "data_update_finish": 8
+      },
+      "2026-04-24": {
+        "file_finish": 23,
+        "table_get_record": 28
+      }
+    },
+    "Cheesecuit": {
+      "2026-04-15": {
+        "file_finish": 550,
+        "table_get_record": 4
+      },
+      "2026-04-16": {
+        "table_get_record": 50,
+        "file_finish": 85
+      },
+      "2026-04-17": {
+        "file_finish": 280
+      },
+      "2026-04-20": {
+        "file_finish": 270
+      },
+      "2026-04-13": {
+        "file_finish": 35
+      },
+      "2026-04-14": {
+        "file_finish": 345
+      }
+    },
+    "AGRINESIA-RAYA": {
+      "2026-04-14": {
+        "file_finish": 97
+      },
+      "2026-04-17": {
+        "file_finish": 220,
+        "data_update_finish": 15,
+        "table_get_record": 15
+      },
+      "2026-04-20": {
+        "table_get_record": 11,
+        "file_finish": 233,
+        "data_update_finish": 5
+      },
+      "2026-04-15": {
+        "file_finish": 164
+      },
+      "2026-04-16": {
+        "file_finish": 168
+      },
+      "2026-04-18": {
+        "file_finish": 168
+      },
+      "2026-04-19": {
+        "file_finish": 168
+      },
+      "2026-04-21": {
+        "file_finish": 156
+      },
+      "2026-04-22": {
+        "file_finish": 156
+      },
+      "2026-04-23": {
+        "file_finish": 164
+      },
+      "2026-04-24": {
+        "file_finish": 8
+      },
+      "2026-04-10": {
+        "file_finish": 105,
+        "table_get_record": 2,
+        "data_update_finish": 1
+      },
+      "2026-04-11": {
+        "file_finish": 80
+      },
+      "2026-04-12": {
+        "file_finish": 90
+      },
+      "2026-04-13": {
+        "file_finish": 137,
+        "data_update_finish": 5
+      }
+    },
+    "Ayam Dikichi": {
+      "2026-04-15": {
+        "table_get_record": 143
+      },
+      "2026-04-13": {
+        "table_get_record": 24
+      },
+      "2026-04-14": {
+        "table_get_record": 114
+      },
+      "2026-04-18": {
+        "table_get_record": 15
+      },
+      "2026-04-21": {
+        "table_get_record": 39
+      },
+      "2026-04-23": {
+        "file_finish": 2,
+        "table_get_record": 5,
+        "data_update_finish": 1
+      },
+      "2026-04-22": {
+        "table_get_record": 2
+      }
+    },
+    "GINO-MARIANI": {
+      "2026-04-13": {
+        "file_finish": 90,
+        "data_update_finish": 10
+      },
+      "2026-04-14": {
+        "file_finish": 70,
+        "data_update_finish": 10
+      },
+      "2026-04-15": {
+        "file_finish": 60,
+        "data_update_finish": 10
+      },
+      "2026-04-16": {
+        "file_finish": 60,
+        "data_update_finish": 10
+      },
+      "2026-04-17": {
+        "file_finish": 60,
+        "data_update_finish": 10
+      },
+      "2026-04-20": {
+        "file_finish": 60,
+        "data_update_finish": 10
+      },
+      "2026-04-21": {
+        "file_finish": 80,
+        "data_update_finish": 5
+      },
+      "2026-04-22": {
+        "data_update_finish": 15,
+        "file_finish": 15
+      },
+      "2026-04-23": {
+        "file_finish": 105,
+        "data_update_finish": 10
+      },
+      "2026-04-24": {
+        "file_finish": 25,
+        "data_update_finish": 5
+      },
+      "2026-04-10": {
+        "file_finish": 16,
+        "data_update_finish": 2
+      }
+    },
+    "Company 8122ae4d": {
+      "2026-04-10": {
+        "file_finish": 27,
+        "table_get_record": 3,
+        "data_update_finish": 3
+      },
+      "2026-04-13": {
+        "file_finish": 39,
+        "data_update_finish": 6,
+        "table_get_record": 6
+      },
+      "2026-04-14": {
+        "file_finish": 27,
+        "data_update_finish": 6
+      },
+      "2026-04-15": {
+        "file_finish": 27,
+        "data_update_finish": 6
+      },
+      "2026-04-16": {
+        "file_finish": 27,
+        "data_update_finish": 3
+      },
+      "2026-04-17": {
+        "file_finish": 27,
+        "data_update_finish": 6
+      },
+      "2026-04-20": {
+        "file_finish": 27,
+        "data_update_finish": 3
+      },
+      "2026-04-21": {
+        "file_finish": 15
+      },
+      "2026-04-22": {
+        "file_finish": 15,
+        "data_update_finish": 3
+      },
+      "2026-04-23": {
+        "file_finish": 30,
+        "data_update_finish": 9,
+        "table_get_record": 3
+      },
+      "2026-04-24": {
+        "file_finish": 15,
+        "data_update_finish": 3
+      }
+    },
+    "GALERI24": {
+      "2026-04-12": {
+        "file_finish": 965
+      },
+      "2026-04-13": {
+        "file_finish": 950
+      },
+      "2026-04-14": {
+        "file_finish": 965
+      },
+      "2026-04-15": {
+        "file_finish": 960
+      },
+      "2026-04-16": {
+        "file_finish": 960
+      },
+      "2026-04-17": {
+        "file_finish": 965
+      },
+      "2026-04-18": {
+        "file_finish": 955
+      },
+      "2026-04-19": {
+        "file_finish": 960
+      },
+      "2026-04-20": {
+        "file_finish": 955
+      },
+      "2026-04-21": {
+        "file_finish": 960
+      },
+      "2026-04-22": {
+        "file_finish": 955
+      },
+      "2026-04-23": {
+        "file_finish": 960
+      },
+      "2026-04-24": {
+        "file_finish": 104
+      },
+      "2026-04-10": {
+        "file_finish": 191
+      },
+      "2026-04-11": {
+        "file_finish": 190
+      }
+    },
+    "Company e91cad3d": {
+      "2026-04-23": {
+        "table_get_record": 100
+      }
+    },
+    "Company c366cf67": {
+      "2026-04-20": {
+        "file_finish": 330,
+        "data_update_finish": 5
+      },
+      "2026-04-21": {
+        "file_finish": 5,
+        "data_update_finish": 5
+      },
+      "2026-04-23": {
+        "file_finish": 250,
+        "data_update_finish": 5
+      },
+      "2026-04-24": {
+        "file_finish": 245,
+        "data_update_finish": 5
+      }
+    },
+    "Company 29f3a9e0": {
+      "2026-04-14": {
+        "table_get_record": 116,
+        "data_update_finish": 4
+      },
+      "2026-04-15": {
+        "table_get_record": 128
+      },
+      "2026-04-16": {
+        "table_get_record": 800,
+        "data_update_finish": 4
+      },
+      "2026-04-17": {
+        "table_get_record": 288,
+        "data_update_finish": 8
+      },
+      "2026-04-19": {
+        "table_get_record": 4
+      },
+      "2026-04-20": {
+        "table_get_record": 352
+      },
+      "2026-04-21": {
+        "table_get_record": 8096,
+        "data_update_finish": 20,
+        "file_finish": 2264
+      },
+      "2026-04-22": {
+        "table_get_record": 4060,
+        "file_finish": 3980,
+        "data_update_finish": 28
+      },
+      "2026-04-23": {
+        "table_get_record": 100,
+        "file_finish": 400
+      },
+      "2026-04-24": {
+        "table_get_record": 12,
+        "file_finish": 124,
+        "data_update_finish": 4
+      },
+      "2026-04-10": {
+        "table_get_record": 77,
+        "data_update_finish": 1
+      },
+      "2026-04-13": {
+        "table_get_record": 148,
+        "data_update_finish": 2,
+        "file_finish": 2
+      }
+    },
+    "Company dcdeb401": {
+      "2026-04-13": {
+        "table_get_record": 30
+      },
+      "2026-04-14": {
+        "data_update_finish": 5,
+        "table_get_record": 65
+      },
+      "2026-04-15": {
+        "table_get_record": 85
+      },
+      "2026-04-16": {
+        "table_get_record": 60
+      },
+      "2026-04-17": {
+        "table_get_record": 450,
+        "data_update_finish": 5
+      },
+      "2026-04-20": {
+        "table_get_record": 110
+      },
+      "2026-04-21": {
+        "table_get_record": 460,
+        "file_finish": 15
+      },
+      "2026-04-22": {
+        "table_get_record": 105
+      },
+      "2026-04-23": {
+        "table_get_record": 215
+      },
+      "2026-04-24": {
+        "table_get_record": 30
+      }
+    },
+    "Company ee3782da": {
+      "2026-04-22": {
+        "table_get_record": 45
+      },
+      "2026-04-23": {
+        "table_get_record": 10
+      }
+    },
+    "AMARTHA AMF": {
+      "2026-04-10": {
+        "table_get_record": 6,
+        "file_finish": 54,
+        "data_update_finish": 3
+      },
+      "2026-04-13": {
+        "table_get_record": 27,
+        "file_finish": 33,
+        "data_update_finish": 6
+      },
+      "2026-04-14": {
+        "table_get_record": 57,
+        "file_finish": 33
+      },
+      "2026-04-15": {
+        "table_get_record": 9
+      },
+      "2026-04-16": {
+        "file_finish": 54,
+        "data_update_finish": 3
+      },
+      "2026-04-17": {
+        "file_finish": 33,
+        "data_update_finish": 6,
+        "table_get_record": 36
+      },
+      "2026-04-20": {
+        "table_get_record": 6
+      },
+      "2026-04-21": {
+        "table_get_record": 6,
+        "file_finish": 57
+      },
+      "2026-04-23": {
+        "table_get_record": 28,
+        "file_finish": 5,
+        "data_update_finish": 3
+      },
+      "2026-04-22": {
+        "file_finish": 12,
+        "data_update_finish": 1
+      }
+    }
+  }
+}

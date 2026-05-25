@@ -1,10 +1,9 @@
 ---
 name: copywriting
-description: >
-  Use this skill when writing, rewriting, or improving marketing copy
-  for any page (homepage, landing page, pricing, feature, product, or about page).
-  This skill produces clear, compelling, and testable copy while enforcing
-  alignment, honesty, and conversion best practices.
+description: Write rigorous, conversion-focused marketing copy for landing pages and emails. Enforces brief confirmation and strict no-fabrication rules.
+risk: safe
+source: community
+date_added: "2026-02-27"
 ---
 
 # Copywriting
@@ -15,6 +14,7 @@ Produce **clear, credible, and action-oriented marketing copy** that aligns with
 user intent and business goals.
 
 This skill exists to prevent:
+
 - writing before understanding the audience
 - vague or hype-driven messaging
 - misaligned CTAs
@@ -44,11 +44,13 @@ Before writing any copy, gather or confirm the following.
 If information is missing, ask for it **before proceeding**.
 
 ### 1️⃣ Page Purpose
+
 - Page type (homepage, landing page, pricing, feature, about)
 - ONE primary action (CTA)
 - Secondary action (if any)
 
 ### 2️⃣ Audience
+
 - Target customer or role
 - Primary problem they are trying to solve
 - What they have already tried
@@ -56,12 +58,14 @@ If information is missing, ask for it **before proceeding**.
 - Language they use to describe the problem
 
 ### 3️⃣ Product / Offer
+
 - What is being offered
 - Key differentiator vs alternatives
 - Primary outcome or transformation
 - Available proof (numbers, testimonials, case studies)
 
 ### 4️⃣ Context
+
 - Traffic source (ads, organic, email, referrals)
 - Awareness level (unaware, problem-aware, solution-aware, product-aware)
 - What visitors already know or expect
@@ -73,7 +77,9 @@ If information is missing, ask for it **before proceeding**.
 Before writing any copy, you MUST present a **Copy Brief Summary** and pause.
 
 ### Copy Brief Summary
+
 Summarize in 4–6 bullets:
+
 - Page goal
 - Target audience
 - Core value proposition
@@ -81,6 +87,7 @@ Summarize in 4–6 bullets:
 - Traffic / awareness context
 
 ### Assumptions
+
 List any assumptions explicitly (e.g. awareness level, urgency, sophistication).
 
 Then ask:
@@ -103,6 +110,7 @@ Then ask:
 - **One idea per section**
 
 Always connect:
+
 > Feature → Benefit → Outcome
 
 ---
@@ -110,6 +118,7 @@ Always connect:
 ## Writing Style Rules
 
 ### Style Guidelines
+
 - Simple over complex
 - Active over passive
 - Confident over hedged
@@ -117,6 +126,7 @@ Always connect:
 - Avoid buzzwords unless customers use them
 
 ### Claim Discipline
+
 - No fabricated data or testimonials
 - No implied guarantees unless explicitly stated
 - No exaggerated speed or certainty
@@ -129,15 +139,18 @@ Always connect:
 ### Above the Fold
 
 **Headline**
+
 - Single most important message
 - Specific value proposition
 - Outcome-focused
 
 **Subheadline**
+
 - Adds clarity or context
 - 1–2 sentences max
 
 **Primary CTA**
+
 - Action-oriented
 - Describes what the user gets
 
@@ -161,7 +174,9 @@ Avoid stacking features without narrative flow.
 When writing copy, provide:
 
 ### Page Copy
+
 Organized by section with clear labels:
+
 - Headline
 - Subheadline
 - CTAs
@@ -169,14 +184,18 @@ Organized by section with clear labels:
 - Body copy
 
 ### Alternatives
+
 Provide 2–3 options for:
+
 - Headlines
 - Primary CTAs
 
 Each option must include a brief rationale.
 
 ### Annotations
+
 For key sections, explain:
+
 - Why this copy was chosen
 - Which principle it applies
 - What alternatives were considered
@@ -186,6 +205,7 @@ For key sections, explain:
 ## Testability Guidance
 
 Write copy with testing in mind:
+
 - Clear, isolated value propositions
 - Headlines and CTAs that can be A/B tested
 - Avoid combining multiple messages into one element
@@ -197,6 +217,7 @@ If the copy is intended for experimentation, recommend next-step testing.
 ## Completion Criteria (Hard Stop)
 
 This skill is complete ONLY when:
+
 - Copy brief has been confirmed
 - Page copy is delivered in structured form
 - Headline and CTA alternatives are provided
@@ -223,3 +244,7 @@ It persuades **the right person** to take **the right action**.
 
 If the copy feels clever but unclear,  
 rewrite it until it feels obvious.
+
+## When to Use
+
+This skill is applicable to execute the workflow or actions described in the overview.

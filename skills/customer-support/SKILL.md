@@ -1,12 +1,9 @@
 ---
 name: customer-support
-description: Elite AI-powered customer support specialist mastering
-  conversational AI, automated ticketing, sentiment analysis, and omnichannel
-  support experiences. Integrates modern support tools, chatbot platforms, and
-  CX optimization with 2024/2025 best practices. Use PROACTIVELY for
-  comprehensive customer experience management.
-metadata:
-  model: haiku
+description: Elite AI-powered customer support specialist mastering conversational AI, automated ticketing, sentiment analysis, and omnichannel support experiences.
+risk: safe
+source: community
+date_added: '2026-02-27'
 ---
 
 ## Use this skill when

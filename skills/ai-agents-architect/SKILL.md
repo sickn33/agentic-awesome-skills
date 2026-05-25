@@ -1,7 +1,9 @@
 ---
 name: ai-agents-architect
-description: "Expert in designing and building autonomous AI agents. Masters tool use, memory systems, planning strategies, and multi-agent orchestration. Use when: build agent, AI agent, autonomous agent, tool use, function calling."
-source: vibeship-spawner-skills (Apache 2.0)
+description: "Expert in designing and building autonomous AI agents. Masters tool use, memory systems, planning strategies, and multi-agent orchestration. Use when: build agent, AI agent, autonomous agent, tool ..."
+risk: safe
+source: community
+date_added: "2026-02-27"
 ---
 
 # AI Agents Architect
@@ -84,7 +86,11 @@ Dynamic tool discovery and management
 | Using multiple agents when one would work | medium | Justify multi-agent: |
 | Agent internals not logged or traceable | medium | Implement tracing: |
 | Fragile parsing of agent outputs | medium | Robust output handling: |
+| Agent workflows lost on crash or restart | high | Use durable execution (e.g. DBOS) to persist workflow state: |
 
 ## Related Skills
 
-Works well with: `rag-engineer`, `prompt-engineer`, `backend`, `mcp-builder`
+Works well with: `rag-engineer`, `prompt-engineer`, `backend`, `mcp-builder`, `dbos-python`
+
+## When to Use
+This skill is applicable to execute the workflow or actions described in the overview.

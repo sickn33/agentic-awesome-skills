@@ -1,0 +1,154 @@
+{
+  "links": [
+    {
+      "inward": "MAT-3571",
+      "outward": "MAT-3576",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3576",
+      "outward": "MAT-3576",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3574",
+      "outward": "MAT-3576",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3571",
+      "outward": "MAT-3578",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3572",
+      "outward": "MAT-3578",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3494",
+      "outward": "MAT-3579",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3578",
+      "outward": "MAT-3579",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3578",
+      "outward": "MAT-3580",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3576",
+      "outward": "MAT-3580",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3571",
+      "outward": "MAT-3581",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3573",
+      "outward": "MAT-3581",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3582",
+      "outward": "MAT-3583",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3576",
+      "outward": "MAT-3583",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3578",
+      "outward": "MAT-3583",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3586",
+      "outward": "MAT-3586",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3575",
+      "outward": "MAT-3586",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3586",
+      "outward": "MAT-3590",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3588",
+      "outward": "MAT-3591",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3586",
+      "outward": "MAT-3591",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3590",
+      "outward": "MAT-3591",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3571",
+      "outward": "MAT-3591",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3571",
+      "outward": "MAT-3591",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3581",
+      "outward": "MAT-3591",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3592",
+      "outward": "MAT-3595",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3593",
+      "outward": "MAT-3595",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3578",
+      "outward": "MAT-3595",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3596",
+      "outward": "MAT-3597",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3594",
+      "outward": "MAT-3597",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3592",
+      "outward": "MAT-3597",
+      "type": "Blocks"
+    },
+    {
+      "inward": "MAT-3593",
+      "outward": "MAT-3597",
+      "type": "Blocks"
+    }
+  ]
+}

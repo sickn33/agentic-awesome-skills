@@ -1,7 +1,9 @@
 ---
 name: agent-memory-systems
-description: "Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-term (context window), long-term (vector stores), and the cognitive architectures that organize them.  Key insight: Memory isn't just storage - it's retrieval. A million stored facts mean nothing if you can't find the right one. Chunking, embedding, and retrieval strategies determine whether your agent remembers or forgets.  The field is fragm"
-source: vibeship-spawner-skills (Apache 2.0)
+description: "Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-term (context window), long-term (vector s..."
+risk: safe
+source: community
+date_added: "2026-02-27"
 ---
 
 # Agent Memory Systems
@@ -65,3 +67,6 @@ Breaking documents into retrievable chunks
 ## Related Skills
 
 Works well with: `autonomous-agents`, `multi-agent-orchestration`, `llm-architect`, `agent-tool-builder`
+
+## When to Use
+This skill is applicable to execute the workflow or actions described in the overview.

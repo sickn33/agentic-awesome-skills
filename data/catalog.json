@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 715,
+  "generatedAt": "2026-05-25T00:55:02.580Z",
+  "total": 752,
   "skills": [
     {
       "id": "3d-web-experience",
@@ -233,7 +233,7 @@
     {
       "id": "agent-memory-systems",
       "name": "agent-memory-systems",
-      "description": "Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-term (context window), long-term (vector stores), and the cognitive architectures that organize them.  Key insight: Memory isn't just storage - it's retrieval. A million stored facts mean nothing if you can't find the right one. Chunking, embedding, and retrieval strategies determine whether your agent remembers or forgets.  The field is fragm",
+      "description": "Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-term (context window), long-term (vector s...",
       "category": "security",
       "tags": [
         "agent",
@@ -309,7 +309,7 @@
     {
       "id": "agent-tool-builder",
       "name": "agent-tool-builder",
-      "description": "Tools are how AI agents interact with the world. A well-designed tool is the difference between an agent that works and one that hallucinates, fails silently, or costs 10x more tokens than necessary.  This skill covers tool design from schema to error handling. JSON Schema best practices, description writing that actually helps the LLM, validation, and the emerging MCP standard that's becoming the lingua franca for AI tools.  Key insight: Tool descriptions are more important than tool implementa",
+      "description": "Tools are how AI agents interact with the world. A well-designed tool is the difference between an agent that works and one that hallucinates, fails silently, or costs 10x more tokens than necessar...",
       "category": "data-ai",
       "tags": [
         "agent",
@@ -332,9 +332,34 @@
       "path": "skills/agent-tool-builder/SKILL.md"
     },
     {
+      "id": "agents-md",
+      "name": "agents-md",
+      "description": "This skill should be used when the user asks to \"create AGENTS.md\", \"update AGENTS.md\", \"maintain agent docs\", \"set up CLAUDE.md\", or needs to keep agent instructions concise. Enforces research-backed best practices for minimal, high-signal agent documentation.",
+      "category": "general",
+      "tags": [
+        "agents",
+        "md"
+      ],
+      "triggers": [
+        "agents",
+        "md",
+        "skill",
+        "should",
+        "used",
+        "user",
+        "asks",
+        "update",
+        "maintain",
+        "agent",
+        "docs",
+        "set"
+      ],
+      "path": "skills/agents-md/SKILL.md"
+    },
+    {
       "id": "ai-agents-architect",
       "name": "ai-agents-architect",
-      "description": "Expert in designing and building autonomous AI agents. Masters tool use, memory systems, planning strategies, and multi-agent orchestration. Use when: build agent, AI agent, autonomous agent, tool use, function calling.",
+      "description": "Expert in designing and building autonomous AI agents. Masters tool use, memory systems, planning strategies, and multi-agent orchestration. Use when: build agent, AI agent, autonomous agent, tool ...",
       "category": "data-ai",
       "tags": [
         "ai",
@@ -359,7 +384,7 @@
     {
       "id": "ai-engineer",
       "name": "ai-engineer",
-      "description": "Build production-ready LLM applications, advanced RAG systems, and intelligent agents. Implements vector search, multimodal AI, agent orchestration, and enterprise AI integrations. Use PROACTIVELY for LLM features, chatbots, AI agents, or AI-powered applications.",
+      "description": "Build production-ready LLM applications, advanced RAG systems, and intelligent agents. Implements vector search, multimodal AI, agent orchestration, and enterprise AI integrations.",
       "category": "data-ai",
       "tags": [
         "ai"
@@ -383,8 +408,8 @@
     {
       "id": "ai-product",
       "name": "ai-product",
-      "description": "Every product will be AI-powered. The question is whether you'll build it right or ship a demo that falls apart in production.  This skill covers LLM integration patterns, RAG architecture, prompt engineering that scales, AI UX that users trust, and cost optimization that doesn't bankrupt you. Use when: keywords, file_patterns, code_patterns.",
-      "category": "security",
+      "description": "Every product will be AI-powered. The question is whether you'll build it right or ship a demo that falls apart in production. This skill covers LLM integration patterns, RAG architecture, prompt ...",
+      "category": "data-ai",
       "tags": [
         "ai",
         "product"
@@ -408,7 +433,7 @@
     {
       "id": "ai-wrapper-product",
       "name": "ai-wrapper-product",
-      "description": "Expert in building products that wrap AI APIs (OpenAI, Anthropic, etc.) into focused tools people will pay for. Not just 'ChatGPT but different' - products that solve specific problems with AI. Covers prompt engineering for products, cost management, rate limiting, and building defensible AI businesses. Use when: AI wrapper, GPT product, AI tool, wrap AI, AI SaaS.",
+      "description": "Expert in building products that wrap AI APIs (OpenAI, Anthropic, etc.) into focused tools people will pay for. Not just 'ChatGPT but different' - products that solve specific problems with AI. Cov...",
       "category": "data-ai",
       "tags": [
         "ai",
@@ -2261,7 +2286,7 @@
     {
       "id": "business-analyst",
       "name": "business-analyst",
-      "description": "Master modern business analysis with AI-powered analytics, real-time dashboards, and data-driven insights. Build comprehensive KPI frameworks, predictive models, and strategic recommendations. Use PROACTIVELY for business intelligence or strategic analysis.",
+      "description": "Master modern business analysis with AI-powered analytics, real-time dashboards, and data-driven insights. Build comprehensive KPI frameworks, predictive models, and strategic recommendations.",
       "category": "data-ai",
       "tags": [
         "business",
@@ -3513,7 +3538,7 @@
     {
       "id": "competitive-landscape",
       "name": "competitive-landscape",
-      "description": "This skill should be used when the user asks to \"analyze competitors\", \"assess competitive landscape\", \"identify differentiation\", \"evaluate market positioning\", \"apply Porter's Five Forces\", or requests competitive strategy analysis.",
+      "description": "This skill should be used when the user asks to \\\\\\\"analyze competitors\", \"assess competitive landscape\", \"identify differentiation\", \"evaluate market positioning\", \"apply Porter's Five Forces\",...",
       "category": "business",
       "tags": [
         "competitive",
@@ -3538,8 +3563,8 @@
     {
       "id": "competitor-alternatives",
       "name": "competitor-alternatives",
-      "description": "When the user wants to create competitor comparison or alternative pages for SEO and sales enablement. Also use when the user mentions 'alternative page,' 'vs page,' 'competitor comparison,' 'comparison page,' '[Product] vs [Product],' '[Product] alternative,' or 'competitive landing pages.' Covers four formats: singular alternative, plural alternatives, you vs competitor, and competitor vs competitor. Emphasizes deep research, modular content architecture, and varied section types beyond feature tables.",
-      "category": "architecture",
+      "description": "When the user wants to create competitor comparison or alternative pages for SEO and sales enablement. Also use when the user mentions 'alternative page,' 'vs page,' 'competitor comparison,' 'compa...",
+      "category": "business",
       "tags": [
         "competitor",
         "alternatives"
@@ -4165,7 +4190,7 @@
     {
       "id": "copy-editing",
       "name": "copy-editing",
-      "description": "When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish this,' 'make this better,' or 'copy sweep.' This skill provides a systematic approach to editing marketing copy through multiple focused passes.",
+      "description": "When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish this,' 'make this ...",
       "category": "business",
       "tags": [
         "copy",
@@ -4190,24 +4215,24 @@
     {
       "id": "copywriting",
       "name": "copywriting",
-      "description": "Use this skill when writing, rewriting, or improving marketing copy for any page (homepage, landing page, pricing, feature, product, or about page). This skill produces clear, compelling, and testable copy while enforcing alignment, honesty, and conversion best practices.",
+      "description": "Write rigorous, conversion-focused marketing copy for landing pages and emails. Enforces brief confirmation and strict no-fabrication rules.",
       "category": "business",
       "tags": [
         "copywriting"
       ],
       "triggers": [
         "copywriting",
-        "skill",
-        "writing",
-        "rewriting",
-        "improving",
+        "write",
+        "rigorous",
+        "conversion",
         "marketing",
         "copy",
-        "any",
-        "page",
-        "homepage",
         "landing",
-        "pricing"
+        "pages",
+        "emails",
+        "enforces",
+        "brief",
+        "confirmation"
       ],
       "path": "skills/copywriting/SKILL.md"
     },
@@ -4396,9 +4421,35 @@
       "path": "skills/culture-index/SKILL.md"
     },
     {
+      "id": "customer-journey-map",
+      "name": "customer-journey-map",
+      "description": "Create a customer journey map across stages, touchpoints, actions, emotions, and metrics. Use when diagnosing a broken experience or aligning a team on the full customer flow.",
+      "category": "business",
+      "tags": [
+        "customer",
+        "journey",
+        "map"
+      ],
+      "triggers": [
+        "customer",
+        "journey",
+        "map",
+        "stages",
+        "touchpoints",
+        "actions",
+        "emotions",
+        "metrics",
+        "diagnosing",
+        "broken",
+        "experience",
+        "aligning"
+      ],
+      "path": "skills/customer-journey-map/SKILL.md"
+    },
+    {
       "id": "customer-support",
       "name": "customer-support",
-      "description": "Elite AI-powered customer support specialist mastering conversational AI, automated ticketing, sentiment analysis, and omnichannel support experiences. Integrates modern support tools, chatbot platforms, and CX optimization with 2024/2025 best practices. Use PROACTIVELY for comprehensive customer experience management.",
+      "description": "Elite AI-powered customer support specialist mastering conversational AI, automated ticketing, sentiment analysis, and omnichannel support experiences.",
       "category": "data-ai",
       "tags": [
         "customer",
@@ -5239,6 +5290,57 @@
       "path": "skills/discord-bot-architect/SKILL.md"
     },
     {
+      "id": "discovery-interview-prep",
+      "name": "discovery-interview-prep",
+      "description": "Plan customer discovery interviews with the right goal, segment, constraints, and method. Use when preparing interviews for problem validation, churn research, or new product ideas.",
+      "category": "business",
+      "tags": [
+        "discovery",
+        "interview",
+        "prep"
+      ],
+      "triggers": [
+        "discovery",
+        "interview",
+        "prep",
+        "plan",
+        "customer",
+        "interviews",
+        "right",
+        "goal",
+        "segment",
+        "constraints",
+        "method",
+        "preparing"
+      ],
+      "path": "skills/discovery-interview-prep/SKILL.md"
+    },
+    {
+      "id": "discovery-process",
+      "name": "discovery-process",
+      "description": "Run a full discovery cycle from problem hypothesis to validated solution. Use when a team needs a structured path through framing, interviews, synthesis, and experiments.",
+      "category": "workflow",
+      "tags": [
+        "discovery",
+        "process"
+      ],
+      "triggers": [
+        "discovery",
+        "process",
+        "run",
+        "full",
+        "cycle",
+        "problem",
+        "hypothesis",
+        "validated",
+        "solution",
+        "team",
+        "structured",
+        "path"
+      ],
+      "path": "skills/discovery-process/SKILL.md"
+    },
+    {
       "id": "dispatching-parallel-agents",
       "name": "dispatching-parallel-agents",
       "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
@@ -5802,6 +5904,57 @@
         "configurations"
       ],
       "path": "skills/environment-setup-guide/SKILL.md"
+    },
+    {
+      "id": "epic-breakdown-advisor",
+      "name": "epic-breakdown-advisor",
+      "description": "Break down epics into user stories with Humanizing Work split patterns. Use when a backlog item is too large to estimate, sequence, or deliver safely.",
+      "category": "architecture",
+      "tags": [
+        "epic",
+        "breakdown",
+        "advisor"
+      ],
+      "triggers": [
+        "epic",
+        "breakdown",
+        "advisor",
+        "break",
+        "down",
+        "epics",
+        "user",
+        "stories",
+        "humanizing",
+        "work",
+        "split",
+        "backlog"
+      ],
+      "path": "skills/epic-breakdown-advisor/SKILL.md"
+    },
+    {
+      "id": "epic-hypothesis",
+      "name": "epic-hypothesis",
+      "description": "Frame an epic as a testable hypothesis with target user, expected outcome, and validation method. Use when defining a major initiative before roadmap, discovery, or delivery planning.",
+      "category": "general",
+      "tags": [
+        "epic",
+        "hypothesis"
+      ],
+      "triggers": [
+        "epic",
+        "hypothesis",
+        "frame",
+        "testable",
+        "target",
+        "user",
+        "expected",
+        "outcome",
+        "validation",
+        "method",
+        "defining",
+        "major"
+      ],
+      "path": "skills/epic-hypothesis/SKILL.md"
     },
     {
       "id": "error-debugging-error-analysis",
@@ -7808,6 +7961,31 @@
       "path": "skills/google-analytics-automation/SKILL.md"
     },
     {
+      "id": "google-calendar",
+      "name": "google-calendar",
+      "description": "Interact with Google Calendar via the Google Calendar API – list upcoming events, create new events, update or delete them. Use this skill when you need programmatic access to your calendar from OpenClaw.",
+      "category": "development",
+      "tags": [
+        "google",
+        "calendar"
+      ],
+      "triggers": [
+        "google",
+        "calendar",
+        "interact",
+        "via",
+        "api",
+        "list",
+        "upcoming",
+        "events",
+        "new",
+        "update",
+        "delete",
+        "them"
+      ],
+      "path": "skills/google-calendar/SKILL.md"
+    },
+    {
       "id": "google-calendar-automation",
       "name": "google-calendar-automation",
       "description": "Automate Google Calendar events, scheduling, availability checks, and attendee management via Rube MCP (Composio). Create events, find free slots, manage attendees, and list calendars programmatically.",
@@ -8801,6 +8979,58 @@
       "path": "skills/jira-automation/SKILL.md"
     },
     {
+      "id": "jira-sprint-workflow",
+      "name": "jira-sprint-workflow",
+      "description": "Comprehensive workflow for managing Jira tickets from sprint planning documents. Supports creating, updating, verifying, and syncing tickets with sprint plans across all initiatives.",
+      "category": "workflow",
+      "tags": [
+        "jira",
+        "sprint"
+      ],
+      "triggers": [
+        "jira",
+        "sprint",
+        "managing",
+        "tickets",
+        "planning",
+        "documents",
+        "supports",
+        "creating",
+        "updating",
+        "verifying",
+        "syncing",
+        "plans"
+      ],
+      "path": "skills/jira-sprint-workflow/SKILL.md"
+    },
+    {
+      "id": "jobs-to-be-done",
+      "name": "jobs-to-be-done",
+      "description": "Uncover customer jobs, pains, and gains in a structured JTBD format. Use when clarifying unmet needs, repositioning a product, or improving discovery and messaging.",
+      "category": "business",
+      "tags": [
+        "jobs",
+        "to",
+        "be",
+        "done"
+      ],
+      "triggers": [
+        "jobs",
+        "to",
+        "be",
+        "done",
+        "uncover",
+        "customer",
+        "pains",
+        "gains",
+        "structured",
+        "jtbd",
+        "format",
+        "clarifying"
+      ],
+      "path": "skills/jobs-to-be-done/SKILL.md"
+    },
+    {
       "id": "julia-pro",
       "name": "julia-pro",
       "description": "Master Julia 1.10+ with modern features, performance optimization, multiple dispatch, and production-ready practices. Expert in the Julia ecosystem including package management, scientific computing, and high-performance numerical code. Use PROACTIVELY for Julia development, optimization, or advanced Julia patterns.",
@@ -8927,7 +9157,7 @@
     {
       "id": "kpi-dashboard-design",
       "name": "kpi-dashboard-design",
-      "description": "Design effective KPI dashboards with metrics selection, visualization best practices, and real-time monitoring patterns. Use when building business dashboards, selecting metrics, or designing data visualization layouts.",
+      "description": "Design effective KPI dashboards with metrics selection, visualization best practices, and real-time monitoring patterns. Use when building business dashboards, selecting metrics, or designing data ...",
       "category": "infrastructure",
       "tags": [
         "kpi",
@@ -9073,7 +9303,7 @@
     {
       "id": "launch-strategy",
       "name": "launch-strategy",
-      "description": "When the user wants to plan a product launch, feature announcement, or release strategy. Also use when the user mentions 'launch,' 'Product Hunt,' 'feature release,' 'announcement,' 'go-to-market,' 'beta launch,' 'early access,' 'waitlist,' or 'product update.' This skill covers phased launches, channel strategy, and ongoing launch momentum.",
+      "description": "When the user wants to plan a product launch, feature announcement, or release strategy. Also use when the user mentions 'launch,' 'Product Hunt,' 'feature release,' 'announcement,' 'go-to-market,'...",
       "category": "development",
       "tags": [
         "launch"
@@ -9093,6 +9323,32 @@
         "market"
       ],
       "path": "skills/launch-strategy/SKILL.md"
+    },
+    {
+      "id": "lean-ux-canvas",
+      "name": "lean-ux-canvas",
+      "description": "Guide teams through Lean UX Canvas v2. Use when framing a business problem, surfacing assumptions, and defining what to learn next.",
+      "category": "business",
+      "tags": [
+        "lean",
+        "ux",
+        "canvas"
+      ],
+      "triggers": [
+        "lean",
+        "ux",
+        "canvas",
+        "teams",
+        "through",
+        "v2",
+        "framing",
+        "business",
+        "problem",
+        "surfacing",
+        "assumptions",
+        "defining"
+      ],
+      "path": "skills/lean-ux-canvas/SKILL.md"
     },
     {
       "id": "legacy-modernizer",
@@ -9591,7 +9847,7 @@
     {
       "id": "market-sizing-analysis",
       "name": "market-sizing-analysis",
-      "description": "This skill should be used when the user asks to \"calculate TAM\", \"determine SAM\", \"estimate SOM\", \"size the market\", \"calculate market opportunity\", \"what's the total addressable market\", or requests market sizing analysis for a startup or business opportunity.",
+      "description": "This skill should be used when the user asks to \\\\\\\"calculate TAM\\\\\\\", \"determine SAM\", \"estimate SOM\", \"size the market\", \"calculate market opportunity\", \"what's the total addressable market\", or...",
       "category": "business",
       "tags": [
         "market",
@@ -9758,8 +10014,8 @@
     {
       "id": "mermaid-expert",
       "name": "mermaid-expert",
-      "description": "Create Mermaid diagrams for flowcharts, sequences, ERDs, and architectures. Masters syntax for all diagram types and styling. Use PROACTIVELY for visual documentation, system diagrams, or process flows.",
-      "category": "workflow",
+      "description": "Create Mermaid diagrams for flowcharts, sequences, ERDs, and architectures. Masters syntax for all diagram types and styling.",
+      "category": "general",
       "tags": [
         "mermaid"
       ],
@@ -9951,6 +10207,31 @@
         "cohorts"
       ],
       "path": "skills/mixpanel-automation/SKILL.md"
+    },
+    {
+      "id": "mixpanel-insights",
+      "name": "mixpanel-insights",
+      "description": "Analyzes Mixpanel data to find product usage situations, least active companies, drop-offs, and leading metrics. Triggered by 'mixpanel health check', 'product usage situation', 'mixpanel insights', 'anomaly signal', 'least active company', 'worst signal', 'good news'.",
+      "category": "data-ai",
+      "tags": [
+        "mixpanel",
+        "insights"
+      ],
+      "triggers": [
+        "mixpanel",
+        "insights",
+        "analyzes",
+        "data",
+        "find",
+        "product",
+        "usage",
+        "situations",
+        "least",
+        "active",
+        "companies",
+        "drop"
+      ],
+      "path": "skills/mixpanel-insights/SKILL.md"
     },
     {
       "id": "ml-engineer",
@@ -11049,6 +11330,32 @@
       "path": "skills/openapi-spec-generation/SKILL.md"
     },
     {
+      "id": "opportunity-solution-tree",
+      "name": "opportunity-solution-tree",
+      "description": "Build an Opportunity Solution Tree from outcomes to opportunities, solutions, and tests. Use when a stakeholder request needs problem framing before you decide what to build.",
+      "category": "general",
+      "tags": [
+        "opportunity",
+        "solution",
+        "tree"
+      ],
+      "triggers": [
+        "opportunity",
+        "solution",
+        "tree",
+        "outcomes",
+        "opportunities",
+        "solutions",
+        "tests",
+        "stakeholder",
+        "request",
+        "problem",
+        "framing",
+        "before"
+      ],
+      "path": "skills/opportunity-solution-tree/SKILL.md"
+    },
+    {
       "id": "oss-hunter",
       "name": "oss-hunter",
       "description": "Automatically hunt for high-impact OSS contribution opportunities in trending repositories.",
@@ -11510,6 +11817,30 @@
       "path": "skills/personal-tool-builder/SKILL.md"
     },
     {
+      "id": "pestel-analysis",
+      "name": "pestel-analysis",
+      "description": "Analyze political, economic, social, technological, environmental, and legal forces. Use when external market shifts could materially affect a product, roadmap, or strategy.",
+      "category": "business",
+      "tags": [
+        "pestel"
+      ],
+      "triggers": [
+        "pestel",
+        "analysis",
+        "analyze",
+        "political",
+        "economic",
+        "social",
+        "technological",
+        "environmental",
+        "legal",
+        "forces",
+        "external",
+        "market"
+      ],
+      "path": "skills/pestel-analysis/SKILL.md"
+    },
+    {
       "id": "php-pro",
       "name": "php-pro",
       "description": "Write idiomatic PHP code with generators, iterators, SPL data structures, and modern OOP features. Use PROACTIVELY for high-performance PHP applications.",
@@ -11659,6 +11990,328 @@
       "path": "skills/playwright-skill/SKILL.md"
     },
     {
+      "id": "pm-ai-ai-shaped-readiness-advisor",
+      "name": "pm-ai-ai-shaped-readiness-advisor",
+      "description": "Assess whether your product work is AI-first or AI-shaped. Use when evaluating AI maturity and choosing the next team capability to build.",
+      "category": "data-ai",
+      "tags": [
+        "pm",
+        "ai",
+        "shaped",
+        "readiness",
+        "advisor"
+      ],
+      "triggers": [
+        "pm",
+        "ai",
+        "shaped",
+        "readiness",
+        "advisor",
+        "assess",
+        "whether",
+        "product",
+        "work",
+        "first",
+        "evaluating",
+        "maturity"
+      ],
+      "path": "skills/pm-ai-ai-shaped-readiness-advisor/SKILL.md"
+    },
+    {
+      "id": "pm-ai-company-research",
+      "name": "pm-ai-company-research",
+      "description": "Create a company research brief with executive quotes, product strategy, and org context. Use when preparing for interviews, competitive analysis, partnerships, or market-entry work.",
+      "category": "data-ai",
+      "tags": [
+        "pm",
+        "ai",
+        "company",
+        "research"
+      ],
+      "triggers": [
+        "pm",
+        "ai",
+        "company",
+        "research",
+        "brief",
+        "executive",
+        "quotes",
+        "product",
+        "org",
+        "context",
+        "preparing",
+        "interviews"
+      ],
+      "path": "skills/pm-ai-company-research/SKILL.md"
+    },
+    {
+      "id": "pm-ai-context-engineering-advisor",
+      "name": "pm-ai-context-engineering-advisor",
+      "description": "Diagnose context stuffing vs. context engineering. Use when an AI workflow feels bloated, brittle, or hard to steer reliably.",
+      "category": "data-ai",
+      "tags": [
+        "pm",
+        "ai",
+        "engineering",
+        "advisor"
+      ],
+      "triggers": [
+        "pm",
+        "ai",
+        "engineering",
+        "advisor",
+        "context",
+        "diagnose",
+        "stuffing",
+        "vs",
+        "feels",
+        "bloated",
+        "brittle",
+        "hard"
+      ],
+      "path": "skills/pm-ai-context-engineering-advisor/SKILL.md"
+    },
+    {
+      "id": "pm-ai-pol-probe",
+      "name": "pm-ai-pol-probe",
+      "description": "Define a Proof of Life probe to test a risky hypothesis cheaply. Use when you need harsh truth before building real product.",
+      "category": "data-ai",
+      "tags": [
+        "pm",
+        "ai",
+        "pol",
+        "probe"
+      ],
+      "triggers": [
+        "pm",
+        "ai",
+        "pol",
+        "probe",
+        "define",
+        "proof",
+        "life",
+        "test",
+        "risky",
+        "hypothesis",
+        "cheaply",
+        "harsh"
+      ],
+      "path": "skills/pm-ai-pol-probe/SKILL.md"
+    },
+    {
+      "id": "pm-ai-pol-probe-advisor",
+      "name": "pm-ai-pol-probe-advisor",
+      "description": "Select the right Proof of Life (PoL) probe based on hypothesis, risk, and resources. Use this to match the validation method to the real learning goal, not tooling comfort.",
+      "category": "security",
+      "tags": [
+        "pm",
+        "ai",
+        "pol",
+        "probe",
+        "advisor"
+      ],
+      "triggers": [
+        "pm",
+        "ai",
+        "pol",
+        "probe",
+        "advisor",
+        "select",
+        "right",
+        "proof",
+        "life",
+        "hypothesis",
+        "risk",
+        "resources"
+      ],
+      "path": "skills/pm-ai-pol-probe-advisor/SKILL.md"
+    },
+    {
+      "id": "pm-ai-recommendation-canvas",
+      "name": "pm-ai-recommendation-canvas",
+      "description": "Evaluate an AI product idea across outcomes, hypotheses, risks, and positioning. Use when deciding whether an AI solution deserves investment or recommendation.",
+      "category": "data-ai",
+      "tags": [
+        "pm",
+        "ai",
+        "recommendation",
+        "canvas"
+      ],
+      "triggers": [
+        "pm",
+        "ai",
+        "recommendation",
+        "canvas",
+        "evaluate",
+        "product",
+        "idea",
+        "outcomes",
+        "hypotheses",
+        "risks",
+        "positioning",
+        "deciding"
+      ],
+      "path": "skills/pm-ai-recommendation-canvas/SKILL.md"
+    },
+    {
+      "id": "pm-discovery-process",
+      "name": "pm-discovery-process",
+      "description": "Run a full discovery cycle from problem hypothesis to validated solution. Use when a team needs a structured path through framing, interviews, synthesis, and experiments.",
+      "category": "workflow",
+      "tags": [
+        "pm",
+        "discovery",
+        "process"
+      ],
+      "triggers": [
+        "pm",
+        "discovery",
+        "process",
+        "run",
+        "full",
+        "cycle",
+        "problem",
+        "hypothesis",
+        "validated",
+        "solution",
+        "team",
+        "structured"
+      ],
+      "path": "skills/pm-discovery-process/SKILL.md"
+    },
+    {
+      "id": "pm-jobs-to-be-done",
+      "name": "pm-jobs-to-be-done",
+      "description": "Uncover customer jobs, pains, and gains in a structured JTBD format. Use when clarifying unmet needs, repositioning a product, or improving discovery and messaging.",
+      "category": "business",
+      "tags": [
+        "pm",
+        "jobs",
+        "to",
+        "be",
+        "done"
+      ],
+      "triggers": [
+        "pm",
+        "jobs",
+        "to",
+        "be",
+        "done",
+        "uncover",
+        "customer",
+        "pains",
+        "gains",
+        "structured",
+        "jtbd",
+        "format"
+      ],
+      "path": "skills/pm-jobs-to-be-done/SKILL.md"
+    },
+    {
+      "id": "pm-prioritization-advisor",
+      "name": "pm-prioritization-advisor",
+      "description": "Choose a prioritization framework based on stage, team context, and stakeholder needs. Use when deciding between RICE, ICE, value/effort, or another scoring approach.",
+      "category": "general",
+      "tags": [
+        "pm",
+        "prioritization",
+        "advisor"
+      ],
+      "triggers": [
+        "pm",
+        "prioritization",
+        "advisor",
+        "choose",
+        "framework",
+        "stage",
+        "team",
+        "context",
+        "stakeholder",
+        "deciding",
+        "between",
+        "rice"
+      ],
+      "path": "skills/pm-prioritization-advisor/SKILL.md"
+    },
+    {
+      "id": "pm-product-strategy-session",
+      "name": "pm-product-strategy-session",
+      "description": "Run an end-to-end product strategy session across positioning, discovery, and roadmap planning. Use when a team needs validated direction before committing to execution.",
+      "category": "business",
+      "tags": [
+        "pm",
+        "product",
+        "session"
+      ],
+      "triggers": [
+        "pm",
+        "product",
+        "session",
+        "run",
+        "positioning",
+        "discovery",
+        "roadmap",
+        "planning",
+        "team",
+        "validated",
+        "direction",
+        "before"
+      ],
+      "path": "skills/pm-product-strategy-session/SKILL.md"
+    },
+    {
+      "id": "pm-roadmap-planning",
+      "name": "pm-roadmap-planning",
+      "description": "Plan a strategic roadmap across prioritization, epic definition, stakeholder alignment, and sequencing. Use when turning strategy into a release plan that teams can execute.",
+      "category": "general",
+      "tags": [
+        "pm",
+        "roadmap",
+        "planning"
+      ],
+      "triggers": [
+        "pm",
+        "roadmap",
+        "planning",
+        "plan",
+        "strategic",
+        "prioritization",
+        "epic",
+        "definition",
+        "stakeholder",
+        "alignment",
+        "sequencing",
+        "turning"
+      ],
+      "path": "skills/pm-roadmap-planning/SKILL.md"
+    },
+    {
+      "id": "pm-user-story",
+      "name": "pm-user-story",
+      "description": "Create user stories with Mike Cohn format and Gherkin acceptance criteria. Use when turning user needs into development-ready work with clear outcomes and testable conditions.",
+      "category": "general",
+      "tags": [
+        "pm",
+        "user",
+        "story"
+      ],
+      "triggers": [
+        "pm",
+        "user",
+        "story",
+        "stories",
+        "mike",
+        "cohn",
+        "format",
+        "gherkin",
+        "acceptance",
+        "criteria",
+        "turning",
+        "development"
+      ],
+      "path": "skills/pm-user-story/SKILL.md"
+    },
+    {
       "id": "popup-cro",
       "name": "popup-cro",
       "description": "Create and optimize popups, modals, overlays, slide-ins, and banners to increase conversions without harming user experience or brand trust.",
@@ -11682,6 +12335,56 @@
         "without"
       ],
       "path": "skills/popup-cro/SKILL.md"
+    },
+    {
+      "id": "positioning-statement",
+      "name": "positioning-statement",
+      "description": "Create a Geoffrey Moore-style positioning statement. Use when clarifying who you serve, what problem you solve, your category, and why you're different from alternatives.",
+      "category": "general",
+      "tags": [
+        "positioning",
+        "statement"
+      ],
+      "triggers": [
+        "positioning",
+        "statement",
+        "geoffrey",
+        "moore",
+        "style",
+        "clarifying",
+        "who",
+        "serve",
+        "what",
+        "problem",
+        "solve",
+        "category"
+      ],
+      "path": "skills/positioning-statement/SKILL.md"
+    },
+    {
+      "id": "positioning-workshop",
+      "name": "positioning-workshop",
+      "description": "Run a positioning workshop that surfaces target customer, unmet need, category, benefits, and differentiation. Use when your product messaging feels fuzzy, generic, or misaligned.",
+      "category": "business",
+      "tags": [
+        "positioning",
+        "workshop"
+      ],
+      "triggers": [
+        "positioning",
+        "workshop",
+        "run",
+        "surfaces",
+        "target",
+        "customer",
+        "unmet",
+        "category",
+        "benefits",
+        "differentiation",
+        "product",
+        "messaging"
+      ],
+      "path": "skills/positioning-workshop/SKILL.md"
     },
     {
       "id": "posix-shell-pro",
@@ -11876,6 +12579,30 @@
       "path": "skills/pptx-official/SKILL.md"
     },
     {
+      "id": "prd-development",
+      "name": "prd-development",
+      "description": "Build a structured PRD that connects problem, users, solution, and success criteria. Use when turning discovery notes into an engineering-ready document for a major initiative.",
+      "category": "general",
+      "tags": [
+        "prd"
+      ],
+      "triggers": [
+        "prd",
+        "development",
+        "structured",
+        "connects",
+        "problem",
+        "users",
+        "solution",
+        "success",
+        "criteria",
+        "turning",
+        "discovery",
+        "notes"
+      ],
+      "path": "skills/prd-development/SKILL.md"
+    },
+    {
       "id": "pricing-strategy",
       "name": "pricing-strategy",
       "description": "Design pricing, packaging, and monetization strategies based on value, customer willingness to pay, and growth objectives.",
@@ -11947,6 +12674,31 @@
       "path": "skills/privilege-escalation-methods/SKILL.md"
     },
     {
+      "id": "problem-statement",
+      "name": "problem-statement",
+      "description": "Write a user-centered problem statement with who is blocked, what they are trying to do, why it matters, and how it feels. Use when framing discovery, prioritization, or a PRD.",
+      "category": "general",
+      "tags": [
+        "problem",
+        "statement"
+      ],
+      "triggers": [
+        "problem",
+        "statement",
+        "write",
+        "user",
+        "centered",
+        "who",
+        "blocked",
+        "what",
+        "trying",
+        "do",
+        "why",
+        "matters"
+      ],
+      "path": "skills/problem-statement/SKILL.md"
+    },
+    {
       "id": "product-manager-toolkit",
       "name": "product-manager-toolkit",
       "description": "Comprehensive toolkit for product managers including RICE prioritization, customer interview analysis, PRD templates, discovery frameworks, and go-to-market strategies. Use for feature prioritization, user research synthesis, requirement documentation, and product strategy development.",
@@ -11970,6 +12722,31 @@
         "discovery"
       ],
       "path": "skills/product-manager-toolkit/SKILL.md"
+    },
+    {
+      "id": "product-strategy-session",
+      "name": "product-strategy-session",
+      "description": "Run an end-to-end product strategy session across positioning, discovery, and roadmap planning. Use when a team needs validated direction before committing to execution.",
+      "category": "business",
+      "tags": [
+        "product",
+        "session"
+      ],
+      "triggers": [
+        "product",
+        "session",
+        "run",
+        "positioning",
+        "discovery",
+        "roadmap",
+        "planning",
+        "team",
+        "validated",
+        "direction",
+        "before",
+        "committing"
+      ],
+      "path": "skills/product-strategy-session/SKILL.md"
     },
     {
       "id": "production-code-audit",
@@ -12196,6 +12973,31 @@
         "task"
       ],
       "path": "skills/prompt-library/SKILL.md"
+    },
+    {
+      "id": "proto-persona",
+      "name": "proto-persona",
+      "description": "Create a proto-persona from current research, market signals, and team knowledge. Use when you need a working customer profile before deeper validation.",
+      "category": "business",
+      "tags": [
+        "proto",
+        "persona"
+      ],
+      "triggers": [
+        "proto",
+        "persona",
+        "current",
+        "research",
+        "market",
+        "signals",
+        "team",
+        "knowledge",
+        "working",
+        "customer",
+        "profile",
+        "before"
+      ],
+      "path": "skills/proto-persona/SKILL.md"
     },
     {
       "id": "protocol-reverse-engineering",
@@ -12680,6 +13482,31 @@
       "path": "skills/receiving-code-review/SKILL.md"
     },
     {
+      "id": "recommendation-canvas",
+      "name": "recommendation-canvas",
+      "description": "Evaluate an AI product idea across outcomes, hypotheses, risks, and positioning. Use when deciding whether an AI solution deserves investment or recommendation.",
+      "category": "data-ai",
+      "tags": [
+        "recommendation",
+        "canvas"
+      ],
+      "triggers": [
+        "recommendation",
+        "canvas",
+        "evaluate",
+        "ai",
+        "product",
+        "idea",
+        "outcomes",
+        "hypotheses",
+        "risks",
+        "positioning",
+        "deciding",
+        "whether"
+      ],
+      "path": "skills/recommendation-canvas/SKILL.md"
+    },
+    {
       "id": "red-team-tactics",
       "name": "red-team-tactics",
       "description": "Red team tactics principles based on MITRE ATT&CK. Attack phases, detection evasion, reporting.",
@@ -12973,6 +13800,31 @@
         "analysis"
       ],
       "path": "skills/risk-metrics-calculation/SKILL.md"
+    },
+    {
+      "id": "roadmap-planning",
+      "name": "roadmap-planning",
+      "description": "Plan a strategic roadmap across prioritization, epic definition, stakeholder alignment, and sequencing. Use when turning strategy into a release plan that teams can execute.",
+      "category": "general",
+      "tags": [
+        "roadmap",
+        "planning"
+      ],
+      "triggers": [
+        "roadmap",
+        "planning",
+        "plan",
+        "strategic",
+        "prioritization",
+        "epic",
+        "definition",
+        "stakeholder",
+        "alignment",
+        "sequencing",
+        "turning",
+        "release"
+      ],
+      "path": "skills/roadmap-planning/SKILL.md"
     },
     {
       "id": "ruby-pro",
@@ -14761,7 +15613,7 @@
     {
       "id": "startup-business-analyst-business-case",
       "name": "startup-business-analyst-business-case",
-      "description": "Generate comprehensive investor-ready business case document with market, solution, financials, and strategy",
+      "description": "Generate comprehensive investor-ready business case document with\nmarket, solution, financials, and strategy",
       "category": "business",
       "tags": [
         "startup",
@@ -14786,7 +15638,7 @@
     {
       "id": "startup-business-analyst-financial-projections",
       "name": "startup-business-analyst-financial-projections",
-      "description": "Create detailed 3-5 year financial model with revenue, costs, cash flow, and scenarios",
+      "description": "Create detailed 3-5 year financial model with revenue, costs, cash\nflow, and scenarios",
       "category": "business",
       "tags": [
         "startup",
@@ -14814,7 +15666,7 @@
     {
       "id": "startup-business-analyst-market-opportunity",
       "name": "startup-business-analyst-market-opportunity",
-      "description": "Generate comprehensive market opportunity analysis with TAM/SAM/SOM calculations",
+      "description": "Generate comprehensive market opportunity analysis with TAM/SAM/SOM\ncalculations",
       "category": "business",
       "tags": [
         "startup",
@@ -14841,7 +15693,7 @@
     {
       "id": "startup-financial-modeling",
       "name": "startup-financial-modeling",
-      "description": "This skill should be used when the user asks to \"create financial projections\", \"build a financial model\", \"forecast revenue\", \"calculate burn rate\", \"estimate runway\", \"model cash flow\", or requests 3-5 year financial planning for a startup.",
+      "description": "This skill should be used when the user asks to \\\\\\\"create financial projections\", \"build a financial model\", \"forecast revenue\", \"calculate burn rate\", \"estimate runway\", \"model cash flow\", or...",
       "category": "business",
       "tags": [
         "startup",
@@ -14867,7 +15719,7 @@
     {
       "id": "startup-metrics-framework",
       "name": "startup-metrics-framework",
-      "description": "This skill should be used when the user asks about \"key startup metrics\", \"SaaS metrics\", \"CAC and LTV\", \"unit economics\", \"burn multiple\", \"rule of 40\", \"marketplace metrics\", or requests guidance on tracking and optimizing business performance metrics.",
+      "description": "This skill should be used when the user asks about \\\\\\\"key startup metrics\", \"SaaS metrics\", \"CAC and LTV\", \"unit economics\", \"burn multiple\", \"rule of 40\", \"marketplace metrics\", or requests...",
       "category": "testing",
       "tags": [
         "startup",
@@ -15170,6 +16022,33 @@
         "architecture"
       ],
       "path": "skills/tailwind-patterns/SKILL.md"
+    },
+    {
+      "id": "tam-sam-som-calculator",
+      "name": "tam-sam-som-calculator",
+      "description": "Calculate TAM, SAM, and SOM with explicit assumptions, methods, and caveats. Use when sizing a market for a product idea, business case, or executive review.",
+      "category": "business",
+      "tags": [
+        "tam",
+        "sam",
+        "som",
+        "calculator"
+      ],
+      "triggers": [
+        "tam",
+        "sam",
+        "som",
+        "calculator",
+        "calculate",
+        "explicit",
+        "assumptions",
+        "methods",
+        "caveats",
+        "sizing",
+        "market",
+        "product"
+      ],
+      "path": "skills/tam-sam-som-calculator/SKILL.md"
     },
     {
       "id": "tavily-web",
@@ -15704,6 +16583,28 @@
         "pages"
       ],
       "path": "skills/theme-factory/SKILL.md"
+    },
+    {
+      "id": "thoughtful",
+      "name": "thoughtful",
+      "description": "Your thoughtful companion for WhatsApp - remembers what matters, helps you stay present in your relationships.",
+      "category": "general",
+      "tags": [
+        "thoughtful"
+      ],
+      "triggers": [
+        "thoughtful",
+        "companion",
+        "whatsapp",
+        "remembers",
+        "what",
+        "matters",
+        "helps",
+        "stay",
+        "present",
+        "relationships"
+      ],
+      "path": "skills/thoughtful/SKILL.md"
     },
     {
       "id": "threat-mitigation-mapping",
@@ -16349,6 +17250,57 @@
         "without"
       ],
       "path": "skills/upstash-qstash/SKILL.md"
+    },
+    {
+      "id": "user-story",
+      "name": "user-story",
+      "description": "Create user stories with Mike Cohn format and Gherkin acceptance criteria. Use when turning user needs into development-ready work with clear outcomes and testable conditions.",
+      "category": "general",
+      "tags": [
+        "user",
+        "story"
+      ],
+      "triggers": [
+        "user",
+        "story",
+        "stories",
+        "mike",
+        "cohn",
+        "format",
+        "gherkin",
+        "acceptance",
+        "criteria",
+        "turning",
+        "development",
+        "work"
+      ],
+      "path": "skills/user-story/SKILL.md"
+    },
+    {
+      "id": "user-story-splitting",
+      "name": "user-story-splitting",
+      "description": "Break a large story or epic into smaller deliverable stories using proven split patterns. Use when backlog items are too big for estimation, sequencing, or independent release.",
+      "category": "architecture",
+      "tags": [
+        "user",
+        "story",
+        "splitting"
+      ],
+      "triggers": [
+        "user",
+        "story",
+        "splitting",
+        "break",
+        "large",
+        "epic",
+        "smaller",
+        "deliverable",
+        "stories",
+        "proven",
+        "split",
+        "backlog"
+      ],
+      "path": "skills/user-story-splitting/SKILL.md"
     },
     {
       "id": "using-git-worktrees",

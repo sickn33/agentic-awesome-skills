@@ -1,11 +1,9 @@
 ---
 name: market-sizing-analysis
-description: This skill should be used when the user asks to "calculate TAM",
-  "determine SAM", "estimate SOM", "size the market", "calculate market
-  opportunity", "what's the total addressable market", or requests market sizing
-  analysis for a startup or business opportunity.
-metadata:
-  version: 1.0.0
+description: This skill should be used when the user asks to \\\"calculate TAM\\\", "determine SAM", "estimate SOM", "size the market", "calculate market opportunity", "what's the total addressable market", or...
+risk: safe
+source: community
+date_added: '2026-02-27'
 ---
 
 # Market Sizing Analysis
@@ -55,7 +53,7 @@ Market sizing provides the foundation for startup strategy, fundraising, and bus
 - Used for financial projections and fundraising
 - Example: 2-5% of SAM based on competitive landscape
 
-### When to Use Each Methodology
+## When to Use Each Methodology
 
 **Top-Down Analysis**
 - Use when established market research exists

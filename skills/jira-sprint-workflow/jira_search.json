@@ -1,0 +1,255 @@
+{
+    "issues": [
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24796",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24796",
+            "key": "MAT-3575",
+            "fields": {
+                "summary": "[EMAIL-TEMPLATE] Create magic link email template",
+                "description": "h2. Context  \nneed to create new email template\n\nh2. Todo\n\n1. Create dynamic template in sendgrid\n\n    * Refer to [this design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1181-6586&t=AJ6YMYSWARGjpgZ9-4)\n    * Params:\n    \n        * {{whatsapp_number}} → construct [wa.me](http://wa.me) link from here\n        * {{magic_link}}\n        \n    \n2. Add template to our [email template repo](https://github.com/Match-Made/email-template-generator)\n3. Add env var to fusion and populate the value in github actions w/ sendgrid Template ID (APP_EMAIL_MAGIC_LINK_TEMPLATE_ID)\n\nh2. Acceptance Criteria\n\n1. Magic link email template created\n2. Template ID is ready to use in fusion\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24798",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24798",
+            "key": "MAT-3576",
+            "fields": {
+                "summary": "[HOLA] Login with email password endpoint",
+                "description": "h2. Context  \nwe need to enable passwordless sign in\n\nh2. Todo\n\n1. Endpoint: POST /login\n2. Request:  \n  {  \n  \"email\": \"user@example.com\",  \n  \"password\": \"string\"  \n  }\n3. Response: { firebase user obj }\n4. Hit firebase for sign in with password ([docs](https://docs.cloud.google.com/identity-platform/docs/reference/rest/v1/accounts/signInWithPassword))\n5. Adjust hola_client package as well\n\nh2. Acceptance Criteria\n\n1. Able to login using email and password\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24800",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24800",
+            "key": "MAT-3577",
+            "fields": {
+                "summary": "[FUSION] Login with email password endpoint",
+                "description": "h2. Context  \nwe currently hit firebase endpoint directly from FE. now, we need to have an endpoint to handle login to replace that flow\n\nh2. Todo\n\n1. Endpoint: POST /auth/v1/login\n2. Request:  \n  {  \n  \"email\": \"user@example.com\",  \n  \"password\": \"string\"  \n  }\n3. Success response:  \n  {  \n  \"mfa_required\": <APP_FT_MFA_REQUIRED> and user.mfa_required,  \n  \"token_id\": \"\", → only if mfaRequired = true  \n  \"firebase_user\": {user obj} → only if mfaRequired = false  \n  }\n4. Failed response:  \n  {  \n  \"error\": \"\",  \n  \"failed_count\": 3  \n  }\n5. Details:\n\n    * Hit hola POST /login\n    \n        * If APP_FT_MFA_REQUIRED = false OR user.mfa_required = false, return resp immediately (skip steps below)\n        \n    * On success login\n    \n        * Generate random token_id\n        * Store firebase resp object in redis\n        \n            * Key: **auth:login:token:{token_id}**\n            * TTL: APP_FIREBASE_USER_OBJECT_TTL (10 minutes)\n            \n        * Reset failed login counter **auth:login:fail:{email}**\n        \n    * On failed login\n    \n        * Get failed counter\n        \n            * Key: **auth:login:fail:{email}**\n            \n        * If counter = 10\n        \n            * Return 403 id blocked\n            \n        * If counter not exists OR counter < 10\n        \n            * Increment failed counter in redis\n            * Reset TTL using APP_FAILED_LOGIN_COUNTER_TTL (30 minutes)\n            \n        * Return current failed count to FE\n        * If failed count after incremented == 10:\n        \n            * Call RevokeRefreshTokens function to force log out\n            * Send email (use APP_EMAIL_ACCOUNT_LOCKED_TEMPLATE_ID)\n            * Params:\n            \n                * {{user_name}}\n                * {{whatsapp_number}} → construct [wa.me](http://wa.me) link from here\n                * {{date_time}}\n                \n            * Log to blacklisted_login_logs (ip addr, email)\n            \n        \n    \n6. Error codes & messages:\n\n    * Counter >= 10: 403 - ID Blocked\n    * Wrong email pass combo: 400 - Invalid Creds\n    \n7. Refer to [flow diagram](?tab=t.ih3v4ftggs44) for overall flow and handling both success & error cases\n\nh2. Acceptance Criteria\n\n1. Able to successfully login all types of user using password and email\n2. Able to increment failed counter on error\n3. Able to lock user and send email on 10th err\n4. When FT is false returns firebase object for direct login\n\nh2. Dependencies\n\n1. \\[FUSION\\] Migration and package initialization\n2. \\[HOLA\\] Login with email password endpoint\n3. \\[EMAIL-TEMPLATE\\] Create account locked email template\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24802",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24802",
+            "key": "MAT-3578",
+            "fields": {
+                "summary": "[FUSION] Generate OTP endpoint (email)",
+                "description": "h2. Context  \nwe need to generate OTP using email and be able to send them to user\n\nh2. Todo\n\n1. Endpoint: POST /auth/v1/otp\n2. Request:  \n  {  \n  \"email\": \"\",  \n  \"phone_number\": \"\",  \n  \"mfa_channel\": \"email\",  \n  \"token_id\": \"\", → optional  \n  }\n3. Response:  \n  {  \n  \"token_id\": \"\",  \n  }\n4. For email\n\n    * Mfa_channel = “email”\n    * Email is required\n    * Phone_number is not needed\n    \n5. Details:\n\n    * Enforce daily OTP limit counter\n    \n        * Key: **auth:otp:daily:{email}**\n        * TTL: end of day\n        * If >20 return 429\n        * If not, increment and continue steps below\n        \n    * Generate OTP for email\n    \n        * 6-digit numeric code\n        \n    * If token_id is not in request, generate random token_id\n    * Store OTP in redis using token_id\n    \n        * Key: **auth:otp:{token_id}**\n        * TTL: 2 minutes\n        * Overwrite existing OTP if any to invalidate old ones\n        \n    * Send OTP to email (use APP_EMAIL_LOGIN_OTP_TEMPLATE_ID)\n    \n        * Params:\n        \n            * {{user_name}}\n            * {{otp_code}}\n            * {{whatsapp_number}} → construct [wa.me](http://wa.me) link from here\n            \n        \n    * Return token_id\n    \n6. This task should only handle email\n7. Make sure that the c.iii functions are reusable so that we can use them in login with email pass endpoint\n\nh2. Acceptance Criteria\n\n1. Able to generate OTP and send them to user\n2. Able to enforce 20 OTP per day per account limit\n\nh2. Dependencies\n\n1. \\[FUSION\\] Migration and package initialization\n2. \\[EMAIL-TEMPLATE\\] Create login OTP email template\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24804",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24804",
+            "key": "MAT-3579",
+            "fields": {
+                "summary": "[FUSION] Generate OTP endpoint (WhatsApp)",
+                "description": "h2. Context  \nwe need to send OTP to user whatsapp\n\nh2. Todo\n\n1. Request:  \n  {  \n  \"email\": \"\",  \n  \"phone_number\": \"\",  \n  \"mfa_channel\": \"whatsapp\"  \n  }\n2. For whatsapp\n\n    * Mfa_channel = “whatsapp”\n    * Phone_number is required\n    * Email is not needed\n    \n3. Flow is similar to email, but send the OTP to whatsapp using XXX\n4. Adjust generate OTP endpoint depending on SPIKE result\n\nh2. Acceptance Criteria\n\n1. Able to send OTP using chosen WhatsApp Business provider\n\nh2. Dependencies\n\n1. \\[SPIKE\\] WhatsApp Business Providers\n2. \\[FUSION\\]\\[DELIVERY/USER\\] Generate OTP endpoint (email)\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24806",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24806",
+            "key": "MAT-3580",
+            "fields": {
+                "summary": "[FUSION] Send OTP on login with email password endpoint",
+                "description": "h2. Context  \nwe need to adjust login with email password endpoint to also generate and send OTP on success\n\nh2. Todo\n\n1. On success login\n\n    * Use previously created functions to generate and send OTP before returning\n    * Always use email first after login\n    \n\nh2. Acceptance Criteria\n\n1. Able to generate OTP and send them to user when login using valid email/pass\n\nh2. Dependencies\n\n1. \\[FUSION\\] Generate OTP endpoint (email)\n2. \\[FUSION\\] Login with email password endpoint\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24808",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24808",
+            "key": "MAT-3581",
+            "fields": {
+                "summary": "[FUSION] Verify Login OTP endpoint",
+                "description": "### Context\n\nwe need to be able to verify OTPs based on previously generated ones\n\n### Todo\n\n* Endpoint: POST /auth/v1/login/verify-otp\n* Request:\n\n```json\n{\n  \"token_id\": \"\",\n  \"otp\": \"123456\",\n  \"mfa_channel\": \"email\"/\"whatsapp\"\n}\n```\n\n* Response:\n\n```json\n{\n  \"kind\": \"\",\n  \"localId\": \"\",\n  \"email\": \"\",\n  \"displayName\": \"\",\n  \"idToken\": \"\",\n  \"registered\": \"\",\n  \"refreshToken\": \"\",\n  \"expiresIn\": \"\"\n}\n```\n\n* Details:\n\n    * Retrieve OTP\n    \n        * Key: `auth:otp:{token_id}`\n        \n    * Verify\n    \n        * Check OTP matches stored OTP\n        \n    * Get stored user obj\n    \n        * Key: `auth:login:token:{token_id}`\n        \n    * On success\n    \n        * Delete:\n        \n            * Previously fetched `auth:otp:{token_id}`\n            * All `auth:login:\\*` (token and fail counter)\n            \n        * If mfa_channel = \"whatsapp\", send email (use APP_EMAIL_SUCCESSFUL_LOGIN_TEMPLATE_ID)\n        \n            * Params: `{{user_name}}`, `{{whatsapp_number}}`, `{{date_time}}`, `{{location}}`, `{{device_type}}`, `{{ip_address}}`, `{{reset_password_link}}`\n            \n        * Return response object\n        \n    \n* Make sure the verification functions are reusable for update phone number flows\n\n### Acceptance Criteria\n\n* Able to verify OTP\n\n### Dependencies\n\n* \\[FUSION\\] Migration and package initialization\n* \\[EMAIL-TEMPLATE\\] Create successful login email template\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24810",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24810",
+            "key": "MAT-3582",
+            "fields": {
+                "summary": "[REACTOR] Login page (submit OTP) – UI",
+                "description": "h2. Context  \nneed to add new submit OTP page on our reactor\n\nh2. Todo\n\n1. Refer to [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1182-1580&t=AJ6YMYSWARGjpgZ9-4)\n2. Should consist:\n\n    * Error states\n    * Microinteractions (hover, disable, etc)\n    * Request new OTP timer (2 minutes) after clicking\n    \n3. Does not consist:\n\n    * Endpoint integration\n    * Flow integration (create a temporary button in login modal for QA testing)\n    \n4. Use [shadcn input OTP](https://ui.shadcn.com/docs/components/radix/input-otp)\n5. For contact support use VITE_WHATSAPP_NUMBER\n\nh2. Acceptance Criteria\n\n1. Page styling and microinteractions are according to Figma\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24812",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24812",
+            "key": "MAT-3583",
+            "fields": {
+                "summary": "[REACTOR] Login page – integration",
+                "description": "h2. Context  \nneed to adjust the behavior of our login page to hit BE instead of directly hitting firebase\n\nh2. Todo\n\n1. Implement FT to protect route VITE_FT_LOGIN_IMPROVEMENT\n\n    * If false, use the current flow\n    * If true, proceed with new flow\n    \n2. Hit POST /auth/v1/login\n\n    * On error, show labels/toast\n    * On success:\n    \n        * If mfaRequired = true redirect to OTP page\n        * Else redirect to dashboard and set user\n        \n    \n3. Hit POST /auth/v1/otp when clicking request new OTP\n4. Hit POST /auth/v1/login/verify-otp\n\n    * Set user based on response\n    \n5. Adjust user object storage and ensure post-login analytics is retained\n\nh2. Acceptance Criteria\n\n1. Able to login with new flow using email password\n\nh2. Dependencies\n\n1. \\[REACTOR\\] Login page (submit OTP) – UI\n2. \\[FUSION\\]\\[DELIVERY/USER\\] Login with email password endpoint\n3. \\[FUSION\\]\\[DELIVERY/USER\\] Generate OTP endpoint\n4. \\[FUSION\\]\\[DELIVERY/USER\\] Verify OTP endpoint\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24814",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24814",
+            "key": "MAT-3584",
+            "fields": {
+                "summary": "[UTILITY-SCRIPT] Verify emails firebase",
+                "description": "h2. Context  \nsome prod users have unverified emails in firebase. We need to set emailVerified = true for these existing users so they can use magic link and email pass login.\n\nh2. Todo\n\n1. For each user in the firebase project\n2. Check emailVerified value\n3. If false, update the user to emailVerified = true\n\nh2. Acceptance Criteria\n\n1. Able to set emailVerified = true for all users in a firebase project\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24816",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24816",
+            "key": "MAT-3585",
+            "fields": {
+                "summary": "[MIGRATION] Verify emails for existing firebase account",
+                "description": "h2. Context  \nwe need to run the created script to set emailVerified = true for existing users\n\nh2. Todo\n\n1. Run script in all env projects\n\n    * Devlab\n    * Staging\n    * Prod (ensure it is done exactly before deployment)\n    \n\nh2. Acceptance Criteria\n\n1. Able to set emailVerified = true for all users in a firebase project\n\nh2. Dependencies\n\n1. \\[UTILITY-SCRIPT\\] Force Verify Firebase Account Emails\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24818",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24818",
+            "key": "MAT-3586",
+            "fields": {
+                "summary": "[HOLA] Magic link login endpoint",
+                "description": "h2. Context  \nwe need to enable passwordless sign in\n\nh2. Todo\n\n1. Endpoint: POST /magic-link\n2. Request: { email: “” }\n3. Response: { data: “” }\n4. Use firebase EmailSignInLink function\n5. Adjust hola_client package as well\n6. Reference:\n\n* [\\[SPIKE\\]\\[20250219\\] Magic Link Login](https://docs.google.com/document/d/1PmcIjTSlQhFo6VB21E4z3qLN2Z2FSNpd49B_BUza4MQ/edit?tab=t.0#heading=h.6jynaot9cbnq)\n* [https://github.com/Match-Made/hola/pull/49](https://github.com/Match-Made/hola/pull/49)\n\nh2. Acceptance Criteria\n\n1. Able to generate sign in link using email\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24820",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24820",
+            "key": "MAT-3587",
+            "fields": {
+                "summary": "[FUSION] Magic link login endpoint",
+                "description": "h2. Context  \nwe need to enable passwordless sign in\n\nh2. Todo\n\n1. Endpoint: POST /auth/v1/magic-link\n2. Request: { email: “” }\n3. Call hola endpoint\n4. Use sendgrid to send email (use APP_EMAIL_MAGIC_LINK_TEMPLATE_ID for template)\n\n* Params:\n\n    * {{whatsapp_number}} → construct wa.me link from here\n    * {{magic_link}}\n    \n\n5. Reference:\n\n* [\\[SPIKE\\]\\[20250219\\] Magic Link Login](https://docs.google.com/document/d/1PmcIjTSlQhFo6VB21E4z3qLN2Z2FSNpd49B_BUza4MQ/edit?tab=t.0#heading=h.6jynaot9cbnq)\n* [https://github.com/Match-Made/fusion/pull/894](https://github.com/Match-Made/fusion/pull/894)\n\nh2. Acceptance Criteria\n\n1. Able to send sign in link to email\n\nh2. Dependencies\n\n1. \\[HOLA\\] Magic link login endpoint\n2. \\[EMAIL-TEMPLATE\\] Create magic link email template\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24822",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24822",
+            "key": "MAT-3588",
+            "fields": {
+                "summary": "[FUSION][DELIVERY/USER] Reset failed login counter endpoint",
+                "description": "h2. Context  \nwe need to reset counter after successful magic link sign in\n\nh2. Todo\n\n1. Endpoint: POST /auth/v1/reset-failed-login-counter\n2. Deletes _auth:login:fail:{email}_ entry from redis\n\nh2. Acceptance Criteria\n\n1. Able to delete failed login counter for a user\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24824",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24824",
+            "key": "MAT-3589",
+            "fields": {
+                "summary": "[FUSION][ADMIN][LOW PRIO] Adjust admin create user endpoint",
+                "description": "h2. Context  \nwe need to make sure that users created via the admin endpoint have emailVerified = true\n\nh2. Todo\n\n1. Adjust endpoint: POST /admin-api/v1/users\n2. After creating user, set EmailVerified to true for newly created user using holaclient’s UpdateUser function\n\nh2. Acceptance Criteria\n\n1. Able to auto set newly created user’s EmailVerified attribute to be true\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24826",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24826",
+            "key": "MAT-3590",
+            "fields": {
+                "summary": "[REACTOR] Magic link login – UI",
+                "description": "h2. Context  \nwe need UI tweaks to accommodate new magic link feature\n\nh2. Todo\n\n1. Entry point button & sent modal ([design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1181-5794&t=AJ6YMYSWARGjpgZ9-4))\n2. Bumper page ([design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1298-13786&t=AJ6YMYSWARGjpgZ9-4))\n3. Error state\n4. For cases where there are no entry point, create temporary button in login modal so that QA can test\n\nh2. Acceptance Criteria\n\n1. Styling and microinteractions are according to Figma\n\nh2. Dependencies\n\n1. \\[FUSION\\]\\[DELIVERY/USER\\] Magic link login endpoint\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24828",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24828",
+            "key": "MAT-3591",
+            "fields": {
+                "summary": "[REACTOR] Magic link login – Integration",
+                "description": "h2. Context  \nwe need to enable passwordless sign in through our web\n\nh2. Todo\n\n1. Details:\n\n* Hit POST /auth/v1/magic-link\n* Store the email in local storage\n* After user redirected to dashboard from magic link, try signing in using email stored in local storage\n\n    * If no email in local storage, show modal to re-fill email\n    \n* On successful login\n\n    * Hit POST /auth/v1/reset-failed-login-counter\n    \n\n2. Reference:\n\n* [\\[SPIKE\\]\\[20250219\\] Magic Link Login](https://docs.google.com/document/d/1PmcIjTSlQhFo6VB21E4z3qLN2Z2FSNpd49B_BUza4MQ/edit?tab=t.0#heading=h.6jynaot9cbnq)\n* [https://github.com/Match-Made/mm-web/pull/593](https://github.com/Match-Made/mm-web/pull/593)\n\nh2. Acceptance Criteria\n\n1. Able to login using magic link through reactor\n\nh2. Dependencies\n\n1. \\[FUSION\\]\\[DELIVERY/USER\\] Reset failed login counter endpoint\n2. \\[FUSION\\]\\[DELIVERY/USER\\] Magic link login endpoint\n3. \\[REACTOR\\] Magic link login – UI\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24830",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24830",
+            "key": "MAT-3592",
+            "fields": {
+                "summary": "[FUSION][USER] Get user detail endpoint",
+                "description": "h2. Context  \nneed to get user details based on uid\n\nh2. Todo\n\n1. Endpoint: GET /api/v1/users/:id\n2. Response:  \n  {  \n   \"id\": “”  \n   \"name\": “”,\"email\": “”,\"type\": “”,\"is_active\": “”,\"company_name\": “”,\"phone_number\": “”  \n  }\n3. Should also return the user’s\n\nh2. Acceptance Criteria\n\n1. Able to get user details accordingly\n\nh2. Dependencies\n\n1. \\[FUSION\\] Migration and package initialization\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24832",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24832",
+            "key": "MAT-3593",
+            "fields": {
+                "summary": "[FUSION][USER] Update user endpoint",
+                "description": "h2. Context  \nneed to be able to update user details\n\nh2. Todo\n\n1. Endpoint: PATCH /api/v1/users/:id\n2. Request:  \n  {  \n   \"verification\": {  \n     \"current_password\": “”,\"otp\": “”,\"token_id\": “”  \n   },  \n   \"updated_data\": {  \n     \"phone_number\": “”,\"password\": “”,\"last_password_reminder_at\": “”  \n   }  \n  }\n3. Response: { user object }\n4. Verification object\n\n* current_password: used to try signing in to check legitimacy\n* token_id: used to get stored otp\n* otp: used to compare with the stored otp\n\n5. On change phone number\n\n* All verification fields are required\n\n    * Try signing in using current_password\n    * Try comparing the submitted otp with the stored otp (get auth:otp:{token_id})\n    \n* Update phone_number_changed_at\n* Will use 62 (or +62) → based off of SPIKE\n\n6. On change password\n\n* Only current_password field is required in verification\n\n    * Try signing in using current_password\n    \n* Hit holaclient UpdateUser\n* Update password_changed_at\n* If successfully updated, call RevokeRefreshTokens function to force log out\n\n7. Updates can be partial\n\nh2. Acceptance Criteria\n\n1. Able to update user details accordingly\n\nh2. Dependencies\n\n1. \\[FUSION\\] Migration and package initialization\n2. \\[FUSION\\] Verify Login OTP endpoint\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24834",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24834",
+            "key": "MAT-3594",
+            "fields": {
+                "summary": "[REACTOR] Account detail - UI",
+                "description": "h2. Context  \nwe need to add new account detail UI\n\nh2. Todo\n\n1. Refer to this [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1235-8705&t=yN5kpijod8E1Aqa3-4)\n2. Should include:\n\n* Entry point, account page, password modal, WA modal\n* Microinteractions\n* Error states + form validation\n* Confirmation modal when leaving WA modal\n\n3. Add +62 as prefix for phone number\n4. Make sure this is only shown to user-typed user\n\nh2. Acceptance Criteria\n\n1. Styling and microinteractions are according to Figma\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24836",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24836",
+            "key": "MAT-3595",
+            "fields": {
+                "summary": "[REACTOR] Account detail - Integration",
+                "description": "h2. Context  \nwe need to be able to update user account from web\n\nh2. Todo\n\n1. Show user info in the account page\n\n* Hit GET /users/:id\n\n2. Upon requesting OTP\n\n* Hit POST /auth/v1/otp\n\n    * Use phone_number\n    * If user re-request OTP, make sure to use the firstly received token_id from this endpoint in request body\n    \n\n3. Upon changing phone number\n\n* Hit PATCH /users/:id\n* Fill the verification object\n\n    * current_password\n    * OTP\n    * token_id (from [c.ii](http://c.ii))\n    \n\n4. Upon changing password\n\n* Hit PATCH /users/:id\n* Fill the verification object\n\n    * current_password\n    \n\n5. Make sure this is only shown to user-typed user\n\nh2. Acceptance Criteria\n\n1. Able to change password\n2. Able to change phone number and verify it\n\nh2. Dependencies\n\n1. \\[FUSION\\]\\[DELIVERY/USER\\] Get user detail endpoint\n2. \\[FUSION\\]\\[DELIVERY/USER\\] Update user endpoint\n3. \\[FUSION\\]\\[DELIVERY/USER\\] Generate OTP endpoint\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24838",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24838",
+            "key": "MAT-3596",
+            "fields": {
+                "summary": "[REACTOR] Update Password reminder pop up modal – UI",
+                "description": "h2. Context  \nneed to know when the last time a user has been updated\n\nh2. Todo\n\n1. Should include microinteractions (hover, disable, etc)\n2. Refer to [design](https://www.figma.com/design/CPoA9hPdIIricEshBgDktH/Login-Wall?node-id=1186-13927&t=AJ6YMYSWARGjpgZ9-4) (can use confirmation modal)\n\nh2. Acceptance Criteria\n\n1. Styling and microinteractions are according to Figma\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24840",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24840",
+            "key": "MAT-3597",
+            "fields": {
+                "summary": "[REACTOR] Update Password reminder pop up modal – Integration",
+                "description": "h2. Context  \nneed to know when the last time a user has been updated\n\nh2. Todo\n\n1. Upon opening web/after logging in, hit GET /users/:id\n2. If last_password_reminder_at is >= 90 days ago, show modal\n3. This modal will persist like TnC until user clicks “Remind me later”\n4. Upon clicking “Update password”\n\n* Hit PATCH /users/:id\n\n    * last_password_reminder_at = today\n    \n* Redirect to account detail page with password change pane opened\n\n5. On click “remind me later”\n\n* Hit PATCH /users/:id\n\n    * last_password_reminder_at = today\n    \n\n6. Make sure this is only shown to user-typed user\n\nh2. Acceptance Criteria\n\n1. TBD\n\nh2. Dependencies\n\n1. \\[REACTOR\\] Password reminder pop up modal – UI\n2. \\[REACTOR\\] Account detail - UI\n3. \\[FUSION\\] Get user detail endpoint\n4. \\[FUSION\\] Update user endpoint\n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24842",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24842",
+            "key": "MAT-3598",
+            "fields": {
+                "summary": "[FUSION][LOW PRIO] Implement cloudflare in login endpoint",
+                "description": "h2. Context  \nwe need to be able to implement bot checks\n\nh2. Todo\n\n1. Adjust request to accept cloudflare token\n2. In both magic link endpoint and email/pass endpoint, test the token first by hitting sitesverify\n3. Reference:\n\n* [https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/)\n* [https://developers.cloudflare.com/turnstile/get-started/server-side-validation/](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)\n\n4. Make sure we’re able to handle case when cloudflare is down so it doesn’t block login flow\n\nh2. Acceptance Criteria\n\n1. Able to detect bot using cloudflare turnstile\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        },
+        {
+            "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+            "id": "24844",
+            "self": "https://api.atlassian.com/ex/jira/baa647e2-8cd8-468b-99ba-afc8198f5f62/rest/api/3/issue/24844",
+            "key": "MAT-3599",
+            "fields": {
+                "summary": "[REACTOR][LOW PRIO] Implement cloudflare token",
+                "description": "h2. Context  \nwe need to be able to implement bot checks\n\nh2. Todo\n\n1. Need to generate token and pass it to the magic link endpoint and email/pass endpoint\n2. Reference:\n\n* [https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/)\n* [https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/)\n\n3. Make sure we’re able to handle case when cloudflare is down so it doesn’t block login flow\n\nh2. Acceptance Criteria\n\n1. Able to detect bot using cloudflare turnstile\n\nh2. Dependencies\n\n1. \n\n    * \n    \n\n"
+            }
+        }
+    ],
+    "isLast": true
+}

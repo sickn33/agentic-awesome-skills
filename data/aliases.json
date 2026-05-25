@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-08T00:00:00.000Z",
+  "generatedAt": "2026-05-25T00:55:02.580Z",
   "aliases": {
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
     "active directory attacks": "active-directory-attacks",
@@ -96,6 +96,7 @@
     "pentest commands": "pentest-commands",
     "performance-testing-ai": "performance-testing-review-ai-review",
     "performance-testing-agent": "performance-testing-review-multi-agent-review",
+    "pm-ai-advisor": "pm-ai-ai-shaped-readiness-advisor",
     "supabase-postgres-best-practices": "postgres-best-practices",
     "pptx": "pptx-official",
     "privilege escalation methods": "privilege-escalation-methods",

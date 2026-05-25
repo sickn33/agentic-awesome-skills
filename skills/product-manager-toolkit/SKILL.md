@@ -1,6 +1,8 @@
 ---
 name: product-manager-toolkit
 description: Comprehensive toolkit for product managers including RICE prioritization, customer interview analysis, PRD templates, discovery frameworks, and go-to-market strategies. Use for feature prioritization, user research synthesis, requirement documentation, and product strategy development.
+risk: safe
+source: community
 ---
 
 # Product Manager Toolkit
@@ -10,17 +12,20 @@ Essential tools and frameworks for modern product management, from discovery to 
 ## Quick Start
 
 ### For Feature Prioritization
+
 ```bash
 python scripts/rice_prioritizer.py sample  # Create sample CSV
 python scripts/rice_prioritizer.py sample_features.csv --capacity 15
 ```
 
 ### For Interview Analysis
+
 ```bash
 python scripts/customer_interview_analyzer.py interview_transcript.txt
 ```
 
 ### For PRD Creation
+
 1. Choose template from `references/prd_templates.md`
 2. Fill in sections based on discovery work
 3. Review with stakeholders
@@ -37,10 +42,12 @@ python scripts/customer_interview_analyzer.py interview_transcript.txt
    - Strategic initiatives
 
 2. **Score with RICE**
+
    ```bash
    # Create CSV with: name,reach,impact,confidence,effort
    python scripts/rice_prioritizer.py features.csv
    ```
+
    - **Reach**: Users affected per quarter
    - **Impact**: massive/high/medium/low/minimal
    - **Confidence**: high/medium/low
@@ -64,9 +71,11 @@ python scripts/customer_interview_analyzer.py interview_transcript.txt
    - Record with permission
 
 2. **Analyze Insights**
+
    ```bash
    python scripts/customer_interview_analyzer.py transcript.txt
    ```
+
    Extracts:
    - Pain points with severity
    - Feature requests with priority
@@ -106,9 +115,11 @@ python scripts/customer_interview_analyzer.py interview_transcript.txt
 ## Key Scripts
 
 ### rice_prioritizer.py
+
 Advanced RICE framework implementation with portfolio analysis.
 
 **Features**:
+
 - RICE score calculation
 - Portfolio balance analysis (quick wins vs big bets)
 - Quarterly roadmap generation
@@ -116,6 +127,7 @@ Advanced RICE framework implementation with portfolio analysis.
 - Multiple output formats (text/json/csv)
 
 **Usage Examples**:
+
 ```bash
 # Basic prioritization
 python scripts/rice_prioritizer.py features.csv
@@ -128,9 +140,11 @@ python scripts/rice_prioritizer.py features.csv --output json
 ```
 
 ### customer_interview_analyzer.py
+
 NLP-based interview analysis for extracting actionable insights.
 
 **Capabilities**:
+
 - Pain point extraction with severity assessment
 - Feature request identification and classification
 - Jobs-to-be-done pattern recognition
@@ -140,6 +154,7 @@ NLP-based interview analysis for extracting actionable insights.
 - Key quotes identification
 
 **Usage Examples**:
+
 ```bash
 # Analyze single interview
 python scripts/customer_interview_analyzer.py interview.txt
@@ -151,6 +166,7 @@ python scripts/customer_interview_analyzer.py interview.txt json
 ## Reference Documents
 
 ### prd_templates.md
+
 Multiple PRD formats for different contexts:
 
 1. **Standard PRD Template**
@@ -173,10 +189,25 @@ Multiple PRD formats for different contexts:
    - Hypothesis-driven
    - Pre-PRD phase
 
+### release_brief_template.md
+
+Product Release Brief template intended for the Delivery Team:
+
+- Synthesizes PRD to focus on user journeys and operational updates.
+- Highlights configuration details, rule limitations, and FAQs.
+
+### changelog_template.md
+
+Changelog structure based on PRD requirements:
+
+- Organizes changes into Added, Changed, Fixed, and Security & Infrastructure.
+- Highlights specific workflow and system improvements.
+
 ## Prioritization Frameworks
 
 ### RICE Framework
-```
+
+```text
 Score = (Reach × Impact × Confidence) / Effort
 
 Reach: # of users/quarter
@@ -194,7 +225,8 @@ Effort: Person-months
 ```
 
 ### Value vs Effort Matrix
-```
+
+```text
          Low Effort    High Effort
          
 High     QUICK WINS    BIG BETS
@@ -205,6 +237,7 @@ Value    [Maybe]       [Avoid]
 ```
 
 ### MoSCoW Method
+
 - **Must Have**: Critical for launch
 - **Should Have**: Important but not critical
 - **Could Have**: Nice to have
@@ -213,7 +246,8 @@ Value    [Maybe]       [Avoid]
 ## Discovery Frameworks
 
 ### Customer Interview Guide
-```
+
+```text
 1. Context Questions (5 min)
    - Role and responsibilities
    - Current workflow
@@ -236,7 +270,8 @@ Value    [Maybe]       [Avoid]
 ```
 
 ### Hypothesis Template
-```
+
+```text
 We believe that [building this feature]
 For [these users]
 Will [achieve this outcome]
@@ -244,7 +279,8 @@ We'll know we're right when [metric]
 ```
 
 ### Opportunity Solution Tree
-```
+
+```text
 Outcome
 ├── Opportunity 1
 │   ├── Solution A
@@ -257,13 +293,15 @@ Outcome
 ## Metrics & Analytics
 
 ### North Star Metric Framework
+
 1. **Identify Core Value**: What's the #1 value to users?
 2. **Make it Measurable**: Quantifiable and trackable
 3. **Ensure It's Actionable**: Teams can influence it
 4. **Check Leading Indicator**: Predicts business success
 
 ### Funnel Analysis Template
-```
+
+```text
 Acquisition → Activation → Retention → Revenue → Referral
 
 Key Metrics:
@@ -274,6 +312,7 @@ Key Metrics:
 ```
 
 ### Feature Success Metrics
+
 - **Adoption**: % of users using feature
 - **Frequency**: Usage per user per time period
 - **Depth**: % of feature capability used
@@ -283,6 +322,7 @@ Key Metrics:
 ## Best Practices
 
 ### Writing Great PRDs
+
 1. Start with the problem, not solution
 2. Include clear success metrics upfront
 3. Explicitly state what's out of scope
@@ -291,6 +331,7 @@ Key Metrics:
 6. Version control changes
 
 ### Effective Prioritization
+
 1. Mix quick wins with strategic bets
 2. Consider opportunity cost
 3. Account for dependencies
@@ -299,6 +340,7 @@ Key Metrics:
 6. Communicate decisions clearly
 
 ### Customer Discovery Tips
+
 1. Ask "why" 5 times
 2. Focus on past behavior, not future intentions
 3. Avoid leading questions
@@ -307,6 +349,7 @@ Key Metrics:
 6. Validate with data
 
 ### Stakeholder Management
+
 1. Identify RACI for decisions
 2. Regular async updates
 3. Demo over documentation
@@ -326,6 +369,7 @@ Key Metrics:
 ## Integration Points
 
 This toolkit integrates with:
+
 - **Analytics**: Amplitude, Mixpanel, Google Analytics
 - **Roadmapping**: ProductBoard, Aha!, Roadmunk
 - **Design**: Figma, Sketch, Miro

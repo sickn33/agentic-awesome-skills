@@ -103,9 +103,9 @@
     "path": "skills/agent-memory-systems",
     "category": "uncategorized",
     "name": "agent-memory-systems",
-    "description": "Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-term (context window), long-term (vector stores), and the cognitive architectures that organize them.  Key insight: Memory isn't just storage - it's retrieval. A million stored facts mean nothing if you can't find the right one. Chunking, embedding, and retrieval strategies determine whether your agent remembers or forgets.  The field is fragm",
-    "risk": "unknown",
-    "source": "vibeship-spawner-skills (Apache 2.0)"
+    "description": "Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-term (context window), long-term (vector s...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "agent-orchestration-improve-agent",
@@ -130,45 +130,54 @@
     "path": "skills/agent-tool-builder",
     "category": "uncategorized",
     "name": "agent-tool-builder",
-    "description": "Tools are how AI agents interact with the world. A well-designed tool is the difference between an agent that works and one that hallucinates, fails silently, or costs 10x more tokens than necessary.  This skill covers tool design from schema to error handling. JSON Schema best practices, description writing that actually helps the LLM, validation, and the emerging MCP standard that's becoming the lingua franca for AI tools.  Key insight: Tool descriptions are more important than tool implementa",
-    "risk": "unknown",
-    "source": "vibeship-spawner-skills (Apache 2.0)"
+    "description": "Tools are how AI agents interact with the world. A well-designed tool is the difference between an agent that works and one that hallucinates, fails silently, or costs 10x more tokens than necessar...",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "agents-md",
+    "path": "skills/agents-md",
+    "category": "uncategorized",
+    "name": "agents-md",
+    "description": "This skill should be used when the user asks to \"create AGENTS.md\", \"update AGENTS.md\", \"maintain agent docs\", \"set up CLAUDE.md\", or needs to keep agent instructions concise. Enforces research-backed best practices for minimal, high-signal agent documentation.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ai-agents-architect",
     "path": "skills/ai-agents-architect",
     "category": "uncategorized",
     "name": "ai-agents-architect",
-    "description": "Expert in designing and building autonomous AI agents. Masters tool use, memory systems, planning strategies, and multi-agent orchestration. Use when: build agent, AI agent, autonomous agent, tool use, function calling.",
-    "risk": "unknown",
-    "source": "vibeship-spawner-skills (Apache 2.0)"
+    "description": "Expert in designing and building autonomous AI agents. Masters tool use, memory systems, planning strategies, and multi-agent orchestration. Use when: build agent, AI agent, autonomous agent, tool ...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ai-engineer",
     "path": "skills/ai-engineer",
     "category": "uncategorized",
     "name": "ai-engineer",
-    "description": "Build production-ready LLM applications, advanced RAG systems, and intelligent agents. Implements vector search, multimodal AI, agent orchestration, and enterprise AI integrations. Use PROACTIVELY for LLM features, chatbots, AI agents, or AI-powered applications.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Build production-ready LLM applications, advanced RAG systems, and intelligent agents. Implements vector search, multimodal AI, agent orchestration, and enterprise AI integrations.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ai-product",
     "path": "skills/ai-product",
     "category": "uncategorized",
     "name": "ai-product",
-    "description": "Every product will be AI-powered. The question is whether you'll build it right or ship a demo that falls apart in production.  This skill covers LLM integration patterns, RAG architecture, prompt engineering that scales, AI UX that users trust, and cost optimization that doesn't bankrupt you. Use when: keywords, file_patterns, code_patterns.",
-    "risk": "unknown",
-    "source": "vibeship-spawner-skills (Apache 2.0)"
+    "description": "Every product will be AI-powered. The question is whether you'll build it right or ship a demo that falls apart in production. This skill covers LLM integration patterns, RAG architecture, prompt ...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ai-wrapper-product",
     "path": "skills/ai-wrapper-product",
     "category": "uncategorized",
     "name": "ai-wrapper-product",
-    "description": "Expert in building products that wrap AI APIs (OpenAI, Anthropic, etc.) into focused tools people will pay for. Not just 'ChatGPT but different' - products that solve specific problems with AI. Covers prompt engineering for products, cost management, rate limiting, and building defensible AI businesses. Use when: AI wrapper, GPT product, AI tool, wrap AI, AI SaaS.",
-    "risk": "unknown",
-    "source": "vibeship-spawner-skills (Apache 2.0)"
+    "description": "Expert in building products that wrap AI APIs (OpenAI, Anthropic, etc.) into focused tools people will pay for. Not just 'ChatGPT but different' - products that solve specific problems with AI. Cov...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "airflow-dag-patterns",
@@ -220,9 +229,9 @@
     "path": "skills/analytics-tracking",
     "category": "uncategorized",
     "name": "analytics-tracking",
-    "description": "Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. Use when the user wants to set up, fix, or evaluate analytics tracking (GA4, GTM, product analytics, events, conversions, UTMs). This skill focuses on measurement strategy, signal quality, and validation\u2014 not just firing events.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. Use when the user wants to set up, fix, or evaluate analytics tracking (GA4, GTM, product analytics, events, conversions, UTMs). This skill focuses on measurement strategy, signal quality, and validation\u2014 not just firing events.\n",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "angular",
@@ -284,8 +293,8 @@
     "category": "uncategorized",
     "name": "antigravity-workflows",
     "description": "Orchestrate multiple Antigravity skills through guided workflows for SaaS MVP delivery, security audits, AI agent builds, and browser QA.",
-    "risk": "none",
-    "source": "self"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "api-fuzzing-bug-bounty",
@@ -751,9 +760,9 @@
     "path": "skills/brainstorming",
     "category": "uncategorized",
     "name": "brainstorming",
-    "description": "Use this skill before any creative or constructive work (features, components, architecture, behavior changes, or functionality). This skill transforms vague ideas into validated designs through disciplined, incremental reasoning and collaboration.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Use this skill before any creative or constructive work (features, components, architecture, behavior changes, or functionality). This skill transforms vague ideas into validated designs through disciplined, incremental reasoning and collaboration.\n",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "brand-guidelines-anthropic",
@@ -841,9 +850,9 @@
     "path": "skills/business-analyst",
     "category": "uncategorized",
     "name": "business-analyst",
-    "description": "Master modern business analysis with AI-powered analytics, real-time dashboards, and data-driven insights. Build comprehensive KPI frameworks, predictive models, and strategic recommendations. Use PROACTIVELY for business intelligence or strategic analysis.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Master modern business analysis with AI-powered analytics, real-time dashboards, and data-driven insights. Build comprehensive KPI frameworks, predictive models, and strategic recommendations.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "busybox-on-windows",
@@ -1264,18 +1273,18 @@
     "path": "skills/competitive-landscape",
     "category": "uncategorized",
     "name": "competitive-landscape",
-    "description": "This skill should be used when the user asks to \"analyze competitors\", \"assess competitive landscape\", \"identify differentiation\", \"evaluate market positioning\", \"apply Porter's Five Forces\", or requests competitive strategy analysis.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "This skill should be used when the user asks to \\\\\\\"analyze competitors\", \"assess competitive landscape\", \"identify differentiation\", \"evaluate market positioning\", \"apply Porter's Five Forces\",...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "competitor-alternatives",
     "path": "skills/competitor-alternatives",
     "category": "uncategorized",
     "name": "competitor-alternatives",
-    "description": "When the user wants to create competitor comparison or alternative pages for SEO and sales enablement. Also use when the user mentions 'alternative page,' 'vs page,' 'competitor comparison,' 'comparison page,' '[Product] vs [Product],' '[Product] alternative,' or 'competitive landing pages.' Covers four formats: singular alternative, plural alternatives, you vs competitor, and competitor vs competitor. Emphasizes deep research, modular content architecture, and varied section types beyond feature tables.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "When the user wants to create competitor comparison or alternative pages for SEO and sales enablement. Also use when the user mentions 'alternative page,' 'vs page,' 'competitor comparison,' 'compa...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "comprehensive-review-full-review",
@@ -1319,8 +1328,8 @@
     "category": "uncategorized",
     "name": "concise-planning",
     "description": "Use when a user asks for a plan for a coding task, to generate a clear, actionable, and atomic checklist.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "conductor-implement",
@@ -1525,18 +1534,18 @@
     "path": "skills/copy-editing",
     "category": "uncategorized",
     "name": "copy-editing",
-    "description": "When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish this,' 'make this better,' or 'copy sweep.' This skill provides a systematic approach to editing marketing copy through multiple focused passes.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish this,' 'make this ...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "copywriting",
     "path": "skills/copywriting",
     "category": "uncategorized",
     "name": "copywriting",
-    "description": "Use this skill when writing, rewriting, or improving marketing copy for any page (homepage, landing page, pricing, feature, product, or about page). This skill produces clear, compelling, and testable copy while enforcing alignment, honesty, and conversion best practices.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Write rigorous, conversion-focused marketing copy for landing pages and emails. Enforces brief confirmation and strict no-fabrication rules.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "core-components",
@@ -1620,13 +1629,22 @@
     "source": "https://github.com/trailofbits/skills/tree/main/plugins/culture-index"
   },
   {
+    "id": "customer-journey-map",
+    "path": "skills/customer-journey-map",
+    "category": "uncategorized",
+    "name": "customer-journey-map",
+    "description": "Create a customer journey map across stages, touchpoints, actions, emotions, and metrics. Use when diagnosing a broken experience or aligning a team on the full customer flow.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "customer-support",
     "path": "skills/customer-support",
     "category": "uncategorized",
     "name": "customer-support",
-    "description": "Elite AI-powered customer support specialist mastering conversational AI, automated ticketing, sentiment analysis, and omnichannel support experiences. Integrates modern support tools, chatbot platforms, and CX optimization with 2024/2025 best practices. Use PROACTIVELY for comprehensive customer experience management.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Elite AI-powered customer support specialist mastering conversational AI, automated ticketing, sentiment analysis, and omnichannel support experiences.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "claude-d3js-skill",
@@ -1697,8 +1715,8 @@
     "category": "uncategorized",
     "name": "data-storytelling",
     "description": "Transform data into compelling narratives using visualization, context, and persuasive structure. Use when presenting analytics to stakeholders, creating data reports, or building executive presentations.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "database-admin",
@@ -1935,6 +1953,24 @@
     "source": "vibeship-spawner-skills (Apache 2.0)"
   },
   {
+    "id": "discovery-interview-prep",
+    "path": "skills/discovery-interview-prep",
+    "category": "uncategorized",
+    "name": "discovery-interview-prep",
+    "description": "Plan customer discovery interviews with the right goal, segment, constraints, and method. Use when preparing interviews for problem validation, churn research, or new product ideas.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "discovery-process",
+    "path": "skills/discovery-process",
+    "category": "uncategorized",
+    "name": "discovery-process",
+    "description": "Run a full discovery cycle from problem hypothesis to validated solution. Use when a team needs a structured path through framing, interviews, synthesis, and experiments.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "dispatching-parallel-agents",
     "path": "skills/dispatching-parallel-agents",
     "category": "uncategorized",
@@ -2140,6 +2176,24 @@
     "description": "Guide developers through setting up development environments with proper tools, dependencies, and configurations",
     "risk": "unknown",
     "source": "unknown"
+  },
+  {
+    "id": "epic-breakdown-advisor",
+    "path": "skills/epic-breakdown-advisor",
+    "category": "uncategorized",
+    "name": "epic-breakdown-advisor",
+    "description": "Break down epics into user stories with Humanizing Work split patterns. Use when a backlog item is too large to estimate, sequence, or deliver safely.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "epic-hypothesis",
+    "path": "skills/epic-hypothesis",
+    "category": "uncategorized",
+    "name": "epic-hypothesis",
+    "description": "Frame an epic as a testable hypothesis with target user, expected outcome, and validation method. Use when defining a major initiative before roadmap, discovery, or delivery planning.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "error-debugging-error-analysis",
@@ -2844,6 +2898,15 @@
     "source": "unknown"
   },
   {
+    "id": "google-calendar",
+    "path": "skills/google-calendar",
+    "category": "uncategorized",
+    "name": "google-calendar",
+    "description": "Interact with Google Calendar via the Google Calendar API \u2013 list upcoming events, create new events, update or delete them. Use this skill when you need programmatic access to your calendar from OpenClaw.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "google-calendar-automation",
     "path": "skills/google-calendar-automation",
     "category": "uncategorized",
@@ -3213,6 +3276,24 @@
     "source": "unknown"
   },
   {
+    "id": "jira-sprint-workflow",
+    "path": "skills/jira-sprint-workflow",
+    "category": "uncategorized",
+    "name": "jira-sprint-workflow",
+    "description": "Comprehensive workflow for managing Jira tickets from sprint planning documents. Supports creating, updating, verifying, and syncing tickets with sprint plans across all initiatives.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "jobs-to-be-done",
+    "path": "skills/jobs-to-be-done",
+    "category": "uncategorized",
+    "name": "jobs-to-be-done",
+    "description": "Uncover customer jobs, pains, and gains in a structured JTBD format. Use when clarifying unmet needs, repositioning a product, or improving discovery and messaging.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "julia-pro",
     "path": "skills/julia-pro",
     "category": "uncategorized",
@@ -3245,8 +3326,8 @@
     "category": "uncategorized",
     "name": "kaizen",
     "description": "Guide for continuous improvement, error proofing, and standardization. Use this skill when the user wants to improve code quality, refactor, or discuss process improvements.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "klaviyo-automation",
@@ -3262,9 +3343,9 @@
     "path": "skills/kpi-dashboard-design",
     "category": "uncategorized",
     "name": "kpi-dashboard-design",
-    "description": "Design effective KPI dashboards with metrics selection, visualization best practices, and real-time monitoring patterns. Use when building business dashboards, selecting metrics, or designing data visualization layouts.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Design effective KPI dashboards with metrics selection, visualization best practices, and real-time monitoring patterns. Use when building business dashboards, selecting metrics, or designing data ...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "kubernetes-architect",
@@ -3316,9 +3397,18 @@
     "path": "skills/launch-strategy",
     "category": "uncategorized",
     "name": "launch-strategy",
-    "description": "When the user wants to plan a product launch, feature announcement, or release strategy. Also use when the user mentions 'launch,' 'Product Hunt,' 'feature release,' 'announcement,' 'go-to-market,' 'beta launch,' 'early access,' 'waitlist,' or 'product update.' This skill covers phased launches, channel strategy, and ongoing launch momentum.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "When the user wants to plan a product launch, feature announcement, or release strategy. Also use when the user mentions 'launch,' 'Product Hunt,' 'feature release,' 'announcement,' 'go-to-market,'...",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "lean-ux-canvas",
+    "path": "skills/lean-ux-canvas",
+    "category": "uncategorized",
+    "name": "lean-ux-canvas",
+    "description": "Guide teams through Lean UX Canvas v2. Use when framing a business problem, surfacing assumptions, and defining what to learn next.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "legacy-modernizer",
@@ -3505,9 +3595,9 @@
     "path": "skills/market-sizing-analysis",
     "category": "uncategorized",
     "name": "market-sizing-analysis",
-    "description": "This skill should be used when the user asks to \"calculate TAM\", \"determine SAM\", \"estimate SOM\", \"size the market\", \"calculate market opportunity\", \"what's the total addressable market\", or requests market sizing analysis for a startup or business opportunity.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "This skill should be used when the user asks to \\\\\\\"calculate TAM\\\\\\\", \"determine SAM\", \"estimate SOM\", \"size the market\", \"calculate market opportunity\", \"what's the total addressable market\", or...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "marketing-ideas",
@@ -3568,9 +3658,9 @@
     "path": "skills/mermaid-expert",
     "category": "uncategorized",
     "name": "mermaid-expert",
-    "description": "Create Mermaid diagrams for flowcharts, sequences, ERDs, and architectures. Masters syntax for all diagram types and styling. Use PROACTIVELY for visual documentation, system diagrams, or process flows.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Create Mermaid diagrams for flowcharts, sequences, ERDs, and architectures. Masters syntax for all diagram types and styling.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "metasploit-framework",
@@ -3634,6 +3724,15 @@
     "description": "Automate Mixpanel tasks via Rube MCP (Composio): events, segmentation, funnels, cohorts, user profiles, JQL queries. Always search tools first for current schemas.",
     "risk": "unknown",
     "source": "unknown"
+  },
+  {
+    "id": "mixpanel-insights",
+    "path": "skills/mixpanel-insights",
+    "category": "uncategorized",
+    "name": "mixpanel-insights",
+    "description": "Analyzes Mixpanel data to find product usage situations, least active companies, drop-offs, and leading metrics. Triggered by 'mixpanel health check', 'product usage situation', 'mixpanel insights', 'anomaly signal', 'least active company', 'worst signal', 'good news'.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ml-engineer",
@@ -3757,9 +3856,9 @@
     "path": "skills/multi-agent-brainstorming",
     "category": "uncategorized",
     "name": "multi-agent-brainstorming",
-    "description": "Use this skill when a design or idea requires higher confidence, risk reduction, or formal review. This skill orchestrates a structured, sequential multi-agent design review where each agent has a strict, non-overlapping role. It prevents blind spots, false confidence, and premature convergence.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Use this skill when a design or idea requires higher confidence, risk reduction, or formal review. This skill orchestrates a structured, sequential multi-agent design review where each agent has a strict, non-overlapping role. It prevents blind spots, false confidence, and premature convergence.\n",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "multi-agent-patterns",
@@ -4050,6 +4149,15 @@
     "source": "unknown"
   },
   {
+    "id": "opportunity-solution-tree",
+    "path": "skills/opportunity-solution-tree",
+    "category": "uncategorized",
+    "name": "opportunity-solution-tree",
+    "description": "Build an Opportunity Solution Tree from outcomes to opportunities, solutions, and tests. Use when a stakeholder request needs problem framing before you decide what to build.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "oss-hunter",
     "path": "skills/oss-hunter",
     "category": "uncategorized",
@@ -4230,6 +4338,15 @@
     "source": "vibeship-spawner-skills (Apache 2.0)"
   },
   {
+    "id": "pestel-analysis",
+    "path": "skills/pestel-analysis",
+    "category": "uncategorized",
+    "name": "pestel-analysis",
+    "description": "Analyze political, economic, social, technological, environmental, and legal forces. Use when external market shifts could materially affect a product, roadmap, or strategy.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "php-pro",
     "path": "skills/php-pro",
     "category": "uncategorized",
@@ -4262,8 +4379,8 @@
     "category": "uncategorized",
     "name": "plan-writing",
     "description": "Structured task planning with clear breakdowns, dependencies, and verification criteria. Use when implementing features, refactoring, or any multi-step work.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "planning-with-files",
@@ -4284,6 +4401,114 @@
     "source": "unknown"
   },
   {
+    "id": "pm-ai-ai-shaped-readiness-advisor",
+    "path": "skills/pm-ai-ai-shaped-readiness-advisor",
+    "category": "uncategorized",
+    "name": "pm-ai-ai-shaped-readiness-advisor",
+    "description": "Assess whether your product work is AI-first or AI-shaped. Use when evaluating AI maturity and choosing the next team capability to build.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-ai-company-research",
+    "path": "skills/pm-ai-company-research",
+    "category": "uncategorized",
+    "name": "pm-ai-company-research",
+    "description": "Create a company research brief with executive quotes, product strategy, and org context. Use when preparing for interviews, competitive analysis, partnerships, or market-entry work.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-ai-context-engineering-advisor",
+    "path": "skills/pm-ai-context-engineering-advisor",
+    "category": "uncategorized",
+    "name": "pm-ai-context-engineering-advisor",
+    "description": "Diagnose context stuffing vs. context engineering. Use when an AI workflow feels bloated, brittle, or hard to steer reliably.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-ai-pol-probe",
+    "path": "skills/pm-ai-pol-probe",
+    "category": "uncategorized",
+    "name": "pm-ai-pol-probe",
+    "description": "Define a Proof of Life probe to test a risky hypothesis cheaply. Use when you need harsh truth before building real product.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-ai-pol-probe-advisor",
+    "path": "skills/pm-ai-pol-probe-advisor",
+    "category": "uncategorized",
+    "name": "pm-ai-pol-probe-advisor",
+    "description": "Select the right Proof of Life (PoL) probe based on hypothesis, risk, and resources. Use this to match the validation method to the real learning goal, not tooling comfort.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-ai-recommendation-canvas",
+    "path": "skills/pm-ai-recommendation-canvas",
+    "category": "uncategorized",
+    "name": "pm-ai-recommendation-canvas",
+    "description": "Evaluate an AI product idea across outcomes, hypotheses, risks, and positioning. Use when deciding whether an AI solution deserves investment or recommendation.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-discovery-process",
+    "path": "skills/pm-discovery-process",
+    "category": "uncategorized",
+    "name": "pm-discovery-process",
+    "description": "Run a full discovery cycle from problem hypothesis to validated solution. Use when a team needs a structured path through framing, interviews, synthesis, and experiments.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-jobs-to-be-done",
+    "path": "skills/pm-jobs-to-be-done",
+    "category": "uncategorized",
+    "name": "pm-jobs-to-be-done",
+    "description": "Uncover customer jobs, pains, and gains in a structured JTBD format. Use when clarifying unmet needs, repositioning a product, or improving discovery and messaging.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-prioritization-advisor",
+    "path": "skills/pm-prioritization-advisor",
+    "category": "uncategorized",
+    "name": "pm-prioritization-advisor",
+    "description": "Choose a prioritization framework based on stage, team context, and stakeholder needs. Use when deciding between RICE, ICE, value/effort, or another scoring approach.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-product-strategy-session",
+    "path": "skills/pm-product-strategy-session",
+    "category": "uncategorized",
+    "name": "pm-product-strategy-session",
+    "description": "Run an end-to-end product strategy session across positioning, discovery, and roadmap planning. Use when a team needs validated direction before committing to execution.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-roadmap-planning",
+    "path": "skills/pm-roadmap-planning",
+    "category": "uncategorized",
+    "name": "pm-roadmap-planning",
+    "description": "Plan a strategic roadmap across prioritization, epic definition, stakeholder alignment, and sequencing. Use when turning strategy into a release plan that teams can execute.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "pm-user-story",
+    "path": "skills/pm-user-story",
+    "category": "uncategorized",
+    "name": "pm-user-story",
+    "description": "Create user stories with Mike Cohn format and Gherkin acceptance criteria. Use when turning user needs into development-ready work with clear outcomes and testable conditions.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "popup-cro",
     "path": "skills/popup-cro",
     "category": "uncategorized",
@@ -4291,6 +4516,24 @@
     "description": "Create and optimize popups, modals, overlays, slide-ins, and banners to increase conversions without harming user experience or brand trust.",
     "risk": "unknown",
     "source": "unknown"
+  },
+  {
+    "id": "positioning-statement",
+    "path": "skills/positioning-statement",
+    "category": "uncategorized",
+    "name": "positioning-statement",
+    "description": "Create a Geoffrey Moore-style positioning statement. Use when clarifying who you serve, what problem you solve, your category, and why you're different from alternatives.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "positioning-workshop",
+    "path": "skills/positioning-workshop",
+    "category": "uncategorized",
+    "name": "positioning-workshop",
+    "description": "Run a positioning workshop that surfaces target customer, unmet need, category, benefits, and differentiation. Use when your product messaging feels fuzzy, generic, or misaligned.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "posix-shell-pro",
@@ -4356,6 +4599,15 @@
     "source": "unknown"
   },
   {
+    "id": "prd-development",
+    "path": "skills/prd-development",
+    "category": "uncategorized",
+    "name": "prd-development",
+    "description": "Build a structured PRD that connects problem, users, solution, and success criteria. Use when turning discovery notes into an engineering-ready document for a major initiative.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "pricing-strategy",
     "path": "skills/pricing-strategy",
     "category": "uncategorized",
@@ -4383,13 +4635,31 @@
     "source": "unknown"
   },
   {
+    "id": "problem-statement",
+    "path": "skills/problem-statement",
+    "category": "uncategorized",
+    "name": "problem-statement",
+    "description": "Write a user-centered problem statement with who is blocked, what they are trying to do, why it matters, and how it feels. Use when framing discovery, prioritization, or a PRD.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "product-manager-toolkit",
     "path": "skills/product-manager-toolkit",
     "category": "uncategorized",
     "name": "product-manager-toolkit",
     "description": "Comprehensive toolkit for product managers including RICE prioritization, customer interview analysis, PRD templates, discovery frameworks, and go-to-market strategies. Use for feature prioritization, user research synthesis, requirement documentation, and product strategy development.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "product-strategy-session",
+    "path": "skills/product-strategy-session",
+    "category": "uncategorized",
+    "name": "product-strategy-session",
+    "description": "Run an end-to-end product strategy session across positioning, discovery, and roadmap planning. Use when a team needs validated direction before committing to execution.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "production-code-audit",
@@ -4471,6 +4741,15 @@
     "description": "Curated collection of high-quality prompts for various use cases. Includes role-based prompts, task-specific templates, and prompt refinement techniques. Use when user needs prompt templates, role-play prompts, or ready-to-use prompt examples for coding, writing, analysis, or creative tasks.",
     "risk": "unknown",
     "source": "unknown"
+  },
+  {
+    "id": "proto-persona",
+    "path": "skills/proto-persona",
+    "category": "uncategorized",
+    "name": "proto-persona",
+    "description": "Create a proto-persona from current research, market signals, and team knowledge. Use when you need a working customer profile before deeper validation.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "protocol-reverse-engineering",
@@ -4644,6 +4923,15 @@
     "source": "unknown"
   },
   {
+    "id": "recommendation-canvas",
+    "path": "skills/recommendation-canvas",
+    "category": "uncategorized",
+    "name": "recommendation-canvas",
+    "description": "Evaluate an AI product idea across outcomes, hypotheses, risks, and positioning. Use when deciding whether an AI solution deserves investment or recommendation.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "red-team-tools",
     "path": "skills/red-team-tools",
     "category": "uncategorized",
@@ -4750,6 +5038,15 @@
     "description": "Calculate portfolio risk metrics including VaR, CVaR, Sharpe, Sortino, and drawdown analysis. Use when measuring portfolio risk, implementing risk limits, or building risk monitoring systems.",
     "risk": "unknown",
     "source": "unknown"
+  },
+  {
+    "id": "roadmap-planning",
+    "path": "skills/roadmap-planning",
+    "category": "uncategorized",
+    "name": "roadmap-planning",
+    "description": "Plan a strategic roadmap across prioritization, epic definition, stakeholder alignment, and sequencing. Use when turning strategy into a release plan that teams can execute.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ruby-pro",
@@ -5243,8 +5540,8 @@
     "category": "uncategorized",
     "name": "skill-developer",
     "description": "Create and manage Claude Code skills following Anthropic best practices. Use when creating new skills, modifying skill-rules.json, understanding trigger patterns, working with hooks, debugging skill activation, or implementing progressive disclosure. Covers skill structure, YAML frontmatter, trigger types (keywords, intent patterns, file paths, content patterns), enforcement levels (block, suggest, warn), hook mechanisms (UserPromptSubmit, PreToolUse), session tracking, and the 500-line rule.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "skill-rails-upgrade",
@@ -5413,45 +5710,45 @@
     "path": "skills/startup-business-analyst-business-case",
     "category": "uncategorized",
     "name": "startup-business-analyst-business-case",
-    "description": "Generate comprehensive investor-ready business case document with market, solution, financials, and strategy",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Generate comprehensive investor-ready business case document with\nmarket, solution, financials, and strategy\n",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "startup-business-analyst-financial-projections",
     "path": "skills/startup-business-analyst-financial-projections",
     "category": "uncategorized",
     "name": "startup-business-analyst-financial-projections",
-    "description": "Create detailed 3-5 year financial model with revenue, costs, cash flow, and scenarios",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Create detailed 3-5 year financial model with revenue, costs, cash\nflow, and scenarios\n",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "startup-business-analyst-market-opportunity",
     "path": "skills/startup-business-analyst-market-opportunity",
     "category": "uncategorized",
     "name": "startup-business-analyst-market-opportunity",
-    "description": "Generate comprehensive market opportunity analysis with TAM/SAM/SOM calculations",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "Generate comprehensive market opportunity analysis with TAM/SAM/SOM\ncalculations\n",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "startup-financial-modeling",
     "path": "skills/startup-financial-modeling",
     "category": "uncategorized",
     "name": "startup-financial-modeling",
-    "description": "This skill should be used when the user asks to \"create financial projections\", \"build a financial model\", \"forecast revenue\", \"calculate burn rate\", \"estimate runway\", \"model cash flow\", or requests 3-5 year financial planning for a startup.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "This skill should be used when the user asks to \\\\\\\"create financial projections\", \"build a financial model\", \"forecast revenue\", \"calculate burn rate\", \"estimate runway\", \"model cash flow\", or...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "startup-metrics-framework",
     "path": "skills/startup-metrics-framework",
     "category": "uncategorized",
     "name": "startup-metrics-framework",
-    "description": "This skill should be used when the user asks about \"key startup metrics\", \"SaaS metrics\", \"CAC and LTV\", \"unit economics\", \"burn multiple\", \"rule of 40\", \"marketplace metrics\", or requests guidance on tracking and optimizing business performance metrics.",
-    "risk": "unknown",
-    "source": "unknown"
+    "description": "This skill should be used when the user asks about \\\\\\\"key startup metrics\", \"SaaS metrics\", \"CAC and LTV\", \"unit economics\", \"burn multiple\", \"rule of 40\", \"marketplace metrics\", or requests...",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "stitch-ui-design",
@@ -5569,6 +5866,15 @@
     "description": "Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture.",
     "risk": "unknown",
     "source": "unknown"
+  },
+  {
+    "id": "tam-sam-som-calculator",
+    "path": "skills/tam-sam-som-calculator",
+    "category": "uncategorized",
+    "name": "tam-sam-som-calculator",
+    "description": "Calculate TAM, SAM, and SOM with explicit assumptions, methods, and caveats. Use when sizing a market for a product idea, business case, or executive review.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "tavily-web",
@@ -5787,6 +6093,15 @@
     "source": "unknown"
   },
   {
+    "id": "thoughtful",
+    "path": "skills/thoughtful",
+    "category": "uncategorized",
+    "name": "thoughtful",
+    "description": "Your thoughtful companion for WhatsApp - remembers what matters, helps you stay present in your relationships.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
     "id": "threat-mitigation-mapping",
     "path": "skills/threat-mitigation-mapping",
     "category": "uncategorized",
@@ -5954,8 +6269,8 @@
     "category": "uncategorized",
     "name": "ui-ux-designer",
     "description": "Create interface designs, wireframes, and design systems. Masters user research, accessibility standards, and modern design tools. Specializes in design tokens, component libraries, and inclusive design. Use PROACTIVELY for design systems, user flows, or interface optimization.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ui-ux-pro-max",
@@ -5963,8 +6278,8 @@
     "category": "uncategorized",
     "name": "ui-ux-pro-max",
     "description": "UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 9 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx, .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility, animation, layout, typography, font pairing, spacing, hover, shadow, gradient. Integrations: shadcn/ui MCP for component search and examples.",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "ui-visual-validator",
@@ -6028,6 +6343,24 @@
     "description": "Upstash QStash expert for serverless message queues, scheduled jobs, and reliable HTTP-based task delivery without managing infrastructure. Use when: qstash, upstash queue, serverless cron, scheduled http, message queue serverless.",
     "risk": "unknown",
     "source": "vibeship-spawner-skills (Apache 2.0)"
+  },
+  {
+    "id": "user-story",
+    "path": "skills/user-story",
+    "category": "uncategorized",
+    "name": "user-story",
+    "description": "Create user stories with Mike Cohn format and Gherkin acceptance criteria. Use when turning user needs into development-ready work with clear outcomes and testable conditions.",
+    "risk": "safe",
+    "source": "community"
+  },
+  {
+    "id": "user-story-splitting",
+    "path": "skills/user-story-splitting",
+    "category": "uncategorized",
+    "name": "user-story-splitting",
+    "description": "Break a large story or epic into smaller deliverable stories using proven split patterns. Use when backlog items are too big for estimation, sequencing, or independent release.",
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "using-git-worktrees",
@@ -6224,8 +6557,8 @@
     "category": "uncategorized",
     "name": "web-design-guidelines",
     "description": "Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".",
-    "risk": "unknown",
-    "source": "unknown"
+    "risk": "safe",
+    "source": "community"
   },
   {
     "id": "web-games",
