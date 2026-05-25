@@ -43,5 +43,7 @@ validation-baseline.json
 apps/web-app/public/skills/
 apps/web-app/public/skills.json
 
-# Local duplicate/download artifacts
 skills/spline-3d-integration/*.zip
+
+# Temporary plugin staging directories
+plugins/.antigravity-awesome-skills.staging-*/
