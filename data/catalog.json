@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1465,
+  "total": 1468,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -14058,6 +14058,37 @@
       "path": "skills/fixing-motion-performance/SKILL.md"
     },
     {
+      "id": "flowhunt-skill",
+      "name": "flowhunt-skill",
+      "description": "Automation discovery audit skill. Walks through a 5-question workflow intake, then audits Gmail/Calendar/Slack/task trackers to identify automation opportunities. Use when a user wants to discover what processes in their business can be automated.",
+      "category": "business",
+      "tags": [
+        "automation",
+        "discovery",
+        "audit",
+        "gmail",
+        "calendar",
+        "slack",
+        "productivity",
+        "workflow"
+      ],
+      "triggers": [
+        "automation",
+        "discovery",
+        "audit",
+        "gmail",
+        "calendar",
+        "slack",
+        "productivity",
+        "workflow",
+        "flowhunt",
+        "skill",
+        "walks",
+        "through"
+      ],
+      "path": "skills/flowhunt-skill/SKILL.md"
+    },
+    {
       "id": "flutter-expert",
       "name": "flutter-expert",
       "description": "Master Flutter development with Dart 3, advanced widgets, and multi-platform deployment.",
@@ -21290,6 +21321,31 @@
         "styling"
       ],
       "path": "skills/mermaid-expert/SKILL.md"
+    },
+    {
+      "id": "mesh-memory",
+      "name": "mesh-memory",
+      "description": "Self-hosted semantic memory for AI agents via MCP. Save worklogs, decisions, and notes, then recall them across sessions by meaning, not keyword. Postgres + pgvector with auto-tagging.",
+      "category": "infrastructure",
+      "tags": [
+        "mesh",
+        "memory"
+      ],
+      "triggers": [
+        "mesh",
+        "memory",
+        "self",
+        "hosted",
+        "semantic",
+        "ai",
+        "agents",
+        "via",
+        "mcp",
+        "save",
+        "worklogs",
+        "decisions"
+      ],
+      "path": "skills/mesh-memory/SKILL.md"
     },
     {
       "id": "metasploit-framework",
@@ -30580,6 +30636,42 @@
         "invoke"
       ],
       "path": "skills/social-proof-architect/SKILL.md"
+    },
+    {
+      "id": "socialclaw",
+      "name": "socialclaw",
+      "description": "Agent-first social media publishing skill — schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key.",
+      "category": "development",
+      "tags": [
+        "social-media",
+        "publishing",
+        "scheduling",
+        "marketing",
+        "twitter",
+        "linkedin",
+        "instagram",
+        "tiktok",
+        "discord",
+        "telegram",
+        "reddit",
+        "wordpress",
+        "pinterest"
+      ],
+      "triggers": [
+        "social-media",
+        "publishing",
+        "scheduling",
+        "marketing",
+        "twitter",
+        "linkedin",
+        "instagram",
+        "tiktok",
+        "discord",
+        "telegram",
+        "reddit",
+        "wordpress"
+      ],
+      "path": "skills/socialclaw/SKILL.md"
     },
     {
       "id": "software-architecture",
