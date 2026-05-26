@@ -1,6 +1,6 @@
 ---
 name: sendblue-cli
-description: "Send iMessage and SMS from the shell via the @sendblue/cli npm package — outbound sends, contact management, account setup, and AI Agent plan upgrade with no API client or webhook server required."
+description: "Send iMessage and SMS from the shell via the @sendblue/cli npm package — outbound sends, contact management, and account setup with no API client or webhook server required."
 category: api-integration
 risk: safe
 source: community
@@ -65,7 +65,7 @@ Phone numbers must be E.164 (`+` + country code + digits, no spaces or dashes).
 
 ### Step 4: Manage contacts and plan
 
-On the free plan, **a contact must text your Sendblue number once before outbound sends to that contact will work**. After `sendblue setup ... --contact +15551234567`, have that contact send any text to the printed Sendblue number, then run `sendblue contacts` to confirm verification. The AI Agent plan (`sendblue upgrade`) removes this requirement and gives the account a dedicated number.
+On the free plan, **a contact must text your Sendblue number once before outbound sends to that contact will work**. After `sendblue setup ... --contact +15551234567`, have that contact send any text to the printed Sendblue number, then run `sendblue contacts` to confirm verification.
 
 ## Command Reference
 
@@ -77,8 +77,7 @@ On the free plan, **a contact must text your Sendblue number once before outboun
 | `sendblue messages [--inbound\|--outbound] [-n <number>] [-l <count>]` | List recent messages |
 | `sendblue add-contact <number>` | Register a contact |
 | `sendblue contacts` | List contacts and their verification status |
-| `sendblue status` | Account/plan info; refreshes local creds after a Stripe upgrade |
-| `sendblue upgrade [--no-open] [--poll]` | Upgrade to the AI Agent plan (dedicated number) |
+| `sendblue status` | Account/plan info |
 | `sendblue whoami` | Show current credentials and verify validity |
 
 ## Examples
@@ -109,7 +108,6 @@ To text yourself at the end of every agent turn, register a `Stop` hook in `sett
 
 - ✅ **Use E.164 numbers everywhere.** `+15551234567`, never `5551234567` or `(555) 123-4567`.
 - ✅ **Run `sendblue whoami` before unattended batches** to fail fast on stale or missing creds.
-- ✅ **Use `sendblue upgrade --poll`** after a Stripe upgrade to refresh local creds before relying on the new dedicated number.
 - ✅ **Re-run `setup` as the same OS user** that owns `~/.sendblue/credentials.json`.
 - ❌ **Don't `sudo`** — it writes creds to root's home and the next non-sudo run won't see them.
 - ❌ **Don't embed creds in env vars** when the CLI already reads them from the per-user credentials file.
@@ -118,7 +116,7 @@ To text yourself at the end of every agent turn, register a `Stop` hook in `sett
 
 - Outbound-first: there is no built-in webhook server for inbound. Use [[sendblue-api]] webhooks for full inbound handling.
 - The CLI does not expose send styles/effects, reactions, group messages, status callbacks, media uploads, or the contacts API beyond basic CRUD. Reach for the HTTP API for those.
-- Free-plan accounts require recipient verification before outbound sends succeed. The AI Agent plan removes this.
+- Free-plan accounts require recipient verification before outbound sends succeed.
 
 ## Security & Safety Notes
 
@@ -130,9 +128,8 @@ To text yourself at the end of every agent turn, register a `Stop` hook in `sett
 ## Common Pitfalls
 
 - **E.164 only.** `5551234567` or `(555) 123-4567` will fail — always `+15551234567`.
-- **Free-plan unverified contacts.** Outbound to a contact that hasn't texted in first returns an error. Either have them text in, or `sendblue upgrade` to the AI Agent plan.
+- **Free-plan unverified contacts.** Outbound to a contact that hasn't texted in first returns an error — have them text your Sendblue number once, then confirm with `sendblue contacts`.
 - **Two-step setup in non-interactive mode.** `--email` alone only sends the code; you must run a second invocation with `--code` and the rest of the flags to finish.
-- **Setup polls after `upgrade`.** Stripe Checkout provisioning is async. Use `sendblue upgrade --poll` (or `sendblue status` afterward) to refresh local creds with the new dedicated number before sending.
 - **Credentials are per-user.** `~/.sendblue/credentials.json` is owner-only (`600`). Don't `sudo` and pollute root's home — re-running as the same user that ran `setup` is what works.
 
 ## Related Skills
