@@ -77,10 +77,14 @@ If the user asks for "notify me when done" on a short task, do the obvious one-s
 
 For a single task, append the send to the command. This is the default — no config changes, no surprise behavior later.
 
+Branch on the task's exit status with an `if`/`else`. Do **not** use a `task && send-success || send-failure` chain: if the task succeeds but the success-send itself returns non-zero, the `||` fires the failure message — so the user sees ❌ even though the task completed. The `if`/`else` keeps the outcome tied solely to the task.
+
 ```bash
-long_running_thing && \
-  npx @sendblue/cli send +15551234567 "✅ done: $(date +%H:%M)" || \
+if long_running_thing; then
+  npx @sendblue/cli send +15551234567 "✅ done: $(date +%H:%M)"
+else
   npx @sendblue/cli send +15551234567 "❌ failed: $(date +%H:%M)"
+fi
 ```
 
 Or, when the result is interesting, include a one-line summary:
