@@ -12726,6 +12726,28 @@
     }
   },
   {
+    "id": "flowhunt-skill",
+    "path": "skills/flowhunt-skill",
+    "category": "automation",
+    "name": "flowhunt-skill",
+    "description": "Automation discovery audit skill. Walks through a 5-question workflow intake, then audits Gmail/Calendar/Slack/task trackers to identify automation opportunities. Use when a user wants to discover what processes in their business can be automated.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "flutter-expert",
     "path": "skills/flutter-expert",
     "category": "mobile",
@@ -13680,6 +13702,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "geminiignore-finops",
+    "path": "skills/geminiignore-finops",
+    "category": "context-optimization",
+    "name": "geminiignore-finops",
+    "description": "Configure and optimize .geminiignore files for AI context window efficiency and token cost reduction (FinOps).",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-25",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18884,6 +18928,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "mesh-memory",
+    "path": "skills/mesh-memory",
+    "category": "ai-ml",
+    "name": "mesh-memory",
+    "description": "Self-hosted semantic memory for AI agents via MCP. Save worklogs, decisions, and notes, then recall them across sessions by meaning, not keyword. Postgres + pgvector with auto-tagging.",
+    "risk": "safe",
+    "source": "dklymentiev/mesh-memory (MIT)",
+    "date_added": "2026-05-23",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -27135,6 +27201,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "socialclaw",
+    "path": "skills/socialclaw",
+    "category": "marketing",
+    "name": "socialclaw",
+    "description": "Agent-first social media publishing skill \u2014 schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-25",
     "plugin": {
       "targets": {
         "codex": "supported",

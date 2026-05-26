@@ -10896,6 +10896,25 @@
       "runtime_files": []
     },
     {
+      "id": "flowhunt-skill",
+      "path": "skills/flowhunt-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "flutter-expert",
       "path": "skills/flutter-expert",
       "targets": {
@@ -11848,6 +11867,25 @@
     {
       "id": "gemini-api-integration",
       "path": "skills/gemini-api-integration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "geminiignore-finops",
+      "path": "skills/geminiignore-finops",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -16434,6 +16472,25 @@
     {
       "id": "mermaid-expert",
       "path": "skills/mermaid-expert",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "mesh-memory",
+      "path": "skills/mesh-memory",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -23642,6 +23699,25 @@
       "runtime_files": []
     },
     {
+      "id": "socialclaw",
+      "path": "skills/socialclaw",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "software-architecture",
       "path": "skills/software-architecture",
       "targets": {
@@ -28039,10 +28115,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1465,
+    "total_skills": 1469,
     "supported": {
-      "codex": 1429,
-      "claude": 1444
+      "codex": 1433,
+      "claude": 1448
     },
     "blocked": {
       "codex": 36,
