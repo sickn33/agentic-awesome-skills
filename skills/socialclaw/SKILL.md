@@ -10,6 +10,8 @@ date_added: "2026-05-25"
 author: ndesv21
 tags: [social-media, publishing, scheduling, marketing, twitter, linkedin, instagram, tiktok, discord, telegram, reddit, wordpress, pinterest]
 tools: [claude]
+license: "MIT"
+license_source: "https://github.com/ndesv21/socialclaw/blob/main/LICENSE"
 ---
 
 # SocialClaw — Social Media Publisher
@@ -17,6 +19,12 @@ tools: [claude]
 ## Overview
 
 SocialClaw is an agent-first social media publishing skill that lets you schedule and publish posts across 13 platforms using a single workspace API key. No per-platform OAuth setup required — one key covers everything.
+
+## When to Use
+
+- Use when the user wants to plan, schedule, or publish a social media campaign across multiple platforms.
+- Use when the user has a SocialClaw workspace API key and wants one workflow for X, LinkedIn, Instagram, Facebook, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, or Pinterest.
+- Use when the user asks for social publishing automation that can validate schedules, attach media, and retrieve post performance metrics.
 
 ## Supported Platforms
 
@@ -91,3 +99,9 @@ Create a campaign for our product launch:
 
 GitHub: [ndesv21/socialclaw](https://github.com/ndesv21/socialclaw)
 Website: [getsocialclaw.com](https://getsocialclaw.com)
+
+## Limitations
+
+- Requires a valid SocialClaw workspace API key; do not attempt publishing without explicit user-provided credentials.
+- Platform availability, rate limits, analytics fields, and scheduling behavior depend on the upstream SocialClaw service.
+- This skill describes the publishing workflow; it does not replace platform-specific compliance, brand review, or legal approval before posting.
