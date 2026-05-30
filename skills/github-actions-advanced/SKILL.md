@@ -1,14 +1,9 @@
 ---
 name: github-actions-advanced
 description: >
-  Expert guidance for GitHub Actions CI/CD workflows — use this skill whenever
-  the user mentions GitHub Actions, workflows, pipelines, .github/workflows,
-  YAML CI/CD, runners, jobs, steps, actions, or wants to automate builds, tests,
-  deployments, or releases via GitHub. Covers reusable workflows, matrix builds,
-  self-hosted runners, OIDC authentication, caching strategies, composite actions,
-  workflow security hardening, environments, and secrets management. Trigger even
-  for vague requests like "set up CI for my repo", "automate my deployments on
-  GitHub", or "my GitHub pipeline is failing".
+  Design, debug, and harden GitHub Actions CI/CD workflows, including reusable
+  workflows, matrix builds, self-hosted runners, OIDC authentication, caching,
+  environments, secrets, and release automation.
 category: devops
 risk: safe
 source: community
