@@ -1,6 +1,6 @@
 ---
 name: vibe-code-cleanup
-description: "Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Use this skill whenever a user has a messy, AI-generated, or vibe-coded codebase and wants to clean up dead imports, remove unused files, fix broken references, standardize helpers, refactor without breaking routes or APIs, harden environment config, or prepare a codebase for production deployment. Also triggers on: clean up my app, remove dead code, production refactor, harden my codebase, remove unused code, fix broken imports, safe cleanup, or production-ready cleanup."
+description: "Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, broken references, and standardizes helpers without breaking routes or APIs."
 category: fullstack
 risk: safe
 source: self

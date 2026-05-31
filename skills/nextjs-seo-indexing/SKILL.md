@@ -1,6 +1,6 @@
 ---
 name: nextjs-seo-indexing
-description: "Fix SEO indexing issues, crawl budget problems, and Search Console coverage errors for Next.js apps. Use this skill whenever pages are crawled but not indexed, have duplicate canonicals, are accidentally noindexed, have sitemap errors, or Googlebot cannot find important pages. Triggers on: Search Console coverage issues, pages not indexed, crawl budget, fix my sitemap, canonical tag wrong, noindex fix, static rendering for SEO, or pages discovered but not indexed."
+description: "Fix SEO indexing issues, crawl budget problems, and Search Console coverage errors for Next.js apps. Covers canonical tags, noindex audits, sitemap health, static rendering, and internal linking."
 category: seo
 risk: safe
 source: self

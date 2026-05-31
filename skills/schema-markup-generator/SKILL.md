@@ -1,6 +1,6 @@
 ---
 name: schema-markup-generator
-description: "Generate and implement structured data JSON-LD schema markup for web apps, tool pages, blogs, FAQs, and SaaS sites to improve Google rich results and AI Overview appearances. Use this skill whenever a user wants to add schema markup, generate JSON-LD, get rich results in Google, add FAQ schema, HowTo schema, SoftwareApplication schema, BreadcrumbList, Article schema, or prepare for AI Overviews. Triggers on: schema markup, JSON-LD, structured data, rich results, rich snippets."
+description: "Generate and implement JSON-LD structured data for web apps, tool pages, blogs, FAQs, and SaaS sites. Supports WebSite, SoftwareApplication, BlogPosting, FAQPage, HowTo, BreadcrumbList, and Organization schemas."
 category: seo
 risk: safe
 source: self

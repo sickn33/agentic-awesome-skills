@@ -1,6 +1,6 @@
 ---
 name: vibecode-production-qa-validator
-description: "End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps before going live or shipping a major update. Use this skill to verify a build is production-safe, run pre-launch QA, check for regressions, validate a deployment, ensure no routes are broken, or confirm SEO tags are in HTML. Triggers on: pre-launch checklist, production QA, validate my build, build verification, pre-deploy checks, production-ready, launch checklist, or definition of done."
+description: "End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps before going live or shipping a major update. Covers TypeScript, linting, tests, build, SEO tags, route regression, and sitemap validation."
 category: devops
 risk: safe
 source: self

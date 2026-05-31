@@ -1,6 +1,6 @@
 ---
 name: social-metadata-hardening
-description: "Fix social sharing previews so URLs render as rich cards instead of plain links on Facebook, LinkedIn, X/Twitter, WhatsApp, Telegram, Slack, and Discord. Use this skill whenever: shared links show no preview, OG image is broken or relative, Twitter card shows summary instead of large image, or metadata renders only after JavaScript. Triggers on: social sharing preview broken, og image not showing, fix twitter card, open graph not working, fix og:image, or Discord embed broken."
+description: "Fix social sharing previews so URLs render as rich cards on Facebook, LinkedIn, X/Twitter, WhatsApp, Telegram, Slack, and Discord. Covers OG tags, Twitter cards, absolute image URLs, and metadata debugging."
 category: seo
 risk: safe
 source: self
