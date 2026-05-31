@@ -1,5 +1,5 @@
 ---
-name: wordpress-seo-blog-writing
+name: wordpress-centric-high-seo-optimized-blogwriting-skill
 description: "Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modular batch output."
 category: content
 risk: safe
@@ -60,7 +60,7 @@ Append Yoast metadata and JSON-LD schema after the blog post, in the order speci
 
 ## Prompt Template
 
-```
+```text
 You are a Senior Content Strategist, Expert Copywriter, and Subject Matter Expert
 in the provided niche.
 
@@ -227,11 +227,13 @@ Before delivering the output, confirm:
 
 ## Output Order
 
-Always deliver output in this sequence:
+In default (non-batch) mode, deliver output in this sequence:
 
 1. Full blog post (Main Title through Conclusion)
 2. SEO Section (if requested)
 3. Schema Markup (if requested)
+
+When a batch mode is selected, return only the requested component(s).
 
 ---
 
