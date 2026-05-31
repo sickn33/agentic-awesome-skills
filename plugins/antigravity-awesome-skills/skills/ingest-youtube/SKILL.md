@@ -9,6 +9,11 @@ date_added: "2026-05-09"
 license: MIT
 license_source: "https://github.com/adelaidasofia/ai-brain-starter/blob/main/LICENSE"
 upstream: "https://github.com/adelaidasofia/ai-brain-starter/tree/main/skills/ingest-youtube"
+plugin:
+  setup:
+    type: manual
+    summary: "Install yt-dlp locally before running ingest.py; the script only accepts http(s) YouTube video URLs and writes markdown into the selected vault."
+    docs: "SKILL.md"
 ---
 
 # ingest-youtube — YouTube-to-vault connector
@@ -34,7 +39,7 @@ Do NOT use for:
 
 1. Parse the input as one YouTube video URL.
 2. Verify `yt-dlp` is installed. If not, the script exits with install instructions: `brew install yt-dlp` (macOS) or `pip3 install --user yt-dlp`.
-3. Call `yt-dlp --list-subs <url>` to enumerate available subtitles.
+3. Validate the URL as a single http(s) YouTube video and call `yt-dlp --ignore-config --list-subs -- <url>` to enumerate available subtitles.
 4. Subtitle priority: manual subs > auto-generated captions. Manual subs preserve creator-provided punctuation and speaker labels; auto-gen is uppercase + no punctuation.
 5. Download the highest-priority subtitle as VTT via `yt-dlp --write-sub --sub-lang <lang> --skip-download`. Default language preference: `en,es` (English first, Spanish second).
 6. Strip VTT timing markers and merge into clean prose paragraphs. Deduplicate repeated lines (auto-generated VTTs are line-doubled). Preserve speaker labels if the source had them.

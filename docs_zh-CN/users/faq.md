@@ -107,7 +107,7 @@ _始终检查风险标签并审查代码。_
 这取决于你如何安装：
 
 - **使用安装程序 CLI (`npx antigravity-awesome-skills`)**：
-  默认安装目标是 Antigravity 全局库的 `~/.gemini/antigravity/skills/`。
+  默认安装目标是 Antigravity 全局库的 `~/.agents/skills/`。
 - **使用特定于工具的标志**：
   使用 `--claude`、`--cursor`、`--gemini`、`--codex`、`--kiro` 或 `--antigravity` 自动定位匹配的工具路径。
 - **使用手动克隆或自定义工作区路径**：
@@ -169,7 +169,7 @@ npx antigravity-awesome-skills
 
 - [agent-overload-recovery.md](agent-overload-recovery.md)
 
-该指南展示了如何从此仓库的克隆副本运行 `scripts/activate-skills.sh`，以便只有你需要的捆绑包或技能 ID 在 `~/.gemini/antigravity/skills` 中保持活动状态。
+该指南展示了如何从此仓库的克隆副本运行 `scripts/activate-skills.sh`，以便只有你需要的捆绑包或技能 ID 在 `~/.agents/skills` 中保持活动状态。
 
 ### Gemini CLI 在几轮之后挂起或说"This is taking a bit longer, we're still on it"。我该怎么办？
 

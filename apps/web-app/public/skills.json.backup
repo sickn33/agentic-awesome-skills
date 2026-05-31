@@ -1332,9 +1332,9 @@
   {
     "id": "andrej-karpathy",
     "path": "skills/andrej-karpathy",
-    "category": "ai-ml",
+    "category": "uncategorized",
     "name": "andrej-karpathy",
-    "description": "Agente que simula Andrej Karpathy \u2014 ex-Director of AI da Tesla, co-fundador da OpenAI, fundador da Eureka Labs, e o maior educador de deep learning do mundo.",
+    "description": "Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -6022,6 +6022,30 @@
     }
   },
   {
+    "id": "bilig-workpaper",
+    "path": "skills/bilig-workpaper",
+    "category": "web-development",
+    "name": "bilig-workpaper",
+    "description": "Use formula-backed WorkPaper JSON and MCP tools for agent spreadsheet tasks without driving Excel or a browser UI.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-21",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    }
+  },
+  {
     "id": "bill-gates",
     "path": "skills/bill-gates",
     "category": "uncategorized",
@@ -6562,6 +6586,28 @@
     "risk": "none",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "bumblebee",
+    "path": "skills/bumblebee",
+    "category": "security",
+    "name": "bumblebee",
+    "description": "Run Bumblebee supply-chain inventory and exposure scans on macOS/Linux to detect compromised packages, extensions, and MCP host configs.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-27",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8366,6 +8412,28 @@
     }
   },
   {
+    "id": "complexity-cuts",
+    "path": "skills/complexity-cuts",
+    "category": "uncategorized",
+    "name": "complexity-cuts",
+    "description": "Lower Big-O on existing code via a one-transformation-at-a-time playbook with verify-revert-stop. For new code use lemmaly; for math-level wins escalate to mathguard.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "comprehensive-review-full-review",
     "path": "skills/comprehensive-review-full-review",
     "category": "code-quality",
@@ -8660,6 +8728,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "container-security-hardening",
+    "path": "skills/container-security-hardening",
+    "category": "security",
+    "name": "container-security-hardening",
+    "description": "Harden Docker/container images and runtime deployments with secure base images, non-root users, CVE scanning, SBOM/signing, seccomp/AppArmor, and Kubernetes pod security controls. Use for Dockerfile security reviews, container CVEs, image scanning, distroless images, or production hardening.\n",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-30",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10148,6 +10238,28 @@
     }
   },
   {
+    "id": "decision-navigator",
+    "path": "skills/decision-navigator",
+    "category": "planning",
+    "name": "decision-navigator",
+    "description": "Guide stuck or overwhelmed users through targeted branching questions until they reach concrete next steps.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "deep-research",
     "path": "skills/deep-research",
     "category": "ai-ml",
@@ -11194,15 +11306,17 @@
     "date_added": "2026-05-10",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "manual",
         "summary": "Install the ejentum-mcp MCP server (`npx -y ejentum-mcp`) and provide an EJENTUM_API_KEY env var (free tier: 100 calls, no card, at https://ejentum.com/pricing). Add the server to your client's mcpServers config (Claude Code, Cursor, Cline, Windsurf, Codex CLI, Gemini CLI, Antigravity, or VS Code Copilot Chat).",
         "docs": "https://github.com/ejentum/ejentum-mcp#installation"
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {
@@ -12702,6 +12816,28 @@
     }
   },
   {
+    "id": "flowhunt-skill",
+    "path": "skills/flowhunt-skill",
+    "category": "automation",
+    "name": "flowhunt-skill",
+    "description": "Automation discovery audit skill. Walks through a 5-question workflow intake, then audits Gmail/Calendar/Slack/task trackers to identify automation opportunities. Use when a user wants to discover what processes in their business can be automated.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "flutter-expert",
     "path": "skills/flutter-expert",
     "category": "mobile",
@@ -13670,6 +13806,28 @@
     }
   },
   {
+    "id": "geminiignore-finops",
+    "path": "skills/geminiignore-finops",
+    "category": "context-optimization",
+    "name": "geminiignore-finops",
+    "description": "Configure and optimize .geminiignore files for AI context window efficiency and token cost reduction (FinOps).",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "geo-fundamentals",
     "path": "skills/geo-fundamentals",
     "category": "marketing",
@@ -13920,6 +14078,28 @@
     "risk": "safe",
     "source": "Dimillian/Skills (MIT)",
     "date_added": "2026-03-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "github-actions-advanced",
+    "path": "skills/github-actions-advanced",
+    "category": "devops",
+    "name": "github-actions-advanced",
+    "description": "Design, debug, and harden GitHub Actions CI/CD workflows, including reusable workflows, matrix builds, self-hosted runners, OIDC authentication, caching, environments, secrets, and release automation.\n",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-30",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -15718,6 +15898,28 @@
     }
   },
   {
+    "id": "ii-commons",
+    "path": "skills/ii-commons",
+    "category": "research",
+    "name": "ii-commons",
+    "description": "Deterministic search across arXiv, PubMed/PMC, and US policy corpora with daily freshness cutoffs.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ilya-sutskever",
     "path": "skills/ilya-sutskever",
     "category": "ai-ml",
@@ -15974,9 +16176,9 @@
         "claude": "supported"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Install yt-dlp locally before running ingest.py; the script only accepts http(s) YouTube video URLs and writes markdown into the selected vault.",
+        "docs": "SKILL.md"
       },
       "reasons": []
     }
@@ -16166,6 +16368,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "invariant-guard",
+    "path": "skills/invariant-guard",
+    "category": "uncategorized",
+    "name": "invariant-guard",
+    "description": "Correctness-first: forces writing the function contract, loop invariant, termination argument, and edge cases BEFORE code. Catches Boyer-Moore, leftmost binary search, QuickSelect traps.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-26",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17348,6 +17572,28 @@
     }
   },
   {
+    "id": "lemmaly",
+    "path": "skills/lemmaly",
+    "category": "uncategorized",
+    "name": "lemmaly",
+    "description": "Algorithm-first discipline: state Big-O, data structure, and algorithm family BEFORE writing loops, queries, or recursion. Catches O(n^2), N+1, and brute-force defaults.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "lex",
     "path": "skills/lex",
     "category": "legal",
@@ -17942,6 +18188,30 @@
       },
       "reasons": [
         "target_specific_home_path"
+      ]
+    }
+  },
+  {
+    "id": "longbridge",
+    "path": "skills/longbridge",
+    "category": "finance",
+    "name": "longbridge",
+    "description": "125+ agent skills for Longbridge Securities \u2014 real-time quotes, charts, fundamentals, portfolio analysis, options, and more for HK/US/A-share/SG markets. Trilingual: Simplified Chinese, Traditional Chinese, English.",
+    "risk": "critical",
+    "source": "official",
+    "date_added": "2026-05-29",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
       ]
     }
   },
@@ -18632,6 +18902,28 @@
     }
   },
   {
+    "id": "mathguard",
+    "path": "skills/mathguard",
+    "category": "uncategorized",
+    "name": "mathguard",
+    "description": "Math-heavy escalation for n >= 10^6 \u2014 Bloom, HyperLogLog, Count-Min, MinHash/LSH, FFT, JL projection, sweep line. Use when classical O(n log n) is the floor and approximate or math wins.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "matplotlib",
     "path": "skills/matplotlib",
     "category": "science",
@@ -18830,6 +19122,30 @@
     }
   },
   {
+    "id": "mercury-mcp",
+    "path": "skills/mercury-mcp",
+    "category": "uncategorized",
+    "name": "mercury-mcp",
+    "description": "Cheatsheet for the Mercury (proton) MCP tools. Use when connected to the Mercury MCP server to look up which mercury_* tool to call for messaging teammates, threads, tasks, automations, or admin team-graph edits.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-19",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    }
+  },
+  {
     "id": "mermaid-expert",
     "path": "skills/mermaid-expert",
     "category": "content",
@@ -18838,6 +19154,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "mesh-memory",
+    "path": "skills/mesh-memory",
+    "category": "ai-ml",
+    "name": "mesh-memory",
+    "description": "Self-hosted semantic memory for AI agents via MCP. Save worklogs, decisions, and notes, then recall them across sessions by meaning, not keyword. Postgres + pgvector with auto-tagging.",
+    "risk": "safe",
+    "source": "dklymentiev/mesh-memory (MIT)",
+    "date_added": "2026-05-23",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20115,20 +20453,22 @@
     "category": "research",
     "name": "news-sentiment-engine",
     "description": "Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-13",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {
@@ -21697,6 +22037,28 @@
     }
   },
   {
+    "id": "pdf-conversion-router",
+    "path": "skills/pdf-conversion-router",
+    "category": "uncategorized",
+    "name": "pdf-conversion-router",
+    "description": "Use when converting a PDF into another format such as Markdown, HTML, text, JSON, DOCX, or structured notes and the agent must choose the best extraction route, settings, and cleanup strategy for maximum fidelity and readability.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "pdf-official",
     "path": "skills/pdf-official",
     "category": "document-processing",
@@ -21903,6 +22265,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "photopea-embedded-editor",
+    "path": "skills/photopea-embedded-editor",
+    "category": "uncategorized",
+    "name": "photopea-embedded-editor",
+    "description": "Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and the full Photoshop-compatible API.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-20",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23789,6 +24173,28 @@
     }
   },
   {
+    "id": "recsys-pipeline-architect",
+    "path": "skills/recsys-pipeline-architect",
+    "category": "data-ai",
+    "name": "recsys-pipeline-architect",
+    "description": "Designs composable recommendation, ranking, and feed pipelines using the six-stage Source\u2192Hydrator\u2192Filter\u2192Scorer\u2192Selector\u2192SideEffect framework",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "recursive-context-pruning-token-budgeting",
     "path": "skills/recursive-context-pruning-token-budgeting",
     "category": "prompt-engineering",
@@ -24303,6 +24709,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "runaway-guard",
+    "path": "skills/runaway-guard",
+    "category": "ai-ml",
+    "name": "runaway-guard",
+    "description": "Cost-safety discipline for paid AI / inference APIs: treat $-cost as a third complexity dimension alongside time and space. Forces a written per-run $-cap, per-day $-cap, max-iterations bound, concurrency limit, and a matching provider-dashboard hard cap BEFORE any call site is written.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-28",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -25172,6 +25600,78 @@
         "docs": null
       },
       "reasons": []
+    }
+  },
+  {
+    "id": "sendblue-api",
+    "path": "skills/sendblue/sendblue-api",
+    "category": "api-integration",
+    "name": "sendblue-api",
+    "description": "Send and receive iMessage, SMS, and RCS from application code via the Sendblue HTTP API \u2014 text, media, group messages, send styles, reactions, typing indicators, status callbacks, and inbound webhooks.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-22",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    }
+  },
+  {
+    "id": "sendblue-cli",
+    "path": "skills/sendblue/sendblue-cli",
+    "category": "api-integration",
+    "name": "sendblue-cli",
+    "description": "Send iMessage and SMS from the shell via the @sendblue/cli npm package \u2014 outbound sends, contact management, and account setup with no API client or webhook server required.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-22",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    }
+  },
+  {
+    "id": "sendblue-notify",
+    "path": "skills/sendblue/sendblue-notify",
+    "category": "automation",
+    "name": "sendblue-notify",
+    "description": "Text the user's phone when a long-running task, agent turn, or scheduled job finishes \u2014 via @sendblue/cli for outbound, optionally wired to a Claude Code Stop hook for automatic fire.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-22",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {
@@ -27035,6 +27535,30 @@
     }
   },
   {
+    "id": "socialclaw",
+    "path": "skills/socialclaw",
+    "category": "marketing",
+    "name": "socialclaw",
+    "description": "Agent-first social media publishing skill \u2014 schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-25",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    }
+  },
+  {
     "id": "software-architecture",
     "path": "skills/software-architecture",
     "category": "architecture",
@@ -27727,6 +28251,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "subagent-orchestrator",
+    "path": "skills/subagent-orchestrator",
+    "category": "uncategorized",
+    "name": "subagent-orchestrator",
+    "description": "Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -28797,6 +29343,30 @@
     }
   },
   {
+    "id": "textme",
+    "path": "skills/sendblue/textme",
+    "category": "automation",
+    "name": "textme",
+    "description": "Text Claude from your phone \u2014 set up the njerschow/textme daemon so inbound iMessages drive a Claude Code session on your laptop, with voice notes, image input, code execution, and a phone-number whitelist.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-05-26",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    }
+  },
+  {
     "id": "theme-factory",
     "path": "skills/theme-factory",
     "category": "design",
@@ -29176,20 +29746,22 @@
     "category": "developer-tools",
     "name": "tokenwise",
     "description": "Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper tiers before you trust the savings.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-12",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {
@@ -31710,20 +32282,22 @@
     "category": "data",
     "name": "x-twitter-scraper",
     "description": "X/Twitter automation skill for tweet search, follower export, posting, DMs, webhooks, MCP, SDKs, Hermes Tweet, and TweetClaw.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-28",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {

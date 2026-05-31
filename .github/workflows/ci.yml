@@ -156,6 +156,7 @@ jobs:
         run: |
           npm run chain
           npm run catalog
+          npm run sync:web-assets
 
       - name: Report generated drift
         run: |

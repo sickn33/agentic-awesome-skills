@@ -14,6 +14,10 @@ function copyFolderSync(from, to, rootDir = from) {
     if (!fs.existsSync(to)) fs.mkdirSync(to, { recursive: true });
 
     fs.readdirSync(from).forEach(element => {
+        if (element.startsWith('.')) {
+            return;
+        }
+
         const srcPath = path.join(from, element);
         const destPath = path.join(to, element);
         const stat = fs.lstatSync(srcPath);

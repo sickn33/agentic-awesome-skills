@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import pathlib
 import sys
 import tempfile
@@ -98,6 +99,61 @@ class GenerateIndexCategoryTests(unittest.TestCase):
             self.assertEqual(categories["explicit-skill"], "custom")
             self.assertEqual(categories["nested-skill"], "bundles")
             self.assertEqual(categories["playwright-skill"], "test-automation")
+
+    def test_generate_index_rejects_duplicate_route_ids(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = pathlib.Path(temp_dir)
+            skills_dir = base / "skills"
+            output_file = base / "skills_index.json"
+
+            top_level = skills_dir / "base"
+            top_level.mkdir(parents=True)
+            (top_level / "SKILL.md").write_text(
+                "---\nname: base\ndescription: Top level\n---\nbody\n",
+                encoding="utf-8",
+            )
+
+            nested = skills_dir / "libreoffice" / "base"
+            nested.mkdir(parents=True)
+            (nested / "SKILL.md").write_text(
+                "---\nname: libreoffice-base\ndescription: Nested\n---\nbody\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "Duplicate skill ids"):
+                generate_index.generate_index(str(skills_dir), str(output_file))
+
+    def test_canonical_index_mirror_writes_exact_data_copy(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = pathlib.Path(temp_dir)
+            output_file = base / "skills_index.json"
+            output_file.write_text('[{"id": "demo"}]\n', encoding="utf-8")
+            original_find_repo_root = generate_index.find_repo_root
+            try:
+                generate_index.find_repo_root = lambda _path: base
+                mirrored_path = generate_index.mirror_canonical_index(output_file)
+            finally:
+                generate_index.find_repo_root = original_find_repo_root
+
+            self.assertEqual(mirrored_path, base / "data" / "skills_index.json")
+            self.assertEqual(mirrored_path.read_text(encoding="utf-8"), output_file.read_text(encoding="utf-8"))
+
+    def test_schema_required_fields_match_generated_manifest_entries(self):
+        schema_path = REPO_ROOT / "schemas" / "skills-index.v1.schema.json"
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        required_fields = set(schema["items"]["required"])
+        expected_fields = {
+            "id",
+            "path",
+            "category",
+            "name",
+            "description",
+            "risk",
+            "source",
+            "date_added",
+        }
+
+        self.assertEqual(required_fields, expected_fields)
 
     def test_generate_index_preserves_explicit_specialized_category(self):
         with tempfile.TemporaryDirectory() as temp_dir:

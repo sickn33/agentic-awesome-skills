@@ -26,7 +26,7 @@ function parseCliArgs(argv) {
   const args = {
     sitemapPath: 'dist/sitemap.xml',
     robotsPath: 'dist/robots.txt',
-    manifestPath: 'dist/manifest.webmanifest',
+    manifestPath: 'dist/site.webmanifest',
     indexPath: 'dist/index.html',
     distDir: 'dist',
     minSkillUrls: String(defaultMinSkillUrls),
@@ -39,7 +39,7 @@ function parseCliArgs(argv) {
       if (value) {
         args.sitemapPath = path.join(value, 'sitemap.xml');
         args.robotsPath = path.join(value, 'robots.txt');
-        args.manifestPath = path.join(value, 'manifest.webmanifest');
+        args.manifestPath = path.join(value, 'site.webmanifest');
         args.indexPath = path.join(value, 'index.html');
         args.distDir = value;
         i += 1;

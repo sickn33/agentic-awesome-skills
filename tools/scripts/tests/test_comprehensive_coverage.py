@@ -21,6 +21,34 @@ KNOWN_UPSTREAM_COLLISIONS = {
         ".github/plugins/azure-sdk-typescript/skills/applicationinsights-web-ts",
         ".github/skills/applicationinsights-web-ts",
     },
+    "azure-cosmos-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-cosmos-rust",
+        ".github/skills/azure-cosmos-rust",
+    },
+    "azure-eventhub-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-eventhub-rust",
+        ".github/skills/azure-eventhub-rust",
+    },
+    "azure-identity-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-identity-rust",
+        ".github/skills/azure-identity-rust",
+    },
+    "azure-keyvault-certificates-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-keyvault-certificates-rust",
+        ".github/skills/azure-keyvault-certificates-rust",
+    },
+    "azure-keyvault-keys-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-keyvault-keys-rust",
+        ".github/skills/azure-keyvault-keys-rust",
+    },
+    "azure-keyvault-secrets-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-keyvault-secrets-rust",
+        ".github/skills/azure-keyvault-secrets-rust",
+    },
+    "azure-storage-blob-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-storage-blob-rust",
+        ".github/skills/azure-storage-blob-rust",
+    },
     "entra-agent-id": {
         ".github/plugins/azure-skills/skills/entra-agent-id",
         ".github/skills/entra-agent-id",

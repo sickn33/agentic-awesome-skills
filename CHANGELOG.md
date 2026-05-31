@@ -9,7 +9,275 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No unreleased changes yet._
+## [11.9.0] - 2026-05-30 - "Container, CI, Market, and Wallet Guard Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted community and official skill PRs from the current maintainer batch, adding container hardening, advanced GitHub Actions workflows, Longbridge market-data guidance, and paid-inference wallet guards.
+
+## New Skills
+
+- **container-security-hardening** - Docker/container image and runtime hardening for base images, CVE scanning, SBOM/signing, seccomp/AppArmor, and Kubernetes pod-security controls.
+- **github-actions-advanced** - production-grade GitHub Actions CI/CD design, debugging, reusable workflows, OIDC authentication, caching, environments, secrets, and release automation.
+- **longbridge** - official Longbridge Securities market-data workflow for quotes, charts, fundamentals, portfolios, options, and trilingual HK/US/A-share/SG market analysis.
+- **runaway-guard** - cost-safety discipline for paid AI/inference APIs with per-run, per-day, iteration, concurrency, and provider-dashboard wallet caps.
+
+## Improvements
+
+- Normalized incoming PR metadata, source credits, and security-sensitive install snippets before merge so maintainer CI stayed green.
+- Synced generated registry, catalog, compatibility, plugin mirror, documentation, and web assets for the expanded skill catalog.
+
+## Credits
+
+- **[@sahilaghara1911](https://github.com/sahilaghara1911)** for PR #632 (`container-security-hardening`) and PR #631 (`github-actions-advanced`).
+- **[@hogan-yuan](https://github.com/hogan-yuan)** and **[longbridge/skills](https://github.com/longbridge/skills)** for PR #630 (`longbridge`).
+- **[@morsechimwai](https://github.com/morsechimwai)** and **[morsechimwai/lemmaly](https://github.com/morsechimwai/lemmaly)** for PR #629 (`runaway-guard`).
+
+## [11.8.0] - 2026-05-27 - "Decision, Messaging, Algorithm, and Supply-Chain Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted community skill PRs from the current maintainer batch, adding decision support, Sendblue messaging workflows, algorithmic discipline playbooks, and a Bumblebee supply-chain inventory wrapper.
+
+## New Skills
+
+- **lemmaly** - gateway discipline for stating Big-O, data structure, and algorithm family before writing loops, queries, or recursion.
+- **mathguard** - large-input acceleration playbook for Bloom filters, HyperLogLog, Count-Min Sketch, FFT, LSH, and related techniques.
+- **invariant-guard** - correctness-first workflow for contracts, loop invariants, termination arguments, and edge cases.
+- **complexity-cuts** - corrective workflow for improving shipped code with poor Big-O one transformation at a time.
+- **sendblue-cli** - Sendblue CLI guidance for iMessage, SMS, and RCS workflows.
+- **sendblue-api** - Sendblue HTTP/JSON API guidance for application code.
+- **sendblue-notify** - notification patterns for texting a user when an agent task is done.
+- **textme** - local daemon workflow for bridging inbound iMessages into Claude Code sessions.
+- **bumblebee** - read-only supply-chain inventory and exposure scanning with Perplexity's Bumblebee CLI.
+- **decision-navigator** - targeted-question workflow for helping users gain clarity on decisions before choosing a path.
+
+## Improvements
+
+- Added a stdlib-only Bumblebee report renderer for local Markdown summaries from NDJSON scan output.
+- Synced generated registry, catalog, compatibility, plugin mirror, documentation, and web assets for the expanded skill catalog.
+
+## Credits
+
+- **[@morsechimwai](https://github.com/morsechimwai)** and **[morsechimwai/lemmaly](https://github.com/morsechimwai/lemmaly)** for PR #622 (`lemmaly`, `mathguard`, `invariant-guard`, `complexity-cuts`).
+- **[@AnthonyFirth](https://github.com/AnthonyFirth)** for PR #623 (`sendblue-cli`, `sendblue-api`, `sendblue-notify`, `textme`).
+- **[@stefan-kp](https://github.com/stefan-kp)**, **[perplexityai/bumblebee](https://github.com/perplexityai/bumblebee)**, and **[mycelos-ai/bumblebee-skill](https://github.com/mycelos-ai/bumblebee-skill)** for PR #625 (`bumblebee`).
+- **[@kavinduUdhara](https://github.com/kavinduUdhara)** for PR #627 (`decision-navigator`).
+
+## [11.7.0] - 2026-05-26 - "Community Skill Intake and Merge Hygiene"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the clean community skill PRs from the current maintainer batch, refreshes generated catalog/plugin/web assets to `1,470+` skills, and hardens batch merges so unwanted Claude co-author trailers are stripped from future squash commits.
+
+## New Skills
+
+- **mesh-memory** - structured memory mesh workflow for persistent agent context and recall.
+- **flowhunt-skill** - automation discovery audit for workflow intake, tool-by-tool review, and productivity opportunity prioritization.
+- **socialclaw** - social media campaign scheduling and publishing across major platforms from a single workspace API key.
+- **geminiignore-finops** - `.geminiignore` setup patterns for context-window efficiency and token cost reduction.
+- **ii-commons** - deterministic research retrieval across arXiv, PubMed/PMC, and supported US policy corpora.
+
+## Improvements
+
+- Synced generated registry, catalog, compatibility, plugin mirror, documentation, and web assets to the new `1,470+` skill count.
+- Updated the maintainer batch merge script to pass explicit squash commit subjects/bodies and remove Claude/Anthropic co-author trailers from future merge commits.
+
+## Credits
+
+- **[@dklymentiev](https://github.com/dklymentiev)** for PR #613 (`mesh-memory`).
+- **[@konradbachowski](https://github.com/konradbachowski)** and **[heyneuron/flowhunt-skill](https://github.com/heyneuron/flowhunt-skill)** for PR #614 (`flowhunt-skill`).
+- **[@ndesv21](https://github.com/ndesv21)** for PR #619 (`socialclaw`).
+- **[@iradoweck](https://github.com/iradoweck)** for PR #620 (`geminiignore-finops`).
+- **[@liujuanjuan1984](https://github.com/liujuanjuan1984)** and **[Intelligent-Internet/II-Commons-Skills](https://github.com/Intelligent-Internet/II-Commons-Skills)** for PR #621 (`ii-commons`).
+
+## [11.6.0] - 2026-05-23 - "Audit Hardening and Karpathy Guidelines"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release hardens the repository after a full audit pass, fixes issue #611 by syncing `andrej-karpathy` to English upstream guidelines, and improves release/security guardrails.
+
+## Security
+
+- Replaced executable pipe-to-shell install examples across canonical skills with package-manager or download-inspect-execute flows, and removed the obsolete allowlist comments.
+- Hardened the web-app refresh archive fallback by pre-validating tar/zip paths, rejecting archive symlink entries, and verifying extracted real paths before moving downloaded skills into place.
+- Replaced the Telegram Node boilerplate and docs examples with Telegraf to remove the deprecated vulnerable `request` dependency chain and avoid putting bot tokens in webhook URLs.
+- Hardened WhatsApp webhook signature validation so malformed `x-hub-signature-256` headers return `401` instead of throwing on `timingSafeEqual` buffer length mismatches.
+- Refused installer migrations through symlinked target directories and added regression coverage for symlink target failures.
+- Restored TLS verification by default in Junta scraper implementations, with insecure TLS only available through the shared `JUNTA_INSECURE_TLS` escape hatch.
+
+## Fixed
+
+- Replaced the non-English `andrej-karpathy` skill content with English Karpathy coding guidelines synced from the upstream `multica-ai/andrej-karpathy-skills` source.
+- Made `audit:skills:strict` enforce an explicit legacy warning budget so strict skill-audit debt is tracked and regressions fail without blocking on the historical backlog.
+- Replaced realistic AWS/private-key examples with unmistakable placeholders and taught `security:docs` to block those patterns from returning.
+- Rebuilt local documentation link validation as a deterministic, path-aware checker for `README.md`, `docs/`, and `docs_zh-CN/`, and repaired the broken localized/internal markdown links it now catches.
+- Refreshed stale Chinese documentation release/count claims to `11.5.0` / `1,465+` and marked the old final validation report as a historical snapshot.
+- Made the Chinese glossary validation report deterministic by removing timestamps and machine-specific absolute paths.
+- Stopped publishing `.disabled` skills as web static assets during `app:setup`.
+- Updated web-app SEO counts and social metadata to `1,465+`, aligned the SEO verifier and Pages workflow with the linked `site.webmanifest`, and corrected the documented canonical URL environment variables.
+- Added generated-index duplicate-ID protection so future nested skill basename collisions fail during index generation.
+- Fixed the Remotion chart rule typo from `implmentation` to `implementation`.
+
+## [11.5.0] - 2026-05-21 - "Security Boundary Hardening and New Agent Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+This release hardens plugin-safe distribution boundaries, resolves the current Dependabot `ws` alert in the web app lockfile, and merges PR #604 and PR #605 through the maintainer workflow.
+
+## New Skills
+
+- **subagent-orchestrator** - quota-aware parallel subagent coordination for large, multi-file Antigravity tasks.
+- **bilig-workpaper** - formula-backed WorkPaper JSON and MCP guidance for deterministic spreadsheet-style agent workflows.
+
+## Security
+
+- **plugin-safe boundary hardening** - blocks critical-risk or third-party setup-sensitive community skills from the generated Codex and Claude plugin-safe distributions.
+- **ingest-youtube input hardening** - validates single-video YouTube URLs, terminates `yt-dlp` options with `--`, ignores user config, adds subprocess timeouts, and neutralizes untrusted metadata in generated markdown.
+- **web app dependency fixes** - updates `ws` to the patched `8.20.1` range and refreshes vulnerable transitive audit entries in `apps/web-app/package-lock.json`.
+
+## Improvements
+
+- **generated artifact sync** - refreshes compatibility data, skill indexes, plugin mirrors, docs, and visible skill counts to `1,464+`.
+- **subagent-orchestrator metadata** - normalizes PR #604 metadata so the skill passes repository validation.
+
+## Who should care
+
+- **Plugin users** get a safer marketplace-style distribution that excludes setup-sensitive critical workflows from safe plugin bundles.
+- **Vault users** get safer YouTube transcript ingestion with stricter URL and markdown handling.
+- **Agent workflow builders** get two new community skills for parallel agent coordination and formula-backed workbook automation.
+
+## Credits
+
+- **[@sulavmgr456-byte](https://github.com/sulavmgr456-byte)** for PR #604 (`subagent-orchestrator`).
+- **[@gregkonush](https://github.com/gregkonush)** for PR #605 (`bilig-workpaper`).
+
+## [11.4.1] - 2026-05-20 - "Installer Supply-Chain Hardening"
+
+> Patch release for the npm installer used by Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+This release hardens the npm installer after reviewing Socket.dev's AI-detected code-anomaly warning for `tools/bin/install.js`.
+
+## Improvements
+
+- **release-pinned installs** - default `npx antigravity-awesome-skills` installs now clone the matching package release tag instead of the repository tip, reducing drift between npm package contents and installed skills.
+- **git ref validation** - `--tag` and `--version` refs are validated before invoking `git clone`, while still allowing explicit branch installs such as `--tag main`.
+- **destination symlink guard** - installer copy operations now refuse to write through pre-existing destination symlinks.
+- **installer docs and regression coverage** - documents the release-pinned default and adds installer tests for release-tag resolution and unsafe ref rejection.
+
+## Who should care
+
+- **npm users** get installer behavior that is pinned to the published package version by default.
+- **security scanners and maintainers** get a narrower supply-chain surface for the installer path Socket flagged.
+
+## [11.4.0] - 2026-05-20 - "Mercury MCP, Photopea Embeds, and Codex Bundle Names"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+
+This release merges PR #598 and PR #601 through the maintainer workflow, fixes issue #597 by shortening Codex bundle plugin identifiers, and reduces antivirus false-positive risk in the Linux privilege-escalation guidance from issue #600.
+
+## New Skills
+
+- **mercury-mcp** - lookup reference for Mercury MCP tools covering messages, threads, tasks, automations, agent context, and admin-scoped team graph tools.
+- **photopea-embedded-editor** - web-app integration guide for embedding Photopea with `photopea.js`, file loading, scripting, exports, layers, text, selections, and template editing patterns.
+
+## Improvements
+
+- **Codex bundle names** - generated Codex bundle plugins now use compact `agyb-*` names while preserving existing repo-local source directories, keeping qualified skill names within the 64-character loader limit.
+- **bundle regression tests** - adds coverage that every generated Codex bundle plugin name and `plugin:skill` qualified name stays within the 64-character limit.
+- **security skill false-positive reduction** - replaces a pipe-to-shell LinPEAS example with download, inspect, chmod, and explicit execution steps for authorized labs.
+- **generated artifact sync** - refreshes catalog, skill index, plugin mirrors, web assets, contributor credits, package metadata, and visible skill counts to `1,462+`.
+
+## Who should care
+
+- **Codex CLI users** can enable editorial bundles without losing valid skills to long qualified plugin names.
+- **MCP users** get a compact Mercury tool reference for agent messaging, task tracking, and automations.
+- **Web app builders** get a practical Photopea embedding guide for browser-based image editing workflows.
+- **Security learners and maintainers** get safer documentation patterns that are less likely to trigger local antivirus heuristics.
+
+## Credits
+
+- **[@boeto](https://github.com/boeto)** for issue #597 and the concrete Codex bundle-name reproduction.
+- **[@WagnerFFreitas](https://github.com/WagnerFFreitas)** for issue #600 and the Norton false-positive report.
+- **[@Karthikeya-Meesala](https://github.com/Karthikeya-Meesala)** for PR #598 (`mercury-mcp`).
+- **[@bulkmockupsfiller-ai](https://github.com/bulkmockupsfiller-ai)** and **[@abdul-karim-mia](https://github.com/abdul-karim-mia)** for PR #601 (`photopea-embedded-editor`).
+
+## [11.3.0] - 2026-05-16 - "Discovery Manifests and Recommendation Pipelines"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+
+This release closes issue #596 with a stable discovery-manifest contract and merges PR #595 through the maintainer squash-merge workflow. It keeps contributor PRs source-only while making `main` the canonical owner of generated manifests, web assets, and release metadata.
+
+## New Skills
+
+- **recsys-pipeline-architect** - recommendation, ranking, and feed pipeline design using a Source -> Hydrator -> Filter -> Scorer -> Selector -> SideEffect architecture.
+
+## Improvements
+
+- **stable discovery manifest** - keeps root `skills_index.json` as the canonical public manifest, mirrors it exactly to `data/skills_index.json`, and documents lazy-loading usage for downstream tools.
+- **manifest schema and docs** - adds `schemas/skills-index.v1.schema.json` plus user and integration docs that distinguish the canonical root manifest from the compatibility mirror.
+- **CI-safe drift checks** - extends consistency auditing and PR artifact previews so root/data/web-backup manifest drift is visible and enforced on `main`.
+- **generated artifact sync** - refreshes catalog, skill index, plugin mirrors, web assets, contributor credits, package metadata, and visible skill counts to `1,460+`.
+
+## Who should care
+
+- **Tool builders and indexers** get a stable manifest contract they can validate and consume without loading every skill up front.
+- **Users with large installs** get clearer guidance for filtering by category, risk, source, and description before lazy-loading individual skills.
+- **Recommendation-system builders** get a focused skill for designing composable feed and ranking pipelines across TypeScript, Go, Python, and adjacent stacks.
+- **Maintainers** get a source-only PR path with canonical generated artifacts refreshed on `main` before release.
+
+## Credits
+
+- **[@latentloop07](https://github.com/latentloop07)** for issue #596 and the discovery/installability prompt.
+- **[@mturac](https://github.com/mturac)** for PR #595 (`recsys-pipeline-architect`).
 
 ## [11.2.0] - 2026-05-13 - "Market Intelligence, Token Routing, and Chinese Growth Skills"
 

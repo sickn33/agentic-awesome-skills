@@ -6,10 +6,12 @@ const fs = require("fs");
 const os = require("os");
 const { resolveSafeRealPath } = require("../lib/symlink-safety");
 const { listSkillIdsRecursive, readSkill } = require("../lib/skill-utils");
+const packageMetadata = require("../../package.json");
 
 const REPO = "https://github.com/sickn33/antigravity-awesome-skills.git";
 const HOME = process.env.HOME || process.env.USERPROFILE || "";
 const INSTALL_MANIFEST_FILE = ".antigravity-install-manifest.json";
+const DEFAULT_RELEASE_REF = packageMetadata.version ? `v${packageMetadata.version}` : null;
 
 function resolveDir(p) {
   if (!p) return null;
@@ -126,10 +128,10 @@ function getTargets(opts) {
     targets.push({ name: "Kiro", path: path.join(HOME, ".kiro", "skills") });
   }
   if (opts.antigravity) {
-    targets.push({ name: "Antigravity", path: path.join(HOME, ".gemini", "antigravity", "skills") });
+    targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
   }
   if (targets.length === 0) {
-    targets.push({ name: "Antigravity", path: path.join(HOME, ".gemini", "antigravity", "skills") });
+    targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
   }
   return targets;
 }
@@ -148,13 +150,13 @@ Options:
   --gemini       Install to ~/.gemini/skills (Gemini CLI)
   --codex        Install to ~/.codex/skills (Codex CLI)
   --kiro         Install to ~/.kiro/skills (Kiro CLI)
-  --antigravity  Install to ~/.gemini/antigravity/skills (Antigravity)
-  --path <dir>   Install to <dir> (default: ~/.gemini/antigravity/skills)
+  --antigravity  Install to ~/.agents/skills (Antigravity 2.0)
+  --path <dir>   Install to <dir> (default: ~/.agents/skills)
   --risk <csv>     Install only skills matching these risk labels
   --category <csv> Install only skills matching these categories
   --tags <csv>     Install only skills matching these tags
   --version <ver>  Clone tag v<ver> (e.g. 4.6.0 -> v4.6.0)
-  --tag <tag>      Clone this tag or branch (e.g. v4.6.0)
+  --tag <tag>      Clone this tag or branch (e.g. v4.6.0, main)
 
 Examples:
   npx antigravity-awesome-skills
@@ -267,6 +269,9 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
 
   const resolvedStats = fs.statSync(resolvedSource);
   if (resolvedStats.isDirectory()) {
+    if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
+      throw new Error(`Skipping unsafe destination symlink: ${dest}`);
+    }
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest, { recursive: true });
     }
@@ -275,6 +280,9 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
       copyRecursiveSync(path.join(resolvedSource, child), path.join(dest, child), rootDir, skipGit);
     });
   } else {
+    if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
+      throw new Error(`Skipping unsafe destination symlink: ${dest}`);
+    }
     fs.copyFileSync(resolvedSource, dest);
   }
 }
@@ -414,6 +422,30 @@ function ensureTargetIsDirectory(targetPath) {
   process.exit(1);
 }
 
+function isSafeGitRef(ref) {
+  return (
+    typeof ref === "string" &&
+    ref.length > 0 &&
+    ref.length <= 128 &&
+    /^[A-Za-z0-9._/-]+$/.test(ref) &&
+    !ref.startsWith("-") &&
+    !ref.startsWith("/") &&
+    !ref.endsWith("/") &&
+    !ref.endsWith(".") &&
+    !ref.includes("..") &&
+    !ref.includes("//") &&
+    !ref.includes("@{") &&
+    ref !== "@" &&
+    !ref.split("/").some((part) => part.endsWith(".lock"))
+  );
+}
+
+function assertSafeGitRef(ref) {
+  if (!isSafeGitRef(ref)) {
+    throw new Error(`Unsafe git ref: ${ref}`);
+  }
+}
+
 function run(cmd, args, opts = {}) {
   const r = spawnSync(cmd, args, { stdio: "inherit", ...opts });
   if (r.status !== 0) process.exit(r.status == null ? 1 : r.status);
@@ -422,31 +454,42 @@ function run(cmd, args, opts = {}) {
 function buildCloneArgs(repo, tempDir, ref = null) {
   const args = ["clone", "--depth", "1"];
   if (ref) {
+    assertSafeGitRef(ref);
     args.push("--branch", ref);
   }
   args.push(repo, tempDir);
   return args;
 }
 
+function resolveInstallRef(opts) {
+  if (opts.tagArg) {
+    return opts.tagArg;
+  }
+  if (opts.versionArg) {
+    return opts.versionArg.startsWith("v") ? opts.versionArg : `v${opts.versionArg}`;
+  }
+  return DEFAULT_RELEASE_REF;
+}
+
 function installForTarget(tempDir, target, selectors = buildInstallSelectors({})) {
   if (fs.existsSync(target.path)) {
     ensureTargetIsDirectory(target.path);
+    const targetStats = fs.lstatSync(target.path);
+    if (targetStats.isSymbolicLink()) {
+      console.error(
+        `  Refusing to migrate or update through symlinked target: ${target.path}`,
+      );
+      console.error("  Choose a real directory path, or replace the symlink manually before retrying.");
+      process.exit(1);
+    }
     const gitDir = path.join(target.path, ".git");
     if (fs.existsSync(gitDir)) {
       console.log(`  Migrating from full-repo install to skills-only layout…`);
       const backupPath = `${target.path}_backup_${Date.now()}`;
       try { 
-        const stats = fs.lstatSync(target.path);
-        const isSymlink = stats.isSymbolicLink();
-        const symlinkTarget = isSymlink ? 
-        fs.readlinkSync(target.path) : null;
         fs.renameSync(target.path, backupPath);
         console.log(`  ⚠️  Safety Backup created at: ${backupPath}`);
-        if (isSymlink) {
-          fs.symlinkSync(symlinkTarget, target.path, 'dir');
-        } else {
-          fs.mkdirSync(target.path, { recursive: true, mode: stats.mode });
-        }
+        fs.mkdirSync(target.path, { recursive: true, mode: targetStats.mode });
       } catch (err) {
         console.error(`  Migration Error: ${err.message}`);
         process.exit(1);
@@ -496,7 +539,7 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
 
   if (targets.some((target) => isOpenCodeStylePath(target.path))) {
     const baseMessage =
-      "For OpenCode or other .agents/skills installs, prefer a reduced install with --risk, --category, or --tags to avoid context overload.";
+      "For Antigravity 2.0, OpenCode, or other .agents/skills installs, prefer a reduced install with --risk, --category, or --tags to avoid context overload.";
     messages.push(baseMessage);
     if (!hasInstallSelectors(selectors)) {
       messages.push(
@@ -510,15 +553,8 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
 
 function main() {
   const opts = parseArgs();
-  const { tagArg, versionArg } = opts;
   const selectors = buildInstallSelectors(opts);
-  const ref =
-    tagArg ||
-    (versionArg
-      ? versionArg.startsWith("v")
-        ? versionArg
-        : `v${versionArg}`
-      : null);
+  const ref = resolveInstallRef(opts);
 
   if (opts.help) {
     printHelp();
@@ -534,7 +570,6 @@ function main() {
   }
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-skills-"));
-  const originalCwd = process.cwd();
 
   try {
     console.log("Cloning repository…");
@@ -579,6 +614,7 @@ module.exports = {
   getInstallEntries,
   installSkillsIntoTarget,
   installForTarget,
+  isSafeGitRef,
   isOpenCodeStylePath,
   main,
   matchesInstallSelectors,
@@ -586,5 +622,6 @@ module.exports = {
   parseSelectorArg,
   pruneRemovedEntries,
   readInstallManifest,
+  resolveInstallRef,
   writeInstallManifest,
 };

@@ -39,9 +39,11 @@ The START_APP.bat file includes integrated update functionality that:
 # 1. Generate skills index
 python tools/scripts/generate_index.py
 
-# 2. Copy to web app
+# 2. Copy canonical manifest to web app
 copy skills_index.json apps\web-app\public\skills.json
 ```
+
+`tools/scripts/generate_index.py` writes the canonical root `skills_index.json` and mirrors the same array payload to `data/skills_index.json` for compatibility readers.
 
 ## Prerequisites
 
@@ -67,9 +69,10 @@ For manual updates, you need:
 ## What Gets Updated
 
 The update process refreshes:
-- Skills index (`skills_index.json`)
+- Canonical skills index (`skills_index.json`)
+- Compatibility mirror (`data/skills_index.json`)
 - Web app skills data (`apps\web-app\public\skills.json`)
-- All 1,459+ skills from the skills directory
+- All 1,484+ skills from the skills directory
 
 ## When to Update
 

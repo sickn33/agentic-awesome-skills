@@ -16,6 +16,10 @@ def _read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _read_json(path: Path):
+    return json.loads(_read_text(path))
+
+
 def _package_expected_description(metadata: dict) -> str:
     return (
         f"{metadata['total_skills_label']} agentic skills for Claude Code, Gemini CLI, "
@@ -43,10 +47,65 @@ def _expected_jetski_cortex(content: str, metadata: dict) -> str:
     return sync_repo_metadata.sync_jetski_cortex(content, metadata)
 
 
+def _find_manifest_issues(root: Path) -> list[str]:
+    issues: list[str] = []
+    canonical_path = root / "skills_index.json"
+    mirrored_path = root / "data" / "skills_index.json"
+    web_copy_paths = [
+        root / "apps" / "web-app" / "public" / "skills.json.backup",
+        root / "apps" / "web-app" / "public" / "skills.json",
+    ]
+
+    if not canonical_path.is_file():
+        return ["skills_index.json is missing"]
+
+    try:
+        manifest = _read_json(canonical_path)
+    except json.JSONDecodeError as error:
+        return [f"skills_index.json is invalid JSON: {error}"]
+
+    if not isinstance(manifest, list) or not manifest:
+        issues.append("skills_index.json must be a non-empty array")
+        return issues
+
+    required_fields = {
+        "id",
+        "path",
+        "category",
+        "name",
+        "description",
+        "risk",
+        "source",
+        "date_added",
+    }
+    for index, entry in enumerate(manifest):
+        if not isinstance(entry, dict):
+            issues.append(f"skills_index.json entry {index} must be an object")
+            continue
+        missing = sorted(field for field in required_fields if field not in entry)
+        if missing:
+            skill_id = entry.get("id", f"entry {index}")
+            issues.append(f"skills_index.json {skill_id} missing required fields: {', '.join(missing)}")
+
+    canonical_text = _read_text(canonical_path)
+    if not mirrored_path.is_file():
+        issues.append("data/skills_index.json mirror is missing")
+    elif _read_text(mirrored_path) != canonical_text:
+        issues.append("data/skills_index.json is not an exact mirror of skills_index.json")
+
+    for copy_path in web_copy_paths:
+        if copy_path.is_file() and _read_text(copy_path) != canonical_text:
+            relative_copy = copy_path.relative_to(root).as_posix()
+            issues.append(f"{relative_copy} is not an exact copy of skills_index.json")
+
+    return issues
+
+
 def find_local_consistency_issues(base_dir: str | Path) -> list[str]:
     root = Path(base_dir)
     metadata = load_metadata(str(root))
     issues: list[str] = []
+    issues.extend(_find_manifest_issues(root))
 
     package_json = json.loads(_read_text(root / "package.json"))
     if package_json.get("description") != _package_expected_description(metadata):

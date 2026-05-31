@@ -6,8 +6,6 @@ source: community
 date_added: "2026-02-27"
 ---
 
-<!-- security-allowlist: curl-pipe-bash, irm-pipe-iex -->
-
 # ⚡ Bun Development
 
 > Fast, modern JavaScript/TypeScript development with the Bun runtime, inspired by [oven-sh/bun](https://github.com/oven-sh/bun).
@@ -30,10 +28,17 @@ Use this skill when:
 
 ```bash
 # macOS / Linux
-curl -fsSL https://bun.sh/install | bash
+brew install oven-sh/bun/bun
+
+# Alternative: download the official installer, inspect it, then execute it
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSLo "$tmpdir/bun-install.sh" https://bun.sh/install
+sed -n '1,160p' "$tmpdir/bun-install.sh"
+bash "$tmpdir/bun-install.sh"
 
 # Windows
-powershell -c "irm bun.sh/install.ps1 | iex"
+powershell -NoProfile -Command "Invoke-WebRequest https://bun.sh/install.ps1 -OutFile $env:TEMP\\bun-install.ps1; Get-Content $env:TEMP\\bun-install.ps1 -TotalCount 120; powershell -ExecutionPolicy Bypass -File $env:TEMP\\bun-install.ps1"
 
 # Homebrew
 brew tap oven-sh/bun
@@ -588,7 +593,7 @@ console.log(__filename);
 
 ```bash
 # 1. Install Bun
-curl -fsSL https://bun.sh/install | bash
+brew install oven-sh/bun/bun
 
 # 2. Replace package manager
 rm -rf node_modules package-lock.json

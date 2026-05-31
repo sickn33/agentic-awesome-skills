@@ -139,6 +139,37 @@ installer.installForTarget(${JSON.stringify(repoV2)}, { name: "BadTarget", path:
     /not a directory/i,
     "installer should print a clear error for non-directory targets",
   );
+
+  const symlinkRealTarget = path.join(tmpRoot, "symlink-real-target");
+  const symlinkTargetPath = path.join(tmpRoot, "symlink-target");
+  fs.mkdirSync(path.join(symlinkRealTarget, ".git"), { recursive: true });
+  fs.symlinkSync(symlinkRealTarget, symlinkTargetPath, "dir");
+
+  const symlinkTargetCheck = spawnSync(
+    process.execPath,
+    [
+      "-e",
+      `
+const installer = require(${JSON.stringify(path.resolve(__dirname, "..", "..", "bin", "install.js"))});
+installer.installForTarget(${JSON.stringify(repoV2)}, { name: "SymlinkTarget", path: ${JSON.stringify(symlinkTargetPath)} });
+`,
+    ],
+    {
+      stdio: "pipe",
+      encoding: "utf8",
+    },
+  );
+
+  assert.notStrictEqual(
+    symlinkTargetCheck.status,
+    0,
+    "installer should fail fast when the target path is a symlink",
+  );
+  assert.match(
+    `${symlinkTargetCheck.stdout}\n${symlinkTargetCheck.stderr}`,
+    /symlinked target/i,
+    "installer should print a clear error for symlinked targets",
+  );
 } finally {
   fs.rmSync(tmpRoot, { recursive: true, force: true });
 }

@@ -173,6 +173,20 @@ class PluginCompatibilityTests(unittest.TestCase):
         self.assertEqual(entries["playwright-skill"]["targets"]["claude"], "supported")
         self.assertEqual(entries["playwright-skill"]["setup"]["type"], "manual")
 
+        for skill_id in (
+            "bilig-workpaper",
+            "longbridge",
+            "mercury-mcp",
+            "sendblue/sendblue-api",
+            "sendblue/sendblue-cli",
+            "sendblue/sendblue-notify",
+            "sendblue/textme",
+            "socialclaw",
+        ):
+            self.assertEqual(entries[skill_id]["targets"]["codex"], "blocked")
+            self.assertEqual(entries[skill_id]["targets"]["claude"], "blocked")
+            self.assertIn("explicit_target_restriction", entries[skill_id]["reasons"])
+
 
 if __name__ == "__main__":
     unittest.main()

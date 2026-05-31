@@ -110,6 +110,36 @@ class EditorialBundlesTests(unittest.TestCase):
         )
         self.assertEqual(generated_plugins, expected_plugins)
 
+    def test_codex_bundle_plugin_names_keep_qualified_skill_names_valid(self):
+        max_name_length = 64
+
+        for bundle in self.manifest_bundles:
+            support = all(
+                self.compatibility_by_id[skill["id"]]["targets"]["codex"] == "supported"
+                for skill in bundle["skills"]
+            )
+            if not support:
+                continue
+
+            plugin_name = editorial_bundles._bundle_codex_plugin_name(bundle["id"])
+            manifest = editorial_bundles._bundle_codex_plugin_manifest(
+                editorial_bundles.load_metadata(str(REPO_ROOT)),
+                bundle,
+            )
+            self.assertEqual(manifest["name"], plugin_name)
+            self.assertLessEqual(
+                len(plugin_name),
+                max_name_length,
+                f'Codex plugin name too long for bundle "{bundle["id"]}"',
+            )
+            for skill in bundle["skills"]:
+                qualified_name = f'{plugin_name}:{skill["id"]}'
+                self.assertLessEqual(
+                    len(qualified_name),
+                    max_name_length,
+                    f'Codex qualified skill name too long: {qualified_name}',
+                )
+
     def test_manifest_rejects_bundle_ids_with_path_traversal(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_root = pathlib.Path(temp_dir)

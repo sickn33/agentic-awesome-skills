@@ -507,6 +507,6 @@ Tháng 1: Trở thành người đóng góp thường xuyên
 
 - [GETTING_STARTED.md](GETTING_STARTED.vi.md) - Giới thiệu bằng văn bản.
 - [SKILL_ANATOMY.md](SKILL_ANATOMY.vi.md) - Phân tích chi tiết.
-- [CONTRIBUTING.md](../CONTRIBUTING.vi.md) - Cách thức đóng góp.
+- [CONTRIBUTING.md](../../CONTRIBUTING.md) - Cách thức đóng góp.
 
 **Sẵn sàng đóng góp?** Bạn làm được mà! 💪

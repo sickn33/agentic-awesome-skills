@@ -101,7 +101,8 @@ for (const skill of compatibility) {
 }
 
 for (const bundle of editorialBundles) {
-  const bundlePluginName = `antigravity-bundle-${bundle.id}`;
+  const bundlePluginName = `agyb-${bundle.id}`;
+  const bundlePluginPath = `antigravity-bundle-${bundle.id}`;
   const bundleEntry = marketplace.plugins.find((plugin) => plugin.name === bundlePluginName);
   const codexSupported = bundle.skills.every(
     (skill) => compatibilityById.get(skill.id)?.targets?.codex === "supported",
@@ -117,7 +118,7 @@ for (const bundle of editorialBundles) {
     bundleEntry.source,
     {
       source: "local",
-      path: `./plugins/${bundlePluginName}`,
+      path: `./plugins/${bundlePluginPath}`,
     },
     `bundle plugin ${bundlePluginName} should resolve to the expected repo-local directory`,
   );

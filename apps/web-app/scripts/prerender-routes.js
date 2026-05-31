@@ -9,7 +9,7 @@ const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 
-const HOME_CATALOG_COUNT = 1273;
+const HOME_CATALOG_COUNT_FALLBACK = 1465;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
 
@@ -154,8 +154,9 @@ function safeText(value) {
 }
 
 function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
-  const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT);
-  const title = 'Antigravity Awesome Skills | 1,273+ installable AI skills catalog';
+  const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
+  const formattedCount = visibleCount.toLocaleString('en-US');
+  const title = `Antigravity Awesome Skills | ${formattedCount}+ installable AI skills catalog`;
   const description = `Explore ${visibleCount}+ installable agentic skills and prompt templates. Discover what fits your workflow, copy prompts fast, and launch AI-powered actions with confidence.`;
 
   return {

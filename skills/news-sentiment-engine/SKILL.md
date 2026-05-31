@@ -2,7 +2,7 @@
 name: news-sentiment-engine
 description: Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output
 category: research
-risk: safe
+risk: critical
 source: community
 source_repo: tellmefrankie/news-engine
 source_type: community
@@ -10,6 +10,10 @@ date_added: "2026-05-13"
 author: tellmefrankie
 tags: [news, rss, sentiment-analysis, briefing, research]
 tools: [claude, websearch]
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
 ---
 # News Sentiment Engine (Free)
 
@@ -73,6 +77,10 @@ For each article:
 - Commentary: 1-sentence industry perspective
 
 ## Setup
+
+The optional setup below clones and runs a third-party Node project from
+`tellmefrankie/news-engine`. Review and pin that repository yourself before
+running it, and do not expose API keys to an unreviewed checkout.
 
 ```bash
 git clone https://github.com/tellmefrankie/news-engine

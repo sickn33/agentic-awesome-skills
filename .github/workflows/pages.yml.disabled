@@ -57,7 +57,7 @@ jobs:
           cd apps/web-app
           test -f dist/robots.txt
           test -f dist/sitemap.xml
-          test -f dist/manifest.webmanifest
+          test -f dist/site.webmanifest
 
       - name: Prepare artifact (404 + .nojekyll)
         run: |

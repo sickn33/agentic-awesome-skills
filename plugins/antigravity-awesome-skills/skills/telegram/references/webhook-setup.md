@@ -50,27 +50,26 @@ POST https://api.telegram.org/bot<TOKEN>/deleteWebhook
 
 ```typescript
 import express from 'express';
-import TelegramBot from 'node-telegram-bot-api';
+import { Telegraf } from 'telegraf';
 
 const app = express();
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!; // https://seu-dominio.com
 const SECRET_TOKEN = process.env.WEBHOOK_SECRET || 'meu-secret-seguro';
 
-// Bot sem polling (webhook mode)
-const bot = new TelegramBot(TOKEN);
+const bot = new Telegraf(TOKEN);
 
 app.use(express.json());
 
 // Validar secret token
-app.post(`/webhook/${TOKEN}`, (req, res) => {
+app.post('/webhook', async (req, res) => {
   const secretHeader = req.headers['x-telegram-bot-api-secret-token'];
   if (secretHeader !== SECRET_TOKEN) {
     return res.sendStatus(403);
   }
 
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
+  await bot.handleUpdate(req.body, res);
+  if (!res.headersSent) res.sendStatus(200);
 });
 
 // Health check
@@ -78,13 +77,13 @@ app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // Registrar webhook na inicializacao
 async function start() {
-  await bot.setWebHook(`${WEBHOOK_URL}/webhook/${TOKEN}`, {
+  await bot.telegram.setWebhook(`${WEBHOOK_URL.replace(/\/+$/, '')}/webhook`, {
     max_connections: 40,
     allowed_updates: ['message', 'callback_query'],
     secret_token: SECRET_TOKEN,
   });
 
-  const info = await bot.getWebHookInfo();
+  const info = await bot.telegram.getWebhookInfo();
   console.log('Webhook info:', info);
 
   app.listen(3000, () => console.log('Server rodando na porta 3000'));
@@ -256,14 +255,19 @@ services:
 ```typescript
 // api/webhook.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import TelegramBot from 'node-telegram-bot-api';
+import { Telegraf } from 'telegraf';
 
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!);
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'POST') {
-    bot.processUpdate(req.body);
-    res.status(200).send('OK');
+    const secretHeader = req.headers['x-telegram-bot-api-secret-token'];
+    if (secretHeader !== process.env.WEBHOOK_SECRET) {
+      return res.status(403).send('Forbidden');
+    }
+
+    await bot.handleUpdate(req.body, res);
+    if (!res.writableEnded) res.status(200).send('OK');
   } else {
     res.status(200).json({ status: 'ok' });
   }

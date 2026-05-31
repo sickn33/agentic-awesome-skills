@@ -2,6 +2,7 @@ const assert = require("assert");
 const path = require("path");
 
 const installer = require(path.resolve(__dirname, "..", "..", "bin", "install.js"));
+const packageMetadata = require(path.resolve(__dirname, "..", "..", "..", "package.json"));
 
 assert.deepStrictEqual(
   installer.buildCloneArgs("https://example.com/repo.git", "/tmp/skills"),
@@ -15,8 +16,37 @@ assert.deepStrictEqual(
   "installer should keep versioned installs shallow while selecting the requested ref",
 );
 
+assert.strictEqual(
+  installer.resolveInstallRef({}),
+  `v${packageMetadata.version}`,
+  "default installs should pin the clone to the npm package release tag",
+);
+
+assert.strictEqual(
+  installer.resolveInstallRef({ versionArg: "1.2.3" }),
+  "v1.2.3",
+  "version installs should normalize bare versions to release tags",
+);
+
+assert.strictEqual(
+  installer.resolveInstallRef({ tagArg: "main", versionArg: "1.2.3" }),
+  "main",
+  "explicit tags should override the npm package release tag",
+);
+
+assert.strictEqual(installer.isSafeGitRef("main"), true);
+assert.strictEqual(installer.isSafeGitRef("release/v1.2.3"), true);
+assert.strictEqual(installer.isSafeGitRef("--upload-pack=touch"), false);
+assert.strictEqual(installer.isSafeGitRef("feature/../main"), false);
+assert.strictEqual(installer.isSafeGitRef("feature branch"), false);
+assert.throws(
+  () => installer.buildCloneArgs("https://example.com/repo.git", "/tmp/skills", "--upload-pack=touch"),
+  /Unsafe git ref/,
+  "clone args should reject unsafe refs before invoking git",
+);
+
 const antigravityMessages = installer.getPostInstallMessages([
-  { name: "Antigravity", path: "/tmp/.gemini/antigravity/skills" },
+  { name: "Antigravity", path: "/tmp/.agents/skills" },
 ]);
 
 assert.ok(

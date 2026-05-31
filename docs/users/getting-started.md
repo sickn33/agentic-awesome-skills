@@ -1,4 +1,4 @@
-# Getting Started with Antigravity Awesome Skills (V11.2.0)
+# Getting Started with Antigravity Awesome Skills (V11.9.0)
 
 **New here? This guide will help you supercharge your AI Agent in 5 minutes.**
 
@@ -32,7 +32,7 @@ If you prefer a marketplace-style install for **Claude Code** or **Codex**, use 
 npx antigravity-awesome-skills
 ```
 
-This clones to `~/.gemini/antigravity/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, or `--kiro` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx antigravity-awesome-skills --help` for details.
+This clones to `~/.agents/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, or `--kiro` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx antigravity-awesome-skills --help` for details.
 The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
 
 If you see a 404 error, use: `npx github:sickn33/antigravity-awesome-skills`
@@ -105,7 +105,7 @@ Once installed, just talk to your AI naturally.
 | **Codex CLI**   | ✅ Full Support | `.codex/skills/` or use the repo-local plugin metadata described in [plugins.md](plugins.md) |
 | **Kiro CLI**    | ✅ Full Support | Global: `~/.kiro/skills/` · Workspace: `.kiro/skills/`                |
 | **Kiro IDE**    | ✅ Full Support | Global: `~/.kiro/skills/` · Workspace: `.kiro/skills/`                |
-| **Antigravity** | ✅ Native       | Global: `~/.gemini/antigravity/skills/` · Workspace: `.agent/skills/` |
+| **Antigravity** | ✅ Native       | Global: `~/.agents/skills/` · Workspace: `.agent/skills/` |
 | **Cursor**      | ✅ Native       | `.cursor/skills/`                                                     |
 | **OpenCode**    | ✅ Full Support | `.agents/skills/` (prefer reduced installs with `--risk`, `--category`, or `--tags`) |
 | **AdaL CLI**    | ✅ Full Support | `.adal/skills/`                                                       |

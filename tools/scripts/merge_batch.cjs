@@ -24,6 +24,11 @@ const REQUIRED_CHECKS = [
   ["artifact-preview", ["artifact-preview"]],
 ];
 const SKILL_REVIEW_REQUIRED = ["review", "Skill Review & Optimize", "Skill Review & Optimize / review"];
+const DISALLOWED_COAUTHOR_TRAILER_PATTERNS = [
+  /<noreply@anthropic\.com>/i,
+  /:\s*claude\b/i,
+  /:\s*claude\s+sonnet\b/i,
+];
 
 function parseArgs(argv) {
   const args = {
@@ -88,7 +93,6 @@ function runCommand(command, args, cwd, options = {}) {
       : options.input !== undefined
         ? ["pipe", "inherit", "inherit"]
         : ["inherit", "inherit", "inherit"],
-    shell: process.platform === "win32",
   });
 
   if (result.error) {
@@ -211,6 +215,30 @@ function normalizePrBody(body, templateContent) {
   }
 
   return `${summary}\n\n${templateSections}`.trim();
+}
+
+function stripDisallowedCoauthorTrailers(body) {
+  return String(body || "")
+    .replace(/\r\n/g, "\n")
+    .split("\n")
+    .filter((line) => {
+      if (!/^\s*co-authored-by:/i.test(line)) {
+        return true;
+      }
+      return !DISALLOWED_COAUTHOR_TRAILER_PATTERNS.some((pattern) => pattern.test(line));
+    })
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function buildSquashMergeSubject(prDetails) {
+  return `${String(prDetails.title || `PR #${prDetails.number}`).trim()} (#${prDetails.number})`;
+}
+
+function buildSquashMergeBody(prDetails) {
+  const summary = extractSummaryBlock(prDetails.body);
+  return stripDisallowedCoauthorTrailers(summary);
 }
 
 function loadPullRequestTemplate(projectRoot) {
@@ -452,7 +480,14 @@ function gitPullMain(projectRoot) {
 }
 
 function syncContributors(projectRoot) {
-  runCommand("npm", ["run", "sync:contributors"], projectRoot);
+  runCommand(
+    process.execPath,
+    [
+      path.join(projectRoot, "tools", "scripts", "run-python.js"),
+      path.join(projectRoot, "tools", "scripts", "sync_contributors.py"),
+    ],
+    projectRoot,
+  );
 }
 
 function commitAndPushReadmeIfChanged(projectRoot) {
@@ -531,7 +566,20 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
       if (!options.dryRun) {
-        runCommand("gh", ["pr", "merge", String(prNumber), "--squash"], projectRoot);
+        runCommand(
+          "gh",
+          [
+            "pr",
+            "merge",
+            String(prNumber),
+            "--squash",
+            "--subject",
+            buildSquashMergeSubject(prDetails),
+            "--body",
+            buildSquashMergeBody(prDetails),
+          ],
+          projectRoot,
+        );
       }
       merged = true;
       break;
@@ -618,6 +666,8 @@ if (require.main === module) {
 module.exports = {
   approveActionRequiredRuns,
   baseBranchModifiedPatterns: BASE_BRANCH_MODIFIED_PATTERNS,
+  buildSquashMergeBody,
+  buildSquashMergeSubject,
   checkRunMatchesAliases,
   closeAndReopenPr,
   commitAndPushReadmeIfChanged,
@@ -639,8 +689,10 @@ module.exports = {
   parseArgs,
   parsePrList,
   readRepositorySlug,
+  runCommand,
   runBatch,
   selectLatestCheckRuns,
+  stripDisallowedCoauthorTrailers,
   summarizeRequiredCheckRuns,
   waitForRequiredChecks,
 };

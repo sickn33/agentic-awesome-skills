@@ -22,6 +22,7 @@ Defaults:
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import os
 import re
@@ -31,15 +32,69 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse, urlunparse
 
 VTT_TIMING_RE = re.compile(r"\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}.*")
 VTT_HEADER_RE = re.compile(r"^(WEBVTT|Kind:|Language:|NOTE\s|X-TIMESTAMP-MAP)", re.MULTILINE)
 SLUG_RE = re.compile(r"[^a-z0-9]+")
+YOUTUBE_VIDEO_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+SUBPROCESS_TIMEOUT_SECONDS = 60
 SEED_KEYWORDS = (
     "decision", "framework", "model", "principle", "the lesson is",
     "playbook", "anti-pattern", "case study", "what i learned",
     "the trick is", "the insight is",
 )
+
+
+def validate_youtube_url(raw_url: str) -> str:
+    if not raw_url or raw_url.startswith("-") or any(ord(ch) < 32 or ord(ch) == 127 for ch in raw_url):
+        raise ValueError("URL must be a valid http(s) YouTube video URL")
+
+    parsed = urlparse(raw_url)
+    if parsed.scheme not in {"http", "https"}:
+        raise ValueError("URL must use http or https")
+
+    host = parsed.hostname.lower() if parsed.hostname else ""
+    video_id = ""
+
+    if host in {"youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com"}:
+        parts = [part for part in parsed.path.split("/") if part]
+        if parsed.path == "/watch":
+            video_id = parse_qs(parsed.query).get("v", [""])[0]
+        elif len(parts) >= 2 and parts[0] in {"shorts", "embed", "v"}:
+            video_id = parts[1]
+    elif host == "youtu.be":
+        video_id = parsed.path.lstrip("/").split("/", 1)[0]
+
+    if not YOUTUBE_VIDEO_ID_RE.fullmatch(video_id):
+        raise ValueError("URL must point to a single YouTube video")
+
+    return urlunparse(("https", "www.youtube.com", "/watch", "", f"v={video_id}", ""))
+
+
+def run_ytdlp(args: list[str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=SUBPROCESS_TIMEOUT_SECONDS,
+    )
+
+
+def yaml_scalar(value: object) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (int, float)):
+        return str(value)
+    if value is None:
+        return '""'
+    return json.dumps(str(value), ensure_ascii=False)
+
+
+def markdown_text(value: object) -> str:
+    text = html.escape(str(value), quote=False)
+    return re.sub(r"([\\`*_{}\[\]()#+.!|-])", r"\\\1", text)
 
 
 def slugify(text: str, max_len: int = 60) -> str:
@@ -59,10 +114,7 @@ def require_bin(name: str) -> str:
 
 
 def fetch_metadata(url: str, ytdlp: str) -> dict:
-    proc = subprocess.run(
-        [ytdlp, "--skip-download", "--print-json", "--no-warnings", url],
-        capture_output=True, text=True, check=False,
-    )
+    proc = run_ytdlp([ytdlp, "--ignore-config", "--skip-download", "--print-json", "--no-warnings", "--", url])
     if proc.returncode != 0:
         sys.stderr.write(f"yt-dlp metadata fetch failed:\n{proc.stderr}\n")
         sys.exit(3)
@@ -70,10 +122,7 @@ def fetch_metadata(url: str, ytdlp: str) -> dict:
 
 
 def list_subs(url: str, ytdlp: str) -> str:
-    proc = subprocess.run(
-        [ytdlp, "--list-subs", "--skip-download", "--no-warnings", url],
-        capture_output=True, text=True, check=False,
-    )
+    proc = run_ytdlp([ytdlp, "--ignore-config", "--list-subs", "--skip-download", "--no-warnings", "--", url])
     return proc.stdout
 
 
@@ -117,11 +166,10 @@ def pick_lang(prefs: list[str], manual: set[str], auto: set[str]) -> tuple[str, 
 def download_subs(url: str, lang: str, source: str, ytdlp: str, workdir: Path) -> Path:
     flag = "--write-sub" if source == "manual" else "--write-auto-sub"
     out_template = str(workdir / "%(id)s.%(ext)s")
-    proc = subprocess.run(
-        [ytdlp, flag, "--sub-lang", lang, "--skip-download",
-         "--sub-format", "vtt", "-o", out_template, "--no-warnings", url],
-        capture_output=True, text=True, check=False,
-    )
+    proc = run_ytdlp([
+        ytdlp, "--ignore-config", flag, "--sub-lang", lang, "--skip-download",
+        "--sub-format", "vtt", "-o", out_template, "--no-warnings", "--", url,
+    ])
     if proc.returncode != 0:
         sys.stderr.write(f"yt-dlp subtitle download failed:\n{proc.stderr}\n")
         sys.exit(4)
@@ -171,11 +219,7 @@ def write_vault_file(
     target = target_dir / f"{upload_date}-{video_slug}.md"
     yaml_lines = ["---"]
     for k, v in frontmatter.items():
-        if isinstance(v, str) and ("\n" in v or ":" in v):
-            v = v.replace('"', '\\"')
-            yaml_lines.append(f'{k}: "{v}"')
-        else:
-            yaml_lines.append(f"{k}: {v}")
+        yaml_lines.append(f"{k}: {yaml_scalar(v)}")
     yaml_lines.append("---")
     target.write_text("\n".join(yaml_lines) + "\n\n" + body + "\n", encoding="utf-8")
     return target
@@ -193,14 +237,14 @@ def write_seed_stub(
         "---\n"
         "type: capture\n"
         "source: youtube\n"
-        f"video_url: {video_url}\n"
-        f"detected_at: {datetime.now(timezone.utc).isoformat()}\n"
-        f"keywords: {', '.join(seeds)}\n"
+        f"video_url: {yaml_scalar(video_url)}\n"
+        f"detected_at: {yaml_scalar(datetime.now(timezone.utc).isoformat())}\n"
+        f"keywords: {yaml_scalar(', '.join(seeds))}\n"
         "status: open\n"
         "---\n\n"
-        f"# Capture seed: {video_title}\n\n"
-        f"Trigger keywords detected in transcript: {', '.join(seeds)}.\n\n"
-        f"Source: {video_url}\n\n"
+        f"# Capture seed: {markdown_text(video_title)}\n\n"
+        f"Trigger keywords detected in transcript: {markdown_text(', '.join(seeds))}.\n\n"
+        f"Source: {markdown_text(video_url)}\n\n"
         "## Notes\n\n(fill in)\n"
     )
     target.write_text(body, encoding="utf-8")
@@ -220,10 +264,16 @@ def main() -> int:
         sys.stderr.write(f"Vault root not a directory: {vault_root}\n")
         return 1
 
+    try:
+        youtube_url = validate_youtube_url(args.url)
+    except ValueError as exc:
+        sys.stderr.write(f"Invalid YouTube URL: {exc}\n")
+        return 2
+
     ytdlp = require_bin("yt-dlp")
     prefs = [c.strip() for c in args.lang.split(",") if c.strip()]
 
-    meta = fetch_metadata(args.url, ytdlp)
+    meta = fetch_metadata(youtube_url, ytdlp)
     video_id = meta.get("id", "unknown")
     title = meta.get("title", "Untitled")
     channel = meta.get("channel") or meta.get("uploader") or "unknown-channel"
@@ -236,7 +286,7 @@ def main() -> int:
         datetime.now().strftime("%Y-%m-%d")
     )
 
-    listing = list_subs(args.url, ytdlp)
+    listing = list_subs(youtube_url, ytdlp)
     manual, auto = parse_available_subs(listing)
     pick = pick_lang(prefs, manual, auto)
 
@@ -247,7 +297,7 @@ def main() -> int:
     if pick:
         lang_code, sub_source = pick
         with tempfile.TemporaryDirectory() as td:
-            vtt = download_subs(args.url, lang_code, sub_source, ytdlp, Path(td))
+            vtt = download_subs(youtube_url, lang_code, sub_source, ytdlp, Path(td))
             transcript = clean_vtt(vtt)
     elif args.whisper:
         sys.stderr.write("Whisper fallback requested but not yet implemented in v0.1.\n")
@@ -261,18 +311,18 @@ def main() -> int:
     seeds = detect_seeds(transcript) if transcript else []
 
     body = transcript or (
-        f"# {title}\n\n"
+        f"# {markdown_text(title)}\n\n"
         f"No subtitles or auto-captions available for this video.\n\n"
         "To capture this transcript, add captions to the source video or transcribe the audio "
         "with your local Whisper workflow and re-run ingest.\n\n"
-        f"Source: {args.url}\n"
+        f"Source: {markdown_text(youtube_url)}\n"
     )
 
     fm = {
         "type": "external-input",
         "source": "youtube",
         "video_id": video_id,
-        "url": args.url,
+        "url": youtube_url,
         "channel": channel,
         "channel_url": meta.get("channel_url", ""),
         "title": title,
@@ -288,7 +338,7 @@ def main() -> int:
     seed_paths: list[Path] = []
     if seeds:
         seed_paths.append(
-            write_seed_stub(vault_root, upload_date, channel_slug, video_id, seeds, args.url, title)
+            write_seed_stub(vault_root, upload_date, channel_slug, video_id, seeds, youtube_url, title)
         )
 
     seed_str = f" Seeds at: {', '.join(str(p) for p in seed_paths)}." if seed_paths else ""

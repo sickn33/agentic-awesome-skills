@@ -56,7 +56,8 @@ The app reads configuration from `.env` files in `apps/web-app/`.
 - `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`: optional read access for read-only community save counts.
 - `VITE_ENABLE_SKILLS_SYNC=true`: explicitly exposes the local maintainer-only sync button during development.
 - `VITE_SYNC_SKILLS_TOKEN`: local development token accepted by the Vite refresh plugin.
-- `VITE_SITE_URL`: optional override for canonical URL generation when testing non-default hosts.
+- `SEO_SITE_URL`: optional override for sitemap and prerendered canonical URL generation when testing non-default hosts.
+- `WEBSITE_BASE_URL`: optional sitemap-only fallback used when `SEO_SITE_URL` is not set.
 
 Saving a skill is intentionally browser-local for now. The UI should not imply a shared write path until the project has a real backend contract for persistence, abuse controls, and deployment.
 

@@ -2,7 +2,7 @@
 name: tokenwise
 description: "Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper tiers before you trust the savings."
 category: developer-tools
-risk: safe
+risk: critical
 source: community
 source_repo: CodeShuX/tokenwise
 source_type: community
@@ -12,6 +12,10 @@ tags: [model-routing, token-optimization, cost-reduction, anthropic, haiku, sonn
 tools: [claude]
 license: "MIT"
 license_source: "https://github.com/CodeShuX/tokenwise/blob/main/LICENSE"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
 ---
 
 # TokenWise — Measurement-Driven Model Router

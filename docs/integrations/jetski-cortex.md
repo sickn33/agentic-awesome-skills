@@ -1,9 +1,9 @@
 ---
 title: Jetski/Cortex + Gemini Integration Guide
-description: "Use antigravity-awesome-skills with Jetski/Cortex without hitting context-window overflow with 1,459+ skills."
+description: "Use antigravity-awesome-skills with Jetski/Cortex without hitting context-window overflow with 1,484+ skills."
 ---
 
-# Jetski/Cortex + Gemini: safe integration with 1,459+ skills
+# Jetski/Cortex + Gemini: safe integration with 1,484+ skills
 
 This guide shows how to integrate the `antigravity-awesome-skills` repository with an agent based on **Jetski/Cortex + Gemini** (or similar frameworks) **without exceeding the model context window**.
 
@@ -23,7 +23,7 @@ Never do:
 - concatenate all `SKILL.md` content into a single system prompt;
 - re-inject the entire library for **every** request.
 
-With 1,459+ skills, this approach fills the context window before user messages are even added, causing truncation.
+With 1,484+ skills, this approach fills the context window before user messages are even added, causing truncation.
 
 ---
 
@@ -31,14 +31,16 @@ With 1,459+ skills, this approach fills the context window before user messages 
 
 Core principles:
 
-- **Light manifest**: use `data/skills_index.json` to know *which* skills exist without loading full text.
+- **Stable manifest**: use the canonical root `skills_index.json` to know *which* skills exist without loading full text.
+- **Compatibility mirror**: treat `data/skills_index.json` as an exact mirror of the canonical manifest.
 - **Lazy loading**: read `SKILL.md` **only** for skills actually invoked in a conversation (for example, when `@skill-id` appears).
 - **Explicit limits**: enforce a maximum number of skills/tokens loaded per turn, with clear fallbacks.
 - **Path safety**: verify manifest paths remain inside `SKILLS_ROOT` before reading `SKILL.md`.
+- **Schema contract**: validate manifest entries against [`schemas/skills-index.v1.schema.json`](../../schemas/skills-index.v1.schema.json).
 
 The recommended flow is:
 
-1. **Bootstrap**: on agent startup, read `data/skills_index.json` and build an `id -> meta` map.
+1. **Bootstrap**: on agent startup, read `skills_index.json` (and `data/skills_index.json` if your host expects compatibility reads) and build an `id -> meta` map.
 2. **Message parsing**: before calling the model, extract all `@skill-id` references from user/system messages.
 3. **Resolution**: map the found IDs into `SkillMeta` objects using the bootstrap map.
 4. **Lazy load**: read `SKILL.md` files only for these IDs (up to a configurable maximum).
@@ -48,7 +50,9 @@ The recommended flow is:
 
 ## 3. Structure of `skills_index.json`
 
-The file `data/skills_index.json` is an array of objects, for example:
+The file `skills_index.json` is an array of objects, for example:
+
+> `data/skills_index.json` is the compatibility mirror and should stay in sync with the canonical root manifest.
 
 ```json
 {
@@ -77,6 +81,10 @@ To resolve the path to a skill definition:
 ---
 
 ## 4. Integration pseudocode (TypeScript)
+
+The parser should validate against:
+
+- [`schemas/skills-index.v1.schema.json`](../../schemas/skills-index.v1.schema.json)
 
 > Full example in: [`docs/integrations/jetski-gemini-loader/`](../../docs/integrations/jetski-gemini-loader/).
 
@@ -265,7 +273,7 @@ To prevent recurrence:
 ## 9. Summary
 
 - Do not concatenate all `SKILL.md` files into a single prompt.
-- Use `data/skills_index.json` as a lightweight manifest.
+- Use `skills_index.json` as the canonical lightweight manifest.
 - Load skills **on demand** based on `@skill-id`.
 - Set clear limits (max skills per turn, token threshold).
 

@@ -2,10 +2,14 @@
 name: x-twitter-scraper
 description: "X/Twitter automation skill for tweet search, follower export, posting, DMs, webhooks, MCP, SDKs, Hermes Tweet, and TweetClaw."
 category: data
-risk: safe
+risk: critical
 source: community
 tags: "[twitter, x-api, tweet-search, twitter-api, twitter-scraper, follower-export, automation, mcp, sdk, webhooks, hermes-agent, hermes-tweet, openclaw, tweetclaw]"
 date_added: "2026-02-28"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
 ---
 
 # X (Twitter) Scraper - Xquik
@@ -13,6 +17,10 @@ date_added: "2026-02-28"
 ## Overview
 
 Gives AI agents X (Twitter) data and automation workflows through the Xquik platform. Covers tweet search, advanced Twitter search, profile tweets, user lookup, follower export, media download, posting, replies, DMs, giveaway draws, account monitoring, webhooks, 23 bulk extraction tools, MCP, official SDKs, the Hermes Tweet Hermes Agent plugin, and the TweetClaw OpenClaw plugin.
+
+This repository entry is documentation-only: it does not include an executable scraper, binary, package, or vendored runtime code. The external Xquik, Hermes Tweet, and TweetClaw tools referenced below must be reviewed and installed separately before use.
+
+Because this workflow can automate authenticated X/Twitter account actions, treat it as critical-risk guidance. Only use it with accounts and targets you are authorized to operate, and require explicit user approval before posting, replying, liking, reposting, following, unfollowing, sending DMs, creating monitors, registering webhooks, or starting bulk extraction.
 
 ## When to Use This Skill
 

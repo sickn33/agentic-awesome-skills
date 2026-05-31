@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEFAULT_BASE_DIR="${HOME:-$PWD}/.gemini/antigravity"
+DEFAULT_BASE_DIR="${HOME:-$PWD}/.agents"
 BASE_DIR="${AG_BASE_DIR:-$DEFAULT_BASE_DIR}"
 SKILLS_DIR="${AG_SKILLS_DIR:-$BASE_DIR/skills}"
 LIBRARY_DIR="${AG_LIBRARY_DIR:-$BASE_DIR/skills_library}"

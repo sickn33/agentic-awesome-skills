@@ -112,7 +112,7 @@ while read user; do
 done
 
 # Rotate access key
-OLD_KEY="AKIAIOSFODNN7EXAMPLE"
+OLD_KEY="<AWS_ACCESS_KEY_ID>"
 USER="myuser"
 
 # Create new key

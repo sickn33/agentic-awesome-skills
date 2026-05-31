@@ -1,8 +1,8 @@
 Glossary Consistency Report
 ===========================
-Generated: 2026-03-30 19:53:17
+Generated: deterministic
 
-Glossary File: /home/dannyzeng/coder1-workspace/projects/antigravity-awesome-skills/docs_zh-CN/.glossary.json
+Glossary File: docs_zh-CN/.glossary.json
 
 ----------------------------------------
 

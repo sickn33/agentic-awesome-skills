@@ -6,8 +6,6 @@ source: "https://github.com/dmno-dev/varlock"
 version: 1.0.0
 ---
 
-<!-- security-allowlist: curl-pipe-bash -->
-
 # Varlock Security Skill
 
 Secure-by-default environment variable management for Claude Code sessions.
@@ -90,7 +88,11 @@ curl -H "Authorization: Bearer $API_KEY" https://api.example.com
 
 ```bash
 # Install Varlock CLI
-curl -sSfL https://varlock.dev/install.sh | sh -s -- --force-no-brew
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -sSfL https://varlock.dev/install.sh -o "$tmpdir/varlock-install.sh"
+sed -n '1,160p' "$tmpdir/varlock-install.sh"
+sh "$tmpdir/varlock-install.sh" --force-no-brew
 
 # Add to PATH (add to ~/.zshrc or ~/.bashrc)
 export PATH="$HOME/.varlock/bin:$PATH"
@@ -245,7 +247,11 @@ varlock load
 
 ```dockerfile
 # Install Varlock in container
-RUN curl -sSfL https://varlock.dev/install.sh | sh -s -- --force-no-brew \
+RUN tmpdir="$(mktemp -d)" \
+    && curl -sSfL https://varlock.dev/install.sh -o "$tmpdir/varlock-install.sh" \
+    && sed -n '1,160p' "$tmpdir/varlock-install.sh" \
+    && sh "$tmpdir/varlock-install.sh" --force-no-brew \
+    && rm -rf "$tmpdir" \
     && ln -s /root/.varlock/bin/varlock /usr/local/bin/varlock
 
 # Validate at container start

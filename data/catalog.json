@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1459,
+  "total": 1484,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1476,27 +1476,27 @@
     {
       "id": "andrej-karpathy",
       "name": "andrej-karpathy",
-      "description": "Agente que simula Andrej Karpathy — ex-Director of AI da Tesla, co-fundador da OpenAI, fundador da Eureka Labs, e o maior educador de deep learning do mundo.",
+      "description": "Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.",
       "category": "data-ai",
       "tags": [
-        "persona",
-        "ai-expert",
-        "deep-learning",
-        "education"
+        "coding-guidelines",
+        "code-review",
+        "llm-coding",
+        "simplicity"
       ],
       "triggers": [
-        "persona",
-        "ai-expert",
-        "deep-learning",
-        "education",
+        "coding-guidelines",
+        "code-review",
+        "llm-coding",
+        "simplicity",
         "andrej",
         "karpathy",
-        "agente",
-        "que",
-        "simula",
-        "ex",
-        "director",
-        "ai"
+        "behavioral",
+        "guidelines",
+        "reduce",
+        "common",
+        "llm",
+        "coding"
       ],
       "path": "skills/andrej-karpathy/SKILL.md"
     },
@@ -6814,6 +6814,34 @@
       "path": "skills/bevy-ecs-expert/SKILL.md"
     },
     {
+      "id": "bilig-workpaper",
+      "name": "bilig-workpaper",
+      "description": "Use formula-backed WorkPaper JSON and MCP tools for agent spreadsheet tasks without driving Excel or a browser UI.",
+      "category": "development",
+      "tags": [
+        "spreadsheets",
+        "formulas",
+        "mcp",
+        "xlsx",
+        "typescript"
+      ],
+      "triggers": [
+        "spreadsheets",
+        "formulas",
+        "mcp",
+        "xlsx",
+        "typescript",
+        "bilig",
+        "workpaper",
+        "formula",
+        "backed",
+        "json",
+        "agent",
+        "spreadsheet"
+      ],
+      "path": "skills/bilig-workpaper/SKILL.md"
+    },
+    {
       "id": "bill-gates",
       "name": "bill-gates",
       "description": "Agente que simula Bill Gates — cofundador da Microsoft, arquiteto da industria de software comercial, estrategista tecnologico global, investidor sistemico e filantropo baseado em dados.",
@@ -7411,6 +7439,35 @@
         "js"
       ],
       "path": "skills/bullmq-specialist/SKILL.md"
+    },
+    {
+      "id": "bumblebee",
+      "name": "bumblebee",
+      "description": "Run Bumblebee supply-chain inventory and exposure scans on macOS/Linux to detect compromised packages, extensions, and MCP host configs.",
+      "category": "security",
+      "tags": [
+        "security",
+        "supply-chain",
+        "incident-response",
+        "npm",
+        "pypi",
+        "tooling"
+      ],
+      "triggers": [
+        "security",
+        "supply-chain",
+        "incident-response",
+        "npm",
+        "pypi",
+        "tooling",
+        "bumblebee",
+        "run",
+        "supply",
+        "chain",
+        "inventory",
+        "exposure"
+      ],
+      "path": "skills/bumblebee/SKILL.md"
     },
     {
       "id": "bun-development",
@@ -9383,6 +9440,35 @@
       "path": "skills/competitor-alternatives/SKILL.md"
     },
     {
+      "id": "complexity-cuts",
+      "name": "complexity-cuts",
+      "description": "Lower Big-O on existing code via a one-transformation-at-a-time playbook with verify-revert-stop. For new code use lemmaly; for math-level wins escalate to mathguard.",
+      "category": "general",
+      "tags": [
+        "algorithms",
+        "big-o",
+        "refactoring",
+        "optimization",
+        "performance",
+        "n-plus-one"
+      ],
+      "triggers": [
+        "algorithms",
+        "big-o",
+        "refactoring",
+        "optimization",
+        "performance",
+        "n-plus-one",
+        "complexity",
+        "cuts",
+        "lower",
+        "big",
+        "existing",
+        "code"
+      ],
+      "path": "skills/complexity-cuts/SKILL.md"
+    },
+    {
       "id": "comprehensive-review-full-review",
       "name": "comprehensive-review-full-review",
       "description": "Use when working with comprehensive review full review",
@@ -9702,6 +9788,32 @@
         "through"
       ],
       "path": "skills/constant-time-analysis/SKILL.md"
+    },
+    {
+      "id": "container-security-hardening",
+      "name": "container-security-hardening",
+      "description": "Harden Docker/container images and runtime deployments with secure base images, non-root users, CVE scanning, SBOM/signing, seccomp/AppArmor, and Kubernetes pod security controls. Use for Dockerfile security reviews, container CVEs, image scanning, distroless images, or production hardening.",
+      "category": "security",
+      "tags": [
+        "container",
+        "security",
+        "hardening"
+      ],
+      "triggers": [
+        "container",
+        "security",
+        "hardening",
+        "harden",
+        "docker",
+        "images",
+        "runtime",
+        "deployments",
+        "secure",
+        "base",
+        "non",
+        "root"
+      ],
+      "path": "skills/container-security-hardening/SKILL.md"
     },
     {
       "id": "content-creator",
@@ -11323,6 +11435,31 @@
         "working"
       ],
       "path": "skills/debugging-toolkit-smart-debug/SKILL.md"
+    },
+    {
+      "id": "decision-navigator",
+      "name": "decision-navigator",
+      "description": "Guide stuck or overwhelmed users through targeted branching questions until they reach concrete next steps.",
+      "category": "architecture",
+      "tags": [
+        "decision",
+        "navigator"
+      ],
+      "triggers": [
+        "decision",
+        "navigator",
+        "stuck",
+        "overwhelmed",
+        "users",
+        "through",
+        "targeted",
+        "branching",
+        "questions",
+        "until",
+        "reach",
+        "concrete"
+      ],
+      "path": "skills/decision-navigator/SKILL.md"
     },
     {
       "id": "deep-research",
@@ -14030,6 +14167,37 @@
       "path": "skills/fixing-motion-performance/SKILL.md"
     },
     {
+      "id": "flowhunt-skill",
+      "name": "flowhunt-skill",
+      "description": "Automation discovery audit skill. Walks through a 5-question workflow intake, then audits Gmail/Calendar/Slack/task trackers to identify automation opportunities. Use when a user wants to discover what processes in their business can be automated.",
+      "category": "business",
+      "tags": [
+        "automation",
+        "discovery",
+        "audit",
+        "gmail",
+        "calendar",
+        "slack",
+        "productivity",
+        "workflow"
+      ],
+      "triggers": [
+        "automation",
+        "discovery",
+        "audit",
+        "gmail",
+        "calendar",
+        "slack",
+        "productivity",
+        "workflow",
+        "flowhunt",
+        "skill",
+        "walks",
+        "through"
+      ],
+      "path": "skills/flowhunt-skill/SKILL.md"
+    },
+    {
       "id": "flutter-expert",
       "name": "flutter-expert",
       "description": "Master Flutter development with Dart 3, advanced widgets, and multi-platform deployment.",
@@ -15340,6 +15508,33 @@
       "path": "skills/gemini-api-integration/SKILL.md"
     },
     {
+      "id": "geminiignore-finops",
+      "name": "geminiignore-finops",
+      "description": "Configure and optimize .geminiignore files for AI context window efficiency and token cost reduction (FinOps).",
+      "category": "data-ai",
+      "tags": [
+        "finops",
+        "context-management",
+        "token-optimization",
+        "geminiignore"
+      ],
+      "triggers": [
+        "finops",
+        "context-management",
+        "token-optimization",
+        "geminiignore",
+        "configure",
+        "optimize",
+        "files",
+        "ai",
+        "context",
+        "window",
+        "efficiency",
+        "token"
+      ],
+      "path": "skills/geminiignore-finops/SKILL.md"
+    },
+    {
       "id": "geo-fundamentals",
       "name": "geo-fundamentals",
       "description": "Generative Engine Optimization for AI search engines (ChatGPT, Claude, Perplexity).",
@@ -15638,6 +15833,32 @@
         "queries"
       ],
       "path": "skills/github/SKILL.md"
+    },
+    {
+      "id": "github-actions-advanced",
+      "name": "github-actions-advanced",
+      "description": "Design, debug, and harden GitHub Actions CI/CD workflows, including reusable workflows, matrix builds, self-hosted runners, OIDC authentication, caching, environments, secrets, and release automation.",
+      "category": "security",
+      "tags": [
+        "github",
+        "actions",
+        "advanced"
+      ],
+      "triggers": [
+        "github",
+        "actions",
+        "advanced",
+        "debug",
+        "harden",
+        "ci",
+        "cd",
+        "including",
+        "reusable",
+        "matrix",
+        "self",
+        "hosted"
+      ],
+      "path": "skills/github-actions-advanced/SKILL.md"
     },
     {
       "id": "github-actions-templates",
@@ -17618,6 +17839,37 @@
       "path": "skills/idor-testing/SKILL.md"
     },
     {
+      "id": "ii-commons",
+      "name": "ii-commons",
+      "description": "Deterministic search across arXiv, PubMed/PMC, and US policy corpora with daily freshness cutoffs.",
+      "category": "general",
+      "tags": [
+        "research",
+        "arxiv",
+        "pubmed",
+        "pmc",
+        "policy",
+        "retrieval",
+        "cli",
+        "codex"
+      ],
+      "triggers": [
+        "research",
+        "arxiv",
+        "pubmed",
+        "pmc",
+        "policy",
+        "retrieval",
+        "cli",
+        "codex",
+        "ii",
+        "commons",
+        "deterministic",
+        "search"
+      ],
+      "path": "skills/ii-commons/SKILL.md"
+    },
+    {
       "id": "ilya-sutskever",
       "name": "ilya-sutskever",
       "description": "Agente que simula Ilya Sutskever — co-fundador da OpenAI, ex-Chief Scientist, fundador da SSI. Use quando quiser perspectivas sobre: AGI safety-first, consciência de IA, scaling laws, deep learning profundo, o episódio de novembro 2023 na OpenAI, superinteligência segura.",
@@ -18104,6 +18356,35 @@
         "decoding"
       ],
       "path": "skills/interview-coach/SKILL.md"
+    },
+    {
+      "id": "invariant-guard",
+      "name": "invariant-guard",
+      "description": "Correctness-first: forces writing the function contract, loop invariant, termination argument, and edge cases BEFORE code. Catches Boyer-Moore, leftmost binary search, QuickSelect traps.",
+      "category": "business",
+      "tags": [
+        "algorithms",
+        "correctness",
+        "loop-invariants",
+        "contracts",
+        "edge-cases",
+        "verification"
+      ],
+      "triggers": [
+        "algorithms",
+        "correctness",
+        "loop-invariants",
+        "contracts",
+        "edge-cases",
+        "verification",
+        "invariant",
+        "guard",
+        "first",
+        "forces",
+        "writing",
+        "function"
+      ],
+      "path": "skills/invariant-guard/SKILL.md"
     },
     {
       "id": "inventory-demand-planning",
@@ -19433,6 +19714,35 @@
       "path": "skills/leiloeiro-risco/SKILL.md"
     },
     {
+      "id": "lemmaly",
+      "name": "lemmaly",
+      "description": "Algorithm-first discipline: state Big-O, data structure, and algorithm family BEFORE writing loops, queries, or recursion. Catches O(n^2), N+1, and brute-force defaults.",
+      "category": "data-ai",
+      "tags": [
+        "algorithms",
+        "big-o",
+        "performance",
+        "code-review",
+        "complexity",
+        "gateway"
+      ],
+      "triggers": [
+        "algorithms",
+        "big-o",
+        "performance",
+        "code-review",
+        "complexity",
+        "gateway",
+        "lemmaly",
+        "algorithm",
+        "first",
+        "discipline",
+        "state",
+        "big"
+      ],
+      "path": "skills/lemmaly/SKILL.md"
+    },
+    {
       "id": "lex",
       "name": "lex",
       "description": "Centralized 'Truth Engine' for cross-jurisdictional legal context (US, EU, CA) and contract scaffolding.",
@@ -20226,6 +20536,34 @@
       "path": "skills/loki-mode/SKILL.md"
     },
     {
+      "id": "longbridge",
+      "name": "longbridge",
+      "description": "125+ agent skills for Longbridge Securities — real-time quotes, charts, fundamentals, portfolio analysis, options, and more for HK/US/A-share/SG markets. Trilingual: Simplified Chinese, Traditional Chinese, English.",
+      "category": "business",
+      "tags": [
+        "finance",
+        "stocks",
+        "trading",
+        "portfolio",
+        "market-data"
+      ],
+      "triggers": [
+        "finance",
+        "stocks",
+        "trading",
+        "portfolio",
+        "market-data",
+        "longbridge",
+        "125",
+        "agent",
+        "skills",
+        "securities",
+        "real",
+        "time"
+      ],
+      "path": "skills/longbridge/SKILL.md"
+    },
+    {
       "id": "loss-aversion-designer",
       "name": "loss-aversion-designer",
       "description": "One sentence - what this skill does and when to invoke it",
@@ -20989,6 +21327,36 @@
       "path": "skills/matematico-tao/SKILL.md"
     },
     {
+      "id": "mathguard",
+      "name": "mathguard",
+      "description": "Math-heavy escalation for n >= 10^6 — Bloom, HyperLogLog, Count-Min, MinHash/LSH, FFT, JL projection, sweep line. Use when classical O(n log n) is the floor and approximate or math wins.",
+      "category": "general",
+      "tags": [
+        "algorithms",
+        "probabilistic-data-structures",
+        "approximate-algorithms",
+        "bloom-filter",
+        "hyperloglog",
+        "fft",
+        "performance"
+      ],
+      "triggers": [
+        "algorithms",
+        "probabilistic-data-structures",
+        "approximate-algorithms",
+        "bloom-filter",
+        "hyperloglog",
+        "fft",
+        "performance",
+        "mathguard",
+        "math",
+        "heavy",
+        "escalation",
+        "10"
+      ],
+      "path": "skills/mathguard/SKILL.md"
+    },
+    {
       "id": "matplotlib",
       "name": "matplotlib",
       "description": "Matplotlib is Python's foundational visualization library for creating static, animated, and interactive plots.",
@@ -21215,6 +21583,31 @@
       "path": "skills/mental-health-analyzer/SKILL.md"
     },
     {
+      "id": "mercury-mcp",
+      "name": "mercury-mcp",
+      "description": "Cheatsheet for the Mercury (proton) MCP tools. Use when connected to the Mercury MCP server to look up which mercury_* tool to call for messaging teammates, threads, tasks, automations, or admin team-graph edits.",
+      "category": "general",
+      "tags": [
+        "mercury",
+        "mcp"
+      ],
+      "triggers": [
+        "mercury",
+        "mcp",
+        "cheatsheet",
+        "proton",
+        "connected",
+        "server",
+        "look",
+        "up",
+        "which",
+        "call",
+        "messaging",
+        "teammates"
+      ],
+      "path": "skills/mercury-mcp/SKILL.md"
+    },
+    {
       "id": "mermaid-expert",
       "name": "mermaid-expert",
       "description": "Create Mermaid diagrams for flowcharts, sequences, ERDs, and architectures. Masters syntax for all diagram types and styling.",
@@ -21237,6 +21630,31 @@
         "styling"
       ],
       "path": "skills/mermaid-expert/SKILL.md"
+    },
+    {
+      "id": "mesh-memory",
+      "name": "mesh-memory",
+      "description": "Self-hosted semantic memory for AI agents via MCP. Save worklogs, decisions, and notes, then recall them across sessions by meaning, not keyword. Postgres + pgvector with auto-tagging.",
+      "category": "infrastructure",
+      "tags": [
+        "mesh",
+        "memory"
+      ],
+      "triggers": [
+        "mesh",
+        "memory",
+        "self",
+        "hosted",
+        "semantic",
+        "ai",
+        "agents",
+        "via",
+        "mcp",
+        "save",
+        "worklogs",
+        "decisions"
+      ],
+      "path": "skills/mesh-memory/SKILL.md"
     },
     {
       "id": "metasploit-framework",
@@ -24370,6 +24788,32 @@
       "path": "skills/pci-compliance/SKILL.md"
     },
     {
+      "id": "pdf-conversion-router",
+      "name": "pdf-conversion-router",
+      "description": "Use when converting a PDF into another format such as Markdown, HTML, text, JSON, DOCX, or structured notes and the agent must choose the best extraction route, settings, and cleanup strategy for maximum fidelity and readability.",
+      "category": "general",
+      "tags": [
+        "pdf",
+        "conversion",
+        "router"
+      ],
+      "triggers": [
+        "pdf",
+        "conversion",
+        "router",
+        "converting",
+        "another",
+        "format",
+        "such",
+        "markdown",
+        "html",
+        "text",
+        "json",
+        "docx"
+      ],
+      "path": "skills/pdf-conversion-router/SKILL.md"
+    },
+    {
       "id": "pdf-official",
       "name": "pdf-official",
       "description": "This guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detailed examples, see reference.md. If you need to fill out a PDF form, read forms.md and follow its instructions.",
@@ -24600,6 +25044,32 @@
         "until"
       ],
       "path": "skills/phase-gated-debugging/SKILL.md"
+    },
+    {
+      "id": "photopea-embedded-editor",
+      "name": "photopea-embedded-editor",
+      "description": "Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and the full Photoshop-compatible API.",
+      "category": "data-ai",
+      "tags": [
+        "photopea",
+        "embedded",
+        "editor"
+      ],
+      "triggers": [
+        "photopea",
+        "embedded",
+        "editor",
+        "embed",
+        "web",
+        "apps",
+        "js",
+        "covers",
+        "embedding",
+        "file",
+        "scripting",
+        "exporting"
+      ],
+      "path": "skills/photopea-embedded-editor/SKILL.md"
     },
     {
       "id": "php-pro",
@@ -26702,6 +27172,37 @@
       "path": "skills/receiving-code-review/SKILL.md"
     },
     {
+      "id": "recsys-pipeline-architect",
+      "name": "recsys-pipeline-architect",
+      "description": "Designs composable recommendation, ranking, and feed pipelines using the six-stage Source→Hydrator→Filter→Scorer→Selector→SideEffect framework",
+      "category": "infrastructure",
+      "tags": [
+        "recommender-system",
+        "ranking",
+        "feed-algorithm",
+        "recsys",
+        "personalization",
+        "for-you-feed",
+        "rag-reranker",
+        "pipeline-architecture"
+      ],
+      "triggers": [
+        "recommender-system",
+        "ranking",
+        "feed-algorithm",
+        "recsys",
+        "personalization",
+        "for-you-feed",
+        "rag-reranker",
+        "pipeline-architecture",
+        "pipeline",
+        "architect",
+        "designs",
+        "composable"
+      ],
+      "path": "skills/recsys-pipeline-architect/SKILL.md"
+    },
+    {
       "id": "recursive-context-pruning-token-budgeting",
       "name": "recursive-context-pruning-token-budgeting",
       "description": "Optimizes AI agent performance by pruning redundant context, managing token usage, and enforcing ultra-concise, direct-to-value responses.",
@@ -27292,6 +27793,37 @@
         "development"
       ],
       "path": "skills/ruby-pro/SKILL.md"
+    },
+    {
+      "id": "runaway-guard",
+      "name": "runaway-guard",
+      "description": "Cost-safety discipline for paid AI / inference APIs: treat $-cost as a third complexity dimension alongside time and space. Forces a written per-run $-cap, per-day $-cap, max-iterations bound, concurrency limit, and a matching provider-dashboard hard cap BEFORE any call site is written.",
+      "category": "data-ai",
+      "tags": [
+        "cost-safety",
+        "finops",
+        "ai-apis",
+        "agents",
+        "retries",
+        "concurrency",
+        "wallet-invariant",
+        "gateway"
+      ],
+      "triggers": [
+        "cost-safety",
+        "finops",
+        "ai-apis",
+        "agents",
+        "retries",
+        "concurrency",
+        "wallet-invariant",
+        "gateway",
+        "runaway",
+        "guard",
+        "cost",
+        "safety"
+      ],
+      "path": "skills/runaway-guard/SKILL.md"
     },
     {
       "id": "rust-async-patterns",
@@ -28368,6 +28900,126 @@
         "target"
       ],
       "path": "skills/semgrep-rule-variant-creator/SKILL.md"
+    },
+    {
+      "id": "sendblue/sendblue-api",
+      "name": "sendblue-api",
+      "description": "Send and receive iMessage, SMS, and RCS from application code via the Sendblue HTTP API — text, media, group messages, send styles, reactions, typing indicators, status callbacks, and inbound webhooks.",
+      "category": "development",
+      "tags": [
+        "sendblue",
+        "imessage",
+        "sms",
+        "rcs",
+        "messaging",
+        "api",
+        "webhooks"
+      ],
+      "triggers": [
+        "sendblue",
+        "imessage",
+        "sms",
+        "rcs",
+        "messaging",
+        "api",
+        "webhooks",
+        "send",
+        "receive",
+        "application",
+        "code",
+        "via"
+      ],
+      "path": "skills/sendblue/sendblue-api/SKILL.md"
+    },
+    {
+      "id": "sendblue/sendblue-cli",
+      "name": "sendblue-cli",
+      "description": "Send iMessage and SMS from the shell via the @sendblue/cli npm package — outbound sends, contact management, and account setup with no API client or webhook server required.",
+      "category": "development",
+      "tags": [
+        "sendblue",
+        "imessage",
+        "sms",
+        "cli",
+        "messaging",
+        "notifications"
+      ],
+      "triggers": [
+        "sendblue",
+        "imessage",
+        "sms",
+        "cli",
+        "messaging",
+        "notifications",
+        "send",
+        "shell",
+        "via",
+        "npm",
+        "package",
+        "outbound"
+      ],
+      "path": "skills/sendblue/sendblue-cli/SKILL.md"
+    },
+    {
+      "id": "sendblue/sendblue-notify",
+      "name": "sendblue-notify",
+      "description": "Text the user's phone when a long-running task, agent turn, or scheduled job finishes — via @sendblue/cli for outbound, optionally wired to a Claude Code Stop hook for automatic fire.",
+      "category": "workflow",
+      "tags": [
+        "sendblue",
+        "imessage",
+        "sms",
+        "notifications",
+        "hooks",
+        "claude-code",
+        "automation"
+      ],
+      "triggers": [
+        "sendblue",
+        "imessage",
+        "sms",
+        "notifications",
+        "hooks",
+        "claude-code",
+        "automation",
+        "notify",
+        "text",
+        "user",
+        "phone",
+        "long"
+      ],
+      "path": "skills/sendblue/sendblue-notify/SKILL.md"
+    },
+    {
+      "id": "sendblue/textme",
+      "name": "textme",
+      "description": "Text Claude from your phone — set up the njerschow/textme daemon so inbound iMessages drive a Claude Code session on your laptop, with voice notes, image input, code execution, and a phone-number whitelist.",
+      "category": "workflow",
+      "tags": [
+        "textme",
+        "sendblue",
+        "imessage",
+        "sms",
+        "claude-code",
+        "daemon",
+        "remote-control",
+        "automation"
+      ],
+      "triggers": [
+        "textme",
+        "sendblue",
+        "imessage",
+        "sms",
+        "claude-code",
+        "daemon",
+        "remote-control",
+        "automation",
+        "text",
+        "claude",
+        "phone",
+        "set"
+      ],
+      "path": "skills/sendblue/textme/SKILL.md"
     },
     {
       "id": "sendgrid-automation",
@@ -30446,6 +31098,42 @@
       "path": "skills/social-proof-architect/SKILL.md"
     },
     {
+      "id": "socialclaw",
+      "name": "socialclaw",
+      "description": "Agent-first social media publishing skill — schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key.",
+      "category": "development",
+      "tags": [
+        "social-media",
+        "publishing",
+        "scheduling",
+        "marketing",
+        "twitter",
+        "linkedin",
+        "instagram",
+        "tiktok",
+        "discord",
+        "telegram",
+        "reddit",
+        "wordpress",
+        "pinterest"
+      ],
+      "triggers": [
+        "social-media",
+        "publishing",
+        "scheduling",
+        "marketing",
+        "twitter",
+        "linkedin",
+        "instagram",
+        "tiktok",
+        "discord",
+        "telegram",
+        "reddit",
+        "wordpress"
+      ],
+      "path": "skills/socialclaw/SKILL.md"
+    },
+    {
       "id": "software-architecture",
       "name": "software-architecture",
       "description": "Guide for quality focused software architecture. This skill should be used when users want to write code, design architecture, analyze code, in any case that relates to software development.",
@@ -31232,6 +31920,34 @@
         "session"
       ],
       "path": "skills/subagent-driven-development/SKILL.md"
+    },
+    {
+      "id": "subagent-orchestrator",
+      "name": "subagent-orchestrator",
+      "description": "Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.",
+      "category": "workflow",
+      "tags": [
+        "subagents",
+        "orchestration",
+        "quota",
+        "parallel",
+        "multi-agent"
+      ],
+      "triggers": [
+        "subagents",
+        "orchestration",
+        "quota",
+        "parallel",
+        "multi-agent",
+        "subagent",
+        "orchestrator",
+        "coordinate",
+        "aware",
+        "large",
+        "multi",
+        "file"
+      ],
+      "path": "skills/subagent-orchestrator/SKILL.md"
     },
     {
       "id": "subject-line-psychologist",
