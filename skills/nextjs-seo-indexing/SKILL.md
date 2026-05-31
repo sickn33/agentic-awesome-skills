@@ -18,6 +18,14 @@ Fix Google Search Console coverage issues, canonical problems, sitemap errors, a
 
 ---
 
+## When to Use
+
+- Use when a Next.js site has Google Search Console coverage issues such as duplicate canonicals, accidental noindex, crawl waste, or discovered-but-not-indexed URLs.
+- Use when auditing sitemap, robots.txt, redirect, internal-linking, or static-rendering problems before an SEO release.
+- Use when you need framework-specific examples for Next.js App Router metadata, `generateMetadata`, `robots.js`, and sitemap routes.
+
+---
+
 ## Understanding Search Console Coverage States
 
 | Status | Meaning | Fix |
@@ -247,3 +255,9 @@ export default function robots() {
 - [ ] robots.txt allows important content
 - [ ] Every important page has ≥1 internal inbound link
 - [ ] `generateStaticParams` added for dynamic routes with known slugs
+
+## Limitations
+
+- Does not guarantee Google will index a page; final indexing decisions remain with the search engine.
+- Requires access to the codebase, deployed URLs, and ideally Google Search Console data for confident diagnosis.
+- Treat recommendations that change URL structure, redirects, or canonical policy as production-impacting and review them before deployment.

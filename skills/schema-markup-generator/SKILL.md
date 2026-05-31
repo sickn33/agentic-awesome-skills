@@ -18,6 +18,14 @@ Add JSON-LD structured data to pages to unlock rich results, improve CTR, and si
 
 ---
 
+## When to Use
+
+- Use when adding or auditing JSON-LD schema for websites, SaaS apps, tools, articles, FAQs, breadcrumbs, or organization pages.
+- Use when schema must be implemented in Next.js App Router or validated against Google Rich Results and Schema.org tooling.
+- Use when a page has strong content but lacks structured data for search engines and rich-result eligibility.
+
+---
+
 ## How to Add Schema in Next.js App Router
 
 The cleanest approach is a reusable `JsonLd` component:
@@ -303,3 +311,9 @@ curl -s https://www.yourdomain.com/tools/keyword-density | grep -A 5 "applicatio
 - [ ] All URLs in schema are absolute HTTPS
 - [ ] Schema validated with Google Rich Results Test
 - [ ] No schema errors in Google Search Console
+
+## Limitations
+
+- Does not guarantee rich-result eligibility or display; Google and other consumers decide whether to use valid schema.
+- Generated examples must be adapted to the site's real content, legal entity details, ratings, pricing, and availability.
+- Always validate deployed HTML, not only source code, because frameworks and rendering modes can change the final markup.

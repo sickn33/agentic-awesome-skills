@@ -18,6 +18,14 @@ The end-to-end launch checklist for fullstack Next.js apps. Run this before ever
 
 ---
 
+## When to Use
+
+- Use before deploying a vibe-coded or fast-built app to production.
+- Use when validating build output, SEO tags, sitemap routes, API routes, git diff cleanliness, and post-deploy smoke checks.
+- Use when you need a concrete definition of done for release readiness across code, runtime behavior, and public URLs.
+
+---
+
 ## The Full Validation Command Sequence
 
 Run in order — stop and fix on any failure before continuing:
@@ -221,3 +229,9 @@ A change is **production-ready** only when ALL of the following are true:
 - [ ] No secrets in git diff
 - [ ] Commit message is scoped and descriptive
 - [ ] Social preview platforms show correct card after cache refresh
+
+## Limitations
+
+- Passing this checklist reduces release risk but does not prove the absence of production bugs.
+- Some checks depend on project-specific scripts, deployment topology, and external services that may not exist in every app.
+- Manual exploratory testing is still required for critical user journeys, payments, auth, and data mutation flows.

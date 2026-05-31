@@ -17,6 +17,12 @@ version: 1.0.0
 A safe, incremental cleanup workflow for AI-generated / vibe-coded fullstack apps.
 The goal is to make the codebase production-ready **without** breaking anything that already works.
 
+## When to Use
+
+- Use when a rapidly built app works but has broken imports, duplicated logic, dead code, unclear environment variables, or fragile release hygiene.
+- Use before launch or handoff to convert exploratory code into a maintainable production baseline.
+- Use when cleanup must preserve existing behavior and avoid broad rewrites of routes, APIs, auth, data models, or integrations.
+
 ## Core Philosophy
 
 > **Surgery, not demolition.** Remove only what is provably dead. Preserve everything else.
@@ -217,3 +223,9 @@ Treat these as off-limits unless there's a verified bug:
 - [ ] Tests pass (or no tests exist)
 - [ ] Lint passes
 - [ ] Each commit is scoped and explainable
+
+## Limitations
+
+- Does not infer product intent from code alone; confirm behavior before deleting routes, components, API contracts, or data models.
+- Cleanup should be applied in small reviewed batches because broad refactors can hide regressions.
+- Avoid changing auth, billing, persistence, or third-party integration behavior without explicit requirements and tests.

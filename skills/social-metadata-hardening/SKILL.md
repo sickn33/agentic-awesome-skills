@@ -18,6 +18,14 @@ Fix social sharing so every important URL unfurls as a rich card across all plat
 
 ---
 
+## When to Use
+
+- Use when shared links show missing, stale, cropped, or incorrect previews on social and chat platforms.
+- Use when auditing Open Graph, Twitter/X card, image URL, alt text, or `metadataBase` coverage in a web app.
+- Use before launch when every public page needs predictable rich previews across LinkedIn, X, Facebook, WhatsApp, Slack, Discord, and Telegram.
+
+---
+
 ## Why Previews Break
 
 | Problem | Root Cause |
@@ -214,3 +222,9 @@ After deploying fixes, paste the URL into each platform's debugger and click "Fe
 - [ ] Tags visible in raw HTML (not JavaScript-rendered)
 - [ ] All platform debuggers show correct preview
 - [ ] Cache refreshed on all platforms after deployment
+
+## Limitations
+
+- Cannot force immediate cache refresh on every social platform; some previews may remain stale after a correct fix.
+- Requires deployed, publicly reachable URLs for reliable validation with platform debuggers.
+- Does not replace brand, accessibility, or legal review of image text, alt text, and preview copy.
