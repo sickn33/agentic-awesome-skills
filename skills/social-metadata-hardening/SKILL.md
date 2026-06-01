@@ -141,7 +141,7 @@ export const metadata = {
 };
 ```
 
-> ⚠️ **`metadataBase` is critical.** Without it, Next.js generates relative OG image URLs that every platform rejects.
+> ⚠️ **Set `metadataBase` when using relative metadata URLs.** If your helper already outputs absolute canonical/OG URLs, previews can still work without it.
 
 ---
 
@@ -198,6 +198,7 @@ curl -s https://www.yourdomain.com/blog/my-post | grep -i "og:\|twitter:"
 If tags don't appear → they're being added by JavaScript (not crawlable). Fix: move to `export const metadata` or `generateMetadata`.
 
 ### 2. Validate with platform tools
+
 | Platform | Tool |
 |----------|------|
 | Facebook | https://developers.facebook.com/tools/debug/ |
@@ -226,5 +227,5 @@ After deploying fixes, paste the URL into each platform's debugger and click "Fe
 ## Limitations
 
 - Cannot force immediate cache refresh on every social platform; some previews may remain stale after a correct fix.
-- Requires deployed, publicly reachable URLs for reliable validation with platform debuggers.
+- Requires publicly reachable deployed URLs for reliable validation with platform debuggers.
 - Does not replace brand, accessibility, or legal review of image text, alt text, and preview copy.

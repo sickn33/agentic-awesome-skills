@@ -69,6 +69,7 @@ grep "Static pages\|○\|●" build.log | tail -5
 ```
 
 ### Route symbols explained
+
 | Symbol | Meaning | Expected? |
 |--------|---------|-----------|
 | `○` | Static (rendered at build time) | ✓ Good for most pages |
@@ -179,7 +180,7 @@ git status | grep -E "\.next|node_modules"
 ```
 
 Good commit message format:
-```
+```text
 type(scope): brief description
 
 fix(seo): add canonical tags to all blog pages

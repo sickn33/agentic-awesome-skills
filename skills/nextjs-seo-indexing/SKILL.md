@@ -85,7 +85,7 @@ Find pages that are accidentally noindexed:
 
 ```bash
 # Search for noindex in metadata
-grep -r "noindex\|robots.*noindex" --include="*.{js,ts,jsx,tsx}" app/ pages/ -l
+rg -n --glob '*.{js,ts,jsx,tsx}' 'noindex|robots.*noindex' app pages
 
 # Check layout.js — a noindex here affects ALL pages
 grep -n "robots" app/layout.js
@@ -156,7 +156,7 @@ Pages must be statically generated (or SSR with metadata in HTML) for Google to 
 npm run build 2>&1 | grep -E "○|●|λ|/blog|/tools"
 ```
 
-```
+```text
 ○  /about             (static)
 ●  /blog/[slug]       (SSG)  ← good
 λ  /api/data          (serverless) ← expected for APIs
@@ -221,7 +221,7 @@ async redirects() {
 curl -s https://www.yourdomain.com/robots.txt
 ```
 
-```
+```text
 # ✓ Good
 User-agent: *
 Allow: /
