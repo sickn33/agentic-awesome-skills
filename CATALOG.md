@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1484
+Total skills: 1493
 
 ## architecture (97)
 
@@ -193,10 +193,10 @@ Total skills: 1484
 | `steve-jobs` | Agente que simula Steve Jobs — cofundador da Apple, CEO da Pixar, fundador da NeXT, o maior designer de produtos tecnologicos da historia e o mais influente ... | persona, design-thinking, product, presentations | persona, design-thinking, product, presentations, steve, jobs, agente, que, simula, cofundador, da, apple |
 | `warren-buffett` | Agente que simula Warren Buffett — o maior investidor do seculo XX e XXI, CEO da Berkshire Hathaway, discipulo de Benjamin Graham e socio intelectual de Char... | persona, investing, value-investing, business | persona, investing, value-investing, business, warren, buffett, agente, que, simula, maior, investidor, do |
 | `whatsapp-automation` | Automate WhatsApp Business tasks via Rube MCP (Composio): send messages, manage templates, upload media, and handle contacts. Always search tools first for c... | whatsapp | whatsapp, automation, automate, business, tasks, via, rube, mcp, composio, send, messages, upload |
-| `wordpress-centric-high-seo-optimized-blogwriting-skill` | Create long-form, high-quality, SEO-optimized blog posts ready for WordPress with truth boxes and FAQ schema. | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, long, form |
+| `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 
-## data-ai (285)
+## data-ai (287)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -390,6 +390,7 @@ Total skills: 1484
 | `maxia` | Connect to MAXIA AI-to-AI marketplace on Solana. Discover, buy, sell AI services. Earn USDC. 13 MCP tools, A2A protocol, DeFi yields, sentiment analysis, rug... | solana, crypto, marketplace, ai-agents, mcp, defi, usdc, web3, a2a | solana, crypto, marketplace, ai-agents, mcp, defi, usdc, web3, a2a, maxia, connect, ai |
 | `mlops-engineer` | Build comprehensive ML pipelines, experiment tracking, and model registries with MLflow, Kubeflow, and modern MLOps tools. | mlops | mlops, engineer, ml, pipelines, experiment, tracking, model, registries, mlflow, kubeflow |
 | `mmx-cli` | Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax mo... | mmx, cli | mmx, cli, generate, text, images, video, speech, music, via, minimax, ai, platform |
+| `moatmri` | Analyze AI disruption pressure across a business, map competitive exposure, and produce a 90-day defensive action plan. | moatmri | moatmri, analyze, ai, disruption, pressure, business, map, competitive, exposure, produce, 90, day |
 | `mock-hunter` | Audit a live web page in five phases (catalog, click, trace, classify, report) to identify mock data, hardcoded values, LLM-generated metrics, and broken end... | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code, mock, hunter, audit, live |
 | `molykit` | CRITICAL: Use for MolyKit AI chat toolkit. Triggers on: BotClient, OpenAI, SSE streaming, AI chat, molykit, PlatformSend, spawn(), ThreadToken, cross-platfor... | molykit | molykit, critical, ai, chat, toolkit, triggers, botclient, openai, sse, streaming, platformsend, spawn |
 | `monte-carlo-push-ingestion` | Expert guide for pushing metadata, lineage, and query logs to Monte Carlo from any data warehouse. | data-observability, ingestion, monte-carlo, pycarlo, metadata | data-observability, ingestion, monte-carlo, pycarlo, metadata, monte, carlo, push, pushing, lineage, query, logs |
@@ -431,6 +432,7 @@ Total skills: 1484
 | `scala-pro` | Master enterprise-grade Scala development with functional programming, distributed systems, and big data processing. Expert in Apache Pekko, Akka, Spark, ZIO... | scala | scala, pro, enterprise, grade, development, functional, programming, distributed, big, data, processing, apache |
 | `scanpy` | Scanpy is a scalable Python toolkit for analyzing single-cell RNA-seq data, built on AnnData. Apply this skill for complete single-cell workflows including q... | scanpy | scanpy, scalable, python, toolkit, analyzing, single, cell, rna, seq, data, built, anndata |
 | `schema-markup` | Design, validate, and optimize schema.org structured data for eligibility, correctness, and measurable SEO impact. | schema, markup | schema, markup, validate, optimize, org, structured, data, eligibility, correctness, measurable, seo, impact |
+| `schema-markup-generator` | Generate and implement JSON-LD structured data for web apps, tool pages, blogs, FAQs, and SaaS sites. Supports WebSite, SoftwareApplication, BlogPosting, FAQ... | seo, schema, json-ld, structured-data, rich-results, nextjs, technical-seo | seo, schema, json-ld, structured-data, rich-results, nextjs, technical-seo, markup, generator, generate, json, ld |
 | `scientific-writing` | This is the core skill for the deep research and writing tool—combining AI-driven deep research with well-formatted written outputs. Every document produced ... | scientific, writing | scientific, writing, core, skill, deep, research, combining, ai, driven, well, formatted, written |
 | `scikit-learn` | Machine learning in Python with scikit-learn. Use for classification, regression, clustering, model evaluation, and ML pipelines. | scikit, learn | scikit, learn, machine, learning, python, classification, regression, clustering, model, evaluation, ml, pipelines |
 | `seek-and-analyze-video` | Seek and analyze video content using Memories.ai Large Visual Memory Model for persistent video intelligence | video, ai, memories, social-media, youtube, tiktok, analysis | video, ai, memories, social-media, youtube, tiktok, analysis, seek, analyze, content, large, visual |
@@ -486,7 +488,7 @@ Total skills: 1484
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (211)
+## development (214)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -628,6 +630,7 @@ Total skills: 1484
 | `n8n-node-configuration` | Operation-aware node configuration guidance. Use when configuring nodes, understanding property dependencies, determining required fields, choosing between g... | n8n, node, configuration | n8n, node, configuration, operation, aware, guidance, configuring, nodes, understanding, property, dependencies, determining |
 | `networkx` | NetworkX is a Python package for creating, manipulating, and analyzing complex networks and graphs. | networkx | networkx, python, package, creating, manipulating, analyzing, complex, networks, graphs |
 | `nextjs-app-router-patterns` | Comprehensive patterns for Next.js 14+ App Router architecture, Server Components, and modern full-stack React development. | nextjs, app, router | nextjs, app, router, next, js, 14, architecture, server, components, full, stack, react |
+| `nextjs-seo-indexing` | Fix SEO indexing issues, crawl budget problems, and Search Console coverage errors for Next.js apps. Covers canonical tags, noindex audits, sitemap health, s... | seo, indexing, nextjs, search-console, crawl-budget, canonical, sitemap | seo, indexing, nextjs, search-console, crawl-budget, canonical, sitemap, fix, issues, crawl, budget, problems |
 | `nodejs-backend-patterns` | Comprehensive guidance for building scalable, maintainable, and production-ready Node.js backend applications with modern frameworks, architectural patterns,... | nodejs, backend | nodejs, backend, guidance, building, scalable, maintainable, node, js, applications, frameworks, architectural |
 | `odoo-migration-helper` | Step-by-step guide for migrating Odoo custom modules between versions (v14→v15→v16→v17). Covers API changes, deprecated methods, and view migration. | odoo, migration, helper | odoo, migration, helper, step, migrating, custom, modules, between, versions, v14, v15, v16 |
 | `odoo-rpc-api` | Expert on Odoo's external JSON-RPC and XML-RPC APIs. Covers authentication, model calls, record CRUD, and real-world integration examples in Python, JavaScri... | odoo, rpc, api | odoo, rpc, api, external, json, xml, apis, covers, authentication, model, calls, record |
@@ -669,6 +672,7 @@ Total skills: 1484
 | `shopify-apps` | Expert patterns for Shopify app development including Remix/React Router apps, embedded apps with App Bridge, webhook handling, GraphQL Admin API, Polaris co... | shopify, apps | shopify, apps, app, development, including, remix, react, router, embedded, bridge, webhook, handling |
 | `shopify-development` | Build Shopify apps, extensions, themes using GraphQL Admin API, Shopify CLI, Polaris UI, and Liquid. | shopify | shopify, development, apps, extensions, themes, graphql, admin, api, cli, polaris, ui, liquid |
 | `slack-bot-builder` | Build Slack apps using the Bolt framework across Python, JavaScript, and Java. Covers Block Kit for rich UIs, interactive components, slash commands, event h... | slack, bot, builder | slack, bot, builder, apps, bolt, framework, python, javascript, java, covers, block, kit |
+| `social-metadata-hardening` | Fix social sharing previews so URLs render as rich cards on Facebook, LinkedIn, X/Twitter, WhatsApp, Telegram, Slack, and Discord. Covers OG tags, Twitter ca... | seo, open-graph, twitter-card, social-sharing, og-image, nextjs, metadata | seo, open-graph, twitter-card, social-sharing, og-image, nextjs, metadata, social, hardening, fix, sharing, previews |
 | `socialclaw` | Agent-first social media publishing skill — schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram... | social-media, publishing, scheduling, marketing, twitter, linkedin, instagram, tiktok, discord, telegram, reddit, wordpress, pinterest | social-media, publishing, scheduling, marketing, twitter, linkedin, instagram, tiktok, discord, telegram, reddit, wordpress |
 | `sred-work-summary` | Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects. | sred, work, summary | sred, work, summary, go, back, through, previous, year, notion, doc, groups, relevant |
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
@@ -695,6 +699,7 @@ Total skills: 1484
 | `ux-audit` | Audit screens against Nielsen's heuristics and mobile UX best practices using the StyleSeed Toss design language as the implementation context. | ux, audit, usability, mobile, styleseed | ux, audit, usability, mobile, styleseed, screens, against, nielsen, heuristics, toss, language, context |
 | `ux-copy` | Generate UX microcopy in StyleSeed's Toss-inspired voice for buttons, empty states, errors, toasts, confirmations, and form guidance. | ux, copywriting, microcopy, frontend, styleseed | ux, copywriting, microcopy, frontend, styleseed, copy, generate, toss, inspired, voice, buttons, empty |
 | `ux-feedback` | Add loading, empty, error, and success feedback states to StyleSeed components and pages with practical mobile-first rules. | ux, states, loading, error-handling, styleseed | ux, states, loading, error-handling, styleseed, feedback, add, empty, error, success, components, pages |
+| `vibe-code-cleanup` | Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, broken references, a... | cleanup, refactor, nextjs, production, vibe-code, fullstack, nodejs | cleanup, refactor, nextjs, production, vibe-code, fullstack, nodejs, vibe, code, safe, hardening, coded |
 | `viral-generator-builder` | Expert in building shareable generator tools that go viral - name generators, quiz makers, avatar creators, personality tests, and calculator tools. Covers t... | viral, generator, builder | viral, generator, builder, building, shareable, go, name, generators, quiz, makers, avatar, creators |
 | `vscode-extension-guide-en` | Guide for VS Code extension development from scaffolding to Marketplace publication | vscode, extension, ide, typescript, marketplace | vscode, extension, ide, typescript, marketplace, en, vs, code, development, scaffolding, publication |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
@@ -702,7 +707,7 @@ Total skills: 1484
 | `zod-validation-expert` | Expert in Zod — TypeScript-first schema validation. Covers parsing, custom errors, refinements, type inference, and integration with React Hook Form, Next.js... | zod, validation | zod, validation, typescript, first, schema, covers, parsing, custom, errors, refinements, type, inference |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
-## general (358)
+## general (359)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -799,6 +804,7 @@ Total skills: 1484
 | `design-spells` | Curated micro-interactions and design details that add "magic" and personality to websites and apps. | spells | spells, curated, micro, interactions, details, add, magic, personality, websites, apps |
 | `diary` | Unified Diary System: A context-preserving automated logger for multi-project development. | diary | diary, unified, context, preserving, automated, logger, multi, development |
 | `dispatching-parallel-agents` | Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies | dispatching, parallel, agents | dispatching, parallel, agents, facing, independent, tasks, worked, without, shared, state, sequential, dependencies |
+| `doc2math` | Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty. | doc2math | doc2math, convert, narrative, technical, documents, grounded, mathematical, problem, specifications, variables, constraints, objectives |
 | `docx-official` | A user may ask you to create, edit, or analyze the contents of a .docx file. A .docx file is essentially a ZIP archive containing XML files and other resourc... | docx, official | docx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 | `dx-optimizer` | Developer Experience specialist. Improves tooling, setup, and workflows. Use PROACTIVELY when setting up new projects, after team feedback, or when developme... | dx, optimizer | dx, optimizer, developer, experience, improves, tooling, setup, proactively, setting, up, new, after |
 | `elon-musk` | Agente que simula Elon Musk com profundidade psicologica e comunicacional de alta fidelidade. Ativado para: "fale como Elon", "simule Elon Musk", "o que Elon... | persona, first-principles, innovation, strategy | persona, first-principles, innovation, strategy, elon, musk, agente, que, simula, com, profundidade, psicologica |
@@ -1065,7 +1071,7 @@ Total skills: 1484
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware. | zipai, optimizer | zipai, optimizer, adaptive, token, intelligent, filtering, surgical, output, ambiguity, first, context, window |
 
-## infrastructure (135)
+## infrastructure (137)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1202,10 +1208,12 @@ Total skills: 1484
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `unity-developer` | Build Unity games with optimized C# scripts, efficient rendering, and proper asset management. Masters Unity 6 LTS, URP/HDRP pipelines, and cross-platform de... | unity | unity, developer, games, optimized, scripts, efficient, rendering, proper, asset, masters, lts, urp |
 | `vercel-deployment` | Expert knowledge for deploying to Vercel with Next.js | vercel, deployment | vercel, deployment, knowledge, deploying, next, js |
+| `vibecode-production-qa-validator` | End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps before going live or shipping a major update. Covers ... | qa, testing, nextjs, production, build-validation, deployment, seo | qa, testing, nextjs, production, build-validation, deployment, seo, vibecode, validator, verification, launch, readiness |
 | `whatsapp-cloud-api` | Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhooks HMAC-SHA256, automacao de atendimento. Boilerplates Node.js e Python. | messaging, whatsapp, meta, webhooks | messaging, whatsapp, meta, webhooks, cloud, api, integracao, com, business, mensagens, hmac, sha256 |
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
+| `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (178)
+## security (179)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1386,6 +1394,7 @@ Total skills: 1484
 | `wordpress-penetration-testing` | Assess WordPress installations for common vulnerabilities and WordPress 7.0 attack surfaces. | wordpress, penetration | wordpress, penetration, testing, assess, installations, common, vulnerabilities, attack, surfaces |
 | `wordpress-plugin-development` | WordPress plugin development workflow covering plugin architecture, hooks, admin interfaces, REST API, security best practices, and WordPress 7.0 features: R... | wordpress, plugin | wordpress, plugin, development, covering, architecture, hooks, admin, interfaces, rest, api, security, features |
 | `xss-html-injection` | Execute comprehensive client-side injection vulnerability assessments on web applications to identify XSS and HTML injection flaws, demonstrate exploitation ... | xss, html, injection | xss, html, injection, execute, client, side, vulnerability, assessments, web, applications, identify, flaws |
+| `yield-intelligence` | Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yi... | yield, intelligence | yield, intelligence, passive, income, portfolio, analysis, activate, user, asks, about, dividend, yields |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
 
 ## testing (32)

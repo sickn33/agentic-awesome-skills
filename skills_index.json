@@ -10878,6 +10878,28 @@
     }
   },
   {
+    "id": "doc2math",
+    "path": "skills/doc2math",
+    "category": "uncategorized",
+    "name": "doc2math",
+    "description": "Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "docker-expert",
     "path": "skills/docker-expert",
     "category": "devops",
@@ -19498,6 +19520,28 @@
     }
   },
   {
+    "id": "moatmri",
+    "path": "skills/moatmri",
+    "category": "business",
+    "name": "moatmri",
+    "description": "Analyze AI disruption pressure across a business, map competitive exposure, and produce a 90-day defensive action plan.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "mobile-design",
     "path": "skills/mobile-design",
     "category": "mobile",
@@ -20502,6 +20546,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "nextjs-seo-indexing",
+    "path": "skills/nextjs-seo-indexing",
+    "category": "seo",
+    "name": "nextjs-seo-indexing",
+    "description": "Fix SEO indexing issues, crawl budget problems, and Search Console coverage errors for Next.js apps. Covers canonical tags, noindex audits, sitemap health, static rendering, and internal linking.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-05-31",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -25141,6 +25207,28 @@
     }
   },
   {
+    "id": "schema-markup-generator",
+    "path": "skills/schema-markup-generator",
+    "category": "seo",
+    "name": "schema-markup-generator",
+    "description": "Generate and implement JSON-LD structured data for web apps, tool pages, blogs, FAQs, and SaaS sites. Supports WebSite, SoftwareApplication, BlogPosting, FAQPage, HowTo, BreadcrumbList, and Organization schemas.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-05-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "scientific-writing",
     "path": "skills/scientific-writing",
     "category": "content",
@@ -27455,6 +27543,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "social-metadata-hardening",
+    "path": "skills/social-metadata-hardening",
+    "category": "seo",
+    "name": "social-metadata-hardening",
+    "description": "Fix social sharing previews so URLs render as rich cards on Facebook, LinkedIn, X/Twitter, WhatsApp, Telegram, Slack, and Discord. Covers OG tags, Twitter cards, absolute image URLs, and metadata debugging.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-05-31",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31111,6 +31221,50 @@
     }
   },
   {
+    "id": "vibe-code-cleanup",
+    "path": "skills/vibe-code-cleanup",
+    "category": "fullstack",
+    "name": "vibe-code-cleanup",
+    "description": "Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, broken references, and standardizes helpers without breaking routes or APIs.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-05-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "vibecode-production-qa-validator",
+    "path": "skills/vibecode-production-qa-validator",
+    "category": "devops",
+    "name": "vibecode-production-qa-validator",
+    "description": "End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps before going live or shipping a major update. Covers TypeScript, linting, tests, build, SEO tags, route regression, and sitemap validation.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-05-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "vibers-code-review",
     "path": "skills/vibers-code-review",
     "category": "code-quality",
@@ -31995,7 +32149,7 @@
     "path": "skills/wordpress-centric-high-seo-optimized-blogwriting-skill",
     "category": "content",
     "name": "wordpress-centric-high-seo-optimized-blogwriting-skill",
-    "description": "Create long-form, high-quality, SEO-optimized blog posts ready for WordPress with truth boxes and FAQ schema.",
+    "description": "Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modular batch output.",
     "risk": "safe",
     "source": "self",
     "date_added": "2026-04-12",
@@ -32521,6 +32675,28 @@
     }
   },
   {
+    "id": "yield-intelligence",
+    "path": "skills/yield-intelligence",
+    "category": "uncategorized",
+    "name": "yield-intelligence",
+    "description": "Passive income portfolio analysis \u2014 activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yield optimization. Scans 4 asset classes, ranks by risk-adjusted return, and builds allocations targeting a specific monthly income.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "youtube-automation",
     "path": "skills/youtube-automation",
     "category": "marketing",
@@ -32538,6 +32714,28 @@
         "type": "none",
         "summary": "",
         "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "youtube-full",
+    "path": "skills/youtube-full",
+    "category": "api-integration",
+    "name": "youtube-full",
+    "description": "Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI \u2014 no yt-dlp, no Google API key, works from any cloud server.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-05-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "TranscriptAPI OAuth provisions the API key on first skill invocation. No manual credential setup. 100 free credits included.",
+        "docs": "https://transcriptapi.com/docs"
       },
       "reasons": []
     }

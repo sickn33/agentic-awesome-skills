@@ -10,6 +10,8 @@ TOOLS_SCRIPTS_DIR = REPO_ROOT / "tools" / "scripts"
 if str(TOOLS_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_SCRIPTS_DIR))
 
+from symlink_test_utils import symlink_or_skip
+
 
 def load_module(relative_path: str, module_name: str):
     module_path = REPO_ROOT / relative_path
@@ -165,7 +167,7 @@ If you want a faster answer than "browse all 1,273+ skills", start with a tool-s
             outside = root / "outside.md"
             outside.write_text("original", encoding="utf-8")
             linked = root / "README.md"
-            linked.symlink_to(outside)
+            symlink_or_skip(self, outside, linked)
 
             changed = sync_repo_metadata.update_text_file(
                 linked,

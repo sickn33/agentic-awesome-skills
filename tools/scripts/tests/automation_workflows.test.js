@@ -5,7 +5,7 @@ const path = require("path");
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 
 function readText(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8").replace(/\r\n/g, "\n");
 }
 
 const packageJson = JSON.parse(readText("package.json"));

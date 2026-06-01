@@ -32,6 +32,7 @@ function parseArgs() {
     gemini = false,
     codex = false,
     antigravity = false,
+    agy = false,
     kiro = false;
 
   for (let i = 0; i < a.length; i++) {
@@ -80,6 +81,10 @@ function parseArgs() {
       antigravity = true;
       continue;
     }
+    if (a[i] === "--agy") {
+      agy = true;
+      continue;
+    }
     if (a[i] === "--kiro") {
       kiro = true;
       continue;
@@ -99,6 +104,7 @@ function parseArgs() {
     gemini,
     codex,
     antigravity,
+    agy,
     kiro,
   };
 }
@@ -130,6 +136,13 @@ function getTargets(opts) {
   if (opts.antigravity) {
     targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
   }
+  if (opts.agy) {
+    targets.push({
+      name: "Antigravity CLI",
+      path: path.join(HOME, ".gemini", "antigravity-cli", "skills"),
+      layout: "flat-markdown",
+    });
+  }
   if (targets.length === 0) {
     targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
   }
@@ -150,7 +163,8 @@ Options:
   --gemini       Install to ~/.gemini/skills (Gemini CLI)
   --codex        Install to ~/.codex/skills (Codex CLI)
   --kiro         Install to ~/.kiro/skills (Kiro CLI)
-  --antigravity  Install to ~/.agents/skills (Antigravity 2.0)
+  --antigravity  Install to ~/.agents/skills (Antigravity IDE / OpenCode-style layout)
+  --agy          Install to ~/.gemini/antigravity-cli/skills (Antigravity CLI slash commands)
   --path <dir>   Install to <dir> (default: ~/.agents/skills)
   --risk <csv>     Install only skills matching these risk labels
   --category <csv> Install only skills matching these categories
@@ -163,6 +177,7 @@ Examples:
   npx antigravity-awesome-skills --cursor
   npx antigravity-awesome-skills --kiro
   npx antigravity-awesome-skills --antigravity
+  npx antigravity-awesome-skills --agy
   npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
   npx antigravity-awesome-skills --path .agents/skills --tags debugging,typescript-legacy-
   npx antigravity-awesome-skills --version 4.6.0
@@ -329,6 +344,18 @@ function installSkillsIntoTarget(tempDir, target, installEntries) {
   });
 }
 
+function installSkillsIntoFlatMarkdownTarget(tempDir, target, installEntries) {
+  const repoSkills = path.join(tempDir, "skills");
+  installEntries.forEach((name) => {
+    if (name === "docs") {
+      return;
+    }
+    const src = path.join(repoSkills, name, "SKILL.md");
+    const dest = path.join(target, normalizeFlatMarkdownInstallEntry(name));
+    copyRecursiveSync(src, dest, repoSkills);
+  });
+}
+
 function normalizeInstallEntry(entry) {
   if (entry === "docs") {
     return entry;
@@ -336,6 +363,20 @@ function normalizeInstallEntry(entry) {
   return typeof entry === "string" && entry.startsWith("skills/")
     ? entry.slice("skills/".length)
     : entry;
+}
+
+function normalizeFlatMarkdownInstallEntry(entry) {
+  if (entry === "docs") {
+    return null;
+  }
+  return `${path.basename(normalizeInstallEntry(entry))}.md`;
+}
+
+function getManagedEntries(installEntries, target = {}) {
+  if (target.layout === "flat-markdown") {
+    return installEntries.map(normalizeFlatMarkdownInstallEntry).filter(Boolean);
+  }
+  return installEntries.map(normalizeInstallEntry);
 }
 
 function resolveManagedPath(targetPath, entry) {
@@ -368,7 +409,7 @@ function readInstallManifest(targetPath) {
 
 function writeInstallManifest(targetPath, installEntries) {
   const manifestPath = path.join(targetPath, INSTALL_MANIFEST_FILE);
-  const normalizedEntries = [...new Set(installEntries.map(normalizeInstallEntry))].sort();
+  const normalizedEntries = [...new Set(installEntries.map(normalizeInstallEntry).filter(Boolean))].sort();
   fs.writeFileSync(
     manifestPath,
     JSON.stringify(
@@ -511,10 +552,15 @@ function installForTarget(tempDir, target, selectors = buildInstallSelectors({})
   }
 
   const installEntries = getInstallEntries(tempDir, selectors);
+  const managedEntries = getManagedEntries(installEntries, target);
   const previousEntries = readInstallManifest(target.path);
-  pruneRemovedEntries(target.path, previousEntries, installEntries);
-  installSkillsIntoTarget(tempDir, target.path, installEntries);
-  writeInstallManifest(target.path, installEntries);
+  pruneRemovedEntries(target.path, previousEntries, managedEntries);
+  if (target.layout === "flat-markdown") {
+    installSkillsIntoFlatMarkdownTarget(tempDir, target.path, installEntries);
+  } else {
+    installSkillsIntoTarget(tempDir, target.path, installEntries);
+  }
+  writeInstallManifest(target.path, managedEntries);
   console.log(`  ✓ Installed to ${target.path}`);
 }
 
@@ -533,7 +579,16 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
       "If Antigravity hits context/truncation limits, see docs/users/agent-overload-recovery.md",
     );
     messages.push(
+      "For the agy CLI slash-command menu, install the flat CLI layout with --agy.",
+    );
+    messages.push(
       "For clone-based installs, use scripts/activate-skills.sh or scripts/activate-skills.bat",
+    );
+  }
+
+  if (targets.some((target) => target.name === "Antigravity CLI")) {
+    messages.push(
+      "Restart agy and type /skills or /<skill-name> to load installed Antigravity CLI skills.",
     );
   }
 
@@ -612,12 +667,15 @@ module.exports = {
   buildCloneArgs,
   buildInstallSelectors,
   getInstallEntries,
+  getManagedEntries,
+  installSkillsIntoFlatMarkdownTarget,
   installSkillsIntoTarget,
   installForTarget,
   isSafeGitRef,
   isOpenCodeStylePath,
   main,
   matchesInstallSelectors,
+  normalizeFlatMarkdownInstallEntry,
   normalizeInstallEntry,
   parseSelectorArg,
   pruneRemovedEntries,

@@ -34,7 +34,7 @@ antigravity-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 1,484+ skills live here
+├── 📁 skills/                          ← 1,493+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -47,7 +47,7 @@ antigravity-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (1,484+ total)
+│   └── ... (1,493+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -100,7 +100,7 @@ antigravity-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,484+ SKILLS          │
+                    │  1,493+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -201,7 +201,7 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (1,484+ total)                │
+│   └── ... (1,493+ total)                │
 └─────────────────────────────────────────┘
 ```
 

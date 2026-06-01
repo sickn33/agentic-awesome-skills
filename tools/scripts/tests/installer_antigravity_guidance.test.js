@@ -1,4 +1,6 @@
 const assert = require("assert");
+const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 const installer = require(path.resolve(__dirname, "..", "..", "bin", "install.js"));
@@ -61,6 +63,19 @@ assert.ok(
   antigravityMessages.some((message) => message.includes("activate-skills.bat")),
   "Antigravity installs should mention the Windows activation flow",
 );
+assert.ok(
+  antigravityMessages.some((message) => message.includes("--agy")),
+  "Antigravity installs should point agy CLI users to the flat CLI layout",
+);
+
+const agyMessages = installer.getPostInstallMessages([
+  { name: "Antigravity CLI", path: "/tmp/.gemini/antigravity-cli/skills", layout: "flat-markdown" },
+]);
+
+assert.ok(
+  agyMessages.some((message) => message.includes("/skills")),
+  "Antigravity CLI installs should tell users how to verify slash commands",
+);
 
 const codexMessages = installer.getPostInstallMessages([
   { name: "Codex CLI", path: "/tmp/.codex/skills" },
@@ -71,3 +86,44 @@ assert.strictEqual(
   false,
   "Non-Antigravity installs should not emit the Antigravity-specific overload hint",
 );
+
+const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "agy-install-fixture-"));
+try {
+  const tempDir = path.join(fixtureRoot, "repo");
+  const targetDir = path.join(fixtureRoot, "agy-skills");
+  const alphaDir = path.join(tempDir, "skills", "alpha");
+  const nestedDir = path.join(tempDir, "skills", "security", "audit");
+  fs.mkdirSync(alphaDir, { recursive: true });
+  fs.mkdirSync(nestedDir, { recursive: true });
+  fs.mkdirSync(targetDir, { recursive: true });
+  fs.writeFileSync(path.join(alphaDir, "SKILL.md"), "---\nname: alpha\n---\n\n# Alpha\n", "utf8");
+  fs.writeFileSync(path.join(nestedDir, "SKILL.md"), "---\nname: audit\n---\n\n# Audit\n", "utf8");
+
+  assert.deepStrictEqual(
+    installer.getManagedEntries(["alpha", "security/audit", "docs"], { layout: "flat-markdown" }),
+    ["alpha.md", "audit.md"],
+    "agy CLI flat installs should track markdown skill files instead of skill directories",
+  );
+
+  installer.installSkillsIntoFlatMarkdownTarget(tempDir, targetDir, [
+    "alpha",
+    "security/audit",
+    "docs",
+  ]);
+
+  assert.strictEqual(
+    fs.readFileSync(path.join(targetDir, "alpha.md"), "utf8"),
+    "---\nname: alpha\n---\n\n# Alpha\n",
+  );
+  assert.strictEqual(
+    fs.readFileSync(path.join(targetDir, "audit.md"), "utf8"),
+    "---\nname: audit\n---\n\n# Audit\n",
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(targetDir, "docs")),
+    false,
+    "agy CLI flat installs should not copy docs as a slash-command entry",
+  );
+} finally {
+  fs.rmSync(fixtureRoot, { recursive: true, force: true });
+}

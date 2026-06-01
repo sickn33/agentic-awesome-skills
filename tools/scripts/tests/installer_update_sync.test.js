@@ -4,6 +4,7 @@ const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
 const installer = require(path.resolve(__dirname, "..", "..", "bin", "install.js"));
 
 function writeSkill(repoRoot, skillName, content = "# Skill\n") {
@@ -143,7 +144,10 @@ installer.installForTarget(${JSON.stringify(repoV2)}, { name: "BadTarget", path:
   const symlinkRealTarget = path.join(tmpRoot, "symlink-real-target");
   const symlinkTargetPath = path.join(tmpRoot, "symlink-target");
   fs.mkdirSync(path.join(symlinkRealTarget, ".git"), { recursive: true });
-  fs.symlinkSync(symlinkRealTarget, symlinkTargetPath, "dir");
+  const createdSymlinkTarget = createSymlinkOrSkip(symlinkRealTarget, symlinkTargetPath, "dir");
+  if (!createdSymlinkTarget) {
+    return;
+  }
 
   const symlinkTargetCheck = spawnSync(
     process.execPath,

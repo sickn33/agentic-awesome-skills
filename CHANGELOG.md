@@ -9,6 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.10.0] - 2026-05-31 - "SEO, Yield, YouTube, and Release Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted community PRs from the current maintainer batch, adding SEO production workflows, passive-income analysis, grounded math-spec extraction, AI disruption planning, and API-backed YouTube research.
+
+## New Skills
+
+- **nextjs-seo-indexing** - Next.js indexing diagnostics and production SEO remediation for metadata, rendering, canonicals, sitemaps, robots, and Search Console workflows.
+- **schema-markup-generator** - structured-data generation and validation for products, articles, FAQs, breadcrumbs, organizations, local businesses, and rich-result eligibility.
+- **social-metadata-hardening** - Open Graph, Twitter/X card, preview-image, and share-surface hardening for production web pages.
+- **vibe-code-cleanup** - production cleanup workflow for AI-generated web apps, removing placeholders, fragile logic, and demo-only artifacts before launch.
+- **vibecode-production-qa-validator** - launch QA for AI-assisted web builds across SEO, accessibility, copy, responsive behavior, performance, and deployment readiness.
+- **yield-intelligence** - passive-income portfolio analysis across Treasuries, dividend ETFs, REITs, and preferred stocks.
+- **doc2math** - grounded conversion of narrative technical documents into Mathematical Problem Specifications.
+- **moatmri** - AI disruption pressure mapping with 10-vector exposure scoring and a 90-day defensive plan.
+- **youtube-full** - TranscriptAPI-backed YouTube transcript, search, channel, playlist, and monitoring workflows for cloud-safe video research.
+
+## Improvements
+
+- Added batch output options and refreshed generated registry, catalog, compatibility, plugin mirror, documentation, and web assets for the expanded catalog.
+- Hardened unsafe skill guidance and made security hygiene tests self-contained for CI.
+- Improved `agy install` handling and Windows test portability.
+- Updated the star history chart and release-state metadata.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #638 (`nextjs-seo-indexing`, `schema-markup-generator`, `social-metadata-hardening`, `vibe-code-cleanup`, `vibecode-production-qa-validator`, and SEO batch output updates).
+- **[@KyleMillion](https://github.com/KyleMillion)** and **[IntuiTek¹](https://intuitek.ai)** for PR #637 (`yield-intelligence`, `doc2math`, `moatmri`).
+- **[@therohitdas](https://github.com/therohitdas)** and **[ZeroPointRepo/youtube-skills](https://github.com/ZeroPointRepo/youtube-skills)** for PR #633 (`youtube-full`).
+
 ## [11.9.0] - 2026-05-30 - "Container, CI, Market, and Wallet Guard Skills"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.

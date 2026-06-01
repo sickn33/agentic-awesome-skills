@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1484,
+  "total": 1493,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -12115,6 +12115,30 @@
       "path": "skills/doc-coauthoring/SKILL.md"
     },
     {
+      "id": "doc2math",
+      "name": "doc2math",
+      "description": "Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty.",
+      "category": "general",
+      "tags": [
+        "doc2math"
+      ],
+      "triggers": [
+        "doc2math",
+        "convert",
+        "narrative",
+        "technical",
+        "documents",
+        "grounded",
+        "mathematical",
+        "problem",
+        "specifications",
+        "variables",
+        "constraints",
+        "objectives"
+      ],
+      "path": "skills/doc2math/SKILL.md"
+    },
+    {
       "id": "docker-expert",
       "name": "docker-expert",
       "description": "You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds, orchestration patterns, and production deployment strategies based on current industry best practices.",
@@ -22005,6 +22029,30 @@
       "path": "skills/mmx-cli/SKILL.md"
     },
     {
+      "id": "moatmri",
+      "name": "moatmri",
+      "description": "Analyze AI disruption pressure across a business, map competitive exposure, and produce a 90-day defensive action plan.",
+      "category": "data-ai",
+      "tags": [
+        "moatmri"
+      ],
+      "triggers": [
+        "moatmri",
+        "analyze",
+        "ai",
+        "disruption",
+        "pressure",
+        "business",
+        "map",
+        "competitive",
+        "exposure",
+        "produce",
+        "90",
+        "day"
+      ],
+      "path": "skills/moatmri/SKILL.md"
+    },
+    {
       "id": "mobile-design",
       "name": "mobile-design",
       "description": "(Mobile-First · Touch-First · Platform-Respectful)",
@@ -23093,6 +23141,36 @@
         "fetching"
       ],
       "path": "skills/nextjs-best-practices/SKILL.md"
+    },
+    {
+      "id": "nextjs-seo-indexing",
+      "name": "nextjs-seo-indexing",
+      "description": "Fix SEO indexing issues, crawl budget problems, and Search Console coverage errors for Next.js apps. Covers canonical tags, noindex audits, sitemap health, static rendering, and internal linking.",
+      "category": "development",
+      "tags": [
+        "seo",
+        "indexing",
+        "nextjs",
+        "search-console",
+        "crawl-budget",
+        "canonical",
+        "sitemap"
+      ],
+      "triggers": [
+        "seo",
+        "indexing",
+        "nextjs",
+        "search-console",
+        "crawl-budget",
+        "canonical",
+        "sitemap",
+        "fix",
+        "issues",
+        "crawl",
+        "budget",
+        "problems"
+      ],
+      "path": "skills/nextjs-seo-indexing/SKILL.md"
     },
     {
       "id": "nextjs-supabase-auth",
@@ -28276,6 +28354,36 @@
       "path": "skills/schema-markup/SKILL.md"
     },
     {
+      "id": "schema-markup-generator",
+      "name": "schema-markup-generator",
+      "description": "Generate and implement JSON-LD structured data for web apps, tool pages, blogs, FAQs, and SaaS sites. Supports WebSite, SoftwareApplication, BlogPosting, FAQPage, HowTo, BreadcrumbList, and Organization schemas.",
+      "category": "data-ai",
+      "tags": [
+        "seo",
+        "schema",
+        "json-ld",
+        "structured-data",
+        "rich-results",
+        "nextjs",
+        "technical-seo"
+      ],
+      "triggers": [
+        "seo",
+        "schema",
+        "json-ld",
+        "structured-data",
+        "rich-results",
+        "nextjs",
+        "technical-seo",
+        "markup",
+        "generator",
+        "generate",
+        "json",
+        "ld"
+      ],
+      "path": "skills/schema-markup-generator/SKILL.md"
+    },
+    {
       "id": "scientific-writing",
       "name": "scientific-writing",
       "description": "This is the core skill for the deep research and writing tool—combining AI-driven deep research with well-formatted written outputs. Every document produced is backed by comprehensive literature search and verified citations through the research-lookup skill.",
@@ -31019,6 +31127,36 @@
         "networks"
       ],
       "path": "skills/social-content/SKILL.md"
+    },
+    {
+      "id": "social-metadata-hardening",
+      "name": "social-metadata-hardening",
+      "description": "Fix social sharing previews so URLs render as rich cards on Facebook, LinkedIn, X/Twitter, WhatsApp, Telegram, Slack, and Discord. Covers OG tags, Twitter cards, absolute image URLs, and metadata debugging.",
+      "category": "development",
+      "tags": [
+        "seo",
+        "open-graph",
+        "twitter-card",
+        "social-sharing",
+        "og-image",
+        "nextjs",
+        "metadata"
+      ],
+      "triggers": [
+        "seo",
+        "open-graph",
+        "twitter-card",
+        "social-sharing",
+        "og-image",
+        "nextjs",
+        "metadata",
+        "social",
+        "hardening",
+        "fix",
+        "sharing",
+        "previews"
+      ],
+      "path": "skills/social-metadata-hardening/SKILL.md"
     },
     {
       "id": "social-orchestrator",
@@ -35044,6 +35182,66 @@
       "path": "skills/vibe-code-auditor/SKILL.md"
     },
     {
+      "id": "vibe-code-cleanup",
+      "name": "vibe-code-cleanup",
+      "description": "Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, broken references, and standardizes helpers without breaking routes or APIs.",
+      "category": "development",
+      "tags": [
+        "cleanup",
+        "refactor",
+        "nextjs",
+        "production",
+        "vibe-code",
+        "fullstack",
+        "nodejs"
+      ],
+      "triggers": [
+        "cleanup",
+        "refactor",
+        "nextjs",
+        "production",
+        "vibe-code",
+        "fullstack",
+        "nodejs",
+        "vibe",
+        "code",
+        "safe",
+        "hardening",
+        "coded"
+      ],
+      "path": "skills/vibe-code-cleanup/SKILL.md"
+    },
+    {
+      "id": "vibecode-production-qa-validator",
+      "name": "vibecode-production-qa-validator",
+      "description": "End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps before going live or shipping a major update. Covers TypeScript, linting, tests, build, SEO tags, route regression, and sitemap validation.",
+      "category": "infrastructure",
+      "tags": [
+        "qa",
+        "testing",
+        "nextjs",
+        "production",
+        "build-validation",
+        "deployment",
+        "seo"
+      ],
+      "triggers": [
+        "qa",
+        "testing",
+        "nextjs",
+        "production",
+        "build-validation",
+        "deployment",
+        "seo",
+        "vibecode",
+        "validator",
+        "verification",
+        "launch",
+        "readiness"
+      ],
+      "path": "skills/vibecode-production-qa-validator/SKILL.md"
+    },
+    {
       "id": "vibers-code-review",
       "name": "vibers-code-review",
       "description": "Human review workflow for AI-generated GitHub projects with spec-based feedback, security review, and follow-up PRs from the Vibers service.",
@@ -35983,7 +36181,7 @@
     {
       "id": "wordpress-centric-high-seo-optimized-blogwriting-skill",
       "name": "wordpress-centric-high-seo-optimized-blogwriting-skill",
-      "description": "Create long-form, high-quality, SEO-optimized blog posts ready for WordPress with truth boxes and FAQ schema.",
+      "description": "Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modular batch output.",
       "category": "business",
       "tags": [
         "writing",
@@ -36003,8 +36201,8 @@
         "optimized",
         "blogwriting",
         "skill",
-        "long",
-        "form"
+        "generate",
+        "clean"
       ],
       "path": "skills/wordpress-centric-high-seo-optimized-blogwriting-skill/SKILL.md"
     },
@@ -36560,6 +36758,31 @@
       "path": "skills/yes-md/SKILL.md"
     },
     {
+      "id": "yield-intelligence",
+      "name": "yield-intelligence",
+      "description": "Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yield optimization. Scans 4 asset classes, ranks by risk-adjusted return, and builds allocations targeting a specific monthly income.",
+      "category": "security",
+      "tags": [
+        "yield",
+        "intelligence"
+      ],
+      "triggers": [
+        "yield",
+        "intelligence",
+        "passive",
+        "income",
+        "portfolio",
+        "analysis",
+        "activate",
+        "user",
+        "asks",
+        "about",
+        "dividend",
+        "yields"
+      ],
+      "path": "skills/yield-intelligence/SKILL.md"
+    },
+    {
       "id": "youtube-automation",
       "name": "youtube-automation",
       "description": "Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools first for current schemas.",
@@ -36582,6 +36805,36 @@
         "search"
       ],
       "path": "skills/youtube-automation/SKILL.md"
+    },
+    {
+      "id": "youtube-full",
+      "name": "youtube-full",
+      "description": "Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server.",
+      "category": "infrastructure",
+      "tags": [
+        "youtube",
+        "transcripts",
+        "video-search",
+        "channels",
+        "playlists",
+        "api",
+        "transcriptapi"
+      ],
+      "triggers": [
+        "youtube",
+        "transcripts",
+        "video-search",
+        "channels",
+        "playlists",
+        "api",
+        "transcriptapi",
+        "full",
+        "fetch",
+        "search",
+        "videos",
+        "browse"
+      ],
+      "path": "skills/youtube-full/SKILL.md"
     },
     {
       "id": "youtube-summarizer",

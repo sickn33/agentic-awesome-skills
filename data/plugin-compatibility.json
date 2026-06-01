@@ -9319,6 +9319,25 @@
       "runtime_files": []
     },
     {
+      "id": "doc2math",
+      "path": "skills/doc2math",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "docker-expert",
       "path": "skills/docker-expert",
       "targets": {
@@ -16982,6 +17001,25 @@
       "runtime_files": []
     },
     {
+      "id": "moatmri",
+      "path": "skills/moatmri",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mobile-design",
       "path": "skills/mobile-design",
       "targets": {
@@ -17819,6 +17857,25 @@
     {
       "id": "nextjs-best-practices",
       "path": "skills/nextjs-best-practices",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nextjs-seo-indexing",
+      "path": "skills/nextjs-seo-indexing",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -21823,6 +21880,25 @@
       "runtime_files": []
     },
     {
+      "id": "schema-markup-generator",
+      "path": "skills/schema-markup-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "scientific-writing",
       "path": "skills/scientific-writing",
       "targets": {
@@ -23952,6 +24028,25 @@
     {
       "id": "social-content",
       "path": "skills/social-content",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "social-metadata-hardening",
+      "path": "skills/social-metadata-hardening",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -27092,6 +27187,44 @@
       "runtime_files": []
     },
     {
+      "id": "vibe-code-cleanup",
+      "path": "skills/vibe-code-cleanup",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "vibecode-production-qa-validator",
+      "path": "skills/vibecode-production-qa-validator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "vibers-code-review",
       "path": "skills/vibers-code-review",
       "targets": {
@@ -28257,6 +28390,25 @@
       "runtime_files": []
     },
     {
+      "id": "yield-intelligence",
+      "path": "skills/yield-intelligence",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "youtube-automation",
       "path": "skills/youtube-automation",
       "targets": {
@@ -28267,6 +28419,25 @@
         "type": "none",
         "summary": "",
         "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "youtube-full",
+      "path": "skills/youtube-full",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "TranscriptAPI OAuth provisions the API key on first skill invocation. No manual credential setup. 100 free credits included.",
+        "docs": "https://transcriptapi.com/docs"
       },
       "reasons": [],
       "blocked_reasons": {
@@ -28448,10 +28619,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1484,
+    "total_skills": 1493,
     "supported": {
-      "codex": 1440,
-      "claude": 1455
+      "codex": 1449,
+      "claude": 1464
     },
     "blocked": {
       "codex": 44,

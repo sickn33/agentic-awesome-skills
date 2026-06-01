@@ -5,6 +5,7 @@ const os = require("os");
 const path = require("path");
 
 const { copyRecursiveSync } = require("../../bin/install");
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
 
 async function main() {
   const { copyFolderSync, copyIndexFile } = await import("../../scripts/setup_web.js");
@@ -22,22 +23,31 @@ async function main() {
     fs.writeFileSync(path.join(safeRoot, "nested", "ok.txt"), "ok");
     fs.writeFileSync(path.join(outsideDir, "secret.txt"), "secret");
     fs.writeFileSync(path.join(outsideDir, "symlink-secret.txt"), "do-not-touch");
-    fs.symlinkSync(path.join(outsideDir, "symlink-secret.txt"), symlinkDestination);
-    fs.symlinkSync(outsideDir, path.join(safeRoot, "escape-link"));
+    const createdSymlinkDestination = createSymlinkOrSkip(
+      path.join(outsideDir, "symlink-secret.txt"),
+      symlinkDestination,
+    );
+    const createdEscapeLink = createSymlinkOrSkip(
+      outsideDir,
+      path.join(safeRoot, "escape-link"),
+      "dir",
+    );
 
     copyRecursiveSync(safeRoot, path.join(destRoot, "install-copy"), safeRoot);
     copyFolderSync(safeRoot, path.join(destRoot, "web-copy"), safeRoot);
 
-    assert.strictEqual(
-      fs.existsSync(path.join(destRoot, "install-copy", "escape-link", "secret.txt")),
-      false,
-      "installer copy must not follow symlinks outside the cloned root",
-    );
-    assert.strictEqual(
-      fs.existsSync(path.join(destRoot, "web-copy", "escape-link", "secret.txt")),
-      false,
-      "web setup copy must not follow symlinks outside the skills root",
-    );
+    if (createdEscapeLink) {
+      assert.strictEqual(
+        fs.existsSync(path.join(destRoot, "install-copy", "escape-link", "secret.txt")),
+        false,
+        "installer copy must not follow symlinks outside the cloned root",
+      );
+      assert.strictEqual(
+        fs.existsSync(path.join(destRoot, "web-copy", "escape-link", "secret.txt")),
+        false,
+        "web setup copy must not follow symlinks outside the skills root",
+      );
+    }
     assert.strictEqual(
       fs.readFileSync(path.join(destRoot, "install-copy", "nested", "ok.txt"), "utf8"),
       "ok",
@@ -46,34 +56,38 @@ async function main() {
       fs.readFileSync(path.join(destRoot, "web-copy", "nested", "ok.txt"), "utf8"),
       "ok",
     );
-    assert.throws(
-      () =>
-        copyRecursiveSync(
-          path.join(safeRoot, "nested", "ok.txt"),
-          symlinkDestination,
-          safeRoot,
-        ),
-      /Skipping unsafe destination symlink/i,
-      "installer copy should refuse writing into existing destination symlinks",
-    );
-    assert.strictEqual(
-      fs.readFileSync(path.join(outsideDir, "symlink-secret.txt"), "utf8"),
-      "do-not-touch",
-    );
+    if (createdSymlinkDestination) {
+      assert.throws(
+        () =>
+          copyRecursiveSync(
+            path.join(safeRoot, "nested", "ok.txt"),
+            symlinkDestination,
+            safeRoot,
+          ),
+        /Skipping unsafe destination symlink/i,
+        "installer copy should refuse writing into existing destination symlinks",
+      );
+      assert.strictEqual(
+        fs.readFileSync(path.join(outsideDir, "symlink-secret.txt"), "utf8"),
+        "do-not-touch",
+      );
+    }
 
     const indexSource = path.join(root, "skills_index.json");
     const outsideIndexTarget = path.join(outsideDir, "index-target.json");
     const symlinkedIndexDest = path.join(destRoot, "skills.json");
     fs.writeFileSync(indexSource, "[]");
     fs.writeFileSync(outsideIndexTarget, "outside");
-    fs.symlinkSync(outsideIndexTarget, symlinkedIndexDest);
+    const createdIndexSymlink = createSymlinkOrSkip(outsideIndexTarget, symlinkedIndexDest);
 
-    assert.throws(
-      () => copyIndexFile(indexSource, symlinkedIndexDest),
-      /symlink/i,
-      "web setup index copy must reject destination symlinks",
-    );
-    assert.strictEqual(fs.readFileSync(outsideIndexTarget, "utf8"), "outside");
+    if (createdIndexSymlink) {
+      assert.throws(
+        () => copyIndexFile(indexSource, symlinkedIndexDest),
+        /symlink/i,
+        "web setup index copy must reject destination symlinks",
+      );
+      assert.strictEqual(fs.readFileSync(outsideIndexTarget, "utf8"), "outside");
+    }
 
     const repoRoot = path.resolve(__dirname, "..", "..", "..");
     const repoTmp = path.join(repoRoot, ".tmp", `copy-security-${process.pid}`);
@@ -83,25 +97,27 @@ async function main() {
     fs.mkdirSync(repoTmp, { recursive: true });
     fs.writeFileSync(copySource, "new content");
     fs.writeFileSync(outsideCopyTarget, "outside");
-    fs.symlinkSync(outsideCopyTarget, copyDest);
+    const createdCopyDestSymlink = createSymlinkOrSkip(outsideCopyTarget, copyDest);
 
-    const copyResult = spawnSync(
-      process.execPath,
-      [
-        path.join(repoRoot, "tools", "scripts", "copy-file.js"),
-        path.relative(repoRoot, copySource),
-        path.relative(repoRoot, copyDest),
-      ],
-      { cwd: repoRoot, encoding: "utf8" },
-    );
+    if (createdCopyDestSymlink) {
+      const copyResult = spawnSync(
+        process.execPath,
+        [
+          path.join(repoRoot, "tools", "scripts", "copy-file.js"),
+          path.relative(repoRoot, copySource),
+          path.relative(repoRoot, copyDest),
+        ],
+        { cwd: repoRoot, encoding: "utf8" },
+      );
 
-    assert.notStrictEqual(copyResult.status, 0, "copy-file must fail for destination symlinks");
-    assert.match(
-      `${copyResult.stdout}\n${copyResult.stderr}`,
-      /symlink/i,
-      "copy-file failure should explain that symlink destinations are refused",
-    );
-    assert.strictEqual(fs.readFileSync(outsideCopyTarget, "utf8"), "outside");
+      assert.notStrictEqual(copyResult.status, 0, "copy-file must fail for destination symlinks");
+      assert.match(
+        `${copyResult.stdout}\n${copyResult.stderr}`,
+        /symlink/i,
+        "copy-file failure should explain that symlink destinations are refused",
+      );
+      assert.strictEqual(fs.readFileSync(outsideCopyTarget, "utf8"), "outside");
+    }
     fs.rmSync(repoTmp, { recursive: true, force: true });
   } finally {
     fs.rmSync(root, { recursive: true, force: true });

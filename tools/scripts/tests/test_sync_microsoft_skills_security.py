@@ -8,6 +8,8 @@ TOOLS_SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(TOOLS_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_SCRIPTS_DIR))
 
+from symlink_test_utils import symlink_or_skip
+
 import sync_microsoft_skills as sms
 
 
@@ -25,12 +27,12 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
             safe_skill = root / ".github" / "skills" / "safe-skill"
             safe_skill.mkdir(parents=True)
             (safe_skill / "SKILL.md").write_text("---\nname: safe-skill\n---\n", encoding="utf-8")
-            (skills_dir / "safe-skill").symlink_to(safe_skill, target_is_directory=True)
+            symlink_or_skip(self, safe_skill, skills_dir / "safe-skill", target_is_directory=True)
 
             outside = Path(tempfile.mkdtemp())
             try:
                 (outside / "SKILL.md").write_text("---\nname: leaked\n---\n", encoding="utf-8")
-                (skills_dir / "escape").symlink_to(outside, target_is_directory=True)
+                symlink_or_skip(self, outside, skills_dir / "escape", target_is_directory=True)
 
                 entries = sms.find_skills_in_directory(root)
                 relative_paths = {str(entry["relative_path"]) for entry in entries}
@@ -58,7 +60,7 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
             try:
                 target = outside / "SKILL.md"
                 target.write_text("---\nname: escaped\n---\n", encoding="utf-8")
-                (linked_skill / "SKILL.md").symlink_to(target)
+                symlink_or_skip(self, target, linked_skill / "SKILL.md")
 
                 entries = sms.find_skills_in_directory(root)
                 relative_paths = {str(entry["relative_path"]) for entry in entries}
@@ -83,7 +85,7 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
                 escaped = outside / "escaped-skill"
                 escaped.mkdir()
                 (escaped / "SKILL.md").write_text("---\nname: escaped\n---\n", encoding="utf-8")
-                (github_skills / "escape").symlink_to(escaped, target_is_directory=True)
+                symlink_or_skip(self, escaped, github_skills / "escape", target_is_directory=True)
 
                 entries = sms.find_github_skills(root, set())
                 relative_paths = {str(entry["relative_path"]) for entry in entries}
@@ -112,7 +114,7 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
             try:
                 target = outside / "SKILL.md"
                 target.write_text("---\nname: escaped\n---\n", encoding="utf-8")
-                (linked_skill / "SKILL.md").symlink_to(target)
+                symlink_or_skip(self, target, linked_skill / "SKILL.md")
 
                 entries = sms.find_github_skills(root, set())
                 relative_paths = {str(entry["relative_path"]) for entry in entries}
@@ -139,7 +141,7 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
             try:
                 target = outside / "SKILL.md"
                 target.write_text("---\nname: escaped\n---\n", encoding="utf-8")
-                (linked_plugin / "SKILL.md").symlink_to(target)
+                symlink_or_skip(self, target, linked_plugin / "SKILL.md")
 
                 entries = sms.find_plugin_skills(root, set())
                 relative_paths = {str(entry["relative_path"]) for entry in entries}
@@ -158,7 +160,7 @@ class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
 
             outside = root / "outside-license.txt"
             outside.write_text("secret license payload", encoding="utf-8")
-            (source / "LICENSE").symlink_to(outside)
+            symlink_or_skip(self, outside, source / "LICENSE")
 
             previous_docs_dir = sms.DOCS_DIR
             sms.DOCS_DIR = docs

@@ -4,6 +4,8 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
+
 const repoRoot = path.resolve(__dirname, "../..", "..");
 const pycacheDir = path.join(repoRoot, "skills", "ui-ux-pro-max", "scripts", "__pycache__");
 const nestedSkillsDir = path.join(repoRoot, "skills", "skills");
@@ -41,7 +43,12 @@ assert.doesNotMatch(alphaVantage, /--- Unknown/, "alpha-vantage frontmatter shou
       "[absolute](/etc/passwd)\n[traversal](../../etc/passwd)\n[symlink](linked-secret)\n[missing](docs/missing.md)\n",
       "utf8",
     );
-    fs.symlinkSync("/etc/passwd", path.join(targetRepo, "linked-secret"));
+    const outsideSecret = path.join(tempDir, "outside-secret");
+    fs.writeFileSync(outsideSecret, "secret", "utf8");
+    const createdSymlink = createSymlinkOrSkip(outsideSecret, path.join(targetRepo, "linked-secret"));
+    if (!createdSymlink) {
+      return;
+    }
     const fakeBin = path.join(tempDir, "bin");
     fs.mkdirSync(fakeBin);
     const fakeRg = path.join(fakeBin, "rg");
