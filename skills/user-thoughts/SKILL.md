@@ -5,7 +5,7 @@ description: >-
   Trigger on /user-thoughts or /ustht, or when user discusses architecture,
   tech stack, rules, UI/UX, or mentions '想法', '记录', 'mdbase'.
 license: MIT
-source: "https://github.com/JularDepick/user-thoughts.SKILL"
+source: JularDepick/user-thoughts.SKILL
 risk: safe
 allowed-tools: read write bash
 metadata:

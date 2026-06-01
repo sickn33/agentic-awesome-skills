@@ -74,6 +74,9 @@ def parse_entries(filepath: Path) -> list[dict]:
 
 def get_dim_file(mdbase: Path, dim: str) -> Path:
     """获取维度文件路径，支持子目录维度（如 ui/outline）。"""
+    # backlog 位于 mdbase 根目录，不在 details/ 下
+    if dim == "backlog":
+        return mdbase / "backlog.md"
     details = mdbase / "details"
     parts = dim.split("/")
     if len(parts) > 1:

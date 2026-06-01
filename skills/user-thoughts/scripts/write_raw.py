@@ -98,9 +98,10 @@ def main():
                 seq += 1
             raw_file = raw_dir / f"{today}-{seq}.md"
 
-    # 构建条目行
+    # 构建条目行（换行替换为空格，保持单行格式）
+    thought_clean = thought.replace("\n", " ").replace("\r", "")
     suffix = f" | 待归入:{dim}" if dim else ""
-    entry = f"- [{now}] {thought}{suffix}"
+    entry = f"- [{now}] {thought_clean}{suffix}"
 
     # 追加到文件
     if raw_file.exists():
