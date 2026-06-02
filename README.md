@@ -62,7 +62,7 @@ Most users should start with the full library install and use bundles or workflo
 # Default: ~/.agents/skills (Antigravity 2.0 global). Use --path for other locations.
 npx antigravity-awesome-skills
 
-# Antigravity CLI slash commands (agy): ~/.gemini/antigravity-cli/skills/*.md
+# Antigravity CLI slash commands (agy): ~/.gemini/antigravity-cli/skills/<skill>/SKILL.md
 npx antigravity-awesome-skills --agy
 ```
 

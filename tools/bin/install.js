@@ -140,7 +140,6 @@ function getTargets(opts) {
     targets.push({
       name: "Antigravity CLI",
       path: path.join(HOME, ".gemini", "antigravity-cli", "skills"),
-      layout: "flat-markdown",
     });
   }
   if (targets.length === 0) {
@@ -344,18 +343,6 @@ function installSkillsIntoTarget(tempDir, target, installEntries) {
   });
 }
 
-function installSkillsIntoFlatMarkdownTarget(tempDir, target, installEntries) {
-  const repoSkills = path.join(tempDir, "skills");
-  installEntries.forEach((name) => {
-    if (name === "docs") {
-      return;
-    }
-    const src = path.join(repoSkills, name, "SKILL.md");
-    const dest = path.join(target, normalizeFlatMarkdownInstallEntry(name));
-    copyRecursiveSync(src, dest, repoSkills);
-  });
-}
-
 function normalizeInstallEntry(entry) {
   if (entry === "docs") {
     return entry;
@@ -365,17 +352,7 @@ function normalizeInstallEntry(entry) {
     : entry;
 }
 
-function normalizeFlatMarkdownInstallEntry(entry) {
-  if (entry === "docs") {
-    return null;
-  }
-  return `${path.basename(normalizeInstallEntry(entry))}.md`;
-}
-
 function getManagedEntries(installEntries, target = {}) {
-  if (target.layout === "flat-markdown") {
-    return installEntries.map(normalizeFlatMarkdownInstallEntry).filter(Boolean);
-  }
   return installEntries.map(normalizeInstallEntry);
 }
 
@@ -555,11 +532,7 @@ function installForTarget(tempDir, target, selectors = buildInstallSelectors({})
   const managedEntries = getManagedEntries(installEntries, target);
   const previousEntries = readInstallManifest(target.path);
   pruneRemovedEntries(target.path, previousEntries, managedEntries);
-  if (target.layout === "flat-markdown") {
-    installSkillsIntoFlatMarkdownTarget(tempDir, target.path, installEntries);
-  } else {
-    installSkillsIntoTarget(tempDir, target.path, installEntries);
-  }
+  installSkillsIntoTarget(tempDir, target.path, installEntries);
   writeInstallManifest(target.path, managedEntries);
   console.log(`  ✓ Installed to ${target.path}`);
 }
@@ -579,7 +552,7 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
       "If Antigravity hits context/truncation limits, see docs/users/agent-overload-recovery.md",
     );
     messages.push(
-      "For the agy CLI slash-command menu, install the flat CLI layout with --agy.",
+      "For the agy CLI slash-command menu, install the Antigravity CLI layout with --agy.",
     );
     messages.push(
       "For clone-based installs, use scripts/activate-skills.sh or scripts/activate-skills.bat",
@@ -668,14 +641,12 @@ module.exports = {
   buildInstallSelectors,
   getInstallEntries,
   getManagedEntries,
-  installSkillsIntoFlatMarkdownTarget,
   installSkillsIntoTarget,
   installForTarget,
   isSafeGitRef,
   isOpenCodeStylePath,
   main,
   matchesInstallSelectors,
-  normalizeFlatMarkdownInstallEntry,
   normalizeInstallEntry,
   parseSelectorArg,
   pruneRemovedEntries,
