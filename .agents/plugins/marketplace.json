@@ -269,6 +269,186 @@
       "category": "Quality Assurance"
     },
     {
+      "name": "agyb-codex-web-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-web-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-product-design-studio",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-product-design-studio"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-security-engineer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-security-engineer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-secure-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-secure-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-documents-presentations",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-documents-presentations"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-data-analytics",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-data-analytics"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-agent-mcp-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-agent-mcp-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-oss-maintainer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-oss-maintainer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-qa-test-automation",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-qa-test-automation"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-devops-cloud",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-devops-cloud"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-codex-marketing-seo-growth",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-marketing-seo-growth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-codex-automation-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-automation-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-codex-observability-ir",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-observability-ir"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-codex-python-api-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-python-api-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-codex-mobile-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-codex-mobile-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
       "name": "agyb-mobile-developer",
       "source": {
         "source": "local",

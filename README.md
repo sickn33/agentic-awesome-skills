@@ -200,6 +200,7 @@ Use the root repo as a landing page, then jump into the deeper surface that matc
 - **Generated catalog and metadata** in [`CATALOG.md`](CATALOG.md), `skills_index.json`, and [`data/`](data/)
 - **Hosted and local web app** in [`apps/web-app`](apps/web-app) and on [GitHub Pages](https://sickn33.github.io/antigravity-awesome-skills/)
 - **Role-based bundles** in [docs/users/bundles.md](docs/users/bundles.md)
+- **Specialized plugin roadmap** in [docs/users/specialized-plugin-roadmap.md](docs/users/specialized-plugin-roadmap.md)
 - **Execution workflows** in [docs/users/workflows.md](docs/users/workflows.md)
 - **User, contributor, and maintainer docs** under [`docs/`](docs/)
 
@@ -209,7 +210,7 @@ Use the root repo as a landing page, then jump into the deeper surface that matc
 - Browse the hosted catalog at [https://sickn33.github.io/antigravity-awesome-skills/](https://sickn33.github.io/antigravity-awesome-skills/).
 - Start with [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) if you are new after installation.
 - Use [Bundles](docs/users/bundles.md) for role-based discovery and [Workflows](docs/users/workflows.md) for step-by-step execution.
-- Use [Plugins for Claude Code and Codex](docs/users/plugins.md) when you care about marketplace-safe distribution.
+- Use [Plugins for Claude Code and Codex](docs/users/plugins.md) when you care about marketplace-safe distribution, and the [Specialized Plugin Roadmap](docs/users/specialized-plugin-roadmap.md) when you want the best plugin candidates.
 
 ### Compare alternatives
 

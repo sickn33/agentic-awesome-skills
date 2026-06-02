@@ -16,6 +16,7 @@ const LOCAL_TEST_COMMANDS = [
     [path.join(TOOL_TESTS, "build_catalog_bundles.test.js")],
     [path.join(TOOL_TESTS, "claude_plugin_marketplace.test.js")],
     [path.join(TOOL_TESTS, "codex_plugin_marketplace.test.js")],
+    [path.join(TOOL_TESTS, "specialized_plugin_candidates.test.js")],
     [path.join(TOOL_TESTS, "plugin_directories.test.js")],
     [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_editorial_bundles.py")],
     [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_plugin_compatibility.py")],

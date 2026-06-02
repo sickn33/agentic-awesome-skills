@@ -450,6 +450,306 @@
       "source": "./plugins/antigravity-bundle-qa-testing"
     },
     {
+      "name": "antigravity-bundle-codex-web-app-builder",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Web App Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-web-app-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-web-app-builder"
+    },
+    {
+      "name": "antigravity-bundle-codex-product-design-studio",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Product Design Studio\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-product-design-studio",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-product-design-studio"
+    },
+    {
+      "name": "antigravity-bundle-codex-security-engineer",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Security Engineer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-security-engineer",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-security-engineer"
+    },
+    {
+      "name": "antigravity-bundle-codex-secure-app-builder",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Secure App Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-secure-app-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-secure-app-builder"
+    },
+    {
+      "name": "antigravity-bundle-codex-documents-presentations",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Documents & Presentations\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-documents-presentations",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-documents-presentations"
+    },
+    {
+      "name": "antigravity-bundle-codex-data-analytics",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Data Analytics\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-data-analytics",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-data-analytics"
+    },
+    {
+      "name": "antigravity-bundle-codex-agent-mcp-builder",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Agent & MCP Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-agent-mcp-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-agent-mcp-builder"
+    },
+    {
+      "name": "antigravity-bundle-codex-oss-maintainer",
+      "version": "11.11.0",
+      "description": "Install the \"Codex OSS Maintainer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-oss-maintainer",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-oss-maintainer"
+    },
+    {
+      "name": "antigravity-bundle-codex-qa-test-automation",
+      "version": "11.11.0",
+      "description": "Install the \"Codex QA & Test Automation\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-qa-test-automation",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-qa-test-automation"
+    },
+    {
+      "name": "antigravity-bundle-codex-devops-cloud",
+      "version": "11.11.0",
+      "description": "Install the \"Codex DevOps & Cloud\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-devops-cloud",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-devops-cloud"
+    },
+    {
+      "name": "antigravity-bundle-codex-marketing-seo-growth",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Marketing, SEO & Growth\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-marketing-seo-growth",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-marketing-seo-growth"
+    },
+    {
+      "name": "antigravity-bundle-codex-automation-builder",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Automation Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-automation-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-automation-builder"
+    },
+    {
+      "name": "antigravity-bundle-codex-observability-ir",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Observability IR\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-observability-ir",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-observability-ir"
+    },
+    {
+      "name": "antigravity-bundle-codex-python-api-builder",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Python API Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-python-api-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-python-api-builder"
+    },
+    {
+      "name": "antigravity-bundle-codex-mobile-app-builder",
+      "version": "11.11.0",
+      "description": "Install the \"Codex Mobile App Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "codex-mobile-app-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-codex-mobile-app-builder"
+    },
+    {
       "name": "antigravity-bundle-mobile-developer",
       "version": "11.11.0",
       "description": "Install the \"Mobile Developer\" editorial skill bundle for Claude Code.",

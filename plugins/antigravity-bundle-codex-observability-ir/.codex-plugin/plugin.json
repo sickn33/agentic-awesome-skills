@@ -1,0 +1,33 @@
+{
+  "name": "agyb-codex-observability-ir",
+  "version": "11.11.0",
+  "description": "Install the \"Codex Observability IR\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "codex-observability-ir",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Observability IR",
+    "shortDescription": "Specialized Product Plugins - Next Wave · 8 curated skills",
+    "longDescription": "Engineering teams monitoring systems, debugging production issues, and writing postmortems. Covers Observability Engineer, Distributed Tracing, and 6 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}
