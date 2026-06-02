@@ -92,7 +92,7 @@ export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD }
     })
     .join('\n');
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n${urlsXml}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlsXml}\n</urlset>\n`;
 }
 
 function readSkillsCatalog() {
