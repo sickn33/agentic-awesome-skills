@@ -8,22 +8,27 @@ const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
     answer:
-      'Antigravity Awesome Skills is an installable GitHub library of reusable SKILL.md playbooks for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.',
+      'Antigravity Awesome Skills is an installable GitHub library of 1,494+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
   },
   {
     question: 'How do I install Antigravity Awesome Skills?',
     answer:
-      'Install the library with npx antigravity-awesome-skills, then use tool-specific flags such as --codex, --cursor, --gemini, or --claude when you want the installer to target a specific skills directory.',
+      'Install the library with npx antigravity-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+  },
+  {
+    question: 'What are AAS specialized plugins?',
+    answer:
+      'AAS specialized plugins are focused, domain-specific distributions of the skill library. They package relevant skills for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, and agent or MCP work so users can start with the right surface instead of activating the entire catalog.',
   },
   {
     question: 'What is the difference between skills and MCP tools?',
     answer:
-      'Skills are reusable playbooks that tell an AI assistant how to execute a workflow, while MCP tools expose external systems or actions the assistant can call. Skills guide behavior; MCP tools provide capabilities.',
+      'Skills are reusable playbooks that tell an AI assistant how to execute a workflow. MCP tools expose external systems or callable actions. Skills guide behavior, context, constraints, and output quality; MCP tools provide the external capabilities an assistant may need while following those instructions.',
   },
   {
-    question: 'What is the difference between bundles and workflows?',
+    question: 'How are plugins, bundles, and workflows different?',
     answer:
-      'Bundles are curated sets of recommended skills for a role or domain, while workflows are ordered execution playbooks that show how to combine skills step by step for a concrete outcome.',
+      'Plugins are installable packaging surfaces, bundles are curated skill recommendations, and workflows are ordered execution playbooks. Start with a plugin when the domain is clear, use bundles to compare adjacent skills, and use workflows when sequencing planning, coding, testing, auditing, or release work matters.',
   },
 ] as const;
 
@@ -77,6 +82,11 @@ function buildOrganizationSchema(): Record<string, unknown> {
     '@type': 'Organization',
     name: SITE_NAME,
     url: 'https://github.com/sickn33/antigravity-awesome-skills',
+    sameAs: [
+      'https://x.com/AASkills_',
+      'https://www.npmjs.com/package/antigravity-awesome-skills',
+      'https://sickn33.github.io/antigravity-awesome-skills/',
+    ],
     brand: {
       '@type': 'Brand',
       name: SITE_NAME,
@@ -91,6 +101,11 @@ function buildWebSiteSchema(canonicalUrl: string): Record<string, unknown> {
     name: SITE_NAME,
     url: getCatalogBaseUrl(canonicalUrl),
     inLanguage: 'en',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${getCatalogBaseUrl(canonicalUrl).replace(/\/+$/, '')}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 
@@ -103,9 +118,21 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: `Installable GitHub library of ${visibleCountLabel} for AI coding assistants.`,
+    description: `Installable GitHub library of ${visibleCountLabel}, specialized plugins, bundles, and workflows for AI coding assistants.`,
     url: canonicalUrl,
     codeRepository: 'https://github.com/sickn33/antigravity-awesome-skills',
+    applicationCategory: 'DeveloperApplication',
+    keywords: [
+      'AI coding assistant skills',
+      'Claude Code skills',
+      'Codex CLI skills',
+      'Cursor skills',
+      'Gemini CLI skills',
+      'Antigravity skills',
+      'specialized plugins',
+      'SKILL.md',
+    ],
+    isAccessibleForFree: true,
     programmingLanguage: {
       '@type': 'ComputerLanguage',
       name: 'Markdown',
@@ -286,8 +313,8 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
     : 'installable AI skills';
   const title = `Antigravity Awesome Skills | ${visibleCountLabel} catalog`;
   const description = visibleCount > 0
-    ? `Explore ${visibleCount.toLocaleString('en-US')} installable agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity. Browse bundles, workflows, FAQs, and integration guides in one place.`
-    : 'Explore installable agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity. Browse bundles, workflows, FAQs, and integration guides in one place.';
+    ? `Explore ${visibleCount.toLocaleString('en-US')} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`
+    : 'Explore installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.';
   return {
     title,
     description,

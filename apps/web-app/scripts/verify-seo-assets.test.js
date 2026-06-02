@@ -7,6 +7,7 @@ import {
   analyzeSitemap,
   assertPrerenderedSkillRoutes,
   assertIndexSocialMeta,
+  assertLlms,
   assertRobots,
   assertSitemap,
   extractSitemapLocations,
@@ -56,10 +57,28 @@ describe('seo assets verification helpers', () => {
     const robots = `
       User-agent: *
       Allow: /
+      User-agent: GPTBot
+      Allow: /
+      User-agent: OAI-SearchBot
+      Allow: /
+      User-agent: ClaudeBot
+      Allow: /
+      User-agent: PerplexityBot
+      Allow: /
       Sitemap: https://example.com/sitemap.xml
     `;
 
     expect(() => assertRobots(robots)).not.toThrow();
+  });
+
+  it('requires llms.txt discovery signals', () => {
+    const llms = `
+      # Antigravity Awesome Skills
+      1,494+ agentic skills with specialized plugins for Claude Code and Codex CLI.
+      https://github.com/sickn33/antigravity-awesome-skills
+    `;
+
+    expect(() => assertLlms(llms)).not.toThrow();
   });
 
   it('requires social image tags in rendered index html', () => {

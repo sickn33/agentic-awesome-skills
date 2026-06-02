@@ -26,6 +26,7 @@ function parseCliArgs(argv) {
   const args = {
     sitemapPath: 'dist/sitemap.xml',
     robotsPath: 'dist/robots.txt',
+    llmsPath: 'dist/llms.txt',
     manifestPath: 'dist/site.webmanifest',
     indexPath: 'dist/index.html',
     distDir: 'dist',
@@ -39,6 +40,7 @@ function parseCliArgs(argv) {
       if (value) {
         args.sitemapPath = path.join(value, 'sitemap.xml');
         args.robotsPath = path.join(value, 'robots.txt');
+        args.llmsPath = path.join(value, 'llms.txt');
         args.manifestPath = path.join(value, 'site.webmanifest');
         args.indexPath = path.join(value, 'index.html');
         args.distDir = value;
@@ -61,6 +63,12 @@ function parseCliArgs(argv) {
 
     if (arg === '--robots' && argv[i + 1]) {
       args.robotsPath = argv[i + 1];
+      i += 1;
+      continue;
+    }
+
+    if (arg === '--llms' && argv[i + 1]) {
+      args.llmsPath = argv[i + 1];
       i += 1;
       continue;
     }
@@ -205,9 +213,29 @@ export function assertRobots(robotsText) {
   const lines = String(robotsText ?? '').split(/\r?\n/).map((line) => line.trim());
   const allowsRoot = lines.some((line) => line.startsWith('Allow: /'));
   const hasSitemap = lines.some((line) => /^Sitemap:\s*.+\/?sitemap\.xml$/i.test(line));
+  const allowsAiSearchCrawlers = ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'PerplexityBot'].every((crawler) =>
+    lines.some((line) => line === `User-agent: ${crawler}`),
+  );
 
   assert(allowsRoot, 'robots.txt must allow root crawling.');
   assert(hasSitemap, 'robots.txt must expose sitemap location.');
+  assert(allowsAiSearchCrawlers, 'robots.txt must explicitly expose AI search crawler directives.');
+}
+
+export function assertLlms(llmsText) {
+  const text = String(llmsText ?? '');
+  const requiredSnippets = [
+    '# Antigravity Awesome Skills',
+    '1,494+',
+    'specialized plugins',
+    'Claude Code',
+    'Codex CLI',
+    'https://github.com/sickn33/antigravity-awesome-skills',
+  ];
+
+  for (const snippet of requiredSnippets) {
+    assert(text.includes(snippet), `llms.txt missing required snippet: ${snippet}`);
+  }
 }
 
 export function assertManifest(manifestText) {
@@ -229,6 +257,7 @@ function readFile(filePath) {
 export function runVerification({
   sitemapPath,
   robotsPath,
+  llmsPath = 'dist/llms.txt',
   manifestPath,
   indexPath = 'dist/index.html',
   distDir = 'dist',
@@ -238,6 +267,7 @@ export function runVerification({
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
   assertIndexSocialMeta(readFile(indexPath));
   assertRobots(readFile(robotsPath));
+  assertLlms(readFile(llmsPath));
   assertManifest(readFile(manifestPath));
 }
 

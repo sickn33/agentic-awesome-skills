@@ -52,7 +52,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
 - [Browse 1,273+ Skills](#browse-1273-skills)
 
-**Antigravity Awesome Skills** (Release 8.3.0) is a large, installable skill library for AI coding assistants. It includes onboarding docs, bundles, workflows, generated catalogs, and a CLI installer so you can move from discovery to actual usage without manually stitching together dozens of repos.
+**Antigravity Awesome Skills** (Release 8.3.0) is a large, installable skill library for AI coding assistants. It packages 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
 """,
                 encoding="utf-8",
             )
@@ -112,6 +112,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
             self.assertIn("1,304+ agentic skills", readme)
             self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("[Browse 1,304+ Skills](#browse-1304-skills)", readme)
+            self.assertIn("1,304+ reusable `SKILL.md` playbooks", readme)
             self.assertIn("V8.4.0", (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ files", (root / "docs" / "users" / "gemini-cli-skills.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ specialized areas", (root / "docs" / "users" / "kiro-integration.md").read_text(encoding="utf-8"))
