@@ -81,7 +81,7 @@ Start here:
 
 - Install: `npx antigravity-awesome-skills`
 - Choose your tool: `README.md#choose-your-tool`
-- Best skills by tool: `README.md#best-skills-by-tool`
+- Specialized plugins: `README.md#recommended-specialized-plugins`
 - Bundles: `docs/users/bundles.md`
 - Workflows: `docs/users/workflows.md`
 

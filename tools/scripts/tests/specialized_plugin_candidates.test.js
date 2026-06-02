@@ -24,7 +24,9 @@ const claudePluginNames = new Set(claudeMarketplace.plugins.map((plugin) => plug
 assert.ok(candidates.length >= 10, "specialized plugin candidates should include a meaningful shortlist");
 
 for (const candidate of candidates) {
-  assert.match(candidate.id, /^codex-[a-z0-9-]+$/, `candidate ${candidate.id} should use the codex-* id convention`);
+  assert.match(candidate.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/, `candidate ${candidate.id} should use a host-neutral id convention`);
+  assert.ok(!candidate.id.startsWith("codex-"), `candidate ${candidate.id} should not brand the plugin name around Codex`);
+  assert.ok(!/^Codex\b/.test(candidate.name), `candidate ${candidate.id} display name should not start with Codex`);
   assert.ok(
     candidate.skills.length >= 5 && candidate.skills.length <= 10,
     `candidate ${candidate.id} should stay within the focused 5-10 skill range`,

@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-automation-builder",
+  "version": "11.11.0",
+  "description": "Install the \"AAS Automation Builder\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-automation-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Automation Builder",
+    "shortDescription": "Specialized Product Plugins - Next Wave · 8 curated skills",
+    "longDescription": "Teams designing reliable automations across tools, data stores, and communication platforms. Covers Workflow Automation, MCP Builder, and 6 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

@@ -26,7 +26,7 @@ This pass evaluated the full local catalog in `data/skills_index.json`:
 
 Candidate details live in `data/specialized-plugin-candidates.json`. Each listed skill ID exists in the catalog and was checked as Codex-supported.
 
-The candidates are now enabled as editorial bundle plugins. Running `npm run bundles:sync` materializes them under `plugins/antigravity-bundle-codex-*`, adds Codex marketplace entries in `.agents/plugins/marketplace.json`, adds Claude marketplace entries in `.claude-plugin/marketplace.json`, and refreshes `docs/users/bundles.md`.
+The candidates are now enabled as editorial bundle plugins. Running `npm run bundles:sync` materializes them under `plugins/antigravity-bundle-aas-*`, adds Codex marketplace entries in `.agents/plugins/marketplace.json`, adds Claude marketplace entries in `.claude-plugin/marketplace.json`, and refreshes `docs/users/bundles.md`.
 
 ## Tier 1 Plugins
 
@@ -34,16 +34,16 @@ These should become the primary marketplace surface.
 
 | Plugin | Job | Why it deserves focus |
 | --- | --- | --- |
-| Codex Web App Builder | Build modern React/Next.js web apps. | High-demand, coherent path from UI design to implementation, forms, Tailwind, and SEO. |
-| Codex Product Design Studio | Create richer UI, brand, motion, 3D, and visual assets. | Stronger than a generic design bundle; it has a clear creative/product promise. |
-| Codex Security Engineer | Run authorized testing, audit, and hardening workflows. | Security is deep enough to justify a standalone plugin with explicit boundaries. |
-| Codex Secure App Builder | Build secure application features. | Keeps defensive implementation separate from offensive assessment. |
-| Codex Documents & Presentations | Create, edit, convert, and automate DOCX/XLSX/PPTX/PDF/Google files. | Concrete productivity plugin with obvious user value and room for app integrations. |
-| Codex Data Analytics | Track, query, visualize, dashboard, and experiment. | Data workflows need a repeatable toolchain, not one isolated skill. |
-| Codex Agent & MCP Builder | Build agentic apps, MCP tools, RAG, and eval loops. | Maps directly to the official Codex plugin model because it can grow into MCP config. |
-| Codex OSS Maintainer | Manage PRs, reviews, releases, changelogs, and repo guidance. | Very Codex-native and useful for this repository's own maintainer workflow. |
-| Codex QA & Test Automation | Write, debug, stabilize, and scale tests. | Testing is a workflow chain: TDD, browser automation, failure diagnosis, and regression prevention. |
-| Codex DevOps & Cloud | Ship infrastructure, deployment, and operational workflows. | Strong fit for scripts, deployment gates, incident practice, and cloud patterns. |
+| AAS Web App Builder | Build modern React/Next.js web apps. | High-demand, coherent path from UI design to implementation, forms, Tailwind, and SEO. |
+| AAS Product Design Studio | Create richer UI, brand, motion, 3D, and visual assets. | Stronger than a generic design bundle; it has a clear creative/product promise. |
+| AAS Security Engineer | Run authorized testing, audit, and hardening workflows. | Security is deep enough to justify a standalone plugin with explicit boundaries. |
+| AAS Secure App Builder | Build secure application features. | Keeps defensive implementation separate from offensive assessment. |
+| AAS Documents & Presentations | Create, edit, convert, and automate DOCX/XLSX/PPTX/PDF/Google files. | Concrete productivity plugin with obvious user value and room for app integrations. |
+| AAS Data Analytics | Track, query, visualize, dashboard, and experiment. | Data workflows need a repeatable toolchain, not one isolated skill. |
+| AAS Agent & MCP Builder | Build agentic apps, MCP tools, RAG, and eval loops. | Maps directly to plugin-based agent workflows because it can grow into MCP config. |
+| AAS OSS Maintainer | Manage PRs, reviews, releases, changelogs, and repo guidance. | Very useful for this repository's own maintainer workflow. |
+| AAS QA & Test Automation | Write, debug, stabilize, and scale tests. | Testing is a workflow chain: TDD, browser automation, failure diagnosis, and regression prevention. |
+| AAS DevOps & Cloud | Ship infrastructure, deployment, and operational workflows. | Strong fit for scripts, deployment gates, incident practice, and cloud patterns. |
 
 ## Tier 2 Plugins
 
@@ -51,11 +51,11 @@ These are promising and should be hardened after Tier 1.
 
 | Plugin | Job | Why it is promising |
 | --- | --- | --- |
-| Codex Marketing, SEO & Growth | Plan, write, measure, and improve acquisition work. | Better as a growth workflow than many isolated copy/SEO skills. |
-| Codex Automation Builder | Design durable automations across tools. | Can become much stronger when paired with apps and MCP configuration. |
-| Codex Observability & Incident Response | Monitor systems, debug production, and write postmortems. | Operational work benefits from consistent proof gates. |
-| Codex Python API Builder | Build Python APIs and services with tests. | Language-specialized plugin with practical framework coverage. |
-| Codex Mobile App Builder | Ship Expo, React Native, Flutter, and iOS apps. | Covers architecture, release, CI, native platforms, and store optimization. |
+| AAS Marketing, SEO & Growth | Plan, write, measure, and improve acquisition work. | Better as a growth workflow than many isolated copy/SEO skills. |
+| AAS Automation Builder | Design durable automations across tools. | Can become much stronger when paired with apps and MCP configuration. |
+| AAS Observability IR | Monitor systems, debug production, and write postmortems. | Operational work benefits from consistent proof gates. |
+| AAS Python API Builder | Build Python APIs and services with tests. | Language-specialized plugin with practical framework coverage. |
+| AAS Mobile App Builder | Ship Expo, React Native, Flutter, and iOS apps. | Covers architecture, release, CI, native platforms, and store optimization. |
 
 ## Recommended Product Changes
 
@@ -88,7 +88,7 @@ Implemented in the repository:
 
 - `data/editorial-bundles.json` includes all 15 specialized plugin candidates.
 - `data/specialized-plugin-candidates.json` remains the source-of-truth shortlist and rationale.
-- `plugins/antigravity-bundle-codex-*` contains the generated plugin folders.
+- `plugins/antigravity-bundle-aas-*` contains the generated plugin folders.
 - `.agents/plugins/marketplace.json` and `.claude-plugin/marketplace.json` expose the generated plugin entries.
 - `docs/users/bundles.md` renders the specialized plugin sections for users.
 

@@ -5,7 +5,7 @@
   "selection_rules": [
     "Prefer focused plugins with a clear user job over broad library replicas.",
     "Include only skill IDs present in data/skills_index.json.",
-    "Prefer skills marked supported for both Codex and Claude plugin targets.",
+    "Prefer skills marked supported for both Codex and Claude plugin targets, without branding the plugin names around either host.",
     "Keep each plugin small enough to remain easy to browse, install, and invoke."
   ],
   "official_codex_docs_basis": [
@@ -15,8 +15,8 @@
   ],
   "candidates": [
     {
-      "id": "codex-web-app-builder",
-      "name": "Codex Web App Builder",
+      "id": "aas-web-app-builder",
+      "name": "AAS Web App Builder",
       "priority": "tier-1",
       "audience": "Frontend and full-stack developers shipping modern web apps.",
       "why": "High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO.",
@@ -33,8 +33,8 @@
       ]
     },
     {
-      "id": "codex-product-design-studio",
-      "name": "Codex Product Design Studio",
+      "id": "aas-product-design-studio",
+      "name": "AAS Product Design Studio",
       "priority": "tier-1",
       "audience": "Builders who want richer UI, brand, portfolio, and visual product work.",
       "why": "Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation.",
@@ -50,8 +50,8 @@
       ]
     },
     {
-      "id": "codex-security-engineer",
-      "name": "Codex Security Engineer",
+      "id": "aas-security-engineer",
+      "name": "AAS Security Engineer",
       "priority": "tier-1",
       "audience": "Authorized security testing, audit, and hardening teams.",
       "why": "Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows.",
@@ -68,8 +68,8 @@
       ]
     },
     {
-      "id": "codex-secure-app-builder",
-      "name": "Codex Secure App Builder",
+      "id": "aas-secure-app-builder",
+      "name": "AAS Secure App Builder",
       "priority": "tier-1",
       "audience": "Application developers who want security embedded while building features.",
       "why": "Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams.",
@@ -85,8 +85,8 @@
       ]
     },
     {
-      "id": "codex-documents-presentations",
-      "name": "Codex Documents & Presentations",
+      "id": "aas-documents-presentations",
+      "name": "AAS Documents & Presentations",
       "priority": "tier-1",
       "audience": "Users creating, editing, converting, and automating office documents.",
       "why": "Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations.",
@@ -102,8 +102,8 @@
       ]
     },
     {
-      "id": "codex-data-analytics",
-      "name": "Codex Data Analytics",
+      "id": "aas-data-analytics",
+      "name": "AAS Data Analytics",
       "priority": "tier-1",
       "audience": "Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments.",
       "why": "Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.",
@@ -119,11 +119,11 @@
       ]
     },
     {
-      "id": "codex-agent-mcp-builder",
-      "name": "Codex Agent & MCP Builder",
+      "id": "aas-agent-mcp-builder",
+      "name": "AAS Agent & MCP Builder",
       "priority": "tier-1",
       "audience": "Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.",
-      "why": "Maps directly to Codex's plugin model because it can grow from skills into MCP server configuration and app/tool integrations.",
+      "why": "Maps directly to plugin-based agent workflows because it can grow from skills into MCP server configuration and app/tool integrations.",
       "skills": [
         "ai-agents-architect",
         "agent-evaluation",
@@ -137,11 +137,11 @@
       ]
     },
     {
-      "id": "codex-oss-maintainer",
-      "name": "Codex OSS Maintainer",
+      "id": "aas-oss-maintainer",
+      "name": "AAS OSS Maintainer",
       "priority": "tier-1",
       "audience": "Open-source maintainers managing PRs, releases, reviews, and contributor handoffs.",
-      "why": "This is one of the most Codex-native plugin opportunities: it packages repeatable repo work around review, release, changelog, and GitHub workflows.",
+      "why": "This is one of the strongest maintainer-focused plugin opportunities: it packages repeatable repo work around review, release, changelog, and GitHub workflows.",
       "skills": [
         "agents-md",
         "commit",
@@ -156,8 +156,8 @@
       ]
     },
     {
-      "id": "codex-qa-test-automation",
-      "name": "Codex QA & Test Automation",
+      "id": "aas-qa-test-automation",
+      "name": "AAS QA & Test Automation",
       "priority": "tier-1",
       "audience": "Engineers and QA teams writing, debugging, and stabilizing test suites.",
       "why": "Testing is a natural plugin because users need a workflow, not a single skill: plan tests, automate browsers, debug failures, and fix regressions.",
@@ -174,8 +174,8 @@
       ]
     },
     {
-      "id": "codex-devops-cloud",
-      "name": "Codex DevOps & Cloud",
+      "id": "aas-devops-cloud",
+      "name": "AAS DevOps & Cloud",
       "priority": "tier-1",
       "audience": "Teams shipping infrastructure, deployments, and operational workflows.",
       "why": "Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows.",
@@ -192,8 +192,8 @@
       ]
     },
     {
-      "id": "codex-marketing-seo-growth",
-      "name": "Codex Marketing, SEO & Growth",
+      "id": "aas-marketing-seo-growth",
+      "name": "AAS Marketing, SEO & Growth",
       "priority": "tier-2",
       "audience": "Founders and growth teams creating content, SEO systems, experiments, and email campaigns.",
       "why": "A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work.",
@@ -210,8 +210,8 @@
       ]
     },
     {
-      "id": "codex-automation-builder",
-      "name": "Codex Automation Builder",
+      "id": "aas-automation-builder",
+      "name": "AAS Automation Builder",
       "priority": "tier-2",
       "audience": "Teams designing reliable automations across tools, data stores, and communication platforms.",
       "why": "Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows.",
@@ -227,8 +227,8 @@
       ]
     },
     {
-      "id": "codex-observability-ir",
-      "name": "Codex Observability IR",
+      "id": "aas-observability-ir",
+      "name": "AAS Observability IR",
       "priority": "tier-2",
       "audience": "Engineering teams monitoring systems, debugging production issues, and writing postmortems.",
       "why": "Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts.",
@@ -244,8 +244,8 @@
       ]
     },
     {
-      "id": "codex-python-api-builder",
-      "name": "Codex Python API Builder",
+      "id": "aas-python-api-builder",
+      "name": "AAS Python API Builder",
       "priority": "tier-2",
       "audience": "Python developers building APIs, services, and tests.",
       "why": "A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together.",
@@ -261,8 +261,8 @@
       ]
     },
     {
-      "id": "codex-mobile-app-builder",
-      "name": "Codex Mobile App Builder",
+      "id": "aas-mobile-app-builder",
+      "name": "AAS Mobile App Builder",
       "priority": "tier-2",
       "audience": "Mobile teams shipping Expo, React Native, Flutter, and iOS apps.",
       "why": "Mobile development has a full lifecycle in the catalog: architecture, Expo routes, distribution, CI, native platforms, and store optimization.",

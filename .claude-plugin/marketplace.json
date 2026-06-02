@@ -450,9 +450,9 @@
       "source": "./plugins/antigravity-bundle-qa-testing"
     },
     {
-      "name": "antigravity-bundle-codex-web-app-builder",
+      "name": "antigravity-bundle-aas-web-app-builder",
       "version": "11.11.0",
-      "description": "Install the \"Codex Web App Builder\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Web App Builder\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -464,15 +464,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-web-app-builder",
+        "aas-web-app-builder",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-web-app-builder"
+      "source": "./plugins/antigravity-bundle-aas-web-app-builder"
     },
     {
-      "name": "antigravity-bundle-codex-product-design-studio",
+      "name": "antigravity-bundle-aas-product-design-studio",
       "version": "11.11.0",
-      "description": "Install the \"Codex Product Design Studio\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Product Design Studio\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -484,15 +484,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-product-design-studio",
+        "aas-product-design-studio",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-product-design-studio"
+      "source": "./plugins/antigravity-bundle-aas-product-design-studio"
     },
     {
-      "name": "antigravity-bundle-codex-security-engineer",
+      "name": "antigravity-bundle-aas-security-engineer",
       "version": "11.11.0",
-      "description": "Install the \"Codex Security Engineer\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Security Engineer\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -504,15 +504,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-security-engineer",
+        "aas-security-engineer",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-security-engineer"
+      "source": "./plugins/antigravity-bundle-aas-security-engineer"
     },
     {
-      "name": "antigravity-bundle-codex-secure-app-builder",
+      "name": "antigravity-bundle-aas-secure-app-builder",
       "version": "11.11.0",
-      "description": "Install the \"Codex Secure App Builder\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Secure App Builder\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -524,15 +524,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-secure-app-builder",
+        "aas-secure-app-builder",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-secure-app-builder"
+      "source": "./plugins/antigravity-bundle-aas-secure-app-builder"
     },
     {
-      "name": "antigravity-bundle-codex-documents-presentations",
+      "name": "antigravity-bundle-aas-documents-presentations",
       "version": "11.11.0",
-      "description": "Install the \"Codex Documents & Presentations\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Documents & Presentations\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -544,15 +544,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-documents-presentations",
+        "aas-documents-presentations",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-documents-presentations"
+      "source": "./plugins/antigravity-bundle-aas-documents-presentations"
     },
     {
-      "name": "antigravity-bundle-codex-data-analytics",
+      "name": "antigravity-bundle-aas-data-analytics",
       "version": "11.11.0",
-      "description": "Install the \"Codex Data Analytics\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Data Analytics\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -564,15 +564,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-data-analytics",
+        "aas-data-analytics",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-data-analytics"
+      "source": "./plugins/antigravity-bundle-aas-data-analytics"
     },
     {
-      "name": "antigravity-bundle-codex-agent-mcp-builder",
+      "name": "antigravity-bundle-aas-agent-mcp-builder",
       "version": "11.11.0",
-      "description": "Install the \"Codex Agent & MCP Builder\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Agent & MCP Builder\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -584,15 +584,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-agent-mcp-builder",
+        "aas-agent-mcp-builder",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-agent-mcp-builder"
+      "source": "./plugins/antigravity-bundle-aas-agent-mcp-builder"
     },
     {
-      "name": "antigravity-bundle-codex-oss-maintainer",
+      "name": "antigravity-bundle-aas-oss-maintainer",
       "version": "11.11.0",
-      "description": "Install the \"Codex OSS Maintainer\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS OSS Maintainer\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -604,15 +604,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-oss-maintainer",
+        "aas-oss-maintainer",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-oss-maintainer"
+      "source": "./plugins/antigravity-bundle-aas-oss-maintainer"
     },
     {
-      "name": "antigravity-bundle-codex-qa-test-automation",
+      "name": "antigravity-bundle-aas-qa-test-automation",
       "version": "11.11.0",
-      "description": "Install the \"Codex QA & Test Automation\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS QA & Test Automation\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -624,15 +624,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-qa-test-automation",
+        "aas-qa-test-automation",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-qa-test-automation"
+      "source": "./plugins/antigravity-bundle-aas-qa-test-automation"
     },
     {
-      "name": "antigravity-bundle-codex-devops-cloud",
+      "name": "antigravity-bundle-aas-devops-cloud",
       "version": "11.11.0",
-      "description": "Install the \"Codex DevOps & Cloud\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS DevOps & Cloud\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -644,15 +644,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-devops-cloud",
+        "aas-devops-cloud",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-devops-cloud"
+      "source": "./plugins/antigravity-bundle-aas-devops-cloud"
     },
     {
-      "name": "antigravity-bundle-codex-marketing-seo-growth",
+      "name": "antigravity-bundle-aas-marketing-seo-growth",
       "version": "11.11.0",
-      "description": "Install the \"Codex Marketing, SEO & Growth\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Marketing, SEO & Growth\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -664,15 +664,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-marketing-seo-growth",
+        "aas-marketing-seo-growth",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-marketing-seo-growth"
+      "source": "./plugins/antigravity-bundle-aas-marketing-seo-growth"
     },
     {
-      "name": "antigravity-bundle-codex-automation-builder",
+      "name": "antigravity-bundle-aas-automation-builder",
       "version": "11.11.0",
-      "description": "Install the \"Codex Automation Builder\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Automation Builder\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -684,15 +684,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-automation-builder",
+        "aas-automation-builder",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-automation-builder"
+      "source": "./plugins/antigravity-bundle-aas-automation-builder"
     },
     {
-      "name": "antigravity-bundle-codex-observability-ir",
+      "name": "antigravity-bundle-aas-observability-ir",
       "version": "11.11.0",
-      "description": "Install the \"Codex Observability IR\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Observability IR\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -704,15 +704,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-observability-ir",
+        "aas-observability-ir",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-observability-ir"
+      "source": "./plugins/antigravity-bundle-aas-observability-ir"
     },
     {
-      "name": "antigravity-bundle-codex-python-api-builder",
+      "name": "antigravity-bundle-aas-python-api-builder",
       "version": "11.11.0",
-      "description": "Install the \"Codex Python API Builder\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Python API Builder\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -724,15 +724,15 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-python-api-builder",
+        "aas-python-api-builder",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-python-api-builder"
+      "source": "./plugins/antigravity-bundle-aas-python-api-builder"
     },
     {
-      "name": "antigravity-bundle-codex-mobile-app-builder",
+      "name": "antigravity-bundle-aas-mobile-app-builder",
       "version": "11.11.0",
-      "description": "Install the \"Codex Mobile App Builder\" editorial skill bundle for Claude Code.",
+      "description": "Install the \"AAS Mobile App Builder\" editorial skill bundle for Claude Code.",
       "author": {
         "name": "sickn33 and contributors",
         "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -744,10 +744,10 @@
         "claude-code",
         "skills",
         "bundle",
-        "codex-mobile-app-builder",
+        "aas-mobile-app-builder",
         "marketplace"
       ],
-      "source": "./plugins/antigravity-bundle-codex-mobile-app-builder"
+      "source": "./plugins/antigravity-bundle-aas-mobile-app-builder"
     },
     {
       "name": "antigravity-bundle-mobile-developer",

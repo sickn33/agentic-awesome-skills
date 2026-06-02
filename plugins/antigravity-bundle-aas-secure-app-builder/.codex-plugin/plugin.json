@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-secure-app-builder",
+  "version": "11.11.0",
+  "description": "Install the \"AAS Secure App Builder\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-secure-app-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Secure App Builder",
+    "shortDescription": "Specialized Product Plugins · 8 curated skills",
+    "longDescription": "Application developers who want security embedded while building features. Covers API Security Best Practices, Auth Implementation Patterns, and 6 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

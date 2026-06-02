@@ -48,11 +48,11 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
 - **Broad coverage with real utility**: 1,273+ skills across development, testing, security, infrastructure, product, and marketing.
 
+**Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse 1,273+ Skills](#browse-1273-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
+
 - [Browse 1,273+ Skills](#browse-1273-skills)
 
 **Antigravity Awesome Skills** (Release 8.3.0) is a large, installable skill library for AI coding assistants. It includes onboarding docs, bundles, workflows, generated catalogs, and a CLI installer so you can move from discovery to actual usage without manually stitching together dozens of repos.
-
-If you want a faster answer than "browse all 1,273+ skills", start with a tool-specific guide:
 """,
                 encoding="utf-8",
             )
@@ -110,6 +110,7 @@ If you want a faster answer than "browse all 1,273+ skills", start with a tool-s
             self.assertGreaterEqual(updated_files, 10)
             readme = (root / "README.md").read_text(encoding="utf-8")
             self.assertIn("1,304+ agentic skills", readme)
+            self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("[Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("V8.4.0", (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ files", (root / "docs" / "users" / "gemini-cli-skills.md").read_text(encoding="utf-8"))

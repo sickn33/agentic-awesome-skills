@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-documents-presentations",
+  "version": "11.11.0",
+  "description": "Install the \"AAS Documents & Presentations\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-documents-presentations",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Documents & Presentations",
+    "shortDescription": "Specialized Product Plugins · 8 curated skills",
+    "longDescription": "Users creating, editing, converting, and automating office documents. Covers Office Productivity, DOCX Official, and 6 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

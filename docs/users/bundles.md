@@ -363,7 +363,7 @@ _For breaking things before users do._
 
 ## ⭐ Specialized Product Plugins
 
-### 🌐 The "Codex Web App Builder" Plugin
+### 🌐 The "AAS Web App Builder" Plugin
 
 _Frontend and full-stack developers shipping modern web apps._
 
@@ -379,7 +379,7 @@ _Frontend and full-stack developers shipping modern web apps._
 - [`form-cro`](../../skills/form-cro/): Improve form conversion and usability.
 - [`seo-audit`](../../skills/seo-audit/): Audit technical SEO and discoverability.
 
-### 🎨 The "Codex Product Design Studio" Plugin
+### 🎨 The "AAS Product Design Studio" Plugin
 
 _Builders who want richer UI, brand, portfolio, and visual product work._
 
@@ -394,7 +394,7 @@ _Builders who want richer UI, brand, portfolio, and visual product work._
 - [`scroll-experience`](../../skills/scroll-experience/): Design scroll-driven web experiences.
 - [`interactive-portfolio`](../../skills/interactive-portfolio/): Create compelling interactive portfolios.
 
-### 🛡️ The "Codex Security Engineer" Plugin
+### 🛡️ The "AAS Security Engineer" Plugin
 
 _Authorized security testing, audit, and hardening teams._
 
@@ -410,7 +410,7 @@ _Authorized security testing, audit, and hardening teams._
 - [`vulnerability-scanner`](../../skills/vulnerability-scanner/): Analyze and validate vulnerability findings.
 - [`sast-configuration`](../../skills/sast-configuration/): Configure static application security testing.
 
-### 🔐 The "Codex Secure App Builder" Plugin
+### 🔐 The "AAS Secure App Builder" Plugin
 
 _Application developers who want security embedded while building features._
 
@@ -425,7 +425,7 @@ _Application developers who want security embedded while building features._
 - [`sast-configuration`](../../skills/sast-configuration/): Configure static application security testing.
 - [`sql-injection-testing`](../../skills/sql-injection-testing/): Find and validate SQL injection risks.
 
-### 📄 The "Codex Documents & Presentations" Plugin
+### 📄 The "AAS Documents & Presentations" Plugin
 
 _Users creating, editing, converting, and automating office documents._
 
@@ -440,7 +440,7 @@ _Users creating, editing, converting, and automating office documents._
 - [`google-sheets-automation`](../../skills/google-sheets-automation/): Automate Google Sheets reads and writes.
 - [`google-slides-automation`](../../skills/google-slides-automation/): Automate Google Slides updates.
 
-### 📊 The "Codex Data Analytics" Plugin
+### 📊 The "AAS Data Analytics" Plugin
 
 _Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments._
 
@@ -455,7 +455,7 @@ _Operators, analysts, and builders working with product analytics, SQL, dashboar
 - [`kpi-dashboard-design`](../../skills/kpi-dashboard-design/): Design dashboards for decision-making.
 - [`ab-test-setup`](../../skills/ab-test-setup/): Plan and validate experiments.
 
-### 🤖 The "Codex Agent & MCP Builder" Plugin
+### 🤖 The "AAS Agent & MCP Builder" Plugin
 
 _Developers building agentic apps, MCP tools, RAG systems, and evaluation loops._
 
@@ -471,7 +471,7 @@ _Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.
 - [`langfuse`](../../skills/langfuse/): Trace, evaluate, and monitor LLM apps.
 - [`context-window-management`](../../skills/context-window-management/): Manage long context effectively.
 
-### 🧰 The "Codex OSS Maintainer" Plugin
+### 🧰 The "AAS OSS Maintainer" Plugin
 
 _Open-source maintainers managing PRs, releases, reviews, and contributor handoffs._
 
@@ -488,7 +488,7 @@ _Open-source maintainers managing PRs, releases, reviews, and contributor handof
 - [`address-github-comments`](../../skills/address-github-comments/): Address GitHub review comments systematically.
 - [`lint-and-validate`](../../skills/lint-and-validate/): Run validation and quality checks.
 
-### 🧪 The "Codex QA & Test Automation" Plugin
+### 🧪 The "AAS QA & Test Automation" Plugin
 
 _Engineers and QA teams writing, debugging, and stabilizing test suites._
 
@@ -504,7 +504,7 @@ _Engineers and QA teams writing, debugging, and stabilizing test suites._
 - [`test-fixing`](../../skills/test-fixing/): Fix failing tests systematically.
 - [`code-review-checklist`](../../skills/code-review-checklist/): Catch common bugs in reviews.
 
-### ☁️ The "Codex DevOps & Cloud" Plugin
+### ☁️ The "AAS DevOps & Cloud" Plugin
 
 _Teams shipping infrastructure, deployments, and operational workflows._
 
@@ -525,7 +525,7 @@ _Teams shipping infrastructure, deployments, and operational workflows._
 
 ## 🧩 Specialized Product Plugins - Next Wave
 
-### 📈 The "Codex Marketing, SEO & Growth" Plugin
+### 📈 The "AAS Marketing, SEO & Growth" Plugin
 
 _Founders and growth teams creating content, SEO systems, experiments, and email campaigns._
 
@@ -541,7 +541,7 @@ _Founders and growth teams creating content, SEO systems, experiments, and email
 - [`copywriting`](../../skills/copywriting/): Write conversion-focused copy.
 - [`schema-markup`](../../skills/schema-markup/): Add structured data for search visibility.
 
-### ⚙️ The "Codex Automation Builder" Plugin
+### ⚙️ The "AAS Automation Builder" Plugin
 
 _Teams designing reliable automations across tools, data stores, and communication platforms._
 
@@ -556,7 +556,7 @@ _Teams designing reliable automations across tools, data stores, and communicati
 - [`googlesheets-automation`](../../skills/googlesheets-automation/): Automate Google Sheets operations.
 - [`github-automation`](../../skills/github-automation/): Automate GitHub issues and repository work.
 
-### 📡 The "Codex Observability IR" Plugin
+### 📡 The "AAS Observability IR" Plugin
 
 _Engineering teams monitoring systems, debugging production issues, and writing postmortems._
 
@@ -571,7 +571,7 @@ _Engineering teams monitoring systems, debugging production issues, and writing 
 - [`grafana-dashboards`](../../skills/grafana-dashboards/): Create useful Grafana dashboards.
 - [`langfuse`](../../skills/langfuse/): Trace, evaluate, and monitor LLM apps.
 
-### 🐍 The "Codex Python API Builder" Plugin
+### 🐍 The "AAS Python API Builder" Plugin
 
 _Python developers building APIs, services, and tests._
 
@@ -586,7 +586,7 @@ _Python developers building APIs, services, and tests._
 - [`async-python-patterns`](../../skills/async-python-patterns/): Use asyncio and async Python safely.
 - [`api-design-principles`](../../skills/api-design-principles/): Design clear and maintainable APIs.
 
-### 📱 The "Codex Mobile App Builder" Plugin
+### 📱 The "AAS Mobile App Builder" Plugin
 
 _Mobile teams shipping Expo, React Native, Flutter, and iOS apps._
 

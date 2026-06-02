@@ -12,7 +12,9 @@ from _project_paths import find_repo_root
 from update_readme import configure_utf8_output, load_metadata
 
 
+CONTRIBUTOR_SECTION_HEADING = "## Repo Contributors"
 CONTRIBUTOR_SECTION_START = "We officially thank the following contributors for their help in making this repository awesome!\n\n"
+CONTRIB_ROCKS_MAX = 500
 SPECIAL_LINK_OVERRIDES = {
     "Copilot": "https://github.com/apps/copilot-swe-agent",
     "github-actions[bot]": "https://github.com/apps/github-actions",
@@ -88,20 +90,26 @@ def render_contributor_lines(contributors: list[str], existing_links: dict[str, 
     return "\n".join(lines)
 
 
-def update_repo_contributors_section(content: str, contributors: list[str]) -> str:
-    existing_links = parse_existing_contributor_links(content)
-    ordered_contributors = order_contributors_for_render(
-        contributors,
-        parse_existing_contributor_order(content),
-    )
-    rendered_list = render_contributor_lines(ordered_contributors, existing_links)
+def render_repo_contributors_section(repo: str) -> str:
+    return f"""{CONTRIBUTOR_SECTION_HEADING}
 
-    if CONTRIBUTOR_SECTION_START not in content or "\n## " not in content:
+<a href="https://github.com/{repo}/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo={repo}&max={CONTRIB_ROCKS_MAX}" alt="Repository contributors" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks). *(Image may be cached; [view live contributors](https://github.com/{repo}/graphs/contributors) on GitHub.)*
+
+{CONTRIBUTOR_SECTION_START}The image above renders the repository contributor avatar grid with `max={CONTRIB_ROCKS_MAX}` so the README stays compact while keeping live contributor attribution linked.
+"""
+
+
+def update_repo_contributors_section(content: str, contributors: list[str], repo: str = "sickn33/antigravity-awesome-skills") -> str:
+    if CONTRIBUTOR_SECTION_HEADING not in content or "\n## " not in content:
         raise ValueError("README.md does not contain the expected Repo Contributors section structure.")
 
-    start_index = content.index(CONTRIBUTOR_SECTION_START) + len(CONTRIBUTOR_SECTION_START)
-    end_index = content.index("\n## ", start_index)
-    return f"{content[:start_index]}{rendered_list}\n{content[end_index:]}"
+    start_index = content.index(CONTRIBUTOR_SECTION_HEADING)
+    end_index = content.index("\n## ", start_index + len(CONTRIBUTOR_SECTION_HEADING))
+    return f"{content[:start_index]}{render_repo_contributors_section(repo).rstrip()}\n{content[end_index:]}"
 
 
 def fetch_contributors(repo: str) -> list[str]:
@@ -131,7 +139,7 @@ def sync_contributors(base_dir: str | Path, dry_run: bool = False) -> bool:
     contributors = fetch_contributors(metadata["repo"])
     readme_path = root / "README.md"
     original = readme_path.read_text(encoding="utf-8")
-    updated = update_repo_contributors_section(original, contributors)
+    updated = update_repo_contributors_section(original, contributors, metadata["repo"])
 
     if updated == original:
         return False

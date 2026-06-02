@@ -49,9 +49,8 @@ README_NEW_HERE_RE = re.compile(
     r"^\*\*Antigravity Awesome Skills\*\* \(Release [\d.]+\) is a large, installable skill library.*$",
     re.MULTILINE,
 )
-README_BROWSE_RE = re.compile(
-    r'^If you want a faster answer than "browse all \d[\d,]*\+ skills", start with a tool-specific guide:$',
-    re.MULTILINE,
+README_INLINE_BROWSE_RE = re.compile(
+    r"\[📚 Browse \d[\d,]*\+ Skills\]\(#browse-\d+-skills\)"
 )
 README_TOC_BROWSE_RE = re.compile(
     r"^- \[Browse \d[\d,]*\+ Skills\]\(#browse-\d+-skills\)$",
@@ -167,8 +166,8 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
             ),
         ),
         (
-            README_BROWSE_RE,
-            f'If you want a faster answer than "browse all {metadata["total_skills_label"]} skills", start with a tool-specific guide:',
+            README_INLINE_BROWSE_RE,
+            f"[📚 Browse {metadata['total_skills_label']} Skills](#browse-{metadata['total_skills']}-skills)",
         ),
         (
             README_TOC_BROWSE_RE,

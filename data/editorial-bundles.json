@@ -732,11 +732,11 @@
       ]
     },
     {
-      "id": "codex-web-app-builder",
-      "name": "Codex Web App Builder",
+      "id": "aas-web-app-builder",
+      "name": "AAS Web App Builder",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "🌐",
-      "tagline": "The \"Codex Web App Builder\" Plugin",
+      "tagline": "The \"AAS Web App Builder\" Plugin",
       "audience": "Frontend and full-stack developers shipping modern web apps.",
       "description": "High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO.",
       "skills": [
@@ -776,14 +776,15 @@
           "id": "seo-audit",
           "summary": "Audit technical SEO and discoverability."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-product-design-studio",
-      "name": "Codex Product Design Studio",
+      "id": "aas-product-design-studio",
+      "name": "AAS Product Design Studio",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "🎨",
-      "tagline": "The \"Codex Product Design Studio\" Plugin",
+      "tagline": "The \"AAS Product Design Studio\" Plugin",
       "audience": "Builders who want richer UI, brand, portfolio, and visual product work.",
       "description": "Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation.",
       "skills": [
@@ -819,14 +820,15 @@
           "id": "interactive-portfolio",
           "summary": "Create compelling interactive portfolios."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-security-engineer",
-      "name": "Codex Security Engineer",
+      "id": "aas-security-engineer",
+      "name": "AAS Security Engineer",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "🛡️",
-      "tagline": "The \"Codex Security Engineer\" Plugin",
+      "tagline": "The \"AAS Security Engineer\" Plugin",
       "audience": "Authorized security testing, audit, and hardening teams.",
       "description": "Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows.",
       "skills": [
@@ -866,14 +868,15 @@
           "id": "sast-configuration",
           "summary": "Configure static application security testing."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-secure-app-builder",
-      "name": "Codex Secure App Builder",
+      "id": "aas-secure-app-builder",
+      "name": "AAS Secure App Builder",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "🔐",
-      "tagline": "The \"Codex Secure App Builder\" Plugin",
+      "tagline": "The \"AAS Secure App Builder\" Plugin",
       "audience": "Application developers who want security embedded while building features.",
       "description": "Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams.",
       "skills": [
@@ -909,14 +912,15 @@
           "id": "sql-injection-testing",
           "summary": "Find and validate SQL injection risks."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-documents-presentations",
-      "name": "Codex Documents & Presentations",
+      "id": "aas-documents-presentations",
+      "name": "AAS Documents & Presentations",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "📄",
-      "tagline": "The \"Codex Documents & Presentations\" Plugin",
+      "tagline": "The \"AAS Documents & Presentations\" Plugin",
       "audience": "Users creating, editing, converting, and automating office documents.",
       "description": "Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations.",
       "skills": [
@@ -952,14 +956,15 @@
           "id": "google-slides-automation",
           "summary": "Automate Google Slides updates."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-data-analytics",
-      "name": "Codex Data Analytics",
+      "id": "aas-data-analytics",
+      "name": "AAS Data Analytics",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "📊",
-      "tagline": "The \"Codex Data Analytics\" Plugin",
+      "tagline": "The \"AAS Data Analytics\" Plugin",
       "audience": "Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments.",
       "description": "Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.",
       "skills": [
@@ -995,14 +1000,15 @@
           "id": "ab-test-setup",
           "summary": "Plan and validate experiments."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-agent-mcp-builder",
-      "name": "Codex Agent & MCP Builder",
+      "id": "aas-agent-mcp-builder",
+      "name": "AAS Agent & MCP Builder",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "🤖",
-      "tagline": "The \"Codex Agent & MCP Builder\" Plugin",
+      "tagline": "The \"AAS Agent & MCP Builder\" Plugin",
       "audience": "Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.",
       "description": "Maps directly to Codex's plugin model because it can grow from skills into MCP server configuration and app/tool integrations.",
       "skills": [
@@ -1042,16 +1048,17 @@
           "id": "context-window-management",
           "summary": "Manage long context effectively."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-oss-maintainer",
-      "name": "Codex OSS Maintainer",
+      "id": "aas-oss-maintainer",
+      "name": "AAS OSS Maintainer",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "🧰",
-      "tagline": "The \"Codex OSS Maintainer\" Plugin",
+      "tagline": "The \"AAS OSS Maintainer\" Plugin",
       "audience": "Open-source maintainers managing PRs, releases, reviews, and contributor handoffs.",
-      "description": "This is one of the most Codex-native plugin opportunities: it packages repeatable repo work around review, release, changelog, and GitHub workflows.",
+      "description": "This is one of the most agent-native plugin opportunities: it packages repeatable repo work around review, release, changelog, and GitHub workflows.",
       "skills": [
         {
           "id": "agents-md",
@@ -1093,14 +1100,15 @@
           "id": "lint-and-validate",
           "summary": "Run validation and quality checks."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-qa-test-automation",
-      "name": "Codex QA & Test Automation",
+      "id": "aas-qa-test-automation",
+      "name": "AAS QA & Test Automation",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "🧪",
-      "tagline": "The \"Codex QA & Test Automation\" Plugin",
+      "tagline": "The \"AAS QA & Test Automation\" Plugin",
       "audience": "Engineers and QA teams writing, debugging, and stabilizing test suites.",
       "description": "Testing is a natural plugin because users need a workflow, not a single skill: plan tests, automate browsers, debug failures, and fix regressions.",
       "skills": [
@@ -1140,14 +1148,15 @@
           "id": "code-review-checklist",
           "summary": "Catch common bugs in reviews."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-devops-cloud",
-      "name": "Codex DevOps & Cloud",
+      "id": "aas-devops-cloud",
+      "name": "AAS DevOps & Cloud",
       "group": "⭐ Specialized Product Plugins",
       "emoji": "☁️",
-      "tagline": "The \"Codex DevOps & Cloud\" Plugin",
+      "tagline": "The \"AAS DevOps & Cloud\" Plugin",
       "audience": "Teams shipping infrastructure, deployments, and operational workflows.",
       "description": "Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows.",
       "skills": [
@@ -1187,14 +1196,15 @@
           "id": "incident-responder",
           "summary": "Respond to incidents with clear procedure."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-marketing-seo-growth",
-      "name": "Codex Marketing, SEO & Growth",
+      "id": "aas-marketing-seo-growth",
+      "name": "AAS Marketing, SEO & Growth",
       "group": "🧩 Specialized Product Plugins - Next Wave",
       "emoji": "📈",
-      "tagline": "The \"Codex Marketing, SEO & Growth\" Plugin",
+      "tagline": "The \"AAS Marketing, SEO & Growth\" Plugin",
       "audience": "Founders and growth teams creating content, SEO systems, experiments, and email campaigns.",
       "description": "A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work.",
       "skills": [
@@ -1234,14 +1244,15 @@
           "id": "schema-markup",
           "summary": "Add structured data for search visibility."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-automation-builder",
-      "name": "Codex Automation Builder",
+      "id": "aas-automation-builder",
+      "name": "AAS Automation Builder",
       "group": "🧩 Specialized Product Plugins - Next Wave",
       "emoji": "⚙️",
-      "tagline": "The \"Codex Automation Builder\" Plugin",
+      "tagline": "The \"AAS Automation Builder\" Plugin",
       "audience": "Teams designing reliable automations across tools, data stores, and communication platforms.",
       "description": "Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows.",
       "skills": [
@@ -1277,14 +1288,15 @@
           "id": "github-automation",
           "summary": "Automate GitHub issues and repository work."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-observability-ir",
-      "name": "Codex Observability IR",
+      "id": "aas-observability-ir",
+      "name": "AAS Observability IR",
       "group": "🧩 Specialized Product Plugins - Next Wave",
       "emoji": "📡",
-      "tagline": "The \"Codex Observability IR\" Plugin",
+      "tagline": "The \"AAS Observability IR\" Plugin",
       "audience": "Engineering teams monitoring systems, debugging production issues, and writing postmortems.",
       "description": "Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts.",
       "skills": [
@@ -1320,14 +1332,15 @@
           "id": "langfuse",
           "summary": "Trace, evaluate, and monitor LLM apps."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-python-api-builder",
-      "name": "Codex Python API Builder",
+      "id": "aas-python-api-builder",
+      "name": "AAS Python API Builder",
       "group": "🧩 Specialized Product Plugins - Next Wave",
       "emoji": "🐍",
-      "tagline": "The \"Codex Python API Builder\" Plugin",
+      "tagline": "The \"AAS Python API Builder\" Plugin",
       "audience": "Python developers building APIs, services, and tests.",
       "description": "A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together.",
       "skills": [
@@ -1363,14 +1376,15 @@
           "id": "api-design-principles",
           "summary": "Design clear and maintainable APIs."
         }
-      ]
+      ],
+      "why": ""
     },
     {
-      "id": "codex-mobile-app-builder",
-      "name": "Codex Mobile App Builder",
+      "id": "aas-mobile-app-builder",
+      "name": "AAS Mobile App Builder",
       "group": "🧩 Specialized Product Plugins - Next Wave",
       "emoji": "📱",
-      "tagline": "The \"Codex Mobile App Builder\" Plugin",
+      "tagline": "The \"AAS Mobile App Builder\" Plugin",
       "audience": "Mobile teams shipping Expo, React Native, Flutter, and iOS apps.",
       "description": "Mobile development has a full lifecycle in the catalog: architecture, Expo routes, distribution, CI, native platforms, and store optimization.",
       "skills": [
@@ -1410,7 +1424,8 @@
           "id": "app-store-optimization",
           "summary": "Improve App Store and Play Store visibility."
         }
-      ]
+      ],
+      "why": ""
     },
     {
       "id": "mobile-developer",

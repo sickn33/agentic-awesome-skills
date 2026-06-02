@@ -269,10 +269,10 @@
       "category": "Quality Assurance"
     },
     {
-      "name": "agyb-codex-web-app-builder",
+      "name": "agyb-aas-web-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-web-app-builder"
+        "path": "./plugins/antigravity-bundle-aas-web-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -281,10 +281,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-product-design-studio",
+      "name": "agyb-aas-product-design-studio",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-product-design-studio"
+        "path": "./plugins/antigravity-bundle-aas-product-design-studio"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -293,10 +293,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-security-engineer",
+      "name": "agyb-aas-security-engineer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-security-engineer"
+        "path": "./plugins/antigravity-bundle-aas-security-engineer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -305,10 +305,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-secure-app-builder",
+      "name": "agyb-aas-secure-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-secure-app-builder"
+        "path": "./plugins/antigravity-bundle-aas-secure-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -317,10 +317,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-documents-presentations",
+      "name": "agyb-aas-documents-presentations",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-documents-presentations"
+        "path": "./plugins/antigravity-bundle-aas-documents-presentations"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -329,10 +329,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-data-analytics",
+      "name": "agyb-aas-data-analytics",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-data-analytics"
+        "path": "./plugins/antigravity-bundle-aas-data-analytics"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -341,10 +341,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-agent-mcp-builder",
+      "name": "agyb-aas-agent-mcp-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-agent-mcp-builder"
+        "path": "./plugins/antigravity-bundle-aas-agent-mcp-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -353,10 +353,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-oss-maintainer",
+      "name": "agyb-aas-oss-maintainer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-oss-maintainer"
+        "path": "./plugins/antigravity-bundle-aas-oss-maintainer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -365,10 +365,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-qa-test-automation",
+      "name": "agyb-aas-qa-test-automation",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-qa-test-automation"
+        "path": "./plugins/antigravity-bundle-aas-qa-test-automation"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -377,10 +377,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-devops-cloud",
+      "name": "agyb-aas-devops-cloud",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-devops-cloud"
+        "path": "./plugins/antigravity-bundle-aas-devops-cloud"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -389,10 +389,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-codex-marketing-seo-growth",
+      "name": "agyb-aas-marketing-seo-growth",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-marketing-seo-growth"
+        "path": "./plugins/antigravity-bundle-aas-marketing-seo-growth"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -401,10 +401,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-codex-automation-builder",
+      "name": "agyb-aas-automation-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-automation-builder"
+        "path": "./plugins/antigravity-bundle-aas-automation-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -413,10 +413,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-codex-observability-ir",
+      "name": "agyb-aas-observability-ir",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-observability-ir"
+        "path": "./plugins/antigravity-bundle-aas-observability-ir"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -425,10 +425,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-codex-python-api-builder",
+      "name": "agyb-aas-python-api-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-python-api-builder"
+        "path": "./plugins/antigravity-bundle-aas-python-api-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -437,10 +437,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-codex-mobile-app-builder",
+      "name": "agyb-aas-mobile-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-codex-mobile-app-builder"
+        "path": "./plugins/antigravity-bundle-aas-mobile-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
