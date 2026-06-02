@@ -4,6 +4,8 @@ import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
 export const DEFAULT_TOP_SKILL_COUNT = 40;
 export const DEFAULT_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
+const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
+const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
@@ -80,12 +82,13 @@ function buildOrganizationSchema(): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': `${REPOSITORY_URL}#organization`,
     name: SITE_NAME,
-    url: 'https://github.com/sickn33/antigravity-awesome-skills',
+    url: REPOSITORY_URL,
     sameAs: [
       'https://x.com/AASkills_',
       'https://www.npmjs.com/package/antigravity-awesome-skills',
-      'https://sickn33.github.io/antigravity-awesome-skills/',
+      HOSTED_CATALOG_URL,
     ],
     brand: {
       '@type': 'Brand',
@@ -100,6 +103,7 @@ function buildWebSiteSchema(canonicalUrl: string): Record<string, unknown> {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: getCatalogBaseUrl(canonicalUrl),
+    sameAs: REPOSITORY_URL,
     inLanguage: 'en',
     potentialAction: {
       '@type': 'SearchAction',
@@ -119,8 +123,14 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
     description: `Installable GitHub library of ${visibleCountLabel}, specialized plugins, bundles, and workflows for AI coding assistants.`,
-    url: canonicalUrl,
-    codeRepository: 'https://github.com/sickn33/antigravity-awesome-skills',
+    url: REPOSITORY_URL,
+    sameAs: [
+      canonicalUrl,
+      HOSTED_CATALOG_URL,
+      'https://www.npmjs.com/package/antigravity-awesome-skills',
+    ],
+    mainEntityOfPage: canonicalUrl,
+    codeRepository: REPOSITORY_URL,
     applicationCategory: 'DeveloperApplication',
     keywords: [
       'AI coding assistant skills',
@@ -138,7 +148,7 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
       name: 'Markdown',
       url: 'https://en.wikipedia.org/wiki/Markdown',
     },
-    license: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/LICENSE',
+    license: `${REPOSITORY_URL}/blob/main/LICENSE`,
   };
 }
 
@@ -331,6 +341,8 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
         description,
         url: canonicalUrl,
         isPartOf: buildWebSiteSchema(canonicalUrl),
+        sameAs: REPOSITORY_URL,
+        about: buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
         mainEntity: {
           '@type': 'ItemList',
           name: 'Antigravity Awesome Skills catalog',

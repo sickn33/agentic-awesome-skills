@@ -12,6 +12,8 @@ const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 const HOME_CATALOG_COUNT_FALLBACK = 1494;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
+const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
+const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
@@ -181,6 +183,38 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   const title = `Antigravity Awesome Skills | ${formattedCount}+ AI coding skills and plugins`;
   const description = `Explore ${formattedCount}+ installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`;
   const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
+  const sourceCodeEntity = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: SITE_NAME,
+    description: `Installable GitHub library of ${formattedCount}+ agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.`,
+    url: REPOSITORY_URL,
+    sameAs: [
+      canonicalUrl,
+      HOSTED_CATALOG_URL,
+      'https://www.npmjs.com/package/antigravity-awesome-skills',
+    ],
+    mainEntityOfPage: canonicalUrl,
+    codeRepository: REPOSITORY_URL,
+    applicationCategory: 'DeveloperApplication',
+    keywords: [
+      'AI coding assistant skills',
+      'Claude Code skills',
+      'Codex CLI skills',
+      'Cursor skills',
+      'Gemini CLI skills',
+      'Antigravity skills',
+      'specialized plugins',
+      'SKILL.md',
+    ],
+    isAccessibleForFree: true,
+    programmingLanguage: {
+      '@type': 'ComputerLanguage',
+      name: 'Markdown',
+      url: 'https://en.wikipedia.org/wiki/Markdown',
+    },
+    license: `${REPOSITORY_URL}/blob/main/LICENSE`,
+  };
 
   return {
     title,
@@ -197,6 +231,8 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
         name: SITE_NAME,
         description,
         url: canonicalUrl,
+        sameAs: REPOSITORY_URL,
+        about: sourceCodeEntity,
         isPartOf: {
           '@type': 'WebSite',
           name: SITE_NAME,
@@ -210,12 +246,13 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
       {
         '@context': 'https://schema.org',
         '@type': 'Organization',
+        '@id': `${REPOSITORY_URL}#organization`,
         name: SITE_NAME,
-        url: 'https://github.com/sickn33/antigravity-awesome-skills',
+        url: REPOSITORY_URL,
         sameAs: [
           'https://x.com/AASkills_',
           'https://www.npmjs.com/package/antigravity-awesome-skills',
-          'https://sickn33.github.io/antigravity-awesome-skills/',
+          HOSTED_CATALOG_URL,
         ],
       },
       {
@@ -223,6 +260,7 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
         '@type': 'WebSite',
         name: SITE_NAME,
         url: catalogBaseUrl,
+        sameAs: REPOSITORY_URL,
         inLanguage: 'en',
         potentialAction: {
           '@type': 'SearchAction',
@@ -230,32 +268,7 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
           'query-input': 'required name=search_term_string',
         },
       },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'SoftwareSourceCode',
-        name: SITE_NAME,
-        description: `Installable GitHub library of ${formattedCount}+ agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.`,
-        url: canonicalUrl,
-        codeRepository: 'https://github.com/sickn33/antigravity-awesome-skills',
-        applicationCategory: 'DeveloperApplication',
-        keywords: [
-          'AI coding assistant skills',
-          'Claude Code skills',
-          'Codex CLI skills',
-          'Cursor skills',
-          'Gemini CLI skills',
-          'Antigravity skills',
-          'specialized plugins',
-          'SKILL.md',
-        ],
-        isAccessibleForFree: true,
-        programmingLanguage: {
-          '@type': 'ComputerLanguage',
-          name: 'Markdown',
-          url: 'https://en.wikipedia.org/wiki/Markdown',
-        },
-        license: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/LICENSE',
-      },
+      sourceCodeEntity,
       {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
@@ -344,6 +357,7 @@ function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
           '@type': 'WebSite',
           name: SITE_NAME,
           url: canonicalUrl.replace(/\/plugins\/?$/, ''),
+          sameAs: REPOSITORY_URL,
         },
         mainEntity: {
           '@type': 'ItemList',
@@ -354,8 +368,9 @@ function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
       {
         '@context': 'https://schema.org',
         '@type': 'Organization',
+        '@id': `${REPOSITORY_URL}#organization`,
         name: SITE_NAME,
-        url: 'https://github.com/sickn33/antigravity-awesome-skills',
+        url: REPOSITORY_URL,
       },
     ],
   };

@@ -80,6 +80,7 @@ describe('seo assets verification helpers', () => {
       # Antigravity Awesome Skills
       1,494+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/antigravity-awesome-skills
+      Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
     expect(() => assertLlms(llms)).not.toThrow();
@@ -111,10 +112,10 @@ describe('seo assets verification helpers', () => {
           <meta name="twitter:description" content="Explore 1,494+ installable agentic skills, specialized plugins, bundles, and workflows." />
           <script type="application/ld+json">
             [
-              {"@context":"https://schema.org","@type":"CollectionPage"},
-              {"@context":"https://schema.org","@type":"Organization"},
+              {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/antigravity-awesome-skills"},
+              {"@context":"https://schema.org","@type":"Organization","url":"https://github.com/sickn33/antigravity-awesome-skills"},
               {"@context":"https://schema.org","@type":"WebSite"},
-              {"@context":"https://schema.org","@type":"SoftwareSourceCode"},
+              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/antigravity-awesome-skills","codeRepository":"https://github.com/sickn33/antigravity-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"},
               {"@context":"https://schema.org","@type":"FAQPage"}
             ]
           </script>

@@ -237,6 +237,23 @@ function assertJsonLdTypes(htmlText, requiredTypes) {
   }
 }
 
+function assertRepositoryJsonLdSignals(htmlText) {
+  const entries = extractJsonLdEntries(htmlText);
+  const repoUrl = 'https://github.com/sickn33/antigravity-awesome-skills';
+  const sourceCode = entries.find((entry) => entry?.['@type'] === 'SoftwareSourceCode');
+  const organization = entries.find((entry) => entry?.['@type'] === 'Organization');
+  const collectionPage = entries.find((entry) => entry?.['@type'] === 'CollectionPage');
+
+  assert(sourceCode?.url === repoUrl, 'SoftwareSourceCode JSON-LD must use the GitHub repository as its URL.');
+  assert(sourceCode?.codeRepository === repoUrl, 'SoftwareSourceCode JSON-LD must expose the GitHub repository.');
+  assert(
+    typeof sourceCode?.mainEntityOfPage === 'string' && sourceCode.mainEntityOfPage.length > 0,
+    'SoftwareSourceCode JSON-LD must link back to the hosted catalog page with mainEntityOfPage.',
+  );
+  assert(organization?.url === repoUrl, 'Organization JSON-LD must use the GitHub repository as its URL.');
+  assert(collectionPage?.sameAs === repoUrl, 'CollectionPage JSON-LD must link the hosted catalog to the GitHub repository.');
+}
+
 export function assertIndexSocialMeta(htmlText) {
   assertMetaContent(htmlText, 'property', 'og:image');
   assertMetaContent(htmlText, 'name', 'twitter:image');
@@ -263,6 +280,7 @@ export function assertIndexDiscoveryMeta(htmlText) {
   assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
   assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
+  assertRepositoryJsonLdSignals(htmlText);
 }
 
 export function assertPluginsDiscoveryMeta(htmlText) {
@@ -331,6 +349,7 @@ export function assertLlms(llmsText) {
     'Claude Code',
     'Codex CLI',
     'https://github.com/sickn33/antigravity-awesome-skills',
+    'Canonical source of truth',
   ];
 
   for (const snippet of requiredSnippets) {

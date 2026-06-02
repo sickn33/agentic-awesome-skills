@@ -15,6 +15,7 @@
 - Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
 - Specialized plugin landing page: https://sickn33.github.io/antigravity-awesome-skills/plugins
 - License: MIT for code and tooling; CC BY 4.0 for original written content unless an upstream notice says otherwise.
+- Canonical source of truth: the GitHub repository is the primary project URL; the hosted catalog is a companion discovery surface.
 
 ## Main Pages
 
