@@ -2,7 +2,7 @@
 
 Release `9.0.0` adds first-class plugin distributions for both **Claude Code** and **Codex**.
 
-This page is the canonical explanation of what those plugins are, how they differ from a full library install, and why the repository now ships both a **root plugin** and multiple **specialized bundle plugins**.
+This page is the canonical explanation of what those plugins are, how they differ from a full library install, and why the repository now ships both a **root plugin** and multiple **specialized plugins**.
 
 ## What a plugin is in this repo
 
@@ -50,7 +50,7 @@ Choose the plugin route when you want:
 - marketplace-friendly installation
 - a cleaner starter surface
 - plugin-safe filtering by default
-- bundle-specific installs such as `Essentials`, `Security Engineer`, or `Web Wizard`
+- domain-specific installs such as `AAS Web App Builder`, `AAS Security Engineer`, or `AAS Data Analytics`
 
 ## What `plugin-safe` means
 
@@ -69,7 +69,7 @@ The important rule is:
 - the repository remains the source of truth for the complete library
 - plugins publish the hardened subset that is ready for marketplace-style installation
 
-## Root plugin vs bundle plugins
+## Root Plugin Vs Specialized Plugins
 
 The repository now ships two plugin shapes.
 
@@ -82,18 +82,18 @@ The root plugin is the broad installable distribution for each host:
 
 Use the root plugin when you want the widest plugin-safe install without picking a specialty bundle. Treat it as an advanced breadth-first option, not the best default for most users.
 
-### Specialized bundle plugins
+### Specialized plugins
 
-Specialized bundle plugins are smaller, role-based or workflow-based distributions generated from the same repository. They are the recommended default when a user can name the job they want Codex or Claude Code to help with. Examples include:
+Specialized plugins are smaller, role-based or workflow-based distributions generated from the same repository. They are the recommended default when a user can name the job they want Claude Code, Codex, or another supported skills host to help with. Examples include:
 
-- `Essentials`
-- `Security Engineer`
-- `Web Wizard`
-- `Full-Stack Developer`
-- `Documents & Presentations`
-- `OSS Maintainer`
+- `AAS Web App Builder`
+- `AAS Security Engineer`
+- `AAS Data Analytics`
+- `AAS Documents & Presentations`
+- `AAS OSS Maintainer`
+- `AAS Agent & MCP Builder`
 
-Use a specialized bundle plugin when you want:
+Use a specialized plugin when you want:
 
 - a lighter starting point
 - a team-specific plugin install
@@ -145,12 +145,14 @@ Choose the **root plugin** if:
 - you prefer marketplace-style installation
 - you are an advanced user who wants a broad plugin-safe catalog
 
-Choose a **specialized bundle plugin** if:
+Choose a **specialized plugin** if:
 
 - you want a smaller role-based install
 - you are onboarding a team around one domain
 - you want plugin convenience without the breadth of the root plugin
 - you want the plugin itself to communicate a clear job, audience, and workflow
+
+The hosted [specialized plugin landing page](https://sickn33.github.io/antigravity-awesome-skills/plugins) is the quickest way to compare the current AAS plugin packs.
 
 ## Related guides
 

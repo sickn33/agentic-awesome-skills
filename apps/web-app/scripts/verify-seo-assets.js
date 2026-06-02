@@ -161,8 +161,16 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
 
   const isRoot = ({ parsed: parsedUrl }) => rootPathVariants.has(parsedUrl.pathname);
   const extraRoutes = parsed.filter(({ parsed: parsedUrl }) => !isRoot({ parsed: parsedUrl }));
+  const allowedExtraPathVariants = new Set([
+    `${normalizedRoot}/plugins`,
+    `${normalizedRoot}/plugins/`,
+  ]);
   const skillRoutes = extraRoutes.filter(({ parsed: parsedUrl }) =>
     parsedUrl.pathname.startsWith(skillPrefix),
+  );
+  const unsupportedRoutes = extraRoutes.filter(
+    ({ parsed: parsedUrl }) =>
+      !parsedUrl.pathname.startsWith(skillPrefix) && !allowedExtraPathVariants.has(parsedUrl.pathname),
   );
 
   assert(
@@ -171,7 +179,7 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
   );
 
   assert(
-    extraRoutes.every(({ parsed: parsedUrl }) => parsedUrl.pathname.startsWith(skillPrefix)),
+    unsupportedRoutes.length === 0,
     'Sitemap contains unsupported non-skill routes.',
   );
 
@@ -180,11 +188,53 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
     rootPath: rootUrl.pathname,
     normalizedRootPath: normalizedRoot,
     skillUrls: skillRoutes.map(({ raw }) => raw),
+    pluginUrls: extraRoutes
+      .filter(({ parsed: parsedUrl }) => allowedExtraPathVariants.has(parsedUrl.pathname))
+      .map(({ raw }) => raw),
   };
 }
 
 export function assertSitemap(urlText, { minSkillUrls = 1 } = {}) {
   analyzeSitemap(urlText, { minSkillUrls });
+}
+
+function extractJsonLdEntries(htmlText) {
+  const raw = String(htmlText ?? '');
+  const matches = raw.matchAll(
+    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  );
+  const entries = [];
+
+  for (const match of matches) {
+    const text = match[1]?.trim();
+    if (!text) {
+      continue;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (_err) {
+      throw new Error('JSON-LD script contains invalid JSON.');
+    }
+
+    if (Array.isArray(parsed)) {
+      entries.push(...parsed);
+    } else {
+      entries.push(parsed);
+    }
+  }
+
+  return entries;
+}
+
+function assertJsonLdTypes(htmlText, requiredTypes) {
+  const entries = extractJsonLdEntries(htmlText);
+  const types = new Set(entries.map((entry) => entry?.['@type']).filter(Boolean));
+
+  for (const requiredType of requiredTypes) {
+    assert(types.has(requiredType), `JSON-LD missing required @type: ${requiredType}`);
+  }
 }
 
 export function assertIndexSocialMeta(htmlText) {
@@ -212,6 +262,18 @@ export function assertIndexDiscoveryMeta(htmlText) {
   assert(combined.includes('1,494+'), 'Home SEO metadata must expose the current 1,494+ skill count.');
   assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
+  assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
+}
+
+export function assertPluginsDiscoveryMeta(htmlText) {
+  const title = extractTitle(htmlText);
+  const description = extractMetaContent(htmlText, 'name', 'description') || '';
+  const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
+  const combined = [title, description, ogTitle].join(' ');
+
+  assert(combined.includes('AAS Specialized Plugins'), 'Plugins page SEO metadata must expose the plugin landing title.');
+  assert(combined.includes('specialized plugin packs'), 'Plugins page SEO metadata must mention specialized plugin packs.');
+  assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization']);
 }
 
 function routePathToDistFile(routePath, normalizedRootPath) {
@@ -232,6 +294,18 @@ export function assertPrerenderedSkillRoutes(skillUrls, distDir = 'dist', normal
       fs.existsSync(filePath),
       `Missing prerendered page for skill route: ${parsed.pathname}. Expected ${filePath}.`,
     );
+  }
+}
+
+export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', normalizedRootPath = '') {
+  for (const pluginUrl of pluginUrls) {
+    const parsed = new URL(pluginUrl);
+    const filePath = path.join(distDir, routePathToDistFile(parsed.pathname, normalizedRootPath));
+    assert(
+      fs.existsSync(filePath),
+      `Missing prerendered page for plugin route: ${parsed.pathname}. Expected ${filePath}.`,
+    );
+    assertPluginsDiscoveryMeta(readFile(filePath));
   }
 }
 
@@ -292,6 +366,7 @@ export function runVerification({
   const sitemapReport = analyzeSitemap(readFile(sitemapPath), { minSkillUrls });
   const indexHtml = readFile(indexPath);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
+  assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
   assertIndexSocialMeta(indexHtml);
   assertIndexDiscoveryMeta(indexHtml);
   assertRobots(readFile(robotsPath));

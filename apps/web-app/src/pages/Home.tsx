@@ -6,8 +6,13 @@ import { Icon } from '../components/ui/Icon';
 import type { SyncMessage, CategoryStats } from '../types';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildHomeMeta, getHomeFaqItems } from '../utils/seo';
+import { Link } from 'react-router-dom';
 
 const conceptCards = [
+  {
+    title: 'Specialized plugins',
+    body: 'Focused installable distributions for domains like web apps, security, documents, data, DevOps, QA, OSS, mobile, automation, and agent/MCP work.',
+  },
   {
     title: 'Skills',
     body: 'Reusable SKILL.md playbooks that teach an AI assistant how to execute a workflow with better structure and context.',
@@ -194,6 +199,12 @@ export function Home(): React.ReactElement {
             >
               Read getting started docs
             </a>
+            <Link
+              to="/plugins"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              Compare specialized plugins
+            </Link>
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">

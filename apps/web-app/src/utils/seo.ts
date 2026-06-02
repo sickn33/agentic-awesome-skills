@@ -308,10 +308,10 @@ export function isTopSkill(skillId: string, skills: ReadonlyArray<Skill>, limit 
 
 export function buildHomeMeta(skillCount: number): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
-  const visibleCountLabel = visibleCount > 0
-    ? `${visibleCount.toLocaleString('en-US')} installable AI skills`
-    : 'installable AI skills';
-  const title = `Antigravity Awesome Skills | ${visibleCountLabel} catalog`;
+  const visibleCountLabel = visibleCount > 0 ? `${visibleCount.toLocaleString('en-US')}+` : '';
+  const title = visibleCount > 0
+    ? `Antigravity Awesome Skills | ${visibleCountLabel} AI coding skills and plugins`
+    : 'Antigravity Awesome Skills | AI coding skills and plugins';
   const description = visibleCount > 0
     ? `Explore ${visibleCount.toLocaleString('en-US')} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`
     : 'Explore installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.';
@@ -340,6 +340,39 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
       buildWebSiteSchema(canonicalUrl),
       buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
       buildHomeFaqSchema(canonicalUrl),
+    ],
+  };
+}
+
+export function buildPluginsMeta(pluginCount: number): SeoMeta {
+  const countLabel = pluginCount > 0 ? `${pluginCount.toLocaleString('en-US')} ` : '';
+  const title = `AAS Specialized Plugins | ${countLabel}AI coding workflow packs`;
+  const description = `Compare ${countLabel}specialized plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, mobile apps, automation, and agent or MCP systems.`;
+
+  return {
+    title,
+    description,
+    canonicalPath: '/plugins',
+    ogTitle: 'AAS Specialized Plugins | AI coding workflow packs',
+    ogDescription: description,
+    ogImage: DEFAULT_SOCIAL_IMAGE,
+    twitterCard: 'summary_large_image',
+    jsonLd: (canonicalUrl: string) => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'AAS Specialized Plugins',
+        description,
+        url: canonicalUrl,
+        isPartOf: buildWebSiteSchema(canonicalUrl),
+        mainEntity: {
+          '@type': 'ItemList',
+          name: 'AAS specialized plugin packs',
+          numberOfItems: pluginCount,
+        },
+      },
+      buildOrganizationSchema(),
+      buildWebSiteSchema(canonicalUrl),
     ],
   };
 }

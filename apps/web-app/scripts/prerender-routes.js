@@ -321,6 +321,46 @@ function buildSkillMeta({ skill, isPriority, imageUrl, canonicalUrl }) {
   };
 }
 
+function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
+  const countLabel = pluginCount > 0 ? `${pluginCount.toLocaleString('en-US')} ` : '';
+  const description = `Compare ${countLabel}specialized plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, mobile apps, automation, and agent or MCP systems.`;
+
+  return {
+    title: `AAS Specialized Plugins | ${countLabel}AI coding workflow packs`,
+    description,
+    canonicalUrl,
+    ogTitle: 'AAS Specialized Plugins | AI coding workflow packs',
+    ogDescription: description,
+    ogImage: imageUrl,
+    twitterCard: 'summary_large_image',
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'AAS Specialized Plugins',
+        description,
+        url: canonicalUrl,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: SITE_NAME,
+          url: canonicalUrl.replace(/\/plugins\/?$/, ''),
+        },
+        mainEntity: {
+          '@type': 'ItemList',
+          name: 'AAS specialized plugin packs',
+          numberOfItems: pluginCount,
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: 'https://github.com/sickn33/antigravity-awesome-skills',
+      },
+    ],
+  };
+}
+
 function applySeoMeta(templateHtml, meta) {
   let output = templateHtml;
   const title = safeText(meta.title);
@@ -392,6 +432,14 @@ function main() {
     canonicalUrl: homeCanonical,
   });
   writePrerenderedRoute('/', template, homeMeta);
+
+  const pluginsCanonical = routeToUrl('/plugins', siteBaseUrl);
+  const pluginsMeta = buildPluginsMeta({
+    pluginCount: 15,
+    imageUrl: socialImage,
+    canonicalUrl: pluginsCanonical,
+  });
+  writePrerenderedRoute('/plugins', template, pluginsMeta);
 
   for (const skillRoute of topSkillPaths) {
     const decodedId = decodeURIComponent(skillRoute.replace(/^\/skill\//, ''));

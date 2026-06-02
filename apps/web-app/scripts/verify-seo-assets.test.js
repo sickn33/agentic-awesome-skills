@@ -5,7 +5,9 @@ import path from 'node:path';
 import {
   assertManifest,
   assertIndexDiscoveryMeta,
+  assertPluginsDiscoveryMeta,
   analyzeSitemap,
+  assertPrerenderedPluginRoutes,
   assertPrerenderedSkillRoutes,
   assertIndexSocialMeta,
   assertLlms,
@@ -35,6 +37,7 @@ describe('seo assets verification helpers', () => {
     const xml = `
       <urlset>
         <url><loc>https://owner.github.io/repo/</loc></url>
+        <url><loc>https://owner.github.io/repo/plugins</loc></url>
         <url><loc>https://owner.github.io/repo/skill/agent-a</loc></url>
         <url><loc>https://owner.github.io/repo/skill/agent-b</loc></url>
       </urlset>
@@ -106,11 +109,40 @@ describe('seo assets verification helpers', () => {
           <meta property="og:description" content="Explore 1,494+ installable agentic skills, specialized plugins, bundles, and workflows." />
           <meta name="twitter:title" content="Antigravity Awesome Skills | 1,494+ AI coding skills and plugins" />
           <meta name="twitter:description" content="Explore 1,494+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <script type="application/ld+json">
+            [
+              {"@context":"https://schema.org","@type":"CollectionPage"},
+              {"@context":"https://schema.org","@type":"Organization"},
+              {"@context":"https://schema.org","@type":"WebSite"},
+              {"@context":"https://schema.org","@type":"SoftwareSourceCode"},
+              {"@context":"https://schema.org","@type":"FAQPage"}
+            ]
+          </script>
         </head>
       </html>
     `;
 
     expect(() => assertIndexDiscoveryMeta(html)).not.toThrow();
+  });
+
+  it('requires plugin landing discovery copy in rendered plugin html', () => {
+    const html = `
+      <html>
+        <head>
+          <title>AAS Specialized Plugins | 15 AI coding workflow packs</title>
+          <meta name="description" content="Compare 15 specialized plugin packs for web apps and security." />
+          <meta property="og:title" content="AAS Specialized Plugins | AI coding workflow packs" />
+          <script type="application/ld+json">
+            [
+              {"@context":"https://schema.org","@type":"CollectionPage"},
+              {"@context":"https://schema.org","@type":"Organization"}
+            ]
+          </script>
+        </head>
+      </html>
+    `;
+
+    expect(() => assertPluginsDiscoveryMeta(html)).not.toThrow();
   });
 
   it('validates prerendered skill route files when present', () => {
@@ -129,6 +161,27 @@ describe('seo assets verification helpers', () => {
 
     const report = analyzeSitemap(xml);
     expect(() => assertPrerenderedSkillRoutes(report.skillUrls, distDir, report.normalizedRootPath)).not.toThrow();
+  });
+
+  it('validates prerendered plugin route files when present', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'seo-assets-'));
+    const distDir = path.join(tmpDir, 'dist');
+    const routeFile = path.join(distDir, 'plugins', 'index.html');
+    fs.mkdirSync(path.dirname(routeFile), { recursive: true });
+    fs.writeFileSync(
+      routeFile,
+      '<html><head><title>AAS Specialized Plugins | 15 AI coding workflow packs</title><meta name="description" content="Compare 15 specialized plugin packs." /><meta property="og:title" content="AAS Specialized Plugins | AI coding workflow packs" /><script type="application/ld+json">[{"@context":"https://schema.org","@type":"CollectionPage"},{"@context":"https://schema.org","@type":"Organization"}]</script></head></html>',
+    );
+
+    const xml = `
+      <urlset>
+        <url><loc>https://owner.github.io/repo/</loc></url>
+        <url><loc>https://owner.github.io/repo/plugins</loc></url>
+      </urlset>
+    `;
+
+    const report = analyzeSitemap(xml, { minSkillUrls: 0 });
+    expect(() => assertPrerenderedPluginRoutes(report.pluginUrls, distDir, report.normalizedRootPath)).not.toThrow();
   });
 
   it('throws when a prerendered skill file is missing', () => {

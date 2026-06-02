@@ -108,7 +108,7 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
   const topSkillPaths = selectTopSkillEntries(skills, topCount);
   return generateSitemapXml({
     baseUrl,
-    paths: ['/', ...topSkillPaths],
+    paths: ['/', '/plugins', ...topSkillPaths],
   });
 }
 

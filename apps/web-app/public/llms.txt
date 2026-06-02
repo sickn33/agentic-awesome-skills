@@ -13,11 +13,13 @@
 - Workflows are ordered execution playbooks.
 - Repository: https://github.com/sickn33/antigravity-awesome-skills
 - Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+- Specialized plugin landing page: https://sickn33.github.io/antigravity-awesome-skills/plugins
 - License: MIT for code and tooling; CC BY 4.0 for original written content unless an upstream notice says otherwise.
 
 ## Main Pages
 
 - Project README: https://github.com/sickn33/antigravity-awesome-skills
+- Hosted specialized plugins: https://sickn33.github.io/antigravity-awesome-skills/plugins
 - Full skill catalog: https://github.com/sickn33/antigravity-awesome-skills/blob/main/CATALOG.md
 - Specialized plugin roadmap: https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/specialized-plugin-roadmap.md
 - Plugin install guide: https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/plugins.md
