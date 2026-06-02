@@ -108,7 +108,6 @@ We officially thank the following contributors for their help in making this rep
             1,
         )[1].split("\n## License", 1)[0]
 
-        self.assertIn("The image above renders the repository contributor avatar grid", contributor_block)
         self.assertNotIn("- [@", contributor_block)
 
     def test_parse_contributors_response_dedupes_and_sorts_order(self):

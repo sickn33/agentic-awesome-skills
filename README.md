@@ -462,8 +462,6 @@ Made with [contrib.rocks](https://contrib.rocks). *(Image may be cached; [view l
 
 We officially thank the following contributors for their help in making this repository awesome!
 
-The image above renders the repository contributor avatar grid with `max=500` so the README stays compact while keeping live contributor attribution linked.
-
 ## Star History
 
 <a href="https://www.star-history.com/#sickn33/antigravity-awesome-skills&type=date&legend=top-left">

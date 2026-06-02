@@ -99,7 +99,7 @@ def render_repo_contributors_section(repo: str) -> str:
 
 Made with [contrib.rocks](https://contrib.rocks). *(Image may be cached; [view live contributors](https://github.com/{repo}/graphs/contributors) on GitHub.)*
 
-{CONTRIBUTOR_SECTION_START}The image above renders the repository contributor avatar grid with `max={CONTRIB_ROCKS_MAX}` so the README stays compact while keeping live contributor attribution linked.
+{CONTRIBUTOR_SECTION_START}
 """
 
 
