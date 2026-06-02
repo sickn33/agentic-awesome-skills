@@ -26759,6 +26759,25 @@
       "runtime_files": []
     },
     {
+      "id": "user-thoughts",
+      "path": "skills/user-thoughts",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "using-git-worktrees",
       "path": "skills/using-git-worktrees",
       "targets": {
@@ -28619,10 +28638,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1493,
+    "total_skills": 1494,
     "supported": {
-      "codex": 1449,
-      "claude": 1464
+      "codex": 1450,
+      "claude": 1465
     },
     "blocked": {
       "codex": 44,

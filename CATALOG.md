@@ -2,9 +2,9 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1493
+Total skills: 1494
 
-## architecture (97)
+## architecture (98)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -97,6 +97,7 @@ Total skills: 1493
 | `ui-pattern` | Generate reusable UI patterns such as card sections, grids, lists, forms, and chart wrappers using StyleSeed Toss primitives. | ui, patterns, design-system, reuse, styleseed | ui, patterns, design-system, reuse, styleseed, generate, reusable, such, card, sections, grids, lists |
 | `uncle-bob-craft` | Use when performing code review, writing or refactoring code, or discussing architecture; complements clean-code and does not replace project linter/formatter. | clean-code, clean-architecture, solid, code-review, craftsmanship, uncle-bob | clean-code, clean-architecture, solid, code-review, craftsmanship, uncle-bob, uncle, bob, craft, performing, code, review |
 | `unreal-engine-cpp-pro` | Expert guide for Unreal Engine 5.x C++ development, covering UObject hygiene, performance patterns, and best practices. | unreal, engine, cpp | unreal, engine, cpp, pro, development, covering, uobject, hygiene, performance |
+| `user-thoughts` | Persist user decisions and project constraints to mdbase across sessions. Trigger on /user-thoughts or /ustht, or when user discusses architecture, tech stac... | userthoughts, documentation, project-management, mdbase | userthoughts, documentation, project-management, mdbase, user, thoughts, persist, decisions, constraints, sessions, trigger, ustht |
 | `ux-flow` | Design user flows and screen structure using StyleSeed UX patterns such as progressive disclosure, hub-and-spoke navigation, and information pyramids. | ux, flows, navigation, product-design, styleseed | ux, flows, navigation, product-design, styleseed, flow, user, screen, structure, such, progressive, disclosure |
 | `wcag-audit-patterns` | Comprehensive guide to auditing web content against WCAG 2.2 guidelines with actionable remediation strategies. | wcag, audit | wcag, audit, auditing, web, content, against, guidelines, actionable, remediation |
 | `web3-testing` | Master comprehensive testing strategies for smart contracts using Hardhat, Foundry, and advanced testing patterns. | web3 | web3, testing, smart, contracts, hardhat, foundry |

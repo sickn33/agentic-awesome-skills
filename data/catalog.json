@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1493,
+  "total": 1494,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -34626,6 +34626,33 @@
         "without"
       ],
       "path": "skills/upstash-qstash/SKILL.md"
+    },
+    {
+      "id": "user-thoughts",
+      "name": "user-thoughts",
+      "description": "Persist user decisions and project constraints to mdbase across sessions. Trigger on /user-thoughts or /ustht, or when user discusses architecture, tech stack, rules, UI/UX, or mentions '想法', '记录', 'mdbase'.",
+      "category": "architecture",
+      "tags": [
+        "userthoughts",
+        "documentation",
+        "project-management",
+        "mdbase"
+      ],
+      "triggers": [
+        "userthoughts",
+        "documentation",
+        "project-management",
+        "mdbase",
+        "user",
+        "thoughts",
+        "persist",
+        "decisions",
+        "constraints",
+        "sessions",
+        "trigger",
+        "ustht"
+      ],
+      "path": "skills/user-thoughts/SKILL.md"
     },
     {
       "id": "using-git-worktrees",
