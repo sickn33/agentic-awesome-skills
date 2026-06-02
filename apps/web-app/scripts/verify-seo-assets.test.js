@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {
   assertManifest,
+  assertIndexDiscoveryMeta,
   analyzeSitemap,
   assertPrerenderedSkillRoutes,
   assertIndexSocialMeta,
@@ -93,6 +94,23 @@ describe('seo assets verification helpers', () => {
     `;
 
     expect(() => assertIndexSocialMeta(html)).not.toThrow();
+  });
+
+  it('requires current discovery copy in rendered index html', () => {
+    const html = `
+      <html>
+        <head>
+          <title>Antigravity Awesome Skills | 1,494+ AI coding skills and plugins</title>
+          <meta name="description" content="Explore 1,494+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta property="og:title" content="Antigravity Awesome Skills | 1,494+ AI coding skills and plugins" />
+          <meta property="og:description" content="Explore 1,494+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta name="twitter:title" content="Antigravity Awesome Skills | 1,494+ AI coding skills and plugins" />
+          <meta name="twitter:description" content="Explore 1,494+ installable agentic skills, specialized plugins, bundles, and workflows." />
+        </head>
+      </html>
+    `;
+
+    expect(() => assertIndexDiscoveryMeta(html)).not.toThrow();
   });
 
   it('validates prerendered skill route files when present', () => {

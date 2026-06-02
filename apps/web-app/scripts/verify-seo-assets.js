@@ -103,6 +103,11 @@ function extractMetaContent(htmlText, selectorType, selectorValue) {
   return match?.[1]?.trim();
 }
 
+function extractTitle(htmlText) {
+  const match = String(htmlText ?? '').match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  return match?.[1]?.trim() || '';
+}
+
 function assertMetaContent(htmlText, selectorType, selectorValue) {
   const content = extractMetaContent(htmlText, selectorType, selectorValue);
   assert(Boolean(content), `Missing required meta tag ${selectorType}="${selectorValue}".`);
@@ -188,6 +193,27 @@ export function assertIndexSocialMeta(htmlText) {
   assertMetaContent(htmlText, 'name', 'twitter:image:alt');
 }
 
+export function assertIndexDiscoveryMeta(htmlText) {
+  const title = extractTitle(htmlText);
+  const description = extractMetaContent(htmlText, 'name', 'description') || '';
+  const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
+  const ogDescription = extractMetaContent(htmlText, 'property', 'og:description') || '';
+  const twitterTitle = extractMetaContent(htmlText, 'name', 'twitter:title') || '';
+  const twitterDescription = extractMetaContent(htmlText, 'name', 'twitter:description') || '';
+  const combined = [
+    title,
+    description,
+    ogTitle,
+    ogDescription,
+    twitterTitle,
+    twitterDescription,
+  ].join(' ');
+
+  assert(combined.includes('1,494+'), 'Home SEO metadata must expose the current 1,494+ skill count.');
+  assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
+  assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
+}
+
 function routePathToDistFile(routePath, normalizedRootPath) {
   const normalizedPath = (routePath || '/').replace(/\/+$/, '') || '/';
   const normalizedRoot = normalizedRootPath === '/' ? '' : String(normalizedRootPath || '').replace(/\/+$/, '');
@@ -264,8 +290,10 @@ export function runVerification({
   minSkillUrls,
 }) {
   const sitemapReport = analyzeSitemap(readFile(sitemapPath), { minSkillUrls });
+  const indexHtml = readFile(indexPath);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
-  assertIndexSocialMeta(readFile(indexPath));
+  assertIndexSocialMeta(indexHtml);
+  assertIndexDiscoveryMeta(indexHtml);
   assertRobots(readFile(robotsPath));
   assertLlms(readFile(llmsPath));
   assertManifest(readFile(manifestPath));
