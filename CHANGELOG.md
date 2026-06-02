@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.11.0] - 2026-06-02 - "User Thoughts, MiniMax M3, and Registry Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted maintainer batch from June 2, adds project-local user intent persistence, updates MiniMax CLI guidance for MiniMax-M3, fixes the `agy` installer layout, and closes the current Dependabot critical alerts.
+
+## New Skills
+
+- **user-thoughts** - project-local mdbase memory for persisting user decisions, constraints, UI/UX rationale, backlog items, and project preferences across sessions and agents.
+
+## Improvements
+
+- Updated `mmx-cli` documentation so chat workflows point at MiniMax-M3 as the default model.
+- Added batch output guidance across the accepted SEO and production QA skill updates.
+- Normalized `user-thoughts` source metadata, README attribution, runtime templates, references, scripts, and plugin mirrors in English for public catalog use.
+- Fixed `agy` installer guidance so Antigravity installs use directory-based skill layouts instead of flat markdown files.
+- Bumped the web app Vitest stack to close the critical Dependabot alerts and verified `npm audit` returns zero open vulnerabilities.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,494-skill catalog.
+
+## Credits
+
+- **[@JularDepick](https://github.com/JularDepick)** and **[JularDepick/user-thoughts.SKILL](https://github.com/JularDepick/user-thoughts.SKILL)** for PR #639 (`user-thoughts`).
+- **[@octo-patch](https://github.com/octo-patch)** for PR #640 (`mmx-cli` MiniMax-M3 guidance).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #641 (batch output updates).
+
 ## [11.10.0] - 2026-05-31 - "SEO, Yield, YouTube, and Release Hardening"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
