@@ -1,41 +1,30 @@
-"""user-thoughts init — 从模板初始化 .ustht/ 目录。
-
-用法:
-    python init.py [--help]
-
-在当前工作目录下创建 .ustht/ 并复制模板文件。
-"""
-import sys
+"""Initialize the .ustht/ runtime directory from templates."""
 import shutil
+import sys
 from pathlib import Path
 
 from common import find_skill_dir
 
-HELP = """用法: python init.py [--help]
+HELP = """Usage: python init.py [--help]
 
-在当前工作目录下初始化 .ustht/ 目录。
-
-操作:
-  1. 创建 .ustht/ 目录
-  2. 从技能模板复制 mdbase/ 结构
-  3. 创建 raw/、ignored/、export/ 空目录
-  4. 初始化 define.ini (SKILL_STATUS=on, INSTANT_STATUS=off)
-
-若 .ustht/ 已存在，输出提示并跳过，不覆盖。"""
+Create .ustht/ in the current working directory, copy the runtime templates,
+and create raw/, ignored/, and export/ directories. Existing .ustht/ content is
+not overwritten.
+"""
 
 
-def copy_template(template_dir: Path, target_dir: Path):
-    """复制模板文件到目标目录，跳过符号链接。"""
-    for item in template_dir.rglob("*"):
+def copy_template(src: Path, dst: Path):
+    """Copy template files while skipping symlinks."""
+    for item in src.rglob("*"):
+        rel = item.relative_to(src)
+        target = dst / rel
         if item.is_symlink():
             continue
-        rel = item.relative_to(template_dir)
-        dest = target_dir / rel
         if item.is_dir():
-            dest.mkdir(parents=True, exist_ok=True)
+            target.mkdir(parents=True, exist_ok=True)
         else:
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(item, dest)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(item, target)
 
 
 def main():
@@ -43,46 +32,31 @@ def main():
         print(HELP)
         sys.exit(0)
 
-    cwd = Path.cwd()
-    ustht = cwd / ".ustht"
-
-    if ustht.exists():
-        print("已初始化。.ustht/ 目录已存在，跳过创建。")
+    target = Path.cwd() / ".ustht"
+    if target.exists():
+        print("Already initialized; .ustht/ exists, skipping creation.")
         sys.exit(0)
 
     skill_dir = find_skill_dir()
     if skill_dir is None:
-        print("错误：未找到 SKILL.md。请确保脚本位于 user-thoughts/scripts/ 目录下。")
+        print("Error: SKILL.md was not found. Ensure this script is inside user-thoughts/scripts/.")
         sys.exit(1)
 
     template = skill_dir / "assets" / "Runtime-Template"
     if not template.exists():
-        print(f"错误：模板目录不存在：{template}")
+        print(f"Error: template directory does not exist: {template}")
         sys.exit(1)
 
-    # 创建 .ustht/ 并复制模板
-    ustht.mkdir(parents=True, exist_ok=True)
-    copy_template(template, ustht)
+    target.mkdir()
+    copy_template(template, target)
+    for name in ["raw", "ignored", "export"]:
+        (target / name).mkdir(exist_ok=True)
 
-    # 确保空目录存在
-    for subdir in ["raw", "ignored", "export"]:
-        (ustht / subdir).mkdir(exist_ok=True)
+    define = target / "define.ini"
+    if not define.exists():
+        define.write_text("SKILL_STATUS=on\nINSTANT_STATUS=off\nLAST_SORTIN=\n", encoding="utf-8")
 
-    # 验证 define.ini
-    ini = ustht / "define.ini"
-    if not ini.exists():
-        ini.write_text("SKILL_STATUS=on\nINSTANT_STATUS=off\nLAST_SORTIN=\n", encoding="utf-8")
-
-    print("已初始化。")
-    print(f"  .ustht/")
-    print(f"  ├── define.ini (SKILL_STATUS=on, INSTANT_STATUS=off, LAST_SORTIN=)")
-    print(f"  ├── raw/")
-    print(f"  ├── ignored/")
-    print(f"  ├── export/")
-    print(f"  └── mdbase/")
-    print(f"      ├── README.ai.md")
-    print(f"      ├── backlog.md")
-    print(f"      └── details/ (rules, plans, dev-stack, general, ui/)")
+    print("Initialized .ustht/.")
 
 
 if __name__ == "__main__":

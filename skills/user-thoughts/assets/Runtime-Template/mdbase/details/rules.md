@@ -1,21 +1,7 @@
-# 项目规则
+# Project Rules and Constraints
 
-> 用户对当前项目整体的规则性想法、约束、原则。
+> User-defined rules, constraints, conventions, preferences, and non-negotiables.
 
----
+## Current Rules
 
-## 编码规范
-
-<!-- 示例：用户对代码风格、命名约定等的要求 -->
-
-## 安全约束
-
-<!-- 示例：用户对数据安全、权限控制等方面的要求 -->
-
-## 协作规则
-
-<!-- 示例：用户对团队协作、代码审查等方面的规则 -->
-
----
-
-> 记录时保留用户原始表述，仅做格式化。每条规则标注提出日期。
+<!-- Append dated user rules here. -->

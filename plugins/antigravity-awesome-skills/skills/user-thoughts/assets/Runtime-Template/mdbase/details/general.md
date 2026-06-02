@@ -1,7 +1,7 @@
-# 通用想法
+# General Project Notes
 
-> 不属于其他维度的用户想法、零散偏好、未分类的项目决策。
+> Project-relevant thoughts that do not fit another dimension yet.
 
----
+## Current Notes
 
-<!-- 记录无法归入其他维度的用户想法，保持原文 -->
+<!-- Append dated user thoughts here. -->

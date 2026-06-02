@@ -1,236 +1,76 @@
-# Sortin / Resort 维护算法
+# Sortin and Resort Algorithms
 
-> 本文档详述 `/ustht sortin` 和 `/ustht resort` 的执行流程、维度文件管理规则和 raw 文件处理机制。
+This document describes how raw thoughts become organized mdbase records.
 
----
+## Commands
 
-## 命令定义
+| Command | Behavior |
+|---|---|
+| `/ustht sortin` | Soft maintenance: append new raw entries into mdbase without restructuring existing content. |
+| `/ustht resort` | Hard maintenance: review all mdbase content, deduplicate, reclassify, merge, and update indexes. |
+| `--dry` | Preview intended changes without writing. |
 
-| 命令 | 行为 |
-|------|------|
-| `/ustht sortin` | 软维护：仅追加新想法到 mdbase，不改已有结构 |
-| `/ustht resort` | 硬维护：重新审视全部 mdbase，去重、归类、合并，必要时调整文件结构和索引 |
-| `--dry`（可叠加） | 预览模式：输出将要执行的操作，不实际写入 |
+## Raw Format
 
----
+Before processing:
 
-## 执行流程
-
-1. 读取 `#raw/` 全部 `.md`，过滤掉已含 `<!-- processed -->` 标记的文件
-2. 逐条分析待整理条目的归属维度（规则、规划、UI、技术栈等）
-3. **sortin**：追加到 `#mdbase/` 对应维度文件（按日期分组，详见下方追加格式）
-4. **resort**：重新审视全部 mdbase，去重、归类、合并，必要时调整文件结构和索引
-5. 在已处理 raw 文件头部插入 `<!-- processed -->` 标记
-6. 更新 `define.ini` 中 `LAST_SORTIN` 为当前时间戳 `yyyy-mm-dd HH:MM`
-7. 更新 `#mdbase/README.ai.md` 索引和概要
-8. 输出摘要：新增条目数、归入维度列表
-
----
-
-## raw 文件格式
-
-### 写入时（即时计划生成）
-
-```markdown
-- [14:30] 按钮改成圆角的，圆角半径 8px | 待归入:ui/details
-- [14:45] 登录页用深色主题，参考 figma 链接 | 待归入:ui/outline
-- [15:10] API 统一用 RESTful 风格，不用 GraphQL | 待归入:dev-stack
+```text
+- [14:30] Make buttons use 8px radius | suggested-dim:ui/details
+- [14:45] Login should use a dark theme | suggested-dim:ui/outline
+- [15:10] Use REST APIs, not GraphQL | suggested-dim:dev-stack
 ```
 
-### 处理后（sortin 标记）
+After processing, the first line of the file becomes:
 
-```markdown
+```text
 <!-- processed -->
-- [14:30] 按钮改成圆角的，圆角半径 8px | 待归入:ui/details
-- [14:45] 登录页用深色主题，参考 figma 链接 | 待归入:ui/outline
-- [15:10] API 统一用 RESTful 风格，不用 GraphQL | 待归入:dev-stack
 ```
 
-`<!-- processed -->` 必须在文件第一行，不能放在其他位置。
+## Soft Append Format
 
----
-
-## ignored 文件格式
-
-`#ignored/` 目录记录被用户主动忽略的发言，按日期分片：
+A raw entry is appended under a date heading in the selected dimension file:
 
 ```markdown
-- [14:30] 这个变量名不太规范（后缀忽略）
-- [14:45] 代码细节要把把控好（--last 忽略）
-- [15:00~15:10] 这个报错不用管，是已知问题（区间忽略）
+## 2026-06-01
+
+- Make buttons use 8px radius
 ```
 
-- 文件名：`yyyy-mm-dd.md`（与 raw 文件同日期分片）
-- 区间忽略记录起止时间，用 `~` 连接
-- 标注忽略方式：后缀忽略、--last 忽略、区间忽略
+Rules:
 
----
+- Preserve original wording.
+- Remove only the timestamp and `suggested-dim` suffix.
+- Group entries by raw-file date.
+- Append to an existing date section when present.
+- Create a new date section when needed.
 
-## 导出文件命名
+## Dimension Management
 
-`#export/` 目录下的导出文件命名规则：
+Create a new dimension only when the thought does not fit an existing dimension. Dimension names must be kebab-case path segments and must pass safety validation.
 
-| 命令 | 导出文件 |
-|------|----------|
-| `/ustht mdbase export --rules` | `#export/rules.md` |
-| `/ustht mdbase export --dev-stack` | `#export/dev-stack.md` |
-| `/ustht mdbase export` | `#export/` 下全部维度文件 + `README.ai.md` |
+When `resort` finds overlapping dimensions, merge them into the clearest target and preserve provenance. When a dimension is no longer useful, mark it with `<!-- deprecated -->` instead of deleting it.
 
-文件名与源文件名一致，不做修改。
+## Classification Priority
 
----
+1. User-specified dimension.
+2. Exact existing dimension match.
+3. Closest semantic existing dimension, with a note if the fit is weak.
+4. `general.md` fallback.
 
-## mdbase 追加格式（soft 模式）
+## Import Algorithm
 
-sortin 将 raw 条目追加到维度文件末尾，保持想法原文，仅做以下格式化：
+`/ustht import <path>` scans markdown files under a safe project-local path and extracts project-relevant user decisions, constraints, and requirements. It should not modify source files. Imported entries should include source provenance such as `[source:docs/design.md]`.
 
-- 去除 raw 中的时间戳前缀 `- [HH:MM] `
-- 去除维度标记后缀 ` | 待归入:维度名`
-- 按日期分组加标题，转为 mdbase 格式
+Skip ordinary technical docs, generated docs, API reference text, and code comments unless they clearly encode a user decision.
 
-raw 条目 `- [14:30] 按钮改成圆角的，圆角半径 8px | 待归入:ui/details` 格式化后为：
+## Summary Output
 
-```markdown
-## 2026-05-28
+After `sortin`, report the number of processed entries and destination dimensions, for example:
 
-- 按钮改成圆角的，圆角半径 8px
+```text
+Soft maintenance complete. Processed 3 thoughts:
+  -> ui/details.md: +1
+  -> ui/outline.md: +1
+  -> dev-stack.md: +1
+LAST_SORTIN updated to 2026-06-01 15:30
 ```
-
-规则：
-- 按日期分组，同一天的想法归入同一个 `## yyyy-mm-dd` 标题下
-- 若文件中已有当天日期标题，追加到该标题下已有条目之后
-- 若文件中无当天日期标题，在文件末尾新建 `## yyyy-mm-dd` 标题
-- 保留用户原始表述，不简化、不改写、不丢失细节
-- 每条想法独立成行，以 `- ` 开头
-
----
-
-## 摘要输出格式
-
-sortin 完成后输出的摘要：
-
-```
-已执行软维护，处理 3 条想法：
-  → ui/details.md: +1（把这个按钮改成圆角的）
-  → ui/outline.md: +1（登录页用深色主题）
-  → dev-stack.md: +1（API 统一用 RESTful 风格，不用 GraphQL）
-LAST_SORTIN 已更新为 2026-05-28 15:30
-```
-
-硬维护额外输出：
-
-```
-已执行硬维护：
-  - 去重：rules.md 中 2 条重复已合并
-  - 归类：dev-stack.md 中 1 条移至 architecture.md（新建维度，需有明确用户想法支撑）
-  - 合并：ui/outline.md 与 ui/details.md 重叠内容已整合
-  - 索引已更新，README.ai.md 已同步
-```
-
----
-
-## raw 文件状态管理
-
-- `/ustht raw` 仅展示未处理条目（无 `<!-- processed -->` 标记的文件）
-- 已处理文件保留不删除，便于回溯
-- 多个日期的 raw 文件按日期倒序展示（最新优先）
-- 单个 raw 文件内条目按时间顺序排列
-
----
-
-## 维度文件管理
-
-### 新建维度
-
-触发条件：想法不属于已有任何维度时。
-
-规则：
-- 在 `details/` 下新建 kebab-case 命名的 `.md` 文件
-- **维度名验证**：每段仅 `[a-z0-9-]`，须以 `[a-z0-9]` 开头和结尾，支持 `/` 子目录分隔（如 `ui/outline`），不得含 `..`、`\`，最大 64 字符，不与保留名冲突
-- 必须有明确用户想法支撑，不得仅因"可能有用"而创建
-- 同步更新 `README.ai.md` 索引表
-- 多细分文件用子目录（如 `ui/`）；单一维度直接用单个 `.md`
-
-### 合并维度
-
-触发条件：`resort`（硬维护）模式下发现内容高度重叠的文件。
-
-规则：
-- 合并后保留一个文件，内容去重整合
-- 更新 `README.ai.md` 索引
-- 被合并文件的内容标注来源日期
-
-### 删除维度
-
-规则：
-- 不主动删除维度文件
-- 用户明确不需要时，标记 `<!-- deprecated -->` 而非物理删除
-
----
-
-## 维度归类优先级
-
-1. 用户明确指定维度 → 按用户指定归类，即使语义不完全匹配
-2. 精确匹配已有维度 → 追加到该维度文件
-3. 语义相近维度 → 追加到最相近维度，标注"相关"
-4. 无匹配维度 → 追加到 `general.md`（通用兜底）
-
----
-
-## 维度文件不存在时的行为
-
-sortin 过程中如果目标维度文件不存在：
-- **sortin**：自动创建文件，写入文件头（标题 + 描述），追加内容，更新索引
-- **resort**：同上，但会重新审视是否应合并到已有维度
-
----
-
-## 维护方式
-
-- **SubAgent 维护**（首选）：SubAgent 可用时**必须使用**，派发子代理并行更新维度文件，减少上下文占用
-- **亲自维护**：仅当 SubAgent 不可用时，主 Agent 直接执行全部操作
-
----
-
-## 自动触发条件
-
-- 用户发送 `/ustht sortin` 或 `/ustht resort` 命令
-- 即时计划下 raw 计划项积累较多时（建议阈值：单日 >5 条），自动建议执行 sortin
-- 用户明确要求整理或回顾想法
-
----
-
-## Import 导入算法
-
-`/ustht import <路径>` 从用户指定路径扫描 .md 文件，整理内容并入 mdbase。
-
-### 路径验证
-
-- 路径必须在工作目录（`~/`）内，可以是 `#ustht/` 外但在 `~/` 内的项目文档，不得使用 `..` 或绝对路径指向系统目录
-- 支持单文件（`docs/design.md`）和目录（`docs/`）
-- 目录模式递归扫描所有 `.md` 文件
-- 路径不存在 → 输出错误
-
-### 执行流程
-
-1. 验证路径存在且在工作目录内
-2. 读取目标路径下所有 `.md` 文件
-3. 逐文件分析内容，提取与项目相关的想法、决策、规则
-4. 按维度归类（复用 sortin 的维度归类优先级）
-5. 追加到 `#mdbase/` 对应维度文件（复用 mdbase 追加格式）
-6. 输出摘要：扫描文件数、提取条目数、归入维度
-
-### 内容提取规则
-
-- 仅提取与项目相关的想法、决策、规则、需求
-- 跳过纯技术文档、API 说明、代码注释等非想法内容
-- 保持原文，不改写导入内容
-- 导入的条目标注来源文件路径：`- [来源:docs/design.md] 想法原文`
-
-### 与 sortin 的区别
-
-| | sortin | import |
-|--|--------|--------|
-| 数据源 | `#raw/` 即时计划 | 用户指定路径的 .md 文件 |
-| 标记 | `<!-- processed -->` | 不标记源文件（只读） |
-| 用途 | 日常维护 | 批量导入已有文档 |

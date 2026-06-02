@@ -1,36 +1,28 @@
-"""user-thoughts write_raw — 写入一条想法到当天 raw 文件。
-
-用法:
-    python write_raw.py "想法内容" [--dim 维度名] [--help]
-
-即时计划调用此脚本记录用户想法。
-"""
+"""Append one thought to today's raw file."""
 import sys
-import re
 from datetime import datetime
 from pathlib import Path
 
 from common import find_ustht, read_define_ini, validate_dim_name
 
-HELP = """用法: python write_raw.py "想法内容" [--dim 维度名] [--help]
+HELP = """Usage: python write_raw.py "thought text" [--dim dimension] [--help]
 
-将一条想法写入 #raw/ 当天日期文件。
+Append one thought to today's #raw/ markdown file.
 
-参数:
-  "想法内容"     要记录的想法文本（必需）
-  --dim 维度名   预判维度（可选），如 rules、ui/outline
-  --help         显示此帮助信息
+Arguments:
+  "thought text"     Thought text to record (required)
+  --dim dimension    Suggested dimension, such as rules or ui/outline
+  --help             Show this help text
 
-维度名规则: 仅允许小写字母、数字、连字符，支持子目录（如 ui/outline）。
-
-行为:
-  - 若当天文件已标记 processed，自动创建带序号的新文件（如 2026-06-01-2.md）
-  - 单日条目超过 5 条时，建议执行 /ustht sortin
-  - SKILL_STATUS=off 时输出提示并退出"""
+Behavior:
+  - If today's raw file is already processed, creates a numbered file such as 2026-06-01-2.md.
+  - If the day has more than five raw entries, suggests /ustht sortin.
+  - If SKILL_STATUS=off, exits without writing.
+"""
 
 
 def count_today_raw(raw_dir: Path) -> int:
-    """统计当天所有未处理 raw 文件的条目数（含带序号的文件）。"""
+    """Count unprocessed entries across today's raw files."""
     today = datetime.now().strftime("%Y-%m-%d")
     count = 0
     for f in sorted(raw_dir.glob(f"{today}*.md")):
@@ -38,7 +30,7 @@ def count_today_raw(raw_dir: Path) -> int:
         first_line = content.split("\n", 1)[0].strip()
         if first_line == "<!-- processed -->":
             continue
-        count += sum(1 for l in content.splitlines() if l.strip().startswith("- ["))
+        count += sum(1 for line in content.splitlines() if line.strip().startswith("- ["))
     return count
 
 
@@ -49,15 +41,14 @@ def main():
 
     ustht = find_ustht()
     if ustht is None:
-        print("错误：未找到 .ustht/ 目录。请先执行 /ustht init 初始化。")
+        print("Error: .ustht/ was not found. Run /ustht init first.")
         sys.exit(1)
 
     cfg = read_define_ini(ustht)
     if cfg.get("SKILL_STATUS") == "off":
-        print("SKILL 已关闭，操作已忽略。")
+        print("SKILL is off; write ignored.")
         sys.exit(0)
 
-    # 解析参数
     thought = None
     dim = None
     args = sys.argv[1:]
@@ -73,13 +64,12 @@ def main():
             i += 1
 
     if not thought:
-        print("错误：缺少想法内容参数。")
-        print(f"用法: {sys.argv[0]} \"想法内容\" [--dim 维度名]")
+        print("Error: missing thought text.")
+        print(f"Usage: {sys.argv[0]} \"thought text\" [--dim dimension]")
         sys.exit(1)
 
-    # 验证维度名
     if dim and not validate_dim_name(dim):
-        print(f"维度名非法：{dim}。仅允许小写字母、数字和连字符，支持子目录。")
+        print(f"Invalid dimension name: {dim}. Use lowercase letters, digits, hyphens, and optional / subdirectories.")
         sys.exit(1)
 
     raw_dir = ustht / "raw"
@@ -89,7 +79,6 @@ def main():
     now = datetime.now().strftime("%H:%M")
     raw_file = raw_dir / f"{today}.md"
 
-    # 如果当天文件已 processed，创建带序号的新文件
     if raw_file.exists():
         first_line = raw_file.read_text(encoding="utf-8").split("\n", 1)[0].strip()
         if first_line == "<!-- processed -->":
@@ -98,22 +87,19 @@ def main():
                 seq += 1
             raw_file = raw_dir / f"{today}-{seq}.md"
 
-    # 构建条目行（换行替换为空格，保持单行格式）
     thought_clean = thought.replace("\n", " ").replace("\r", "")
-    suffix = f" | 待归入:{dim}" if dim else ""
+    suffix = f" | suggested-dim:{dim}" if dim else ""
     entry = f"- [{now}] {thought_clean}{suffix}"
 
-    # 追加到文件
     if raw_file.exists():
         content = raw_file.read_text(encoding="utf-8").rstrip()
         raw_file.write_text(f"{content}\n{entry}\n", encoding="utf-8")
     else:
         raw_file.write_text(f"{entry}\n", encoding="utf-8")
 
-    # 检查阈值并建议 sortin
     count = count_today_raw(raw_dir)
     if count > 5:
-        print(f"今日已记录 {count} 条想法，建议执行 /ustht sortin 整理到 mdbase。")
+        print(f"Today has {count} recorded thoughts. Consider running /ustht sortin.")
 
 
 if __name__ == "__main__":

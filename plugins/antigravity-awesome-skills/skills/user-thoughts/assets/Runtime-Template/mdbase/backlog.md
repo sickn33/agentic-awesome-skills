@@ -1,21 +1,19 @@
-# 待办事项
+# Backlog
 
-> 用户的计划、待办事项、未完成的任务。
+> User plans, pending tasks, and work that has been requested but not started.
 
----
+## Pending
 
-## 待处理
+<!-- Items explicitly requested by the user but not started yet. -->
 
-<!-- 用户明确提出但尚未开始的事项 -->
+## In Progress
 
-## 进行中
+<!-- Items that have started but are not complete. -->
 
-<!-- 已启动但未完成的事项 -->
+## Done
 
-## 已完成
+<!-- Completed items retained for traceability. -->
 
-<!-- 已完成的事项（保留记录便于回溯） -->
+## Notes
 
----
-
-> 每条待办标注提出日期和当前状态。完成后移至"已完成"并标注完成日期。
+Record the date each item was raised. When an item is completed, move it to Done and include the completion date when known.

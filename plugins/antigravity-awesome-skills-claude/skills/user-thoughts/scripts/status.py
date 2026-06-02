@@ -1,55 +1,31 @@
-"""user-thoughts status — 显示当前 SKILL 运行状态。
-
-用法:
-    python status.py [--help]
-
-输出: SKILL_STATUS、INSTANT_STATUS、LAST_SORTIN、未处理 raw 数、mdbase 维度数。
-"""
+"""Show current user-thoughts runtime status."""
 import sys
 from pathlib import Path
 
-from common import find_ustht, read_define_ini
+from common import find_ustht, read_define_ini, is_processed
 
-HELP = """用法: python status.py [--help]
+HELP = """Usage: python status.py [--help]
 
-显示当前 user-thoughts 运行状态。
-
-输出格式:
-  SKILL_STATUS=... | INSTANT_STATUS=... | LAST_SORTIN=... | raw: N | dims: N
-
-字段说明:
-  SKILL_STATUS    技能启用状态 (on/off)
-  INSTANT_STATUS  即时计划启用状态 (on/off)
-  LAST_SORTIN     上次软维护时间
-  raw             未处理的 raw 文件数
-  dims            mdbase 维度文件数"""
+Show SKILL_STATUS, INSTANT_STATUS, LAST_SORTIN, raw file counts, and mdbase
+dimension counts.
+"""
 
 
-def count_raw_files(ustht: Path) -> tuple[int, int]:
-    """统计 raw 文件总数和未处理数。"""
-    raw_dir = ustht / "raw"
+def count_raw(raw_dir: Path):
+    """Return total and unprocessed raw file counts."""
     if not raw_dir.exists():
         return 0, 0
-    total = 0
-    unprocessed = 0
-    for f in sorted(raw_dir.glob("*.md")):
-        total += 1
-        first_line = f.read_text(encoding="utf-8").split("\n", 1)[0].strip()
-        if first_line != "<!-- processed -->":
-            unprocessed += 1
-    return total, unprocessed
+    files = list(raw_dir.glob("*.md"))
+    unprocessed = sum(1 for f in files if not is_processed(f))
+    return len(files), unprocessed
 
 
-def count_mdbase_dims(ustht: Path) -> int:
-    """统计 mdbase/details/ 下的维度文件数。"""
-    details = ustht / "mdbase" / "details"
+def count_dims(mdbase: Path):
+    """Count dimension files under mdbase/details/."""
+    details = mdbase / "details"
     if not details.exists():
         return 0
-    count = 0
-    for f in details.rglob("*.md"):
-        if f.name != "README.ai.md":
-            count += 1
-    return count
+    return len(list(details.rglob("*.md")))
 
 
 def main():
@@ -59,19 +35,21 @@ def main():
 
     ustht = find_ustht()
     if ustht is None:
-        print("错误：未找到 .ustht/ 目录。请先执行 /ustht init 初始化。")
+        print("Error: .ustht/ was not found. Run /ustht init first.")
         sys.exit(1)
 
     cfg = read_define_ini(ustht)
-    skill_status = cfg.get("SKILL_STATUS", "未知")
-    instant_status = cfg.get("INSTANT_STATUS", "未知")
-    last_sortin = cfg.get("LAST_SORTIN", "从未")
+    skill_status = cfg.get("SKILL_STATUS", "unknown")
+    instant_status = cfg.get("INSTANT_STATUS", "unknown")
+    last_sortin = cfg.get("LAST_SORTIN", "never") or "never"
+    total_raw, unprocessed_raw = count_raw(ustht / "raw")
+    dims = count_dims(ustht / "mdbase")
 
-    raw_total, raw_unprocessed = count_raw_files(ustht)
-    dim_count = count_mdbase_dims(ustht)
-
-    print(f"SKILL_STATUS={skill_status} | INSTANT_STATUS={instant_status} | "
-          f"LAST_SORTIN={last_sortin} | raw: {raw_unprocessed} | dims: {dim_count}")
+    print(f"SKILL_STATUS={skill_status}")
+    print(f"INSTANT_STATUS={instant_status}")
+    print(f"LAST_SORTIN={last_sortin}")
+    print(f"raw={unprocessed_raw} unprocessed / {total_raw} total")
+    print(f"dims={dims}")
 
 
 if __name__ == "__main__":

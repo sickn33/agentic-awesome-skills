@@ -1,140 +1,65 @@
-# 安全边界与数据完整性
+# Safety and Data Integrity
 
-> 本文档定义 SKILL 的安全约束、输入验证规则和数据完整性保障。所有文件操作必须遵守本文档规范。
+This document defines path safety, input validation, and data-integrity rules for `user-thoughts`.
 
----
+## Path Safety
 
-## 路径安全
+All runtime file operations must stay inside `#ustht/` unless an import command reads project-local markdown files.
 
-### 维度名验证
+Dimension names are used to construct paths, so validate them strictly:
 
-维度名用于构建文件路径，必须严格验证：
+| Rule | Reason |
+|---|---|
+| Each path segment uses `[a-z0-9-]` only | Prevents shell and path surprises. |
+| Each segment starts and ends with `[a-z0-9]` | Avoids hidden or malformed files. |
+| `/` is allowed only as a dimension subdirectory separator | Supports `ui/outline`. |
+| `..`, backslashes, spaces, and absolute paths are forbidden | Prevents path traversal. |
+| Reserved names are forbidden | Avoids collisions with runtime folders. |
 
-| 规则 | 说明 |
-|------|------|
-| 每段仅允许 `[a-z0-9-]` | 小写字母、数字、连字符 |
-| 每段必须以 `[a-z0-9]` 开头 | 防止隐藏文件 |
-| 每段必须以 `[a-z0-9]` 结尾 | 防止隐藏文件 |
-| 支持 `/` 作为子目录分隔符 | 如 `ui/outline`，每段独立验证 |
-| 不得包含 `..` | 防止路径遍历 |
-| 不得包含 `\` | 防止 Windows 路径穿越 |
-| 不得包含空格 | 防止参数注入 |
-| 最大长度 64 字符（含 `/`） | 防止文件名过长 |
-| 不得与保留名冲突 | `backlog`、`readme-ai`、`export`、`raw`、`ignored`、`define`、`general` |
+Reserved names: `backlog`, `readme-ai`, `export`, `raw`, `ignored`, `define`, `general`.
 
-验证失败时：拒绝操作，输出错误原因和合法格式示例。
+## Content Safety
 
-### 路径构造规则
+Raw entries use this format:
 
-- 所有文件路径必须限制在 `#ustht/` 目录内
-- 不得使用绝对路径（如 `/etc/passwd`、`C:\Windows`）
-- 不得使用 `..` 路径段
-- 维度文件路径：`#mdbase/details/<dimension>.md` 或 `#mdbase/details/<dir>/<dimension>.md`
-- 导出文件路径：`#export/<dimension>.md`
-- 导入路径：必须在工作目录（`~/`）内，可以是 `~/` 下的任意 `.md` 文件或目录（包括 `#ustht/` 外的项目文档），不得使用 `..` 或绝对路径指向系统目录
+```text
+- [HH:MM] original user text | suggested-dim:dimension
+```
 
-### 子目录维度名
+The suffix is agent-generated metadata. User text may contain markdown and should be preserved as written. Parse the last ` | suggested-dim:` separator only.
 
-子目录维度（如 `ui/outline`）同样适用上述验证规则，每个路径段独立验证。
+`<!-- processed -->` is meaningful only as the first line of a raw file. If the user mentions that string inside a thought, treat it as normal content.
 
----
+## define.ini Safety
 
-## 内容安全
+Allowed keys and values:
 
-### processed 标记注入防护
+| Key | Allowed value |
+|---|---|
+| `SKILL_STATUS` | `on` or `off` |
+| `INSTANT_STATUS` | `on` or `off` |
+| `LAST_SORTIN` | empty or `yyyy-mm-dd HH:MM` |
 
-用户想法内容可能包含 `<!-- processed -->` 字符串。写入 raw 文件时：
+Values must not contain newlines or `=`. Write the whole file rather than appending partial fragments.
 
-- raw 条目内容不得以 `<!-- processed -->` 开头
-- sortin 仅检查文件**第一行**是否为 `<!-- processed -->`，不检查条目内容
-- 即使条目内容包含该字符串，不影响 sortin 的处理判断
+## Shell Safety
 
-### raw 格式完整性
+- Do not execute user-provided shell commands.
+- Do not use `eval` or dynamic execution.
+- Construct file paths only from validated dimensions or fixed template paths.
+- During initialization, copy known template files safely instead of recursively shell-copying arbitrary directories.
 
-raw 条目格式：`- [HH:MM] 想法原文 | 待归入:维度名`
+## Data Integrity
 
-- `| 待归入:` 是 Agent 写入的结构化标记，不是用户输入
-- 用户想法原文中若包含 `|` 字符，不影响解析（解析逻辑：最后一个 `| 待归入:` 作为分隔）
-- 维度名部分仍需通过维度名验证
+`sortin` is not fully atomic. To reduce partial-write risk:
 
-### mdbase 内容边界
+1. Parse raw entries first.
+2. Write dimension files.
+3. Mark raw files as processed only after writes succeed.
+4. Update `LAST_SORTIN` last.
 
-- 维度文件内容以 markdown 格式存储
-- 想法条目以 `- ` 开头，属于 markdown 列表
-- 用户想法中的 markdown 语法（如 `#`、`**`）保留原样，不转义
-- 日期标题 `## yyyy-mm-dd` 由 Agent 生成，不从用户输入构造
+Processed raw files are retained for traceability. Dimension files should be appended or marked deprecated; do not silently delete user history.
 
----
+## Sensitive Data
 
-## define.ini 安全
-
-### 写入约束
-
-| 键 | 合法值 | 验证 |
-|----|--------|------|
-| SKILL_STATUS | `on` 或 `off` | 严格匹配，拒绝其他值 |
-| INSTANT_STATUS | `on` 或 `off` | 严格匹配，拒绝其他值 |
-| LAST_SORTIN | `yyyy-mm-dd HH:MM` 或空 | 正则 `^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$` 或空字符串 |
-
-- 值不得包含换行符（防止键注入）
-- 值不得包含 `=` 字符（防止键值混淆）
-- 写入时使用整文件覆写，不追加
-
----
-
-## bash 命令安全
-
-### 文件操作约束
-
-- 仅在 `#ustht/` 目录内执行文件操作
-- 文件名从维度名构造（已通过验证），不直接使用用户输入
-- 不执行用户提供的任意 shell 命令
-- 不使用 `eval`、`exec` 等动态执行
-
-### 复制/移动操作
-
-- 初始化时从 `@/assets/` 复制到 `#ustht/`：使用 read/write 工具逐文件复制
-- 不使用 `cp -r` 等递归命令（防止符号链接攻击）
-- 目标路径已知且固定
-
----
-
-## 数据完整性
-
-### sortin 原子性
-
-sortin 不是原子操作，中断可能导致部分写入：
-
-- 先处理完所有 raw 条目，再批量写入维度文件
-- `<!-- processed -->` 标记在维度文件写入成功后再插入
-- LAST_SORTIN 在所有操作完成后更新
-- 中断恢复：重新执行 sortin，已 processed 的文件自动跳过
-
-### 备份策略
-
-- sortin 执行前不自动备份（Agent 可在 resort（硬维护）前建议用户手动备份）
-- 已处理的 raw 文件保留不删除，作为原始记录
-- 维度文件保留历史内容，新内容追加
-
-### 并发安全
-
-- sortin 期间新发言正常记入 raw，不阻塞
-- 不依赖文件锁，依赖 Agent 协调
-- 多 Agent 环境下不保证一致性
-
----
-
-## 敏感数据
-
-### 记录边界
-
-- 用户想法中可能包含敏感信息（密码、密钥、个人信息）
-- SKILL 不对内容做脱敏处理（保持原文原则）
-- 用户可通过 `ignore` 命令主动排除敏感内容
-- `.ustht/` 目录的安全性由用户自行保障
-
-### 导出安全
-
-- 导出文件写入 `#export/`，不写入其他位置
-- 导出前不检查 `#export/` 中是否已有同名文件（直接覆写）
-- 导出内容与源文件一致，不做修改
+The skill preserves original wording and does not redact secrets or personal data. Users should use ignore commands before sensitive content is captured, and teams should protect `.ustht/` with normal repository and filesystem hygiene.

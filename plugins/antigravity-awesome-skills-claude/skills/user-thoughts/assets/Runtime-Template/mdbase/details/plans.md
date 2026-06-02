@@ -1,21 +1,7 @@
-# 项目规划
+# Project Plans
 
-> 用户对当前项目整体的规划性想法、阶段性目标、路线图。
+> Directional plans, milestones, priorities, sequencing, and strategic project ideas.
 
----
+## Current Plans
 
-## 近期目标
-
-<!-- 示例：用户对当前迭代或近期要完成的事项 -->
-
-## 中期方向
-
-<!-- 示例：用户对项目中期发展的规划 -->
-
-## 长期愿景
-
-<!-- 示例：用户对项目长期发展的期望 -->
-
----
-
-> 记录时保留用户原始表述，仅做格式化。每条规划标注提出日期。
+<!-- Append dated user plans here. -->

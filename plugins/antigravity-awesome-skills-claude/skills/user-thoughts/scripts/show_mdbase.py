@@ -1,89 +1,61 @@
-"""user-thoughts mdbase show — 显示 mdbase 索引或维度内容。
-
-用法:
-    python show_mdbase.py show              # 显示 README.ai.md 索引
-    python show_mdbase.py show --all        # 显示所有维度及条目数
-    python show_mdbase.py show <维度名>     # 显示指定维度内容
-"""
+"""Show the mdbase index or dimension content."""
 import sys
 from pathlib import Path
 
 from common import find_ustht, validate_dim_name
 
-HELP = """用法: python show_mdbase.py show [--all|--维度名] [--help]
+HELP = """Usage: python show_mdbase.py show [--all|--dimension] [--help]
 
-显示 mdbase 索引或指定维度内容。
-
-子命令:
-  show            显示 README.ai.md 索引
-  show --all      列出所有维度及条目数
-  show <维度名>   显示指定维度的完整内容
-
-示例:
-  python show_mdbase.py show
-  python show_mdbase.py show --all
-  python show_mdbase.py show rules
-  python show_mdbase.py show ui/outline"""
+Subcommands:
+  show              Show README.ai.md index
+  show --all        List all dimensions and entry counts
+  show <dimension>  Show one dimension file
+"""
 
 
 def show_index(mdbase: Path):
-    """显示 README.ai.md 索引。"""
-    readme = mdbase / "README.ai.md"
-    if readme.exists():
-        print(readme.read_text(encoding="utf-8"))
-    else:
-        print("mdbase/README.ai.md 不存在。")
+    index = mdbase / "README.ai.md"
+    if not index.exists():
+        print("mdbase/README.ai.md does not exist.")
+        return
+    print(index.read_text(encoding="utf-8"))
 
 
-def list_dimensions(details: Path) -> list[str]:
-    """列出 details/ 下所有维度名。"""
-    dims = []
-    if not details.exists():
-        return dims
-    for f in sorted(details.rglob("*.md")):
-        rel = f.relative_to(details)
-        dim = str(rel.with_suffix("")).replace("\\", "/")
-        dims.append(dim)
-    return dims
-
-
-def show_dimension(mdbase: Path, dim: str):
-    """显示指定维度文件内容。
-
-    `dim` 可以是简单名称（如 rules）或子目录路径（如 ui/outline）。
-    Path 自动处理 `/` 作为目录分隔符。
-    """
-    if not validate_dim_name(dim):
-        print(f"维度名非法：{dim}。每段仅允许小写字母、数字和连字符，支持 / 子目录分隔。")
-        sys.exit(1)
-
+def list_dims(mdbase: Path):
     details = mdbase / "details"
-    target = details / f"{dim}.md"
-    if target.exists():
-        print(target.read_text(encoding="utf-8"))
+    if not details.exists():
+        return []
+    return sorted(p.relative_to(details).with_suffix("").as_posix() for p in details.rglob("*.md"))
+
+
+def show_dim(mdbase: Path, dim: str):
+    if not validate_dim_name(dim):
+        print(f"Invalid dimension name: {dim}. Use lowercase letters, digits, hyphens, and optional / subdirectories.")
+        return
+    if dim == "backlog":
+        path = mdbase / "backlog.md"
     else:
-        print(f"mdbase/details/{dim}.md 不存在。尚未记录相关想法。")
+        path = mdbase / "details" / f"{dim}.md"
+    if not path.exists():
+        print(f"mdbase/details/{dim}.md does not exist yet.")
+        return
+    print(path.read_text(encoding="utf-8"))
 
 
 def show_all(mdbase: Path):
-    """显示所有维度文件及条目数。"""
     details = mdbase / "details"
     if not details.exists():
-        print("mdbase/details/ 目录不存在。")
+        print("mdbase/details/ does not exist.")
         return
-
-    dims = list_dimensions(details)
+    dims = list_dims(mdbase)
     if not dims:
-        print("mdbase 中无维度文件。")
+        print("mdbase has no dimension files.")
         return
-
-    print(f"mdbase 共 {len(dims)} 个维度：")
+    print(f"mdbase has {len(dims)} dimensions:")
     for dim in dims:
-        f = details / f"{dim}.md"
-        if f.exists():
-            content = f.read_text(encoding="utf-8")
-            lines = [l for l in content.splitlines() if l.strip().startswith("- ")]
-            print(f"  {dim}.md: {len(lines)} 条")
+        path = details / f"{dim}.md"
+        lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip().startswith("- ")]
+        print(f"  {dim}.md: {len(lines)} entries")
 
 
 def main():
@@ -93,29 +65,28 @@ def main():
 
     ustht = find_ustht()
     if ustht is None:
-        print("错误：未找到 .ustht/ 目录。请先执行 /ustht init 初始化。")
+        print("Error: .ustht/ was not found. Run /ustht init first.")
         sys.exit(1)
 
     mdbase = ustht / "mdbase"
     if not mdbase.exists():
-        print("mdbase 尚未初始化。请先执行 /ustht init。")
-        sys.exit(1)
+        print("mdbase is not initialized. Run /ustht init first.")
+        return
 
-    # 解析参数
     args = sys.argv[1:]
-
-    if not args or args == ["show"]:
-        show_index(mdbase)
-    elif args == ["show", "--all"]:
-        show_all(mdbase)
-    elif len(args) >= 2 and args[0] == "show":
-        dim = args[1].lstrip("-")
-        show_dimension(mdbase, dim)
-    else:
-        print(f"未知参数: {' '.join(args)}")
-        print(f"用法: {sys.argv[0]} show [--all|--维度名]")
-        print(f"示例: {sys.argv[0]} show rules")
+    if not args or args[0] != "show":
+        print(f"Usage: {sys.argv[0]} show [--all|--dimension]")
         sys.exit(1)
+
+    rest = args[1:]
+    if not rest:
+        show_index(mdbase)
+    elif rest[0] == "--all":
+        show_all(mdbase)
+    elif rest[0].startswith("--"):
+        show_dim(mdbase, rest[0][2:])
+    else:
+        show_dim(mdbase, rest[0])
 
 
 if __name__ == "__main__":
