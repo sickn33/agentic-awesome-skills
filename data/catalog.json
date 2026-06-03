@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1495,
+  "total": 1496,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -25448,6 +25448,35 @@
         "data"
       ],
       "path": "skills/polars/SKILL.md"
+    },
+    {
+      "id": "polis-protocol",
+      "name": "polis-protocol",
+      "description": "Coordinate multi-vendor AI agents as a self-improving team — a learning router assigns work by track record and citizens can amend the protocol's own rules.",
+      "category": "data-ai",
+      "tags": [
+        "multi-agent",
+        "coordination",
+        "routing",
+        "orchestration",
+        "governance",
+        "vendor-agnostic"
+      ],
+      "triggers": [
+        "multi-agent",
+        "coordination",
+        "routing",
+        "orchestration",
+        "governance",
+        "vendor-agnostic",
+        "polis",
+        "protocol",
+        "coordinate",
+        "multi",
+        "vendor",
+        "ai"
+      ],
+      "path": "skills/polis-protocol/SKILL.md"
     },
     {
       "id": "popup-cro",

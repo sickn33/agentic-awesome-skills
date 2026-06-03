@@ -22631,6 +22631,28 @@
     }
   },
   {
+    "id": "polis-protocol",
+    "path": "skills/polis-protocol",
+    "category": "orchestration",
+    "name": "polis-protocol",
+    "description": "Coordinate multi-vendor AI agents as a self-improving team \u2014 a learning router assigns work by track record and citizens can amend the protocol's own rules.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "popup-cro",
     "path": "skills/popup-cro",
     "category": "marketing",

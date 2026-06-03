@@ -19653,6 +19653,25 @@
       "runtime_files": []
     },
     {
+      "id": "polis-protocol",
+      "path": "skills/polis-protocol",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "popup-cro",
       "path": "skills/popup-cro",
       "targets": {
@@ -28663,10 +28682,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1495,
+    "total_skills": 1496,
     "supported": {
-      "codex": 1450,
-      "claude": 1465
+      "codex": 1451,
+      "claude": 1466
     },
     "blocked": {
       "codex": 45,
