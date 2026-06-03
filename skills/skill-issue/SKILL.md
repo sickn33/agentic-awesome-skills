@@ -65,3 +65,9 @@ skill-issue ~/.claude/skills --why "deploy the app to prod"
 #  1. shipit       0.74  ← would fire
 #  2. land-deploy  0.69  (margin 0.05 — ambiguous, likely collision)
 ```
+
+## Limitations
+
+- Offline scoring is heuristic and should be treated as a triage signal, not a final quality verdict.
+- Collision reports highlight likely shadowing, but agent-specific routers can weight metadata differently.
+- The `--fix` mode can improve weak trigger wording, but generated edits still need maintainer review before committing.
