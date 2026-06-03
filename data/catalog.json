@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1496,
+  "total": 1508,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -212,6 +212,81 @@
         "identify"
       ],
       "path": "skills/accessibility-compliance-accessibility-audit/SKILL.md"
+    },
+    {
+      "id": "accesslint-audit",
+      "name": "accesslint-audit",
+      "description": "Find and fix WCAG 2.2 accessibility issues. Two modes — report (sweep a codebase or page, produce a prioritized written report, no edits) and fix (audit→edit→verify loop on a target). Prefers direct-CDP live-DOM auditing; falls back to a browser-MCP composition or HTML-string audits.",
+      "category": "general",
+      "tags": [
+        "accesslint",
+        "audit"
+      ],
+      "triggers": [
+        "accesslint",
+        "audit",
+        "find",
+        "fix",
+        "wcag",
+        "accessibility",
+        "issues",
+        "two",
+        "modes",
+        "report",
+        "sweep",
+        "codebase"
+      ],
+      "path": "skills/accesslint-audit/SKILL.md"
+    },
+    {
+      "id": "accesslint-diff",
+      "name": "accesslint-diff",
+      "description": "Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff against a branch. Reports only new violations introduced, violations fixed, and pre-existing count. Use `scan` for a full audit with no diffing.",
+      "category": "general",
+      "tags": [
+        "accesslint",
+        "diff"
+      ],
+      "triggers": [
+        "accesslint",
+        "diff",
+        "live",
+        "page",
+        "accessibility",
+        "violations",
+        "against",
+        "baseline",
+        "default",
+        "compares",
+        "uncommitted",
+        "changes"
+      ],
+      "path": "skills/accesslint-diff/SKILL.md"
+    },
+    {
+      "id": "accesslint-scan",
+      "name": "accesslint-scan",
+      "description": "Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing.",
+      "category": "general",
+      "tags": [
+        "accesslint",
+        "scan"
+      ],
+      "triggers": [
+        "accesslint",
+        "scan",
+        "audit",
+        "live",
+        "page",
+        "accessibility",
+        "issues",
+        "locate",
+        "each",
+        "wcag",
+        "violation",
+        "precisely"
+      ],
+      "path": "skills/accesslint-scan/SKILL.md"
     },
     {
       "id": "active-directory-attacks",
@@ -9469,6 +9544,21 @@
       "path": "skills/complexity-cuts/SKILL.md"
     },
     {
+      "id": "composition-patterns",
+      "name": "composition-patterns",
+      "description": "Use when working with composition-patterns tasks or workflows",
+      "category": "architecture",
+      "tags": [
+        "composition"
+      ],
+      "triggers": [
+        "composition",
+        "working",
+        "tasks"
+      ],
+      "path": "skills/composition-patterns/SKILL.md"
+    },
+    {
       "id": "comprehensive-review-full-review",
       "name": "comprehensive-review-full-review",
       "description": "Use when working with comprehensive review full review",
@@ -11419,6 +11509,24 @@
       "path": "skills/debugging-strategies/SKILL.md"
     },
     {
+      "id": "debugging-toolkit",
+      "name": "debugging-toolkit",
+      "description": "Use when working with debugging toolkit smart debug (Alias for debugging-toolkit-smart-debug)",
+      "category": "general",
+      "tags": [
+        "debugging"
+      ],
+      "triggers": [
+        "debugging",
+        "toolkit",
+        "working",
+        "smart",
+        "debug",
+        "alias"
+      ],
+      "path": "skills/debugging-toolkit/SKILL.md"
+    },
+    {
       "id": "debugging-toolkit-smart-debug",
       "name": "debugging-toolkit-smart-debug",
       "description": "Use when working with debugging toolkit smart debug",
@@ -11582,6 +11690,32 @@
         "approaches"
       ],
       "path": "skills/dependency-upgrade/SKILL.md"
+    },
+    {
+      "id": "deploy-to-vercel",
+      "name": "deploy-to-vercel",
+      "description": "Deploy applications and websites to Vercel. Use when the user requests deployment actions like \"deploy my app\", \"deploy and give me the link\", \"push this live\", or \"create a preview deployment\".",
+      "category": "infrastructure",
+      "tags": [
+        "deploy",
+        "to",
+        "vercel"
+      ],
+      "triggers": [
+        "deploy",
+        "to",
+        "vercel",
+        "applications",
+        "websites",
+        "user",
+        "requests",
+        "deployment",
+        "actions",
+        "like",
+        "my",
+        "app"
+      ],
+      "path": "skills/deploy-to-vercel/SKILL.md"
     },
     {
       "id": "deployment-engineer",
@@ -26559,6 +26693,30 @@
       "path": "skills/pypict-skill/SKILL.md"
     },
     {
+      "id": "python-development",
+      "name": "python-development",
+      "description": "You are a Python project architecture expert specializing in scaffolding production-ready Python applications. Generate complete project structures with modern tooling (uv, FastAPI, Django), type hint (Alias for python-development-python-scaffold)",
+      "category": "development",
+      "tags": [
+        "python"
+      ],
+      "triggers": [
+        "python",
+        "development",
+        "architecture",
+        "specializing",
+        "scaffolding",
+        "applications",
+        "generate",
+        "complete",
+        "structures",
+        "tooling",
+        "uv",
+        "fastapi"
+      ],
+      "path": "skills/python-development/SKILL.md"
+    },
+    {
       "id": "python-development-python-scaffold",
       "name": "python-development-python-scaffold",
       "description": "You are a Python project architecture expert specializing in scaffolding production-ready Python applications. Generate complete project structures with modern tooling (uv, FastAPI, Django), type hint",
@@ -27109,6 +27267,25 @@
         "first"
       ],
       "path": "skills/react-native-architecture/SKILL.md"
+    },
+    {
+      "id": "react-native-skills",
+      "name": "react-native-skills",
+      "description": "Use when working with react-native-skills tasks or workflows",
+      "category": "development",
+      "tags": [
+        "react",
+        "native",
+        "skills"
+      ],
+      "triggers": [
+        "react",
+        "native",
+        "skills",
+        "working",
+        "tasks"
+      ],
+      "path": "skills/react-native-skills/SKILL.md"
     },
     {
       "id": "react-nextjs-development",
@@ -32661,6 +32838,22 @@
       "path": "skills/tdd-workflow/SKILL.md"
     },
     {
+      "id": "tdd-workflows",
+      "name": "tdd-workflows",
+      "description": "Use when working with tdd workflows tdd cycle (Alias for tdd-workflows-tdd-cycle)",
+      "category": "testing",
+      "tags": [
+        "tdd"
+      ],
+      "triggers": [
+        "tdd",
+        "working",
+        "cycle",
+        "alias"
+      ],
+      "path": "skills/tdd-workflows/SKILL.md"
+    },
+    {
       "id": "tdd-workflows-tdd-cycle",
       "name": "tdd-workflows-tdd-cycle",
       "description": "Use when working with tdd workflows tdd cycle",
@@ -35148,6 +35341,33 @@
       "path": "skills/vercel-automation/SKILL.md"
     },
     {
+      "id": "vercel-cli-with-tokens",
+      "name": "vercel-cli-with-tokens",
+      "description": "Deploy and manage projects on Vercel using token-based authentication. Use when working with Vercel CLI using access tokens rather than interactive login — e.g. \"deploy to vercel\", \"set up vercel\", \"add environment variables to vercel\".",
+      "category": "general",
+      "tags": [
+        "vercel",
+        "cli",
+        "with",
+        "tokens"
+      ],
+      "triggers": [
+        "vercel",
+        "cli",
+        "with",
+        "tokens",
+        "deploy",
+        "token",
+        "authentication",
+        "working",
+        "access",
+        "rather",
+        "than",
+        "interactive"
+      ],
+      "path": "skills/vercel-cli-with-tokens/SKILL.md"
+    },
+    {
       "id": "vercel-deployment",
       "name": "vercel-deployment",
       "description": "Expert knowledge for deploying to Vercel with Next.js",
@@ -35165,6 +35385,58 @@
         "js"
       ],
       "path": "skills/vercel-deployment/SKILL.md"
+    },
+    {
+      "id": "vercel-optimize",
+      "name": "vercel-optimize",
+      "description": "Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations.",
+      "category": "general",
+      "tags": [
+        "vercel",
+        "optimize"
+      ],
+      "triggers": [
+        "vercel",
+        "optimize",
+        "audit",
+        "deployed",
+        "apps",
+        "cost",
+        "performance",
+        "issues",
+        "metrics",
+        "config",
+        "code",
+        "scans"
+      ],
+      "path": "skills/vercel-optimize/SKILL.md"
+    },
+    {
+      "id": "vercel-react-view-transitions",
+      "name": "vercel-react-view-transitions",
+      "description": "Guide React and Next.js view transitions, shared element animations, route transitions, transition types, and reduced-motion-safe UI state animation.",
+      "category": "development",
+      "tags": [
+        "vercel",
+        "react",
+        "view",
+        "transitions"
+      ],
+      "triggers": [
+        "vercel",
+        "react",
+        "view",
+        "transitions",
+        "next",
+        "js",
+        "shared",
+        "element",
+        "animations",
+        "route",
+        "transition",
+        "types"
+      ],
+      "path": "skills/vercel-react-view-transitions/SKILL.md"
     },
     {
       "id": "verification-before-completion",

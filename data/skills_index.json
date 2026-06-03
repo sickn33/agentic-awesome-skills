@@ -220,6 +220,72 @@
     }
   },
   {
+    "id": "accesslint-audit",
+    "path": "skills/accesslint-audit",
+    "category": "web-development",
+    "name": "accesslint-audit",
+    "description": "Find and fix WCAG 2.2 accessibility issues. Two modes \u2014 report (sweep a codebase or page, produce a prioritized written report, no edits) and fix (audit\u2192edit\u2192verify loop on a target). Prefers direct-CDP live-DOM auditing; falls back to a browser-MCP composition or HTML-string audits.",
+    "risk": "safe",
+    "source": "https://github.com/AccessLint/skills",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "accesslint-diff",
+    "path": "skills/accesslint-diff",
+    "category": "uncategorized",
+    "name": "accesslint-diff",
+    "description": "Diff a live page's accessibility violations against a baseline \u2014 by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff against a branch. Reports only new violations introduced, violations fixed, and pre-existing count. Use `scan` for a full audit with no diffing.",
+    "risk": "safe",
+    "source": "https://github.com/AccessLint/skills",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "accesslint-scan",
+    "path": "skills/accesslint-scan",
+    "category": "uncategorized",
+    "name": "accesslint-scan",
+    "description": "Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing.",
+    "risk": "safe",
+    "source": "https://github.com/AccessLint/skills",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "active-directory-attacks",
     "path": "skills/active-directory-attacks",
     "category": "security",
@@ -8434,6 +8500,28 @@
     }
   },
   {
+    "id": "composition-patterns",
+    "path": "skills/composition-patterns",
+    "category": "uncategorized",
+    "name": "composition-patterns",
+    "description": "Use when working with composition-patterns tasks or workflows",
+    "risk": "safe",
+    "source": "https://github.com/vercel-labs/agent-skills",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "comprehensive-review-full-review",
     "path": "skills/comprehensive-review-full-review",
     "category": "code-quality",
@@ -10216,6 +10304,28 @@
     }
   },
   {
+    "id": "debugging-toolkit",
+    "path": "skills/debugging-toolkit",
+    "category": "development",
+    "name": "debugging-toolkit",
+    "description": "Use when working with debugging toolkit smart debug (Alias for debugging-toolkit-smart-debug)",
+    "risk": "unknown",
+    "source": "alias",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "debugging-toolkit-smart-debug",
     "path": "skills/debugging-toolkit-smart-debug",
     "category": "development",
@@ -10367,6 +10477,30 @@
         "docs": null
       },
       "reasons": []
+    }
+  },
+  {
+    "id": "deploy-to-vercel",
+    "path": "skills/deploy-to-vercel",
+    "category": "devops",
+    "name": "deploy-to-vercel",
+    "description": "Deploy applications and websites to Vercel. Use when the user requests deployment actions like \"deploy my app\", \"deploy and give me the link\", \"push this live\", or \"create a preview deployment\".",
+    "risk": "safe",
+    "source": "https://github.com/vercel-labs/agent-skills",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
     }
   },
   {
@@ -23623,6 +23757,28 @@
     }
   },
   {
+    "id": "python-development",
+    "path": "skills/python-development",
+    "category": "development",
+    "name": "python-development",
+    "description": "You are a Python project architecture expert specializing in scaffolding production-ready Python applications. Generate complete project structures with modern tooling (uv, FastAPI, Django), type hint (Alias for python-development-python-scaffold)",
+    "risk": "critical",
+    "source": "alias",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "python-development-python-scaffold",
     "path": "skills/python-development-python-scaffold",
     "category": "development",
@@ -24093,6 +24249,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "react-native-skills",
+    "path": "skills/react-native-skills",
+    "category": "web-development",
+    "name": "react-native-skills",
+    "description": "Use when working with react-native-skills tasks or workflows",
+    "risk": "safe",
+    "source": "https://github.com/vercel-labs/agent-skills",
+    "date_added": "2026-06-02",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -28927,6 +29105,28 @@
     }
   },
   {
+    "id": "tdd-workflows",
+    "path": "skills/tdd-workflows",
+    "category": "testing",
+    "name": "tdd-workflows",
+    "description": "Use when working with tdd workflows tdd cycle (Alias for tdd-workflows-tdd-cycle)",
+    "risk": "unknown",
+    "source": "alias",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "tdd-workflows-tdd-cycle",
     "path": "skills/tdd-workflows-tdd-cycle",
     "category": "testing",
@@ -31179,6 +31379,28 @@
     }
   },
   {
+    "id": "vercel-cli-with-tokens",
+    "path": "skills/vercel-cli-with-tokens",
+    "category": "uncategorized",
+    "name": "vercel-cli-with-tokens",
+    "description": "Deploy and manage projects on Vercel using token-based authentication. Use when working with Vercel CLI using access tokens rather than interactive login \u2014 e.g. \"deploy to vercel\", \"set up vercel\", \"add environment variables to vercel\".",
+    "risk": "safe",
+    "source": "https://github.com/vercel-labs/agent-skills",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "vercel-deployment",
     "path": "skills/vercel-deployment",
     "category": "uncategorized",
@@ -31187,6 +31409,50 @@
     "risk": "safe",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "vercel-optimize",
+    "path": "skills/vercel-optimize",
+    "category": "uncategorized",
+    "name": "vercel-optimize",
+    "description": "Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations.",
+    "risk": "safe",
+    "source": "https://github.com/vercel-labs/agent-skills",
+    "date_added": "2026-06-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "vercel-react-view-transitions",
+    "path": "skills/vercel-react-view-transitions",
+    "category": "web-development",
+    "name": "vercel-react-view-transitions",
+    "description": "Guide React and Next.js view transitions, shared element animations, route transitions, transition types, and reduced-motion-safe UI state animation.",
+    "risk": "safe",
+    "source": "https://github.com/vercel-labs/agent-skills",
+    "date_added": "2026-06-02",
     "plugin": {
       "targets": {
         "codex": "supported",

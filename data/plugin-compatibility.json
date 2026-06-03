@@ -153,6 +153,63 @@
       "runtime_files": []
     },
     {
+      "id": "accesslint-audit",
+      "path": "skills/accesslint-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "accesslint-diff",
+      "path": "skills/accesslint-diff",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "accesslint-scan",
+      "path": "skills/accesslint-scan",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "active-directory-attacks",
       "path": "skills/active-directory-attacks",
       "targets": {
@@ -7202,6 +7259,25 @@
       "runtime_files": []
     },
     {
+      "id": "composition-patterns",
+      "path": "skills/composition-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "comprehensive-review-full-review",
       "path": "skills/comprehensive-review-full-review",
       "targets": {
@@ -8741,6 +8817,25 @@
       "runtime_files": []
     },
     {
+      "id": "debugging-toolkit",
+      "path": "skills/debugging-toolkit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "debugging-toolkit-smart-debug",
       "path": "skills/debugging-toolkit-smart-debug",
       "targets": {
@@ -8869,6 +8964,29 @@
       "reasons": [],
       "blocked_reasons": {
         "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "deploy-to-vercel",
+      "path": "skills/deploy-to-vercel",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
         "claude": []
       },
       "runtime_files": []
@@ -20512,6 +20630,25 @@
       "runtime_files": []
     },
     {
+      "id": "python-development",
+      "path": "skills/python-development",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "python-development-python-scaffold",
       "path": "skills/python-development-python-scaffold",
       "targets": {
@@ -20913,6 +21050,25 @@
     {
       "id": "react-native-architecture",
       "path": "skills/react-native-architecture",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "react-native-skills",
+      "path": "skills/react-native-skills",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -25239,6 +25395,25 @@
       "runtime_files": []
     },
     {
+      "id": "tdd-workflows",
+      "path": "skills/tdd-workflows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tdd-workflows-tdd-cycle",
       "path": "skills/tdd-workflows-tdd-cycle",
       "targets": {
@@ -27155,8 +27330,65 @@
       "runtime_files": []
     },
     {
+      "id": "vercel-cli-with-tokens",
+      "path": "skills/vercel-cli-with-tokens",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "vercel-deployment",
       "path": "skills/vercel-deployment",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "vercel-optimize",
+      "path": "skills/vercel-optimize",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "vercel-react-view-transitions",
+      "path": "skills/vercel-react-view-transitions",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28682,13 +28914,13 @@
     }
   ],
   "summary": {
-    "total_skills": 1496,
+    "total_skills": 1508,
     "supported": {
-      "codex": 1451,
-      "claude": 1466
+      "codex": 1462,
+      "claude": 1478
     },
     "blocked": {
-      "codex": 45,
+      "codex": 46,
       "claude": 30
     },
     "manual_setup": 4

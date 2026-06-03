@@ -2,9 +2,9 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1496
+Total skills: 1508
 
-## architecture (98)
+## architecture (99)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -35,6 +35,7 @@ Total skills: 1496
 | `cloudformation-best-practices` | CloudFormation template optimization, nested stacks, drift detection, and production-ready patterns. Use when writing or reviewing CF templates. | cloudformation, best, practices | cloudformation, best, practices, optimization, nested, stacks, drift, detection, writing, reviewing, cf |
 | `code-refactoring-refactor-clean` | You are a code refactoring expert specializing in clean code principles, SOLID design patterns, and modern software engineering best practices. Analyze and r... | code, refactoring, refactor, clean | code, refactoring, refactor, clean, specializing, principles, solid, software, engineering, analyze, provided, improve |
 | `codebase-cleanup-refactor-clean` | You are a code refactoring expert specializing in clean code principles, SOLID design patterns, and modern software engineering best practices. Analyze and r... | codebase, cleanup, refactor, clean | codebase, cleanup, refactor, clean, code, refactoring, specializing, principles, solid, software, engineering, analyze |
+| `composition-patterns` | Use when working with composition-patterns tasks or workflows | composition | composition, working, tasks |
 | `context-degradation` | Language models exhibit predictable degradation patterns as context length increases. Understanding these patterns is essential for diagnosing failures and d... | degradation | degradation, context, language, models, exhibit, predictable, length, increases, understanding, these, essential, diagnosing |
 | `core-components` | Core component library and design system patterns. Use when building UI, using design tokens, or working with the component library. | core, components | core, components, component, library, building, ui, tokens, working |
 | `cqrs-implementation` | Implement Command Query Responsibility Segregation for scalable architectures. Use when separating read and write models, optimizing query performance, or bu... | cqrs | cqrs, command, query, responsibility, segregation, scalable, architectures, separating, read, write, models, optimizing |
@@ -490,7 +491,7 @@ Total skills: 1496
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (214)
+## development (217)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -644,6 +645,7 @@ Total skills: 1496
 | `playwright-java` | Scaffold, write, debug, and enhance enterprise-grade Playwright E2E tests in Java using Page Object Model, JUnit 5, Allure reporting, and parallel execution. | playwright, java, e2e-testing, junit5, page-object-model, allure, selenium-alternative | playwright, java, e2e-testing, junit5, page-object-model, allure, selenium-alternative, scaffold, write, debug, enhance, enterprise |
 | `podcast-generation` | Generate real audio narratives from text content using Azure OpenAI's Realtime API. | podcast, generation | podcast, generation, generate, real, audio, narratives, text, content, azure, openai, realtime, api |
 | `pydantic-models-py` | Create Pydantic models following the multi-model pattern for clean API contracts. | pydantic, models, py | pydantic, models, py, following, multi, model, clean, api, contracts |
+| `python-development` | You are a Python project architecture expert specializing in scaffolding production-ready Python applications. Generate complete project structures with mode... | python | python, development, architecture, specializing, scaffolding, applications, generate, complete, structures, tooling, uv, fastapi |
 | `python-development-python-scaffold` | You are a Python project architecture expert specializing in scaffolding production-ready Python applications. Generate complete project structures with mode... | python | python, development, scaffold, architecture, specializing, scaffolding, applications, generate, complete, structures, tooling, uv |
 | `python-fastapi-development` | Python FastAPI backend development with async patterns, SQLAlchemy, Pydantic, authentication, and production API patterns. | python, fastapi | python, fastapi, development, backend, async, sqlalchemy, pydantic, authentication, api |
 | `python-packaging` | Comprehensive guide to creating, structuring, and distributing Python packages using modern packaging tools, pyproject.toml, and publishing to PyPI. | python, packaging | python, packaging, creating, structuring, distributing, packages, pyproject, toml, publishing, pypi |
@@ -658,6 +660,7 @@ Total skills: 1496
 | `react-flow-node-ts` | Create React Flow node components following established patterns with proper TypeScript types and store integration. | react, flow, node, ts | react, flow, node, ts, components, following, established, proper, typescript, types, store, integration |
 | `react-modernization` | Master React version upgrades, class to hooks migration, concurrent features adoption, and codemods for automated transformation. | react, modernization | react, modernization, version, upgrades, class, hooks, migration, concurrent, features, adoption, codemods, automated |
 | `react-native-architecture` | Production-ready patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture. | react, native, architecture | react, native, architecture, development, expo, including, navigation, state, modules, offline, first |
+| `react-native-skills` | Use when working with react-native-skills tasks or workflows | react, native, skills | react, native, skills, working, tasks |
 | `react-nextjs-development` | React and Next.js 14+ application development with App Router, Server Components, TypeScript, Tailwind CSS, and modern frontend patterns. | react, nextjs | react, nextjs, development, next, js, 14, application, app, router, server, components, typescript |
 | `react-patterns` | Modern React patterns and principles. Hooks, composition, performance, TypeScript best practices. | react | react, principles, hooks, composition, performance, typescript |
 | `react-state-management` | Master modern React state management with Redux Toolkit, Zustand, Jotai, and React Query. Use when setting up global state, managing server state, or choosin... | react, state | react, state, redux, toolkit, zustand, jotai, query, setting, up, global, managing, server |
@@ -701,6 +704,7 @@ Total skills: 1496
 | `ux-audit` | Audit screens against Nielsen's heuristics and mobile UX best practices using the StyleSeed Toss design language as the implementation context. | ux, audit, usability, mobile, styleseed | ux, audit, usability, mobile, styleseed, screens, against, nielsen, heuristics, toss, language, context |
 | `ux-copy` | Generate UX microcopy in StyleSeed's Toss-inspired voice for buttons, empty states, errors, toasts, confirmations, and form guidance. | ux, copywriting, microcopy, frontend, styleseed | ux, copywriting, microcopy, frontend, styleseed, copy, generate, toss, inspired, voice, buttons, empty |
 | `ux-feedback` | Add loading, empty, error, and success feedback states to StyleSeed components and pages with practical mobile-first rules. | ux, states, loading, error-handling, styleseed | ux, states, loading, error-handling, styleseed, feedback, add, empty, error, success, components, pages |
+| `vercel-react-view-transitions` | Guide React and Next.js view transitions, shared element animations, route transitions, transition types, and reduced-motion-safe UI state animation. | vercel, react, view, transitions | vercel, react, view, transitions, next, js, shared, element, animations, route, transition, types |
 | `vibe-code-cleanup` | Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, and broken reference... | cleanup, refactor, nextjs, production, vibe-code, fullstack, nodejs | cleanup, refactor, nextjs, production, vibe-code, fullstack, nodejs, vibe, code, safe, hardening, coded |
 | `viral-generator-builder` | Expert in building shareable generator tools that go viral - name generators, quiz makers, avatar creators, personality tests, and calculator tools. Covers t... | viral, generator, builder | viral, generator, builder, building, shareable, go, name, generators, quiz, makers, avatar, creators |
 | `vscode-extension-guide-en` | Guide for VS Code extension development from scaffolding to Marketplace publication | vscode, extension, ide, typescript, marketplace | vscode, extension, ide, typescript, marketplace, en, vs, code, development, scaffolding, publication |
@@ -709,13 +713,16 @@ Total skills: 1496
 | `zod-validation-expert` | Expert in Zod — TypeScript-first schema validation. Covers parsing, custom errors, refinements, type inference, and integration with React Hook Form, Next.js... | zod, validation | zod, validation, typescript, first, schema, covers, parsing, custom, errors, refinements, type, inference |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
-## general (359)
+## general (365)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
 | `00-andruia-consultant` | Arquitecto de Soluciones Principal y Consultor Tecnológico de Andru.ia. Diagnostica y traza la hoja de ruta óptima para proyectos de IA en español. | 00, andruia, consultant | 00, andruia, consultant, arquitecto, de, soluciones, principal, consultor, tecnol, gico, andru, ia |
 | `10-andruia-skill-smith` | Ingeniero de Sistemas de Andru.ia. Diseña, redacta y despliega nuevas habilidades (skills) dentro del repositorio siguiendo el Estándar de Diamante. | 10, andruia, skill, smith | 10, andruia, skill, smith, ingeniero, de, sistemas, andru, ia, dise, redacta, despliega |
 | `20-andruia-niche-intelligence` | Estratega de Inteligencia de Dominio de Andru.ia. Analiza el nicho específico de un proyecto para inyectar conocimientos, regulaciones y estándares únicos de... | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, estratega, de, inteligencia, dominio, andru, ia, analiza, el |
+| `accesslint-audit` | Find and fix WCAG 2.2 accessibility issues. Two modes — report (sweep a codebase or page, produce a prioritized written report, no edits) and fix (audit→edit... | accesslint, audit | accesslint, audit, find, fix, wcag, accessibility, issues, two, modes, report, sweep, codebase |
+| `accesslint-diff` | Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff aga... | accesslint, diff | accesslint, diff, live, page, accessibility, violations, against, baseline, default, compares, uncommitted, changes |
+| `accesslint-scan` | Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing. | accesslint, scan | accesslint, scan, audit, live, page, accessibility, issues, locate, each, wcag, violation, precisely |
 | `address-github-comments` | Use when you need to address review or issue comments on an open GitHub Pull Request using the gh CLI. | address, github, comments | address, github, comments, review, issue, open, pull, request, gh, cli |
 | `agent-manager-skill` | Manage multiple local CLI agents via tmux sessions (start/stop/monitor/assign) with cron-friendly scheduling. | agent, manager, skill | agent, manager, skill, multiple, local, cli, agents, via, tmux, sessions, start, stop |
 | `agents-md` | This skill should be used when the user asks to "create AGENTS.md", "update AGENTS.md", "maintain agent docs", "set up CLAUDE.md", or needs to keep agent ins... | agents, md | agents, md, skill, should, used, user, asks, update, maintain, agent, docs, set |
@@ -799,6 +806,7 @@ Total skills: 1496
 | `daily-news-report` | Scrapes content based on a preset URL list, filters high-quality technical information, and generates daily Markdown reports. | daily, news, report | daily, news, report, scrapes, content, preset, url, list, filters, high, quality, technical |
 | `debug-buttercup` | All pods run in namespace crs. Use when pods in the crs namespace are in CrashLoopBackOff, OOMKilled, or restarting, multiple services restart simultaneously... | debug, buttercup | debug, buttercup, all, pods, run, namespace, crs, crashloopbackoff, oomkilled, restarting, multiple, restart |
 | `debugging-strategies` | Transform debugging from frustrating guesswork into systematic problem-solving with proven strategies, powerful tools, and methodical approaches. | debugging, strategies | debugging, strategies, transform, frustrating, guesswork, systematic, problem, solving, proven, powerful, methodical, approaches |
+| `debugging-toolkit` | Use when working with debugging toolkit smart debug (Alias for debugging-toolkit-smart-debug) | debugging | debugging, toolkit, working, smart, debug, alias |
 | `debugging-toolkit-smart-debug` | Use when working with debugging toolkit smart debug | debugging, debug | debugging, debug, toolkit, smart, working |
 | `deep-research` | Run autonomous research tasks that plan, search, read, and synthesize information into comprehensive reports. | deep, research | deep, research, run, autonomous, tasks, plan, search, read, synthesize, information, reports |
 | `defuddle` | Extract clean markdown content from web pages using Defuddle CLI, removing clutter and navigation to save tokens. Use instead of WebFetch when the user provi... | defuddle | defuddle, extract, clean, markdown, content, web, pages, cli, removing, clutter, navigation, save |
@@ -1050,6 +1058,8 @@ Total skills: 1496
 | `using-superpowers` | Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions | using, superpowers | using, superpowers, starting, any, conversation, establishes, how, find, skills, requiring, skill, invocation |
 | `ux-persuasion-engineer` | One sentence - what this skill does and when to invoke it | ux, persuasion | ux, persuasion, engineer, one, sentence, what, skill, does, invoke |
 | `varlock` | Secure-by-default environment variable management for Claude Code sessions. | varlock | varlock, secure, default, environment, variable, claude, code, sessions |
+| `vercel-cli-with-tokens` | Deploy and manage projects on Vercel using token-based authentication. Use when working with Vercel CLI using access tokens rather than interactive login — e... | vercel, cli, with, tokens | vercel, cli, with, tokens, deploy, token, authentication, working, access, rather, than, interactive |
+| `vercel-optimize` | Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations. | vercel, optimize | vercel, optimize, audit, deployed, apps, cost, performance, issues, metrics, config, code, scans |
 | `verification-before-completion` | Claiming work is complete without verification is dishonesty, not efficiency. Use when ANY variation of success/completion claims, ANY expression of satisfac... | verification, before, completion | verification, before, completion, claiming, work, complete, without, dishonesty, efficiency, any, variation, success |
 | `vexor-cli` | Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location... | vexor, cli | vexor, cli, semantic, file, discovery, via, whenever, locating, where, something, implemented, loaded |
 | `videodb` | Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add o... | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture, videodb, audio |
@@ -1073,7 +1083,7 @@ Total skills: 1496
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware. | zipai, optimizer | zipai, optimizer, adaptive, token, intelligent, filtering, surgical, output, ambiguity, first, context, window |
 
-## infrastructure (138)
+## infrastructure (139)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1121,6 +1131,7 @@ Total skills: 1496
 | `database-admin` | Expert database administrator specializing in modern cloud databases, automation, and reliability engineering. | database, admin | database, admin, administrator, specializing, cloud, databases, automation, reliability, engineering |
 | `database-cloud-optimization-cost-optimize` | You are a cloud cost optimization expert specializing in reducing infrastructure expenses while maintaining performance and reliability. Analyze cloud spendi... | database, cloud, optimization, cost, optimize | database, cloud, optimization, cost, optimize, specializing, reducing, infrastructure, expenses, while, maintaining, performance |
 | `database-migrations-migration-observability` | Migration monitoring, CDC, and observability infrastructure | database, cdc, debezium, kafka, prometheus, grafana, monitoring | database, cdc, debezium, kafka, prometheus, grafana, monitoring, migrations, migration, observability, infrastructure |
+| `deploy-to-vercel` | Deploy applications and websites to Vercel. Use when the user requests deployment actions like "deploy my app", "deploy and give me the link", "push this liv... | deploy, to, vercel | deploy, to, vercel, applications, websites, user, requests, deployment, actions, like, my, app |
 | `deployment-engineer` | Expert deployment engineer specializing in modern CI/CD pipelines, GitOps workflows, and advanced deployment automation. | deployment | deployment, engineer, specializing, ci, cd, pipelines, gitops, automation |
 | `deployment-pipeline-design` | Architecture patterns for multi-stage CI/CD pipelines with approval gates and deployment strategies. | deployment, pipeline | deployment, pipeline, architecture, multi, stage, ci, cd, pipelines, approval, gates |
 | `deployment-procedures` | Production deployment principles and decision-making. Safe deployment workflows, rollback strategies, and verification. Teaches thinking, not scripts. | deployment, procedures | deployment, procedures, principles, decision, making, safe, rollback, verification, teaches, thinking, scripts |
@@ -1400,7 +1411,7 @@ Total skills: 1496
 | `yield-intelligence` | Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yi... | yield, intelligence | yield, intelligence, passive, income, portfolio, analysis, activate, user, asks, about, dividend, yields |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
 
-## testing (32)
+## testing (33)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1426,6 +1437,7 @@ Total skills: 1496
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `tdd-orchestrator` | Master TDD orchestrator specializing in red-green-refactor discipline, multi-agent workflow coordination, and comprehensive test-driven development practices. | tdd, orchestrator | tdd, orchestrator, specializing, red, green, refactor, discipline, multi, agent, coordination, test, driven |
 | `tdd-workflow` | Test-Driven Development workflow principles. RED-GREEN-REFACTOR cycle. | tdd | tdd, test, driven, development, principles, red, green, refactor, cycle |
+| `tdd-workflows` | Use when working with tdd workflows tdd cycle (Alias for tdd-workflows-tdd-cycle) | tdd | tdd, working, cycle, alias |
 | `tdd-workflows-tdd-cycle` | Use when working with tdd workflows tdd cycle | tdd, cycle | tdd, cycle, working |
 | `tdd-workflows-tdd-green` | Implement the minimal code needed to make failing tests pass in the TDD green phase. | tdd, green | tdd, green, minimal, code, needed, failing, tests, pass, phase |
 | `tdd-workflows-tdd-red` | Generate failing tests for the TDD red phase to define expected behavior and edge cases. | tdd, red | tdd, red, generate, failing, tests, phase, define, expected, behavior, edge, cases |
