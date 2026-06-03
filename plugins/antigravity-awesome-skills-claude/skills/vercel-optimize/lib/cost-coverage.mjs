@@ -1,5 +1,7 @@
 // Maps billing line items to gate coverage so report surfaces uncovered dimensions (Sandbox, AI Gateway, Build, …) as blind spots.
 
+import { escapeMarkdownTableCell } from './util.mjs';
+
 // Service → billing dimension. dim=null means uncovered. Substring match — Vercel billing names are stable but untyped.
 const SERVICE_DIMENSION = [
   { match: /^Function Duration$/i,                       dim: 'function-duration' },
@@ -139,5 +141,5 @@ export function renderCostCoverageMarkdown(coverage) {
 }
 
 function escapeCell(s) {
-  return String(s ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  return escapeMarkdownTableCell(s);
 }

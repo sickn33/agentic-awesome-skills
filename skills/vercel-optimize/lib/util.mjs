@@ -9,6 +9,13 @@ export function escapeRegex(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+export function escapeMarkdownTableCell(value) {
+  return String(value ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\|/g, '\\|')
+    .replace(/[\r\n]+/g, ' ');
+}
+
 // `slow_route:/api/products` → `/api/products`.
 export function extractRoute(rec) {
   if (typeof rec?.candidateRef !== 'string') return null;

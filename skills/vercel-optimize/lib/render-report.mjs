@@ -8,6 +8,7 @@ import { computeCostCoverage, renderCostCoverageMarkdown } from './cost-coverage
 import { gates as registeredGates } from './gates/index.mjs';
 import { formatCandidateLabel, formatKind, formatPublicText, formatRoute, formatSignal } from './display-labels.mjs';
 import { splitCustomerSafeObservations } from './observation-safety.mjs';
+import { escapeMarkdownTableCell } from './util.mjs';
 
 const PLATFORM_CAP = 3;
 const GATED_TARGET_PREVIEW = 5;
@@ -911,8 +912,7 @@ function formatBytes(b) {
 }
 
 function escape(s) {
-  if (typeof s !== 'string') return String(s ?? '');
-  return s.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  return escapeMarkdownTableCell(s);
 }
 
 function asArray(v) { return Array.isArray(v) ? v : []; }
