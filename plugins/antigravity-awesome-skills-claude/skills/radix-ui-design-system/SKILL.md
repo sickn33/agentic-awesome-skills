@@ -768,8 +768,8 @@ const SelectItems = memo(({ items }) => (
 shadcn/ui is a collection of copy-paste components built with Radix + Tailwind.
 
 ```bash
-npx shadcn-ui@latest init
-npx shadcn-ui@latest add dialog
+npx shadcn@latest init
+npx shadcn@latest add dialog
 ```
 
 **When to use shadcn vs raw Radix**:
