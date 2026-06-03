@@ -52,7 +52,7 @@ Each agent publishes a capability card under `_polis/citizens/`. Work is opened 
 ### Step 3: Route by track record
 
 ```bash
-python3 scripts/route_contract.py --polis-root _polis \
+python3 polis-protocol/scripts/route_contract.py --polis-root _polis \
   --contract _polis/contracts/open/your-task.md --explain
 ```
 
