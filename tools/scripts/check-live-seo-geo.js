@@ -62,7 +62,7 @@ async function main() {
     fetchText(`${baseUrl}/robots.txt`),
   ]);
 
-  assertIncludes(home, 'Antigravity Awesome Skills | 1,494+ AI coding skills and plugins', 'home');
+  assertIncludes(home, 'Antigravity Awesome Skills | 1,508+ AI coding skills and plugins', 'home');
   assertIncludes(home, 'SoftwareSourceCode', 'home JSON-LD');
   assertIncludes(home, 'FAQPage', 'home JSON-LD');
   assertIncludes(home, 'specialized plugins', 'home');
