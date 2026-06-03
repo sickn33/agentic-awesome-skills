@@ -23704,6 +23704,31 @@
       "runtime_files": []
     },
     {
+      "id": "skill-issue",
+      "path": "skills/skill-issue",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": [
+          "target_specific_home_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "skill-optimizer",
       "path": "skills/skill-optimizer",
       "targets": {
@@ -28638,14 +28663,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1494,
+    "total_skills": 1495,
     "supported": {
       "codex": 1450,
       "claude": 1465
     },
     "blocked": {
-      "codex": 44,
-      "claude": 29
+      "codex": 45,
+      "claude": 30
     },
     "manual_setup": 4
   }

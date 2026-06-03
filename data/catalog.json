@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1494,
+  "total": 1495,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -30714,6 +30714,34 @@
         "skills"
       ],
       "path": "skills/skill-installer/SKILL.md"
+    },
+    {
+      "id": "skill-issue",
+      "name": "skill-issue",
+      "description": "Find out why a coding-agent skill won't fire — grade each SKILL.md A–F on activation, simulate which skill a prompt triggers, and flag collisions where one silently shadows another.",
+      "category": "infrastructure",
+      "tags": [
+        "skills",
+        "linter",
+        "activation",
+        "meta",
+        "ci"
+      ],
+      "triggers": [
+        "skills",
+        "linter",
+        "activation",
+        "meta",
+        "ci",
+        "skill",
+        "issue",
+        "find",
+        "why",
+        "coding",
+        "agent",
+        "won"
+      ],
+      "path": "skills/skill-issue/SKILL.md"
     },
     {
       "id": "skill-optimizer",

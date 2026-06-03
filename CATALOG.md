@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1494
+Total skills: 1495
 
 ## architecture (98)
 
@@ -1072,7 +1072,7 @@ Total skills: 1494
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware. | zipai, optimizer | zipai, optimizer, adaptive, token, intelligent, filtering, surgical, output, ambiguity, first, context, window |
 
-## infrastructure (137)
+## infrastructure (138)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1197,6 +1197,7 @@ Total skills: 1494
 | `server-management` | Server management principles and decision-making. Process management, monitoring strategy, and scaling decisions. Teaches thinking, not commands. | server | server, principles, decision, making, process, monitoring, scaling, decisions, teaches, thinking, commands |
 | `service-mesh-observability` | Complete guide to observability patterns for Istio, Linkerd, and service mesh deployments. | service, mesh, observability | service, mesh, observability, complete, istio, linkerd, deployments |
 | `skill-installer` | Instala, valida, registra e verifica novas skills no ecossistema. 10 checks de seguranca, copia, registro no orchestrator e verificacao pos-instalacao. | skill-management, deployment, validation, installation | skill-management, deployment, validation, installation, skill, installer, instala, valida, registra, verifica, novas, skills |
+| `skill-issue` | Find out why a coding-agent skill won't fire — grade each SKILL.md A–F on activation, simulate which skill a prompt triggers, and flag collisions where one s... | skills, linter, activation, meta, ci | skills, linter, activation, meta, ci, skill, issue, find, why, coding, agent, won |
 | `slo-implementation` | Framework for defining and implementing Service Level Indicators (SLIs), Service Level Objectives (SLOs), and error budgets. | slo | slo, framework, defining, implementing, level, indicators, slis, objectives, slos, error, budgets |
 | `sql-pro` | Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query techniques. Expert in performance tuning, data modeling, and hybrid... | sql | sql, pro, cloud, native, databases, oltp, olap, optimization, query, techniques, performance, tuning |
 | `squirrel` | Full-cycle AI coding skill: plans, builds, tests, lints, fixes bugs, and writes production-grade docs. Auto-detects project state and adapts its 8-phase pipe... | development, testing, planning, code-review, documentation, ci-cd | development, testing, planning, code-review, documentation, ci-cd, squirrel, full, cycle, ai, coding, skill |
