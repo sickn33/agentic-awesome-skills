@@ -92,3 +92,8 @@ git commit -m "feat: synchronize parallel front-end and back-end agent changes"
 - ✅ **Do:** Use git branches or commits to checkpoint progress before letting agents perform massive rewrites.
 - ❌ **Don't:** Let multiple agents edit the same file at the same time, as it causes write conflicts and git merge conflicts.
 - ❌ **Don't:** Search for the "Open Agent Manager" button in the black icon IDE; use the standalone white icon application instead.
+
+## Limitations
+
+- This skill assumes you have local administrator permissions to install both applications on Windows/macOS.
+- Coordination of file locks relies on standard IDE file-system watchers. If changes do not reflect, reload the IDE workspace (`Ctrl+R` or developer reload).
