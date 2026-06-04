@@ -48,3 +48,39 @@ Starting with version 2.0, Google decoupled the Agent Manager from the main IDE 
    - Assign the `frontend-agent` to the frontend directory (e.g., `/client` or `/src`).
 2. Run the agents in parallel.
 3. Use the Antigravity IDE (black icon) to monitor file changes in real-time, review diffs, and perform manual tweaks.
+
+## Examples
+
+### Example 1: Defining Independent Scopes in Multi-Agent Projects
+
+When configuring the Agent Manager dashboard, specify the target files or directories in the prompts to keep agents from colliding:
+
+**Backend Agent Task Prompt:**
+```text
+Role: Backend Developer Agent
+Workspace Target: /server
+Task: Add a new POST /api/v1/students endpoint in server/routes/students.js and update database/models/student.js. Do not edit files outside the /server directory.
+```
+
+**Frontend Agent Task Prompt:**
+```text
+Role: Frontend UI Agent
+Workspace Target: /client
+Task: Build the student registration form under client/components/StudentForm.jsx. Consume the /api/v1/students endpoint. Do not edit files outside the /client directory.
+```
+
+### Example 2: Synchronizing Changes via Git
+
+Since agents write code in parallel, sync their work using git in your IDE terminal:
+
+```bash
+# In the Antigravity IDE terminal, check the changes written by the agents
+git status
+
+# Review diffs before committing
+git diff
+
+# Commit stable checkpoints so both agents stay in sync with main branch
+git add .
+git commit -m "feat: synchronize parallel front-end and back-end agent changes"
+```
