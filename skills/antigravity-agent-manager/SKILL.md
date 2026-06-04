@@ -2,7 +2,7 @@
 name: antigravity-agent-manager
 description: "Configure and orchestrate parallel agents using the standalone Antigravity 2.0 Agent Manager and Antigravity IDE."
 category: general
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-06-04"
