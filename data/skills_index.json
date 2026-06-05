@@ -110,6 +110,28 @@
     }
   },
   {
+    "id": "2slides-ppt-generator",
+    "path": "skills/2slides-ppt-generator",
+    "category": "api-integration",
+    "name": "2slides-ppt-generator",
+    "description": "AI-powered presentation generation via the 2slides API \u2014 create slides from text, match a reference image style, summarize documents into decks, add AI voice narration, and export pages/audio. Use for any \"make slides\", \"create a deck\", or \"slides from this document\" request.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "3d-games",
     "path": "skills/game-development/3d-games",
     "category": "game-development",

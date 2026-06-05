@@ -77,6 +77,25 @@
       "runtime_files": []
     },
     {
+      "id": "2slides-ppt-generator",
+      "path": "skills/2slides-ppt-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "3d-web-experience",
       "path": "skills/3d-web-experience",
       "targets": {
@@ -29000,10 +29019,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1512,
+    "total_skills": 1513,
     "supported": {
-      "codex": 1464,
-      "claude": 1481
+      "codex": 1465,
+      "claude": 1482
     },
     "blocked": {
       "codex": 48,
