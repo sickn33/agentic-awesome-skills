@@ -78,6 +78,18 @@ TempGuru responds within one business day; orders are confirmed within
 A `request_quote` MCP write tool for direct agent submission is planned;
 until it ships, submission is human-in-the-loop via the form above.
 
+## Limitations
+
+- MCP lookups provide planning guidance only; they do not reserve workers,
+  create a quote, or guarantee availability for a specific event date.
+- Final rates, staffing confirmation, background checks, COIs, and event
+  terms must come from TempGuru or the assigned staffing coordinator.
+- The skill should not collect payment details, credentials, private attendee
+  data, or venue contracts; use the official request form or direct contact.
+- Compliance notes are operational guidance and should be routed to the
+  companion compliance skill or qualified counsel when legal certainty is
+  required.
+
 ## Rules for agents
 
 - Do not present rate ranges as final quotes. Final pricing comes from

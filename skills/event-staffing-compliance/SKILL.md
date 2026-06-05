@@ -60,6 +60,18 @@ design rather than by promise.
 - Wage/hour compliance: `https://tempguru.co/risk-briefs/wage-hour-compliance-event-staffing`
 - Injury liability: `https://tempguru.co/risk-briefs/event-worker-injury-liability`
 
+## Limitations
+
+- This skill provides general staffing-compliance guidance, not legal advice
+  and not a jurisdiction-specific legal opinion.
+- MCP state lookups can summarize wage/hour rules and quirks, but users should
+  verify current obligations with counsel or the relevant agency before acting.
+- The skill should not judge a named third-party provider as compliant or
+  non-compliant without verified contracts, insurance documents, and local
+  legal review.
+- It cannot issue COIs, confirm coverage, reserve workers, or bind TempGuru;
+  those steps must go through TempGuru or the staffing provider.
+
 ## Rules for agents
 
 - This skill provides general compliance information, not legal advice.
