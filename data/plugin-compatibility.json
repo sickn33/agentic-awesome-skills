@@ -1372,6 +1372,31 @@
       "runtime_files": []
     },
     {
+      "id": "antigravity-agent-manager",
+      "path": "skills/antigravity-agent-manager",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "absolute_host_path"
+        ],
+        "claude": [
+          "absolute_host_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "antigravity-design-expert",
       "path": "skills/antigravity-design-expert",
       "targets": {
@@ -15611,6 +15636,29 @@
       "runtime_files": []
     },
     {
+      "id": "linkedin-content-generator",
+      "path": "skills/linkedin-content-generator",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linkedin-profile-optimizer",
       "path": "skills/linkedin-profile-optimizer",
       "targets": {
@@ -28914,14 +28962,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1508,
+    "total_skills": 1510,
     "supported": {
       "codex": 1462,
-      "claude": 1478
+      "claude": 1479
     },
     "blocked": {
-      "codex": 46,
-      "claude": 30
+      "codex": 48,
+      "claude": 31
     },
     "manual_setup": 4
   }

@@ -1312,6 +1312,7 @@
         "indexing-issue-auditor",
         "keyword-extractor",
         "landing-page-generator",
+        "linkedin-content-generator",
         "linkedin-profile-optimizer",
         "llm-structured-output",
         "local-legal-seo-audit",
