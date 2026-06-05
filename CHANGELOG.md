@@ -9,6 +9,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.0.0] - 2026-06-03 - "Specialized Plugins, Discovery SEO, and Community Skill Intake"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 2-3 maintainer work into a major catalog update: specialized Codex bundle plugins, stronger GitHub/AI discovery metadata, webmaster verification, star-history refreshes, and the accepted community PR batch. It keeps PR #642 open because it still targets a non-canonical shadow path rather than the live registry pipeline.
+
+## New Skills
+
+- **skill-issue** - activation-audit workflow for grading skill descriptions, diagnosing prompt matching, and finding collision clusters before a skill fails to fire.
+- **polis-protocol** - multi-agent coordination workflow using capability cards, routing history, and protocol amendments.
+- **accesslint-scan** - full-page accessibility scans through AccessLint Chrome and CLI tooling.
+- **accesslint-diff** - baseline-vs-branch accessibility regression review for changed pages.
+- **accesslint-audit** - issue-focused accessibility audit workflow for larger remediation passes.
+- **composition-patterns** - React composition guidance for compound components, explicit variants, state boundaries, and React 19 patterns.
+- **debugging-toolkit** - structured debugging workflow for reproducible traces, hypotheses, and fixes.
+- **deploy-to-vercel** - Vercel deployment workflow with CLI/scripted project setup.
+- **python-development** - Python project workflow guidance for implementation, testing, and environment hygiene.
+- **react-native-skills** - React Native rules for performance, UI primitives, navigation, state, and Expo-friendly implementation.
+- **tdd-workflows** - test-first development workflow for small, verified changes.
+- **vercel-cli-with-tokens** - token-aware Vercel CLI operations for automation contexts.
+- **vercel-optimize** - deep Vercel performance and cost optimization workflow with scanners, gates, support topics, and report rendering.
+- **vercel-react-view-transitions** - React/Next.js View Transitions guidance and implementation recipes.
+
+## Improvements
+
+- Added specialized Codex bundle plugins for agent/MCP building, automation, data analytics, DevOps/cloud, documents/presentations, marketing/SEO/growth, and related high-signal workflows.
+- Refreshed plugin marketplace manifests, editorial bundle docs, specialized-plugin documentation, and candidate analysis so the plugin direction is visible from the README and docs.
+- Improved AI and search discovery signals with stronger repository metadata, prerendered home/catalog metadata, a specialized plugin landing page, and a live SEO discovery smoke check.
+- Added Bing and Google webmaster verification assets and standardized the sitemap namespace for crawler compatibility.
+- Updated the star-history chart and removed the old contributor-grid explainer from the README.
+- Replaced deprecated `shadcn-ui` CLI references with the current `shadcn` command in the Radix UI design-system guidance.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, web assets, and SEO skill-count claims for the 1,508-skill catalog.
+- Fixed the web app SEO verifier after the catalog grew from `1,494+` to `1,508+`, restoring the Pages deploy workflow to green.
+
+## Credits
+
+- **[@mishanefedov](https://github.com/mishanefedov)** and **[mishanefedov/skill-issue](https://github.com/mishanefedov/skill-issue)** for PR #646 (`skill-issue`).
+- **[@FrancoStino](https://github.com/FrancoStino)** for PR #647 (community skills and aliases for SkillPointer coverage).
+- **[@yehudalevy-collab](https://github.com/yehudalevy-collab)** and **[yehudalevy-collab/polis-protocol](https://github.com/yehudalevy-collab/polis-protocol)** for PR #648 (`polis-protocol`).
+- **[@PzocikErwin](https://github.com/PzocikErwin)** for PR #649 (`shadcn` CLI documentation refresh).
+
+## [11.11.0] - 2026-06-02 - "User Thoughts, MiniMax M3, and Registry Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted maintainer batch from June 2, adds project-local user intent persistence, updates MiniMax CLI guidance for MiniMax-M3, fixes the `agy` installer layout, and closes the current Dependabot critical alerts.
+
+## New Skills
+
+- **user-thoughts** - project-local mdbase memory for persisting user decisions, constraints, UI/UX rationale, backlog items, and project preferences across sessions and agents.
+
+## Improvements
+
+- Updated `mmx-cli` documentation so chat workflows point at MiniMax-M3 as the default model.
+- Added batch output guidance across the accepted SEO and production QA skill updates.
+- Normalized `user-thoughts` source metadata, README attribution, runtime templates, references, scripts, and plugin mirrors in English for public catalog use.
+- Fixed `agy` installer guidance so Antigravity installs use directory-based skill layouts instead of flat markdown files.
+- Bumped the web app Vitest stack to close the critical Dependabot alerts and verified `npm audit` returns zero open vulnerabilities.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,494-skill catalog.
+
+## Credits
+
+- **[@JularDepick](https://github.com/JularDepick)** and **[JularDepick/user-thoughts.SKILL](https://github.com/JularDepick/user-thoughts.SKILL)** for PR #639 (`user-thoughts`).
+- **[@octo-patch](https://github.com/octo-patch)** for PR #640 (`mmx-cli` MiniMax-M3 guidance).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #641 (batch output updates).
+
 ## [11.10.0] - 2026-05-31 - "SEO, Yield, YouTube, and Release Hardening"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.

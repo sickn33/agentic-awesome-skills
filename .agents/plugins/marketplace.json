@@ -269,6 +269,186 @@
       "category": "Quality Assurance"
     },
     {
+      "name": "agyb-aas-web-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-web-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-product-design-studio",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-product-design-studio"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-security-engineer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-security-engineer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-secure-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-secure-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-documents-presentations",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-documents-presentations"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-data-analytics",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-data-analytics"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-agent-mcp-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-agent-mcp-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-oss-maintainer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-oss-maintainer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-qa-test-automation",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-qa-test-automation"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-devops-cloud",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-devops-cloud"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-marketing-seo-growth",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-marketing-seo-growth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-aas-automation-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-automation-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-aas-observability-ir",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-observability-ir"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-aas-python-api-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-python-api-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-aas-mobile-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-mobile-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
       "name": "agyb-mobile-developer",
       "source": {
         "source": "local",

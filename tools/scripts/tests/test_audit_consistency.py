@@ -78,7 +78,7 @@ class AuditConsistencyTests(unittest.TestCase):
 
 - **Broad coverage with real utility**: {count_label} skills across development, testing, security, infrastructure, product, and marketing.
 
-If you want a faster answer than "browse all {count_label} skills", start with a tool-specific guide:
+**Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse {count_label} Skills](#browse-{total_skills}-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
 """,
             encoding="utf-8",
         )

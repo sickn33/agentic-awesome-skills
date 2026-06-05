@@ -5,14 +5,14 @@ This app is the static catalog and skill browser for `antigravity-awesome-skills
 ## What This App Does
 
 - Loads the generated skill catalog and related metadata from tracked assets in `public/`.
-- Renders home, category, bundle, and skill detail routes for the published library.
+- Renders home, specialized plugin, category, bundle, and skill detail routes for the published library.
 - Adds SEO metadata, sitemap-backed URLs, and static asset resolution for GitHub Pages.
 - Supports a local-only "refresh skills" developer flow through the Vite dev server plugin.
 - Treats save/star interactions as browser-local UX, even when optional read-only Supabase counts are configured.
 
 ## Architecture
 
-- `src/pages/` contains top-level route screens such as `Home.tsx` and `SkillDetail.tsx`.
+- `src/pages/` contains top-level route screens such as `Home.tsx`, `Plugins.tsx`, and `SkillDetail.tsx`.
 - `src/context/` holds catalog loading and shared app state.
 - `src/hooks/` contains feature-specific client hooks such as star state and filters.
 - `src/utils/` contains URL, SEO, and content helpers.

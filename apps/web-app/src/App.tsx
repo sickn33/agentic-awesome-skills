@@ -4,6 +4,7 @@ import { Icon } from './components/ui/Icon';
 
 const Home = lazy(() => import('./pages/Home'));
 const SkillDetail = lazy(() => import('./pages/SkillDetail'));
+const Plugins = lazy(() => import('./pages/Plugins'));
 
 function App(): React.ReactElement {
   const logoSrc = `${import.meta.env.BASE_URL}Antigravity-Skills-logo.png`;
@@ -24,7 +25,13 @@ function App(): React.ReactElement {
               </span>
             </Link>
 
-            <nav className="flex items-center">
+            <nav className="flex items-center gap-2">
+              <Link
+                to="/plugins"
+                className="hidden rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] sm:inline-flex"
+              >
+                Plugins
+              </Link>
               <a
                 href="https://github.com/sickn33/antigravity-awesome-skills"
                 target="_blank"
@@ -49,6 +56,7 @@ function App(): React.ReactElement {
             >
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/plugins" element={<Plugins />} />
                 <Route path="/skill/:id" element={<SkillDetail />} />
               </Routes>
             </Suspense>

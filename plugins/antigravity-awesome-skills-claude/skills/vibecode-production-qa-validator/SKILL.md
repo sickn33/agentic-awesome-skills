@@ -1,6 +1,6 @@
 ---
 name: vibecode-production-qa-validator
-description: "End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps before going live or shipping a major update. Covers TypeScript, linting, tests, build, SEO tags, route regression, and sitemap validation."
+description: "End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps. Covers TypeScript, linting, tests, build, SEO tags, route regression, and sitemap validation."
 category: devops
 risk: safe
 source: self
@@ -69,6 +69,7 @@ grep "Static pages\|○\|●" build.log | tail -5
 ```
 
 ### Route symbols explained
+
 | Symbol | Meaning | Expected? |
 |--------|---------|-----------|
 | `○` | Static (rendered at build time) | ✓ Good for most pages |
@@ -179,7 +180,7 @@ git status | grep -E "\.next|node_modules"
 ```
 
 Good commit message format:
-```
+```text
 type(scope): brief description
 
 fix(seo): add canonical tags to all blog pages

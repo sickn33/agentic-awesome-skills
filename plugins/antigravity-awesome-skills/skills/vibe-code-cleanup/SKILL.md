@@ -1,6 +1,6 @@
 ---
 name: vibe-code-cleanup
-description: "Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, broken references, and standardizes helpers without breaking routes or APIs."
+description: "Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, and broken references without breaking routes or APIs."
 category: fullstack
 risk: safe
 source: self
@@ -48,8 +48,8 @@ Before changing anything, map the codebase:
 
 ```bash
 # List all pages/routes
-find . -path "*/app/**/page.{js,jsx,ts,tsx}" | sort
-find . -path "*/pages/**/*.{js,jsx,ts,tsx}" | grep -v "_" | sort
+find . -type f \( -name 'page.js' -o -name 'page.jsx' -o -name 'page.ts' -o -name 'page.tsx' \)
+find pages -type f \( -name '*.js' -o -name '*.jsx' -o -name '*.ts' -o -name '*.tsx' \) | rg -v '/_' | sort
 
 # Find broken imports (TS projects)
 npx tsc --noEmit 2>&1 | head -80
@@ -185,7 +185,7 @@ If build or typecheck breaks → **revert the last batch** before continuing.
 
 Each commit should be a single logical unit:
 
-```
+```text
 fix: remove broken import in app/blog/page.js
 refactor: consolidate social metadata into lib/socialMetadata.js  
 chore: remove verified-unused utils/oldHelper.js
