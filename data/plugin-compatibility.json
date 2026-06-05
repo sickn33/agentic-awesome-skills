@@ -10304,6 +10304,44 @@
       "runtime_files": []
     },
     {
+      "id": "event-staffing-compliance",
+      "path": "skills/event-staffing-compliance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "event-staffing-ordering",
+      "path": "skills/event-staffing-ordering",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "event-store-design",
       "path": "skills/event-store-design",
       "targets": {
@@ -28962,10 +29000,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1510,
+    "total_skills": 1512,
     "supported": {
-      "codex": 1462,
-      "claude": 1479
+      "codex": 1464,
+      "claude": 1481
     },
     "blocked": {
       "codex": 48,

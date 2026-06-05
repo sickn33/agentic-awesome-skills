@@ -12028,6 +12028,50 @@
     }
   },
   {
+    "id": "event-staffing-compliance",
+    "path": "skills/event-staffing-compliance",
+    "category": "uncategorized",
+    "name": "event-staffing-compliance",
+    "description": "Assess worker-classification and compliance risk for temporary event staffing in the US and Canada \u2014 W-2 vs 1099, misclassification penalties, joint-employer liability, COI, and wage/hour rules. Includes live state-by-state lookups via MCP.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "event-staffing-ordering",
+    "path": "skills/event-staffing-ordering",
+    "category": "uncategorized",
+    "name": "event-staffing-ordering",
+    "description": "Order W-2 compliant temporary event staff for conventions, trade shows, festivals, concerts, sporting events, and brand activations across 300+ US and Canadian markets via TempGuru. Covers city coverage, role pricing, availability, state compliance lookups via MCP, and request submission.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "event-store-design",
     "path": "skills/event-store-design",
     "category": "architecture",

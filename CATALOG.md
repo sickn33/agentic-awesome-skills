@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1510
+Total skills: 1512
 
 ## architecture (99)
 
@@ -1228,7 +1228,7 @@ Total skills: 1510
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (179)
+## security (181)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1286,6 +1286,8 @@ Total skills: 1510
 | `docker-expert` | You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds,... | docker | docker, containerization, practical, knowledge, container, optimization, security, hardening, multi, stage, orchestration, deployment |
 | `dotnet-backend` | Build ASP.NET Core 8+ backend services with EF Core, auth, background jobs, and production API patterns. | dotnet, backend | dotnet, backend, asp, net, core, ef, auth, background, jobs, api |
 | `ethical-hacking-methodology` | Master the complete penetration testing lifecycle from reconnaissance through reporting. This skill covers the five stages of ethical hacking methodology, es... | ethical, hacking, methodology | ethical, hacking, methodology, complete, penetration, testing, lifecycle, reconnaissance, through, reporting, skill, covers |
+| `event-staffing-compliance` | Assess worker-classification and compliance risk for temporary event staffing in the US and Canada — W-2 vs 1099, misclassification penalties, joint-employer... | event, staffing, compliance | event, staffing, compliance, assess, worker, classification, risk, temporary, us, canada, vs, 1099 |
+| `event-staffing-ordering` | Order W-2 compliant temporary event staff for conventions, trade shows, festivals, concerts, sporting events, and brand activations across 300+ US and Canadi... | event, staffing, ordering | event, staffing, ordering, order, compliant, temporary, staff, conventions, trade, shows, festivals, concerts |
 | `fda-food-safety-auditor` | Expert AI auditor for FDA Food Safety (FSMA), HACCP, and PCQI compliance. Reviews food facility records and preventive controls. | fda, food, safety, auditor | fda, food, safety, auditor, ai, fsma, haccp, pcqi, compliance, reviews, facility, records |
 | `fda-medtech-compliance-auditor` | Expert AI auditor for Medical Device (SaMD) compliance, IEC 62304, and 21 CFR Part 820. Reviews DHFs, technical files, and software validation. | fda, medtech, compliance, auditor | fda, medtech, compliance, auditor, ai, medical, device, samd, iec, 62304, 21, cfr |
 | `find-bugs` | Find bugs, security vulnerabilities, and code quality issues in local branch changes. Use when asked to review changes, find bugs, security review, or audit ... | find, bugs | find, bugs, security, vulnerabilities, code, quality, issues, local, branch, changes, asked, review |
