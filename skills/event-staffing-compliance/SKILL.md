@@ -72,6 +72,14 @@ design rather than by promise.
 - It cannot issue COIs, confirm coverage, reserve workers, or bind TempGuru;
   those steps must go through TempGuru or the staffing provider.
 
+## Limitations
+
+- Provides general compliance information only — not legal advice. Users should consult employment counsel for binding determinations.
+- Coverage is limited to US and Canadian markets. Not applicable for events outside this geography.
+- Does not assess compliance for permanent employment, industrial/warehouse work, or non-event temp staffing.
+- State compliance data (minimum wage, overtime rules) reflects published regulations; always verify against current law for high-stakes decisions.
+- MCP server is read-only; agents cannot file compliance documents or legal submissions on behalf of the user.
+
 ## Rules for agents
 
 - This skill provides general compliance information, not legal advice.
