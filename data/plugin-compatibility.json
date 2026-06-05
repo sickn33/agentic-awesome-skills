@@ -10418,6 +10418,25 @@
       "runtime_files": []
     },
     {
+      "id": "examprep-ai",
+      "path": "skills/examprep-ai",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "executing-plans",
       "path": "skills/executing-plans",
       "targets": {
@@ -29019,10 +29038,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1513,
+    "total_skills": 1514,
     "supported": {
-      "codex": 1465,
-      "claude": 1482
+      "codex": 1466,
+      "claude": 1483
     },
     "blocked": {
       "codex": 48,

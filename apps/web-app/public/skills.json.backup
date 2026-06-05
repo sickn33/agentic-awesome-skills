@@ -12160,6 +12160,28 @@
     }
   },
   {
+    "id": "examprep-ai",
+    "path": "skills/examprep-ai",
+    "category": "education",
+    "name": "examprep-ai",
+    "description": "Exam preparation assistant that converts syllabi, past papers, or notes into a ranked High Score Roadmap. Covers theory, numericals, MCQs, coding, and lab prep, ordered Easy \u2192 Medium \u2192 Hard. Use for last-minute revision, important topics, and question prediction.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "executing-plans",
     "path": "skills/executing-plans",
     "category": "workflow",
