@@ -9,6 +9,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.1.0] - 2026-06-05 - "Community Skills, Release Sync, and Dependency Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 5 maintainer batch: accepted community PRs, dependency security updates, web-app SEO count fixes, generated registry sync, and data-use guardrails for scraping-oriented documentation. The catalog is synced to 1,520+ skills.
+
+## New Skills
+
+- **antigravity-agent-manager** - agent lifecycle and project orchestration guidance for Antigravity workflows.
+- **linkedin-content-generator** - LinkedIn post, carousel, newsletter, and content-calendar generation helpers.
+- **event-staffing-ordering** - staffing-order workflow guidance for event operations.
+- **event-staffing-compliance** - compliance review guidance for event staffing workflows.
+- **2slides-ppt-generator** - 2Slides API workflows for generating, exporting, and narrating presentation decks.
+- **examprep-ai** - education and exam-preparation assistant workflows.
+- **hasdata** - HasData API workflows for compliant web-data collection.
+- **hasdata-cli** - HasData CLI workflows with safer install guidance and data-use guardrails.
+- **anti-sycophancy** - prompt and review patterns for reducing agreement bias in AI assistants.
+- **permission-manager** - permission review and approval-flow guidance for agent work.
+- **skill-suggester** - skill recommendation workflow for routing tasks to relevant playbooks.
+- **smart-git-automation** - Git automation patterns for safer repository operations.
+
+## Improvements
+
+- Updated React Router dependencies to resolve the current high-severity Dependabot/audit findings.
+- Hardened `vercel-optimize` sanitizer coverage and star-history refresh automation.
+- Fixed web-app SEO count verification after the catalog grew to 1,520+ skills.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,520-skill catalog.
+- Tightened scraping-related wording and documentation safety guidance for HasData skills.
+
+## Credits
+
+- **[@PzocikErwin](https://github.com/PzocikErwin)** for PR #652 (`antigravity-agent-manager`).
+- **[@sarveshtalele](https://github.com/sarveshtalele)** for PR #654 (`linkedin-content-generator`).
+- **[@kissmyabs32](https://github.com/kissmyabs32)** for PR #655 (`event-staffing-ordering`, `event-staffing-compliance`).
+- **[@2slides](https://github.com/2slides)** for PR #656 (`2slides-ppt-generator`).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #657 (`examprep-ai`).
+- **[@valka465](https://github.com/valka465)** for PR #651 (`hasdata`, `hasdata-cli`).
+- **[@FrancoStino](https://github.com/FrancoStino)** and **[mskadu/opencode-agent-skills](https://github.com/mskadu/opencode-agent-skills)** for PR #653 (`anti-sycophancy`, `permission-manager`, `skill-suggester`, `smart-git-automation`).
+
 ## [12.0.0] - 2026-06-03 - "Specialized Plugins, Discovery SEO, and Community Skill Intake"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
