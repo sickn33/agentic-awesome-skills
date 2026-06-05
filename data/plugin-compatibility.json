@@ -1391,6 +1391,25 @@
       "runtime_files": []
     },
     {
+      "id": "anti-sycophancy",
+      "path": "skills/anti-sycophancy",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "antigravity-agent-manager",
       "path": "skills/antigravity-agent-manager",
       "targets": {
@@ -19646,6 +19665,25 @@
       "runtime_files": []
     },
     {
+      "id": "permission-manager",
+      "path": "skills/permission-manager",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "personal-tool-builder",
       "path": "skills/personal-tool-builder",
       "targets": {
@@ -24190,6 +24228,25 @@
       "runtime_files": []
     },
     {
+      "id": "skill-suggester",
+      "path": "skills/skill-suggester",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "skill-writer",
       "path": "skills/skill-writer",
       "targets": {
@@ -24333,6 +24390,25 @@
     {
       "id": "slo-implementation",
       "path": "skills/slo-implementation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "smart-git-automation",
+      "path": "skills/smart-git-automation",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -29076,10 +29152,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1516,
+    "total_skills": 1520,
     "supported": {
-      "codex": 1468,
-      "claude": 1485
+      "codex": 1472,
+      "claude": 1489
     },
     "blocked": {
       "codex": 48,

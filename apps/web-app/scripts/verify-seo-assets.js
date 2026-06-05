@@ -276,7 +276,7 @@ export function assertIndexDiscoveryMeta(htmlText) {
     twitterDescription,
   ].join(' ');
 
-  assert(combined.includes('1,514+'), 'Home SEO metadata must expose the current 1,514+ skill count.');
+  assert(combined.includes('1,520+'), 'Home SEO metadata must expose the current 1,520+ skill count.');
   assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
   assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
@@ -344,7 +344,7 @@ export function assertLlms(llmsText) {
   const text = String(llmsText ?? '');
   const requiredSnippets = [
     '# Antigravity Awesome Skills',
-    '1,514+',
+    '1,520+',
     'specialized plugins',
     'Claude Code',
     'Codex CLI',

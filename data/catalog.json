@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1516,
+  "total": 1520,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1825,6 +1825,29 @@
         "bypass"
       ],
       "path": "skills/anti-reversing-techniques/SKILL.md"
+    },
+    {
+      "id": "anti-sycophancy",
+      "name": "anti-sycophancy",
+      "description": "Eliminate sycophantic agreement patterns in AI responses. Load via /skill anti-sycophancy.",
+      "category": "data-ai",
+      "tags": [
+        "anti",
+        "sycophancy"
+      ],
+      "triggers": [
+        "anti",
+        "sycophancy",
+        "eliminate",
+        "sycophantic",
+        "agreement",
+        "ai",
+        "responses",
+        "load",
+        "via",
+        "skill"
+      ],
+      "path": "skills/anti-sycophancy/SKILL.md"
     },
     {
       "id": "antigravity-agent-manager",
@@ -25422,6 +25445,31 @@
       "path": "skills/performance-testing-review-multi-agent-review/SKILL.md"
     },
     {
+      "id": "permission-manager",
+      "name": "permission-manager",
+      "description": "Manage opencode permissions: review always-allow lists, suggest safe read-only commands, configure permission patterns",
+      "category": "architecture",
+      "tags": [
+        "permission",
+        "manager"
+      ],
+      "triggers": [
+        "permission",
+        "manager",
+        "opencode",
+        "permissions",
+        "review",
+        "always",
+        "allow",
+        "lists",
+        "suggest",
+        "safe",
+        "read",
+        "commands"
+      ],
+      "path": "skills/permission-manager/SKILL.md"
+    },
+    {
       "id": "personal-tool-builder",
       "name": "personal-tool-builder",
       "description": "Expert in building custom tools that solve your own problems first. The best products often start as personal tools - scratch your own itch, build for yourself, then discover others have the same itch.",
@@ -31313,6 +31361,31 @@
       "path": "skills/skill-sentinel/SKILL.md"
     },
     {
+      "id": "skill-suggester",
+      "name": "skill-suggester",
+      "description": "Scan prompt history for recurring patterns and unmet needs, then propose new skills or command templates",
+      "category": "architecture",
+      "tags": [
+        "skill",
+        "suggester"
+      ],
+      "triggers": [
+        "skill",
+        "suggester",
+        "scan",
+        "prompt",
+        "history",
+        "recurring",
+        "unmet",
+        "then",
+        "propose",
+        "new",
+        "skills",
+        "command"
+      ],
+      "path": "skills/skill-suggester/SKILL.md"
+    },
+    {
       "id": "skill-writer",
       "name": "skill-writer",
       "description": "Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills.",
@@ -31502,6 +31575,29 @@
         "budgets"
       ],
       "path": "skills/slo-implementation/SKILL.md"
+    },
+    {
+      "id": "smart-git-automation",
+      "name": "smart-git-automation",
+      "description": "Smart change detection, auto branch naming, and streamlined commit/PR workflow",
+      "category": "workflow",
+      "tags": [
+        "git"
+      ],
+      "triggers": [
+        "git",
+        "smart",
+        "automation",
+        "change",
+        "detection",
+        "auto",
+        "branch",
+        "naming",
+        "streamlined",
+        "commit",
+        "pr"
+      ],
+      "path": "skills/smart-git-automation/SKILL.md"
     },
     {
       "id": "smtp-penetration-testing",

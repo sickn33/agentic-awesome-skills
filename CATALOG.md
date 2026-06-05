@@ -2,9 +2,9 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1516
+Total skills: 1520
 
-## architecture (97)
+## architecture (99)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -74,6 +74,7 @@ Total skills: 1516
 | `odoo-module-developer` | Expert guide for creating custom Odoo modules. Covers __manifest__.py, model inheritance, ORM patterns, and module structure best practices. | odoo, module | odoo, module, developer, creating, custom, modules, covers, manifest, py, model, inheritance, orm |
 | `odoo-orm-expert` | Master Odoo ORM patterns: search, browse, create, write, domain filters, computed fields, and performance-safe query techniques. | odoo, orm | odoo, orm, search, browse, write, domain, filters, computed, fields, performance, safe, query |
 | `parallel-agents` | Multi-agent orchestration patterns. Use when multiple independent tasks can run with different domain expertise or when comprehensive analysis requires multi... | parallel, agents | parallel, agents, multi, agent, orchestration, multiple, independent, tasks, run, different, domain, expertise |
+| `permission-manager` | Manage opencode permissions: review always-allow lists, suggest safe read-only commands, configure permission patterns | permission, manager | permission, manager, opencode, permissions, review, always, allow, lists, suggest, safe, read, commands |
 | `powershell-windows` | PowerShell Windows patterns. Critical pitfalls, operator syntax, error handling. | powershell, windows | powershell, windows, critical, pitfalls, operator, syntax, error, handling |
 | `production-code-audit` | Autonomously deep-scan entire codebase line-by-line, understand architecture and patterns, then systematically transform it to production-grade, corporate-le... | production, code, audit | production, code, audit, autonomously, deep, scan, entire, codebase, line, understand, architecture, then |
 | `projection-patterns` | Build read models and projections from event streams. Use when implementing CQRS read sides, building materialized views, or optimizing query performance in ... | projection | projection, read, models, projections, event, streams, implementing, cqrs, sides, building, materialized, views |
@@ -86,6 +87,7 @@ Total skills: 1516
 | `salesforce-development` | Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, Connected Apps, and ... | salesforce | salesforce, development, platform, including, lightning, web, components, lwc, apex, triggers, classes, rest |
 | `shadcn` | Manages shadcn/ui components and projects, providing context, documentation, and usage patterns for building modern design systems. | shadcn | shadcn, manages, ui, components, providing, context, documentation, usage, building |
 | `site-architecture` | Plan or restructure website hierarchy, navigation, URL patterns, breadcrumbs, and internal linking. Use when mapping pages, sections, and site structure, but... | site, architecture | site, architecture, plan, restructure, website, hierarchy, navigation, url, breadcrumbs, internal, linking, mapping |
+| `skill-suggester` | Scan prompt history for recurring patterns and unmet needs, then propose new skills or command templates | skill, suggester | skill, suggester, scan, prompt, history, recurring, unmet, then, propose, new, skills, command |
 | `software-architecture` | Guide for quality focused software architecture. This skill should be used when users want to write code, design architecture, analyze code, in any case that... | software, architecture | software, architecture, quality, skill, should, used, users, want, write, code, analyze, any |
 | `swiftui-ui-patterns` | Apply proven SwiftUI UI patterns for navigation, sheets, async state, and reusable screens. | swiftui, ui | swiftui, ui, apply, proven, navigation, sheets, async, state, reusable, screens |
 | `tailwind-design-system` | Build production-ready design systems with Tailwind CSS, including design tokens, component variants, responsive patterns, and accessibility. | tailwind | tailwind, css, including, tokens, component, variants, responsive, accessibility |
@@ -195,7 +197,7 @@ Total skills: 1516
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 
-## data-ai (291)
+## data-ai (292)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -225,6 +227,7 @@ Total skills: 1516
 | `analytics-tracking` | Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. | analytics, tracking | analytics, tracking, audit, improve, produce, reliable, decision, data |
 | `andrej-karpathy` | Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes... | coding-guidelines, code-review, llm-coding, simplicity | coding-guidelines, code-review, llm-coding, simplicity, andrej, karpathy, behavioral, guidelines, reduce, common, llm, coding |
 | `angular-ui-patterns` | Modern Angular UI patterns for loading states, error handling, and data display. Use when building UI components, handling async data, or managing component ... | angular, ui | angular, ui, loading, states, error, handling, data, display, building, components, async, managing |
+| `anti-sycophancy` | Eliminate sycophantic agreement patterns in AI responses. Load via /skill anti-sycophancy. | anti, sycophancy | anti, sycophancy, eliminate, sycophantic, agreement, ai, responses, load, via, skill |
 | `api-documenter` | Master API documentation with OpenAPI 3.1, AI-powered tools, and modern developer experience practices. Create interactive docs, generate SDKs, and build com... | api, documenter | api, documenter, documentation, openapi, ai, powered, developer, experience, interactive, docs, generate, sdks |
 | `apify-actor-development` | Important: Before you begin, fill in the generatedBy property in the meta section of .actor/actor.json. Replace it with the tool and model you're currently u... | apify, actor | apify, actor, development, important, before, begin, fill, generatedby, property, meta, section, json |
 | `apify-content-analytics` | Track engagement metrics, measure campaign ROI, and analyze content performance across Instagram, Facebook, YouTube, and TikTok. | apify, content, analytics | apify, content, analytics, track, engagement, metrics, measure, campaign, roi, analyze, performance, instagram |
@@ -1461,7 +1464,7 @@ Total skills: 1516
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (104)
+## workflow (105)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1548,6 +1551,7 @@ Total skills: 1516
 | `sentry-automation` | Automate Sentry tasks via Rube MCP (Composio): manage issues/events, configure alerts, track releases, monitor projects and teams. Always search tools first ... | sentry | sentry, automation, automate, tasks, via, rube, mcp, composio, issues, events, configure, alerts |
 | `shopify-automation` | Automate Shopify tasks via Rube MCP (Composio): products, orders, customers, inventory, collections. Always search tools first for current schemas. | shopify | shopify, automation, automate, tasks, via, rube, mcp, composio, products, orders, customers, inventory |
 | `slack-automation` | Automate Slack workspace operations including messaging, search, channel management, and reaction workflows through Composio's Slack toolkit. | slack | slack, automation, automate, workspace, operations, including, messaging, search, channel, reaction, through, composio |
+| `smart-git-automation` | Smart change detection, auto branch naming, and streamlined commit/PR workflow | git | git, smart, automation, change, detection, auto, branch, naming, streamlined, commit, pr |
 | `square-automation` | Automate Square tasks via Rube MCP (Composio): payments, orders, invoices, locations. Always search tools first for current schemas. | square | square, automation, automate, tasks, via, rube, mcp, composio, payments, orders, invoices, locations |
 | `stripe-automation` | Automate Stripe tasks via Rube MCP (Composio): customers, charges, subscriptions, invoices, products, refunds. Always search tools first for current schemas. | stripe | stripe, automation, automate, tasks, via, rube, mcp, composio, customers, charges, subscriptions, invoices |
 | `subagent-orchestrator` | Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks. | subagents, orchestration, quota, parallel, multi-agent | subagents, orchestration, quota, parallel, multi-agent, subagent, orchestrator, coordinate, aware, large, multi, file |
