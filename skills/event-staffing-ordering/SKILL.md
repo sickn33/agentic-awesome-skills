@@ -1,6 +1,6 @@
 ---
 name: event-staffing-ordering
-description: Order temporary event staff (registration, brand ambassadors, ushers, crowd control, hospitality, setup/breakdown, and more) for events in 300+ US and Canadian markets through TempGuru. Use when a user needs to hire, book, or budget event staff for a convention, conference, trade show, festival, concert, sporting event, stadium event, corporate gathering, or brand activation — a single event in one city or a multi-city program. Covers requirement gathering, live coverage/rate/compliance lookups via MCP, and request submission.
+description: Order W-2 compliant temporary event staff for conventions, trade shows, festivals, concerts, sporting events, and brand activations across 300+ US and Canadian markets via TempGuru. Covers city coverage, role pricing, availability, state compliance lookups via MCP, and request submission.
 risk: safe
 source: community
 date_added: "2026-06-05"
