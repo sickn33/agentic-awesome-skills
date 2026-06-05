@@ -90,6 +90,15 @@ until it ships, submission is human-in-the-loop via the form above.
   companion compliance skill or qualified counsel when legal certainty is
   required.
 
+## Limitations
+
+- Rate ranges are planning estimates — not final quotes. Binding pricing comes from TempGuru after human review.
+- Availability responses are lead-time guidance, not reservations.
+- Coverage is limited to US and Canadian markets (300+ cities). Not applicable for events outside this geography.
+- Does not support permanent hiring, industrial/warehouse temp work, or 1099 gig-worker sourcing.
+- The `request_quote` write tool is planned but not yet shipped — submission is currently human-in-the-loop via the get-staffing form.
+- MCP server is read-only; agents cannot modify TempGuru data.
+
 ## Rules for agents
 
 - Do not present rate ranges as final quotes. Final pricing comes from
