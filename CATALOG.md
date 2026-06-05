@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1509
+Total skills: 1510
 
 ## architecture (99)
 
@@ -198,7 +198,7 @@ Total skills: 1509
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 
-## data-ai (288)
+## data-ai (289)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -377,6 +377,7 @@ Total skills: 1509
 | `libreoffice/base` | Database management, forms, reports, and data operations with LibreOffice Base. | libreoffice/base | libreoffice/base, base, database, forms, reports, data, operations, libreoffice |
 | `libreoffice/calc` | Spreadsheet creation, format conversion (ODS/XLSX/CSV), formulas, data automation with LibreOffice Calc. | libreoffice/calc | libreoffice/calc, calc, spreadsheet, creation, format, conversion, ods, xlsx, csv, formulas, data, automation |
 | `libreoffice/draw` | Vector graphics and diagram creation, format conversion (ODG/SVG/PDF) with LibreOffice Draw. | libreoffice/draw | libreoffice/draw, draw, vector, graphics, diagram, creation, format, conversion, odg, svg, pdf, libreoffice |
+| `linkedin-content-generator` | AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning pe... | linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, reinforcement-learning, seo, copywriting | linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, reinforcement-learning, seo, copywriting, content, generator |
 | `llm-app-patterns` | Production-ready patterns for building LLM applications, inspired by [Dify](https://github.com/langgenius/dify) and industry best practices. | llm, app | llm, app, building, applications, inspired, dify, https, github, com, langgenius, industry |
 | `llm-application-dev-ai-assistant` | You are an AI assistant development expert specializing in creating intelligent conversational interfaces, chatbots, and AI-powered applications. Design comp... | llm, application, dev, ai | llm, application, dev, ai, assistant, development, specializing, creating, intelligent, conversational, interfaces, chatbots |
 | `llm-application-dev-langchain-agent` | You are an expert LangChain agent developer specializing in production-grade AI systems using LangChain 0.1+ and LangGraph. | llm, application, dev, langchain, agent | llm, application, dev, langchain, agent, developer, specializing, grade, ai, langgraph |

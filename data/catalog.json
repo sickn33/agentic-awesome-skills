@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1509,
+  "total": 1510,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -20239,6 +20239,39 @@
         "connections"
       ],
       "path": "skills/linkedin-cli/SKILL.md"
+    },
+    {
+      "id": "linkedin-content-generator",
+      "name": "linkedin-content-generator",
+      "description": "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning personal memory system.",
+      "category": "data-ai",
+      "tags": [
+        "linkedin",
+        "content-creation",
+        "social-media",
+        "marketing",
+        "newsletter",
+        "carousel",
+        "content-calendar",
+        "reinforcement-learning",
+        "seo",
+        "copywriting"
+      ],
+      "triggers": [
+        "linkedin",
+        "content-creation",
+        "social-media",
+        "marketing",
+        "newsletter",
+        "carousel",
+        "content-calendar",
+        "reinforcement-learning",
+        "seo",
+        "copywriting",
+        "content",
+        "generator"
+      ],
+      "path": "skills/linkedin-content-generator/SKILL.md"
     },
     {
       "id": "linkedin-profile-optimizer",

@@ -15636,6 +15636,29 @@
       "runtime_files": []
     },
     {
+      "id": "linkedin-content-generator",
+      "path": "skills/linkedin-content-generator",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linkedin-profile-optimizer",
       "path": "skills/linkedin-profile-optimizer",
       "targets": {
@@ -28939,13 +28962,13 @@
     }
   ],
   "summary": {
-    "total_skills": 1509,
+    "total_skills": 1510,
     "supported": {
       "codex": 1462,
-      "claude": 1478
+      "claude": 1479
     },
     "blocked": {
-      "codex": 47,
+      "codex": 48,
       "claude": 31
     },
     "manual_setup": 4

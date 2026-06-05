@@ -17952,6 +17952,30 @@
     }
   },
   {
+    "id": "linkedin-content-generator",
+    "path": "skills/linkedin-content-generator",
+    "category": "marketing",
+    "name": "linkedin-content-generator",
+    "description": "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning personal memory system.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-04",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    }
+  },
+  {
     "id": "linkedin-profile-optimizer",
     "path": "skills/linkedin-profile-optimizer",
     "category": "growth",
