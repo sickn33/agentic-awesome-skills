@@ -13021,6 +13021,44 @@
       "runtime_files": []
     },
     {
+      "id": "hasdata",
+      "path": "skills/hasdata",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "hasdata-cli",
+      "path": "skills/hasdata-cli",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "haskell-pro",
       "path": "skills/haskell-pro",
       "targets": {
@@ -29038,10 +29076,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1514,
+    "total_skills": 1516,
     "supported": {
-      "codex": 1466,
-      "claude": 1483
+      "codex": 1468,
+      "claude": 1485
     },
     "blocked": {
       "codex": 48,

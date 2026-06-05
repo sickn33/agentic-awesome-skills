@@ -646,6 +646,8 @@
         "google-analytics-automation",
         "googlesheets-automation",
         "graphql",
+        "hasdata",
+        "hasdata-cli",
         "helium-mcp",
         "hugging-face-datasets",
         "industrial-brutalist-ui",

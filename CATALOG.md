@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1514
+Total skills: 1516
 
 ## architecture (97)
 
@@ -195,7 +195,7 @@ Total skills: 1514
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 
-## data-ai (289)
+## data-ai (291)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -355,6 +355,8 @@ Total skills: 1514
 | `google-analytics-automation` | Automate Google Analytics tasks via Rube MCP (Composio): run reports, list accounts/properties, funnels, pivots, key events. Always search tools first for cu... | google, analytics | google, analytics, automation, automate, tasks, via, rube, mcp, composio, run, reports, list |
 | `googlesheets-automation` | Automate Google Sheets operations (read, write, format, filter, manage spreadsheets) via Rube MCP (Composio). Read/write data, manage tabs, apply formatting,... | googlesheets | googlesheets, automation, automate, google, sheets, operations, read, write, format, filter, spreadsheets, via |
 | `graphql` | GraphQL gives clients exactly the data they need - no more, no less. One endpoint, typed schema, introspection. But the flexibility that makes it powerful al... | graphql | graphql, gives, clients, exactly, data, no, less, one, endpoint, typed, schema, introspection |
+| `hasdata` | Use HasData APIs for web scraping and structured web data extraction. | hasdata | hasdata, apis, web, scraping, structured, data, extraction |
+| `hasdata-cli` | Command-line access to search, scraping, and structured web data. | hasdata, cli | hasdata, cli, command, line, access, search, scraping, structured, web, data |
 | `helium-mcp` | Connect to Helium's MCP server for news research, media bias analysis, balanced perspectives, stock/options data, and semantic meme search across 3.2M+ artic... | mcp, news, media-bias, stocks, options, finance, research | mcp, news, media-bias, stocks, options, finance, research, helium, connect, server, media, bias |
 | `hosted-agents-v2-py` | Build hosted agents using Azure AI Projects SDK with ImageBasedHostedAgentDefinition. Use when creating container-based agents in Azure AI Foundry. | hosted, agents, v2, py | hosted, agents, v2, py, azure, ai, sdk, imagebasedhostedagentdefinition, creating, container, foundry |
 | `hugging-face-community-evals` | Run local evaluations for Hugging Face Hub models with inspect-ai or lighteval. | hugging, face, community, evals | hugging, face, community, evals, run, local, evaluations, hub, models, inspect, ai, lighteval |

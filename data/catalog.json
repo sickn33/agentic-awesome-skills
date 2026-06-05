@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1514,
+  "total": 1516,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -16842,6 +16842,48 @@
         "secure"
       ],
       "path": "skills/grpc-golang/SKILL.md"
+    },
+    {
+      "id": "hasdata",
+      "name": "hasdata",
+      "description": "Use HasData APIs for web scraping and structured web data extraction.",
+      "category": "data-ai",
+      "tags": [
+        "hasdata"
+      ],
+      "triggers": [
+        "hasdata",
+        "apis",
+        "web",
+        "scraping",
+        "structured",
+        "data",
+        "extraction"
+      ],
+      "path": "skills/hasdata/SKILL.md"
+    },
+    {
+      "id": "hasdata-cli",
+      "name": "hasdata-cli",
+      "description": "Command-line access to search, scraping, and structured web data.",
+      "category": "data-ai",
+      "tags": [
+        "hasdata",
+        "cli"
+      ],
+      "triggers": [
+        "hasdata",
+        "cli",
+        "command",
+        "line",
+        "access",
+        "search",
+        "scraping",
+        "structured",
+        "web",
+        "data"
+      ],
+      "path": "skills/hasdata-cli/SKILL.md"
     },
     {
       "id": "haskell-pro",

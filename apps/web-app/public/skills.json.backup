@@ -15020,6 +15020,50 @@
     }
   },
   {
+    "id": "hasdata",
+    "path": "skills/hasdata",
+    "category": "uncategorized",
+    "name": "hasdata",
+    "description": "Use HasData APIs for web scraping and structured web data extraction.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "hasdata-cli",
+    "path": "skills/hasdata-cli",
+    "category": "uncategorized",
+    "name": "hasdata-cli",
+    "description": "Command-line access to search, scraping, and structured web data.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "haskell-pro",
     "path": "skills/haskell-pro",
     "category": "code",
