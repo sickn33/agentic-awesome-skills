@@ -120,6 +120,14 @@ CATEGORY_RULES = [
         ],
     },
     {
+        "name": "education",
+        "keywords": [
+            "education", "student", "syllabus", "exam", "study",
+            "teacher", "curriculum", "classroom", "school",
+            "examprep", "roadmap", "academic", "university",
+        ],
+    },
+    {
         "name": "business",
         "keywords": [
             "business", "product", "market", "sales", "finance", "startup",
@@ -589,6 +597,7 @@ CURATED_CATEGORY_OVERRIDES = {
     "evaluation": "ai-ml",
     "event-store-design": "architecture",
     "exa-search": "data-ai",
+    "examprep-ai": "education",
     "explain-like-socrates": "content",
     "family-health-analyzer": "health",
     "find-bugs": "code-quality",
