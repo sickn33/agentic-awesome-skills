@@ -83,6 +83,20 @@ Score = (Frequency × 0.40) + (Recency × 0.30) + (Unit Weight × 0.20) + (Marks
 - Unit Weight: core = 100 · elective = 50
 - Marks: 10+ = 100 · 5–9 = 60 · 2–4 = 30 · MCQ = 20
 
+## Limitations
+
+- This skill supports study planning and revision, but it cannot guarantee
+  exam questions, marks, grading outcomes, or instructor expectations.
+- Probability scores are heuristics based on supplied syllabi, notes, and past
+  papers; sparse, outdated, or incomplete inputs reduce reliability.
+- The skill should not fabricate syllabus coverage. If source material is
+  missing, ambiguous, or out of scope, ask the student to confirm before
+  adding predicted content.
+- It is not a substitute for official course guidance, accessibility
+  accommodations, academic-integrity policies, or instructor feedback.
+- Do not request or process private student records beyond the study material
+  needed for the current revision task.
+
 ---
 
 ## Full Roadmap Mode
