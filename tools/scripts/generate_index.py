@@ -120,6 +120,14 @@ CATEGORY_RULES = [
         ],
     },
     {
+        "name": "education",
+        "keywords": [
+            "education", "student", "syllabus", "exam", "study",
+            "teacher", "curriculum", "classroom", "school",
+            "examprep", "roadmap", "academic", "university",
+        ],
+    },
+    {
         "name": "business",
         "keywords": [
             "business", "product", "market", "sales", "finance", "startup",
@@ -131,14 +139,6 @@ CATEGORY_RULES = [
         "keywords": [
             "architecture", "adr", "microservices", "ddd", "domain",
             "cqrs", "saga", "patterns",
-        ],
-    },
-    {
-        "name": "education",
-        "keywords": [
-            "education", "student", "syllabus", "exam", "study", "learning",
-            "course", "teacher", "curriculum", "classroom", "school",
-            "examprep", "roadmap",
         ],
     },
 ]

@@ -157,24 +157,6 @@ const TAG_STOPWORDS = new Set([
 
 const CATEGORY_RULES = [
   {
-    name: "education",
-    keywords: [
-      "education",
-      "student",
-      "syllabus",
-      "exam",
-      "study",
-      "learning",
-      "course",
-      "teacher",
-      "curriculum",
-      "classroom",
-      "school",
-      "examprep",
-      "roadmap",
-    ],
-  },
-  {
     name: "security",
     keywords: [
       "security",
@@ -229,6 +211,24 @@ const CATEGORY_RULES = [
       "ci",
       "cd",
       "kafka",
+    ],
+  },
+  {
+    name: "education",
+    keywords: [
+      "education",
+      "student",
+      "syllabus",
+      "exam",
+      "study",
+      "teacher",
+      "curriculum",
+      "classroom",
+      "school",
+      "examprep",
+      "roadmap",
+      "academic",
+      "university",
     ],
   },
   {

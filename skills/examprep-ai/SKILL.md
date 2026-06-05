@@ -1,6 +1,6 @@
 ---
 name: examprep-ai
-description: "Exam preparation assistant that converts a student's syllabus, past question papers, or notes into a ranked High Score Roadmap. Covers all question types (theory, numerical, MCQ, coding, lab) ordered Easy → Medium → Hard. Trigger on: exam prep, last-minute revision, important topics, question prediction, study guide, analyze past papers, MCQ practice, numerical problems, coding questions for exam, or any syllabus/question-paper upload."
+description: "Exam preparation assistant that converts syllabi, past papers, or notes into a ranked High Score Roadmap. Covers theory, numericals, MCQs, coding, and lab prep, ordered Easy → Medium → Hard. Use for last-minute revision, important topics, and question prediction."
 risk: safe
 source: community
 date_added: "2026-06-05"
