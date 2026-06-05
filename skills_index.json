@@ -1616,6 +1616,30 @@
     }
   },
   {
+    "id": "antigravity-agent-manager",
+    "path": "skills/antigravity-agent-manager",
+    "category": "general",
+    "name": "antigravity-agent-manager",
+    "description": "Configure and orchestrate parallel agents using the standalone Antigravity 2.0 Agent Manager and Antigravity IDE.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-06-04",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ]
+    }
+  },
+  {
     "id": "antigravity-design-expert",
     "path": "skills/antigravity-design-expert",
     "category": "design",

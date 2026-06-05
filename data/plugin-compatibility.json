@@ -1372,6 +1372,31 @@
       "runtime_files": []
     },
     {
+      "id": "antigravity-agent-manager",
+      "path": "skills/antigravity-agent-manager",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "absolute_host_path"
+        ],
+        "claude": [
+          "absolute_host_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "antigravity-design-expert",
       "path": "skills/antigravity-design-expert",
       "targets": {
@@ -28914,14 +28939,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1508,
+    "total_skills": 1509,
     "supported": {
       "codex": 1462,
       "claude": 1478
     },
     "blocked": {
-      "codex": 46,
-      "claude": 30
+      "codex": 47,
+      "claude": 31
     },
     "manual_setup": 4
   }

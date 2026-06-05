@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1508
+Total skills: 1509
 
 ## architecture (99)
 
@@ -1449,7 +1449,7 @@ Total skills: 1508
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (103)
+## workflow (104)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1459,6 +1459,7 @@ Total skills: 1508
 | `agent-orchestrator` | Meta-skill que orquestra todos os agentes do ecossistema. Scan automatico de skills, match por capacidades, coordenacao de workflows multi-skill e registry m... | orchestration, multi-agent, workflow, automation | orchestration, multi-agent, workflow, automation, agent, orchestrator, meta, skill, que, orquestra, todos, os |
 | `airtable-automation` | Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views. Always search tools first for current schemas. | airtable | airtable, automation, automate, tasks, via, rube, mcp, composio, records, bases, tables, fields |
 | `amplitude-automation` | Automate Amplitude tasks via Rube MCP (Composio): events, user activity, cohorts, user identification. Always search tools first for current schemas. | amplitude | amplitude, automation, automate, tasks, via, rube, mcp, composio, events, user, activity, cohorts |
+| `antigravity-agent-manager` | Configure and orchestrate parallel agents using the standalone Antigravity 2.0 Agent Manager and Antigravity IDE. | agent-manager, orchestration, multi-agent, setup | agent-manager, orchestration, multi-agent, setup, antigravity, agent, manager, configure, orchestrate, parallel, agents, standalone |
 | `antigravity-skill-orchestrator` | A meta-skill that understands task requirements, dynamically selects appropriate skills, tracks successful skill combinations using agent-memory-mcp, and pre... | orchestration, meta-skill, agent-memory, task-evaluation | orchestration, meta-skill, agent-memory, task-evaluation, antigravity, skill, orchestrator, meta, understands, task, requirements, dynamically |
 | `apify-influencer-discovery` | Find and evaluate influencers for brand partnerships, verify authenticity, and track collaboration performance across Instagram, Facebook, YouTube, and TikTok. | apify, influencer, discovery | apify, influencer, discovery, find, evaluate, influencers, brand, partnerships, verify, authenticity, track, collaboration |
 | `asana-automation` | Automate Asana tasks via Rube MCP (Composio): tasks, projects, sections, teams, workspaces. Always search tools first for current schemas. | asana | asana, automation, automate, tasks, via, rube, mcp, composio, sections, teams, workspaces, always |
