@@ -4,6 +4,7 @@
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
       "skills": [
+        "2slides-ppt-generator",
         "3d-web-experience",
         "agent-framework-azure-ai-py",
         "agentmail",
@@ -414,6 +415,8 @@
         "docker-expert",
         "dotnet-backend",
         "ethical-hacking-methodology",
+        "event-staffing-compliance",
+        "event-staffing-ordering",
         "fda-food-safety-auditor",
         "fda-medtech-compliance-auditor",
         "find-bugs",
@@ -643,6 +646,8 @@
         "google-analytics-automation",
         "googlesheets-automation",
         "graphql",
+        "hasdata",
+        "hasdata-cli",
         "helium-mcp",
         "hugging-face-datasets",
         "industrial-brutalist-ui",
@@ -834,6 +839,7 @@
     "automation-core": {
       "description": "Automation platforms, workflow tooling, and business systems.",
       "skills": [
+        "2slides-ppt-generator",
         "activecampaign-automation",
         "agent-orchestrator",
         "agentphone",
@@ -993,6 +999,7 @@
         "slack-automation",
         "slack-bot-builder",
         "slack-gif-creator",
+        "smart-git-automation",
         "square-automation",
         "sred-work-summary",
         "stripe-automation",
@@ -1312,6 +1319,7 @@
         "indexing-issue-auditor",
         "keyword-extractor",
         "landing-page-generator",
+        "linkedin-content-generator",
         "linkedin-profile-optimizer",
         "llm-structured-output",
         "local-legal-seo-audit",
@@ -1376,6 +1384,7 @@
     "docs-core": {
       "description": "Documents, spreadsheets, presentations, and office workflows.",
       "skills": [
+        "2slides-ppt-generator",
         "akf-trust-metadata",
         "azure-ai-translation-document-py",
         "bilig-workpaper",

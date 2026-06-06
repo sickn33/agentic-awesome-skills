@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1508,
+  "total": 1520,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -110,6 +110,37 @@
         "el"
       ],
       "path": "skills/20-andruia-niche-intelligence/SKILL.md"
+    },
+    {
+      "id": "2slides-ppt-generator",
+      "name": "2slides-ppt-generator",
+      "description": "AI-powered presentation generation via the 2slides API — create slides from text, match a reference image style, summarize documents into decks, add AI voice narration, and export pages/audio. Use for any \"make slides\", \"create a deck\", or \"slides from this document\" request.",
+      "category": "data-ai",
+      "tags": [
+        "presentations",
+        "slides",
+        "powerpoint",
+        "ai",
+        "api-integration",
+        "pdf",
+        "narration",
+        "document-summarization"
+      ],
+      "triggers": [
+        "presentations",
+        "slides",
+        "powerpoint",
+        "ai",
+        "api-integration",
+        "pdf",
+        "narration",
+        "document-summarization",
+        "2slides",
+        "ppt",
+        "generator",
+        "powered"
+      ],
+      "path": "skills/2slides-ppt-generator/SKILL.md"
     },
     {
       "id": "3d-web-experience",
@@ -1796,6 +1827,56 @@
       "path": "skills/anti-reversing-techniques/SKILL.md"
     },
     {
+      "id": "anti-sycophancy",
+      "name": "anti-sycophancy",
+      "description": "Eliminate sycophantic agreement patterns in AI responses. Load via /skill anti-sycophancy.",
+      "category": "data-ai",
+      "tags": [
+        "anti",
+        "sycophancy"
+      ],
+      "triggers": [
+        "anti",
+        "sycophancy",
+        "eliminate",
+        "sycophantic",
+        "agreement",
+        "ai",
+        "responses",
+        "load",
+        "via",
+        "skill"
+      ],
+      "path": "skills/anti-sycophancy/SKILL.md"
+    },
+    {
+      "id": "antigravity-agent-manager",
+      "name": "antigravity-agent-manager",
+      "description": "Configure and orchestrate parallel agents using the standalone Antigravity 2.0 Agent Manager and Antigravity IDE.",
+      "category": "workflow",
+      "tags": [
+        "agent-manager",
+        "orchestration",
+        "multi-agent",
+        "setup"
+      ],
+      "triggers": [
+        "agent-manager",
+        "orchestration",
+        "multi-agent",
+        "setup",
+        "antigravity",
+        "agent",
+        "manager",
+        "configure",
+        "orchestrate",
+        "parallel",
+        "agents",
+        "standalone"
+      ],
+      "path": "skills/antigravity-agent-manager/SKILL.md"
+    },
+    {
       "id": "antigravity-design-expert",
       "name": "antigravity-design-expert",
       "description": "Core UI/UX engineering skill for building highly interactive, spatial, weightless, and glassmorphism-based web interfaces using GSAP and 3D CSS.",
@@ -2961,7 +3042,7 @@
       "id": "auri-core",
       "name": "auri-core",
       "description": "Auri: assistente de voz inteligente (Alexa + Claude claude-opus-4-20250805). Visao do produto, persona Vitoria Neural, stack AWS, modelo Free/Pro/Business/Enterprise, roadmap 4 fases, GTM, north star WAC e analise competitiva.",
-      "category": "business",
+      "category": "education",
       "tags": [
         "voice-assistant",
         "product-vision",
@@ -8989,7 +9070,7 @@
       "id": "code-documentation-code-explain",
       "name": "code-documentation-code-explain",
       "description": "You are a code education expert specializing in explaining complex code through clear narratives, visual diagrams, and step-by-step breakdowns. Transform difficult concepts into understandable explanations for developers at all levels.",
-      "category": "general",
+      "category": "education",
       "tags": [
         "code",
         "documentation",
@@ -9959,7 +10040,7 @@
       "id": "content-strategy",
       "name": "content-strategy",
       "description": "Plan a content strategy, topic clusters, editorial roadmap, and content mix for traffic, authority, and lead generation. Use when deciding what to publish, what topics to prioritize, or how to structure a content program.",
-      "category": "general",
+      "category": "education",
       "tags": [
         "content"
       ],
@@ -13316,6 +13397,58 @@
       "path": "skills/event-sourcing-architect/SKILL.md"
     },
     {
+      "id": "event-staffing-compliance",
+      "name": "event-staffing-compliance",
+      "description": "Assess worker-classification and compliance risk for temporary event staffing in the US and Canada — W-2 vs 1099, misclassification penalties, joint-employer liability, COI, and wage/hour rules. Includes live state-by-state lookups via MCP.",
+      "category": "security",
+      "tags": [
+        "event",
+        "staffing",
+        "compliance"
+      ],
+      "triggers": [
+        "event",
+        "staffing",
+        "compliance",
+        "assess",
+        "worker",
+        "classification",
+        "risk",
+        "temporary",
+        "us",
+        "canada",
+        "vs",
+        "1099"
+      ],
+      "path": "skills/event-staffing-compliance/SKILL.md"
+    },
+    {
+      "id": "event-staffing-ordering",
+      "name": "event-staffing-ordering",
+      "description": "Order W-2 compliant temporary event staff for conventions, trade shows, festivals, concerts, sporting events, and brand activations across 300+ US and Canadian markets via TempGuru. Covers city coverage, role pricing, availability, state compliance lookups via MCP, and request submission.",
+      "category": "security",
+      "tags": [
+        "event",
+        "staffing",
+        "ordering"
+      ],
+      "triggers": [
+        "event",
+        "staffing",
+        "ordering",
+        "order",
+        "compliant",
+        "temporary",
+        "staff",
+        "conventions",
+        "trade",
+        "shows",
+        "festivals",
+        "concerts"
+      ],
+      "path": "skills/event-staffing-ordering/SKILL.md"
+    },
+    {
       "id": "event-store-design",
       "name": "event-store-design",
       "description": "Design and implement event stores for event-sourced systems. Use when building event sourcing infrastructure, choosing event store technologies, or implementing event persistence patterns.",
@@ -13385,6 +13518,36 @@
         "searching"
       ],
       "path": "skills/exa-search/SKILL.md"
+    },
+    {
+      "id": "examprep-ai",
+      "name": "examprep-ai",
+      "description": "Exam preparation assistant that converts syllabi, past papers, or notes into a ranked High Score Roadmap. Covers theory, numericals, MCQs, coding, and lab prep, ordered Easy → Medium → Hard. Use for last-minute revision, important topics, and question prediction.",
+      "category": "education",
+      "tags": [
+        "education",
+        "exam-prep",
+        "study-guide",
+        "question-prediction",
+        "syllabus-analysis",
+        "revision",
+        "students"
+      ],
+      "triggers": [
+        "education",
+        "exam-prep",
+        "study-guide",
+        "question-prediction",
+        "syllabus-analysis",
+        "revision",
+        "students",
+        "examprep",
+        "ai",
+        "exam",
+        "preparation",
+        "assistant"
+      ],
+      "path": "skills/examprep-ai/SKILL.md"
     },
     {
       "id": "executing-plans",
@@ -14628,7 +14791,7 @@
       "id": "fp-pragmatic",
       "name": "fp-pragmatic",
       "description": "A practical, jargon-free guide to functional programming - the 80/20 approach that gets results without the academic overhead",
-      "category": "development",
+      "category": "education",
       "tags": [
         "fp-ts",
         "functional-programming",
@@ -14777,7 +14940,7 @@
       "id": "fp-ts-pragmatic",
       "name": "fp-ts-pragmatic",
       "description": "A practical, jargon-free guide to fp-ts functional programming - the 80/20 approach that gets results without the academic overhead. Use when writing TypeScript with fp-ts library.",
-      "category": "development",
+      "category": "education",
       "tags": [
         "fp",
         "ts",
@@ -16704,6 +16867,48 @@
       "path": "skills/grpc-golang/SKILL.md"
     },
     {
+      "id": "hasdata",
+      "name": "hasdata",
+      "description": "Use HasData APIs for web scraping and structured web data extraction.",
+      "category": "data-ai",
+      "tags": [
+        "hasdata"
+      ],
+      "triggers": [
+        "hasdata",
+        "apis",
+        "web",
+        "scraping",
+        "structured",
+        "data",
+        "extraction"
+      ],
+      "path": "skills/hasdata/SKILL.md"
+    },
+    {
+      "id": "hasdata-cli",
+      "name": "hasdata-cli",
+      "description": "Command-line access to search, scraping, and structured web data.",
+      "category": "data-ai",
+      "tags": [
+        "hasdata",
+        "cli"
+      ],
+      "triggers": [
+        "hasdata",
+        "cli",
+        "command",
+        "line",
+        "access",
+        "search",
+        "scraping",
+        "structured",
+        "web",
+        "data"
+      ],
+      "path": "skills/hasdata-cli/SKILL.md"
+    },
+    {
       "id": "haskell-pro",
       "name": "haskell-pro",
       "description": "Expert Haskell engineer specializing in advanced type systems, pure",
@@ -17744,7 +17949,7 @@
       "id": "humanize-chinese",
       "name": "humanize-chinese",
       "description": "Detect and rewrite AI-like Chinese text with a practical workflow for scoring, humanization, academic AIGC reduction, and style conversion. Use when the user asks to 去AI味, 降AIGC, 去除AI痕迹, 论文降重, 知网检测, 维普检测, humanize chinese, detect AI text, or make Chinese text sound more natural.",
-      "category": "data-ai",
+      "category": "education",
       "tags": [
         "chinese",
         "writing",
@@ -19588,7 +19793,7 @@
       "id": "latex-paper-conversion",
       "name": "latex-paper-conversion",
       "description": "This skill should be used when the user asks to convert an academic paper in LaTeX from one format (e.g., Springer, IPOL) to another format (e.g., MDPI, IEEE, Nature). It automates extraction, injection, fixing formatting, and compiling.",
-      "category": "general",
+      "category": "education",
       "tags": [
         "latex",
         "paper",
@@ -20212,6 +20417,39 @@
         "connections"
       ],
       "path": "skills/linkedin-cli/SKILL.md"
+    },
+    {
+      "id": "linkedin-content-generator",
+      "name": "linkedin-content-generator",
+      "description": "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning personal memory system.",
+      "category": "data-ai",
+      "tags": [
+        "linkedin",
+        "content-creation",
+        "social-media",
+        "marketing",
+        "newsletter",
+        "carousel",
+        "content-calendar",
+        "reinforcement-learning",
+        "seo",
+        "copywriting"
+      ],
+      "triggers": [
+        "linkedin",
+        "content-creation",
+        "social-media",
+        "marketing",
+        "newsletter",
+        "carousel",
+        "content-calendar",
+        "reinforcement-learning",
+        "seo",
+        "copywriting",
+        "content",
+        "generator"
+      ],
+      "path": "skills/linkedin-content-generator/SKILL.md"
     },
     {
       "id": "linkedin-profile-optimizer",
@@ -25207,6 +25445,31 @@
       "path": "skills/performance-testing-review-multi-agent-review/SKILL.md"
     },
     {
+      "id": "permission-manager",
+      "name": "permission-manager",
+      "description": "Manage opencode permissions: review always-allow lists, suggest safe read-only commands, configure permission patterns",
+      "category": "architecture",
+      "tags": [
+        "permission",
+        "manager"
+      ],
+      "triggers": [
+        "permission",
+        "manager",
+        "opencode",
+        "permissions",
+        "review",
+        "always",
+        "allow",
+        "lists",
+        "suggest",
+        "safe",
+        "read",
+        "commands"
+      ],
+      "path": "skills/permission-manager/SKILL.md"
+    },
+    {
       "id": "personal-tool-builder",
       "name": "personal-tool-builder",
       "description": "Expert in building custom tools that solve your own problems first. The best products often start as personal tools - scratch your own itch, build for yourself, then discover others have the same itch.",
@@ -26595,7 +26858,7 @@
       "id": "puzzle-activity-planner",
       "name": "puzzle-activity-planner",
       "description": "Plan puzzle-based activities for classrooms, parties, and events with pre-configured generator links",
-      "category": "architecture",
+      "category": "education",
       "tags": [
         "education",
         "puzzle",
@@ -30173,7 +30436,7 @@
       "id": "seo-plan",
       "name": "seo-plan",
       "description": "Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use when user says \"SEO plan\", \"SEO strategy\", \"content strategy\", \"site architecture\", or \"SEO roadmap\".",
-      "category": "architecture",
+      "category": "education",
       "tags": [
         "seo",
         "plan"
@@ -31098,6 +31361,31 @@
       "path": "skills/skill-sentinel/SKILL.md"
     },
     {
+      "id": "skill-suggester",
+      "name": "skill-suggester",
+      "description": "Scan prompt history for recurring patterns and unmet needs, then propose new skills or command templates",
+      "category": "architecture",
+      "tags": [
+        "skill",
+        "suggester"
+      ],
+      "triggers": [
+        "skill",
+        "suggester",
+        "scan",
+        "prompt",
+        "history",
+        "recurring",
+        "unmet",
+        "then",
+        "propose",
+        "new",
+        "skills",
+        "command"
+      ],
+      "path": "skills/skill-suggester/SKILL.md"
+    },
+    {
       "id": "skill-writer",
       "name": "skill-writer",
       "description": "Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills.",
@@ -31287,6 +31575,29 @@
         "budgets"
       ],
       "path": "skills/slo-implementation/SKILL.md"
+    },
+    {
+      "id": "smart-git-automation",
+      "name": "smart-git-automation",
+      "description": "Smart change detection, auto branch naming, and streamlined commit/PR workflow",
+      "category": "workflow",
+      "tags": [
+        "git"
+      ],
+      "triggers": [
+        "git",
+        "smart",
+        "automation",
+        "change",
+        "detection",
+        "auto",
+        "branch",
+        "naming",
+        "streamlined",
+        "commit",
+        "pr"
+      ],
+      "path": "skills/smart-git-automation/SKILL.md"
     },
     {
       "id": "smtp-penetration-testing",
@@ -37037,7 +37348,7 @@
       "id": "yann-lecun-filosofia",
       "name": "yann-lecun-filosofia",
       "description": "Sub-skill filosófica e pedagógica de Yann LeCun.",
-      "category": "general",
+      "category": "education",
       "tags": [
         "persona",
         "ai-philosophy",

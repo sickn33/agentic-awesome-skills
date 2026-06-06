@@ -110,6 +110,28 @@
     }
   },
   {
+    "id": "2slides-ppt-generator",
+    "path": "skills/2slides-ppt-generator",
+    "category": "api-integration",
+    "name": "2slides-ppt-generator",
+    "description": "AI-powered presentation generation via the 2slides API \u2014 create slides from text, match a reference image style, summarize documents into decks, add AI voice narration, and export pages/audio. Use for any \"make slides\", \"create a deck\", or \"slides from this document\" request.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "3d-games",
     "path": "skills/game-development/3d-games",
     "category": "game-development",
@@ -1613,6 +1635,52 @@
         "docs": null
       },
       "reasons": []
+    }
+  },
+  {
+    "id": "anti-sycophancy",
+    "path": "skills/anti-sycophancy",
+    "category": "uncategorized",
+    "name": "anti-sycophancy",
+    "description": "Eliminate sycophantic agreement patterns in AI responses. Load via /skill anti-sycophancy.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "antigravity-agent-manager",
+    "path": "skills/antigravity-agent-manager",
+    "category": "general",
+    "name": "antigravity-agent-manager",
+    "description": "Configure and orchestrate parallel agents using the standalone Antigravity 2.0 Agent Manager and Antigravity IDE.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-06-04",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ]
     }
   },
   {
@@ -12004,6 +12072,50 @@
     }
   },
   {
+    "id": "event-staffing-compliance",
+    "path": "skills/event-staffing-compliance",
+    "category": "uncategorized",
+    "name": "event-staffing-compliance",
+    "description": "Assess worker-classification and compliance risk for temporary event staffing in the US and Canada \u2014 W-2 vs 1099, misclassification penalties, joint-employer liability, COI, and wage/hour rules. Includes live state-by-state lookups via MCP.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "event-staffing-ordering",
+    "path": "skills/event-staffing-ordering",
+    "category": "uncategorized",
+    "name": "event-staffing-ordering",
+    "description": "Order W-2 compliant temporary event staff for conventions, trade shows, festivals, concerts, sporting events, and brand activations across 300+ US and Canadian markets via TempGuru. Covers city coverage, role pricing, availability, state compliance lookups via MCP, and request submission.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "event-store-design",
     "path": "skills/event-store-design",
     "category": "architecture",
@@ -12056,6 +12168,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "examprep-ai",
+    "path": "skills/examprep-ai",
+    "category": "education",
+    "name": "examprep-ai",
+    "description": "Exam preparation assistant that converts syllabi, past papers, or notes into a ranked High Score Roadmap. Covers theory, numericals, MCQs, coding, and lab prep, ordered Easy \u2192 Medium \u2192 Hard. Use for last-minute revision, important topics, and question prediction.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -14894,6 +15028,50 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "hasdata",
+    "path": "skills/hasdata",
+    "category": "uncategorized",
+    "name": "hasdata",
+    "description": "Use HasData APIs for web scraping and structured web data extraction.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "hasdata-cli",
+    "path": "skills/hasdata-cli",
+    "category": "uncategorized",
+    "name": "hasdata-cli",
+    "description": "Command-line access to search, scraping, and structured web data.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17925,6 +18103,30 @@
         "docs": null
       },
       "reasons": []
+    }
+  },
+  {
+    "id": "linkedin-content-generator",
+    "path": "skills/linkedin-content-generator",
+    "category": "marketing",
+    "name": "linkedin-content-generator",
+    "description": "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning personal memory system.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-04",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
     }
   },
   {
@@ -22421,6 +22623,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "permission-manager",
+    "path": "skills/permission-manager",
+    "category": "uncategorized",
+    "name": "permission-manager",
+    "description": "Manage opencode permissions: review always-allow lists, suggest safe read-only commands, configure permission patterns",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-05",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -27537,6 +27761,28 @@
     }
   },
   {
+    "id": "skill-suggester",
+    "path": "skills/skill-suggester",
+    "category": "meta",
+    "name": "skill-suggester",
+    "description": "Scan prompt history for recurring patterns and unmet needs, then propose new skills or command templates",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "skill-writer",
     "path": "skills/skill-writer",
     "category": "meta",
@@ -27701,6 +27947,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "smart-git-automation",
+    "path": "skills/smart-git-automation",
+    "category": "automation",
+    "name": "smart-git-automation",
+    "description": "Smart change detection, auto branch naming, and streamlined commit/PR workflow",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-05",
     "plugin": {
       "targets": {
         "codex": "supported",
