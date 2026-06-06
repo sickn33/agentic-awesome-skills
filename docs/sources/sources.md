@@ -11,6 +11,7 @@ If you recognize your work here and it is not properly attributed, please open a
 | `burp-suite-testing`        | [PortSwigger](https://portswigger.net/burp)                                | N/A            | Usage guide only (no binary). |
 | `crewai`                    | [CrewAI](https://github.com/joaomdmoura/crewAI)                            | MIT            | Framework guides.             |
 | `hasdata`, `hasdata-cli`    | [HasData CLI](https://github.com/HasData/hasdata-cli)                      | MIT            | Official HasData API and CLI guidance. |
+| `runapi-cli`                | [RunAPI CLI Skill](https://github.com/runapi-ai/cli-skill)                 | Apache-2.0     | Official RunAPI CLI skill for model API jobs. |
 | `langgraph`                 | [LangGraph](https://github.com/langchain-ai/langgraph)                     | MIT            | Framework guides.             |
 | `react-patterns`            | [React Docs](https://react.dev/)                                           | CC-BY          | Official patterns.            |
 | **All Official Skills**     | [Anthropic / Google / OpenAI / Microsoft / Supabase / Apify / Vercel Labs] | Proprietary    | Usage encouraged by vendors.  |
