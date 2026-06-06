@@ -497,6 +497,7 @@ CURATED_CATEGORY_OVERRIDES = {
     "cpp-pro": "code",
     "cred-omega": "security",
     "csharp-pro": "code",
+    "cv-generator": "content",
     "datadog-automation": "reliability",
     "dependency-upgrade": "development",
     "differential-review": "security",
