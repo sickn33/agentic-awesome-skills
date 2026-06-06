@@ -18,6 +18,14 @@ tags:
 
 # CV Generator Skill — FlowCV / Canva Edition
 
+## When to Use
+
+Use this skill when you need to:
+- Generate a professional, ATS-optimized CV from multiple sources (LinkedIn, GitHub, Portfolio).
+- Tailor an existing CV for a specific Job Description (JD).
+- Improve the language, metrics, and structure of a draft resume.
+- Prepare a paste-ready version of your CV for tools like FlowCV or Canva.
+
 Turns raw profile data into a polished, ATS-ready CV. Outputs a paste-ready plain-text
 version formatted for FlowCV, Canva, Google Docs, or Word — with a flaw report and
 missing-info checklist.
@@ -63,7 +71,7 @@ before writing begins.
 
 ---
 
-## 2. Source selection
+## Source Selection
 
 Ask the user which source(s) to use. At least one is required.
 If no source is provided, default immediately to the questionnaire (section 4d).
@@ -80,9 +88,9 @@ If no source is provided, default immediately to the questionnaire (section 4d).
 
 ---
 
-## 3. Purpose, seniority, and format
+## Purpose, seniority, and format
 
-### 3a. Purpose
+### Purpose
 
 Ask after source selection:
 
@@ -101,7 +109,7 @@ Ask after source selection:
 | Return to work / career break | Frame gap positively; emphasise upskilling |
 | Other | Ask the user to describe the goal in one sentence |
 
-### 3b. Seniority
+### Seniority
 
 Detect from data. If undetectable, **default to mid-level and tell the user:**
 > "I've assumed mid-level (3–8 years). Let me know if this should be different."
@@ -115,7 +123,7 @@ Detect from data. If undetectable, **default to mid-level and tell the user:**
 | Executive / C-suite | 15+ | Strategic narrative; board roles; P&L; 2–3 pages |
 | Academic | Any | No page limit; publications; grants; teaching |
 
-### 3c. Format
+### Format
 
 | Format | Use when |
 |--------|----------|
@@ -128,9 +136,9 @@ Detect from data. If undetectable, **default to mid-level and tell the user:**
 
 ---
 
-## 4. Data extraction rules
+## Data extraction rules
 
-### 4a. LinkedIn URL
+### LinkedIn URL
 
 If the page is blocked or returns no content, **stop immediately** and ask:
 > "LinkedIn blocked the fetch. Please export your LinkedIn profile as a PDF
@@ -150,7 +158,7 @@ If accessible, extract in order:
 11. Languages and proficiency
 12. Publications, patents, courses
 
-### 4b. LinkedIn PDF
+### LinkedIn PDF
 
 Hard rules:
 - Extract only what is physically present in the document.
@@ -161,7 +169,7 @@ Hard rules:
   > "OCR was used to read this document. Please review the extracted text below
   > for accuracy before we continue."
 
-### 4c. Portfolio / personal website
+### Portfolio / personal website
 
 Extract:
 - About / bio → Professional Summary
@@ -172,7 +180,7 @@ Extract:
 - Blog posts or articles → Publications / Thought Leadership
 - Contact details
 
-### 4d. Questionnaire
+### Questionnaire
 
 **One question at a time. Wait for the answer before continuing.**
 Do not display the full list unless the user explicitly asks for a form.
@@ -218,7 +226,7 @@ Q19. Target country or job market
 Q20. Any employment gaps? Dates and brief reason — will be framed constructively.
 ```
 
-### 4e. Existing CV or draft
+### Existing CV or draft
 
 Rules:
 - Preserve every fact: titles, companies, dates, institutions, grades.
@@ -231,7 +239,7 @@ Rules:
 - Restructure section order if it does not match target market or seniority.
 - **Do not add experience, qualifications, metrics, or skills not present in the original.**
 
-### 4f. GitHub profile
+### GitHub profile
 
 Extract:
 - Bio / tagline → supplement Professional Summary
@@ -240,7 +248,7 @@ Extract:
 - README content for context on major projects
 - Do not infer seniority from commit count alone
 
-### 4g. Employment gaps and special situations
+### Employment gaps and special situations
 
 **Gap under 3 months:** no special treatment.
 
@@ -273,7 +281,7 @@ advise the user to have the translation reviewed by a native speaker.
 
 ---
 
-## 5. Multi-source merging
+## Multi-source merging
 
 1. Build a master profile combining all extracted data.
 2. Deduplicate: keep the most detailed version of each entry.
@@ -283,9 +291,9 @@ advise the user to have the translation reviewed by a native speaker.
 
 ---
 
-## 6. CV section order
+## CV section order
 
-### 6a. Chronological (default — mid / senior)
+### Chronological (default — mid / senior)
 ```
 1.  Full Name
 2.  Contact Information (email | phone | LinkedIn | portfolio | city, country)
@@ -303,7 +311,7 @@ advise the user to have the translation reviewed by a native speaker.
 14. Additional Information
 ```
 
-### 6b. Fresh graduate / student
+### Fresh graduate / student
 ```
 1.  Full Name + Contact Information
 2.  Professional Summary / Objective
@@ -316,7 +324,7 @@ advise the user to have the translation reviewed by a native speaker.
 9.  Languages
 ```
 
-### 6c. Functional / skills-first (career changers, large gaps)
+### Functional / skills-first (career changers, large gaps)
 ```
 1.  Full Name + Contact Information
 2.  Professional Summary
@@ -328,7 +336,7 @@ advise the user to have the translation reviewed by a native speaker.
 8.  Languages
 ```
 
-### 6d. Academic CV
+### Academic CV
 ```
 1.  Full Name + Contact + ORCID / ResearchGate
 2.  Research Interests
@@ -345,7 +353,7 @@ advise the user to have the translation reviewed by a native speaker.
 13. References
 ```
 
-### 6e. Executive / Board
+### Executive / Board
 ```
 1.  Full Name + Contact Information
 2.  Executive Summary
@@ -359,9 +367,9 @@ advise the user to have the translation reviewed by a native speaker.
 
 ---
 
-## 7. Writing rules
+## Writing rules
 
-### 7a. Professional Summary
+### Professional Summary
 
 Write 3–5 sentences (executive: 5–7) covering:
 1. Who the person is: job title + years of experience
@@ -379,7 +387,7 @@ Good example:
 > costs 30–40% through cloud-native redesigns. Seeking a staff-level role where
 > systems reliability and platform engineering intersect."
 
-### 7b. Experience bullets — STAR-lite
+### Experience bullets — STAR-lite
 
 Pattern: `[Strong verb] + [what you did] + [scale/scope] + [outcome if available]`
 
@@ -417,7 +425,7 @@ AFTER:  "Led migration from monolith to microservices, cutting deployment time f
          45 minutes to under 4 minutes"
 ```
 
-### 7c. Banned phrases — machine-checkable blocklist
+### Banned phrases — machine-checkable blocklist
 
 Before output, scan the full CV text and **reject any bullet or sentence containing**
 any of the following strings (case-insensitive):
@@ -449,7 +457,7 @@ change agent
 
 If found: rewrite the sentence to show the specific evidence instead.
 
-### 7d. Tense enforcement
+### Tense enforcement
 
 This is a hard gate — output is blocked until tense is correct:
 
@@ -457,7 +465,7 @@ This is a hard gate — output is blocked until tense is correct:
 - **Current role** → all bullets in present tense (Lead, Build, Reduce...)
 - **Mixed tense within one role** → always fail; fix before output
 
-### 7e. Acronym and terminology
+### Acronym and terminology
 
 - Spell out on first use: "Machine Learning (ML)"; use abbreviation thereafter.
 - Consistent capitalisation throughout: "JavaScript" not "Javascript".
@@ -466,9 +474,9 @@ This is a hard gate — output is blocked until tense is correct:
 
 ---
 
-## 8. ATS optimisation
+## ATS optimisation
 
-### 8a. Structural rules
+### Structural rules
 
 | Rule | Why it matters |
 |------|----------------|
@@ -488,7 +496,7 @@ This is a hard gate — output is blocked until tense is correct:
 | File format: .docx preferred for ATS; PDF for email | DOCX parses more accurately in most ATS |
 | File name: FirstName_LastName_CV.docx | Generic names ("resume.pdf") get buried in recruiter files |
 
-### 8b. Keyword strategy
+### Keyword strategy
 
 1. Extract top 10–20 keywords from the JD (if provided).
 2. Categorise: hard skills | soft skills | qualifications | industry terms.
@@ -501,7 +509,7 @@ This is a hard gate — output is blocked until tense is correct:
 5. Include both spelled-out form and abbreviation for key terms.
 6. Mirror exact JD phrasing for shared responsibilities.
 
-### 8c. ATS platform quick notes
+### ATS platform quick notes
 
 | Platform | Key quirk |
 |----------|-----------|
@@ -516,7 +524,7 @@ Default when platform is unknown: apply Taleo-level strictness.
 
 ---
 
-## 9. Job description integration
+## Job description integration
 
 When a JD is provided, run four steps:
 
@@ -549,7 +557,7 @@ Recommendation: even limited Salesforce exposure is worth noting if any exists
 
 ---
 
-## 10. Anti-hallucination enforcement gate
+## Anti-hallucination enforcement gate
 
 Before any output is produced, confirm every item in the CV passes this check.
 **Output is blocked until all items pass.**
@@ -571,14 +579,14 @@ missing information checklist (section 11d). Never fill gaps silently.
 
 ---
 
-## 11. Final output — deliver in this exact order
+## Final output — deliver in this exact order
 
-### 11a. Formatted CV (staging draft)
+### Formatted CV (staging draft)
 
 Clean plain-text draft with clear section labels. Used as the working version
 before generating the tool-specific paste copies below.
 
-### 11b. FlowCV paste-ready version
+### FlowCV paste-ready version
 
 FlowCV uses structured text fields, not free-form documents. Format accordingly:
 
@@ -646,7 +654,7 @@ ADDITIONAL INFORMATION
 [Anything else: open-source, interests relevant to role]
 ```
 
-### 11c. Canva paste-ready version
+### Canva paste-ready version
 
 Canva CV templates use individual text boxes per section. Provide each section as
 a separate clearly labelled block, with no Markdown symbols.
@@ -688,7 +696,7 @@ a separate clearly labelled block, with no Markdown symbols.
 [Language] ([Proficiency])
 ```
 
-### 11d. Missing information checklist
+### Missing information checklist
 
 ```
 MISSING INFORMATION
@@ -702,7 +710,7 @@ MISSING INFORMATION
 [ ] [Any other flagged item]
 ```
 
-### 11e. CV flaw report (scored 0–100)
+### CV flaw report (scored 0–100)
 
 Run all checks. Display a scored report:
 
@@ -733,7 +741,7 @@ Score deductions: -10 per FAIL on truthfulness or hallucination;
 -5 per FAIL on tense, ATS structure, or banned phrases;
 -3 per FAIL on formatting issues.
 
-### 11f. Improvement suggestions (3–7, specific and actionable)
+### Improvement suggestions (3–7, specific and actionable)
 
 - "Your summary does not state the target role. Open with your job title explicitly."
 - "The [Company] role has no metrics. Even approximate scope (team size, users, budget range) strengthens credibility."
@@ -742,7 +750,7 @@ Score deductions: -10 per FAIL on truthfulness or hallucination;
 - "Three bullets begin with 'Responsible for' — replace with direct action verbs."
 - "CV is [N] pages for [N] years of experience. Target is [N] pages; trim older roles to one line."
 
-### 11g. Suggested file name
+### Suggested file name
 
 ```
 Suggested filename: [FirstName]_[LastName]_CV.docx
@@ -750,7 +758,7 @@ Suggested filename: [FirstName]_[LastName]_CV.docx
 
 ---
 
-## 12. Cover letter companion (optional)
+## Cover letter companion (optional)
 
 After the CV output, offer:
 
@@ -769,7 +777,7 @@ Rules:
 
 ---
 
-## 13. Constraints and guardrails
+## Limitations
 
 - **No hallucination.** Never invent a title, company, date, degree, cert, skill, metric, or award.
 - **No fake metrics.** If the user says "we grew a lot", ask for specifics — never insert a percentage.
@@ -782,7 +790,7 @@ Rules:
 
 ---
 
-## 14. Country and market conventions
+## Country and market conventions
 
 | Market | Length | Photo | DOB | Marital status | References |
 |--------|--------|-------|-----|----------------|------------|
@@ -812,7 +820,7 @@ Default when market is unknown: UK / international conventions (no photo, no DOB
 
 ---
 
-## 15. Decision tree
+## Decision tree
 
 ```
 User invokes @cv-generator
@@ -853,13 +861,13 @@ Run banned phrase scan (section 7c) --> fix any found
         |
         v
 Output in order:
-  11a. Formatted CV (staging draft)
-  11b. FlowCV paste-ready version
-  11c. Canva paste-ready version
-  11d. Missing information checklist
-  11e. CV flaw report (scored)
-  11f. Improvement suggestions
-  11g. Suggested file name
+  Formatted CV (staging draft)
+  FlowCV paste-ready version
+  Canva paste-ready version
+  Missing information checklist
+  CV flaw report (scored)
+  Improve suggestions
+  Suggested file name
         |
         v
 Offer cover letter (section 12)
