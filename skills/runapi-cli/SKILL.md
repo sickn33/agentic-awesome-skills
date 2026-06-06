@@ -1,6 +1,6 @@
 ---
 name: runapi-cli
-description: Run RunAPI model jobs from agents using the RunAPI CLI.
+description: Generate AI images, videos, and music/audio from agents using the RunAPI CLI.
 category: development
 risk: safe
 source: official
@@ -18,7 +18,7 @@ license_source: "https://github.com/runapi-ai/cli-skill/blob/main/LICENSE"
 
 ## Overview
 
-The `runapi` CLI is the execution layer for RunAPI model tasks. Use it when an agent needs to run a one-off model job, pass a JSON request body, wait for an async task, or script RunAPI from a terminal, server, or CI job.
+The `runapi` CLI is the execution layer for RunAPI model tasks. Use it when an agent needs to generate AI images, videos, or music/audio, run a one-off model job, pass a JSON request body, wait for an async task, or script RunAPI from a terminal, server, or CI job.
 
 Source repository: [github.com/runapi-ai/cli-skill](https://github.com/runapi-ai/cli-skill) (Apache-2.0)
 
