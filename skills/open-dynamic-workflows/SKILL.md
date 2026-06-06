@@ -45,19 +45,28 @@ Completed work is routed through an adversarial verification pass that challenge
 
 ### Example 1: Run a parallel workflow
 
+ODW is installed from source (clone the repo, then `npm install`). The CLI is
+`odw-daemon` — run it as `npm run odw -- <args>` from inside the repo, or as
+`npx odw-daemon <args>` / a global `odw-daemon` if you link the bin.
+
 ```bash
 # Configure your model provider (bring-your-own-model)
 export ANTHROPIC_API_KEY=...        # or an OpenAI-compatible / Ollama endpoint
 
+# Start the local workflow daemon (once)
+npm run odw -- start
+
 # Plan, orchestrate, and verify a task across parallel agents
-odw run "refactor the auth module and add tests"
+npm run odw -- run --prompt "refactor the auth module and add tests"
 ```
 
 ### Example 2: Use the Codex/Antigravity skill bridge
 
 ```bash
-# ODW ships a SKILL.md + daemon bridge consumed by Codex / Antigravity
-odw daemon start
+# ODW ships a SKILL.md + daemon bridge consumed by Codex / Antigravity.
+# Start the daemon, then run a saved orchestration script through it:
+npm run odw -- start
+npm run odw -- run --script examples/workflows/studio-prime.workflow.js --cwd .
 ```
 
 ## Best Practices
