@@ -2,7 +2,7 @@
 name: article-illustrations
 description: "Generate hand-drawn 16:9 article illustrations featuring the Grav character IP. Turns article concepts into memorable whiteboard-sketch explanations with a recurring floating character, sparse annotations, and absurd metaphors."
 risk: safe
-source: community
+source: "https://github.com/vipin-si/article-illustrations"
 date_added: "2026-06-06"
 ---
 
