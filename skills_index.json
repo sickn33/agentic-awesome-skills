@@ -31955,6 +31955,28 @@
     }
   },
   {
+    "id": "video-content-extractor",
+    "path": "skills/video-content-extractor",
+    "category": "media-processing",
+    "name": "video-content-extractor",
+    "description": "Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped text transcripts.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "videodb",
     "path": "skills/videodb",
     "category": "media",

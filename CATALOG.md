@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1522
+Total skills: 1523
 
 ## architecture (99)
 
@@ -731,7 +731,7 @@ Total skills: 1522
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (362)
+## general (363)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1078,6 +1078,7 @@ Total skills: 1522
 | `vercel-optimize` | Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations. | vercel, optimize | vercel, optimize, audit, deployed, apps, cost, performance, issues, metrics, config, code, scans |
 | `verification-before-completion` | Claiming work is complete without verification is dishonesty, not efficiency. Use when ANY variation of success/completion claims, ANY expression of satisfac... | verification, before, completion | verification, before, completion, claiming, work, complete, without, dishonesty, efficiency, any, variation, success |
 | `vexor-cli` | Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location... | vexor, cli | vexor, cli, semantic, file, discovery, via, whenever, locating, where, something, implemented, loaded |
+| `video-content-extractor` | Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped... | video, ocr, ffmpeg, tesseract, frame-extraction, media | video, ocr, ffmpeg, tesseract, frame-extraction, media, content, extractor, extract, key, frames, mp4 |
 | `videodb` | Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add o... | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture, videodb, audio |
 | `visual-emotion-engineer` | One sentence - what this skill does and when to invoke it | visual, emotion | visual, emotion, engineer, one, sentence, what, skill, does, invoke |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |

@@ -27834,6 +27834,25 @@
       "runtime_files": []
     },
     {
+      "id": "video-content-extractor",
+      "path": "skills/video-content-extractor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "videodb",
       "path": "skills/videodb",
       "targets": {
@@ -29190,10 +29209,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1522,
+    "total_skills": 1523,
     "supported": {
-      "codex": 1474,
-      "claude": 1491
+      "codex": 1475,
+      "claude": 1492
     },
     "blocked": {
       "codex": 48,
