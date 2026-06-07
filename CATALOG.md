@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1523
+Total skills: 1524
 
 ## architecture (99)
 
@@ -197,7 +197,7 @@ Total skills: 1523
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 
-## data-ai (293)
+## data-ai (294)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -434,6 +434,7 @@ Total skills: 1523
 | `recursive-context-pruning-token-budgeting` | Optimizes AI agent performance by pruning redundant context, managing token usage, and enforcing ultra-concise, direct-to-value responses. | efficiency, token-optimization, brevity, context-management | efficiency, token-optimization, brevity, context-management, recursive, context, pruning, token, budgeting, optimizes, ai, agent |
 | `referral-program` | You are an expert in viral growth and referral marketing with access to referral program data and third-party tools. Your goal is to help design and optimize... | referral, program | referral, program, viral, growth, marketing, access, data, third, party, goal, optimize, programs |
 | `robius-state-management` | CRITICAL: Use for Robius state management patterns. Triggers on: AppState, persistence, theme switch, 状态管理, Scope::with_data, save state, load state, serde, ... | robius, state | robius, state, critical, triggers, appstate, persistence, theme, switch, scope, data, save, load |
+| `runapi-cli` | Generate AI images, videos, and music/audio from agents using the RunAPI CLI. | runapi, cli, models, automation, codex, claude, gemini | runapi, cli, models, automation, codex, claude, gemini, generate, ai, images, videos, music |
 | `runaway-guard` | Cost-safety discipline for paid AI / inference APIs: treat $-cost as a third complexity dimension alongside time and space. Forces a written per-run $-cap, p... | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway, runaway, guard, cost, safety |
 | `sankhya-dashboard-html-jsp-custom-best-pratices` | This skill should be used when the user asks for patterns, best practices, creation, or fixing of Sankhya dashboards using HTML, JSP, Java, and SQL. | sankhya, dashboard, jsp, html, sql, best-practices | sankhya, dashboard, jsp, html, sql, best-practices, custom, pratices, skill, should, used, user |
 | `scala-pro` | Master enterprise-grade Scala development with functional programming, distributed systems, and big data processing. Expert in Apache Pekko, Akka, Spark, ZIO... | scala | scala, pro, enterprise, grade, development, functional, programming, distributed, big, data, processing, apache |

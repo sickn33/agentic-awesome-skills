@@ -983,6 +983,7 @@
         "reddit-automation",
         "render-automation",
         "revops",
+        "runapi-cli",
         "salesforce-automation",
         "security-audit",
         "security/aws-secrets-rotation",

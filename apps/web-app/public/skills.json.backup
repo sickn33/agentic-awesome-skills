@@ -25257,6 +25257,28 @@
     }
   },
   {
+    "id": "runapi-cli",
+    "path": "skills/runapi-cli",
+    "category": "development",
+    "name": "runapi-cli",
+    "description": "Generate AI images, videos, and music/audio from agents using the RunAPI CLI.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "runaway-guard",
     "path": "skills/runaway-guard",
     "category": "ai-ml",

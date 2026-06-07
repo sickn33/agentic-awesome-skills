@@ -21932,6 +21932,25 @@
       "runtime_files": []
     },
     {
+      "id": "runapi-cli",
+      "path": "skills/runapi-cli",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "runaway-guard",
       "path": "skills/runaway-guard",
       "targets": {
@@ -29209,10 +29228,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1523,
+    "total_skills": 1524,
     "supported": {
-      "codex": 1475,
-      "claude": 1492
+      "codex": 1476,
+      "claude": 1493
     },
     "blocked": {
       "codex": 48,
