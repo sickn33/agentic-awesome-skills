@@ -8310,6 +8310,25 @@
       "runtime_files": []
     },
     {
+      "id": "cv-generator",
+      "path": "skills/cv-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "daily",
       "path": "skills/daily",
       "targets": {
@@ -19133,6 +19152,25 @@
       "runtime_files": []
     },
     {
+      "id": "open-dynamic-workflows",
+      "path": "skills/open-dynamic-workflows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "openapi-spec-generation",
       "path": "skills/openapi-spec-generation",
       "targets": {
@@ -27796,6 +27834,25 @@
       "runtime_files": []
     },
     {
+      "id": "video-content-extractor",
+      "path": "skills/video-content-extractor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "videodb",
       "path": "skills/videodb",
       "targets": {
@@ -29152,10 +29209,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1520,
+    "total_skills": 1523,
     "supported": {
-      "codex": 1472,
-      "claude": 1489
+      "codex": 1475,
+      "claude": 1492
     },
     "blocked": {
       "codex": 48,

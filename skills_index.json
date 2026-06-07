@@ -9712,6 +9712,28 @@
     }
   },
   {
+    "id": "cv-generator",
+    "path": "skills/cv-generator",
+    "category": "content",
+    "name": "cv-generator",
+    "description": "Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and humanized rewriting. Outputs paste-ready text with an ATS flaw report and improvement suggestions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "daily",
     "path": "skills/daily",
     "category": "uncategorized",
@@ -21999,6 +22021,28 @@
     }
   },
   {
+    "id": "open-dynamic-workflows",
+    "path": "skills/open-dynamic-workflows",
+    "category": "ai-agents",
+    "name": "open-dynamic-workflows",
+    "description": "Plan, orchestrate, and adversarially verify parallel AI coding agents with a dynamic multi-agent workflow engine.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "openapi-spec-generation",
     "path": "skills/openapi-spec-generation",
     "category": "api-integration",
@@ -31897,6 +31941,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "video-content-extractor",
+    "path": "skills/video-content-extractor",
+    "category": "media-processing",
+    "name": "video-content-extractor",
+    "description": "Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped text transcripts.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
     "plugin": {
       "targets": {
         "codex": "supported",

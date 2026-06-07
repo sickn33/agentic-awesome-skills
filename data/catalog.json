@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1520,
+  "total": 1523,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -10843,6 +10843,35 @@
         "party"
       ],
       "path": "skills/customs-trade-compliance/SKILL.md"
+    },
+    {
+      "id": "cv-generator",
+      "name": "cv-generator",
+      "description": "Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and humanized rewriting. Outputs paste-ready text with an ATS flaw report and improvement suggestions.",
+      "category": "general",
+      "tags": [
+        "cv",
+        "resume",
+        "ats",
+        "career",
+        "job-application",
+        "career-change"
+      ],
+      "triggers": [
+        "cv",
+        "resume",
+        "ats",
+        "career",
+        "job-application",
+        "career-change",
+        "generator",
+        "generate",
+        "professional",
+        "optimized",
+        "cvs",
+        "flowcv"
+      ],
+      "path": "skills/cv-generator/SKILL.md"
     },
     {
       "id": "daily",
@@ -24759,6 +24788,34 @@
       "path": "skills/one-drive-automation/SKILL.md"
     },
     {
+      "id": "open-dynamic-workflows",
+      "name": "open-dynamic-workflows",
+      "description": "Plan, orchestrate, and adversarially verify parallel AI coding agents with a dynamic multi-agent workflow engine.",
+      "category": "data-ai",
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "workflow",
+        "adversarial-verification",
+        "coding-agents"
+      ],
+      "triggers": [
+        "multi-agent",
+        "orchestration",
+        "workflow",
+        "adversarial-verification",
+        "coding-agents",
+        "open",
+        "dynamic",
+        "plan",
+        "orchestrate",
+        "adversarially",
+        "verify",
+        "parallel"
+      ],
+      "path": "skills/open-dynamic-workflows/SKILL.md"
+    },
+    {
       "id": "openapi-spec-generation",
       "name": "openapi-spec-generation",
       "description": "Generate and maintain OpenAPI 3.1 specifications from code, design-first specs, and validation patterns. Use when creating API documentation, generating SDKs, or ensuring API contract compliance.",
@@ -35960,6 +36017,35 @@
         "through"
       ],
       "path": "skills/viboscope/SKILL.md"
+    },
+    {
+      "id": "video-content-extractor",
+      "name": "video-content-extractor",
+      "description": "Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped text transcripts.",
+      "category": "general",
+      "tags": [
+        "video",
+        "ocr",
+        "ffmpeg",
+        "tesseract",
+        "frame-extraction",
+        "media"
+      ],
+      "triggers": [
+        "video",
+        "ocr",
+        "ffmpeg",
+        "tesseract",
+        "frame-extraction",
+        "media",
+        "content",
+        "extractor",
+        "extract",
+        "key",
+        "frames",
+        "mp4"
+      ],
+      "path": "skills/video-content-extractor/SKILL.md"
     },
     {
       "id": "videodb",
