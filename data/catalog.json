@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1524,
+  "total": 1525,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2800,6 +2800,34 @@
         "teensy"
       ],
       "path": "skills/arm-cortex-expert/SKILL.md"
+    },
+    {
+      "id": "article-illustrations",
+      "name": "article-illustrations",
+      "description": "Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors.",
+      "category": "general",
+      "tags": [
+        "illustration",
+        "article-graphics",
+        "visual-metaphors",
+        "image-generation",
+        "whiteboard-sketch"
+      ],
+      "triggers": [
+        "illustration",
+        "article-graphics",
+        "visual-metaphors",
+        "image-generation",
+        "whiteboard-sketch",
+        "article",
+        "illustrations",
+        "generate",
+        "hand",
+        "drawn",
+        "16",
+        "grav"
+      ],
+      "path": "skills/article-illustrations/SKILL.md"
     },
     {
       "id": "asana-automation",

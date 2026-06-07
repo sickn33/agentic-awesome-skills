@@ -2142,6 +2142,25 @@
       "runtime_files": []
     },
     {
+      "id": "article-illustrations",
+      "path": "skills/article-illustrations",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "asana-automation",
       "path": "skills/asana-automation",
       "targets": {
@@ -29228,10 +29247,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1524,
+    "total_skills": 1525,
     "supported": {
-      "codex": 1476,
-      "claude": 1493
+      "codex": 1477,
+      "claude": 1494
     },
     "blocked": {
       "codex": 48,
