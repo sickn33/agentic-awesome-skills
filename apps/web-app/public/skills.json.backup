@@ -22021,6 +22021,28 @@
     }
   },
   {
+    "id": "open-dynamic-workflows",
+    "path": "skills/open-dynamic-workflows",
+    "category": "ai-agents",
+    "name": "open-dynamic-workflows",
+    "description": "Plan, orchestrate, and adversarially verify parallel AI coding agents with a dynamic multi-agent workflow engine.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "openapi-spec-generation",
     "path": "skills/openapi-spec-generation",
     "category": "api-integration",

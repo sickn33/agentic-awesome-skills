@@ -19152,6 +19152,25 @@
       "runtime_files": []
     },
     {
+      "id": "open-dynamic-workflows",
+      "path": "skills/open-dynamic-workflows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "openapi-spec-generation",
       "path": "skills/openapi-spec-generation",
       "targets": {
@@ -29171,10 +29190,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1521,
+    "total_skills": 1522,
     "supported": {
-      "codex": 1473,
-      "claude": 1490
+      "codex": 1474,
+      "claude": 1491
     },
     "blocked": {
       "codex": 48,
