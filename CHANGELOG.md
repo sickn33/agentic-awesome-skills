@@ -9,6 +9,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.2.0] - 2026-06-07 - "Education, Media, Workflow, and Creative Skill Intake"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 7 maintainer batch: accepted community PRs for education, media processing, workflow orchestration, media-generation APIs, and article illustration workflows. The catalog is synced to 1,525+ skills, plugin mirrors are refreshed, and the hosted web-app SEO metadata now matches the current catalog count.
+
+## New Skills
+
+- **cv-generator** - ATS-ready CV and resume generation guidance for FlowCV, Canva, and structured career-document workflows.
+- **open-dynamic-workflows** - dynamic multi-agent workflow orchestration guidance for planning, parallel execution, and adversarial verification.
+- **video-content-extractor** - FFmpeg and Tesseract OCR workflows for extracting timestamped screen text and structured Markdown reports from MP4 videos.
+- **runapi-cli** - official RunAPI CLI guidance for generating AI images, videos, music, audio, and related model API jobs.
+- **article-illustrations** - Grav-style hand-drawn article illustration workflow with whiteboard sketches, sparse annotations, visual metaphors, and QA checks.
+
+## Improvements
+
+- Refined `examprep-ai` release metadata and education category support as part of the accepted education skill update.
+- Added README source credits and structured provenance metadata for newly imported external/community skills.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,525-skill catalog.
+- Updated web-app home metadata, `llms.txt`, social preview copy, prerender fallback text, and SEO verification tests from `1,520+` to `1,525+`.
+- Kept PR #642 open because it still targets a non-canonical shadow path and includes generated star-history noise instead of the live registry pipeline.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #658 (`cv-generator` and `examprep-ai` refinements).
+- **[@Suraj1235](https://github.com/Suraj1235)** and **[Suraj1235/open-dynamic-workflows](https://github.com/Suraj1235/open-dynamic-workflows)** for PR #659 (`open-dynamic-workflows`).
+- **[@274326424](https://github.com/274326424)** and **[274326424/video-content-extractor](https://github.com/274326424/video-content-extractor)** for PR #660 (`video-content-extractor`).
+- **[@runapi-builder](https://github.com/runapi-builder)** and **[runapi-ai/cli-skill](https://github.com/runapi-ai/cli-skill)** for PR #661 (`runapi-cli`).
+- **[@vipin-si](https://github.com/vipin-si)** and **[vipin-si/article-illustrations](https://github.com/vipin-si/article-illustrations)** for PR #662 (`article-illustrations`).
+
 ## [12.1.0] - 2026-06-05 - "Community Skills, Release Sync, and Dependency Hardening"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
