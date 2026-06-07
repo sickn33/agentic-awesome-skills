@@ -18,5 +18,5 @@ Use this when optimizing opencode's permission settings, reviewing allowed comma
 
 - **Config review**: Loads `~/.config/opencode/opencode.json` or project-level config
 - **Permission summary**: Identifies currently allowed commands and skill permissions
-- **Safe commands**: Suggests read-only commands (ls*, git status*, git log*, rg, grep, cat, etc.)
+- **Safe commands**: Suggests reviewed read-only commands such as `git status --short`, `git log --oneline`, `rg`, `grep`, and `cat`; broad trailing wildcards need manual review.
 - **Change application**: Edits config to add/remove permission entries, validates JSON

@@ -2,7 +2,7 @@
 name: polis-protocol
 description: "Coordinate multi-vendor AI agents as a self-improving team — a learning router assigns work by track record and citizens can amend the protocol's own rules."
 category: orchestration
-risk: safe
+risk: critical
 source: community
 source_repo: yehudalevy-collab/polis-protocol
 source_type: community
@@ -12,6 +12,10 @@ tags: [multi-agent, coordination, routing, orchestration, governance, vendor-agn
 tools: [claude, cursor, gemini, codex, antigravity]
 license: "MIT"
 license_source: "https://github.com/yehudalevy-collab/polis-protocol/blob/main/LICENSE"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
 ---
 
 # Polis Protocol — a team of agents that develops
@@ -33,11 +37,13 @@ In Antigravity specifically, this turns Manager View's fixed pipeline into a tea
 
 ### Step 1: Found a polis
 
-Clone the repo and run the scaffolder directly (review `install.sh` first if you prefer the one-line installer):
+Clone a reviewed revision of the repo and run the scaffolder directly (review `install.sh` first if you prefer the one-line installer):
 
 ```bash
 git clone https://github.com/yehudalevy-collab/polis-protocol.git
-python3 polis-protocol/scripts/init_polis.py \
+cd polis-protocol
+git checkout <reviewed-commit-sha>
+python3 scripts/init_polis.py \
   --project-root . \
   --agent-id gemini-antigravity-yourproject \
   --vendor google --model gemini-3 --tool antigravity
@@ -68,7 +74,9 @@ A settled contract files a lesson; `--reconcile` folds it into `routing_stats.ym
 
 ```bash
 git clone https://github.com/yehudalevy-collab/polis-protocol.git
-cd polis-protocol && bash scripts/demo.sh
+cd polis-protocol
+git checkout <reviewed-commit-sha>
+bash scripts/demo.sh
 ```
 
 The router recommends Gemini for a Spanish-translation contract — because settled work taught it she has the best record on that tag, not because anyone reassigned it.
@@ -91,3 +99,4 @@ python3 scripts/route_contract.py --polis-root examples/research-team/_polis \
 - Routing quality depends on accurate citizen capability cards and enough settled work history to learn from.
 - The protocol coordinates agent work but does not replace review, tests, or explicit maintainer approval.
 - Multi-agent voting and amendments can add process overhead for small, single-owner tasks.
+- The upstream scripts are external code; pin to a reviewed commit and run `--dry-run` before allowing writes to a project.

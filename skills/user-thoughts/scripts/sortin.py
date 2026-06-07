@@ -5,7 +5,18 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-from common import find_ustht, read_define_ini, write_define_ini, is_processed, validate_dim_name
+from common import (
+    ensure_runtime_dir,
+    safe_markdown_files,
+    safe_markdown_tree,
+    safe_read_text,
+    safe_write_text,
+    find_ustht,
+    read_define_ini,
+    write_define_ini,
+    is_processed,
+    validate_dim_name,
+)
 
 HELP = """Usage: python sortin.py [--dry] [--help]
 
@@ -18,7 +29,7 @@ Options:
 """
 
 
-def parse_raw_file(filepath: Path):
+def parse_raw_file(ustht: Path, filepath: Path):
     """Parse raw entries from one file."""
     entries = []
     date = filepath.stem.split("-", 3)
@@ -27,7 +38,7 @@ def parse_raw_file(filepath: Path):
     else:
         date = datetime.now().strftime("%Y-%m-%d")
 
-    for line in filepath.read_text(encoding="utf-8").splitlines():
+    for line in safe_read_text(ustht, filepath).splitlines():
         line = line.strip()
         match = re.match(r"^- \[(\d{2}:\d{2})\] (.*)$", line)
         if not match:
@@ -51,31 +62,31 @@ def dim_path(mdbase: Path, dim: str) -> Path:
     return mdbase / "details" / f"{dim}.md"
 
 
-def count_entries(path: Path) -> int:
+def count_entries(ustht: Path, path: Path) -> int:
     if not path.exists():
         return 0
-    return sum(1 for line in path.read_text(encoding="utf-8").splitlines() if line.strip().startswith("- "))
+    return sum(1 for line in safe_read_text(ustht, path).splitlines() if line.strip().startswith("- "))
 
 
-def append_entries(path: Path, entries):
+def append_entries(ustht: Path, path: Path, entries):
     """Append entries grouped by date to one dimension file."""
     by_date = defaultdict(list)
     for entry in entries:
         by_date[entry["date"]].append(entry)
 
-    path.parent.mkdir(parents=True, exist_ok=True)
+    ensure_runtime_dir(ustht, path.parent, create=True)
     if not path.exists():
         title = path.stem.replace("-", " ").title()
-        path.write_text(f"# {title}\n\n> Project memory for `{path.stem}`.\n\n", encoding="utf-8")
+        safe_write_text(ustht, path, f"# {title}\n\n> Project memory for `{path.stem}`.\n\n")
 
-    content = path.read_text(encoding="utf-8").rstrip()
+    content = safe_read_text(ustht, path).rstrip()
     for date, date_entries in sorted(by_date.items()):
         lines = [f"- {entry['text']}" for entry in date_entries]
         block = "\n".join(lines)
         heading = f"## {date}"
-        if heading in content:
-            content_lines = content.splitlines()
-            heading_idx = next(i for i, line in enumerate(content_lines) if line.strip() == heading)
+        content_lines = content.splitlines()
+        heading_idx = next((i for i, line in enumerate(content_lines) if line.strip() == heading), None)
+        if heading_idx is not None:
             insert_idx = len(content_lines)
             for i in range(heading_idx + 1, len(content_lines)):
                 if content_lines[i].startswith("## "):
@@ -92,31 +103,31 @@ def append_entries(path: Path, entries):
             content = "\n".join(before).rstrip()
         else:
             content = f"{content}\n\n{heading}\n\n{block}".rstrip()
-    path.write_text(content + "\n", encoding="utf-8")
+    safe_write_text(ustht, path, content + "\n")
 
 
-def mark_processed(filepath: Path):
+def mark_processed(ustht: Path, filepath: Path):
     """Insert the processed marker at the top of a raw file."""
-    content = filepath.read_text(encoding="utf-8")
+    content = safe_read_text(ustht, filepath)
     if content.split("\n", 1)[0].strip() != "<!-- processed -->":
-        filepath.write_text("<!-- processed -->\n" + content, encoding="utf-8")
+        safe_write_text(ustht, filepath, "<!-- processed -->\n" + content)
 
 
-def update_index(mdbase: Path):
+def update_index(ustht: Path, mdbase: Path):
     """Rebuild mdbase/README.ai.md with dimension counts."""
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     details = mdbase / "details"
     dims = []
     if details.exists():
-        dims = sorted(p.relative_to(details).with_suffix("").as_posix() for p in details.rglob("*.md"))
+        dims = sorted(p.relative_to(details).with_suffix("").as_posix() for p in safe_markdown_tree(ustht, details))
 
     rows = ["| File | Dimension | Entries |", "|------|-----------|---------|"]
     backlog = mdbase / "backlog.md"
     if backlog.exists():
-        rows.append(f"| [backlog.md](backlog.md) | backlog | {count_entries(backlog)} |")
+        rows.append(f"| [backlog.md](backlog.md) | backlog | {count_entries(ustht, backlog)} |")
     for dim in dims:
         path = details / f"{dim}.md"
-        rows.append(f"| [details/{dim}.md](details/{dim}.md) | {dim} | {count_entries(path)} |")
+        rows.append(f"| [details/{dim}.md](details/{dim}.md) | {dim} | {count_entries(ustht, path)} |")
 
     content = "\n".join([
         "# user-thoughts mdbase Index",
@@ -137,7 +148,7 @@ def update_index(mdbase: Path):
         *rows,
         "",
     ])
-    (mdbase / "README.ai.md").write_text(content, encoding="utf-8")
+    safe_write_text(ustht, mdbase / "README.ai.md", content)
 
 
 def main():
@@ -161,7 +172,7 @@ def main():
         print("No unprocessed records.")
         return
 
-    raw_files = [f for f in sorted(raw_dir.glob("*.md")) if not is_processed(f)]
+    raw_files = [f for f in safe_markdown_files(ustht, raw_dir) if not is_processed(f, ustht)]
     if not raw_files:
         print("No unprocessed records. All raw files are marked processed.")
         return
@@ -169,7 +180,7 @@ def main():
     all_entries = []
     entries_by_file = {}
     for f in raw_files:
-        entries = parse_raw_file(f)
+        entries = parse_raw_file(ustht, f)
         entries_by_file[f] = entries
         all_entries.extend(entries)
 
@@ -194,16 +205,16 @@ def main():
         return
 
     for dim, entries in grouped.items():
-        append_entries(dim_path(mdbase, dim), entries)
+        append_entries(ustht, dim_path(mdbase, dim), entries)
 
     for f in raw_files:
         if entries_by_file.get(f):
-            mark_processed(f)
+            mark_processed(ustht, f)
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     cfg["LAST_SORTIN"] = now
     write_define_ini(ustht, cfg)
-    update_index(mdbase)
+    update_index(ustht, mdbase)
     print(f"  LAST_SORTIN updated to {now}")
 
 

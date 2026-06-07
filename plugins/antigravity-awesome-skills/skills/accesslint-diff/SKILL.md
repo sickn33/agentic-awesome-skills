@@ -36,7 +36,10 @@ Branch switching triggers a rebuild but not a browser reload — the CLI opens a
 
 ```bash
 git diff --quiet && git diff --cached --quiet || git stash push -u -m "accesslint-diff-branch"
-git checkout <branch>
+branch="<branch>"
+git check-ref-format --branch "$branch" >/dev/null
+case "$branch" in -*) echo "Refusing option-like branch name: $branch" >&2; exit 1 ;; esac
+git checkout -- "$branch"
 npx -y @accesslint/cli@latest "<url>" --port "$PORT" --snapshot accesslint-diff --snapshot-dir /tmp --update-snapshot [--wait-for "<selector>"]
 git checkout - && git stash pop 2>/dev/null
 npx -y @accesslint/cli@latest "<url>" --port "$PORT" --snapshot accesslint-diff --snapshot-dir /tmp --format json [--wait-for "<selector>"]

@@ -2,7 +2,7 @@
 name: open-dynamic-workflows
 description: "Plan, orchestrate, and adversarially verify parallel AI coding agents with a dynamic multi-agent workflow engine."
 category: ai-agents
-risk: safe
+risk: critical
 source: community
 source_repo: Suraj1235/open-dynamic-workflows
 source_type: community

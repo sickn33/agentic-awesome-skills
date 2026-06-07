@@ -2,7 +2,7 @@
 name: runapi-cli
 description: Generate AI images, videos, and music/audio from agents using the RunAPI CLI.
 category: development
-risk: safe
+risk: critical
 source: official
 source_repo: runapi-ai/cli-skill
 source_type: official
@@ -57,6 +57,8 @@ sh runapi-install.sh --version v0.1.0
 The installer detects OS and architecture, verifies the SHA-256 checksum from `https://runapi.ai/cli/latest.json`, and refuses to write the binary if verification fails.
 
 ## Authentication
+
+Treat RunAPI authentication and generation as security-sensitive: commands can call remote services, consume credits, and expose account state. Review installer scripts before running them and keep API keys in environment variables or stdin, not shell history.
 
 Check the current state first:
 

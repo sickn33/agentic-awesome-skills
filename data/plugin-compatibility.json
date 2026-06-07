@@ -84,16 +84,18 @@
         "claude": "supported"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Install Python requirements and configure a 2slides API key before running generation scripts.",
+        "docs": "SKILL.md"
       },
       "reasons": [],
       "blocked_reasons": {
         "codex": [],
         "claude": []
       },
-      "runtime_files": []
+      "runtime_files": [
+        "requirements.txt"
+      ]
     },
     {
       "id": "3d-web-experience",
@@ -20031,18 +20033,24 @@
       "id": "polis-protocol",
       "path": "skills/polis-protocol",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -29249,13 +29257,13 @@
   "summary": {
     "total_skills": 1525,
     "supported": {
-      "codex": 1477,
-      "claude": 1494
+      "codex": 1476,
+      "claude": 1493
     },
     "blocked": {
-      "codex": 48,
-      "claude": 31
+      "codex": 49,
+      "claude": 32
     },
-    "manual_setup": 4
+    "manual_setup": 5
   }
 }

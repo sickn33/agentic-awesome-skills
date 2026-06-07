@@ -2,7 +2,7 @@
 import sys
 from pathlib import Path
 
-from common import find_ustht, is_processed
+from common import find_ustht, is_processed, safe_markdown_files, safe_read_text
 
 HELP = """Usage: python show_raw.py [--help]
 
@@ -25,13 +25,13 @@ def main():
         print("No unprocessed records.")
         return
 
-    files = [f for f in sorted(raw_dir.glob("*.md"), reverse=True) if not is_processed(f)]
+    files = [f for f in safe_markdown_files(ustht, raw_dir, reverse=True) if not is_processed(f, ustht)]
     if not files:
         print("No unprocessed records. All raw files are marked processed.")
         return
 
     for f in files:
-        content = f.read_text(encoding="utf-8").strip()
+        content = safe_read_text(ustht, f).strip()
         entry_count = sum(1 for line in content.splitlines() if line.strip().startswith("- ["))
         print(f"#{f.name} ({entry_count} unprocessed entries):")
         print(content)

@@ -2,7 +2,7 @@
 import sys
 from pathlib import Path
 
-from common import find_ustht, validate_dim_name
+from common import find_ustht, safe_markdown_tree, safe_read_text, validate_dim_name
 
 HELP = """Usage: python show_mdbase.py show [--all|--dimension] [--help]
 
@@ -18,14 +18,14 @@ def show_index(mdbase: Path):
     if not index.exists():
         print("mdbase/README.ai.md does not exist.")
         return
-    print(index.read_text(encoding="utf-8"))
+    print(safe_read_text(mdbase.parent, index))
 
 
 def list_dims(mdbase: Path):
     details = mdbase / "details"
     if not details.exists():
         return []
-    return sorted(p.relative_to(details).with_suffix("").as_posix() for p in details.rglob("*.md"))
+    return sorted(p.relative_to(details).with_suffix("").as_posix() for p in safe_markdown_tree(mdbase.parent, details))
 
 
 def show_dim(mdbase: Path, dim: str):
@@ -39,7 +39,7 @@ def show_dim(mdbase: Path, dim: str):
     if not path.exists():
         print(f"mdbase/details/{dim}.md does not exist yet.")
         return
-    print(path.read_text(encoding="utf-8"))
+    print(safe_read_text(mdbase.parent, path))
 
 
 def show_all(mdbase: Path):
@@ -54,7 +54,7 @@ def show_all(mdbase: Path):
     print(f"mdbase has {len(dims)} dimensions:")
     for dim in dims:
         path = details / f"{dim}.md"
-        lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip().startswith("- ")]
+        lines = [line for line in safe_read_text(mdbase.parent, path).splitlines() if line.strip().startswith("- ")]
         print(f"  {dim}.md: {len(lines)} entries")
 
 

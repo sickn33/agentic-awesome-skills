@@ -13,6 +13,10 @@ function pluginDocUrl(): string {
   return `${repoBaseUrl}/blob/main/docs/users/plugins.md`;
 }
 
+function bundleDocUrl(): string {
+  return `${repoBaseUrl}/blob/main/docs/users/bundles.md`;
+}
+
 export function Plugins(): React.ReactElement {
   usePageMeta(buildPluginsMeta(specializedPlugins.length));
 
@@ -148,7 +152,7 @@ function PluginSection({
                 View plugin folder
               </a>
               <a
-                href={`${repoBaseUrl}/blob/main/docs/users/bundles.md#${plugin.id}`}
+                href={bundleDocUrl()}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"

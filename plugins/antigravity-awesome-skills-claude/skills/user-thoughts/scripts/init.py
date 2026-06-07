@@ -3,7 +3,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from common import find_skill_dir
+from common import UsthtSafetyError, find_skill_dir
 
 HELP = """Usage: python init.py [--help]
 
@@ -34,6 +34,8 @@ def main():
 
     target = Path.cwd() / ".ustht"
     if target.exists():
+        if target.is_symlink():
+            raise UsthtSafetyError(f"Refusing symlinked runtime directory: {target}")
         print("Already initialized; .ustht/ exists, skipping creation.")
         sys.exit(0)
 
