@@ -19,6 +19,14 @@ tags:
 
 # ExamPrep AI
 
+## When to Use
+
+Use this skill when you need to:
+- Convert a syllabus, past papers, or study notes into a prioritized roadmap.
+- Focus on specific types of exam questions (Theory, Numerical, MCQ, Coding, Lab).
+- Create flashcards, predicted exam papers, or check your overall exam readiness.
+- Perform last-minute revision or deep-dive into important exam topics.
+
 ## 🎯 Selective Reading Rule — Read ONLY the section matching the request
 
 | What the student asks for | Jump to |

@@ -8310,6 +8310,25 @@
       "runtime_files": []
     },
     {
+      "id": "cv-generator",
+      "path": "skills/cv-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "daily",
       "path": "skills/daily",
       "targets": {
@@ -29152,10 +29171,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1520,
+    "total_skills": 1521,
     "supported": {
-      "codex": 1472,
-      "claude": 1489
+      "codex": 1473,
+      "claude": 1490
     },
     "blocked": {
       "codex": 48,

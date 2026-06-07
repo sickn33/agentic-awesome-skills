@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1520,
+  "total": 1521,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -10843,6 +10843,35 @@
         "party"
       ],
       "path": "skills/customs-trade-compliance/SKILL.md"
+    },
+    {
+      "id": "cv-generator",
+      "name": "cv-generator",
+      "description": "Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and humanized rewriting. Outputs paste-ready text with an ATS flaw report and improvement suggestions.",
+      "category": "general",
+      "tags": [
+        "cv",
+        "resume",
+        "ats",
+        "career",
+        "job-application",
+        "career-change"
+      ],
+      "triggers": [
+        "cv",
+        "resume",
+        "ats",
+        "career",
+        "job-application",
+        "career-change",
+        "generator",
+        "generate",
+        "professional",
+        "optimized",
+        "cvs",
+        "flowcv"
+      ],
+      "path": "skills/cv-generator/SKILL.md"
     },
     {
       "id": "daily",
