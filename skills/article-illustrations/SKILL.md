@@ -1,9 +1,17 @@
 ---
 name: article-illustrations
-description: "Generate hand-drawn 16:9 article illustrations featuring the Grav character IP. Turns article concepts into memorable whiteboard-sketch explanations with a recurring floating character, sparse annotations, and absurd metaphors."
+description: "Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors."
+category: creative
 risk: safe
-source: "https://github.com/vipin-si/article-illustrations"
+source: community
+source_repo: vipin-si/article-illustrations
+source_type: community
+license: MIT
+license_source: https://github.com/vipin-si/article-illustrations/blob/main/LICENSE
 date_added: "2026-06-06"
+author: vipin-si
+tags: [illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch]
+tools: [image-generation]
 ---
 
 # Article Illustrations — Grav Hand-Drawn Style
@@ -126,6 +134,13 @@ driving the structure.
 - ❌ Don't add title bars or decorative frames
 - ❌ Don't let Grav touch the ground or stand on surfaces
 - ❌ Don't make Grav cute, smiling, or emoji-like
+
+## Limitations
+
+- Requires access to an image-generation tool that can follow composition, line-art, and annotation constraints.
+- The recurring Grav character style can drift between generations; verify every output against the QA checklist.
+- Text in generated images may be misspelled or distorted, so short labels and post-generation review are required.
+- The style is intended for explanatory article illustrations, not photorealistic product imagery or brand-final artwork.
 
 ## Common Pitfalls
 
