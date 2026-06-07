@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.2.1] - 2026-06-07 - "Security Scan Follow-up"
+
+> Patch release for the June 7 security scan remediation after `12.2.0`.
+
+## Security
+
+- Hardened `user-thoughts` runtime file handling against symlink traversal and realpath escapes inside `.ustht/`.
+- Fixed tar archive validation to prefer PAX `path` / `linkpath` headers before GNU long-name headers.
+- Replaced risky documentation examples for unquoted Git branches, placeholder `git add`, predictable `/tmp` installer paths, token-printing Vercel commands, and unsafe JSON-LD injection.
+- Removed public Google and Bing site-verification tokens from the web app.
+- Raised risk labels and plugin metadata for external-code and remote-execution skills, including `runapi-cli`, `open-dynamic-workflows`, and `polis-protocol`.
+
+## Improvements
+
+- Marked `2slides-ppt-generator` plugin setup as manual with declared Python requirements.
+- Fixed broken plugin bundle links and the mobile plugin skill list.
+- Regenerated plugin compatibility reports, skill indexes, web assets, and plugin mirrors after the remediation.
+
 ## [12.2.0] - 2026-06-07 - "Education, Media, Workflow, and Creative Skill Intake"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
