@@ -112,7 +112,7 @@ const initPush = async () => {
 
 ## Performance Best Practices
 
-- Use **WKWebView** rendering (default in Capacitor)
+- Ensure hardware acceleration is enabled for the application in AndroidManifest.xml (default in Capacitor)
 - Enable HTTP caching in Android WebView settings
 - Lazy-load routes with React.lazy / dynamic imports
 - Avoid `setTimeout`/`setInterval` for animations; use CSS transitions

@@ -304,6 +304,18 @@ public class ItemRepository {
         this.apiService = ApiClient.getInstance();
     }
 
+    // Synchronous fetch for ViewModel executor
+    public List<Item> getItems() throws Exception {
+        Response<List<ItemDto>> response = apiService.getItems().execute();
+        if (response.isSuccessful() && response.body() != null) {
+            return response.body().stream()
+                .map(ItemMapper::toDomain)
+                .collect(Collectors.toList());
+        } else {
+            throw new IOException("HTTP " + response.code());
+        }
+    }
+
     // Observe cached data (returns LiveData — auto updates UI)
     public LiveData<List<Item>> observeItems() {
         return Transformations.map(itemDao.observeAll(), entities ->

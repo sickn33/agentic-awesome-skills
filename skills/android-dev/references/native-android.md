@@ -97,6 +97,12 @@ class ItemRepositoryImpl @Inject constructor(
         val dto = remoteSource.fetchItems()
         localSource.insertAll(mapper.toEntity(dto))
     }
+
+    override suspend fun getItemById(id: String): Result<Item> = runCatching {
+        // Example implementation fetching from local cache
+        val entity = localSource.getById(id) ?: throw Exception("Item not found")
+        mapper.toDomain(entity)
+    }
 }
 ```
 
