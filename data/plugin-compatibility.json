@@ -1222,6 +1222,25 @@
       "runtime_files": []
     },
     {
+      "id": "android-dev",
+      "path": "skills/android-dev",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "android-jetpack-compose-expert",
       "path": "skills/android-jetpack-compose-expert",
       "targets": {
@@ -29274,10 +29293,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1526,
+    "total_skills": 1527,
     "supported": {
-      "codex": 1477,
-      "claude": 1494
+      "codex": 1478,
+      "claude": 1495
     },
     "blocked": {
       "codex": 49,

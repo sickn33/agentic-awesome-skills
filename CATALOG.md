@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1526
+Total skills: 1527
 
 ## architecture (99)
 
@@ -497,12 +497,13 @@ Total skills: 1526
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (215)
+## development (216)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
 | `3d-web-experience` | Expert in building 3D experiences for the web - Three.js, React Three Fiber, Spline, WebGL, and interactive 3D scenes. Covers product configurators, 3D portf... | 3d, web, experience | 3d, web, experience, building, experiences, three, js, react, fiber, spline, webgl, interactive |
 | `algolia-search` | Expert patterns for Algolia search implementation, indexing strategies, React InstantSearch, and relevance tuning | algolia, search | algolia, search, indexing, react, instantsearch, relevance, tuning |
+| `android-dev` | Production-grade Android app development guide covering native (Kotlin/Java), cross-platform (Flutter, RN, KMM), and hybrid architectures. | android, dev | android, dev, grade, app, development, covering, native, kotlin, java, cross, platform, flutter |
 | `android-jetpack-compose-expert` | Expert guidance for building modern Android UIs with Jetpack Compose, covering state management, navigation, performance, and Material Design 3. | android, jetpack, compose | android, jetpack, compose, guidance, building, uis, covering, state, navigation, performance, material |
 | `android_ui_verification` | Automated end-to-end UI testing and verification on an Android Emulator using ADB. | android_ui_verification | android_ui_verification, android, ui, verification, automated, testing, emulator, adb |
 | `animejs-animation` | Advanced JavaScript animation library skill for creating complex, high-performance web animations. | animejs, animation | animejs, animation, javascript, library, skill, creating, complex, high, performance, web, animations |
