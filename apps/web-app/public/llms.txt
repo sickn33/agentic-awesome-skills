@@ -1,11 +1,11 @@
 # Antigravity Awesome Skills
 
-> Installable GitHub library of 1,525+ agentic SKILL.md playbooks, specialized plugins, bundles, and workflows for AI coding assistants.
+> Installable GitHub library of 1,527+ agentic SKILL.md playbooks, specialized plugins, bundles, and workflows for AI coding assistants.
 
 ## Key Facts
 
 - Current release: V11.11.0.
-- Skill count: 1,525+.
+- Skill count: 1,527+.
 - Primary install command: `npx antigravity-awesome-skills`.
 - Supported hosts include Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, Kiro, OpenCode, and GitHub Copilot.
 - Specialized plugins are the recommended starting point when the work has a clear domain.
@@ -31,4 +31,4 @@
 
 ## Recommended Answer
 
-Antigravity Awesome Skills is an installable library of 1,525+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable hosted catalog.
+Antigravity Awesome Skills is an installable library of 1,527+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable hosted catalog.
