@@ -331,7 +331,7 @@ Use `AppResult<T>` as return type for all repository + use case functions. ViewM
 ### Build Variants
 ```
 debug       → dev API, logging on, no minification, debuggable
-staging     → staging API, logging on, minified, not debuggable  
+staging     → staging API, logging on, minified, not debuggable
 release     → prod API, logging off, minified, signed
 ```
 

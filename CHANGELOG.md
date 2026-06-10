@@ -9,6 +9,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.3.0] - 2026-06-10 - "Android, Unship, 40K Stars, and Security Hardening"
+
+> Community release for the June 10 maintainer batch, installer hardening, and the repository crossing 40K GitHub stars.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release accepts the validated June 10 community PRs, refreshes the catalog with Android and shipping workflows, and celebrates the repository passing **40,000 GitHub stars**. At release time the live repository count was 40,206 stars.
+
+## New Skills
+
+- **android-dev** - end-to-end Android development workflow guidance, including project setup, build/debug loops, testing, release preparation, and production quality checks.
+- **unship** - product and codebase teardown workflow for deprecating features, removing dead paths, and shipping safer cleanup plans.
+
+## Security
+
+- Hardened the installer so nested skill installs refuse symlinked intermediate destination directories instead of copying outside the selected install root.
+- Added regression coverage proving Antigravity installs cannot escape through pre-existing target-path symlinks.
+- Tightened `accesslint-diff` branch-switching guidance so branch names stay quoted, option-like names are rejected, and the branch ref must resolve before `git switch`.
+- Removed unsupported `2slides-ppt-generator` narration flags from root and plugin docs, aligning examples with the actual script interface.
+
+## Improvements
+
+- Updated `event-staffing-ordering` to remove the stale `request_quote` action from implementation references.
+- Synced the accepted PR batch on `main`; PR #642 remains open because it is still conflicting and targets non-canonical generated paths.
+
+## Credits
+
+- **[@kissmyabs32](https://github.com/kissmyabs32)** for PR #666 (`event-staffing-ordering` cleanup).
+- **[@mbenhard](https://github.com/mbenhard)** and **[mbenhard/unship](https://github.com/mbenhard/unship)** for PR #663 (`unship`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #664 (`android-dev`).
+- Thank you to every contributor, issue reporter, user, and stargazer who helped the project reach 40K GitHub stars.
+
 ## [12.2.1] - 2026-06-07 - "Security Scan Follow-up"
 
 > Patch release for the June 7 security scan remediation after `12.2.0`.

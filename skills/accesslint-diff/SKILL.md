@@ -34,14 +34,17 @@ npx -y @accesslint/cli@latest "<url>" --port "$PORT" --snapshot accesslint-diff 
 
 Branch switching triggers a rebuild but not a browser reload — the CLI opens a fresh tab each time so it always reads the current build. Use `--wait-for "<selector>"` to gate the audit until the rebuild is ready; without it, warn the user that a slow build may yield a stale baseline.
 
+Keep the branch value in the quoted `branch` variable below; never paste or evaluate a branch name as shell syntax.
+
 ```bash
 git diff --quiet && git diff --cached --quiet || git stash push -u -m "accesslint-diff-branch"
 branch="<branch>"
 git check-ref-format --branch "$branch" >/dev/null
 case "$branch" in -*) echo "Refusing option-like branch name: $branch" >&2; exit 1 ;; esac
-git checkout -- "$branch"
+git rev-parse --verify --quiet "$branch^{commit}" >/dev/null
+git switch "$branch"
 npx -y @accesslint/cli@latest "<url>" --port "$PORT" --snapshot accesslint-diff --snapshot-dir /tmp --update-snapshot [--wait-for "<selector>"]
-git checkout - && git stash pop 2>/dev/null
+git switch - && git stash pop 2>/dev/null
 npx -y @accesslint/cli@latest "<url>" --port "$PORT" --snapshot accesslint-diff --snapshot-dir /tmp --format json [--wait-for "<selector>"]
 ```
 
