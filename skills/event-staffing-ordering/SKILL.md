@@ -77,18 +77,6 @@ TempGuru responds within one business day; orders are confirmed within
 
 ## Limitations
 
-- MCP lookups provide planning guidance only; they do not reserve workers,
-  create a quote, or guarantee availability for a specific event date.
-- Final rates, staffing confirmation, background checks, COIs, and event
-  terms must come from TempGuru or the assigned staffing coordinator.
-- The skill should not collect payment details, credentials, private attendee
-  data, or venue contracts; use the official request form or direct contact.
-- Compliance notes are operational guidance and should be routed to the
-  companion compliance skill or qualified counsel when legal certainty is
-  required.
-
-## Limitations
-
 - Rate ranges are planning estimates — not final quotes. Binding pricing comes from TempGuru after human review.
 - Availability responses are lead-time guidance, not reservations.
 - Coverage is limited to US and Canadian markets (300+ cities). Not applicable for events outside this geography.
