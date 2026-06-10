@@ -31249,6 +31249,28 @@
     }
   },
   {
+    "id": "unship",
+    "path": "skills/unship",
+    "category": "development",
+    "name": "unship",
+    "description": "Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "unslop",
     "path": "skills/unslop",
     "category": "writing",

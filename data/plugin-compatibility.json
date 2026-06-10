@@ -27224,6 +27224,25 @@
       "runtime_files": []
     },
     {
+      "id": "unship",
+      "path": "skills/unship",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "unslop",
       "path": "skills/unslop",
       "targets": {
@@ -29255,10 +29274,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1525,
+    "total_skills": 1526,
     "supported": {
-      "codex": 1476,
-      "claude": 1493
+      "codex": 1477,
+      "claude": 1494
     },
     "blocked": {
       "codex": 49,
