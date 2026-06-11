@@ -54,23 +54,26 @@ long-running MCP process.
 
 ### Step 1: Verify dependencies
 
-Three Python packages are required. The skill should check once per session:
+Three Python packages are required. The skill should check once per session,
+using the **same interpreter** to import-check and install so the dependency
+check and install target stay in sync:
 
 ```bash
-python -c "import httpx, arxiv, fitz" 2>&1 || pip install httpx arxiv PyMuPDF
+python -c "import httpx, arxiv, fitz" 2>&1 || python -m pip install httpx arxiv PyMuPDF
 ```
 
 If `python` is not on PATH, fall back to `py` (Windows launcher) or the
-absolute interpreter path.
+absolute interpreter path — and remember to invoke pip via the same
+interpreter, e.g. `py -m pip install httpx arxiv PyMuPDF`.
 
 ### Step 2: Invoke the bundled CLI
 
-The script lives at `${CLAUDE_PLUGIN_ROOT}/scripts/papers.py` when installed
-as a Claude Code plugin, or wherever you placed it in standalone use. Always
-quote the path so it survives spaces.
+The script lives at `${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py`
+and is bundled with this skill (no separate install needed). Always quote the
+path so it survives spaces.
 
 ```bash
-python "${CLAUDE_PLUGIN_ROOT}/scripts/papers.py" <subcommand> [args]
+python "${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py" <subcommand> [args]
 ```
 
 ### Step 3: Pick the right subcommand
@@ -93,7 +96,7 @@ long hex strings are treated as Semantic Scholar `paperId`s.
 ### Example 1: Literature scan on a topic
 
 ```bash
-python "${CLAUDE_PLUGIN_ROOT}/scripts/papers.py" search "retrieval augmented generation" --limit 10
+python "${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py" search "retrieval augmented generation" --limit 10
 ```
 
 Present results as a ranked table with **# | Title | Year | Citations | ID**,
@@ -103,11 +106,11 @@ then ask the user which papers to dig into.
 
 ```bash
 # 1. Confirm match
-python "${CLAUDE_PLUGIN_ROOT}/scripts/papers.py" detail 2005.11401
+python "${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py" detail 2005.11401
 # 2. Download
-python "${CLAUDE_PLUGIN_ROOT}/scripts/papers.py" download 2005.11401 --save-dir ./pdfs
+python "${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py" download 2005.11401 --save-dir ./pdfs
 # 3. Extract abstract + intro + conclusion
-python "${CLAUDE_PLUGIN_ROOT}/scripts/papers.py" read ./pdfs/2005.11401v4.RAG.pdf --max-pages 10
+python "${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py" read ./pdfs/2005.11401v4.RAG.pdf --max-pages 10
 ```
 
 Summarize as: **problem · method · key result · limitations**.
@@ -115,8 +118,8 @@ Summarize as: **problem · method · key result · limitations**.
 ### Example 3: Impact analysis on an anchor paper
 
 ```bash
-python "${CLAUDE_PLUGIN_ROOT}/scripts/papers.py" detail 10.48550/arXiv.2005.11401
-python "${CLAUDE_PLUGIN_ROOT}/scripts/papers.py" citations 10.48550/arXiv.2005.11401 --limit 20
+python "${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py" detail 10.48550/arXiv.2005.11401
+python "${CLAUDE_PLUGIN_ROOT}/skills/papers-skill/scripts/papers.py" citations 10.48550/arXiv.2005.11401 --limit 20
 ```
 
 Cluster the citing papers by year/theme and highlight the most-cited
