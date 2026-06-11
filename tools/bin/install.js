@@ -4,7 +4,7 @@ const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
-const { resolveSafeRealPath } = require("../lib/symlink-safety");
+const { getRealPath, isPathInside, resolveSafeRealPath } = require("../lib/symlink-safety");
 const { listSkillIdsRecursive, readSkill } = require("../lib/skill-utils");
 const packageMetadata = require("../../package.json");
 
@@ -270,7 +270,35 @@ function matchesInstallSelectors(skill, selectors) {
   );
 }
 
-function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
+function assertSafeDestinationPath(dest, destRoot) {
+  const rootPath = path.resolve(destRoot);
+  const destPath = path.resolve(dest);
+  const relative = path.relative(rootPath, destPath);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error(`Refusing destination outside install root: ${dest}`);
+  }
+
+  if (fs.existsSync(rootPath) && fs.lstatSync(rootPath).isSymbolicLink()) {
+    throw new Error(`Refusing symlinked install root: ${destRoot}`);
+  }
+
+  const realRoot = fs.existsSync(rootPath) ? getRealPath(rootPath) : rootPath;
+  let current = rootPath;
+  for (const part of relative.split(path.sep).filter(Boolean)) {
+    current = path.join(current, part);
+    if (!fs.existsSync(current)) {
+      break;
+    }
+    if (fs.lstatSync(current).isSymbolicLink()) {
+      throw new Error(`Refusing unsafe destination symlink component: ${current}`);
+    }
+    if (!isPathInside(realRoot, getRealPath(current))) {
+      throw new Error(`Refusing destination outside install root: ${current}`);
+    }
+  }
+}
+
+function copyRecursiveSync(src, dest, rootDir = src, skipGit = true, destRoot = dest) {
   const stats = fs.lstatSync(src);
   const resolvedSource = stats.isSymbolicLink()
     ? resolveSafeRealPath(rootDir, src)
@@ -282,21 +310,25 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
   }
 
   const resolvedStats = fs.statSync(resolvedSource);
+  if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
+    throw new Error(`Skipping unsafe destination symlink: ${dest}`);
+  }
+  assertSafeDestinationPath(dest, destRoot);
   if (resolvedStats.isDirectory()) {
-    if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
-      throw new Error(`Skipping unsafe destination symlink: ${dest}`);
-    }
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest, { recursive: true });
     }
     fs.readdirSync(resolvedSource).forEach((child) => {
       if (skipGit && child === ".git") return;
-      copyRecursiveSync(path.join(resolvedSource, child), path.join(dest, child), rootDir, skipGit);
+      copyRecursiveSync(
+        path.join(resolvedSource, child),
+        path.join(dest, child),
+        rootDir,
+        skipGit,
+        destRoot,
+      );
     });
   } else {
-    if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
-      throw new Error(`Skipping unsafe destination symlink: ${dest}`);
-    }
     fs.copyFileSync(resolvedSource, dest);
   }
 }
@@ -333,13 +365,13 @@ function installSkillsIntoTarget(tempDir, target, installEntries) {
       const repoDocs = path.join(tempDir, "docs");
       const docsDest = path.join(target, "docs");
       if (!fs.existsSync(docsDest)) fs.mkdirSync(docsDest, { recursive: true });
-      copyRecursiveSync(repoDocs, docsDest, repoDocs);
+      copyRecursiveSync(repoDocs, docsDest, repoDocs, true, target);
       return;
     }
     const src = path.join(repoSkills, name);
     const destName = normalizeInstallEntry(name);
     const dest = path.join(target, destName);
-    copyRecursiveSync(src, dest, repoSkills);
+    copyRecursiveSync(src, dest, repoSkills, true, target);
   });
 }
 

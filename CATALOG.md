@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1525
+Total skills: 1527
 
 ## architecture (99)
 
@@ -197,7 +197,7 @@ Total skills: 1525
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 
-## data-ai (294)
+## data-ai (295)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -476,6 +476,7 @@ Total skills: 1525
 | `uniprot-database` | Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bio... | uniprot, database | uniprot, database, direct, rest, api, access, protein, searches, fasta, retrieval, id, mapping |
 | `unity-ai-game-creator` | Transform raw game ideas into complete Unity projects with AI-powered asset generation, scene blueprints, music/SFX prompts, and step-by-step development pro... | unity, game-development, ai-generation, asset-pipeline, scene-design, music-generation, game-design-document | unity, game-development, ai-generation, asset-pipeline, scene-design, music-generation, game-design-document, ai, game, creator, transform, raw |
 | `unity-ecs-patterns` | Production patterns for Unity's Data-Oriented Technology Stack (DOTS) including Entity Component System, Job System, and Burst Compiler. | unity, ecs | unity, ecs, data, oriented, technology, stack, dots, including, entity, component, job, burst |
+| `unship` | Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code. | ui-variants, frontend, local-first, coding-agents | ui-variants, frontend, local-first, coding-agents, unship, compare, ai, agent, made, ui, variants, locally |
 | `unslop` | Post-process AI-generated text through the unslop CLI to strip AI writing patterns before publishing | writing, content-quality, ai-writing, text-processing, cli, publishing | writing, content-quality, ai-writing, text-processing, cli, publishing, unslop, post, process, ai, generated, text |
 | `uxui-principles` | Evaluate interfaces against 168 research-backed UX/UI principles, detect antipatterns, and inject UX context into AI coding sessions. | ux, ui, design, evaluation, principles, antipatterns, accessibility | ux, ui, design, evaluation, principles, antipatterns, accessibility, uxui, evaluate, interfaces, against, 168 |
 | `vector-database-engineer` | Expert in vector databases, embedding strategies, and semantic search implementation. Masters Pinecone, Weaviate, Qdrant, Milvus, and pgvector for RAG applic... | vector, database | vector, database, engineer, databases, embedding, semantic, search, masters, pinecone, weaviate, qdrant, milvus |
@@ -496,12 +497,13 @@ Total skills: 1525
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (215)
+## development (216)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
 | `3d-web-experience` | Expert in building 3D experiences for the web - Three.js, React Three Fiber, Spline, WebGL, and interactive 3D scenes. Covers product configurators, 3D portf... | 3d, web, experience | 3d, web, experience, building, experiences, three, js, react, fiber, spline, webgl, interactive |
 | `algolia-search` | Expert patterns for Algolia search implementation, indexing strategies, React InstantSearch, and relevance tuning | algolia, search | algolia, search, indexing, react, instantsearch, relevance, tuning |
+| `android-dev` | Production-grade Android app development guide covering native (Kotlin/Java), cross-platform (Flutter, RN, KMM), and hybrid architectures. | android, dev | android, dev, grade, app, development, covering, native, kotlin, java, cross, platform, flutter |
 | `android-jetpack-compose-expert` | Expert guidance for building modern Android UIs with Jetpack Compose, covering state management, navigation, performance, and Material Design 3. | android, jetpack, compose | android, jetpack, compose, guidance, building, uis, covering, state, navigation, performance, material |
 | `android_ui_verification` | Automated end-to-end UI testing and verification on an Android Emulator using ADB. | android_ui_verification | android_ui_verification, android, ui, verification, automated, testing, emulator, adb |
 | `animejs-animation` | Advanced JavaScript animation library skill for creating complex, high-performance web animations. | animejs, animation | animejs, animation, javascript, library, skill, creating, complex, high, performance, web, animations |

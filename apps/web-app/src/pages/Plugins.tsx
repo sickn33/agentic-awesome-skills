@@ -36,7 +36,7 @@ export function Plugins(): React.ReactElement {
             Choose the focused AAS plugin for your AI coding workflow
           </h1>
           <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            AAS specialized plugins are focused, domain-specific distributions of the 1,525+ skill library.
+            AAS specialized plugins are focused, domain-specific distributions of the 1,527+ skill library.
             Start here when you know the job: web apps, security, data analytics, documents, DevOps, QA,
             OSS maintenance, mobile apps, automation, or agent and MCP systems.
           </p>

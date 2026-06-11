@@ -1440,6 +1440,28 @@
     }
   },
   {
+    "id": "android-dev",
+    "path": "skills/android-dev",
+    "category": "mobile",
+    "name": "android-dev",
+    "description": "Production-grade Android app development guide covering native (Kotlin/Java), cross-platform (Flutter, RN, KMM), and hybrid architectures.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "android-jetpack-compose-expert",
     "path": "skills/android-jetpack-compose-expert",
     "category": "mobile",
@@ -31235,6 +31257,28 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "unship",
+    "path": "skills/unship",
+    "category": "development",
+    "name": "unship",
+    "description": "Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-07",
     "plugin": {
       "targets": {
         "codex": "supported",

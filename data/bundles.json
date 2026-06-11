@@ -10,6 +10,7 @@
         "agentmail",
         "agentphone",
         "algolia-search",
+        "android-dev",
         "android-jetpack-compose-expert",
         "android_ui_verification",
         "animejs-animation",
@@ -340,6 +341,7 @@
         "ui-setup",
         "ui-ux-pro-max",
         "uniprot-database",
+        "unship",
         "uv-package-manager",
         "ux-audit",
         "ux-copy",
@@ -1246,6 +1248,7 @@
     "mobile-core": {
       "description": "Mobile app development across native and cross-platform stacks.",
       "skills": [
+        "android-dev",
         "android-jetpack-compose-expert",
         "android_ui_verification",
         "app-store-optimization",
