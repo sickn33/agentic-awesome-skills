@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1527,
+  "total": 1537,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -752,6 +752,207 @@
         "os"
       ],
       "path": "skills/agent-orchestrator/SKILL.md"
+    },
+    {
+      "id": "agent-squad",
+      "name": "agent-squad",
+      "description": "Main agent orchestrator that coordinates a specialized squad of agents",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad"
+      ],
+      "triggers": [
+        "agent",
+        "squad",
+        "main",
+        "orchestrator",
+        "coordinates",
+        "specialized",
+        "agents"
+      ],
+      "path": "skills/agent-squad/SKILL.md"
+    },
+    {
+      "id": "agent-squad/alex",
+      "name": "alex",
+      "description": "Turns requirements into a precise, dependency-aware implementation plan.",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad/alex"
+      ],
+      "triggers": [
+        "agent",
+        "squad/alex",
+        "alex",
+        "turns",
+        "requirements",
+        "precise",
+        "dependency",
+        "aware",
+        "plan"
+      ],
+      "path": "skills/agent-squad/alex/SKILL.md"
+    },
+    {
+      "id": "agent-squad/aria",
+      "name": "aria",
+      "description": "Designs the data model, API contracts, and structural foundation of the system.",
+      "category": "data-ai",
+      "tags": [
+        "agent",
+        "squad/aria"
+      ],
+      "triggers": [
+        "agent",
+        "squad/aria",
+        "aria",
+        "designs",
+        "data",
+        "model",
+        "api",
+        "contracts",
+        "structural",
+        "foundation"
+      ],
+      "path": "skills/agent-squad/aria/SKILL.md"
+    },
+    {
+      "id": "agent-squad/dep",
+      "name": "dep",
+      "description": "Handles containerization, CI/CD pipelines, and deployment setup.",
+      "category": "infrastructure",
+      "tags": [
+        "agent",
+        "squad/dep"
+      ],
+      "triggers": [
+        "agent",
+        "squad/dep",
+        "dep",
+        "containerization",
+        "ci",
+        "cd",
+        "pipelines",
+        "deployment",
+        "setup"
+      ],
+      "path": "skills/agent-squad/dep/SKILL.md"
+    },
+    {
+      "id": "agent-squad/luna",
+      "name": "luna",
+      "description": "Reviews code for objective correctness, security, and reliability.",
+      "category": "security",
+      "tags": [
+        "agent",
+        "squad/luna"
+      ],
+      "triggers": [
+        "agent",
+        "squad/luna",
+        "luna",
+        "reviews",
+        "code",
+        "objective",
+        "correctness",
+        "security",
+        "reliability"
+      ],
+      "path": "skills/agent-squad/luna/SKILL.md"
+    },
+    {
+      "id": "agent-squad/mason",
+      "name": "mason",
+      "description": "Produces clean, functional code that matches the architecture and checklists.",
+      "category": "architecture",
+      "tags": [
+        "agent",
+        "squad/mason"
+      ],
+      "triggers": [
+        "agent",
+        "squad/mason",
+        "mason",
+        "produces",
+        "clean",
+        "functional",
+        "code",
+        "matches",
+        "architecture",
+        "checklists"
+      ],
+      "path": "skills/agent-squad/mason/SKILL.md"
+    },
+    {
+      "id": "agent-squad/max",
+      "name": "max",
+      "description": "Cleans up and improves existing code without changing behavior.",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad/max"
+      ],
+      "triggers": [
+        "agent",
+        "squad/max",
+        "max",
+        "cleans",
+        "up",
+        "improves",
+        "existing",
+        "code",
+        "without",
+        "changing",
+        "behavior"
+      ],
+      "path": "skills/agent-squad/max/SKILL.md"
+    },
+    {
+      "id": "agent-squad/quinn",
+      "name": "quinn",
+      "description": "Proves the system works by writing and executing comprehensive test suites.",
+      "category": "testing",
+      "tags": [
+        "agent",
+        "squad/quinn"
+      ],
+      "triggers": [
+        "agent",
+        "squad/quinn",
+        "quinn",
+        "proves",
+        "works",
+        "writing",
+        "executing",
+        "test",
+        "suites"
+      ],
+      "path": "skills/agent-squad/quinn/SKILL.md"
+    },
+    {
+      "id": "agent-squad/rex",
+      "name": "rex",
+      "description": "Translates user intent into a precise, unambiguous specification and requirements.",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad/rex"
+      ],
+      "triggers": [
+        "agent",
+        "squad/rex",
+        "rex",
+        "translates",
+        "user",
+        "intent",
+        "precise",
+        "unambiguous",
+        "specification",
+        "requirements"
+      ],
+      "path": "skills/agent-squad/rex/SKILL.md"
     },
     {
       "id": "agent-tool-builder",
@@ -23741,6 +23942,33 @@
         "single"
       ],
       "path": "skills/nosql-expert/SKILL.md"
+    },
+    {
+      "id": "not-a-vibe-coder",
+      "name": "not-a-vibe-coder",
+      "description": "Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.",
+      "category": "general",
+      "tags": [
+        "not",
+        "a",
+        "vibe",
+        "coder"
+      ],
+      "triggers": [
+        "not",
+        "a",
+        "vibe",
+        "coder",
+        "turns",
+        "vague",
+        "prompts",
+        "structured",
+        "planning",
+        "files",
+        "brand",
+        "new"
+      ],
+      "path": "skills/not-a-vibe-coder/SKILL.md"
     },
     {
       "id": "not-human-search-mcp",

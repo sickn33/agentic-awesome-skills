@@ -684,6 +684,28 @@
     }
   },
   {
+    "id": "agent-squad",
+    "path": "skills/agent-squad",
+    "category": "ai-ml",
+    "name": "agent-squad",
+    "description": "Main agent orchestrator that coordinates a specialized squad of agents",
+    "risk": "unknown",
+    "source": "unknown",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "agent-tool-builder",
     "path": "skills/agent-tool-builder",
     "category": "ai-ml",
@@ -1226,6 +1248,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "alex",
+    "path": "skills/agent-squad/alex",
+    "category": "agent-squad",
+    "name": "alex",
+    "description": "Turns requirements into a precise, dependency-aware implementation plan.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -2464,6 +2508,28 @@
     "risk": "none",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "aria",
+    "path": "skills/agent-squad/aria",
+    "category": "agent-squad",
+    "name": "aria",
+    "description": "Designs the data model, API contracts, and structural foundation of the system.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10570,6 +10636,28 @@
     }
   },
   {
+    "id": "dep",
+    "path": "skills/agent-squad/dep",
+    "category": "agent-squad",
+    "name": "dep",
+    "description": "Handles containerization, CI/CD pipelines, and deployment setup.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "dependency-management-deps-audit",
     "path": "skills/dependency-management-deps-audit",
     "category": "security",
@@ -18662,6 +18750,28 @@
     }
   },
   {
+    "id": "luna",
+    "path": "skills/agent-squad/luna",
+    "category": "agent-squad",
+    "name": "luna",
+    "description": "Reviews code for objective correctness, security, and reliability.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "m365-agents-dotnet",
     "path": "skills/m365-agents-dotnet",
     "category": "ai-agents",
@@ -19304,6 +19414,28 @@
     }
   },
   {
+    "id": "mason",
+    "path": "skills/agent-squad/mason",
+    "category": "agent-squad",
+    "name": "mason",
+    "description": "Produces clean, functional code that matches the architecture and checklists.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "matematico-tao",
     "path": "skills/matematico-tao",
     "category": "uncategorized",
@@ -19356,6 +19488,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "max",
+    "path": "skills/agent-squad/max",
+    "category": "agent-squad",
+    "name": "max",
+    "description": "Cleans up and improves existing code without changing behavior.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -21080,6 +21234,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "not-a-vibe-coder",
+    "path": "skills/not-a-vibe-coder",
+    "category": "uncategorized",
+    "name": "not-a-vibe-coder",
+    "description": "Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.",
+    "risk": "critical",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24335,6 +24511,28 @@
     }
   },
   {
+    "id": "quinn",
+    "path": "skills/agent-squad/quinn",
+    "category": "agent-squad",
+    "name": "quinn",
+    "description": "Proves the system works by writing and executing comprehensive test suites.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "radix-ui-design-system",
     "path": "skills/radix-ui-design-system",
     "category": "web-development",
@@ -25091,6 +25289,28 @@
     "risk": "unknown",
     "source": "https://github.com/coreyhaines31/marketingskills",
     "date_added": "2026-03-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "rex",
+    "path": "skills/agent-squad/rex",
+    "category": "agent-squad",
+    "name": "rex",
+    "description": "Translates user intent into a precise, unambiguous specification and requirements.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
     "plugin": {
       "targets": {
         "codex": "supported",
