@@ -1,6 +1,8 @@
 ---
 name: atlas-ledger
 description: "Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drift into WHEN/DON'T/INSTEAD clauses, writes to Atlas.md after confirmation."
+risk: low
+source: https://github.com/wede-wx/atlas
 license: MIT
 metadata:
   version: "2.2.0"
@@ -66,6 +68,8 @@ Chinese label mapping (process labels — localize these):
 **Pre-output localization self-check:** Before sending any user-facing output, scan for untranslated English process labels (e.g. "Suggested Clause", "Actionability"). If any are found, translate them before sending. Do **not** translate the fixed machine keys (`WHEN`/`DON'T`/`INSTEAD`/IDs/`severity`/`Source`/`seen`/`Confirmed Clauses`/`Provisional Observations`) — those stay English even in a Chinese response.
 
 ---
+
+## When to Use
 
 # 2. When To Run
 

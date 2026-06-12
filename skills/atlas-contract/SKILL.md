@@ -1,6 +1,8 @@
 ---
 name: atlas-contract
 description: "Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, Deviation Notices, Phase Checks, Final Audits. Skip for Q&A or trivial edits."
+risk: medium
+source: https://github.com/wede-wx/atlas
 license: MIT
 metadata:
   version: "6.2.0"
@@ -97,6 +99,8 @@ Atlas Event:
 Stop Status rules: use `Final` only in a Final Audit. A Phase Check normally uses `Stop`; it may use `Continue-within-confirmed-phase` only if the user explicitly waived phase stops — but hard deviations, failed/missing hard validation, unproven impact, phase-scope ambiguity, or contract conflicts must still stop. Do not merge multiple events into one vague summary.
 
 ---
+
+## When to Use
 
 # 2. When To Use Atlas, and How Much
 
