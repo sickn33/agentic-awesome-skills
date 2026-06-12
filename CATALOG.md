@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1539
+Total skills: 1541
 
 ## architecture (100)
 
@@ -109,7 +109,7 @@ Total skills: 1539
 | `workflow-patterns` | Use this skill when implementing tasks according to Conductor's TDD workflow, handling phase checkpoints, managing git commits for tasks, or understanding th... |  | skill, implementing, tasks, according, conductor, tdd, handling, phase, checkpoints, managing, git, commits |
 | `zapier-make-patterns` | No-code automation democratizes workflow building. Zapier and Make (formerly Integromat) let non-developers automate business processes without writing code.... | zapier, make | zapier, make, no, code, automation, democratizes, building, formerly, integromat, let, non, developers |
 
-## business (84)
+## business (85)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -117,6 +117,7 @@ Total skills: 1539
 | `advogado-especialista` | Advogado especialista em todas as areas do Direito brasileiro: familia, criminal, trabalhista, tributario, consumidor, imobiliario, empresarial, civil e cons... | legal, brazilian-law, multi-domain, portuguese | legal, brazilian-law, multi-domain, portuguese, advogado, especialista, em, todas, areas, do, direito, brasileiro |
 | `apify-competitor-intelligence` | Analyze competitor strategies, content, pricing, ads, and market positioning across Google Maps, Booking.com, Facebook, Instagram, YouTube, and TikTok. | apify, competitor, intelligence | apify, competitor, intelligence, analyze, content, pricing, ads, market, positioning, google, maps, booking |
 | `apify-market-research` | Analyze market conditions, geographic opportunities, pricing, consumer behavior, and product validation across Google Maps, Facebook, Instagram, Booking.com,... | apify, market, research | apify, market, research, analyze, conditions, geographic, opportunities, pricing, consumer, behavior, product, validation |
+| `atlas-ledger` | Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drif... | atlas, ledger | atlas, ledger, companion, contract, auto, invoked, final, audit, caught, drift, after, post |
 | `blog-writing-guide` | This skill enforces Sentry's blog writing standards across every post — whether you're helping an engineer write their first blog post or a marketer draft a ... | blog, writing | blog, writing, skill, enforces, sentry, standards, every, post, whether, re, helping, engineer |
 | `brand-guidelines` | Write copy following Sentry brand guidelines. Use when writing UI text, error messages, empty states, onboarding flows, 404 pages, documentation, marketing c... | brand, guidelines | brand, guidelines, write, copy, following, sentry, writing, ui, text, error, messages, empty |
 | `brevo-automation` | Automate Brevo (formerly Sendinblue) email marketing operations through Composio's Brevo toolkit via Rube MCP. | brevo | brevo, automation, automate, formerly, sendinblue, email, marketing, operations, through, composio, toolkit, via |
@@ -499,7 +500,7 @@ Total skills: 1539
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (216)
+## development (217)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -516,6 +517,7 @@ Total skills: 1539
 | `app-store-optimization` | Complete App Store Optimization (ASO) toolkit for researching, optimizing, and tracking mobile app performance on Apple App Store and Google Play Store | app, store, optimization | app, store, optimization, complete, aso, toolkit, researching, optimizing, tracking, mobile, performance, apple |
 | `architecture-patterns` | Master proven backend architecture patterns including Clean Architecture, Hexagonal Architecture, and Domain-Driven Design to build maintainable, testable, a... | architecture | architecture, proven, backend, including, clean, hexagonal, domain, driven, maintainable, testable, scalable |
 | `async-python-patterns` | Comprehensive guidance for implementing asynchronous Python applications using asyncio, concurrent programming patterns, and async/await for building high-pe... | async, python | async, python, guidance, implementing, asynchronous, applications, asyncio, concurrent, programming, await, building, high |
+| `atlas-contract` | Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, De... | atlas, contract | atlas, contract, goal, integrity, skill, backend, api, persistence, preserve, do, change, tests |
 | `azure-appconfiguration-java` | Azure App Configuration SDK for Java. Centralized application configuration management with key-value settings, feature flags, and snapshots. | azure, appconfiguration, java | azure, appconfiguration, java, app, configuration, sdk, centralized, application, key, value, settings, feature |
 | `azure-appconfiguration-py` | Azure App Configuration SDK for Python. Use for centralized configuration management, feature flags, and dynamic settings. | azure, appconfiguration, py | azure, appconfiguration, py, app, configuration, sdk, python, centralized, feature, flags, dynamic, settings |
 | `azure-communication-callingserver-java` | ⚠️ DEPRECATED: This SDK has been renamed to Call Automation. For new projects, use azure-communication-callautomation instead. This skill is for maintaining ... | azure, communication, callingserver, java | azure, communication, callingserver, java, deprecated, sdk, been, renamed, call, automation, new, callautomation |

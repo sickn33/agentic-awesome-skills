@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1539,
+  "total": 1541,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3184,6 +3184,56 @@
         "high"
       ],
       "path": "skills/async-python-patterns/SKILL.md"
+    },
+    {
+      "id": "atlas-contract",
+      "name": "atlas-contract",
+      "description": "Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, Deviation Notices, Phase Checks, Final Audits. Skip for Q&A or trivial edits.",
+      "category": "development",
+      "tags": [
+        "atlas",
+        "contract"
+      ],
+      "triggers": [
+        "atlas",
+        "contract",
+        "goal",
+        "integrity",
+        "skill",
+        "backend",
+        "api",
+        "persistence",
+        "preserve",
+        "do",
+        "change",
+        "tests"
+      ],
+      "path": "skills/atlas-contract/SKILL.md"
+    },
+    {
+      "id": "atlas-ledger",
+      "name": "atlas-ledger",
+      "description": "Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drift into WHEN/DON'T/INSTEAD clauses, writes to Atlas.md after confirmation.",
+      "category": "business",
+      "tags": [
+        "atlas",
+        "ledger"
+      ],
+      "triggers": [
+        "atlas",
+        "ledger",
+        "companion",
+        "contract",
+        "auto",
+        "invoked",
+        "final",
+        "audit",
+        "caught",
+        "drift",
+        "after",
+        "post"
+      ],
+      "path": "skills/atlas-ledger/SKILL.md"
     },
     {
       "id": "attack-tree-construction",

@@ -2698,6 +2698,50 @@
     }
   },
   {
+    "id": "atlas-contract",
+    "path": "skills/atlas-contract",
+    "category": "backend",
+    "name": "atlas-contract",
+    "description": "Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, Deviation Notices, Phase Checks, Final Audits. Skip for Q&A or trivial edits.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "atlas-ledger",
+    "path": "skills/atlas-ledger",
+    "category": "uncategorized",
+    "name": "atlas-ledger",
+    "description": "Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drift into WHEN/DON'T/INSTEAD clauses, writes to Atlas.md after confirmation.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "attack-tree-construction",
     "path": "skills/attack-tree-construction",
     "category": "security",

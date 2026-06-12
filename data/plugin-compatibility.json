@@ -2448,6 +2448,44 @@
       "runtime_files": []
     },
     {
+      "id": "atlas-contract",
+      "path": "skills/atlas-contract",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "atlas-ledger",
+      "path": "skills/atlas-ledger",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "attack-tree-construction",
       "path": "skills/attack-tree-construction",
       "targets": {
@@ -29521,10 +29559,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1539,
+    "total_skills": 1541,
     "supported": {
-      "codex": 1490,
-      "claude": 1507
+      "codex": 1492,
+      "claude": 1509
     },
     "blocked": {
       "codex": 49,
