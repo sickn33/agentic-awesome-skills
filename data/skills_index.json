@@ -33591,7 +33591,7 @@
     "path": "skills/zipai-optimizer",
     "category": "agent-behavior",
     "name": "zipai-optimizer",
-    "description": "Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware.",
+    "description": "Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads.",
     "risk": "safe",
     "source": "community",
     "date_added": null,

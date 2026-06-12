@@ -37804,7 +37804,7 @@
     {
       "id": "zipai-optimizer",
       "name": "zipai-optimizer",
-      "description": "Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware.",
+      "description": "Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads.",
       "category": "general",
       "tags": [
         "zipai",
@@ -37813,16 +37813,16 @@
       "triggers": [
         "zipai",
         "optimizer",
-        "adaptive",
+        "ultra",
+        "dense",
         "token",
-        "intelligent",
-        "filtering",
-        "surgical",
-        "output",
-        "ambiguity",
-        "first",
-        "context",
-        "window"
+        "skill",
+        "prompt",
+        "caching",
+        "log",
+        "pruning",
+        "ast",
+        "inspection"
       ],
       "path": "skills/zipai-optimizer/SKILL.md"
     },
