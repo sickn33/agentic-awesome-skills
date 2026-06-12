@@ -698,7 +698,7 @@ Recommended fix:
 
 # Use stealth plugins:
 
-## Puppeteer Stealth (best option):
+### Puppeteer Stealth (best option):
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
@@ -709,13 +709,13 @@ const browser = await puppeteer.launch({
   args: ['--disable-blink-features=AutomationControlled'],
 });
 
-## Playwright Stealth:
+### Playwright Stealth:
 import { chromium } from 'playwright-extra';
 import stealth from 'puppeteer-extra-plugin-stealth';
 
 chromium.use(stealth());
 
-## Manual (partial):
+### Manual (partial):
 await page.evaluateOnNewDocument(() => {
   Object.defineProperty(navigator, 'webdriver', {
     get: () => undefined,
@@ -745,7 +745,7 @@ Recommended fix:
 
 # Each test must be fully isolated:
 
-## Playwright Test (automatic isolation):
+### Playwright Test (automatic isolation):
 test('first test', async ({ page }) => {
   // Fresh context, fresh page
 });
@@ -754,7 +754,7 @@ test('second test', async ({ page }) => {
   // Completely isolated from first test
 });
 
-## Manual isolation:
+### Manual isolation:
 const context = await browser.newContext();  // Fresh context
 const page = await context.newPage();
 // ... test code ...
@@ -792,7 +792,7 @@ Recommended fix:
 
 # Enable traces for failures:
 
-## playwright.config.ts:
+### playwright.config.ts:
 export default defineConfig({
   use: {
     trace: 'retain-on-failure',    # Keep trace on failure
@@ -802,10 +802,10 @@ export default defineConfig({
   outputDir: './test-results',
 });
 
-## View trace locally:
+### View trace locally:
 npx playwright show-trace test-results/path/to/trace.zip
 
-## In CI, upload test-results as artifact:
+### In CI, upload test-results as artifact:
 # GitHub Actions:
 - uses: actions/upload-artifact@v3
   if: failure()
@@ -940,7 +940,7 @@ Recommended fix:
 
 # Wait for popup BEFORE triggering it:
 
-## New window/tab:
+### New window/tab:
 const pagePromise = context.waitForEvent('page');
 await page.getByRole('link', { name: 'Open in new tab' }).click();
 const newPage = await pagePromise;
@@ -952,13 +952,13 @@ await expect(newPage.getByRole('heading')).toBeVisible();
 // Close when done
 await newPage.close();
 
-## Popup windows:
+### Popup windows:
 const popupPromise = page.waitForEvent('popup');
 await page.getByRole('button', { name: 'Open popup' }).click();
 const popup = await popupPromise;
 await popup.waitForLoadState();
 
-## Multiple windows:
+### Multiple windows:
 const pages = context.pages();  // Get all open pages
 
 ### Can't Interact with Elements in iframes
@@ -981,7 +981,7 @@ Recommended fix:
 
 # Get frame by name or selector:
 
-## By frame name:
+### By frame name:
 const frame = page.frame('payment-iframe');
 await frame.getByRole('textbox', { name: 'Card number' }).fill('4242...');
 
@@ -989,12 +989,12 @@ await frame.getByRole('textbox', { name: 'Card number' }).fill('4242...');
 const frame = page.frameLocator('iframe#payment');
 await frame.getByRole('textbox', { name: 'Card number' }).fill('4242...');
 
-## Nested iframes:
+### Nested iframes:
 const outer = page.frameLocator('iframe#outer');
 const inner = outer.frameLocator('iframe#inner');
 await inner.getByRole('button').click();
 
-## Wait for iframe to load:
+### Wait for iframe to load:
 await page.waitForSelector('iframe#payment');
 const frame = page.frameLocator('iframe#payment');
 await frame.getByText('Secure Payment').waitFor();

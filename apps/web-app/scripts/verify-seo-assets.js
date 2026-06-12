@@ -26,7 +26,8 @@ function parseCliArgs(argv) {
   const args = {
     sitemapPath: 'dist/sitemap.xml',
     robotsPath: 'dist/robots.txt',
-    manifestPath: 'dist/manifest.webmanifest',
+    llmsPath: 'dist/llms.txt',
+    manifestPath: 'dist/site.webmanifest',
     indexPath: 'dist/index.html',
     distDir: 'dist',
     minSkillUrls: String(defaultMinSkillUrls),
@@ -39,7 +40,8 @@ function parseCliArgs(argv) {
       if (value) {
         args.sitemapPath = path.join(value, 'sitemap.xml');
         args.robotsPath = path.join(value, 'robots.txt');
-        args.manifestPath = path.join(value, 'manifest.webmanifest');
+        args.llmsPath = path.join(value, 'llms.txt');
+        args.manifestPath = path.join(value, 'site.webmanifest');
         args.indexPath = path.join(value, 'index.html');
         args.distDir = value;
         i += 1;
@@ -61,6 +63,12 @@ function parseCliArgs(argv) {
 
     if (arg === '--robots' && argv[i + 1]) {
       args.robotsPath = argv[i + 1];
+      i += 1;
+      continue;
+    }
+
+    if (arg === '--llms' && argv[i + 1]) {
+      args.llmsPath = argv[i + 1];
       i += 1;
       continue;
     }
@@ -93,6 +101,11 @@ function extractMetaContent(htmlText, selectorType, selectorValue) {
   );
   const match = htmlText.match(pattern);
   return match?.[1]?.trim();
+}
+
+function extractTitle(htmlText) {
+  const match = String(htmlText ?? '').match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  return match?.[1]?.trim() || '';
 }
 
 function assertMetaContent(htmlText, selectorType, selectorValue) {
@@ -148,8 +161,16 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
 
   const isRoot = ({ parsed: parsedUrl }) => rootPathVariants.has(parsedUrl.pathname);
   const extraRoutes = parsed.filter(({ parsed: parsedUrl }) => !isRoot({ parsed: parsedUrl }));
+  const allowedExtraPathVariants = new Set([
+    `${normalizedRoot}/plugins`,
+    `${normalizedRoot}/plugins/`,
+  ]);
   const skillRoutes = extraRoutes.filter(({ parsed: parsedUrl }) =>
     parsedUrl.pathname.startsWith(skillPrefix),
+  );
+  const unsupportedRoutes = extraRoutes.filter(
+    ({ parsed: parsedUrl }) =>
+      !parsedUrl.pathname.startsWith(skillPrefix) && !allowedExtraPathVariants.has(parsedUrl.pathname),
   );
 
   assert(
@@ -158,7 +179,7 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
   );
 
   assert(
-    extraRoutes.every(({ parsed: parsedUrl }) => parsedUrl.pathname.startsWith(skillPrefix)),
+    unsupportedRoutes.length === 0,
     'Sitemap contains unsupported non-skill routes.',
   );
 
@@ -167,6 +188,9 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
     rootPath: rootUrl.pathname,
     normalizedRootPath: normalizedRoot,
     skillUrls: skillRoutes.map(({ raw }) => raw),
+    pluginUrls: extraRoutes
+      .filter(({ parsed: parsedUrl }) => allowedExtraPathVariants.has(parsedUrl.pathname))
+      .map(({ raw }) => raw),
   };
 }
 
@@ -174,10 +198,100 @@ export function assertSitemap(urlText, { minSkillUrls = 1 } = {}) {
   analyzeSitemap(urlText, { minSkillUrls });
 }
 
+function extractJsonLdEntries(htmlText) {
+  const raw = String(htmlText ?? '');
+  const matches = raw.matchAll(
+    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  );
+  const entries = [];
+
+  for (const match of matches) {
+    const text = match[1]?.trim();
+    if (!text) {
+      continue;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (_err) {
+      throw new Error('JSON-LD script contains invalid JSON.');
+    }
+
+    if (Array.isArray(parsed)) {
+      entries.push(...parsed);
+    } else {
+      entries.push(parsed);
+    }
+  }
+
+  return entries;
+}
+
+function assertJsonLdTypes(htmlText, requiredTypes) {
+  const entries = extractJsonLdEntries(htmlText);
+  const types = new Set(entries.map((entry) => entry?.['@type']).filter(Boolean));
+
+  for (const requiredType of requiredTypes) {
+    assert(types.has(requiredType), `JSON-LD missing required @type: ${requiredType}`);
+  }
+}
+
+function assertRepositoryJsonLdSignals(htmlText) {
+  const entries = extractJsonLdEntries(htmlText);
+  const repoUrl = 'https://github.com/sickn33/antigravity-awesome-skills';
+  const sourceCode = entries.find((entry) => entry?.['@type'] === 'SoftwareSourceCode');
+  const organization = entries.find((entry) => entry?.['@type'] === 'Organization');
+  const collectionPage = entries.find((entry) => entry?.['@type'] === 'CollectionPage');
+
+  assert(sourceCode?.url === repoUrl, 'SoftwareSourceCode JSON-LD must use the GitHub repository as its URL.');
+  assert(sourceCode?.codeRepository === repoUrl, 'SoftwareSourceCode JSON-LD must expose the GitHub repository.');
+  assert(
+    typeof sourceCode?.mainEntityOfPage === 'string' && sourceCode.mainEntityOfPage.length > 0,
+    'SoftwareSourceCode JSON-LD must link back to the hosted catalog page with mainEntityOfPage.',
+  );
+  assert(organization?.url === repoUrl, 'Organization JSON-LD must use the GitHub repository as its URL.');
+  assert(collectionPage?.sameAs === repoUrl, 'CollectionPage JSON-LD must link the hosted catalog to the GitHub repository.');
+}
+
 export function assertIndexSocialMeta(htmlText) {
   assertMetaContent(htmlText, 'property', 'og:image');
   assertMetaContent(htmlText, 'name', 'twitter:image');
   assertMetaContent(htmlText, 'name', 'twitter:image:alt');
+}
+
+export function assertIndexDiscoveryMeta(htmlText) {
+  const title = extractTitle(htmlText);
+  const description = extractMetaContent(htmlText, 'name', 'description') || '';
+  const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
+  const ogDescription = extractMetaContent(htmlText, 'property', 'og:description') || '';
+  const twitterTitle = extractMetaContent(htmlText, 'name', 'twitter:title') || '';
+  const twitterDescription = extractMetaContent(htmlText, 'name', 'twitter:description') || '';
+  const combined = [
+    title,
+    description,
+    ogTitle,
+    ogDescription,
+    twitterTitle,
+    twitterDescription,
+  ].join(' ');
+
+  assert(combined.includes('1,527+'), 'Home SEO metadata must expose the current 1,527+ skill count.');
+  assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
+  assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
+  assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
+  assertRepositoryJsonLdSignals(htmlText);
+}
+
+export function assertPluginsDiscoveryMeta(htmlText) {
+  const title = extractTitle(htmlText);
+  const description = extractMetaContent(htmlText, 'name', 'description') || '';
+  const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
+  const combined = [title, description, ogTitle].join(' ');
+
+  assert(combined.includes('AAS Specialized Plugins'), 'Plugins page SEO metadata must expose the plugin landing title.');
+  assert(combined.includes('specialized plugin packs'), 'Plugins page SEO metadata must mention specialized plugin packs.');
+  assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization']);
 }
 
 function routePathToDistFile(routePath, normalizedRootPath) {
@@ -201,13 +315,46 @@ export function assertPrerenderedSkillRoutes(skillUrls, distDir = 'dist', normal
   }
 }
 
+export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', normalizedRootPath = '') {
+  for (const pluginUrl of pluginUrls) {
+    const parsed = new URL(pluginUrl);
+    const filePath = path.join(distDir, routePathToDistFile(parsed.pathname, normalizedRootPath));
+    assert(
+      fs.existsSync(filePath),
+      `Missing prerendered page for plugin route: ${parsed.pathname}. Expected ${filePath}.`,
+    );
+    assertPluginsDiscoveryMeta(readFile(filePath));
+  }
+}
+
 export function assertRobots(robotsText) {
   const lines = String(robotsText ?? '').split(/\r?\n/).map((line) => line.trim());
   const allowsRoot = lines.some((line) => line.startsWith('Allow: /'));
   const hasSitemap = lines.some((line) => /^Sitemap:\s*.+\/?sitemap\.xml$/i.test(line));
+  const allowsAiSearchCrawlers = ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'PerplexityBot'].every((crawler) =>
+    lines.some((line) => line === `User-agent: ${crawler}`),
+  );
 
   assert(allowsRoot, 'robots.txt must allow root crawling.');
   assert(hasSitemap, 'robots.txt must expose sitemap location.');
+  assert(allowsAiSearchCrawlers, 'robots.txt must explicitly expose AI search crawler directives.');
+}
+
+export function assertLlms(llmsText) {
+  const text = String(llmsText ?? '');
+  const requiredSnippets = [
+    '# Antigravity Awesome Skills',
+    '1,527+',
+    'specialized plugins',
+    'Claude Code',
+    'Codex CLI',
+    'https://github.com/sickn33/antigravity-awesome-skills',
+    'Canonical source of truth',
+  ];
+
+  for (const snippet of requiredSnippets) {
+    assert(text.includes(snippet), `llms.txt missing required snippet: ${snippet}`);
+  }
 }
 
 export function assertManifest(manifestText) {
@@ -229,15 +376,20 @@ function readFile(filePath) {
 export function runVerification({
   sitemapPath,
   robotsPath,
+  llmsPath = 'dist/llms.txt',
   manifestPath,
   indexPath = 'dist/index.html',
   distDir = 'dist',
   minSkillUrls,
 }) {
   const sitemapReport = analyzeSitemap(readFile(sitemapPath), { minSkillUrls });
+  const indexHtml = readFile(indexPath);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
-  assertIndexSocialMeta(readFile(indexPath));
+  assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
+  assertIndexSocialMeta(indexHtml);
+  assertIndexDiscoveryMeta(indexHtml);
   assertRobots(readFile(robotsPath));
+  assertLlms(readFile(llmsPath));
   assertManifest(readFile(manifestPath));
 }
 

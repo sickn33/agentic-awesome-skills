@@ -321,6 +321,41 @@ echo "prompt injection"
             self.assertIn("analysis-skill", markdown)
             self.assertIn("review-skill", markdown)
 
+    def test_strict_budget_allows_baseline_and_blocks_regressions(self):
+        summary = {
+            "errors": 0,
+            "warnings": 3,
+            "skills_with_warnings_only": 2,
+            "top_finding_codes": [
+                {"code": "risk_suggestion", "count": 2},
+                {"code": "missing_examples", "count": 1},
+            ],
+        }
+        budget = {
+            "maxWarnings": 3,
+            "maxWarningOnlySkills": 2,
+            "maxTopFindingCodes": {
+                "risk_suggestion": 2,
+                "missing_examples": 1,
+            },
+        }
+
+        self.assertEqual(audit_skills.evaluate_strict_budget(summary, budget), [])
+
+        regressed_summary = {
+            **summary,
+            "warnings": 4,
+            "top_finding_codes": [
+                {"code": "risk_suggestion", "count": 3},
+                {"code": "missing_examples", "count": 1},
+            ],
+        }
+
+        issues = audit_skills.evaluate_strict_budget(regressed_summary, budget)
+
+        self.assertIn("warnings exceed budget: 4/3", issues)
+        self.assertIn("risk_suggestion findings exceed budget: 3/2", issues)
+
 
 if __name__ == "__main__":
     unittest.main()

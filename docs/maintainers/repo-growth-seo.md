@@ -6,7 +6,7 @@ This document keeps the repository's GitHub-facing discovery copy aligned with t
 
 Preferred positioning:
 
-> Installable GitHub library of 1,409+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.
+> Installable GitHub library of 1,527+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.
 
 Key framing:
 
@@ -20,7 +20,7 @@ Key framing:
 
 Preferred description:
 
-> Installable GitHub library of 1,409+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and more. Includes installer CLI, bundles, workflows, and official/community skill collections.
+> Installable GitHub library of 1,527+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and more. Includes installer CLI, bundles, workflows, and official/community skill collections.
 
 Preferred homepage:
 
@@ -28,7 +28,7 @@ Preferred homepage:
 
 Preferred social preview:
 
-- use a clean preview image that says `1,409+ Agentic Skills`;
+- use a clean preview image that says `1,527+ Agentic Skills`;
 - mention Claude Code, Cursor, Codex CLI, and Gemini CLI;
 - avoid dense text and tiny logos that disappear in social cards.
 
@@ -81,7 +81,7 @@ Start here:
 
 - Install: `npx antigravity-awesome-skills`
 - Choose your tool: `README.md#choose-your-tool`
-- Best skills by tool: `README.md#best-skills-by-tool`
+- Specialized plugins: `README.md#recommended-specialized-plugins`
 - Bundles: `docs/users/bundles.md`
 - Workflows: `docs/users/workflows.md`
 

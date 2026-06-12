@@ -1,3 +1,22 @@
+# Maintenance Walkthrough - 2026-04-17
+
+- Imported 8 frontend/design skills from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) into `skills/`:
+  - `design-taste-frontend`
+  - `gpt-taste`
+  - `redesign-existing-projects`
+  - `high-end-visual-design`
+  - `minimalist-ui`
+  - `industrial-brutalist-ui`
+  - `stitch-design-taste`
+  - `full-output-enforcement`
+- Normalized the imported skill metadata to repository conventions:
+  - folder names match `name`
+  - `risk`, `source`, `source_repo`, `source_type`, `author`, and `date_added` are present
+  - descriptions are shortened for validation
+  - `## When to Use` sections were added where the upstream files did not have one
+- Preserved the upstream `stitch-design-taste/DESIGN.md` artifact.
+- Added source attribution for `Leonxlnx/taste-skill` in `README.md` and `docs/sources/sources.md`.
+
 # Maintenance Walkthrough - 2026-04-05
 
 - Merged community PR batch `#487`, `#488`, `#489`, and `#490` on GitHub with squash, following the maintainer GitHub-only merge contract instead of local integration.

@@ -4,6 +4,7 @@ const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
 const installer = require(path.resolve(__dirname, "..", "..", "bin", "install.js"));
 
 function writeSkill(repoRoot, skillName, content = "# Skill\n") {
@@ -80,6 +81,38 @@ try {
     "install manifest should mirror the latest filtered install entries",
   );
 
+  const legacyTargetDir = path.join(tmpRoot, "legacy-target");
+  fs.mkdirSync(path.join(legacyTargetDir, "removed-skill"), { recursive: true });
+  fs.writeFileSync(
+    path.join(legacyTargetDir, ".antigravity-install-manifest.json"),
+    JSON.stringify(
+      {
+        schemaVersion: 1,
+        updatedAt: new Date().toISOString(),
+        entries: ["skills/removed-skill", "skills/nested/skill-c"],
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
+
+  installer.installForTarget(
+    repoV2,
+    { name: "LegacyManifest", path: legacyTargetDir },
+    installer.buildInstallSelectors({ categoryArg: "backend" }),
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(legacyTargetDir, "removed-skill")),
+    false,
+    "legacy skills/<name> manifest entries should prune the flattened installed path",
+  );
+  assert.deepStrictEqual(
+    readManifestEntries(legacyTargetDir),
+    ["docs", "nested/skill-c"],
+    "legacy manifest entries should be normalized after update",
+  );
+
   const badTargetPath = path.join(tmpRoot, "bad-target");
   fs.writeFileSync(badTargetPath, "not-a-directory", "utf8");
   const badTargetCheck = spawnSync(
@@ -106,6 +139,40 @@ installer.installForTarget(${JSON.stringify(repoV2)}, { name: "BadTarget", path:
     `${badTargetCheck.stdout}\n${badTargetCheck.stderr}`,
     /not a directory/i,
     "installer should print a clear error for non-directory targets",
+  );
+
+  const symlinkRealTarget = path.join(tmpRoot, "symlink-real-target");
+  const symlinkTargetPath = path.join(tmpRoot, "symlink-target");
+  fs.mkdirSync(path.join(symlinkRealTarget, ".git"), { recursive: true });
+  const createdSymlinkTarget = createSymlinkOrSkip(symlinkRealTarget, symlinkTargetPath, "dir");
+  if (!createdSymlinkTarget) {
+    return;
+  }
+
+  const symlinkTargetCheck = spawnSync(
+    process.execPath,
+    [
+      "-e",
+      `
+const installer = require(${JSON.stringify(path.resolve(__dirname, "..", "..", "bin", "install.js"))});
+installer.installForTarget(${JSON.stringify(repoV2)}, { name: "SymlinkTarget", path: ${JSON.stringify(symlinkTargetPath)} });
+`,
+    ],
+    {
+      stdio: "pipe",
+      encoding: "utf8",
+    },
+  );
+
+  assert.notStrictEqual(
+    symlinkTargetCheck.status,
+    0,
+    "installer should fail fast when the target path is a symlink",
+  );
+  assert.match(
+    `${symlinkTargetCheck.stdout}\n${symlinkTargetCheck.stderr}`,
+    /symlinked target/i,
+    "installer should print a clear error for symlinked targets",
   );
 } finally {
   fs.rmSync(tmpRoot, { recursive: true, force: true });

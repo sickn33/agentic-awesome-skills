@@ -5,7 +5,7 @@
 ## Prerequisites
 
 - Start from a clean `main`.
-- Make sure [`.github/MAINTENANCE.md`](/Users/nicco/Projects/antigravity-awesome-skills/.github/MAINTENANCE.md) is the governing policy.
+- Make sure [`.github/MAINTENANCE.md`](../../.github/MAINTENANCE.md) is the governing policy.
 - Have `gh` authenticated with maintainer permissions.
 - Use this only for PRs that are already expected to merge; conflicting PRs still need the manual conflict playbook.
 
@@ -52,4 +52,4 @@ Stop and switch to the manual playbook when:
 - the PR needs a manual README credits decision
 - fork approval or branch permissions are missing
 
-In those cases, follow [Merging Pull Requests](/Users/nicco/Projects/antigravity-awesome-skills/docs/maintainers/merging-prs.md) and the relevant sections in [MAINTENANCE.md](/Users/nicco/Projects/antigravity-awesome-skills/.github/MAINTENANCE.md).
+In those cases, follow [Merging Pull Requests](merging-prs.md) and the relevant sections in [MAINTENANCE.md](../../.github/MAINTENANCE.md).

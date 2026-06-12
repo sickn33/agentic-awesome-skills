@@ -85,6 +85,37 @@ source: community
             self.assertEqual(summary["max"], 0)
             self.assertFalse(summary["within_budget"])
 
+    def test_warning_budget_ignores_missing_date_added_advisories(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "tools" / "config").mkdir(parents=True)
+            (root / "skills" / "example-skill").mkdir(parents=True)
+            (root / "tools" / "config" / "validation-budget.json").write_text(
+                json.dumps({"maxWarnings": 0}),
+                encoding="utf-8",
+            )
+            (root / "skills" / "example-skill" / "SKILL.md").write_text(
+                """---
+name: example-skill
+description: Example skill
+risk: safe
+source: community
+---
+
+# Example Skill
+
+## When to Use
+- Testing warning-budget behavior.
+""",
+                encoding="utf-8",
+            )
+
+            summary = warning_budget.check_warning_budget(root)
+
+            self.assertEqual(summary["actual"], 0)
+            self.assertEqual(summary["max"], 0)
+            self.assertTrue(summary["within_budget"])
+
 
 if __name__ == "__main__":
     unittest.main()

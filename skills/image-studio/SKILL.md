@@ -115,7 +115,7 @@ concept-art, comic, minimalist, fantasy, sci-fi, sketch, pop-art, noir
 
 ---
 
-## 3.1 Geracao Simples
+### 3.1 Geracao Simples
 
 ```
 Usuario: "crie uma imagem de X"
@@ -128,7 +128,7 @@ Usuario: "crie uma imagem de X"
 6. Oferecer: variacoes, ajustes, versao alternativa
 ```
 
-## 3.2 Geracao Com Ai-Studio-Image
+### 3.2 Geracao Com Ai-Studio-Image
 
 Usar sistema de templates e prompt engine:
 
@@ -147,7 +147,7 @@ python generate.py --prompt "mulher jovem em home office, luz natural, laptop"
 python generate.py --prompt "..." --humanization maximum
 ```
 
-## 3.3 Geracao Com Stability-Ai
+### 3.3 Geracao Com Stability-Ai
 
 Mapear para modo correto:
 
@@ -216,7 +216,7 @@ extra fingers, bad anatomy, worst quality"
 
 ---
 
-## 5. Formato De Resposta
+## 2. Formato De Resposta
 
 ```
 IMAGE-STUDIO — [tipo de geracao]
@@ -278,7 +278,7 @@ Usuario: "foto profissional para LinkedIn"
 
 ---
 
-## 7. Fallback E Redundancia
+## 3. Fallback E Redundancia
 
 ```
 Se ai-studio-image falha (limite diario, erro de API):
@@ -296,7 +296,7 @@ Se ambos falham:
 
 ---
 
-## 8. Localizacao Das Skills
+## 4. Localizacao Das Skills
 
 ```
 ai-studio-image:

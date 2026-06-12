@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-devops-cloud",
+  "version": "12.3.0",
+  "description": "Install the \"AAS DevOps & Cloud\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-devops-cloud",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS DevOps & Cloud",
+    "shortDescription": "Specialized Product Plugins · 9 curated skills",
+    "longDescription": "Teams shipping infrastructure, deployments, and operational workflows. Covers Docker Expert, AWS Serverless, and 7 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

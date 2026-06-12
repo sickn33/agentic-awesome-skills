@@ -29,7 +29,7 @@ Tabela de referência atualizada com todas as 27 Juntas Comerciais e seus sites 
 | AM | JUCEA | https://www.jucea.am.gov.br/leiloeiros/ | httpx+BS4 | GENÉRICO |
 | RO | JUCER | https://rondonia.ro.gov.br/jucer/lista-de-leiloeiros-oficiais/ | httpx+BS4 | CUSTOMIZADO (migrou para portal estadual) |
 | RR | JUCERR | https://jucerr.rr.gov.br/leiloeiros/ | httpx+BS4 | GENÉRICO |
-| AP | JUCAP | http://www.jucap.ap.gov.br/leiloeiros | httpx (verify=False) | CUSTOMIZADO (cert TLS inválido) |
+| AP | JUCAP | http://www.jucap.ap.gov.br/leiloeiros | httpx+BS4 | CUSTOMIZADO (TLS inseguro somente via `JUNTA_INSECURE_TLS=1`) |
 | AC | JUCEAC | https://juceac.ac.gov.br/leiloeiro/ | httpx+BS4 | CUSTOMIZADO (URL: /leiloeiro/ singular) |
 | TO | JUCETINS | https://www.to.gov.br/jucetins/leiloeiros/152aezl6blm0 | httpx+BS4 | CUSTOMIZADO (domínio antigo: juceto.to.gov.br APOSENTADO) |
 

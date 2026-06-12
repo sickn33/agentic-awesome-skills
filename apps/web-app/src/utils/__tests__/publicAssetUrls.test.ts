@@ -50,6 +50,19 @@ describe('public asset URL helpers', () => {
     ]);
   });
 
+  it('rejects markdown asset paths that escape the skills tree', () => {
+    const input = {
+      baseUrl: '/antigravity-awesome-skills/',
+      origin: 'https://sickn33.github.io',
+      pathname: '/antigravity-awesome-skills/skill/react-patterns',
+      documentBaseUrl: 'https://sickn33.github.io/antigravity-awesome-skills/',
+    };
+
+    expect(getSkillMarkdownCandidateUrls({ ...input, skillPath: 'skills/../../manifest.webmanifest' })).toEqual([]);
+    expect(getSkillMarkdownCandidateUrls({ ...input, skillPath: 'skills/%2e%2e/%2e%2e/manifest.webmanifest' })).toEqual([]);
+    expect(getSkillMarkdownCandidateUrls({ ...input, skillPath: 'https://evil.example/skills/demo' })).toEqual([]);
+  });
+
   it('resolves absolute public asset URLs from the shared base path logic', () => {
     expect(
       getAbsolutePublicAssetUrl('/skill/react-patterns', {

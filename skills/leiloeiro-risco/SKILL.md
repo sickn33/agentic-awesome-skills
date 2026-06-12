@@ -256,7 +256,7 @@ CLASSIFICAÇÃO:
 
 ---
 
-## Obrigatórias (Sempre, Para Qualquer Lote):
+### Obrigatórias (Sempre, Para Qualquer Lote):
 
 - [ ] Certidão de ônus reais (matrícula atualizada) — R$ 50-150
 - [ ] Certidão negativa de IPTU (ou extrato de débitos)
@@ -264,7 +264,7 @@ CLASSIFICAÇÃO:
 - [ ] Pesquisa do processo no sistema do TJ (ou cartório)
 - [ ] Verificar leiloeiro na Junta Comercial
 
-## Complementares (Quando Score > 5):
+### Complementares (Quando Score > 5):
 
 - [ ] Certidão do distribuidor cível (ações no imóvel)
 - [ ] Extrato de débitos de condomínio

@@ -20,7 +20,7 @@ from typing import List
 import httpx
 from bs4 import BeautifulSoup
 
-from .base_scraper import AbstractJuntaScraper, Leiloeiro
+from .base_scraper import AbstractJuntaScraper, Leiloeiro, should_verify_tls
 
 logger = logging.getLogger(__name__)
 
@@ -159,13 +159,13 @@ class JucemaScraper(AbstractJuntaScraper):
         return records
 
     async def fetch_insecure(self, url: str):
-        """Fetch com verify=False para sites com SSL problematico."""
+        """Fetch com verificacao TLS configuravel para sites com SSL problematico."""
         try:
             async with httpx.AsyncClient(
                 headers=self.HEADERS,
                 timeout=30.0,
                 follow_redirects=True,
-                verify=False,
+                verify=should_verify_tls(),
             ) as client:
                 resp = await client.get(url)
                 if resp.status_code < 400:

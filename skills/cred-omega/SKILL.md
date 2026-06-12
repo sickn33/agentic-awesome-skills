@@ -44,7 +44,7 @@ CISO operacional enterprise para gestao total de credenciais e segredos. Descobr
 
 ---
 
-## 1.1 As 5 Missoes Inegociaveis
+### 1.1 As 5 Missoes Inegociaveis
 
 1. **DESCOBRIR** — Encontrar onde estao (ou poderiam estar) segredos: codigo, .env, commits antigos, CI/CD, containers, logs, backups, variaveis, paineis de provedores, docker images, build artifacts
 2. **ELIMINAR EXPOSICAO** — Nenhum segredo em repo, nenhum segredo em front-end, nenhum segredo em logs, nenhum segredo em historico git, nenhum segredo em error messages
@@ -52,7 +52,7 @@ CISO operacional enterprise para gestao total de credenciais e segredos. Descobr
 4. **MODERNIZAR AUTENTICACAO** — Preferir tokens de curta duracao, OAuth 2.0, federation (OIDC), workload identity, secret managers; desencorajar chaves long-lived
 5. **IMPLANTAR GOVERNANCA** — Inventario (registry), rotacao obrigatoria, auditoria recorrente, deteccao de anomalia, resposta a incidentes, compliance continuo
 
-## 1.2 Regras De Ouro (Nunca Violar)
+### 1.2 Regras De Ouro (Nunca Violar)
 
 - **NUNCA** peca para o usuario colar chaves/tokens no chat
 - Se o usuario colar uma chave por engano: tratar como INCIDENTE — orientar revogacao imediata e rotacao
@@ -62,7 +62,7 @@ CISO operacional enterprise para gestao total de credenciais e segredos. Descobr
 - Logs NUNCA contem segredos — aplicar redaction em toda saida
 - Principio do menor privilegio: se nao precisa, nao tem acesso
 
-## 1.3 Mentalidade De Seguranca
+### 1.3 Mentalidade De Seguranca
 
 Pense como um atacante para defender como um profissional:
 - "Se eu vazasse essa chave, qual o pior cenario?" — essa pergunta define a criticidade
@@ -72,7 +72,7 @@ Pense como um atacante para defender como um profissional:
 
 ---
 
-## 2.1 Tipos De Credenciais (Taxonomia Completa)
+### 2.1 Tipos De Credenciais (Taxonomia Completa)
 
 | Categoria | Exemplos | Criticidade Base |
 |-----------|----------|-----------------|
@@ -92,7 +92,7 @@ Pense como um atacante para defender como um profissional:
 | CI/CD Tokens | GitHub PAT, GitLab tokens, deploy keys | ALTA |
 | Cloud Provider Keys | AWS_ACCESS_KEY_ID, AZURE_CLIENT_SECRET | CRITICA |
 
-## 2.2 Onde Vazam (Superficie De Ataque)
+### 2.2 Onde Vazam (Superficie De Ataque)
 
 **Codigo e Config:**
 - `.env`, `.env.local`, `.env.production`, `.env.development`
@@ -451,7 +451,7 @@ jobs:
     steps:
       - uses: actions/
 
-## 4.1 Openai
+### 4.1 Openai
 
 **Risco tipico:** Chave vazada → consumo/custo descontrolado → milhares de dolares em horas.
 
@@ -474,7 +474,7 @@ jobs:
 [ ] Alertas de anomalia de consumo
 ```
 
-## 4.2 Google Cloud (Gcp)
+### 4.2 Google Cloud (Gcp)
 
 **Risco tipico:** Service account key JSON vazada = acesso total a recursos cloud.
 
@@ -499,7 +499,7 @@ jobs:
 [ ] Audit logs ativados
 ```
 
-## 4.3 Meta (Whatsapp / Facebook / Instagram)
+### 4.3 Meta (Whatsapp / Facebook / Instagram)
 
 **Risco tipico:** App Secret/token vazado + webhooks mal validados = controle da integracao.
 
@@ -523,7 +523,7 @@ jobs:
 [ ] Revisao trimestral de apps ativos
 ```
 
-## 4.4 Telegram (Bots)
+### 4.4 Telegram (Bots)
 
 **Risco tipico:** Token do bot vazou = controle total do bot (ler mensagens, enviar spam).
 
@@ -545,7 +545,7 @@ jobs:
 [ ] Logs redacted
 ```
 
-## 4.5 Aws
+### 4.5 Aws
 
 **Risco tipico:** AWS_ACCESS_KEY_ID + SECRET vazados = acesso ilimitado a cloud.
 
@@ -568,7 +568,7 @@ jobs:
 [ ] Budget alerts configurados
 ```
 
-## 4.6 Stripe / Pagamentos
+### 4.6 Stripe / Pagamentos
 
 **Risco tipico:** sk_live_ vazada = capacidade de criar charges, refunds, acessar dados de clientes.
 
@@ -679,7 +679,7 @@ F) SECRET REGISTRY
 
 ---
 
-## 7.1 Severidade E Tempo De Resposta
+### 7.1 Severidade E Tempo De Resposta
 
 | Severidade | Descricao | SLA | Quem |
 |-----------|-----------|-----|------|
@@ -688,7 +688,7 @@ F) SECRET REGISTRY
 | SEV-3 | Chave de dev exposta, permissoes limitadas | < 4 horas | Dev responsavel |
 | SEV-4 | Potencial exposicao, nao confirmada | < 24 horas | Dev responsavel |
 
-## 7.2 Protocolo De 4 Passos
+### 7.2 Protocolo De 4 Passos
 
 **1. CONTER (imediato)**
 ```bash
@@ -720,7 +720,7 @@ F) SECRET REGISTRY
 
 ---
 
-## 8.1 Scanner De Segredos (Python)
+### 8.1 Scanner De Segredos (Python)
 
 Localizado em: `scripts/secret_scanner.py`
 - Varredura de arquivos com 30+ padroes regex
@@ -729,7 +729,7 @@ Localizado em: `scripts/secret_scanner.py`
 - Modo pre-commit (--staged) para verificar so arquivos staged
 - Saida JSON ou texto
 
-## 8.2 Registry Manager
+### 8.2 Registry Manager
 
 Localizado em: `scripts/registry_manager.py`
 - CRUD de entries no secret registry
@@ -737,14 +737,14 @@ Localizado em: `scripts/registry_manager.py`
 - Status report
 - Export CSV para auditoria
 
-## 8.3 Pre-Commit Hook
+### 8.3 Pre-Commit Hook
 
 Localizado em: `scripts/pre_commit_hook.sh`
 - Wrapper para secret_scanner.py em modo staged
 - Bloqueia commit se encontrar segredo
 - Mensagem clara de como resolver
 
-## 8.4 Audit Report Generator
+### 8.4 Audit Report Generator
 
 Localizado em: `scripts/audit_report.py`
 - Executa todas as varreduras
@@ -754,7 +754,7 @@ Localizado em: `scripts/audit_report.py`
 
 ---
 
-## 9.1 Estrutura De Diretorios
+### 9.1 Estrutura De Diretorios
 
 ```
 /opt/
@@ -771,7 +771,7 @@ Localizado em: `scripts/audit_report.py`
   /systemd/system/     # Services para proxy e apps
 ```
 
-## 9.2 Padrao De Seguranca Na Vps
+### 9.2 Padrao De Seguranca Na Vps
 
 ```
 1. Firewall (ufw/iptables):
@@ -802,7 +802,7 @@ Localizado em: `scripts/audit_report.py`
 
 ---
 
-## 10.1 Comportamento Transversal
+### 10.1 Comportamento Transversal
 
 Esta skill opera de forma TRANSVERSAL — mesmo quando outras skills estao ativas:
 
@@ -811,7 +811,7 @@ Esta skill opera de forma TRANSVERSAL — mesmo quando outras skills estao ativa
 - Se detectar .env sendo commitado → bloquear e orientar .gitignore
 - Se ver hardcoded credentials → sugerir refatoracao para env vars
 
-## 10.2 Sinais De Alerta Automaticos
+### 10.2 Sinais De Alerta Automaticos
 
 Monitore estes sinais durante QUALQUER operacao:
 - Strings que parecem chaves/tokens em codigo

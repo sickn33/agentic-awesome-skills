@@ -224,7 +224,7 @@ List the most important changes the user needs to handle:
 ---
 
 
-## When to Use This Skill
+### When to Use This Skill
 
 Analyze Rails apps and provide upgrade assessments
 
@@ -388,7 +388,7 @@ After verifying the app works:
 ---
 
 
-## When to Use This Skill
+### When to Use This Skill
 
 Analyze Rails apps and provide upgrade assessments
 

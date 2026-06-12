@@ -9,8 +9,6 @@ date_added: "2026-02-27"
 
 > AUTHORIZED USE ONLY: Use this skill only for authorized security assessments, defensive validation, or controlled educational environments.
 
-<!-- security-allowlist: curl-pipe-bash -->
-
 # Linux Privilege Escalation
 
 ## Purpose
@@ -145,8 +143,11 @@ echo $PATH
 Deploy automated scripts for comprehensive enumeration:
 
 ```bash
-# LinPEAS
-curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+# LinPEAS: download first, inspect the script, then execute only in an authorized lab
+curl -L -o linpeas.sh https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
+less linpeas.sh
+chmod +x linpeas.sh
+./linpeas.sh
 
 # LinEnum
 ./LinEnum.sh -t

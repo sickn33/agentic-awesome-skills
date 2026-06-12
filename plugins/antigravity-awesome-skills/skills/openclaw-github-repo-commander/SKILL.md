@@ -29,7 +29,7 @@ A structured 7-stage super workflow for comprehensive GitHub repository manageme
 Clone the target repository, define success criteria, and establish baseline metrics.
 
 ### Stage 2: Execution
-Run `scripts/repo-audit.sh` — automated checks for:
+Run `scripts/repo-audit.sh <repo-path>` from this skill directory — automated read-only checks for:
 - Hardcoded secrets (`ghp_`, `sk-`, `AKIA`, etc.)
 - Tracked `node_modules/` or build artifacts
 - Empty directories
@@ -85,12 +85,13 @@ Compare my skill repo with the top 5 similar repos on GitHub
 ## Security & Safety Notes
 
 - The audit script scans for common secret patterns but excludes `.github/workflows/` to avoid false positives
+- The bundled script is read-only: it reports findings and never deletes, rewrites, stages, commits, or pushes files
 - All `gh` CLI operations use the user's existing authentication — no credentials are stored by this skill
 - The skill never modifies files without explicit user confirmation in Stage 6
 
-## Source Repository
+## Source Attribution
 
-[github.com/wd041216-bit/openclaw-github-repo-commander](https://github.com/wd041216-bit/openclaw-github-repo-commander)
+Originally contributed by [@wd041216-bit](https://github.com/wd041216-bit) in [PR #340](https://github.com/sickn33/antigravity-awesome-skills/pull/340). No standalone upstream repository is currently available for this skill.
 
 **License**: MIT | **Version**: 4.0.0
 

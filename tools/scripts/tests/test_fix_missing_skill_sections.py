@@ -10,6 +10,8 @@ TOOLS_SCRIPTS_DIR = REPO_ROOT / "tools" / "scripts"
 if str(TOOLS_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_SCRIPTS_DIR))
 
+from symlink_test_utils import symlink_or_skip
+
 
 def load_module(relative_path: str, module_name: str):
     module_path = REPO_ROOT / relative_path
@@ -144,7 +146,7 @@ description: Demo description.
 """
             target.write_text(original, encoding="utf-8")
             skill_path = skill_dir / "SKILL.md"
-            skill_path.symlink_to(target)
+            symlink_or_skip(self, target, skill_path)
 
             changed, changes = fix_missing_skill_sections.update_skill_file(skill_path, add_missing=True)
 

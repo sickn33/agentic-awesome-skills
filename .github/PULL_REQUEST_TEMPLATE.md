@@ -31,6 +31,7 @@ Use this only when the PR should auto-close an issue:
 - [ ] **Repo Checks**: I ran `npm run validate:references` if my change affected docs, workflows, or infrastructure.
 - [ ] **Source-Only PR**: I did not manually include generated registry artifacts (`CATALOG.md`, `skills_index.json`, `data/*.json`) in this PR.
 - [ ] **Credits**: I have added the source credit in `README.md` (if applicable).
+- [ ] **License provenance**: If this skill imports from an external `source_repo`, I have declared `license:` and `license_source:` in the frontmatter, or confirmed the upstream repo carries no restricting license.
 - [ ] **Maintainer Edits**: I enabled **Allow edits from maintainers** on the PR.
 
 ## Screenshots (if applicable)

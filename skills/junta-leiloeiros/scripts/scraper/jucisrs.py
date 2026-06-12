@@ -1,7 +1,7 @@
 """
 Scraper JUCISRS — Junta Comercial, Industrial e Servicos do Rio Grande do Sul
 URL: https://sistemas.jucisrs.rs.gov.br/leiloeiros/
-Metodo: httpx POST com verify=False (SSL invalido mas conteudo OK)
+Metodo: httpx POST com TLS verificavel por padrao
 Mecanismo real descoberto em 2026-02-25:
   - GET  https://sistemas.jucisrs.rs.gov.br/leiloeiros/
          -> retorna formulario de busca PHP/Bootstrap
@@ -18,7 +18,7 @@ import logging
 import re
 from typing import List
 
-from .base_scraper import AbstractJuntaScraper, Leiloeiro
+from .base_scraper import AbstractJuntaScraper, Leiloeiro, should_verify_tls
 
 logger = logging.getLogger(__name__)
 
@@ -177,7 +177,7 @@ class JucisrsScraper(AbstractJuntaScraper):
         try:
             async with httpx.AsyncClient(
                 headers=self.HEADERS,
-                verify=False,  # Cert autoassinado/invalido
+                verify=should_verify_tls(),
                 follow_redirects=True,
                 timeout=60.0,
             ) as client:
@@ -214,7 +214,7 @@ class JucisrsScraper(AbstractJuntaScraper):
 
     async def _fetch_get_all(self) -> List[dict]:
         """
-        Fallback: GET simples na URL principal com verify=False.
+        Fallback: GET simples na URL principal com verificacao TLS configuravel.
         Pode retornar formulario ou lista parcial.
         """
         import httpx
@@ -223,7 +223,7 @@ class JucisrsScraper(AbstractJuntaScraper):
         try:
             async with httpx.AsyncClient(
                 headers=self.HEADERS,
-                verify=False,
+                verify=should_verify_tls(),
                 follow_redirects=True,
                 timeout=30.0,
             ) as client:
@@ -237,7 +237,7 @@ class JucisrsScraper(AbstractJuntaScraper):
             return []
 
     async def _playwright_ssl_bypass(self, url: str):
-        """Playwright com SSL completamente desabilitado para cert autoassinado."""
+        """Playwright com verificacao TLS alinhada ao helper compartilhado."""
         try:
             from playwright.async_api import async_playwright
             from bs4 import BeautifulSoup
@@ -253,7 +253,7 @@ class JucisrsScraper(AbstractJuntaScraper):
                 )
                 ctx = await browser.new_context(
                     user_agent=self.HEADERS["User-Agent"],
-                    ignore_https_errors=True,
+                    ignore_https_errors=not should_verify_tls(),
                 )
                 page = await ctx.new_page()
                 try:

@@ -84,7 +84,7 @@ Chúng tôi phân loại các kỹ năng để bạn biết mình đang chạy n
 - 🔵 **Safe (An toàn)**: Các kỹ năng cộng đồng không gây hại (Chỉ đọc/Lập kế hoạch).
 - 🔴 **Risk (Rủi ro)**: Các kỹ năng sửa đổi hệ thống hoặc thực hiện kiểm thử bảo mật (Sử dụng khi được cấp phép).
 
-_Kiểm tra [Danh mục Skill (Skill Catalog)](../CATALOG.vi.md) để xem danh sách đầy đủ._
+_Kiểm tra [Danh mục Skill (Skill Catalog)](../../CATALOG.md) để xem danh sách đầy đủ._
 
 ---
 
@@ -105,4 +105,4 @@ _Kiểm tra [Danh mục Skill (Skill Catalog)](../CATALOG.vi.md) để xem danh 
 
 1. [Duyệt qua các Gói kỹ năng (Bundles)](BUNDLES.vi.md)
 2. [Xem các Ví dụ thực tế (Examples)](EXAMPLES.vi.md)
-3. [Đóng góp một Skill mới](../CONTRIBUTING.vi.md)
+3. [Đóng góp một Skill mới](../../CONTRIBUTING.md)

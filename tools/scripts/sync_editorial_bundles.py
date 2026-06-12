@@ -147,6 +147,10 @@ def _bundle_plugin_name(bundle_id: str) -> str:
     return f"antigravity-bundle-{bundle_id}"
 
 
+def _bundle_codex_plugin_name(bundle_id: str) -> str:
+    return f"agyb-{bundle_id}"
+
+
 def _humanize_skill_label(skill_id: str) -> str:
     tokens = re.split(r"[-_]+", skill_id.split("/")[-1])
     words = [ACRONYM_TOKENS.get(token.lower(), token.capitalize()) for token in tokens if token]
@@ -432,7 +436,7 @@ def _bundle_claude_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, A
 
 def _bundle_codex_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, Any]) -> dict[str, Any]:
     category = _clean_group_label(bundle["group"])
-    plugin_name = _bundle_plugin_name(bundle["id"])
+    plugin_name = _bundle_codex_plugin_name(bundle["id"])
     skill_count = len(bundle["skills"])
     return {
         "name": plugin_name,
@@ -558,7 +562,7 @@ def _render_codex_marketplace(
             continue
         plugins.append(
             {
-                "name": _bundle_plugin_name(bundle["id"]),
+                "name": _bundle_codex_plugin_name(bundle["id"]),
                 "source": {
                     "source": "local",
                     "path": f'./plugins/{_bundle_plugin_name(bundle["id"])}',

@@ -10,6 +10,8 @@ If you recognize your work here and it is not properly attributed, please open a
 | `owasp-top-10`              | [OWASP](https://owasp.org/)                                                | CC-BY-SA       | Methodology adapted.          |
 | `burp-suite-testing`        | [PortSwigger](https://portswigger.net/burp)                                | N/A            | Usage guide only (no binary). |
 | `crewai`                    | [CrewAI](https://github.com/joaomdmoura/crewAI)                            | MIT            | Framework guides.             |
+| `hasdata`, `hasdata-cli`    | [HasData CLI](https://github.com/HasData/hasdata-cli)                      | MIT            | Official HasData API and CLI guidance. |
+| `runapi-cli`                | [RunAPI CLI Skill](https://github.com/runapi-ai/cli-skill)                 | Apache-2.0     | Official RunAPI CLI skill for generating AI images, videos, and music/audio, plus other model API jobs. |
 | `langgraph`                 | [LangGraph](https://github.com/langchain-ai/langgraph)                     | MIT            | Framework guides.             |
 | `react-patterns`            | [React Docs](https://react.dev/)                                           | CC-BY          | Official patterns.            |
 | **All Official Skills**     | [Anthropic / Google / OpenAI / Microsoft / Supabase / Apify / Vercel Labs] | Proprietary    | Usage encouraged by vendors.  |
@@ -89,6 +91,15 @@ The following skills were added from [Dimillian/Skills](https://github.com/Dimil
 | `app-store-changelog`, `github`, `orchestrate-batch-refactor`, `project-skill-audit`, `react-component-performance`, `simplify-code` | [Dimillian/Skills](https://github.com/Dimillian/Skills) | MIT | Workflow, GitHub, React performance, and code simplification skills. |
 | `ios-debugger-agent`, `macos-menubar-tuist-app`, `macos-spm-app-packaging`, `swift-concurrency-expert` | [Dimillian/Skills](https://github.com/Dimillian/Skills) | MIT | Apple-platform debugging, packaging, and Swift concurrency guidance. |
 | `swiftui-liquid-glass`, `swiftui-performance-audit`, `swiftui-ui-patterns`, `swiftui-view-refactor` | [Dimillian/Skills](https://github.com/Dimillian/Skills) | MIT | SwiftUI-specific implementation, performance, and refactoring patterns. |
+
+## Skills from Leonxlnx/taste-skill
+
+The following skills were added from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill), a frontend design taste collection focused on premium UI generation, redesign audits, motion, and anti-generic output rules.
+
+| Skill / Group | Original Source | License | Notes |
+| :------------ | :-------------- | :------ | :---- |
+| `design-taste-frontend`, `gpt-taste`, `high-end-visual-design`, `minimalist-ui`, `industrial-brutalist-ui` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | Not declared upstream | Frontend visual design protocols for high-agency, motion-rich, minimalist, and brutalist UI generation. |
+| `redesign-existing-projects`, `stitch-design-taste`, `full-output-enforcement` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | Not declared upstream | Redesign audit workflow, Google Stitch design-system export, and full-output enforcement protocol. |
 
 ---
 

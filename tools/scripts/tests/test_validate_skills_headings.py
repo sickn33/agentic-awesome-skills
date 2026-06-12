@@ -9,6 +9,7 @@ SAMPLES = [
     ("## When to Use", True),
     ("## Use this skill when", True),
     ("## When to Use This Skill", True),
+    ("## When to activate this skill", True),
     ("## Overview", False),
 ]
 

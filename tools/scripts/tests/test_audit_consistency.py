@@ -29,10 +29,27 @@ audit_consistency = load_module(
 
 
 class AuditConsistencyTests(unittest.TestCase):
+    def manifest_entries(self, total_skills: int):
+        return [
+            {
+                "id": f"demo-{index}",
+                "path": f"skills/demo-{index}",
+                "category": "testing",
+                "name": f"demo-{index}",
+                "description": "Demo skill.",
+                "risk": "safe",
+                "source": "test",
+                "date_added": "2026-03-21",
+            }
+            for index in range(total_skills)
+        ]
+
     def write_repo_state(self, root: Path, total_skills: int = 1304, count_label: str = "1,304+"):
         (root / "docs" / "users").mkdir(parents=True)
         (root / "docs" / "maintainers").mkdir(parents=True)
         (root / "docs" / "integrations" / "jetski-gemini-loader").mkdir(parents=True)
+        (root / "data").mkdir(parents=True)
+        (root / "apps" / "web-app" / "public").mkdir(parents=True)
 
         (root / "package.json").write_text(
             json.dumps(
@@ -44,7 +61,11 @@ class AuditConsistencyTests(unittest.TestCase):
             ),
             encoding="utf-8",
         )
-        (root / "skills_index.json").write_text(json.dumps([{}] * total_skills), encoding="utf-8")
+        manifest = json.dumps(self.manifest_entries(total_skills), indent=2)
+        (root / "skills_index.json").write_text(manifest, encoding="utf-8")
+        (root / "data" / "skills_index.json").write_text(manifest, encoding="utf-8")
+        (root / "apps" / "web-app" / "public" / "skills.json.backup").write_text(manifest, encoding="utf-8")
+        (root / "apps" / "web-app" / "public" / "skills.json").write_text(manifest, encoding="utf-8")
         (root / "README.md").write_text(
             f"""<!-- registry-sync: version=8.4.0; skills={total_skills}; stars=26132; updated_at=2026-03-21T00:00:00+00:00 -->
 # 🌌 Antigravity Awesome Skills: {count_label} Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More
@@ -57,7 +78,7 @@ class AuditConsistencyTests(unittest.TestCase):
 
 - **Broad coverage with real utility**: {count_label} skills across development, testing, security, infrastructure, product, and marketing.
 
-If you want a faster answer than "browse all {count_label} skills", start with a tool-specific guide:
+**Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse {count_label} Skills](#browse-{total_skills}-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
 """,
             encoding="utf-8",
         )
@@ -98,7 +119,7 @@ If you want a faster answer than "browse all {count_label} skills", start with a
             encoding="utf-8",
         )
         (root / "docs" / "integrations" / "jetski-cortex.md").write_text(
-            "1.304+ skill\nOver 1.304 skills, this approach\n",
+            f"{count_label} skill\nWith {count_label} skills, this approach\n",
             encoding="utf-8",
         )
         (root / "docs" / "integrations" / "jetski-gemini-loader" / "README.md").write_text(
@@ -127,6 +148,41 @@ If you want a faster answer than "browse all {count_label} skills", start with a
             issues = audit_consistency.find_local_consistency_issues(root)
 
             self.assertTrue(any("docs/users/usage.md" in issue for issue in issues))
+
+    def test_local_consistency_flags_manifest_mirror_drift(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.write_repo_state(root)
+            (root / "data" / "skills_index.json").write_text(
+                json.dumps(self.manifest_entries(1), indent=2),
+                encoding="utf-8",
+            )
+
+            issues = audit_consistency.find_local_consistency_issues(root)
+
+            self.assertTrue(any("data/skills_index.json" in issue for issue in issues))
+
+    def test_local_consistency_flags_missing_manifest_fields(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.write_repo_state(root)
+            broken_manifest = self.manifest_entries(1)
+            del broken_manifest[0]["risk"]
+            manifest_text = json.dumps(broken_manifest, indent=2)
+            (root / "skills_index.json").write_text(manifest_text, encoding="utf-8")
+            (root / "data" / "skills_index.json").write_text(manifest_text, encoding="utf-8")
+            (root / "apps" / "web-app" / "public" / "skills.json.backup").write_text(
+                manifest_text,
+                encoding="utf-8",
+            )
+            (root / "apps" / "web-app" / "public" / "skills.json").write_text(
+                manifest_text,
+                encoding="utf-8",
+            )
+
+            issues = audit_consistency.find_local_consistency_issues(root)
+
+            self.assertTrue(any("missing required fields: risk" in issue for issue in issues))
 
 
 if __name__ == "__main__":

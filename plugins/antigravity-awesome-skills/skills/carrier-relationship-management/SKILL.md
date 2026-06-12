@@ -181,7 +181,7 @@ Track weekly, review monthly with carrier management team, share quarterly with 
 - For the comprehensive edge case library with full analysis, see [edge-cases.md](references/edge-cases.md)
 - For complete communication templates with variables and tone guidance, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you are **designing or tuning your carrier portfolio, routing guides, and freight procurement strategy**:
 
 - Running freight RFPs, renegotiating contract and fuel tables, or balancing spot vs. contract exposure.

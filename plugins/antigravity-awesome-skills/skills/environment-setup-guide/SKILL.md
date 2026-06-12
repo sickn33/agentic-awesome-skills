@@ -83,7 +83,11 @@ Provide verification steps to ensure everything works:
 **macOS (using Homebrew):**
 \`\`\`bash
 # Install Homebrew if not installed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSLo "$tmpdir/homebrew-install.sh" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+sed -n '1,160p' "$tmpdir/homebrew-install.sh"
+/bin/bash "$tmpdir/homebrew-install.sh"
 
 # Install Node.js
 brew install node
@@ -95,7 +99,11 @@ brew install node
 sudo apt update
 
 # Install Node.js and npm
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSLo "$tmpdir/nodesource-setup.sh" https://deb.nodesource.com/setup_20.x
+sed -n '1,160p' "$tmpdir/nodesource-setup.sh"
+sudo -E bash "$tmpdir/nodesource-setup.sh"
 sudo apt install -y nodejs
 \`\`\`
 

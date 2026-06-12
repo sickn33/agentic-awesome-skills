@@ -1,6 +1,6 @@
 {
-  "name": "antigravity-bundle-odoo-erp",
-  "version": "10.0.0",
+  "name": "agyb-odoo-erp",
+  "version": "12.3.0",
   "description": "Install the \"Odoo ERP\" editorial skill bundle from Antigravity Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",

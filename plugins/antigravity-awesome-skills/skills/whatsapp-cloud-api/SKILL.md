@@ -43,7 +43,7 @@ Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhook
 
 Skill para implementar integracoes profissionais com WhatsApp Business usando a Cloud API oficial da Meta. Suporta Node.js/TypeScript e Python.
 
-## Overview
+### Overview
 
 A WhatsApp Cloud API e a API oficial da Meta para envio e recebimento de mensagens via WhatsApp Business. Desde outubro 2025, e a unica opcao suportada (a API On-Premises foi descontinuada).
 

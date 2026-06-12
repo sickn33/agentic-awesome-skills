@@ -203,7 +203,7 @@ Recommended fix:
 - Postmark (very strict, great reputation)
 - Includes shared pool with high standards
 
-## Separate concerns:
+### Separate concerns:
 - Transactional: Postmark or Resend
 - Marketing: ConvertKit or Customer.io
 - Never mix marketing and transactional
@@ -229,15 +229,15 @@ Recommended fix:
 
 # Bounce handling requirements:
 
-## Hard bounces:
+### Hard bounces:
 Remove immediately on first occurrence
 Invalid address, domain doesn't exist
 
-## Soft bounces:
+### Soft bounces:
 Retry 3 times over 72 hours
 After 3 failures, treat as hard bounce
 
-## Implementation:
+### Implementation:
 ```typescript
 // Webhook handler for bounces
 app.post('/webhooks/email', (req, res) => {
@@ -249,7 +249,7 @@ app.post('/webhooks/email', (req, res) => {
 });
 ```
 
-## Monitor:
+### Monitor:
 Track bounce rate by campaign
 Alert if bounce rate exceeds 1%
 
@@ -275,24 +275,24 @@ Recommended fix:
 
 # Unsubscribe requirements:
 
-## Visible:
+### Visible:
 - Above the fold in email footer
 - Clear text, not hidden
 - Not styled to be invisible
 
-## One-click:
+### One-click:
 - Link directly unsubscribes
 - No login required
 - No "are you sure" hoops
 
-## List-Unsubscribe header:
+### List-Unsubscribe header:
 ```
 List-Unsubscribe: <mailto:unsubscribe@example.com>,
   <https://example.com/unsubscribe?token=xxx>
 List-Unsubscribe-Post: List-Unsubscribe=One-Click
 ```
 
-## Preference center:
+### Preference center:
 Option to reduce frequency instead of full unsubscribe
 
 ### Sending HTML without plain text alternative
@@ -392,23 +392,23 @@ Recommended fix:
 
 # Permission requirements:
 
-## Explicit opt-in:
+### Explicit opt-in:
 - User actively chooses to receive email
 - Not pre-checked boxes
 - Clear what they are signing up for
 
-## Double opt-in:
+### Double opt-in:
 - Confirmation email with link
 - Only add to list after confirmation
 - Best practice for marketing lists
 
-## What you cannot do:
+### What you cannot do:
 - Buy email lists
 - Scrape emails from websites
 - Add conference contacts without consent
 - Use partner/customer lists without consent
 
-## Transactional exception:
+### Transactional exception:
 Password resets, receipts, account alerts
 do not need marketing opt-in
 
@@ -439,12 +439,12 @@ Recommended fix:
 - At least 60% text content
 - Images for enhancement, not content
 
-## Always include:
+### Always include:
 - Alt text on every image
 - Key message in text, not just image
 - Fallback for images-off view
 
-## Test:
+### Test:
 - Preview with images disabled
 - Should still be usable
 
@@ -479,7 +479,7 @@ Recommended fix:
 
 # Add explicit preview text:
 
-## In HTML:
+### In HTML:
 ```html
 <div style="display:none;max-height:0;overflow:hidden;">
   Your preview text here. This appears in inbox preview.
@@ -488,14 +488,14 @@ Recommended fix:
 </div>
 ```
 
-## With React Email:
+### With React Email:
 ```tsx
 <Preview>
   Your preview text here. This appears in inbox preview.
 </Preview>
 ```
 
-## Best practices:
+### Best practices:
 - Complement the subject line
 - 40-100 characters optimal
 - Create curiosity or value

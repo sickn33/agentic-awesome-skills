@@ -53,7 +53,7 @@ Generar un informe especializado que incluya:
 - Se alimenta de los hallazgos de: `@00-andruia-consultant`.
 - Proporciona las bases para: `@ui-ux-pro-max` y `@security-review`.
 
-## When to Use
+### When to Use
 Activa este skill **después de que el nicho de mercado esté claro** y ya exista una visión inicial definida por `@00-andruia-consultant`:
 
 - Cuando quieras profundizar en regulaciones, estándares y patrones UX específicos de un sector concreto (Fintech, HealthTech, logística, etc.).

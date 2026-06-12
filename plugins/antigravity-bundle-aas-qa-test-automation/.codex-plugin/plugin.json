@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-qa-test-automation",
+  "version": "12.3.0",
+  "description": "Install the \"AAS QA & Test Automation\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-qa-test-automation",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS QA & Test Automation",
+    "shortDescription": "Specialized Product Plugins · 9 curated skills",
+    "longDescription": "Engineers and QA teams writing, debugging, and stabilizing test suites. Covers Test Driven Development, Systematic Debugging, and 7 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

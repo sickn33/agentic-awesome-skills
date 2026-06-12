@@ -49,8 +49,11 @@ README_NEW_HERE_RE = re.compile(
     r"^\*\*Antigravity Awesome Skills\*\* \(Release [\d.]+\) is a large, installable skill library.*$",
     re.MULTILINE,
 )
-README_BROWSE_RE = re.compile(
-    r'^If you want a faster answer than "browse all \d[\d,]*\+ skills", start with a tool-specific guide:$',
+README_INLINE_BROWSE_RE = re.compile(
+    r"\[📚 Browse \d[\d,]*\+ Skills\]\(#browse-\d+-skills\)"
+)
+README_TOC_BROWSE_RE = re.compile(
+    r"^- \[Browse \d[\d,]*\+ Skills\]\(#browse-\d+-skills\)$",
     re.MULTILINE,
 )
 GETTING_STARTED_TITLE_RE = re.compile(
@@ -66,7 +69,7 @@ def build_about_description(metadata: dict) -> str:
     return (
         f"Installable GitHub library of {metadata['total_skills_label']} agentic skills for "
         "Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and more. "
-        "Includes installer CLI, bundles, workflows, and official/community skill collections."
+        "Includes specialized plugins, installer CLI, bundles, workflows, and official/community skill collections."
     )
 
 
@@ -157,14 +160,19 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
             README_NEW_HERE_RE,
             (
                 f"**Antigravity Awesome Skills** (Release {metadata['version']}) is a large, installable "
-                "skill library for AI coding assistants. It includes onboarding docs, bundles, workflows, "
-                "generated catalogs, and a CLI installer so you can move from discovery to actual usage "
-                "without manually stitching together dozens of repos."
+                f"skill library for AI coding assistants. It packages {metadata['total_skills_label']} reusable "
+                "`SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI "
+                "installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can "
+                "reuse proven operating instructions instead of one-off prompts."
             ),
         ),
         (
-            README_BROWSE_RE,
-            f'If you want a faster answer than "browse all {metadata["total_skills_label"]} skills", start with a tool-specific guide:',
+            README_INLINE_BROWSE_RE,
+            f"[📚 Browse {metadata['total_skills_label']} Skills](#browse-{metadata['total_skills']}-skills)",
+        ),
+        (
+            README_TOC_BROWSE_RE,
+            f"- [Browse {metadata['total_skills_label']} Skills](#browse-{metadata['total_skills']}-skills)",
         ),
     ]
 
@@ -204,10 +212,10 @@ def sync_bundles_doc(content: str, metadata: dict, base_dir: str | Path | None =
 
 
 def sync_jetski_cortex(content: str, metadata: dict) -> str:
-    italian_skill_label = f"{metadata['total_skills']:,}".replace(",", ".")
+    skill_label = metadata["total_skills_label"]
     replacements = [
-        (r"\d[\d\.]*\+ skill", f"{italian_skill_label}+ skill"),
-        (r"\d[\d\.]* skill", f"{italian_skill_label} skill"),
+        (r"\d[\d,.]*\+ skill", f"{skill_label} skill"),
+        (r"\d[\d,.]* skill", f"{skill_label} skill"),
     ]
     return sync_regex_text(
         content,

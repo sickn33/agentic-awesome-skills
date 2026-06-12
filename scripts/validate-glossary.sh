@@ -3,15 +3,12 @@
 # Glossary Consistency Validation Script
 # Validates glossary structure and reports statistics
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 GLOSSARY_FILE="$PROJECT_ROOT/docs_zh-CN/.glossary.json"
 OUTPUT_FILE="$PROJECT_ROOT/docs_zh-CN/glossary-consistency-report.txt"
-
-# Create timestamp
-TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
 
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
@@ -25,9 +22,9 @@ fi
 {
     echo "Glossary Consistency Report"
     echo "==========================="
-    echo "Generated: $TIMESTAMP"
+    echo "Generated: deterministic"
     echo ""
-    echo "Glossary File: $GLOSSARY_FILE"
+    echo "Glossary File: docs_zh-CN/.glossary.json"
     echo ""
     echo "----------------------------------------"
     echo ""
@@ -36,8 +33,7 @@ fi
 # Check if glossary file exists
 if [[ ! -f "$GLOSSARY_FILE" ]]; then
     {
-        echo "ERROR: Glossary file not found at:"
-        echo "  $GLOSSARY_FILE"
+        echo "ERROR: Glossary file not found at docs_zh-CN/.glossary.json."
         echo ""
         echo "Please create the glossary file first."
     } >> "$OUTPUT_FILE"
@@ -99,15 +95,16 @@ else
     {
         echo "Field Validation:"
         echo ""
-        jq -r '.terms | to_entries[] | select(.value.zh == null and (.value.translations | not) ) | "  Missing translation: \(.key)"' "$GLOSSARY_FILE" > /tmp/missing_translations.txt
+        MISSING_TRANSLATIONS_FILE="$(mktemp)"
+        jq -r '.terms | to_entries[] | select(.value.zh == null and (.value.translations | not) ) | "  Missing translation: \(.key)"' "$GLOSSARY_FILE" > "$MISSING_TRANSLATIONS_FILE"
 
-        if [[ -s /tmp/missing_translations.txt ]]; then
-            cat /tmp/missing_translations.txt >> "$OUTPUT_FILE"
+        if [[ -s "$MISSING_TRANSLATIONS_FILE" ]]; then
+            cat "$MISSING_TRANSLATIONS_FILE" >> "$OUTPUT_FILE"
         else
             echo "  All terms have translations." >> "$OUTPUT_FILE"
         fi
 
-        rm -f /tmp/missing_translations.txt
+        rm -f "$MISSING_TRANSLATIONS_FILE"
         echo ""
     } >> "$OUTPUT_FILE"
 fi
@@ -141,7 +138,7 @@ fi
 } >> "$OUTPUT_FILE"
 
 echo "Glossary validation complete. Report saved to:"
-echo "  $OUTPUT_FILE"
+echo "  docs_zh-CN/glossary-consistency-report.txt"
 echo ""
 echo "Summary:"
 echo "  Total Terms: $TERM_COUNT"

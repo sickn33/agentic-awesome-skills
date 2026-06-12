@@ -206,7 +206,7 @@ Track per shift and trend weekly:
 - For the comprehensive edge case library with full resolution playbooks, see [edge-cases.md](references/edge-cases.md)
 - For complete communication templates with variables and tone guidance, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you need to **design or adjust production schedules and constraint‑focused execution plans**:
 
 - Sequencing jobs, balancing lines, and optimising changeovers in discrete or batch manufacturing.

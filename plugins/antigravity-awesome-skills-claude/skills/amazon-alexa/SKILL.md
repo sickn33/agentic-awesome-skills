@@ -72,7 +72,7 @@ Integracao completa com Amazon Alexa para criar skills de voz inteligentes, tran
 
 ---
 
-## 2.1 Pre-Requisitos
+### 2.1 Pre-Requisitos
 
 ```bash
 
@@ -248,7 +248,7 @@ def chat_handler(handler_input: HandlerInput) -> Response:
         handler_input.attributes_manager.persistent_attributes = attrs
         handler_input.attributes_manager.save_persist
 
-## 4.2 Variaveis De Ambiente Lambda
+### 4.2 Variaveis De Ambiente Lambda
 
 ```
 ANTHROPIC_API_KEY=sk-...  (armazenar em Secrets Manager)
@@ -256,7 +256,7 @@ DYNAMODB_TABLE=auri-users
 AWS_REGION=us-east-1
 ```
 
-## 4.3 Requirements.Txt
+### 4.3 Requirements.Txt
 
 ```
 ask-sdk-core>=1.19.0
@@ -267,7 +267,7 @@ boto3>=1.34.0
 
 ---
 
-## 5.1 Criar Tabela
+### 5.1 Criar Tabela
 
 ```bash
 aws dynamodb create-table \
@@ -278,7 +278,7 @@ aws dynamodb create-table \
   --region us-east-1
 ```
 
-## 5.2 Schema Do Usuario
+### 5.2 Schema Do Usuario
 
 ```json
 {
@@ -302,7 +302,7 @@ aws dynamodb create-table \
 }
 ```
 
-## 5.3 Ttl Automatico (Expirar Dados Antigos)
+### 5.3 Ttl Automatico (Expirar Dados Antigos)
 
 ```python
 import time
@@ -314,7 +314,7 @@ attrs["ttl"] = int(time.time()) + (180 * 24 * 3600)
 
 ---
 
-## 6.1 Vozes Disponiveis (Portugues)
+### 6.1 Vozes Disponiveis (Portugues)
 
 | Voice | Idioma | Tipo | Recomendado |
 |-------|--------|------|-------------|
@@ -323,7 +323,7 @@ attrs["ttl"] = int(time.time()) + (180 * 24 * 3600)
 | `Ricardo` | pt-BR | Standard | Masculino |
 | `Ines` | pt-PT | Neural | Portugal |
 
-## 6.2 Integrar Polly Na Resposta
+### 6.2 Integrar Polly Na Resposta
 
 ```python
 import boto3
@@ -349,7 +349,7 @@ def speak_with_polly(handler_input, text, voice_id="Vitoria"):
     return handler_input.response_builder.speak(ssml)
 ```
 
-## 6.3 Ssml Para Controle De Voz
+### 6.3 Ssml Para Controle De Voz
 
 ```xml
 <speak>
@@ -363,7 +363,7 @@ def speak_with_polly(handler_input, text, voice_id="Vitoria"):
 
 ---
 
-## 7.1 Template De Chat
+### 7.1 Template De Chat
 
 ```json
 {
@@ -409,7 +409,7 @@ def speak_with_polly(handler_input, text, voice_id="Vitoria"):
 }
 ```
 
-## 7.2 Adicionar Apl Na Resposta
+### 7.2 Adicionar Apl Na Resposta
 
 ```python
 @sb.request_handler(can_handle_func=is_intent_name("ChatIntent"))
@@ -434,7 +434,7 @@ def chat_with_apl(handler_input: HandlerInput) -> Response:
 
 ---
 
-## 8.1 Ativar Smart Home Skill
+### 8.1 Ativar Smart Home Skill
 
 No `skill.json`, adicionar:
 ```json
@@ -449,7 +449,7 @@ No `skill.json`, adicionar:
 }
 ```
 
-## 8.2 Handler De Smart Home
+### 8.2 Handler De Smart Home
 
 ```python
 def handle_smart_home_directive(event, context):
@@ -469,7 +469,7 @@ def handle_smart_home_directive(event, context):
         return build_smart_home_response(endpoint_id, "brightness", brightness)
 ```
 
-## 8.3 Discovery De Dispositivos
+### 8.3 Discovery De Dispositivos
 
 ```python
 def handle_discovery(event, context):

@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-security-engineer",
+  "version": "12.3.0",
+  "description": "Install the \"AAS Security Engineer\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-security-engineer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Security Engineer",
+    "shortDescription": "Specialized Product Plugins · 9 curated skills",
+    "longDescription": "Authorized security testing, audit, and hardening teams. Covers Ethical Hacking Methodology, Burp Suite Testing, and 7 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

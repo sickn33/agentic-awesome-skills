@@ -71,4 +71,15 @@ function makeCheckRun(name, status, conclusion, startedAt, id) {
   assert.strictEqual(mergeBatch.isRetryableMergeError(new Error("Something else")), false);
 }
 
+{
+  const literalArg = "safe&echo injected";
+  const stdout = mergeBatch.runCommand(
+    process.execPath,
+    ["-e", "process.stdout.write(process.argv[1])", literalArg],
+    path.join(__dirname, "..", "..", ".."),
+    { capture: true },
+  );
+  assert.strictEqual(stdout, literalArg);
+}
+
 console.log("ok");

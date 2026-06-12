@@ -113,6 +113,18 @@ tools: [claude, cursor, gemini]
 ---
 ```
 
+#### `license` *(optional)*
+- **What it is:** SPDX license identifier for the upstream source material
+- **Format:** A valid SPDX expression (e.g. `MIT`, `Apache-2.0`, `CC-BY-4.0`)
+- **Example:** `license: MIT`
+- **When to use:** Declare when `source_repo` points to material under a known license. Omitting it signals "license not verified" to downstream tooling.
+
+#### `license_source` *(optional)*
+- **What it is:** Direct URL to the upstream license file
+- **Format:** Full URL string
+- **Example:** `license_source: "https://github.com/owner/repo/blob/main/LICENSE"`
+- **When to use:** Include alongside `license:` so automated tooling can verify the claim. If the upstream repo has no LICENSE file, omit this field.
+
 ### Source-credit contract
 
 - External GitHub-derived skills should declare both `source_repo` and `source_type`.

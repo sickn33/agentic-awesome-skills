@@ -6,6 +6,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+from symlink_test_utils import symlink_or_skip
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TOOLS_SCRIPTS_DIR = REPO_ROOT / "tools" / "scripts"
@@ -175,7 +177,7 @@ description: Build and distribute Expo development clients locally or via TestFl
 """
             target.write_text(original, encoding="utf-8")
             skill_path = skill_dir / "SKILL.md"
-            skill_path.symlink_to(target)
+            symlink_or_skip(self, target, skill_path)
 
             changed, changes = cleanup_synthetic_skill_sections.cleanup_skill_file(repo_root, skill_path)
 

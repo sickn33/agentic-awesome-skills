@@ -48,7 +48,7 @@ Você é um **Advogado Especialista** com domínio absoluto em:
 
 ---
 
-## 1.1 Leilão Judicial (Cpc/2015)
+### 1.1 Leilão Judicial (Cpc/2015)
 
 **Fluxo Processual Completo:**
 ```
@@ -107,7 +107,7 @@ Registro no Cartório de Imóveis
 | Art. 898 | Desfazimento da arrematação |
 | Art. 901 | Auto de 
 
-## 1.2 Leilão Extrajudicial — Alienação Fiduciária (Lei 9.514/97)
+### 1.2 Leilão Extrajudicial — Alienação Fiduciária (Lei 9.514/97)
 
 **Fluxo Legal Completo:**
 ```
@@ -153,7 +153,7 @@ Credor incorpora o imóvel — dívida extinta (Art. 27, §5º)
 
 ---
 
-## 2.1 Risco De Nulidade Da Hasta Pública
+### 2.1 Risco De Nulidade Da Hasta Pública
 
 **ALTO RISCO — Verificar Sempre:**
 
@@ -181,7 +181,7 @@ Credor incorpora o imóvel — dívida extinta (Art. 27, §5º)
 - Bem de família não declarado nos autos pode ser arguido após leilão
 - Risco: arrematação anulada (Art. 903, §1º, II CPC — até 10 dias após)
 
-## 2.2 Bem De Família (Lei 8.009/90)
+### 2.2 Bem De Família (Lei 8.009/90)
 
 **Regra Geral (Art. 1º):**
 O imóvel utilizado como residência pela família é impenhorável.
@@ -204,7 +204,7 @@ O imóvel utilizado como residência pela família é impenhorável.
 de boa-fé, jurisprudência tende a preservar a arrematação (Art. 903, §1º CPC).
 Mas o risco existe — avaliar caso a caso.
 
-## 2.3 Ônus Reais Que Acompanham O Imóvel
+### 2.3 Ônus Reais Que Acompanham O Imóvel
 
 **O que o arrematante herda:**
 
@@ -226,7 +226,7 @@ Mas o risco existe — avaliar caso a caso.
   se o edital expressamente transfere a responsabilidade ao credor
 - SEMPRE verificar no edital quem responde pelos débitos
 
-## 2.4 Prazo Para Anulação Da Arrematação (Art. 903 Cpc)
+### 2.4 Prazo Para Anulação Da Arrematação (Art. 903 Cpc)
 
 A arrematação pode ser desconstituída por:
 
@@ -249,7 +249,7 @@ o risco de anulação. Imóvel com muito valor emocional para o devedor = maior 
 
 ---
 
-## 3.1 Leitura De Matrícula (Certidão De Ônus)
+### 3.1 Leitura De Matrícula (Certidão De Ônus)
 
 **O que verificar:**
 1. Identificação do imóvel (número, área, confrontações)
@@ -264,7 +264,7 @@ o risco de anulação. Imóvel com muito valor emocional para o devedor = maior 
 5. Área de preservação permanente, faixa de marinha (laudêmio)
 6. Existência de ação de usucapião, retificação, etc.
 
-## 3.2 Leitura Do Processo Judicial
+### 3.2 Leitura Do Processo Judicial
 
 **O que buscar nos autos:**
 - Petição inicial da execução — valor do débito original

@@ -770,7 +770,7 @@ def analyze_dockerfile(filepath: Path, verbose: bool = False) -> dict:
                 pattern="sensitive_file_in_image",
             ))
 
-        # curl | bash pattern
+        # Remote script piping pattern
         if _DOCKER_CURL_PIPE_RE.search(line):
             findings.append(_make_finding(
                 file=file_str,

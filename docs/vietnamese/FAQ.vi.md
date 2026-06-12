@@ -116,7 +116,7 @@ Sử dụng biểu tượng `@` theo sau là tên skill:
 
 ### Làm thế nào để tôi biết nên dùng kỹ năng nào?
 
-1. **Duyệt qua danh mục**: Xem [Danh mục Skill (Skill Catalog)](../CATALOG.vi.md).
+1. **Duyệt qua danh mục**: Xem [Danh mục Skill (Skill Catalog)](../../CATALOG.md).
 2. **Tìm kiếm**: `ls skills/ | grep "từ-khóa"`
 3. **Hỏi AI của bạn**: "Bạn có kỹ năng nào để kiểm thử (testing) không?"
 
@@ -152,7 +152,7 @@ Vui lòng gửi kèm:
 - Sửa lỗi đánh máy.
 - Thêm ví dụ.
 - Cải thiện tài liệu hướng dẫn.  
-Hãy xem [CONTRIBUTING.md](../CONTRIBUTING.vi.md) để biết hướng dẫn chi tiết.
+Hãy xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn chi tiết.
 
 ### Pull Request (PR) của tôi thất bại khi kiểm tra "Quality Bar". Tại sao?
 

@@ -61,5 +61,5 @@ Detect primary language from file extensions and build files, then select a comp
 
 JSON code block following the catalogue schema with `items[].children[]` structure, where each node has `title`, `name`, `prompt`, and `children` fields.
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

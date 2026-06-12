@@ -70,8 +70,15 @@ This is **not** how this repository is designed to be used, and it will almost c
 
 Instead, hosts should:
 
-- use `data/skills_index.json` as a **lightweight manifest** for discovery; and
+- use `skills_index.json` as the **canonical array-format manifest** for discovery;
+- use `data/skills_index.json` as the compatibility mirror in `data/` when needed;
+- validate each discovered `path` against `SKILLS_ROOT` before reading; and
 - load individual `SKILL.md` files **only when a skill is invoked** (e.g. via `@skill-id` in the conversation).
+
+Manifest contract references:
+
+- [`schemas/skills-index.v1.schema.json`](../../schemas/skills-index.v1.schema.json)
+- [`discovery-manifest.md`](discovery-manifest.md)
 
 For a concrete example (including pseudo‑code) see:
 
@@ -116,7 +123,7 @@ _Always check the Risk label and review the code._
 It depends on how you install:
 
 - **Using the installer CLI (`npx antigravity-awesome-skills`)**:
-  The default install target is `~/.gemini/antigravity/skills/` for Antigravity's global library.
+  The default install target is `~/.agents/skills/` for Antigravity's global library.
 - **Using a tool-specific flag**:
   Use `--claude`, `--cursor`, `--gemini`, `--codex`, `--kiro`, or `--antigravity` to target the matching tool path automatically.
 - **Using a manual clone or custom workspace path**:
@@ -223,7 +230,7 @@ If Antigravity becomes unstable only when the full skills library is active, swi
 
 - [agent-overload-recovery.md](agent-overload-recovery.md)
 
-That guide shows how to run `scripts/activate-skills.sh` from a cloned copy of this repository so only the bundles or skill ids you need stay active in `~/.gemini/antigravity/skills`.
+That guide shows how to run `scripts/activate-skills.sh` from a cloned copy of this repository so only the bundles or skill ids you need stay active in `~/.agents/skills`.
 
 ### I use OpenCode with `.agents/skills`. Should I install the whole library?
 
@@ -246,6 +253,25 @@ The filter rules are:
 - `--risk`, `--category`, and `--tags` combine with AND
 
 This keeps the installed skill set smaller and reduces the chance of context overload in OpenCode-style runtimes.
+
+### OpenCode on Windows crashes with Bun or enters repeated compaction loops after adding many skills. What should I do?
+
+Treat this as two separate problems:
+
+- **Binary crash on startup (`bun.exe` segfault):** this is usually an OpenCode runtime issue, not a skill-content issue. Verify OpenCode can run without this repository loaded first.
+- **Compaction/summary loops after loading many skills:** this is usually context overload from too many active skills at once.
+
+Practical mitigation:
+
+1. Start with a reduced install in `.agents/skills`:
+
+```bash
+npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
+```
+
+2. Avoid loading large autonomy/conductor-style skills until the base flow is stable.
+3. Add skills incrementally and retest after each addition.
+4. If loops continue, follow the overload recovery guide: [agent-overload-recovery.md](agent-overload-recovery.md)
 
 ### Gemini CLI hangs after a few turns or says "This is taking a bit longer, we're still on it". What should I do?
 

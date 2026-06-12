@@ -10,6 +10,9 @@ date_added: "YYYY-MM-DD"
 author: your-name-or-handle
 tags: [tag-one, tag-two]
 tools: [claude, cursor, gemini]
+# Optional: declare the upstream license if source_repo is set
+# license: "MIT"
+# license_source: "https://github.com/owner/repo/blob/main/LICENSE"
 ---
 
 # Skill Title

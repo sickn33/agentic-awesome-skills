@@ -732,6 +732,702 @@
       ]
     },
     {
+      "id": "aas-web-app-builder",
+      "name": "AAS Web App Builder",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🌐",
+      "tagline": "The \"AAS Web App Builder\" Plugin",
+      "audience": "Frontend and full-stack developers shipping modern web apps.",
+      "description": "High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO.",
+      "skills": [
+        {
+          "id": "frontend-developer",
+          "summary": "Build production React and Next.js interfaces."
+        },
+        {
+          "id": "frontend-design",
+          "summary": "Apply strong UI layout and visual design patterns."
+        },
+        {
+          "id": "react-best-practices",
+          "summary": "Optimize React performance and maintainability."
+        },
+        {
+          "id": "nextjs-app-router-patterns",
+          "summary": "Use Next.js App Router patterns safely."
+        },
+        {
+          "id": "nextjs-best-practices",
+          "summary": "Ship high-quality Next.js applications."
+        },
+        {
+          "id": "tailwind-patterns",
+          "summary": "Style efficiently with Tailwind CSS patterns."
+        },
+        {
+          "id": "shadcn",
+          "summary": "Build polished interfaces with shadcn/ui."
+        },
+        {
+          "id": "form-cro",
+          "summary": "Improve form conversion and usability."
+        },
+        {
+          "id": "seo-audit",
+          "summary": "Audit technical SEO and discoverability."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-product-design-studio",
+      "name": "AAS Product Design Studio",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🎨",
+      "tagline": "The \"AAS Product Design Studio\" Plugin",
+      "audience": "Builders who want richer UI, brand, portfolio, and visual product work.",
+      "description": "Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation.",
+      "skills": [
+        {
+          "id": "ui-ux-pro-max",
+          "summary": "Use advanced UI/UX reasoning and design systems."
+        },
+        {
+          "id": "high-end-visual-design",
+          "summary": "Raise visual polish for premium interfaces."
+        },
+        {
+          "id": "frontend-design",
+          "summary": "Apply strong UI layout and visual design patterns."
+        },
+        {
+          "id": "mobile-design",
+          "summary": "Design mobile-first interaction patterns."
+        },
+        {
+          "id": "3d-web-experience",
+          "summary": "Create immersive Three.js web experiences."
+        },
+        {
+          "id": "canvas-design",
+          "summary": "Generate visual assets, posters, and diagrams."
+        },
+        {
+          "id": "scroll-experience",
+          "summary": "Design scroll-driven web experiences."
+        },
+        {
+          "id": "interactive-portfolio",
+          "summary": "Create compelling interactive portfolios."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-security-engineer",
+      "name": "AAS Security Engineer",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🛡️",
+      "tagline": "The \"AAS Security Engineer\" Plugin",
+      "audience": "Authorized security testing, audit, and hardening teams.",
+      "description": "Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows.",
+      "skills": [
+        {
+          "id": "ethical-hacking-methodology",
+          "summary": "Follow an authorized pentest methodology."
+        },
+        {
+          "id": "burp-suite-testing",
+          "summary": "Test web apps with Burp Suite workflows."
+        },
+        {
+          "id": "top-web-vulnerabilities",
+          "summary": "Cover OWASP-aligned vulnerability classes."
+        },
+        {
+          "id": "api-security-testing",
+          "summary": "Test REST and GraphQL API security."
+        },
+        {
+          "id": "linux-privilege-escalation",
+          "summary": "Assess Linux privilege escalation paths."
+        },
+        {
+          "id": "cloud-penetration-testing",
+          "summary": "Assess AWS, Azure, and GCP environments."
+        },
+        {
+          "id": "security-auditor",
+          "summary": "Run comprehensive security audits."
+        },
+        {
+          "id": "vulnerability-scanner",
+          "summary": "Analyze and validate vulnerability findings."
+        },
+        {
+          "id": "sast-configuration",
+          "summary": "Configure static application security testing."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-secure-app-builder",
+      "name": "AAS Secure App Builder",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🔐",
+      "tagline": "The \"AAS Secure App Builder\" Plugin",
+      "audience": "Application developers who want security embedded while building features.",
+      "description": "Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams.",
+      "skills": [
+        {
+          "id": "api-security-best-practices",
+          "summary": "Design secure APIs from the start."
+        },
+        {
+          "id": "auth-implementation-patterns",
+          "summary": "Implement auth, sessions, JWT, and OAuth2 safely."
+        },
+        {
+          "id": "backend-security-coder",
+          "summary": "Apply secure backend coding practices."
+        },
+        {
+          "id": "frontend-security-coder",
+          "summary": "Prevent XSS and client-side security bugs."
+        },
+        {
+          "id": "cc-skill-security-review",
+          "summary": "Review features with a security checklist."
+        },
+        {
+          "id": "pci-compliance",
+          "summary": "Handle payment security and PCI expectations."
+        },
+        {
+          "id": "sast-configuration",
+          "summary": "Configure static application security testing."
+        },
+        {
+          "id": "sql-injection-testing",
+          "summary": "Find and validate SQL injection risks."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-documents-presentations",
+      "name": "AAS Documents & Presentations",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "📄",
+      "tagline": "The \"AAS Documents & Presentations\" Plugin",
+      "audience": "Users creating, editing, converting, and automating office documents.",
+      "description": "Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations.",
+      "skills": [
+        {
+          "id": "office-productivity",
+          "summary": "Coordinate document, spreadsheet, and slide workflows."
+        },
+        {
+          "id": "docx-official",
+          "summary": "Create, edit, and inspect Word-compatible documents."
+        },
+        {
+          "id": "xlsx-official",
+          "summary": "Create and analyze formula-backed spreadsheets."
+        },
+        {
+          "id": "pptx-official",
+          "summary": "Create and edit PowerPoint-compatible presentations."
+        },
+        {
+          "id": "pdf-official",
+          "summary": "Extract, generate, and manipulate PDFs."
+        },
+        {
+          "id": "pdf-conversion-router",
+          "summary": "Choose high-fidelity PDF conversion routes."
+        },
+        {
+          "id": "google-sheets-automation",
+          "summary": "Automate Google Sheets reads and writes."
+        },
+        {
+          "id": "google-slides-automation",
+          "summary": "Automate Google Slides updates."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-data-analytics",
+      "name": "AAS Data Analytics",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "📊",
+      "tagline": "The \"AAS Data Analytics\" Plugin",
+      "audience": "Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments.",
+      "description": "Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.",
+      "skills": [
+        {
+          "id": "analytics-tracking",
+          "summary": "Set up reliable product analytics."
+        },
+        {
+          "id": "sql-pro",
+          "summary": "Query and model data with modern SQL."
+        },
+        {
+          "id": "postgres-best-practices",
+          "summary": "Optimize Postgres schemas and queries."
+        },
+        {
+          "id": "database-architect",
+          "summary": "Design robust database structures."
+        },
+        {
+          "id": "dbt-transformation-patterns",
+          "summary": "Build dbt transformation pipelines."
+        },
+        {
+          "id": "claude-d3js-skill",
+          "summary": "Create custom D3 visualizations."
+        },
+        {
+          "id": "kpi-dashboard-design",
+          "summary": "Design dashboards for decision-making."
+        },
+        {
+          "id": "ab-test-setup",
+          "summary": "Plan and validate experiments."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-agent-mcp-builder",
+      "name": "AAS Agent & MCP Builder",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🤖",
+      "tagline": "The \"AAS Agent & MCP Builder\" Plugin",
+      "audience": "Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.",
+      "description": "Maps directly to Codex's plugin model because it can grow from skills into MCP server configuration and app/tool integrations.",
+      "skills": [
+        {
+          "id": "ai-agents-architect",
+          "summary": "Design autonomous AI agent systems."
+        },
+        {
+          "id": "agent-evaluation",
+          "summary": "Evaluate agent reliability and performance."
+        },
+        {
+          "id": "mcp-builder",
+          "summary": "Create MCP interfaces for agents."
+        },
+        {
+          "id": "mcp-tool-developer",
+          "summary": "Build MCP servers and tools."
+        },
+        {
+          "id": "llm-app-patterns",
+          "summary": "Use production LLM application patterns."
+        },
+        {
+          "id": "rag-engineer",
+          "summary": "Build retrieval-augmented generation systems."
+        },
+        {
+          "id": "langgraph",
+          "summary": "Implement stateful agent workflows."
+        },
+        {
+          "id": "langfuse",
+          "summary": "Trace, evaluate, and monitor LLM apps."
+        },
+        {
+          "id": "context-window-management",
+          "summary": "Manage long context effectively."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-oss-maintainer",
+      "name": "AAS OSS Maintainer",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🧰",
+      "tagline": "The \"AAS OSS Maintainer\" Plugin",
+      "audience": "Open-source maintainers managing PRs, releases, reviews, and contributor handoffs.",
+      "description": "This is one of the most agent-native plugin opportunities: it packages repeatable repo work around review, release, changelog, and GitHub workflows.",
+      "skills": [
+        {
+          "id": "agents-md",
+          "summary": "Create concise durable agent instructions."
+        },
+        {
+          "id": "commit",
+          "summary": "Write high-quality conventional commits."
+        },
+        {
+          "id": "create-pr",
+          "summary": "Create review-ready pull requests."
+        },
+        {
+          "id": "requesting-code-review",
+          "summary": "Ask for targeted code reviews."
+        },
+        {
+          "id": "receiving-code-review",
+          "summary": "Apply review feedback rigorously."
+        },
+        {
+          "id": "changelog-automation",
+          "summary": "Keep changelogs and release notes consistent."
+        },
+        {
+          "id": "git-advanced-workflows",
+          "summary": "Handle advanced Git recovery and history workflows."
+        },
+        {
+          "id": "github-actions-advanced",
+          "summary": "Build and debug advanced GitHub Actions."
+        },
+        {
+          "id": "address-github-comments",
+          "summary": "Address GitHub review comments systematically."
+        },
+        {
+          "id": "lint-and-validate",
+          "summary": "Run validation and quality checks."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-qa-test-automation",
+      "name": "AAS QA & Test Automation",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🧪",
+      "tagline": "The \"AAS QA & Test Automation\" Plugin",
+      "audience": "Engineers and QA teams writing, debugging, and stabilizing test suites.",
+      "description": "Testing is a natural plugin because users need a workflow, not a single skill: plan tests, automate browsers, debug failures, and fix regressions.",
+      "skills": [
+        {
+          "id": "test-driven-development",
+          "summary": "Use red-green-refactor development loops."
+        },
+        {
+          "id": "systematic-debugging",
+          "summary": "Trace failures to root cause."
+        },
+        {
+          "id": "browser-automation",
+          "summary": "Automate browsers for testing and scraping."
+        },
+        {
+          "id": "e2e-testing-patterns",
+          "summary": "Build reliable end-to-end suites."
+        },
+        {
+          "id": "playwright-skill",
+          "summary": "Use Playwright for browser test automation."
+        },
+        {
+          "id": "webapp-testing",
+          "summary": "Test local web applications with Playwright."
+        },
+        {
+          "id": "k6-load-testing",
+          "summary": "Run load and scalability tests."
+        },
+        {
+          "id": "test-fixing",
+          "summary": "Fix failing tests systematically."
+        },
+        {
+          "id": "code-review-checklist",
+          "summary": "Catch common bugs in reviews."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-devops-cloud",
+      "name": "AAS DevOps & Cloud",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "☁️",
+      "tagline": "The \"AAS DevOps & Cloud\" Plugin",
+      "audience": "Teams shipping infrastructure, deployments, and operational workflows.",
+      "description": "Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows.",
+      "skills": [
+        {
+          "id": "docker-expert",
+          "summary": "Build and operate containers cleanly."
+        },
+        {
+          "id": "aws-serverless",
+          "summary": "Ship serverless workloads on AWS."
+        },
+        {
+          "id": "kubernetes-architect",
+          "summary": "Design Kubernetes and GitOps systems."
+        },
+        {
+          "id": "terraform-specialist",
+          "summary": "Manage infrastructure as code."
+        },
+        {
+          "id": "github-actions-templates",
+          "summary": "Use production GitHub Actions patterns."
+        },
+        {
+          "id": "environment-setup-guide",
+          "summary": "Standardize team environments."
+        },
+        {
+          "id": "deployment-procedures",
+          "summary": "Roll out changes safely."
+        },
+        {
+          "id": "bash-linux",
+          "summary": "Use Linux shell workflows effectively."
+        },
+        {
+          "id": "incident-responder",
+          "summary": "Respond to incidents with clear procedure."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-marketing-seo-growth",
+      "name": "AAS Marketing, SEO & Growth",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "📈",
+      "tagline": "The \"AAS Marketing, SEO & Growth\" Plugin",
+      "audience": "Founders and growth teams creating content, SEO systems, experiments, and email campaigns.",
+      "description": "A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work.",
+      "skills": [
+        {
+          "id": "content-creator",
+          "summary": "Create SEO-aware marketing content."
+        },
+        {
+          "id": "seo-audit",
+          "summary": "Audit technical SEO and discoverability."
+        },
+        {
+          "id": "seo-fundamentals",
+          "summary": "Apply durable SEO principles."
+        },
+        {
+          "id": "programmatic-seo",
+          "summary": "Create scalable SEO page systems."
+        },
+        {
+          "id": "analytics-tracking",
+          "summary": "Set up reliable product analytics."
+        },
+        {
+          "id": "ab-test-setup",
+          "summary": "Plan and validate experiments."
+        },
+        {
+          "id": "email-sequence",
+          "summary": "Write automated email campaigns."
+        },
+        {
+          "id": "copywriting",
+          "summary": "Write conversion-focused copy."
+        },
+        {
+          "id": "schema-markup",
+          "summary": "Add structured data for search visibility."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-automation-builder",
+      "name": "AAS Automation Builder",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "⚙️",
+      "tagline": "The \"AAS Automation Builder\" Plugin",
+      "audience": "Teams designing reliable automations across tools, data stores, and communication platforms.",
+      "description": "Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows.",
+      "skills": [
+        {
+          "id": "workflow-automation",
+          "summary": "Design durable automation workflows."
+        },
+        {
+          "id": "mcp-builder",
+          "summary": "Create MCP interfaces for agents."
+        },
+        {
+          "id": "make-automation",
+          "summary": "Build Make/Integromat automations."
+        },
+        {
+          "id": "airtable-automation",
+          "summary": "Automate Airtable data and views."
+        },
+        {
+          "id": "notion-automation",
+          "summary": "Automate Notion pages and databases."
+        },
+        {
+          "id": "slack-automation",
+          "summary": "Automate Slack workflows."
+        },
+        {
+          "id": "googlesheets-automation",
+          "summary": "Automate Google Sheets operations."
+        },
+        {
+          "id": "github-automation",
+          "summary": "Automate GitHub issues and repository work."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-observability-ir",
+      "name": "AAS Observability IR",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "📡",
+      "tagline": "The \"AAS Observability IR\" Plugin",
+      "audience": "Engineering teams monitoring systems, debugging production issues, and writing postmortems.",
+      "description": "Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts.",
+      "skills": [
+        {
+          "id": "observability-engineer",
+          "summary": "Design monitoring and observability systems."
+        },
+        {
+          "id": "distributed-tracing",
+          "summary": "Trace requests across services."
+        },
+        {
+          "id": "slo-implementation",
+          "summary": "Define and operate service level objectives."
+        },
+        {
+          "id": "incident-responder",
+          "summary": "Respond to incidents with clear procedure."
+        },
+        {
+          "id": "postmortem-writing",
+          "summary": "Write clear blameless postmortems."
+        },
+        {
+          "id": "performance-engineer",
+          "summary": "Diagnose and improve application performance."
+        },
+        {
+          "id": "grafana-dashboards",
+          "summary": "Create useful Grafana dashboards."
+        },
+        {
+          "id": "langfuse",
+          "summary": "Trace, evaluate, and monitor LLM apps."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-python-api-builder",
+      "name": "AAS Python API Builder",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "🐍",
+      "tagline": "The \"AAS Python API Builder\" Plugin",
+      "audience": "Python developers building APIs, services, and tests.",
+      "description": "A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together.",
+      "skills": [
+        {
+          "id": "python-pro",
+          "summary": "Write modern, idiomatic Python."
+        },
+        {
+          "id": "python-patterns",
+          "summary": "Apply Python architecture and design patterns."
+        },
+        {
+          "id": "fastapi-pro",
+          "summary": "Build high-performance FastAPI services."
+        },
+        {
+          "id": "fastapi-templates",
+          "summary": "Start production-ready FastAPI projects."
+        },
+        {
+          "id": "django-pro",
+          "summary": "Build robust Django applications."
+        },
+        {
+          "id": "python-testing-patterns",
+          "summary": "Test Python code with pytest patterns."
+        },
+        {
+          "id": "async-python-patterns",
+          "summary": "Use asyncio and async Python safely."
+        },
+        {
+          "id": "api-design-principles",
+          "summary": "Design clear and maintainable APIs."
+        }
+      ],
+      "why": ""
+    },
+    {
+      "id": "aas-mobile-app-builder",
+      "name": "AAS Mobile App Builder",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "📱",
+      "tagline": "The \"AAS Mobile App Builder\" Plugin",
+      "audience": "Mobile teams shipping Expo, React Native, Flutter, and iOS apps.",
+      "description": "Mobile development has a full lifecycle in the catalog: architecture, Expo routes, distribution, CI, native platforms, and store optimization.",
+      "skills": [
+        {
+          "id": "mobile-developer",
+          "summary": "Build cross-platform mobile applications."
+        },
+        {
+          "id": "react-native-architecture",
+          "summary": "Structure production React Native apps."
+        },
+        {
+          "id": "expo-api-routes",
+          "summary": "Build Expo Router API routes."
+        },
+        {
+          "id": "expo-dev-client",
+          "summary": "Create Expo development clients."
+        },
+        {
+          "id": "expo-cicd-workflows",
+          "summary": "Automate Expo builds and releases."
+        },
+        {
+          "id": "expo-deployment",
+          "summary": "Deploy and release Expo applications."
+        },
+        {
+          "id": "flutter-expert",
+          "summary": "Build Flutter multi-platform apps."
+        },
+        {
+          "id": "ios-developer",
+          "summary": "Develop iOS apps with Swift."
+        },
+        {
+          "id": "app-store-optimization",
+          "summary": "Improve App Store and Play Store visibility."
+        }
+      ],
+      "why": ""
+    },
+    {
       "id": "mobile-developer",
       "name": "Mobile Developer",
       "group": "🔧 Specialized Packs",

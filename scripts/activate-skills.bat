@@ -3,7 +3,7 @@ setlocal EnableDelayedExpansion
 
 :: --- CONFIGURATION ---
 set "BASE_DIR=%AG_BASE_DIR%"
-if not defined BASE_DIR set "BASE_DIR=%USERPROFILE%\.gemini\antigravity"
+if not defined BASE_DIR set "BASE_DIR=%USERPROFILE%\.agents"
 set "SKILLS_DIR=%AG_SKILLS_DIR%"
 if not defined SKILLS_DIR set "SKILLS_DIR=%BASE_DIR%\skills"
 set "LIBRARY_DIR=%AG_LIBRARY_DIR%"

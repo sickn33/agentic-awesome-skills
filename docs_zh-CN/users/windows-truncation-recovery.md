@@ -68,7 +68,7 @@
 参见:
 
 - [`docs/integrations/jetski-cortex.md`](../integrations/jetski-cortex.md)
-- [`docs/integrations/jetski-gemini-loader/README.md`](../../docs/integrations/jetski-gemini-loader/README.md)
+- [`docs/integrations/jetski-gemini-loader/README.md`](../integrations/jetski-gemini-loader/README.md)
 
 ## 可选的 Windows 批处理助手
 

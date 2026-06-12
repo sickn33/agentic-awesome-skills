@@ -66,7 +66,7 @@ description: "One-line description"
 - No `<br/>` in Mermaid blocks
 - All hex colors must be 3 or 6 digits
 
-## When to Use
+### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations

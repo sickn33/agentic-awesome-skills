@@ -43,7 +43,7 @@ Integracao completa com Telegram Bot API. Setup com BotFather, mensagens, webhoo
 
 Skill para implementar bots profissionais no Telegram usando a Bot API oficial. Suporta Node.js/TypeScript e Python.
 
-## Overview
+### Overview
 
 A Telegram Bot API permite criar bots que interagem com usuarios via mensagens, comandos, inline keyboards, pagamentos e muito mais. Bots sao criados pelo @BotFather e autenticados via token unico.
 
@@ -131,23 +131,25 @@ TELEGRAM_BOT_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
 ## Node.Js/Typescript
 
 ```typescript
-// Instalar: npm install node-telegram-bot-api dotenv
-// Para TypeScript: npm install -D @types/node-telegram-bot-api typescript
-import TelegramBot from 'node-telegram-bot-api';
+// Instalar: npm install telegraf dotenv
+// Para TypeScript: npm install -D typescript
+import { Telegraf } from 'telegraf';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, { polling: true });
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
 
-bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, 'Ola! Eu sou seu bot. Como posso ajudar?');
+bot.start((ctx) => {
+  ctx.reply('Ola! Eu sou seu bot. Como posso ajudar?');
 });
 
-bot.on('message', (msg) => {
-  if (msg.text && !msg.text.startsWith('/')) {
-    bot.sendMessage(msg.chat.id, `Voce disse: ${msg.text}`);
+bot.on('text', (ctx) => {
+  if (!ctx.message.text.startsWith('/')) {
+    ctx.reply(`Voce disse: ${ctx.message.text}`);
   }
 });
+
+bot.launch();
 ```
 
 ## Python
@@ -353,8 +355,9 @@ app.run_polling(allowed_updates=Update.ALL_TYPES)
 ```
 
 ```typescript
-// node-telegram-bot-api com polling
-const bot = new TelegramBot(token, { polling: true });
+// Telegraf com polling
+const bot = new Telegraf(token);
+bot.launch();
 ```
 
 ## Webhooks (Producao)

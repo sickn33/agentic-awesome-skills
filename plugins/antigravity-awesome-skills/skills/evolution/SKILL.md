@@ -5,8 +5,6 @@ risk: critical
 source: community
 ---
 
-<!-- security-allowlist: curl-pipe-bash -->
-
 # Makepad Skills Evolution
 
 This skill enables makepad-skills to self-improve continuously during development.
@@ -36,7 +34,11 @@ For reliable automatic triggering, use Claude Code hooks. Install with `--with-h
 
 ```bash
 # Install makepad-skills with hooks enabled
-curl -fsSL https://raw.githubusercontent.com/ZhangHanDong/makepad-skills/main/install.sh | bash -s -- --with-hooks
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSLo "$tmpdir/makepad-skills-install.sh" https://raw.githubusercontent.com/ZhangHanDong/makepad-skills/main/install.sh
+sed -n '1,160p' "$tmpdir/makepad-skills-install.sh"
+bash "$tmpdir/makepad-skills-install.sh" --with-hooks
 ```
 
 This will install hooks to `.claude/hooks/` and configure `.claude/settings.json`:

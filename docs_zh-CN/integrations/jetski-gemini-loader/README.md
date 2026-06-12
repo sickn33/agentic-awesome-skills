@@ -20,7 +20,7 @@
 - 如何通过 `maxSkillsPerTurn` 强制执行**每轮最大技能数**。
 - 如何通过 `overflowBehavior` 选择在请求太多技能时是**截断还是报错**。
 
-此模式避免了在安装 1,328+ 技能时的上下文溢出。
+此模式避免了在安装 1,494+ 技能时的上下文溢出。
 
 ---
 
@@ -33,7 +33,7 @@
     - `loadSkillBodies(skillsRoot, metas)`;
     - `buildModelMessages({...})`。
 - 另请参阅集成指南:
-  - [`docs/integrations/jetski-cortex.md`](../../docs/integrations/jetski-cortex.md)
+  - [`docs/integrations/jetski-cortex.md`](../jetski-cortex.md)
 
 ---
 

@@ -569,7 +569,7 @@ context about what system is being configured is nearly useless.
 
 Recommended fix:
 
-## Contextual Chunking (Anthropic's approach)
+### Contextual Chunking (Anthropic's approach)
 # Add document context to each chunk before embedding
 # Reduces retrieval failures by 35%
 

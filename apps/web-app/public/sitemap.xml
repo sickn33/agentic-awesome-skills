@@ -1,248 +1,254 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://localhost/</loc>
-    <lastmod>2026-04-13</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/axiom</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/plugins</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/helium-mcp</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/android-dev</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/indexing-issue-auditor</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/runapi-cli</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/linkedin-profile-optimizer</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/unship</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/codebase-to-wordpress-converter</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/article-illustrations</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/vscode-extension-guide-en</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/cv-generator</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/puzzle-activity-planner</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/open-dynamic-workflows</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/skill-optimizer</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/video-content-extractor</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/rayden-code</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/2slides-ppt-generator</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/rayden-use</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/anti-sycophancy</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/multi-agent-task-orchestrator</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/event-staffing-compliance</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/monte-carlo-monitor-creation</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/event-staffing-ordering</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/monte-carlo-prevent</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/examprep-ai</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/monte-carlo-push-ingestion</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/permission-manager</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/monte-carlo-validation-notebook</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/skill-suggester</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ui-a11y</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/smart-git-automation</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ui-component</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/antigravity-agent-manager</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ui-page</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/hasdata</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ui-pattern</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/hasdata-cli</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ui-review</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/linkedin-content-generator</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ui-setup</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/accesslint-audit</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ui-tokens</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/accesslint-diff</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ux-audit</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/accesslint-scan</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ux-copy</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/composition-patterns</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ux-feedback</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/debugging-toolkit</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ux-flow</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/deploy-to-vercel</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/faf-expert</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/polis-protocol</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/faf-wizard</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/python-development</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/idea-darwin</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/react-native-skills</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/global-chat-agent-discovery</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/skill-issue</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/python-pptx-generator</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/tdd-workflows</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/satori</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/vercel-cli-with-tokens</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/protect-mcp-governance</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/vercel-optimize</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/technical-change-tracker</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/vercel-react-view-transitions</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/awareness-stage-mapper</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/doc2math</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/brand-perception-psychologist</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/moatmri</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/copywriting-psychologist</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/nextjs-seo-indexing</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/customer-psychographic-profiler</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/schema-markup-generator</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/emotional-arc-designer</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/social-metadata-hardening</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/headline-psychologist</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>http://localhost/skill/user-thoughts</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost/skill/vibe-code-cleanup</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -16,6 +16,50 @@ const audioExample = fs.readFileSync(
   path.join(repoRoot, 'skills', 'audio-transcriber', 'examples', 'basic-transcription.sh'),
   'utf8',
 );
+const aomiSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'aomi-transact', 'SKILL.md'),
+  'utf8',
+);
+const mockHunterSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'mock-hunter', 'SKILL.md'),
+  'utf8',
+);
+const longbridgeSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'longbridge', 'SKILL.md'),
+  'utf8',
+);
+const mercurySkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'mercury-mcp', 'SKILL.md'),
+  'utf8',
+);
+const socialclawSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'socialclaw', 'SKILL.md'),
+  'utf8',
+);
+const bumblebeeSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'bumblebee', 'SKILL.md'),
+  'utf8',
+);
+const githubActionsAdvancedSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'github-actions-advanced', 'SKILL.md'),
+  'utf8',
+);
+const photopeaSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'photopea-embedded-editor', 'SKILL.md'),
+  'utf8',
+);
+
+function fencedBlocks(content, language) {
+  const blocks = [];
+  const blockRe = new RegExp(`^\\\`\\\`\\\`${language}\\n([\\s\\S]*?)^\\\`\\\`\\\``, 'gm');
+  let match;
+
+  while ((match = blockRe.exec(content)) !== null) {
+    blocks.push(match[1]);
+  }
+
+  return blocks;
+}
 
 function findSkillFiles(skillsRoot) {
   const files = [];
@@ -103,6 +147,38 @@ const rules = [
   },
 ];
 
+const textFileExtensions = new Set([
+  '.cjs',
+  '.js',
+  '.json',
+  '.md',
+  '.mjs',
+  '.py',
+  '.sh',
+  '.ts',
+  '.txt',
+  '.yaml',
+  '.yml',
+]);
+
+const realisticSecretPatterns = [
+  {
+    id: 'aws-example-access-key',
+    message: 'realistic AWS access key example',
+    regex: /AKIAIOSFODNN7EXAMPLE/,
+  },
+  {
+    id: 'aws-example-secret-key',
+    message: 'realistic AWS secret access key example',
+    regex: /wJalrXUtnFEMI\/K7MDENG\/bPxRfiCYEXAMPLEKEY/,
+  },
+  {
+    id: 'pem-private-key-placeholder',
+    message: 'literal PEM private key placeholder',
+    regex: /^\s*-----BEGIN PRIVATE KEY-----\s*$/m,
+  },
+];
+
 function collectSkillFiles(basePaths) {
   const files = new Set();
 
@@ -141,6 +217,31 @@ function addViolation(relativePath, lineNumber, rule) {
   violations.push(`${relativePath}:${lineNumber}: ${rule.message}`);
 }
 
+function findTextFiles(rootPath) {
+  const files = [];
+  const queue = [rootPath];
+
+  while (queue.length > 0) {
+    const current = queue.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const fullPath = path.join(current, entry.name);
+
+      if (entry.isDirectory()) {
+        queue.push(fullPath);
+        continue;
+      }
+
+      if (entry.isFile() && textFileExtensions.has(path.extname(entry.name))) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  return files;
+}
+
 for (const filePath of skillFiles) {
   const content = fs.readFileSync(filePath, 'utf8');
   const lines = content.split(/\r?\n/);
@@ -163,6 +264,22 @@ for (const filePath of skillFiles) {
   }
 }
 
+for (const filePath of findTextFiles(path.join(repoRoot, 'skills'))) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const relativePath = path.relative(repoRoot, filePath);
+
+  for (const rule of realisticSecretPatterns) {
+    const match = rule.regex.exec(content);
+    if (!match) {
+      continue;
+    }
+
+    const lineNumber = content.slice(0, match.index).split(/\r?\n/).length;
+    addViolation(relativePath, lineNumber, rule);
+    rule.regex.lastIndex = 0;
+  }
+}
+
 assert.strictEqual(violationCount(violations), 0, violations.join('\n'));
 assert.match(audioExample, /python3 << 'EOF'/, 'audio example should use a quoted heredoc for Python');
 assert.match(audioExample, /AUDIO_FILE_ENV/, 'audio example should pass shell variables through the environment');
@@ -170,6 +287,38 @@ assert.strictEqual(/\|\s*(bash|sh)\b/.test(apifySkill), false, 'SKILL.md must no
 assert.strictEqual(/\|\s*iex\b/i.test(apifySkill), false, 'SKILL.md must not recommend PowerShell pipe-to-iex installs');
 assert.strictEqual(/apify login -t\b/.test(apifySkill), false, 'SKILL.md must not put tokens on the command line');
 assert.strictEqual(/\bcurl\b[\s\S]*?\|\s*(?:bash|sh)\b/i.test(apifyCliReference), false, 'cli reference must not recommend pipe-to-shell installs');
+assert.strictEqual(
+  fencedBlocks(aomiSkill, 'bash').some((block) => /\baomi\s+tx\s+sign\b/.test(block)),
+  false,
+  'Aomi runnable bash examples must stop before signing',
+);
+assert.match(mockHunterSkill, /^risk:\s*critical$/m, 'MockHunter must not be classified as plugin-safe');
+assert.match(mockHunterSkill, /^\s+codex:\s*blocked$/m, 'MockHunter must be blocked from Codex plugin bundle');
+assert.match(mockHunterSkill, /^\s+claude:\s*blocked$/m, 'MockHunter must be blocked from Claude plugin bundle');
+for (const [name, content] of [
+  ['longbridge', longbridgeSkill],
+  ['mercury-mcp', mercurySkill],
+  ['socialclaw', socialclawSkill],
+]) {
+  assert.match(content, /^risk:\s*critical$/m, `${name} must not be classified as safe`);
+  assert.match(content, /^\s+codex:\s*blocked$/m, `${name} must be blocked from Codex plugin bundle`);
+  assert.match(content, /^\s+claude:\s*blocked$/m, `${name} must be blocked from Claude plugin bundle`);
+}
+assert.doesNotMatch(
+  bumblebeeSkill,
+  /^\s*python3 scripts\/render_report\.py\b/m,
+  'Bumblebee must not invoke helper scripts via workspace-relative paths',
+);
+assert.doesNotMatch(
+  githubActionsAdvancedSkill,
+  /run:\s+npm ci \$\{\{\s*inputs\.install-flags\s*\}\}/,
+  'GitHub Actions examples must not interpolate action inputs directly into run steps',
+);
+assert.doesNotMatch(
+  photopeaSkill,
+  /textItem\.contents\s*=\s*"\$\{(?:name|tagline)\}"/,
+  'Photopea examples must serialize dynamic text before embedding it in runScript',
+);
 
 function violationCount(list) {
   return list.length;

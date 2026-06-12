@@ -1,19 +1,19 @@
-import TelegramBot from 'node-telegram-bot-api';
+import { Telegraf } from 'telegraf';
 import express from 'express';
 
 export class TelegramBotClient {
-  public bot: TelegramBot;
-  private token: string;
+  public bot: Telegraf;
 
   constructor(token: string, webhookMode: boolean = false) {
-    this.token = token;
-    this.bot = new TelegramBot(token, {
-      polling: !webhookMode,
-    });
+    this.bot = new Telegraf(token);
+    if (webhookMode) {
+      this.bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(() => undefined);
+    }
   }
 
   async startPolling(): Promise<void> {
-    const me = await this.bot.getMe();
+    await this.bot.launch();
+    const me = await this.bot.telegram.getMe();
     console.log(`Bot @${me.username} (${me.first_name}) started with polling`);
   }
 
@@ -21,16 +21,18 @@ export class TelegramBotClient {
     const app = express();
     app.use(express.json());
 
-    // Webhook endpoint
-    app.post(`/webhook/${this.token}`, (req, res) => {
+    app.post('/webhook', async (req, res) => {
       if (secret) {
         const headerSecret = req.headers['x-telegram-bot-api-secret-token'];
         if (headerSecret !== secret) {
           return res.sendStatus(403);
         }
       }
-      this.bot.processUpdate(req.body);
-      res.sendStatus(200);
+
+      await this.bot.handleUpdate(req.body, res);
+      if (!res.headersSent) {
+        res.sendStatus(200);
+      }
     });
 
     // Health check
@@ -39,19 +41,20 @@ export class TelegramBotClient {
     });
 
     // Register webhook with Telegram
-    await this.bot.setWebHook(`${webhookUrl}/webhook/${this.token}`, {
+    const normalizedWebhookUrl = webhookUrl.replace(/\/+$/, '');
+    await this.bot.telegram.setWebhook(`${normalizedWebhookUrl}/webhook`, {
       max_connections: 40,
       secret_token: secret,
     } as any);
 
-    const info = await this.bot.getWebHookInfo();
+    const info = await this.bot.telegram.getWebhookInfo();
     console.log('Webhook registered:', info.url);
 
     app.listen(port, () => {
       console.log(`Express server listening on port ${port}`);
     });
 
-    const me = await this.bot.getMe();
+    const me = await this.bot.telegram.getMe();
     console.log(`Bot @${me.username} (${me.first_name}) started with webhook`);
   }
 
@@ -61,20 +64,20 @@ export class TelegramBotClient {
   async sendMessageSafe(
     chatId: number | string,
     text: string,
-    options?: TelegramBot.SendMessageOptions
-  ): Promise<TelegramBot.Message | null> {
+    options?: Record<string, unknown>
+  ): Promise<unknown | null> {
     const maxRetries = 3;
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
-        return await this.bot.sendMessage(chatId, text, options);
+        return await this.bot.telegram.sendMessage(chatId, text, options as any);
       } catch (error: any) {
-        if (error?.response?.statusCode === 429) {
-          const retryAfter = error.response.body?.parameters?.retry_after || 5;
+        if (error?.response?.error_code === 429) {
+          const retryAfter = error.response.parameters?.retry_after || 5;
           console.warn(`Rate limited. Retrying after ${retryAfter}s...`);
           await new Promise((r) => setTimeout(r, retryAfter * 1000));
           continue;
         }
-        if (error?.response?.statusCode === 403) {
+        if (error?.response?.error_code === 403) {
           console.warn(`Bot blocked by user ${chatId}`);
           return null;
         }

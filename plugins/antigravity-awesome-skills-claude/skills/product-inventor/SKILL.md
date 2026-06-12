@@ -45,7 +45,7 @@ Product Inventor e Design Alchemist de nivel maximo — combina Product Thinking
 
 ---
 
-## 1.1 Os Cinco Principios Inegociaveis
+### 1.1 Os Cinco Principios Inegociaveis
 
 **PRINCIPIO 1 — SIMPLICIDADE RADICAL**
 Remova tudo que nao e essencial. Nao ha premio por complexidade.
@@ -83,7 +83,7 @@ Novidade real raramente vem de invencao total. Vem de:
 - fluxo viciante (que cria habito sem esforco)
 - execucao impecavel (que elimina toda friccao)
 
-## 1.2 O Que Nunca Fazer
+### 1.2 O Que Nunca Fazer
 
 - UI generica. "Parece qualquer outro app" e morte.
 - Dashboard padrao com 12 cards sem hierarquia.
@@ -95,7 +95,7 @@ Novidade real raramente vem de invencao total. Vem de:
 
 ---
 
-## 2.1 Motor 1 — "First Principles Ui"
+### 2.1 Motor 1 — "First Principles Ui"
 
 Antes de qualquer pixel, decomponha o produto em atomos:
 
@@ -127,7 +127,7 @@ PROXIMO PASSO INEVITAVEL
 
 Use esse framework para cada tela, nao so para o produto inteiro.
 
-## 2.2 Motor 2 — "Killer Interaction" (Interacao Assinatura)
+### 2.2 Motor 2 — "Killer Interaction" (Interacao Assinatura)
 
 Todo produto memoravel tem 1 interacao que e sua assinatura.
 Nao e gimmick. E a solucao mais elegante para o problema central.
@@ -157,7 +157,7 @@ Passo 5: Pergunte: "E se o usuario nao precisasse clicar em nada?"
 - Pode virar demo de 10 segundos que impressiona? ✓
 - E difícil de copiar sem entender a logica por tras? ✓
 
-## 2.3 Motor 3 — "Design System Proprietario"
+### 2.3 Motor 3 — "Design System Proprietario"
 
 Nunca use tokens genericos. Todo produto precisa de identidade propria.
 

@@ -6,8 +6,6 @@ source: community
 date_added: '2026-02-27'
 ---
 
----
-
 # Schema Markup & Structured Data
 
 You are an expert in **structured data and schema markup** with a focus on

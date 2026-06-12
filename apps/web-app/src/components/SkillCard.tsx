@@ -1,66 +1,65 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Book, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { SkillStarButton } from './SkillStarButton';
+import { Icon } from './ui/Icon';
 import type { Skill } from '../types';
 
 interface SkillCardProps {
-    skill: Skill;
-    starCount: number;
+  skill: Skill;
+  starCount: number;
 }
 
 export const SkillCard = React.memo(({ skill, starCount }: SkillCardProps) => {
-    return (
-        <motion.div
-            layout
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="h-full"
-        >
-            <Link
-                to={`/skill/${skill.id}`}
-                className="group flex flex-col h-full rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-500/50"
-            >
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                        <div className="p-2 bg-indigo-50 dark:bg-indigo-950/30 rounded-md">
-                            <Book className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                        </div>
-                        <span className="text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-                            {skill.category || 'Uncategorized'}
-                        </span>
-                    </div>
-                    <SkillStarButton
-                        skillId={skill.id}
-                        communityCount={starCount}
-                        variant="default"
-                    />
-                </div>
+  return (
+    <div className="h-full">
+      <Link
+        to={`/skill/${skill.id}`}
+        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-[0_20px_40px_-34px_rgba(15,23,42,0.85)] transition-all hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_28px_56px_-34px_rgba(15,23,42,0.7)] dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
+      >
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-r from-slate-100/70 via-transparent to-teal-100/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-slate-800/60 dark:to-teal-900/20" />
 
-                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2 line-clamp-1">
-                    @{skill.name}
-                </h3>
+        <div className="relative mb-5 flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className="rounded-lg border border-slate-200 bg-slate-100 p-2 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+              <Icon name="book" size={20} className="h-5 w-5" />
+            </div>
+            <span className="truncate rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+              {skill.category || 'Uncategorized'}
+            </span>
+          </div>
 
-                <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-4 flex-grow">
-                    {skill.description}
-                </p>
+          <SkillStarButton
+            skillId={skill.id}
+            communityCount={starCount}
+            variant="default"
+          />
+        </div>
 
-                <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 mb-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <span>Risk: <span className="font-semibold text-slate-600 dark:text-slate-300">{skill.risk || 'unknown'}</span></span>
-                    {skill.date_added && (
-                        <span className="ml-2">📅 {skill.date_added}</span>
-                    )}
-                </div>
+        <h3 className="mb-2 line-clamp-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+          @{skill.name}
+        </h3>
 
-                <div className="flex items-center text-sm font-medium text-indigo-600 dark:text-indigo-400 pt-2 mt-auto group-hover:translate-x-1 transition-transform">
-                    Read Skill <ArrowRight className="ml-1 h-4 w-4" />
-                </div>
-            </Link>
-        </motion.div>
-    );
+        <p className="mb-5 line-clamp-3 flex-grow text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+          {skill.description}
+        </p>
+
+        <div className="mb-4 flex items-center justify-between border-y border-slate-200/80 py-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+          <span>
+            Risk:{' '}
+            <span className="font-semibold text-slate-700 dark:text-slate-200">{skill.risk || 'unknown'}</span>
+          </span>
+          {skill.date_added && (
+            <span className="ml-2 truncate">Added {skill.date_added}</span>
+          )}
+        </div>
+
+        <div className="mt-auto flex items-center text-sm font-medium text-slate-800 transition-transform group-hover:translate-x-1 dark:text-slate-200">
+          Read skill
+          <Icon name="arrowRight" size={16} className="ml-1 h-4 w-4" />
+        </div>
+      </Link>
+    </div>
+  );
 });
 
 SkillCard.displayName = 'SkillCard';

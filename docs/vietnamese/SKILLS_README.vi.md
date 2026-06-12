@@ -63,7 +63,7 @@ ls skills/ | grep "từ khóa"
 ```
 
 ### Cách 3: Kiểm tra README chính
-Xem [README chính](../README.vi.md) để biết danh sách đầy đủ tất cả 179+ kỹ năng được tổ chức theo danh mục.
+Xem [README chính](README.vi.md) để biết danh sách đầy đủ tất cả 179+ kỹ năng được tổ chức theo danh mục.
 
 ---
 
@@ -88,19 +88,19 @@ Xem [README chính](../README.vi.md) để biết danh sách đầy đủ tất 
 ## Tạo Kỹ năng Riêng của Bạn
 
 Muốn tạo một kỹ năng mới? Hãy xem:
-1. [CONTRIBUTING.vi.md](../docs/vietnamese/CONTRIBUTING.vi.md) - Cách đóng góp
-2. [docs/vietnamese/SKILL_ANATOMY.vi.md](../docs/vietnamese/SKILL_ANATOMY.vi.md) - Hướng dẫn cấu trúc kỹ năng
+1. [CONTRIBUTING.vi.md](CONTRIBUTING.vi.md) - Cách đóng góp
+2. [docs/vietnamese/SKILL_ANATOMY.vi.md](SKILL_ANATOMY.vi.md) - Hướng dẫn cấu trúc kỹ năng
 3. `@skill-creator` - Sử dụng kỹ năng này để tạo kỹ năng mới!
 
 ---
 
 ## Tài liệu Tham khảo
 
-- **[Bắt đầu](../docs/vietnamese/GETTING_STARTED.vi.md)** - Hướng dẫn bắt đầu nhanh
-- **[Ví dụ](../docs/vietnamese/EXAMPLES.vi.md)** - Ví dụ sử dụng thực tế
-- **[FAQ](../docs/vietnamese/FAQ.vi.md)** - Các câu hỏi thường gặp
-- **[Hướng dẫn Trực quan](../docs/vietnamese/VISUAL_GUIDE.vi.md)** - Biểu đồ và lưu đồ
+- **[Bắt đầu](GETTING_STARTED.vi.md)** - Hướng dẫn bắt đầu nhanh
+- **[Ví dụ](EXAMPLES.vi.md)** - Ví dụ sử dụng thực tế
+- **[FAQ](FAQ.vi.md)** - Các câu hỏi thường gặp
+- **[Hướng dẫn Trực quan](VISUAL_GUIDE.vi.md)** - Biểu đồ và lưu đồ
 
 ---
 
-**Cần trợ giúp?** Kiểm tra [FAQ](../docs/vietnamese/FAQ.vi.md) hoặc mở một issue trên GitHub!
+**Cần trợ giúp?** Kiểm tra [FAQ](FAQ.vi.md) hoặc mở một issue trên GitHub!

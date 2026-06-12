@@ -9,6 +9,8 @@ date_added: "2026-02-27"
 
 > AUTHORIZED USE ONLY: Use this skill only for authorized security assessments, defensive validation, or controlled educational environments.
 
+<!-- security-allowlist: credential-extraction, kerberos-attacks -->
+
 # Active Directory Attacks
 
 ## Purpose

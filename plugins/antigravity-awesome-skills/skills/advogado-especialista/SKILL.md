@@ -87,7 +87,7 @@ Voce atua em TODAS as areas, mas tem **especialidade profunda** e
 
 ---
 
-## 1.1 Divorcio
+### 1.1 Divorcio
 
 #### Divorcio Consensual Extrajudicial (Lei 11.441/2007)
 
@@ -124,7 +124,7 @@ No regime de separacao obrigatoria de bens, comunicam-se os adquiridos na consta
 
 **Aplicacao pratica:** Casamentos de maiores de 70 anos (Art. 1.641, II CC) — mesmo com separacao obrigatoria, o conjuge tem direito a meacao dos bens adquiridos durante a uniao.
 
-## 1.2 Alimentos
+### 1.2 Alimentos
 
 #### Base Legal
 - **Art. 1.694-1.710 CC** — Alimentos entre parentes, conjuges e companheiros
@@ -167,7 +167,7 @@ No regime de separacao obrigatoria de bens, comunicam-se os adquiridos na consta
 | Autonomo/informal | Percentual do salario minimo (1-3 SM) |
 | Alimentos para ex-conjuge | 20-33% dos rendimentos (temporario) |
 
-## 1.3 Uniao Estavel (Art. 1.723-1.727 Cc)
+### 1.3 Uniao Estavel (Art. 1.723-1.727 Cc)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -178,7 +178,7 @@ No regime de separacao obrigatoria de bens, comunicam-se os adquiridos na consta
 | **Direito real de habitacao** | Sim (analogia com casamento — STJ) |
 | **Dissolucao** | Identica ao divorcio (Art. 7, par. 2 Lei 9.278/96) |
 
-## 1.4 Investigacao De Paternidade
+### 1.4 Investigacao De Paternidade
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -196,7 +196,7 @@ No regime de separacao obrigatoria de bens, comunicam-se os adquiridos na consta
 
 Para analises criminais aprofundadas, este modulo orquestra com `advogado-criminal`.
 
-## 2.1 Estrutura Analitica Rapida
+### 2.1 Estrutura Analitica Rapida
 
 | Etapa | O que fazer |
 |-------|-------------|
@@ -208,7 +208,7 @@ Para analises criminais aprofundadas, este modulo orquestra com `advogado-crimin
 | 6 | Identificar teses defensivas e acusatorias |
 | 7 | Definir estrategia (acordo/defesa/recurso) |
 
-## 2.2 Crimes Mais Comuns — Referencia Rapida
+### 2.2 Crimes Mais Comuns — Referencia Rapida
 
 | Crime | Artigo | Pena |
 |-------|--------|------|
@@ -230,7 +230,7 @@ Para analises criminais aprofundadas, este modulo orquestra com `advogado-crimin
 
 Para casos de Maria da Penha, orquestrar com `advogado-criminal` que contem o modulo completo.
 
-## 3.1 Fluxo De Urgencia Para Vitima
+### 3.1 Fluxo De Urgencia Para Vitima
 
 ```
 PERIGO IMEDIATO → Ligar 190 (PM) ou 180 (Central da Mulher)
@@ -239,7 +239,7 @@ ORIENTACAO → CRAM ou Defensoria Publica
 SINAL VERMELHO → X na mao em farmacia/hospital participante
 ```
 
-## 3.2 Medidas Protetivas Mais Usadas
+### 3.2 Medidas Protetivas Mais Usadas
 
 | Medida | Art. 22 Lei 11.340 |
 |--------|-------------------|
@@ -249,7 +249,7 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 | Alimentos provisionais | Inciso V |
 | Tornozeleira eletronica | Par. 5 (Lei 15.125/2025) |
 
-## 3.3 Legislacao Atualizada
+### 3.3 Legislacao Atualizada
 
 - Lei 11.340/2006 (base)
 - Lei 14.994/2024 (Pacote Antifeminicidio)
@@ -262,7 +262,7 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 
 ---
 
-## 4.1 Partilha De Bens No Divorcio
+### 4.1 Partilha De Bens No Divorcio
 
 #### Bens Comunicaveis vs Incomunicaveis (Comunhao Parcial)
 
@@ -284,7 +284,7 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 | Avaliacao de mercado (corretor/avaliador) | Imoveis residenciais, veiculos |
 | Balanco patrimonial | Quotas sociais, participacoes empresariais |
 
-## 4.2 Inventario E Partilha Por Morte
+### 4.2 Inventario E Partilha Por Morte
 
 #### Inventario Extrajudicial (Art. 610, par. 1 CPC + Lei 11.441/2007)
 
@@ -327,7 +327,7 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 - **STF RE 878.694 (Tema 498):** equiparou companheiro a conjuge para fins sucessorios
 - Art. 1.790 CC declarado inconstitucional — aplica-se Art. 1.829 CC
 
-## 4.3 Testamento
+### 4.3 Testamento
 
 | Tipo | Base Legal | Requisitos |
 |------|-----------|-----------|
@@ -338,7 +338,7 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 
 **Legitima (Art. 1.846 CC):** 50% do patrimonio e dos herdeiros necessarios (descendentes, ascendentes, conjuge). O testador so pode dispor livremente da outra metade.
 
-## 4.4 Itcmd — Imposto De Transmissao Causa Mortis E Doacao
+### 4.4 Itcmd — Imposto De Transmissao Causa Mortis E Doacao
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -348,7 +348,7 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 | **Isencao** | Varia por estado (ex: SP isenta ate 2.500 UFESPs para imovel residencial) |
 | **Prazo** | 60 dias — alem disso, multa progressiva |
 
-## 4.5 Sobrepartilha (Art. 669 Cpc)
+### 4.5 Sobrepartilha (Art. 669 Cpc)
 
 Cabe quando:
 - Bens sonegados
@@ -358,7 +358,7 @@ Cabe quando:
 
 ---
 
-## 5.1 Tipos De Guarda (Art. 1.583-1.590 Cc + Lei 13.058/2014)
+### 5.1 Tipos De Guarda (Art. 1.583-1.590 Cc + Lei 13.058/2014)
 
 | Tipo | Descricao | Base Legal |
 |------|-----------|-----------|
@@ -367,7 +367,7 @@ Cabe quando:
 | **Alternada** | Crianca alterna residencias periodicamente | Jurisprudencia (nao prevista em lei) |
 | **Nidacao** | Crianca fica, genitores alternam | Rara no Brasil |
 
-## 5.2 Guarda Compartilhada (Lei 13.058/2014)
+### 5.2 Guarda Compartilhada (Lei 13.058/2014)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -378,7 +378,7 @@ Cabe quando:
 | **Decisoes** | Ambos decidem sobre saude, educacao, lazer |
 | **Alimentos** | Guarda compartilhada NAO exclui alimentos (STJ — REsp 1.629.994) |
 
-## 5.3 Regulamentacao De Visitas (Art. 1.589 Cc)
+### 5.3 Regulamentacao De Visitas (Art. 1.589 Cc)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -388,7 +388,7 @@ Cabe quando:
 | **Descumprimento** | Busca e apreensao de menor (Art. 461 CPC) + multa |
 | **Supervisao** | Visita supervisionada quando ha risco |
 
-## 5.4 Alienacao Parental (Lei 12.318/2010)
+### 5.4 Alienacao Parental (Lei 12.318/2010)
 
 #### Definicao (Art. 2)
 Interferencia na formacao psicologica da crianca, promovida por um genitor (ou avos/tutores) para prejudicar o vinculo com o outro genitor.
@@ -416,7 +416,7 @@ Interferencia na formacao psicologica da crianca, promovida por um genitor (ou a
 | Alteracao da guarda | Grave |
 | Suspensao da autoridade parental | Gravissima |
 
-## 5.5 Busca E Apreensao De Menor
+### 5.5 Busca E Apreensao De Menor
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -426,7 +426,7 @@ Interferencia na formacao psicologica da crianca, promovida por um genitor (ou a
 | **Competencia** | Vara de Familia do domicilio do menor |
 | **Urgencia** | Pode ser concedida liminarmente |
 
-## 5.6 Modificacao De Guarda (Art. 1.586 Cc)
+### 5.6 Modificacao De Guarda (Art. 1.586 Cc)
 
 Pode ser modificada a qualquer tempo se houver:
 - Mudanca nas circunstancias
@@ -437,7 +437,7 @@ Pode ser modificada a qualquer tempo se houver:
 
 ---
 
-## 6.1 Fundamentos (Art. 186-188 + Art. 927-954 Cc)
+### 6.1 Fundamentos (Art. 186-188 + Art. 927-954 Cc)
 
 #### Pressupostos da Responsabilidade Civil
 
@@ -459,7 +459,7 @@ Pode ser modificada a qualquer tempo se houver:
 | Ambiental | Lei 6.938/81 |
 | Nuclear | CF Art. 21, XXIII, d |
 
-## 6.2 Tipos De Dano
+### 6.2 Tipos De Dano
 
 | Tipo | Descricao | Exemplos |
 |------|-----------|----------|
@@ -470,7 +470,7 @@ Pode ser modificada a qualquer tempo se houver:
 | **Existencial** | Privacao de atividades essenciais da vida | Jornadas exaustivas, restricao de liberdade |
 | **Moral coletivo** | Lesao a valores de grupo/coletividade | Propaganda discriminatoria, desastre ambiental |
 
-## 6.3 Parametros De Indenizacao (Jurisprudencia)
+### 6.3 Parametros De Indenizacao (Jurisprudencia)
 
 | Situacao | Faixa de Valor (2024-2025) |
 |----------|--------------------------|
@@ -488,7 +488,7 @@ Pode ser modificada a qualquer tempo se houver:
 | Assedio moral trabalhista | R$ 5.000 - R$ 100.000 |
 | Publicacao ofensiva em rede social | R$ 5.000 - R$ 50.000 |
 
-## 6.4 Dano Moral In Re Ipsa (Presumido)
+### 6.4 Dano Moral In Re Ipsa (Presumido)
 
 Dispensa prova do dano — basta provar o fato:
 
@@ -500,7 +500,7 @@ Dispensa prova do dano — basta provar o fato:
 | Extravio de bagagem | STJ consolidado |
 | Prisao ilegal | STJ consolidado |
 
-## 6.5 Acoes De Danos Morais — Aspectos Processuais
+### 6.5 Acoes De Danos Morais — Aspectos Processuais
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -514,7 +514,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 7.1 Principios Fundamentais (Cdc — Lei 8.078/1990)
+### 7.1 Principios Fundamentais (Cdc — Lei 8.078/1990)
 
 | Principio | Descricao |
 |-----------|-----------|
@@ -523,7 +523,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Inversao do onus da prova** | Juiz pode inverter quando verossimil (Art. 6, VIII) |
 | **Responsabilidade objetiva** | Fornecedor responde sem culpa (Art. 12-14) |
 
-## 7.2 Vicios E Defeitos
+### 7.2 Vicios E Defeitos
 
 | Tipo | Descricao | Prazo de Reclamacao |
 |------|-----------|-------------------|
@@ -532,7 +532,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Fato do produto** (Art. 12) | Defeito que causa acidente | 5 anos (Art. 27 CDC) |
 | **Fato do servico** (Art. 14) | Defeito no servico que causa dano | 5 anos (Art. 27 CDC) |
 
-## 7.3 Praticas Abusivas (Art. 39 Cdc)
+### 7.3 Praticas Abusivas (Art. 39 Cdc)
 
 | Pratica | Descricao |
 |---------|-----------|
@@ -542,7 +542,7 @@ Dispensa prova do dano — basta provar o fato:
 | Vantagem excessiva | Prevalecer-se de fraqueza do consumidor (Art. 39, IV) |
 | Elevacao sem justa causa | Elevar preco sem justa causa (Art. 39, X) |
 
-## 7.4 Direito De Arrependimento (Art. 49 Cdc)
+### 7.4 Direito De Arrependimento (Art. 49 Cdc)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -553,7 +553,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 8.1 Compra E Venda De Imoveis
+### 8.1 Compra E Venda De Imoveis
 
 | Etapa | Detalhe |
 |-------|---------|
@@ -563,7 +563,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Registro** | Cartorio de registro de imoveis — transfere propriedade (Art. 1.245 CC) |
 | **ITBI** | Imposto municipal sobre transmissao (2-3% do valor) |
 
-## 8.2 Usucapiao
+### 8.2 Usucapiao
 
 | Modalidade | Prazo | Requisitos |
 |------------|-------|-----------|
@@ -575,7 +575,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Coletiva** (Art. 10 Estatuto Cidade) | 5 anos | Area urbana > 250m2, populacao baixa renda |
 | **Extrajudicial** (Lei 13.105/2015, Art. 216-A LRP) | Qualquer | Via cartorio de registro |
 
-## 8.3 Locacao (Lei 8.245/1991 — Lei Do Inquilinato)
+### 8.3 Locacao (Lei 8.245/1991 — Lei Do Inquilinato)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -587,7 +587,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Revisional** | Art. 19 — apos 3 anos, qualquer parte pode pedir revisao judicial do aluguel |
 | **Benfeitorias** | Necessarias: indenizaveis (Art. 35); Uteis: se autorizado; Voluptuarias: nao indenizaveis |
 
-## 8.4 Condominio (Art. 1.331-1.358 Cc + Lei 4.591/1964)
+### 8.4 Condominio (Art. 1.331-1.358 Cc + Lei 4.591/1964)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -598,7 +598,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 9.1 Rescisao Do Contrato De Trabalho
+### 9.1 Rescisao Do Contrato De Trabalho
 
 | Modalidade | Verbas Devidas |
 |------------|---------------|
@@ -608,7 +608,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Rescisao indireta** (Art. 483 CLT) | Mesmas verbas da sem justa causa |
 | **Acordo** (Art. 484-A CLT — Reforma) | 50% do aviso + 20% FGTS + saca 80% FGTS + demais verbas (sem seguro-desemprego) |
 
-## 9.2 Verbas Trabalhistas
+### 9.2 Verbas Trabalhistas
 
 | Verba | Base Legal |
 |-------|-----------|
@@ -621,14 +621,14 @@ Dispensa prova do dano — basta provar o fato:
 | **Insalubridade** | Art. 192 CLT — 10% (minimo), 20% (medio), 40% (maximo) sobre SM |
 | **Periculosidade** | Art. 193 CLT — 30% sobre salario base |
 
-## 9.3 Assedio Moral E Sexual No Trabalho
+### 9.3 Assedio Moral E Sexual No Trabalho
 
 | Tipo | Descricao | Consequencias |
 |------|-----------|--------------|
 | **Assedio moral** | Conduta abusiva reiterada que humilha/constrange | Indenizacao + rescisao indireta |
 | **Assedio sexual** | Art. 216-A CP — constranger para vantagem sexual | Crime (1-2 anos detencao) + indenizacao |
 
-## 9.4 Prazos Trabalhistas
+### 9.4 Prazos Trabalhistas
 
 | Prazo | Descricao |
 |-------|-----------|
@@ -639,7 +639,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 10.1 Beneficios Do Inss
+### 10.1 Beneficios Do Inss
 
 | Beneficio | Requisitos Principais |
 |-----------|----------------------|
@@ -653,7 +653,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Salario-maternidade** | 120 dias (empregada) / 14 dias (contribuinte individual) |
 | **BPC/LOAS** | Idoso 65+ ou PcD + renda per capita familiar < 1/4 SM |
 
-## 10.2 Revisao De Beneficios
+### 10.2 Revisao De Beneficios
 
 | Tipo de Revisao | Prazo |
 |-----------------|-------|
@@ -663,7 +663,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 11.1 Impostos Mais Comuns
+### 11.1 Impostos Mais Comuns
 
 | Imposto | Competencia | Fato Gerador |
 |---------|------------|--------------|
@@ -675,7 +675,7 @@ Dispensa prova do dano — basta provar o fato:
 | **ISS** | Municipal | Prestacao de servicos (LC 116/2003) |
 | **ICMS** | Estadual | Circulacao de mercadorias |
 
-## 11.2 Execucao Fiscal (Lei 6.830/1980)
+### 11.2 Execucao Fiscal (Lei 6.830/1980)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -686,7 +686,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 12.1 Mandado De Seguranca (Lei 12.016/2009)
+### 12.1 Mandado De Seguranca (Lei 12.016/2009)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -696,7 +696,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Liminar** | Cabivel (Art. 7, III) |
 | **Coletivo** | Art. 21-22 — por partido, sindicato, associacao |
 
-## 12.2 Improbidade Administrativa (Lei 8.429/1992 — Alterada Pela Lei 14.230/2021)
+### 12.2 Improbidade Administrativa (Lei 8.429/1992 — Alterada Pela Lei 14.230/2021)
 
 | Tipo | Art. | Sancao |
 |------|------|--------|
@@ -708,7 +708,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 13.1 Lgpd (Lei 13.709/2018)
+### 13.1 Lgpd (Lei 13.709/2018)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -718,7 +718,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Direitos do titular** | Acesso, correcao, anonimizacao, portabilidade, eliminacao (Art. 18) |
 | **Sancoes ANPD** | Advertencia ate multa de 2% do faturamento (max R$ 50 milhoes/infracao) |
 
-## 13.2 Crimes Digitais
+### 13.2 Crimes Digitais
 
 | Crime | Base Legal | Pena |
 |-------|-----------|------|
@@ -728,7 +728,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Estelionato eletronico** | Art. 171, par. 2-A CP | 4-8 anos reclusao |
 | **Falsa identidade digital** | Art. 307 CP | 3 meses - 1 ano detencao |
 
-## 13.3 Marco Civil Da Internet (Lei 12.965/2014)
+### 13.3 Marco Civil Da Internet (Lei 12.965/2014)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -739,7 +739,7 @@ Dispensa prova do dano — basta provar o fato:
 
 ---
 
-## 14.1 Tipos Societarios
+### 14.1 Tipos Societarios
 
 | Tipo | Base Legal | Caracteristica |
 |------|-----------|---------------|
@@ -750,7 +750,7 @@ Dispensa prova do dano — basta provar o fato:
 | **LTDA** | Art. 1.052-1.087 CC | 2+ socios, responsabilidade limitada ao capital |
 | **S.A.** | Lei 6.404/1976 | Aberta ou fechada, acoes |
 
-## 14.2 Recuperacao Judicial (Lei 11.101/2005)
+### 14.2 Recuperacao Judicial (Lei 11.101/2005)
 
 | Aspecto | Detalhe |
 |---------|---------|
@@ -759,7 +759,7 @@ Dispensa prova do dano — basta provar o fato:
 | **Plano** | Deve ser aprovado pelos credores em assembleia |
 | **Efeito** | Suspende execucoes e acoes de cobranca |
 
-## 14.3 Falencia
+### 14.3 Falencia
 
 | Aspecto | Detalhe |
 |---------|---------|

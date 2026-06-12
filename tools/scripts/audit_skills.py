@@ -36,6 +36,7 @@ VALID_RISK_LEVELS = {"none", "safe", "critical", "offensive", "unknown"}
 DEFAULT_MARKDOWN_TOP_FINDINGS = 15
 DEFAULT_MARKDOWN_TOP_SKILLS = 20
 DEFAULT_MARKDOWN_TOP_RISK_SUGGESTIONS = 20
+STRICT_BUDGET_PATH = Path("tools/config/audit-skills-strict-budget.json")
 
 
 @dataclass(frozen=True)
@@ -437,6 +438,79 @@ def print_summary(report: dict[str, object]) -> None:
             print(f"   - {item['code']}: {item['count']}")
 
 
+def load_strict_budget(repo_root: Path) -> dict[str, object]:
+    budget_path = repo_root / STRICT_BUDGET_PATH
+    try:
+        budget = json.loads(budget_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise ValueError(f"Missing strict audit budget: {STRICT_BUDGET_PATH}") from exc
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid strict audit budget JSON: {STRICT_BUDGET_PATH}: {exc}") from exc
+
+    max_warnings = budget.get("maxWarnings")
+    max_warning_only_skills = budget.get("maxWarningOnlySkills")
+    max_top_finding_codes = budget.get("maxTopFindingCodes")
+
+    if not isinstance(max_warnings, int) or max_warnings < 0:
+        raise ValueError(f"{STRICT_BUDGET_PATH} must define non-negative integer maxWarnings")
+    if not isinstance(max_warning_only_skills, int) or max_warning_only_skills < 0:
+        raise ValueError(f"{STRICT_BUDGET_PATH} must define non-negative integer maxWarningOnlySkills")
+    if not isinstance(max_top_finding_codes, dict):
+        raise ValueError(f"{STRICT_BUDGET_PATH} must define maxTopFindingCodes")
+    for code, maximum in max_top_finding_codes.items():
+        if not isinstance(code, str) or not isinstance(maximum, int) or maximum < 0:
+            raise ValueError(f"{STRICT_BUDGET_PATH} maxTopFindingCodes values must be non-negative integers")
+
+    return budget
+
+
+def evaluate_strict_budget(summary: dict[str, object], budget: dict[str, object]) -> list[str]:
+    issues: list[str] = []
+    warnings = int(summary.get("warnings", 0))
+    warning_only_skills = int(summary.get("skills_with_warnings_only", 0))
+    errors = int(summary.get("errors", 0))
+    max_warnings = int(budget["maxWarnings"])
+    max_warning_only_skills = int(budget["maxWarningOnlySkills"])
+    max_top_finding_codes = dict(budget["maxTopFindingCodes"])
+
+    if errors > 0:
+        issues.append(f"errors present: {errors}")
+    if warnings > max_warnings:
+        issues.append(f"warnings exceed budget: {warnings}/{max_warnings}")
+    if warning_only_skills > max_warning_only_skills:
+        issues.append(f"warning-only skills exceed budget: {warning_only_skills}/{max_warning_only_skills}")
+
+    finding_counts = {
+        item["code"]: item["count"]
+        for item in summary.get("top_finding_codes", [])
+        if isinstance(item, dict) and "code" in item and "count" in item
+    }
+    for code, maximum in max_top_finding_codes.items():
+        actual = int(finding_counts.get(code, 0))
+        if actual > maximum:
+            issues.append(f"{code} findings exceed budget: {actual}/{maximum}")
+
+    return issues
+
+
+def print_strict_budget_status(summary: dict[str, object], budget: dict[str, object], issues: list[str]) -> None:
+    print("   Strict audit budget:")
+    print(f"   - warnings: {summary['warnings']}/{budget['maxWarnings']}")
+    print(f"   - warning-only skills: {summary['skills_with_warnings_only']}/{budget['maxWarningOnlySkills']}")
+    for code, maximum in budget["maxTopFindingCodes"].items():
+        actual = next(
+            (item["count"] for item in summary["top_finding_codes"] if item["code"] == code),
+            0,
+        )
+        print(f"   - {code}: {actual}/{maximum}")
+    if issues:
+        print("   Strict audit budget exceeded:")
+        for issue in issues:
+            print(f"   - {issue}")
+    else:
+        print("   Strict audit budget: within baseline")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Audit every SKILL.md for conformance and baseline usability.")
     parser.add_argument(
@@ -450,7 +524,7 @@ def main() -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="Exit with code 1 when warnings are present, not only errors.",
+        help="Exit with code 1 on errors or warning regressions above tools/config/audit-skills-strict-budget.json.",
     )
     args = parser.parse_args()
 
@@ -467,9 +541,18 @@ def main() -> int:
         print(f"📝 Wrote Markdown audit report to {args.markdown_out}")
 
     summary = report["summary"]
+    if args.strict:
+        try:
+            budget = load_strict_budget(repo_root)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 1
+        budget_issues = evaluate_strict_budget(summary, budget)
+        print_strict_budget_status(summary, budget, budget_issues)
+        if budget_issues:
+            return 1
+        return 0
     if summary["errors"] > 0:
-        return 1
-    if args.strict and summary["warnings"] > 0:
         return 1
     return 0
 

@@ -1,6 +1,7 @@
 import os
 import json
 import pathlib
+import shutil
 import re
 import sys
 from collections.abc import Mapping
@@ -116,6 +117,14 @@ CATEGORY_RULES = [
         "keywords": [
             "content", "copy", "copywriting", "writing", "documentation",
             "transcription", "transcribe", "seo", "blog", "markdown",
+        ],
+    },
+    {
+        "name": "education",
+        "keywords": [
+            "education", "student", "syllabus", "exam", "study",
+            "teacher", "curriculum", "classroom", "school",
+            "examprep", "roadmap", "academic", "university",
         ],
     },
     {
@@ -488,6 +497,7 @@ CURATED_CATEGORY_OVERRIDES = {
     "cpp-pro": "code",
     "cred-omega": "security",
     "csharp-pro": "code",
+    "cv-generator": "content",
     "datadog-automation": "reliability",
     "dependency-upgrade": "development",
     "differential-review": "security",
@@ -588,6 +598,7 @@ CURATED_CATEGORY_OVERRIDES = {
     "evaluation": "ai-ml",
     "event-store-design": "architecture",
     "exa-search": "data-ai",
+    "examprep-ai": "education",
     "explain-like-socrates": "content",
     "family-health-analyzer": "health",
     "find-bugs": "code-quality",
@@ -976,6 +987,21 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
 
             skills.append(skill_info)
 
+    seen_ids: dict[str, str] = {}
+    duplicate_ids: list[tuple[str, str, str]] = []
+    for skill in skills:
+        existing_path = seen_ids.get(skill["id"])
+        if existing_path is not None:
+            duplicate_ids.append((skill["id"], existing_path, skill["path"]))
+        else:
+            seen_ids[skill["id"]] = skill["path"]
+    if duplicate_ids:
+        details = "; ".join(
+            f"{skill_id}: {first_path} conflicts with {second_path}"
+            for skill_id, first_path, second_path in duplicate_ids
+        )
+        raise ValueError(f"Duplicate skill ids in generated index: {details}")
+
     # Sort validation: by name
     skills.sort(key=lambda x: (x["name"].lower(), x["id"].lower()))
 
@@ -985,8 +1011,23 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
     print(f"✅ Generated rich index with {len(skills)} skills at: {output_file}")
     return skills
 
+def mirror_canonical_index(output_path):
+    """Mirror the root public manifest into data/ for compatibility consumers."""
+    output_path = pathlib.Path(output_path)
+    root = pathlib.Path(find_repo_root(__file__))
+    root_index = root / "skills_index.json"
+    if output_path.resolve() != root_index.resolve():
+        return None
+
+    data_index = root / "data" / "skills_index.json"
+    data_index.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(output_path, data_index)
+    print(f"✅ Mirrored canonical index to: {data_index}")
+    return data_index
+
 if __name__ == "__main__":
     base_dir = str(find_repo_root(__file__))
     skills_path = os.path.join(base_dir, "skills")
     output_path = os.path.join(base_dir, "skills_index.json")
     generate_index(skills_path, output_path)
+    mirror_canonical_index(output_path)

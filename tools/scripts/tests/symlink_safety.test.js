@@ -4,6 +4,7 @@ const os = require("os");
 const path = require("path");
 
 const { resolveSafeRealPath } = require("../../lib/symlink-safety");
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
 
 function withTempDir(fn) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "symlink-safety-"));
@@ -26,8 +27,11 @@ withTempDir((root) => {
   fs.writeFileSync(path.join(internalDir, "data.txt"), "ok");
   fs.writeFileSync(path.join(outsideDir, "secret.txt"), "secret");
 
-  fs.symlinkSync(internalDir, internalLink);
-  fs.symlinkSync(outsideDir, outsideLink);
+  const createdInternalLink = createSymlinkOrSkip(internalDir, internalLink, "dir");
+  const createdOutsideLink = createSymlinkOrSkip(outsideDir, outsideLink, "dir");
+  if (!createdInternalLink || !createdOutsideLink) {
+    return;
+  }
 
   const internalResolved = resolveSafeRealPath(safeRoot, internalLink);
   const outsideResolved = resolveSafeRealPath(safeRoot, outsideLink);
