@@ -9,6 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.4.0] - 2026-06-12 - "Community Skill Batch and Web Catalog Sync"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 12 maintainer batch: seven accepted community PRs, finance compliance and academic research workflows, Atlas long-running-agent integrity skills, refreshed Polis Protocol install guidance, and a web catalog sync to 1,541+ skills.
+
+## New Skills
+
+- **agent-squad** - multi-persona development squad workflows for coordinating specialized AI roles across planning, implementation, review, and delivery.
+- **not-a-vibe-coder** - disciplined engineering workflow guidance for avoiding vague implementation loops and keeping AI-assisted coding grounded in requirements, tests, and review.
+- **fsi-compliance-checker** - PCI-DSS v4.0 and MAS TRM compliance review guidance for financial-services systems.
+- **papers-skill** - academic paper research workflow for finding, reading, summarizing, and organizing scholarly sources.
+- **atlas-contract** - long-running agent contract workflow for preserving task intent, scope, evidence, and acceptance criteria.
+- **atlas-ledger** - execution-ledger workflow for tracking decisions, state changes, validation, and handoff evidence during extended agent tasks.
+
+## Improvements
+
+- Upgraded **zipai-optimizer** to v14.0 guidance for extreme token optimization workflows.
+- Updated **polis-protocol** to v2 with always-latest PyPI install guidance, Polis CLI usage, and a corrected skill path.
+- Added missing README credits, provenance metadata, risk labels, and `## Limitations` sections while repairing accepted community PRs.
+- Synced generated registry artifacts, web catalog assets, sitemap, `llms.txt`, social-card copy, and SEO verification to the 1,541+ skill catalog.
+- Closed PR #671 because it remained conflicted and only touched generated/presentation assets rather than a mergeable skill contribution.
+
+## Credits
+
+- **[@nickdesi](https://github.com/nickdesi)** for PR #674 (`zipai-optimizer` v14.0).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #673 (`not-a-vibe-coder`) and PR #669 (`agent-squad`).
+- **[@timwukp](https://github.com/timwukp)** for PR #677 (`fsi-compliance-checker`).
+- **[@xwmxcz](https://github.com/xwmxcz)** for PR #668 (`papers-skill`).
+- **[@yehudalevy-collab](https://github.com/yehudalevy-collab)** for PR #667 (`polis-protocol` v2).
+- **[@wede-wx](https://github.com/wede-wx)** and **[wede-wx/atlas](https://github.com/wede-wx/atlas)** for PR #675 (`atlas-contract` and `atlas-ledger`).
+
 ## [12.3.0] - 2026-06-10 - "Android, Unship, 40K Stars, and Security Hardening"
 
 > Community release for the June 10 maintainer batch, installer hardening, and the repository crossing 40K GitHub stars.
