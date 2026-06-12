@@ -1,9 +1,13 @@
 ---
 name: atlas-ledger
 description: "Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drift into WHEN/DON'T/INSTEAD clauses, writes to Atlas.md after confirmation."
-risk: low
-source: https://github.com/wede-wx/atlas
+risk: critical
+source: community
+source_repo: wede-wx/atlas
+source_type: community
+date_added: "2026-06-12"
 license: MIT
+license_source: "https://github.com/wede-wx/atlas/blob/main/LICENSE"
 metadata:
   version: "2.2.0"
   author: wede-wx
@@ -235,3 +239,10 @@ Without that hook the clauses are written but never enforced, and the ledger deg
 atlas-ledger turns a one-time, caught mistake into a permanent project constraint — that is the compounding. Its worth is entirely in distillation quality: too specific and it never fires, too broad and it fires constantly, built on a guessed motive and it guards the wrong thing. The four gates, confirm-before-write, merge-first, and retirement rules exist to hold that quality and keep the ledger small.
 
 **Self-enforcement ceiling:** like atlas-contract, this skill is run by the same model it governs, so it can mis-distill or miss a drift worth recording. It raises the project's floor over time; it is not a guarantee, and the user confirming each clause is part of the design, not a formality. One more layer in the Atlas series — not a closed loop on its own.
+
+## Limitations
+
+- Writes to `Atlas.md` only after user confirmation; without that confirmation it produces a proposed clause, not durable project memory.
+- Clause quality depends on the model correctly identifying the actual drift, so user review is required before accepting entries.
+- The ledger can become stale or overbroad if clauses are not merged, retired, or reviewed as the project changes.
+- It does not replace tests, code review, or independent validation of whether the original task was actually completed.

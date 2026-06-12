@@ -1,9 +1,13 @@
 ---
 name: atlas-contract
 description: "Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, Deviation Notices, Phase Checks, Final Audits. Skip for Q&A or trivial edits."
-risk: medium
-source: https://github.com/wede-wx/atlas
+risk: critical
+source: community
+source_repo: wede-wx/atlas
+source_type: community
+date_added: "2026-06-12"
 license: MIT
+license_source: "https://github.com/wede-wx/atlas/blob/main/LICENSE"
 metadata:
   version: "6.2.0"
   author: wede-wx
@@ -638,3 +642,9 @@ Atlas may slow the agent down when speed would cause a silent goal change. It sh
 
 **Self-enforcement ceiling:** This skill is enforced by the same model it governs. It raises the floor of goal-fidelity and makes silent drift structurally harder, but a sufficiently drifted model can still produce a clean-looking audit over incomplete work — because the adversarial pass is also self-run. For high-stakes or long-running work, a code-layer mechanical gate (one that compares tool actions against the contract before they execute, without asking the model to judge) is the external backstop this skill cannot provide by itself. Treat Atlas as one necessary layer, not a complete solution.
 
+## Limitations
+
+- This is a prompt-level governance layer, not an external enforcement mechanism; the same model that drifts may still misapply the audit.
+- Heavy footprint can add significant interaction overhead and should not be imposed on simple factual answers or trivial edits.
+- It cannot prove tool effects mechanically; high-stakes work still needs independent tests, review, or code-level gates.
+- The companion ledger only works when the user confirms durable clauses and the project keeps `Atlas.md` available.
