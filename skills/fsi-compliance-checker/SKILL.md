@@ -86,7 +86,7 @@ Offer to turn findings into backlog items with the control ID in each story for 
 
 **User**: "Is this PCI-DSS compliant: we log the full request body of card authorization calls for debugging?"
 
-**Skill**: Loads pci-dss.md → Critical findings against 3.2.1 (CVV must never be stored post-authorization — logs are storage), 3.3.1 (PAN display masking), 3.4.1 (PAN unreadable at rest); remediation: remove the log line or apply a field-allowlist redaction filter; flags downstream log-pipeline scoping (10.3.x); QSA disclaimer included.
+**Skill**: Loads pci-dss.md → Critical findings against 3.3.1 (CVV must never be stored post-authorization — logs are storage), 3.4.1 (PAN display masking), 3.5.1 (PAN unreadable at rest); remediation: remove the log line or apply a field-allowlist redaction filter; flags downstream log-pipeline scoping (10.3.x); QSA disclaimer included.
 
 ### Example 2: Cloud migration
 

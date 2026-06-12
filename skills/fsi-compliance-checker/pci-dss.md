@@ -18,10 +18,10 @@ Engineering-relevant controls from PCI-DSS v4.0, organized by what a code/archit
 
 | Control | Requirement (summary) | Engineering check |
 |---------|----------------------|-------------------|
-| 3.2.1 | Don't store sensitive authentication data (CVV/CVC, full track, PIN) after authorization — ever, even encrypted | grep for CVV/CVC fields in models, logs, caches, analytics events |
-| 3.3.1 | Mask PAN when displayed (max first 6 + last 4 visible) | UI components, receipts, admin screens, support tooling |
-| 3.4.1 | Render PAN unreadable anywhere stored (strong crypto, truncation, tokens) | DB columns, backups, object storage, message queues, data lakes |
-| 3.5.1 | Documented inventory of where account data is stored | New stores/caches must update the data-flow inventory |
+| 3.2.1 | Account data storage kept to minimum: retention/disposal policies covering all storage locations | New stores/caches must update the data-flow inventory; retention defined |
+| 3.3.1 | Don't store sensitive authentication data (CVV/CVC, full track, PIN) after authorization — ever, even encrypted | grep for CVV/CVC fields in models, logs, caches, analytics events |
+| 3.4.1 | Mask PAN when displayed (BIN + last 4 max visible) | UI components, receipts, admin screens, support tooling |
+| 3.5.1 | Render PAN unreadable anywhere stored (strong crypto, truncation, tokens) | DB columns, backups, object storage, message queues, data lakes |
 | 3.6 / 3.7 | Key management: documented procedures, key rotation, split knowledge for manual operations | KMS usage, key rotation schedules, no keys in code/config |
 | 4.2.1 | Strong cryptography for PAN over open/public networks; no fallback to insecure versions | TLS 1.2+ enforced, cert validation not disabled, no PAN over email/chat |
 
@@ -79,11 +79,11 @@ The two controls that catch most modern e-commerce teams (both FD, mandatory sin
 
 | Change type | Check first |
 |-------------|-------------|
-| New logging | 3.2.1, never-log list (§4) |
-| New data store/cache | 3.4.1, 3.5.1, 1.4.4 |
+| New logging | 3.3.1, never-log list (§4) |
+| New data store/cache | 3.5.1, 3.2.1, 1.4.4 |
 | Auth/session change | 8.3.x, 8.4.2, 10.2.1 |
 | New dependency | 6.3.2, 6.3.3 |
 | New public endpoint | 6.4.1/6.4.2, 1.2.x |
-| Checkout/payment UI | 6.4.3, 11.6.1, 3.3.1 |
+| Checkout/payment UI | 6.4.3, 11.6.1, 3.4.1 |
 | CI/CD change | 6.5.1-6.5.6, 8.6.x |
 | Infra/network change | 1.2.x, 1.3.x |
