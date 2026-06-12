@@ -260,7 +260,20 @@ export function assertIndexSocialMeta(htmlText) {
   assertMetaContent(htmlText, 'name', 'twitter:image:alt');
 }
 
-export function assertIndexDiscoveryMeta(htmlText) {
+function readSkillCountLabel(distDir) {
+  try {
+    const skills = JSON.parse(readFile(path.join(distDir, 'skills.json')));
+    if (Array.isArray(skills) && skills.length > 0) {
+      return `${skills.length.toLocaleString('en-US')}+`;
+    }
+  } catch (_err) {
+    // Fall back to the explicit baseline when a fixture omits generated skill data.
+  }
+
+  return '1,541+';
+}
+
+export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '1,541+' } = {}) {
   const title = extractTitle(htmlText);
   const description = extractMetaContent(htmlText, 'name', 'description') || '';
   const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
@@ -276,7 +289,10 @@ export function assertIndexDiscoveryMeta(htmlText) {
     twitterDescription,
   ].join(' ');
 
-  assert(combined.includes('1,527+'), 'Home SEO metadata must expose the current 1,527+ skill count.');
+  assert(
+    combined.includes(expectedSkillCountLabel),
+    `Home SEO metadata must expose the current ${expectedSkillCountLabel} skill count.`,
+  );
   assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
   assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
@@ -340,11 +356,11 @@ export function assertRobots(robotsText) {
   assert(allowsAiSearchCrawlers, 'robots.txt must explicitly expose AI search crawler directives.');
 }
 
-export function assertLlms(llmsText) {
+export function assertLlms(llmsText, { expectedSkillCountLabel = '1,541+' } = {}) {
   const text = String(llmsText ?? '');
   const requiredSnippets = [
     '# Antigravity Awesome Skills',
-    '1,527+',
+    expectedSkillCountLabel,
     'specialized plugins',
     'Claude Code',
     'Codex CLI',
@@ -384,12 +400,13 @@ export function runVerification({
 }) {
   const sitemapReport = analyzeSitemap(readFile(sitemapPath), { minSkillUrls });
   const indexHtml = readFile(indexPath);
+  const expectedSkillCountLabel = readSkillCountLabel(distDir);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
   assertIndexSocialMeta(indexHtml);
-  assertIndexDiscoveryMeta(indexHtml);
+  assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel });
   assertRobots(readFile(robotsPath));
-  assertLlms(readFile(llmsPath));
+  assertLlms(readFile(llmsPath), { expectedSkillCountLabel });
   assertManifest(readFile(manifestPath));
 }
 
