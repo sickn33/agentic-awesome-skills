@@ -430,6 +430,7 @@
         "framework-migration-deps-upgrade",
         "frontend-mobile-security-xss-scan",
         "frontend-security-coder",
+        "fsi-compliance-checker",
         "gdpr-data-handling",
         "gha-security-review",
         "github-actions-advanced",

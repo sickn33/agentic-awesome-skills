@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1537
+Total skills: 1538
 
 ## architecture (100)
 
@@ -1255,7 +1255,7 @@ Total skills: 1537
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (182)
+## security (183)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1325,6 +1325,7 @@ Total skills: 1537
 | `framework-migration-deps-upgrade` | You are a dependency management expert specializing in safe, incremental upgrades of project dependencies. Plan and execute dependency updates with minimal r... | framework, migration, deps, upgrade | framework, migration, deps, upgrade, dependency, specializing, safe, incremental, upgrades, dependencies, plan, execute |
 | `frontend-mobile-security-xss-scan` | You are a frontend security specialist focusing on Cross-Site Scripting (XSS) vulnerability detection and prevention. Analyze React, Vue, Angular, and vanill... | frontend, mobile, security, xss, scan | frontend, mobile, security, xss, scan, focusing, cross, site, scripting, vulnerability, detection, prevention |
 | `frontend-security-coder` | Expert in secure frontend coding practices specializing in XSS prevention, output sanitization, and client-side security patterns. | frontend, security, coder | frontend, security, coder, secure, coding, specializing, xss, prevention, output, sanitization, client, side |
+| `fsi-compliance-checker` | Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0 and MAS TRM (Singapore financial regulator), producing an audit-t... | compliance, pci-dss, mas-trm, fintech, banking, security-review, audit, financial-services | compliance, pci-dss, mas-trm, fintech, banking, security-review, audit, financial-services, fsi, checker, maps, code |
 | `gdpr-data-handling` | Practical implementation guide for GDPR-compliant data processing, consent management, and privacy controls. | gdpr, data, handling | gdpr, data, handling, practical, compliant, processing, consent, privacy, controls |
 | `gha-security-review` | Find exploitable vulnerabilities in GitHub Actions workflows. Every finding MUST include a concrete exploitation scenario — if you can't build the attack, do... | gha, security | gha, security, review, find, exploitable, vulnerabilities, github, actions, every, finding, must, include |
 | `github-actions-advanced` | Design, debug, and harden GitHub Actions CI/CD workflows, including reusable workflows, matrix builds, self-hosted runners, OIDC authentication, caching, env... | github, actions, advanced | github, actions, advanced, debug, harden, ci, cd, including, reusable, matrix, self, hosted |

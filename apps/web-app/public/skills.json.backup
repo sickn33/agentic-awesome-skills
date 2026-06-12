@@ -14008,6 +14008,28 @@
     }
   },
   {
+    "id": "fsi-compliance-checker",
+    "path": "skills/fsi-compliance-checker",
+    "category": "security",
+    "name": "fsi-compliance-checker",
+    "description": "Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0 and MAS TRM (Singapore financial regulator), producing an audit-traceable findings report with per-control remediation.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "full-output-enforcement",
     "path": "skills/full-output-enforcement",
     "category": "frontend",

@@ -12111,6 +12111,25 @@
       "runtime_files": []
     },
     {
+      "id": "fsi-compliance-checker",
+      "path": "skills/fsi-compliance-checker",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "full-output-enforcement",
       "path": "skills/full-output-enforcement",
       "targets": {
@@ -29483,10 +29502,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1537,
+    "total_skills": 1538,
     "supported": {
-      "codex": 1488,
-      "claude": 1505
+      "codex": 1489,
+      "claude": 1506
     },
     "blocked": {
       "codex": 49,
