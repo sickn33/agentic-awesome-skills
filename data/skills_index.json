@@ -22593,6 +22593,28 @@
     }
   },
   {
+    "id": "papers-skill",
+    "path": "skills/papers-skill",
+    "category": "research",
+    "name": "papers-skill",
+    "description": "Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-contained Python CLI.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "parallel-agents",
     "path": "skills/parallel-agents",
     "category": "ai-agents",

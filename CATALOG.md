@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1538
+Total skills: 1539
 
 ## architecture (100)
 
@@ -720,7 +720,7 @@ Total skills: 1538
 | `zod-validation-expert` | Expert in Zod — TypeScript-first schema validation. Covers parsing, custom errors, refinements, type inference, and integration with React Hook Form, Next.js... | zod, validation | zod, validation, typescript, first, schema, covers, parsing, custom, errors, refinements, type, inference |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
-## education (11)
+## education (12)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -732,6 +732,7 @@ Total skills: 1538
 | `fp-ts-pragmatic` | A practical, jargon-free guide to fp-ts functional programming - the 80/20 approach that gets results without the academic overhead. Use when writing TypeScr... | fp, ts, pragmatic | fp, ts, pragmatic, practical, jargon, free, functional, programming, 80, 20, approach, gets |
 | `humanize-chinese` | Detect and rewrite AI-like Chinese text with a practical workflow for scoring, humanization, academic AIGC reduction, and style conversion. Use when the user... | chinese, writing, editing, aigc, academic, style-transfer | chinese, writing, editing, aigc, academic, style-transfer, humanize, detect, rewrite, ai, like, text |
 | `latex-paper-conversion` | This skill should be used when the user asks to convert an academic paper in LaTeX from one format (e.g., Springer, IPOL) to another format (e.g., MDPI, IEEE... | latex, paper, conversion | latex, paper, conversion, skill, should, used, user, asks, convert, academic, one, format |
+| `papers-skill` | Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-c... | research, academic, papers, citations, arxiv, semantic-scholar, pdf | research, academic, papers, citations, arxiv, semantic-scholar, pdf, skill, search, semantic, scholar, 200m |
 | `puzzle-activity-planner` | Plan puzzle-based activities for classrooms, parties, and events with pre-configured generator links | education, puzzle, classroom, activity-planning, event | education, puzzle, classroom, activity-planning, event, activity, planner, plan, activities, classrooms, parties, events |
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |

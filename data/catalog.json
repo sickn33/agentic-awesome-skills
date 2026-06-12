@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1538,
+  "total": 1539,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -25480,6 +25480,36 @@
         "integrations"
       ],
       "path": "skills/pakistan-payments-stack/SKILL.md"
+    },
+    {
+      "id": "papers-skill",
+      "name": "papers-skill",
+      "description": "Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-contained Python CLI.",
+      "category": "education",
+      "tags": [
+        "research",
+        "academic",
+        "papers",
+        "citations",
+        "arxiv",
+        "semantic-scholar",
+        "pdf"
+      ],
+      "triggers": [
+        "research",
+        "academic",
+        "papers",
+        "citations",
+        "arxiv",
+        "semantic-scholar",
+        "pdf",
+        "skill",
+        "search",
+        "semantic",
+        "scholar",
+        "200m"
+      ],
+      "path": "skills/papers-skill/SKILL.md"
     },
     {
       "id": "parallel-agents",

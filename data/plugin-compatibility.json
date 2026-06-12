@@ -19686,6 +19686,25 @@
       "runtime_files": []
     },
     {
+      "id": "papers-skill",
+      "path": "skills/papers-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "parallel-agents",
       "path": "skills/parallel-agents",
       "targets": {
@@ -29502,10 +29521,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1538,
+    "total_skills": 1539,
     "supported": {
-      "codex": 1489,
-      "claude": 1506
+      "codex": 1490,
+      "claude": 1507
     },
     "blocked": {
       "codex": 49,
