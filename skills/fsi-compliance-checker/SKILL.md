@@ -113,6 +113,13 @@ Changes that almost always have compliance impact — check proactively when the
 - Never output real card numbers, even as examples; use the standard test PANs (e.g. 4111 1111 1111 1111) when illustrating.
 - Read-only: this skill reviews and reports; it never modifies code, infrastructure, or configuration.
 
+## Limitations
+
+- Covers only the bundled PCI-DSS v4.0 and MAS TRM engineering summaries; other frameworks or local policy overlays need separate review.
+- Provides engineering triage, not legal advice, QSA assessment, or formal compliance sign-off.
+- Requires concrete evidence such as diffs, designs, IaC, logs, or control artifacts; incomplete evidence should be marked `Needs evidence`.
+- The bundled references are concise control maps, not substitutes for reading the official standards.
+
 ## Credits
 
 Adapted from [timwukp/agent-skills-best-practice](https://github.com/timwukp/agent-skills-best-practice) (MIT), where the skill ships with evals and a documented 4-layer test methodology (see the repo's TESTING.md).
