@@ -128,6 +128,6 @@ export const specializedPlugins: SpecializedPlugin[] = [
     priority: 'tier-2',
     audience: 'Mobile teams shipping Expo, React Native, Flutter, and iOS apps.',
     why: 'Covers architecture, Expo routes, distribution, CI, native platforms, and store optimization.',
-    skills: ['expo-api-routes', 'expo-dev-client', 'expo-deployment', 'expo-cicd-workflows', 'react-native-patterns', 'mobile-design', 'flutter-expert', 'ios-developer', 'app-store-optimization'],
+    skills: ['mobile-developer', 'react-native-architecture', 'expo-api-routes', 'expo-dev-client', 'expo-deployment', 'expo-cicd-workflows', 'mobile-design', 'flutter-expert', 'ios-developer', 'app-store-optimization'],
   },
 ];

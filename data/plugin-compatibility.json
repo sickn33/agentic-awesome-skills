@@ -84,16 +84,18 @@
         "claude": "supported"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Install Python requirements and configure a 2slides API key before running generation scripts.",
+        "docs": "SKILL.md"
       },
       "reasons": [],
       "blocked_reasons": {
         "codex": [],
         "claude": []
       },
-      "runtime_files": []
+      "runtime_files": [
+        "requirements.txt"
+      ]
     },
     {
       "id": "3d-web-experience",
@@ -539,6 +541,177 @@
     {
       "id": "agent-orchestrator",
       "path": "skills/agent-orchestrator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad",
+      "path": "skills/agent-squad",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/alex",
+      "path": "skills/agent-squad/alex",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/aria",
+      "path": "skills/agent-squad/aria",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/dep",
+      "path": "skills/agent-squad/dep",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/luna",
+      "path": "skills/agent-squad/luna",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/mason",
+      "path": "skills/agent-squad/mason",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/max",
+      "path": "skills/agent-squad/max",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/quinn",
+      "path": "skills/agent-squad/quinn",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-squad/rex",
+      "path": "skills/agent-squad/rex",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -1203,6 +1376,25 @@
     {
       "id": "andrej-karpathy",
       "path": "skills/andrej-karpathy",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "android-dev",
+      "path": "skills/android-dev",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -2142,6 +2334,25 @@
       "runtime_files": []
     },
     {
+      "id": "article-illustrations",
+      "path": "skills/article-illustrations",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "asana-automation",
       "path": "skills/asana-automation",
       "targets": {
@@ -2220,6 +2431,44 @@
     {
       "id": "async-python-patterns",
       "path": "skills/async-python-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "atlas-contract",
+      "path": "skills/atlas-contract",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "atlas-ledger",
+      "path": "skills/atlas-ledger",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -8310,6 +8559,25 @@
       "runtime_files": []
     },
     {
+      "id": "cv-generator",
+      "path": "skills/cv-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "daily",
       "path": "skills/daily",
       "targets": {
@@ -11864,6 +12132,25 @@
     {
       "id": "frontend-ui-dark-ts",
       "path": "skills/frontend-ui-dark-ts",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "fsi-compliance-checker",
+      "path": "skills/fsi-compliance-checker",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -18287,6 +18574,25 @@
       "runtime_files": []
     },
     {
+      "id": "not-a-vibe-coder",
+      "path": "skills/not-a-vibe-coder",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "not-human-search-mcp",
       "path": "skills/not-human-search-mcp",
       "targets": {
@@ -19133,6 +19439,25 @@
       "runtime_files": []
     },
     {
+      "id": "open-dynamic-workflows",
+      "path": "skills/open-dynamic-workflows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "openapi-spec-generation",
       "path": "skills/openapi-spec-generation",
       "targets": {
@@ -19382,6 +19707,25 @@
     {
       "id": "pakistan-payments-stack",
       "path": "skills/pakistan-payments-stack",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "papers-skill",
+      "path": "skills/papers-skill",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19974,18 +20318,24 @@
       "id": "polis-protocol",
       "path": "skills/polis-protocol",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -21877,6 +22227,25 @@
     {
       "id": "ruby-pro",
       "path": "skills/ruby-pro",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "runapi-cli",
+      "path": "skills/runapi-cli",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -27140,6 +27509,25 @@
       "runtime_files": []
     },
     {
+      "id": "unship",
+      "path": "skills/unship",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "unslop",
       "path": "skills/unslop",
       "targets": {
@@ -27779,6 +28167,25 @@
     {
       "id": "viboscope",
       "path": "skills/viboscope",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "video-content-extractor",
+      "path": "skills/video-content-extractor",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -29152,15 +29559,15 @@
     }
   ],
   "summary": {
-    "total_skills": 1520,
+    "total_skills": 1541,
     "supported": {
-      "codex": 1472,
-      "claude": 1489
+      "codex": 1492,
+      "claude": 1509
     },
     "blocked": {
-      "codex": 48,
-      "claude": 31
+      "codex": 49,
+      "claude": 32
     },
-    "manual_setup": 4
+    "manual_setup": 5
   }
 }

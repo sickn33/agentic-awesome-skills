@@ -124,9 +124,9 @@
         "claude": "supported"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Install Python requirements and configure a 2slides API key before running generation scripts.",
+        "docs": "SKILL.md"
       },
       "reasons": []
     }
@@ -670,6 +670,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "agent-squad",
+    "path": "skills/agent-squad",
+    "category": "ai-ml",
+    "name": "agent-squad",
+    "description": "Main agent orchestrator that coordinates a specialized squad of agents",
+    "risk": "unknown",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1240,6 +1262,28 @@
     }
   },
   {
+    "id": "alex",
+    "path": "skills/agent-squad/alex",
+    "category": "agent-squad",
+    "name": "alex",
+    "description": "Turns requirements into a precise, dependency-aware implementation plan.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "algolia-search",
     "path": "skills/algolia-search",
     "category": "api-integration",
@@ -1426,6 +1470,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "android-dev",
+    "path": "skills/android-dev",
+    "category": "mobile",
+    "name": "android-dev",
+    "description": "Production-grade Android app development guide covering native (Kotlin/Java), cross-platform (Flutter, RN, KMM), and hybrid architectures.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-08",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -2456,6 +2522,28 @@
     }
   },
   {
+    "id": "aria",
+    "path": "skills/agent-squad/aria",
+    "category": "agent-squad",
+    "name": "aria",
+    "description": "Designs the data model, API contracts, and structural foundation of the system.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "arm-cortex-expert",
     "path": "skills/arm-cortex-expert",
     "category": "development",
@@ -2464,6 +2552,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "article-illustrations",
+    "path": "skills/article-illustrations",
+    "category": "creative",
+    "name": "article-illustrations",
+    "description": "Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -2574,6 +2684,50 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "atlas-contract",
+    "path": "skills/atlas-contract",
+    "category": "backend",
+    "name": "atlas-contract",
+    "description": "Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, Deviation Notices, Phase Checks, Final Audits. Skip for Q&A or trivial edits.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "atlas-ledger",
+    "path": "skills/atlas-ledger",
+    "category": "uncategorized",
+    "name": "atlas-ledger",
+    "description": "Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drift into WHEN/DON'T/INSTEAD clauses, writes to Atlas.md after confirmation.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-12",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -9712,6 +9866,28 @@
     }
   },
   {
+    "id": "cv-generator",
+    "path": "skills/cv-generator",
+    "category": "content",
+    "name": "cv-generator",
+    "description": "Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and humanized rewriting. Outputs paste-ready text with an ATS flaw report and improvement suggestions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "daily",
     "path": "skills/daily",
     "category": "uncategorized",
@@ -10490,6 +10666,28 @@
     "risk": "unknown",
     "source": "https://github.com/kepano/obsidian-skills",
     "date_added": "2026-03-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "dep",
+    "path": "skills/agent-squad/dep",
+    "category": "agent-squad",
+    "name": "dep",
+    "description": "Handles containerization, CI/CD pipelines, and deployment setup.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13840,6 +14038,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "fsi-compliance-checker",
+    "path": "skills/fsi-compliance-checker",
+    "category": "security",
+    "name": "fsi-compliance-checker",
+    "description": "Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0 and MAS TRM (Singapore financial regulator), producing an audit-traceable findings report with per-control remediation.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-12",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18596,6 +18816,28 @@
     }
   },
   {
+    "id": "luna",
+    "path": "skills/agent-squad/luna",
+    "category": "agent-squad",
+    "name": "luna",
+    "description": "Reviews code for objective correctness, security, and reliability.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "m365-agents-dotnet",
     "path": "skills/m365-agents-dotnet",
     "category": "ai-agents",
@@ -19238,6 +19480,28 @@
     }
   },
   {
+    "id": "mason",
+    "path": "skills/agent-squad/mason",
+    "category": "agent-squad",
+    "name": "mason",
+    "description": "Produces clean, functional code that matches the architecture and checklists.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "matematico-tao",
     "path": "skills/matematico-tao",
     "category": "uncategorized",
@@ -19290,6 +19554,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "max",
+    "path": "skills/agent-squad/max",
+    "category": "agent-squad",
+    "name": "max",
+    "description": "Cleans up and improves existing code without changing behavior.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -21028,6 +21314,28 @@
     }
   },
   {
+    "id": "not-a-vibe-coder",
+    "path": "skills/not-a-vibe-coder",
+    "category": "uncategorized",
+    "name": "not-a-vibe-coder",
+    "description": "Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.",
+    "risk": "critical",
+    "source": "unknown",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "not-human-search-mcp",
     "path": "skills/not-human-search-mcp",
     "category": "mcp",
@@ -21999,6 +22307,28 @@
     }
   },
   {
+    "id": "open-dynamic-workflows",
+    "path": "skills/open-dynamic-workflows",
+    "category": "ai-agents",
+    "name": "open-dynamic-workflows",
+    "description": "Plan, orchestrate, and adversarially verify parallel AI coding agents with a dynamic multi-agent workflow engine.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "openapi-spec-generation",
     "path": "skills/openapi-spec-generation",
     "category": "api-integration",
@@ -22293,6 +22623,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "papers-skill",
+    "path": "skills/papers-skill",
+    "category": "research",
+    "name": "papers-skill",
+    "description": "Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-contained Python CLI.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22994,20 +23346,22 @@
     "category": "orchestration",
     "name": "polis-protocol",
     "description": "Coordinate multi-vendor AI agents as a self-improving team \u2014 a learning router assigns work by track record and citizens can amend the protocol's own rules.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-02",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {
@@ -24245,6 +24599,28 @@
     }
   },
   {
+    "id": "quinn",
+    "path": "skills/agent-squad/quinn",
+    "category": "agent-squad",
+    "name": "quinn",
+    "description": "Proves the system works by writing and executing comprehensive test suites.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "radix-ui-design-system",
     "path": "skills/radix-ui-design-system",
     "category": "web-development",
@@ -25015,6 +25391,28 @@
     }
   },
   {
+    "id": "rex",
+    "path": "skills/agent-squad/rex",
+    "category": "agent-squad",
+    "name": "rex",
+    "description": "Translates user intent into a precise, unambiguous specification and requirements.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "rich-elicitation",
     "path": "skills/rich-elicitation",
     "category": "productivity",
@@ -25199,6 +25597,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "runapi-cli",
+    "path": "skills/runapi-cli",
+    "category": "development",
+    "name": "runapi-cli",
+    "description": "Generate AI images, videos, and music/audio from agents using the RunAPI CLI.",
+    "risk": "critical",
+    "source": "official",
+    "date_added": "2026-06-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31159,6 +31579,28 @@
     }
   },
   {
+    "id": "unship",
+    "path": "skills/unship",
+    "category": "development",
+    "name": "unship",
+    "description": "Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "unslop",
     "path": "skills/unslop",
     "category": "writing",
@@ -31897,6 +32339,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "video-content-extractor",
+    "path": "skills/video-content-extractor",
+    "category": "media-processing",
+    "name": "video-content-extractor",
+    "description": "Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped text transcripts.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-06",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33435,7 +33899,7 @@
     "path": "skills/zipai-optimizer",
     "category": "agent-behavior",
     "name": "zipai-optimizer",
-    "description": "Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware.",
+    "description": "Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads.",
     "risk": "safe",
     "source": "community",
     "date_added": null,

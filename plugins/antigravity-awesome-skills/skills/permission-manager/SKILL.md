@@ -33,7 +33,8 @@ Complements opencode's built-in allow/deny/ask permissions by auditing current c
 
 ## Key Rules
 - Never allow commands that modify files, commit, push, or change system state
-- Use wildcards appropriately (e.g., `git status*` not just `git status`)
+- Prefer exact command entries such as `git status --short`, `git diff --stat`, and `ls -la`
+- Avoid trailing wildcards such as `git status*` unless the expanded command family has been manually reviewed as read-only
 - Confirm with user before modifying permission config
 - Distinguish between bash command permissions and skill permissions
 - Keep config organized: group related commands together

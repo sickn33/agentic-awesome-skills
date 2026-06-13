@@ -83,6 +83,17 @@ function createTarGzip(entries) {
   return zlib.gzipSync(Buffer.concat(blocks));
 }
 
+function createPaxRecord(key, value) {
+  let record = ` ${key}=${value}\n`;
+  let length = Buffer.byteLength(record);
+  while (true) {
+    const next = `${length}${record}`;
+    const nextLength = Buffer.byteLength(next);
+    if (nextLength === length) return next;
+    length = nextLength;
+  }
+}
+
 async function loadRefreshHandler() {
   const { default: refreshSkillsPlugin } = await import('../../refresh-skills-plugin.js');
   const registrations = [];
@@ -377,6 +388,45 @@ describe('refresh-skills plugin security', () => {
       expect(entries[0].type).toBe('2');
       expect(() => assertSafeArchiveEntries(entries, { rejectLinks: true })).toThrow(
         'Unsafe archive link entry',
+      );
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it('prefers PAX tar paths over GNU long names before validation', async () => {
+    const {
+      assertSafeArchiveEntries,
+      readTarGzipEntries,
+    } = await import('../../refresh-skills-plugin.js');
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'archive-pax-test-'));
+    const archivePath = path.join(tempDir, 'pax.tar.gz');
+
+    try {
+      fs.writeFileSync(
+        archivePath,
+        createTarGzip([
+          {
+            name: 'pax-header',
+            type: 'x',
+            data: createPaxRecord('path', '../outside'),
+          },
+          {
+            name: '././@LongLink',
+            type: 'L',
+            data: 'antigravity-awesome-skills-main/skills/demo/SKILL.md\0',
+          },
+          {
+            name: 'antigravity-awesome-skills-main/skills/demo/SKILL.md',
+            data: 'demo',
+          },
+        ]),
+      );
+      const entries = readTarGzipEntries(archivePath);
+
+      expect(entries[0].name).toBe('../outside');
+      expect(() => assertSafeArchiveEntries(entries, { rejectLinks: true })).toThrow(
+        'Unsafe archive entry path',
       );
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });

@@ -20,21 +20,22 @@ Before running any Vercel CLI commands, identify where the token is coming from.
 ### A) `VERCEL_TOKEN` is already set in the environment
 
 ```bash
-printenv VERCEL_TOKEN
+[ -n "${VERCEL_TOKEN:-}" ] && printf 'VERCEL_TOKEN is set\n'
 ```
 
-If this returns a value, you're ready. Skip to Step 2.
+If this reports a configured token, you're ready. Skip to Step 2.
 
 ### B) Token is in a `.env` file under `VERCEL_TOKEN`
 
 ```bash
-grep '^VERCEL_TOKEN=' .env 2>/dev/null
+grep -q '^VERCEL_TOKEN=' .env 2>/dev/null && printf 'VERCEL_TOKEN is present in .env\n'
 ```
 
 If found, export it:
 
 ```bash
-export VERCEL_TOKEN=$(grep '^VERCEL_TOKEN=' .env | cut -d= -f2-)
+VERCEL_TOKEN="$(sed -n 's/^VERCEL_TOKEN=//p' .env | tail -n 1)"
+export VERCEL_TOKEN
 ```
 
 ### C) Token is in a `.env` file under a different name
@@ -42,13 +43,15 @@ export VERCEL_TOKEN=$(grep '^VERCEL_TOKEN=' .env | cut -d= -f2-)
 Look for any variable that looks like a Vercel token (Vercel tokens typically start with `vca_`):
 
 ```bash
-grep -i 'vercel' .env 2>/dev/null
+grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)' .env 2>/dev/null
 ```
 
 Inspect the output to identify which variable holds the token, then export it as `VERCEL_TOKEN`:
 
 ```bash
-export VERCEL_TOKEN=$(grep '^<VARIABLE_NAME>=' .env | cut -d= -f2-)
+vercel_var="<VARIABLE_NAME>"
+VERCEL_TOKEN="$(sed -n "s/^${vercel_var}=//p" .env | tail -n 1)"
+export VERCEL_TOKEN
 ```
 
 ### D) No token found — ask the user
@@ -64,7 +67,7 @@ If none of the above yield a token, ask the user to provide one. They can create
 vercel deploy --token "vca_abc123"
 
 # Good — CLI reads VERCEL_TOKEN from the environment
-export VERCEL_TOKEN="vca_abc123"
+[ -n "${VERCEL_TOKEN:-}" ] || { echo "Set VERCEL_TOKEN first" >&2; exit 1; }
 vercel deploy
 ```
 
@@ -74,11 +77,11 @@ Similarly, check for the project ID and team scope. These let the CLI target the
 
 ```bash
 # Check environment
-printenv VERCEL_PROJECT_ID
-printenv VERCEL_ORG_ID
+[ -n "${VERCEL_PROJECT_ID:-}" ] && printf 'VERCEL_PROJECT_ID is set\n'
+[ -n "${VERCEL_ORG_ID:-}" ] && printf 'VERCEL_ORG_ID is set\n'
 
 # Or check .env
-grep -i 'vercel' .env 2>/dev/null
+grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)' .env 2>/dev/null
 ```
 
 **If you have a project URL** (e.g. `https://vercel.com/my-team/my-project`), extract the team slug:
@@ -317,8 +320,8 @@ Full details: https://vercel.com/docs/plans/pro-plan
 Check the environment and any `.env` files present:
 
 ```bash
-printenv | grep -i vercel
-grep -i vercel .env 2>/dev/null
+env | grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)'
+grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)' .env 2>/dev/null
 ```
 
 ### Authentication error

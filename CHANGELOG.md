@@ -9,6 +9,140 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.4.0] - 2026-06-12 - "Community Skill Batch and Web Catalog Sync"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 12 maintainer batch: seven accepted community PRs, finance compliance and academic research workflows, Atlas long-running-agent integrity skills, refreshed Polis Protocol install guidance, and a web catalog sync to 1,541+ skills.
+
+## New Skills
+
+- **agent-squad** - multi-persona development squad workflows for coordinating specialized AI roles across planning, implementation, review, and delivery.
+- **not-a-vibe-coder** - disciplined engineering workflow guidance for avoiding vague implementation loops and keeping AI-assisted coding grounded in requirements, tests, and review.
+- **fsi-compliance-checker** - PCI-DSS v4.0 and MAS TRM compliance review guidance for financial-services systems.
+- **papers-skill** - academic paper research workflow for finding, reading, summarizing, and organizing scholarly sources.
+- **atlas-contract** - long-running agent contract workflow for preserving task intent, scope, evidence, and acceptance criteria.
+- **atlas-ledger** - execution-ledger workflow for tracking decisions, state changes, validation, and handoff evidence during extended agent tasks.
+
+## Improvements
+
+- Upgraded **zipai-optimizer** to v14.0 guidance for extreme token optimization workflows.
+- Updated **polis-protocol** to v2 with always-latest PyPI install guidance, Polis CLI usage, and a corrected skill path.
+- Added missing README credits, provenance metadata, risk labels, and `## Limitations` sections while repairing accepted community PRs.
+- Synced generated registry artifacts, web catalog assets, sitemap, `llms.txt`, social-card copy, and SEO verification to the 1,541+ skill catalog.
+- Closed PR #671 because it remained conflicted and only touched generated/presentation assets rather than a mergeable skill contribution.
+
+## Credits
+
+- **[@nickdesi](https://github.com/nickdesi)** for PR #674 (`zipai-optimizer` v14.0).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #673 (`not-a-vibe-coder`) and PR #669 (`agent-squad`).
+- **[@timwukp](https://github.com/timwukp)** for PR #677 (`fsi-compliance-checker`).
+- **[@xwmxcz](https://github.com/xwmxcz)** for PR #668 (`papers-skill`).
+- **[@yehudalevy-collab](https://github.com/yehudalevy-collab)** for PR #667 (`polis-protocol` v2).
+- **[@wede-wx](https://github.com/wede-wx)** and **[wede-wx/atlas](https://github.com/wede-wx/atlas)** for PR #675 (`atlas-contract` and `atlas-ledger`).
+
+## [12.3.0] - 2026-06-10 - "Android, Unship, 40K Stars, and Security Hardening"
+
+> Community release for the June 10 maintainer batch, installer hardening, and the repository crossing 40K GitHub stars.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release accepts the validated June 10 community PRs, refreshes the catalog with Android and shipping workflows, and celebrates the repository passing **40,000 GitHub stars**. At release time the live repository count was 40,206 stars.
+
+## New Skills
+
+- **android-dev** - end-to-end Android development workflow guidance, including project setup, build/debug loops, testing, release preparation, and production quality checks.
+- **unship** - product and codebase teardown workflow for deprecating features, removing dead paths, and shipping safer cleanup plans.
+
+## Security
+
+- Hardened the installer so nested skill installs refuse symlinked intermediate destination directories instead of copying outside the selected install root.
+- Added regression coverage proving Antigravity installs cannot escape through pre-existing target-path symlinks.
+- Tightened `accesslint-diff` branch-switching guidance so branch names stay quoted, option-like names are rejected, and the branch ref must resolve before `git switch`.
+- Removed unsupported `2slides-ppt-generator` narration flags from root and plugin docs, aligning examples with the actual script interface.
+
+## Improvements
+
+- Updated `event-staffing-ordering` to remove the stale `request_quote` action from implementation references.
+- Synced the accepted PR batch on `main`; PR #642 remains open because it is still conflicting and targets non-canonical generated paths.
+
+## Credits
+
+- **[@kissmyabs32](https://github.com/kissmyabs32)** for PR #666 (`event-staffing-ordering` cleanup).
+- **[@mbenhard](https://github.com/mbenhard)** and **[mbenhard/unship](https://github.com/mbenhard/unship)** for PR #663 (`unship`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #664 (`android-dev`).
+- Thank you to every contributor, issue reporter, user, and stargazer who helped the project reach 40K GitHub stars.
+
+## [12.2.1] - 2026-06-07 - "Security Scan Follow-up"
+
+> Patch release for the June 7 security scan remediation after `12.2.0`.
+
+## Security
+
+- Hardened `user-thoughts` runtime file handling against symlink traversal and realpath escapes inside `.ustht/`.
+- Fixed tar archive validation to prefer PAX `path` / `linkpath` headers before GNU long-name headers.
+- Replaced risky documentation examples for unquoted Git branches, placeholder `git add`, predictable `/tmp` installer paths, token-printing Vercel commands, and unsafe JSON-LD injection.
+- Removed public Google and Bing site-verification tokens from the web app.
+- Raised risk labels and plugin metadata for external-code and remote-execution skills, including `runapi-cli`, `open-dynamic-workflows`, and `polis-protocol`.
+
+## Improvements
+
+- Marked `2slides-ppt-generator` plugin setup as manual with declared Python requirements.
+- Fixed broken plugin bundle links and the mobile plugin skill list.
+- Regenerated plugin compatibility reports, skill indexes, web assets, and plugin mirrors after the remediation.
+
+## [12.2.0] - 2026-06-07 - "Education, Media, Workflow, and Creative Skill Intake"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 7 maintainer batch: accepted community PRs for education, media processing, workflow orchestration, media-generation APIs, and article illustration workflows. The catalog is synced to 1,525+ skills, plugin mirrors are refreshed, and the hosted web-app SEO metadata now matches the current catalog count.
+
+## New Skills
+
+- **cv-generator** - ATS-ready CV and resume generation guidance for FlowCV, Canva, and structured career-document workflows.
+- **open-dynamic-workflows** - dynamic multi-agent workflow orchestration guidance for planning, parallel execution, and adversarial verification.
+- **video-content-extractor** - FFmpeg and Tesseract OCR workflows for extracting timestamped screen text and structured Markdown reports from MP4 videos.
+- **runapi-cli** - official RunAPI CLI guidance for generating AI images, videos, music, audio, and related model API jobs.
+- **article-illustrations** - Grav-style hand-drawn article illustration workflow with whiteboard sketches, sparse annotations, visual metaphors, and QA checks.
+
+## Improvements
+
+- Refined `examprep-ai` release metadata and education category support as part of the accepted education skill update.
+- Added README source credits and structured provenance metadata for newly imported external/community skills.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,525-skill catalog.
+- Updated web-app home metadata, `llms.txt`, social preview copy, prerender fallback text, and SEO verification tests from `1,520+` to `1,525+`.
+- Kept PR #642 open because it still targets a non-canonical shadow path and includes generated star-history noise instead of the live registry pipeline.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #658 (`cv-generator` and `examprep-ai` refinements).
+- **[@Suraj1235](https://github.com/Suraj1235)** and **[Suraj1235/open-dynamic-workflows](https://github.com/Suraj1235/open-dynamic-workflows)** for PR #659 (`open-dynamic-workflows`).
+- **[@274326424](https://github.com/274326424)** and **[274326424/video-content-extractor](https://github.com/274326424/video-content-extractor)** for PR #660 (`video-content-extractor`).
+- **[@runapi-builder](https://github.com/runapi-builder)** and **[runapi-ai/cli-skill](https://github.com/runapi-ai/cli-skill)** for PR #661 (`runapi-cli`).
+- **[@vipin-si](https://github.com/vipin-si)** and **[vipin-si/article-illustrations](https://github.com/vipin-si/article-illustrations)** for PR #662 (`article-illustrations`).
+
 ## [12.1.0] - 2026-06-05 - "Community Skills, Release Sync, and Dependency Hardening"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.

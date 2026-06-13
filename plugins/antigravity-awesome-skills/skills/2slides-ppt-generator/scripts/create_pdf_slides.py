@@ -126,7 +126,7 @@ Examples:
     )
 
     parser.add_argument("--content", required=True, help="Content for slides")
-    parser.add_argument("--design-spec", help="Optional design specifications")
+    parser.add_argument("--design-spec", "--design-style", dest="design_spec", help="Optional design specifications")
     parser.add_argument("--language", default="Auto", help="Response language (default: Auto)")
     parser.add_argument("--aspect-ratio", default="16:9", help="Aspect ratio in width:height format (default: 16:9)")
     parser.add_argument("--resolution", choices=["1K", "2K", "4K"], default="2K",

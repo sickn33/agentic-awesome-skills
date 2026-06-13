@@ -61,8 +61,10 @@ Show the proposed branch name and ask for one-word confirmation (or type alterna
 - If not on main/master: check if current branch matches proposed name
   - If yes: stay on it
   - If no: ask to switch or create new
-- Create branch: `git checkout -b <branch-name>`
-- Stage changes: `git add <grouped-files>`
+- Create branch only after validating the branch name, then use `git checkout -b "$branch_name"`
+- Stage explicit pathspecs only: `git add -- path/to/file ...`
+  - If file paths are generated, keep them NUL-delimited (`git diff -z --name-only`) and pass them as pathspec arguments.
+  - Never concatenate untrusted filenames into a shell command and never run the placeholder text literally.
 - Auto-generate commit message from changes:
   - First line: `<type>: <short description>` (max 72 chars)
   - Body: grouped file changes with brief descriptions

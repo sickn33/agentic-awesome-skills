@@ -213,10 +213,10 @@ function readTarGzipEntries(archivePath) {
         } else if (type === 'K') {
             longLink = data.toString('utf8').replace(/\0.*$/s, '');
         } else {
-            const name = longName || pax.path || [readTarString(header, 345, 155), readTarString(header, 0, 100)]
+            const name = pax.path || longName || [readTarString(header, 345, 155), readTarString(header, 0, 100)]
                 .filter(Boolean)
                 .join('/');
-            const linkName = longLink || pax.linkpath || readTarString(header, 157, 100);
+            const linkName = pax.linkpath || longLink || readTarString(header, 157, 100);
             entries.push({ name, type: type || '0', linkName });
             pax = {};
             longName = null;

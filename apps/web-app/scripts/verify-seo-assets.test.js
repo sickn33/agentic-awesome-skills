@@ -78,7 +78,7 @@ describe('seo assets verification helpers', () => {
   it('requires llms.txt discovery signals', () => {
     const llms = `
       # Antigravity Awesome Skills
-      1,520+ agentic skills with specialized plugins for Claude Code and Codex CLI.
+      1,541+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/antigravity-awesome-skills
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
@@ -104,12 +104,12 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Antigravity Awesome Skills | 1,520+ AI coding skills and plugins</title>
-          <meta name="description" content="Explore 1,520+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Antigravity Awesome Skills | 1,520+ AI coding skills and plugins" />
-          <meta property="og:description" content="Explore 1,520+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Antigravity Awesome Skills | 1,520+ AI coding skills and plugins" />
-          <meta name="twitter:description" content="Explore 1,520+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <title>Antigravity Awesome Skills | 1,541+ AI coding skills and plugins</title>
+          <meta name="description" content="Explore 1,541+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta property="og:title" content="Antigravity Awesome Skills | 1,541+ AI coding skills and plugins" />
+          <meta property="og:description" content="Explore 1,541+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta name="twitter:title" content="Antigravity Awesome Skills | 1,541+ AI coding skills and plugins" />
+          <meta name="twitter:description" content="Explore 1,541+ installable agentic skills, specialized plugins, bundles, and workflows." />
           <script type="application/ld+json">
             [
               {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/antigravity-awesome-skills"},

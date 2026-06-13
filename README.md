@@ -1,9 +1,9 @@
-<!-- registry-sync: version=12.1.0; skills=1520; stars=39820; updated_at=2026-06-05T18:50:27+00:00 -->
+<!-- registry-sync: version=12.4.0; skills=1541; stars=40473; updated_at=2026-06-12T17:19:05+00:00 -->
 [![Antigravity Awesome Skills hero](assets/aas-readme-hero.jpeg)](https://github.com/sickn33/antigravity-awesome-skills)
 
-# 🌌 Antigravity Awesome Skills: 1,520+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More
+# 🌌 Antigravity Awesome Skills: 1,541+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More
 
-> **Installable GitHub library of 1,520+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.**
+> **Installable GitHub library of 1,541+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.**
 
 Antigravity Awesome Skills is an installable GitHub library and npm installer for reusable `SKILL.md` playbooks. It is designed for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, Kiro, OpenCode, GitHub Copilot, and other AI coding assistants that benefit from structured operating instructions. Instead of collecting one-off prompt snippets, this repository gives you a searchable, installable catalog of skills, bundles, workflows, plugin-safe distributions, and practical docs that help agents perform recurring tasks with better context, stronger constraints, and clearer outputs.
 
@@ -11,7 +11,7 @@ You can use this repo to install a broad multi-tool skill library, start from fo
 
 The canonical project page is the GitHub repository at <https://github.com/sickn33/antigravity-awesome-skills>; the hosted catalog is a companion discovery surface for search, plugins, and skill detail pages.
 
-**Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Compare plugin packs](https://sickn33.github.io/antigravity-awesome-skills/plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse 1,520+ Skills](#browse-1520-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
+**Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Compare plugin packs](https://sickn33.github.io/antigravity-awesome-skills/plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse 1,541+ Skills](#browse-1541-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2040%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/antigravity-awesome-skills/stargazers)
 [![Follow @AASkills_ on X](https://img.shields.io/badge/Follow-%40AASkills__-black?style=for-the-badge&logo=x)](https://x.com/AASkills_)
@@ -27,13 +27,13 @@ The canonical project page is the GitHub repository at <https://github.com/sickn
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/antigravity-awesome-skills)
 
-**Current release: V12.1.0.** Trusted by 40k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
+**Current release: V12.4.0.** Trusted by 40k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
 
 ## Why This Repo
 
 - **Installable, not just inspirational**: use `npx antigravity-awesome-skills` to put skills where your tool expects them.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
-- **Broad coverage with real utility**: 1,520+ skills across development, testing, security, infrastructure, product, and marketing.
+- **Broad coverage with real utility**: 1,541+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Focused by default**: specialized plugins help you start with the web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows you actually need.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
 
@@ -45,7 +45,7 @@ The canonical project page is the GitHub repository at <https://github.com/sickn
 - [Choose Your Tool](#choose-your-tool)
 - [Quick FAQ](#quick-faq)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 1,520+ Skills](#browse-1520-skills)
+- [Browse 1,541+ Skills](#browse-1541-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Support the Project](#support-the-project)
@@ -151,7 +151,7 @@ Use the table above for install targets. Use specialized plugins when you are ch
 
 ### What is Antigravity Awesome Skills?
 
-**Antigravity Awesome Skills** (Release 12.1.0) is a large, installable skill library for AI coding assistants. It packages 1,520+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
+**Antigravity Awesome Skills** (Release 12.4.0) is a large, installable skill library for AI coding assistants. It packages 1,541+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
 
 ### How do I install it?
 
@@ -209,7 +209,7 @@ If Antigravity starts hitting context limits with too many active skills, the ac
 
 If you use OpenCode or another `.agents/skills` host, prefer a reduced install up front instead of copying the full library into a context-sensitive runtime. The installer now supports `--risk`, `--category`, and `--tags` so you can keep the installed set narrow.
 
-## Browse 1,520+ Skills
+## Browse 1,541+ Skills
 
 Use the root repo as a landing page, then jump into the deeper surface that matches your intent.
 
@@ -327,6 +327,7 @@ Key source families include:
 - **[huggingface/skills](https://github.com/huggingface/skills)**: Official Hugging Face skills - Models, Spaces, datasets, inference, and broader Hugging Face ecosystem workflows.
 - **[longbridge/skills](https://github.com/longbridge/skills)**: Official Longbridge Securities skills - real-time quotes, charts, fundamentals, portfolio analysis, options, and market workflows for HK, US, A-share, and SG markets.
 - **[HasData/hasdata-cli](https://github.com/HasData/hasdata-cli)**: Official HasData CLI and API guidance for search, scraping, ecommerce, travel, jobs, local business, and structured web data workflows.
+- **[runapi-ai/cli-skill](https://github.com/runapi-ai/cli-skill)**: Official RunAPI CLI skill - generate AI images, videos, and music/audio from agent workflows, plus run other model API jobs.
 - **[neondatabase/agent-skills](https://github.com/neondatabase/agent-skills)**: Official Neon skills - Serverless Postgres workflows and Neon platform guidance.
 - **[Skyvern-AI/skyvern](https://github.com/Skyvern-AI/skyvern)**: Official Skyvern browser automation skill — AI-powered browser control using Vision LLMs and computer vision for navigating sites, filling forms, and extracting structured data.
 - **[scopeblind/scopeblind-gateway](https://github.com/scopeblind/scopeblind-gateway)**: Official Scopeblind MCP governance toolkit - Cedar policy authoring, shadow-to-enforce rollout, and signed-receipt verification guidance for agent tool calls.
@@ -338,6 +339,7 @@ Key source families include:
 
 ### Community Contributors
 
+- **[Suraj1235/open-dynamic-workflows](https://github.com/Suraj1235/open-dynamic-workflows)**: Source for the `open-dynamic-workflows` skill - open-source dynamic multi-agent workflow engine that plans, orchestrates, and adversarially verifies parallel AI coding agents across OpenCode, Codex, Antigravity, and VS Code (MIT).
 - **[multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)**: Source for the `andrej-karpathy` skill - English Karpathy-inspired LLM coding guidelines for simplicity, surgical changes, assumption surfacing, and verifiable success criteria (MIT).
 - **[mskadu/opencode-agent-skills](https://github.com/mskadu/opencode-agent-skills)**: Source for opencode behavior, permission, skill-suggestion, and smart Git automation skills.
 - **[adelaidasofia/ai-brain-starter](https://github.com/adelaidasofia/ai-brain-starter)**: Source for the `ingest-youtube` skill - YouTube transcript ingestion into markdown vaults with yt-dlp metadata, VTT cleanup, and capture-seed stubs (MIT).
@@ -359,6 +361,8 @@ Key source families include:
 - **[yikuansun/PhotopeaAPI](https://github.com/yikuansun/PhotopeaAPI)**: Source for the `photopea-embedded-editor` skill - Photopea embedding, host-page messaging, file I/O, scripting, and export workflows for web apps (MIT).
 - **[milkomida77/guardian-agent-prompts](https://github.com/milkomida77/guardian-agent-prompts)**: Source for the Multi-Agent Task Orchestrator skill - production-tested delegation patterns, anti-duplication, and quality gates for coordinated agent work.
 - **[Elkidogz/technical-change-skill](https://github.com/Elkidogz/technical-change-skill)**: Source for the Technical Change Tracker skill - structured JSON change records, session handoff, and accessible HTML dashboards for coding continuity.
+- **[vipin-si/article-illustrations](https://github.com/vipin-si/article-illustrations)**: Source for the `article-illustrations` skill - Grav-style hand-drawn article illustrations with whiteboard sketches, sparse annotations, and visual metaphor QA guidance (MIT).
+- **[274326424/video-content-extractor](https://github.com/274326424/video-content-extractor)**: Source for the `video-content-extractor` skill - FFmpeg and Tesseract OCR workflows for extracting timestamped screen text and structured Markdown reports from MP4 videos (MIT).
 - **[rmyndharis/antigravity-skills](https://github.com/rmyndharis/antigravity-skills)**: For the massive contribution of 300+ Enterprise skills and the catalog generation logic.
 - **[amartelr/antigravity-workspace-manager](https://github.com/amartelr/antigravity-workspace-manager)**: Workspace Manager CLI companion to dynamically auto-provision subsets of skills across local development environments.
 - **[obra/superpowers](https://github.com/obra/superpowers)**: The original "Superpowers" by Jesse Vincent.
@@ -386,6 +390,7 @@ Key source families include:
 - **[jonathimer/devmarketing-skills](https://github.com/jonathimer/devmarketing-skills)**: Developer marketing skills — HN strategy, technical tutorials, docs-as-marketing, Reddit engagement, developer onboarding, and more (33 skills, MIT).
 - **[kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)**: Obsidian-focused skills for markdown, Bases, JSON Canvas, CLI workflows, and content cleanup.
 - **[lewiswigmore/agent-skills](https://github.com/lewiswigmore/agent-skills)**: Source for the `vscode-extension-guide-en` skill - VS Code extension development workflows, packaging, Marketplace publishing, TreeView, and webview patterns.
+- **[mbenhard/unship](https://github.com/mbenhard/unship)**: Source for the `unship` skill - local workflow for comparing AI-generated UI variants in a real app, then keeping one option and cleaning up temporary alternatives (MIT).
 - **[Silverov/yandex-direct-skill](https://github.com/Silverov/yandex-direct-skill)**: Yandex Direct (API v5) advertising audit skill — 55 automated checks, A-F scoring, campaign/ad/keyword analysis for the Russian PPC market (MIT).
 - **[vudovn/antigravity-kit](https://github.com/vudovn/antigravity-kit)**: AI Agent templates with Skills, Agents, and Workflows (33 skills, MIT).
 - **[affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code)**: Large Claude Code configuration and workflow collection from an Anthropic hackathon winner (MIT).
@@ -395,11 +400,14 @@ Key source families include:
 - **[webzler/agentMemory](https://github.com/webzler/agentMemory)**: Source for the agent-memory-mcp skill.
 - **[rafsilva85/credit-optimizer-v5](https://github.com/rafsilva85/credit-optimizer-v5)**: Manus AI credit optimizer skill — intelligent model routing, context compression, and smart testing. Saves 30-75% on credits with zero quality loss. Audited across 53 scenarios.
 - **[ndesv21/socialclaw](https://github.com/ndesv21/socialclaw)**: Source for the SocialClaw social media publishing skill - campaign scheduling and publishing across major social platforms with a single workspace API key.
+- **[nickdesi/ZipAI](https://github.com/nickdesi/ZipAI)**: Source for the `zipai-optimizer` skill — ultra-dense prompt caching, semantic log pruning, AST-based code viewing, minified JSON payloads, and telegraphic output constraints for maximum token savings.
 - **[Wittlesus/cursorrules-pro](https://github.com/Wittlesus/cursorrules-pro)**: Professional .cursorrules configurations for 8 frameworks - Next.js, React, Python, Go, Rust, and more. Works with Cursor, Claude Code, and Windsurf.
 - **[nedcodes-ok/rule-porter](https://github.com/nedcodes-ok/rule-porter)**: Bidirectional rule converter between Cursor (.mdc), Claude Code (CLAUDE.md), GitHub Copilot, Windsurf, and legacy .cursorrules formats. Zero dependencies.
 - **[SSOJet/skills](https://github.com/ssojet/skills)**: Production-ready SSOJet skills and integration guides for popular frameworks and platforms — Node.js, Next.js, React, Java, .NET Core, Go, iOS, Android, and more. Works seamlessly with SSOJet SAML, OIDC, and enterprise SSO flows. Works with Cursor, Antigravity, Claude Code, and Windsurf.
+- **[timwukp/agent-skills-best-practice](https://github.com/timwukp/agent-skills-best-practice)**: Source for the `fsi-compliance-checker` skill - financial-services compliance triage for PCI-DSS v4.0 and MAS TRM control mapping (MIT).
 - **[MojoAuth/skills](https://github.com/MojoAuth/skills)**: Production-ready MojoAuth guides and examples for popular frameworks like Node.js, Next.js, React, Java, .NET Core, Go, iOS, and Android.
 - **[mishanefedov/skill-issue](https://github.com/mishanefedov/skill-issue)**: Source for the `skill-issue` activation-audit skill for grading SKILL.md trigger metadata, prompt matching, and collision clusters (MIT).
+- **[wede-wx/atlas](https://github.com/wede-wx/atlas)**: Source for the `atlas-contract` and `atlas-ledger` goal-integrity skills - contract, phase-check, final-audit, and project-ledger guardrails for long-running agent work (MIT).
 - **[yehudalevy-collab/polis-protocol](https://github.com/yehudalevy-collab/polis-protocol)**: Source for the `polis-protocol` multi-agent coordination skill with capability cards, routing history, and protocol amendments (MIT).
 - **[Xquik-dev/x-twitter-scraper](https://github.com/Xquik-dev/x-twitter-scraper)**: X (Twitter) data platform — tweet search, user lookup, follower extraction, engagement metrics, giveaway draws, monitoring, webhooks, 19 extraction tools, MCP server.
 - **[connerlambden/helium-mcp](https://github.com/connerlambden/helium-mcp)**: Source for the `helium-mcp` skill — MCP server for news intelligence, media bias analysis, market data, options pricing, and semantic meme search.
@@ -442,6 +450,7 @@ Key source families include:
 - **[sstklen/infinite-gratitude](https://github.com/sstklen/infinite-gratitude)**: Multi-agent research skill from the AI Dojo series (MIT).
 - **[wrsmith108/linear-claude-skill](https://github.com/wrsmith108/linear-claude-skill)**: Linear issue/project/team management skill with MCP and GraphQL workflows (MIT).
 - **[wrsmith108/varlock-claude-skill](https://github.com/wrsmith108/varlock-claude-skill)**: Secure environment-variable management skill for Claude Code (MIT).
+- **[xwmxcz/papers-skill](https://github.com/xwmxcz/papers-skill)**: Source for the `papers-skill` skill — academic research workflows over Semantic Scholar (200M+ papers) and arXiv, with citation lookup, arXiv PDF download, and PyMuPDF text extraction via a bundled Python CLI (MIT).
 - **[zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides)**: Frontend slide-creation skills for web-based presentations (MIT).
 - **[zxkane/aws-skills](https://github.com/zxkane/aws-skills)**: AWS-focused Claude agent skills (MIT).
 - **[UrRhb/agentflow](https://github.com/UrRhb/agentflow)**: Kanban-driven AI development pipeline for orchestrating multi-worker Claude Code workflows with deterministic quality gates, adversarial review, cost tracking, and crash-proof execution (MIT).
@@ -482,14 +491,14 @@ We officially thank the following contributors for their help in making this rep
 ## Star History
 
 <a href="https://www.star-history.com/#sickn33/antigravity-awesome-skills&type=date&legend=top-left">
- <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left&cache_bust=202606050731" />
+ <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left&cache_bust=202606120739" />
 </a>
 
 <a href="https://www.star-history.com/sickn33/antigravity-awesome-skills">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&theme=dark&cache_bust=202606050731" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606050731" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606050731" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&theme=dark&cache_bust=202606120739" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606120739" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606120739" />
  </picture>
 </a>
 

@@ -13,6 +13,10 @@ function pluginDocUrl(): string {
   return `${repoBaseUrl}/blob/main/docs/users/plugins.md`;
 }
 
+function bundleDocUrl(): string {
+  return `${repoBaseUrl}/blob/main/docs/users/bundles.md`;
+}
+
 export function Plugins(): React.ReactElement {
   usePageMeta(buildPluginsMeta(specializedPlugins.length));
 
@@ -32,7 +36,7 @@ export function Plugins(): React.ReactElement {
             Choose the focused AAS plugin for your AI coding workflow
           </h1>
           <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            AAS specialized plugins are focused, domain-specific distributions of the 1,520+ skill library.
+            AAS specialized plugins are focused, domain-specific distributions of the 1,541+ skill library.
             Start here when you know the job: web apps, security, data analytics, documents, DevOps, QA,
             OSS maintenance, mobile apps, automation, or agent and MCP systems.
           </p>
@@ -148,7 +152,7 @@ function PluginSection({
                 View plugin folder
               </a>
               <a
-                href={`${repoBaseUrl}/blob/main/docs/users/bundles.md#${plugin.id}`}
+                href={bundleDocUrl()}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"

@@ -10,6 +10,11 @@ date_added: "2026-06-05"
 author: 2slides
 tags: [presentations, slides, powerpoint, ai, api-integration, pdf, narration, document-summarization]
 tools: [claude, cursor, gemini, codex, antigravity]
+plugin:
+  setup:
+    type: manual
+    summary: "Install Python requirements and configure a 2slides API key before running generation scripts."
+    docs: SKILL.md
 ---
 
 # 2slides Presentation Generation
@@ -269,6 +274,12 @@ Section 2: [Subtopic]
 
 Use the `create_pdf_slides.py` script:
 
+Install the Python dependency first if it is not already available:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
 ```bash
 # Basic generation
 python scripts/create_pdf_slides.py --content "Your content here"
@@ -294,7 +305,6 @@ python scripts/create_pdf_slides.py \
 --resolution 1K|2K|4K          # default: 2K
 --page N                        # 0=auto, 1-100 (default: 1)
 --content-detail concise|standard # default: standard
---mode sync|async               # default: async
 ```
 
 **Step 3: Handle Results**
@@ -440,25 +450,16 @@ python scripts/generate_narration.py --job-id "abc-123-def-456"
 # Single speaker, specific voice
 python scripts/generate_narration.py --job-id "abc-123-def-456" --voice Aoede
 
-# No speaker intro
-python scripts/generate_narration.py --job-id "abc-123-def-456" --no-intro
-
-# Multi-speaker (names required)
-python scripts/generate_narration.py --job-id "abc-123-def-456" --multi-speaker \
-  --speaker1-name "Alice" --speaker2-name "Bob" \
-  --speaker1-voice Aoede --speaker2-voice Puck
+# Multi-speaker mode
+python scripts/generate_narration.py --job-id "abc-123-def-456" --multi-speaker
 ```
 
 **Parameters (aligned with [2slides API](https://2slides.com/api.md)):**
 - `--job-id`: Job ID (required, UUID for Nano Banana)
-- `--mode`: `single` or `multi` (default: single)
-- `--speaker-name`: Speaker name (single mode)
 - `--voice`: Voice name (default: Puck); use `--list-voices` for all 30
-- `--content-mode`: `concise` or `standard` (default: standard)
-- `--no-intro`: Omit speaker introduction (single mode)
-- `--speaker1-name`, `--speaker2-name`: Required for multi mode
-- `--speaker1-voice`, `--speaker2-voice`: Optional for multi mode
-- `--multi-speaker`: Shortcut for `--mode multi`
+- `--language`: Narration language (default: Auto)
+- `--multi-speaker`: Enable multi-speaker mode
+- `--list-voices`: Print the supported voices without calling the API
 
 **Step 3: Check Status**
 
@@ -706,11 +707,10 @@ All scripts accept parameters that match [2slides API](https://2slides.com/api.m
 | | `--aspect-ratio` | 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9 |
 | | `--resolution` | 1K, 2K, 4K |
 | | `--content-detail` | concise, standard |
-| `create_pdf_slides.py` | Same as above + `--design-style` (free text), `--mode` (default async) | |
-| `generate_narration.py` | `--mode` | single, multi |
-| | `--voice` | 30 voices (Puck, Aoede, Charon, …); use `--list-voices` |
-| | `--content-mode` | concise, standard |
-| | Multi: `--speaker1-name`, `--speaker2-name`, `--speaker1-voice`, `--speaker2-voice` | |
+| `create_pdf_slides.py` | Same as above + `--design-style` / `--design-spec` (free text) | |
+| `generate_narration.py` | `--voice` | 30 voices (Puck, Aoede, Charon, …); use `--list-voices` |
+| | `--language` | Auto, English, Spanish, Arabic, Portuguese, Indonesian, Japanese, Russian, Hindi, French, German, Vietnamese, Turkish, Polish, Italian, Korean, Simplified Chinese, Traditional Chinese |
+| | `--multi-speaker` | enabled when present |
 | `search_themes.py` | `--query` (required), `--limit` (1–100) | |
 | `get_job_status.py` | `--job-id` (required) | |
 | `download_slides_pages_voices.py` | `--job-id` (required), `--output` (path) | |

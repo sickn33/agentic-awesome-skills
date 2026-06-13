@@ -2,13 +2,14 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1520
+Total skills: 1541
 
-## architecture (99)
+## architecture (100)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
 | `active-directory-attacks` | Provide comprehensive techniques for attacking Microsoft Active Directory environments. Covers reconnaissance, credential harvesting, Kerberos attacks, later... | active, directory, attacks | active, directory, attacks, provide, techniques, attacking, microsoft, environments, covers, reconnaissance, credential, harvesting |
+| `agent-squad/mason` | Produces clean, functional code that matches the architecture and checklists. | agent, squad/mason | agent, squad/mason, mason, produces, clean, functional, code, matches, architecture, checklists |
 | `analyze-project` | Forensic root cause analyzer for Antigravity sessions. Classifies scope deltas, rework patterns, root causes, hotspots, and auto-improves prompts/health. | analysis, diagnostics, meta, root-cause, project-health, session-review | analysis, diagnostics, meta, root-cause, project-health, session-review, analyze, forensic, root, cause, analyzer, antigravity |
 | `angular` | Modern Angular (v20+) expert with deep knowledge of Signals, Standalone Components, Zoneless applications, SSR/Hydration, and reactive patterns. | angular | angular, v20, deep, knowledge, signals, standalone, components, zoneless, applications, ssr, hydration, reactive |
 | `angular-state-management` | Master modern Angular state management with Signals, NgRx, and RxJS. Use when setting up global state, managing component stores, choosing between state solu... | angular, state | angular, state, signals, ngrx, rxjs, setting, up, global, managing, component, stores, choosing |
@@ -108,7 +109,7 @@ Total skills: 1520
 | `workflow-patterns` | Use this skill when implementing tasks according to Conductor's TDD workflow, handling phase checkpoints, managing git commits for tasks, or understanding th... |  | skill, implementing, tasks, according, conductor, tdd, handling, phase, checkpoints, managing, git, commits |
 | `zapier-make-patterns` | No-code automation democratizes workflow building. Zapier and Make (formerly Integromat) let non-developers automate business processes without writing code.... | zapier, make | zapier, make, no, code, automation, democratizes, building, formerly, integromat, let, non, developers |
 
-## business (84)
+## business (85)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -116,6 +117,7 @@ Total skills: 1520
 | `advogado-especialista` | Advogado especialista em todas as areas do Direito brasileiro: familia, criminal, trabalhista, tributario, consumidor, imobiliario, empresarial, civil e cons... | legal, brazilian-law, multi-domain, portuguese | legal, brazilian-law, multi-domain, portuguese, advogado, especialista, em, todas, areas, do, direito, brasileiro |
 | `apify-competitor-intelligence` | Analyze competitor strategies, content, pricing, ads, and market positioning across Google Maps, Booking.com, Facebook, Instagram, YouTube, and TikTok. | apify, competitor, intelligence | apify, competitor, intelligence, analyze, content, pricing, ads, market, positioning, google, maps, booking |
 | `apify-market-research` | Analyze market conditions, geographic opportunities, pricing, consumer behavior, and product validation across Google Maps, Facebook, Instagram, Booking.com,... | apify, market, research | apify, market, research, analyze, conditions, geographic, opportunities, pricing, consumer, behavior, product, validation |
+| `atlas-ledger` | Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drif... | atlas, ledger | atlas, ledger, companion, contract, auto, invoked, final, audit, caught, drift, after, post |
 | `blog-writing-guide` | This skill enforces Sentry's blog writing standards across every post — whether you're helping an engineer write their first blog post or a marketer draft a ... | blog, writing | blog, writing, skill, enforces, sentry, standards, every, post, whether, re, helping, engineer |
 | `brand-guidelines` | Write copy following Sentry brand guidelines. Use when writing UI text, error messages, empty states, onboarding flows, 404 pages, documentation, marketing c... | brand, guidelines | brand, guidelines, write, copy, following, sentry, writing, ui, text, error, messages, empty |
 | `brevo-automation` | Automate Brevo (formerly Sendinblue) email marketing operations through Composio's Brevo toolkit via Rube MCP. | brevo | brevo, automation, automate, formerly, sendinblue, email, marketing, operations, through, composio, toolkit, via |
@@ -197,7 +199,7 @@ Total skills: 1520
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 
-## data-ai (292)
+## data-ai (296)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -206,6 +208,7 @@ Total skills: 1520
 | `advanced-evaluation` | This skill should be used when the user asks to "implement LLM-as-judge", "compare model outputs", "create evaluation rubrics", "mitigate evaluation bias", o... | advanced, evaluation | advanced, evaluation, skill, should, used, user, asks, llm, judge, compare, model, outputs |
 | `agent-framework-azure-ai-py` | Build persistent agents on Azure AI Foundry using the Microsoft Agent Framework Python SDK. | agent, framework, azure, ai, py | agent, framework, azure, ai, py, persistent, agents, foundry, microsoft, python, sdk |
 | `agent-memory-mcp` | A hybrid memory system that provides persistent, searchable knowledge management for AI agents (Architecture, Patterns, Decisions). | agent, memory, mcp | agent, memory, mcp, hybrid, provides, persistent, searchable, knowledge, ai, agents, architecture, decisions |
+| `agent-squad/aria` | Designs the data model, API contracts, and structural foundation of the system. | agent, squad/aria | agent, squad/aria, aria, designs, data, model, api, contracts, structural, foundation |
 | `agent-tool-builder` | Tools are how AI agents interact with the world. A well-designed tool is the difference between an agent that works and one that hallucinates, fails silently... | agent, builder | agent, builder, how, ai, agents, interact, world, well, designed, difference, between, works |
 | `agentfolio` | Skill for discovering and researching autonomous AI agents, tools, and ecosystems using the AgentFolio directory. | agentfolio | agentfolio, skill, discovering, researching, autonomous, ai, agents, ecosystems, directory |
 | `agentmail` | Email infrastructure for AI agents. Create accounts, send/receive emails, manage webhooks, and check karma balance via the AgentMail API. | agentmail | agentmail, email, infrastructure, ai, agents, accounts, send, receive, emails, webhooks, check, karma |
@@ -411,6 +414,7 @@ Total skills: 1520
 | `obsidian-bases` | Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of... | obsidian, bases | obsidian, bases, edit, base, files, views, filters, formulas, summaries, working, creating, database |
 | `odoo-edi-connector` | Guide for implementing EDI (Electronic Data Interchange) with Odoo: X12, EDIFACT document mapping, partner onboarding, and automated order processing. | odoo, edi, connector | odoo, edi, connector, implementing, electronic, data, interchange, x12, edifact, document, mapping, partner |
 | `odoo-inventory-optimizer` | Expert guide for Odoo Inventory: stock valuation (FIFO/AVCO), reordering rules, putaway strategies, routes, and multi-warehouse configuration. | odoo, inventory, optimizer | odoo, inventory, optimizer, stock, valuation, fifo, avco, reordering, rules, putaway, routes, multi |
+| `open-dynamic-workflows` | Plan, orchestrate, and adversarially verify parallel AI coding agents with a dynamic multi-agent workflow engine. | multi-agent, orchestration, workflow, adversarial-verification, coding-agents | multi-agent, orchestration, workflow, adversarial-verification, coding-agents, open, dynamic, plan, orchestrate, adversarially, verify, parallel |
 | `photopea-embedded-editor` | Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and the full Photoshop-compatible API. | photopea, embedded, editor | photopea, embedded, editor, embed, web, apps, js, covers, embedding, file, scripting, exporting |
 | `php-pro` | Write idiomatic PHP code with generators, iterators, SPL data structures, and modern OOP features. Use PROACTIVELY for high-performance PHP applications. | php | php, pro, write, idiomatic, code, generators, iterators, spl, data, structures, oop, features |
 | `polars` | Fast in-memory DataFrame library for datasets that fit in RAM. Use when pandas is too slow but data still fits in memory. Lazy evaluation, parallel execution... | polars | polars, fast, memory, dataframe, library, datasets, fit, ram, pandas, too, slow, data |
@@ -433,6 +437,7 @@ Total skills: 1520
 | `recursive-context-pruning-token-budgeting` | Optimizes AI agent performance by pruning redundant context, managing token usage, and enforcing ultra-concise, direct-to-value responses. | efficiency, token-optimization, brevity, context-management | efficiency, token-optimization, brevity, context-management, recursive, context, pruning, token, budgeting, optimizes, ai, agent |
 | `referral-program` | You are an expert in viral growth and referral marketing with access to referral program data and third-party tools. Your goal is to help design and optimize... | referral, program | referral, program, viral, growth, marketing, access, data, third, party, goal, optimize, programs |
 | `robius-state-management` | CRITICAL: Use for Robius state management patterns. Triggers on: AppState, persistence, theme switch, 状态管理, Scope::with_data, save state, load state, serde, ... | robius, state | robius, state, critical, triggers, appstate, persistence, theme, switch, scope, data, save, load |
+| `runapi-cli` | Generate AI images, videos, and music/audio from agents using the RunAPI CLI. | runapi, cli, models, automation, codex, claude, gemini | runapi, cli, models, automation, codex, claude, gemini, generate, ai, images, videos, music |
 | `runaway-guard` | Cost-safety discipline for paid AI / inference APIs: treat $-cost as a third complexity dimension alongside time and space. Forces a written per-run $-cap, p... | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway, runaway, guard, cost, safety |
 | `sankhya-dashboard-html-jsp-custom-best-pratices` | This skill should be used when the user asks for patterns, best practices, creation, or fixing of Sankhya dashboards using HTML, JSP, Java, and SQL. | sankhya, dashboard, jsp, html, sql, best-practices | sankhya, dashboard, jsp, html, sql, best-practices, custom, pratices, skill, should, used, user |
 | `scala-pro` | Master enterprise-grade Scala development with functional programming, distributed systems, and big data processing. Expert in Apache Pekko, Akka, Spark, ZIO... | scala | scala, pro, enterprise, grade, development, functional, programming, distributed, big, data, processing, apache |
@@ -474,6 +479,7 @@ Total skills: 1520
 | `uniprot-database` | Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bio... | uniprot, database | uniprot, database, direct, rest, api, access, protein, searches, fasta, retrieval, id, mapping |
 | `unity-ai-game-creator` | Transform raw game ideas into complete Unity projects with AI-powered asset generation, scene blueprints, music/SFX prompts, and step-by-step development pro... | unity, game-development, ai-generation, asset-pipeline, scene-design, music-generation, game-design-document | unity, game-development, ai-generation, asset-pipeline, scene-design, music-generation, game-design-document, ai, game, creator, transform, raw |
 | `unity-ecs-patterns` | Production patterns for Unity's Data-Oriented Technology Stack (DOTS) including Entity Component System, Job System, and Burst Compiler. | unity, ecs | unity, ecs, data, oriented, technology, stack, dots, including, entity, component, job, burst |
+| `unship` | Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code. | ui-variants, frontend, local-first, coding-agents | ui-variants, frontend, local-first, coding-agents, unship, compare, ai, agent, made, ui, variants, locally |
 | `unslop` | Post-process AI-generated text through the unslop CLI to strip AI writing patterns before publishing | writing, content-quality, ai-writing, text-processing, cli, publishing | writing, content-quality, ai-writing, text-processing, cli, publishing, unslop, post, process, ai, generated, text |
 | `uxui-principles` | Evaluate interfaces against 168 research-backed UX/UI principles, detect antipatterns, and inject UX context into AI coding sessions. | ux, ui, design, evaluation, principles, antipatterns, accessibility | ux, ui, design, evaluation, principles, antipatterns, accessibility, uxui, evaluate, interfaces, against, 168 |
 | `vector-database-engineer` | Expert in vector databases, embedding strategies, and semantic search implementation. Masters Pinecone, Weaviate, Qdrant, Milvus, and pgvector for RAG applic... | vector, database | vector, database, engineer, databases, embedding, semantic, search, masters, pinecone, weaviate, qdrant, milvus |
@@ -494,12 +500,13 @@ Total skills: 1520
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (215)
+## development (217)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
 | `3d-web-experience` | Expert in building 3D experiences for the web - Three.js, React Three Fiber, Spline, WebGL, and interactive 3D scenes. Covers product configurators, 3D portf... | 3d, web, experience | 3d, web, experience, building, experiences, three, js, react, fiber, spline, webgl, interactive |
 | `algolia-search` | Expert patterns for Algolia search implementation, indexing strategies, React InstantSearch, and relevance tuning | algolia, search | algolia, search, indexing, react, instantsearch, relevance, tuning |
+| `android-dev` | Production-grade Android app development guide covering native (Kotlin/Java), cross-platform (Flutter, RN, KMM), and hybrid architectures. | android, dev | android, dev, grade, app, development, covering, native, kotlin, java, cross, platform, flutter |
 | `android-jetpack-compose-expert` | Expert guidance for building modern Android UIs with Jetpack Compose, covering state management, navigation, performance, and Material Design 3. | android, jetpack, compose | android, jetpack, compose, guidance, building, uis, covering, state, navigation, performance, material |
 | `android_ui_verification` | Automated end-to-end UI testing and verification on an Android Emulator using ADB. | android_ui_verification | android_ui_verification, android, ui, verification, automated, testing, emulator, adb |
 | `animejs-animation` | Advanced JavaScript animation library skill for creating complex, high-performance web animations. | animejs, animation | animejs, animation, javascript, library, skill, creating, complex, high, performance, web, animations |
@@ -510,6 +517,7 @@ Total skills: 1520
 | `app-store-optimization` | Complete App Store Optimization (ASO) toolkit for researching, optimizing, and tracking mobile app performance on Apple App Store and Google Play Store | app, store, optimization | app, store, optimization, complete, aso, toolkit, researching, optimizing, tracking, mobile, performance, apple |
 | `architecture-patterns` | Master proven backend architecture patterns including Clean Architecture, Hexagonal Architecture, and Domain-Driven Design to build maintainable, testable, a... | architecture | architecture, proven, backend, including, clean, hexagonal, domain, driven, maintainable, testable, scalable |
 | `async-python-patterns` | Comprehensive guidance for implementing asynchronous Python applications using asyncio, concurrent programming patterns, and async/await for building high-pe... | async, python | async, python, guidance, implementing, asynchronous, applications, asyncio, concurrent, programming, await, building, high |
+| `atlas-contract` | Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, De... | atlas, contract | atlas, contract, goal, integrity, skill, backend, api, persistence, preserve, do, change, tests |
 | `azure-appconfiguration-java` | Azure App Configuration SDK for Java. Centralized application configuration management with key-value settings, feature flags, and snapshots. | azure, appconfiguration, java | azure, appconfiguration, java, app, configuration, sdk, centralized, application, key, value, settings, feature |
 | `azure-appconfiguration-py` | Azure App Configuration SDK for Python. Use for centralized configuration management, feature flags, and dynamic settings. | azure, appconfiguration, py | azure, appconfiguration, py, app, configuration, sdk, python, centralized, feature, flags, dynamic, settings |
 | `azure-communication-callingserver-java` | ⚠️ DEPRECATED: This SDK has been renamed to Call Automation. For new projects, use azure-communication-callautomation instead. This skill is for maintaining ... | azure, communication, callingserver, java | azure, communication, callingserver, java, deprecated, sdk, been, renamed, call, automation, new, callautomation |
@@ -714,7 +722,7 @@ Total skills: 1520
 | `zod-validation-expert` | Expert in Zod — TypeScript-first schema validation. Covers parsing, custom errors, refinements, type inference, and integration with React Hook Form, Next.js... | zod, validation | zod, validation, typescript, first, schema, covers, parsing, custom, errors, refinements, type, inference |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
-## education (11)
+## education (12)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -726,11 +734,12 @@ Total skills: 1520
 | `fp-ts-pragmatic` | A practical, jargon-free guide to fp-ts functional programming - the 80/20 approach that gets results without the academic overhead. Use when writing TypeScr... | fp, ts, pragmatic | fp, ts, pragmatic, practical, jargon, free, functional, programming, 80, 20, approach, gets |
 | `humanize-chinese` | Detect and rewrite AI-like Chinese text with a practical workflow for scoring, humanization, academic AIGC reduction, and style conversion. Use when the user... | chinese, writing, editing, aigc, academic, style-transfer | chinese, writing, editing, aigc, academic, style-transfer, humanize, detect, rewrite, ai, like, text |
 | `latex-paper-conversion` | This skill should be used when the user asks to convert an academic paper in LaTeX from one format (e.g., Springer, IPOL) to another format (e.g., MDPI, IEEE... | latex, paper, conversion | latex, paper, conversion, skill, should, used, user, asks, convert, academic, one, format |
+| `papers-skill` | Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-c... | research, academic, papers, citations, arxiv, semantic-scholar, pdf | research, academic, papers, citations, arxiv, semantic-scholar, pdf, skill, search, semantic, scholar, 200m |
 | `puzzle-activity-planner` | Plan puzzle-based activities for classrooms, parties, and events with pre-configured generator links | education, puzzle, classroom, activity-planning, event | education, puzzle, classroom, activity-planning, event, activity, planner, plan, activities, classrooms, parties, events |
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (361)
+## general (369)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -742,6 +751,10 @@ Total skills: 1520
 | `accesslint-scan` | Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing. | accesslint, scan | accesslint, scan, audit, live, page, accessibility, issues, locate, each, wcag, violation, precisely |
 | `address-github-comments` | Use when you need to address review or issue comments on an open GitHub Pull Request using the gh CLI. | address, github, comments | address, github, comments, review, issue, open, pull, request, gh, cli |
 | `agent-manager-skill` | Manage multiple local CLI agents via tmux sessions (start/stop/monitor/assign) with cron-friendly scheduling. | agent, manager, skill | agent, manager, skill, multiple, local, cli, agents, via, tmux, sessions, start, stop |
+| `agent-squad` | Main agent orchestrator that coordinates a specialized squad of agents | agent, squad | agent, squad, main, orchestrator, coordinates, specialized, agents |
+| `agent-squad/alex` | Turns requirements into a precise, dependency-aware implementation plan. | agent, squad/alex | agent, squad/alex, alex, turns, requirements, precise, dependency, aware, plan |
+| `agent-squad/max` | Cleans up and improves existing code without changing behavior. | agent, squad/max | agent, squad/max, max, cleans, up, improves, existing, code, without, changing, behavior |
+| `agent-squad/rex` | Translates user intent into a precise, unambiguous specification and requirements. | agent, squad/rex | agent, squad/rex, rex, translates, user, intent, precise, unambiguous, specification, requirements |
 | `agents-md` | This skill should be used when the user asks to "create AGENTS.md", "update AGENTS.md", "maintain agent docs", "set up CLAUDE.md", or needs to keep agent ins... | agents, md | agents, md, skill, should, used, user, asks, update, maintain, agent, docs, set |
 | `algorithmic-art` | Algorithmic philosophies are computational aesthetic movements that are then expressed through code. Output .md files (philosophy), .html files (interactive ... | algorithmic, art | algorithmic, art, philosophies, computational, aesthetic, movements, then, expressed, through, code, output, md |
 | `amazon-alexa` | Integracao completa com Amazon Alexa para criar skills de voz inteligentes, transformar Alexa em assistente com Claude como cerebro (projeto Auri) e integrar... | voice, alexa, aws, smart-home, iot | voice, alexa, aws, smart-home, iot, amazon, integracao, completa, com, para, criar, skills |
@@ -756,6 +769,7 @@ Total skills: 1520
 | `app-builder/templates` | Project scaffolding templates for new applications. Use when creating new projects from scratch. Contains 12 templates for various tech stacks. | app, builder/templates | app, builder/templates, scaffolding, new, applications, creating, scratch, contains, 12, various, tech, stacks |
 | `app-store-changelog` | Generate user-facing App Store release notes from git history since the last tag. | app, store, changelog | app, store, changelog, generate, user, facing, release, notes, git, history, since, last |
 | `arm-cortex-expert` | Senior embedded software engineer specializing in firmware and driver development for ARM Cortex-M microcontrollers (Teensy, STM32, nRF52, SAMD). | arm, cortex | arm, cortex, senior, embedded, software, engineer, specializing, firmware, driver, development, microcontrollers, teensy |
+| `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
 | `ask-questions-if-underspecified` | Clarify requirements before implementing. Use when serious doubts arise. | ask, questions, if, underspecified | ask, questions, if, underspecified, clarify, requirements, before, implementing, serious, doubts, arise |
 | `avalonia-layout-zafiro` | Guidelines for modern Avalonia UI layout using Zafiro.Avalonia, emphasizing shared styles, generic components, and avoiding XAML redundancy. | avalonia, layout, zafiro | avalonia, layout, zafiro, guidelines, ui, emphasizing, shared, styles, generic, components, avoiding, xaml |
 | `avalonia-zafiro-development` | Mandatory skills, conventions, and behavioral rules for Avalonia UI development using the Zafiro toolkit. | avalonia, zafiro | avalonia, zafiro, development, mandatory, skills, conventions, behavioral, rules, ui, toolkit |
@@ -817,6 +831,7 @@ Total skills: 1520
 | `create-branch` | Create a git branch following Sentry naming conventions. Use when asked to "create a branch", "new branch", "start a branch", "make a branch", "switch to a n... | create, branch | create, branch, git, following, sentry, naming, conventions, asked, new, start, switch, starting |
 | `create-issue-gate` | Use when starting a new implementation task and an issue must be created with strict acceptance criteria gating before execution. | create, issue, gate | create, issue, gate, starting, new, task, must, created, strict, acceptance, criteria, gating |
 | `crewai` | Expert in CrewAI - the leading role-based multi-agent framework used by 60% of Fortune 500 companies. | crewai | crewai, leading, role, multi, agent, framework, used, 60, fortune, 500, companies |
+| `cv-generator` | Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and human... | cv, resume, ats, career, job-application, career-change | cv, resume, ats, career, job-application, career-change, generator, generate, professional, optimized, cvs, flowcv |
 | `daily` | Documentation and capabilities reference for Daily | daily | daily, documentation, capabilities, reference |
 | `daily-news-report` | Scrapes content based on a preset URL list, filters high-quality technical information, and generates daily Markdown reports. | daily, news, report | daily, news, report, scrapes, content, preset, url, list, filters, high, quality, technical |
 | `debug-buttercup` | All pods run in namespace crs. Use when pods in the crs namespace are in CrashLoopBackOff, OOMKilled, or restarting, multiple services restart simultaneously... | debug, buttercup | debug, buttercup, all, pods, run, namespace, crs, crashloopbackoff, oomkilled, restarting, multiple, restart |
@@ -956,6 +971,7 @@ Total skills: 1520
 | `news-sentiment-engine` | Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output | news, rss, sentiment-analysis, briefing, research | news, rss, sentiment-analysis, briefing, research, sentiment, engine, multi, source, aggregation, claude, powered |
 | `nft-standards` | Master ERC-721 and ERC-1155 NFT standards, metadata best practices, and advanced NFT features. | nft, standards | nft, standards, erc, 721, 1155, metadata, features |
 | `nosql-expert` | Expert guidance for distributed NoSQL databases (Cassandra, DynamoDB). Focuses on mental models, query-first modeling, single-table design, and avoiding hot ... | nosql | nosql, guidance, distributed, databases, cassandra, dynamodb, mental, models, query, first, modeling, single |
+| `not-a-vibe-coder` | Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases. | not, a, vibe, coder | not, a, vibe, coder, turns, vague, prompts, structured, planning, files, brand, new |
 | `notebooklm` | Interact with Google NotebookLM to query documentation with Gemini's source-grounded answers. Each question opens a fresh browser session, retrieves the answ... | notebooklm | notebooklm, interact, google, query, documentation, gemini, source, grounded, answers, each, question, opens |
 | `nutrition-analyzer` | 分析营养数据、识别营养模式、评估营养状况，并提供个性化营养建议。支持与运动、睡眠、慢性病数据的关联分析。 | nutrition, analyzer | nutrition, analyzer |
 | `objection-preemptor` | One sentence - what this skill does and when to invoke it | objection, preemptor | objection, preemptor, one, sentence, what, skill, does, invoke |
@@ -1076,6 +1092,7 @@ Total skills: 1520
 | `vercel-optimize` | Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations. | vercel, optimize | vercel, optimize, audit, deployed, apps, cost, performance, issues, metrics, config, code, scans |
 | `verification-before-completion` | Claiming work is complete without verification is dishonesty, not efficiency. Use when ANY variation of success/completion claims, ANY expression of satisfac... | verification, before, completion | verification, before, completion, claiming, work, complete, without, dishonesty, efficiency, any, variation, success |
 | `vexor-cli` | Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location... | vexor, cli | vexor, cli, semantic, file, discovery, via, whenever, locating, where, something, implemented, loaded |
+| `video-content-extractor` | Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped... | video, ocr, ffmpeg, tesseract, frame-extraction, media | video, ocr, ffmpeg, tesseract, frame-extraction, media, content, extractor, extract, key, frames, mp4 |
 | `videodb` | Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add o... | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture, videodb, audio |
 | `visual-emotion-engineer` | One sentence - what this skill does and when to invoke it | visual, emotion | visual, emotion, engineer, one, sentence, what, skill, does, invoke |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
@@ -1094,14 +1111,15 @@ Total skills: 1520
 | `yann-lecun-debate` | Sub-skill de debates e posições de Yann LeCun. Cobre críticas técnicas detalhadas aos LLMs, rivalidades intelectuais (LeCun vs Hinton, Sutskever, Russell, Yu... | persona, ai-debate, llm-criticism, open-source | persona, ai-debate, llm-criticism, open-source, yann, lecun, debate, sub, skill, de, debates, posi |
 | `yann-lecun-tecnico` | Sub-skill técnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervise... | persona, cnn, jepa, self-supervised, pytorch | persona, cnn, jepa, self-supervised, pytorch, yann, lecun, tecnico, sub, skill, cnica, de |
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
-| `zipai-optimizer` | Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware. | zipai, optimizer | zipai, optimizer, adaptive, token, intelligent, filtering, surgical, output, ambiguity, first, context, window |
+| `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (139)
+## infrastructure (140)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
 | `acceptance-orchestrator` | Use when a coding task should be driven end-to-end from issue intake through implementation, review, deployment, and acceptance verification with minimal hum... | acceptance, orchestrator | acceptance, orchestrator, coding, task, should, driven, issue, intake, through, review, deployment, verification |
 | `agent-evaluation` | Testing and benchmarking LLM agents including behavioral testing, capability assessment, reliability metrics, and production monitoring—where even top agents... | agent, evaluation | agent, evaluation, testing, benchmarking, llm, agents, including, behavioral, capability, assessment, reliability, metrics |
+| `agent-squad/dep` | Handles containerization, CI/CD pipelines, and deployment setup. | agent, squad/dep | agent, squad/dep, dep, containerization, ci, cd, pipelines, deployment, setup |
 | `agentflow` | Orchestrate autonomous AI development pipelines through your Kanban board (Asana, GitHub Projects, Linear). Manages multi-worker Claude Code dispatch, determ... | agentflow | agentflow, orchestrate, autonomous, ai, development, pipelines, through, kanban, board, asana, github, linear |
 | `agenttrace-session-audit` | Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates. | ai-coding, observability, cost-tracking, session-analysis | ai-coding, observability, cost-tracking, session-analysis, agenttrace, session, audit, local, ai, coding, agent, sessions |
 | `airflow-dag-patterns` | Build production Apache Airflow DAGs with best practices for operators, sensors, testing, and deployment. Use when creating data pipelines, orchestrating wor... | airflow, dag | airflow, dag, apache, dags, operators, sensors, testing, deployment, creating, data, pipelines, orchestrating |
@@ -1240,7 +1258,7 @@ Total skills: 1520
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (181)
+## security (183)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1248,6 +1266,7 @@ Total skills: 1520
 | `accessibility-compliance-accessibility-audit` | You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers,... | accessibility, compliance, audit | accessibility, compliance, audit, specializing, wcag, inclusive, assistive, technology, compatibility, conduct, audits, identify |
 | `aegisops-ai` | Autonomous DevSecOps & FinOps Guardrails. Orchestrates Gemini 3 Flash to audit Linux Kernel patches, Terraform cost drifts, and K8s compliance. | aegisops, ai | aegisops, ai, autonomous, devsecops, finops, guardrails, orchestrates, gemini, flash, audit, linux, kernel |
 | `agent-memory-systems` | Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-te... | agent, memory | agent, memory, cornerstone, intelligent, agents, without, every, interaction, starts, zero, skill, covers |
+| `agent-squad/luna` | Reviews code for objective correctness, security, and reliability. | agent, squad/luna | agent, squad/luna, luna, reviews, code, objective, correctness, security, reliability |
 | `agentic-actions-auditor` | Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations  including Claude Code Action,  Gemini CLI, OpenAI Codex, and GitHub AI... | agentic, actions, auditor | agentic, actions, auditor, audits, github, security, vulnerabilities, ai, agent, integrations, including, claude |
 | `ai-engineering-toolkit` | 6 production-ready AI engineering workflows: prompt evaluation (8-dimension scoring), context budget planning, RAG pipeline design, agent security audit (65-... | prompt-engineering, rag, security, evaluation, ai-engineering, llm | prompt-engineering, rag, security, evaluation, ai-engineering, llm, ai, engineering, toolkit, prompt, dimension, scoring |
 | `ai-md` | Convert human-written CLAUDE.md into AI-native structured-label format. Battle-tested across 4 models. Same rules, fewer tokens, higher compliance. | ai, md | ai, md, convert, human, written, claude, native, structured, label, format, battle, tested |
@@ -1309,6 +1328,7 @@ Total skills: 1520
 | `framework-migration-deps-upgrade` | You are a dependency management expert specializing in safe, incremental upgrades of project dependencies. Plan and execute dependency updates with minimal r... | framework, migration, deps, upgrade | framework, migration, deps, upgrade, dependency, specializing, safe, incremental, upgrades, dependencies, plan, execute |
 | `frontend-mobile-security-xss-scan` | You are a frontend security specialist focusing on Cross-Site Scripting (XSS) vulnerability detection and prevention. Analyze React, Vue, Angular, and vanill... | frontend, mobile, security, xss, scan | frontend, mobile, security, xss, scan, focusing, cross, site, scripting, vulnerability, detection, prevention |
 | `frontend-security-coder` | Expert in secure frontend coding practices specializing in XSS prevention, output sanitization, and client-side security patterns. | frontend, security, coder | frontend, security, coder, secure, coding, specializing, xss, prevention, output, sanitization, client, side |
+| `fsi-compliance-checker` | Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0 and MAS TRM (Singapore financial regulator), producing an audit-t... | compliance, pci-dss, mas-trm, fintech, banking, security-review, audit, financial-services | compliance, pci-dss, mas-trm, fintech, banking, security-review, audit, financial-services, fsi, checker, maps, code |
 | `gdpr-data-handling` | Practical implementation guide for GDPR-compliant data processing, consent management, and privacy controls. | gdpr, data, handling | gdpr, data, handling, practical, compliant, processing, consent, privacy, controls |
 | `gha-security-review` | Find exploitable vulnerabilities in GitHub Actions workflows. Every finding MUST include a concrete exploitation scenario — if you can't build the attack, do... | gha, security | gha, security, review, find, exploitable, vulnerabilities, github, actions, every, finding, must, include |
 | `github-actions-advanced` | Design, debug, and harden GitHub Actions CI/CD workflows, including reusable workflows, matrix builds, self-hosted runners, OIDC authentication, caching, env... | github, actions, advanced | github, actions, advanced, debug, harden, ci, cd, including, reusable, matrix, self, hosted |
@@ -1426,12 +1446,13 @@ Total skills: 1520
 | `yield-intelligence` | Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yi... | yield, intelligence | yield, intelligence, passive, income, portfolio, analysis, activate, user, asks, about, dividend, yields |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
 
-## testing (33)
+## testing (34)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
 | `ab-test-setup` | Structured guide for setting up A/B tests with mandatory gates for hypothesis, metrics, and execution readiness. | ab, setup | ab, setup, test, structured, setting, up, tests, mandatory, gates, hypothesis, metrics, execution |
 | `ad-creative` | Create, iterate, and scale paid ad creative for Google Ads, Meta, LinkedIn, TikTok, and similar platforms. Use when generating headlines, descriptions, prima... | ad, creative | ad, creative, iterate, scale, paid, google, ads, meta, linkedin, tiktok, similar, platforms |
+| `agent-squad/quinn` | Proves the system works by writing and executing comprehensive test suites. | agent, squad/quinn | agent, squad/quinn, quinn, proves, works, writing, executing, test, suites |
 | `circleci-automation` | Automate CircleCI tasks via Rube MCP (Composio): trigger pipelines, monitor workflows/jobs, retrieve artifacts and test metadata. Always search tools first f... | circleci | circleci, automation, automate, tasks, via, rube, mcp, composio, trigger, pipelines, monitor, jobs |
 | `conductor-implement` | Execute tasks from a track's implementation plan following TDD workflow | conductor, implement | conductor, implement, execute, tasks, track, plan, following, tdd |
 | `conductor-revert` | Git-aware undo by logical work unit (track, phase, or task) | conductor, revert | conductor, revert, git, aware, undo, logical, work, unit, track, phase, task |

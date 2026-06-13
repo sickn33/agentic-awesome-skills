@@ -126,6 +126,33 @@ try {
     true,
     "agy CLI installs should preserve the standard skills-only layout, including docs",
   );
+
+  const unsafeTargetDir = path.join(fixtureRoot, "agy-unsafe");
+  const outsideDir = path.join(fixtureRoot, "outside");
+  fs.mkdirSync(unsafeTargetDir, { recursive: true });
+  fs.mkdirSync(outsideDir, { recursive: true });
+  let createdIntermediateSymlink = false;
+  try {
+    fs.symlinkSync(outsideDir, path.join(unsafeTargetDir, "security"), "dir");
+    createdIntermediateSymlink = true;
+  } catch (error) {
+    if (!["EPERM", "EACCES", "ENOTSUP"].includes(error.code)) {
+      throw error;
+    }
+  }
+
+  if (createdIntermediateSymlink) {
+    assert.throws(
+      () => installer.installSkillsIntoTarget(tempDir, unsafeTargetDir, ["security/audit"]),
+      /unsafe destination symlink component/i,
+      "agy CLI installs must refuse symlinked intermediate target directories",
+    );
+    assert.strictEqual(
+      fs.existsSync(path.join(outsideDir, "audit")),
+      false,
+      "agy CLI installs must not copy nested skills outside the install root",
+    );
+  }
 } finally {
   fs.rmSync(fixtureRoot, { recursive: true, force: true });
 }

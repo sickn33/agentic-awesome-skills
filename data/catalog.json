@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1520,
+  "total": 1541,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -752,6 +752,207 @@
         "os"
       ],
       "path": "skills/agent-orchestrator/SKILL.md"
+    },
+    {
+      "id": "agent-squad",
+      "name": "agent-squad",
+      "description": "Main agent orchestrator that coordinates a specialized squad of agents",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad"
+      ],
+      "triggers": [
+        "agent",
+        "squad",
+        "main",
+        "orchestrator",
+        "coordinates",
+        "specialized",
+        "agents"
+      ],
+      "path": "skills/agent-squad/SKILL.md"
+    },
+    {
+      "id": "agent-squad/alex",
+      "name": "alex",
+      "description": "Turns requirements into a precise, dependency-aware implementation plan.",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad/alex"
+      ],
+      "triggers": [
+        "agent",
+        "squad/alex",
+        "alex",
+        "turns",
+        "requirements",
+        "precise",
+        "dependency",
+        "aware",
+        "plan"
+      ],
+      "path": "skills/agent-squad/alex/SKILL.md"
+    },
+    {
+      "id": "agent-squad/aria",
+      "name": "aria",
+      "description": "Designs the data model, API contracts, and structural foundation of the system.",
+      "category": "data-ai",
+      "tags": [
+        "agent",
+        "squad/aria"
+      ],
+      "triggers": [
+        "agent",
+        "squad/aria",
+        "aria",
+        "designs",
+        "data",
+        "model",
+        "api",
+        "contracts",
+        "structural",
+        "foundation"
+      ],
+      "path": "skills/agent-squad/aria/SKILL.md"
+    },
+    {
+      "id": "agent-squad/dep",
+      "name": "dep",
+      "description": "Handles containerization, CI/CD pipelines, and deployment setup.",
+      "category": "infrastructure",
+      "tags": [
+        "agent",
+        "squad/dep"
+      ],
+      "triggers": [
+        "agent",
+        "squad/dep",
+        "dep",
+        "containerization",
+        "ci",
+        "cd",
+        "pipelines",
+        "deployment",
+        "setup"
+      ],
+      "path": "skills/agent-squad/dep/SKILL.md"
+    },
+    {
+      "id": "agent-squad/luna",
+      "name": "luna",
+      "description": "Reviews code for objective correctness, security, and reliability.",
+      "category": "security",
+      "tags": [
+        "agent",
+        "squad/luna"
+      ],
+      "triggers": [
+        "agent",
+        "squad/luna",
+        "luna",
+        "reviews",
+        "code",
+        "objective",
+        "correctness",
+        "security",
+        "reliability"
+      ],
+      "path": "skills/agent-squad/luna/SKILL.md"
+    },
+    {
+      "id": "agent-squad/mason",
+      "name": "mason",
+      "description": "Produces clean, functional code that matches the architecture and checklists.",
+      "category": "architecture",
+      "tags": [
+        "agent",
+        "squad/mason"
+      ],
+      "triggers": [
+        "agent",
+        "squad/mason",
+        "mason",
+        "produces",
+        "clean",
+        "functional",
+        "code",
+        "matches",
+        "architecture",
+        "checklists"
+      ],
+      "path": "skills/agent-squad/mason/SKILL.md"
+    },
+    {
+      "id": "agent-squad/max",
+      "name": "max",
+      "description": "Cleans up and improves existing code without changing behavior.",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad/max"
+      ],
+      "triggers": [
+        "agent",
+        "squad/max",
+        "max",
+        "cleans",
+        "up",
+        "improves",
+        "existing",
+        "code",
+        "without",
+        "changing",
+        "behavior"
+      ],
+      "path": "skills/agent-squad/max/SKILL.md"
+    },
+    {
+      "id": "agent-squad/quinn",
+      "name": "quinn",
+      "description": "Proves the system works by writing and executing comprehensive test suites.",
+      "category": "testing",
+      "tags": [
+        "agent",
+        "squad/quinn"
+      ],
+      "triggers": [
+        "agent",
+        "squad/quinn",
+        "quinn",
+        "proves",
+        "works",
+        "writing",
+        "executing",
+        "test",
+        "suites"
+      ],
+      "path": "skills/agent-squad/quinn/SKILL.md"
+    },
+    {
+      "id": "agent-squad/rex",
+      "name": "rex",
+      "description": "Translates user intent into a precise, unambiguous specification and requirements.",
+      "category": "general",
+      "tags": [
+        "agent",
+        "squad/rex"
+      ],
+      "triggers": [
+        "agent",
+        "squad/rex",
+        "rex",
+        "translates",
+        "user",
+        "intent",
+        "precise",
+        "unambiguous",
+        "specification",
+        "requirements"
+      ],
+      "path": "skills/agent-squad/rex/SKILL.md"
     },
     {
       "id": "agent-tool-builder",
@@ -1605,6 +1806,31 @@
         "coding"
       ],
       "path": "skills/andrej-karpathy/SKILL.md"
+    },
+    {
+      "id": "android-dev",
+      "name": "android-dev",
+      "description": "Production-grade Android app development guide covering native (Kotlin/Java), cross-platform (Flutter, RN, KMM), and hybrid architectures.",
+      "category": "development",
+      "tags": [
+        "android",
+        "dev"
+      ],
+      "triggers": [
+        "android",
+        "dev",
+        "grade",
+        "app",
+        "development",
+        "covering",
+        "native",
+        "kotlin",
+        "java",
+        "cross",
+        "platform",
+        "flutter"
+      ],
+      "path": "skills/android-dev/SKILL.md"
     },
     {
       "id": "android-jetpack-compose-expert",
@@ -2802,6 +3028,34 @@
       "path": "skills/arm-cortex-expert/SKILL.md"
     },
     {
+      "id": "article-illustrations",
+      "name": "article-illustrations",
+      "description": "Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors.",
+      "category": "general",
+      "tags": [
+        "illustration",
+        "article-graphics",
+        "visual-metaphors",
+        "image-generation",
+        "whiteboard-sketch"
+      ],
+      "triggers": [
+        "illustration",
+        "article-graphics",
+        "visual-metaphors",
+        "image-generation",
+        "whiteboard-sketch",
+        "article",
+        "illustrations",
+        "generate",
+        "hand",
+        "drawn",
+        "16",
+        "grav"
+      ],
+      "path": "skills/article-illustrations/SKILL.md"
+    },
+    {
       "id": "asana-automation",
       "name": "asana-automation",
       "description": "Automate Asana tasks via Rube MCP (Composio): tasks, projects, sections, teams, workspaces. Always search tools first for current schemas.",
@@ -2930,6 +3184,56 @@
         "high"
       ],
       "path": "skills/async-python-patterns/SKILL.md"
+    },
+    {
+      "id": "atlas-contract",
+      "name": "atlas-contract",
+      "description": "Goal-integrity skill. Use for backend/API/persistence, preserve/do-not-change, tests/validation, mocks, rework, multi-part requests. Emits Goal Contracts, Deviation Notices, Phase Checks, Final Audits. Skip for Q&A or trivial edits.",
+      "category": "development",
+      "tags": [
+        "atlas",
+        "contract"
+      ],
+      "triggers": [
+        "atlas",
+        "contract",
+        "goal",
+        "integrity",
+        "skill",
+        "backend",
+        "api",
+        "persistence",
+        "preserve",
+        "do",
+        "change",
+        "tests"
+      ],
+      "path": "skills/atlas-contract/SKILL.md"
+    },
+    {
+      "id": "atlas-ledger",
+      "name": "atlas-ledger",
+      "description": "Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drift into WHEN/DON'T/INSTEAD clauses, writes to Atlas.md after confirmation.",
+      "category": "business",
+      "tags": [
+        "atlas",
+        "ledger"
+      ],
+      "triggers": [
+        "atlas",
+        "ledger",
+        "companion",
+        "contract",
+        "auto",
+        "invoked",
+        "final",
+        "audit",
+        "caught",
+        "drift",
+        "after",
+        "post"
+      ],
+      "path": "skills/atlas-ledger/SKILL.md"
     },
     {
       "id": "attack-tree-construction",
@@ -10845,6 +11149,35 @@
       "path": "skills/customs-trade-compliance/SKILL.md"
     },
     {
+      "id": "cv-generator",
+      "name": "cv-generator",
+      "description": "Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and humanized rewriting. Outputs paste-ready text with an ATS flaw report and improvement suggestions.",
+      "category": "general",
+      "tags": [
+        "cv",
+        "resume",
+        "ats",
+        "career",
+        "job-application",
+        "career-change"
+      ],
+      "triggers": [
+        "cv",
+        "resume",
+        "ats",
+        "career",
+        "job-application",
+        "career-change",
+        "generator",
+        "generate",
+        "professional",
+        "optimized",
+        "cvs",
+        "flowcv"
+      ],
+      "path": "skills/cv-generator/SKILL.md"
+    },
+    {
       "id": "daily",
       "name": "daily",
       "description": "Documentation and capabilities reference for Daily",
@@ -15395,6 +15728,37 @@
         "dashboards"
       ],
       "path": "skills/frontend-ui-dark-ts/SKILL.md"
+    },
+    {
+      "id": "fsi-compliance-checker",
+      "name": "fsi-compliance-checker",
+      "description": "Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0 and MAS TRM (Singapore financial regulator), producing an audit-traceable findings report with per-control remediation.",
+      "category": "security",
+      "tags": [
+        "compliance",
+        "pci-dss",
+        "mas-trm",
+        "fintech",
+        "banking",
+        "security-review",
+        "audit",
+        "financial-services"
+      ],
+      "triggers": [
+        "compliance",
+        "pci-dss",
+        "mas-trm",
+        "fintech",
+        "banking",
+        "security-review",
+        "audit",
+        "financial-services",
+        "fsi",
+        "checker",
+        "maps",
+        "code"
+      ],
+      "path": "skills/fsi-compliance-checker/SKILL.md"
     },
     {
       "id": "full-output-enforcement",
@@ -23661,6 +24025,33 @@
       "path": "skills/nosql-expert/SKILL.md"
     },
     {
+      "id": "not-a-vibe-coder",
+      "name": "not-a-vibe-coder",
+      "description": "Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.",
+      "category": "general",
+      "tags": [
+        "not",
+        "a",
+        "vibe",
+        "coder"
+      ],
+      "triggers": [
+        "not",
+        "a",
+        "vibe",
+        "coder",
+        "turns",
+        "vague",
+        "prompts",
+        "structured",
+        "planning",
+        "files",
+        "brand",
+        "new"
+      ],
+      "path": "skills/not-a-vibe-coder/SKILL.md"
+    },
+    {
       "id": "not-human-search-mcp",
       "name": "not-human-search-mcp",
       "description": "Search AI-ready websites, inspect indexed site details, verify MCP endpoints, and discover tools and APIs using the Not Human Search MCP server",
@@ -24759,6 +25150,34 @@
       "path": "skills/one-drive-automation/SKILL.md"
     },
     {
+      "id": "open-dynamic-workflows",
+      "name": "open-dynamic-workflows",
+      "description": "Plan, orchestrate, and adversarially verify parallel AI coding agents with a dynamic multi-agent workflow engine.",
+      "category": "data-ai",
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "workflow",
+        "adversarial-verification",
+        "coding-agents"
+      ],
+      "triggers": [
+        "multi-agent",
+        "orchestration",
+        "workflow",
+        "adversarial-verification",
+        "coding-agents",
+        "open",
+        "dynamic",
+        "plan",
+        "orchestrate",
+        "adversarially",
+        "verify",
+        "parallel"
+      ],
+      "path": "skills/open-dynamic-workflows/SKILL.md"
+    },
+    {
       "id": "openapi-spec-generation",
       "name": "openapi-spec-generation",
       "description": "Generate and maintain OpenAPI 3.1 specifications from code, design-first specs, and validation patterns. Use when creating API documentation, generating SDKs, or ensuring API contract compliance.",
@@ -25111,6 +25530,36 @@
         "integrations"
       ],
       "path": "skills/pakistan-payments-stack/SKILL.md"
+    },
+    {
+      "id": "papers-skill",
+      "name": "papers-skill",
+      "description": "Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-contained Python CLI.",
+      "category": "education",
+      "tags": [
+        "research",
+        "academic",
+        "papers",
+        "citations",
+        "arxiv",
+        "semantic-scholar",
+        "pdf"
+      ],
+      "triggers": [
+        "research",
+        "academic",
+        "papers",
+        "citations",
+        "arxiv",
+        "semantic-scholar",
+        "pdf",
+        "skill",
+        "search",
+        "semantic",
+        "scholar",
+        "200m"
+      ],
+      "path": "skills/papers-skill/SKILL.md"
     },
     {
       "id": "parallel-agents",
@@ -28340,6 +28789,36 @@
         "development"
       ],
       "path": "skills/ruby-pro/SKILL.md"
+    },
+    {
+      "id": "runapi-cli",
+      "name": "runapi-cli",
+      "description": "Generate AI images, videos, and music/audio from agents using the RunAPI CLI.",
+      "category": "data-ai",
+      "tags": [
+        "runapi",
+        "cli",
+        "models",
+        "automation",
+        "codex",
+        "claude",
+        "gemini"
+      ],
+      "triggers": [
+        "runapi",
+        "cli",
+        "models",
+        "automation",
+        "codex",
+        "claude",
+        "gemini",
+        "generate",
+        "ai",
+        "images",
+        "videos",
+        "music"
+      ],
+      "path": "skills/runapi-cli/SKILL.md"
     },
     {
       "id": "runaway-guard",
@@ -35094,6 +35573,33 @@
       "path": "skills/unreal-engine-cpp-pro/SKILL.md"
     },
     {
+      "id": "unship",
+      "name": "unship",
+      "description": "Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code.",
+      "category": "data-ai",
+      "tags": [
+        "ui-variants",
+        "frontend",
+        "local-first",
+        "coding-agents"
+      ],
+      "triggers": [
+        "ui-variants",
+        "frontend",
+        "local-first",
+        "coding-agents",
+        "unship",
+        "compare",
+        "ai",
+        "agent",
+        "made",
+        "ui",
+        "variants",
+        "locally"
+      ],
+      "path": "skills/unship/SKILL.md"
+    },
+    {
       "id": "unslop",
       "name": "unslop",
       "description": "Post-process AI-generated text through the unslop CLI to strip AI writing patterns before publishing",
@@ -35960,6 +36466,35 @@
         "through"
       ],
       "path": "skills/viboscope/SKILL.md"
+    },
+    {
+      "id": "video-content-extractor",
+      "name": "video-content-extractor",
+      "description": "Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped text transcripts.",
+      "category": "general",
+      "tags": [
+        "video",
+        "ocr",
+        "ffmpeg",
+        "tesseract",
+        "frame-extraction",
+        "media"
+      ],
+      "triggers": [
+        "video",
+        "ocr",
+        "ffmpeg",
+        "tesseract",
+        "frame-extraction",
+        "media",
+        "content",
+        "extractor",
+        "extract",
+        "key",
+        "frames",
+        "mp4"
+      ],
+      "path": "skills/video-content-extractor/SKILL.md"
     },
     {
       "id": "videodb",
@@ -37608,7 +38143,7 @@
     {
       "id": "zipai-optimizer",
       "name": "zipai-optimizer",
-      "description": "Adaptive token optimizer: intelligent filtering, surgical output, ambiguity-first, context-window-aware, VCS-aware, MCP-aware.",
+      "description": "Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads.",
       "category": "general",
       "tags": [
         "zipai",
@@ -37617,16 +38152,16 @@
       "triggers": [
         "zipai",
         "optimizer",
-        "adaptive",
+        "ultra",
+        "dense",
         "token",
-        "intelligent",
-        "filtering",
-        "surgical",
-        "output",
-        "ambiguity",
-        "first",
-        "context",
-        "window"
+        "skill",
+        "prompt",
+        "caching",
+        "log",
+        "pruning",
+        "ast",
+        "inspection"
       ],
       "path": "skills/zipai-optimizer/SKILL.md"
     },

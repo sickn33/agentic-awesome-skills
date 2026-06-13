@@ -3,7 +3,15 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from common import find_ustht, read_define_ini, validate_dim_name
+from common import (
+    ensure_runtime_dir,
+    safe_markdown_files,
+    safe_read_text,
+    safe_write_text,
+    find_ustht,
+    read_define_ini,
+    validate_dim_name,
+)
 
 HELP = """Usage: python write_raw.py "thought text" [--dim dimension] [--help]
 
@@ -21,12 +29,14 @@ Behavior:
 """
 
 
-def count_today_raw(raw_dir: Path) -> int:
+def count_today_raw(ustht: Path, raw_dir: Path) -> int:
     """Count unprocessed entries across today's raw files."""
     today = datetime.now().strftime("%Y-%m-%d")
     count = 0
-    for f in sorted(raw_dir.glob(f"{today}*.md")):
-        content = f.read_text(encoding="utf-8")
+    for f in safe_markdown_files(ustht, raw_dir):
+        if not f.name.startswith(today):
+            continue
+        content = safe_read_text(ustht, f)
         first_line = content.split("\n", 1)[0].strip()
         if first_line == "<!-- processed -->":
             continue
@@ -72,15 +82,14 @@ def main():
         print(f"Invalid dimension name: {dim}. Use lowercase letters, digits, hyphens, and optional / subdirectories.")
         sys.exit(1)
 
-    raw_dir = ustht / "raw"
-    raw_dir.mkdir(exist_ok=True)
+    raw_dir = ensure_runtime_dir(ustht, ustht / "raw", create=True)
 
     today = datetime.now().strftime("%Y-%m-%d")
     now = datetime.now().strftime("%H:%M")
     raw_file = raw_dir / f"{today}.md"
 
     if raw_file.exists():
-        first_line = raw_file.read_text(encoding="utf-8").split("\n", 1)[0].strip()
+        first_line = safe_read_text(ustht, raw_file).split("\n", 1)[0].strip()
         if first_line == "<!-- processed -->":
             seq = 2
             while (raw_dir / f"{today}-{seq}.md").exists():
@@ -92,12 +101,12 @@ def main():
     entry = f"- [{now}] {thought_clean}{suffix}"
 
     if raw_file.exists():
-        content = raw_file.read_text(encoding="utf-8").rstrip()
-        raw_file.write_text(f"{content}\n{entry}\n", encoding="utf-8")
+        content = safe_read_text(ustht, raw_file).rstrip()
+        safe_write_text(ustht, raw_file, f"{content}\n{entry}\n")
     else:
-        raw_file.write_text(f"{entry}\n", encoding="utf-8")
+        safe_write_text(ustht, raw_file, f"{entry}\n")
 
-    count = count_today_raw(raw_dir)
+    count = count_today_raw(ustht, raw_dir)
     if count > 5:
         print(f"Today has {count} recorded thoughts. Consider running /ustht sortin.")
 
