@@ -84,12 +84,17 @@ you get the `shipped` and `source` fields. (The default text form prints
 `SHIPPED PLAN PHASE (via grep)` or `NOT_SHIPPED PLAN PHASE (via none)` — the same
 verdict, and the process exit code is non-zero when not shipped.)
 
-`shipped: true` is real evidence when `source` is `registry` or any value
-**starting with `grep`** — git fallback grades itself by forgeability, so you may
-see bare `grep`, `grep-artifact` (a non-forgeable artefact/diff rung), or
-`grep-subject` (a commit subject carried the phase token — shipped, but forgeable,
-so weaker). `source: none` means there is no positive evidence — accept that as
-"not shipped", not as a failure of the tool.
+Grade `shipped: true` by the `source`, because git fallback grades itself by
+**forgeability** — and forgeable evidence is exactly what this skill exists to
+distrust:
+
+- `registry` or `grep-artifact` — **non-forgeable** (a registry row, or an
+  artefact/diff rung). This closes the claim.
+- `grep-subject` (or bare `grep`) — **forgeable**: a commit *subject* or body
+  carried the phase token, which an agent can write without doing the work (even
+  on an empty commit). Treat this as *shipped-per-the-subject*, not confirmed —
+  corroborate it (run `dos commit-audit` on that commit, below) before you close.
+- `none` — no positive evidence; accept as "not shipped", not as a tool failure.
 
 ### Step 4: Fold only confirmed effects
 
@@ -113,8 +118,9 @@ dos commit-audit --workspace . HEAD --json | jq -r '.[0].verdict'
 
 ```bash
 dos verify --workspace . AUTH AUTH2 --json --no-ci
-# shipped: true, source: grep-artifact -> a real ship commit exists; safe to close
-#   (source: registry, grep, or any grep-* value all count as real evidence)
+# shipped: true, source: registry|grep-artifact -> non-forgeable; safe to close
+# shipped: true, source: grep-subject|grep       -> forgeable subject/body match;
+#   shipped-per-the-subject only -> corroborate with commit-audit before closing
 # shipped: false, source: none -> no evidence; keep the ticket open
 ```
 
@@ -122,6 +128,9 @@ dos verify --workspace . AUTH AUTH2 --json --no-ci
 
 - ✅ Run `dos commit-audit HEAD` immediately after every agent commit.
 - ✅ Treat `source: none` / `CLAIM_UNWITNESSED` as "not done", not as a tool error.
+- ✅ Close a claim on a **non-forgeable** `source` (`registry`, `grep-artifact`).
+  Treat `grep-subject` / bare `grep` as forgeable (an agent can write the subject
+  text) — corroborate before closing.
 - ✅ Keep the test suite as the separate correctness gate — this skill checks shipping, not correctness.
 - ❌ Don't accept a "done" because the agent's prose was confident.
 - ❌ Don't use this to replace code review or testing.
