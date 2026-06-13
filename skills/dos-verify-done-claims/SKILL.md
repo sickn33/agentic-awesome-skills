@@ -71,15 +71,20 @@ If the agent claims a specific plan/phase landed, confirm it from git history
 rather than the transcript:
 
 ```bash
-dos verify --workspace . PLAN PHASE --json
+dos verify --workspace . PLAN PHASE --json --no-ci
 ```
 
-With `--json` you get the `shipped` and `source` fields. (The default text form
-prints `SHIPPED PLAN PHASE (via grep)` or `NOT_SHIPPED PLAN PHASE (via none)` —
-the same verdict, and the process exit code is non-zero when not shipped.)
-`shipped: true` with a `source` of `registry` or `grep` is real evidence;
-`source: none` means there is no positive evidence — accept that as "not shipped",
-not as a failure of the tool.
+`--no-ci` keeps the verdict git-only (see the Security note below). With `--json`
+you get the `shipped` and `source` fields. (The default text form prints
+`SHIPPED PLAN PHASE (via grep)` or `NOT_SHIPPED PLAN PHASE (via none)` — the same
+verdict, and the process exit code is non-zero when not shipped.)
+
+`shipped: true` is real evidence when `source` is `registry` or any value
+**starting with `grep`** — git fallback grades itself by forgeability, so you may
+see bare `grep`, `grep-artifact` (a non-forgeable artefact/diff rung), or
+`grep-subject` (a commit subject carried the phase token — shipped, but forgeable,
+so weaker). `source: none` means there is no positive evidence — accept that as
+"not shipped", not as a failure of the tool.
 
 ### Step 4: Fold only confirmed effects
 
@@ -101,8 +106,9 @@ dos commit-audit --workspace . HEAD --json
 ### Example 2: confirm a feature phase shipped before closing a ticket
 
 ```bash
-dos verify --workspace . AUTH AUTH2 --json
-# shipped: true, source: grep  -> a real ship commit exists; safe to close
+dos verify --workspace . AUTH AUTH2 --json --no-ci
+# shipped: true, source: grep-artifact -> a real ship commit exists; safe to close
+#   (source: registry, grep, or any grep-* value all count as real evidence)
 # shipped: false, source: none -> no evidence; keep the ticket open
 ```
 
@@ -124,9 +130,12 @@ dos verify --workspace . AUTH AUTH2 --json
 ## Security & Safety Notes
 
 - This skill runs shell commands: `pip install dos-kernel` and the read-only
-  `dos` verbs (`dos commit-audit`, `dos verify`). The `dos` verbs only **read**
-  git history and the working tree — they do not mutate the repo, push, or
-  network.
+  `dos` verbs (`dos commit-audit`, `dos verify`). These verbs never **mutate**
+  the repo or push. `dos commit-audit` only reads git history and the working
+  tree (no network). `dos verify` is also git-only **unless** the workspace has
+  wired a CI oracle (`[verify] non_git_oracle` in its `dos.toml`), in which case
+  it may shell a network check (e.g. `gh api`) for the verdict — pass `--no-ci`
+  (as the examples above do) to force the git-only path and guarantee no network.
 - `pip install dos-kernel` installs from PyPI. The distribution name is
   `dos-kernel` (the bare `dos` on PyPI is an unrelated package — do not install
   it). Pin a version in locked environments.
