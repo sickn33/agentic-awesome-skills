@@ -23,7 +23,10 @@ fact — and a claim the agent checks by re-reading its own work is *consistency
 not grounding*. This skill replaces that self-report with a verdict from a
 witness the agent did not author: it shells the **DOS kernel** (`dos verify`,
 `dos commit-audit`) to confirm the claimed effect from git ancestry and the
-commit's actual diff. DOS is deterministic — no API key, no LLM, no network.
+commit's actual diff. DOS is deterministic — no API key, no LLM. The verdict is
+git-only and offline as used here; the one exception is `dos verify` in a
+workspace that wires a CI oracle, which `--no-ci` suppresses (see Security &
+Safety Notes).
 
 This skill adapts the DOS reference "witness-claim" pattern
 (`anthony-chaudhary/dos-kernel`) into a host-agnostic screenplay.
@@ -58,12 +61,14 @@ actual diff:
 dos commit-audit --workspace . HEAD --json
 ```
 
-Read the `verdict` field — the `--json` flag emits it. (Without `--json` the
-same verdict prints as a one-line text row: `· OK …`, `⚑ UNWITNESSED …`, or
-`· abstain …`; the JSON form is the one to parse.) The verdicts are: `OK` (the
-diff backs the claim's *kind*), `CLAIM_UNWITNESSED` (the subject's claim is not
-evidenced by the diff — treat the "done" as unproven), or `ABSTAIN`. This judges
-the *kind* of change, never correctness — run the tests for that.
+`commit-audit --json` prints a JSON **array** of audited commits (one element
+even for a single `HEAD`), so read `verdict` from the first element — e.g.
+`dos commit-audit --workspace . HEAD --json | jq -r '.[0].verdict'`. (Without
+`--json` the same verdict prints as a one-line text row: `· OK …`,
+`⚑ UNWITNESSED …`, or `· abstain …`.) The verdicts are: `OK` (the diff backs the
+claim's *kind*), `CLAIM_UNWITNESSED` (the subject's claim is not evidenced by the
+diff — treat the "done" as unproven), or `ABSTAIN`. This judges the *kind* of
+change, never correctness — run the tests for that.
 
 ### Step 3: Verify a named phase actually shipped
 
@@ -97,10 +102,11 @@ confidently the agent narrated it — send it back.
 ### Example 1: gate an agent's "I fixed the bug" claim
 
 ```bash
-# The agent committed and said it's fixed. Check the diff backs the claim:
-dos commit-audit --workspace . HEAD --json
-# verdict OK                -> the change is of the claimed kind; now run the tests
-# verdict CLAIM_UNWITNESSED -> the commit doesn't do what it says; reject
+# The agent committed and said it's fixed. Check the diff backs the claim.
+# commit-audit --json returns an array, so read the first element's verdict:
+dos commit-audit --workspace . HEAD --json | jq -r '.[0].verdict'
+# OK                -> the change is of the claimed kind; now run the tests
+# CLAIM_UNWITNESSED -> the commit doesn't do what it says; reject
 ```
 
 ### Example 2: confirm a feature phase shipped before closing a ticket
