@@ -318,7 +318,7 @@ func main() {
 
 	for _, dir := range templateDirs {
 		filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-			if err != nil || info.IsDir() || !strings.HasSuffix(path, ".tpl") {
+			if err != nil || info == nil || info.IsDir() || !strings.HasSuffix(path, ".tpl") {
 				return nil
 			}
 
@@ -347,6 +347,9 @@ func main() {
 
 	for _, dir := range templateDirs {
 		filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+			if err != nil || info == nil {
+				return nil
+			}
 			if !info.IsDir() && strings.HasSuffix(path, ".tpl") {
 				tplFiles[filepath.Base(path)] = false
 			}
@@ -387,7 +390,6 @@ func main() {
 lint-arch:
 	@echo "Checking architecture constraints..."
 	@go run scripts/lint-deps.go
-	@go run scripts/lint-tools.go
 	@go run scripts/lint-prompts.go
 	@go run scripts/lint-quality.go
 	@echo "✓ Architecture checks passed"

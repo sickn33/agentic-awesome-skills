@@ -588,8 +588,9 @@ class Config:
 from {package_name}.main import main
 
 
-def test_main_no_args(capsys):
+def test_main_no_args(capsys, monkeypatch):
     """Test main with no arguments shows usage."""
+    monkeypatch.setattr("sys.argv", ["{project-name}"])
     main()
     captured = capsys.readouterr()
     assert "{project-name}" in captured.out
