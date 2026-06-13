@@ -55,13 +55,15 @@ it touched are not (git did). `dos commit-audit` grades the subject against the
 actual diff:
 
 ```bash
-dos commit-audit --workspace . HEAD
+dos commit-audit --workspace . HEAD --json
 ```
 
-Read the `verdict` field: `OK` (the diff backs the claim's *kind*),
-`CLAIM_UNWITNESSED` (the subject's claim is not evidenced by the diff — treat the
-"done" as unproven), or `ABSTAIN`. This judges the *kind* of change, never
-correctness — run the tests for that.
+Read the `verdict` field — the `--json` flag emits it. (Without `--json` the
+same verdict prints as a one-line text row: `· OK …`, `⚑ UNWITNESSED …`, or
+`· abstain …`; the JSON form is the one to parse.) The verdicts are: `OK` (the
+diff backs the claim's *kind*), `CLAIM_UNWITNESSED` (the subject's claim is not
+evidenced by the diff — treat the "done" as unproven), or `ABSTAIN`. This judges
+the *kind* of change, never correctness — run the tests for that.
 
 ### Step 3: Verify a named phase actually shipped
 
@@ -69,9 +71,12 @@ If the agent claims a specific plan/phase landed, confirm it from git history
 rather than the transcript:
 
 ```bash
-dos verify --workspace . PLAN PHASE
+dos verify --workspace . PLAN PHASE --json
 ```
 
+With `--json` you get the `shipped` and `source` fields. (The default text form
+prints `SHIPPED PLAN PHASE (via grep)` or `NOT_SHIPPED PLAN PHASE (via none)` —
+the same verdict, and the process exit code is non-zero when not shipped.)
 `shipped: true` with a `source` of `registry` or `grep` is real evidence;
 `source: none` means there is no positive evidence — accept that as "not shipped",
 not as a failure of the tool.
@@ -88,15 +93,15 @@ confidently the agent narrated it — send it back.
 
 ```bash
 # The agent committed and said it's fixed. Check the diff backs the claim:
-dos commit-audit --workspace . HEAD
-# verdict OK            -> the change is of the claimed kind; now run the tests
+dos commit-audit --workspace . HEAD --json
+# verdict OK                -> the change is of the claimed kind; now run the tests
 # verdict CLAIM_UNWITNESSED -> the commit doesn't do what it says; reject
 ```
 
 ### Example 2: confirm a feature phase shipped before closing a ticket
 
 ```bash
-dos verify --workspace . AUTH AUTH2
+dos verify --workspace . AUTH AUTH2 --json
 # shipped: true, source: grep  -> a real ship commit exists; safe to close
 # shipped: false, source: none -> no evidence; keep the ticket open
 ```
