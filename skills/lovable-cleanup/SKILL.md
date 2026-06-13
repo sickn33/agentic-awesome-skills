@@ -253,11 +253,11 @@ Remove any Lovable-specific `.gitignore` entries or commit hooks.
 
 <!-- security-allowlist: grep over source files, read-only, writes to /tmp only -->
 ```bash
-grep -rh "from '@radix-ui/" src/ --include="*.tsx" --include="*.ts" \
-  | grep -oP "(?<=from ')@radix-ui/[^']+" | sort -u > /tmp/radix-used.txt
+grep -rh "from [\"']@radix-ui/" src/ --include="*.tsx" --include="*.ts" \
+  | grep -oP "from [\"']\K@radix-ui/[^\"']+" | sort -u > /tmp/radix-used.txt
 
-grep -rh "from '@/components/ui/" src/ --include="*.tsx" \
-  | grep -oP "(?<=from ')@/components/ui/[^']+" | sort -u > /tmp/shadcn-used.txt
+grep -rh "from [\"']@/components/ui/" src/ --include="*.tsx" \
+  | grep -oP "from [\"']\K@/components/ui/[^\"']+" | sort -u > /tmp/shadcn-used.txt
 ```
 
 **Step 2 — Diff against installed**
