@@ -446,6 +446,7 @@ function pruneRemovedEntries(targetPath, previousEntries, installEntries) {
       console.warn(`  Skipping unsafe managed entry path from manifest: ${entry}`);
       continue;
     }
+    assertSafeDestinationPath(candidate, targetPath);
     fs.rmSync(candidate, { recursive: true, force: true });
     console.log(`  Removed stale managed entry: ${normalizedEntry}`);
   }

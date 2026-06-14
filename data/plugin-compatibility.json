@@ -27512,18 +27512,24 @@
       "id": "unship",
       "path": "skills/unship",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -29561,12 +29567,12 @@
   "summary": {
     "total_skills": 1541,
     "supported": {
-      "codex": 1492,
-      "claude": 1509
+      "codex": 1491,
+      "claude": 1508
     },
     "blocked": {
-      "codex": 49,
-      "claude": 32
+      "codex": 50,
+      "claude": 33
     },
     "manual_setup": 5
   }

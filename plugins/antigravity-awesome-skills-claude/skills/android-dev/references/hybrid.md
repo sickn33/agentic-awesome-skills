@@ -88,13 +88,16 @@ const takePhoto = async () => {
   return photo.webPath;
 };
 
-// Secure storage
+// Secure storage: do not store auth tokens in Capacitor Preferences.
+// Use a platform-backed secure storage plugin such as
+// @aparajita/capacitor-secure-storage, Ionic Identity Vault, or an
+// equivalent Android Keystore-backed plugin.
 const saveToken = async (token: string) => {
-  await Preferences.set({ key: 'auth_token', value: token });
+  await SecureStorage.set({ key: 'auth_token', value: token });
 };
 
 const getToken = async (): Promise<string | null> => {
-  const { value } = await Preferences.get({ key: 'auth_token' });
+  const { value } = await SecureStorage.get({ key: 'auth_token' });
   return value;
 };
 

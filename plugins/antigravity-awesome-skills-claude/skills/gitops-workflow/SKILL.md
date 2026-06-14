@@ -144,7 +144,7 @@ brew install fluxcd/tap/flux
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -fsSLo "$tmpdir/flux-install.sh" https://fluxcd.io/install.sh
-sed -n '1,160p' "$tmpdir/flux-install.sh"
+cat "$tmpdir/flux-install.sh"  # review the full installer before sudo
 sudo bash "$tmpdir/flux-install.sh"
 
 # Bootstrap Flux

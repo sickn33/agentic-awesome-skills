@@ -37,16 +37,19 @@ In Antigravity specifically, this turns Manager View's fixed pipeline into a tea
 
 ### Step 1: Found a polis
 
-Run the published CLI — `uvx` fetches the latest release from PyPI ([polis-protocol](https://pypi.org/project/polis-protocol/)), so you always get the current version:
+Use a reviewed checkout by default so the scaffolder code is pinned before it writes into the project:
 
 ```bash
-uvx polis-protocol init \
+git clone https://github.com/yehudalevy-collab/polis-protocol.git
+cd polis-protocol
+git checkout <reviewed-commit-sha>
+python3 scripts/init_polis.py \
   --project-root . \
   --agent-id gemini-antigravity-yourproject \
   --vendor google --model gemini-3 --tool antigravity
 ```
 
-(Prefer a pinned, reviewed install? `pipx install polis-protocol==<version>`, or clone the repo and run `python3 scripts/init_polis.py` with the same flags.)
+If you prefer the published PyPI package, install an exact version after reviewing that release, for example `pipx install polis-protocol==<reviewed-version>`. Do not invoke the package through an unpinned `uvx` or "latest" workflow for automated setup.
 
 This writes `_polis/` plus the skill into `.agents/skills/` (the path Antigravity reads), and bridge pointers (`GEMINI.md`, `AGENTS.md`) that point every tool at `_polis/CONSTITUTION.md`. Tip: add `--dry-run` to preview every file before anything is written; init never overwrites existing files, and `polis init --repair` restores missing ones.
 

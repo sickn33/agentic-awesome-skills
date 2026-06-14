@@ -2,7 +2,7 @@
 name: unship
 description: "Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code."
 category: development
-risk: safe
+risk: critical
 source: community
 source_repo: mbenhard/unship
 source_type: community
@@ -12,6 +12,10 @@ tags: [ui-variants, frontend, local-first, coding-agents]
 tools: [claude-code, antigravity, cursor, gemini-cli, codex-cli, opencode]
 license: "MIT"
 license_source: "https://github.com/mbenhard/unship/blob/main/LICENSE"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
 ---
 
 # Unship
@@ -44,16 +48,17 @@ Prefer the project-local binary when it exists:
 ./node_modules/.bin/unship doctor --json --no-update-check
 ```
 
-Otherwise use the npm package without assuming a global binary:
+Otherwise install a reviewed, exact CLI version into the project and then run the local binary:
 
 ```bash
-npx -y @unship/cli@latest doctor --json --no-update-check
+npm install --save-dev @unship/cli@<reviewed-version>
+./node_modules/.bin/unship doctor --json --no-update-check
 ```
 
 If setup is needed for the local picker, run:
 
 ```bash
-npx -y @unship/cli@latest setup --json
+./node_modules/.bin/unship setup --json
 ```
 
 Patch only the smallest development-only mount point required to load the picker in the local preview.
@@ -95,7 +100,7 @@ When the user picks a winner, keep that option's real source and remove losing o
 For final cleanup before shipping, remove all Unship artifacts and run:
 
 ```bash
-npx -y @unship/cli@latest check --json
+./node_modules/.bin/unship check --json
 ```
 
 Do not claim cleanup is complete until the check reports clean.
@@ -117,6 +122,7 @@ Do not claim cleanup is complete until the check reports clean.
 ## Security & Safety Notes
 
 - Run commands only in a local project the user has authorized you to modify.
+- Do not run `npx @unship/cli@latest` or any unpinned remote CLI in automated agent workflows. Pin and review the package version first, then execute the project-local binary.
 - Treat generated variants as temporary code that must be cleaned before release.
 - Before destructive cleanup, confirm the selected option label when the user's choice is ambiguous.
 - If a baseline build or typecheck already fails before Unship edits, report that baseline state and keep variant work isolated.

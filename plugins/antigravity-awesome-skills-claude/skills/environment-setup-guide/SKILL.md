@@ -86,7 +86,7 @@ Provide verification steps to ensure everything works:
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -fsSLo "$tmpdir/homebrew-install.sh" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-sed -n '1,160p' "$tmpdir/homebrew-install.sh"
+cat "$tmpdir/homebrew-install.sh"  # review the full installer before executing
 /bin/bash "$tmpdir/homebrew-install.sh"
 
 # Install Node.js
@@ -102,7 +102,7 @@ sudo apt update
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -fsSLo "$tmpdir/nodesource-setup.sh" https://deb.nodesource.com/setup_20.x
-sed -n '1,160p' "$tmpdir/nodesource-setup.sh"
+cat "$tmpdir/nodesource-setup.sh"  # review the full installer before sudo
 sudo -E bash "$tmpdir/nodesource-setup.sh"
 sudo apt install -y nodejs
 \`\`\`

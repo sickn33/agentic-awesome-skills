@@ -8,7 +8,6 @@ import os
 import sys
 import json
 import argparse
-import requests
 from typing import Optional, Dict, Any, List
 
 
@@ -67,6 +66,8 @@ def generate_narration(
         - Cost: 210 credits per page (10 for text, 200 for audio)
         - Processing time: Varies by slide count
     """
+    import requests
+
     if api_key is None:
         api_key = get_api_key()
 
