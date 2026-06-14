@@ -1,4 +1,4 @@
-<!-- registry-sync: version=12.4.0; skills=1550; stars=40473; updated_at=2026-06-12T17:19:05+00:00 -->
+<!-- registry-sync: version=12.5.0; skills=1550; stars=40667; updated_at=2026-06-14T08:56:09+00:00 -->
 [![Antigravity Awesome Skills hero](assets/aas-readme-hero.jpeg)](https://github.com/sickn33/antigravity-awesome-skills)
 
 # 🌌 Antigravity Awesome Skills: 1,550+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More
@@ -13,7 +13,7 @@ The canonical project page is the GitHub repository at <https://github.com/sickn
 
 **Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Compare plugin packs](https://sickn33.github.io/antigravity-awesome-skills/plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse 1,550+ Skills](#browse-1550-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
 
-[![GitHub stars](https://img.shields.io/badge/⭐%2040%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/antigravity-awesome-skills/stargazers)
+[![GitHub stars](https://img.shields.io/badge/⭐%2041%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/antigravity-awesome-skills/stargazers)
 [![Follow @AASkills_ on X](https://img.shields.io/badge/Follow-%40AASkills__-black?style=for-the-badge&logo=x)](https://x.com/AASkills_)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Anthropic-purple)](https://claude.ai)
@@ -27,7 +27,7 @@ The canonical project page is the GitHub repository at <https://github.com/sickn
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/antigravity-awesome-skills)
 
-**Current release: V12.4.0.** Trusted by 40k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
+**Current release: V12.5.0.** Trusted by 41k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
 
 ## Why This Repo
 
@@ -151,7 +151,7 @@ Use the table above for install targets. Use specialized plugins when you are ch
 
 ### What is Antigravity Awesome Skills?
 
-**Antigravity Awesome Skills** (Release 12.4.0) is a large, installable skill library for AI coding assistants. It packages 1,550+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
+**Antigravity Awesome Skills** (Release 12.5.0) is a large, installable skill library for AI coding assistants. It packages 1,550+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
 
 ### How do I install it?
 
