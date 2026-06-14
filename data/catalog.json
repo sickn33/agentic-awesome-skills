@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1541,
+  "total": 1543,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -21347,6 +21347,35 @@
       "path": "skills/loss-aversion-designer/SKILL.md"
     },
     {
+      "id": "lovable-cleanup",
+      "name": "lovable-cleanup",
+      "description": "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans generated docs so the codebase ships as yours.",
+      "category": "development",
+      "tags": [
+        "lovable",
+        "cleanup",
+        "vite",
+        "react",
+        "shadcn",
+        "devtools"
+      ],
+      "triggers": [
+        "lovable",
+        "cleanup",
+        "vite",
+        "react",
+        "shadcn",
+        "devtools",
+        "audits",
+        "strips",
+        "scaffolding",
+        "removes",
+        "tagger",
+        "swaps"
+      ],
+      "path": "skills/lovable-cleanup/SKILL.md"
+    },
+    {
       "id": "m365-agents-dotnet",
       "name": "m365-agents-dotnet",
       "description": "Microsoft 365 Agents SDK for .NET. Build multichannel agents for Teams/M365/Copilot Studio with ASP.NET Core hosting, AgentApplication routing, and MSAL-based auth.",
@@ -25475,6 +25504,31 @@
         "policies"
       ],
       "path": "skills/pagerduty-automation/SKILL.md"
+    },
+    {
+      "id": "pagespeed-enhancer",
+      "name": "pagespeed-enhancer",
+      "description": "Scan, audit, and fix web performance issues across all four Lighthouse/PageSpeed Insights pillars — Performance, Accessibility, Best Practices, and SEO — in structured batches.",
+      "category": "business",
+      "tags": [
+        "pagespeed",
+        "enhancer"
+      ],
+      "triggers": [
+        "pagespeed",
+        "enhancer",
+        "scan",
+        "audit",
+        "fix",
+        "web",
+        "performance",
+        "issues",
+        "all",
+        "four",
+        "lighthouse",
+        "insights"
+      ],
+      "path": "skills/pagespeed-enhancer/SKILL.md"
     },
     {
       "id": "paid-ads",

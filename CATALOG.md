@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1541
+Total skills: 1543
 
 ## architecture (100)
 
@@ -109,7 +109,7 @@ Total skills: 1541
 | `workflow-patterns` | Use this skill when implementing tasks according to Conductor's TDD workflow, handling phase checkpoints, managing git commits for tasks, or understanding th... |  | skill, implementing, tasks, according, conductor, tdd, handling, phase, checkpoints, managing, git, commits |
 | `zapier-make-patterns` | No-code automation democratizes workflow building. Zapier and Make (formerly Integromat) let non-developers automate business processes without writing code.... | zapier, make | zapier, make, no, code, automation, democratizes, building, formerly, integromat, let, non, developers |
 
-## business (85)
+## business (86)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -152,6 +152,7 @@ Total skills: 1541
 | `odoo-ecommerce-configurator` | Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow. | odoo, ecommerce, configurator | odoo, ecommerce, configurator, website, product, catalog, payment, providers, shipping, methods, seo, order |
 | `odoo-hr-payroll-setup` | Expert guide for Odoo HR and Payroll: salary structures, payslip rules, leave policies, employee contracts, and payroll journal entries. | odoo, hr, payroll, setup | odoo, hr, payroll, setup, salary, structures, payslip, rules, leave, policies, employee, contracts |
 | `osterwalder-canvas-architect` | Iterative consultant agent for building and validating logically consistent 9-block Business Model Canvases. | business-model, osterwalder, strategy, bmc | business-model, osterwalder, strategy, bmc, canvas, architect, iterative, consultant, agent, building, validating, logically |
+| `pagespeed-enhancer` | Scan, audit, and fix web performance issues across all four Lighthouse/PageSpeed Insights pillars — Performance, Accessibility, Best Practices, and SEO — in ... | pagespeed, enhancer | pagespeed, enhancer, scan, audit, fix, web, performance, issues, all, four, lighthouse, insights |
 | `paid-ads` | You are an expert performance marketer with direct access to ad platform accounts. Your goal is to help create, optimize, and scale paid advertising campaign... | paid, ads | paid, ads, performance, marketer, direct, access, ad, platform, accounts, goal, optimize, scale |
 | `pricing-strategy` | Design pricing, packaging, and monetization strategies based on value, customer willingness to pay, and growth objectives. | pricing | pricing, packaging, monetization, value, customer, willingness, pay, growth, objectives |
 | `product-design` | Design de produto nivel Apple — sistemas visuais, UX flows, acessibilidade, linguagem visual proprietaria, design tokens, prototipagem e handoff. Cobre Figma... | design, ux, design-systems, accessibility, figma | design, ux, design-systems, accessibility, figma, product, de, produto, nivel, apple, sistemas, visuais |
@@ -500,7 +501,7 @@ Total skills: 1541
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (217)
+## development (218)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -626,6 +627,7 @@ Total skills: 1541
 | `javascript-typescript-typescript-scaffold` | You are a TypeScript project architecture expert specializing in scaffolding production-ready Node.js and frontend applications. Generate complete project st... | javascript, typescript | javascript, typescript, scaffold, architecture, specializing, scaffolding, node, js, frontend, applications, generate, complete |
 | `junta-leiloeiros` | Coleta e consulta dados de leiloeiros oficiais de todas as 27 Juntas Comerciais do Brasil. Scraper multi-UF, banco SQLite, API FastAPI e exportacao CSV/JSON. | scraping, brazilian-data, auctioneers, api | scraping, brazilian-data, auctioneers, api, junta, leiloeiros, coleta, consulta, dados, de, oficiais, todas |
 | `landing-page-generator` | Generates high-converting Next.js/React landing pages with Tailwind CSS. Uses PAS, AIDA, and BAB frameworks for optimized copy/components (Heroes, Features, ... | nextjs, react, tailwind, landing-page, marketing, seo, cro | nextjs, react, tailwind, landing-page, marketing, seo, cro, landing, page, generator, generates, high |
+| `lovable-cleanup` | Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans gen... | lovable, cleanup, vite, react, shadcn, devtools | lovable, cleanup, vite, react, shadcn, devtools, audits, strips, scaffolding, removes, tagger, swaps |
 | `m365-agents-ts` | Microsoft 365 Agents SDK for TypeScript/Node.js. | m365, agents, ts | m365, agents, ts, microsoft, 365, sdk, typescript, node, js |
 | `makepad-platform` | CRITICAL: Use for Makepad cross-platform support. Triggers on: makepad platform, makepad os, makepad macos, makepad windows, makepad linux, makepad android, ... | makepad, platform | makepad, platform, critical, cross, triggers, os, macos, windows, linux, android, ios, web |
 | `makepad-skills` | Makepad UI development skills for Rust apps: setup, patterns, shaders, packaging, and troubleshooting. | makepad, skills | makepad, skills, ui, development, rust, apps, setup, shaders, packaging, troubleshooting |

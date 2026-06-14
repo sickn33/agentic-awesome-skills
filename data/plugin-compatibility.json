@@ -16488,6 +16488,25 @@
       "runtime_files": []
     },
     {
+      "id": "lovable-cleanup",
+      "path": "skills/lovable-cleanup",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "m365-agents-dotnet",
       "path": "skills/m365-agents-dotnet",
       "targets": {
@@ -19669,6 +19688,25 @@
     {
       "id": "pagerduty-automation",
       "path": "skills/pagerduty-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pagespeed-enhancer",
+      "path": "skills/pagespeed-enhancer",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -29565,10 +29603,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1541,
+    "total_skills": 1543,
     "supported": {
-      "codex": 1491,
-      "claude": 1508
+      "codex": 1493,
+      "claude": 1510
     },
     "blocked": {
       "codex": 50,

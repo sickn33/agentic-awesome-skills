@@ -18816,6 +18816,28 @@
     }
   },
   {
+    "id": "lovable-cleanup",
+    "path": "skills/lovable-cleanup",
+    "category": "uncategorized",
+    "name": "lovable-cleanup",
+    "description": "Audits and strips Lovable scaffolding from Vite + React projects \u2014 removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans generated docs so the codebase ships as yours.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "luna",
     "path": "skills/agent-squad/luna",
     "category": "agent-squad",
@@ -22579,6 +22601,28 @@
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "pagespeed-enhancer",
+    "path": "skills/pagespeed-enhancer",
+    "category": "uncategorized",
+    "name": "pagespeed-enhancer",
+    "description": "Scan, audit, and fix web performance issues across all four Lighthouse/PageSpeed Insights pillars \u2014 Performance, Accessibility, Best Practices, and SEO \u2014 in structured batches.",
+    "risk": "safe",
+    "source": "personal",
+    "date_added": "2026-06-14",
     "plugin": {
       "targets": {
         "codex": "supported",
