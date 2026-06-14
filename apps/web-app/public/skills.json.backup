@@ -11476,6 +11476,28 @@
     }
   },
   {
+    "id": "dos-verify-done-claims",
+    "path": "skills/dos-verify-done-claims",
+    "category": "quality",
+    "name": "dos-verify-done-claims",
+    "description": "Before accepting an agent's 'done / shipped / fixed' claim, verify it against ground truth (git ancestry + the commit's own diff) using the DOS kernel's `dos verify` and `dos commit-audit` \u2014 never the agent's own narration.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "dotnet-architect",
     "path": "skills/dotnet-architect",
     "category": "development",

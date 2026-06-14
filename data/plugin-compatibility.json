@@ -9939,6 +9939,25 @@
       "runtime_files": []
     },
     {
+      "id": "dos-verify-done-claims",
+      "path": "skills/dos-verify-done-claims",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dotnet-architect",
       "path": "skills/dotnet-architect",
       "targets": {
@@ -29603,10 +29622,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1543,
+    "total_skills": 1544,
     "supported": {
-      "codex": 1493,
-      "claude": 1510
+      "codex": 1494,
+      "claude": 1511
     },
     "blocked": {
       "codex": 50,

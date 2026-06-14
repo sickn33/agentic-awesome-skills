@@ -37,6 +37,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>http://localhost/skill/dos-verify-done-claims</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>http://localhost/skill/fsi-compliance-checker</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
@@ -242,12 +248,6 @@
   </url>
   <url>
     <loc>http://localhost/skill/deploy-to-vercel</loc>
-    <lastmod>2026-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>http://localhost/skill/polis-protocol</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

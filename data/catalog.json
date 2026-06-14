@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1543,
+  "total": 1544,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -12882,6 +12882,34 @@
         "evented"
       ],
       "path": "skills/domain-driven-design/SKILL.md"
+    },
+    {
+      "id": "dos-verify-done-claims",
+      "name": "dos-verify-done-claims",
+      "description": "Before accepting an agent's 'done / shipped / fixed' claim, verify it against ground truth (git ancestry + the commit's own diff) using the DOS kernel's `dos verify` and `dos commit-audit` — never the agent's own narration.",
+      "category": "security",
+      "tags": [
+        "verification",
+        "git",
+        "ai-agents",
+        "trust",
+        "quality-gate"
+      ],
+      "triggers": [
+        "verification",
+        "git",
+        "ai-agents",
+        "trust",
+        "quality-gate",
+        "dos",
+        "verify",
+        "done",
+        "claims",
+        "before",
+        "accepting",
+        "agent"
+      ],
+      "path": "skills/dos-verify-done-claims/SKILL.md"
     },
     {
       "id": "dotnet-architect",

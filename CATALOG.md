@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1543
+Total skills: 1544
 
 ## architecture (100)
 
@@ -1260,7 +1260,7 @@ Total skills: 1543
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (183)
+## security (184)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1317,6 +1317,7 @@ Total skills: 1543
 | `devops-troubleshooter` | Expert DevOps troubleshooter specializing in rapid incident response, advanced debugging, and modern observability. | devops, troubleshooter | devops, troubleshooter, specializing, rapid, incident, response, debugging, observability |
 | `differential-review` | Security-focused code review for PRs, commits, and diffs. | differential | differential, review, security, code, prs, commits, diffs |
 | `docker-expert` | You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds,... | docker | docker, containerization, practical, knowledge, container, optimization, security, hardening, multi, stage, orchestration, deployment |
+| `dos-verify-done-claims` | Before accepting an agent's 'done / shipped / fixed' claim, verify it against ground truth (git ancestry + the commit's own diff) using the DOS kernel's `dos... | verification, git, ai-agents, trust, quality-gate | verification, git, ai-agents, trust, quality-gate, dos, verify, done, claims, before, accepting, agent |
 | `dotnet-backend` | Build ASP.NET Core 8+ backend services with EF Core, auth, background jobs, and production API patterns. | dotnet, backend | dotnet, backend, asp, net, core, ef, auth, background, jobs, api |
 | `ethical-hacking-methodology` | Master the complete penetration testing lifecycle from reconnaissance through reporting. This skill covers the five stages of ethical hacking methodology, es... | ethical, hacking, methodology | ethical, hacking, methodology, complete, penetration, testing, lifecycle, reconnaissance, through, reporting, skill, covers |
 | `event-staffing-compliance` | Assess worker-classification and compliance risk for temporary event staffing in the US and Canada — W-2 vs 1099, misclassification penalties, joint-employer... | event, staffing, compliance | event, staffing, compliance, assess, worker, classification, risk, temporary, us, canada, vs, 1099 |
