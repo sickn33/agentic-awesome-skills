@@ -2,9 +2,9 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1544
+Total skills: 1549
 
-## architecture (100)
+## architecture (101)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -66,6 +66,7 @@ Total skills: 1544
 | `makepad-event-action` | CRITICAL: Use for Makepad event and action handling. Triggers on: makepad event, makepad action, Event enum, ActionTrait, handle_event, MouseDown, KeyDown, T... | makepad, event, action | makepad, event, action, critical, handling, triggers, enum, actiontrait, handle, mousedown, keydown, touchupdate |
 | `makepad-reference` | This category provides reference materials for debugging, code quality, and advanced layout patterns. | makepad, reference | makepad, reference, category, provides, materials, debugging, code, quality, layout |
 | `memory-safety-patterns` | Cross-language patterns for memory-safe programming including RAII, ownership, smart pointers, and resource management. | memory, safety | memory, safety, cross, language, safe, programming, including, raii, ownership, smart, pointers, resource |
+| `monopoly/patterns` | Reference document for monopoly patterns. | monopoly/patterns | monopoly/patterns, reference, document, monopoly |
 | `monorepo-architect` | Expert in monorepo architecture, build systems, and dependency management at scale. Masters Nx, Turborepo, Bazel, and Lerna for efficient multi-project devel... | monorepo | monorepo, architect, architecture, dependency, scale, masters, nx, turborepo, bazel, lerna, efficient, multi |
 | `multi-agent-patterns` | This skill should be used when the user asks to "design multi-agent system", "implement supervisor pattern", "create swarm architecture", "coordinate multipl... | multi, agent | multi, agent, skill, should, used, user, asks, supervisor, swarm, architecture, coordinate, multiple |
 | `n8n-mcp-tools-expert` | Expert guide for using n8n-mcp MCP tools effectively. Use when searching for nodes, validating configurations, accessing templates, managing workflows, or us... | n8n, mcp | n8n, mcp, effectively, searching, nodes, validating, configurations, accessing, managing, any, provides, selection |
@@ -501,7 +502,7 @@ Total skills: 1544
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (218)
+## development (219)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -638,6 +639,7 @@ Total skills: 1544
 | `mobile-design` | (Mobile-First · Touch-First · Platform-Respectful) | mobile | mobile, first, touch, platform, respectful |
 | `mobile-developer` | Develop React Native, Flutter, or native mobile apps with modern architecture patterns. Masters cross-platform development, native integrations, offline sync... | mobile | mobile, developer, develop, react, native, flutter, apps, architecture, masters, cross, platform, development |
 | `modern-javascript-patterns` | Comprehensive guide for mastering modern JavaScript (ES6+) features, functional programming patterns, and best practices for writing clean, maintainable, and... | modern, javascript | modern, javascript, mastering, es6, features, functional, programming, writing, clean, maintainable, performant, code |
+| `monopoly` | MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, s... | monopoly | monopoly, senior, engineer, skill, architecting, reviewing, scaling, triggers, requests, involving, architecture, databases |
 | `multi-platform-apps-multi-platform` | Build and deploy the same feature consistently across web, mobile, and desktop platforms using API-first architecture and parallel implementation strategies. | multi, platform, apps | multi, platform, apps, deploy, same, feature, consistently, web, mobile, desktop, platforms, api |
 | `n8n-code-javascript` | Write JavaScript code in n8n Code nodes. Use when writing JavaScript in n8n, using $input/$json/$node syntax, making HTTP requests with $helpers, working wit... | n8n, code, javascript | n8n, code, javascript, write, nodes, writing, input, json, node, syntax, making, http |
 | `n8n-code-python` | Write Python code in n8n Code nodes. Use when writing Python in n8n, using _input/_json/_node syntax, working with standard library, or need to understand Py... | n8n, code, python | n8n, code, python, write, nodes, writing, input, json, node, syntax, working, standard |
@@ -741,7 +743,7 @@ Total skills: 1544
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (369)
+## general (371)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -966,6 +968,8 @@ Total skills: 1544
 | `micro-saas-launcher` | Expert in launching small, focused SaaS products fast - the indie hacker approach to building profitable software. Covers idea validation, MVP development, p... | micro, saas, launcher | micro, saas, launcher, launching, small, products, fast, indie, hacker, approach, building, profitable |
 | `minecraft-bukkit-pro` | Master Minecraft server plugin development with Bukkit, Spigot, and Paper APIs. | minecraft, bukkit | minecraft, bukkit, pro, server, plugin, development, spigot, paper, apis |
 | `monetization` | Estrategia e implementacao de monetizacao para produtos digitais - Stripe, subscriptions, pricing experiments, freemium, upgrade flows, churn prevention, rev... | monetization, stripe, saas, pricing, subscriptions | monetization, stripe, saas, pricing, subscriptions, estrategia, implementacao, de, monetizacao, para, produtos, digitais |
+| `monopoly/scale-benchmarks` | Reference document for monopoly scale-benchmarks. | monopoly/scale, benchmarks | monopoly/scale, benchmarks, scale, reference, document, monopoly |
+| `monopoly/tech-matrix` | Reference document for monopoly tech-matrix. | monopoly/tech, matrix | monopoly/tech, matrix, tech, reference, document, monopoly |
 | `monorepo-management` | Build efficient, scalable monorepos that enable code sharing, consistent tooling, and atomic changes across multiple packages and applications. | monorepo | monorepo, efficient, scalable, monorepos, enable, code, sharing, consistent, tooling, atomic, changes, multiple |
 | `multi-advisor` | Conselho de especialistas — consulta multiplos agentes do ecossistema em paralelo para analise multi-perspectiva de qualquer topico. Ativa personas, especial... | multi-agent, advisory, parallel-analysis, synthesis | multi-agent, advisory, parallel-analysis, synthesis, multi, advisor, conselho, de, especialistas, consulta, multiplos, agentes |
 | `n8n-validation-expert` | Expert guide for interpreting and fixing n8n validation errors. | n8n, validation | n8n, validation, interpreting, fixing, errors |
@@ -1260,7 +1264,7 @@ Total skills: 1544
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (184)
+## security (185)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1364,6 +1368,7 @@ Total skills: 1544
 | `memory-forensics` | Comprehensive techniques for acquiring, analyzing, and extracting artifacts from memory dumps for incident response and malware analysis. | memory, forensics | memory, forensics, techniques, acquiring, analyzing, extracting, artifacts, dumps, incident, response, malware, analysis |
 | `metasploit-framework` | ⚠️ AUTHORIZED USE ONLY > This skill is for educational purposes or authorized security assessments only. > You must have explicit, written permission from th... | metasploit, framework | metasploit, framework, authorized, skill, educational, purposes, security, assessments, must, explicit, written, permission |
 | `mobile-security-coder` | Expert in secure mobile coding practices specializing in input validation, WebView security, and mobile-specific security patterns. | mobile, security, coder | mobile, security, coder, secure, coding, specializing, input, validation, webview, specific |
+| `monopoly/security-checklist` | Reference document for monopoly security-checklist. | monopoly/security, checklist | monopoly/security, checklist, security, reference, document, monopoly |
 | `mtls-configuration` | Configure mutual TLS (mTLS) for zero-trust service-to-service communication. Use when implementing zero-trust networking, certificate management, or securing... | mtls, configuration | mtls, configuration, configure, mutual, tls, zero, trust, communication, implementing, networking, certificate, securing |
 | `network-101` | Configure and test common network services (HTTP, HTTPS, SNMP, SMB) for penetration testing lab environments. Enable hands-on practice with service enumerati... | network, 101 | network, 101, configure, test, common, http, https, snmp, smb, penetration, testing, lab |
 | `network-engineer` | Expert network engineer specializing in modern cloud networking, security architectures, and performance optimization. | network | network, engineer, specializing, cloud, networking, security, architectures, performance, optimization |

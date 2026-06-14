@@ -20410,6 +20410,28 @@
     }
   },
   {
+    "id": "monopoly",
+    "path": "skills/monopoly",
+    "category": "architecture",
+    "name": "monopoly",
+    "description": "MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.",
+    "risk": "unknown",
+    "source": "unknown",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "monorepo-architect",
     "path": "skills/monorepo-architect",
     "category": "development",
@@ -22733,6 +22755,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "patterns",
+    "path": "skills/monopoly/patterns",
+    "category": "monopoly",
+    "name": "patterns",
+    "description": "Reference document for monopoly patterns.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26029,6 +26073,28 @@
     }
   },
   {
+    "id": "scale-benchmarks",
+    "path": "skills/monopoly/scale-benchmarks",
+    "category": "monopoly",
+    "name": "scale-benchmarks",
+    "description": "Reference document for monopoly scale-benchmarks.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "scanning-tools",
     "path": "skills/scanning-tools",
     "category": "security",
@@ -26366,6 +26432,28 @@
     "description": "Build a minimal but real security policy for sensitive apps. The output is a single, coherent Blue Book document using MUST/SHOULD/CAN language, with explicit assumptions, scope, and security gates.",
     "risk": "unknown",
     "source": "community",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "security-checklist",
+    "path": "skills/monopoly/security-checklist",
+    "category": "monopoly",
+    "name": "security-checklist",
+    "description": "Reference document for monopoly security-checklist.",
+    "risk": "safe",
+    "source": "unknown",
     "date_added": null,
     "plugin": {
       "targets": {
@@ -30021,6 +30109,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "tech-matrix",
+    "path": "skills/monopoly/tech-matrix",
+    "category": "monopoly",
+    "name": "tech-matrix",
+    "description": "Reference document for monopoly tech-matrix.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1544,
+  "total": 1549,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -23041,6 +23041,103 @@
         "digitais"
       ],
       "path": "skills/monetization/SKILL.md"
+    },
+    {
+      "id": "monopoly",
+      "name": "monopoly",
+      "description": "MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.",
+      "category": "development",
+      "tags": [
+        "monopoly"
+      ],
+      "triggers": [
+        "monopoly",
+        "senior",
+        "engineer",
+        "skill",
+        "architecting",
+        "reviewing",
+        "scaling",
+        "triggers",
+        "requests",
+        "involving",
+        "architecture",
+        "databases"
+      ],
+      "path": "skills/monopoly/SKILL.md"
+    },
+    {
+      "id": "monopoly/patterns",
+      "name": "patterns",
+      "description": "Reference document for monopoly patterns.",
+      "category": "architecture",
+      "tags": [
+        "monopoly/patterns"
+      ],
+      "triggers": [
+        "monopoly/patterns",
+        "reference",
+        "document",
+        "monopoly"
+      ],
+      "path": "skills/monopoly/patterns/SKILL.md"
+    },
+    {
+      "id": "monopoly/scale-benchmarks",
+      "name": "scale-benchmarks",
+      "description": "Reference document for monopoly scale-benchmarks.",
+      "category": "general",
+      "tags": [
+        "monopoly/scale",
+        "benchmarks"
+      ],
+      "triggers": [
+        "monopoly/scale",
+        "benchmarks",
+        "scale",
+        "reference",
+        "document",
+        "monopoly"
+      ],
+      "path": "skills/monopoly/scale-benchmarks/SKILL.md"
+    },
+    {
+      "id": "monopoly/security-checklist",
+      "name": "security-checklist",
+      "description": "Reference document for monopoly security-checklist.",
+      "category": "security",
+      "tags": [
+        "monopoly/security",
+        "checklist"
+      ],
+      "triggers": [
+        "monopoly/security",
+        "checklist",
+        "security",
+        "reference",
+        "document",
+        "monopoly"
+      ],
+      "path": "skills/monopoly/security-checklist/SKILL.md"
+    },
+    {
+      "id": "monopoly/tech-matrix",
+      "name": "tech-matrix",
+      "description": "Reference document for monopoly tech-matrix.",
+      "category": "general",
+      "tags": [
+        "monopoly/tech",
+        "matrix"
+      ],
+      "triggers": [
+        "monopoly/tech",
+        "matrix",
+        "tech",
+        "reference",
+        "document",
+        "monopoly"
+      ],
+      "path": "skills/monopoly/tech-matrix/SKILL.md"
     },
     {
       "id": "monorepo-architect",

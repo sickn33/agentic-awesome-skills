@@ -17808,6 +17808,101 @@
       "runtime_files": []
     },
     {
+      "id": "monopoly",
+      "path": "skills/monopoly",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/patterns",
+      "path": "skills/monopoly/patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/scale-benchmarks",
+      "path": "skills/monopoly/scale-benchmarks",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/security-checklist",
+      "path": "skills/monopoly/security-checklist",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/tech-matrix",
+      "path": "skills/monopoly/tech-matrix",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "monorepo-architect",
       "path": "skills/monorepo-architect",
       "targets": {
@@ -29622,10 +29717,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1544,
+    "total_skills": 1549,
     "supported": {
-      "codex": 1494,
-      "claude": 1511
+      "codex": 1499,
+      "claude": 1516
     },
     "blocked": {
       "codex": 50,
