@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1549,
+  "total": 1550,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -13155,6 +13155,34 @@
         "connects"
       ],
       "path": "skills/earllm-build/SKILL.md"
+    },
+    {
+      "id": "ecl-harness-engineer",
+      "name": "ecl-harness-engineer",
+      "description": "Create or audit ECL Agent Harness infrastructure: AGENTS.md, change tracking, repository guidance, lint checks, CI gates, and agent handoff docs.",
+      "category": "infrastructure",
+      "tags": [
+        "codex",
+        "agent-harness",
+        "ecl",
+        "workflow",
+        "ci"
+      ],
+      "triggers": [
+        "codex",
+        "agent-harness",
+        "ecl",
+        "workflow",
+        "ci",
+        "harness",
+        "engineer",
+        "audit",
+        "agent",
+        "infrastructure",
+        "agents",
+        "md"
+      ],
+      "path": "skills/ecl-harness-engineer/SKILL.md"
     },
     {
       "id": "ejentum-reasoning-harness",

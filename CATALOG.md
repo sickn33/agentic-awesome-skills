@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1549
+Total skills: 1550
 
 ## architecture (101)
 
@@ -1119,7 +1119,7 @@ Total skills: 1549
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (140)
+## infrastructure (141)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1179,6 +1179,7 @@ Total skills: 1549
 | `django-pro` | Master Django 5.x with async views, DRF, Celery, and Django Channels. Build scalable web applications with proper architecture, testing, and deployment. | django | django, pro, async, views, drf, celery, channels, scalable, web, applications, proper, architecture |
 | `e2e-testing` | End-to-end testing workflow with Playwright for browser automation, visual regression, cross-browser testing, and CI/CD integration. | e2e | e2e, testing, playwright, browser, automation, visual, regression, cross, ci, cd, integration |
 | `earllm-build` | Build, maintain, and extend the EarLLM One Android project — a Kotlin/Compose app that connects Bluetooth earbuds to an LLM via voice pipeline. | android, kotlin, bluetooth, llm, voice | android, kotlin, bluetooth, llm, voice, earllm, maintain, extend, one, compose, app, connects |
+| `ecl-harness-engineer` | Create or audit ECL Agent Harness infrastructure: AGENTS.md, change tracking, repository guidance, lint checks, CI gates, and agent handoff docs. | codex, agent-harness, ecl, workflow, ci | codex, agent-harness, ecl, workflow, ci, harness, engineer, audit, agent, infrastructure, agents, md |
 | `error-debugging-error-analysis` | You are an expert error analysis specialist with deep expertise in debugging distributed systems, analyzing production incidents, and implementing comprehens... | error, debugging | error, debugging, analysis, deep, expertise, distributed, analyzing, incidents, implementing, observability, solutions |
 | `error-debugging-error-trace` | You are an error tracking and observability expert specializing in implementing comprehensive error monitoring solutions. Set up error tracking systems, conf... | error, debugging, trace | error, debugging, trace, tracking, observability, specializing, implementing, monitoring, solutions, set, up, configure |
 | `error-diagnostics-error-analysis` | You are an expert error analysis specialist with deep expertise in debugging distributed systems, analyzing production incidents, and implementing comprehens... | error, diagnostics | error, diagnostics, analysis, deep, expertise, debugging, distributed, analyzing, incidents, implementing, observability, solutions |

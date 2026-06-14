@@ -10148,6 +10148,25 @@
       "runtime_files": []
     },
     {
+      "id": "ecl-harness-engineer",
+      "path": "skills/ecl-harness-engineer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ejentum-reasoning-harness",
       "path": "skills/ejentum-reasoning-harness",
       "targets": {
@@ -29717,10 +29736,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1549,
+    "total_skills": 1550,
     "supported": {
-      "codex": 1499,
-      "claude": 1516
+      "codex": 1500,
+      "claude": 1517
     },
     "blocked": {
       "codex": 50,
