@@ -9,6 +9,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.5.0] - 2026-06-14 - "Security Remediation and Agent Harness Batch"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 14 maintainer batch: confirmed Codex Security and GitHub Dependabot remediations, four accepted community PRs, source-only registry sync, and the web catalog refreshed to 1,550+ skills.
+
+## New Skills
+
+- **pagespeed-enhancer** - Lighthouse/PageSpeed audit and remediation workflow across performance, accessibility, best practices, and SEO.
+- **lovable-cleanup** - cleanup workflow for removing Lovable scaffolding from Vite and React projects.
+- **dos-verify-done-claims** - done-claim verification workflow that checks shipped/fixed claims against deterministic git evidence.
+- **monopoly** - senior system-design engineering skill with nested references for architecture patterns, scale benchmarks, security checklist, and technology selection.
+- **ecl-harness-engineer** - ECL Agent Harness creation and audit workflow for `AGENTS.md`, change tracking, repository guidance, lint checks, CI gates, and handoff docs.
+
+## Security
+
+- Remediated confirmed Codex Security findings across external CLI install guidance, remote installer review steps, Android token-storage guidance, Atlas untrusted workspace instructions, installer symlink pruning, and stale/broken skill examples.
+- Updated Vite-related dependencies to remove the GitHub Dependabot/esbuild alert path in the web app and Loki example lockfiles.
+- Added regression checks for unsafe command guidance, untrusted instruction precedence, Android plaintext token storage, installer symlink pruning, and 2slides CLI examples.
+
+## Improvements
+
+- Added maintainer fixes for README source credits, PR quality-bar metadata, and missing limitations discovered during the PR merge batch.
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,550+ skill catalog.
+- Preserved the source-only contributor contract while keeping `main` as the owner of generated registry artifacts.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #683 (`pagespeed-enhancer`, `lovable-cleanup`, and author metadata).
+- **[@anthony-chaudhary](https://github.com/anthony-chaudhary)** and **[anthony-chaudhary/dos-kernel](https://github.com/anthony-chaudhary/dos-kernel)** for PR #679 (`dos-verify-done-claims`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #684 (`monopoly`).
+- **[@qinghui316](https://github.com/qinghui316)** and **[qinghui316/ecl-harness-engineer](https://github.com/qinghui316/ecl-harness-engineer)** for PR #678 (`ecl-harness-engineer`).
+
 ## [12.4.0] - 2026-06-12 - "Community Skill Batch and Web Catalog Sync"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
