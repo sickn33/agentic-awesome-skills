@@ -80,7 +80,7 @@ Manage Android Virtual Devices (AVDs) using the `android emulator` command.
 
 ## Capturing Screenshots
 
-Capture an image of the current screen of a connected Android device and output it to a file using the `android screenshot` command.
+Capture an image of the current screen of a connected Android device and output it to a file using the `android screen capture -o <file path>` command.
 
 ## Managing Skills
 

@@ -74,10 +74,10 @@ To tap on this button, you would execute `adb shell input tap 152 23`. This taps
   "center": "[250,400]"
 }
 ```
-To scroll down on this list, you would execute `adb shell input swipe 250 400 600 500`. This swipes from the center to the bottom over 500ms.
+To scroll down on this list, you would execute `adb shell input swipe 250 400 250 200 500`. This swipes from the center to the top over 500ms.
 
 # Android Interaction Rules
 1. Always ensure text input fields have `"focused"` in their `"state"` list before entering text
 2. If an element has `"scrollable"` in its `"interactions"` list, try scrolling it when looking for missing UI elements
-3. Always scroll slowly when executing scroll inputs. The 5th argument to `adb shell input swipe` controls scroll duration.
+3. Always scroll slowly when executing scroll inputs. In `adb shell input swipe <x1> <y1> <x2> <y2> [duration(ms)]`, the duration is the optional 5th parameter after `swipe` (the 6th argument to the `input` utility).
 4. Content may take time to load; if a `layout` is missing information after you take an action, wait a few seconds, then perform `layout --diff` to see if anything changes.
