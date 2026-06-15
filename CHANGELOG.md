@@ -9,6 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.6.0] - 2026-06-15 - "Community Research Skills and Dependency Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 15 maintainer batch: five accepted community PRs, a web-app dependency security refresh, generated registry sync, and the hosted catalog refreshed to 1,555+ skills.
+
+## New Skills
+
+- **android-cli** - Android CLI workflow guidance for SDK management, project creation, emulator control, screenshots, layout inspection, and XML journey tests.
+- **codex-fable5** - community skill adapted from FableCodex for structured coding-agent workflows.
+- **accint-solve** - AccInt MCP workflow guidance for retrieve-first solving, commitment frames, continuation handling, and evidence-based closure.
+- **sharp-coder** - concise coding discipline skill combining surgical edit thinking with terse response patterns.
+- **efficient-web-research** - token-efficient web research protocol for URLs, GitHub repositories, search queries, multi-URL lists, and file-backed retrieval.
+
+## Security
+
+- Refreshed the web-app lockfile to resolve GitHub Dependabot alerts for vulnerable transitive dependencies: `@babel/core`, `form-data`, `js-yaml`, and `ws`.
+- Verified both root and web-app npm audit surfaces report zero vulnerabilities after the refresh.
+
+## Improvements
+
+- Added missing `android-cli` limitations before merging PR #685.
+- Normalized PR #686 metadata so the source-only quality gate could run on a fresh pull-request event.
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, `llms.txt`, and release metadata for the 1,555+ skill catalog.
+
+## Credits
+
+- **[@GeekLuffy](https://github.com/GeekLuffy)** for PR #685 (`android-cli`).
+- **[@baskduf](https://github.com/baskduf)** and **[baskduf/FableCodex](https://github.com/baskduf/FableCodex)** for PR #686 (`codex-fable5`).
+- **[@maxbaluev](https://github.com/maxbaluev)** and **[maxbaluev/accreted-intelligence](https://github.com/maxbaluev/accreted-intelligence)** for PR #687 (`accint-solve`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #688 (`sharp-coder`) and PR #690 (`efficient-web-research`).
+
 ## [12.5.0] - 2026-06-14 - "Security Remediation and Agent Harness Batch"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
