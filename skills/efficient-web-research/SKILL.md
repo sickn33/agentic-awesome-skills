@@ -58,10 +58,10 @@ Always prefer the GitHub API. It returns clean JSON — no HTML parsing needed.
 GET https://api.github.com/repos/{owner}/{repo}
 
 # File tree (see what files exist — very cheap)
-GET https://api.github.com/repos/{owner}/{repo}/git/trees/HEAD?recursive=1
+GET https://api.github.com/repos/{owner}/{repo}/git/trees/{ref}?recursive=1
 
 # Single file content (base64 encoded)
-GET https://api.github.com/repos/{owner}/{repo}/contents/{path}
+GET https://api.github.com/repos/{owner}/{repo}/contents/{path}?ref={ref}
 
 # README only (usually enough to understand the repo)
 GET https://api.github.com/repos/{owner}/{repo}/readme
