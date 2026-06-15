@@ -7457,6 +7457,25 @@
       "runtime_files": []
     },
     {
+      "id": "codex-fable5",
+      "path": "skills/codex-fable5",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "codex-review",
       "path": "skills/codex-review",
       "targets": {
@@ -29755,10 +29774,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1551,
+    "total_skills": 1552,
     "supported": {
-      "codex": 1501,
-      "claude": 1518
+      "codex": 1502,
+      "claude": 1519
     },
     "blocked": {
       "codex": 50,

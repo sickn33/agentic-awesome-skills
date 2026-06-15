@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1551,
+  "total": 1552,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -9777,6 +9777,34 @@
         "pixel"
       ],
       "path": "skills/codebase-to-wordpress-converter/SKILL.md"
+    },
+    {
+      "id": "codex-fable5",
+      "name": "codex-fable5",
+      "description": "Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt Claude/Fable prompt guidance without identity or provider claims.",
+      "category": "general",
+      "tags": [
+        "codex",
+        "fable-style",
+        "agent-workflow",
+        "verification",
+        "prompt-adaptation"
+      ],
+      "triggers": [
+        "codex",
+        "fable-style",
+        "agent-workflow",
+        "verification",
+        "prompt-adaptation",
+        "fable5",
+        "apply",
+        "fable",
+        "inspired",
+        "discipline",
+        "work",
+        "inspect"
+      ],
+      "path": "skills/codex-fable5/SKILL.md"
     },
     {
       "id": "codex-review",

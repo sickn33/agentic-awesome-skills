@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1551
+Total skills: 1552
 
 ## architecture (101)
 
@@ -743,7 +743,7 @@ Total skills: 1551
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (371)
+## general (372)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -818,6 +818,7 @@ Total skills: 1551
 | `code-review-excellence` | Transform code reviews from gatekeeping to knowledge sharing through constructive feedback, systematic analysis, and collaborative improvement. | code, excellence | code, excellence, review, transform, reviews, gatekeeping, knowledge, sharing, through, constructive, feedback, systematic |
 | `code-simplifier` | Simplifies and refines code for clarity, consistency, and maintainability while preserving all functionality. Use when asked to "simplify code", "clean up co... | code, simplifier | code, simplifier, simplifies, refines, clarity, consistency, maintainability, while, preserving, all, functionality, asked |
 | `codebase-cleanup-tech-debt` | You are a technical debt expert specializing in identifying, quantifying, and prioritizing technical debt in software projects. Analyze the codebase to uncov... | codebase, cleanup, tech, debt | codebase, cleanup, tech, debt, technical, specializing, identifying, quantifying, prioritizing, software, analyze, uncover |
+| `codex-fable5` | Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt C... | codex, fable-style, agent-workflow, verification, prompt-adaptation | codex, fable-style, agent-workflow, verification, prompt-adaptation, fable5, apply, fable, inspired, discipline, work, inspect |
 | `cold-email` | Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, sub... | cold, email | cold, email, write, b2b, emails, follow, up, sequences, earn, replies, creating, outbound |
 | `commit` | ALWAYS use this skill when committing code changes — never commit directly without it. Creates commits following Sentry conventions with proper conventional ... | commit | commit, always, skill, committing, code, changes, never, directly, without, creates, commits, following |
 | `complexity-cuts` | Lower Big-O on existing code via a one-transformation-at-a-time playbook with verify-revert-stop. For new code use lemmaly; for math-level wins escalate to m... | algorithms, big-o, refactoring, optimization, performance, n-plus-one | algorithms, big-o, refactoring, optimization, performance, n-plus-one, complexity, cuts, lower, big, existing, code |

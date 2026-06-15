@@ -8590,6 +8590,28 @@
     }
   },
   {
+    "id": "codex-fable5",
+    "path": "skills/codex-fable5",
+    "category": "agent-behavior",
+    "name": "codex-fable5",
+    "description": "Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt Claude/Fable prompt guidance without identity or provider claims.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "codex-review",
     "path": "skills/codex-review",
     "category": "code-quality",
