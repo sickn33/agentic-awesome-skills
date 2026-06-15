@@ -3,6 +3,8 @@ name: sharp-coder
 description: >
   Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.
 risk: safe
+source: self
+source_type: self
 ---
 
 # Sharp Coder
@@ -15,6 +17,10 @@ Two orthogonal layers. Both always active. Neither overrides the other.
 | **SPEAK** | Prose output style | Every response |
 
 Shared philosophy: **no bloat**. Not in code. Not in words.
+
+## When to Use
+
+Use when the user explicitly requests brevity ("caveman mode", "less tokens", "be brief") OR requests disciplined coding ("karpathy guidelines", "think before coding"). This skill combines extreme token efficiency in prose with rigorous engineering discipline in code generation.
 
 ---
 
