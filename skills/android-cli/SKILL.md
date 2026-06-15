@@ -94,6 +94,12 @@ Use the `android layout` command to inspect the UI layout of an Android applicat
 
 Update the Android CLI using the `android update` command.
 
+## Limitations
+
+- The `android` CLI must be installed and available on `PATH`; otherwise install it first or use the platform-specific setup guidance above.
+- Device, emulator, SDK, and documentation commands can depend on local Android SDK state, network access, and attached hardware.
+- Treat generated commands as environment-sensitive: inspect paths, package names, device serials, and install/update targets before running them.
+
 ## Android Help Output
 
 ```text
