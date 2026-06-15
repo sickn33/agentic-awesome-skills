@@ -1,12 +1,7 @@
 ---
 name: sharp-coder
 description: >
-  Two-layer performance skill: THINK layer (Karpathy coding discipline) + SPEAK layer (Caveman compression).
-  THINK: surfaces assumptions, enforces simplicity, surgical edits, goal-driven execution.
-  SPEAK: compresses every prose response ~65-75% by dropping fluff, keeping all technical substance exact.
-  Use when user says "caveman", "less tokens", "be brief", "/caveman", "karpathy", "think before coding",
-  "sharp coder", or wants both disciplined coding AND terse output. Both layers active simultaneously.
-  Auto-triggers for any coding task where disciplined thinking AND token efficiency both matter.
+  Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.
 risk: safe
 ---
 
