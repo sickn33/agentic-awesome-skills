@@ -11,6 +11,7 @@
         "agentmail",
         "agentphone",
         "algolia-search",
+        "android-cli",
         "android-dev",
         "android-jetpack-compose-expert",
         "android_ui_verification",
@@ -748,6 +749,7 @@
         "agenttrace-session-audit",
         "ai-engineering-toolkit",
         "airflow-dag-patterns",
+        "android-cli",
         "api-testing-observability-api-mock",
         "apify-brand-reputation-monitoring",
         "application-performance-performance-optimization",
@@ -1259,6 +1261,7 @@
     "mobile-core": {
       "description": "Mobile app development across native and cross-platform stacks.",
       "skills": [
+        "android-cli",
         "android-dev",
         "android-jetpack-compose-expert",
         "android_ui_verification",

@@ -1393,6 +1393,25 @@
       "runtime_files": []
     },
     {
+      "id": "android-cli",
+      "path": "skills/android-cli",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "android-dev",
       "path": "skills/android-dev",
       "targets": {
@@ -29736,10 +29755,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1550,
+    "total_skills": 1551,
     "supported": {
-      "codex": 1500,
-      "claude": 1517
+      "codex": 1501,
+      "claude": 1518
     },
     "blocked": {
       "codex": 50,

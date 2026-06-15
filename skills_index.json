@@ -1484,6 +1484,28 @@
     }
   },
   {
+    "id": "android-cli",
+    "path": "skills/android-cli",
+    "category": "tools",
+    "name": "android-cli",
+    "description": "Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line tool.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "android-dev",
     "path": "skills/android-dev",
     "category": "mobile",
