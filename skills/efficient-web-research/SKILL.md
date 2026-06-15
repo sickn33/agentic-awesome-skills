@@ -1,13 +1,8 @@
 ---
 name: efficient-web-research
+risk: safe
 description: >
-  Use this skill whenever you need to access, fetch, or research content from the web —
-  including specific URLs, GitHub repos, documentation sites, articles, or topic-based queries.
-  Trigger this skill when the user gives a link, asks you to "look up", "check", "read", "research",
-  "summarize", or "find information" from any web source. Also triggers for: "what does this repo do",
-  "find me info on X", "check the docs for Y", "browse this page", or any task where retrieving
-  live web content is necessary. Always use this skill before fetching any URL — it ensures
-  token-efficient, accurate, and layered web access rather than naive full-page dumps.
+  Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.
 ---
 
 # Efficient Web Research Skill
@@ -315,3 +310,11 @@ Never output:
 | Search snippet scan | ~300–500 tokens | Always before fetching |
 
 **Rule of thumb:** If you're about to spend >2000 tokens on a fetch, ask yourself if there's a cheaper path first.
+
+---
+
+## Limitations
+
+- **JavaScript Reliance**: Standard fetching may not fully render Single Page Applications (SPAs). You must fallback to `browser_subagent` for these, which is slower and more expensive.
+- **Paywalls & Protections**: This skill cannot bypass CAPTCHAs, bot protections (e.g., strict Cloudflare rules), or hard paywalls.
+- **GitHub API Limits**: Frequent GitHub API requests without authentication may hit rate limits.
