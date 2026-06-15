@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1552,
+  "total": 1555,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -318,6 +318,34 @@
         "precisely"
       ],
       "path": "skills/accesslint-scan/SKILL.md"
+    },
+    {
+      "id": "accint-solve",
+      "name": "accint-solve",
+      "description": "Route agent work through AccInt's MCP memory loop: retrieve prior outcomes, resolve frames, and close commitments with evidence.",
+      "category": "workflow",
+      "tags": [
+        "mcp",
+        "memory",
+        "ai-agents",
+        "coding-agents",
+        "workflow"
+      ],
+      "triggers": [
+        "mcp",
+        "memory",
+        "ai-agents",
+        "coding-agents",
+        "workflow",
+        "accint",
+        "solve",
+        "route",
+        "agent",
+        "work",
+        "through",
+        "loop"
+      ],
+      "path": "skills/accint-solve/SKILL.md"
     },
     {
       "id": "active-directory-attacks",
@@ -13240,6 +13268,32 @@
         "md"
       ],
       "path": "skills/ecl-harness-engineer/SKILL.md"
+    },
+    {
+      "id": "efficient-web-research",
+      "name": "efficient-web-research",
+      "description": "Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.",
+      "category": "general",
+      "tags": [
+        "efficient",
+        "web",
+        "research"
+      ],
+      "triggers": [
+        "efficient",
+        "web",
+        "research",
+        "protocol",
+        "token",
+        "accessing",
+        "urls",
+        "github",
+        "repos",
+        "running",
+        "search",
+        "queries"
+      ],
+      "path": "skills/efficient-web-research/SKILL.md"
     },
     {
       "id": "ejentum-reasoning-harness",
@@ -31504,6 +31558,31 @@
         "covering"
       ],
       "path": "skills/shader-programming-glsl/SKILL.md"
+    },
+    {
+      "id": "sharp-coder",
+      "name": "sharp-coder",
+      "description": "Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.",
+      "category": "general",
+      "tags": [
+        "sharp",
+        "coder"
+      ],
+      "triggers": [
+        "sharp",
+        "coder",
+        "two",
+        "layer",
+        "performance",
+        "skill",
+        "combining",
+        "disciplined",
+        "think",
+        "surgical",
+        "edits",
+        "simplicity"
+      ],
+      "path": "skills/sharp-coder/SKILL.md"
     },
     {
       "id": "sharp-edges",

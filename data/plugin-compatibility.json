@@ -231,6 +231,25 @@
       "runtime_files": []
     },
     {
+      "id": "accint-solve",
+      "path": "skills/accint-solve",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "active-directory-attacks",
       "path": "skills/active-directory-attacks",
       "targets": {
@@ -10188,6 +10207,25 @@
     {
       "id": "ecl-harness-engineer",
       "path": "skills/ecl-harness-engineer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "efficient-web-research",
+      "path": "skills/efficient-web-research",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -24324,6 +24362,25 @@
       "runtime_files": []
     },
     {
+      "id": "sharp-coder",
+      "path": "skills/sharp-coder",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "sharp-edges",
       "path": "skills/sharp-edges",
       "targets": {
@@ -29774,10 +29831,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1552,
+    "total_skills": 1555,
     "supported": {
-      "codex": 1502,
-      "claude": 1519
+      "codex": 1505,
+      "claude": 1522
     },
     "blocked": {
       "codex": 50,

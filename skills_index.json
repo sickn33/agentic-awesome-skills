@@ -308,6 +308,28 @@
     }
   },
   {
+    "id": "accint-solve",
+    "path": "skills/accint-solve",
+    "category": "ai-agents",
+    "name": "accint-solve",
+    "description": "Route agent work through AccInt's MCP memory loop: retrieve prior outcomes, resolve frames, and close commitments with evidence.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "active-directory-attacks",
     "path": "skills/active-directory-attacks",
     "category": "security",
@@ -11792,6 +11814,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-06-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "efficient-web-research",
+    "path": "skills/efficient-web-research",
+    "category": "uncategorized",
+    "name": "efficient-web-research",
+    "description": "Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -27849,6 +27893,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "sharp-coder",
+    "path": "skills/sharp-coder",
+    "category": "uncategorized",
+    "name": "sharp-coder",
+    "description": "Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.\n",
+    "risk": "safe",
+    "source": "self",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",

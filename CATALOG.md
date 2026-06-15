@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1552
+Total skills: 1555
 
 ## architecture (101)
 
@@ -743,7 +743,7 @@ Total skills: 1552
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (372)
+## general (374)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -852,6 +852,7 @@ Total skills: 1552
 | `doc2math` | Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty. | doc2math | doc2math, convert, narrative, technical, documents, grounded, mathematical, problem, specifications, variables, constraints, objectives |
 | `docx-official` | A user may ask you to create, edit, or analyze the contents of a .docx file. A .docx file is essentially a ZIP archive containing XML files and other resourc... | docx, official | docx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 | `dx-optimizer` | Developer Experience specialist. Improves tooling, setup, and workflows. Use PROACTIVELY when setting up new projects, after team feedback, or when developme... | dx, optimizer | dx, optimizer, developer, experience, improves, tooling, setup, proactively, setting, up, new, after |
+| `efficient-web-research` | Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste. | efficient, web, research | efficient, web, research, protocol, token, accessing, urls, github, repos, running, search, queries |
 | `elon-musk` | Agente que simula Elon Musk com profundidade psicologica e comunicacional de alta fidelidade. Ativado para: "fale como Elon", "simule Elon Musk", "o que Elon... | persona, first-principles, innovation, strategy | persona, first-principles, innovation, strategy, elon, musk, agente, que, simula, com, profundidade, psicologica |
 | `emergency-card` | 生成紧急情况下快速访问的医疗信息摘要卡片。当用户需要旅行、就诊准备、紧急情况或询问"紧急信息"、"医疗卡片"、"急救信息"时使用此技能。提取关键信息（过敏、用药、急症、植入物），支持多格式输出（JSON、文本、二维码），用于急救或快速就医。 | emergency, card | emergency, card, json |
 | `emotional-arc-designer` | One sentence - what this skill does and when to invoke it | emotional, arc, designer | emotional, arc, designer, one, sentence, what, skill, does, invoke |
@@ -1044,6 +1045,7 @@ Total skills: 1552
 | `sequence-psychologist` | One sentence - what this skill does and when to invoke it | sequence, psychologist | sequence, psychologist, one, sentence, what, skill, does, invoke |
 | `sexual-health-analyzer` | Sexual Health Analyzer | sexual, health, analyzer | sexual, health, analyzer |
 | `shader-programming-glsl` | Expert guide for writing efficient GLSL shaders (Vertex/Fragment) for web and game engines, covering syntax, uniforms, and common effects. | shader, programming, glsl | shader, programming, glsl, writing, efficient, shaders, vertex, fragment, web, game, engines, covering |
+| `sharp-coder` | Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests ... | sharp, coder | sharp, coder, two, layer, performance, skill, combining, disciplined, think, surgical, edits, simplicity |
 | `sharp-edges` | sharp-edges | sharp, edges | sharp, edges |
 | `shellcheck-configuration` | Master ShellCheck static analysis configuration and usage for shell script quality. Use when setting up linting infrastructure, fixing code issues, or ensuri... | shellcheck, configuration | shellcheck, configuration, static, analysis, usage, shell, script, quality, setting, up, linting, infrastructure |
 | `signup-flow-cro` | You are an expert in optimizing signup and registration flows. Your goal is to reduce friction, increase completion rates, and set users up for successful ac... | signup, flow, cro | signup, flow, cro, optimizing, registration, flows, goal, reduce, friction, increase, completion, rates |
@@ -1496,10 +1498,11 @@ Total skills: 1552
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (105)
+## workflow (106)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
+| `accint-solve` | Route agent work through AccInt's MCP memory loop: retrieve prior outcomes, resolve frames, and close commitments with evidence. | mcp, memory, ai-agents, coding-agents, workflow | mcp, memory, ai-agents, coding-agents, workflow, accint, solve, route, agent, work, through, loop |
 | `activecampaign-automation` | Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions, automation enrollment, and tasks. Always search tools first... | activecampaign | activecampaign, automation, automate, tasks, via, rube, mcp, composio, contacts, tags, list, subscriptions |
 | `agent-orchestration-improve-agent` | Systematic improvement of existing agents through performance analysis, prompt engineering, and continuous iteration. | agent, improve | agent, improve, orchestration, systematic, improvement, existing, agents, through, performance, analysis, prompt, engineering |
 | `agent-orchestration-multi-agent-optimize` | Optimize multi-agent systems with coordinated profiling, workload distribution, and cost-aware orchestration. Use when improving agent performance, throughpu... | agent, multi, optimize | agent, multi, optimize, orchestration, coordinated, profiling, workload, distribution, cost, aware, improving, performance |
