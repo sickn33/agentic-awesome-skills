@@ -1,0 +1,3 @@
+display_name: CrossFrame Essay
+short_description: 先做完整可见结构底稿，再写可概念上升、带现代编辑口吻的中文长文洞察文章。
+default_prompt: 用 full-visible-v3-longform 和现代编辑同志口吻写一篇“团队越复盘越失真”的批判性洞察文章，先给完整可见结构洞察底稿，再给概念上升后的完整长文正文。

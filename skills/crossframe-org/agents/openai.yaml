@@ -1,0 +1,3 @@
+display_name: CrossFrame Org
+short_description: 组织修复专项：责任链、授权链、反馈写回与低风险试点。
+default_prompt: 用 crossframe-org 诊断这个团队复盘为什么失效，并输出组织备忘录、反馈写回方案和带停止条件的低风险试点。
