@@ -1,0 +1,4 @@
+interface:
+  display_name: "CrossFrame Notebook"
+  short_description: "读书、理论和文章研究笔记：关联、不同、冲突、吸收与框架反馈。"
+  default_prompt: "用 crossframe-notebook 阅读这本书、文章、理论或摘录，做一份双向 CrossFrame 研究笔记：保留原文主张，比较关联与不同，标出冲突、可吸收和不可吸收处，并把问题反馈给框架。"
