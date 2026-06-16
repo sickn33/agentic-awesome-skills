@@ -133,11 +133,11 @@ How · Why · What · Best · Full · Real · Free · New · Step-by-Step · Com
 
 ## Tags Strategy
 
-Use for every mode that includes tags (A-F). Generate 15-20 tags using this mix:
+Use for long-form modes (A-D) that include tags. Generate 14-19 tags using this mix. For short-form (E-F), see the Shorts section for the 5-8 tag rule.
 
 | Type | Count | Rule |
 |---|---|---|
-| Exact match primary keyword | 2 | Must match Step 1 target keyword exactly |
+| Exact match primary keyword | 1 | Must match Step 1 target keyword exactly |
 | Broad topic | 3-4 | 1-2 word umbrella terms |
 | Long-tail (3-5 words) | 5-6 | Pulled from Step 1 research |
 | Question-based | 2 | "how to [topic]", "what is [topic]" |
@@ -429,7 +429,7 @@ Character count: [N]/70
 [Full 3-block description]
 
 ④ REWRITTEN TAGS
-[15-20 tags across all 7 types]
+[14-19 tags across all 7 types]
 
 ⑤ REWRITTEN HASHTAGS
 #Tag1 #Tag2 #Tag3 #Tag4 #Tag5 [#Tag6 #Tag7 optional]
@@ -628,7 +628,7 @@ Character count: [N]/70
 [3-block structure, guest bio in Block 2, platform links in Block 3]
 
 ④ REWRITTEN TAGS
-[15-20 tags including show + guest name]
+[14-19 tags including show + guest name]
 
 ⑤ REWRITTEN HASHTAGS
 #Tag1 #Tag2 #Tag3 #Tag4 #Tag5 [#Tag6 #Tag7 optional]
@@ -866,7 +866,7 @@ Then run the Quality Checklist below.
 - [ ] Hashtags on final line only
 
 ### Tags & Hashtags
-- [ ] 15-20 tags, under 500 chars, all 7 types represented
+- [ ] 14-19 tags, under 500 chars, all 7 types represented
 - [ ] No hashtag symbols in the tags field
 - [ ] 5-8 hashtags (3-5 for short-form), CamelCase, strongest 3 first
 - [ ] Hashtag set differs from recent uploads
