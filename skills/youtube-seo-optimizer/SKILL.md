@@ -311,7 +311,7 @@ Character count: [N]/70
 5. [secondary keyword from Step 1 research]
 
 ⑤ TAGS
-[tag1], [tag2], [tag3] ... [tag15-20 total]
+[tag1], [tag2], [tag3] ... [tag14-19 total]
 Total character count: [N]/500
 
 ⑥ HASHTAGS
@@ -399,7 +399,7 @@ Chapters in description: Yes / No
 Links/CTA present: Yes / No
 
 TAGS ANALYSIS
-Count: [N] (ideal: 15-20)
+Count: [N] (ideal: 14-19)
 Tag type coverage: [which of 7 types are missing]
 
 HASHTAG ANALYSIS
@@ -507,7 +507,7 @@ Character count: [N]/70
 5. [show name + topic]
 
 ⑤ TAGS
-[tag1], [tag2] ... [tag15-20 — include show + guest name]
+[tag1], [tag2] ... [tag14-19 — include show + guest name]
 Total: [N]/500
 
 ⑥ HASHTAGS
@@ -605,7 +605,7 @@ Timestamps present: Yes / No
 Platform links present: Yes / No
 
 TAGS ANALYSIS
-Count: [N] (ideal: 15-20)
+Count: [N] (ideal: 14-19)
 Show / guest name as tags: Yes / No
 
 TOPICS / TIMESTAMPS ANALYSIS
