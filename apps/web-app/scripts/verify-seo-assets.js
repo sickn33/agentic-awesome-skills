@@ -270,10 +270,10 @@ function readSkillCountLabel(distDir) {
     // Fall back to the explicit baseline when a fixture omits generated skill data.
   }
 
-  return '1,541+';
+  return '1,550+';
 }
 
-export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '1,541+' } = {}) {
+export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '1,550+' } = {}) {
   const title = extractTitle(htmlText);
   const description = extractMetaContent(htmlText, 'name', 'description') || '';
   const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
@@ -356,7 +356,7 @@ export function assertRobots(robotsText) {
   assert(allowsAiSearchCrawlers, 'robots.txt must explicitly expose AI search crawler directives.');
 }
 
-export function assertLlms(llmsText, { expectedSkillCountLabel = '1,541+' } = {}) {
+export function assertLlms(llmsText, { expectedSkillCountLabel = '1,550+' } = {}) {
   const text = String(llmsText ?? '');
   const requiredSnippets = [
     '# Antigravity Awesome Skills',

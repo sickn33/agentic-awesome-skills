@@ -41,7 +41,7 @@
     "@types/node": "^20.14.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
+    "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.8",
     "autoprefixer": "^10.4.24",
     "eslint": "^9.39.1",
@@ -53,7 +53,7 @@
     "tailwindcss": "^4.2.0",
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.46.1",
-    "vite": "^7.3.2",
+    "vite": "^8.0.16",
     "vitest": "^4.1.8"
   },
   "overrides": {

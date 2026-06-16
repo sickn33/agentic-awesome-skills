@@ -4,6 +4,7 @@ description: "Expert skill for converting any codebase (React/HTML/Next.js) into
 risk: safe
 source: community
 date_added: "2026-04-12"
+author: WHOISABHISHEKADHIKARI
 ---
 
 # Codebase to WordPress Converter

@@ -2,9 +2,9 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1541
+Total skills: 1555
 
-## architecture (100)
+## architecture (101)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -66,6 +66,7 @@ Total skills: 1541
 | `makepad-event-action` | CRITICAL: Use for Makepad event and action handling. Triggers on: makepad event, makepad action, Event enum, ActionTrait, handle_event, MouseDown, KeyDown, T... | makepad, event, action | makepad, event, action, critical, handling, triggers, enum, actiontrait, handle, mousedown, keydown, touchupdate |
 | `makepad-reference` | This category provides reference materials for debugging, code quality, and advanced layout patterns. | makepad, reference | makepad, reference, category, provides, materials, debugging, code, quality, layout |
 | `memory-safety-patterns` | Cross-language patterns for memory-safe programming including RAII, ownership, smart pointers, and resource management. | memory, safety | memory, safety, cross, language, safe, programming, including, raii, ownership, smart, pointers, resource |
+| `monopoly/patterns` | Reference document for monopoly patterns. | monopoly/patterns | monopoly/patterns, reference, document, monopoly |
 | `monorepo-architect` | Expert in monorepo architecture, build systems, and dependency management at scale. Masters Nx, Turborepo, Bazel, and Lerna for efficient multi-project devel... | monorepo | monorepo, architect, architecture, dependency, scale, masters, nx, turborepo, bazel, lerna, efficient, multi |
 | `multi-agent-patterns` | This skill should be used when the user asks to "design multi-agent system", "implement supervisor pattern", "create swarm architecture", "coordinate multipl... | multi, agent | multi, agent, skill, should, used, user, asks, supervisor, swarm, architecture, coordinate, multiple |
 | `n8n-mcp-tools-expert` | Expert guide for using n8n-mcp MCP tools effectively. Use when searching for nodes, validating configurations, accessing templates, managing workflows, or us... | n8n, mcp | n8n, mcp, effectively, searching, nodes, validating, configurations, accessing, managing, any, provides, selection |
@@ -109,7 +110,7 @@ Total skills: 1541
 | `workflow-patterns` | Use this skill when implementing tasks according to Conductor's TDD workflow, handling phase checkpoints, managing git commits for tasks, or understanding th... |  | skill, implementing, tasks, according, conductor, tdd, handling, phase, checkpoints, managing, git, commits |
 | `zapier-make-patterns` | No-code automation democratizes workflow building. Zapier and Make (formerly Integromat) let non-developers automate business processes without writing code.... | zapier, make | zapier, make, no, code, automation, democratizes, building, formerly, integromat, let, non, developers |
 
-## business (85)
+## business (86)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -152,6 +153,7 @@ Total skills: 1541
 | `odoo-ecommerce-configurator` | Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow. | odoo, ecommerce, configurator | odoo, ecommerce, configurator, website, product, catalog, payment, providers, shipping, methods, seo, order |
 | `odoo-hr-payroll-setup` | Expert guide for Odoo HR and Payroll: salary structures, payslip rules, leave policies, employee contracts, and payroll journal entries. | odoo, hr, payroll, setup | odoo, hr, payroll, setup, salary, structures, payslip, rules, leave, policies, employee, contracts |
 | `osterwalder-canvas-architect` | Iterative consultant agent for building and validating logically consistent 9-block Business Model Canvases. | business-model, osterwalder, strategy, bmc | business-model, osterwalder, strategy, bmc, canvas, architect, iterative, consultant, agent, building, validating, logically |
+| `pagespeed-enhancer` | Scan, audit, and fix web performance issues across all four Lighthouse/PageSpeed Insights pillars — Performance, Accessibility, Best Practices, and SEO — in ... | pagespeed, enhancer | pagespeed, enhancer, scan, audit, fix, web, performance, issues, all, four, lighthouse, insights |
 | `paid-ads` | You are an expert performance marketer with direct access to ad platform accounts. Your goal is to help create, optimize, and scale paid advertising campaign... | paid, ads | paid, ads, performance, marketer, direct, access, ad, platform, accounts, goal, optimize, scale |
 | `pricing-strategy` | Design pricing, packaging, and monetization strategies based on value, customer willingness to pay, and growth objectives. | pricing | pricing, packaging, monetization, value, customer, willingness, pay, growth, objectives |
 | `product-design` | Design de produto nivel Apple — sistemas visuais, UX flows, acessibilidade, linguagem visual proprietaria, design tokens, prototipagem e handoff. Cobre Figma... | design, ux, design-systems, accessibility, figma | design, ux, design-systems, accessibility, figma, product, de, produto, nivel, apple, sistemas, visuais |
@@ -500,7 +502,7 @@ Total skills: 1541
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (217)
+## development (219)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -626,6 +628,7 @@ Total skills: 1541
 | `javascript-typescript-typescript-scaffold` | You are a TypeScript project architecture expert specializing in scaffolding production-ready Node.js and frontend applications. Generate complete project st... | javascript, typescript | javascript, typescript, scaffold, architecture, specializing, scaffolding, node, js, frontend, applications, generate, complete |
 | `junta-leiloeiros` | Coleta e consulta dados de leiloeiros oficiais de todas as 27 Juntas Comerciais do Brasil. Scraper multi-UF, banco SQLite, API FastAPI e exportacao CSV/JSON. | scraping, brazilian-data, auctioneers, api | scraping, brazilian-data, auctioneers, api, junta, leiloeiros, coleta, consulta, dados, de, oficiais, todas |
 | `landing-page-generator` | Generates high-converting Next.js/React landing pages with Tailwind CSS. Uses PAS, AIDA, and BAB frameworks for optimized copy/components (Heroes, Features, ... | nextjs, react, tailwind, landing-page, marketing, seo, cro | nextjs, react, tailwind, landing-page, marketing, seo, cro, landing, page, generator, generates, high |
+| `lovable-cleanup` | Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans gen... | lovable, cleanup, vite, react, shadcn, devtools | lovable, cleanup, vite, react, shadcn, devtools, audits, strips, scaffolding, removes, tagger, swaps |
 | `m365-agents-ts` | Microsoft 365 Agents SDK for TypeScript/Node.js. | m365, agents, ts | m365, agents, ts, microsoft, 365, sdk, typescript, node, js |
 | `makepad-platform` | CRITICAL: Use for Makepad cross-platform support. Triggers on: makepad platform, makepad os, makepad macos, makepad windows, makepad linux, makepad android, ... | makepad, platform | makepad, platform, critical, cross, triggers, os, macos, windows, linux, android, ios, web |
 | `makepad-skills` | Makepad UI development skills for Rust apps: setup, patterns, shaders, packaging, and troubleshooting. | makepad, skills | makepad, skills, ui, development, rust, apps, setup, shaders, packaging, troubleshooting |
@@ -636,6 +639,7 @@ Total skills: 1541
 | `mobile-design` | (Mobile-First · Touch-First · Platform-Respectful) | mobile | mobile, first, touch, platform, respectful |
 | `mobile-developer` | Develop React Native, Flutter, or native mobile apps with modern architecture patterns. Masters cross-platform development, native integrations, offline sync... | mobile | mobile, developer, develop, react, native, flutter, apps, architecture, masters, cross, platform, development |
 | `modern-javascript-patterns` | Comprehensive guide for mastering modern JavaScript (ES6+) features, functional programming patterns, and best practices for writing clean, maintainable, and... | modern, javascript | modern, javascript, mastering, es6, features, functional, programming, writing, clean, maintainable, performant, code |
+| `monopoly` | MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, s... | monopoly | monopoly, senior, engineer, skill, architecting, reviewing, scaling, triggers, requests, involving, architecture, databases |
 | `multi-platform-apps-multi-platform` | Build and deploy the same feature consistently across web, mobile, and desktop platforms using API-first architecture and parallel implementation strategies. | multi, platform, apps | multi, platform, apps, deploy, same, feature, consistently, web, mobile, desktop, platforms, api |
 | `n8n-code-javascript` | Write JavaScript code in n8n Code nodes. Use when writing JavaScript in n8n, using $input/$json/$node syntax, making HTTP requests with $helpers, working wit... | n8n, code, javascript | n8n, code, javascript, write, nodes, writing, input, json, node, syntax, making, http |
 | `n8n-code-python` | Write Python code in n8n Code nodes. Use when writing Python in n8n, using _input/_json/_node syntax, working with standard library, or need to understand Py... | n8n, code, python | n8n, code, python, write, nodes, writing, input, json, node, syntax, working, standard |
@@ -739,7 +743,7 @@ Total skills: 1541
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (369)
+## general (374)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -814,6 +818,7 @@ Total skills: 1541
 | `code-review-excellence` | Transform code reviews from gatekeeping to knowledge sharing through constructive feedback, systematic analysis, and collaborative improvement. | code, excellence | code, excellence, review, transform, reviews, gatekeeping, knowledge, sharing, through, constructive, feedback, systematic |
 | `code-simplifier` | Simplifies and refines code for clarity, consistency, and maintainability while preserving all functionality. Use when asked to "simplify code", "clean up co... | code, simplifier | code, simplifier, simplifies, refines, clarity, consistency, maintainability, while, preserving, all, functionality, asked |
 | `codebase-cleanup-tech-debt` | You are a technical debt expert specializing in identifying, quantifying, and prioritizing technical debt in software projects. Analyze the codebase to uncov... | codebase, cleanup, tech, debt | codebase, cleanup, tech, debt, technical, specializing, identifying, quantifying, prioritizing, software, analyze, uncover |
+| `codex-fable5` | Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt C... | codex, fable-style, agent-workflow, verification, prompt-adaptation | codex, fable-style, agent-workflow, verification, prompt-adaptation, fable5, apply, fable, inspired, discipline, work, inspect |
 | `cold-email` | Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, sub... | cold, email | cold, email, write, b2b, emails, follow, up, sequences, earn, replies, creating, outbound |
 | `commit` | ALWAYS use this skill when committing code changes — never commit directly without it. Creates commits following Sentry conventions with proper conventional ... | commit | commit, always, skill, committing, code, changes, never, directly, without, creates, commits, following |
 | `complexity-cuts` | Lower Big-O on existing code via a one-transformation-at-a-time playbook with verify-revert-stop. For new code use lemmaly; for math-level wins escalate to m... | algorithms, big-o, refactoring, optimization, performance, n-plus-one | algorithms, big-o, refactoring, optimization, performance, n-plus-one, complexity, cuts, lower, big, existing, code |
@@ -847,6 +852,7 @@ Total skills: 1541
 | `doc2math` | Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty. | doc2math | doc2math, convert, narrative, technical, documents, grounded, mathematical, problem, specifications, variables, constraints, objectives |
 | `docx-official` | A user may ask you to create, edit, or analyze the contents of a .docx file. A .docx file is essentially a ZIP archive containing XML files and other resourc... | docx, official | docx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 | `dx-optimizer` | Developer Experience specialist. Improves tooling, setup, and workflows. Use PROACTIVELY when setting up new projects, after team feedback, or when developme... | dx, optimizer | dx, optimizer, developer, experience, improves, tooling, setup, proactively, setting, up, new, after |
+| `efficient-web-research` | Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste. | efficient, web, research | efficient, web, research, protocol, token, accessing, urls, github, repos, running, search, queries |
 | `elon-musk` | Agente que simula Elon Musk com profundidade psicologica e comunicacional de alta fidelidade. Ativado para: "fale como Elon", "simule Elon Musk", "o que Elon... | persona, first-principles, innovation, strategy | persona, first-principles, innovation, strategy, elon, musk, agente, que, simula, com, profundidade, psicologica |
 | `emergency-card` | 生成紧急情况下快速访问的医疗信息摘要卡片。当用户需要旅行、就诊准备、紧急情况或询问"紧急信息"、"医疗卡片"、"急救信息"时使用此技能。提取关键信息（过敏、用药、急症、植入物），支持多格式输出（JSON、文本、二维码），用于急救或快速就医。 | emergency, card | emergency, card, json |
 | `emotional-arc-designer` | One sentence - what this skill does and when to invoke it | emotional, arc, designer | emotional, arc, designer, one, sentence, what, skill, does, invoke |
@@ -964,6 +970,8 @@ Total skills: 1541
 | `micro-saas-launcher` | Expert in launching small, focused SaaS products fast - the indie hacker approach to building profitable software. Covers idea validation, MVP development, p... | micro, saas, launcher | micro, saas, launcher, launching, small, products, fast, indie, hacker, approach, building, profitable |
 | `minecraft-bukkit-pro` | Master Minecraft server plugin development with Bukkit, Spigot, and Paper APIs. | minecraft, bukkit | minecraft, bukkit, pro, server, plugin, development, spigot, paper, apis |
 | `monetization` | Estrategia e implementacao de monetizacao para produtos digitais - Stripe, subscriptions, pricing experiments, freemium, upgrade flows, churn prevention, rev... | monetization, stripe, saas, pricing, subscriptions | monetization, stripe, saas, pricing, subscriptions, estrategia, implementacao, de, monetizacao, para, produtos, digitais |
+| `monopoly/scale-benchmarks` | Reference document for monopoly scale-benchmarks. | monopoly/scale, benchmarks | monopoly/scale, benchmarks, scale, reference, document, monopoly |
+| `monopoly/tech-matrix` | Reference document for monopoly tech-matrix. | monopoly/tech, matrix | monopoly/tech, matrix, tech, reference, document, monopoly |
 | `monorepo-management` | Build efficient, scalable monorepos that enable code sharing, consistent tooling, and atomic changes across multiple packages and applications. | monorepo | monorepo, efficient, scalable, monorepos, enable, code, sharing, consistent, tooling, atomic, changes, multiple |
 | `multi-advisor` | Conselho de especialistas — consulta multiplos agentes do ecossistema em paralelo para analise multi-perspectiva de qualquer topico. Ativa personas, especial... | multi-agent, advisory, parallel-analysis, synthesis | multi-agent, advisory, parallel-analysis, synthesis, multi, advisor, conselho, de, especialistas, consulta, multiplos, agentes |
 | `n8n-validation-expert` | Expert guide for interpreting and fixing n8n validation errors. | n8n, validation | n8n, validation, interpreting, fixing, errors |
@@ -1037,6 +1045,7 @@ Total skills: 1541
 | `sequence-psychologist` | One sentence - what this skill does and when to invoke it | sequence, psychologist | sequence, psychologist, one, sentence, what, skill, does, invoke |
 | `sexual-health-analyzer` | Sexual Health Analyzer | sexual, health, analyzer | sexual, health, analyzer |
 | `shader-programming-glsl` | Expert guide for writing efficient GLSL shaders (Vertex/Fragment) for web and game engines, covering syntax, uniforms, and common effects. | shader, programming, glsl | shader, programming, glsl, writing, efficient, shaders, vertex, fragment, web, game, engines, covering |
+| `sharp-coder` | Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests ... | sharp, coder | sharp, coder, two, layer, performance, skill, combining, disciplined, think, surgical, edits, simplicity |
 | `sharp-edges` | sharp-edges | sharp, edges | sharp, edges |
 | `shellcheck-configuration` | Master ShellCheck static analysis configuration and usage for shell script quality. Use when setting up linting infrastructure, fixing code issues, or ensuri... | shellcheck, configuration | shellcheck, configuration, static, analysis, usage, shell, script, quality, setting, up, linting, infrastructure |
 | `signup-flow-cro` | You are an expert in optimizing signup and registration flows. Your goal is to reduce friction, increase completion rates, and set users up for successful ac... | signup, flow, cro | signup, flow, cro, optimizing, registration, flows, goal, reduce, friction, increase, completion, rates |
@@ -1113,7 +1122,7 @@ Total skills: 1541
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (140)
+## infrastructure (142)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1123,6 +1132,7 @@ Total skills: 1541
 | `agentflow` | Orchestrate autonomous AI development pipelines through your Kanban board (Asana, GitHub Projects, Linear). Manages multi-worker Claude Code dispatch, determ... | agentflow | agentflow, orchestrate, autonomous, ai, development, pipelines, through, kanban, board, asana, github, linear |
 | `agenttrace-session-audit` | Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates. | ai-coding, observability, cost-tracking, session-analysis | ai-coding, observability, cost-tracking, session-analysis, agenttrace, session, audit, local, ai, coding, agent, sessions |
 | `airflow-dag-patterns` | Build production Apache Airflow DAGs with best practices for operators, sensors, testing, and deployment. Use when creating data pipelines, orchestrating wor... | airflow, dag | airflow, dag, apache, dags, operators, sensors, testing, deployment, creating, data, pipelines, orchestrating |
+| `android-cli` | Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line t... | android, cli, adb, mobile, build, emulator | android, cli, adb, mobile, build, emulator, orchestrates, development, tasks, including, creation, deployment |
 | `api-testing-observability-api-mock` | You are an API mocking expert specializing in realistic mock services for development, testing, and demos. Design mocks that simulate real API behavior and e... | api, observability, mock | api, observability, mock, testing, mocking, specializing, realistic, development, demos, mocks, simulate, real |
 | `apify-brand-reputation-monitoring` | Scrape reviews, ratings, and brand mentions from multiple platforms using Apify Actors. | apify, brand, reputation, monitoring | apify, brand, reputation, monitoring, scrape, reviews, ratings, mentions, multiple, platforms, actors |
 | `application-performance-performance-optimization` | Optimize end-to-end application performance with profiling, observability, and backend/frontend tuning. Use when coordinating performance optimization across... | application, performance, optimization | application, performance, optimization, optimize, profiling, observability, backend, frontend, tuning, coordinating, stack |
@@ -1173,6 +1183,7 @@ Total skills: 1541
 | `django-pro` | Master Django 5.x with async views, DRF, Celery, and Django Channels. Build scalable web applications with proper architecture, testing, and deployment. | django | django, pro, async, views, drf, celery, channels, scalable, web, applications, proper, architecture |
 | `e2e-testing` | End-to-end testing workflow with Playwright for browser automation, visual regression, cross-browser testing, and CI/CD integration. | e2e | e2e, testing, playwright, browser, automation, visual, regression, cross, ci, cd, integration |
 | `earllm-build` | Build, maintain, and extend the EarLLM One Android project — a Kotlin/Compose app that connects Bluetooth earbuds to an LLM via voice pipeline. | android, kotlin, bluetooth, llm, voice | android, kotlin, bluetooth, llm, voice, earllm, maintain, extend, one, compose, app, connects |
+| `ecl-harness-engineer` | Create or audit ECL Agent Harness infrastructure: AGENTS.md, change tracking, repository guidance, lint checks, CI gates, and agent handoff docs. | codex, agent-harness, ecl, workflow, ci | codex, agent-harness, ecl, workflow, ci, harness, engineer, audit, agent, infrastructure, agents, md |
 | `error-debugging-error-analysis` | You are an expert error analysis specialist with deep expertise in debugging distributed systems, analyzing production incidents, and implementing comprehens... | error, debugging | error, debugging, analysis, deep, expertise, distributed, analyzing, incidents, implementing, observability, solutions |
 | `error-debugging-error-trace` | You are an error tracking and observability expert specializing in implementing comprehensive error monitoring solutions. Set up error tracking systems, conf... | error, debugging, trace | error, debugging, trace, tracking, observability, specializing, implementing, monitoring, solutions, set, up, configure |
 | `error-diagnostics-error-analysis` | You are an expert error analysis specialist with deep expertise in debugging distributed systems, analyzing production incidents, and implementing comprehens... | error, diagnostics | error, diagnostics, analysis, deep, expertise, debugging, distributed, analyzing, incidents, implementing, observability, solutions |
@@ -1258,7 +1269,7 @@ Total skills: 1541
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (183)
+## security (185)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1315,6 +1326,7 @@ Total skills: 1541
 | `devops-troubleshooter` | Expert DevOps troubleshooter specializing in rapid incident response, advanced debugging, and modern observability. | devops, troubleshooter | devops, troubleshooter, specializing, rapid, incident, response, debugging, observability |
 | `differential-review` | Security-focused code review for PRs, commits, and diffs. | differential | differential, review, security, code, prs, commits, diffs |
 | `docker-expert` | You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds,... | docker | docker, containerization, practical, knowledge, container, optimization, security, hardening, multi, stage, orchestration, deployment |
+| `dos-verify-done-claims` | Before accepting an agent's 'done / shipped / fixed' claim, verify it against ground truth (git ancestry + the commit's own diff) using the DOS kernel's `dos... | verification, git, ai-agents, trust, quality-gate | verification, git, ai-agents, trust, quality-gate, dos, verify, done, claims, before, accepting, agent |
 | `dotnet-backend` | Build ASP.NET Core 8+ backend services with EF Core, auth, background jobs, and production API patterns. | dotnet, backend | dotnet, backend, asp, net, core, ef, auth, background, jobs, api |
 | `ethical-hacking-methodology` | Master the complete penetration testing lifecycle from reconnaissance through reporting. This skill covers the five stages of ethical hacking methodology, es... | ethical, hacking, methodology | ethical, hacking, methodology, complete, penetration, testing, lifecycle, reconnaissance, through, reporting, skill, covers |
 | `event-staffing-compliance` | Assess worker-classification and compliance risk for temporary event staffing in the US and Canada — W-2 vs 1099, misclassification penalties, joint-employer... | event, staffing, compliance | event, staffing, compliance, assess, worker, classification, risk, temporary, us, canada, vs, 1099 |
@@ -1361,6 +1373,7 @@ Total skills: 1541
 | `memory-forensics` | Comprehensive techniques for acquiring, analyzing, and extracting artifacts from memory dumps for incident response and malware analysis. | memory, forensics | memory, forensics, techniques, acquiring, analyzing, extracting, artifacts, dumps, incident, response, malware, analysis |
 | `metasploit-framework` | ⚠️ AUTHORIZED USE ONLY > This skill is for educational purposes or authorized security assessments only. > You must have explicit, written permission from th... | metasploit, framework | metasploit, framework, authorized, skill, educational, purposes, security, assessments, must, explicit, written, permission |
 | `mobile-security-coder` | Expert in secure mobile coding practices specializing in input validation, WebView security, and mobile-specific security patterns. | mobile, security, coder | mobile, security, coder, secure, coding, specializing, input, validation, webview, specific |
+| `monopoly/security-checklist` | Reference document for monopoly security-checklist. | monopoly/security, checklist | monopoly/security, checklist, security, reference, document, monopoly |
 | `mtls-configuration` | Configure mutual TLS (mTLS) for zero-trust service-to-service communication. Use when implementing zero-trust networking, certificate management, or securing... | mtls, configuration | mtls, configuration, configure, mutual, tls, zero, trust, communication, implementing, networking, certificate, securing |
 | `network-101` | Configure and test common network services (HTTP, HTTPS, SNMP, SMB) for penetration testing lab environments. Enable hands-on practice with service enumerati... | network, 101 | network, 101, configure, test, common, http, https, snmp, smb, penetration, testing, lab |
 | `network-engineer` | Expert network engineer specializing in modern cloud networking, security architectures, and performance optimization. | network | network, engineer, specializing, cloud, networking, security, architectures, performance, optimization |
@@ -1485,10 +1498,11 @@ Total skills: 1541
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (105)
+## workflow (106)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
+| `accint-solve` | Route agent work through AccInt's MCP memory loop: retrieve prior outcomes, resolve frames, and close commitments with evidence. | mcp, memory, ai-agents, coding-agents, workflow | mcp, memory, ai-agents, coding-agents, workflow, accint, solve, route, agent, work, through, loop |
 | `activecampaign-automation` | Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions, automation enrollment, and tasks. Always search tools first... | activecampaign | activecampaign, automation, automate, tasks, via, rube, mcp, composio, contacts, tags, list, subscriptions |
 | `agent-orchestration-improve-agent` | Systematic improvement of existing agents through performance analysis, prompt engineering, and continuous iteration. | agent, improve | agent, improve, orchestration, systematic, improvement, existing, agents, through, performance, analysis, prompt, engineering |
 | `agent-orchestration-multi-agent-optimize` | Optimize multi-agent systems with coordinated profiling, workload distribution, and cost-aware orchestration. Use when improving agent performance, throughpu... | agent, multi, optimize | agent, multi, optimize, orchestration, coordinated, profiling, workload, distribution, cost, aware, improving, performance |

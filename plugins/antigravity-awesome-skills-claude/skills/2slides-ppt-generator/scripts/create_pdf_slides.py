@@ -8,7 +8,6 @@ import os
 import sys
 import json
 import argparse
-import requests
 from typing import Optional, Dict, Any
 
 
@@ -55,6 +54,8 @@ def create_pdf_slides(
     Returns:
         Dict with generation result
     """
+    import requests
+
     if api_key is None:
         api_key = get_api_key()
 

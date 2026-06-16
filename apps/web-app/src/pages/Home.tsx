@@ -169,9 +169,9 @@ export function Home(): React.ReactElement {
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
             Skills Library
           </p>
-          <h2 className="max-w-[20ch] text-2xl font-bold tracking-tight text-slate-900 [text-wrap:balance] sm:text-[3.25rem] sm:leading-[0.97] dark:text-slate-100">
+          <h1 className="max-w-[20ch] text-2xl font-bold tracking-tight text-slate-900 [text-wrap:balance] sm:text-[3.25rem] sm:leading-[0.97] dark:text-slate-100">
             Build agent workflows with production-grade skill playbooks
-          </h2>
+          </h1>
           <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
             Antigravity Awesome Skills is a curated catalog for the official GitHub repository of installable
             capabilities for AI assistants. Search fast, shortlist by category, and launch your first tested
@@ -229,7 +229,7 @@ export function Home(): React.ReactElement {
           <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-[var(--accent-solid)]/65" />
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="mb-1 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Explore Skills</h1>
+              <h2 className="mb-1 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Explore Skills</h2>
               <p className="text-sm text-slate-600 dark:text-slate-400">
                 Discover {catalogCountLabel} agentic capabilities for your AI assistant.
               </p>

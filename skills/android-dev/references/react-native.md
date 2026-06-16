@@ -63,6 +63,9 @@ export const RootNavigator = () => {
 
 ```typescript
 // Client state — Zustand
+// Do not persist bearer or refresh tokens in AsyncStorage/plain MMKV.
+// Store secrets with a platform-backed module such as react-native-keychain
+// or expo-secure-store, and persist only non-sensitive UI state here.
 interface AuthState {
   token: string | null;
   isLoggedIn: boolean;
@@ -78,7 +81,7 @@ export const useAuthStore = create<AuthState>()(
       setToken: (token) => set({ token, isLoggedIn: true }),
       logout: () => set({ token: null, isLoggedIn: false }),
     }),
-    { name: 'auth-storage', storage: createJSONStorage(() => mmkvStorage) }
+    { name: 'auth-ui-storage', storage: createJSONStorage(() => mmkvStorage) }
   )
 );
 

@@ -91,7 +91,7 @@ curl -H "Authorization: Bearer $API_KEY" https://api.example.com
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -sSfL https://varlock.dev/install.sh -o "$tmpdir/varlock-install.sh"
-sed -n '1,160p' "$tmpdir/varlock-install.sh"
+cat "$tmpdir/varlock-install.sh"  # review the full installer before executing
 sh "$tmpdir/varlock-install.sh" --force-no-brew
 
 # Add to PATH (add to ~/.zshrc or ~/.bashrc)
@@ -249,7 +249,7 @@ varlock load
 # Install Varlock in container
 RUN tmpdir="$(mktemp -d)" \
     && curl -sSfL https://varlock.dev/install.sh -o "$tmpdir/varlock-install.sh" \
-    && sed -n '1,160p' "$tmpdir/varlock-install.sh" \
+    && cat "$tmpdir/varlock-install.sh" \
     && sh "$tmpdir/varlock-install.sh" --force-no-brew \
     && rm -rf "$tmpdir" \
     && ln -s /root/.varlock/bin/varlock /usr/local/bin/varlock

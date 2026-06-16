@@ -231,6 +231,25 @@
       "runtime_files": []
     },
     {
+      "id": "accint-solve",
+      "path": "skills/accint-solve",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "active-directory-attacks",
       "path": "skills/active-directory-attacks",
       "targets": {
@@ -1376,6 +1395,25 @@
     {
       "id": "andrej-karpathy",
       "path": "skills/andrej-karpathy",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "android-cli",
+      "path": "skills/android-cli",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -7438,6 +7476,25 @@
       "runtime_files": []
     },
     {
+      "id": "codex-fable5",
+      "path": "skills/codex-fable5",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "codex-review",
       "path": "skills/codex-review",
       "targets": {
@@ -9939,6 +9996,25 @@
       "runtime_files": []
     },
     {
+      "id": "dos-verify-done-claims",
+      "path": "skills/dos-verify-done-claims",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dotnet-architect",
       "path": "skills/dotnet-architect",
       "targets": {
@@ -10112,6 +10188,44 @@
     {
       "id": "earllm-build",
       "path": "skills/earllm-build",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ecl-harness-engineer",
+      "path": "skills/ecl-harness-engineer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "efficient-web-research",
+      "path": "skills/efficient-web-research",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -16488,6 +16602,25 @@
       "runtime_files": []
     },
     {
+      "id": "lovable-cleanup",
+      "path": "skills/lovable-cleanup",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "m365-agents-dotnet",
       "path": "skills/m365-agents-dotnet",
       "targets": {
@@ -17753,6 +17886,101 @@
     {
       "id": "monetization",
       "path": "skills/monetization",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly",
+      "path": "skills/monopoly",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/patterns",
+      "path": "skills/monopoly/patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/scale-benchmarks",
+      "path": "skills/monopoly/scale-benchmarks",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/security-checklist",
+      "path": "skills/monopoly/security-checklist",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monopoly/tech-matrix",
+      "path": "skills/monopoly/tech-matrix",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19669,6 +19897,25 @@
     {
       "id": "pagerduty-automation",
       "path": "skills/pagerduty-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pagespeed-enhancer",
+      "path": "skills/pagespeed-enhancer",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -24115,6 +24362,25 @@
       "runtime_files": []
     },
     {
+      "id": "sharp-coder",
+      "path": "skills/sharp-coder",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "sharp-edges",
       "path": "skills/sharp-edges",
       "targets": {
@@ -27512,18 +27778,24 @@
       "id": "unship",
       "path": "skills/unship",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -29559,14 +29831,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1541,
+    "total_skills": 1555,
     "supported": {
-      "codex": 1492,
-      "claude": 1509
+      "codex": 1505,
+      "claude": 1522
     },
     "blocked": {
-      "codex": 49,
-      "claude": 32
+      "codex": 50,
+      "claude": 33
     },
     "manual_setup": 5
   }

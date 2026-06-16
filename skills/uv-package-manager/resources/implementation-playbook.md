@@ -54,7 +54,7 @@ Comprehensive guide to using uv, an extremely fast Python package installer and 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -LsSf https://astral.sh/uv/install.sh -o "$tmpdir/uv-install.sh"
-sed -n '1,160p' "$tmpdir/uv-install.sh"
+cat "$tmpdir/uv-install.sh"  # review the full installer before executing
 sh "$tmpdir/uv-install.sh"
 
 # Windows (PowerShell)

@@ -113,6 +113,43 @@ try {
     "legacy manifest entries should be normalized after update",
   );
 
+  const symlinkPruneTargetDir = path.join(tmpRoot, "symlink-prune-target");
+  const outsidePruneDir = path.join(tmpRoot, "outside-prune");
+  fs.mkdirSync(symlinkPruneTargetDir, { recursive: true });
+  fs.mkdirSync(path.join(outsidePruneDir, "audit"), { recursive: true });
+  fs.writeFileSync(path.join(outsidePruneDir, "audit", "secret.txt"), "keep", "utf8");
+  fs.writeFileSync(
+    path.join(symlinkPruneTargetDir, ".antigravity-install-manifest.json"),
+    JSON.stringify(
+      {
+        schemaVersion: 1,
+        updatedAt: new Date().toISOString(),
+        entries: ["security/audit"],
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
+  const createdPruneSymlink = createSymlinkOrSkip(
+    outsidePruneDir,
+    path.join(symlinkPruneTargetDir, "security"),
+    "dir",
+  );
+
+  if (createdPruneSymlink) {
+    assert.throws(
+      () => installer.installForTarget(repoV2, { name: "SymlinkPrune", path: symlinkPruneTargetDir }),
+      /unsafe destination symlink component/i,
+      "installer pruning must refuse symlinked managed-entry parent directories",
+    );
+    assert.strictEqual(
+      fs.readFileSync(path.join(outsidePruneDir, "audit", "secret.txt"), "utf8"),
+      "keep",
+      "installer pruning must not remove directories through target symlinks",
+    );
+  }
+
   const badTargetPath = path.join(tmpRoot, "bad-target");
   fs.writeFileSync(badTargetPath, "not-a-directory", "utf8");
   const badTargetCheck = spawnSync(

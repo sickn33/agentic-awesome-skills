@@ -308,6 +308,28 @@
     }
   },
   {
+    "id": "accint-solve",
+    "path": "skills/accint-solve",
+    "category": "ai-agents",
+    "name": "accint-solve",
+    "description": "Route agent work through AccInt's MCP memory loop: retrieve prior outcomes, resolve frames, and close commitments with evidence.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "active-directory-attacks",
     "path": "skills/active-directory-attacks",
     "category": "security",
@@ -1470,6 +1492,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "android-cli",
+    "path": "skills/android-cli",
+    "category": "tools",
+    "name": "android-cli",
+    "description": "Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line tool.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-15",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8568,6 +8612,28 @@
     }
   },
   {
+    "id": "codex-fable5",
+    "path": "skills/codex-fable5",
+    "category": "agent-behavior",
+    "name": "codex-fable5",
+    "description": "Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt Claude/Fable prompt guidance without identity or provider claims.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "codex-review",
     "path": "skills/codex-review",
     "category": "code-quality",
@@ -11476,6 +11542,28 @@
     }
   },
   {
+    "id": "dos-verify-done-claims",
+    "path": "skills/dos-verify-done-claims",
+    "category": "quality",
+    "name": "dos-verify-done-claims",
+    "description": "Before accepting an agent's 'done / shipped / fixed' claim, verify it against ground truth (git ancestry + the commit's own diff) using the DOS kernel's `dos verify` and `dos commit-audit` \u2014 never the agent's own narration.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "dotnet-architect",
     "path": "skills/dotnet-architect",
     "category": "development",
@@ -11704,6 +11792,50 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "ecl-harness-engineer",
+    "path": "skills/ecl-harness-engineer",
+    "category": "development",
+    "name": "ecl-harness-engineer",
+    "description": "Create or audit ECL Agent Harness infrastructure: AGENTS.md, change tracking, repository guidance, lint checks, CI gates, and agent handoff docs.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "efficient-web-research",
+    "path": "skills/efficient-web-research",
+    "category": "uncategorized",
+    "name": "efficient-web-research",
+    "description": "Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18816,6 +18948,28 @@
     }
   },
   {
+    "id": "lovable-cleanup",
+    "path": "skills/lovable-cleanup",
+    "category": "uncategorized",
+    "name": "lovable-cleanup",
+    "description": "Audits and strips Lovable scaffolding from Vite + React projects \u2014 removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans generated docs so the codebase ships as yours.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "luna",
     "path": "skills/agent-squad/luna",
     "category": "agent-squad",
@@ -20352,6 +20506,28 @@
     "risk": "none",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "monopoly",
+    "path": "skills/monopoly",
+    "category": "architecture",
+    "name": "monopoly",
+    "description": "MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.",
+    "risk": "unknown",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22593,6 +22769,28 @@
     }
   },
   {
+    "id": "pagespeed-enhancer",
+    "path": "skills/pagespeed-enhancer",
+    "category": "uncategorized",
+    "name": "pagespeed-enhancer",
+    "description": "Scan, audit, and fix web performance issues across all four Lighthouse/PageSpeed Insights pillars \u2014 Performance, Accessibility, Best Practices, and SEO \u2014 in structured batches.",
+    "risk": "safe",
+    "source": "personal",
+    "date_added": "2026-06-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "paid-ads",
     "path": "skills/paid-ads",
     "category": "marketing",
@@ -22667,6 +22865,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "patterns",
+    "path": "skills/monopoly/patterns",
+    "category": "monopoly",
+    "name": "patterns",
+    "description": "Reference document for monopoly patterns.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -25963,6 +26183,28 @@
     }
   },
   {
+    "id": "scale-benchmarks",
+    "path": "skills/monopoly/scale-benchmarks",
+    "category": "monopoly",
+    "name": "scale-benchmarks",
+    "description": "Reference document for monopoly scale-benchmarks.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "scanning-tools",
     "path": "skills/scanning-tools",
     "category": "security",
@@ -26300,6 +26542,28 @@
     "description": "Build a minimal but real security policy for sensitive apps. The output is a single, coherent Blue Book document using MUST/SHOULD/CAN language, with explicit assumptions, scope, and security gates.",
     "risk": "unknown",
     "source": "community",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "security-checklist",
+    "path": "skills/monopoly/security-checklist",
+    "category": "monopoly",
+    "name": "security-checklist",
+    "description": "Reference document for monopoly security-checklist.",
+    "risk": "safe",
+    "source": "unknown",
     "date_added": null,
     "plugin": {
       "targets": {
@@ -27629,6 +27893,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "sharp-coder",
+    "path": "skills/sharp-coder",
+    "category": "uncategorized",
+    "name": "sharp-coder",
+    "description": "Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.\n",
+    "risk": "safe",
+    "source": "self",
+    "date_added": null,
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29969,6 +30255,28 @@
     }
   },
   {
+    "id": "tech-matrix",
+    "path": "skills/monopoly/tech-matrix",
+    "category": "monopoly",
+    "name": "tech-matrix",
+    "description": "Reference document for monopoly tech-matrix.",
+    "risk": "safe",
+    "source": "unknown",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "technical-change-tracker",
     "path": "skills/technical-change-tracker",
     "category": "development",
@@ -31584,20 +31892,22 @@
     "category": "development",
     "name": "unship",
     "description": "Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-07",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {
