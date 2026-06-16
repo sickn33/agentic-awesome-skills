@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1557
+Total skills: 1569
 
 ## architecture (101)
 
@@ -744,7 +744,7 @@ Total skills: 1557
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (375)
+## general (384)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -838,6 +838,15 @@ Total skills: 1557
 | `create-branch` | Create a git branch following Sentry naming conventions. Use when asked to "create a branch", "new branch", "start a branch", "make a branch", "switch to a n... | create, branch | create, branch, git, following, sentry, naming, conventions, asked, new, start, switch, starting |
 | `create-issue-gate` | Use when starting a new implementation task and an issue must be created with strict acceptance criteria gating before execution. | create, issue, gate | create, issue, gate, starting, new, task, must, created, strict, acceptance, criteria, gating |
 | `crewai` | Expert in CrewAI - the leading role-based multi-agent framework used by 60% of Fortune 500 companies. | crewai | crewai, leading, role, multi, agent, framework, used, 60, fortune, 500, companies |
+| `crossframe` | Use when the user explicitly invokes CrossFrame or 跨尺度结构诊断 for Chinese-canonical structural diagnosis of complex relationships, organizations, institutions, ... | crossframe, chinese, structural-diagnosis, reasoning, governance | crossframe, chinese, structural-diagnosis, reasoning, governance, user, explicitly, invokes, canonical, structural, diagnosis, complex |
+| `crossframe-casebook` | Use when CrossFrame Suite routes explicit Chinese casebook work: turning materials into reusable cases, anonymized entries, mechanisms, and retrieval indexes. | crossframe, chinese, casebook, case-study, knowledge-base | crossframe, chinese, casebook, case-study, knowledge-base, suite, routes, explicit, work, turning, materials, reusable |
+| `crossframe-critical` | Use only when the user explicitly names crossframe-critical for a Chinese structural critique dossier, article plan, or long-form critical essay. | crossframe, chinese, critique, essay, structural-analysis | crossframe, chinese, critique, essay, structural-analysis, critical, user, explicitly, names, structural, dossier, article |
+| `crossframe-dialogue` | Use when CrossFrame Suite routes explicit Chinese reader replies, editor responses, consultation-style short answers, or boundary-aware structural advice. | crossframe, chinese, dialogue, reader-reply, consultation | crossframe, chinese, dialogue, reader-reply, consultation, suite, routes, explicit, reader, replies, editor, responses |
+| `crossframe-essay` | Use when explicit CrossFrame work needs a Chinese critical insight essay, commentary, concept essay, public piece, or structure-to-article draft after diagno... | crossframe, chinese, essay, writing, commentary | crossframe, chinese, essay, writing, commentary, explicit, work, critical, insight, concept, public, piece |
+| `crossframe-notebook` | Use when CrossFrame Suite routes explicit Chinese notes for books, theories, articles, excerpts, bidirectional reading, absorption, or conflict mapping. | crossframe, chinese, notebook, research, reading | crossframe, chinese, notebook, research, reading, suite, routes, explicit, notes, books, theories, articles |
+| `crossframe-org` | Use when CrossFrame Suite routes explicit Chinese analysis of teams, projects, organizations, responsibility chains, feedback write-back, repair, or retrospe... | crossframe, chinese, organization, retrospective, repair | crossframe, chinese, organization, retrospective, repair, org, suite, routes, explicit, analysis, teams, organizations |
+| `crossframe-review` | Use when explicit CrossFrame output needs review for reasoning fidelity, evidence boundaries, source anchors, concept drift, article collapse, or repair steps. | crossframe, chinese, review, quality-gate, evidence | crossframe, chinese, review, quality-gate, evidence, explicit, output, reasoning, fidelity, boundaries, source, anchors |
+| `crossframe-teach` | Use when CrossFrame Suite routes explicit Chinese teaching of CrossFrame concepts, misreading boundaries, plain-language examples, signals, or exercises. | crossframe, chinese, teaching, concepts, plain-language | crossframe, chinese, teaching, concepts, plain-language, teach, suite, routes, explicit, misreading, boundaries, plain |
 | `cv-generator` | Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and human... | cv, resume, ats, career, job-application, career-change | cv, resume, ats, career, job-application, career-change, generator, generate, professional, optimized, cvs, flowcv |
 | `daily` | Documentation and capabilities reference for Daily | daily | daily, documentation, capabilities, reference |
 | `daily-news-report` | Scrapes content based on a preset URL list, filters high-quality technical information, and generates daily Markdown reports. | daily, news, report | daily, news, report, scrapes, content, preset, url, list, filters, high, quality, technical |
@@ -1271,7 +1280,7 @@ Total skills: 1557
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (185)
+## security (186)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1321,6 +1330,7 @@ Total skills: 1557
 | `context-guardian` | Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao. | context, data-integrity, snapshots, verification | context, data-integrity, snapshots, verification, guardian, guardiao, de, contexto, que, preserva, dados, criticos |
 | `convex` | Convex reactive backend expert: schema design, TypeScript functions, real-time subscriptions, auth, file storage, scheduling, and deployment. | convex | convex, reactive, backend, schema, typescript, functions, real, time, subscriptions, auth, file, storage |
 | `cred-omega` | CISO operacional enterprise para gestao total de credenciais e segredos. | credentials, secrets, security, api-keys, vault | credentials, secrets, security, api-keys, vault, cred, omega, ciso, operacional, enterprise, para, gestao |
+| `crossframe-public` | Use when CrossFrame Suite routes explicit Chinese analysis of public issues, platform governance, policy, institutional responsibility, appeals, or complianc... | crossframe, chinese, public-policy, governance, evidence | crossframe, chinese, public-policy, governance, evidence, public, suite, routes, explicit, analysis, issues, platform |
 | `customs-trade-compliance` | Codified expertise for customs documentation, tariff classification, duty optimisation, restricted party screening, and regulatory compliance across multiple... | customs, trade, compliance | customs, trade, compliance, codified, expertise, documentation, tariff, classification, duty, optimisation, restricted, party |
 | `database-migration` | Master database schema and data migrations across ORMs (Sequelize, TypeORM, Prisma), including rollback strategies and zero-downtime deployments. | database, migration | database, migration, schema, data, migrations, orms, sequelize, typeorm, prisma, including, rollback, zero |
 | `database-migrations-sql-migrations` | SQL database migrations with zero-downtime strategies for PostgreSQL, MySQL, and SQL Server. Focus on data integrity and rollback plans. | database, migrations, sql | database, migrations, sql, zero, downtime, postgresql, mysql, server, data, integrity, rollback, plans |
@@ -1461,7 +1471,7 @@ Total skills: 1557
 | `yield-intelligence` | Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yi... | yield, intelligence | yield, intelligence, passive, income, portfolio, analysis, activate, user, asks, about, dividend, yields |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
 
-## testing (34)
+## testing (35)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1471,6 +1481,7 @@ Total skills: 1557
 | `circleci-automation` | Automate CircleCI tasks via Rube MCP (Composio): trigger pipelines, monitor workflows/jobs, retrieve artifacts and test metadata. Always search tools first f... | circleci | circleci, automation, automate, tasks, via, rube, mcp, composio, trigger, pipelines, monitor, jobs |
 | `conductor-implement` | Execute tasks from a track's implementation plan following TDD workflow | conductor, implement | conductor, implement, execute, tasks, track, plan, following, tdd |
 | `conductor-revert` | Git-aware undo by logical work unit (track, phase, or task) | conductor, revert | conductor, revert, git, aware, undo, logical, work, unit, track, phase, task |
+| `crossframe-debate` | Use when CrossFrame Suite routes explicit Chinese proposition testing, debate analysis, hidden-premise review, rebuttal design, or withdrawal condition checks. | crossframe, chinese, debate, argument, proposition | crossframe, chinese, debate, argument, proposition, suite, routes, explicit, testing, analysis, hidden, premise |
 | `debugger` | Debugging specialist for errors, test failures, and unexpected behavior. Use proactively when encountering any issues. | debugger | debugger, debugging, errors, test, failures, unexpected, behavior, proactively, encountering, any, issues |
 | `dependency-upgrade` | Master major dependency version upgrades, compatibility analysis, staged upgrade strategies, and comprehensive testing approaches. | dependency, upgrade | dependency, upgrade, major, version, upgrades, compatibility, analysis, staged, testing, approaches |
 | `doc-coauthoring` | This skill provides a structured workflow for guiding users through collaborative document creation. Act as an active guide, walking users through three stag... | doc, coauthoring | doc, coauthoring, skill, provides, structured, guiding, users, through, collaborative, document, creation, act |
@@ -1500,7 +1511,7 @@ Total skills: 1557
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (106)
+## workflow (107)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1535,6 +1546,7 @@ Total skills: 1557
 | `confluence-automation` | Automate Confluence page creation, content search, space management, labels, and hierarchy navigation via Rube MCP (Composio). Always search tools first for ... | confluence | confluence, automation, automate, page, creation, content, search, space, labels, hierarchy, navigation, via |
 | `convertkit-automation` | Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and broadcast stats. Always search tools first for current sch... | convertkit | convertkit, automation, automate, kit, tasks, via, rube, mcp, composio, subscribers, tags, broadcasts |
 | `create-pr` | Alias for sentry-skills:pr-writer. Use when users explicitly ask for "create-pr" or reference the legacy skill name. Redirects to the canonical PR writing wo... | create, pr | create, pr, alias, sentry, skills, writer, users, explicitly, ask, reference, legacy, skill |
+| `crossframe-suite` | Use when the user explicitly invokes CrossFrame Suite for Chinese structural diagnosis workflows across relationships, organizations, public issues, philosop... | crossframe, chinese, workflow, multi-skill, structural-diagnosis | crossframe, chinese, workflow, multi-skill, structural-diagnosis, suite, user, explicitly, invokes, structural, diagnosis, relationships |
 | `datadog-automation` | Automate Datadog tasks via Rube MCP (Composio): query metrics, search logs, manage monitors/dashboards, create events and downtimes. Always search tools firs... | datadog | datadog, automation, automate, tasks, via, rube, mcp, composio, query, metrics, search, logs |
 | `design-orchestration` | Orchestrates design workflows by routing work through brainstorming, multi-agent review, and execution readiness in the correct order. |  | orchestration, orchestrates, routing, work, through, brainstorming, multi, agent, review, execution, readiness, correct |
 | `discord-automation` | Automate Discord tasks via Rube MCP (Composio): messages, channels, roles, webhooks, reactions. Always search tools first for current schemas. | discord | discord, automation, automate, tasks, via, rube, mcp, composio, messages, channels, roles, webhooks |

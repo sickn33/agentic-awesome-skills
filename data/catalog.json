@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1557,
+  "total": 1569,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -11133,6 +11133,342 @@
         "companies"
       ],
       "path": "skills/crewai/SKILL.md"
+    },
+    {
+      "id": "crossframe",
+      "name": "crossframe",
+      "description": "Use when the user explicitly invokes CrossFrame or 跨尺度结构诊断 for Chinese-canonical structural diagnosis of complex relationships, organizations, institutions, public disputes, or long-term evolution.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "structural-diagnosis",
+        "reasoning",
+        "governance"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "structural-diagnosis",
+        "reasoning",
+        "governance",
+        "user",
+        "explicitly",
+        "invokes",
+        "canonical",
+        "structural",
+        "diagnosis",
+        "complex"
+      ],
+      "path": "skills/crossframe/SKILL.md"
+    },
+    {
+      "id": "crossframe-casebook",
+      "name": "crossframe-casebook",
+      "description": "Use when CrossFrame Suite routes explicit Chinese casebook work: turning materials into reusable cases, anonymized entries, mechanisms, and retrieval indexes.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "casebook",
+        "case-study",
+        "knowledge-base"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "casebook",
+        "case-study",
+        "knowledge-base",
+        "suite",
+        "routes",
+        "explicit",
+        "work",
+        "turning",
+        "materials",
+        "reusable"
+      ],
+      "path": "skills/crossframe-casebook/SKILL.md"
+    },
+    {
+      "id": "crossframe-critical",
+      "name": "crossframe-critical",
+      "description": "Use only when the user explicitly names crossframe-critical for a Chinese structural critique dossier, article plan, or long-form critical essay.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "critique",
+        "essay",
+        "structural-analysis"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "critique",
+        "essay",
+        "structural-analysis",
+        "critical",
+        "user",
+        "explicitly",
+        "names",
+        "structural",
+        "dossier",
+        "article"
+      ],
+      "path": "skills/crossframe-critical/SKILL.md"
+    },
+    {
+      "id": "crossframe-debate",
+      "name": "crossframe-debate",
+      "description": "Use when CrossFrame Suite routes explicit Chinese proposition testing, debate analysis, hidden-premise review, rebuttal design, or withdrawal condition checks.",
+      "category": "testing",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "debate",
+        "argument",
+        "proposition"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "debate",
+        "argument",
+        "proposition",
+        "suite",
+        "routes",
+        "explicit",
+        "testing",
+        "analysis",
+        "hidden",
+        "premise"
+      ],
+      "path": "skills/crossframe-debate/SKILL.md"
+    },
+    {
+      "id": "crossframe-dialogue",
+      "name": "crossframe-dialogue",
+      "description": "Use when CrossFrame Suite routes explicit Chinese reader replies, editor responses, consultation-style short answers, or boundary-aware structural advice.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "dialogue",
+        "reader-reply",
+        "consultation"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "dialogue",
+        "reader-reply",
+        "consultation",
+        "suite",
+        "routes",
+        "explicit",
+        "reader",
+        "replies",
+        "editor",
+        "responses"
+      ],
+      "path": "skills/crossframe-dialogue/SKILL.md"
+    },
+    {
+      "id": "crossframe-essay",
+      "name": "crossframe-essay",
+      "description": "Use when explicit CrossFrame work needs a Chinese critical insight essay, commentary, concept essay, public piece, or structure-to-article draft after diagnosis.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "essay",
+        "writing",
+        "commentary"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "essay",
+        "writing",
+        "commentary",
+        "explicit",
+        "work",
+        "critical",
+        "insight",
+        "concept",
+        "public",
+        "piece"
+      ],
+      "path": "skills/crossframe-essay/SKILL.md"
+    },
+    {
+      "id": "crossframe-notebook",
+      "name": "crossframe-notebook",
+      "description": "Use when CrossFrame Suite routes explicit Chinese notes for books, theories, articles, excerpts, bidirectional reading, absorption, or conflict mapping.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "notebook",
+        "research",
+        "reading"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "notebook",
+        "research",
+        "reading",
+        "suite",
+        "routes",
+        "explicit",
+        "notes",
+        "books",
+        "theories",
+        "articles"
+      ],
+      "path": "skills/crossframe-notebook/SKILL.md"
+    },
+    {
+      "id": "crossframe-org",
+      "name": "crossframe-org",
+      "description": "Use when CrossFrame Suite routes explicit Chinese analysis of teams, projects, organizations, responsibility chains, feedback write-back, repair, or retrospectives.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "organization",
+        "retrospective",
+        "repair"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "organization",
+        "retrospective",
+        "repair",
+        "org",
+        "suite",
+        "routes",
+        "explicit",
+        "analysis",
+        "teams",
+        "organizations"
+      ],
+      "path": "skills/crossframe-org/SKILL.md"
+    },
+    {
+      "id": "crossframe-public",
+      "name": "crossframe-public",
+      "description": "Use when CrossFrame Suite routes explicit Chinese analysis of public issues, platform governance, policy, institutional responsibility, appeals, or compliance evidence.",
+      "category": "security",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "public-policy",
+        "governance",
+        "evidence"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "public-policy",
+        "governance",
+        "evidence",
+        "public",
+        "suite",
+        "routes",
+        "explicit",
+        "analysis",
+        "issues",
+        "platform"
+      ],
+      "path": "skills/crossframe-public/SKILL.md"
+    },
+    {
+      "id": "crossframe-review",
+      "name": "crossframe-review",
+      "description": "Use when explicit CrossFrame output needs review for reasoning fidelity, evidence boundaries, source anchors, concept drift, article collapse, or repair steps.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "review",
+        "quality-gate",
+        "evidence"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "review",
+        "quality-gate",
+        "evidence",
+        "explicit",
+        "output",
+        "reasoning",
+        "fidelity",
+        "boundaries",
+        "source",
+        "anchors"
+      ],
+      "path": "skills/crossframe-review/SKILL.md"
+    },
+    {
+      "id": "crossframe-suite",
+      "name": "crossframe-suite",
+      "description": "Use when the user explicitly invokes CrossFrame Suite for Chinese structural diagnosis workflows across relationships, organizations, public issues, philosophy, research, or essay output.",
+      "category": "workflow",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "workflow",
+        "multi-skill",
+        "structural-diagnosis"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "workflow",
+        "multi-skill",
+        "structural-diagnosis",
+        "suite",
+        "user",
+        "explicitly",
+        "invokes",
+        "structural",
+        "diagnosis",
+        "relationships"
+      ],
+      "path": "skills/crossframe-suite/SKILL.md"
+    },
+    {
+      "id": "crossframe-teach",
+      "name": "crossframe-teach",
+      "description": "Use when CrossFrame Suite routes explicit Chinese teaching of CrossFrame concepts, misreading boundaries, plain-language examples, signals, or exercises.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "teaching",
+        "concepts",
+        "plain-language"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "teaching",
+        "concepts",
+        "plain-language",
+        "teach",
+        "suite",
+        "routes",
+        "explicit",
+        "misreading",
+        "boundaries",
+        "plain"
+      ],
+      "path": "skills/crossframe-teach/SKILL.md"
     },
     {
       "id": "crypto-bd-agent",

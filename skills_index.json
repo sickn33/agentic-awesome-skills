@@ -9844,6 +9844,270 @@
     }
   },
   {
+    "id": "crossframe",
+    "path": "skills/crossframe",
+    "category": "workflow",
+    "name": "crossframe",
+    "description": "Use when the user explicitly invokes CrossFrame or \u8de8\u5c3a\u5ea6\u7ed3\u6784\u8bca\u65ad for Chinese-canonical structural diagnosis of complex relationships, organizations, institutions, public disputes, or long-term evolution.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-casebook",
+    "path": "skills/crossframe-casebook",
+    "category": "content",
+    "name": "crossframe-casebook",
+    "description": "Use when CrossFrame Suite routes explicit Chinese casebook work: turning materials into reusable cases, anonymized entries, mechanisms, and retrieval indexes.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-critical",
+    "path": "skills/crossframe-critical",
+    "category": "content",
+    "name": "crossframe-critical",
+    "description": "Use only when the user explicitly names crossframe-critical for a Chinese structural critique dossier, article plan, or long-form critical essay.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-debate",
+    "path": "skills/crossframe-debate",
+    "category": "content",
+    "name": "crossframe-debate",
+    "description": "Use when CrossFrame Suite routes explicit Chinese proposition testing, debate analysis, hidden-premise review, rebuttal design, or withdrawal condition checks.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-dialogue",
+    "path": "skills/crossframe-dialogue",
+    "category": "content",
+    "name": "crossframe-dialogue",
+    "description": "Use when CrossFrame Suite routes explicit Chinese reader replies, editor responses, consultation-style short answers, or boundary-aware structural advice.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-essay",
+    "path": "skills/crossframe-essay",
+    "category": "content",
+    "name": "crossframe-essay",
+    "description": "Use when explicit CrossFrame work needs a Chinese critical insight essay, commentary, concept essay, public piece, or structure-to-article draft after diagnosis.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-notebook",
+    "path": "skills/crossframe-notebook",
+    "category": "content",
+    "name": "crossframe-notebook",
+    "description": "Use when CrossFrame Suite routes explicit Chinese notes for books, theories, articles, excerpts, bidirectional reading, absorption, or conflict mapping.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-org",
+    "path": "skills/crossframe-org",
+    "category": "business",
+    "name": "crossframe-org",
+    "description": "Use when CrossFrame Suite routes explicit Chinese analysis of teams, projects, organizations, responsibility chains, feedback write-back, repair, or retrospectives.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-public",
+    "path": "skills/crossframe-public",
+    "category": "workflow",
+    "name": "crossframe-public",
+    "description": "Use when CrossFrame Suite routes explicit Chinese analysis of public issues, platform governance, policy, institutional responsibility, appeals, or compliance evidence.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-review",
+    "path": "skills/crossframe-review",
+    "category": "workflow",
+    "name": "crossframe-review",
+    "description": "Use when explicit CrossFrame output needs review for reasoning fidelity, evidence boundaries, source anchors, concept drift, article collapse, or repair steps.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-suite",
+    "path": "skills/crossframe-suite",
+    "category": "workflow",
+    "name": "crossframe-suite",
+    "description": "Use when the user explicitly invokes CrossFrame Suite for Chinese structural diagnosis workflows across relationships, organizations, public issues, philosophy, research, or essay output.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "crossframe-teach",
+    "path": "skills/crossframe-teach",
+    "category": "content",
+    "name": "crossframe-teach",
+    "description": "Use when CrossFrame Suite routes explicit Chinese teaching of CrossFrame concepts, misreading boundaries, plain-language examples, signals, or exercises.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "crypto-bd-agent",
     "path": "skills/crypto-bd-agent",
     "category": "blockchain",

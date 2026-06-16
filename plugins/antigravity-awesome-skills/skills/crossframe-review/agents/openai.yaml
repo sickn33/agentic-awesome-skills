@@ -1,0 +1,4 @@
+interface:
+  display_name: "CrossFrame Review"
+  short_description: "审查 CrossFrame 输出是否真推理、守证据与边界。"
+  default_prompt: "用 crossframe-review 审查这段 CrossFrame 诊断或文章，检查推理链、证据边界、引用完整性和修复建议。"
