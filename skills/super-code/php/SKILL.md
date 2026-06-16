@@ -310,3 +310,7 @@ str_pad($s, 10, ' ', STR_PAD_LEFT);
 | Not using `declare(strict_types=1)` | always enable |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

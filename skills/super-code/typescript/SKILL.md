@@ -280,3 +280,7 @@ items.map(item => <Row key={item.id} {...item} />)
 | `try { ... } catch (e) {}` (silent swallow) | log or rethrow |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

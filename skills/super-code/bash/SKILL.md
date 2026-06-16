@@ -286,3 +286,7 @@ command 2>/dev/null || true  # explicit: we expect and accept failure
 | `test -z` for number comparison | `(( ))` for arithmetic |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

@@ -300,3 +300,7 @@ first, second = arr
 | `eval` / `send` for known methods | direct method call |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

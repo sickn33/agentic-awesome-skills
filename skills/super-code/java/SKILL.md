@@ -224,3 +224,7 @@ public void process() throws IOException, SQLException, ParseException { ... }
 | Mutable `static` fields | avoid; use dependency injection |
 | `instanceof` + cast without pattern matching | pattern matching (Java 16+) |
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

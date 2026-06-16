@@ -270,3 +270,7 @@ return reader.ReadToEnd();
 | `IDisposable` without `using` | `using` declaration |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

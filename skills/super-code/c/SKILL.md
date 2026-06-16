@@ -257,3 +257,7 @@ struct Foo { int x; };
 | Mixing signed/unsigned in comparisons | use consistent types, cast explicitly |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

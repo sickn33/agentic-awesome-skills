@@ -275,3 +275,7 @@ Column {
 | Wrapping every function in try/catch to log | handle at the boundary, not inside |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

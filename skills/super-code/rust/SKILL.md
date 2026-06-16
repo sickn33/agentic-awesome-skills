@@ -283,3 +283,7 @@ items.par_iter().for_each(|item| process(item));
 | `Vec<Box<T>>` when `Vec<T>` works | avoid heap allocation inside collections unless T is unsized |
 | Manual `Drop` for cleanup that `?` handles | let RAII + `?` do it |
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

@@ -360,3 +360,7 @@ updated = put_in(user.address.city, "NYC")
 | Shared mutable state via ETS without wrapper | GenServer or Agent as access layer |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

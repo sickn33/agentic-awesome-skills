@@ -228,3 +228,7 @@ for i := 0; i < n; i++ {
 | Exported types with unexported fields (when fields are the whole point) | `record`-style structs with all-exported fields |
 | `log.Fatal` outside `main` | return errors up the stack |
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

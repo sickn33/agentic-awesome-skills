@@ -309,3 +309,7 @@ def first(lst: list[T]) -> T: ...
 | Manual `__eq__` + `__hash__` on value objects | `@dataclass(eq=True, frozen=True)` |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.

@@ -265,3 +265,7 @@ auto result = future.get();
 | Header-only mega-templates | separate declaration/definition where compile time matters |
 
 
+
+## Limitations
+- These are language-specific guidelines and do not cover overall architectural decisions.
+- Over-compression might reduce readability; apply judgement.
