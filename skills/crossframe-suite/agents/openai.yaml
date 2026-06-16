@@ -1,3 +1,4 @@
-display_name: CrossFrame Suite
-short_description: Default CrossFrame entry for routing tasks and producing full-visible-v3-longform article outputs unless explicitly disabled.
-default_prompt: "Use CrossFrame Suite as the default entry. Choose the right CrossFrame workflow, read only the needed sibling skills, and produce a short dispatch outline. For any CrossFrame content task, finish the needed sibling skills first, then default to full-visible-v3-longform through crossframe-essay: complete visible 3.0 dossier plus complete long-form article, then review it. Only skip the article layer when the user explicitly disables it."
+interface:
+  display_name: "CrossFrame Suite"
+  short_description: "Default CrossFrame entry for routing tasks and producing full-visible-v5-longform article outputs unless explicitly disabled."
+  default_prompt: "Use CrossFrame Suite as the default entry. Choose the right CrossFrame workflow, read only the needed sibling skills, and produce a short dispatch outline. For any CrossFrame content task, finish the needed sibling skills first, then default to full-visible-v5-longform through crossframe-essay: complete visible v5.0 dossier plus complete long-form article, then review it. Only skip the article layer when the user explicitly disables it."

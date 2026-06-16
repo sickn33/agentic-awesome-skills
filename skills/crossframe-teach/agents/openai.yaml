@@ -1,3 +1,4 @@
-display_name: CrossFrame Teach
-short_description: 用人话解释 CrossFrame 概念、边界、信号与练习。
-default_prompt: 用 crossframe-teach 解释这个 CrossFrame 概念，先说人话，再给边界、现实信号和练习题。
+interface:
+  display_name: "CrossFrame Teach"
+  short_description: "用人话解释 CrossFrame 概念、边界、信号与练习。"
+  default_prompt: "用 crossframe-teach 解释这个 CrossFrame 概念，先说人话，再给边界、现实信号和练习题。"
