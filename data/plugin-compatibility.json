@@ -29659,6 +29659,25 @@
       "runtime_files": []
     },
     {
+      "id": "youtube-seo-optimizer",
+      "path": "skills/youtube-seo-optimizer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "youtube-summarizer",
       "path": "skills/youtube-summarizer",
       "targets": {
@@ -29831,10 +29850,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1555,
+    "total_skills": 1556,
     "supported": {
-      "codex": 1505,
-      "claude": 1522
+      "codex": 1506,
+      "claude": 1523
     },
     "blocked": {
       "codex": 50,

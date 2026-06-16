@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1555
+Total skills: 1556
 
 ## architecture (101)
 
@@ -110,7 +110,7 @@ Total skills: 1555
 | `workflow-patterns` | Use this skill when implementing tasks according to Conductor's TDD workflow, handling phase checkpoints, managing git commits for tasks, or understanding th... |  | skill, implementing, tasks, according, conductor, tdd, handling, phase, checkpoints, managing, git, commits |
 | `zapier-make-patterns` | No-code automation democratizes workflow building. Zapier and Make (formerly Integromat) let non-developers automate business processes without writing code.... | zapier, make | zapier, make, no, code, automation, democratizes, building, formerly, integromat, let, non, developers |
 
-## business (86)
+## business (87)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -200,6 +200,7 @@ Total skills: 1555
 | `whatsapp-automation` | Automate WhatsApp Business tasks via Rube MCP (Composio): send messages, manage templates, upload media, and handle contacts. Always search tools first for c... | whatsapp | whatsapp, automation, automate, business, tasks, via, rube, mcp, composio, send, messages, upload |
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
+| `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
 ## data-ai (296)
 

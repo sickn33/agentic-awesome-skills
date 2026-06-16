@@ -34117,6 +34117,28 @@
     }
   },
   {
+    "id": "youtube-seo-optimizer",
+    "path": "skills/youtube-seo-optimizer",
+    "category": "content",
+    "name": "youtube-seo-optimizer",
+    "description": "Generate complete YouTube & podcast SEO packages with live-researched keywords \u2014 titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new or underperforming content.\n",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "youtube-summarizer",
     "path": "skills/youtube-summarizer",
     "category": "content",

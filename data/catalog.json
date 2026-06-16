@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1555,
+  "total": 1556,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -38380,6 +38380,32 @@
         "browse"
       ],
       "path": "skills/youtube-full/SKILL.md"
+    },
+    {
+      "id": "youtube-seo-optimizer",
+      "name": "youtube-seo-optimizer",
+      "description": "Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new or underperforming content.",
+      "category": "business",
+      "tags": [
+        "youtube",
+        "seo",
+        "optimizer"
+      ],
+      "triggers": [
+        "youtube",
+        "seo",
+        "optimizer",
+        "generate",
+        "complete",
+        "podcast",
+        "packages",
+        "live",
+        "researched",
+        "keywords",
+        "titles",
+        "descriptions"
+      ],
+      "path": "skills/youtube-seo-optimizer/SKILL.md"
     },
     {
       "id": "youtube-summarizer",
