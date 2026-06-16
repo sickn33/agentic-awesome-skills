@@ -38,7 +38,7 @@ A valid hypothesis includes:
 
 ---
 
-### 3️⃣ Hypothesis Lock (Hard Gate)
+## 3️⃣ Hypothesis Lock (Hard Gate)
 
 Before designing variants or metrics, you MUST:
 
@@ -57,7 +57,7 @@ Ask explicitly:
 
 ---
 
-### 4️⃣ Assumptions & Validity Check (Mandatory)
+## 4️⃣ Assumptions & Validity Check (Mandatory)
 
 Explicitly list assumptions about:
 
@@ -74,7 +74,7 @@ If assumptions are weak or violated:
 
 ---
 
-### 5️⃣ Test Type Selection
+## 5️⃣ Test Type Selection
 
 Choose the simplest valid test:
 
@@ -87,7 +87,7 @@ Default to **A/B** unless there is a clear reason otherwise.
 
 ---
 
-### 6️⃣ Metrics Definition
+## 6️⃣ Metrics Definition
 
 #### Primary Metric (Mandatory)
 
@@ -109,7 +109,7 @@ Default to **A/B** unless there is a clear reason otherwise.
 
 ---
 
-### 7️⃣ Sample Size & Duration
+## 7️⃣ Sample Size & Duration
 
 Define upfront:
 
@@ -127,7 +127,7 @@ Estimate:
 
 ---
 
-### 8️⃣ Execution Readiness Gate (Hard Stop)
+## 8️⃣ Execution Readiness Gate (Hard Stop)
 
 You may proceed to implementation **only if all are true**:
 

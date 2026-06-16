@@ -6712,6 +6712,28 @@
     }
   },
   {
+    "id": "brave-man",
+    "path": "skills/brave-man",
+    "category": "ai-ml",
+    "name": "brave-man",
+    "description": "Runs a structured clarifying interview for new project requests before building. Instead of writing code, it outputs a fully specified prompt.md for a fresh agent session to execute, preventing expensive mistakes.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "brevo-automation",
     "path": "skills/brevo-automation",
     "category": "marketing",

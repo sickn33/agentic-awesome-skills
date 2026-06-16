@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1556
+Total skills: 1557
 
 ## architecture (101)
 
@@ -744,7 +744,7 @@ Total skills: 1556
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (374)
+## general (375)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -794,6 +794,7 @@ Total skills: 1556
 | `brand-guidelines-anthropic` | To access Anthropic's official brand identity and style resources, use this skill. | brand, guidelines, anthropic | brand, guidelines, anthropic, access, official, identity, style, resources, skill |
 | `brand-guidelines-community` | To access Anthropic's official brand identity and style resources, use this skill. | brand, guidelines, community | brand, guidelines, community, access, anthropic, official, identity, style, resources, skill |
 | `brand-perception-psychologist` | One sentence - what this skill does and when to invoke it | brand, perception, psychologist | brand, perception, psychologist, one, sentence, what, skill, does, invoke |
+| `brave-man` | Runs a structured clarifying interview for new project requests before building. Instead of writing code, it outputs a fully specified prompt.md for a fresh ... | brave, man | brave, man, runs, structured, clarifying, interview, new, requests, before, building, instead, writing |
 | `bug-hunter` | Systematically finds and fixes bugs using proven debugging techniques. Traces from symptoms to root cause, implements fixes, and prevents regression. | bug, hunter | bug, hunter, systematically, finds, fixes, bugs, proven, debugging, techniques, traces, symptoms, root |
 | `build` | build | build | build |
 | `bulletmind` | Convert input into clean, structured, hierarchical bullet points for summarization, note-taking, and structured thinking. | writing, summarization, note-taking, formatting, structured-output | writing, summarization, note-taking, formatting, structured-output, bulletmind, convert, input, clean, structured, hierarchical, bullet |

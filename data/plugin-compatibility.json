@@ -5839,6 +5839,25 @@
       "runtime_files": []
     },
     {
+      "id": "brave-man",
+      "path": "skills/brave-man",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "brevo-automation",
       "path": "skills/brevo-automation",
       "targets": {
@@ -29850,10 +29869,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1556,
+    "total_skills": 1557,
     "supported": {
-      "codex": 1506,
-      "claude": 1523
+      "codex": 1507,
+      "claude": 1524
     },
     "blocked": {
       "codex": 50,
