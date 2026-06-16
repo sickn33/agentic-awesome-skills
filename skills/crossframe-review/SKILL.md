@@ -34,6 +34,12 @@ tags:
 
 This AAS-ready copy preserves the original CrossFrame skill body below. Chinese remains the canonical semantic layer; English metadata is only for discovery, installation, and repository review.
 
+## Limitations
+
+- The skill body is intentionally Chinese-canonical; English metadata is for discovery and does not replace the original Chinese terms.
+- Use only after explicit CrossFrame invocation or `crossframe-suite` routing; do not apply it as a generic default reasoning layer.
+- It structures analysis, drafting, and review, but does not replace source verification, domain expertise, or legal, medical, or financial judgment.
+
 如果评审对象来自多个 CrossFrame skill 的连续工作流，先读取 `../crossframe-suite/SKILL.md` 还原应有调度链，再判断是否有漏触发、误触发或跳过质量闸。
 
 本 skill 只做评审与修复建议，不替代 `crossframe` 生成诊断，也不替代 `crossframe-essay` 写文章。中文为权威语义；英文只作 skill id、文件名和接口说明。

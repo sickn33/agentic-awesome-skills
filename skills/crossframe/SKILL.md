@@ -34,6 +34,12 @@ tags:
 
 This AAS-ready copy preserves the original CrossFrame skill body below. Chinese remains the canonical semantic layer; English metadata is only for discovery, installation, and repository review.
 
+## Limitations
+
+- The skill body is intentionally Chinese-canonical; English metadata is for discovery and does not replace the original Chinese terms.
+- Use only after explicit CrossFrame invocation or `crossframe-suite` routing; do not apply it as a generic default reasoning layer.
+- It structures analysis, drafting, and review, but does not replace source verification, domain expertise, or legal, medical, or financial judgment.
+
 如果用户任务需要多个 CrossFrame 平行 skill 连续协作，先读取 `../crossframe-suite/SKILL.md` 做总调度；本 skill 负责其中的结构诊断、事实边界、尺度窗口、机制候选、七闸复核和判断档位。
 
 ## 语言原则

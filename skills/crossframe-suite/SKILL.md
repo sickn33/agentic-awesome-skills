@@ -34,6 +34,12 @@ tags:
 
 This AAS-ready copy preserves the original CrossFrame skill body below. Chinese remains the canonical semantic layer; English metadata is only for discovery, installation, and repository review.
 
+## Limitations
+
+- The skill body is intentionally Chinese-canonical; English metadata is for discovery and does not replace the original Chinese terms.
+- Use only after explicit CrossFrame invocation or `crossframe-suite` routing; do not apply it as a generic default reasoning layer.
+- It structures analysis, drafting, and review, but does not replace source verification, domain expertise, or legal, medical, or financial judgment.
+
 `crossframe-suite` 是总调度 skill，不替代任何专项 skill。它只做三件事：
 
 1. 判断用户任务属于哪条工作流。
