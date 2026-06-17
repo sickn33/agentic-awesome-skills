@@ -165,11 +165,3 @@ To use a style, you MUST read its file at `f:\skill\design-it\<style-folder>\SKI
 - This skill does not replace environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, or safety boundaries are missing.
 
-## Security & Safety Notes
-
-- If this skill includes shell commands, command-like examples, network fetches, token/capability strings, or direct mutation guidance, add explicit preconditions and caveats.
-
-## Related Skills
-
-- `@frontend-design` - Use for general frontend design tasks not specific to the 48 styles
-- `@super-code` - Use when generating code for the design
