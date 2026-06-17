@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1569
+Total skills: 1587
 
 ## architecture (101)
 
@@ -503,7 +503,7 @@ Total skills: 1569
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (219)
+## development (227)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -696,6 +696,14 @@ Total skills: 1569
 | `sred-work-summary` | Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects. | sred, work, summary | sred, work, summary, go, back, through, previous, year, notion, doc, groups, relevant |
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `stitch-design-taste` | Use when generating Google Stitch DESIGN.md systems for premium typography, color, layout, motion intent, and anti-generic UI rules. | stitch, design-system, frontend, ui | stitch, design-system, frontend, ui, taste, generating, google, md, premium, typography, color, layout |
+| `super-code/csharp` | Language-specific super-code guidelines for csharp. | super, code/csharp | super, code/csharp, csharp, language, specific, code, guidelines |
+| `super-code/go` | Language-specific super-code guidelines for go. | super, code/go | super, code/go, go, language, specific, code, guidelines |
+| `super-code/java` | Language-specific super-code guidelines for java. | super, code/java | super, code/java, java, language, specific, code, guidelines |
+| `super-code/php` | Language-specific super-code guidelines for php. | super, code/php | super, code/php, php, language, specific, code, guidelines |
+| `super-code/python` | Language-specific super-code guidelines for python. | super, code/python | super, code/python, python, language, specific, code, guidelines |
+| `super-code/ruby` | Language-specific super-code guidelines for ruby. | super, code/ruby | super, code/ruby, ruby, language, specific, code, guidelines |
+| `super-code/rust` | Language-specific super-code guidelines for rust. | super, code/rust | super, code/rust, rust, language, specific, code, guidelines |
+| `super-code/typescript` | Language-specific super-code guidelines for typescript. | super, code/typescript | super, code/typescript, typescript, language, specific, code, guidelines |
 | `sveltekit` | Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework. | svelte, sveltekit, fullstack, ssr, ssg, typescript | svelte, sveltekit, fullstack, ssr, ssg, typescript, full, stack, web, applications, file, routing |
 | `swiftui-expert-skill` | Write, review, or improve SwiftUI code following best practices for state management, view composition, performance, and iOS 26+ Liquid Glass adoption. Use w... | swiftui, skill | swiftui, skill, write, review, improve, code, following, state, view, composition, performance, ios |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
@@ -744,7 +752,7 @@ Total skills: 1569
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (384)
+## general (394)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -773,6 +781,7 @@ Total skills: 1569
 | `app-builder` | Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordina... | app, builder | app, builder, main, application, building, orchestrator, creates, full, stack, applications, natural, language |
 | `app-builder/templates` | Project scaffolding templates for new applications. Use when creating new projects from scratch. Contains 12 templates for various tech stacks. | app, builder/templates | app, builder/templates, scaffolding, new, applications, creating, scratch, contains, 12, various, tech, stacks |
 | `app-store-changelog` | Generate user-facing App Store release notes from git history since the last tag. | app, store, changelog | app, store, changelog, generate, user, facing, release, notes, git, history, since, last |
+| `apple-notes-search` | Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall,... | apple-notes, search, mcp, macos, semantic-search, knowledge | apple-notes, search, mcp, macos, semantic-search, knowledge, apple, notes, semantic, keyword, connection, discovery |
 | `arm-cortex-expert` | Senior embedded software engineer specializing in firmware and driver development for ARM Cortex-M microcontrollers (Teensy, STM32, nRF52, SAMD). | arm, cortex | arm, cortex, senior, embedded, software, engineer, specializing, firmware, driver, development, microcontrollers, teensy |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
 | `ask-questions-if-underspecified` | Clarify requirements before implementing. Use when serious doubts arise. | ask, questions, if, underspecified | ask, questions, if, underspecified, clarify, requirements, before, implementing, serious, doubts, arise |
@@ -1077,6 +1086,15 @@ Total skills: 1569
 | `stitch-loop` | Teaches agents to iteratively build websites using Stitch with an autonomous baton-passing loop pattern | stitch, loop | stitch, loop, teaches, agents, iteratively, websites, autonomous, baton, passing |
 | `subagent-driven-development` | Use when executing implementation plans with independent tasks in the current session | subagent, driven | subagent, driven, development, executing, plans, independent, tasks, current, session |
 | `subject-line-psychologist` | One sentence - what this skill does and when to invoke it | subject, line, psychologist | subject, line, psychologist, one, sentence, what, skill, does, invoke |
+| `super-code` | Standing house style to enforce dense, correct, and idiomatic code on all coding tasks. Minimizes code bloat and agent operation overhead. | super, code | super, code, standing, house, style, enforce, dense, correct, idiomatic, all, coding, tasks |
+| `super-code/bash` | Language-specific super-code guidelines for bash. | super, code/bash | super, code/bash, bash, language, specific, code, guidelines |
+| `super-code/c` | Language-specific super-code guidelines for c. | super, code/c | super, code/c, language, specific, code, guidelines |
+| `super-code/cpp` | Language-specific super-code guidelines for cpp. | super, code/cpp | super, code/cpp, cpp, language, specific, code, guidelines |
+| `super-code/dart` | Language-specific super-code guidelines for dart. | super, code/dart | super, code/dart, dart, language, specific, code, guidelines |
+| `super-code/elixir` | Language-specific super-code guidelines for elixir. | super, code/elixir | super, code/elixir, elixir, language, specific, code, guidelines |
+| `super-code/kotlin` | Language-specific super-code guidelines for kotlin. | super, code/kotlin | super, code/kotlin, kotlin, language, specific, code, guidelines |
+| `super-code/scala` | Language-specific super-code guidelines for scala. | super, code/scala | super, code/scala, scala, language, specific, code, guidelines |
+| `super-code/swift` | Language-specific super-code guidelines for swift. | super, code/swift | super, code/swift, swift, language, specific, code, guidelines |
 | `superpowers-lab` | Lab environment for Claude superpowers | superpowers, lab | superpowers, lab, environment, claude |
 | `swift-concurrency-expert` | Review and fix Swift concurrency issues such as actor isolation and Sendable violations. | swift, concurrency | swift, concurrency, review, fix, issues, such, actor, isolation, sendable, violations |
 | `swiftui-liquid-glass` | Implement or review SwiftUI Liquid Glass APIs with correct fallbacks and modifier order. | swiftui, liquid, glass | swiftui, liquid, glass, review, apis, correct, fallbacks, modifier, order |

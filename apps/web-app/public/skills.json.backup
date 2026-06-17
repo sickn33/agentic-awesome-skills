@@ -2456,6 +2456,30 @@
     }
   },
   {
+    "id": "apple-notes-search",
+    "path": "skills/apple-notes-search",
+    "category": "uncategorized",
+    "name": "apple-notes-search",
+    "description": "Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall, or synthesize something from their notes, or surface non-obvious bridges/related notes. macOS, on-device.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ]
+    }
+  },
+  {
     "id": "application-performance-performance-optimization",
     "path": "skills/application-performance-performance-optimization",
     "category": "reliability",
@@ -6090,6 +6114,28 @@
     }
   },
   {
+    "id": "bash",
+    "path": "skills/super-code/bash",
+    "category": "super-code",
+    "name": "bash",
+    "description": "Language-specific super-code guidelines for bash.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "bash-defensive-patterns",
     "path": "skills/bash-defensive-patterns",
     "category": "development",
@@ -7094,6 +7140,28 @@
     "risk": "safe",
     "source": "official",
     "date_added": "2026-04-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "c",
+    "path": "skills/super-code/c",
+    "category": "super-code",
+    "name": "c",
+    "description": "Language-specific super-code guidelines for c.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -9690,6 +9758,28 @@
     }
   },
   {
+    "id": "cpp",
+    "path": "skills/super-code/cpp",
+    "category": "super-code",
+    "name": "cpp",
+    "description": "Language-specific super-code guidelines for cpp.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "cpp-pro",
     "path": "skills/cpp-pro",
     "category": "code",
@@ -10130,6 +10220,28 @@
     }
   },
   {
+    "id": "csharp",
+    "path": "skills/super-code/csharp",
+    "category": "super-code",
+    "name": "csharp",
+    "description": "Language-specific super-code guidelines for csharp.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "csharp-pro",
     "path": "skills/csharp-pro",
     "category": "code",
@@ -10292,6 +10404,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "dart",
+    "path": "skills/super-code/dart",
+    "category": "super-code",
+    "name": "dart",
+    "description": "Language-specific super-code guidelines for dart.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12168,6 +12302,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "elixir",
+    "path": "skills/super-code/elixir",
+    "category": "super-code",
+    "name": "elixir",
+    "description": "Language-specific super-code guidelines for elixir.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -15240,6 +15396,28 @@
     }
   },
   {
+    "id": "go",
+    "path": "skills/super-code/go",
+    "category": "super-code",
+    "name": "go",
+    "description": "Language-specific super-code guidelines for go.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "go-concurrency-patterns",
     "path": "skills/go-concurrency-patterns",
     "category": "development",
@@ -17574,6 +17752,28 @@
     }
   },
   {
+    "id": "java",
+    "path": "skills/super-code/java",
+    "category": "super-code",
+    "name": "java",
+    "description": "Language-specific super-code guidelines for java.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "java-pro",
     "path": "skills/java-pro",
     "category": "code",
@@ -17978,6 +18178,28 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-04-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "kotlin",
+    "path": "skills/super-code/kotlin",
+    "category": "super-code",
+    "name": "kotlin",
+    "description": "Language-specific super-code guidelines for kotlin.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23583,6 +23805,28 @@
     }
   },
   {
+    "id": "php",
+    "path": "skills/super-code/php",
+    "category": "super-code",
+    "name": "php",
+    "description": "Language-specific super-code guidelines for php.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "php-pro",
     "path": "skills/php-pro",
     "category": "code",
@@ -24827,6 +25071,28 @@
     "risk": "safe",
     "source": "https://github.com/omkamal/pypict-claude-skill/blob/main/SKILL.md",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "python",
+    "path": "skills/super-code/python",
+    "category": "super-code",
+    "name": "python",
+    "description": "Language-specific super-code guidelines for python.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26095,6 +26361,28 @@
     }
   },
   {
+    "id": "ruby",
+    "path": "skills/super-code/ruby",
+    "category": "super-code",
+    "name": "ruby",
+    "description": "Language-specific super-code guidelines for ruby.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ruby-pro",
     "path": "skills/ruby-pro",
     "category": "code",
@@ -26147,6 +26435,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-05-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "rust",
+    "path": "skills/super-code/rust",
+    "category": "super-code",
+    "name": "rust",
+    "description": "Language-specific super-code guidelines for rust.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26433,6 +26743,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "scala",
+    "path": "skills/super-code/scala",
+    "category": "super-code",
+    "name": "scala",
+    "description": "Language-specific super-code guidelines for scala.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29925,6 +30257,28 @@
     }
   },
   {
+    "id": "super-code",
+    "path": "skills/super-code",
+    "category": "uncategorized",
+    "name": "super-code",
+    "description": "Standing house style to enforce dense, correct, and idiomatic code on all coding tasks. Minimizes code bloat and agent operation overhead.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "superpowers-lab",
     "path": "skills/superpowers-lab",
     "category": "uncategorized",
@@ -29977,6 +30331,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "swift",
+    "path": "skills/super-code/swift",
+    "category": "super-code",
+    "name": "swift",
+    "description": "Language-specific super-code guidelines for swift.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31697,6 +32073,28 @@
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "typescript",
+    "path": "skills/super-code/typescript",
+    "category": "super-code",
+    "name": "typescript",
+    "description": "Language-specific super-code guidelines for typescript.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
