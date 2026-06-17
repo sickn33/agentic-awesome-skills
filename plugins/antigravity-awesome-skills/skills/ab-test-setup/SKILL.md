@@ -127,6 +127,20 @@ Estimate:
 
 ---
 
+### Tracking Verification (Required before Gate 8)
+
+Before entering the Execution Readiness Gate below, run through this checklist to make "Tracking is verified" mean something concrete:
+
+1. **Event firing:** Trigger each event the primary and secondary metrics depend on (sign-up, add-to-cart, custom event) on staging or a debug page, and confirm it lands in your analytics destination within 30 seconds.
+2. **Variant attribution:** Verify that the variant assignment ID is attached to every fired event — not just the entry event. Use your analytics' raw event view to compare a sample of 5+ events per variant.
+3. **De-duplication:** Confirm that a user reloading the page does not cause double-counted events. If your stack uses client-side de-duping, the variant ID must be part of the dedup key.
+4. **Sample randomization:** Pull the first 100 assignment records from your assignment table; the variant split should be within ±5% of the configured allocation.
+5. **Guardrail metric pipeline:** Each guardrail metric defined in §6️⃣ must have a working dashboard or alert by the time the test launches.
+
+If any of the above fails, stop and resolve it before Gate 8.
+
+---
+
 ## 8️⃣ Execution Readiness Gate (Hard Stop)
 
 You may proceed to implementation **only if all are true**:
