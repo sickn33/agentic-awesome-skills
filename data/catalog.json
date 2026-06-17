@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1569,
+  "total": 1586,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -33861,6 +33861,350 @@
         "execution"
       ],
       "path": "skills/supabase-automation/SKILL.md"
+    },
+    {
+      "id": "super-code",
+      "name": "super-code",
+      "description": "Standing house style to enforce dense, correct, and idiomatic code on all coding tasks. Minimizes code bloat and agent operation overhead.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code"
+      ],
+      "triggers": [
+        "super",
+        "code",
+        "standing",
+        "house",
+        "style",
+        "enforce",
+        "dense",
+        "correct",
+        "idiomatic",
+        "all",
+        "coding",
+        "tasks"
+      ],
+      "path": "skills/super-code/SKILL.md"
+    },
+    {
+      "id": "super-code/bash",
+      "name": "bash",
+      "description": "Language-specific super-code guidelines for bash.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/bash"
+      ],
+      "triggers": [
+        "super",
+        "code/bash",
+        "bash",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/bash/SKILL.md"
+    },
+    {
+      "id": "super-code/c",
+      "name": "c",
+      "description": "Language-specific super-code guidelines for c.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/c"
+      ],
+      "triggers": [
+        "super",
+        "code/c",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/c/SKILL.md"
+    },
+    {
+      "id": "super-code/cpp",
+      "name": "cpp",
+      "description": "Language-specific super-code guidelines for cpp.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/cpp"
+      ],
+      "triggers": [
+        "super",
+        "code/cpp",
+        "cpp",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/cpp/SKILL.md"
+    },
+    {
+      "id": "super-code/csharp",
+      "name": "csharp",
+      "description": "Language-specific super-code guidelines for csharp.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/csharp"
+      ],
+      "triggers": [
+        "super",
+        "code/csharp",
+        "csharp",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/csharp/SKILL.md"
+    },
+    {
+      "id": "super-code/dart",
+      "name": "dart",
+      "description": "Language-specific super-code guidelines for dart.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/dart"
+      ],
+      "triggers": [
+        "super",
+        "code/dart",
+        "dart",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/dart/SKILL.md"
+    },
+    {
+      "id": "super-code/elixir",
+      "name": "elixir",
+      "description": "Language-specific super-code guidelines for elixir.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/elixir"
+      ],
+      "triggers": [
+        "super",
+        "code/elixir",
+        "elixir",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/elixir/SKILL.md"
+    },
+    {
+      "id": "super-code/go",
+      "name": "go",
+      "description": "Language-specific super-code guidelines for go.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/go"
+      ],
+      "triggers": [
+        "super",
+        "code/go",
+        "go",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/go/SKILL.md"
+    },
+    {
+      "id": "super-code/java",
+      "name": "java",
+      "description": "Language-specific super-code guidelines for java.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/java"
+      ],
+      "triggers": [
+        "super",
+        "code/java",
+        "java",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/java/SKILL.md"
+    },
+    {
+      "id": "super-code/kotlin",
+      "name": "kotlin",
+      "description": "Language-specific super-code guidelines for kotlin.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/kotlin"
+      ],
+      "triggers": [
+        "super",
+        "code/kotlin",
+        "kotlin",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/kotlin/SKILL.md"
+    },
+    {
+      "id": "super-code/php",
+      "name": "php",
+      "description": "Language-specific super-code guidelines for php.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/php"
+      ],
+      "triggers": [
+        "super",
+        "code/php",
+        "php",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/php/SKILL.md"
+    },
+    {
+      "id": "super-code/python",
+      "name": "python",
+      "description": "Language-specific super-code guidelines for python.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/python"
+      ],
+      "triggers": [
+        "super",
+        "code/python",
+        "python",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/python/SKILL.md"
+    },
+    {
+      "id": "super-code/ruby",
+      "name": "ruby",
+      "description": "Language-specific super-code guidelines for ruby.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/ruby"
+      ],
+      "triggers": [
+        "super",
+        "code/ruby",
+        "ruby",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/ruby/SKILL.md"
+    },
+    {
+      "id": "super-code/rust",
+      "name": "rust",
+      "description": "Language-specific super-code guidelines for rust.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/rust"
+      ],
+      "triggers": [
+        "super",
+        "code/rust",
+        "rust",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/rust/SKILL.md"
+    },
+    {
+      "id": "super-code/scala",
+      "name": "scala",
+      "description": "Language-specific super-code guidelines for scala.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/scala"
+      ],
+      "triggers": [
+        "super",
+        "code/scala",
+        "scala",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/scala/SKILL.md"
+    },
+    {
+      "id": "super-code/swift",
+      "name": "swift",
+      "description": "Language-specific super-code guidelines for swift.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/swift"
+      ],
+      "triggers": [
+        "super",
+        "code/swift",
+        "swift",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/swift/SKILL.md"
+    },
+    {
+      "id": "super-code/typescript",
+      "name": "typescript",
+      "description": "Language-specific super-code guidelines for typescript.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/typescript"
+      ],
+      "triggers": [
+        "super",
+        "code/typescript",
+        "typescript",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/typescript/SKILL.md"
     },
     {
       "id": "superpowers-lab",
