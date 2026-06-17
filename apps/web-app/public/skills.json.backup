@@ -2456,6 +2456,30 @@
     }
   },
   {
+    "id": "apple-notes-search",
+    "path": "skills/apple-notes-search",
+    "category": "uncategorized",
+    "name": "apple-notes-search",
+    "description": "Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall, or synthesize something from their notes, or surface non-obvious bridges/related notes. macOS, on-device.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ]
+    }
+  },
+  {
     "id": "application-performance-performance-optimization",
     "path": "skills/application-performance-performance-optimization",
     "category": "reliability",

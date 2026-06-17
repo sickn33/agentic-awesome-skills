@@ -2258,6 +2258,31 @@
       "runtime_files": []
     },
     {
+      "id": "apple-notes-search",
+      "path": "skills/apple-notes-search",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "absolute_host_path"
+        ],
+        "claude": [
+          "absolute_host_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "application-performance-performance-optimization",
       "path": "skills/application-performance-performance-optimization",
       "targets": {
@@ -30420,14 +30445,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1586,
+    "total_skills": 1587,
     "supported": {
       "codex": 1536,
       "claude": 1553
     },
     "blocked": {
-      "codex": 50,
-      "claude": 33
+      "codex": 51,
+      "claude": 34
     },
     "manual_setup": 5
   }

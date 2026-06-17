@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1586,
+  "total": 1587,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2945,6 +2945,35 @@
         "publish"
       ],
       "path": "skills/appdeploy/SKILL.md"
+    },
+    {
+      "id": "apple-notes-search",
+      "name": "apple-notes-search",
+      "description": "Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall, or synthesize something from their notes, or surface non-obvious bridges/related notes. macOS, on-device.",
+      "category": "general",
+      "tags": [
+        "apple-notes",
+        "search",
+        "mcp",
+        "macos",
+        "semantic-search",
+        "knowledge"
+      ],
+      "triggers": [
+        "apple-notes",
+        "search",
+        "mcp",
+        "macos",
+        "semantic-search",
+        "knowledge",
+        "apple",
+        "notes",
+        "semantic",
+        "keyword",
+        "connection",
+        "discovery"
+      ],
+      "path": "skills/apple-notes-search/SKILL.md"
     },
     {
       "id": "application-performance-performance-optimization",
