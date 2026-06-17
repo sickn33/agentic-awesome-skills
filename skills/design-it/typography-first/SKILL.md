@@ -1,6 +1,7 @@
 ---
 name: typography-first
 description: Web and App implementation guide for Typography First Design. Trigger when user wants text as the absolute main visual element, with minimal UI chroming.
+date_added: "2026-06-17"
 ---
 
 # Typography First Design

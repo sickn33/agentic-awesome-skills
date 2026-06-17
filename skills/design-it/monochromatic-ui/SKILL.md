@@ -1,6 +1,7 @@
 ---
 name: monochromatic-ui
 description: Web and App implementation guide for Monochromatic UI. Trigger when user wants a single-color palette, high elegance, and strict color discipline.
+date_added: "2026-06-17"
 ---
 
 # Monochromatic UI

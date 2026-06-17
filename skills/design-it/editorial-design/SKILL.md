@@ -1,6 +1,7 @@
 ---
 name: editorial-design
 description: Web and App implementation guide for Editorial Design. Trigger when user wants a magazine-inspired layout, large headlines, and elegant typography pairing.
+date_added: "2026-06-17"
 ---
 
 # Editorial Design

@@ -1,6 +1,7 @@
 ---
 name: cyberpunk-ui
 description: Web and App implementation guide for Cyberpunk UI. Trigger when user wants neon colors, dark backgrounds, high-tech dystopian aesthetics, and hacking interfaces.
+date_added: "2026-06-17"
 ---
 
 # Cyberpunk UI

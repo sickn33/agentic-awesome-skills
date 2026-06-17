@@ -1,6 +1,7 @@
 ---
 name: neo-brutalism
 description: Web and App implementation guide for Neo-Brutalism. Trigger when user wants thick borders, hard shadows, bright colors, and a playful yet structured look.
+date_added: "2026-06-17"
 ---
 
 # Neo-Brutalism

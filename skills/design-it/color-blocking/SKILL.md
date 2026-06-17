@@ -1,6 +1,7 @@
 ---
 name: color-blocking
 description: Web and App implementation guide for Color Blocking. Trigger when user wants large color sections, striking layout divisions, and Mondrian-style grids.
+date_added: "2026-06-17"
 ---
 
 # Color Blocking

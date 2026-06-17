@@ -1,6 +1,7 @@
 ---
 name: retro-design
 description: Web and App implementation guide for Retro Design (60s-80s). Trigger when user wants vintage aesthetics, warm muted colors, and nostalgic layouts.
+date_added: "2026-06-17"
 ---
 
 # Retro Design

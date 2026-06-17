@@ -1,6 +1,7 @@
 ---
 name: maximalism
 description: Web and App implementation guide for Controlled Maximalism. Trigger when user wants lots of elements, dense content, but a highly curated and artistic presentation.
+date_added: "2026-06-17"
 ---
 
 # Controlled Maximalism

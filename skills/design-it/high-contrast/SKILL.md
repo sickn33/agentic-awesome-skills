@@ -1,6 +1,7 @@
 ---
 name: high-contrast
 description: Web and App implementation guide for High Contrast Design. Trigger when user wants accessibility-focused design, extreme legibility, or stark visual impact.
+date_added: "2026-06-17"
 ---
 
 # High Contrast Design

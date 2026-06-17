@@ -1,6 +1,7 @@
 ---
 name: vaporwave
 description: Web and App implementation guide for Vaporwave. Trigger when user wants neon colors, retro digital aesthetics, 90s OS elements, and Roman statues.
+date_added: "2026-06-17"
 ---
 
 # Vaporwave

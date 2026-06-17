@@ -1,6 +1,7 @@
 ---
 name: 3d-ui
 description: Web and App implementation guide for 3D UI. Trigger when user wants actual 3D objects, perspective effects, and spatial depth.
+date_added: "2026-06-17"
 ---
 
 # 3D UI

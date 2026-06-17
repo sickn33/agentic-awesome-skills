@@ -1,6 +1,7 @@
 ---
 name: minimalism
 description: Web and App implementation guide for the Minimalism design style. Trigger when the user wants simple layouts, lots of whitespace, few colors, and clear hierarchy.
+date_added: "2026-06-17"
 ---
 
 # Minimalism

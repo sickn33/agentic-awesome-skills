@@ -1,6 +1,7 @@
 ---
 name: spatial-computing-ui
 description: Web and App implementation guide for Spatial Computing UI. Trigger when user wants floating elements, environmental awareness, and Apple Vision Pro style.
+date_added: "2026-06-17"
 ---
 
 # Spatial Computing UI

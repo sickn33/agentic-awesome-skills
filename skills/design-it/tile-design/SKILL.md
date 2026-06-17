@@ -1,6 +1,7 @@
 ---
 name: tile-design
 description: Web and App implementation guide for Tile Design. Trigger when user wants Microsoft Metro style, sharp square information units, and horizontal scrolling grids.
+date_added: "2026-06-17"
 ---
 
 # Tile Design (Metro UI)

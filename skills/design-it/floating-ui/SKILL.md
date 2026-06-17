@@ -1,6 +1,7 @@
 ---
 name: floating-ui
 description: Web and App implementation guide for Floating UI. Trigger when user wants detached cards, elevated components, and a light, airy feel.
+date_added: "2026-06-17"
 ---
 
 # Floating UI

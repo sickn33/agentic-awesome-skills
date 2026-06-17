@@ -1,6 +1,7 @@
 ---
 name: flat-design
 description: Web and App implementation guide for the Flat Design style. Trigger when the user wants no shadows, simple shapes, and bold colors.
+date_added: "2026-06-17"
 ---
 
 # Flat Design

@@ -1,6 +1,7 @@
 ---
 name: synthwave
 description: Web and App implementation guide for Synthwave. Trigger when user wants 80s-inspired neon, dark backgrounds, outrun grids, and Miami Vice aesthetics.
+date_added: "2026-06-17"
 ---
 
 # Synthwave (Outrun)

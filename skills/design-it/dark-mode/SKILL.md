@@ -1,6 +1,7 @@
 ---
 name: dark-mode
 description: Web and App implementation guide for Dark Mode Design. Trigger when user wants dark surfaces, reduced eye strain, and premium sleek aesthetics.
+date_added: "2026-06-17"
 ---
 
 # Dark Mode Design

@@ -1,6 +1,7 @@
 ---
 name: bento-ui
 description: Web and App implementation guide for Bento UI. Trigger when user wants modular grid cards, Apple-like dashboard style, or sections arranged like a bento box.
+date_added: "2026-06-17"
 ---
 
 # Bento UI

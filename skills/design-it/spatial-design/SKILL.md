@@ -1,6 +1,7 @@
 ---
 name: spatial-design
 description: Web and App implementation guide for Spatial Design. Trigger when user wants environment-aware layouts, Apple Vision Pro inspiration, and mixed reality aesthetics.
+date_added: "2026-06-17"
 ---
 
 # Spatial Design

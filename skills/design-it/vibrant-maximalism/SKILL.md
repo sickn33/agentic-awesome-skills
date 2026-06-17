@@ -1,6 +1,7 @@
 ---
 name: vibrant-maximalism
 description: Web and App implementation guide for Vibrant Maximalism. Trigger when user wants rich colors, dense layouts, extreme sensory input, and "more is more".
+date_added: "2026-06-17"
 ---
 
 # Vibrant Maximalism

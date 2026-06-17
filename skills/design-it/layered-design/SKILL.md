@@ -1,6 +1,7 @@
 ---
 name: layered-design
 description: Web and App implementation guide for Layered Design. Trigger when user wants multiple depth levels, floating panels, and overlapping content.
+date_added: "2026-06-17"
 ---
 
 # Layered Design

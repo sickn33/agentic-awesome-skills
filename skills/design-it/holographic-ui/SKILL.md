@@ -1,6 +1,7 @@
 ---
 name: holographic-ui
 description: Web and App implementation guide for Holographic UI. Trigger when user wants light-based appearance, projected interfaces, and transparent floating elements.
+date_added: "2026-06-17"
 ---
 
 # Holographic UI

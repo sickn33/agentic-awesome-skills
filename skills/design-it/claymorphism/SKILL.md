@@ -1,6 +1,7 @@
 ---
 name: claymorphism
 description: Web and App implementation guide for Claymorphism. Trigger when user wants soft 3D elements, rounded shapes, and a playful, tactile appearance.
+date_added: "2026-06-17"
 ---
 
 # Claymorphism

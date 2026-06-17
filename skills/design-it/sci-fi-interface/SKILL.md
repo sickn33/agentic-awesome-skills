@@ -1,6 +1,7 @@
 ---
 name: sci-fi-interface
 description: Web and App implementation guide for Sci-Fi Interface Design. Trigger when user wants HUDs, spacecraft dashboards, or tactical military readouts.
+date_added: "2026-06-17"
 ---
 
 # Sci-Fi Interface Design (HUD)

@@ -1,6 +1,7 @@
 ---
 name: dashboard-design
 description: Web and App implementation guide for Dashboard Design. Trigger when user wants analytics-focused layouts, data visualization, and modular overview screens.
+date_added: "2026-06-17"
 ---
 
 # Dashboard Design

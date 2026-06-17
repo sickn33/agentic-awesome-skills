@@ -1,6 +1,7 @@
 ---
 name: y2k-design
 description: Web and App implementation guide for Y2K Design. Trigger when user wants chrome effects, futuristic 2000s look, blob shapes, and tech optimism.
+date_added: "2026-06-17"
 ---
 
 # Y2K Design

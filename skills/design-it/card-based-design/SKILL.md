@@ -1,6 +1,7 @@
 ---
 name: card-based-design
 description: Web and App implementation guide for Card-Based Design. Trigger when user wants information cards, Pinterest-style layouts, and bite-sized content containers.
+date_added: "2026-06-17"
 ---
 
 # Card-Based Design

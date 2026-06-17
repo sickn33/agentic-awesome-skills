@@ -1,6 +1,7 @@
 ---
 name: neumorphism
 description: Web and App implementation guide for Neumorphism (Soft UI). Trigger when user wants soft shadows, extruded appearance, and light source simulation.
+date_added: "2026-06-17"
 ---
 
 # Neumorphism (Soft UI)

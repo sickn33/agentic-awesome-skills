@@ -1,6 +1,7 @@
 ---
 name: flat-design-2
 description: Web and App implementation guide for Flat Design 2.0 (Semi-Flat). Trigger when the user wants flat design with subtle shadows and improved usability.
+date_added: "2026-06-17"
 ---
 
 # Flat Design 2.0 (Semi-Flat)

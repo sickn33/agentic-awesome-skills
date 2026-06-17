@@ -1,6 +1,7 @@
 ---
 name: cyber-y2k
 description: Web and App implementation guide for Cyber Y2K. Trigger when user wants modern Y2K, holographic visuals, and glitch aesthetics.
+date_added: "2026-06-17"
 ---
 
 # Cyber Y2K

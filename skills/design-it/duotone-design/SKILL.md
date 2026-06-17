@@ -1,6 +1,7 @@
 ---
 name: duotone-design
 description: Web and App implementation guide for Duotone Design. Trigger when user wants two-color schemes, striking imagery, and Spotify-like playlist aesthetics.
+date_added: "2026-06-17"
 ---
 
 # Duotone Design

@@ -1,6 +1,7 @@
 ---
 name: skeuomorphism
 description: Web and App implementation guide for Skeuomorphism. Trigger when user wants UI to mimic real-world objects, realistic textures, or physical metaphors.
+date_added: "2026-06-17"
 ---
 
 # Skeuomorphism

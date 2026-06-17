@@ -1,6 +1,7 @@
 ---
 name: ai-native-ui
 description: Web and App implementation guide for AI Native UI. Trigger when user wants conversational interfaces, adaptive layouts, and generative AI aesthetics.
+date_added: "2026-06-17"
 ---
 
 # AI Native UI

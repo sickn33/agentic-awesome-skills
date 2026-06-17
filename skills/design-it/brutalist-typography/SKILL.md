@@ -1,6 +1,7 @@
 ---
 name: brutalist-typography
 description: Web and App implementation guide for Brutalist Typography. Trigger when user wants huge fonts, raw presentation, and aggressive layout decisions.
+date_added: "2026-06-17"
 ---
 
 # Brutalist Typography

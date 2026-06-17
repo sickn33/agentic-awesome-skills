@@ -1,6 +1,7 @@
 ---
 name: widget-based-design
 description: Web and App implementation guide for Widget-Based Design. Trigger when user wants modular blocks, iOS Home Screen aesthetics, and customizable mini-apps.
+date_added: "2026-06-17"
 ---
 
 # Widget-Based Design

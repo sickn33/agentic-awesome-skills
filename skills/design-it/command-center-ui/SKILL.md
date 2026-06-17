@@ -1,6 +1,7 @@
 ---
 name: command-center-ui
 description: Web and App implementation guide for Command Center UI. Trigger when user wants monitoring systems, enterprise dashboards, NOCs, and global maps.
+date_added: "2026-06-17"
 ---
 
 # Command Center UI

@@ -1,6 +1,7 @@
 ---
 name: material-design
 description: Web and App implementation guide for Material Design. Trigger when user wants Google's aesthetic, elevation, motion, and consistent components.
+date_added: "2026-06-17"
 ---
 
 # Material Design

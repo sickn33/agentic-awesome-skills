@@ -1,6 +1,7 @@
 ---
 name: soft-pastel
 description: Web and App implementation guide for Soft Pastel Design. Trigger when user wants gentle colors, calming UI, baby/lifestyle branding, or low-contrast aesthetics.
+date_added: "2026-06-17"
 ---
 
 # Soft Pastel Design
