@@ -51,3 +51,9 @@ record with `sck-record --no-cursor <out.mp4> <seconds>`, then run its post-prod
 pass on the resulting mp4. (Auto-zoom and keystroke overlays additionally need an
 input-event log captured *during* recording, which that skill supplies; `sck-record`'s
 pixels alone cover idle speed-up, cursor smoothing, and vertical export.)
+
+## Limitations
+
+- macOS only; it depends on ScreenCaptureKit and the user's Screen Recording permission.
+- The recorder captures raw display and system audio but does not provide editing, auto-zoom, captions, or social-format polish by itself.
+- Input-event overlays require a separate event log captured during recording; pixels alone cannot reconstruct keystrokes or precise click metadata.

@@ -121,3 +121,9 @@ the wrong set.
 - This generalizes: any reversible bulk toggle (select, expand-all, mute-all,
   check-all) needs its inverse one tap away. Symmetry of action — see
   restraint-rule (don't strand the user mid-task).
+
+## Limitations
+
+- This skill improves visual direction and review discipline, but it does not replace rendering the actual UI and checking it in target browsers or devices.
+- Some recommendations assume access to screenshots, browser automation, or vision review; when those are unavailable, treat the guidance as a design checklist rather than proof.
+- Brand, legal, accessibility, and localization constraints from the product owner override the taste rules here.

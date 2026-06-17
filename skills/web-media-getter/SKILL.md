@@ -111,3 +111,9 @@ This is the **internet-retrieval** capability — peer to `muser` (local semanti
 and `fal` (generate). A future `media` router would fan out across all three and rank
 candidates by relevance (CLIP), handing aesthetic spreads to `lookdev`. Don't build that
 router until the model demonstrably mis-routes without it.
+
+## Limitations
+
+- Results depend on third-party API availability, quotas, credentials, and license metadata quality.
+- License tags and attribution fields must still be reviewed before commercial or public use.
+- Relevance ranking can find plausible assets, but final aesthetic fit, brand safety, and audio suitability require human inspection.

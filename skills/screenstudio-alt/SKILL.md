@@ -83,3 +83,9 @@ is the DEFAULT for social-facing demos.
   PNGs + `overlay`.
 - Test rig: `make-fixture.py` synthesizes a fake screen recording + ground-truth
   events.jsonl — validate any change against it before trusting real footage.
+
+## Limitations
+
+- The workflow assumes FFmpeg plus the companion scripts are available locally; it is not a hosted video editor.
+- Polished cursor, click, and keystroke effects depend on event logs captured during recording; missing logs limit what can be reconstructed.
+- Auto-zoom and idle speed-up still need human review for pacing, framing, and platform-specific taste.

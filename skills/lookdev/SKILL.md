@@ -221,3 +221,9 @@ UI, numbers not vibes). The family it chains with:
 - **macos-screen-recorder** — capture a studio session or demo (display + system audio).
 - **lookdev-auto** — the *automated* counterpart: a vision model judges instead of you.
   The foil to lookdev's thesis — use when there's no human to sit the loop.
+
+## Limitations
+
+- Lookdev is useful only when the user can inspect or mark up rendered variants; it is overkill for small deterministic edits.
+- A studio must faithfully mirror production fonts, media, containers, and constraints, otherwise the chosen settings can be misleading.
+- Human preference remains the source of truth, so the workflow cannot guarantee a universally "best" design or media treatment.

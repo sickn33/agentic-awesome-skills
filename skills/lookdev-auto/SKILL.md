@@ -94,3 +94,9 @@ a tight optimize loop. Worked reference: the `screenstudio-alternative` skill (`
   winner against the safe default yourself before committing.
 - Vision/video models perceive gross differences well, fine ones poorly — keep variant
   spacing perceptible; near-identical variants get noise-rated.
+
+## Limitations
+
+- Model ratings are probabilistic aesthetic judgments, not objective truth; keep a human review step for brand-critical or subjective work.
+- Automated rounds can become expensive or slow when renders are heavy or many variants are explored.
+- This skill needs screenshots, frames, or clips that expose the quality difference; it is weak for subtle motion, audio, copy nuance, or user-preference calls.
