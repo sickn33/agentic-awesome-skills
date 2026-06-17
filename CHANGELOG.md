@@ -9,28 +9,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [12.8.0] - 2026-06-17 - "Maintainer Batch and SEO Metadata Refresh"
+## [12.8.0] - 2026-06-17 - "Community Skills and Maintainer Fixes"
 
-> Patch release for the June 17 maintainer batch and hosted catalog metadata.
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
 
-This release packages the June 17 maintainer batch: accepted community PRs, issue-closing skill fixes, generated registry sync, and the hosted catalog refreshed to 1,595+ skills.
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 17 maintainer batch: 11 merged PRs, six issue-closing workflow fixes, new community skill families, maintainer safety edits before merge, and a generated catalog refresh to 1,595+ skills.
 
 ## New Skills
 
-- **apple-notes-search** - Apple Notes MCP search workflow with safer setup guidance and limitations.
-- **pr-merge-champion** - pull request merge review and maintainer workflow guidance.
-- **super-code** and companion language skills - multi-language coding guidance across Bash, C, C++, C#, Dart, Elixir, Go, Java, Kotlin, PHP, Python, Ruby, Rust, Scala, Swift, and TypeScript.
-- **ckw-design**, **deterministic-design**, **lookdev**, **lookdev-auto**, **macos-screen-recorder**, **screenstudio-alt**, and **web-media-getter** - Conner K Ward inspired creative, media, and design workflows.
+- **super-code** - a multi-language coding skill with 16 companion subskills for Bash, C, C++, C#, Dart, Elixir, Go, Java, Kotlin, PHP, Python, Ruby, Rust, Scala, Swift, and TypeScript (PR #701).
+- **apple-notes-search** - Apple Notes MCP search workflow for local note discovery, with maintainer-added limitations, README source credit, safer Bun setup guidance, and Full Disk Access path guidance (PR #703).
+- **Conner K Ward skill set** - **ckw-design**, **deterministic-design**, **lookdev**, **lookdev-auto**, **macos-screen-recorder**, **screenstudio-alt**, and **web-media-getter**, all merged with README credits and added limitations sections (PR #704).
+- **pr-merge-champion** - pull request merge review and maintainer workflow guidance for checking PR readiness, risk, and merge hygiene (PR #691).
 
-## Fixes
+## Skill Fixes
 
-- Fixed workflow documentation and reference issues in `ab-test-setup`, `astropy`, `browser-extension-builder`, `lint-and-validate`, `programmatic-seo`, `schema-markup`, and `youtube-seo-optimizer`.
-- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current 1,595+ catalog.
+- Tightened **youtube-seo-optimizer** badge guidance by addressing exact-match tag count and Shorts exemption feedback (PR #700).
+- Fixed the duplicate **Extension Architecture** heading in **browser-extension-builder** (PR #706, closes #705).
+- Added missing **astropy** reference stubs that point users to the appropriate upstream Astropy documentation areas (PR #708, closes #707).
+- Added category-level scoring guidance before **schema-markup** eligibility bands (PR #710, closes #709).
+- Added category-level scoring guidance before **programmatic-seo** feasibility bands (PR #712, closes #711).
+- Made **lint-and-validate** quality-loop commands ecosystem-aware instead of Node.js-only (PR #714, closes #713).
+- Added a concrete **ab-test-setup** tracking verification procedure before Gate 8 (PR #716, closes #715).
 
-## Improvements
+## Maintainer Sync
 
 - Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,595+ skill catalog.
-- Left the large AI Skill Registry validation framework PR open for contributor follow-up instead of merging unrelated tooling surfaces into this patch release.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current catalog count and v12.8.0 release metadata.
+- Left PR #702, the AI Skill Registry validation framework, open for contributor follow-up because it combines broad Python tooling, a parallel .NET CLI, baseline behavior, and release-surface changes that should be split before merge.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #701 (`super-code`).
+- **[@connerkward](https://github.com/connerkward)** and the referenced Conner K Ward upstream projects for PR #703 (`apple-notes-search`) and PR #704 (`ckw-design`, `deterministic-design`, `lookdev`, `lookdev-auto`, `macos-screen-recorder`, `screenstudio-alt`, `web-media-getter`).
+- **[@himanshu-2l](https://github.com/himanshu-2l)** for PR #691 (`pr-merge-champion`).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #700 (`youtube-seo-optimizer` fixes).
+- **[@specterslient95-lgtm](https://github.com/specterslient95-lgtm)** for PRs #706, #708, #710, #712, #714, and #716, which closed issues #705, #707, #709, #711, #713, and #715.
 
 ## [12.7.0] - 2026-06-16 - "CrossFrame Suite and Workflow Fixes"
 
