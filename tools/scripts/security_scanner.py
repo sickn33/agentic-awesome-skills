@@ -265,12 +265,13 @@ def scan_skill_file(skill_path: Path) -> ScanResult | None:
 
 
 def scan_all_skills(skills_dir: Path) -> list[ScanResult]:
-    """Scan all skill directories under skills_dir."""
+    """Scan all skill directories under skills_dir (recursively)."""
     results: list[ScanResult] = []
-    for entry in sorted(skills_dir.iterdir()):
-        if not entry.is_dir() or entry.name.startswith("."):
+    for skill_file in sorted(skills_dir.rglob("SKILL.md")):
+        skill_path = skill_file.parent
+        if any(part.startswith(".") for part in skill_path.parts):
             continue
-        result = scan_skill_file(entry)
+        result = scan_skill_file(skill_path)
         if result is not None:
             results.append(result)
     return results

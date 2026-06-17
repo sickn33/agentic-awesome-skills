@@ -173,18 +173,21 @@ def save_baseline(
 
 
 def build_current_entries(skills_dir: Path) -> dict[str, DriftEntry]:
-    """Compute DriftEntry for every skill currently on disk."""
+    """Compute DriftEntry for every skill currently on disk (recursively)."""
     now = datetime.now(timezone.utc).isoformat()
     entries: dict[str, DriftEntry] = {}
-    for entry in sorted(skills_dir.iterdir()):
-        if not entry.is_dir() or entry.name.startswith("."):
+    for skill_file in sorted(skills_dir.rglob("SKILL.md")):
+        skill_path = skill_file.parent
+        if any(part.startswith(".") for part in skill_path.parts):
             continue
-        result = compute_skill_hash(entry)
+        result = compute_skill_hash(skill_path)
         if result is None:
             continue
         hash_, length = result
-        entries[entry.name] = DriftEntry(
-            skill_id=entry.name,
+        # Use path relative to skills_dir as ID to handle nested layouts uniquely
+        skill_id = skill_path.relative_to(skills_dir).as_posix()
+        entries[skill_id] = DriftEntry(
+            skill_id=skill_id,
             hash_=hash_,
             length=length,
             updated_at=now,

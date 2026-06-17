@@ -231,10 +231,15 @@ def score_security(scan_result: ScanResult, metadata: dict) -> float:
     return max(0.0, score)
 
 
-def score_skill(skill_path: Path) -> SkillScore | None:
+def score_skill(skill_path: Path, skill_id: str | None = None) -> SkillScore | None:
     """
     Read a skill directory and compute its quality score.
     Returns None if the skill cannot be read or parsed.
+
+    Args:
+        skill_path: Path to the skill directory containing SKILL.md.
+        skill_id: Override for the skill identifier (e.g. a relative path).
+                  Defaults to the directory name.
     """
     skill_file = skill_path / "SKILL.md"
     if not skill_file.exists():
@@ -252,13 +257,15 @@ def score_skill(skill_path: Path) -> SkillScore | None:
     # Strip frontmatter to get body for documentation scoring
     body = re.sub(r"^---\s*\n.*?\n---\s*\n?", "", content, count=1, flags=re.DOTALL)
 
+    effective_id = skill_id if skill_id is not None else skill_path.name
     is_offensive = str(metadata.get("risk", "")).lower() == "offensive"
     scan_result = scan_content(
-        skill_id=skill_path.name,
+        skill_id=effective_id,
         content=body,
         is_offensive=is_offensive,
     )
 
+    # Metadata name comparison always uses the immediate directory name
     meta_score = score_metadata(metadata, skill_path.name)
     doc_score = score_documentation(content, body)
     sec_score = score_security(scan_result, metadata)
@@ -266,7 +273,7 @@ def score_skill(skill_path: Path) -> SkillScore | None:
     total = (meta_score * _W_METADATA) + (doc_score * _W_DOCS) + (sec_score * _W_SECURITY)
 
     return SkillScore(
-        skill_id=skill_path.name,
+        skill_id=effective_id,
         risk=metadata.get("risk", "unknown"),
         metadata_score=round(meta_score, 1),
         documentation_score=round(doc_score, 1),
@@ -278,12 +285,15 @@ def score_skill(skill_path: Path) -> SkillScore | None:
 
 
 def score_all_skills(skills_dir: Path) -> list[SkillScore]:
-    """Score every skill directory found under skills_dir."""
+    """Score every skill directory found under skills_dir (recursively)."""
     scores: list[SkillScore] = []
-    for entry in sorted(skills_dir.iterdir()):
-        if not entry.is_dir() or entry.name.startswith("."):
+    for skill_file in sorted(skills_dir.rglob("SKILL.md")):
+        skill_path = skill_file.parent
+        if any(part.startswith(".") for part in skill_path.parts):
             continue
-        result = score_skill(entry)
+        # Use path relative to skills_dir as ID to avoid collisions in nested layouts
+        rel_id = skill_path.relative_to(skills_dir).as_posix()
+        result = score_skill(skill_path, skill_id=rel_id)
         if result is not None:
             scores.append(result)
     return scores
@@ -412,7 +422,8 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = find_repo_root(__file__)
     skills_dir = repo_root / "skills"
 
-    print(f"📐 Scoring skills in: {skills_dir}")
+    if not args.json:
+        print(f"📐 Scoring skills in: {skills_dir}")
     scores = score_all_skills(skills_dir)
     summary = build_summary(scores)
 
