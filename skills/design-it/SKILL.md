@@ -92,7 +92,7 @@ If the user provides their own colors, use them. Otherwise, you MUST use one of 
 
 ## Style Index (48 Styles)
 
-To use a style, you MUST read its file at `f:\skill\design-it\<style-folder>\SKILL.md`.
+To use a style, you MUST read its file at `<style-folder>/SKILL.md` relative to this file's directory.
 
 ### Modern UI
 - `minimalism`
