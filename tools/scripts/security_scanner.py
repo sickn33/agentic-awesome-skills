@@ -42,9 +42,9 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
     ),
     SecurityPattern(
         code="SEC002",
-        regex=r"curl\b[^\n]*\|\s*bash",
+        regex=r"curl\b[^\n]*\|\s*(?:bash|sh|zsh)",
         severity="error",
-        description="Remote code execution: curl | bash",
+        description="Remote code execution: curl piped to shell",
         rationale="Pipes untrusted remote content directly into a shell without integrity verification.",
     ),
     SecurityPattern(
@@ -70,10 +70,10 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
     ),
     SecurityPattern(
         code="SEC006",
-        regex=r"chmod\s+[0-9]*7[0-9]*[0-9]*\s",
+        regex=r"chmod\s+[0-7]*[2367](?:\s|$)",
         severity="warning",
-        description="World-writable permission (chmod 7xx / 777)",
-        rationale="chmod 777 grants all users write+execute access — usually a misconfiguration.",
+        description="World-writable permission (other-write bit set)",
+        rationale="Modes where the last octal digit is 2/3/6/7 grant write access to all users.",
     ),
     SecurityPattern(
         code="SEC007",
@@ -120,7 +120,9 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
 ]
 
 # Lines containing this marker are excluded from scanning (project convention).
-_ALLOWLIST_MARKERS = ("# security-allowlist", "<!-- security-allowlist -->")
+# Prefix match covers both bare (<!-- security-allowlist -->) and colon forms
+# (<!-- security-allowlist: reason -->) documented in skill-template.md.
+_ALLOWLIST_MARKERS = ("# security-allowlist", "<!-- security-allowlist")
 
 
 # ---------------------------------------------------------------------------
