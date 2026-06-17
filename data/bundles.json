@@ -1006,6 +1006,7 @@
         "postgresql-optimization",
         "posthog-automation",
         "postmark-automation",
+        "pr-merge-champion",
         "production-audit",
         "rag-implementation",
         "reddit-automation",

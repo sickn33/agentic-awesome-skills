@@ -24445,6 +24445,28 @@
     }
   },
   {
+    "id": "pr-merge-champion",
+    "path": "skills/pr-merge-champion",
+    "category": "workflow",
+    "name": "pr-merge-champion",
+    "description": "Optimize pull requests for quick approval and merging by ensuring clean diffs, comprehensive self-reviews, and structured documentation.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "pr-writer",
     "path": "skills/pr-writer",
     "category": "workflow",

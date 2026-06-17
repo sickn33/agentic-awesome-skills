@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1594
+Total skills: 1595
 
 ## architecture (101)
 
@@ -1535,7 +1535,7 @@ Total skills: 1594
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (108)
+## workflow (109)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1616,6 +1616,7 @@ Total skills: 1594
 | `pagerduty-automation` | Automate PagerDuty tasks via Rube MCP (Composio): manage incidents, services, schedules, escalation policies, and on-call rotations. Always search tools firs... | pagerduty | pagerduty, automation, automate, tasks, via, rube, mcp, composio, incidents, schedules, escalation, policies |
 | `posthog-automation` | Automate PostHog tasks via Rube MCP (Composio): events, feature flags, projects, user profiles, annotations. Always search tools first for current schemas. | posthog | posthog, automation, automate, tasks, via, rube, mcp, composio, events, feature, flags, user |
 | `postmark-automation` | Automate Postmark email delivery tasks via Rube MCP (Composio): send templated emails, manage templates, monitor delivery stats and bounces. Always search to... | postmark | postmark, automation, automate, email, delivery, tasks, via, rube, mcp, composio, send, templated |
+| `pr-merge-champion` | Optimize pull requests for quick approval and merging by ensuring clean diffs, comprehensive self-reviews, and structured documentation. | git, github, pull-request, code-review, workflow | git, github, pull-request, code-review, workflow, pr, merge, champion, optimize, pull, requests, quick |
 | `reddit-automation` | Automate Reddit tasks via Rube MCP (Composio): search subreddits, create posts, manage comments, and browse top content. Always search tools first for curren... | reddit | reddit, automation, automate, tasks, via, rube, mcp, composio, search, subreddits, posts, comments |
 | `render-automation` | Automate Render tasks via Rube MCP (Composio): services, deployments, projects. Always search tools first for current schemas. | render | render, automation, automate, tasks, via, rube, mcp, composio, deployments, always, search, first |
 | `salesforce-automation` | Automate Salesforce tasks via Rube MCP (Composio): leads, contacts, accounts, opportunities, SOQL queries. Always search tools first for current schemas. | salesforce | salesforce, automation, automate, tasks, via, rube, mcp, composio, leads, contacts, accounts, opportunities |

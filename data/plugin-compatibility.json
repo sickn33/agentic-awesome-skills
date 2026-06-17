@@ -21144,6 +21144,25 @@
       "runtime_files": []
     },
     {
+      "id": "pr-merge-champion",
+      "path": "skills/pr-merge-champion",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pr-writer",
       "path": "skills/pr-writer",
       "targets": {
@@ -30578,10 +30597,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1594,
+    "total_skills": 1595,
     "supported": {
-      "codex": 1543,
-      "claude": 1560
+      "codex": 1544,
+      "claude": 1561
     },
     "blocked": {
       "codex": 51,
