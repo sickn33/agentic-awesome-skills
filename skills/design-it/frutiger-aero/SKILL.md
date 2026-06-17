@@ -2,11 +2,18 @@
 name: frutiger-aero
 description: Web and App implementation guide for Frutiger Aero. Trigger when user wants glossy gradients, early 2000s nature-inspired tech, glass, and water motifs.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Frutiger Aero
 
 > "The aesthetic of mid-2000s optimism. Glossy plastic, clear water, blue skies, and eco-friendly technology."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Hyper-Glossy Textures**: Buttons look like polished glass or wet plastic. Extensive use of convex gradients and specular highlights.

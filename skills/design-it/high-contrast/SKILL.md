@@ -2,11 +2,18 @@
 name: high-contrast
 description: Web and App implementation guide for High Contrast Design. Trigger when user wants accessibility-focused design, extreme legibility, or stark visual impact.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # High Contrast Design
 
 > "Maximum legibility. Stark, powerful, and universally accessible."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **WCAG AAA Compliance**: Every color pairing must exceed a 7:1 contrast ratio.

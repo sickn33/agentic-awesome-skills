@@ -2,11 +2,18 @@
 name: skeuomorphism
 description: Web and App implementation guide for Skeuomorphism. Trigger when user wants UI to mimic real-world objects, realistic textures, or physical metaphors.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Skeuomorphism
 
 > "Digital interfaces that look and behave like their physical counterparts."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Realistic Textures**: Leather, brushed metal, wood grain, paper. The UI should feel like a physical object you can touch.

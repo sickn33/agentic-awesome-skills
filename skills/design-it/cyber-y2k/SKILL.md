@@ -2,11 +2,18 @@
 name: cyber-y2k
 description: Web and App implementation guide for Cyber Y2K. Trigger when user wants modern Y2K, holographic visuals, and glitch aesthetics.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Cyber Y2K
 
 > "Y2K, but seen through a distorted, modern lens. Darker, glitchier, and highly holographic."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Holographic Gradients**: Iridescent, oil-slick color palettes that shift as you move.

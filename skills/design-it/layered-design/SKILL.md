@@ -2,11 +2,18 @@
 name: layered-design
 description: Web and App implementation guide for Layered Design. Trigger when user wants multiple depth levels, floating panels, and overlapping content.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Layered Design
 
 > "Stacking context. Interfaces built from overlapping, independent layers."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Explicit Overlap**: Elements intentionally overlap each other to break the grid and show depth.

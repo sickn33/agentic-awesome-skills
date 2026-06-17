@@ -2,11 +2,18 @@
 name: 3d-ui
 description: Web and App implementation guide for 3D UI. Trigger when user wants actual 3D objects, perspective effects, and spatial depth.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # 3D UI
 
 > "Breaking the plane. Interfaces that exist in a three-dimensional, rotatable space."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **True Depth (Z-Axis Translation)**: Elements don't just have shadows; they physically move closer to or further from the camera.

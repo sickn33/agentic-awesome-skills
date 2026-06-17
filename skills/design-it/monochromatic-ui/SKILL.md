@@ -2,11 +2,18 @@
 name: monochromatic-ui
 description: Web and App implementation guide for Monochromatic UI. Trigger when user wants a single-color palette, high elegance, and strict color discipline.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Monochromatic UI
 
 > "Elegance through constraint. A single hue, explored through all its tints, tones, and shades."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Single Hue**: Choose one base color (e.g., deep blue). The entire UI is built using lighter (tints) and darker (shades) versions of that exact hue.

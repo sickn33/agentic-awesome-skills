@@ -2,11 +2,18 @@
 name: brutalism
 description: Web and App implementation guide for Brutalism. Trigger when user wants a raw appearance, intentionally unfinished look, and rejection of standard design conventions.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Brutalism
 
 > "Raw materials exposed. An intentional rejection of polish, gradients, and soft shadows."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Unstyled Components**: Default browser styling for buttons, inputs, and links is celebrated.

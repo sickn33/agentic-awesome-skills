@@ -2,11 +2,18 @@
 name: vibrant-maximalism
 description: Web and App implementation guide for Vibrant Maximalism. Trigger when user wants rich colors, dense layouts, extreme sensory input, and "more is more".
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Vibrant Maximalism
 
 > "More is more. An explosion of color, pattern, and typography."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Sensory Overload**: Every pixel is doing something. Patterns on top of gradients on top of photos.

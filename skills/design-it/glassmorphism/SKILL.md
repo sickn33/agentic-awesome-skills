@@ -2,11 +2,18 @@
 name: glassmorphism
 description: Web and App implementation guide for Glassmorphism. Trigger when user wants a frosted glass effect, blurred backgrounds, transparency, or a sleek MacOS-like feel.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Glassmorphism
 
 > "Looking through a frosted window. Interfaces that blend seamlessly with vibrant backgrounds."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Background Blur (Backdrop Filter)**: The defining characteristic. Elements blur whatever is underneath them.

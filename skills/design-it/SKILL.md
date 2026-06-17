@@ -15,6 +15,9 @@ tools: [claude, cursor, gemini]
 
 This is the main entry point for the **design-it** skill system. Instead of falling back to generic "AI slop" aesthetics, you have access to 48 distinct, deeply opinionated design styles.
 
+## When to Use
+Use this skill when a user requests building any frontend interface (website, app screen, UI component) and you want to apply a specific, opinionated design aesthetic instead of generic defaults.
+
 ## How to Use This Skill
 
 When a user asks you to build a frontend interface (web or app):

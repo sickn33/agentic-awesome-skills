@@ -2,11 +2,18 @@
 name: aurora-ui
 description: Web and App implementation guide for Aurora UI. Trigger when user wants gradient glows, color blobs, and atmospheric lighting effects.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Aurora UI
 
 > "Ethereal, shifting lights. Like the Northern Lights trapped beneath a pane of frosted glass."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Blurred Color Orbs**: Large, out-of-focus, highly saturated color blobs floating in the background.

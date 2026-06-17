@@ -2,11 +2,18 @@
 name: swiss-design
 description: Web and App implementation guide for Swiss Design (International Typographic Style). Trigger when user wants strict grid systems, strong typography, and clean, asymmetrical alignment.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Swiss Design (International Typographic Style)
 
 > "Form follows function. The grid is absolute. Typography is the primary visual element."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Mathematical Grids**: Everything aligns to a strict underlying grid. Asymmetry is preferred over centered text.

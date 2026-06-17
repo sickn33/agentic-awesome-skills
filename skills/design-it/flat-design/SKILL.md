@@ -2,11 +2,18 @@
 name: flat-design
 description: Web and App implementation guide for the Flat Design style. Trigger when the user wants no shadows, simple shapes, and bold colors.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Flat Design
 
 > "Digital surfaces should look digital. Embrace the 2D plane."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Zero Depth**: Absolutely no drop shadows, bevels, gradients, or 3D effects. Everything sits on the same z-axis.

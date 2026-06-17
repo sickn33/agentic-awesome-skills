@@ -2,11 +2,18 @@
 name: command-center-ui
 description: Web and App implementation guide for Command Center UI. Trigger when user wants monitoring systems, enterprise dashboards, NOCs, and global maps.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Command Center UI
 
 > "Mission Control. Global monitoring, real-time alerts, and high-stakes data visualization."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Dark/Black Backgrounds**: Essential for a room full of glowing monitors (NOCs). It makes the data pop and reduces glare.

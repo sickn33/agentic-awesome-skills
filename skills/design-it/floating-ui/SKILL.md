@@ -2,11 +2,18 @@
 name: floating-ui
 description: Web and App implementation guide for Floating UI. Trigger when user wants detached cards, elevated components, and a light, airy feel.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Floating UI
 
 > "Defying gravity. Elements that hover effortlessly above the surface."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Detachment**: UI elements (like nav bars, sidebars, or main content cards) do not touch the edges of the screen. They float with margins on all sides.

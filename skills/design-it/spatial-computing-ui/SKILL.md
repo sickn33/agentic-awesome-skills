@@ -2,11 +2,18 @@
 name: spatial-computing-ui
 description: Web and App implementation guide for Spatial Computing UI. Trigger when user wants floating elements, environmental awareness, and Apple Vision Pro style.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Spatial Computing UI
 
 > "A step beyond Spatial Design. Fully 3D windows floating in augmented reality."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Z-Space Hierarchy**: Not just drop shadows, but actual 3D distance. Modals float 10px *in front of* the main window.

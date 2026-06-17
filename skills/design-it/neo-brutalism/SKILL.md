@@ -2,11 +2,18 @@
 name: neo-brutalism
 description: Web and App implementation guide for Neo-Brutalism. Trigger when user wants thick borders, hard shadows, bright colors, and a playful yet structured look.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Neo-Brutalism
 
 > "Brutalism, but make it pop. Hard lines, stark shadows, and vibrant, unashamed colors."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Hard Drop Shadows**: Solid black shadows with no blur. Usually offset by a few pixels down and to the right.

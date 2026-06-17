@@ -2,11 +2,18 @@
 name: card-based-design
 description: Web and App implementation guide for Card-Based Design. Trigger when user wants information cards, Pinterest-style layouts, and bite-sized content containers.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Card-Based Design
 
 > "Bite-sized consumption. Encapsulating discrete pieces of information into distinct visual containers."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Encapsulation**: Every card is self-contained. It has an image, a title, a short description, and usually an action (like a button or a 'like' icon).

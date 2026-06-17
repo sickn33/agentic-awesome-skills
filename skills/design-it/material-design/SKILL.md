@@ -2,11 +2,18 @@
 name: material-design
 description: Web and App implementation guide for Material Design. Trigger when user wants Google's aesthetic, elevation, motion, and consistent components.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Material Design
 
 > "Digital paper and ink. Interfaces built on the physical properties of stacked material."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Z-Axis Elevation**: Everything exists on a specific layer. Shadows communicate hierarchy and state.

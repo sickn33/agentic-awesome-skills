@@ -2,11 +2,18 @@
 name: tile-design
 description: Web and App implementation guide for Tile Design. Trigger when user wants Microsoft Metro style, sharp square information units, and horizontal scrolling grids.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Tile Design (Metro UI)
 
 > "Authentically digital. Clean, sharp squares relying purely on typography and flat color."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Sharp Corners**: Absolutely no border-radius. Everything is a perfect square or sharp rectangle.

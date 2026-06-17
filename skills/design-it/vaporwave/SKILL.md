@@ -2,11 +2,18 @@
 name: vaporwave
 description: Web and App implementation guide for Vaporwave. Trigger when user wants neon colors, retro digital aesthetics, 90s OS elements, and Roman statues.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Vaporwave
 
 > "A surreal, nostalgic dream of 90s computing and pastel neon."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Windows 95 / Mac OS 9 Motifs**: UI elements designed to look explicitly like 1990s operating systems (grey boxes, hard bevels, blue title bars).

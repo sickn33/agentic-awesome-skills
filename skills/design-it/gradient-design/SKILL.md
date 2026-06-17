@@ -2,11 +2,18 @@
 name: gradient-design
 description: Web and App implementation guide for Gradient Design. Trigger when user wants heavy gradient usage, vibrant transitions, and modern energetic feels.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Gradient Design
 
 > "Color in motion. Fluid transitions that add energy and depth to flat surfaces."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Gradients are the Primary Visual**: Backgrounds, buttons, text, and borders all use gradients instead of solid colors.

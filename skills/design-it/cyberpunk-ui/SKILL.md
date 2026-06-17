@@ -2,11 +2,18 @@
 name: cyberpunk-ui
 description: Web and App implementation guide for Cyberpunk UI. Trigger when user wants neon colors, dark backgrounds, high-tech dystopian aesthetics, and hacking interfaces.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Cyberpunk UI
 
 > "High tech, low life. Neon signs cutting through the smog of a dystopian megacity."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Neon on Black**: The foundation is absolute black (`#000000`) or deep charcoal, cut by searingly bright neon accents.

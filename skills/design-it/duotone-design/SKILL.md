@@ -2,11 +2,18 @@
 name: duotone-design
 description: Web and App implementation guide for Duotone Design. Trigger when user wants two-color schemes, striking imagery, and Spotify-like playlist aesthetics.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Duotone Design
 
 > "Striking contrast. Photography and UI stripped down to exactly two clashing or complementary colors."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Two Colors Only**: The entire design is mapped to a dark color (replacing blacks/shadows) and a light color (replacing whites/highlights).

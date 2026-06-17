@@ -2,11 +2,18 @@
 name: typography-first
 description: Web and App implementation guide for Typography First Design. Trigger when user wants text as the absolute main visual element, with minimal UI chroming.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Typography First Design
 
 > "The words are the interface. No distractions, just beautiful text."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Hyper-Sized Typography**: The main headline is so large it becomes an abstract graphic element.

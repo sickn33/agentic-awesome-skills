@@ -2,11 +2,18 @@
 name: bento-ui
 description: Web and App implementation guide for Bento UI. Trigger when user wants modular grid cards, Apple-like dashboard style, or sections arranged like a bento box.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Bento UI
 
 > "Everything in its right place. A highly structured, modular grid of distinct compartments."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Strict Grid Structure**: The entire UI is built on a responsive, multi-column grid (usually 3x3, 4x4, or irregular masonry).

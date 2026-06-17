@@ -2,11 +2,18 @@
 name: synthwave
 description: Web and App implementation guide for Synthwave. Trigger when user wants 80s-inspired neon, dark backgrounds, outrun grids, and Miami Vice aesthetics.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Synthwave (Outrun)
 
 > "Driving a Ferrari through a neon-lit digital grid at midnight."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Dark Mode by Default**: Absolute pitch-black or deep purple backgrounds.

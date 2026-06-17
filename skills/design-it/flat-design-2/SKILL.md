@@ -2,11 +2,18 @@
 name: flat-design-2
 description: Web and App implementation guide for Flat Design 2.0 (Semi-Flat). Trigger when the user wants flat design with subtle shadows and improved usability.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Flat Design 2.0 (Semi-Flat)
 
 > "Flat aesthetics, but with subtle hints of physics to communicate interactability."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Mostly Flat**: The primary aesthetic remains 2D and solid.

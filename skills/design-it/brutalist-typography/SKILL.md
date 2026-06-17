@@ -2,11 +2,18 @@
 name: brutalist-typography
 description: Web and App implementation guide for Brutalist Typography. Trigger when user wants huge fonts, raw presentation, and aggressive layout decisions.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Brutalist Typography
 
 > "Aggressive, unpolished, and unapologetic. Text that demands attention by breaking the rules."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Rule Breaking**: Text that overlaps, ignores margins, or deliberately clips off the edge of the screen.

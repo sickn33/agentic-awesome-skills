@@ -2,11 +2,18 @@
 name: widget-based-design
 description: Web and App implementation guide for Widget-Based Design. Trigger when user wants modular blocks, iOS Home Screen aesthetics, and customizable mini-apps.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Widget-Based Design
 
 > "Miniature applications. Small, highly functional blocks of UI designed to be rearranged."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Strict Aspect Ratios**: Widgets usually follow strict sizes (1x1 square, 2x1 rectangle, 2x2 large square).

@@ -2,11 +2,18 @@
 name: dashboard-design
 description: Web and App implementation guide for Dashboard Design. Trigger when user wants analytics-focused layouts, data visualization, and modular overview screens.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Dashboard Design
 
 > "Data at a glance. Organized, scannable, and highly functional."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Modular Grid**: The screen is broken down into functional "widgets" or cards. Usually a sidebar on the left and a top nav.

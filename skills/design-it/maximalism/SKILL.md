@@ -2,11 +2,18 @@
 name: maximalism
 description: Web and App implementation guide for Controlled Maximalism. Trigger when user wants lots of elements, dense content, but a highly curated and artistic presentation.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Controlled Maximalism
 
 > "Dense and rich, but deeply intentional. Like an exquisitely curated museum of artifacts."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **High Density**: The screen is packed with information, imagery, and interactive elements.

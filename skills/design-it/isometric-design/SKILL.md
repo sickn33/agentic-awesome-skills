@@ -2,11 +2,18 @@
 name: isometric-design
 description: Web and App implementation guide for Isometric Design. Trigger when user wants angled 3D appearances without vanishing points, often used for technical illustrations.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Isometric Design
 
 > "The architect's view. A parallel projection where depth is constant and parallel lines never converge."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Parallel Lines**: Unlike true 3D, isometric projection has no vanishing point. Everything is viewed from an exact 30-degree angle.

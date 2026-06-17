@@ -2,11 +2,18 @@
 name: ai-native-ui
 description: Web and App implementation guide for AI Native UI. Trigger when user wants conversational interfaces, adaptive layouts, and generative AI aesthetics.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # AI Native UI
 
 > "Fluid, adaptive, and conversational. The interface morphs to serve the content."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Conversational First**: The chat input or voice prompt is the primary navigation method, not a sidebar of links.

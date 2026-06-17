@@ -2,11 +2,18 @@
 name: sci-fi-interface
 description: Web and App implementation guide for Sci-Fi Interface Design. Trigger when user wants HUDs, spacecraft dashboards, or tactical military readouts.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Sci-Fi Interface Design (HUD)
 
 > "Heads-Up Display. Tactical, precise, and highly analytical."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Wireframe and Outlines**: Interfaces are built almost entirely out of thin strokes rather than solid filled boxes.

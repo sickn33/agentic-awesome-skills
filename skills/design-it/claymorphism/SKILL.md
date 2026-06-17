@@ -2,11 +2,18 @@
 name: claymorphism
 description: Web and App implementation guide for Claymorphism. Trigger when user wants soft 3D elements, rounded shapes, and a playful, tactile appearance.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Claymorphism
 
 > "Like interacting with a pristine, digital claymation set. Soft, bubbly, and incredibly approachable."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Fluffy 3D Volume**: Elements look like inflated balloons or soft clay blocks.

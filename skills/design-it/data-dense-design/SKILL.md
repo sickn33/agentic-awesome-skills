@@ -2,11 +2,18 @@
 name: data-dense-design
 description: Web and App implementation guide for Data-Dense Design. Trigger when user wants professional tools, maximum information density, and expert interfaces (like Bloomberg terminals or IDEs).
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Data-Dense Design
 
 > "Density is a feature. For expert users, reducing clicks is more important than whitespace."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Compact Layouts**: Extremely tight margins and padding (often 2px to 4px).

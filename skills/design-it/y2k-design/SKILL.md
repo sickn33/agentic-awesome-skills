@@ -2,11 +2,18 @@
 name: y2k-design
 description: Web and App implementation guide for Y2K Design. Trigger when user wants chrome effects, futuristic 2000s look, blob shapes, and tech optimism.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Y2K Design
 
 > "The optimistic, shiny future as imagined in 1999. Chrome, blobs, and alien tech."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Metallic & Chrome Effects**: Extensive use of silver, chrome, and shiny metallic gradients.

@@ -2,11 +2,18 @@
 name: editorial-design
 description: Web and App implementation guide for Editorial Design. Trigger when user wants a magazine-inspired layout, large headlines, and elegant typography pairing.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Editorial Design
 
 > "The digital magazine. Sophisticated typography pairings and deliberate, elegant pacing."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Serif & Sans-Serif Pairing**: The hallmark of editorial design. A beautiful, high-contrast serif for headings, paired with a clean sans-serif for body copy.

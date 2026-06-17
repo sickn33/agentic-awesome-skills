@@ -2,11 +2,18 @@
 name: neumorphism
 description: Web and App implementation guide for Neumorphism (Soft UI). Trigger when user wants soft shadows, extruded appearance, and light source simulation.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Neumorphism (Soft UI)
 
 > "Elements extruded from the background material itself, shaped by a singular, persistent light source."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Unified Surface Color**: The background and the elements MUST share the exact same base color.

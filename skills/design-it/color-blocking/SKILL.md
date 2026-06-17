@@ -2,11 +2,18 @@
 name: color-blocking
 description: Web and App implementation guide for Color Blocking. Trigger when user wants large color sections, striking layout divisions, and Mondrian-style grids.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Color Blocking
 
 > "The grid made visible. Large, solid swaths of contrasting color defining the layout."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Geometric Division**: The viewport is divided into large rectangles or squares, each filled with a solid, distinct color.

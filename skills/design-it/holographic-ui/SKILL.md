@@ -2,11 +2,18 @@
 name: holographic-ui
 description: Web and App implementation guide for Holographic UI. Trigger when user wants light-based appearance, projected interfaces, and transparent floating elements.
 date_added: "2026-06-17"
+risk: safe
+source: self
+source_type: self
 ---
 
 # Holographic UI
 
 > "Made of light. Interfaces projected into thin air, visible but completely translucent."
+
+
+## When to Use
+Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
 1. **Zero Opacity Backgrounds**: Elements are never fully solid. Everything is semi-transparent, allowing the background to show through.
