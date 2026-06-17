@@ -46,17 +46,17 @@ or empty, run `index-notes` first (see Ranking caveats).
 The server reads Apple Notes' SQLite store directly, so the **bun** binary needs Full
 Disk Access. Steps, in order:
 
-1. **Install bun** (if absent): `curl -fsSL https://bun.sh/install | bash`
+1. **Install bun** (if absent): `brew install oven-sh/bun/bun`
 2. **Clone + install deps:**
    ```bash
    git clone https://github.com/connerkward/mcp-apple-notes
    cd mcp-apple-notes && bun install
    ```
-3. **Grant Full Disk Access to bun.** Open System Settings → Privacy & Security → Full
-   Disk Access, click `+`, and add `~/.bun/bin/bun` (press Cmd+Shift+G in the file
-   picker and paste the path). Without this the server cannot read NoteStore.sqlite and
-   every call fails with a permissions error. (`bun install`'s postinstall tries to open
-   this pane automatically.)
+3. **Grant Full Disk Access to bun.** Run `which bun`, then open System Settings →
+   Privacy & Security → Full Disk Access, click `+`, and add that exact `bun` binary
+   path (commonly `/opt/homebrew/bin/bun` or `/usr/local/bin/bun`). Without this the
+   server cannot read NoteStore.sqlite and every call fails with a permissions error.
+   (`bun install`'s postinstall tries to open this pane automatically.)
 4. **Register the MCP server** (pick the user's client):
    - Claude Code: `claude mcp add apple-notes -- bun /absolute/path/to/mcp-apple-notes/index.ts --stdio`
    - Claude Desktop: add to `claude_desktop_config.json`:
