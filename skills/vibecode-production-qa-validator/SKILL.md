@@ -28,7 +28,7 @@ export PAGESPEED_API_KEY=""    # optional: for auto PageSpeed API
 
 ```bash
 qa:all() { qa:code && qa:build && qa:routes / /about /contact /privacy /terms /faq /sitemap.xml /robots.txt /api/health && qa:seo && qa:api /api/health /api/tools && qa:git && qa:smoke; }
-qa:full() { qa:all && qa:lazyload && qa:heavyload && qa:vulns && qa:cleanup && qa:ux:cards && qa:ux:boundaries && qa:ux:animation && qa:database && qa:secure; }
+qa:full() { qa:all && qa:auth && qa:auth:cookies && qa:lazyload && qa:heavyload && qa:vulns && qa:cleanup && qa:ux:cards && qa:ux:boundaries && qa:ux:animation && qa:database && qa:secure; }
 ```
 
 ---
@@ -103,8 +103,8 @@ qa:auth:cookies() {
 - [ ] Sitemap XML valid, all URLs resolve 200
 
 ```bash
-qa:routes() { for p; do curl -so /dev/null -w "%{http_code} $p\n" "$PROD_URL$p"; done; }
-qa:robots() { curl -s "$PROD_URL/robots.txt" | grep -qi "Disallow: /\$" && echo "  ✗ Blocks all crawlers" || echo "  ✓ OK"; }
+qa:routes() { local F=0; for p; do local C=$(curl -so /dev/null -w "%{http_code}" "$PROD_URL$p"); echo "$C $p"; [ "$C" = "200" ] || ((F++)); done; return $F; }
+qa:robots() { curl -s "$PROD_URL/robots.txt" | grep -qi "Disallow: /$" && echo "  ✗ Blocks all crawlers" || echo "  ✓ OK"; }
 qa:sitemap() { curl -s "$PROD_URL/sitemap.xml" | python3 -c "import sys,xml.etree.ElementTree as ET; ET.parse(sys.stdin); print('✓ Valid XML')"; }
 ```
 
@@ -387,7 +387,7 @@ jobs:
 | Problem | Solution |
 |---------|----------|
 | OG tags missing in raw HTML | Use `export const metadata` in Next.js |
-| `Disallow: /$` in robots.txt | Blocks all crawlers — use specific paths |
+| `Disallow: /` in robots.txt | Blocks all crawlers — use specific paths |
 | Cards different heights in grid | Use `display: grid` with equal-height rows, not flex |
 | Text overflows card | Add `text-overflow: ellipsis` + `overflow: hidden` |
 | Animation jank | Animate `transform` not `width`/`height` |
