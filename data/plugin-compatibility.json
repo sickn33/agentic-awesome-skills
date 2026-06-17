@@ -6738,6 +6738,25 @@
       "runtime_files": []
     },
     {
+      "id": "ckw-design",
+      "path": "skills/ckw-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "claimable-postgres",
       "path": "skills/claimable-postgres",
       "targets": {
@@ -9787,6 +9806,25 @@
     {
       "id": "design-taste-frontend",
       "path": "skills/design-taste-frontend",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "deterministic-design",
+      "path": "skills/deterministic-design",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -16855,6 +16893,44 @@
       "runtime_files": []
     },
     {
+      "id": "lookdev",
+      "path": "skills/lookdev",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "lookdev-auto",
+      "path": "skills/lookdev-auto",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "loss-aversion-designer",
       "path": "skills/loss-aversion-designer",
       "targets": {
@@ -16971,6 +17047,25 @@
     {
       "id": "macos-menubar-tuist-app",
       "path": "skills/macos-menubar-tuist-app",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "macos-screen-recorder",
+      "path": "skills/macos-screen-recorder",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -23238,6 +23333,25 @@
       "runtime_files": []
     },
     {
+      "id": "screenstudio-alt",
+      "path": "skills/screenstudio-alt",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "scroll-experience",
       "path": "skills/scroll-experience",
       "targets": {
@@ -29336,6 +29450,25 @@
       "runtime_files": []
     },
     {
+      "id": "web-media-getter",
+      "path": "skills/web-media-getter",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "web-performance-optimization",
       "path": "skills/web-performance-optimization",
       "targets": {
@@ -30445,10 +30578,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1587,
+    "total_skills": 1594,
     "supported": {
-      "codex": 1536,
-      "claude": 1553
+      "codex": 1543,
+      "claude": 1560
     },
     "blocked": {
       "codex": 51,

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1587,
+  "total": 1594,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -8860,6 +8860,35 @@
       "path": "skills/citation-management/SKILL.md"
     },
     {
+      "id": "ckw-design",
+      "name": "ckw-design",
+      "description": "Frontend design entry point: direction, design system, visual philosophy. Use whenever building or touching the look of any web UI (components, pages, dashboards, React/Vue/HTML-CSS) or when the user says \"make this look better\", \"fix the spacing/layout\", or mentions styling, color, type, or polish.",
+      "category": "development",
+      "tags": [
+        "design",
+        "frontend",
+        "ui",
+        "css",
+        "typography",
+        "responsive"
+      ],
+      "triggers": [
+        "design",
+        "frontend",
+        "ui",
+        "css",
+        "typography",
+        "responsive",
+        "ckw",
+        "entry",
+        "point",
+        "direction",
+        "visual",
+        "philosophy"
+      ],
+      "path": "skills/ckw-design/SKILL.md"
+    },
+    {
       "id": "claimable-postgres",
       "name": "claimable-postgres",
       "description": "Provision instant temporary Postgres databases via Claimable Postgres by Neon (pg.new). No login or credit card required. Use for quick Postgres environments and throwaway DATABASE_URL for prototyping.",
@@ -12788,6 +12817,35 @@
         "color"
       ],
       "path": "skills/design-taste-frontend/SKILL.md"
+    },
+    {
+      "id": "deterministic-design",
+      "name": "deterministic-design",
+      "description": "Render the UI and prove it's balanced + usable: a deterministic layout audit (centroid / optical-center / pixel-oracle balance via explicit math + annotated screenshot) plus a vision-judged Nielsen usability audit by a separate fresh-eyes judge. The measurement layer taste-only design skills lack.",
+      "category": "general",
+      "tags": [
+        "design",
+        "layout",
+        "usability",
+        "audit",
+        "verification",
+        "vision"
+      ],
+      "triggers": [
+        "design",
+        "layout",
+        "usability",
+        "audit",
+        "verification",
+        "vision",
+        "deterministic",
+        "render",
+        "ui",
+        "prove",
+        "balanced",
+        "usable"
+      ],
+      "path": "skills/deterministic-design/SKILL.md"
     },
     {
       "id": "devcontainer-setup",
@@ -21881,6 +21939,64 @@
       "path": "skills/longbridge/SKILL.md"
     },
     {
+      "id": "lookdev",
+      "name": "lookdev",
+      "description": "Human-in-the-loop web studio to tune AI-generated output by eye. Stand up a local interactive studio (sliders, pickers, drag handles) or an inline edit/highlight/comment annotation studio for prose & media, instead of guessing values or shipping a static comparison grid.",
+      "category": "data-ai",
+      "tags": [
+        "lookdev",
+        "design",
+        "ui",
+        "tuning",
+        "studio",
+        "visual-eval",
+        "annotation"
+      ],
+      "triggers": [
+        "lookdev",
+        "design",
+        "ui",
+        "tuning",
+        "studio",
+        "visual-eval",
+        "annotation",
+        "human",
+        "loop",
+        "web",
+        "tune",
+        "ai"
+      ],
+      "path": "skills/lookdev/SKILL.md"
+    },
+    {
+      "id": "lookdev-auto",
+      "name": "lookdev-auto",
+      "description": "Automated visual tuning: a vision or video model rates rendered variants in a loop. Render several labeled variants into one artifact, ask the model to rate them and suggest better values, render the suggestions, ask it to pick the best, repeat until good — the model is the eye, you run the loop.",
+      "category": "workflow",
+      "tags": [
+        "visual-eval",
+        "vision-model",
+        "tuning",
+        "automation",
+        "render-loop"
+      ],
+      "triggers": [
+        "visual-eval",
+        "vision-model",
+        "tuning",
+        "automation",
+        "render-loop",
+        "lookdev",
+        "auto",
+        "automated",
+        "visual",
+        "vision",
+        "video",
+        "model"
+      ],
+      "path": "skills/lookdev-auto/SKILL.md"
+    },
+    {
       "id": "loss-aversion-designer",
       "name": "loss-aversion-designer",
       "description": "One sentence - what this skill does and when to invoke it",
@@ -22052,6 +22168,35 @@
         "apps"
       ],
       "path": "skills/macos-menubar-tuist-app/SKILL.md"
+    },
+    {
+      "id": "macos-screen-recorder",
+      "name": "macos-screen-recorder",
+      "description": "macOS screen recorder that captures the main display PLUS system audio via ScreenCaptureKit — no BlackHole/loopback driver, no sudo, just the standard Screen Recording permission. CLI-driven; fills the headless-screen-recording-with-system-sound gap QuickTime and `screencapture -v` can't.",
+      "category": "general",
+      "tags": [
+        "macos",
+        "screen-recording",
+        "system-audio",
+        "screencapturekit",
+        "cli",
+        "swift"
+      ],
+      "triggers": [
+        "macos",
+        "screen-recording",
+        "system-audio",
+        "screencapturekit",
+        "cli",
+        "swift",
+        "screen",
+        "recorder",
+        "captures",
+        "main",
+        "display",
+        "plus"
+      ],
+      "path": "skills/macos-screen-recorder/SKILL.md"
     },
     {
       "id": "macos-spm-app-packaging",
@@ -30136,6 +30281,35 @@
       "path": "skills/screenshots/SKILL.md"
     },
     {
+      "id": "screenstudio-alt",
+      "name": "screenstudio-alt",
+      "description": "Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9:16 vertical export that follows the action — post-production for screen recordings from the CLI.",
+      "category": "general",
+      "tags": [
+        "screen-recording",
+        "video",
+        "post-production",
+        "auto-zoom",
+        "vertical-video",
+        "ffmpeg"
+      ],
+      "triggers": [
+        "screen-recording",
+        "video",
+        "post-production",
+        "auto-zoom",
+        "vertical-video",
+        "ffmpeg",
+        "screenstudio",
+        "alt",
+        "open",
+        "source",
+        "headless",
+        "screen"
+      ],
+      "path": "skills/screenstudio-alt/SKILL.md"
+    },
+    {
       "id": "scroll-experience",
       "name": "scroll-experience",
       "description": "Expert in building immersive scroll-driven experiences - parallax storytelling, scroll animations, interactive narratives, and cinematic web experiences. Like NY Times interactives, Apple product pages, and award-winning web experiences.",
@@ -37923,6 +38097,36 @@
         "interface"
       ],
       "path": "skills/web-design-guidelines/SKILL.md"
+    },
+    {
+      "id": "web-media-getter",
+      "name": "web-media-getter",
+      "description": "One query across free image / video / GIF APIs (stock + historical/archival + GIF engines), returning normalized, license-tagged results with optional top-K download + attribution sidecar. The retrieval peer to local semantic search and generative media.",
+      "category": "general",
+      "tags": [
+        "media",
+        "images",
+        "video",
+        "gif",
+        "stock",
+        "archival",
+        "attribution"
+      ],
+      "triggers": [
+        "media",
+        "images",
+        "video",
+        "gif",
+        "stock",
+        "archival",
+        "attribution",
+        "web",
+        "getter",
+        "one",
+        "query",
+        "free"
+      ],
+      "path": "skills/web-media-getter/SKILL.md"
     },
     {
       "id": "web-performance-optimization",

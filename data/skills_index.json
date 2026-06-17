@@ -7814,6 +7814,28 @@
     }
   },
   {
+    "id": "ckw-design",
+    "path": "skills/ckw-design",
+    "category": "web-development",
+    "name": "ckw-design",
+    "description": "Frontend design entry point: direction, design system, visual philosophy. Use whenever building or touching the look of any web UI (components, pages, dashboards, React/Vue/HTML-CSS) or when the user says \"make this look better\", \"fix the spacing/layout\", or mentions styling, color, type, or polish.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "claimable-postgres",
     "path": "skills/claimable-postgres",
     "category": "database",
@@ -11418,6 +11440,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "deterministic-design",
+    "path": "skills/deterministic-design",
+    "category": "uncategorized",
+    "name": "deterministic-design",
+    "description": "Render the UI and prove it's balanced + usable: a deterministic layout audit (centroid / optical-center / pixel-oracle balance via explicit math + annotated screenshot) plus a vision-judged Nielsen usability audit by a separate fresh-eyes judge. The measurement layer taste-only design skills lack.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19434,6 +19478,50 @@
     }
   },
   {
+    "id": "lookdev",
+    "path": "skills/lookdev",
+    "category": "uncategorized",
+    "name": "lookdev",
+    "description": "Human-in-the-loop web studio to tune AI-generated output by eye. Stand up a local interactive studio (sliders, pickers, drag handles) or an inline edit/highlight/comment annotation studio for prose & media, instead of guessing values or shipping a static comparison grid.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "lookdev-auto",
+    "path": "skills/lookdev-auto",
+    "category": "uncategorized",
+    "name": "lookdev-auto",
+    "description": "Automated visual tuning: a vision or video model rates rendered variants in a loop. Render several labeled variants into one artifact, ask the model to rate them and suggest better values, render the suggestions, ask it to pick the best, repeat until good \u2014 the model is the eye, you run the loop.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "loss-aversion-designer",
     "path": "skills/loss-aversion-designer",
     "category": "uncategorized",
@@ -19596,6 +19684,28 @@
     "risk": "safe",
     "source": "Dimillian/Skills (MIT)",
     "date_added": "2026-03-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "macos-screen-recorder",
+    "path": "skills/macos-screen-recorder",
+    "category": "uncategorized",
+    "name": "macos-screen-recorder",
+    "description": "macOS screen recorder that captures the main display PLUS system audio via ScreenCaptureKit \u2014 no BlackHole/loopback driver, no sudo, just the standard Screen Recording permission. CLI-driven; fills the headless-screen-recording-with-system-sound gap QuickTime and `screencapture -v` can't.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -27021,6 +27131,28 @@
     }
   },
   {
+    "id": "screenstudio-alt",
+    "path": "skills/screenstudio-alt",
+    "category": "uncategorized",
+    "name": "screenstudio-alt",
+    "description": "Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9:16 vertical export that follows the action \u2014 post-production for screen recordings from the CLI.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "scroll-experience",
     "path": "skills/scroll-experience",
     "category": "front-end",
@@ -33707,6 +33839,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "web-media-getter",
+    "path": "skills/web-media-getter",
+    "category": "uncategorized",
+    "name": "web-media-getter",
+    "description": "One query across free image / video / GIF APIs (stock + historical/archival + GIF engines), returning normalized, license-tagged results with optional top-K download + attribution sidecar. The retrieval peer to local semantic search and generative media.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-16",
     "plugin": {
       "targets": {
         "codex": "supported",
