@@ -108,6 +108,13 @@ which writes a grounded answer with inline `[n]` citations back to source notes.
   notes stay on-device) or real OpenAI (funded `OPENAI_API_KEY`, defaults to `gpt-4o-mini`).
   Everything else — embeddings, search, BM25, clustering, bridges, entities — is on-device.
 
+## Limitations
+
+- macOS and Apple Notes only; it does not search Obsidian, Notion, Google Docs, or other note stores.
+- The MCP server needs local filesystem permissions to read Apple Notes data, so setup cannot be completed purely inside a remote shell.
+- Search quality depends on a fresh local index. Recently edited notes may require `check-changes`, `index-health`, or a rerun after background indexing catches up.
+- Entity tools require the optional layered graph database; without it, use hybrid search, exact search, related notes, or bridges instead.
+
 ## Credits
 
 Fork of [RafalWilinski/mcp-apple-notes](https://github.com/RafalWilinski/mcp-apple-notes);
