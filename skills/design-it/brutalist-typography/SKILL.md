@@ -281,3 +281,7 @@ fun BrutalistTypeScreen() {
 ## Do's and Don'ts
 - **DO**: Mix serif and monospace fonts aggressively.
 - **DON'T**: Add drop shadows, gradients, or rounded corners. The design must look raw and unstyled.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

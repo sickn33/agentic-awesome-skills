@@ -282,3 +282,7 @@ fun HighContrastScreen() {
 ## Do's and Don'ts
 - **DO**: Run your colors through a contrast checker. If it's below 7:1, adjust it.
 - **DON'T**: Rely on color alone to convey meaning (e.g., don't just make an error state red; make it red AND add an error icon AND bold the text).
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

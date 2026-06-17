@@ -253,3 +253,7 @@ fun RetroFutureCard() {
 ## Do's and Don'ts
 - **DO**: Use strict `Futura` or `Century Gothic` for a very authentic mid-century feel.
 - **DON'T**: Make the UI look dirty or distressed (that's standard retro or steampunk). Retro-futurism is clean, optimistic, and shiny.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

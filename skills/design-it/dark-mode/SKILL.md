@@ -283,3 +283,7 @@ fun DarkModeScreen() {
 ## Do's and Don'ts
 - **DO**: Meet WCAG contrast standards. Just because it's dark doesn't mean the text should be illegibly dim.
 - **DON'T**: Use bright, highly saturated primary colors.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

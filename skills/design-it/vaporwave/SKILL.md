@@ -325,3 +325,7 @@ fun VaporwaveScreen() {
 ## Do's and Don'ts
 - **DO**: Use authentic 90s icons (pixelated hourglasses, folders, error dialogs).
 - **DON'T**: Use modern drop shadows or rounded corners. The 90s UI was sharp and jagged.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

@@ -285,3 +285,7 @@ fun VibrantMaximalismScreen() {
 ## Do's and Don'ts
 - **DO**: Break the grid. Let elements overlap awkwardly.
 - **DON'T**: Use whitespace. If there is an empty area, fill it with a pattern, a marquee, or a giant emoji.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

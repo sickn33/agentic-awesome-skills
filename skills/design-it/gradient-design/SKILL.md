@@ -303,3 +303,7 @@ fun GradientDesignScreen() {
 ## Do's and Don'ts
 - **DO**: Use multi-stop gradients (3 or 4 colors) rather than just simple A-to-B gradients for a more modern, rich look.
 - **DON'T**: Apply gradients to tiny text or thin icons, they will lose legibility immediately.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

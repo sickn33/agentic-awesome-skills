@@ -290,3 +290,7 @@ fun MonochromaticScreen() {
 ## Do's and Don'ts
 - **DO**: Use pure white or pure black as absolute extremes if needed for text legibility.
 - **DON'T**: Sneak in an accent color. If you add a red error button to a blue monochromatic UI, it immediately breaks the aesthetic and becomes "duotone" or standard UI. Find a way to signify errors using bold text or dark shades of the base hue.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

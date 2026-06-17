@@ -215,3 +215,7 @@ fun FlatCard() {
 ## Do's and Don'ts
 - **DO**: Use solid, contrasting borders to separate overlapping elements.
 - **DON'T**: Use any transparency (rgba) or blur effects.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

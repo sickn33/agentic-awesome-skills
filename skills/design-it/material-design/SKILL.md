@@ -269,3 +269,7 @@ fun MaterialScreen() {
 ## Do's and Don'ts
 - **DO**: Use the standard Material easing curves for animations (`cubic-bezier(0.4, 0.0, 0.2, 1)`).
 - **DON'T**: Mix overlapping shadows arbitrarily. Elements should clearly sit 'above' or 'below' others.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

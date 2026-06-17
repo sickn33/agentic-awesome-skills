@@ -253,3 +253,7 @@ fun Card3D() {
 ## Do's and Don'ts
 - **DO**: Tie 3D rotation to user input (mouse move on web, device tilt on mobile) for maximum impact.
 - **DON'T**: Make text itself 3D unless it's a massive headline. 3D text is generally unreadable at small sizes.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

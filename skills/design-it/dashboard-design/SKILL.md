@@ -325,3 +325,7 @@ fun KPICard(title: String, value: String, trend: String, isPositive: Boolean) {
 ## Do's and Don'ts
 - **DO**: Right-align numbers in tables so they are easier to scan and compare.
 - **DON'T**: Clutter cards with unnecessary decorative images. The data is the decoration.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

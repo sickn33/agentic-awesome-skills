@@ -264,3 +264,7 @@ fun NeoCard() {
 ## Do's and Don'ts
 - **DO**: Make the active/pressed state visually translate the button to cover its shadow, creating a physical "click" feel.
 - **DON'T**: Use gradients or blurred shadows. The aesthetic relies entirely on flat, sharp vectors.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

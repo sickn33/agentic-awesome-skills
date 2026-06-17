@@ -262,3 +262,7 @@ fun Y2KDesignScreen() {
 ## Do's and Don'ts
 - **DO**: Use sparkles (✨) as decorative elements around headers and buttons.
 - **DON'T**: Make it minimal. Y2K is fundamentally maximalist and flashy.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

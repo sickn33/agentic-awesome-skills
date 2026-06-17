@@ -306,3 +306,7 @@ fun CyberY2KScreen() {
 ## Do's and Don'ts
 - **DO**: Incorporate UI elements that look like raw HTML/CSS (like visible tables or marquee tags) as an ironic nod to early web.
 - **DON'T**: Use clean, modern geometric layouts. Cyber Y2K is chaotic and rebellious.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

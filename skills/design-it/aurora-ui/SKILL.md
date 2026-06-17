@@ -301,3 +301,7 @@ fun AuroraView() {
 ## Do's and Don'ts
 - **DO**: Ensure the foreground text remains legible. If a bright orb floats behind white text, the text will vanish. Use glassy panels to guarantee contrast.
 - **DON'T**: Use sharp gradients. Everything in the background must be heavily blurred and diffuse.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

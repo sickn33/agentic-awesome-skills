@@ -261,3 +261,7 @@ fun MinimalScreen() {
 ## Do's and Don'ts
 - **DO**: Focus intensely on alignment. A 1px misalignment breaks the illusion of minimalism.
 - **DON'T**: Use "card" wrappers for content. Let the whitespace define the grouping.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

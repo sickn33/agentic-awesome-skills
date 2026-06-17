@@ -294,3 +294,7 @@ fun SpatialComputingScreen() {
 ## Do's and Don'ts
 - **DO**: Create a distinct visual pop (size increase and shadow depth increase) on hover/focus to simulate the gaze-tracking interaction of Spatial Computing.
 - **DON'T**: Use flat, opaque colors for the main windows. They must be glass.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

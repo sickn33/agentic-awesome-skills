@@ -339,3 +339,7 @@ fun CommandCenterScreen() {
 ## Do's and Don'ts
 - **DO**: Create a distinct visual rhythm. The screen should feel calm until a specific alert requires attention.
 - **DON'T**: Fill the screen with bright, solid white panels. A command center should glow softly, not blind the user.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

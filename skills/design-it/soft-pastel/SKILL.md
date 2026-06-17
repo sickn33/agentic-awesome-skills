@@ -301,3 +301,7 @@ fun SoftPastelScreen() {
 ## Do's and Don'ts
 - **DO**: Use illustrative assets that match the pastel vibe (flat vectors, soft gradients).
 - **DON'T**: Use stark black borders, sharp corners, or high-saturation primary colors.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

@@ -287,3 +287,7 @@ fun SwissDesignScreen() {
 ## Do's and Don'ts
 - **DO**: Use negative space as a structural element. Empty columns are just as important as filled ones.
 - **DON'T**: Center align text. Do not use serif fonts. Do not use drop shadows.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

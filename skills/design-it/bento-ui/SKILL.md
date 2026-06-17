@@ -308,3 +308,7 @@ fun BentoCard(title: String, modifier: Modifier = Modifier) {
 ## Do's and Don'ts
 - **DO**: Mix sizes! A bento box is boring if every cell is 1x1. Use 2x1, 1x2, and 2x2 cells to create visual interest.
 - **DON'T**: Clutter the inside of a bento card. If it needs a lot of elements, break it into multiple cards.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

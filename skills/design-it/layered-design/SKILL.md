@@ -241,3 +241,7 @@ fun LayeredDesignScreen() {
 ## Do's and Don'ts
 - **DO**: Use contrasting colors or drop shadows where layers intersect so the boundary is clear.
 - **DON'T**: Trap interactive elements (like buttons) underneath other layers where they cannot be clicked.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

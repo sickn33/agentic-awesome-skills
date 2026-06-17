@@ -304,3 +304,7 @@ fun HolographicScreen() {
 ## Do's and Don'ts
 - **DO**: Use `mix-blend-mode: screen` (web) or additive blending so overlapping holographic panels get brighter where they intersect.
 - **DON'T**: Use any dark colors or drop shadows for the UI elements. Shadows don't exist in light projections.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

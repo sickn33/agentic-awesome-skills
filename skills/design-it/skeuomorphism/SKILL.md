@@ -274,3 +274,7 @@ fun SkeuoButton() {
 ## Do's and Don'ts
 - **DO**: Ensure the metaphor makes sense for the user's task.
 - **DON'T**: Overuse it to the point of clutter. Keep the interactive elements highly realistic, but let the structural layout remain clean.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

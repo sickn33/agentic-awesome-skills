@@ -281,3 +281,7 @@ fun ClayCard() {
 ## Do's and Don'ts
 - **DO**: Use highly bouncy, spring-based animations to reinforce the soft, physical nature of the "clay."
 - **DON'T**: Use thin, delicate fonts. They will get lost against the heavy, voluminous UI elements.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

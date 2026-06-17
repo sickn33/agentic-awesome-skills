@@ -251,3 +251,7 @@ fun AdvancedNeonText(text: String) {
 ## Do's and Don'ts
 - **DO**: Italicize fonts to give a sense of speed and forward momentum.
 - **DON'T**: Use standard, subtle box shadows. If it casts a shadow, it must cast a neon glow instead.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

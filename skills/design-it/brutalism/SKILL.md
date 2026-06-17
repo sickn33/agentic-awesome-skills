@@ -264,3 +264,7 @@ fun BrutalistScreen() {
 ## Do's and Don'ts
 - **DO**: Use harsh, high-contrast borders (1px solid black) around everything.
 - **DON'T**: Use border-radius, drop shadows, or smooth transitions. If it animates, it should pop instantly (0s transition).
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

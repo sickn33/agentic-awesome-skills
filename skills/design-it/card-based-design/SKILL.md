@@ -256,3 +256,7 @@ fun ContentCard() {
 ## Do's and Don'ts
 - **DO**: Make the entire card clickable, not just the title or image.
 - **DON'T**: Put too much text in a card. If the user has to scroll *within* a card, the card is too big.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

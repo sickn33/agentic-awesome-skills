@@ -268,3 +268,7 @@ fun WeatherWidget(modifier: Modifier = Modifier) {
 ## Do's and Don'ts
 - **DO**: Use full-bleed background colors to make different widgets stand out.
 - **DON'T**: Put complex forms or scrollable lists inside a 1x1 widget.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

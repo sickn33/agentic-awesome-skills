@@ -272,3 +272,7 @@ fun ColorBlock(color: Color, text: String, textColor: Color, modifier: Modifier 
 ## Do's and Don'ts
 - **DO**: Ensure extreme contrast. Text on a yellow block should be black. Text on a dark blue block should be white.
 - **DON'T**: Use drop shadows, rounded corners, or gradients. Keep it completely flat and sharp.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

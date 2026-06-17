@@ -241,3 +241,7 @@ fun TypographyFirstScreen() {
 ## Do's and Don'ts
 - **DO**: Mix filled text and outlined text (using `-webkit-text-stroke`) for visual interest.
 - **DON'T**: Wrap the text in cards or containers. Let it bleed into the background.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

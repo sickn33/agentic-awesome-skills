@@ -303,3 +303,7 @@ fun SciFiHUDScreen() {
 ## Do's and Don'ts
 - **DO**: Animate elements entering the screen as if they are 'booting up' or 'calibrating' (drawing lines from 0 to 100%).
 - **DON'T**: Use drop shadows. Light in a HUD is emitted, not blocked. Use `text-shadow` for glows instead.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

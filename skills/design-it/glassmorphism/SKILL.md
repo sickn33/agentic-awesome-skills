@@ -266,3 +266,7 @@ fun GlassCard() {
 ## Do's and Don'ts
 - **DO**: Ensure there is enough contrast between text and the blurred background. Accessibility is often a challenge with this style.
 - **DON'T**: Use Glassmorphism on a solid white or solid black background—the effect will be completely invisible.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

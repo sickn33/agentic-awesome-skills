@@ -256,3 +256,7 @@ fun CyberButton() {
 ## Do's and Don'ts
 - **DO**: Include tiny, meaningless technical details (crosshairs, serial numbers, "SYS.OVERRIDE" text).
 - **DON'T**: Use soft, organic curves or gradients. It must be sharp and aggressive.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

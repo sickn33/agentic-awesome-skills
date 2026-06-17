@@ -322,3 +322,7 @@ fun EditorialScreen() {
 ## Do's and Don'ts
 - **DO**: Treat the interface like a printed page. Margins should be generous.
 - **DON'T**: Clutter the UI with typical app components like floating action buttons or heavy navigation bars. Keep it clean.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

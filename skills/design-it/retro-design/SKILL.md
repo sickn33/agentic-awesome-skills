@@ -277,3 +277,7 @@ fun RetroCard() {
 ## Do's and Don'ts
 - **DO**: Use slightly off-white backgrounds (cream, beige) instead of pure `#FFFFFF` to simulate aged paper.
 - **DON'T**: Use sleek, modern geometric sans-serifs or tech-focused neon colors.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

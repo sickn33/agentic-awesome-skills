@@ -242,3 +242,7 @@ fun NeuCard() {
 ## Do's and Don'ts
 - **DO**: Use inset shadows for "active" states (like pressed buttons or filled form fields).
 - **DON'T**: Rely on Neumorphism for critical elements without secondary indicators. Contrast is inherently low, making it an accessibility nightmare if used improperly.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

@@ -293,3 +293,7 @@ fun FloatingUIScreen() {
 ## Do's and Don'ts
 - **DO**: Animate floating elements! A slow, continuous 2px up/down translateY animation makes them feel truly buoyant.
 - **DON'T**: Pin elements to the screen edges (except perhaps background images).
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

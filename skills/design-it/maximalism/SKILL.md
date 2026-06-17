@@ -291,3 +291,7 @@ fun MaxItem(title: String, isFeature: Boolean = false) {
 ## Do's and Don'ts
 - **DO**: Treat every pixel as valuable real estate. Frame everything.
 - **DON'T**: Let it become unreadable. The contrast between text and background must remain high despite the density.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

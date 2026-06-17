@@ -289,3 +289,7 @@ fun AINativeInput() {
 ## Do's and Don'ts
 - **DO**: Use a distinct, vibrant gradient to represent the AI "agent", contrasting with a very plain, clean background.
 - **DON'T**: Use complex navigation headers. The user should navigate by asking the AI, not by clicking deep menus.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

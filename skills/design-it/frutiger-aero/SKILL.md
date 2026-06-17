@@ -268,3 +268,7 @@ fun FrutigerAeroScreen() {
 ## Do's and Don'ts
 - **DO**: Include imagery of lens flares, auroras, or water bubbles if appropriate.
 - **DON'T**: Make it flat. Frutiger Aero is the ultimate antithesis of Flat Design. Everything must shine.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

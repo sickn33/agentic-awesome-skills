@@ -316,3 +316,7 @@ fun Cell(text: String, width: Dp, color: Color, isHeader: Boolean, align: TextAl
 ## Do's and Don'ts
 - **DO**: Use color coding (red/green) for data deltas, but keep the saturation muted to prevent eye fatigue.
 - **DON'T**: Use large padding or giant H1 headers. Expert users already know what screen they are on.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

@@ -262,3 +262,7 @@ fun SpatialDesignScreen() {
 ## Do's and Don'ts
 - **DO**: Crank up the `saturate()` filter on the backdrop blur to make the background colors pop through the glass.
 - **DON'T**: Use dark, opaque drop shadows. The UI should look like glass, which doesn't cast harsh shadows.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

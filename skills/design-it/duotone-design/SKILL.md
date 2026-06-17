@@ -242,3 +242,7 @@ fun DuotoneImage() {
 ## Do's and Don'ts
 - **DO**: Ensure the dark color is dark enough to be legible when used as text against the light color.
 - **DON'T**: Add a third color. It instantly ruins the aesthetic.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

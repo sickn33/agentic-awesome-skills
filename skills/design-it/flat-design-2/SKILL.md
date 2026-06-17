@@ -234,3 +234,7 @@ fun SemiFlatCard() {
 ## Do's and Don'ts
 - **DO**: Keep shadows incredibly subtle. If you immediately notice the shadow, it's too dark.
 - **DON'T**: Use inner shadows, heavy gradients, or skeuomorphic textures.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.

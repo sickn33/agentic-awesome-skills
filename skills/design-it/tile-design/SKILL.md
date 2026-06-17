@@ -291,3 +291,7 @@ fun Tile(title: String, color: Color) {
 ## Do's and Don'ts
 - **DO**: Place the tile label text strictly in the bottom-left corner of the tile.
 - **DON'T**: Add drop shadows or gradients to the tiles.
+
+## Limitations
+- This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
+- Ensure appropriate contrast ratios and responsive behaviors are verified separately.
