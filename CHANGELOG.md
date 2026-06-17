@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.8.0] - 2026-06-17 - "Maintainer Batch and SEO Metadata Refresh"
+
+> Patch release for the June 17 maintainer batch and hosted catalog metadata.
+
+This release packages the June 17 maintainer batch: accepted community PRs, issue-closing skill fixes, generated registry sync, and the hosted catalog refreshed to 1,595+ skills.
+
+## New Skills
+
+- **apple-notes-search** - Apple Notes MCP search workflow with safer setup guidance and limitations.
+- **pr-merge-champion** - pull request merge review and maintainer workflow guidance.
+- **super-code** and companion language skills - multi-language coding guidance across Bash, C, C++, C#, Dart, Elixir, Go, Java, Kotlin, PHP, Python, Ruby, Rust, Scala, Swift, and TypeScript.
+- **ckw-design**, **deterministic-design**, **lookdev**, **lookdev-auto**, **macos-screen-recorder**, **screenstudio-alt**, and **web-media-getter** - Conner K Ward inspired creative, media, and design workflows.
+
+## Fixes
+
+- Fixed workflow documentation and reference issues in `ab-test-setup`, `astropy`, `browser-extension-builder`, `lint-and-validate`, `programmatic-seo`, `schema-markup`, and `youtube-seo-optimizer`.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current 1,595+ catalog.
+
+## Improvements
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,595+ skill catalog.
+- Left the large AI Skill Registry validation framework PR open for contributor follow-up instead of merging unrelated tooling surfaces into this patch release.
+
 ## [12.7.0] - 2026-06-16 - "CrossFrame Suite and Workflow Fixes"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
