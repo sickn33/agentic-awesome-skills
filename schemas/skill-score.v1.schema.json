@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sickn33.github.io/antigravity-awesome-skills/schemas/skill-score.v1.schema.json",
+  "title": "Antigravity Skill Score v1",
+  "description": "Quality score record for a single Antigravity skill. Scores are informational only and never block skill usage.",
+  "type": "object",
+  "required": ["skill_id", "risk", "scores", "label"],
+  "additionalProperties": false,
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Skill folder name — matches the 'name' frontmatter field."
+    },
+    "risk": {
+      "type": "string",
+      "enum": ["none", "safe", "critical", "offensive", "unknown"],
+      "description": "Risk classification as declared in frontmatter."
+    },
+    "scores": {
+      "type": "object",
+      "required": ["metadata", "documentation", "security", "total"],
+      "additionalProperties": false,
+      "description": "Scoring dimensions. All values are in the range [0, 100].",
+      "properties": {
+        "metadata": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Metadata completeness score (weight: 30%). Evaluates required and optional frontmatter fields."
+        },
+        "documentation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Documentation quality score (weight: 40%). Evaluates section coverage, code examples, and content depth."
+        },
+        "security": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Security posture score (weight: 30%). Reduced by detected dangerous command patterns."
+        },
+        "total": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Weighted total: (metadata × 0.30) + (documentation × 0.40) + (security × 0.30)."
+        }
+      }
+    },
+    "label": {
+      "type": "string",
+      "enum": ["excellent", "good", "needs_improvement", "critical"],
+      "description": "Human-readable quality label derived from total score. excellent ≥85, good ≥65, needs_improvement ≥45, critical <45."
+    },
+    "flags": {
+      "type": "array",
+      "description": "List of security and quality flags detected in this skill.",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "message", "line", "matched_text"],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^SEC[0-9]{3}$",
+            "description": "Unique pattern code (e.g. SEC002)."
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["error", "warning", "info"],
+            "description": "Flag severity level."
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable description of the detected pattern."
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Line number (1-indexed) in the skill body where the pattern was found."
+          },
+          "matched_text": {
+            "type": "string",
+            "description": "The matched text fragment from the pattern."
+          }
+        }
+      }
+    }
+  }
+}
