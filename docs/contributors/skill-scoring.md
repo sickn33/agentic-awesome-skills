@@ -161,8 +161,16 @@ npm run drift:update
 npm run drift:check -- --skill my-skill-name
 ```
 
-The baseline is stored in `data/drift-baseline.json` (generated file, not committed
-in PRs — regenerated automatically on main after merge).
+**Baseline ownership:**
+
+| File | Committed? | Who updates it? |
+|------|-----------|-----------------|
+| `data/drift-baseline.json` | No — listed in `.gitignore` | Maintainers run `npm run drift:update` on `main` after merging changes |
+| `data/registry-report.json` | No — listed in `.gitignore` | Generated locally on demand; never in PRs |
+| `data/scores.json` | No — listed in `.gitignore` | Generated locally on demand; never in PRs |
+
+Contributors should never commit these files. If you accidentally generate them
+locally, they will be ignored by git automatically.
 
 ---
 

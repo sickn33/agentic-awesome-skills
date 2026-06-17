@@ -17,6 +17,11 @@ antigravity-awesome-skills-*.tgz
 .release-clone-*/
 data/node_modules
 
+# Generated skill registry outputs (maintainer-owned, never committed in PRs)
+data/drift-baseline.json
+data/registry-report.json
+data/scores.json
+
 # Temporary analysis and report files
 *_REPORT.md
 *_ANALYSIS*.md
