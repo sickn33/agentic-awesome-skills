@@ -9,6 +9,89 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.8.0] - 2026-06-17 - "Community Skills and Maintainer Fixes"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 17 maintainer batch: 11 merged PRs, six issue-closing workflow fixes, new community skill families, maintainer safety edits before merge, and a generated catalog refresh to 1,595+ skills.
+
+## New Skills
+
+- **super-code** - a multi-language coding skill with 16 companion subskills for Bash, C, C++, C#, Dart, Elixir, Go, Java, Kotlin, PHP, Python, Ruby, Rust, Scala, Swift, and TypeScript (PR #701).
+- **apple-notes-search** - Apple Notes MCP search workflow for local note discovery, with maintainer-added limitations, README source credit, safer Bun setup guidance, and Full Disk Access path guidance (PR #703).
+- **Conner K Ward skill set** - **ckw-design**, **deterministic-design**, **lookdev**, **lookdev-auto**, **macos-screen-recorder**, **screenstudio-alt**, and **web-media-getter**, all merged with README credits and added limitations sections (PR #704).
+- **pr-merge-champion** - pull request merge review and maintainer workflow guidance for checking PR readiness, risk, and merge hygiene (PR #691).
+
+## Skill Fixes
+
+- Tightened **youtube-seo-optimizer** badge guidance by addressing exact-match tag count and Shorts exemption feedback (PR #700).
+- Fixed the duplicate **Extension Architecture** heading in **browser-extension-builder** (PR #706, closes #705).
+- Added missing **astropy** reference stubs that point users to the appropriate upstream Astropy documentation areas (PR #708, closes #707).
+- Added category-level scoring guidance before **schema-markup** eligibility bands (PR #710, closes #709).
+- Added category-level scoring guidance before **programmatic-seo** feasibility bands (PR #712, closes #711).
+- Made **lint-and-validate** quality-loop commands ecosystem-aware instead of Node.js-only (PR #714, closes #713).
+- Added a concrete **ab-test-setup** tracking verification procedure before Gate 8 (PR #716, closes #715).
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,595+ skill catalog.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current catalog count and v12.8.0 release metadata.
+- Left PR #702, the AI Skill Registry validation framework, open for contributor follow-up because it combines broad Python tooling, a parallel .NET CLI, baseline behavior, and release-surface changes that should be split before merge.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #701 (`super-code`).
+- **[@connerkward](https://github.com/connerkward)** and the referenced Conner K Ward upstream projects for PR #703 (`apple-notes-search`) and PR #704 (`ckw-design`, `deterministic-design`, `lookdev`, `lookdev-auto`, `macos-screen-recorder`, `screenstudio-alt`, `web-media-getter`).
+- **[@himanshu-2l](https://github.com/himanshu-2l)** for PR #691 (`pr-merge-champion`).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #700 (`youtube-seo-optimizer` fixes).
+- **[@specterslient95-lgtm](https://github.com/specterslient95-lgtm)** for PRs #706, #708, #710, #712, #714, and #716, which closed issues #705, #707, #709, #711, #713, and #715.
+
+## [12.7.0] - 2026-06-16 - "CrossFrame Suite and Workflow Fixes"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 16 maintainer batch: three accepted community PRs, the CrossFrame skill suite, workflow heading fixes, generated registry sync, and the hosted catalog refreshed to 1,569+ skills.
+
+## New Skills
+
+- **youtube-seo-optimizer** - YouTube and podcast SEO workflow for keyword research, metadata generation, transcript repurposing, and content optimization.
+- **brave-man** - project-specification interview workflow that slows down vague build requests and turns clarified requirements into an implementation prompt.
+- **crossframe** and companion skills - Chinese-canonical structural diagnosis, dialogue, essay, debate, teaching, review, notebook, public-issue, organization, and casebook workflows.
+
+## Fixes
+
+- Fixed **ab-test-setup** heading levels so workflow phases 3-8 render as peers instead of nesting under Pre-Requisites.
+- Fixed **apify-actorization** step numbering after schema configuration by renumbering local testing and deployment to Steps 7 and 8.
+- Refreshed `llms.txt` SEO metadata so Pages verification matches the current 1,569+ skill catalog.
+
+## Improvements
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,569+ skill catalog.
+- Approved and re-ran maintainer-required fork checks for remaining community PRs, leaving PR #691 open until its PR body and Quality Bar Checklist are completed.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #698 (`youtube-seo-optimizer`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #696 (`brave-man`).
+- **[@xi-kari](https://github.com/xi-kari)** and **[xi-kari/crossframe-skill](https://github.com/xi-kari/crossframe-skill)** for PR #693 (`crossframe` suite).
+- **[@specterslient95-lgtm](https://github.com/specterslient95-lgtm)** for reporting the `ab-test-setup` and `apify-actorization` workflow structure issues.
+
 ## [12.6.0] - 2026-06-15 - "Community Research Skills and Dependency Hardening"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.

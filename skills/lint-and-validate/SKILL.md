@@ -24,7 +24,9 @@ date_added: "2026-02-27"
 
 ## The Quality Loop
 1. **Write/Edit Code**
-2. **Run Audit:** `npm run lint && npx tsc --noEmit`
+2. **Run Audit** for the project's ecosystem:
+   - **Node.js / TypeScript:** `npm run lint && npx tsc --noEmit`
+   - **Python:** `ruff check . --fix && mypy . && bandit -r . -ll`
 3. **Analyze Report:** Check the "FINAL AUDIT REPORT" section.
 4. **Fix & Repeat:** Submitting code with "FINAL AUDIT" failures is NOT allowed.
 

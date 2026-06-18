@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1555,
+  "total": 1595,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2945,6 +2945,35 @@
         "publish"
       ],
       "path": "skills/appdeploy/SKILL.md"
+    },
+    {
+      "id": "apple-notes-search",
+      "name": "apple-notes-search",
+      "description": "Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall, or synthesize something from their notes, or surface non-obvious bridges/related notes. macOS, on-device.",
+      "category": "general",
+      "tags": [
+        "apple-notes",
+        "search",
+        "mcp",
+        "macos",
+        "semantic-search",
+        "knowledge"
+      ],
+      "triggers": [
+        "apple-notes",
+        "search",
+        "mcp",
+        "macos",
+        "semantic-search",
+        "knowledge",
+        "apple",
+        "notes",
+        "semantic",
+        "keyword",
+        "connection",
+        "discovery"
+      ],
+      "path": "skills/apple-notes-search/SKILL.md"
     },
     {
       "id": "application-performance-performance-optimization",
@@ -7715,6 +7744,31 @@
       "path": "skills/brand-perception-psychologist/SKILL.md"
     },
     {
+      "id": "brave-man",
+      "name": "brave-man",
+      "description": "Runs a structured clarifying interview for new project requests before building. Instead of writing code, it outputs a fully specified prompt.md for a fresh agent session to execute, preventing expensive mistakes.",
+      "category": "general",
+      "tags": [
+        "brave",
+        "man"
+      ],
+      "triggers": [
+        "brave",
+        "man",
+        "runs",
+        "structured",
+        "clarifying",
+        "interview",
+        "new",
+        "requests",
+        "before",
+        "building",
+        "instead",
+        "writing"
+      ],
+      "path": "skills/brave-man/SKILL.md"
+    },
+    {
       "id": "brevo-automation",
       "name": "brevo-automation",
       "description": "Automate Brevo (formerly Sendinblue) email marketing operations through Composio's Brevo toolkit via Rube MCP.",
@@ -8804,6 +8858,35 @@
         "process"
       ],
       "path": "skills/citation-management/SKILL.md"
+    },
+    {
+      "id": "ckw-design",
+      "name": "ckw-design",
+      "description": "Frontend design entry point: direction, design system, visual philosophy. Use whenever building or touching the look of any web UI (components, pages, dashboards, React/Vue/HTML-CSS) or when the user says \"make this look better\", \"fix the spacing/layout\", or mentions styling, color, type, or polish.",
+      "category": "development",
+      "tags": [
+        "design",
+        "frontend",
+        "ui",
+        "css",
+        "typography",
+        "responsive"
+      ],
+      "triggers": [
+        "design",
+        "frontend",
+        "ui",
+        "css",
+        "typography",
+        "responsive",
+        "ckw",
+        "entry",
+        "point",
+        "direction",
+        "visual",
+        "philosophy"
+      ],
+      "path": "skills/ckw-design/SKILL.md"
     },
     {
       "id": "claimable-postgres",
@@ -11110,6 +11193,342 @@
       "path": "skills/crewai/SKILL.md"
     },
     {
+      "id": "crossframe",
+      "name": "crossframe",
+      "description": "Use when the user explicitly invokes CrossFrame or 跨尺度结构诊断 for Chinese-canonical structural diagnosis of complex relationships, organizations, institutions, public disputes, or long-term evolution.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "structural-diagnosis",
+        "reasoning",
+        "governance"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "structural-diagnosis",
+        "reasoning",
+        "governance",
+        "user",
+        "explicitly",
+        "invokes",
+        "canonical",
+        "structural",
+        "diagnosis",
+        "complex"
+      ],
+      "path": "skills/crossframe/SKILL.md"
+    },
+    {
+      "id": "crossframe-casebook",
+      "name": "crossframe-casebook",
+      "description": "Use when CrossFrame Suite routes explicit Chinese casebook work: turning materials into reusable cases, anonymized entries, mechanisms, and retrieval indexes.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "casebook",
+        "case-study",
+        "knowledge-base"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "casebook",
+        "case-study",
+        "knowledge-base",
+        "suite",
+        "routes",
+        "explicit",
+        "work",
+        "turning",
+        "materials",
+        "reusable"
+      ],
+      "path": "skills/crossframe-casebook/SKILL.md"
+    },
+    {
+      "id": "crossframe-critical",
+      "name": "crossframe-critical",
+      "description": "Use only when the user explicitly names crossframe-critical for a Chinese structural critique dossier, article plan, or long-form critical essay.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "critique",
+        "essay",
+        "structural-analysis"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "critique",
+        "essay",
+        "structural-analysis",
+        "critical",
+        "user",
+        "explicitly",
+        "names",
+        "structural",
+        "dossier",
+        "article"
+      ],
+      "path": "skills/crossframe-critical/SKILL.md"
+    },
+    {
+      "id": "crossframe-debate",
+      "name": "crossframe-debate",
+      "description": "Use when CrossFrame Suite routes explicit Chinese proposition testing, debate analysis, hidden-premise review, rebuttal design, or withdrawal condition checks.",
+      "category": "testing",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "debate",
+        "argument",
+        "proposition"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "debate",
+        "argument",
+        "proposition",
+        "suite",
+        "routes",
+        "explicit",
+        "testing",
+        "analysis",
+        "hidden",
+        "premise"
+      ],
+      "path": "skills/crossframe-debate/SKILL.md"
+    },
+    {
+      "id": "crossframe-dialogue",
+      "name": "crossframe-dialogue",
+      "description": "Use when CrossFrame Suite routes explicit Chinese reader replies, editor responses, consultation-style short answers, or boundary-aware structural advice.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "dialogue",
+        "reader-reply",
+        "consultation"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "dialogue",
+        "reader-reply",
+        "consultation",
+        "suite",
+        "routes",
+        "explicit",
+        "reader",
+        "replies",
+        "editor",
+        "responses"
+      ],
+      "path": "skills/crossframe-dialogue/SKILL.md"
+    },
+    {
+      "id": "crossframe-essay",
+      "name": "crossframe-essay",
+      "description": "Use when explicit CrossFrame work needs a Chinese critical insight essay, commentary, concept essay, public piece, or structure-to-article draft after diagnosis.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "essay",
+        "writing",
+        "commentary"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "essay",
+        "writing",
+        "commentary",
+        "explicit",
+        "work",
+        "critical",
+        "insight",
+        "concept",
+        "public",
+        "piece"
+      ],
+      "path": "skills/crossframe-essay/SKILL.md"
+    },
+    {
+      "id": "crossframe-notebook",
+      "name": "crossframe-notebook",
+      "description": "Use when CrossFrame Suite routes explicit Chinese notes for books, theories, articles, excerpts, bidirectional reading, absorption, or conflict mapping.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "notebook",
+        "research",
+        "reading"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "notebook",
+        "research",
+        "reading",
+        "suite",
+        "routes",
+        "explicit",
+        "notes",
+        "books",
+        "theories",
+        "articles"
+      ],
+      "path": "skills/crossframe-notebook/SKILL.md"
+    },
+    {
+      "id": "crossframe-org",
+      "name": "crossframe-org",
+      "description": "Use when CrossFrame Suite routes explicit Chinese analysis of teams, projects, organizations, responsibility chains, feedback write-back, repair, or retrospectives.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "organization",
+        "retrospective",
+        "repair"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "organization",
+        "retrospective",
+        "repair",
+        "org",
+        "suite",
+        "routes",
+        "explicit",
+        "analysis",
+        "teams",
+        "organizations"
+      ],
+      "path": "skills/crossframe-org/SKILL.md"
+    },
+    {
+      "id": "crossframe-public",
+      "name": "crossframe-public",
+      "description": "Use when CrossFrame Suite routes explicit Chinese analysis of public issues, platform governance, policy, institutional responsibility, appeals, or compliance evidence.",
+      "category": "security",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "public-policy",
+        "governance",
+        "evidence"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "public-policy",
+        "governance",
+        "evidence",
+        "public",
+        "suite",
+        "routes",
+        "explicit",
+        "analysis",
+        "issues",
+        "platform"
+      ],
+      "path": "skills/crossframe-public/SKILL.md"
+    },
+    {
+      "id": "crossframe-review",
+      "name": "crossframe-review",
+      "description": "Use when explicit CrossFrame output needs review for reasoning fidelity, evidence boundaries, source anchors, concept drift, article collapse, or repair steps.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "review",
+        "quality-gate",
+        "evidence"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "review",
+        "quality-gate",
+        "evidence",
+        "explicit",
+        "output",
+        "reasoning",
+        "fidelity",
+        "boundaries",
+        "source",
+        "anchors"
+      ],
+      "path": "skills/crossframe-review/SKILL.md"
+    },
+    {
+      "id": "crossframe-suite",
+      "name": "crossframe-suite",
+      "description": "Use when the user explicitly invokes CrossFrame Suite for Chinese structural diagnosis workflows across relationships, organizations, public issues, philosophy, research, or essay output.",
+      "category": "workflow",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "workflow",
+        "multi-skill",
+        "structural-diagnosis"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "workflow",
+        "multi-skill",
+        "structural-diagnosis",
+        "suite",
+        "user",
+        "explicitly",
+        "invokes",
+        "structural",
+        "diagnosis",
+        "relationships"
+      ],
+      "path": "skills/crossframe-suite/SKILL.md"
+    },
+    {
+      "id": "crossframe-teach",
+      "name": "crossframe-teach",
+      "description": "Use when CrossFrame Suite routes explicit Chinese teaching of CrossFrame concepts, misreading boundaries, plain-language examples, signals, or exercises.",
+      "category": "general",
+      "tags": [
+        "crossframe",
+        "chinese",
+        "teaching",
+        "concepts",
+        "plain-language"
+      ],
+      "triggers": [
+        "crossframe",
+        "chinese",
+        "teaching",
+        "concepts",
+        "plain-language",
+        "teach",
+        "suite",
+        "routes",
+        "explicit",
+        "misreading",
+        "boundaries",
+        "plain"
+      ],
+      "path": "skills/crossframe-teach/SKILL.md"
+    },
+    {
       "id": "crypto-bd-agent",
       "name": "crypto-bd-agent",
       "description": "Production-tested patterns for building AI agents that autonomously discover, > evaluate, and acquire token listings for cryptocurrency exchanges.",
@@ -12398,6 +12817,35 @@
         "color"
       ],
       "path": "skills/design-taste-frontend/SKILL.md"
+    },
+    {
+      "id": "deterministic-design",
+      "name": "deterministic-design",
+      "description": "Render the UI and prove it's balanced + usable: a deterministic layout audit (centroid / optical-center / pixel-oracle balance via explicit math + annotated screenshot) plus a vision-judged Nielsen usability audit by a separate fresh-eyes judge. The measurement layer taste-only design skills lack.",
+      "category": "general",
+      "tags": [
+        "design",
+        "layout",
+        "usability",
+        "audit",
+        "verification",
+        "vision"
+      ],
+      "triggers": [
+        "design",
+        "layout",
+        "usability",
+        "audit",
+        "verification",
+        "vision",
+        "deterministic",
+        "render",
+        "ui",
+        "prove",
+        "balanced",
+        "usable"
+      ],
+      "path": "skills/deterministic-design/SKILL.md"
     },
     {
       "id": "devcontainer-setup",
@@ -21491,6 +21939,64 @@
       "path": "skills/longbridge/SKILL.md"
     },
     {
+      "id": "lookdev",
+      "name": "lookdev",
+      "description": "Human-in-the-loop web studio to tune AI-generated output by eye. Stand up a local interactive studio (sliders, pickers, drag handles) or an inline edit/highlight/comment annotation studio for prose & media, instead of guessing values or shipping a static comparison grid.",
+      "category": "data-ai",
+      "tags": [
+        "lookdev",
+        "design",
+        "ui",
+        "tuning",
+        "studio",
+        "visual-eval",
+        "annotation"
+      ],
+      "triggers": [
+        "lookdev",
+        "design",
+        "ui",
+        "tuning",
+        "studio",
+        "visual-eval",
+        "annotation",
+        "human",
+        "loop",
+        "web",
+        "tune",
+        "ai"
+      ],
+      "path": "skills/lookdev/SKILL.md"
+    },
+    {
+      "id": "lookdev-auto",
+      "name": "lookdev-auto",
+      "description": "Automated visual tuning: a vision or video model rates rendered variants in a loop. Render several labeled variants into one artifact, ask the model to rate them and suggest better values, render the suggestions, ask it to pick the best, repeat until good — the model is the eye, you run the loop.",
+      "category": "workflow",
+      "tags": [
+        "visual-eval",
+        "vision-model",
+        "tuning",
+        "automation",
+        "render-loop"
+      ],
+      "triggers": [
+        "visual-eval",
+        "vision-model",
+        "tuning",
+        "automation",
+        "render-loop",
+        "lookdev",
+        "auto",
+        "automated",
+        "visual",
+        "vision",
+        "video",
+        "model"
+      ],
+      "path": "skills/lookdev-auto/SKILL.md"
+    },
+    {
       "id": "loss-aversion-designer",
       "name": "loss-aversion-designer",
       "description": "One sentence - what this skill does and when to invoke it",
@@ -21662,6 +22168,35 @@
         "apps"
       ],
       "path": "skills/macos-menubar-tuist-app/SKILL.md"
+    },
+    {
+      "id": "macos-screen-recorder",
+      "name": "macos-screen-recorder",
+      "description": "macOS screen recorder that captures the main display PLUS system audio via ScreenCaptureKit — no BlackHole/loopback driver, no sudo, just the standard Screen Recording permission. CLI-driven; fills the headless-screen-recording-with-system-sound gap QuickTime and `screencapture -v` can't.",
+      "category": "general",
+      "tags": [
+        "macos",
+        "screen-recording",
+        "system-audio",
+        "screencapturekit",
+        "cli",
+        "swift"
+      ],
+      "triggers": [
+        "macos",
+        "screen-recording",
+        "system-audio",
+        "screencapturekit",
+        "cli",
+        "swift",
+        "screen",
+        "recorder",
+        "captures",
+        "main",
+        "display",
+        "plus"
+      ],
+      "path": "skills/macos-screen-recorder/SKILL.md"
     },
     {
       "id": "macos-spm-app-packaging",
@@ -26880,6 +27415,34 @@
       "path": "skills/pptx-official/SKILL.md"
     },
     {
+      "id": "pr-merge-champion",
+      "name": "pr-merge-champion",
+      "description": "Optimize pull requests for quick approval and merging by ensuring clean diffs, comprehensive self-reviews, and structured documentation.",
+      "category": "workflow",
+      "tags": [
+        "git",
+        "github",
+        "pull-request",
+        "code-review",
+        "workflow"
+      ],
+      "triggers": [
+        "git",
+        "github",
+        "pull-request",
+        "code-review",
+        "workflow",
+        "pr",
+        "merge",
+        "champion",
+        "optimize",
+        "pull",
+        "requests",
+        "quick"
+      ],
+      "path": "skills/pr-merge-champion/SKILL.md"
+    },
+    {
       "id": "pr-writer",
       "name": "pr-writer",
       "description": "Create pull requests following Sentry's engineering practices.",
@@ -29744,6 +30307,35 @@
         "landing"
       ],
       "path": "skills/screenshots/SKILL.md"
+    },
+    {
+      "id": "screenstudio-alt",
+      "name": "screenstudio-alt",
+      "description": "Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9:16 vertical export that follows the action — post-production for screen recordings from the CLI.",
+      "category": "general",
+      "tags": [
+        "screen-recording",
+        "video",
+        "post-production",
+        "auto-zoom",
+        "vertical-video",
+        "ffmpeg"
+      ],
+      "triggers": [
+        "screen-recording",
+        "video",
+        "post-production",
+        "auto-zoom",
+        "vertical-video",
+        "ffmpeg",
+        "screenstudio",
+        "alt",
+        "open",
+        "source",
+        "headless",
+        "screen"
+      ],
+      "path": "skills/screenstudio-alt/SKILL.md"
     },
     {
       "id": "scroll-experience",
@@ -33502,6 +34094,350 @@
       "path": "skills/supabase-automation/SKILL.md"
     },
     {
+      "id": "super-code",
+      "name": "super-code",
+      "description": "Standing house style to enforce dense, correct, and idiomatic code on all coding tasks. Minimizes code bloat and agent operation overhead.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code"
+      ],
+      "triggers": [
+        "super",
+        "code",
+        "standing",
+        "house",
+        "style",
+        "enforce",
+        "dense",
+        "correct",
+        "idiomatic",
+        "all",
+        "coding",
+        "tasks"
+      ],
+      "path": "skills/super-code/SKILL.md"
+    },
+    {
+      "id": "super-code/bash",
+      "name": "bash",
+      "description": "Language-specific super-code guidelines for bash.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/bash"
+      ],
+      "triggers": [
+        "super",
+        "code/bash",
+        "bash",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/bash/SKILL.md"
+    },
+    {
+      "id": "super-code/c",
+      "name": "c",
+      "description": "Language-specific super-code guidelines for c.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/c"
+      ],
+      "triggers": [
+        "super",
+        "code/c",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/c/SKILL.md"
+    },
+    {
+      "id": "super-code/cpp",
+      "name": "cpp",
+      "description": "Language-specific super-code guidelines for cpp.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/cpp"
+      ],
+      "triggers": [
+        "super",
+        "code/cpp",
+        "cpp",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/cpp/SKILL.md"
+    },
+    {
+      "id": "super-code/csharp",
+      "name": "csharp",
+      "description": "Language-specific super-code guidelines for csharp.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/csharp"
+      ],
+      "triggers": [
+        "super",
+        "code/csharp",
+        "csharp",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/csharp/SKILL.md"
+    },
+    {
+      "id": "super-code/dart",
+      "name": "dart",
+      "description": "Language-specific super-code guidelines for dart.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/dart"
+      ],
+      "triggers": [
+        "super",
+        "code/dart",
+        "dart",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/dart/SKILL.md"
+    },
+    {
+      "id": "super-code/elixir",
+      "name": "elixir",
+      "description": "Language-specific super-code guidelines for elixir.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/elixir"
+      ],
+      "triggers": [
+        "super",
+        "code/elixir",
+        "elixir",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/elixir/SKILL.md"
+    },
+    {
+      "id": "super-code/go",
+      "name": "go",
+      "description": "Language-specific super-code guidelines for go.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/go"
+      ],
+      "triggers": [
+        "super",
+        "code/go",
+        "go",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/go/SKILL.md"
+    },
+    {
+      "id": "super-code/java",
+      "name": "java",
+      "description": "Language-specific super-code guidelines for java.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/java"
+      ],
+      "triggers": [
+        "super",
+        "code/java",
+        "java",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/java/SKILL.md"
+    },
+    {
+      "id": "super-code/kotlin",
+      "name": "kotlin",
+      "description": "Language-specific super-code guidelines for kotlin.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/kotlin"
+      ],
+      "triggers": [
+        "super",
+        "code/kotlin",
+        "kotlin",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/kotlin/SKILL.md"
+    },
+    {
+      "id": "super-code/php",
+      "name": "php",
+      "description": "Language-specific super-code guidelines for php.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/php"
+      ],
+      "triggers": [
+        "super",
+        "code/php",
+        "php",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/php/SKILL.md"
+    },
+    {
+      "id": "super-code/python",
+      "name": "python",
+      "description": "Language-specific super-code guidelines for python.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/python"
+      ],
+      "triggers": [
+        "super",
+        "code/python",
+        "python",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/python/SKILL.md"
+    },
+    {
+      "id": "super-code/ruby",
+      "name": "ruby",
+      "description": "Language-specific super-code guidelines for ruby.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/ruby"
+      ],
+      "triggers": [
+        "super",
+        "code/ruby",
+        "ruby",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/ruby/SKILL.md"
+    },
+    {
+      "id": "super-code/rust",
+      "name": "rust",
+      "description": "Language-specific super-code guidelines for rust.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/rust"
+      ],
+      "triggers": [
+        "super",
+        "code/rust",
+        "rust",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/rust/SKILL.md"
+    },
+    {
+      "id": "super-code/scala",
+      "name": "scala",
+      "description": "Language-specific super-code guidelines for scala.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/scala"
+      ],
+      "triggers": [
+        "super",
+        "code/scala",
+        "scala",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/scala/SKILL.md"
+    },
+    {
+      "id": "super-code/swift",
+      "name": "swift",
+      "description": "Language-specific super-code guidelines for swift.",
+      "category": "general",
+      "tags": [
+        "super",
+        "code/swift"
+      ],
+      "triggers": [
+        "super",
+        "code/swift",
+        "swift",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/swift/SKILL.md"
+    },
+    {
+      "id": "super-code/typescript",
+      "name": "typescript",
+      "description": "Language-specific super-code guidelines for typescript.",
+      "category": "development",
+      "tags": [
+        "super",
+        "code/typescript"
+      ],
+      "triggers": [
+        "super",
+        "code/typescript",
+        "typescript",
+        "language",
+        "specific",
+        "code",
+        "guidelines"
+      ],
+      "path": "skills/super-code/typescript/SKILL.md"
+    },
+    {
       "id": "superpowers-lab",
       "name": "superpowers-lab",
       "description": "Lab environment for Claude superpowers",
@@ -37191,6 +38127,36 @@
       "path": "skills/web-design-guidelines/SKILL.md"
     },
     {
+      "id": "web-media-getter",
+      "name": "web-media-getter",
+      "description": "One query across free image / video / GIF APIs (stock + historical/archival + GIF engines), returning normalized, license-tagged results with optional top-K download + attribution sidecar. The retrieval peer to local semantic search and generative media.",
+      "category": "general",
+      "tags": [
+        "media",
+        "images",
+        "video",
+        "gif",
+        "stock",
+        "archival",
+        "attribution"
+      ],
+      "triggers": [
+        "media",
+        "images",
+        "video",
+        "gif",
+        "stock",
+        "archival",
+        "attribution",
+        "web",
+        "getter",
+        "one",
+        "query",
+        "free"
+      ],
+      "path": "skills/web-media-getter/SKILL.md"
+    },
+    {
       "id": "web-performance-optimization",
       "name": "web-performance-optimization",
       "description": "Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance",
@@ -38380,6 +39346,32 @@
         "browse"
       ],
       "path": "skills/youtube-full/SKILL.md"
+    },
+    {
+      "id": "youtube-seo-optimizer",
+      "name": "youtube-seo-optimizer",
+      "description": "Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new or underperforming content.",
+      "category": "business",
+      "tags": [
+        "youtube",
+        "seo",
+        "optimizer"
+      ],
+      "triggers": [
+        "youtube",
+        "seo",
+        "optimizer",
+        "generate",
+        "complete",
+        "podcast",
+        "packages",
+        "live",
+        "researched",
+        "keywords",
+        "titles",
+        "descriptions"
+      ],
+      "path": "skills/youtube-seo-optimizer/SKILL.md"
     },
     {
       "id": "youtube-summarizer",

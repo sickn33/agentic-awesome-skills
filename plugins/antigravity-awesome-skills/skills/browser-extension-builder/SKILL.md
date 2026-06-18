@@ -44,7 +44,7 @@ use daily. You know the difference between a toy and a tool.
 
 ## Patterns
 
-### Extension Architecture
+### Architecture Patterns
 
 Structure for modern browser extensions
 

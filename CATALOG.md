@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1555
+Total skills: 1595
 
 ## architecture (101)
 
@@ -110,7 +110,7 @@ Total skills: 1555
 | `workflow-patterns` | Use this skill when implementing tasks according to Conductor's TDD workflow, handling phase checkpoints, managing git commits for tasks, or understanding th... |  | skill, implementing, tasks, according, conductor, tdd, handling, phase, checkpoints, managing, git, commits |
 | `zapier-make-patterns` | No-code automation democratizes workflow building. Zapier and Make (formerly Integromat) let non-developers automate business processes without writing code.... | zapier, make | zapier, make, no, code, automation, democratizes, building, formerly, integromat, let, non, developers |
 
-## business (86)
+## business (87)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -200,8 +200,9 @@ Total skills: 1555
 | `whatsapp-automation` | Automate WhatsApp Business tasks via Rube MCP (Composio): send messages, manage templates, upload media, and handle contacts. Always search tools first for c... | whatsapp | whatsapp, automation, automate, business, tasks, via, rube, mcp, composio, send, messages, upload |
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
+| `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (296)
+## data-ai (297)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -393,6 +394,7 @@ Total skills: 1555
 | `llm-ops` | LLM Operations -- RAG, embeddings, vector databases, fine-tuning, prompt engineering avancado, custos de LLM, evals de qualidade e arquiteturas de IA para pr... | llm, rag, embeddings, vector-db, fine-tuning | llm, rag, embeddings, vector-db, fine-tuning, ops, operations, vector, databases, fine, tuning, prompt |
 | `llm-prompt-optimizer` | Use when improving prompts for any LLM. Applies proven prompt engineering techniques to boost output quality, reduce hallucinations, and cut token usage. | llm, prompt, optimizer | llm, prompt, optimizer, improving, prompts, any, applies, proven, engineering, techniques, boost, output |
 | `llm-structured-output` | Get reliable JSON, enums, and typed objects from LLMs using response_format, tool_use, and schema-constrained decoding across OpenAI, Anthropic, and Google A... | llm, structured, output | llm, structured, output, get, reliable, json, enums, typed, objects, llms, response, format |
+| `lookdev` | Human-in-the-loop web studio to tune AI-generated output by eye. Stand up a local interactive studio (sliders, pickers, drag handles) or an inline edit/highl... | lookdev, design, ui, tuning, studio, visual-eval, annotation | lookdev, design, ui, tuning, studio, visual-eval, annotation, human, loop, web, tune, ai |
 | `magic-animator` | AI-powered animation tool for creating motion in logos, UI, icons, and social media assets. | magic, animator | magic, animator, ai, powered, animation, creating, motion, logos, ui, icons, social, media |
 | `mailchimp-automation` | Automate Mailchimp email marketing including campaigns, audiences, subscribers, segments, and analytics via Rube MCP (Composio). Always search tools first fo... | mailchimp | mailchimp, automation, automate, email, marketing, including, campaigns, audiences, subscribers, segments, analytics, via |
 | `makepad-splash` | CRITICAL: Use for Makepad Splash scripting language. Triggers on: splash language, makepad script, makepad scripting, script!, cx.eval, makepad dynamic, make... | makepad, splash | makepad, splash, critical, scripting, language, triggers, script, cx, eval, dynamic, ai |
@@ -502,7 +504,7 @@ Total skills: 1555
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (219)
+## development (228)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -569,6 +571,7 @@ Total skills: 1555
 | `bun-development` | Fast, modern JavaScript/TypeScript development with the Bun runtime, inspired by [oven-sh/bun](https://github.com/oven-sh/bun). | bun | bun, development, fast, javascript, typescript, runtime, inspired, oven, sh, https, github, com |
 | `cc-skill-coding-standards` | Universal coding standards, best practices, and patterns for TypeScript, JavaScript, React, and Node.js development. | cc, skill, coding, standards | cc, skill, coding, standards, universal, typescript, javascript, react, node, js, development |
 | `cc-skill-frontend-patterns` | Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices. | cc, skill, frontend | cc, skill, frontend, development, react, next, js, state, performance, optimization, ui |
+| `ckw-design` | Frontend design entry point: direction, design system, visual philosophy. Use whenever building or touching the look of any web UI (components, pages, dashbo... | design, frontend, ui, css, typography, responsive | design, frontend, ui, css, typography, responsive, ckw, entry, point, direction, visual, philosophy |
 | `clarvia-aeo-check` | Score any MCP server, API, or CLI for agent-readiness using Clarvia AEO (Agent Experience Optimization). Search 15,400+ indexed tools before adding them to y... | mcp, aeo, tool-quality, agent-readiness, api-scoring, clarvia | mcp, aeo, tool-quality, agent-readiness, api-scoring, clarvia, check, score, any, server, api, cli |
 | `codebase-to-wordpress-converter` | Expert skill for converting any codebase (React/HTML/Next.js) into a pixel-perfect, SEO-optimized, and dynamic WordPress theme. | codebase, to, wordpress, converter | codebase, to, wordpress, converter, skill, converting, any, react, html, next, js, pixel |
 | `context7-auto-research` | Automatically fetch latest library/framework documentation for Claude Code via Context7 API. Use when you need up-to-date documentation for libraries and fra... | context7, auto, research | context7, auto, research, automatically, fetch, latest, library, framework, documentation, claude, code, via |
@@ -695,6 +698,14 @@ Total skills: 1555
 | `sred-work-summary` | Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects. | sred, work, summary | sred, work, summary, go, back, through, previous, year, notion, doc, groups, relevant |
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `stitch-design-taste` | Use when generating Google Stitch DESIGN.md systems for premium typography, color, layout, motion intent, and anti-generic UI rules. | stitch, design-system, frontend, ui | stitch, design-system, frontend, ui, taste, generating, google, md, premium, typography, color, layout |
+| `super-code/csharp` | Language-specific super-code guidelines for csharp. | super, code/csharp | super, code/csharp, csharp, language, specific, code, guidelines |
+| `super-code/go` | Language-specific super-code guidelines for go. | super, code/go | super, code/go, go, language, specific, code, guidelines |
+| `super-code/java` | Language-specific super-code guidelines for java. | super, code/java | super, code/java, java, language, specific, code, guidelines |
+| `super-code/php` | Language-specific super-code guidelines for php. | super, code/php | super, code/php, php, language, specific, code, guidelines |
+| `super-code/python` | Language-specific super-code guidelines for python. | super, code/python | super, code/python, python, language, specific, code, guidelines |
+| `super-code/ruby` | Language-specific super-code guidelines for ruby. | super, code/ruby | super, code/ruby, ruby, language, specific, code, guidelines |
+| `super-code/rust` | Language-specific super-code guidelines for rust. | super, code/rust | super, code/rust, rust, language, specific, code, guidelines |
+| `super-code/typescript` | Language-specific super-code guidelines for typescript. | super, code/typescript | super, code/typescript, typescript, language, specific, code, guidelines |
 | `sveltekit` | Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework. | svelte, sveltekit, fullstack, ssr, ssg, typescript | svelte, sveltekit, fullstack, ssr, ssg, typescript, full, stack, web, applications, file, routing |
 | `swiftui-expert-skill` | Write, review, or improve SwiftUI code following best practices for state management, view composition, performance, and iOS 26+ Liquid Glass adoption. Use w... | swiftui, skill | swiftui, skill, write, review, improve, code, following, state, view, composition, performance, ios |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
@@ -743,7 +754,7 @@ Total skills: 1555
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 
-## general (374)
+## general (398)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -772,6 +783,7 @@ Total skills: 1555
 | `app-builder` | Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordina... | app, builder | app, builder, main, application, building, orchestrator, creates, full, stack, applications, natural, language |
 | `app-builder/templates` | Project scaffolding templates for new applications. Use when creating new projects from scratch. Contains 12 templates for various tech stacks. | app, builder/templates | app, builder/templates, scaffolding, new, applications, creating, scratch, contains, 12, various, tech, stacks |
 | `app-store-changelog` | Generate user-facing App Store release notes from git history since the last tag. | app, store, changelog | app, store, changelog, generate, user, facing, release, notes, git, history, since, last |
+| `apple-notes-search` | Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall,... | apple-notes, search, mcp, macos, semantic-search, knowledge | apple-notes, search, mcp, macos, semantic-search, knowledge, apple, notes, semantic, keyword, connection, discovery |
 | `arm-cortex-expert` | Senior embedded software engineer specializing in firmware and driver development for ARM Cortex-M microcontrollers (Teensy, STM32, nRF52, SAMD). | arm, cortex | arm, cortex, senior, embedded, software, engineer, specializing, firmware, driver, development, microcontrollers, teensy |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
 | `ask-questions-if-underspecified` | Clarify requirements before implementing. Use when serious doubts arise. | ask, questions, if, underspecified | ask, questions, if, underspecified, clarify, requirements, before, implementing, serious, doubts, arise |
@@ -793,6 +805,7 @@ Total skills: 1555
 | `brand-guidelines-anthropic` | To access Anthropic's official brand identity and style resources, use this skill. | brand, guidelines, anthropic | brand, guidelines, anthropic, access, official, identity, style, resources, skill |
 | `brand-guidelines-community` | To access Anthropic's official brand identity and style resources, use this skill. | brand, guidelines, community | brand, guidelines, community, access, anthropic, official, identity, style, resources, skill |
 | `brand-perception-psychologist` | One sentence - what this skill does and when to invoke it | brand, perception, psychologist | brand, perception, psychologist, one, sentence, what, skill, does, invoke |
+| `brave-man` | Runs a structured clarifying interview for new project requests before building. Instead of writing code, it outputs a fully specified prompt.md for a fresh ... | brave, man | brave, man, runs, structured, clarifying, interview, new, requests, before, building, instead, writing |
 | `bug-hunter` | Systematically finds and fixes bugs using proven debugging techniques. Traces from symptoms to root cause, implements fixes, and prevents regression. | bug, hunter | bug, hunter, systematically, finds, fixes, bugs, proven, debugging, techniques, traces, symptoms, root |
 | `build` | build | build | build |
 | `bulletmind` | Convert input into clean, structured, hierarchical bullet points for summarization, note-taking, and structured thinking. | writing, summarization, note-taking, formatting, structured-output | writing, summarization, note-taking, formatting, structured-output, bulletmind, convert, input, clean, structured, hierarchical, bullet |
@@ -836,6 +849,15 @@ Total skills: 1555
 | `create-branch` | Create a git branch following Sentry naming conventions. Use when asked to "create a branch", "new branch", "start a branch", "make a branch", "switch to a n... | create, branch | create, branch, git, following, sentry, naming, conventions, asked, new, start, switch, starting |
 | `create-issue-gate` | Use when starting a new implementation task and an issue must be created with strict acceptance criteria gating before execution. | create, issue, gate | create, issue, gate, starting, new, task, must, created, strict, acceptance, criteria, gating |
 | `crewai` | Expert in CrewAI - the leading role-based multi-agent framework used by 60% of Fortune 500 companies. | crewai | crewai, leading, role, multi, agent, framework, used, 60, fortune, 500, companies |
+| `crossframe` | Use when the user explicitly invokes CrossFrame or 跨尺度结构诊断 for Chinese-canonical structural diagnosis of complex relationships, organizations, institutions, ... | crossframe, chinese, structural-diagnosis, reasoning, governance | crossframe, chinese, structural-diagnosis, reasoning, governance, user, explicitly, invokes, canonical, structural, diagnosis, complex |
+| `crossframe-casebook` | Use when CrossFrame Suite routes explicit Chinese casebook work: turning materials into reusable cases, anonymized entries, mechanisms, and retrieval indexes. | crossframe, chinese, casebook, case-study, knowledge-base | crossframe, chinese, casebook, case-study, knowledge-base, suite, routes, explicit, work, turning, materials, reusable |
+| `crossframe-critical` | Use only when the user explicitly names crossframe-critical for a Chinese structural critique dossier, article plan, or long-form critical essay. | crossframe, chinese, critique, essay, structural-analysis | crossframe, chinese, critique, essay, structural-analysis, critical, user, explicitly, names, structural, dossier, article |
+| `crossframe-dialogue` | Use when CrossFrame Suite routes explicit Chinese reader replies, editor responses, consultation-style short answers, or boundary-aware structural advice. | crossframe, chinese, dialogue, reader-reply, consultation | crossframe, chinese, dialogue, reader-reply, consultation, suite, routes, explicit, reader, replies, editor, responses |
+| `crossframe-essay` | Use when explicit CrossFrame work needs a Chinese critical insight essay, commentary, concept essay, public piece, or structure-to-article draft after diagno... | crossframe, chinese, essay, writing, commentary | crossframe, chinese, essay, writing, commentary, explicit, work, critical, insight, concept, public, piece |
+| `crossframe-notebook` | Use when CrossFrame Suite routes explicit Chinese notes for books, theories, articles, excerpts, bidirectional reading, absorption, or conflict mapping. | crossframe, chinese, notebook, research, reading | crossframe, chinese, notebook, research, reading, suite, routes, explicit, notes, books, theories, articles |
+| `crossframe-org` | Use when CrossFrame Suite routes explicit Chinese analysis of teams, projects, organizations, responsibility chains, feedback write-back, repair, or retrospe... | crossframe, chinese, organization, retrospective, repair | crossframe, chinese, organization, retrospective, repair, org, suite, routes, explicit, analysis, teams, organizations |
+| `crossframe-review` | Use when explicit CrossFrame output needs review for reasoning fidelity, evidence boundaries, source anchors, concept drift, article collapse, or repair steps. | crossframe, chinese, review, quality-gate, evidence | crossframe, chinese, review, quality-gate, evidence, explicit, output, reasoning, fidelity, boundaries, source, anchors |
+| `crossframe-teach` | Use when CrossFrame Suite routes explicit Chinese teaching of CrossFrame concepts, misreading boundaries, plain-language examples, signals, or exercises. | crossframe, chinese, teaching, concepts, plain-language | crossframe, chinese, teaching, concepts, plain-language, teach, suite, routes, explicit, misreading, boundaries, plain |
 | `cv-generator` | Generate professional, ATS-optimized CVs for FlowCV, Canva, Google Docs, or Word. Handles multi-source merging, JD targeting, seniority adaptation, and human... | cv, resume, ats, career, job-application, career-change | cv, resume, ats, career, job-application, career-change, generator, generate, professional, optimized, cvs, flowcv |
 | `daily` | Documentation and capabilities reference for Daily | daily | daily, documentation, capabilities, reference |
 | `daily-news-report` | Scrapes content based on a preset URL list, filters high-quality technical information, and generates daily Markdown reports. | daily, news, report | daily, news, report, scrapes, content, preset, url, list, filters, high, quality, technical |
@@ -847,6 +869,7 @@ Total skills: 1555
 | `defuddle` | Extract clean markdown content from web pages using Defuddle CLI, removing clutter and navigation to save tokens. Use instead of WebFetch when the user provi... | defuddle | defuddle, extract, clean, markdown, content, web, pages, cli, removing, clutter, navigation, save |
 | `design-md` | Analyze Stitch projects and synthesize a semantic design system into DESIGN.md files | md | md, analyze, stitch, synthesize, semantic, files |
 | `design-spells` | Curated micro-interactions and design details that add "magic" and personality to websites and apps. | spells | spells, curated, micro, interactions, details, add, magic, personality, websites, apps |
+| `deterministic-design` | Render the UI and prove it's balanced + usable: a deterministic layout audit (centroid / optical-center / pixel-oracle balance via explicit math + annotated ... | design, layout, usability, audit, verification, vision | design, layout, usability, audit, verification, vision, deterministic, render, ui, prove, balanced, usable |
 | `diary` | Unified Diary System: A context-preserving automated logger for multi-project development. | diary | diary, unified, context, preserving, automated, logger, multi, development |
 | `dispatching-parallel-agents` | Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies | dispatching, parallel, agents | dispatching, parallel, agents, facing, independent, tasks, worked, without, shared, state, sequential, dependencies |
 | `doc2math` | Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty. | doc2math | doc2math, convert, narrative, technical, documents, grounded, mathematical, problem, specifications, variables, constraints, objectives |
@@ -951,6 +974,7 @@ Total skills: 1555
 | `logistics-exception-management` | Codified expertise for handling freight exceptions, shipment delays, damages, losses, and carrier disputes. Informed by logistics professionals with 15+ year... | logistics, exception | logistics, exception, codified, expertise, handling, freight, exceptions, shipment, delays, damages, losses, carrier |
 | `loss-aversion-designer` | One sentence - what this skill does and when to invoke it | loss, aversion, designer | loss, aversion, designer, one, sentence, what, skill, does, invoke |
 | `macos-menubar-tuist-app` | Build, refactor, or review SwiftUI macOS menubar apps that use Tuist. | macos, menubar, tuist, app | macos, menubar, tuist, app, refactor, review, swiftui, apps |
+| `macos-screen-recorder` | macOS screen recorder that captures the main display PLUS system audio via ScreenCaptureKit — no BlackHole/loopback driver, no sudo, just the standard Screen... | macos, screen-recording, system-audio, screencapturekit, cli, swift | macos, screen-recording, system-audio, screencapturekit, cli, swift, screen, recorder, captures, main, display, plus |
 | `macos-spm-app-packaging` | Scaffold, build, sign, and package SwiftPM macOS apps without Xcode projects. | macos, spm, app, packaging | macos, spm, app, packaging, scaffold, sign, package, swiftpm, apps, without, xcode |
 | `magic-ui-generator` | Utilizes Magic by 21st.dev to generate, compare, and integrate multiple production-ready UI component variations. | magic, ui, generator | magic, ui, generator, utilizes, 21st, dev, generate, compare, integrate, multiple, component, variations |
 | `makepad-animation` | CRITICAL: Use for Makepad animation system. Triggers on: makepad animation, makepad animator, makepad hover, makepad state, makepad transition, "from: { all:... | makepad, animation | makepad, animation, critical, triggers, animator, hover, state, transition, all, forward, pressed |
@@ -1039,6 +1063,7 @@ Total skills: 1555
 | `sam-altman` | Agente que simula Sam Altman — CEO da OpenAI, ex-presidente da Y Combinator, arquiteto da era AGI. | persona, startups, agi, yc, fundraising | persona, startups, agi, yc, fundraising, sam, altman, agente, que, simula, ceo, da |
 | `satori` | Clinically informed wisdom companion blending psychology and philosophy into a structured thinking partner | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation, satori, clinically, informed, companion |
 | `scarcity-urgency-psychologist` | One sentence - what this skill does and when to invoke it | scarcity, urgency, psychologist | scarcity, urgency, psychologist, one, sentence, what, skill, does, invoke |
+| `screenstudio-alt` | Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9... | screen-recording, video, post-production, auto-zoom, vertical-video, ffmpeg | screen-recording, video, post-production, auto-zoom, vertical-video, ffmpeg, screenstudio, alt, open, source, headless, screen |
 | `search-specialist` | Expert web researcher using advanced search techniques and | search | search, web, researcher, techniques |
 | `senior-architect` | Complete toolkit for senior architect with modern tools and best practices. | senior | senior, architect, complete, toolkit |
 | `senior-fullstack` | Complete toolkit for senior fullstack with modern tools and best practices. | senior, fullstack | senior, fullstack, complete, toolkit |
@@ -1066,6 +1091,15 @@ Total skills: 1555
 | `stitch-loop` | Teaches agents to iteratively build websites using Stitch with an autonomous baton-passing loop pattern | stitch, loop | stitch, loop, teaches, agents, iteratively, websites, autonomous, baton, passing |
 | `subagent-driven-development` | Use when executing implementation plans with independent tasks in the current session | subagent, driven | subagent, driven, development, executing, plans, independent, tasks, current, session |
 | `subject-line-psychologist` | One sentence - what this skill does and when to invoke it | subject, line, psychologist | subject, line, psychologist, one, sentence, what, skill, does, invoke |
+| `super-code` | Standing house style to enforce dense, correct, and idiomatic code on all coding tasks. Minimizes code bloat and agent operation overhead. | super, code | super, code, standing, house, style, enforce, dense, correct, idiomatic, all, coding, tasks |
+| `super-code/bash` | Language-specific super-code guidelines for bash. | super, code/bash | super, code/bash, bash, language, specific, code, guidelines |
+| `super-code/c` | Language-specific super-code guidelines for c. | super, code/c | super, code/c, language, specific, code, guidelines |
+| `super-code/cpp` | Language-specific super-code guidelines for cpp. | super, code/cpp | super, code/cpp, cpp, language, specific, code, guidelines |
+| `super-code/dart` | Language-specific super-code guidelines for dart. | super, code/dart | super, code/dart, dart, language, specific, code, guidelines |
+| `super-code/elixir` | Language-specific super-code guidelines for elixir. | super, code/elixir | super, code/elixir, elixir, language, specific, code, guidelines |
+| `super-code/kotlin` | Language-specific super-code guidelines for kotlin. | super, code/kotlin | super, code/kotlin, kotlin, language, specific, code, guidelines |
+| `super-code/scala` | Language-specific super-code guidelines for scala. | super, code/scala | super, code/scala, scala, language, specific, code, guidelines |
+| `super-code/swift` | Language-specific super-code guidelines for swift. | super, code/swift | super, code/swift, swift, language, specific, code, guidelines |
 | `superpowers-lab` | Lab environment for Claude superpowers | superpowers, lab | superpowers, lab, environment, claude |
 | `swift-concurrency-expert` | Review and fix Swift concurrency issues such as actor isolation and Sendable violations. | swift, concurrency | swift, concurrency, review, fix, issues, such, actor, isolation, sendable, violations |
 | `swiftui-liquid-glass` | Implement or review SwiftUI Liquid Glass APIs with correct fallbacks and modifier order. | swiftui, liquid, glass | swiftui, liquid, glass, review, apis, correct, fallbacks, modifier, order |
@@ -1104,6 +1138,7 @@ Total skills: 1555
 | `video-content-extractor` | Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped... | video, ocr, ffmpeg, tesseract, frame-extraction, media | video, ocr, ffmpeg, tesseract, frame-extraction, media, content, extractor, extract, key, frames, mp4 |
 | `videodb` | Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add o... | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture, videodb, audio |
 | `visual-emotion-engineer` | One sentence - what this skill does and when to invoke it | visual, emotion | visual, emotion, engineer, one, sentence, what, skill, does, invoke |
+| `web-media-getter` | One query across free image / video / GIF APIs (stock + historical/archival + GIF engines), returning normalized, license-tagged results with optional top-K ... | media, images, video, gif, stock, archival, attribution | media, images, video, gif, stock, archival, attribution, web, getter, one, query, free |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 | `weightloss-analyzer` | 分析减肥数据、计算代谢率、追踪能量缺口、管理减肥阶段 | weightloss, analyzer | weightloss, analyzer |
 | `wiki-architect` | You are a documentation architect that produces structured wiki catalogues and onboarding guides from codebases. | wiki | wiki, architect, documentation, produces, structured, catalogues, onboarding, guides, codebases |
@@ -1269,7 +1304,7 @@ Total skills: 1555
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (185)
+## security (186)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1319,6 +1354,7 @@ Total skills: 1555
 | `context-guardian` | Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao. | context, data-integrity, snapshots, verification | context, data-integrity, snapshots, verification, guardian, guardiao, de, contexto, que, preserva, dados, criticos |
 | `convex` | Convex reactive backend expert: schema design, TypeScript functions, real-time subscriptions, auth, file storage, scheduling, and deployment. | convex | convex, reactive, backend, schema, typescript, functions, real, time, subscriptions, auth, file, storage |
 | `cred-omega` | CISO operacional enterprise para gestao total de credenciais e segredos. | credentials, secrets, security, api-keys, vault | credentials, secrets, security, api-keys, vault, cred, omega, ciso, operacional, enterprise, para, gestao |
+| `crossframe-public` | Use when CrossFrame Suite routes explicit Chinese analysis of public issues, platform governance, policy, institutional responsibility, appeals, or complianc... | crossframe, chinese, public-policy, governance, evidence | crossframe, chinese, public-policy, governance, evidence, public, suite, routes, explicit, analysis, issues, platform |
 | `customs-trade-compliance` | Codified expertise for customs documentation, tariff classification, duty optimisation, restricted party screening, and regulatory compliance across multiple... | customs, trade, compliance | customs, trade, compliance, codified, expertise, documentation, tariff, classification, duty, optimisation, restricted, party |
 | `database-migration` | Master database schema and data migrations across ORMs (Sequelize, TypeORM, Prisma), including rollback strategies and zero-downtime deployments. | database, migration | database, migration, schema, data, migrations, orms, sequelize, typeorm, prisma, including, rollback, zero |
 | `database-migrations-sql-migrations` | SQL database migrations with zero-downtime strategies for PostgreSQL, MySQL, and SQL Server. Focus on data integrity and rollback plans. | database, migrations, sql | database, migrations, sql, zero, downtime, postgresql, mysql, server, data, integrity, rollback, plans |
@@ -1459,7 +1495,7 @@ Total skills: 1555
 | `yield-intelligence` | Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yi... | yield, intelligence | yield, intelligence, passive, income, portfolio, analysis, activate, user, asks, about, dividend, yields |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
 
-## testing (34)
+## testing (35)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1469,6 +1505,7 @@ Total skills: 1555
 | `circleci-automation` | Automate CircleCI tasks via Rube MCP (Composio): trigger pipelines, monitor workflows/jobs, retrieve artifacts and test metadata. Always search tools first f... | circleci | circleci, automation, automate, tasks, via, rube, mcp, composio, trigger, pipelines, monitor, jobs |
 | `conductor-implement` | Execute tasks from a track's implementation plan following TDD workflow | conductor, implement | conductor, implement, execute, tasks, track, plan, following, tdd |
 | `conductor-revert` | Git-aware undo by logical work unit (track, phase, or task) | conductor, revert | conductor, revert, git, aware, undo, logical, work, unit, track, phase, task |
+| `crossframe-debate` | Use when CrossFrame Suite routes explicit Chinese proposition testing, debate analysis, hidden-premise review, rebuttal design, or withdrawal condition checks. | crossframe, chinese, debate, argument, proposition | crossframe, chinese, debate, argument, proposition, suite, routes, explicit, testing, analysis, hidden, premise |
 | `debugger` | Debugging specialist for errors, test failures, and unexpected behavior. Use proactively when encountering any issues. | debugger | debugger, debugging, errors, test, failures, unexpected, behavior, proactively, encountering, any, issues |
 | `dependency-upgrade` | Master major dependency version upgrades, compatibility analysis, staged upgrade strategies, and comprehensive testing approaches. | dependency, upgrade | dependency, upgrade, major, version, upgrades, compatibility, analysis, staged, testing, approaches |
 | `doc-coauthoring` | This skill provides a structured workflow for guiding users through collaborative document creation. Act as an active guide, walking users through three stag... | doc, coauthoring | doc, coauthoring, skill, provides, structured, guiding, users, through, collaborative, document, creation, act |
@@ -1498,7 +1535,7 @@ Total skills: 1555
 | `wiki-qa` | Answer repository questions grounded entirely in source code evidence. Use when user asks a question about the codebase, user wants to understand a specific ... | wiki, qa | wiki, qa, answer, repository, questions, grounded, entirely, source, code, evidence, user, asks |
 | `windows-privilege-escalation` | Provide systematic methodologies for discovering and exploiting privilege escalation vulnerabilities on Windows systems during penetration testing engagements. | windows, privilege, escalation | windows, privilege, escalation, provide, systematic, methodologies, discovering, exploiting, vulnerabilities, during, penetration, testing |
 
-## workflow (106)
+## workflow (109)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1533,6 +1570,7 @@ Total skills: 1555
 | `confluence-automation` | Automate Confluence page creation, content search, space management, labels, and hierarchy navigation via Rube MCP (Composio). Always search tools first for ... | confluence | confluence, automation, automate, page, creation, content, search, space, labels, hierarchy, navigation, via |
 | `convertkit-automation` | Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and broadcast stats. Always search tools first for current sch... | convertkit | convertkit, automation, automate, kit, tasks, via, rube, mcp, composio, subscribers, tags, broadcasts |
 | `create-pr` | Alias for sentry-skills:pr-writer. Use when users explicitly ask for "create-pr" or reference the legacy skill name. Redirects to the canonical PR writing wo... | create, pr | create, pr, alias, sentry, skills, writer, users, explicitly, ask, reference, legacy, skill |
+| `crossframe-suite` | Use when the user explicitly invokes CrossFrame Suite for Chinese structural diagnosis workflows across relationships, organizations, public issues, philosop... | crossframe, chinese, workflow, multi-skill, structural-diagnosis | crossframe, chinese, workflow, multi-skill, structural-diagnosis, suite, user, explicitly, invokes, structural, diagnosis, relationships |
 | `datadog-automation` | Automate Datadog tasks via Rube MCP (Composio): query metrics, search logs, manage monitors/dashboards, create events and downtimes. Always search tools firs... | datadog | datadog, automation, automate, tasks, via, rube, mcp, composio, query, metrics, search, logs |
 | `design-orchestration` | Orchestrates design workflows by routing work through brainstorming, multi-agent review, and execution readiness in the correct order. |  | orchestration, orchestrates, routing, work, through, brainstorming, multi, agent, review, execution, readiness, correct |
 | `discord-automation` | Automate Discord tasks via Rube MCP (Composio): messages, channels, roles, webhooks, reactions. Always search tools first for current schemas. | discord | discord, automation, automate, tasks, via, rube, mcp, composio, messages, channels, roles, webhooks |
@@ -1560,6 +1598,7 @@ Total skills: 1555
 | `libreoffice/writer` | Document creation, format conversion (ODT/DOCX/PDF), mail merge, and automation with LibreOffice Writer. | libreoffice/writer | libreoffice/writer, writer, document, creation, format, conversion, odt, docx, pdf, mail, merge, automation |
 | `linear-automation` | Automate Linear tasks via Rube MCP (Composio): issues, projects, cycles, teams, labels. Always search tools first for current schemas. | linear | linear, automation, automate, tasks, via, rube, mcp, composio, issues, cycles, teams, labels |
 | `linkedin-automation` | Automate LinkedIn tasks via Rube MCP (Composio): create posts, manage profile, company info, comments, and image uploads. Always search tools first for curre... | linkedin | linkedin, automation, automate, tasks, via, rube, mcp, composio, posts, profile, company, info |
+| `lookdev-auto` | Automated visual tuning: a vision or video model rates rendered variants in a loop. Render several labeled variants into one artifact, ask the model to rate ... | visual-eval, vision-model, tuning, automation, render-loop | visual-eval, vision-model, tuning, automation, render-loop, lookdev, auto, automated, visual, vision, video, model |
 | `make-automation` | Automate Make (Integromat) tasks via Rube MCP (Composio): operations, enums, language and timezone lookups. Always search tools first for current schemas. | make | make, automation, automate, integromat, tasks, via, rube, mcp, composio, operations, enums, language |
 | `microsoft-teams-automation` | Automate Microsoft Teams tasks via Rube MCP (Composio): send messages, manage channels, create meetings, handle chats, and search messages. Always search too... | microsoft, teams | microsoft, teams, automation, automate, tasks, via, rube, mcp, composio, send, messages, channels |
 | `miro-automation` | Automate Miro tasks via Rube MCP (Composio): boards, items, sticky notes, frames, sharing, connectors. Always search tools first for current schemas. | miro | miro, automation, automate, tasks, via, rube, mcp, composio, boards, items, sticky, notes |
@@ -1577,6 +1616,7 @@ Total skills: 1555
 | `pagerduty-automation` | Automate PagerDuty tasks via Rube MCP (Composio): manage incidents, services, schedules, escalation policies, and on-call rotations. Always search tools firs... | pagerduty | pagerduty, automation, automate, tasks, via, rube, mcp, composio, incidents, schedules, escalation, policies |
 | `posthog-automation` | Automate PostHog tasks via Rube MCP (Composio): events, feature flags, projects, user profiles, annotations. Always search tools first for current schemas. | posthog | posthog, automation, automate, tasks, via, rube, mcp, composio, events, feature, flags, user |
 | `postmark-automation` | Automate Postmark email delivery tasks via Rube MCP (Composio): send templated emails, manage templates, monitor delivery stats and bounces. Always search to... | postmark | postmark, automation, automate, email, delivery, tasks, via, rube, mcp, composio, send, templated |
+| `pr-merge-champion` | Optimize pull requests for quick approval and merging by ensuring clean diffs, comprehensive self-reviews, and structured documentation. | git, github, pull-request, code-review, workflow | git, github, pull-request, code-review, workflow, pr, merge, champion, optimize, pull, requests, quick |
 | `reddit-automation` | Automate Reddit tasks via Rube MCP (Composio): search subreddits, create posts, manage comments, and browse top content. Always search tools first for curren... | reddit | reddit, automation, automate, tasks, via, rube, mcp, composio, search, subreddits, posts, comments |
 | `render-automation` | Automate Render tasks via Rube MCP (Composio): services, deployments, projects. Always search tools first for current schemas. | render | render, automation, automate, tasks, via, rube, mcp, composio, deployments, always, search, first |
 | `salesforce-automation` | Automate Salesforce tasks via Rube MCP (Composio): leads, contacts, accounts, opportunities, SOQL queries. Always search tools first for current schemas. | salesforce | salesforce, automation, automate, tasks, via, rube, mcp, composio, leads, contacts, accounts, opportunities |
