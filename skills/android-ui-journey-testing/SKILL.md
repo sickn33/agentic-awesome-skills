@@ -2,7 +2,7 @@
 name: android-ui-journey-testing
 description: "XML-specified Android UI journey testing, interactive step execution, assertion verification, and JSON outcome reporting."
 category: testing
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-06-18"
