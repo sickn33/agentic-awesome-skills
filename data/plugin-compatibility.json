@@ -17881,6 +17881,25 @@
       "runtime_files": []
     },
     {
+      "id": "loop-library",
+      "path": "skills/loop-library",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "loss-aversion-designer",
       "path": "skills/loss-aversion-designer",
       "targets": {
@@ -31566,10 +31585,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1646,
+    "total_skills": 1647,
     "supported": {
-      "codex": 1595,
-      "claude": 1612
+      "codex": 1596,
+      "claude": 1613
     },
     "blocked": {
       "codex": 51,
