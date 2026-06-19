@@ -1,8 +1,9 @@
 ---
-name: setting-up-sending-domain
-description: >-
-  Use when adding or verifying a Mailtrap sending domain, DNS propagation issues,
-  registrar or DNS provider steps, compliance after verification, or click tracking. Domain must be verified before sending from it.
+name: mailtrap-setting-up-sending-domain
+description: Add or verify a Mailtrap sending domain, troubleshoot DNS propagation, publish SPF/DKIM/DMARC records, and complete compliance.
+risk: safe
+source: community
+date_added: "2026-06-19"
 ---
 
 # Setting up a Mailtrap sending domain
@@ -15,7 +16,7 @@ You must add and verify a domain you control before live sending. Mailtrap shows
 
 For step-by-step clicks at common hosts, open the matching guide on [Sending domain setup](https://docs.mailtrap.io/email-api-smtp/setup/sending-domain.md) (Cloudflare, Route 53, etc.) and follow it alongside the live **UI** values.
 
-**Related skills:** `authorizing-api-requests` (tokens, env vars, `account_id` resolution), `sending-emails` (after domain is ready).
+**Related skills:** `mailtrap-sending-emails` (after domain is ready).
 
 ## When to use
 
@@ -24,11 +25,11 @@ For step-by-step clicks at common hosts, open the matching guide on [Sending dom
 
 ## When not to use
 
-- Sandbox-only testing without a custom domain (see `testing-with-sandbox`)
+- Sandbox-only testing without a custom domain (see `mailtrap-testing-with-sandbox`)
 
 ## Authorization
 
-The Sending Domains API calls below need `Authorization: Bearer $MAILTRAP_API_TOKEN` and an `$MAILTRAP_ACCOUNT_ID` in the path. Token scope, storage, and the one-liner that resolves `$MAILTRAP_ACCOUNT_ID` from `GET https://mailtrap.io/api/accounts` are covered in skill `authorizing-api-requests`.
+The Sending Domains API calls below need `Authorization: Bearer $MAILTRAP_API_TOKEN` and an `$MAILTRAP_ACCOUNT_ID` in the path. Resolve `$MAILTRAP_ACCOUNT_ID` from `GET https://mailtrap.io/api/accounts`, and store tokens in environment variables or a secrets manager.
 
 ## Automating setup (API and DNS providers)
 
@@ -70,3 +71,7 @@ If the user's provider is not listed, the same rule applies: **copy every record
 ## Important DNS caveat (proxied DNS)
 
 If your DNS provider **proxies** records (orange-cloud on Cloudflare, similar CDN/proxy modes elsewhere), verification-related records must be **DNS-only** (grey cloud / non-proxied) unless Mailtrap documentation explicitly allows proxying—proxied CNAMEs and similar often break SPF/DKIM verification. The same constraint applies to any host that fronts DNS with a proxy.
+
+## Limitations
+
+- DNS and compliance screens can change; always copy the exact current records from Mailtrap before publishing DNS.

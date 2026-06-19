@@ -1,8 +1,9 @@
 ---
-name: sending-emails
-description: >-
-  Use when integrating, configuring, or troubleshooting Mailtrap live email sending (Email API or SMTP).
-  Use when wiring outbound mail from an application or choosing how to send.
+name: mailtrap-sending-emails
+description: Configure or troubleshoot Mailtrap live email sending with Email API, SMTP, transactional streams, bulk streams, or batches.
+risk: safe
+source: community
+date_added: "2026-06-19"
 ---
 
 # Sending emails (Mailtrap)
@@ -10,6 +11,10 @@ description: >-
 ## Overview
 
 Mailtrap sends live email over **Email API** (REST) or **SMTP**. Two **streams** apply for API/SMTP: **Transactional** (non-promotional, app-generated) and **Bulk** (**promotional** / marketing volume). **Batch** is not a third stream: it is how you submit **many messages in one request** on whichever stream matches the content. **Campaigns** are a separate product path for promotional mail to **Mailtrap contacts**. Pair this sheet with the [Transactional](https://docs.mailtrap.io/developers/email-sending/transactional.md) / [Bulk](https://docs.mailtrap.io/developers/email-sending/bulk.md) developer pages when building or debugging integrations (including with AI-assisted coding).
+
+## When to Use
+
+Use when integrating, configuring, or troubleshooting Mailtrap live email sending with Email API, SMTP, transactional streams, bulk streams, or batch requests.
 
 ## How to integrate (preference order)
 
@@ -31,11 +36,11 @@ Mailtrap sends live email over **Email API** (REST) or **SMTP**. Two **streams**
 
 **Before generating SDK code:** read the README of the relevant SDK repository linked in the **SDKs** section below for current method signatures, constructor options, and examples. Do not rely on memory.
 
-**Related skills:** `authorizing-api-requests` (tokens, env vars, auth headers), `using-email-templates` (template UUID and variables), `testing-with-sandbox` (safe testing), `setting-up-sending-domain` (verification before send).
+**Related skills:** `mailtrap-testing-with-sandbox` (safe testing) and `mailtrap-setting-up-sending-domain` (verification before send).
 
 ## When not to use
 
-- **Sandbox only**—capturing mail without delivery, reading messages in a sandbox (`testing-with-sandbox`).
+- **Sandbox only**—capturing mail without delivery, reading messages in a sandbox (`mailtrap-testing-with-sandbox`).
 - The main ask is **webhooks**, **step-by-step Campaigns UI setup**, or **deliverability deep-dives**.
 - **Exhaustive API reference**—once the user's path is clear, link the official send docs for full schemas, optional fields, and edge cases.
 
@@ -59,7 +64,7 @@ Mailtrap sends live email over **Email API** (REST) or **SMTP**. Two **streams**
 
 ### Tokens
 
-Use `$MAILTRAP_API_TOKEN` in either `Authorization: Bearer ...` or `Api-Token: ...`. The same token works on both `send.api.mailtrap.io` and `bulk.api.mailtrap.io` as long as its scope covers the stream. Full guidance (scope, storage, rotation) lives in skill `authorizing-api-requests`.
+Use `$MAILTRAP_API_TOKEN` in either `Authorization: Bearer ...` or `Api-Token: ...`. The same token works on both `send.api.mailtrap.io` and `bulk.api.mailtrap.io` as long as its scope covers the stream. Store tokens in environment variables or a secrets manager and rotate them when access changes.
 
 ### Rate limits
 
@@ -128,7 +133,7 @@ curl -X POST https://send.api.mailtrap.io/api/send \
   }'
 ```
 
-See skill `using-email-templates` and the same API operations as non-template sends.
+Use the same API operations as non-template sends.
 
 ### SDKs
 
@@ -153,6 +158,10 @@ Mailtrap automatically manages suppressions for addresses that hard bounce, repo
 | Bulk traffic on `send.api.mailtrap.io`       | Promotional/bulk stream uses `bulk.api.mailtrap.io`                                                                                 |
 | Using sandbox SMTP host for live sending     | Live sending uses `live.smtp.mailtrap.io` or `bulk.smtp.mailtrap.io`                                                                |
 | SMTP username is an email address            | Username is `api`; password is the API token                                                                                        |
-| Sending before domain is verified            | Complete **Sending Domains** setup and compliance (see `setting-up-sending-domain`)                                                 |
+| Sending before domain is verified            | Complete **Sending Domains** setup and compliance (see `mailtrap-setting-up-sending-domain`)                                        |
 | Guessing SDK API from memory                 | Read the SDK README and OpenAPI-linked examples; do not invent constructors or method names                                         |
 | Choosing **SMTP first** for a greenfield app | Prefer **platform integration** if one exists, then **SDK**, then **HTTP API**; SMTP only when necessary (see **How to integrate**) |
+
+## Limitations
+
+- This skill summarizes Mailtrap sending choices; use Mailtrap's current API docs for exhaustive schemas and product limits.

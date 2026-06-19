@@ -1,10 +1,9 @@
 ---
-name: managing-contacts
-description: >-
-  Use when using Mailtrap Contacts API or UI to add, update, bulk
-  import, list, segment marketing contacts, custom fields, or custom
-  events. Use when syncing contacts from a CRM or warehouse, or building
-  audiences for campaigns.
+name: mailtrap-managing-contacts
+description: Manage Mailtrap contacts, lists, segments, custom fields, imports, CRM syncs, and campaign audiences through the UI or API.
+risk: safe
+source: community
+date_added: "2026-06-19"
 ---
 
 # Managing Mailtrap contacts
@@ -15,9 +14,9 @@ description: >-
 
 **Contacts** are the marketing database: lists, segments, custom fields, and imports for **campaign audiences** and related workflows. The **Contacts API** automates create/update and can feed **CRM or CDP sync** (your code, or tools like Zapier, Make, n8n — see [Import contacts](https://docs.mailtrap.io/email-marketing/contacts/import-contacts.md)).
 
-**Suppressions** (hard bounces, spam complaints, unsubscribes on the **sending** side) live in the sending product and **block delivery** for those addresses on your streams. That is applied separately from **marketing** filters (segments, list membership, consent flags) that decide who is eligible for campaigns. For sending-side blocks, see [Suppressions](https://docs.mailtrap.io/developers/email-sending/suppressions.md) and skill `sending-emails`.
+**Suppressions** (hard bounces, spam complaints, unsubscribes on the **sending** side) live in the sending product and **block delivery** for those addresses on your streams. That is applied separately from **marketing** filters (segments, list membership, consent flags) that decide who is eligible for campaigns. For sending-side blocks, see [Suppressions](https://docs.mailtrap.io/developers/email-sending/suppressions.md) and `mailtrap-sending-emails`.
 
-**Related skills:** `authorizing-api-requests` (tokens, env vars, `account_id` resolution), `sending-emails` (live send paths).
+**Related skills:** `mailtrap-sending-emails` (live send paths).
 
 ## When to use
 
@@ -29,7 +28,7 @@ description: >-
 
 ## Authorization
 
-All endpoints below need `Authorization: Bearer $MAILTRAP_API_TOKEN` and an `$MAILTRAP_ACCOUNT_ID` in the path. See skill `authorizing-api-requests` for token scope, storage, and the one-liner that resolves `$MAILTRAP_ACCOUNT_ID` from `GET https://mailtrap.io/api/accounts`.
+All endpoints below need `Authorization: Bearer $MAILTRAP_API_TOKEN` and an `$MAILTRAP_ACCOUNT_ID` in the path. Resolve `$MAILTRAP_ACCOUNT_ID` from `GET https://mailtrap.io/api/accounts`, and store tokens in environment variables or a secrets manager.
 
 ## Endpoints (replace placeholders)
 
@@ -107,3 +106,7 @@ Contacts power **marketing campaigns**: you maintain clean lists, consent, and a
 | --------------------------------------------------- | ---------------------------------------------------------------------------- |
 | Hitting rate limits with one-by-one creates         | Use `/contacts/imports` for bulk loads (respect 50k per request) and backoff |
 | Treating marketing contacts as sending suppressions | Use **Suppressions** for blocked recipients on send streams                  |
+
+## Limitations
+
+- Contact API shapes can change; check Mailtrap's current OpenAPI spec before generating request bodies.
