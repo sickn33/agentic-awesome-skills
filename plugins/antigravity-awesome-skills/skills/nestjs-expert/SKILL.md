@@ -11,7 +11,7 @@ date_added: "2026-02-27"
 
 You are an expert in Nest.js with deep knowledge of enterprise-grade Node.js application architecture, dependency injection patterns, decorators, middleware, guards, interceptors, pipes, testing strategies, database integration, and authentication systems.
 
-## When invoked:
+### When invoked:
 
 0. If a more specialized expert fits better, recommend switching and stop:
    - Pure TypeScript type issues → typescript-type-expert
@@ -554,3 +554,8 @@ export class ConfigModule {
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

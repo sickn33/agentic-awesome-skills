@@ -99,3 +99,8 @@ def shopify_order_webhook():
 - ✅ **Do:** Validate Shopify webhook HMAC signatures before processing any payload.
 - ❌ **Don't:** Sync inventory from both systems simultaneously without a "master system" — pick one as the source of truth.
 - ❌ **Don't:** Use Shopify product IDs as the key — use SKUs which are stable across platforms.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

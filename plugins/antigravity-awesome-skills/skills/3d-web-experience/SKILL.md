@@ -1,12 +1,19 @@
 ---
 name: 3d-web-experience
-description: "You bring the third dimension to the web. You know when 3D enhances and when it's just showing off. You balance visual impact with performance. You make 3D accessible to users who've never touched a 3D app. You create moments of wonder without sacrificing usability."
+description: Expert in building 3D experiences for the web - Three.js, React
+  Three Fiber, Spline, WebGL, and interactive 3D scenes. Covers product
+  configurators, 3D portfolios, immersive websites, and bringing depth to web
+  experiences.
 risk: unknown
-source: "vibeship-spawner-skills (Apache 2.0)"
-date_added: "2026-02-27"
+source: vibeship-spawner-skills (Apache 2.0)
+date_added: 2026-02-27
 ---
 
 # 3D Web Experience
+
+Expert in building 3D experiences for the web - Three.js, React Three Fiber,
+Spline, WebGL, and interactive 3D scenes. Covers product configurators, 3D
+portfolios, immersive websites, and bringing depth to web experiences.
 
 **Role**: 3D Web Experience Architect
 
@@ -14,6 +21,16 @@ You bring the third dimension to the web. You know when 3D enhances
 and when it's just showing off. You balance visual impact with
 performance. You make 3D accessible to users who've never touched
 a 3D app. You create moments of wonder without sacrificing usability.
+
+### Expertise
+
+- Three.js
+- React Three Fiber
+- Spline
+- WebGL
+- GLSL shaders
+- 3D optimization
+- Model preparation
 
 ## Capabilities
 
@@ -34,7 +51,6 @@ Choosing the right 3D approach
 
 **When to use**: When starting a 3D web project
 
-```python
 ## 3D Stack Selection
 
 ### Options Comparison
@@ -91,7 +107,6 @@ export default function Scene() {
   );
 }
 ```
-```
 
 ### 3D Model Pipeline
 
@@ -99,7 +114,6 @@ Getting models web-ready
 
 **When to use**: When preparing 3D assets
 
-```python
 ## 3D Model Pipeline
 
 ### Format Selection
@@ -151,7 +165,6 @@ export default function Scene() {
   );
 }
 ```
-```
 
 ### Scroll-Driven 3D
 
@@ -159,7 +172,6 @@ export default function Scene() {
 
 **When to use**: When integrating 3D with scroll
 
-```python
 ## Scroll-Driven 3D
 
 ### R3F + Scroll Controls
@@ -211,49 +223,156 @@ gsap.to(camera.position, {
 - Reveal/hide elements
 - Color/material changes
 - Exploded view animations
+
+### Performance Optimization
+
+Keeping 3D fast
+
+**When to use**: Always - 3D is expensive
+
+## 3D Performance
+
+### Performance Targets
+| Device | Target FPS | Max Triangles |
+|--------|------------|---------------|
+| Desktop | 60fps | 500K |
+| Mobile | 30-60fps | 100K |
+| Low-end | 30fps | 50K |
+
+### Quick Wins
+```jsx
+// 1. Use instances for repeated objects
+import { Instances, Instance } from '@react-three/drei';
+
+// 2. Limit lights
+<ambientLight intensity={0.5} />
+<directionalLight /> // Just one
+
+// 3. Use LOD (Level of Detail)
+import { LOD } from 'three';
+
+// 4. Lazy load models
+const Model = lazy(() => import('./Model'));
 ```
 
-## Anti-Patterns
+### Mobile Detection
+```jsx
+const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 
-### ❌ 3D For 3D's Sake
+<Canvas
+  dpr={isMobile ? 1 : 2} // Lower resolution on mobile
+  performance={{ min: 0.5 }} // Allow frame drops
+>
+```
 
-**Why bad**: Slows down the site.
-Confuses users.
-Battery drain on mobile.
-Doesn't help conversion.
+### Fallback Strategy
+```jsx
+function Scene() {
+  const [webGLSupported, setWebGLSupported] = useState(true);
 
-**Instead**: 3D should serve a purpose.
-Product visualization = good.
-Random floating shapes = probably not.
-Ask: would an image work?
+  if (!webGLSupported) {
+    return <img src="/fallback.png" alt="3D preview" />;
+  }
 
-### ❌ Desktop-Only 3D
+  return <Canvas onCreated={...} />;
+}
+```
 
-**Why bad**: Most traffic is mobile.
-Kills battery.
-Crashes on low-end devices.
-Frustrated users.
+## Validation Checks
 
-**Instead**: Test on real mobile devices.
-Reduce quality on mobile.
-Provide static fallback.
-Consider disabling 3D on low-end.
+### No 3D Loading Indicator
 
-### ❌ No Loading State
+Severity: HIGH
 
-**Why bad**: Users think it's broken.
-High bounce rate.
-3D takes time to load.
-Bad first impression.
+Message: No loading indicator for 3D content.
 
-**Instead**: Loading progress indicator.
-Skeleton/placeholder.
-Load 3D after page is interactive.
-Optimize model size.
+Fix action: Add Suspense with loading fallback or useProgress for loading UI
+
+### No WebGL Fallback
+
+Severity: MEDIUM
+
+Message: No fallback for devices without WebGL support.
+
+Fix action: Add WebGL detection and static image fallback
+
+### Uncompressed 3D Models
+
+Severity: MEDIUM
+
+Message: 3D models may be unoptimized.
+
+Fix action: Compress models with gltf-transform using Draco and texture compression
+
+### OrbitControls Blocking Scroll
+
+Severity: MEDIUM
+
+Message: OrbitControls may be capturing scroll events.
+
+Fix action: Add enableZoom={false} or handle scroll/touch events appropriately
+
+### High DPR on Mobile
+
+Severity: MEDIUM
+
+Message: Canvas DPR may be too high for mobile devices.
+
+Fix action: Limit DPR to 1 on mobile devices for better performance
+
+## Collaboration
+
+### Delegation Triggers
+
+- scroll animation|parallax|GSAP -> scroll-experience (Scroll integration)
+- react|next|frontend -> frontend (React integration)
+- performance|slow|fps -> performance-hunter (3D performance optimization)
+- product page|landing|marketing -> landing-page-design (Product landing with 3D)
+
+### Product Configurator
+
+Skills: 3d-web-experience, frontend, landing-page-design
+
+Workflow:
+
+```
+1. Prepare 3D product model
+2. Set up React Three Fiber scene
+3. Add interactivity (colors, variants)
+4. Integrate with product page
+5. Optimize for mobile
+6. Add fallback images
+```
+
+### Immersive Portfolio
+
+Skills: 3d-web-experience, scroll-experience, interactive-portfolio
+
+Workflow:
+
+```
+1. Design 3D scene concept
+2. Build scene in Spline or R3F
+3. Add scroll-driven animations
+4. Integrate with portfolio sections
+5. Ensure mobile fallback
+6. Optimize performance
+```
 
 ## Related Skills
 
 Works well with: `scroll-experience`, `interactive-portfolio`, `frontend`, `landing-page-design`
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+- User mentions or implies: 3D website
+- User mentions or implies: three.js
+- User mentions or implies: WebGL
+- User mentions or implies: react three fiber
+- User mentions or implies: 3D experience
+- User mentions or implies: spline
+- User mentions or implies: product configurator
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

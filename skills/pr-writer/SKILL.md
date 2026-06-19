@@ -11,6 +11,11 @@ Create pull requests following Sentry's engineering practices.
 
 **Requires**: GitHub CLI (`gh`) authenticated and available.
 
+## When to Use
+- You are ready to open a pull request and need a structured description based on the committed branch diff.
+- You want the PR body to capture what changed, why it changed, and any reviewer context.
+- You are using GitHub CLI and need a repeatable PR-writing workflow rather than writing the description ad hoc.
+
 ## Prerequisites
 
 Before creating a PR, ensure all changes are committed. If there are uncommitted changes, run the `sentry-skills:commit` skill first to commit them properly.
@@ -183,3 +188,8 @@ Note: `gh pr edit` is currently broken due to GitHub's Projects (classic) deprec
 
 - [Sentry Code Review Guidelines](https://develop.sentry.dev/engineering-practices/code-review/)
 - [Sentry Commit Messages](https://develop.sentry.dev/engineering-practices/commit-messages/)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

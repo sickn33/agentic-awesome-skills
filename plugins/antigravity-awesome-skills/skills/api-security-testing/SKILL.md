@@ -169,3 +169,8 @@ Use @api-security-best-practices to audit API error handling
 - `security-audit` - Security auditing
 - `web-security-testing` - Web security
 - `api-development` - API development
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

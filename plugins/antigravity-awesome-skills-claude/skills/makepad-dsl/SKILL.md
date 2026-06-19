@@ -5,7 +5,7 @@ description: |
   makepad dsl, live_design, makepad inheritance, makepad prototype,
   "<Widget>", "Foo = { }", makepad object, makepad property,
   makepad DSL 语法, makepad 继承, makepad 原型, 如何定义 makepad 组件
-risk: unknown
+risk: safe
 source: community
 ---
 
@@ -18,6 +18,11 @@ source: community
 You are an expert at the Rust `makepad-widgets` crate DSL. Help users by:
 - **Writing code**: Generate DSL code following the patterns below
 - **Answering questions**: Explain DSL syntax, inheritance, property overriding
+
+## When to Use
+- You need help with Makepad `live_design!` syntax, object definitions, or inheritance patterns.
+- The task involves widget declarations, property overrides, prototypes, or DSL composition rules.
+- You want Makepad DSL-specific examples rather than generic Rust syntax advice.
 
 ## Documentation
 
@@ -154,3 +159,8 @@ Child = <Parent> {
 2. Emphasize that DSL is embedded in Rust via `live_design!` macro
 3. Highlight that changes to DSL are live-reloaded without recompilation
 4. Distinguish between named objects (prototypes) and widget instances
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

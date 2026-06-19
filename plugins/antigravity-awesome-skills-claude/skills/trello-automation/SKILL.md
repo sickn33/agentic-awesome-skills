@@ -1,7 +1,7 @@
 ---
 name: trello-automation
 description: "Automate Trello boards, cards, and workflows via Rube MCP (Composio). Create cards, manage lists, assign members, and search across boards programmatically."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -182,3 +182,8 @@ Most list endpoints return all items. For boards with 1000+ cards, use `limit` a
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

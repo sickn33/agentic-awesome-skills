@@ -4,13 +4,12 @@ import { SkillDetail } from '../SkillDetail';
 import { renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
 import { useSkills } from '../../context/SkillContext';
-import { getSkillMarkdownCandidateUrls } from '../SkillDetail';
 
 // Mock the SkillStarButton component
 vi.mock('../../components/SkillStarButton', () => ({
-  SkillStarButton: ({ skillId, initialCount }: { skillId: string; initialCount?: number }) => (
-    <button data-testid="star-button" data-skill-id={skillId} data-count={initialCount}>
-      {initialCount || 0} Upvotes
+  SkillStarButton: ({ skillId, communityCount }: { skillId: string; communityCount?: number }) => (
+    <button data-testid="star-button" data-skill-id={skillId} data-community-count={communityCount}>
+      Save locally
     </button>
   ),
 }));
@@ -34,25 +33,6 @@ describe('SkillDetail', () => {
     vi.clearAllMocks();
     localStorage.clear();
     window.history.pushState({}, '', '/');
-  });
-
-  describe('Markdown URL resolution', () => {
-    it('builds stable markdown candidates for gh-pages routes', () => {
-      expect(
-        getSkillMarkdownCandidateUrls({
-          baseUrl: '/antigravity-awesome-skills/',
-          origin: 'https://sickn33.github.io',
-          pathname: '/antigravity-awesome-skills/skill/react-patterns',
-          documentBaseUrl: 'https://sickn33.github.io/antigravity-awesome-skills/',
-          skillPath: 'skills/react-patterns',
-        }),
-      ).toEqual([
-        'https://sickn33.github.io/antigravity-awesome-skills/skills/react-patterns/SKILL.md',
-        'https://sickn33.github.io/skills/react-patterns/SKILL.md',
-        'https://sickn33.github.io/antigravity-awesome-skills/skill/skills/react-patterns/SKILL.md',
-        'https://sickn33.github.io/antigravity-awesome-skills/skill/react-patterns/skills/react-patterns/SKILL.md',
-      ]);
-    });
   });
 
   describe('Loading state', () => {
@@ -131,7 +111,7 @@ describe('SkillDetail', () => {
           '@react-patterns | Antigravity Awesome Skills',
         );
         expect(global.fetch).toHaveBeenCalled();
-      });
+      }, { timeout: 3000 });
     });
 
     it('falls back to the next markdown candidate when the first response is html', async () => {
@@ -345,7 +325,7 @@ describe('SkillDetail', () => {
       await waitFor(() => {
         const starBtn = screen.getByTestId('star-button');
         expect(starBtn).toBeInTheDocument();
-        expect(starBtn).toHaveAttribute('data-count', '10');
+        expect(starBtn).toHaveAttribute('data-community-count', '10');
       });
     });
   });

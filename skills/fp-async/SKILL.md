@@ -22,6 +22,11 @@ Stop writing nested try/catch blocks. Stop losing error context. Start building 
 
 **TaskEither is simply an async operation that tracks success or failure.** That's it. No fancy terminology needed.
 
+## When to Use
+- You need async error handling in TypeScript with `TaskEither`.
+- The task involves wrapping Promises, composing API calls, or replacing nested `try/catch` flows.
+- You want practical fp-ts async patterns instead of academic explanations.
+
 ```typescript
 // TaskEither<Error, User> means:
 // "An async operation that either fails with Error or succeeds with User"
@@ -964,3 +969,8 @@ const getData = (id: string) =>
     TE.getOrElse(() => T.of(defaultValue))
   )
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

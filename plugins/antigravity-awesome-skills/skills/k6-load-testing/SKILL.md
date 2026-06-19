@@ -625,3 +625,8 @@ export default function () {
 - [k6 Examples](https://github.com/grafana/k6/tree/master/examples)
 - [k6 Load Testing Guides](https://k6.io/guides/)
 - [k6 Cloud](https://k6.io/cloud/)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -11,6 +11,11 @@ source: community
 
 # Pull Request Enhancement
 
+## When to Use
+- You need to turn a git diff into a reviewer-friendly pull request description.
+- You want a PR summary with change categories, risks, testing notes, and a checklist.
+- The diff is large enough that reviewers need explicit structure instead of a short ad hoc summary.
+
 ## Workflow
 
 1. Run `git diff <base>...HEAD --stat` to identify changed files and scope
@@ -70,3 +75,8 @@ git cherry-pick <commits-for-part-1>
 ## Resources
 
 - `resources/implementation-playbook.md` — Python helpers for automated PR analysis, coverage reports, and risk scoring
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

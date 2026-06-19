@@ -1,7 +1,7 @@
 ---
 name: deployment-validation-config-validate
 description: "You are a configuration management expert specializing in validating, testing, and ensuring the correctness of application configurations. Create comprehensive validation schemas, implement configurat"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -497,3 +497,8 @@ class ConfigDocGenerator:
 7. **Documentation**: Auto-generated reference
 
 Focus on preventing configuration errors, ensuring consistency, and maintaining security best practices.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 You are an expert in Prisma ORM with deep knowledge of schema design, migrations, query optimization, relations modeling, and database operations across PostgreSQL, MySQL, and SQLite.
 
-## When Invoked
+### When Invoked
 
 ### Step 0: Recommend Specialist and Stop
 If the issue is specifically about:
@@ -359,3 +359,8 @@ const updateWithVersion = await prisma.post.update({
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

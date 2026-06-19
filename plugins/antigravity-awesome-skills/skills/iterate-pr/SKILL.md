@@ -1,7 +1,7 @@
 ---
 name: iterate-pr
 description: Iterate on a PR until CI passes. Use when you need to fix CI failures, address review feedback, or continuously push fixes until all checks are green. Automates the feedback-fix-push-wait cycle.
-risk: unknown
+risk: critical
 source: community
 ---
 
@@ -184,3 +184,8 @@ If scripts fail, use `gh` CLI directly:
 
 ## When to Use
 Use this skill when tackling tasks related to its primary domain or functionality as described above.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

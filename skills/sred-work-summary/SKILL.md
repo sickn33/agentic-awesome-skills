@@ -9,6 +9,11 @@ source: community
 
 Collect all the Github PRs, Notion docs and Linear tickets a person completed in a given year. Group the links from all of those into projects. Put everything into a private Notion document and return a link to that document.
 
+## When to Use
+- You need to gather a year's worth of PRs, Notion docs, and Linear tickets into project groupings for SRED preparation.
+- The task is to build the upstream Notion work summary before writing individual SRED project descriptions.
+- You need a repeatable collection workflow across GitHub, Notion, and Linear for a fixed time window.
+
 ## Prerequisites
 
 Before starting make sure that Github, Notion and Linear can be accessed. Notion and Linear should be connected using an MCP. Github can be connected with an MCP, but if you have access to the `gh` CLI tool, you can use that instead.
@@ -140,3 +145,8 @@ Ensure:
 ## Resources
 
 This is an example Working Summary document for the year 2025: https://www.notion.so/sentry/Work-Summary-Feb-2025-Jan-2026-3068b10e4b5d81d3a40cfa6ad3fe1078?source=copy_link
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

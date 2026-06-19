@@ -8,7 +8,7 @@ import { useSkills } from '../../context/SkillContext';
 let capturedRehypePlugins: unknown[] | undefined;
 
 vi.mock('../../components/SkillStarButton', () => ({
-  SkillStarButton: () => <button data-testid="star-button">0 Upvotes</button>,
+  SkillStarButton: () => <button data-testid="star-button">Save locally</button>,
 }));
 
 vi.mock('../../context/SkillContext', async (importOriginal) => {

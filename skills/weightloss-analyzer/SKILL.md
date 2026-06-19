@@ -1,13 +1,18 @@
 ---
 name: weightloss-analyzer
 description: 分析减肥数据、计算代谢率、追踪能量缺口、管理减肥阶段
-risk: unknown
+risk: safe
 source: community
 ---
 
 # 减肥分析技能
 
 分析减肥数据，计算代谢率，追踪能量缺口，管理减肥阶段。
+
+## When to Use
+- 需要分析减重数据、代谢率、能量缺口或减脂阶段管理时使用。
+- 任务涉及 BMI、体脂、围度、BMR/TDEE 或体重变化趋势分析。
+- 用户请求减肥进度评估、目标规划或个性化减重建议时使用。
 
 ## 功能
 
@@ -320,3 +325,8 @@ source: community
 **技能版本**: v1.0
 **最后更新**: 2026-01-14
 **维护者**: WellAlly Tech
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

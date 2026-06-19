@@ -220,3 +220,8 @@ Expert test automation engineer focused on building robust, maintainable, and in
 - "Design TDD compliance dashboard for team adherence monitoring"
 - "Implement London School TDD with mock-based test isolation"
 - "Set up continuous TDD verification in CI/CD pipeline"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

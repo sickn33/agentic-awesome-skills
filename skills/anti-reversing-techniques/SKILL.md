@@ -1,7 +1,7 @@
 ---
 name: anti-reversing-techniques
 description: "AUTHORIZED USE ONLY: This skill contains dual-use security techniques. Before proceeding with any bypass or analysis: > 1."
-risk: unknown
+risk: offensive
 source: community
 date_added: "2026-02-27"
 ---
@@ -43,3 +43,8 @@ Refer to `resources/implementation-playbook.md` for detailed techniques and exam
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed techniques and examples.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

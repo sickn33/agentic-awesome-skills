@@ -13,7 +13,6 @@ date_added: "2026-03-25"
 Review and fix Swift Concurrency issues in Swift 6.2+ codebases by applying actor isolation, Sendable safety, and modern concurrency patterns with minimal behavior changes.
 
 ## When to Use
-
 - When the user asks to review Swift concurrency usage or fix compiler diagnostics.
 - When you need guidance on actor isolation, `Sendable`, `@MainActor`, or async migration.
 
@@ -111,3 +110,8 @@ func processData(_ input: [Int]) async -> [Int] {
 - See `references/swift-6-2-concurrency.md` for Swift 6.2 changes, patterns, and examples.
 - See `references/approachable-concurrency.md` when the project is opted into approachable concurrency mode.
 - See `references/swiftui-concurrency-tour-wwdc.md` for SwiftUI-specific concurrency guidance.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

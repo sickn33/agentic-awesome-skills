@@ -1,0 +1,4 @@
+interface:
+  display_name: "CrossFrame Public"
+  short_description: "公共议题、平台申诉、制度评论与合规材料的证据边界诊断。"
+  default_prompt: "用 crossframe-public 分析这个公共议题，查源并区分证据边界、程序正义、申诉有效性、弱信号保护、公共承诺偿付和 AI 合规表演风险。"

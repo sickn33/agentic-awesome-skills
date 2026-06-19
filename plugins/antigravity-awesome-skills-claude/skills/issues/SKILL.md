@@ -11,6 +11,11 @@ metadata:
 
 Interact with GitHub issues - create, list, and view issues.
 
+## When to Use
+- The user wants to create, list, inspect, or otherwise work with GitHub issues.
+- The task involves issue intake or repository issue management through the GitHub CLI workflow.
+- You need a guided issue flow that gathers titles, descriptions, and action selection before running commands.
+
 ## Instructions
 
 This command helps you work with GitHub issues using the `gh` CLI.
@@ -258,3 +263,8 @@ If `gh` command fails:
   EOF
   )"
   ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -178,31 +178,23 @@ describe('Home', () => {
   });
 
   describe('User Settings and Sync', () => {
-    it('should sync local stars when sync button is clicked', async () => {
+    it('hides sync actions on the public catalog and explains why', async () => {
       const mockSkills = [createMockSkill({ id: 'skill-1' })];
-      const refreshSkills = vi.fn().mockResolvedValue(undefined);
 
       (useSkills as Mock).mockReturnValue({
         skills: mockSkills,
         stars: { 'skill-1': 5 },
         loading: false,
         error: null,
-        refreshSkills,
+        refreshSkills: vi.fn().mockResolvedValue(undefined),
       });
 
       renderWithRouter(<Home />, { useProvider: false });
 
-      const syncButton = screen.getByRole('button', { name: /Sync/i });
-
-      global.fetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({ success: true, count: 1 })
-      });
-
-      fireEvent.click(syncButton);
-
       await waitFor(() => {
-        expect(refreshSkills).toHaveBeenCalled();
+        expect(screen.queryByRole('button', { name: /Sync Skills/i })).not.toBeInTheDocument();
+        expect(screen.getByText(/Public catalog mode/i)).toBeInTheDocument();
+        expect(screen.getByText(/maintainer-only workflow/i)).toBeInTheDocument();
       });
     });
   });

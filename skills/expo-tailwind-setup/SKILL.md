@@ -11,6 +11,11 @@ license: MIT
 
 This guide covers setting up Tailwind CSS v4 in Expo using react-native-css and NativeWind v5 for universal styling across iOS, Android, and Web.
 
+## When to Use
+- You need to set up Tailwind CSS v4 styling in an Expo app using `react-native-css` and NativeWind v5.
+- The task involves configuring Metro, PostCSS, global CSS, or package versions for Expo + Tailwind.
+- You want one styling setup that works across iOS, Android, and web in an Expo project.
+
 ## Overview
 
 This setup uses:
@@ -480,3 +485,8 @@ Add className to component props:
 ```tsx
 type Props = React.ComponentProps<typeof RNView> & { className?: string };
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

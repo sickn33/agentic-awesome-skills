@@ -1,392 +1,424 @@
-# 📖 使用指南：如何实际使用这些技能
+# 使用指南：如何实际使用这些技能
 
-> **安装后感到困惑？** 本指南逐步指导您下一步该做什么。
-
----
-
-## 🤔 "我刚安装了仓库。现在该做什么？"
-
-好问题！以下是刚刚发生的事情以及下一步该怎么做：
-
-### 您刚刚做了什么
-
-当您运行`npx antigravity-awesome-skills`或克隆仓库时，您：
-
-✅ **下载了1,204+个技能文件**到您的计算机（默认：`~/.gemini/antigravity/skills/`；如果使用`--path`则是`~/.agent/skills/`）  
-✅ **使它们对您的AI助手可用**  
-❌ **没有自动启用它们**（它们就在那里，等待使用）
-
-可以把它想象成安装一个工具箱。您现在拥有所有工具，但您需要为每个工作**选择使用哪些工具**。
+> **安装后感到困惑？**本指南将一步步指导你接下来该做什么。
 
 ---
 
-## 🎯 第1步：理解"包"（这不是另一个安装！）
+## "我刚刚安装了仓库。现在该怎么办？"
 
-**常见困惑：**"我需要单独下载每个技能吗？"
+好问题！以下是刚刚发生的事情和接下来的步骤：
 
-**答案：不需要！** 以下是包的实际含义：
+### 你刚刚做了什么
 
-### 包是什么
+当你运行 `npx antigravity-awesome-skills` 或克隆仓库时，你：
 
-- ✅ **按角色组织的推荐技能列表**（例如：Web向导、黑客包）
-- ✅ **帮助您选择技能**的精选起点
-- ✅ **发现相关技能**的省时快捷方式
+✅ **下载了 1,494+ 个技能文件**到你的计算机（默认路径：`~/.agents/skills/`；如果你使用了 `--path`，则是自定义路径如 `~/.agent/skills/`）
+✅ **使它们对你的 AI 助手可用**
+❌ **并未自动启用所有技能**（它们只是在那里等待使用）
 
-### 包不是什么
-
-- ❌ 单独的安装或下载
-- ❌ 不同的git命令
-- ❌ 需要您"激活"的东西
-
-### 如何使用包
-
-1. **查看[bundles.md](bundles.md)**浏览可用包
-2. **找到匹配您角色的包**
-3. **从该包中选择3-5个技能**开始使用
-4. **在与AI的对话中引用它们**
-
-**示例：**
-```bash
-# 您是Web开发者？
-查看"Web向导"包，从React Patterns、Tailwind Mastery等开始
-
-# 您是安全工程师？
-查看"安全专家"包，从Security Audit、Pen Testing等开始
-```
+把它想象成安装一个工具箱。你现在拥有所有工具，但你需要为每项工作**选择使用哪些工具**。
 
 ---
 
-## 🎯 第2步：理解技能引用语法
+## 步骤 1：理解"捆绑包"（这不是另一次安装！）
 
-不同的AI工具有不同的语法，但概念相同：
+**常见困惑：**"我需要分别下载每个技能吗？"
 
-### Claude Code
-```bash
-> 使用 @skill-name 处理这个...
-```
+**答案：不需要！**以下是捆绑包的实际含义：
 
-### Gemini CLI
-```bash
-(用户消息) 使用 skill-name 来...
-```
+### 捆绑包是什么
 
-### Cursor
-```bash
-@skill-name (在聊天中)
-```
+捆绑包是按角色分组的技能**推荐列表**。它们帮助你决定开始使用哪些技能。
 
-### Antigravity IDE
-```bash
-(代理模式) 使用 skill... 
-```
+**类比：**
 
-### OpenCode
-```bash
-opencode run @skill-name
-```
+- 你安装了一个包含 1,494+ 个工具的工具箱（✅ 完成）
+- 捆绑包就像**贴有标签的整理托盘**，上面写着："如果你是木匠，从这 10 个工具开始"
+- 你不需要安装捆绑包——你从它们中**选择技能**
 
-**关键点：** 您需要明确告诉AI使用哪个技能。它不会自动"知道"要使用哪个。
+### 捆绑包不是什么
 
----
+❌ 单独的安装
+❌ 不同的下载命令
+❌ 大多数用户在正常安装期间需要激活的东西
+❌ 可调用的超级技能，如 `@essentials` 或 `/web-wizard`
 
-## 🎯 第3步：您的第一个技能会话
+### 示例："Web Wizard" 捆绑包
 
-让我们走一遍完整示例：
+当你看到 [Web Wizard 捆绑包](bundles.md#-the-web-wizard-pack)时，它列出了：
 
-### 场景：您需要审核一个React应用的安全性
+- `frontend-design`
+- `react-best-practices`
+- `tailwind-patterns`
+- 等等
 
-**❌ 错误方式：**
-```bash
-用户："检查这个React应用的安全性"
-```
-→ AI会使用通用知识，可能错过具体检查项
+这些是关于 Web 开发人员应该首先尝试哪些技能的**推荐**。它们已经安装了——你只需要**在你的提示词中使用它们**。
 
-**✅ 正确方式：**
-```bash
-用户："使用 @security-audit 检查这个React应用的安全性"
-```
-→ AI会加载security-audit技能并遵循其专门的安全检查清单
-
-### 完整对话示例
+如果你想在 Antigravity 中一次只激活一个捆绑包，请使用激活脚本，而不是尝试直接调用捆绑包名称：
 
 ```bash
-用户："使用 @security-audit 审核这个电商React应用：
-
-src/components/PaymentForm.tsx
-[组件代码...]
-
-src/components/UserAuth.tsx  
-[组件代码...]"
-
-AI："正在使用Security Audit技能进行审核...
-
-🔍 开始安全审核清单...
-
-✅ 认证：使用JWT，实现正确
-✅ 输入验证：React Hook Form + Yup验证
-⚠️ XSS防护：缺少DOMPurify，建议添加
-⚠️ CSRF保护：需要在API端点实现
-
-详细建议：
-1. 安装DOMPurify: npm install dompurify
-2. 在PaymentForm中添加：import DOMPurify from 'dompurify'
-..."
+./scripts/activate-skills.sh --clear Essentials
+./scripts/activate-skills.sh --clear "Web Wizard"
 ```
 
 ---
 
-## 🎯 第4步：掌握高级用法
+## 步骤 2：如何实际执行/使用技能
 
-### 1. 上下文注入
+这是本应该更好地解释的部分！以下是使用技能的方法：
 
-给技能提供特定背景信息：
+### 简单答案
 
-```bash
-"使用 @api-design 设计用户管理API：
+**只需在与 AI 助手的对话中提及技能名称。**
 
-要求：
-- 需要JWT认证
-- 支持分页和搜索
-- 必须GDPR合规
-- 使用TypeScript"
-```
+### 不同的工具，不同的语法
 
-### 2. 技能组合
+确切的语法因工具而异，但总是很简单：
 
-一次使用多个技能：
+#### Claude Code (CLI)
 
 ```bash
-"使用 @react-patterns 构建用户资料页面，
-然后用 @test-driven-development 编写测试，
-最后用 @performance-analyzer 优化性能"
+# 在你的终端/与 Claude Code 的聊天中：
+>> Use @brainstorming to help me design a todo app
 ```
 
-### 3. 迭代优化
-
-逐步改进：
+#### Cursor (IDE)
 
 ```bash
-# 第一次
-"使用 @prompt-engineer 优化这个提示：'写一个登录页面'"
-
-# 第二次  
-"使用 @prompt-engineer 进一步优化，目标：
-- 转化率更高
-- 适合移动端
-- 包含错误处理"
+# 在 Cursor 聊天面板中：
+@brainstorming help me design a todo app
 ```
+
+#### Gemini CLI
+
+```bash
+# 在你与 Gemini 的对话中：
+Use the brainstorming skill to help me plan my app
+```
+
+如果 Gemini CLI 在几轮对话后开始挂起，请尝试一个新对话，并暂时将活动集减少到只有 2-5 个技能，以排除上下文增长的问题。
+
+#### Codex CLI
+
+```bash
+# 在你与 Codex 的对话中：
+Apply @brainstorming to design a new feature
+```
+
+#### Antigravity IDE
+
+```bash
+# 在代理模式下：
+Use @brainstorming to plan this feature
+```
+
+> **专业提示：**大多数现代工具使用 `@skill-name` 语法。如有疑问，先试试这个！
 
 ---
 
-## 🎯 第5步：发现合适的技能
+## 步骤 3：我的提示词应该是什么样的？
 
-### 方法1：直接询问
+以下是**真实示例**的良好提示词：
 
-```bash
-"我需要优化PostgreSQL查询性能，有什么相关技能？"
-```
+### 示例 1：开始一个新项目
 
-### 方法2：浏览包
+**糟糕的提示词：**
 
-查看[bundles.md](bundles.md)找到您的角色相关技能。
+> "Help me build a todo app"
 
-### 方法3：搜索常用技能
+**良好的提示词：**
 
-| 任务类别 | 常用技能 |
-| :------- | :-------- |
-| **前端开发** | `@react-patterns`, `@tailwind-mastery`, `@frontend-design` |
-| **安全** | `@security-audit`, `@pen-testing`, `@vulnerability-scanner` |
-| **API开发** | `@api-design`, `@openapi-spec`, `@rest-best-practices` |
-| **数据库** | `@schema-design`, `@query-optimization`, `@database-audit` |
-| **部署** | `@docker-expert`, `@k8s-deployment`, `@ci-cd-pipeline` |
-| **文档** | `@doc-coauthoring`, `@technical-writing`, `@api-documentation` |
-| **测试** | `@test-driven-development`, `@testing-patterns`, `@e2e-testing` |
-| **性能** | `@performance-analyzer`, `@optimization`, `@profiling` |
+> "Use @brainstorming to help me design a todo app with user authentication and cloud sync"
+
+**为什么更好：**你明确调用了技能并提供了上下文。
 
 ---
 
-## 🔧 故障排除
+### 示例 2：审查代码
 
-### 问题1：AI说找不到技能
+**糟糕的提示词：**
 
-**原因：** 技能未安装在正确位置
+> "Check my code"
 
-**解决：**
-```bash
-# 检查安装位置
-ls ~/.gemini/antigravity/skills/  # 或您的自定义路径
+**良好的提示词：**
 
-# 重新安装
-npx antigravity-awesome-skills --path ~/.agent/skills
-```
+> "Use @lint-and-validate to check `src/components/Button.tsx` for issues"
 
-### 问题2：技能效果不理想
-
-**原因：** 缺少具体上下文
-
-**解决：**
-```bash
-# ❌ 模糊请求
-"使用 @api-design 设计API"
-
-# ✅ 具体请求  
-"使用 @api-design 设计用户管理API，需要：
-- JWT认证
-- 分页支持
-- RESTful设计
-- 错误处理"
-```
-
-### 问题3：不知道用哪个技能
-
-**解决：**
-```bash
-"我需要[任务描述]，有什么推荐的技能吗？"
-
-# 示例
-"我需要重构这个遗留代码，有什么推荐的技能吗？"
-```
-
-### 问题4：技能回答太泛泛
-
-**原因：** 可能技能不适合这个具体场景
-
-**解决：**
-1. **尝试更具体的技能**（如用`@sql-injection-testing`而不是`@security-audit`）
-2. **组合多个技能**
-3. **提供更多上下文**
+**为什么更好：**特定技能 + 特定文件 = 精确结果。
 
 ---
 
-## 💡 专业技巧
+### 示例 3：安全审计
 
-### 1. 建立"技能栈"
+**糟糕的提示词：**
 
-像技术栈一样，为每个项目建立技能栈：
+> "Make my API secure"
 
-```bash
-# SaaS项目技能栈
-@react-patterns + @api-design + @security-audit + @docker-expert
+**良好的提示词：**
 
-# 移动应用技能栈  
-@react-native-patterns + @mobile-testing + @performance-analyzer
+> "Use @api-security-best-practices to review my REST endpoints in `routes/api/users.js`"
 
-# 数据项目技能栈
-@python-patterns + @data-visualization + @ml-model-development
-```
-
-### 2. 创建"工作流模板"
-
-为重复任务创建模板：
-
-```bash
-# 新功能开发模板
-"使用 @brainstorming 设计功能架构 → 使用 @react-patterns 实现前端 → 使用 @api-design 创建后端 → 使用 @test-driven-development 编写测试 → 使用 @performance-analyzer 优化"
-
-# 安全审计模板  
-"使用 @security-audit 进行初步扫描 → 使用 @vulnerability-scanner 深度检查 → 使用 @pen-testing 渗透测试 → 使用 @incident-response 制定响应计划"
-```
-
-### 3. 渐进式复杂度
-
-从简单到复杂：
-
-```bash
-# 第1级：基础使用
-"使用 @skill-name 处理这个"
-
-# 第2级：上下文注入
-"使用 @skill-name 处理这个，要求：..."
-
-# 第3级：技能组合
-"使用 @skill1 和 @skill2 一起处理..."
-
-# 第4级：工作流编排
-"按顺序使用这些技能：@skill1 → @skill2 → @skill3"
-```
+**为什么更好：**AI 知道确切要应用哪个技能的标准。
 
 ---
 
-## 🎯 实际案例研究
+### 示例 4：组合多个技能
 
-### 案例1：快速原型开发
+**良好的提示词：**
 
-**场景：** 需要2小时内构建一个简单的CRUD应用
+> "Use @brainstorming to design a payment flow, then apply @stripe-integration to implement it"
 
-**技能组合：**
-```bash
-"使用 @brainstorming 设计数据库模式 → 使用 @api-design 快速生成CRUD端点 → 使用 @react-patterns 创建基础UI → 使用 @tailwind-mastery 美化界面"
-```
-
-**结果：** 1.5小时完成功能完整的应用
-
-### 案例2：安全加固现有系统
-
-**场景：** 需要对生产系统进行全面安全评估
-
-**技能组合：**
-```bash
-"使用 @security-audit 进行基础检查 → 使用 @vulnerability-scanner 扫描依赖 → 使用 @pen-testing 进行渗透测试 → 使用 @incident-response 制定安全计划"
-```
-
-**结果：** 发现并修复了17个安全漏洞
-
-### 案例3：性能优化
-
-**场景：** React应用加载缓慢
-
-**技能组合：**
-```bash
-"使用 @performance-analyzer 识别瓶颈 → 使用 @optimization 优化关键路径 → 使用 @profiling 深度分析 → 使用 @code-simplifier 重写低效代码"
-```
-
-**结果：** 页面加载时间从4.2秒降到1.1秒
+**为什么好：**你可以在单个提示词中链接技能！
 
 ---
 
-## 🆘 获取帮助
+## 步骤 4：你的第一个技能（动手教程）
 
-### 常见问题快速解答
+让我们现在实际使用一个技能。按照以下步骤操作：
 
-**Q: 技能可以用在哪些AI工具上？**
-A: Claude Code、Gemini、Cursor、Antigravity、OpenCode、Codex等
+### 场景：你想规划一个新功能
 
-**Q: 可以同时使用多个技能吗？**  
-A: 可以，鼓励组合使用以获得最佳效果
+1. **选择一个技能：**让我们使用 `brainstorming`（来自"Essentials"捆绑包）
 
-**Q: 技能会更新吗？**
-A: 会，运行`git pull`更新仓库获取最新技能
+2. **打开你的 AI 助手**（Claude Code、Cursor 等）
 
-**Q: 可以自定义技能吗？**
-A: 可以，参见贡献指南
+3. **输入这个确切的提示词：**
 
-### 社区资源
+   ```
+   Use @brainstorming to help me design a user profile page for my app
+   ```
 
-- 📋 [常见问题](faq.md) - 更多答疑
-- 🎯 [技能包指南](bundles.md) - 发现更多技能
-- 👥 [GitHub讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions) - 与用户交流
-- 🐛 [问题报告](https://github.com/sickn33/antigravity-awesome-skills/issues) - 报告问题
+4. **按 Enter 键**
+
+5. **接下来会发生什么：**
+   - AI 加载 brainstorming 技能
+   - 它将开始向你提出结构化问题（一次一个）
+   - 它将引导你完成理解、需求和设计
+   - 你回答每个问题，它构建完整的规范
+
+6. **结果：**你最终会得到一个详细的设计文档——还没有写一行代码！
 
 ---
 
-## 🎉 恭喜！您现在是技能专家
+## 步骤 5：选择你的前几个技能（实用建议）
 
-您已掌握：
+不要试图一次使用所有 1,494+ 个技能。这里有一个明智的方法：
 
-✅ **理解技能系统** - 知道技能是什么以及如何工作  
-✅ **掌握引用语法** - 能在不同AI工具中使用技能  
-✅ **学会高级技巧** - 上下文注入、技能组合、工作流编排  
-✅ **了解最佳实践** - 建立技能栈、创建模板、渐进式复杂度  
+如果在选择技能之前你需要特定于工具的起点，请使用：
 
-**下一步：**
-- 🎯 探索[技能包](bundles.md)发现更多专业技能组合
-- 🔧 配置[本地环境](local-config.md)优化体验
-- 🤝 加入[社区](https://github.com/sickn33/antigravity-awesome-skills/discussions)与其他用户交流
+- [Claude Code 技能](claude-code-skills.md)
+- [Cursor 技能](cursor-skills.md)
+- [Codex CLI 技能](codex-cli-skills.md)
+- [Gemini CLI 技能](gemini-cli-skills.md)
 
-**开始您的技能之旅：**
+### 从"Essentials"开始（5 个技能，每个人都需要这些）
 
-```bash
-"使用您最需要的技能开始第一个任务吧！"
+1. **`@brainstorming`** - 在构建之前规划
+2. **`@lint-and-validate`** - 保持代码整洁
+3. **`@git-pushing`** - 安全地保存工作
+4. **`@systematic-debugging`** - 更快地修复错误
+5. **`@concise-planning`** - 组织任务
+
+**如何使用它们：**
+
+- 在编写新代码之前 → `@brainstorming`
+- 编写代码之后 → `@lint-and-validate`
+- 在提交之前 → `@git-pushing`
+- 当卡住时 → `@systematic-debugging`
+
+### 然后添加特定于角色的技能（再添加 5-10 个）
+
+在 [bundles.md](bundles.md) 中找到你的角色，并从该捆绑包中选择 5-10 个技能。
+
+**Web 开发人员示例：**
+
+- `@frontend-design`
+- `@react-best-practices`
+- `@tailwind-patterns`
+- `@seo-audit`
+
+**安全工程师示例：**
+
+- `@api-security-best-practices`
+- `@vulnerability-scanner`
+- `@ethical-hacking-methodology`
+
+### 最后，按需添加即时技能
+
+将 [CATALOG.md](../../CATALOG.md) 保持打开作为参考。当你需要特定的东西时：
+
+> "我需要集成 Stripe 付款"
+> → 搜索目录 → 找到 `@stripe-integration` → 使用它！
+
+---
+
+## 完整示例：端到端构建功能
+
+让我们通过一个现实场景来完成：
+
+### 任务："为我的 Next.js 网站添加博客"
+
+#### 步骤 1：规划（使用 @brainstorming）
+
+```
+You: Use @brainstorming to design a blog system for my Next.js site
+
+AI: [询问关于需求的结构化问题]
+You: [回答问题]
+AI: [生成详细的设计规范]
 ```
 
-祝您使用愉快！🚀
+#### 步骤 2：实现（使用 @nextjs-best-practices）
+
+```
+You: Use @nextjs-best-practices to scaffold the blog with App Router
+
+AI: [创建文件结构，设置路由，添加组件]
+```
+
+#### 步骤 3：样式（使用 @tailwind-patterns）
+
+```
+You: Use @tailwind-patterns to make the blog posts look modern
+
+AI: [应用 Tailwind 样式和响应式设计]
+```
+
+#### 步骤 4：SEO（使用 @seo-audit）
+
+```
+You: Use @seo-audit to optimize the blog for search engines
+
+AI: [添加 meta 标签、站点地图、结构化数据]
+```
+
+#### 步骤 5：测试和部署
+
+```
+You: Use @test-driven-development to add tests, then @vercel-deployment to deploy
+
+AI: [创建测试，设置 CI/CD，部署到 Vercel]
+```
+
+**结果：**使用最佳实践构建的专业博客，无需手动研究每个步骤！
+
+---
+
+## 常见问题
+
+### "我应该使用哪个工具？Claude Code、Cursor、Gemini？"
+
+**任何一个都可以！**技能通用适用。选择你已经使用或喜欢的工具：
+
+- **Claude Code** - 最适合终端/CLI 工作流
+- **Cursor** - 最适合 IDE 集成
+- **Gemini CLI** - 最适合 Google 生态系统
+- **Codex CLI** - 最适合 OpenAI 生态系统
+
+### "我可以查看所有可用的技能吗？"
+
+可以！三种方式：
+
+1. 浏览 [CATALOG.md](../../CATALOG.md)（可搜索列表）
+2. 运行 `ls ~/.agents/skills/`（或你的实际安装路径）
+3. 询问你的 AI："你有哪些关于[主题]的技能？"
+
+### "安装后我需要重启 IDE 吗？"
+
+通常不需要，但如果你的 AI 无法识别技能：
+
+1. 尝试重启你的 IDE/CLI
+2. 检查安装路径是否与你的工具匹配
+3. 尝试显式路径：`npx antigravity-awesome-skills --claude`（或 `--cursor`、`--gemini` 等）
+
+### "我可以一次将所有技能加载到模型中吗？"
+
+不可以。即使你在本地安装了 1,494+ 个技能，你**不应该**将每个 `SKILL.md` 连接到单个系统提示词或上下文块中。
+
+预期的模式是：
+
+- 使用 `data/skills_index.json`（清单）来发现存在哪些技能；以及
+- 仅为你实际在对话中使用的特定 `@skill-id` 值加载 `SKILL.md` 文件。
+
+如果你正在构建自己的主机/代理（例如 Jetski/Cortex + Gemini），请参阅：
+
+- [`docs/integrations/jetski-cortex.md`](../integrations/jetski-cortex.md)
+
+### "我可以创建自己的技能吗？"
+
+可以！使用 `@skill-creator` 技能：
+
+```
+Use @skill-creator to help me build a custom skill for [your task]
+```
+
+### "如果技能没有按预期工作怎么办？"
+
+1. 直接在安装路径中检查技能的 `SKILL.md` 文件，例如：`~/.agents/skills/[skill-name]/SKILL.md`
+2. 阅读描述以确保你正确使用它
+3. [打开问题](https://github.com/sickn33/antigravity-awesome-skills/issues)并提供详细信息
+
+---
+
+## 快速参考卡
+
+**保存此内容以供快速查找：**
+
+| 任务             | 使用的技能                   | 示例提示词                                      |
+| ---------------- | ------------------------------ | --------------------------------------------------- |
+| 规划新功能 | `@brainstorming`               | `Use @brainstorming to design a login system`       |
+| 审查代码      | `@lint-and-validate`           | `Use @lint-and-validate on src/app.js`              |
+| 调试问题      | `@systematic-debugging`        | `Use @systematic-debugging to fix login error`      |
+| 安全审计   | `@api-security-best-practices` | `Use @api-security-best-practices on my API routes` |
+| SEO 检查        | `@seo-audit`                   | `Use @seo-audit on my landing page`                 |
+| React 组件  | `@react-patterns`              | `Use @react-patterns to build a form component`     |
+| 部署应用       | `@vercel-deployment`           | `Use @vercel-deployment to ship this to production` |
+
+---
+
+## 下一步
+
+既然你了解了如何使用技能：
+
+1. ✅ **现在就尝试一个技能** - 从 `@brainstorming` 开始，尝试任何想法
+2. 📚 **从你的角色捆绑包中选择 3-5 个技能**，来自 [bundles.md](bundles.md)
+3. 🔖 **将** [CATALOG.md](../../CATALOG.md) **加入书签**，当你需要特定东西时使用
+4. 🎯 **从** [workflows.md](workflows.md) **尝试一个工作流**，以获得完整的端到端流程
+
+---
+
+## 最大化效果的专业提示
+
+### 提示 1：使用 @brainstorming 开始每个功能
+
+> 在编写代码之前，使用 `@brainstorming` 进行规划。你将节省数小时的重构时间。
+
+### 提示 2：按顺序链接技能
+
+> 不要试图一次完成所有事情。按顺序使用技能：规划 → 构建 → 测试 → 部署
+
+### 提示 3：在提示词中具体化
+
+> 糟糕："Use @react-patterns"
+> 良好："Use @react-patterns to build a modal component with animations"
+
+### 提示 4：引用文件路径
+
+> 帮助 AI 专注："Use @security-auditor on routes/api/auth.js"
+
+### 提示 5：组合技能以完成复杂任务
+
+> "Use @brainstorming to design, then @test-driven-development to implement with tests"
+
+---
+
+## 仍然困惑？
+
+如果有些东西仍然不合理：
+
+1. 查看 [FAQ](faq.md)
+2. 查看[真实示例](../contributors/examples.md)
+3. [打开讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions)
+4. [提交问题](https://github.com/sickn33/antigravity-awesome-skills/issues)以帮助我们改进此指南！
+
+记住：你并不孤单！这个项目的全部意义是让 AI 助手更易于使用。如果本指南没有帮助，请告诉我们，以便我们修复它。🙌

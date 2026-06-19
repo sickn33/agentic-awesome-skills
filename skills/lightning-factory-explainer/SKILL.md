@@ -1,7 +1,7 @@
 ---
 name: lightning-factory-explainer
 description: Explain Bitcoin Lightning channel factories and the SuperScalar protocol — scalable Lightning onboarding using shared UTXOs, Decker-Wattenhofer trees, timeout-signature trees, MuSig2, and Taproot. No soft fork required.
-risk: unknown
+risk: safe
 source: community
 date_added: '2026-03-03'
 ---
@@ -49,3 +49,8 @@ Expert guide for understanding Bitcoin Lightning Network channel factories and t
 - SuperScalar project: https://github.com/8144225309/SuperScalar
 - Website: https://SuperScalar.win
 - Original proposal: https://delvingbitcoin.org/t/superscalar-laddered-timeout-tree-structured-decker-wattenhofer-factories/1143
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

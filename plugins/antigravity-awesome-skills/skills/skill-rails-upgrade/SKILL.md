@@ -224,7 +224,7 @@ List the most important changes the user needs to handle:
 ---
 
 
-## When to Use This Skill
+### When to Use This Skill
 
 Analyze Rails apps and provide upgrade assessments
 
@@ -388,7 +388,7 @@ After verifying the app works:
 ---
 
 
-## When to Use This Skill
+### When to Use This Skill
 
 Analyze Rails apps and provide upgrade assessments
 
@@ -407,3 +407,8 @@ Use this skill when working with analyze rails apps and provide upgrade assessme
 3. **Minimal changes** - Only add what's necessary for the new Rails version
 4. **Transparency** - Show the user exactly what will change before doing it
 5. **Reversibility** - User should be able to `git checkout` to restore if needed
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

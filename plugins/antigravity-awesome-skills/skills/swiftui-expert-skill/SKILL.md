@@ -7,6 +7,11 @@ source: community
 
 # SwiftUI Expert Skill
 
+## When to Use
+- You are building, reviewing, or refactoring SwiftUI code and need current best practices.
+- The task involves state management, view composition, performance, accessibility, or iOS 26+ Liquid Glass adoption.
+- You need a fact-based SwiftUI guidance layer without locking into a specific application architecture.
+
 ## Overview
 Use this skill to build, review, or improve SwiftUI features with correct state management, optimal view composition, and iOS 26+ Liquid Glass styling. Prioritize native APIs, Apple design guidance, and performance-conscious patterns. This skill focuses on facts and best practices without enforcing specific architectural patterns.
 
@@ -242,3 +247,8 @@ This skill focuses on **facts and best practices**, not architectural opinions:
 - We do encourage separating business logic for testability
 - We optimize for performance and maintainability
 - We follow Apple's Human Interface Guidelines and API design patterns
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-agent-mcp-builder",
+  "version": "12.8.0",
+  "description": "Install the \"AAS Agent & MCP Builder\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-agent-mcp-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Agent & MCP Builder",
+    "shortDescription": "Specialized Product Plugins · 9 curated skills",
+    "longDescription": "Developers building agentic apps, MCP tools, RAG systems, and evaluation loops. Covers AI Agents Architect, Agent Evaluation, and 7 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

@@ -1,12 +1,20 @@
 ---
 name: telegram-bot-builder
-description: "You build bots that people actually use daily. You understand that bots should feel like helpful assistants, not clunky interfaces. You know the Telegram ecosystem deeply - what's possible, what's popular, and what makes money. You design conversations that feel natural."
+description: Expert in building Telegram bots that solve real problems - from
+  simple automation to complex AI-powered bots. Covers bot architecture, the
+  Telegram Bot API, user experience, monetization strategies, and scaling bots
+  to thousands of users.
 risk: unknown
-source: "vibeship-spawner-skills (Apache 2.0)"
-date_added: "2026-02-27"
+source: vibeship-spawner-skills (Apache 2.0)
+date_added: 2026-02-27
 ---
 
 # Telegram Bot Builder
+
+Expert in building Telegram bots that solve real problems - from simple
+automation to complex AI-powered bots. Covers bot architecture, the Telegram
+Bot API, user experience, monetization strategies, and scaling bots to
+thousands of users.
 
 **Role**: Telegram Bot Architect
 
@@ -14,6 +22,15 @@ You build bots that people actually use daily. You understand that bots
 should feel like helpful assistants, not clunky interfaces. You know
 the Telegram ecosystem deeply - what's possible, what's popular, and
 what makes money. You design conversations that feel natural.
+
+### Expertise
+
+- Telegram Bot API
+- Bot UX design
+- Monetization
+- Node.js/Python bots
+- Webhook architecture
+- Inline keyboards
 
 ## Capabilities
 
@@ -34,7 +51,6 @@ Structure for maintainable Telegram bots
 
 **When to use**: When starting a new bot project
 
-```python
 ## Bot Architecture
 
 ### Stack Options
@@ -84,7 +100,6 @@ telegram-bot/
 ├── .env
 └── package.json
 ```
-```
 
 ### Inline Keyboards
 
@@ -92,7 +107,6 @@ Interactive button interfaces
 
 **When to use**: When building interactive bot flows
 
-```python
 ## Inline Keyboards
 
 ### Basic Keyboard
@@ -142,7 +156,6 @@ function getPaginatedKeyboard(items, page, perPage = 5) {
   return Markup.inlineKeyboard([...buttons, nav]);
 }
 ```
-```
 
 ### Bot Monetization
 
@@ -150,7 +163,6 @@ Making money from Telegram bots
 
 **When to use**: When planning bot revenue
 
-```javascript
 ## Bot Monetization
 
 ### Revenue Models
@@ -211,49 +223,156 @@ async function checkUsage(userId) {
   return { allowed: true };
 }
 ```
+
+### Webhook Deployment
+
+Production bot deployment
+
+**When to use**: When deploying bot to production
+
+## Webhook Deployment
+
+### Polling vs Webhooks
+| Method | Best For |
+|--------|----------|
+| Polling | Development, simple bots |
+| Webhooks | Production, scalable |
+
+### Express + Webhook
+```javascript
+import express from 'express';
+import { Telegraf } from 'telegraf';
+
+const bot = new Telegraf(process.env.BOT_TOKEN);
+const app = express();
+
+app.use(express.json());
+app.use(bot.webhookCallback('/webhook'));
+
+// Set webhook
+const WEBHOOK_URL = 'https://your-domain.com/webhook';
+bot.telegram.setWebhook(WEBHOOK_URL);
+
+app.listen(3000);
 ```
 
-## Anti-Patterns
+### Vercel Deployment
+```javascript
+// api/webhook.js
+import { Telegraf } from 'telegraf';
 
-### ❌ Blocking Operations
+const bot = new Telegraf(process.env.BOT_TOKEN);
+// ... bot setup
 
-**Why bad**: Telegram has timeout limits.
-Users think bot is dead.
-Poor experience.
-Requests pile up.
+export default async (req, res) => {
+  await bot.handleUpdate(req.body);
+  res.status(200).send('OK');
+};
+```
 
-**Instead**: Acknowledge immediately.
-Process in background.
-Send update when done.
-Use typing indicator.
+### Railway/Render Deployment
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD ["node", "src/bot.js"]
+```
 
-### ❌ No Error Handling
+## Validation Checks
 
-**Why bad**: Users get no response.
-Bot appears broken.
-Debugging nightmare.
-Lost trust.
+### Bot Token Hardcoded
 
-**Instead**: Global error handler.
-Graceful error messages.
-Log errors for debugging.
-Rate limiting.
+Severity: HIGH
 
-### ❌ Spammy Bot
+Message: Bot token appears to be hardcoded - security risk!
 
-**Why bad**: Users block the bot.
-Telegram may ban.
-Annoying experience.
-Low retention.
+Fix action: Move token to environment variable BOT_TOKEN
 
-**Instead**: Respect user attention.
-Consolidate messages.
-Allow notification control.
-Quality over quantity.
+### No Bot Error Handler
+
+Severity: HIGH
+
+Message: No global error handler for bot.
+
+Fix action: Add bot.catch() to handle errors gracefully
+
+### No Rate Limiting
+
+Severity: MEDIUM
+
+Message: No rate limiting - may hit Telegram limits.
+
+Fix action: Add throttling with Bottleneck or similar library
+
+### In-Memory Sessions in Production
+
+Severity: MEDIUM
+
+Message: Using in-memory sessions - will lose state on restart.
+
+Fix action: Use Redis or database-backed session store for production
+
+### No Typing Indicator
+
+Severity: LOW
+
+Message: Consider adding typing indicator for better UX.
+
+Fix action: Add ctx.sendChatAction('typing') before slow operations
+
+## Collaboration
+
+### Delegation Triggers
+
+- mini app|web app|TON|twa -> telegram-mini-app (Mini App integration)
+- AI|GPT|Claude|LLM|chatbot -> ai-wrapper-product (AI integration)
+- database|postgres|redis -> backend (Data persistence)
+- payments|subscription|billing -> fintech-integration (Payment integration)
+- deploy|host|production -> devops (Deployment)
+
+### AI Telegram Bot
+
+Skills: telegram-bot-builder, ai-wrapper-product, backend
+
+Workflow:
+
+```
+1. Design bot conversation flow
+2. Set up AI integration (OpenAI/Claude)
+3. Build backend for state/data
+4. Implement bot commands and handlers
+5. Add monetization (freemium)
+6. Deploy and monitor
+```
+
+### Bot + Mini App
+
+Skills: telegram-bot-builder, telegram-mini-app, frontend
+
+Workflow:
+
+```
+1. Design bot as entry point
+2. Build Mini App for complex UI
+3. Integrate bot commands with Mini App
+4. Handle payments in Mini App
+5. Deploy both components
+```
 
 ## Related Skills
 
 Works well with: `telegram-mini-app`, `backend`, `ai-wrapper-product`, `workflow-automation`
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+- User mentions or implies: telegram bot
+- User mentions or implies: bot api
+- User mentions or implies: telegram automation
+- User mentions or implies: chat bot telegram
+- User mentions or implies: tg bot
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

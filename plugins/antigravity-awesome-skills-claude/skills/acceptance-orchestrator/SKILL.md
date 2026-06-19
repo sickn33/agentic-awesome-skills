@@ -14,6 +14,11 @@ Orchestrate coding work as a state machine that ends only when acceptance criter
 
 Core rule: **do not optimize for "code changed"; optimize for "DoD proven".**
 
+## When to Use
+- The task already has an issue or clear acceptance criteria and should run end-to-end with minimal human re-intervention.
+- You need structured handoff across implementation, review, deployment, and final verification.
+- You want explicit stop conditions and escalation instead of silent partial completion.
+
 ## Required Sub-Skills
 
 - `create-issue-gate`
@@ -104,3 +109,8 @@ When reporting status, always include:
 - `Need Human Input`: smallest next decision, if blocked
 
 Do not report "done" unless status is `accepted`.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

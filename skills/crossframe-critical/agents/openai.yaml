@@ -1,0 +1,6 @@
+interface:
+  display_name: "CrossFrame Critical"
+  short_description: "显式调用的结构批判长文 skill：先做 CrossFrame 底稿，再写有现实例子和篇幅规划的批判文章。"
+  default_prompt: "Use $crossframe-critical to write a structural critique essay with a visible dossier, article plan, concrete examples, and full Chinese body text."
+policy:
+  allow_implicit_invocation: false

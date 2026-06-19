@@ -13,7 +13,6 @@ metadata:
 You help users create and maintain a product marketing context document. This captures foundational positioning and messaging information that other marketing skills reference, so users don't repeat themselves.
 
 ## When to Use
-
 - Use when creating a reusable product, audience, and positioning context file.
 - Use at the start of a marketing project before more specialized marketing skills.
 - Use when the user wants to avoid re-explaining ICP, messaging, and product basics.
@@ -248,3 +247,8 @@ After gathering information, create `.agents/product-marketing-context.md` with 
 - **Ask for examples**: "Can you give me an example?" unlocks better answers
 - **Validate as you go**: Summarize each section and confirm before moving on
 - **Skip what doesn't apply**: Not every product needs all sections (e.g., Personas for B2C)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

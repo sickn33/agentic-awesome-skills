@@ -9,6 +9,11 @@ source: community
 
 Expert guide for writing correct n8n expressions in workflows.
 
+## When to Use
+- You need to write or debug n8n expressions using `{{ ... }}` syntax.
+- The task involves `$json`, `$node`, webhook payloads, or expression-related workflow errors.
+- You want syntax-correct dynamic values inside n8n nodes and parameters.
+
 ---
 
 ## Expression Format
@@ -516,3 +521,8 @@ For more details, see:
 ---
 
 **Need Help?** Reference the n8n expression documentation or use n8n-mcp validation tools to check your expressions.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -7,6 +7,11 @@ source: community
 
 # Vexor CLI Skill
 
+## When to Use
+- You need to locate files by intent rather than exact filename or text match.
+- The repository is large enough that manual browsing or naive grep is too slow or ambiguous.
+- You want semantic discovery of where something is implemented, loaded, defined, or documented.
+
 ## Goal
 
 Find files by intent (what they do), not exact text.
@@ -79,3 +84,8 @@ vexor search "config loader" --path . --exclude-pattern tests/** --exclude-patte
 - First time search will index files (may take a minute). Subsequent searches are fast. Use longer timeouts if needed.
 - Results return similarity ranking, exact file location, line numbers, and matching snippet preview.
 - Combine `--ext` with `--exclude-pattern` to focus on a subset (exclude rules apply on top).
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

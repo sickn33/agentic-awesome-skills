@@ -13,7 +13,6 @@ metadata:
 You are a content strategist. Your goal is to help plan content that drives traffic, builds authority, and generates leads by being either searchable, shareable, or both.
 
 ## When to Use
-
 - Use when deciding what content to create, in what order, and for which audience.
 - Use when building topic clusters, content pillars, or an editorial roadmap.
 - Use when the user needs strategy and prioritization, not just copywriting.
@@ -372,3 +371,8 @@ Visual or structured representation of how content interconnects.
 - **site-architecture**: For page hierarchy, navigation design, and URL structure
 - **email-sequence**: For email-based content
 - **social-content**: For social media content
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,9 +1,9 @@
 ---
+source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-jobs"
 name: hugging-face-jobs
-description: "Run any workload on fully managed Hugging Face infrastructure. No local setup required—jobs run on cloud CPUs, GPUs, or TPUs and can persist results to the Hugging Face Hub."
-risk: safe
-source: "https://github.com/huggingface/skills/tree/main/skills/hugging-face-jobs"
-date_added: "2026-02-27"
+description: Run workloads on Hugging Face Jobs with managed CPUs, GPUs, TPUs, secrets, and Hub persistence.
+license: Complete terms in LICENSE.txt
+risk: unknown
 ---
 
 # Running Workloads on Hugging Face Jobs
@@ -66,12 +66,15 @@ Before starting any job, verify:
 
 **How to provide tokens:**
 ```python
-{
-    "secrets": {"HF_TOKEN": "$HF_TOKEN"}  # Recommended: automatic token
-}
+# hf_jobs MCP tool — $HF_TOKEN is auto-replaced with real token:
+{"secrets": {"HF_TOKEN": "$HF_TOKEN"}}
+
+# HfApi().run_uv_job() — MUST pass actual token:
+from huggingface_hub import get_token
+secrets={"HF_TOKEN": get_token()}
 ```
 
-**⚠️ CRITICAL:** The `$HF_TOKEN` placeholder is automatically replaced with your logged-in token. Never hardcode tokens in scripts.
+**⚠️ CRITICAL:** The `$HF_TOKEN` placeholder is ONLY auto-replaced by the `hf_jobs` MCP tool. When using `HfApi().run_uv_job()`, you MUST pass the real token via `get_token()`. Passing the literal string `"$HF_TOKEN"` results in a 9-character invalid token and 401 errors.
 
 ## Token Usage Guide
 
@@ -539,9 +542,12 @@ requests.post("https://your-api.com/results", json=results)
 
 **In job submission:**
 ```python
-{
-    "secrets": {"HF_TOKEN": "$HF_TOKEN"}  # Enables authentication
-}
+# hf_jobs MCP tool:
+{"secrets": {"HF_TOKEN": "$HF_TOKEN"}}  # auto-replaced
+
+# HfApi().run_uv_job():
+from huggingface_hub import get_token
+secrets={"HF_TOKEN": get_token()}  # must pass real token
 ```
 
 **In script:**
@@ -560,7 +566,7 @@ api.upload_file(...)
 
 Before submitting:
 - [ ] Results persistence method chosen
-- [ ] `secrets={"HF_TOKEN": "$HF_TOKEN"}` if using Hub
+- [ ] Token in secrets if using Hub (MCP: `"$HF_TOKEN"`, Python API: `get_token()`)
 - [ ] Script handles missing token gracefully
 - [ ] Test persistence path works
 
@@ -950,7 +956,7 @@ hf_jobs("uv", {
 ### Hub Push Failures
 
 **Fix:**
-1. Add to job: `secrets={"HF_TOKEN": "$HF_TOKEN"}`
+1. Add token to secrets: MCP uses `"$HF_TOKEN"` (auto-replaced), Python API uses `get_token()` (must pass real token)
 2. Verify token in script: `assert "HF_TOKEN" in os.environ`
 3. Check token permissions
 4. Verify repo exists or can be created
@@ -969,7 +975,7 @@ Add to PEP 723 header:
 
 **Fix:**
 1. Check `hf_whoami()` works locally
-2. Verify `secrets={"HF_TOKEN": "$HF_TOKEN"}` in job config
+2. Verify token in secrets — MCP: `"$HF_TOKEN"`, Python API: `get_token()` (NOT `"$HF_TOKEN"`)
 3. Re-login: `hf auth login`
 4. Check token has required permissions
 
@@ -1017,7 +1023,7 @@ Add to PEP 723 header:
 2. **Jobs are asynchronous** - Don't wait/poll; let user check when ready
 3. **Always set timeout** - Default 30 min may be insufficient; set appropriate timeout
 4. **Always persist results** - Environment is ephemeral; without persistence, all work is lost
-5. **Use tokens securely** - Always use `secrets={"HF_TOKEN": "$HF_TOKEN"}` for Hub operations
+5. **Use tokens securely** - MCP: `secrets={"HF_TOKEN": "$HF_TOKEN"}`, Python API: `secrets={"HF_TOKEN": get_token()}` — `"$HF_TOKEN"` only works with MCP tool
 6. **Choose appropriate hardware** - Start small, scale up based on needs (see hardware guide)
 7. **Use UV scripts** - Default to `hf_jobs("uv", {...})` with inline scripts for Python workloads
 8. **Handle authentication** - Verify tokens are available before Hub operations
@@ -1033,6 +1039,12 @@ Add to PEP 723 header:
 | List jobs | `hf_jobs("ps")` | `hf jobs ps` | `list_jobs()` |
 | View logs | `hf_jobs("logs", {...})` | `hf jobs logs <id>` | `fetch_job_logs(job_id)` |
 | Cancel job | `hf_jobs("cancel", {...})` | `hf jobs cancel <id>` | `cancel_job(job_id)` |
-| Schedule UV | `hf_jobs("scheduled uv", {...})` | - | `create_scheduled_uv_job()` |
-| Schedule Docker | `hf_jobs("scheduled run", {...})` | - | `create_scheduled_job()` |
+| Schedule UV | `hf_jobs("scheduled uv", {...})` | `hf jobs scheduled uv run SCHEDULE script.py` | `create_scheduled_uv_job()` |
+| Schedule Docker | `hf_jobs("scheduled run", {...})` | `hf jobs scheduled run SCHEDULE image cmd` | `create_scheduled_job()` |
+| List scheduled | `hf_jobs("scheduled ps")` | `hf jobs scheduled ps` | `list_scheduled_jobs()` |
+| Delete scheduled | `hf_jobs("scheduled delete", {...})` | `hf jobs scheduled delete <id>` | `delete_scheduled_job()` |
 
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

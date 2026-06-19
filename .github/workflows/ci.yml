@@ -22,12 +22,12 @@ jobs:
       has_quality_checklist: ${{ steps.intake.outputs.has_quality_checklist }}
       has_issue_link: ${{ steps.intake.outputs.has_issue_link }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "lts/*"
 
@@ -67,20 +67,25 @@ jobs:
     runs-on: ubuntu-latest
     needs: pr-policy
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.10"
 
       - name: Install Python dependencies
-        run: pip install pyyaml
+        run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "lts/*"
+
+      - name: Fetch base branch
+        run: git fetch origin "${{ github.base_ref }}"
 
       - name: Install npm dependencies
         run: npm ci
@@ -97,18 +102,29 @@ jobs:
       - name: Validate source changes
         run: npm run validate
 
+      - name: Enforce validation warning budget
+        run: npm run check:warning-budget
+
+      - name: Verify README source credits for changed skills
+        run: npm run check:readme-credits -- --base "origin/${{ github.base_ref }}" --head HEAD
+
       - name: Validate references
         if: needs.pr-policy.outputs.requires_references == 'true'
         run: npm run validate:references
 
       - name: Audit npm dependencies
         run: npm audit --audit-level=high
-        continue-on-error: true
 
       - name: Run tests
         env:
           ENABLE_NETWORK_TESTS: "1"
         run: npm run test
+
+      - name: Install web-app dependencies
+        run: npm run app:install
+
+      - name: Run web app coverage
+        run: npm run app:test:coverage
 
       - name: Run docs security checks
         run: npm run security:docs
@@ -118,18 +134,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: [pr-policy, source-validation]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.10"
 
       - name: Install Python dependencies
-        run: pip install pyyaml
+        run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "lts/*"
 
@@ -140,6 +156,7 @@ jobs:
         run: |
           npm run chain
           npm run catalog
+          npm run sync:web-assets
 
       - name: Report generated drift
         run: |
@@ -170,29 +187,34 @@ jobs:
             echo "- Generated drift: detected"
             echo
             echo "Predicted file updates:"
-            printf '%s\n' "$drift_files" | sed 's/^/- `/; s/$/`/'
+            printf '%s\n' "$drift_files" | sed "s/^/- \`/; s/\$/\`/"
           } >> "$GITHUB_STEP_SUMMARY"
 
   main-validation-and-sync:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    concurrency:
+      group: canonical-main-sync
+      cancel-in-progress: false
     permissions:
       contents: write
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.10"
 
       - name: Install Python dependencies
-        run: pip install pyyaml
+        run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "lts/*"
 
@@ -216,12 +238,17 @@ jobs:
 
       - name: Audit npm dependencies
         run: npm audit --audit-level=high
-        continue-on-error: true
 
       - name: Run tests
         env:
           ENABLE_NETWORK_TESTS: "1"
         run: npm run test
+
+      - name: Install web-app dependencies
+        run: npm run app:install
+
+      - name: Run web app coverage
+        run: npm run app:test:coverage
 
       - name: Run docs security checks
         run: npm run security:docs
@@ -229,24 +256,40 @@ jobs:
       - name: Set up GitHub credentials
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git fetch origin main
 
       - name: Auto-commit canonical artifacts
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
+          set -euo pipefail
           mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
           if [ "${#managed_files[@]}" -eq 0 ]; then
             echo "No managed files resolved from generated_files contract."
             exit 1
           fi
 
-          git diff --quiet && exit 0
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "No canonical repo-state drift detected."
+            exit 0
+          fi
 
           git add -- "${managed_files[@]}" || true
 
-          git diff --cached --quiet && exit 0
+          if git diff --cached --quiet; then
+            echo "Repo-state sync produced unmanaged drift only."
+            git status --short
+            exit 1
+          fi
+
+          if [ -n "$(git diff --name-only)" ] || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+            echo "Repo-state sync produced unmanaged drift alongside canonical changes."
+            git status --short
+            exit 1
+          fi
 
           git commit -m "chore: sync repo state [ci skip]"
           git pull origin main --rebase
@@ -255,13 +298,14 @@ jobs:
       - name: Check for uncommitted drift
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          if ! git diff --quiet; then
-            echo "❌ Detected uncommitted changes produced by registry/readme/catalog scripts."
+          if ! git diff --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+            echo "❌ Detected leftover drift after the canonical bot sync."
             echo
-            echo "Main must be self-healing after the auto-sync step."
+            echo "The bot may only commit managed canonical files and must leave a clean tree."
             echo "To fix locally, run the canonical maintainer flow:"
             echo "  npm run release:preflight"
             echo "  npm run sync:repo-state"
             echo "  git status"
+            git status --short
             exit 1
           fi

@@ -7,6 +7,11 @@ source: community
 
 # Three.js Lighting
 
+## When to Use
+- You need to add or tune lighting in a Three.js scene.
+- The task involves light types, shadows, environment lighting, or lighting performance tradeoffs.
+- You want to improve scene readability, realism, or mood through Three.js lighting setup.
+
 ## Quick Start
 
 ```javascript
@@ -482,3 +487,8 @@ decorMesh.castShadow = false; // Small objects often don't need to cast
 - `threejs-materials` - Material light response
 - `threejs-textures` - Lightmaps and environment maps
 - `threejs-postprocessing` - Bloom and other light effects
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,4 +1,4 @@
-# Getting Started with Antigravity Awesome Skills (V9.1.0)
+# Getting Started with Antigravity Awesome Skills (V12.8.0)
 
 **New here? This guide will help you supercharge your AI Agent in 5 minutes.**
 
@@ -32,7 +32,8 @@ If you prefer a marketplace-style install for **Claude Code** or **Codex**, use 
 npx antigravity-awesome-skills
 ```
 
-This clones to `~/.gemini/antigravity/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, or `--kiro` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx antigravity-awesome-skills --help` for details.
+This clones to `~/.agents/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, `--kiro`, or `--agy` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx antigravity-awesome-skills --help` for details.
+The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
 
 If you see a 404 error, use: `npx github:sickn33/antigravity-awesome-skills`
 
@@ -104,9 +105,10 @@ Once installed, just talk to your AI naturally.
 | **Codex CLI**   | ✅ Full Support | `.codex/skills/` or use the repo-local plugin metadata described in [plugins.md](plugins.md) |
 | **Kiro CLI**    | ✅ Full Support | Global: `~/.kiro/skills/` · Workspace: `.kiro/skills/`                |
 | **Kiro IDE**    | ✅ Full Support | Global: `~/.kiro/skills/` · Workspace: `.kiro/skills/`                |
-| **Antigravity** | ✅ Native       | Global: `~/.gemini/antigravity/skills/` · Workspace: `.agent/skills/` |
+| **Antigravity** | ✅ Native       | Global: `~/.agents/skills/` · Workspace: `.agent/skills/` |
+| **Antigravity CLI (`agy`)** | ✅ Full Support | Global slash-command directories: `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md` |
 | **Cursor**      | ✅ Native       | `.cursor/skills/`                                                     |
-| **OpenCode**    | ✅ Full Support | `.agents/skills/`                                                     |
+| **OpenCode**    | ✅ Full Support | `.agents/skills/` (prefer reduced installs with `--risk`, `--category`, or `--tags`) |
 | **AdaL CLI**    | ✅ Full Support | `.adal/skills/`                                                       |
 | **Copilot**     | ⚠️ Text Only    | Manual copy-paste                                                     |
 
@@ -116,11 +118,13 @@ Once installed, just talk to your AI naturally.
 
 We classify skills so you know what you're running:
 
-- 🟣 **Official**: Maintained by Anthropic/Google/Vendors (High Trust).
-- 🔵 **Safe**: Community skills that are non-destructive (Read-only/Planning).
-- 🔴 **Risk**: Skills that modify systems or perform security tests (Authorized Use Only).
+- ⚪ **unknown**: legacy/unclassified content that still needs maintainer triage.
+- 🟢 **none**: pure text/reasoning guidance.
+- 🔵 **safe**: read-only or low-risk operational guidance.
+- 🟠 **critical**: state-changing or deployment-impacting guidance.
+- 🔴 **offensive**: pentest/red-team guidance with an explicit Authorized Use Only warning.
 
-When adding new skills, high-risk guidance is extra-reviewed with repository-wide `security:docs` scanning before release.
+Community PRs may still submit `risk: unknown`, but maintainers now audit and progressively reconcile those labels using the repo-wide audit/report tooling. High-risk guidance is extra-reviewed with repository-wide `security:docs` scanning before release.
 
 _Check the [Skill Catalog](../../CATALOG.md) for the full list._
 
@@ -150,6 +154,12 @@ A: Follow the recovery steps in [windows-truncation-recovery.md](windows-truncat
 
 **Q: What if Antigravity overloads on Linux or macOS when too many skills are active?**
 A: Use the activation flow in [agent-overload-recovery.md](agent-overload-recovery.md). It shows how to run `scripts/activate-skills.sh` from a cloned repo so you can keep the full library archived and activate only the bundles or skills you need in the live Antigravity directory.
+
+**Q: What if `agy` does not show installed skills when I type `/`?**
+A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Run `npx antigravity-awesome-skills --agy`, restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
+
+**Q: What if OpenCode or another `.agents/skills` host becomes unstable with a full install?**
+A: Start with a reduced install instead of copying the whole library. For example: `npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`.
 
 **Q: Is this free?**
 A: Yes. Original code and tooling are MIT-licensed, and original documentation/non-code written content is CC BY 4.0. See [../../LICENSE](../../LICENSE) and [../../LICENSE-CONTENT](../../LICENSE-CONTENT).

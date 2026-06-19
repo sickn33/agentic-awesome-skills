@@ -11,6 +11,11 @@ A hard-edged writing skill for producing timeless, forceful English prose withou
 
 This is a style contract, not a vibe. Treat violations as failures.
 
+## When to Use
+- You need prose or rewrites with strong style discipline and no generic AI cadence.
+- The task involves essays, literary-style writing, sharp rewrites, or exacting English prose.
+- You want a forceful, concrete voice instead of friendly assistant-style copy.
+
 ## What this skill does
 
 When active, write prose that is:
@@ -189,3 +194,8 @@ Fail the output if any are true:
 ## Tests
 
 See `references/test-cases.md`.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

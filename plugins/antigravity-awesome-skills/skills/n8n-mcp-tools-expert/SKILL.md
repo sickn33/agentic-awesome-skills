@@ -9,6 +9,11 @@ source: community
 
 Master guide for using n8n-mcp MCP server tools to build workflows.
 
+## When to Use
+- You are using the `n8n-mcp` toolset to discover nodes, validate configs, or manage workflows.
+- The task involves choosing the right MCP tool or understanding its expected parameters and usage pattern.
+- You need guidance on workflow creation or editing through n8n MCP rather than through the n8n UI alone.
+
 ---
 
 ## Tool Categories
@@ -642,3 +647,8 @@ For details, see:
 - n8n Node Configuration - Operation-specific requirements
 - n8n Code JavaScript - Write JavaScript in Code nodes
 - n8n Code Python - Write Python in Code nodes
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

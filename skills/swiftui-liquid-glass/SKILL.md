@@ -12,7 +12,6 @@ date_added: "2026-03-25"
 Use this skill to build or review SwiftUI features that fully align with the iOS 26+ Liquid Glass API. Prioritize native APIs (`glassEffect`, `GlassEffectContainer`, glass button styles) and Apple design guidance. Keep usage consistent, interactive where needed, and performance aware.
 
 ## When to Use
-
 - When the user wants to adopt or review Liquid Glass in SwiftUI UI.
 - When you need correct API usage, fallback handling, or modifier ordering for Liquid Glass.
 
@@ -96,3 +95,8 @@ Button("Confirm") { }
 ## Resources
 - Reference guide: `references/liquid-glass.md`
 - Prefer Apple docs for up-to-date API details.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

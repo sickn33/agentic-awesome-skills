@@ -9,6 +9,11 @@ source: community
 
 Expert guidance for operation-aware node configuration with property dependencies.
 
+## When to Use
+- You need to configure an n8n node correctly for a specific resource and operation.
+- The task involves required fields, property dependencies, or choosing the right `get_node` detail level.
+- You are troubleshooting node setup rather than overall workflow architecture.
+
 ---
 
 ## Configuration Philosophy
@@ -785,3 +790,8 @@ For comprehensive guides on specific topics:
 - **n8n Validation Expert** - Interpret validation errors
 - **n8n Expression Syntax** - Configure expression fields
 - **n8n Workflow Patterns** - Apply patterns with proper configuration
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

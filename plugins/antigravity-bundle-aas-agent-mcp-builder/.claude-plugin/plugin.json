@@ -1,0 +1,19 @@
+{
+  "name": "antigravity-bundle-aas-agent-mcp-builder",
+  "version": "12.8.0",
+  "description": "Editorial \"AAS Agent & MCP Builder\" bundle for Claude Code from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "bundle",
+    "aas-agent-mcp-builder",
+    "antigravity-awesome-skills"
+  ]
+}

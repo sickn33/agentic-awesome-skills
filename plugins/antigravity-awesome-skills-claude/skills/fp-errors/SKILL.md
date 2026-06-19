@@ -21,6 +21,11 @@ This skill teaches you how to handle errors without try/catch spaghetti. No acad
 
 The core idea: **Errors are just data**. Instead of throwing them into the void and hoping someone catches them, return them as values that TypeScript can track.
 
+## When to Use
+- You need to replace exception-heavy code with `Either` or `TaskEither`.
+- The task involves validation, domain errors, or clearer error contracts in TypeScript.
+- You want pragmatic fp-ts error-handling guidance for real application code.
+
 ---
 
 ## 1. Stop Throwing Everywhere
@@ -857,3 +862,8 @@ All Either operations have TaskEither equivalents:
 5. **Match at the end** - Use `fold` to handle both cases when you're ready to act
 
 The payoff: TypeScript tracks your errors, no more forgotten try/catch, clear control flow, and composable error handling.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

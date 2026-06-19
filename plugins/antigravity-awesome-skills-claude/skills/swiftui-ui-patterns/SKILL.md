@@ -11,7 +11,6 @@ date_added: "2026-03-25"
 ## Quick start
 
 ## When to Use
-
 - When creating or refactoring SwiftUI screens, flows, or reusable UI components.
 - When you need guidance on navigation, sheets, async state, previews, or component patterns.
 
@@ -101,3 +100,8 @@ Use `references/components-index.md` as the entry point. Each component referenc
 - Create `references/<component>.md`.
 - Keep it short and actionable; link to concrete files in the current repo.
 - Update `references/components-index.md` with the new entry.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

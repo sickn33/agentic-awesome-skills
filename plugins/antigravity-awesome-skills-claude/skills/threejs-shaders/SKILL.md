@@ -7,6 +7,11 @@ source: community
 
 # Three.js Shaders
 
+## When to Use
+- You need custom shader logic in Three.js.
+- The task involves `ShaderMaterial`, uniforms, GLSL, vertex deformation, or fragment-based effects.
+- You are extending material behavior beyond what built-in materials provide.
+
 ## Quick Start
 
 ```javascript
@@ -685,3 +690,8 @@ material.positionNode = add(
 - `threejs-materials` - Built-in material types
 - `threejs-postprocessing` - Full-screen shader effects
 - `threejs-textures` - Texture sampling in shaders
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

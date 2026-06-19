@@ -15,7 +15,6 @@ AI coding agents see an error and immediately edit code. They guess at fixes, ge
 Based on [claude-debug](https://github.com/krabat-l/claude-debug) (full plugin with PreToolUse hook enforcement).
 
 ## When to Use
-
 Use this skill when:
 
 - a bug keeps getting "fixed" without resolving the underlying issue
@@ -68,3 +67,8 @@ If verification fails: root cause was wrong, go back to Phase 2.
 2. NEVER proceed past phase 3 without user confirmation
 3. ALWAYS reproduce before investigating
 4. ALWAYS verify after fixing
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

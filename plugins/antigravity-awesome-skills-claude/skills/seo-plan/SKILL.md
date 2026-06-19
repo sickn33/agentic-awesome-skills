@@ -22,7 +22,6 @@ allowed-tools:
 # Strategic SEO Planning
 
 ## When to Use
-
 - Use when building an SEO strategy or roadmap for a new or existing site.
 - Use when planning content, architecture, and implementation phases together.
 - Use when the user asks for an SEO plan rather than a point-in-time audit.
@@ -134,3 +133,8 @@ If DataForSEO MCP tools are available, use `dataforseo_labs_google_competitors_d
 | Unrecognized business type | Fall back to `generic.md` template. Inform user that no industry-specific template was found and proceed with the general business template. |
 | No website URL provided | Proceed with new-site planning mode. Skip current site assessment and competitive gap analysis that require a live URL. |
 | Industry template not found | Check `assets/` directory for available templates. If the requested template file is missing, use `generic.md` and note the missing template in output. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -768,8 +768,8 @@ const SelectItems = memo(({ items }) => (
 shadcn/ui is a collection of copy-paste components built with Radix + Tailwind.
 
 ```bash
-npx shadcn-ui@latest init
-npx shadcn-ui@latest add dialog
+npx shadcn@latest init
+npx shadcn@latest add dialog
 ```
 
 **When to use shadcn vs raw Radix**:
@@ -846,3 +846,8 @@ npm install @radix-ui/react-{primitive-name}
 ---
 
 **Remember**: Radix gives you **behavior**, you give it **beauty**. Accessibility is built-in, customization is unlimited.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

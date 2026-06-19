@@ -14,7 +14,6 @@ license: MIT
 > The best code is code you didn't write. The best PR is the smallest PR.
 
 ## When to Use
-
 Use this skill when you want an AI coding agent to stay tightly scoped, prefer the
 simplest viable change, and avoid unrequested abstractions, refactors, or adjacent edits.
 
@@ -265,3 +264,8 @@ Install both for the best results. PUA sets the floor (don't slack), Moyu sets t
 - User explicitly asks for "add documentation"
 
 When the user explicitly asks, go ahead and deliver fully. Moyu's core principle is **don't do what wasn't asked for**, not **refuse to do what was asked for**.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

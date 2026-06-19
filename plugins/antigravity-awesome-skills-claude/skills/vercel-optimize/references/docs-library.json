@@ -1,0 +1,683 @@
+{
+  "$schema": "Curated documentation allow-list for the vercel-optimize skill. Entries are version-aware via applicableFrameworks (semver). The recommender prompt receives only the subset valid for the user's stack. Citations outside this allow-list are stripped by the unknown-citation sanitizer.",
+  "version": "1.1.1",
+  "lastVerified": "2026-05-26",
+  "schemaVersion": "1.0",
+  "applicableFrameworksSyntax": "Semver-style. '*' = any framework. 'next@*' = any Next.js. 'next@14' = Next 14.x. 'next@>=15.0.0' = Next 15+. Multiple via '||': 'next@14 || next@>=15.0.0'.",
+  "urls": [
+    {
+      "url": "https://vercel.com/docs/caching/cdn-cache",
+      "topic": "Vercel CDN Cache — cacheable response criteria, static file caching, dynamic response caching, and cache limits",
+      "appliesTo": ["uncached_route", "cache_header_gap"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/headers/request-headers",
+      "topic": "Vercel request headers — documented geolocation header names including country, country-region, city, latitude, longitude, timezone, and postal code",
+      "appliesTo": ["uncached_route", "cache_header_gap"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/caching/cache-control-headers",
+      "topic": "Cache-Control headers on Vercel — s-maxage, CDN-Cache-Control, Vercel-CDN-Cache-Control, stale-while-revalidate",
+      "appliesTo": ["uncached_route", "cache_header_gap"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/caching/runtime-cache",
+      "topic": "Runtime Cache — reuse repeated API, database, and expensive computation results from Vercel Functions",
+      "appliesTo": ["slow_route", "external_api_slow"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/fluid-compute",
+      "topic": "Fluid Compute — reduced cold starts, active CPU pricing, function instance reuse, memory right-sizing",
+      "appliesTo": ["cold_start", "platform_fluid_compute", "slow_route", "oversized_memory"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/configuring-functions/memory",
+      "topic": "Function memory configuration — Standard 2GB / Performance 4GB tiers, when to upgrade Performance, account-level setting",
+      "appliesTo": ["platform_fluid_compute"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/speed-insights",
+      "topic": "Vercel Speed Insights — LCP, INP, CLS, TTFB, FCP, FID on real-user traffic",
+      "appliesTo": ["cwv_poor"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://web.dev/articles/vitals",
+      "topic": "Core Web Vitals — LCP < 2500ms, INP < 200ms, CLS < 0.1 thresholds",
+      "appliesTo": ["cwv_poor"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://web.dev/articles/optimize-lcp",
+      "topic": "Optimize LCP — preload critical images, defer non-critical CSS, reduce server response",
+      "appliesTo": ["cwv_poor"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://web.dev/articles/optimize-inp",
+      "topic": "Optimize INP — break up long tasks, defer non-essential JavaScript",
+      "appliesTo": ["cwv_poor"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://web.dev/articles/optimize-cls",
+      "topic": "Optimize CLS — reserve space for images, fonts, ads; avoid layout-affecting injections",
+      "appliesTo": ["cwv_poor"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/vercel-firewall/vercel-waf/managed-rulesets",
+      "topic": "Vercel WAF managed rulesets — managed bot and AI-bot actions by ruleset",
+      "appliesTo": ["platform_bot_protection", "uncached_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/vercel-firewall/vercel-waf/custom-rules",
+      "topic": "Vercel WAF custom rules — log, deny, challenge, bypass, redirect, and persistent actions",
+      "appliesTo": ["platform_bot_protection", "uncached_route", "middleware_heavy"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions",
+      "topic": "Vercel Functions lifecycle — regions, memory, max duration, runtimes",
+      "appliesTo": ["slow_route", "cold_start", "route_errors"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/debug-slow-functions",
+      "topic": "Debugging slow functions — isolate external latency, cold starts, bundle size, initialization, memory, and connection pooling",
+      "appliesTo": ["slow_route", "cold_start", "external_api_slow"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/functions-api-reference/vercel-functions-package",
+      "topic": "@vercel/functions helpers — waitUntil for post-response work and attachDatabasePool for pool lifecycle",
+      "appliesTo": ["slow_route", "cold_start", "external_api_slow", "route_errors"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/limitations",
+      "topic": "Vercel Functions limits — duration, payload, runtime, and invocation constraints",
+      "appliesTo": ["cold_start", "route_errors", "slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/runtimes",
+      "topic": "Runtime selection — node, python, ruby, go (edge runtime deprecated per 2026 platform notes)",
+      "appliesTo": ["cold_start", "slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/incremental-static-regeneration",
+      "topic": "Incremental Static Regeneration — reads vs writes, revalidate timing, on-demand revalidation",
+      "appliesTo": ["isr_overrevalidation", "uncached_route"],
+      "applicableFrameworks": ["next@*", "sveltekit@*", "astro@*", "nuxt@*"]
+    },
+    {
+      "url": "https://vercel.com/docs/image-optimization",
+      "topic": "Image Optimization on Vercel — supported formats, transformations, billing",
+      "appliesTo": ["image_optimization"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/image-optimization/managing-image-optimization-costs",
+      "topic": "Managing Image Optimization usage and costs — reduce unnecessary transformations and cache misses",
+      "appliesTo": ["image_optimization"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/image-optimization/limits-and-pricing",
+      "topic": "Image Optimization limits and pricing — source format, dimensions, transformed image size, and billing dimensions",
+      "appliesTo": ["image_optimization"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/observability/observability-plus",
+      "topic": "Observability Plus — path-level metrics, p75 sort, and retention",
+      "appliesTo": ["platform_fluid_compute", "observability_events_attribution"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/monorepos",
+      "topic": "Monorepos — skip unaffected projects and ignored build step tradeoffs",
+      "appliesTo": ["build_minutes_fanout"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/builds",
+      "topic": "Builds — build infrastructure, monorepo build controls, concurrency, and queues",
+      "appliesTo": ["build_minutes_fanout"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://turborepo.dev/docs/crafting-your-repository/caching",
+      "topic": "Turborepo caching — task-level cache config, force flags, remote cache",
+      "appliesTo": ["build_minutes_fanout"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/regions",
+      "topic": "Vercel Functions regions — single vs multi-region, defaults, latency tradeoffs",
+      "appliesTo": ["region_misconfig"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/configuring-functions/region",
+      "topic": "Configuring function region — vercel.json regions, segment-level preferredRegion",
+      "appliesTo": ["region_misconfig"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/alerts",
+      "topic": "Alerts — per-metric alerting on routes/status/usage with supported destinations",
+      "appliesTo": ["observability_events_attribution", "usage_spike_triage"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/spend-management",
+      "topic": "Spend Management — usage thresholds, notifications, and project pause behavior",
+      "appliesTo": ["usage_spike_triage"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/cli/metrics",
+      "topic": "vercel metrics CLI — schema, query construction, OData filters",
+      "appliesTo": [],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/cli/usage",
+      "topic": "vercel usage CLI — billing line items, breakdown, effectiveCost vs billedCost",
+      "appliesTo": [],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/cli/inspect",
+      "topic": "vercel inspect — view a deployment's build logs, region, runtime, commit, creator",
+      "appliesTo": ["route_errors"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/manage-cdn-usage",
+      "topic": "Vercel Edge Network bandwidth — Fast Data Transfer, included quotas, overage pricing",
+      "appliesTo": ["large_static_asset", "uncached_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/runtimes/edge-runtime",
+      "topic": "Vercel Edge Runtime — supported APIs, constraints, incompatible modules (node:* builtins, native deps)",
+      "appliesTo": ["edge_heavy_import", "cold_start"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/bot-management",
+      "topic": "Vercel Bot Protection — enabling, false-positive handling, billing implications",
+      "appliesTo": ["platform_bot_protection"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/botid",
+      "topic": "BotID — invisible challenge, Basic and Deep Analysis modes, checkBotId, observability, and billing",
+      "appliesTo": ["platform_bot_protection"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/functions/limitations",
+      "topic": "Platform limits — function payload size, max duration, regional caps",
+      "appliesTo": ["route_errors", "slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/project-configuration",
+      "topic": "vercel.json configuration — functions, crons, rewrites, redirects, headers, regions",
+      "appliesTo": ["uncached_route", "cache_header_gap"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/routing/",
+      "topic": "Vercel routing — firewall, bulk redirects, project routes, deployment routes, middleware, and filesystem order",
+      "appliesTo": ["uncached_route", "middleware_heavy", "cache_header_gap"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/redirects/bulk-redirects/",
+      "topic": "Bulk Redirects — framework-agnostic large redirect tables processed before project routes",
+      "appliesTo": ["uncached_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/routing-middleware",
+      "topic": "Vercel Routing Middleware — intercept requests before rendering and keep matcher scope intentional",
+      "appliesTo": ["middleware_heavy"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/workflow",
+      "topic": "Vercel Workflow — beta durable workflows, observability, Workflow Steps/Storage pricing, and compute billing caveats",
+      "appliesTo": ["route_errors", "slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://workflow-sdk.dev/docs/foundations/starting-workflows",
+      "topic": "Workflow SDK starting workflows — start() returns after enqueueing, returnValue waits for completion, streams/status can be read later",
+      "appliesTo": ["route_errors", "slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://workflow-sdk.dev/docs/foundations/workflows-and-steps",
+      "topic": "Workflow SDK workflows and steps — workflow orchestration, step execution, persisted results, retries, sleep, and suspension",
+      "appliesTo": ["route_errors", "slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://workflow-sdk.dev/docs/foundations/streaming",
+      "topic": "Workflow SDK streaming — durable streams, getReadable startIndex, getWritable, lock release, stream close, and retry caveats",
+      "appliesTo": ["slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://workflow-sdk.dev/docs/ai/resumable-streams",
+      "topic": "Workflow SDK resumable streams — reconnecting AI chat streams with run IDs, stream startIndex, and tail-index headers",
+      "appliesTo": ["slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/queues",
+      "topic": "Vercel Queues — asynchronous task queues for background work decoupled from the request path",
+      "appliesTo": ["route_errors"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://vercel.com/docs/concepts/edge-network/regions",
+      "topic": "Vercel function regions — single-region default, multi-region, db proximity",
+      "appliesTo": ["slow_route"],
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config",
+      "topic": "App Router route segment config — dynamic, revalidate, runtime, fetchCache, dynamicParams",
+      "appliesTo": ["uncached_route", "rendering_candidate", "force-dynamic"],
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/file-conventions/route",
+      "topic": "Route Handlers — GET handler caching defaults, route segment config, and request handling",
+      "appliesTo": ["uncached_route", "cache_header_gap"],
+      "applicableFrameworks": ["next@>=13.2.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/image-response",
+      "topic": "ImageResponse — dynamic OG image response options including status and headers",
+      "appliesTo": ["uncached_route", "cache_header_gap"],
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/generate-static-params",
+      "topic": "generateStaticParams — pre-render dynamic routes at build time",
+      "appliesTo": ["uncached_route", "rendering_candidate"],
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/fetch",
+      "topic": "Next.js fetch — server-side cache and next.revalidate semantics for App Router data requests",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "cache_header_gap"],
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/unstable_cache",
+      "topic": "unstable_cache — Next.js 14/15 cache primitive (replaced in 16 by 'use cache')",
+      "appliesTo": ["uncached_route", "function-duration"],
+      "applicableFrameworks": ["next@14 || next@15"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/directives/use-cache",
+      "topic": "'use cache' directive — opt-in persistent cache (15+)",
+      "appliesTo": ["uncached_route", "function-duration"],
+      "applicableFrameworks": ["next@>=15.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/directives/use-cache-remote",
+      "topic": "'use cache: remote' directive — remote cache storage for shared cached data with Cache Components",
+      "appliesTo": ["external_api_slow"],
+      "applicableFrameworks": ["next@>=16.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/cacheLife",
+      "topic": "cacheLife() — TTL annotation for 'use cache' segments",
+      "appliesTo": ["uncached_route", "isr_overrevalidation"],
+      "applicableFrameworks": ["next@>=15.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/cacheTag",
+      "topic": "cacheTag() — tag-based invalidation for 'use cache'",
+      "appliesTo": ["uncached_route", "isr_overrevalidation"],
+      "applicableFrameworks": ["next@>=15.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/revalidateTag",
+      "topic": "revalidateTag — on-demand invalidation by tag",
+      "appliesTo": ["isr_overrevalidation"],
+      "applicableFrameworks": ["next@>=13.4.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/revalidatePath",
+      "topic": "revalidatePath — on-demand invalidation by route",
+      "appliesTo": ["isr_overrevalidation"],
+      "applicableFrameworks": ["next@>=13.4.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/functions/after",
+      "topic": "after() — non-blocking work post-response (15+)",
+      "appliesTo": ["function-duration", "slow_route"],
+      "applicableFrameworks": ["next@>=15.0.0"]
+    },
+    {
+      "url": "https://react.dev/reference/react/cache",
+      "topic": "React cache() — per-request memoization in Server Components",
+      "appliesTo": ["function-duration", "slow_route"],
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/components/image",
+      "topic": "next/image component — formats, sizes, priority, lazy loading",
+      "appliesTo": ["image_optimization", "cwv_poor"],
+      "applicableFrameworks": ["next@*"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/components/font",
+      "topic": "next/font — self-hosted fonts, no CLS, build-time optimization",
+      "appliesTo": ["bundle_candidate", "cwv_poor"],
+      "applicableFrameworks": ["next@>=13.2.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/components/script",
+      "topic": "next/script component — loading strategies for third-party scripts and App Router worker caveats",
+      "appliesTo": ["cwv_poor"],
+      "applicableFrameworks": ["next@*"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/guides/lazy-loading",
+      "topic": "next/dynamic — lazy-load heavy client components, SSR opt-out",
+      "appliesTo": ["bundle_candidate", "slow_route", "cwv_poor"],
+      "applicableFrameworks": ["next@*"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/building-your-application/caching",
+      "topic": "Next.js App Router caching model — full-route cache, data cache, request memoization",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "function-duration"],
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents",
+      "topic": "cacheComponents flag — explicit caching model for App Router prerendering and data access",
+      "appliesTo": ["rendering_candidate", "uncached_route"],
+      "applicableFrameworks": ["next@>=16.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/getting-started/caching",
+      "topic": "Cache Components caching guide — static shell, cached dynamic content, runtime dynamic content",
+      "appliesTo": ["rendering_candidate", "uncached_route"],
+      "applicableFrameworks": ["next@>=16.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/guides/migrating-to-cache-components",
+      "topic": "Migrating to Cache Components — route segment config replacements and static shell migration",
+      "appliesTo": ["rendering_candidate", "uncached_route"],
+      "applicableFrameworks": ["next@>=16.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/building-your-application/routing/middleware",
+      "topic": "Next.js middleware — matcher config, runtime, request modification",
+      "appliesTo": ["middleware-broad-matcher", "platform_bot_protection", "middleware_heavy"],
+      "applicableFrameworks": ["next@>=12.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/building-your-application/rendering/partial-prerendering",
+      "topic": "Partial Prerendering (PPR) — combine static shell + dynamic streaming (15+ experimental, stable later)",
+      "appliesTo": ["rendering_candidate", "slow_route"],
+      "applicableFrameworks": ["next@>=15.0.0"]
+    },
+    {
+      "url": "https://nextjs.org/docs/app/building-your-application/optimizing/bundle-analyzer",
+      "topic": "@next/bundle-analyzer — diagnose oversized client bundles",
+      "appliesTo": ["bundle_candidate"],
+      "applicableFrameworks": ["next@*"]
+    },
+    {
+      "url": "https://vercel.com/docs/frameworks/full-stack/sveltekit",
+      "topic": "SvelteKit on Vercel — adapter config, ISR, split function bundling, regions, and runtime settings",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "cold_start", "slow_route"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://svelte.dev/docs/kit/adapter-vercel",
+      "topic": "SvelteKit adapter-vercel — ISR, split, regions, max duration, and image config",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "cold_start", "slow_route"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://svelte.dev/docs/kit/page-options",
+      "topic": "SvelteKit page options — prerender, SSR, CSR, and server route prerendering",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "rendering_candidate"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/adapter-vercel",
+      "topic": "SvelteKit Vercel adapter — runtime, isr, split, regions, maxDuration config",
+      "appliesTo": ["slow_route", "cold_start", "uncached_route"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/page-options",
+      "topic": "SvelteKit page options — prerender, ssr, csr",
+      "appliesTo": ["rendering_candidate", "uncached_route"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/load",
+      "topic": "SvelteKit load functions — server-side data loading patterns, parallel loads",
+      "appliesTo": ["slow_route", "function-duration"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/routing",
+      "topic": "SvelteKit routing — +page.svelte, +page.server.ts, +server.ts route handlers, +layout.svelte",
+      "appliesTo": ["slow_route", "uncached_route", "rendering_candidate"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/hooks",
+      "topic": "SvelteKit hooks — handle (request middleware), handleFetch (per-fetch interception), handleError",
+      "appliesTo": ["middleware_heavy", "uncached_route", "route_errors"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/form-actions",
+      "topic": "SvelteKit form actions — server-side form handling without separate API endpoints",
+      "appliesTo": ["slow_route", "uncached_route"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/state-management",
+      "topic": "SvelteKit state management — request-scoped state, locals, avoiding cross-request leakage",
+      "appliesTo": ["slow_route", "route_errors"],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/cli",
+      "topic": "SvelteKit CLI — build, preview, sync. Use `vite build` for production output that adapter-vercel consumes.",
+      "appliesTo": [],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://kit.svelte.dev/docs/migrating",
+      "topic": "SvelteKit migration guides — for users on older majors who may not have ISR / per-route prerender",
+      "appliesTo": [],
+      "applicableFrameworks": ["sveltekit@*"]
+    },
+    {
+      "url": "https://docs.astro.build/en/guides/integrations-guide/vercel/",
+      "topic": "Astro Vercel adapter — ISR, image services, edge middleware, runtime config",
+      "appliesTo": ["slow_route", "cold_start", "uncached_route", "isr_overrevalidation", "rendering_candidate", "middleware_heavy"],
+      "applicableFrameworks": ["astro@*"]
+    },
+    {
+      "url": "https://vercel.com/docs/frameworks/frontend/astro",
+      "topic": "Astro on Vercel — output modes, ISR, edge middleware, and image optimization",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "rendering_candidate", "middleware_heavy", "image_optimization"],
+      "applicableFrameworks": ["astro@*"]
+    },
+    {
+      "url": "https://docs.astro.build/en/guides/on-demand-rendering/",
+      "topic": "Astro on-demand rendering — output server mode and per-route prerender controls",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "rendering_candidate"],
+      "applicableFrameworks": ["astro@*"]
+    },
+    {
+      "url": "https://docs.astro.build/en/reference/configuration-reference/",
+      "topic": "Astro configuration — output mode (static/server/hybrid), prerender, integrations",
+      "appliesTo": ["rendering_candidate", "uncached_route"],
+      "applicableFrameworks": ["astro@*"]
+    },
+    {
+      "url": "https://docs.astro.build/en/guides/server-side-rendering/",
+      "topic": "Astro SSR — hybrid mode, prerender export, dynamic routes",
+      "appliesTo": ["slow_route", "uncached_route", "rendering_candidate"],
+      "applicableFrameworks": ["astro@*"]
+    },
+    {
+      "url": "https://nuxt.com/docs/getting-started/deployment#vercel",
+      "topic": "Nuxt on Vercel — deployment, runtime configuration, ISR support",
+      "appliesTo": ["slow_route", "cold_start", "uncached_route"],
+      "applicableFrameworks": ["nuxt@*"]
+    },
+    {
+      "url": "https://vercel.com/docs/frameworks/full-stack/nuxt",
+      "topic": "Nuxt on Vercel — routeRules ISR, Vercel cache integration, deployment, and runtime configuration",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "slow_route", "cold_start"],
+      "applicableFrameworks": ["nuxt@>=3.0.0"]
+    },
+    {
+      "url": "https://nuxt.com/docs/api/composables/use-fetch",
+      "topic": "Nuxt useFetch / useAsyncData — automatic deduplication, parallel data loads, cache options",
+      "appliesTo": ["slow_route", "function-duration"],
+      "applicableFrameworks": ["nuxt@*"]
+    },
+    {
+      "url": "https://nuxt.com/docs/4.x/api/utils/define-route-rules",
+      "topic": "Nuxt defineRouteRules — per-route prerender, ISR, SWR, headers, and rendering controls",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "rendering_candidate"],
+      "applicableFrameworks": ["nuxt@>=3.0.0"]
+    },
+    {
+      "url": "https://nuxt.com/docs/4.x/guide/concepts/rendering",
+      "topic": "Nuxt rendering modes — universal rendering, routeRules, prerendering, and hybrid rendering",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "rendering_candidate"],
+      "applicableFrameworks": ["nuxt@>=3.0.0"]
+    },
+    {
+      "url": "https://nuxt.com/docs/api/utils/define-route-rules",
+      "topic": "Nuxt route rules — per-route SSR/SSG/ISR/swr/cache config in nuxt.config.ts",
+      "appliesTo": ["uncached_route", "isr_overrevalidation", "rendering_candidate"],
+      "applicableFrameworks": ["nuxt@*"]
+    },
+    {
+      "url": "https://docs.astro.build/en/guides/integrations-guide/vercel/",
+      "topic": "Astro Vercel adapter — SSR, ISR, image optimization on Vercel",
+      "appliesTo": ["slow_route", "image_optimization"],
+      "applicableFrameworks": ["astro@*"]
+    },
+    {
+      "url": "https://nuxt.com/docs/getting-started/deployment#vercel",
+      "topic": "Nuxt on Vercel — Nitro preset, ISR, caching headers",
+      "appliesTo": ["uncached_route", "rendering_candidate"],
+      "applicableFrameworks": ["nuxt@*"]
+    }
+  ],
+  "ruleSkillRefs": [
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "async-parallel",
+      "topic": "Promise.all for independent awaits",
+      "applicableFrameworks": ["next@*", "react@*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "async-suspense-boundaries",
+      "topic": "Suspense for streaming content",
+      "applicableFrameworks": ["next@>=13.0.0", "react@>=18.0.0"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "bundle-barrel-imports",
+      "topic": "Avoid barrel files, prefer direct imports",
+      "applicableFrameworks": ["next@*", "react@*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "bundle-dynamic-imports",
+      "topic": "next/dynamic for heavy components",
+      "applicableFrameworks": ["next@*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "bundle-defer-third-party",
+      "topic": "Defer analytics/logging scripts post-hydration",
+      "applicableFrameworks": ["next@*", "react@*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "server-cache-react",
+      "topic": "React.cache() for request deduplication",
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "server-cache-lru",
+      "topic": "LRU for cross-request caching",
+      "applicableFrameworks": ["next@*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "server-after-nonblocking",
+      "topic": "after() for non-blocking work post-response",
+      "applicableFrameworks": ["next@>=15.0.0"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "server-parallel-fetching",
+      "topic": "Restructure server components for parallel fetches",
+      "applicableFrameworks": ["next@>=13.0.0"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "server-hoist-static-io",
+      "topic": "Hoist static I/O (fonts, logos) to module level",
+      "applicableFrameworks": ["next@*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "client-swr-dedup",
+      "topic": "SWR for client-side request deduplication",
+      "applicableFrameworks": ["next@*", "react@*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "rendering-content-visibility",
+      "topic": "content-visibility for long lists",
+      "applicableFrameworks": ["*"]
+    },
+    {
+      "skill": "vercel-react-best-practices",
+      "rule": "rendering-resource-hints",
+      "topic": "React DOM resource hints for preloading",
+      "applicableFrameworks": ["next@*", "react@*"]
+    }
+  ]
+}

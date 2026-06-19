@@ -11,6 +11,11 @@ This skill provides tools to add structured evaluation results to Hugging Face m
 - Importing benchmark scores from Artificial Analysis
 - Running custom model evaluations with vLLM or accelerate backends (lighteval/inspect-ai)
 
+## When to Use
+- You need to add structured evaluation results to a Hugging Face model card.
+- You want to import benchmark data or run custom evaluations with vLLM, lighteval, or inspect-ai.
+- You are preparing leaderboard-compatible `model-index` metadata for a model release.
+
 ## Integration with HF Ecosystem
 - **Model Cards**: Updates model-index metadata for leaderboard integration
 - **Artificial Analysis**: Direct API integration for benchmark imports
@@ -650,3 +655,8 @@ def update_model_evaluations(repo_id, readme_content):
     else:
         print(f"Error: {result.stderr}")
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

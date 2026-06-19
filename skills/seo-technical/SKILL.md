@@ -17,7 +17,6 @@ allowed-tools:
 # Technical SEO Audit
 
 ## When to Use
-
 - Use when the user wants a technical SEO review focused on crawlability, indexability, performance, or rendering.
 - Use when auditing robots.txt, canonicalization, JavaScript SEO, Core Web Vitals, or AI crawler access.
 - Use when the task is infrastructure- and implementation-oriented rather than content-focused.
@@ -173,3 +172,8 @@ If DataForSEO MCP tools are available, use `on_page_instant_pages` for real page
 | robots.txt not found | Note that no robots.txt was detected at the root domain. Recommend creating one with appropriate directives. Continue audit on remaining categories. |
 | HTTPS not configured | Flag as a critical issue. Report whether HTTP is served without redirect, mixed content exists, or SSL certificate is missing/expired. |
 | Core Web Vitals data unavailable | Note that CrUX data is not available (common for low-traffic sites). Suggest using Lighthouse lab data as a proxy and recommend increasing traffic before re-testing. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

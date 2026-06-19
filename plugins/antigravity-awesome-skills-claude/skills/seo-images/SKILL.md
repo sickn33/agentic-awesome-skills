@@ -5,7 +5,7 @@ description: >
   sizes, formats, responsive images, lazy loading, and CLS prevention. Use when
   user says "image optimization", "alt text", "image SEO", "image size",
   or "image audit".
-risk: unknown
+risk: safe
 source: "https://github.com/AgriciDaniel/claude-seo"
 date_added: "2026-03-21"
 user-invokable: true
@@ -21,7 +21,6 @@ allowed-tools:
 # Image Optimization Analysis
 
 ## When to Use
-
 - Use when auditing image SEO, alt text, file sizes, formats, or lazy loading.
 - Use when the user wants image-specific performance recommendations.
 - Use when checking media quality signals that affect both SEO and Core Web Vitals.
@@ -191,3 +190,8 @@ Sorted by file size impact (largest savings first):
 | URL unreachable | Report connection error with status code. Suggest verifying URL and checking if site requires authentication. |
 | No images found on page | Report that no `<img>` elements were detected. Suggest checking if images are loaded via JavaScript or CSS background-image. |
 | Images behind CDN or authentication | Note that image files could not be directly accessed for size analysis. Report available metadata (alt text, dimensions, format from markup) and flag inaccessible resources. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

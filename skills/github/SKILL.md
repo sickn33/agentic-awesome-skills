@@ -11,7 +11,6 @@ date_added: "2026-03-25"
 Use the `gh` CLI to interact with GitHub. Always specify `--repo owner/repo` when not in a git directory, or use URLs directly.
 
 ## When to Use
-
 - When the user asks about GitHub issues, pull requests, workflow runs, or CI failures.
 - When you need `gh issue`, `gh pr`, `gh run`, or `gh api` from the command line.
 
@@ -74,3 +73,8 @@ Most commands support `--json` for structured output.  You can use `--jq` to fil
 ```bash
 gh issue list --repo owner/repo --json number,title --jq '.[] | "\(.number): \(.title)"'
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

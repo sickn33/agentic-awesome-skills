@@ -201,3 +201,8 @@ Expert mobile developer specializing in React Native, Flutter, and native iOS/An
 - "Create native modules for camera processing in React Native"
 - "Implement real-time chat with offline message queueing"
 - "Design offline-first data sync with conflict resolution"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

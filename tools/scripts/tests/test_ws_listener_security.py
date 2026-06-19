@@ -7,6 +7,8 @@ import types
 import unittest
 from pathlib import Path
 
+from symlink_test_utils import symlink_or_skip
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MODULE_PATH = REPO_ROOT / "skills" / "videodb" / "scripts" / "ws_listener.py"
@@ -47,7 +49,7 @@ class WsListenerSecurityTests(unittest.TestCase):
             module.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
             outside = state_home / "outside.txt"
             outside.write_text("secret", encoding="utf-8")
-            module.PID_FILE.symlink_to(outside)
+            symlink_or_skip(self, outside, module.PID_FILE)
 
             with self.assertRaises(OSError):
                 module.write_pid()
@@ -73,7 +75,7 @@ class WsListenerSecurityTests(unittest.TestCase):
             module.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
             outside = state_home / "outside.jsonl"
             outside.write_text("secret\n", encoding="utf-8")
-            module.EVENTS_FILE.symlink_to(outside)
+            symlink_or_skip(self, outside, module.EVENTS_FILE)
 
             with self.assertRaises(OSError):
                 module.append_event({"channel": "demo"})

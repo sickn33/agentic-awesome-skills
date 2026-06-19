@@ -1,11 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
+const fs = require('fs');
+const path = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const require = createRequire(import.meta.url);
 const { findProjectRoot } = require('../lib/project-root');
 const { resolveSafeRealPath } = require('../lib/symlink-safety');
 
@@ -19,6 +14,10 @@ function copyFolderSync(from, to, rootDir = from) {
     if (!fs.existsSync(to)) fs.mkdirSync(to, { recursive: true });
 
     fs.readdirSync(from).forEach(element => {
+        if (element.startsWith('.')) {
+            return;
+        }
+
         const srcPath = path.join(from, element);
         const destPath = path.join(to, element);
         const stat = fs.lstatSync(srcPath);
@@ -40,12 +39,26 @@ function copyFolderSync(from, to, rootDir = from) {
     });
 }
 
-function copyIndexFiles(sourceIndex, destIndex, destBackupIndex) {
-    console.log(`Copying ${sourceIndex} -> ${destIndex}...`);
-    fs.copyFileSync(sourceIndex, destIndex);
+function copyIndexFiles(sourceIndex, destIndex, destBackupIndex, publicRoot = path.dirname(destIndex)) {
+    copyIndexFile(sourceIndex, destIndex, publicRoot);
+    copyIndexFile(sourceIndex, destBackupIndex, publicRoot);
+}
 
-    console.log(`Copying ${sourceIndex} -> ${destBackupIndex}...`);
-    fs.copyFileSync(sourceIndex, destBackupIndex);
+function copyIndexFile(sourceIndex, destinationIndex, publicRoot = path.dirname(destinationIndex)) {
+    if (fs.existsSync(destinationIndex) && fs.lstatSync(destinationIndex).isSymbolicLink()) {
+        throw new Error(`Refusing to copy index through symlink: ${destinationIndex}`);
+    }
+
+    const destinationParent = path.dirname(destinationIndex);
+    const resolvedPublicRoot = fs.realpathSync(publicRoot);
+    const resolvedDestinationParent = fs.realpathSync(destinationParent);
+    const relativeParent = path.relative(resolvedPublicRoot, resolvedDestinationParent);
+    if (relativeParent.startsWith('..') || path.isAbsolute(relativeParent)) {
+        throw new Error(`Refusing to copy index outside web public directory: ${destinationIndex}`);
+    }
+
+    console.log(`Copying ${sourceIndex} -> ${destinationIndex}...`);
+    fs.copyFileSync(sourceIndex, destinationIndex);
 }
 
 function main() {
@@ -56,7 +69,7 @@ function main() {
     const sourceIndex = path.join(ROOT_DIR, 'skills_index.json');
     const destIndex = path.join(WEB_APP_PUBLIC, 'skills.json');
     const destBackupIndex = path.join(WEB_APP_PUBLIC, 'skills.json.backup');
-    copyIndexFiles(sourceIndex, destIndex, destBackupIndex);
+    copyIndexFiles(sourceIndex, destIndex, destBackupIndex, WEB_APP_PUBLIC);
 
     const sourceSkills = path.join(ROOT_DIR, 'skills');
     const destSkills = path.join(WEB_APP_PUBLIC, 'skills');
@@ -73,8 +86,8 @@ function main() {
     console.log('✅ Web app assets setup complete!');
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (require.main === module) {
     main();
 }
 
-export { copyFolderSync, copyIndexFiles, main };
+module.exports = { copyFolderSync, copyIndexFile, copyIndexFiles, main };

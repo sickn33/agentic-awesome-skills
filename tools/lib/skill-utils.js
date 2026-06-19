@@ -137,28 +137,34 @@ function readSkill(skillDir, skillId) {
   if (Array.isArray(data.tags)) {
     tags = data.tags.map(tag => String(tag).trim());
   } else if (typeof data.tags === 'string' && data.tags.trim()) {
-    const parts = data.tags.includes(',')
-      ? data.tags.split(',')
-      : data.tags.split(/\s+/);
+    const inlineTags = parseInlineList(data.tags);
+    const parts = inlineTags.length > 0
+      ? inlineTags
+      : (data.tags.includes(',') ? data.tags.split(',') : data.tags.split(/\s+/));
     tags = parts.map(tag => tag.trim());
   } else if (isPlainObject(data.metadata) && data.metadata.tags) {
     const rawTags = data.metadata.tags;
     if (Array.isArray(rawTags)) {
       tags = rawTags.map(tag => String(tag).trim());
     } else if (typeof rawTags === 'string' && rawTags.trim()) {
-      const parts = rawTags.includes(',')
-        ? rawTags.split(',')
-        : rawTags.split(/\s+/);
+      const inlineTags = parseInlineList(rawTags);
+      const parts = inlineTags.length > 0
+        ? inlineTags
+        : (rawTags.includes(',') ? rawTags.split(',') : rawTags.split(/\s+/));
       tags = parts.map(tag => tag.trim());
     }
   }
 
   tags = tags.filter(Boolean);
+  const category = typeof data.category === 'string' ? data.category.trim() : '';
+  const risk = typeof data.risk === 'string' ? data.risk.trim() : '';
 
   return {
     id: skillId,
     name,
     description,
+    category,
+    risk,
     tags,
     path: skillPath,
     content,
@@ -198,7 +204,7 @@ function listSkillIdsRecursive(skillsDir, baseDir = skillsDir, acc = []) {
       if (!isSafeDirectory(dirPath)) continue;
 
       const skillPath = path.join(dirPath, 'SKILL.md');
-      const relPath = path.relative(skillsDir, dirPath);
+      const relPath = path.relative(skillsDir, dirPath).split(path.sep).join('/');
       if (isSafeSkillFile(skillPath)) {
         acc.push(relPath);
       }

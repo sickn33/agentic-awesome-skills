@@ -1,7 +1,7 @@
 ---
 name: azure-communication-sms-java
 description: "Send SMS messages with Azure Communication Services SMS Java SDK. Use when implementing SMS notifications, alerts, OTP delivery, bulk messaging, or delivery reports."
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---
@@ -277,3 +277,8 @@ SMS_FROM_NUMBER=+14255550100
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

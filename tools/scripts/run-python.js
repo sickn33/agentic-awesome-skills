@@ -5,6 +5,10 @@
 const { spawn, spawnSync } = require('node:child_process');
 
 const args = process.argv.slice(2);
+const PYTHON_ENV = {
+  ...process.env,
+  PYTHONDONTWRITEBYTECODE: process.env.PYTHONDONTWRITEBYTECODE || '1',
+};
 
 if (args.length === 0) {
   console.error('Usage: node tools/scripts/run-python.js <script.py> [args...]');
@@ -47,6 +51,7 @@ function canRun(candidate) {
     command,
     [...baseArgs, '-c', 'import sys; raise SystemExit(0 if sys.version_info[0] == 3 else 1)'],
     {
+      env: PYTHON_ENV,
       stdio: 'ignore',
       shell: false,
     },
@@ -67,6 +72,7 @@ if (!selected) {
 
 const [command, ...baseArgs] = selected;
 const child = spawn(command, [...baseArgs, ...args], {
+  env: PYTHON_ENV,
   stdio: 'inherit',
   shell: false,
 });

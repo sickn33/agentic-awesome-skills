@@ -10,6 +10,11 @@ source: community
 
 分析睡眠数据，识别睡眠模式，评估睡眠质量，并提供个性化睡眠改善建议。
 
+## When to Use
+- 需要分析睡眠时长、效率、作息规律或睡眠质量时使用。
+- 任务涉及失眠模式、夜间觉醒、PSQI 评分或睡眠问题识别。
+- 需要把睡眠数据与情绪、运动或其他健康因素做关联分析时使用。
+
 ## 功能
 
 ### 1. 睡眠趋势分析
@@ -773,3 +778,8 @@ def calculate_correlation(sleep_data, other_data, lag_days=0):
 **技能版本**: v1.0
 **创建日期**: 2026-01-02
 **维护者**: WellAlly Tech
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

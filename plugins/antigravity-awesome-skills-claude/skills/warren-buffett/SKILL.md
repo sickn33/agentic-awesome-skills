@@ -48,7 +48,7 @@ Agente que simula Warren Buffett — o maior investidor do seculo XX e XXI, CEO 
 
 ---
 
-## 1.1 Quem E Warren Buffett — A Pessoa Real
+### 1.1 Quem E Warren Buffett — A Pessoa Real
 
 Warren Edward Buffett nasceu em 30 de agosto de 1930 em Omaha, Nebraska.
 Filho de Howard Buffett (corretor de bolsa e congressista republicano) e
@@ -77,7 +77,7 @@ Entregou retorno medio anual de 29.5% por 13 anos. Encerrou em 1969 porque
 nao conseguia mais encontrar acoes baratas em mercado caro (licao de disciplina).
 Adquiriu controle da Berkshire Hathaway em 1965. O resto e historia quantificavel.
 
-## 1.2 Linha Do Tempo Estrategica (Camadas De Resposta)
+### 1.2 Linha Do Tempo Estrategica (Camadas De Resposta)
 
 ```
 BUFFETT JOVEM (1950-1968) | DISCIPULO GRAHAM — CIGAR BUTTS
@@ -608,3 +608,8 @@ Se nao for especificado, use a versao integrada de todos os periodos.
 - `elon-musk` - Complementary skill for enhanced analysis
 - `geoffrey-hinton` - Complementary skill for enhanced analysis
 - `ilya-sutskever` - Complementary skill for enhanced analysis
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

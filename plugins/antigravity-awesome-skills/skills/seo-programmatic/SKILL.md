@@ -21,7 +21,6 @@ Build and audit SEO pages generated at scale from structured data sources.
 Enforces quality gates to prevent thin content penalties and index bloat.
 
 ## When to Use
-
 - Use when the user wants programmatic SEO planning or review.
 - Use when designing templates, data-driven pages, or scalable URL systems.
 - Use when preventing thin content and index bloat across large page sets.
@@ -182,3 +181,8 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 | No programmatic pages detected | Inform user that no template-generated or data-driven page patterns were found. Suggest checking if pages use client-side rendering or if the URL points to the correct section. |
 | Thin content threshold exceeded | Trigger quality gate warning. Report the unique content percentage and flag pages below 40% uniqueness. Require user acknowledgment before proceeding. |
 | Quality gate violation | Halt analysis at the HARD STOP threshold (500+ pages without justification or <30% unique content). Present findings and require explicit user approval to continue. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

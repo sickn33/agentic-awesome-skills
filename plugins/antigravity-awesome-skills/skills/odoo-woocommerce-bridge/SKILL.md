@@ -43,19 +43,23 @@ This skill guides you through building a reliable sync bridge between Odoo (the 
 ```python
 from woocommerce import API
 import xmlrpc.client
+import os
 
 # WooCommerce client
 wcapi = API(
-    url="https://mystore.com",
-    consumer_key="ck_xxxxxxxxxxxxx",
-    consumer_secret="cs_xxxxxxxxxxxxx",
+    url=os.getenv("WC_URL", "https://mystore.com"),
+    consumer_key=os.getenv("WC_KEY"),
+    consumer_secret=os.getenv("WC_SECRET"),
     version="wc/v3"
 )
 
 # Odoo client
-odoo_url = "https://myodoo.example.com"
-db, uid, pwd = "my_db", 2, "api_key"
+odoo_url = os.getenv("ODOO_URL", "https://myodoo.example.com")
+db = os.getenv("ODOO_DB", "my_db")
+uid = int(os.getenv("ODOO_UID", "2"))
+pwd = os.getenv("ODOO_PASSWORD")
 models = xmlrpc.client.ServerProxy(f"{odoo_url}/xmlrpc/2/object")
+
 
 def sync_orders():
     # Get unprocessed WooCommerce orders
@@ -129,3 +133,8 @@ def sync_inventory_to_woocommerce():
 - ✅ **Do:** Log all API calls and errors to a database table for debugging.
 - ❌ **Don't:** Process the same WooCommerce order twice — flag it as processed immediately after import.
 - ❌ **Don't:** Sync draft or cancelled WooCommerce orders to Odoo — filter by `status = processing` or `completed`.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

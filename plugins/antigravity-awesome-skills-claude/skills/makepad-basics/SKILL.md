@@ -19,6 +19,11 @@ You are an expert at the Rust `makepad-widgets` crate. Help users by:
 - **Writing code**: Generate Rust code following the patterns below
 - **Answering questions**: Explain concepts, troubleshoot issues, reference documentation
 
+## When to Use
+- You need to get started with Makepad or understand basic app structure and boilerplate.
+- The task involves project setup, `live_design!`, `app_main!`, or first-screen application wiring.
+- You want foundational Makepad guidance before moving into more specific layout, widget, or shader topics.
+
 ## Documentation
 
 Refer to the local files for detailed documentation:
@@ -152,3 +157,8 @@ let text = input.text();
 2. Makepad is GPU-first - all rendering is shader-based
 3. Cross-platform: same code runs on Android, iOS, Linux, macOS, Windows, Web
 4. Recommend UI Zoo example for widget exploration
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

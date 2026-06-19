@@ -315,3 +315,8 @@ sudo chroot squashfs-root /usr/bin/qemu-arm-static /bin/httpd
 4. **Analyze systematically**: Follow structured analysis workflow
 5. **Identify issues**: Security vulnerabilities and misconfigurations
 6. **Document findings**: Clear reporting with remediation guidance
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

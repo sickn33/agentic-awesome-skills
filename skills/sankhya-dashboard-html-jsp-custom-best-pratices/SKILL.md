@@ -437,3 +437,8 @@ function onGraficoClick(grupo) {
 **Variáveis internas de segurança**
 - Aproveitar variáveis de sessão para segurança em nível de linha (`CODUSU_LOG`, `CODGRU_LOG`, `CODVEN_LOG`).
 - Restringir dados por contexto do usuário antes de montar visualizações.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

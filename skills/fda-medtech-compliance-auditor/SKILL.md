@@ -60,3 +60,8 @@ Required Actions:
 - ✅ **Do:** Expect strict interpretations — the goal is to find weaknesses before a real inspector does.
 - ❌ **Don't:** Forget to link every software defect to a clinical risk item in your ISO 14971 risk file.
 - ❌ **Don't:** Assume "we tested it and it works" satisfies IEC 62304 software verification requirements.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

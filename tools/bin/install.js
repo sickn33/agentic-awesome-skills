@@ -4,11 +4,14 @@ const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
-const { resolveSafeRealPath } = require("../lib/symlink-safety");
+const { getRealPath, isPathInside, resolveSafeRealPath } = require("../lib/symlink-safety");
+const { listSkillIdsRecursive, readSkill } = require("../lib/skill-utils");
+const packageMetadata = require("../../package.json");
 
 const REPO = "https://github.com/sickn33/antigravity-awesome-skills.git";
 const HOME = process.env.HOME || process.env.USERPROFILE || "";
 const INSTALL_MANIFEST_FILE = ".antigravity-install-manifest.json";
+const DEFAULT_RELEASE_REF = packageMetadata.version ? `v${packageMetadata.version}` : null;
 
 function resolveDir(p) {
   if (!p) return null;
@@ -21,11 +24,15 @@ function parseArgs() {
   let pathArg = null;
   let versionArg = null;
   let tagArg = null;
+  let riskArg = null;
+  let categoryArg = null;
+  let tagsArg = null;
   let cursor = false,
     claude = false,
     gemini = false,
     codex = false,
     antigravity = false,
+    agy = false,
     kiro = false;
 
   for (let i = 0; i < a.length; i++) {
@@ -40,6 +47,18 @@ function parseArgs() {
     }
     if (a[i] === "--tag" && a[i + 1]) {
       tagArg = a[++i];
+      continue;
+    }
+    if (a[i] === "--risk" && a[i + 1]) {
+      riskArg = a[++i];
+      continue;
+    }
+    if (a[i] === "--category" && a[i + 1]) {
+      categoryArg = a[++i];
+      continue;
+    }
+    if (a[i] === "--tags" && a[i + 1]) {
+      tagsArg = a[++i];
       continue;
     }
     if (a[i] === "--cursor") {
@@ -62,6 +81,10 @@ function parseArgs() {
       antigravity = true;
       continue;
     }
+    if (a[i] === "--agy") {
+      agy = true;
+      continue;
+    }
     if (a[i] === "--kiro") {
       kiro = true;
       continue;
@@ -73,11 +96,15 @@ function parseArgs() {
     pathArg,
     versionArg,
     tagArg,
+    riskArg,
+    categoryArg,
+    tagsArg,
     cursor,
     claude,
     gemini,
     codex,
     antigravity,
+    agy,
     kiro,
   };
 }
@@ -107,10 +134,16 @@ function getTargets(opts) {
     targets.push({ name: "Kiro", path: path.join(HOME, ".kiro", "skills") });
   }
   if (opts.antigravity) {
-    targets.push({ name: "Antigravity", path: path.join(HOME, ".gemini", "antigravity", "skills") });
+    targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
+  }
+  if (opts.agy) {
+    targets.push({
+      name: "Antigravity CLI",
+      path: path.join(HOME, ".gemini", "antigravity-cli", "skills"),
+    });
   }
   if (targets.length === 0) {
-    targets.push({ name: "Antigravity", path: path.join(HOME, ".gemini", "antigravity", "skills") });
+    targets.push({ name: "Antigravity", path: path.join(HOME, ".agents", "skills") });
   }
   return targets;
 }
@@ -121,7 +154,7 @@ antigravity-awesome-skills — installer
 
   npx antigravity-awesome-skills [install] [options]
 
-  Clones the skills repo into your agent's skills directory.
+  Shallow-clones the skills repo into your agent's skills directory.
 
 Options:
   --cursor       Install to ~/.cursor/skills (Cursor)
@@ -129,23 +162,143 @@ Options:
   --gemini       Install to ~/.gemini/skills (Gemini CLI)
   --codex        Install to ~/.codex/skills (Codex CLI)
   --kiro         Install to ~/.kiro/skills (Kiro CLI)
-  --antigravity  Install to ~/.gemini/antigravity/skills (Antigravity)
-  --path <dir>   Install to <dir> (default: ~/.gemini/antigravity/skills)
-  --version <ver>  After clone, checkout tag v<ver> (e.g. 4.6.0 -> v4.6.0)
-  --tag <tag>      After clone, checkout this tag (e.g. v4.6.0)
+  --antigravity  Install to ~/.agents/skills (Antigravity IDE / OpenCode-style layout)
+  --agy          Install to ~/.gemini/antigravity-cli/skills (Antigravity CLI slash commands)
+  --path <dir>   Install to <dir> (default: ~/.agents/skills)
+  --risk <csv>     Install only skills matching these risk labels
+  --category <csv> Install only skills matching these categories
+  --tags <csv>     Install only skills matching these tags
+  --version <ver>  Clone tag v<ver> (e.g. 4.6.0 -> v4.6.0)
+  --tag <tag>      Clone this tag or branch (e.g. v4.6.0, main)
 
 Examples:
   npx antigravity-awesome-skills
   npx antigravity-awesome-skills --cursor
   npx antigravity-awesome-skills --kiro
   npx antigravity-awesome-skills --antigravity
+  npx antigravity-awesome-skills --agy
+  npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
+  npx antigravity-awesome-skills --path .agents/skills --tags debugging,typescript-legacy-
   npx antigravity-awesome-skills --version 4.6.0
   npx antigravity-awesome-skills --path ./my-skills
   npx antigravity-awesome-skills --claude --codex    Install to multiple targets
 `);
 }
 
-function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
+function normalizeFilterValue(value) {
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
+
+function uniqueValues(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function parseSelectorArg(raw) {
+  const include = [];
+  const exclude = [];
+
+  if (typeof raw !== "string" || !raw.trim()) {
+    return { include, exclude };
+  }
+
+  for (const token of raw.split(",")) {
+    const normalized = normalizeFilterValue(token);
+    if (!normalized) continue;
+    if (normalized.endsWith("-") && normalized.length > 1) {
+      exclude.push(normalized.slice(0, -1));
+      continue;
+    }
+    include.push(normalized);
+  }
+
+  const excludeValues = uniqueValues(exclude);
+  return {
+    include: uniqueValues(include).filter((value) => !excludeValues.includes(value)),
+    exclude: excludeValues,
+  };
+}
+
+function hasActiveSelector(selector) {
+  return selector.include.length > 0 || selector.exclude.length > 0;
+}
+
+function buildInstallSelectors(opts) {
+  return {
+    risk: parseSelectorArg(opts.riskArg),
+    category: parseSelectorArg(opts.categoryArg),
+    tags: parseSelectorArg(opts.tagsArg),
+  };
+}
+
+function hasInstallSelectors(selectors) {
+  return Object.values(selectors).some(hasActiveSelector);
+}
+
+function matchesScalarSelector(value, selector) {
+  const normalized = normalizeFilterValue(value);
+  if (normalized && selector.exclude.includes(normalized)) {
+    return false;
+  }
+  if (selector.include.length === 0) {
+    return true;
+  }
+  if (!normalized) {
+    return false;
+  }
+  return selector.include.includes(normalized);
+}
+
+function matchesArraySelector(values, selector) {
+  const normalizedValues = uniqueValues(
+    (Array.isArray(values) ? values : []).map((value) => normalizeFilterValue(value)),
+  );
+
+  if (normalizedValues.some((value) => selector.exclude.includes(value))) {
+    return false;
+  }
+  if (selector.include.length === 0) {
+    return true;
+  }
+  return normalizedValues.some((value) => selector.include.includes(value));
+}
+
+function matchesInstallSelectors(skill, selectors) {
+  return (
+    matchesScalarSelector(skill.risk, selectors.risk) &&
+    matchesScalarSelector(skill.category, selectors.category) &&
+    matchesArraySelector(skill.tags, selectors.tags)
+  );
+}
+
+function assertSafeDestinationPath(dest, destRoot) {
+  const rootPath = path.resolve(destRoot);
+  const destPath = path.resolve(dest);
+  const relative = path.relative(rootPath, destPath);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error(`Refusing destination outside install root: ${dest}`);
+  }
+
+  if (fs.existsSync(rootPath) && fs.lstatSync(rootPath).isSymbolicLink()) {
+    throw new Error(`Refusing symlinked install root: ${destRoot}`);
+  }
+
+  const realRoot = fs.existsSync(rootPath) ? getRealPath(rootPath) : rootPath;
+  let current = rootPath;
+  for (const part of relative.split(path.sep).filter(Boolean)) {
+    current = path.join(current, part);
+    if (!fs.existsSync(current)) {
+      break;
+    }
+    if (fs.lstatSync(current).isSymbolicLink()) {
+      throw new Error(`Refusing unsafe destination symlink component: ${current}`);
+    }
+    if (!isPathInside(realRoot, getRealPath(current))) {
+      throw new Error(`Refusing destination outside install root: ${current}`);
+    }
+  }
+}
+
+function copyRecursiveSync(src, dest, rootDir = src, skipGit = true, destRoot = dest) {
   const stats = fs.lstatSync(src);
   const resolvedSource = stats.isSymbolicLink()
     ? resolveSafeRealPath(rootDir, src)
@@ -157,13 +310,23 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
   }
 
   const resolvedStats = fs.statSync(resolvedSource);
+  if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
+    throw new Error(`Skipping unsafe destination symlink: ${dest}`);
+  }
+  assertSafeDestinationPath(dest, destRoot);
   if (resolvedStats.isDirectory()) {
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest, { recursive: true });
     }
     fs.readdirSync(resolvedSource).forEach((child) => {
       if (skipGit && child === ".git") return;
-      copyRecursiveSync(path.join(resolvedSource, child), path.join(dest, child), rootDir, skipGit);
+      copyRecursiveSync(
+        path.join(resolvedSource, child),
+        path.join(dest, child),
+        rootDir,
+        skipGit,
+        destRoot,
+      );
     });
   } else {
     fs.copyFileSync(resolvedSource, dest);
@@ -171,13 +334,24 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true) {
 }
 
 /** Copy contents of repo's skills/ into target so each skill is target/skill-name/ (for Claude Code etc.). */
-function getInstallEntries(tempDir) {
+function getInstallEntries(tempDir, selectors = buildInstallSelectors({})) {
   const repoSkills = path.join(tempDir, "skills");
   if (!fs.existsSync(repoSkills)) {
     console.error("Cloned repo has no skills/ directory.");
     process.exit(1);
   }
-  const entries = fs.readdirSync(repoSkills);
+
+  const skillEntries = listSkillIdsRecursive(repoSkills);
+  const filteredEntries = hasInstallSelectors(selectors)
+    ? skillEntries.filter((skillId) => matchesInstallSelectors(readSkill(repoSkills, skillId), selectors))
+    : skillEntries;
+
+  if (hasInstallSelectors(selectors) && filteredEntries.length === 0) {
+    console.error("No skills matched the requested --risk/--category/--tags filters.");
+    process.exit(1);
+  }
+
+  const entries = [...filteredEntries];
   if (fs.existsSync(path.join(tempDir, "docs"))) {
     entries.push("docs");
   }
@@ -191,18 +365,33 @@ function installSkillsIntoTarget(tempDir, target, installEntries) {
       const repoDocs = path.join(tempDir, "docs");
       const docsDest = path.join(target, "docs");
       if (!fs.existsSync(docsDest)) fs.mkdirSync(docsDest, { recursive: true });
-      copyRecursiveSync(repoDocs, docsDest, repoDocs);
+      copyRecursiveSync(repoDocs, docsDest, repoDocs, true, target);
       return;
     }
     const src = path.join(repoSkills, name);
-    const dest = path.join(target, name);
-    copyRecursiveSync(src, dest, repoSkills);
+    const destName = normalizeInstallEntry(name);
+    const dest = path.join(target, destName);
+    copyRecursiveSync(src, dest, repoSkills, true, target);
   });
 }
 
+function normalizeInstallEntry(entry) {
+  if (entry === "docs") {
+    return entry;
+  }
+  return typeof entry === "string" && entry.startsWith("skills/")
+    ? entry.slice("skills/".length)
+    : entry;
+}
+
+function getManagedEntries(installEntries, target = {}) {
+  return installEntries.map(normalizeInstallEntry);
+}
+
 function resolveManagedPath(targetPath, entry) {
+  const normalizedEntry = normalizeInstallEntry(entry);
   const resolvedTargetPath = path.resolve(targetPath);
-  const candidate = path.resolve(targetPath, entry);
+  const candidate = path.resolve(targetPath, normalizedEntry);
   const relative = path.relative(resolvedTargetPath, candidate);
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
     return null;
@@ -229,13 +418,14 @@ function readInstallManifest(targetPath) {
 
 function writeInstallManifest(targetPath, installEntries) {
   const manifestPath = path.join(targetPath, INSTALL_MANIFEST_FILE);
+  const normalizedEntries = [...new Set(installEntries.map(normalizeInstallEntry).filter(Boolean))].sort();
   fs.writeFileSync(
     manifestPath,
     JSON.stringify(
       {
         schemaVersion: 1,
         updatedAt: new Date().toISOString(),
-        entries: installEntries.slice().sort(),
+        entries: normalizedEntries,
       },
       null,
       2,
@@ -245,9 +435,10 @@ function writeInstallManifest(targetPath, installEntries) {
 }
 
 function pruneRemovedEntries(targetPath, previousEntries, installEntries) {
-  const next = new Set(installEntries);
+  const next = new Set(installEntries.map(normalizeInstallEntry));
   for (const entry of previousEntries) {
-    if (next.has(entry)) {
+    const normalizedEntry = normalizeInstallEntry(entry);
+    if (next.has(normalizedEntry)) {
       continue;
     }
     const candidate = resolveManagedPath(targetPath, entry);
@@ -255,8 +446,9 @@ function pruneRemovedEntries(targetPath, previousEntries, installEntries) {
       console.warn(`  Skipping unsafe managed entry path from manifest: ${entry}`);
       continue;
     }
+    assertSafeDestinationPath(candidate, targetPath);
     fs.rmSync(candidate, { recursive: true, force: true });
-    console.log(`  Removed stale managed entry: ${entry}`);
+    console.log(`  Removed stale managed entry: ${normalizedEntry}`);
   }
 }
 
@@ -281,30 +473,74 @@ function ensureTargetIsDirectory(targetPath) {
   process.exit(1);
 }
 
+function isSafeGitRef(ref) {
+  return (
+    typeof ref === "string" &&
+    ref.length > 0 &&
+    ref.length <= 128 &&
+    /^[A-Za-z0-9._/-]+$/.test(ref) &&
+    !ref.startsWith("-") &&
+    !ref.startsWith("/") &&
+    !ref.endsWith("/") &&
+    !ref.endsWith(".") &&
+    !ref.includes("..") &&
+    !ref.includes("//") &&
+    !ref.includes("@{") &&
+    ref !== "@" &&
+    !ref.split("/").some((part) => part.endsWith(".lock"))
+  );
+}
+
+function assertSafeGitRef(ref) {
+  if (!isSafeGitRef(ref)) {
+    throw new Error(`Unsafe git ref: ${ref}`);
+  }
+}
+
 function run(cmd, args, opts = {}) {
   const r = spawnSync(cmd, args, { stdio: "inherit", ...opts });
   if (r.status !== 0) process.exit(r.status == null ? 1 : r.status);
 }
 
-function installForTarget(tempDir, target) {
+function buildCloneArgs(repo, tempDir, ref = null) {
+  const args = ["clone", "--depth", "1"];
+  if (ref) {
+    assertSafeGitRef(ref);
+    args.push("--branch", ref);
+  }
+  args.push(repo, tempDir);
+  return args;
+}
+
+function resolveInstallRef(opts) {
+  if (opts.tagArg) {
+    return opts.tagArg;
+  }
+  if (opts.versionArg) {
+    return opts.versionArg.startsWith("v") ? opts.versionArg : `v${opts.versionArg}`;
+  }
+  return DEFAULT_RELEASE_REF;
+}
+
+function installForTarget(tempDir, target, selectors = buildInstallSelectors({})) {
   if (fs.existsSync(target.path)) {
     ensureTargetIsDirectory(target.path);
+    const targetStats = fs.lstatSync(target.path);
+    if (targetStats.isSymbolicLink()) {
+      console.error(
+        `  Refusing to migrate or update through symlinked target: ${target.path}`,
+      );
+      console.error("  Choose a real directory path, or replace the symlink manually before retrying.");
+      process.exit(1);
+    }
     const gitDir = path.join(target.path, ".git");
     if (fs.existsSync(gitDir)) {
       console.log(`  Migrating from full-repo install to skills-only layout…`);
       const backupPath = `${target.path}_backup_${Date.now()}`;
       try { 
-        const stats = fs.lstatSync(target.path);
-        const isSymlink = stats.isSymbolicLink();
-        const symlinkTarget = isSymlink ? 
-        fs.readlinkSync(target.path) : null;
         fs.renameSync(target.path, backupPath);
         console.log(`  ⚠️  Safety Backup created at: ${backupPath}`);
-        if (isSymlink) {
-          fs.symlinkSync(symlinkTarget, target.path, 'dir');
-        } else {
-          fs.mkdirSync(target.path, { recursive: true, mode: stats.mode });
-        }
+        fs.mkdirSync(target.path, { recursive: true, mode: targetStats.mode });
       } catch (err) {
         console.error(`  Migration Error: ${err.message}`);
         process.exit(1);
@@ -325,15 +561,21 @@ function installForTarget(tempDir, target) {
     fs.mkdirSync(target.path, { recursive: true });
   }
 
-  const installEntries = getInstallEntries(tempDir);
+  const installEntries = getInstallEntries(tempDir, selectors);
+  const managedEntries = getManagedEntries(installEntries, target);
   const previousEntries = readInstallManifest(target.path);
-  pruneRemovedEntries(target.path, previousEntries, installEntries);
+  pruneRemovedEntries(target.path, previousEntries, managedEntries);
   installSkillsIntoTarget(tempDir, target.path, installEntries);
-  writeInstallManifest(target.path, installEntries);
+  writeInstallManifest(target.path, managedEntries);
   console.log(`  ✓ Installed to ${target.path}`);
 }
 
-function getPostInstallMessages(targets) {
+function isOpenCodeStylePath(targetPath) {
+  const normalizedPath = path.normalize(targetPath);
+  return normalizedPath.endsWith(path.join(".agents", "skills"));
+}
+
+function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) {
   const messages = [
     "Pick a bundle in docs/users/bundles.md and use @skill-name in your AI assistant.",
   ];
@@ -343,8 +585,28 @@ function getPostInstallMessages(targets) {
       "If Antigravity hits context/truncation limits, see docs/users/agent-overload-recovery.md",
     );
     messages.push(
+      "For the agy CLI slash-command menu, install the Antigravity CLI layout with --agy.",
+    );
+    messages.push(
       "For clone-based installs, use scripts/activate-skills.sh or scripts/activate-skills.bat",
     );
+  }
+
+  if (targets.some((target) => target.name === "Antigravity CLI")) {
+    messages.push(
+      "Restart agy and type /skills or /<skill-name> to load installed Antigravity CLI skills.",
+    );
+  }
+
+  if (targets.some((target) => isOpenCodeStylePath(target.path))) {
+    const baseMessage =
+      "For Antigravity 2.0, OpenCode, or other .agents/skills installs, prefer a reduced install with --risk, --category, or --tags to avoid context overload.";
+    messages.push(baseMessage);
+    if (!hasInstallSelectors(selectors)) {
+      messages.push(
+        "Example: npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none",
+      );
+    }
   }
 
   return messages;
@@ -352,7 +614,8 @@ function getPostInstallMessages(targets) {
 
 function main() {
   const opts = parseArgs();
-  const { tagArg, versionArg } = opts;
+  const selectors = buildInstallSelectors(opts);
+  const ref = resolveInstallRef(opts);
 
   if (opts.help) {
     printHelp();
@@ -368,33 +631,21 @@ function main() {
   }
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-skills-"));
-  const originalCwd = process.cwd();
 
   try {
     console.log("Cloning repository…");
-    run("git", ["clone", REPO, tempDir]);
-
-    const ref =
-      tagArg ||
-      (versionArg
-        ? versionArg.startsWith("v")
-          ? versionArg
-          : `v${versionArg}`
-        : null);
     if (ref) {
-      console.log(`Checking out ${ref}…`);
-      process.chdir(tempDir);
-      run("git", ["checkout", ref]);
-      process.chdir(originalCwd);
+      console.log(`Cloning repository at ${ref}…`);
     }
+    run("git", buildCloneArgs(REPO, tempDir, ref));
 
     console.log(`\nInstalling for ${targets.length} target(s):`);
     for (const target of targets) {
       console.log(`\n${target.name}:`);
-      installForTarget(tempDir, target);
+      installForTarget(tempDir, target, selectors);
     }
 
-    for (const message of getPostInstallMessages(targets)) {
+    for (const message of getPostInstallMessages(targets, selectors)) {
       console.log(`\n${message}`);
     }
   } finally {
@@ -419,11 +670,20 @@ if (require.main === module) {
 module.exports = {
   copyRecursiveSync,
   getPostInstallMessages,
+  buildCloneArgs,
+  buildInstallSelectors,
   getInstallEntries,
+  getManagedEntries,
   installSkillsIntoTarget,
   installForTarget,
+  isSafeGitRef,
+  isOpenCodeStylePath,
   main,
+  matchesInstallSelectors,
+  normalizeInstallEntry,
+  parseSelectorArg,
   pruneRemovedEntries,
   readInstallManifest,
+  resolveInstallRef,
   writeInstallManifest,
 };

@@ -2,11 +2,16 @@
 from __future__ import annotations
 
 import argparse
+import errno
 import json
+import os
 import re
 import shutil
+import tempfile
+import time
+import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from _project_paths import find_repo_root
 from plugin_compatibility import build_report as build_plugin_compatibility_report
@@ -17,6 +22,7 @@ from update_readme import configure_utf8_output, load_metadata
 SAFE_SKILL_ID_RE = re.compile(
     r"^(?!.*(?:^|/)\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
 )
+SAFE_BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$")
 REPO_URL = "https://github.com/sickn33/antigravity-awesome-skills"
 AUTHOR = {
     "name": "sickn33 and contributors",
@@ -141,6 +147,10 @@ def _bundle_plugin_name(bundle_id: str) -> str:
     return f"antigravity-bundle-{bundle_id}"
 
 
+def _bundle_codex_plugin_name(bundle_id: str) -> str:
+    return f"agyb-{bundle_id}"
+
+
 def _humanize_skill_label(skill_id: str) -> str:
     tokens = re.split(r"[-_]+", skill_id.split("/")[-1])
     words = [ACRONYM_TOKENS.get(token.lower(), token.capitalize()) for token in tokens if token]
@@ -177,6 +187,11 @@ def _validate_bundle_skill_id(skill_id: str) -> None:
         raise ValueError(f"Invalid skill id in editorial bundles manifest: {skill_id!r}")
 
 
+def _validate_bundle_id(bundle_id: str) -> None:
+    if not SAFE_BUNDLE_ID_RE.fullmatch(bundle_id):
+        raise ValueError(f"Invalid editorial bundle id: {bundle_id!r}")
+
+
 def _validate_editorial_bundles(root: Path, payload: dict[str, Any]) -> list[dict[str, Any]]:
     bundles = payload.get("bundles")
     if not isinstance(bundles, list) or not bundles:
@@ -194,6 +209,7 @@ def _validate_editorial_bundles(root: Path, payload: dict[str, Any]) -> list[dic
         bundle_name = str(bundle.get("name", "")).strip()
         if not bundle_id or not bundle_name:
             raise ValueError("Each editorial bundle requires non-empty 'id' and 'name'.")
+        _validate_bundle_id(bundle_id)
         if bundle_id in seen_bundle_ids:
             raise ValueError(f"Duplicate editorial bundle id: {bundle_id}")
         if bundle_name in seen_bundle_names:
@@ -420,7 +436,7 @@ def _bundle_claude_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, A
 
 def _bundle_codex_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, Any]) -> dict[str, Any]:
     category = _clean_group_label(bundle["group"])
-    plugin_name = _bundle_plugin_name(bundle["id"])
+    plugin_name = _bundle_codex_plugin_name(bundle["id"])
     skill_count = len(bundle["skills"])
     return {
         "name": plugin_name,
@@ -546,7 +562,7 @@ def _render_codex_marketplace(
             continue
         plugins.append(
             {
-                "name": _bundle_plugin_name(bundle["id"]),
+                "name": _bundle_codex_plugin_name(bundle["id"]),
                 "source": {
                     "source": "local",
                     "path": f'./plugins/{_bundle_plugin_name(bundle["id"])}',
@@ -568,15 +584,70 @@ def _render_codex_marketplace(
     }
 
 
+def _remove_tree(path: Path, retries: int = 3, delay_seconds: float = 0.1) -> None:
+    last_error: OSError | None = None
+    for attempt in range(retries):
+        try:
+            shutil.rmtree(path)
+            return
+        except OSError as exc:
+            if exc.errno != errno.ENOTEMPTY or attempt == retries - 1:
+                raise
+            last_error = exc
+            time.sleep(delay_seconds * (attempt + 1))
+
+    if last_error is not None:
+        raise last_error
+
+
 def _materialize_plugin_skills(root: Path, destination_root: Path, skill_ids: list[str]) -> None:
-    if destination_root.is_symlink() or destination_root.is_file():
-        destination_root.unlink()
-    elif destination_root.exists():
-        shutil.rmtree(destination_root)
     destination_root.mkdir(parents=True, exist_ok=True)
 
     for skill_id in skill_ids:
         _copy_skill_directory(root, skill_id, destination_root)
+
+
+def _remove_path(path: Path) -> None:
+    if path.is_symlink() or path.is_file():
+        path.unlink()
+        return
+    if path.exists():
+        _remove_tree(path)
+
+
+def _replace_directory_atomically(
+    destination_root: Path,
+    populate: Callable[[Path], None],
+) -> None:
+    parent = destination_root.parent
+    parent.mkdir(parents=True, exist_ok=True)
+
+    staging_root = Path(
+        tempfile.mkdtemp(
+            prefix=f".{destination_root.name}.staging-",
+            dir=parent,
+        )
+    )
+    backup_root = parent / f".{destination_root.name}.backup-{uuid.uuid4().hex}"
+    replaced_existing = False
+
+    try:
+        populate(staging_root)
+
+        if destination_root.exists() or destination_root.is_symlink():
+            os.replace(destination_root, backup_root)
+            replaced_existing = True
+
+        os.replace(staging_root, destination_root)
+    except Exception:
+        if replaced_existing and backup_root.exists() and not destination_root.exists():
+            os.replace(backup_root, destination_root)
+        raise
+    finally:
+        if staging_root.exists():
+            _remove_path(staging_root)
+        if backup_root.exists():
+            _remove_path(backup_root)
 
 
 def _supported_skill_ids(
@@ -601,18 +672,24 @@ def _sync_root_plugins(
     codex_root = root / "plugins" / ROOT_CODEX_PLUGIN_NAME
     claude_root = root / "plugins" / ROOT_CLAUDE_PLUGIN_DIRNAME
 
-    _materialize_plugin_skills(root, codex_root / "skills", codex_skill_ids)
-    _materialize_plugin_skills(root, claude_root / "skills", claude_skill_ids)
+    def populate_codex_root(staging_root: Path) -> None:
+        _materialize_plugin_skills(root, staging_root / "skills", codex_skill_ids)
+        _write_json(
+            staging_root / ".codex-plugin" / "plugin.json",
+            _root_codex_plugin_manifest(metadata, len(codex_skill_ids)),
+        )
 
-    _write_json(
-        codex_root / ".codex-plugin" / "plugin.json",
-        _root_codex_plugin_manifest(metadata, len(codex_skill_ids)),
-    )
+    def populate_claude_root(staging_root: Path) -> None:
+        _materialize_plugin_skills(root, staging_root / "skills", claude_skill_ids)
+        _write_json(
+            staging_root / ".claude-plugin" / "plugin.json",
+            _root_claude_plugin_manifest(metadata, len(claude_skill_ids)),
+        )
+
+    _replace_directory_atomically(codex_root, populate_codex_root)
+    _replace_directory_atomically(claude_root, populate_claude_root)
+
     claude_manifest = _root_claude_plugin_manifest(metadata, len(claude_skill_ids))
-    _write_json(
-        claude_root / ".claude-plugin" / "plugin.json",
-        claude_manifest,
-    )
     _write_json(root / CLAUDE_PLUGIN_PATH, claude_manifest)
 
 
@@ -627,25 +704,26 @@ def _sync_bundle_plugin_directory(
 
     plugin_name = _bundle_plugin_name(bundle["id"])
     plugin_root = root / "plugins" / plugin_name
-    if plugin_root.exists():
-        shutil.rmtree(plugin_root)
 
-    bundle_skills_root = plugin_root / "skills"
-    bundle_skills_root.mkdir(parents=True, exist_ok=True)
+    def populate_bundle_plugin(staging_root: Path) -> None:
+        bundle_skills_root = staging_root / "skills"
+        bundle_skills_root.mkdir(parents=True, exist_ok=True)
 
-    for skill in bundle["skills"]:
-        _copy_skill_directory(root, skill["id"], bundle_skills_root)
+        for skill in bundle["skills"]:
+            _copy_skill_directory(root, skill["id"], bundle_skills_root)
 
-    if support["claude"]:
-        _write_json(
-            plugin_root / ".claude-plugin" / "plugin.json",
-            _bundle_claude_plugin_manifest(metadata, bundle),
-        )
-    if support["codex"]:
-        _write_json(
-            plugin_root / ".codex-plugin" / "plugin.json",
-            _bundle_codex_plugin_manifest(metadata, bundle),
-        )
+        if support["claude"]:
+            _write_json(
+                staging_root / ".claude-plugin" / "plugin.json",
+                _bundle_claude_plugin_manifest(metadata, bundle),
+            )
+        if support["codex"]:
+            _write_json(
+                staging_root / ".codex-plugin" / "plugin.json",
+                _bundle_codex_plugin_manifest(metadata, bundle),
+            )
+
+    _replace_directory_atomically(plugin_root, populate_bundle_plugin)
 
 
 def sync_editorial_bundle_plugins(
@@ -655,12 +733,17 @@ def sync_editorial_bundle_plugins(
     bundle_support: dict[str, dict[str, Any]],
 ) -> None:
     plugins_root = root / "plugins"
-    for candidate in plugins_root.glob("antigravity-bundle-*"):
-        if candidate.is_dir():
-            shutil.rmtree(candidate)
-
+    expected_plugin_names = {
+        _bundle_plugin_name(bundle["id"])
+        for bundle in bundles
+        if bundle_support[bundle["id"]]["codex"] or bundle_support[bundle["id"]]["claude"]
+    }
     for bundle in bundles:
         _sync_bundle_plugin_directory(root, metadata, bundle, bundle_support[bundle["id"]])
+
+    for candidate in plugins_root.glob("antigravity-bundle-*"):
+        if candidate.is_dir() and candidate.name not in expected_plugin_names:
+            _remove_tree(candidate)
 
 
 def load_editorial_bundles(root: Path) -> list[dict[str, Any]]:
@@ -691,13 +774,6 @@ def sync_editorial_bundles(root: Path) -> None:
     _write_json(
         root / CODEX_MARKETPLACE_PATH,
         _render_codex_marketplace(bundles, bundle_support),
-    )
-    _write_json(
-        root / CODEX_ROOT_PLUGIN_PATH,
-        _root_codex_plugin_manifest(
-            metadata,
-            len(_supported_skill_ids(compatibility, "codex")),
-        ),
     )
     sync_editorial_bundle_plugins(root, metadata, bundles, bundle_support)
 

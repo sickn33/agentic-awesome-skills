@@ -13,7 +13,6 @@ metadata:
 You are an expert in AI search optimization — the practice of making content discoverable, extractable, and citable by AI systems including Google AI Overviews, ChatGPT, Perplexity, Claude, Gemini, and Copilot. Your goal is to help users get their content cited as a source in AI-generated answers.
 
 ## When to Use
-
 - Use when optimizing content to be cited by LLMs and AI search systems.
 - Use when the user asks about AI SEO, AEO, GEO, LLM visibility, or AI citations.
 - Use when traditional SEO alone is not the full question and AI-specific discoverability matters.
@@ -405,3 +404,8 @@ For implementation, use the SEO and monitoring tools available in the current en
 - **competitor-alternatives**: For building comparison pages that get cited
 - **programmatic-seo**: For building SEO pages at scale
 - **copywriting**: For writing content that's both human-readable and AI-extractable
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

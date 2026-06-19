@@ -284,3 +284,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 - `@trpc-fullstack` — Add end-to-end type safety to SvelteKit API routes
 - `@auth-implementation-patterns` — Authentication patterns usable with SvelteKit hooks
 - `@tailwind-patterns` — Styling SvelteKit apps with Tailwind CSS
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

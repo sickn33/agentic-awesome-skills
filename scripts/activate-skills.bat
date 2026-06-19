@@ -2,11 +2,20 @@
 setlocal EnableDelayedExpansion
 
 :: --- CONFIGURATION ---
-set "BASE_DIR=%USERPROFILE%\.gemini\antigravity"
-set "SKILLS_DIR=%BASE_DIR%\skills"
-set "LIBRARY_DIR=%BASE_DIR%\skills_library"
-set "ARCHIVE_DIR=%BASE_DIR%\skills_archive"
-set "REPO_SKILLS=%~dp0..\skills"
+set "BASE_DIR=%AG_BASE_DIR%"
+if not defined BASE_DIR set "BASE_DIR=%USERPROFILE%\.agents"
+set "SKILLS_DIR=%AG_SKILLS_DIR%"
+if not defined SKILLS_DIR set "SKILLS_DIR=%BASE_DIR%\skills"
+set "LIBRARY_DIR=%AG_LIBRARY_DIR%"
+if not defined LIBRARY_DIR set "LIBRARY_DIR=%BASE_DIR%\skills_library"
+set "ARCHIVE_PREFIX=%AG_ARCHIVE_PREFIX%"
+if not defined ARCHIVE_PREFIX set "ARCHIVE_PREFIX=%BASE_DIR%\skills_archive"
+set "REPO_SKILLS=%AG_REPO_SKILLS_DIR%"
+if not defined REPO_SKILLS set "REPO_SKILLS=%~dp0..\skills"
+set "BUNDLE_HELPER=%AG_BUNDLE_HELPER%"
+if not defined BUNDLE_HELPER set "BUNDLE_HELPER=%~dp0..\tools\scripts\get-bundle-skills.py"
+set "PYTHON_BIN=%AG_PYTHON_BIN%"
+if not defined PYTHON_BIN set "PYTHON_BIN=python"
 
 echo Activating Antigravity skills...
 
@@ -55,7 +64,7 @@ if "!DO_CLEAR!"=="1" (
     if exist "%SKILLS_DIR%" (
         set "ts=%date:~10,4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%"
         set "ts=!ts: =0!"
-        robocopy "%SKILLS_DIR%" "%ARCHIVE_DIR%_!ts!" /E /MOVE /NFL /NDL /NJH /NJH >nul 2>&1
+        robocopy "%SKILLS_DIR%" "%ARCHIVE_PREFIX%_!ts!" /E /MOVE /NFL /NDL /NJH /NJH >nul 2>&1
     )
 ) else (
     echo [APPEND] Layering new skills onto existing folder...
@@ -68,13 +77,20 @@ echo Expanding bundles...
 
 if exist "%SKILLS_LIST_FILE%" del "%SKILLS_LIST_FILE%" 2>nul
 
-python --version >nul 2>&1
-if not errorlevel 1 (
-    :: Safely pass all arguments to Python (filtering out --clear)
-    python "%~dp0..\tools\scripts\get-bundle-skills.py" !EXTRA_ARGS! > "%SKILLS_LIST_FILE%" 2>nul
-    
-    :: If no other arguments, expand Essentials
-    if "!EXTRA_ARGS!"=="" python "%~dp0..\tools\scripts\get-bundle-skills.py" Essentials > "%SKILLS_LIST_FILE%" 2>nul
+if exist "%BUNDLE_HELPER%" (
+    "%PYTHON_BIN%" --version >nul 2>&1
+    if not errorlevel 1 (
+        :: Safely pass all arguments to Python (filtering out --clear)
+        "%PYTHON_BIN%" "%BUNDLE_HELPER%" !EXTRA_ARGS! > "%SKILLS_LIST_FILE%" 2>nul
+        
+        :: If no other arguments, expand Essentials
+        if "!EXTRA_ARGS!"=="" "%PYTHON_BIN%" "%BUNDLE_HELPER%" Essentials > "%SKILLS_LIST_FILE%" 2>nul
+    )
+)
+
+:: Empty output should be treated the same as failure so fallback logic still runs
+if exist "%SKILLS_LIST_FILE%" (
+    for %%i in ("%SKILLS_LIST_FILE%") do if %%~zi EQU 0 del "%SKILLS_LIST_FILE%" 2>nul
 )
 
 :: Fallback if Python fails or returned empty
@@ -151,5 +167,6 @@ if exist "%SKILLS_LIST_FILE%" (
 if exist "%SKILLS_LIST_FILE%" del "%SKILLS_LIST_FILE%" 2>nul
 
 echo.
+setlocal DisableDelayedExpansion
 echo Done! Antigravity skills are now activated.
-pause
+if /I not "%AG_NO_PAUSE%"=="1" pause

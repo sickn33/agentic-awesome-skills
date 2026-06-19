@@ -1,0 +1,19 @@
+{
+  "name": "trackio-cli",
+  "version": "1.0.0",
+  "description": "Query Trackio projects, runs, and metrics using the `trackio` CLI. Use when the user needs to list projects/runs/metrics, get summaries, or retrieve metric values from local Trackio databases. Supports both human-readable and JSON output formats. Covers project discovery, run inspection, metric querying, and system metrics. Designed for LLM agents and automation scripts.",
+  "author": {
+    "name": "Hugging Face"
+  },
+  "repository": "https://github.com/huggingface/skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "trackio",
+    "experiment-tracking",
+    "metrics",
+    "mlops",
+    "cli",
+    "monitoring"
+  ]
+}
+

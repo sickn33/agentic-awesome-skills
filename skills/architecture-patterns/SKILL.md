@@ -1,7 +1,7 @@
 ---
 name: architecture-patterns
 description: "Master proven backend architecture patterns including Clean Architecture, Hexagonal Architecture, and Domain-Driven Design to build maintainable, testable, and scalable systems."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---
@@ -43,3 +43,8 @@ Works well with: `event-sourcing-architect`, `saga-orchestration`, `workflow-aut
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed patterns, checklists, and templates.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

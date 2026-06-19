@@ -176,3 +176,8 @@ Expert Django developer specializing in Django 5.x best practices, scalable arch
 - "Optimize database queries for a high-traffic Django application"
 - "Implement JWT authentication with refresh tokens in DRF"
 - "Create a robust background task system with Celery"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

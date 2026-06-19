@@ -9,6 +9,11 @@ source: community
 
 Enforces an opinionated UI baseline to prevent AI-generated interface slop.
 
+## When to Use
+- You are building or reviewing Tailwind-based UI and want a strict baseline for accessibility, motion, typography, and layout.
+- The task is to prevent generic or sloppy AI-generated interface decisions before they spread through the codebase.
+- You need concrete UI constraints to apply to a file review or an ongoing frontend implementation.
+
 ## How to use
 
 - `/baseline-ui`
@@ -85,3 +90,8 @@ Enforces an opinionated UI baseline to prevent AI-generated interface slop.
 - MUST give empty states one clear next action
 - SHOULD limit accent color usage to one per view
 - SHOULD use existing theme or Tailwind CSS color tokens before introducing new ones
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

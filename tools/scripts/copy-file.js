@@ -29,6 +29,17 @@ function isInsideProjectRoot(targetPath) {
   return relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath));
 }
 
+function assertSafeDestination(destinationPath) {
+  if (fs.existsSync(destinationPath) && fs.lstatSync(destinationPath).isSymbolicLink()) {
+    fail(`Destination must not be a symlink: ${path.relative(projectRoot, destinationPath)}`);
+  }
+
+  const resolvedDestinationDir = fs.realpathSync(destinationDir);
+  if (!isInsideProjectRoot(resolvedDestinationDir)) {
+    fail(`Destination parent resolves outside the project root: ${path.relative(projectRoot, destinationDir)}`);
+  }
+}
+
 if (!isInsideProjectRoot(sourcePath) || !isInsideProjectRoot(destinationPath)) {
   fail('Source and destination must resolve inside the project root.');
 }
@@ -62,6 +73,8 @@ try {
 if (!destinationDirStats.isDirectory()) {
   fail(`Destination parent is not a directory: ${path.relative(projectRoot, destinationDir)}`);
 }
+
+assertSafeDestination(destinationPath);
 
 try {
   fs.copyFileSync(sourcePath, destinationPath);

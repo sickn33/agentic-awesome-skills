@@ -195,9 +195,14 @@ Track monthly, review quarterly with finance and sustainability:
 - For the comprehensive edge case library with full analysis, see [edge-cases.md](references/edge-cases.md)
 - For communication templates covering RFPs, PPA negotiations, rate cases, and internal reporting, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you need to **design, audit, or optimise an energy procurement strategy** for commercial or industrial facilities:
 
 - Evaluating fixed vs. index vs. block-and-index contracts, PPAs, or VPPAs.
 - Reducing demand charges, managing capacity tags, or planning DR and battery investments.
 - Preparing RFPs, supplier negotiations, or executive decision memos about multi-site energy strategy, risk, and sustainability tradeoffs.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

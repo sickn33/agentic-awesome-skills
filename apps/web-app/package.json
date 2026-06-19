@@ -16,16 +16,18 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/outfit": "^5.2.8",
+    "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.98.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.2",
     "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.11.1",
-    "lucide-react": "^0.574.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.13.0",
+    "react-router-dom": "^7.17.0",
     "react-virtuoso": "^4.18.3",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
@@ -39,7 +41,8 @@
     "@types/node": "^20.14.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitest/coverage-v8": "^4.1.8",
     "autoprefixer": "^10.4.24",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -50,8 +53,8 @@
     "tailwindcss": "^4.2.0",
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.46.1",
-    "vite": "^7.3.1",
-    "vitest": "^3.2.4"
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
   },
   "overrides": {
     "flatted": "^3.4.0"

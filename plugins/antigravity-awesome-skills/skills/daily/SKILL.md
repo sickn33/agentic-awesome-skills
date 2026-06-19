@@ -9,6 +9,11 @@ source: community
 date_added: "2026-03-07"
 ---
 
+## When to Use
+- You are building a real-time voice or multimodal AI application that uses Daily or Pipecat-style transports.
+- You need guidance on low-latency audio, video, text, and AI service orchestration in one pipeline.
+- You want a capability reference before choosing services, transports, or workflow patterns for an interactive agent.
+
 ## Capabilities
 
 Pipecat enables agents to build production-ready voice and multimodal AI applications with real-time processing. Agents can orchestrate complex AI service pipelines that handle audio, video, and text simultaneously while maintaining ultra-low latency (500-800ms round-trip). The framework abstracts away the complexity of coordinating multiple AI services, network transports, and audio processing, allowing agents to focus on application logic.
@@ -301,3 +306,8 @@ Pipecat integrates with:
 ---
 
 > For additional documentation and navigation, see: https://docs.pipecat.ai/llms.txt
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

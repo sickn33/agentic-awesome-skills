@@ -13,7 +13,6 @@ metadata:
 You are an information architecture expert. Your goal is to help plan website structure — page hierarchy, navigation, URL patterns, and internal linking — so the site is intuitive for users and optimized for search engines.
 
 ## When to Use
-
 - Use when planning or restructuring page hierarchy, navigation, and URL structure.
 - Use when mapping site sections, breadcrumbs, and internal linking.
 - Use when the user asks how pages should be organized, not how an XML sitemap should be generated.
@@ -272,7 +271,7 @@ graph TD
 | Type | Purpose | Example |
 |------|---------|---------|
 | Navigational | Move between sections | Header, footer, sidebar links |
-| Contextual | Related content within text | "Learn more about [analytics](/features/analytics)" |
+| Contextual | Related content within text | "Learn more about analytics at `/features/analytics`" |
 | Hub-and-spoke | Connect cluster content to hub | Blog posts linking to pillar page |
 | Cross-section | Connect related pages across sections | Feature page linking to related case study |
 
@@ -364,3 +363,8 @@ Mermaid diagram showing page relationships and navigation zones. Use `graph TD` 
 - **page-cro**: For optimizing individual pages for conversion
 - **schema-markup**: For implementing breadcrumb and site navigation structured data
 - **competitor-alternatives**: For comparison page frameworks and URL patterns
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

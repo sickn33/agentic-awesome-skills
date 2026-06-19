@@ -292,3 +292,8 @@ Before concluding analysis:
 - [ ] Verified error paths don't bypass security
 - [ ] Checked configuration validation
 - [ ] Constructor params validated (not just defaulted) - see config-patterns.md
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

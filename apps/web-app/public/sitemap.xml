@@ -1,248 +1,254 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://localhost/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/phase-gated-debugging</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/plugins</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/saas-multi-tenant</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/tools-page-seo-optimizer</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/akf-trust-metadata</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/android-ui-journey-testing</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/clarvia-aeo-check</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/3d-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/adhx</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/ai-native-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/app-store-changelog</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/aurora-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/github</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/bento-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ios-debugger-agent</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/brutalism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/macos-menubar-tuist-app</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/brutalist-typography</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/macos-spm-app-packaging</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/card-based-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/orchestrate-batch-refactor</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/claymorphism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/project-skill-audit</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/color-blocking</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/react-component-performance</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/command-center-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/simplify-code</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/cyber-y2k</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/swift-concurrency-expert</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/cyberpunk-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/swiftui-liquid-glass</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/dark-mode</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/swiftui-performance-audit</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/dashboard-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/swiftui-ui-patterns</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/data-dense-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/swiftui-view-refactor</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/design-it</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/aegisops-ai</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/duotone-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/snowflake-development</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/editorial-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/jobgpt</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/flat-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/moyu</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/flat-design-2</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/xvary-stock-research</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/floating-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/gdb-cli</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/frutiger-aero</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ad-creative</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/glassmorphism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ai-seo</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/gradient-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/churn-prevention</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/high-contrast</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/claude-api</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/holographic-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/cold-email</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/isometric-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/content-strategy</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/layered-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/defuddle</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/material-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/internal-comms</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/maximalism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/json-canvas</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/minimalism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/lead-magnets</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/monochromatic-ui</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/obsidian-bases</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/neo-brutalism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/obsidian-cli</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/neumorphism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/obsidian-markdown</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/retro-design</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/product-marketing-context</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/retro-futurism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/revops</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>http://localhost/skill/sci-fi-interface</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost/skill/skeuomorphism</loc>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

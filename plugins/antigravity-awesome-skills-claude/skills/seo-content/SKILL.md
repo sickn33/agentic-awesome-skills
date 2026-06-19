@@ -20,7 +20,6 @@ allowed-tools:
 # Content Quality & E-E-A-T Analysis
 
 ## When to Use
-
 - Use when auditing content quality, readability, thin content risk, or E-E-A-T signals.
 - Use when the user wants a content-focused SEO review rather than a full technical audit.
 - Use when checking whether content is structured and trustworthy enough for search and AI citation.
@@ -184,3 +183,8 @@ If DataForSEO MCP tools are available, use `kw_data_google_ads_search_volume` fo
 | URL unreachable (DNS failure, connection refused) | Report the error clearly. Do not guess page content. Suggest the user verify the URL and try again. |
 | Content behind paywall (402/403, login wall) | Report that the content is not publicly accessible. Analyze only the visible portion (meta tags, headers) and note the limitation. |
 | Thin content (fewer than 100 words retrievable) | Report the findings as-is rather than guessing. Flag the page as potentially JavaScript-rendered or gated, and suggest the user provide the full text directly. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

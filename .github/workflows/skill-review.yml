@@ -10,7 +10,7 @@ jobs:
       pull-requests: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: tesslio/skill-review-and-optimize@d81583861aaf29d1da7f10e6539efef4e27b0dd5
         with:
           optimize: 'true'

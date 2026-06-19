@@ -1,6 +1,7 @@
 const assert = require("assert");
 const { spawnSync } = require("child_process");
 const path = require("path");
+const packageJson = require(path.resolve(__dirname, "..", "..", "..", "package.json"));
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
@@ -9,6 +10,7 @@ function runNpmPackDryRunJson() {
   const result = spawnSync(npmCommand, ["pack", "--dry-run", "--json"], {
     cwd: repoRoot,
     encoding: "utf8",
+    shell: process.platform === "win32",
   });
 
   if (result.error) {
@@ -31,4 +33,9 @@ assert.ok(packagedFiles.has("tools/bin/install.js"), "published package must inc
 assert.ok(
   packagedFiles.has("tools/lib/symlink-safety.js"),
   "published package must include tools/lib/symlink-safety.js",
+);
+assert.strictEqual(
+  packageJson.dependencies?.yaml,
+  "^2.8.2",
+  "published package must declare yaml as a runtime dependency for the installer",
 );

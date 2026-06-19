@@ -9,7 +9,7 @@ export function createMockSkill(overrides?: Partial<Skill>): Skill {
     name: 'Test Skill',
     description: 'A test skill for testing purposes',
     category: 'testing',
-    risk: 'low',
+    risk: 'safe',
     source: 'test',
     date_added: '2024-01-01',
     path: 'skills/test/SKILL.md',

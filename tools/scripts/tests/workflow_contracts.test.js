@@ -16,7 +16,12 @@ const contract = {
     "data/skills_index.json",
     "data/catalog.json",
     "data/bundles.json",
+    "data/plugin-compatibility.json",
     "data/aliases.json",
+    ".agents/plugins/",
+    ".claude-plugin/plugin.json",
+    ".claude-plugin/marketplace.json",
+    "plugins/",
   ],
   mixedFiles: ["README.md"],
   releaseManagedFiles: ["CHANGELOG.md", "package.json", "package-lock.json", "README.md"],
@@ -44,6 +49,20 @@ assert.strictEqual(mixedChange.primaryCategory, "skill");
 assert.deepStrictEqual(
   getDirectDerivedChanges(["skills/example/SKILL.md", "data/catalog.json"], contract),
   ["data/catalog.json"],
+);
+assert.deepStrictEqual(
+  getDirectDerivedChanges(
+    [
+      "plugins/antigravity-awesome-skills/skills/docx-official/ooxml/scripts/unpack.py",
+      ".agents/plugins/marketplace.json",
+      "skills/example/SKILL.md",
+    ],
+    contract,
+  ),
+  [
+    "plugins/antigravity-awesome-skills/skills/docx-official/ooxml/scripts/unpack.py",
+    ".agents/plugins/marketplace.json",
+  ],
 );
 
 const changelog = [

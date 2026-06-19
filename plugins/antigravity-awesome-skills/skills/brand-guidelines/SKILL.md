@@ -9,6 +9,11 @@ source: community
 
 Write user-facing copy following Sentry's brand guidelines.
 
+## When to Use
+- You need to write or rewrite user-facing copy in Sentry's voice.
+- The task involves UI text, onboarding, empty states, docs, marketing copy, or other branded content.
+- You need guidance on when to use Plain Speech versus Sentry Voice.
+
 ## Tone Selection
 
 Choose the appropriate tone based on context:
@@ -168,3 +173,8 @@ Avoid these common mistakes:
 
 - [Sentry Voice Guidelines](https://develop.sentry.dev/frontend/sentry-voice/)
 - [Sentry Frontend Handbook](https://develop.sentry.dev/frontend/)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

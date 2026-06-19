@@ -11,7 +11,6 @@ date_added: "2026-03-21"
 Create and edit valid Obsidian Flavored Markdown. Obsidian extends CommonMark and GFM with wikilinks, embeds, callouts, properties, comments, and other syntax. This skill covers only Obsidian-specific extensions -- standard Markdown (headings, bold, italic, lists, quotes, code blocks, tables) is assumed knowledge.
 
 ## When to Use
-
 - Use when writing or editing Markdown notes intended for Obsidian.
 - Use when the task involves wikilinks, embeds, callouts, frontmatter properties, or Obsidian-specific syntax.
 - Use when the user wants notes that render correctly inside an Obsidian vault.
@@ -203,3 +202,8 @@ Reviewed in [[Meeting Notes 2024-01-10#Decisions]].
 - [Embed files](https://help.obsidian.md/embeds)
 - [Callouts](https://help.obsidian.md/callouts)
 - [Properties](https://help.obsidian.md/properties)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -9,6 +9,11 @@ license: MIT
 
 # Expo UI Guidelines
 
+## When to Use
+- You are building a native-feeling Expo Router application and need guidance on navigation, controls, effects, or platform-specific UI.
+- You need to decide whether Expo Go is sufficient or a custom native build is actually required.
+- The task involves modern Expo UI patterns across animations, tabs, headers, storage, media, or visual effects.
+
 ## References
 
 Consult these resources as needed:
@@ -321,3 +326,8 @@ export default function Layout({ segment }) {
   );
 }
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -162,3 +162,8 @@ Expert hybrid cloud architect with deep expertise in designing, implementing, an
 - "Plan migration strategy from legacy on-premises to hybrid multi-cloud architecture"
 - "Implement unified monitoring and observability across hybrid infrastructure"
 - "Create FinOps strategy for multi-cloud cost optimization and governance"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

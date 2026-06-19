@@ -5,11 +5,14 @@ risk: unknown
 source: community
 ---
 
-<!-- security-allowlist: curl-pipe-bash, irm-pipe-iex -->
-
 # Apify Actor Development
 
 **Important:** Before you begin, fill in the `generatedBy` property in the meta section of `.actor/actor.json`. Replace it with the tool and model you're currently using, such as "Claude Code with Claude Sonnet 4.5". This helps Apify monitor and improve AGENTS.md for specific AI tools and models.
+
+## When to Use
+- You need to create, modify, or debug an Apify Actor project.
+- The task involves choosing an Apify template, wiring actor inputs/outputs, or implementing actor runtime logic.
+- You need safe setup guidance for `apify` CLI authentication, project bootstrap, or deployment workflow.
 
 ## What are Apify Actors?
 
@@ -35,8 +38,8 @@ npm install -g apify-cli
 # Or (Mac): brew install apify-cli
 ```
 
-> **Security note:** Do NOT install the CLI by piping remote scripts to a shell
-> (e.g. `curl … | bash` or `irm … | iex`). Always use a package manager.
+> **Security note:** Do NOT install the CLI by piping remote scripts directly
+> into a shell. Always use a package manager.
 
 When the apify CLI is installed, check that it is logged in with:
 
@@ -219,3 +222,8 @@ Otherwise, the MCP Server url: `https://mcp.apify.com/?tools=docs`.
 - [https://crawlee.dev/llms.txt](https://crawlee.dev/llms.txt) - Crawlee quick reference documentation
 - [https://crawlee.dev/llms-full.txt](https://crawlee.dev/llms-full.txt) - Crawlee complete documentation
 - [whitepaper.actor](https://raw.githubusercontent.com/apify/actor-whitepaper/refs/heads/master/README.md) - Complete Actor specification
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,0 +1,19 @@
+{
+  "name": "antigravity-bundle-automation-builder",
+  "version": "12.8.0",
+  "description": "Editorial \"Automation Builder\" bundle for Claude Code from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "bundle",
+    "automation-builder",
+    "antigravity-awesome-skills"
+  ]
+}

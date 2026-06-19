@@ -8,6 +8,11 @@ source: community
 
 # 心理健康分析技能
 
+## When to Use
+- 需要分析情绪、焦虑、抑郁评分、治疗进展或危机风险时使用。
+- 任务涉及心理健康趋势、情绪模式识别或与睡眠/运动/营养的关联分析。
+- 用户请求心理健康报告、风险预警或治疗进展追踪时使用。
+
 ## 核心功能
 
 心理健康分析技能提供全面的心理健康数据分析功能，帮助用户追踪心理状态、识别情绪模式、监测危机风险和优化应对策略。
@@ -709,7 +714,7 @@ source: community
 2. 冥想 - 有效率85% ✓
 3. 深呼吸 - 有效率75% ✓
 
-## 建议
+### 建议
 - 下午工作压力大时，可使用深呼吸或短暂散步
 - 保持规律运动，对情绪改善效果显著
 - 改善睡眠有助于减轻焦虑和疲劳
@@ -981,3 +986,8 @@ source: community
 **技能版本**: v1.0.0
 **最后更新**: 2025-01-06
 **维护者**: WellAlly Tech
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

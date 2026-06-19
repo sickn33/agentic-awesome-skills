@@ -78,6 +78,30 @@ class PluginCompatibilityTests(unittest.TestCase):
             self.assertEqual(entry["targets"]["claude"], "blocked")
             self.assertIn("undeclared_runtime_dependency", entry["reasons"])
 
+    def test_relative_links_cannot_escape_skill_directory(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skills_dir = pathlib.Path(temp_dir) / "skills"
+            self._write_skill(
+                skills_dir,
+                "escaping-link-skill",
+                (
+                    "---\n"
+                    "name: escaping-link-skill\n"
+                    "description: Example\n"
+                    "---\n"
+                    "Read [secret](../../outside/secret.txt)\n"
+                ),
+            )
+            outside_dir = pathlib.Path(temp_dir) / "outside"
+            outside_dir.mkdir(parents=True, exist_ok=True)
+            (outside_dir / "secret.txt").write_text("secret", encoding="utf-8")
+
+            report = plugin_compatibility.build_report(skills_dir)
+            entry = report["skills"][0]
+            self.assertEqual(entry["targets"]["codex"], "blocked")
+            self.assertEqual(entry["targets"]["claude"], "blocked")
+            self.assertIn("escaped_local_reference", entry["reasons"])
+
     def test_manual_setup_metadata_can_make_runtime_skill_supported(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             skills_dir = pathlib.Path(temp_dir) / "skills"
@@ -105,18 +129,63 @@ class PluginCompatibilityTests(unittest.TestCase):
             self.assertEqual(entry["targets"]["claude"], "supported")
             self.assertEqual(entry["setup"]["type"], "manual")
 
+    def test_explicit_target_restrictions_block_plugin_targets(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skills_dir = pathlib.Path(temp_dir) / "skills"
+            self._write_skill(
+                skills_dir,
+                "active-browser-skill",
+                (
+                    "---\n"
+                    "name: active-browser-skill\n"
+                    "description: Example\n"
+                    "plugin:\n"
+                    "  targets:\n"
+                    "    codex: blocked\n"
+                    "    claude: blocked\n"
+                    "---\n"
+                    "Click live page controls only after explicit approval.\n"
+                ),
+            )
+
+            report = plugin_compatibility.build_report(skills_dir)
+            entry = report["skills"][0]
+            self.assertEqual(entry["targets"]["codex"], "blocked")
+            self.assertEqual(entry["targets"]["claude"], "blocked")
+            self.assertIn("explicit_target_restriction", entry["blocked_reasons"]["codex"])
+            self.assertIn("explicit_target_restriction", entry["blocked_reasons"]["claude"])
+
     def test_repo_sample_skills_have_expected_status(self):
         report = plugin_compatibility.build_report(REPO_ROOT / "skills")
         entries = plugin_compatibility.compatibility_by_skill_id(report)
 
-        for skill_id in ("project-skill-audit", "molykit", "claude-code-expert"):
+        for skill_id in ("molykit", "claude-code-expert"):
             self.assertEqual(entries[skill_id]["targets"]["codex"], "blocked")
             self.assertEqual(entries[skill_id]["targets"]["claude"], "blocked")
             self.assertIn("absolute_host_path", entries[skill_id]["reasons"])
 
+        self.assertEqual(entries["project-skill-audit"]["targets"]["codex"], "supported")
+        self.assertEqual(entries["project-skill-audit"]["targets"]["claude"], "blocked")
+        self.assertNotIn("absolute_host_path", entries["project-skill-audit"]["reasons"])
+        self.assertIn("target_specific_home_path", entries["project-skill-audit"]["blocked_reasons"]["claude"])
+
         self.assertEqual(entries["playwright-skill"]["targets"]["codex"], "supported")
         self.assertEqual(entries["playwright-skill"]["targets"]["claude"], "supported")
         self.assertEqual(entries["playwright-skill"]["setup"]["type"], "manual")
+
+        for skill_id in (
+            "bilig-workpaper",
+            "longbridge",
+            "mercury-mcp",
+            "sendblue/sendblue-api",
+            "sendblue/sendblue-cli",
+            "sendblue/sendblue-notify",
+            "sendblue/textme",
+            "socialclaw",
+        ):
+            self.assertEqual(entries[skill_id]["targets"]["codex"], "blocked")
+            self.assertEqual(entries[skill_id]["targets"]["claude"], "blocked")
+            self.assertIn("explicit_target_restriction", entries[skill_id]["reasons"])
 
 
 if __name__ == "__main__":

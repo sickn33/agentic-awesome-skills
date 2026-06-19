@@ -16,6 +16,44 @@ from pathlib import Path
 from collections import defaultdict
 
 MS_REPO = "https://github.com/microsoft/skills.git"
+KNOWN_UPSTREAM_COLLISIONS = {
+    "applicationinsights-web-ts": {
+        ".github/plugins/azure-sdk-typescript/skills/applicationinsights-web-ts",
+        ".github/skills/applicationinsights-web-ts",
+    },
+    "azure-cosmos-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-cosmos-rust",
+        ".github/skills/azure-cosmos-rust",
+    },
+    "azure-eventhub-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-eventhub-rust",
+        ".github/skills/azure-eventhub-rust",
+    },
+    "azure-identity-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-identity-rust",
+        ".github/skills/azure-identity-rust",
+    },
+    "azure-keyvault-certificates-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-keyvault-certificates-rust",
+        ".github/skills/azure-keyvault-certificates-rust",
+    },
+    "azure-keyvault-keys-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-keyvault-keys-rust",
+        ".github/skills/azure-keyvault-keys-rust",
+    },
+    "azure-keyvault-secrets-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-keyvault-secrets-rust",
+        ".github/skills/azure-keyvault-secrets-rust",
+    },
+    "azure-storage-blob-rust": {
+        ".github/plugins/azure-sdk-rust/skills/azure-storage-blob-rust",
+        ".github/skills/azure-storage-blob-rust",
+    },
+    "entra-agent-id": {
+        ".github/plugins/azure-skills/skills/entra-agent-id",
+        ".github/skills/entra-agent-id",
+    },
+}
 
 
 def create_clone_target(prefix: str) -> Path:
@@ -154,8 +192,16 @@ def analyze_skill_locations():
             name_map[name].append(str(rel))
 
         # Report results
-        collisions = {n: paths for n, paths in name_map.items()
-                      if len(paths) > 1}
+        raw_collisions = {n: paths for n, paths in name_map.items()
+                          if len(paths) > 1}
+        collisions = {}
+        ignored_collisions = {}
+        for name, paths in raw_collisions.items():
+            path_set = set(paths)
+            if KNOWN_UPSTREAM_COLLISIONS.get(name) == path_set:
+                ignored_collisions[name] = paths
+            else:
+                collisions[name] = paths
         unique_names = {n: paths for n,
                         paths in name_map.items() if len(paths) == 1}
 
@@ -177,6 +223,13 @@ def analyze_skill_locations():
                     print(f"       - {p}")
         else:
             print(f"\n  ✅ No collisions detected!")
+
+        if ignored_collisions:
+            print(f"\n  ⚠️  Ignored known upstream collisions ({len(ignored_collisions)}):")
+            for name, paths in ignored_collisions.items():
+                print(f"     '{name}':")
+                for p in paths:
+                    print(f"       - {p}")
 
         # Validate all names are valid directory names
         print("\n5️⃣ Directory Name Validation:")
@@ -201,6 +254,7 @@ def analyze_skill_locations():
         print(f"  Total SKILL.md files: {total}")
         print(f"  Unique flat names: {len(unique_names)}")
         print(f"  Collisions: {len(collisions)}")
+        print(f"  Ignored upstream collisions: {len(ignored_collisions)}")
         print(f"  Missing names: {len(missing_names)}")
 
         is_pass = len(collisions) == 0 and len(invalid_names) == 0
@@ -215,6 +269,7 @@ def analyze_skill_locations():
             "total": total,
             "unique": len(unique_names),
             "collisions": len(collisions),
+            "ignored_collisions": len(ignored_collisions),
             "missing_names": len(missing_names),
             "invalid_names": len(invalid_names),
             "passed": is_pass,

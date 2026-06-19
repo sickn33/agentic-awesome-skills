@@ -1,7 +1,7 @@
 ---
 name: error-detective
 description: Search logs and codebases for error patterns, stack traces, and anomalies. Correlates errors across systems and identifies root causes.
-risk: unknown
+risk: safe
 source: community
 date_added: '2026-02-27'
 ---
@@ -49,3 +49,8 @@ You are an error detective specializing in log analysis and pattern recognition.
 - Code locations likely causing errors
 
 Focus on actionable findings. Include both immediate fixes and prevention strategies.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

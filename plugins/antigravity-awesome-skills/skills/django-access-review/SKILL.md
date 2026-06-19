@@ -22,6 +22,11 @@ Find access control vulnerabilities by investigating how the codebase answers on
 
 **Can User A access, modify, or delete User B's data?**
 
+## When to Use
+- You need to review Django or DRF code for access control gaps, IDOR risk, or object-level authorization failures.
+- The task involves confirming whether one user can access, modify, or delete another user's data.
+- You want an investigation-driven authorization review instead of generic pattern matching.
+
 ## Philosophy: Investigation Over Pattern Matching
 
 Do NOT scan for predefined vulnerable patterns. Instead:
@@ -344,3 +349,8 @@ Use this to guide your review, not as a pass/fail checklist:
 □ I've verified my findings by checking parent classes and middleware
 □ I've only reported issues I've confirmed through investigation
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

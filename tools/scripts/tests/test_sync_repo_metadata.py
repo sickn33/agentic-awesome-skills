@@ -10,6 +10,8 @@ TOOLS_SCRIPTS_DIR = REPO_ROOT / "tools" / "scripts"
 if str(TOOLS_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_SCRIPTS_DIR))
 
+from symlink_test_utils import symlink_or_skip
+
 
 def load_module(relative_path: str, module_name: str):
     module_path = REPO_ROOT / relative_path
@@ -46,9 +48,11 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
 - **Broad coverage with real utility**: 1,273+ skills across development, testing, security, infrastructure, product, and marketing.
 
-**Antigravity Awesome Skills** (Release 8.3.0) is a large, installable skill library for AI coding assistants. It includes onboarding docs, bundles, workflows, generated catalogs, and a CLI installer so you can move from discovery to actual usage without manually stitching together dozens of repos.
+**Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse 1,273+ Skills](#browse-1273-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
 
-If you want a faster answer than "browse all 1,273+ skills", start with a tool-specific guide:
+- [Browse 1,273+ Skills](#browse-1273-skills)
+
+**Antigravity Awesome Skills** (Release 8.3.0) is a large, installable skill library for AI coding assistants. It packages 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
 """,
                 encoding="utf-8",
             )
@@ -93,7 +97,7 @@ If you want a faster answer than "browse all 1,273+ skills", start with a tool-s
                 encoding="utf-8",
             )
             (root / "docs" / "integrations" / "jetski-cortex.md").write_text(
-                "1.200+ skill\nCon oltre 1.200 skill, questo approccio\n",
+                "1.200+ skill\nOver 1.200 skills, this approach\n",
                 encoding="utf-8",
             )
             (root / "docs" / "integrations" / "jetski-gemini-loader" / "README.md").write_text(
@@ -104,12 +108,18 @@ If you want a faster answer than "browse all 1,273+ skills", start with a tool-s
             updated_files = sync_repo_metadata.sync_curated_docs(str(root), metadata, dry_run=False)
 
             self.assertGreaterEqual(updated_files, 10)
-            self.assertIn("1,304+ agentic skills", (root / "README.md").read_text(encoding="utf-8"))
+            readme = (root / "README.md").read_text(encoding="utf-8")
+            self.assertIn("1,304+ agentic skills", readme)
+            self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
+            self.assertIn("[Browse 1,304+ Skills](#browse-1304-skills)", readme)
+            self.assertIn("1,304+ reusable `SKILL.md` playbooks", readme)
             self.assertIn("V8.4.0", (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ files", (root / "docs" / "users" / "gemini-cli-skills.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ specialized areas", (root / "docs" / "users" / "kiro-integration.md").read_text(encoding="utf-8"))
             self.assertIn("Total Bundles: 2", (root / "docs" / "users" / "bundles.md").read_text(encoding="utf-8"))
-            self.assertIn("1.304+ skill", (root / "docs" / "integrations" / "jetski-cortex.md").read_text(encoding="utf-8"))
+            jetski_cortex = (root / "docs" / "integrations" / "jetski-cortex.md").read_text(encoding="utf-8")
+            self.assertIn("1,304+ skill", jetski_cortex)
+            self.assertNotIn("1,1", jetski_cortex)
 
     def test_build_about_description_uses_live_skill_count(self):
         description = sync_repo_metadata.build_about_description(
@@ -159,7 +169,7 @@ If you want a faster answer than "browse all 1,273+ skills", start with a tool-s
             outside = root / "outside.md"
             outside.write_text("original", encoding="utf-8")
             linked = root / "README.md"
-            linked.symlink_to(outside)
+            symlink_or_skip(self, outside, linked)
 
             changed = sync_repo_metadata.update_text_file(
                 linked,

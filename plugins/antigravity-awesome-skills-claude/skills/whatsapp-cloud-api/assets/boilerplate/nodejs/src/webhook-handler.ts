@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { WebhookPayload, IncomingMessage, StatusUpdate } from './types';
 
 const SAFE_CHALLENGE_RE = /^[A-Za-z0-9._-]{1,200}$/;
+const SIGNATURE_RE = /^sha256=[a-f0-9]{64}$/i;
 
 /**
  * Middleware para validar assinatura HMAC-SHA256 dos webhooks do WhatsApp.
@@ -35,10 +36,17 @@ export function validateHMAC(appSecret: string) {
       'sha256=' +
       crypto.createHmac('sha256', appSecret).update(rawBody).digest('hex');
 
-    const isValid = crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(expectedSignature)
-    );
+    if (!SIGNATURE_RE.test(signature)) {
+      console.warn('Invalid webhook signature format');
+      res.sendStatus(401);
+      return;
+    }
+
+    const signatureBuffer = Buffer.from(signature, 'utf8');
+    const expectedSignatureBuffer = Buffer.from(expectedSignature, 'utf8');
+    const isValid =
+      signatureBuffer.length === expectedSignatureBuffer.length &&
+      crypto.timingSafeEqual(signatureBuffer, expectedSignatureBuffer);
 
     if (!isValid) {
       console.warn('Invalid webhook signature');

@@ -65,6 +65,8 @@ def _normalize_yaml_value(value: Any) -> Any:
         return [_normalize_yaml_value(item) for item in value]
     if isinstance(value, (date, datetime)):
         return value.isoformat()
+    if isinstance(value, (bytes, bytearray)):
+        return bytes(value).decode("utf-8", errors="replace")
     return value
 
 
@@ -114,6 +116,7 @@ def _runtime_dependency_files(skill_dir: Path) -> list[str]:
 
 def _local_link_reasons(content: str, skill_dir: Path) -> set[str]:
     reasons: set[str] = set()
+    resolved_skill_dir = skill_dir.resolve()
 
     for link in LOCAL_LINK_RE.findall(content):
         link_clean = link.split("#", 1)[0].strip()
@@ -125,6 +128,11 @@ def _local_link_reasons(content: str, skill_dir: Path) -> set[str]:
             continue
 
         target_path = (skill_dir / link_clean).resolve(strict=False)
+        try:
+            target_path.relative_to(resolved_skill_dir)
+        except ValueError:
+            reasons.add("escaped_local_reference")
+            continue
         if not target_path.exists():
             reasons.add("broken_local_reference")
 

@@ -19,7 +19,6 @@ tags:
 Every photo has EXIF. Every song has ID3. AKF is the native metadata format for AI-generated content.
 
 ## When to Use
-
 Use this skill when you need to stamp, inspect, or audit provenance and trust metadata on AI-generated or AI-modified files for compliance, review, or handoff workflows.
 
 ## After creating or modifying files
@@ -67,3 +66,8 @@ pip install akf
 - https://akf.dev
 - https://github.com/HMAKT99/AKF
 - npm: `npm install akf-format`
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

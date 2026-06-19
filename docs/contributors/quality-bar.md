@@ -47,6 +47,7 @@ A list of known edge cases or things the skill _cannot_ do.
 If a skill includes command examples, remote fetch steps, secrets, or mutation guidance, the PR must document the risk and pass `npm run security:docs` in addition to normal validation.
 
 For pull requests that add or modify `SKILL.md`, GitHub also runs the automated `skill-review` workflow. Treat that review as part of the normal PR quality gate and address any actionable findings before merge.
+Automated checks are necessary, but they do **not** replace manual reviewer judgment on logic, safety, and likely failure modes.
 
 `npm run security:docs` enforces a repo-wide scan for:
 
@@ -62,6 +63,8 @@ Use `npm run audit:skills` when you need a repo-wide report that goes beyond sch
 - which skills still have truncated descriptions (issue `#365`),
 - which skills are missing examples or limitations,
 - and which skills have the highest concentration of warnings/errors.
+
+Maintainers can pair that report with `npm run sync:risk-labels` for conservative legacy cleanup. That sync only rewrites `risk: unknown` when the suggested label is explicit and high-confidence enough to automate safely, and it preserves the contributor-facing rule that new or uncertain submissions can still start as `unknown`.
 
 ---
 
@@ -93,7 +96,9 @@ Notes:
 
 - `npm run validate` is the operational contributor gate.
 - `npm run audit:skills` is the maintainer-facing compliance/usability report for the full library.
+- `npm run sync:risk-labels` is a maintainer cleanup tool for high-confidence legacy `risk:` fixes.
 - `npm run security:docs` is required for command-heavy or risky skill content.
 - PRs that touch `SKILL.md` also get an automated `skill-review` GitHub Actions check.
+- Skill changes and risky guidance still require a manual logic review before merge, even when the automated gates pass.
 - `npm run validate:strict` is a useful hardening pass, but the repository still contains legacy skills that do not yet satisfy strict validation.
 - Examples and limitations remain part of the quality bar even when they are not fully auto-enforced by the current validator.

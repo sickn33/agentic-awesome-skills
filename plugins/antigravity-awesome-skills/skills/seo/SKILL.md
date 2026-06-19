@@ -15,7 +15,6 @@ e-commerce, publishers, agencies). Orchestrates 12 specialized sub-skills and 7 
 (+ optional extension sub-skills like seo-dataforseo).
 
 ## When to Use
-
 - Use when the user asks for a full SEO audit or broad SEO strategy.
 - Use as the umbrella entry point when multiple SEO dimensions are in scope.
 - Use when the task spans technical SEO, content, schema, sitemaps, and AI search readiness together.
@@ -137,3 +136,8 @@ For parallel analysis during audits:
 | URL unreachable | Report the error and suggest the user verify the URL. Do not attempt to guess site content. |
 | Sub-skill fails during audit | Report partial results from successful sub-skills. Clearly note which sub-skill failed and why. Suggest re-running the failed sub-skill individually. |
 | Ambiguous business type detection | Present the top two detected types with supporting signals. Ask the user to confirm before proceeding with industry-specific recommendations. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

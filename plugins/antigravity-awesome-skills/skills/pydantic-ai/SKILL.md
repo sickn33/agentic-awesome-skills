@@ -348,3 +348,8 @@ async def research_and_write(topic: str) -> BlogPost:
 - `@llm-application-dev-ai-assistant` — General LLM application development patterns
 - `@fastapi-templates` — Serving PydanticAI agents via FastAPI endpoints
 - `@agent-orchestration-multi-agent-optimize` — Orchestrating multiple PydanticAI agents
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

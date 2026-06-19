@@ -3,6 +3,10 @@ const fs = require("fs");
 const path = require("path");
 const { findProjectRoot } = require("../../lib/project-root");
 
+function normalizeRelativePath(value) {
+  return value.replace(/\\/g, "/").replace(/^\.\//, "");
+}
+
 const projectRoot = findProjectRoot(__dirname);
 const pluginsRoot = path.join(projectRoot, "plugins");
 const claudeMarketplace = JSON.parse(
@@ -13,10 +17,10 @@ const codexMarketplace = JSON.parse(
 );
 
 const claudePluginPaths = new Set(
-  claudeMarketplace.plugins.map((plugin) => plugin.source.replace(/^\.\//, "")),
+  claudeMarketplace.plugins.map((plugin) => normalizeRelativePath(plugin.source)),
 );
 const codexPluginPaths = new Set(
-  codexMarketplace.plugins.map((plugin) => plugin.source.path.replace(/^\.\//, "")),
+  codexMarketplace.plugins.map((plugin) => normalizeRelativePath(plugin.source.path)),
 );
 const knownPluginPaths = new Set([...claudePluginPaths, ...codexPluginPaths]);
 
@@ -69,7 +73,7 @@ for (const entry of fs.readdirSync(pluginsRoot, { withFileTypes: true })) {
     continue;
   }
 
-  const relativePluginPath = path.join("plugins", entry.name);
+  const relativePluginPath = normalizeRelativePath(path.join("plugins", entry.name));
   if (entry.name.startsWith("antigravity-bundle-") || entry.name === "antigravity-awesome-skills" || entry.name === "antigravity-awesome-skills-claude") {
     assert.ok(
       knownPluginPaths.has(relativePluginPath),

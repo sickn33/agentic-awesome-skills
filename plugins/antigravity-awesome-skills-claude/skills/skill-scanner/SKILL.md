@@ -11,6 +11,11 @@ Scan agent skills for security issues before adoption. Detects prompt injection,
 
 **Important**: Run all scripts from the repository root using the full path via `${CLAUDE_SKILL_ROOT}`.
 
+## When to Use
+- You need to evaluate a skill for prompt injection, malicious code, over-broad permissions, or supply-chain risk before adopting it.
+- You want a static scan plus manual review workflow for a skill directory.
+- The task is to decide whether a skill is safe enough to trust in an agent environment.
+
 ## Bundled Script
 
 ### `scripts/scan_skill.py`
@@ -194,3 +199,8 @@ Example assessments:
 | `references/prompt-injection-patterns.md` | Injection patterns, jailbreaks, obfuscation techniques, false positive guide |
 | `references/dangerous-code-patterns.md` | Script security patterns: exfiltration, shells, credential theft, eval/exec |
 | `references/permission-analysis.md` | Tool risk tiers, least privilege methodology, common skill permission profiles |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

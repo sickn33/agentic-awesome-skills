@@ -4,10 +4,15 @@ description: "Brief one-sentence description of what this skill does (under 200 
 category: your-category
 risk: safe
 source: community
+source_repo: owner/repo
+source_type: community
 date_added: "YYYY-MM-DD"
 author: your-name-or-handle
 tags: [tag-one, tag-two]
 tools: [claude, cursor, gemini]
+# Optional: declare the upstream license if source_repo is set
+# license: "MIT"
+# license_source: "https://github.com/owner/repo/blob/main/LICENSE"
 ---
 
 # Skill Title
@@ -16,6 +21,13 @@ tools: [claude, cursor, gemini]
 
 A brief explanation of what this skill does and why it exists.
 2-4 sentences is perfect.
+
+If this skill adapts material from an external GitHub repository, declare both:
+
+- `source_repo: owner/repo`
+- `source_type: official` or `source_type: community`
+
+Use `source: self` and `source_type: self` when the skill is original to this repository and does not require README external-source credit.
 
 ## When to Use This Skill
 
@@ -53,6 +65,11 @@ More instructions...
 - ✅ Also do this
 - ❌ Don't do this
 - ❌ Avoid this
+
+## Limitations
+
+- This skill does not replace environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, or safety boundaries are missing.
 
 ## Security & Safety Notes
 

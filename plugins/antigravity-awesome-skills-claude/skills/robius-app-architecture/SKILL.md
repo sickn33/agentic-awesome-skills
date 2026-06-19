@@ -17,8 +17,7 @@ Best practices for structuring Makepad applications based on the Robrix and Moly
 - **Robrix**: Matrix chat client - complex sync/async with background subscriptions
 - **Moly**: AI chat application - cross-platform (native + WASM) with streaming APIs
 
-## Triggers
-
+## When to Use
 Use this skill when:
 - Building a Makepad application with async backend integration
 - Designing sync/async communication patterns in Makepad
@@ -328,3 +327,8 @@ impl AppMain for App {
   - `AbortOnDropHandle` for task cancellation
   - `ThreadToken` for non-Send types on WASM
   - `spawn()` platform-agnostic function
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

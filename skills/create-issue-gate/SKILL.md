@@ -14,6 +14,11 @@ Create GitHub issues as the single tracking entrypoint for tasks, with a hard ga
 
 Core rule: **no explicit, testable acceptance criteria from user => issue stays `draft` and execution is blocked.**
 
+## When to Use
+- You are starting a new implementation task and want a GitHub issue to be the required tracking entrypoint.
+- The work must be blocked until the user provides explicit, testable acceptance criteria.
+- You need to distinguish between `draft`, `ready`, and `blocked` work before execution begins.
+
 ## Required Fields
 
 Every issue must include these sections:
@@ -87,3 +92,8 @@ Execution workflows (for example `closed-loop-delivery`) may start only when:
 - execution gate is `allowed`
 
 If issue is `draft`, stop and request user-provided acceptance criteria.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

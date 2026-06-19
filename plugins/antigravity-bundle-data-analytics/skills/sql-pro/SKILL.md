@@ -169,3 +169,8 @@ Expert SQL professional focused on high-performance database systems, advanced q
 - "Design an HTAP system that handles both transactions and analytics efficiently"
 - "Create a time-series analysis query for IoT sensor data in TimescaleDB"
 - "Optimize database performance for a high-traffic e-commerce platform"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

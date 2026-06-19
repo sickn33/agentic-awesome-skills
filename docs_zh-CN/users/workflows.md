@@ -24,465 +24,192 @@
 
 ---
 
-## 工作流：发布SaaS MVP
+## 工作流：发布 SaaS MVP
 
-构建并发布一个最小化但面向生产的SaaS产品。
+构建并发布一个最小化但面向生产的 SaaS 产品。
 
-### 步骤1：产品架构设计
-**技能：** [`@brainstorming`](../../skills/brainstorming/)
+**相关包：** `Essentials`、`Full-Stack Developer`、`QA & Testing`、`DevOps & Cloud`
 
-**任务：** "使用 @brainstorming 设计SaaS MVP架构，包括：
-- 核心功能识别
-- 技术栈选择
-- 数据库设计
-- API端点规划
-- 安全考虑"
+### 前置条件
 
-**产出：** 架构设计文档和功能列表
+- 已配置本地仓库和运行时。
+- 明确的用户问题和 MVP 范围。
+- 已选择基本部署目标。
 
----
+### 步骤
 
-### 步骤2：UI/UX设计
-**技能：** [`@frontend-design`](../../skills/frontend-design/)
+1. **规划范围**
+   - **目标：** 定义 MVP 边界和验收标准。
+   - **技能：** [`@brainstorming`](../../skills/brainstorming/)、[`@concise-planning`](../../skills/concise-planning/)、[`@writing-plans`](../../skills/writing-plans/)
+   - **提示词示例：** `使用 @concise-planning 定义我的 SaaS MVP 的里程碑和验收标准。`
 
-**任务：** "使用 @frontend-design 为核心功能设计用户界面，包括：
-- 用户注册/登录流程
-- 主要功能页面布局
-- 响应式设计
-- 无障碍考虑"
+2. **构建后端和 API**
+   - **目标：** 实现核心实体、API 和身份验证基线。
+   - **技能：** [`@backend-dev-guidelines`](../../skills/backend-dev-guidelines/)、[`@api-patterns`](../../skills/api-patterns/)、[`@database-design`](../../skills/database-design/)
+   - **提示词示例：** `使用 @backend-dev-guidelines 创建账单域的 API 和服务。`
 
-**产出：** UI设计规范和线框图
+3. **构建前端**
+   - **目标：** 发布具有清晰 UX 状态的核心用户流程。
+   - **技能：** [`@frontend-developer`](../../skills/frontend-developer/)、[`@react-patterns`](../../skills/react-patterns/)、[`@frontend-design`](../../skills/frontend-design/)
+   - **提示词示例：** `使用 @frontend-developer 实现入门、空状态和初始仪表板。`
 
----
+4. **测试和验证**
+   - **目标：** 在发布前覆盖关键用户旅程。
+   - **技能：** [`@test-driven-development`](../../skills/test-driven-development/)、[`@browser-automation`](../../skills/browser-automation/)、`@go-playwright`（可选，Go 栈）
+   - **提示词示例：** `使用 @browser-automation 为注册和结账流程创建 E2E 测试。`
+   - **Go 注意：** 如果项目 QA 和工具使用 Go，优先使用 `@go-playwright`。
 
-### 步骤3：安全架构
-**技能：** [`@security-audit`](../../skills/security-audit/)
-
-**任务：** "使用 @security-audit 为SaaS设计安全架构，包括：
-- 身份验证和授权
-- 数据保护
-- API安全
-- 合规要求（GDPR等）"
-
-**产出：** 安全设计文档和威胁模型
+5. **安全发布**
+   - **目标：** 带有可观察性和回滚计划的发布。
+   - **技能：** [`@deployment-procedures`](../../skills/deployment-procedures/)、[`@observability-engineer`](../../skills/observability-engineer/)
+   - **提示词示例：** `使用 @deployment-procedures 创建带有回滚的发布检查清单。`
 
 ---
 
-### 步骤4：数据库设计
-**技能：** [`@schema-design`](../../skills/schema-design/)
+## 工作流：Web 应用安全审计
 
-**任务：** "使用 @schema-design 设计数据库模式，包括：
-- 用户和权限表
-- 核心业务数据表
-- 索引策略
-- 数据迁移计划"
+从范围定义到修复验证的集中安全审查。
 
-**产出：** 完整的数据库模式和迁移脚本
+**相关包：** `Security Engineer`、`Security Developer`、`Observability & Monitoring`
 
----
+### 前置条件
 
-### 步骤5：API开发
-**技能：** [`@api-design`](../../skills/api-design/)
+- 测试的明确授权。
+- 已记录的目标内范围。
+- 可用的日志记录和环境详细信息。
 
-**任务：** "使用 @api-design 开发RESTful API，包括：
-- 认证端点
-- 核心功能CRUD操作
-- 错误处理
-- API文档生成"
+### 步骤
 
-**产出：** 完整的API实现和OpenAPI文档
+1. **定义范围和威胁模型**
+   - **目标：** 识别资产、信任边界和攻击路径。
+   - **技能：** [`@ethical-hacking-methodology`](../../skills/ethical-hacking-methodology/)、[`@threat-modeling-expert`](../../skills/threat-modeling-expert/)、[`@attack-tree-construction`](../../skills/attack-tree-construction/)
+   - **提示词示例：** `使用 @threat-modeling-expert 映射我的 Web 应用的关键资产和信任边界。`
 
----
+2. **审查身份验证和访问控制**
+   - **目标：** 检测账户接管和授权缺陷。
+   - **技能：** [`@broken-authentication`](../../skills/broken-authentication/)、[`@auth-implementation-patterns`](../../skills/auth-implementation-patterns/)、[`@idor-testing`](../../skills/idor-testing/)
+   - **提示词示例：** `使用 @idor-testing 验证多租户端点上的未授权访问。`
 
-### 步骤6：前端开发
-**技能：** [`@react-patterns`](../../skills/react-patterns/)
+3. **评估 API 和输入安全**
+   - **目标：** 发现高影响的 API 和注入漏洞。
+   - **技能：** [`@api-security-best-practices`](../../skills/api-security-best-practices/)、[`@api-fuzzing-bug-bounty`](../../skills/api-fuzzing-bug-bounty/)、[`@top-web-vulnerabilities`](../../skills/top-web-vulnerabilities/)
+   - **提示词示例：** `使用 @api-security-best-practices 审计身份验证、账单和管理端点。`
 
-**任务：** "使用 @react-patterns 构建前端应用，包括：
-- 组件架构
-- 状态管理
-- 路由设计
-- 性能优化"
-
-**产出：** 生产就绪的前端应用
+4. **加固和验证**
+   - **目标：** 将发现转换为修复并验证缓解证据。
+   - **技能：** [`@security-auditor`](../../skills/security-auditor/)、[`@sast-configuration`](../../skills/sast-configuration/)、[`@verification-before-completion`](../../skills/verification-before-completion/)
+   - **提示词示例：** `使用 @verification-before-completion 证明缓解措施是有效的。`
 
 ---
 
-### 步骤7：测试策略
-**技能：** [`@test-driven-development`](../../skills/test-driven-development/)
+## 工作流：构建 AI 代理系统
 
-**任务：** "使用 @test-driven-development 为SaaS实施测试，包括：
-- 单元测试
-- 集成测试
-- 端到端测试
-- 性能测试"
+设计和交付具有可测量可靠性的生产级代理。
 
-**产出：** 完整的测试套件和CI/CD配置
+**相关包：** `Agent Architect`、`LLM Application Developer`、`Data Engineering`
 
----
+### 前置条件
 
-### 步骤8：部署配置
-**技能：** [`@docker-expert`](../../skills/docker-expert/)
+- 具有可测量结果的狭窄用例。
+- 访问模型提供者和可观察性工具。
+- 初始数据集或知识语料库。
 
-**任务：** "使用 @docker-expert 配置生产部署，包括：
-- 容器化配置
-- Docker Compose编排
-- 环境变量管理
-- 健康检查"
+### 步骤
 
-**产出：** 部署配置和基础设施即代码
+1. **定义目标行为和 KPI**
+   - **目标：** 设置质量、延迟和失败阈值。
+   - **技能：** [`@ai-agents-architect`](../../skills/ai-agents-architect/)、[`@agent-evaluation`](../../skills/agent-evaluation/)、[`@product-manager-toolkit`](../../skills/product-manager-toolkit/)
+   - **提示词示例：** `使用 @agent-evaluation 定义我的代理的基准和成功标准。`
 
----
+2. **设计检索和记忆**
+   - **目标：** 构建可靠的检索和上下文架构。
+   - **技能：** [`@llm-app-patterns`](../../skills/llm-app-patterns/)、[`@rag-implementation`](../../skills/rag-implementation/)、[`@vector-database-engineer`](../../skills/vector-database-engineer/)
+   - **提示词示例：** `使用 @rag-implementation 设计分块、嵌入和检索管道。`
 
-### 步骤9：性能优化
-**技能：** [`@performance-analyzer`](../../skills/performance-analyzer/)
+3. **实现编排**
+   - **目标：** 实现确定性编排和工具边界。
+   - **技能：** [`@langgraph`](../../skills/langgraph/)、[`@mcp-builder`](../../skills/mcp-builder/)、[`@workflow-automation`](../../skills/workflow-automation/)
+   - **提示词示例：** `使用 @langgraph 实现带有回退和人机回环的代理图。`
 
-**任务：** "使用 @performance-analyzer 优化SaaS性能，包括：
-- 数据库查询优化
-- 前端资源优化
-- 缓存策略
-- 监控设置"
-
-**产出：** 性能优化报告和监控仪表板
+4. **评估和迭代**
+   - **目标：** 通过结构化循环改进弱点。
+   - **技能：** [`@agent-evaluation`](../../skills/agent-evaluation/)、[`@langfuse`](../../skills/langfuse/)、[`@kaizen`](../../skills/kaizen/)
+   - **提示词示例：** `使用 @kaizen 根据测试发现的失败模式确定修复优先级。`
 
 ---
 
-### 步骤10：发布准备
-**技能：** [`@deployment-pipeline`](../../skills/deployment-pipeline/)
+## 工作流：QA 和浏览器自动化
 
-**任务：** "使用 @deployment-pipeline 准备生产发布，包括：
-- 发布流程设计
-- 回滚策略
-- 监控告警
-- 用户文档"
+在 CI 中创建具有确定性执行的弹性浏览器自动化。
 
-**产出：** 生产就绪的发布计划
+**相关包：** `QA & Testing`、`Full-Stack Developer`
 
----
+### 前置条件
 
-## 工作流：Web应用安全审计
+- 测试环境和稳定的凭据。
+- 已识别的关键用户旅程。
+- 可用的 CI 管道。
 
-对现有Web应用进行全面安全评估。
+### 步骤
 
-### 步骤1：初步侦察
-**技能：** [`@reconnaissance`](../../skills/reconnaissance/)
+1. **准备测试策略**
+   - **目标：** 范围旅程、装置和执行环境。
+   - **技能：** [`@e2e-testing-patterns`](../../skills/e2e-testing-patterns/)、[`@test-driven-development`](../../skills/test-driven-development/)
+   - **提示词示例：** `使用 @e2e-testing-patterns 定义最小但高影响的 E2E 套件。`
 
-**任务：** "使用 @reconnaissance 收集目标信息，包括：
-- 技术栈识别
-- 子域名枚举
-- 端口扫描
-- 公开信息收集"
+2. **实现浏览器测试**
+   - **目标：** 使用稳定的选择器构建强大的测试覆盖。
+   - **技能：** [`@browser-automation`](../../skills/browser-automation/)、`@go-playwright`（可选，Go 栈）
+   - **提示词示例：** `使用 @go-playwright 在 Go 项目中实现浏览器自动化。`
 
-**产出：** 目标信息收集报告
-
----
-
-### 步骤2：漏洞扫描
-**技能：** [`@vulnerability-scanner`](../../skills/vulnerability-scanner/)
-
-**任务：** "使用 @vulnerability-scanner 进行自动扫描，包括：
-- 依赖漏洞检查
-- 配置安全检查
-- 已知漏洞扫描
-- 错误配置检测"
-
-**产出：** 自动扫描结果报告
+3. **分类和加固**
+   - **目标：** 消除不稳定行为并强制可重复性。
+   - **技能：** [`@systematic-debugging`](../../skills/systematic-debugging/)、[`@test-fixing`](../../skills/test-fixing/)、[`@verification-before-completion`](../../skills/verification-before-completion/)
+   - **提示词示例：** `使用 @systematic-debugging 分类和解决 CI 中的不稳定性。`
 
 ---
 
-### 步骤3：手动渗透测试
-**技能：** [`@pen-testing`](../../skills/pen-testing/)
+## 工作流：设计 DDD 核心域
 
-**任务：** "使用 @pen-testing 进行手动测试，包括：
-- SQL注入测试
-- XSS漏洞测试
-- CSRF测试
-- 认证绕过测试"
+连贯地对复杂领域建模，然后仅在合理的地方实现战术和事件模式。
 
-**产出：** 手动渗透测试报告
+**相关包：** `Architecture & Design`、`DDD & Evented Architecture`
 
----
+### 前置条件
 
-### 步骤4：API安全测试
-**技能：** [`@api-security-testing`](../../skills/api-security-testing/)
+- 至少有一个领域专家或产品负责人代理的访问权限。
+- 可用的当前系统上下文和集成环境。
+- 对业务目标和关键领域成果的共识。
 
-**任务：** "使用 @api-security-testing 测试API安全，包括：
-- 认证授权测试
-- 输入验证测试
-- 速率限制测试
-- 敏感数据泄露测试"
+### 步骤
 
-**产出：** API安全测试报告
+1. **评估 DDD 适用性和范围**
+   - **目标：** 决定完整 DDD、部分 DDD 或简单模块化架构是否合适。
+   - **技能：** [`@domain-driven-design`](../../skills/domain-driven-design/)、[`@architecture-decision-records`](../../skills/architecture-decision-records/)
+   - **提示词示例：** `使用 @domain-driven-design 评估完整 DDD 对于我们的账单和履行平台是否合理。`
 
----
+2. **创建战略模型**
+   - **目标：** 定义子域、限界上下文和通用语言。
+   - **技能：** [`@ddd-strategic-design`](../../skills/ddd-strategic-design/)
+   - **提示词示例：** `使用 @ddd-strategic-design 分类子域并提出具有所有权的限界上下文。`
 
-### 步骤5：业务逻辑测试
-**技能：** [`@business-logic-testing`](../../skills/business-logic-testing/)
+3. **映射上下文关系**
+   - **目标：** 定义上游/下游合约和反腐败边界。
+   - **技能：** [`@ddd-context-mapping`](../../skills/ddd-context-mapping/)
+   - **提示词示例：** `使用 @ddd-context-mapping 建模 Checkout、Billing 和 Inventory 的交互，明确合约所有权。`
 
-**任务：** "使用 @business-logic-testing 测试业务逻辑，包括：
-- 权限提升测试
-- 价格操纵测试
-- 工作流程绕过
-- 数据完整性测试"
+4. **实现战术模型**
+   - **目标：** 使用聚合、值对象和领域事件编码不变量。
+   - **技能：** [`@ddd-tactical-patterns`](../../skills/ddd-tactical-patterns/)、[`@test-driven-development`](../../skills/test-driven-development/)
+   - **提示词示例：** `使用 @ddd-tactical-patterns 为订单生命周期转换设计聚合和不变量。`
 
-**产出：** 业务逻辑安全报告
-
----
-
-### 步骤6：社会工程测试
-**技能：** [`@social-engineering-testing`](../../skills/social-engineering-testing/)
-
-**任务：** "使用 @social-engineering-testing 进行社会工程测试，包括：
-- 钓鱼邮件测试
-- 员工安全意识测试
-- 物理安全测试（如适用）
-- 安全培训效果评估"
-
-**产出：** 社会工程测试报告
+5. **有选择地采用事件模式**
+   - **目标：** 仅在复杂性和规模需要的地方应用 CQRS、事件存储、投影和 Saga。
+   - **技能：** [`@cqrs-implementation`](../../skills/cqrs-implementation/)、[`@event-store-design`](../../skills/event-store-design/)、[`@projection-patterns`](../../skills/projection-patterns/)、[`@saga-orchestration`](../../skills/saga-orchestration/)
+   - **提示词示例：** `使用 @cqrs-implementation 和 @projection-patterns 在不损害领域不变量的情况下扩展读端报告。`
 
 ---
 
-### 步骤7：报告和建议
-**技能：** [`@security-reporting`](../../skills/security-reporting/)
+## 机器可读的工作流
 
-**任务：** "使用 @security-reporting 生成综合报告，包括：
-- 风险等级评估
-- 漏洞详细说明
-- 修复建议
-- 安全加固指南"
-
-**产出：** 完整的安全审计报告
-
----
-
-## 工作流：AI应用开发
-
-开发一个完整的AI驱动应用。
-
-### 步骤1：AI策略规划
-**技能：** [`@ai-strategy`](../../skills/ai-strategy/)
-
-**任务：** "使用 @ai-strategy 规划AI应用，包括：
-- AI模型选择
-- 数据需求分析
-- 性能指标定义
-- 伦理考虑"
-
-**产出：** AI策略文档
-
----
-
-### 步骤2：数据工程
-**技能：** [`@data-engineering`](../../skills/data-engineering/)
-
-**任务：** "使用 @data-engineering 准备数据，包括：
-- 数据收集策略
-- 清洗和预处理
-- 数据管道构建
-- 数据质量管理"
-
-**产出：** 数据管道和预处理脚本
-
----
-
-### 步骤3：模型开发
-**技能：** [`@model-development`](../../skills/model-development/)
-
-**任务：** "使用 @model-development 开发AI模型，包括：
-- 模型架构设计
-- 训练流程实现
-- 模型评估
-- 超参数调优"
-
-**产出：** 训练好的模型和评估报告
-
----
-
-### 步骤4：提示工程
-**技能：** [`@prompt-engineer`](../../skills/prompt-engineer/)
-
-**任务：** "使用 @prompt-engineer 优化AI交互，包括：
-- 提示模板设计
-- 上下文管理
-- 输出格式控制
-- 错误处理"
-
-**产出：** 提示模板和对话管理系统
-
----
-
-### 步骤5：RAG系统构建
-**技能：** [`@rag-engineer`](../../skills/rag-engineer/)
-
-**任务：** "使用 @rag-engineer 构建RAG系统，包括：
-- 向量数据库设置
-- 检索策略设计
-- 生成增强
-- 评估指标"
-
-**产出：** 完整的RAG系统
-
----
-
-### 步骤6：应用集成
-**技能：** [`@ai-integration`](../../skills/ai-integration/)
-
-**任务：** "使用 @ai-integration 集成AI到应用，包括：
-- API端点设计
-- 错误处理机制
-- 缓存策略
-- 监控设置"
-
-**产出：** 生产就绪的AI应用
-
----
-
-## 工作流：全栈项目重构
-
-重构遗留的全栈应用。
-
-### 步骤1：代码审计
-**技能：** [`@code-audit`](../../skills/code-audit/)
-
-**任务：** "使用 @code-audit 审计现有代码，包括：
-- 代码质量评估
-- 性能瓶颈识别
-- 安全漏洞检查
-- 技术债务分析"
-
-**产出：** 代码审计报告
-
----
-
-### 步骤2：重构规划
-**技能：** [`@refactoring-planning`](../../skills/refactoring-planning/)
-
-**任务：** "使用 @refactoring-planning 制定重构计划，包括：
-- 优先级排序
-- 风险评估
-- 时间线规划
-- 资源分配"
-
-**产出：** 重构执行计划
-
----
-
-### 步骤3：数据库重构
-**技能：** [`@database-refactoring`](../../skills/database-refactoring/)
-
-**任务：** "使用 @database-refactoring 重构数据库，包括：
-- 模式优化
-- 索引重建
-- 查询优化
-- 迁移脚本"
-
-**产出：** 优化后的数据库和迁移脚本
-
----
-
-### 步骤4：后端重构
-**技能：** [`@backend-refactoring`](../../skills/backend-refactoring/)
-
-**任务：** "使用 @backend-refactoring 重构后端，包括：
-- 架构现代化
-- 代码清理
-- 性能优化
-- 测试补全"
-
-**产出：** 重构后的后端代码
-
----
-
-### 步骤5：前端重构
-**技能：** [`@frontend-refactoring`](../../skills/frontend-refactoring/)
-
-**任务：** "使用 @frontend-refactoring 重构前端，包括：
-- 组件重构
-- 状态管理优化
-- 性能提升
-- 用户体验改进"
-
-**产出：** 重构后的前端代码
-
----
-
-### 步骤6：测试验证
-**技能：** [`@testing-verification`](../../skills/testing-verification/)
-
-**任务：** "使用 @testing-verification 验证重构，包括：
-- 回归测试
-- 性能对比
-- 安全验证
-- 用户验收测试"
-
-**产出：** 验证测试报告
-
----
-
-## 💡 工作流最佳实践
-
-### 📋 使用原则
-
-1. **按顺序执行：** 不要跳过步骤，每个步骤都依赖前一步的产出
-2. **保存成果：** 每个步骤的输出都是下一步的重要输入
-3. **迭代改进：** 根据实际情况调整工作流
-4. **团队协作：** 分配不同步骤给不同专业角色
-
-### 🔄 自定义工作流
-
-**创建自定义工作流：**
-1. 明确目标和成果
-2. 选择合适的技能组合
-3. 设计步骤顺序
-4. 定义每个步骤的产出要求
-5. 测试和优化
-
-### 🎯 工作流选择指南
-
-| 项目类型 | 推荐工作流 | 关键技能 |
-| :------- | :----------- | :------- |
-| **新SaaS产品** | Ship a SaaS MVP | 架构、安全、部署 |
-| **安全审计** | Web应用安全审计 | 渗透测试、漏洞扫描 |
-| **AI项目** | AI应用开发 | 模型开发、RAG工程 |
-| **代码重构** | 全栈项目重构 | 代码审计、重构策略 |
-| **移动应用** | 移动应用开发 | React Native、移动安全 |
-
----
-
-## 🆘 获取帮助
-
-### ❓ 常见问题
-
-**Q: 可以跳过某些步骤吗？**
-A: 不建议。每个步骤都为后续步骤提供必要基础。
-
-**Q: 工作流需要多长时间？**
-A: 根据项目复杂度，从几天到几个月不等。
-
-**Q: 可以并行执行步骤吗？**
-A: 部分步骤可以并行，但需确保依赖关系。
-
-### 📚 更多资源
-
-- 📋 [技能包](bundles.md) - 按角色选择技能
-- 📖 [使用指南](usage.md) - 详细使用说明
-- ❓ [常见问题](faq.md) - 答疑解惑
-- 🤝 [社区讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions) - 经验分享
-
----
-
-## 🎉 开始使用工作流
-
-现在您有了完整的工作流指南：
-
-1. **选择工作流**符合您的项目需求
-2. **按步骤执行**每个阶段的任务
-3. **保存每个产出**用于后续步骤
-4. **团队协作**提高效率
-
-**立即开始：**
-
-```bash
-"根据我的项目需求，使用最合适的工作流开始工作！"
-```
-
-祝您项目成功！🚀
+对于工具和自动化，工作流元数据可在[data/workflows.json](../../data/workflows.json)中获得。

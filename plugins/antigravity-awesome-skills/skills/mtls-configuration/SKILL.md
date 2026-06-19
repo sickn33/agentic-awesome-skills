@@ -360,3 +360,8 @@ linkerd viz tap deploy/my-app --to deploy/my-backend
 - [SPIFFE/SPIRE](https://spiffe.io/)
 - [cert-manager](https://cert-manager.io/)
 - [Zero Trust Architecture (NIST)](https://www.nist.gov/publications/zero-trust-architecture)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

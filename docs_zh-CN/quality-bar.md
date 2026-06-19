@@ -341,14 +341,14 @@ npm run quality:compare skills/skill-name/
 
 **参考标准：**
 - [技能结构指南](skill-anatomy.md)
-- [代码规范指南](coding-standards.md)
-- [安全最佳实践](security-best-practices.md)
-- [性能优化指南](performance-guidelines.md)
+- [代码规范指南](contributors/quality-bar.md)
+- [安全最佳实践](contributors/security-guardrails.md)
+- [性能优化指南](contributors/quality-bar.md)
 
 **质量模板：**
-- [优秀技能示例](examples/excellent-skill/)
-- [常见错误示例](examples/common-mistakes/)
-- [改进前后的对比](examples/before-after/)
+- [优秀技能示例](contributors/examples.md)
+- [常见错误示例](contributors/examples.md)
+- [改进前后的对比](contributors/examples.md)
 
 ---
 

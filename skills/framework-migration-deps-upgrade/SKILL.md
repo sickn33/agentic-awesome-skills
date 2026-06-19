@@ -1,7 +1,7 @@
 ---
 name: framework-migration-deps-upgrade
 description: "You are a dependency management expert specializing in safe, incremental upgrades of project dependencies. Plan and execute dependency updates with minimal risk, proper testing, and clear migration pa"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -49,3 +49,8 @@ Focus on safe, incremental upgrades that maintain system stability while keeping
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed patterns and examples.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

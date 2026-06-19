@@ -21,7 +21,6 @@ allowed-tools:
 # Sitemap Analysis & Generation
 
 ## When to Use
-
 - Use when analyzing an existing XML sitemap or generating a new one.
 - Use when the user mentions sitemap issues, sitemap generation, or sitemap validation.
 - Use when checking URL coverage, sitemap limits, and sitemap quality rules.
@@ -127,3 +126,8 @@ allowed-tools:
 - `sitemap.xml` (or split files with index)
 - `STRUCTURE.md`: site architecture documentation
 - URL count and organization summary
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -218,7 +218,7 @@ This skill connects to all other skills as a cross-cutting concern:
 Internal reference:
 - Metrics Reference - Detailed evaluation metrics and implementation
 
-## References
+### References
 
 Internal skills:
 - All other skills connect to evaluation for quality measurement
@@ -236,3 +236,8 @@ External resources:
 **Last Updated**: 2025-12-20
 **Author**: Agent Skills for Context Engineering Contributors
 **Version**: 1.0.0
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -7,6 +7,11 @@ source: community
 
 # Three.js Textures
 
+## When to Use
+- You need to load, configure, or optimize textures in Three.js.
+- The task involves UV mapping, texture settings, cubemaps, environment maps, or HDR texture workflows.
+- You are working on surface detail and material inputs rather than geometry or animation.
+
 ## Quick Start
 
 ```javascript
@@ -636,3 +641,8 @@ Three.js r183 supports ISO 21496-1 gainmap metadata in HDR textures, enabling pr
 - `threejs-materials` - Applying textures to materials
 - `threejs-loaders` - Loading texture files
 - `threejs-shaders` - Custom texture sampling
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

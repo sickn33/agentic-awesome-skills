@@ -220,3 +220,8 @@ When using `maxSteps`, the `useChat` hook will display intermediate tool calls i
 
 **Problem:** "Tool execution failed" or the LLM didn't return an answer after using a tool.
 **Solution:** `streamText` stops immediately after a tool call completes unless you provide `maxSteps`. Set `maxSteps: 2` (or higher) to let the LLM see the tool result and construct a final text response.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -9,6 +9,11 @@ source: community
 
 Extract product data, prices, reviews, and seller information from any e-commerce platform using Apify's E-commerce Scraping Tool.
 
+## When to Use
+- You need product, pricing, review, stock, or seller data from e-commerce sites.
+- The task involves price monitoring, competitor product comparison, MAP enforcement, or review analysis.
+- You need a guided workflow for extracting marketplace data and summarizing findings.
+
 ## Prerequisites
 
 - `.env` file with `APIFY_TOKEN` (at `~/.claude/.env`)
@@ -263,3 +268,8 @@ Report:
 | `Timeout` | Reduce `maxProductResults` or increase `--timeout` |
 | `No results` | Verify URLs are valid and accessible |
 | `Invalid marketplace` | Check marketplace value matches supported list exactly |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

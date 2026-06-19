@@ -144,3 +144,8 @@ The marker is the ONLY way to complete the loop. Natural language like "looks go
 - "This minor issue seems wrong, I'll skip all of them" - Evaluate each one individually
 - "The reviewer is being too strict" - The quality bar exists for a reason
 - "It's good enough" - If there are major issues, it's not good enough
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

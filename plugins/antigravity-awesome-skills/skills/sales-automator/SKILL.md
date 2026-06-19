@@ -1,12 +1,6 @@
 ---
 name: sales-automator
-description: 'Draft cold emails, follow-ups, and proposal templates. Creates
-
-  pricing pages, case studies, and sales scripts. Use PROACTIVELY for sales
-
-  outreach or lead nurturing.
-
-  '
+description: 'Draft cold emails, follow-ups, and proposal templates. Creates pricing pages, case studies, and sales scripts. Use PROACTIVELY for sales outreach or lead nurturing. '
 risk: unknown
 source: community
 date_added: '2026-02-27'
@@ -58,3 +52,8 @@ You are a sales automation specialist focused on conversions and relationships.
 - Tracking metrics to monitor
 
 Write conversationally. Show empathy for customer problems.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

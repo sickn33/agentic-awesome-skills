@@ -7,6 +7,11 @@ source: community
 
 # Three.js Geometry
 
+## When to Use
+- You need to create or optimize geometry in Three.js.
+- The task involves built-in shapes, custom `BufferGeometry`, vertices, or instanced rendering.
+- You are working on mesh structure rather than scene setup or materials alone.
+
 ## Quick Start
 
 ```javascript
@@ -578,3 +583,8 @@ scene.add(batchedMesh);
 - `threejs-fundamentals` - Scene setup and Object3D
 - `threejs-materials` - Material types for meshes
 - `threejs-shaders` - Custom vertex manipulation
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

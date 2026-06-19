@@ -208,9 +208,14 @@ Level 1 (Returns Associate) → Level 2 (Team Lead, 2 hours) → Level 3 (Return
 - For the comprehensive edge case library with full analysis, see [edge-cases.md](references/edge-cases.md)
 - For complete communication templates with variables and tone guidance, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you need to **design, improve, or troubleshoot returns and reverse logistics operations**:
 
 - Defining or revising returns policies, grading standards, and disposition routes across channels.
 - Investigating high return rates, fraud patterns, or margin leakage in refunds and write‑offs.
 - Building SOPs, scorecards, or automation flows for RMAs, inspections, RTV, and warranty workflows in retail or e‑commerce environments.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

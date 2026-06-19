@@ -9,7 +9,8 @@ This example shows one way to integrate **antigravity-awesome-skills** with a Je
 ## What this example demonstrates
 
 - How to:
-  - load the global manifest `data/skills_index.json` once at startup;
+  - load the canonical manifest `skills_index.json` once at startup;
+  - optionally support `data/skills_index.json` for compatibility-only hosts.
   - scan conversation messages for `@skill-id` patterns;
   - resolve those ids to entries in the manifest;
   - read only the corresponding `SKILL.md` files from disk (lazy loading);
@@ -20,7 +21,12 @@ This example shows one way to integrate **antigravity-awesome-skills** with a Je
 - How to enforce a **maximum number of skills per turn** via `maxSkillsPerTurn`.
 - How to choose whether to **truncate or error** when too many skills are requested via `overflowBehavior`.
 
-This pattern avoids context overflow when you have 1,331+ skills installed.
+This pattern avoids context overflow when you have 1,646+ skills installed.
+
+Manifest contract references:
+
+- [`../../../schemas/skills-index.v1.schema.json`](../../../schemas/skills-index.v1.schema.json)
+- [`../../users/discovery-manifest.md`](../../users/discovery-manifest.md)
 
 ---
 
@@ -33,7 +39,7 @@ This pattern avoids context overflow when you have 1,331+ skills installed.
     - `loadSkillBodies(skillsRoot, metas)`;
     - `buildModelMessages({...})`.
 - See also the integration guide:
-  - [`docs/integrations/jetski-cortex.md`](../../docs/integrations/jetski-cortex.md)
+  - [`docs/integrations/jetski-cortex.md`](../jetski-cortex.md)
 
 ---
 
@@ -49,9 +55,9 @@ import {
 
 const REPO_ROOT = "/path/to/antigravity-awesome-skills";
 const SKILLS_ROOT = REPO_ROOT;
-const INDEX_PATH = path.join(REPO_ROOT, "data", "skills_index.json");
+const INDEX_PATH = path.join(REPO_ROOT, "skills_index.json");
 
-// 1. Bootstrap once at agent startup
+// 1. Bootstrap once at agent startup (optionally validate `data/skills_index.json` for compatibility hosts).
 const skillIndex = loadSkillIndex(INDEX_PATH);
 
 // 2. Before calling the model, build messages with lazy‑loaded skills
@@ -85,7 +91,8 @@ Adapt the paths and model call to your environment.
 
 - **Do not** iterate through `skills/*/SKILL.md` and load everything at once.
 - This example:
-  - assumes skills live under the same repo root as `data/skills_index.json`;
+  - assumes skills live under the same repo root as `skills_index.json`;
+  - keeps `data/skills_index.json` for compatibility readers only;
   - uses a plain Node.js ESM module so it can be imported directly without a TypeScript runtime.
 - In a real host:
   - wire `buildModelMessages` into the point where you currently assemble the prompt before `TrajectoryChatConverter`;

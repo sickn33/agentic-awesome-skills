@@ -43,7 +43,7 @@ Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhook
 
 Skill para implementar integracoes profissionais com WhatsApp Business usando a Cloud API oficial da Meta. Suporta Node.js/TypeScript e Python.
 
-## Overview
+### Overview
 
 A WhatsApp Cloud API e a API oficial da Meta para envio e recebimento de mensagens via WhatsApp Business. Desde outubro 2025, e a unica opcao suportada (a API On-Premises foi descontinuada).
 
@@ -486,3 +486,8 @@ python scripts/validate_config.py
 - `instagram` - Complementary skill for enhanced analysis
 - `social-orchestrator` - Complementary skill for enhanced analysis
 - `telegram` - Complementary skill for enhanced analysis
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,7 +1,7 @@
 ---
 name: projection-patterns
 description: "Build read models and projections from event streams. Use when implementing CQRS read sides, building materialized views, or optimizing query performance in event-sourced systems."
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---
@@ -34,3 +34,8 @@ Comprehensive guide to building projections and read models for event-sourced sy
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed patterns and examples.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

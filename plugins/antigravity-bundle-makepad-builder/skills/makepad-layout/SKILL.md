@@ -6,7 +6,7 @@ description: |
   makepad padding, makepad margin, makepad flow, makepad align,
   Fit, Fill, Size, Walk, "how to center in makepad",
   makepad 布局, makepad 宽度, makepad 对齐, makepad 居中
-risk: unknown
+risk: safe
 source: community
 ---
 
@@ -19,6 +19,11 @@ source: community
 You are an expert at Makepad layout system. Help users by:
 - **Writing code**: Generate layout code following the patterns below
 - **Answering questions**: Explain layout concepts, sizing, flow directions
+
+## When to Use
+- You need to size, align, or position widgets in a Makepad UI.
+- The task involves `Walk`, `Align`, `Fit`, `Fill`, padding, spacing, or container flow configuration.
+- You want Makepad-specific layout solutions for centering, responsiveness, or composition.
 
 ## Documentation
 
@@ -176,3 +181,8 @@ Refer to the local files for detailed documentation:
 2. `Fill` takes all available space, `Fit` shrinks to content
 3. Unlike CSS flexbox, there's no flex-grow/shrink - use Fill/Fit
 4. Alignment applies to children, not the element itself
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

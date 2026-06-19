@@ -2,6 +2,8 @@ import os
 import json
 import re
 import sys
+from collections.abc import Mapping
+from datetime import date, datetime
 
 import yaml
 from _project_paths import find_repo_root
@@ -161,6 +163,27 @@ def infer_category(skill_info, metadata, body_text):
 
     return infer_dynamic_category(str(skill_info.get("id", "")))
 
+
+def normalize_yaml_value(value):
+    if isinstance(value, Mapping):
+        return {key: normalize_yaml_value(val) for key, val in value.items()}
+    if isinstance(value, list):
+        return [normalize_yaml_value(item) for item in value]
+    if isinstance(value, (date, datetime)):
+        return value.isoformat()
+    if isinstance(value, (bytes, bytearray)):
+        return bytes(value).decode("utf-8", errors="replace")
+    return value
+
+
+def coerce_metadata_text(value):
+    if value is None or isinstance(value, (Mapping, list, tuple, set)):
+        return None
+    if isinstance(value, str):
+        return value
+    return str(value)
+
+
 def parse_frontmatter(content):
     """
     Parses YAML frontmatter, sanitizing unquoted values containing @.
@@ -190,7 +213,12 @@ def parse_frontmatter(content):
     sanitized_yaml = '\n'.join(sanitized_lines)
     
     try:
-        return yaml.safe_load(sanitized_yaml) or {}
+        parsed = yaml.safe_load(sanitized_yaml) or {}
+        parsed = normalize_yaml_value(parsed)
+        if not isinstance(parsed, Mapping):
+            print("⚠️ YAML frontmatter must be a mapping/object")
+            return {}
+        return dict(parsed)
     except yaml.YAMLError as e:
         print(f"⚠️ YAML parsing error: {e}")
         return {}
@@ -240,11 +268,25 @@ def generate_index(skills_dir, output_file):
                 body = content[fm_match.end():].strip()
             
             # Merge Metadata (frontmatter takes priority)
-            if "name" in metadata: skill_info["name"] = metadata["name"]
-            if "description" in metadata: skill_info["description"] = metadata["description"]
-            if "risk" in metadata: skill_info["risk"] = metadata["risk"]
-            if "source" in metadata: skill_info["source"] = metadata["source"]
-            if "date_added" in metadata: skill_info["date_added"] = metadata["date_added"]
+            name = coerce_metadata_text(metadata.get("name"))
+            description = coerce_metadata_text(metadata.get("description"))
+            risk = coerce_metadata_text(metadata.get("risk"))
+            source = coerce_metadata_text(metadata.get("source"))
+            date_added = coerce_metadata_text(metadata.get("date_added"))
+            category = coerce_metadata_text(metadata.get("category"))
+
+            if name is not None:
+                skill_info["name"] = name
+            if description is not None:
+                skill_info["description"] = description
+            if risk is not None:
+                skill_info["risk"] = risk
+            if source is not None:
+                skill_info["source"] = source
+            if date_added is not None:
+                skill_info["date_added"] = date_added
+            if category is not None:
+                skill_info["category"] = category
             
             # Category: prefer frontmatter, then folder structure, then default
             inferred_category, confidence, reason = infer_category(skill_info, metadata, body)

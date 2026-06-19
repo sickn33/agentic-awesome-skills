@@ -12,6 +12,22 @@ const editorialBundles = JSON.parse(fs.readFileSync(editorialBundlesPath, "utf8"
 const compatibility = JSON.parse(fs.readFileSync(compatibilityPath, "utf8")).skills || [];
 const compatibilityById = new Map(compatibility.map((skill) => [skill.id, skill]));
 
+function sleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+function waitForPathState(filePath, shouldExist, attempts = 5, delayMs = 50) {
+  for (let index = 0; index < attempts; index += 1) {
+    if (fs.existsSync(filePath) === shouldExist) {
+      return true;
+    }
+    if (index < attempts - 1) {
+      sleep(delayMs);
+    }
+  }
+  return fs.existsSync(filePath) === shouldExist;
+}
+
 assert.ok(Array.isArray(marketplace.plugins), "marketplace.json must define a plugins array");
 assert.ok(marketplace.plugins.length > 0, "marketplace.json must contain at least one plugin");
 assert.strictEqual(
@@ -52,9 +68,15 @@ const pluginRoot = path.join(projectRoot, "plugins", "antigravity-awesome-skills
 for (const skill of compatibility) {
   const copiedPath = path.join(pluginRoot, ...skill.id.split("/"));
   if (skill.targets.claude === "supported") {
-    assert.ok(fs.existsSync(copiedPath), `Claude root plugin should include supported skill ${skill.id}`);
+    assert.ok(
+      waitForPathState(copiedPath, true),
+      `Claude root plugin should include supported skill ${skill.id}`,
+    );
   } else {
-    assert.ok(!fs.existsSync(copiedPath), `Claude root plugin should exclude blocked skill ${skill.id}`);
+    assert.ok(
+      waitForPathState(copiedPath, false),
+      `Claude root plugin should exclude blocked skill ${skill.id}`,
+    );
   }
 }
 

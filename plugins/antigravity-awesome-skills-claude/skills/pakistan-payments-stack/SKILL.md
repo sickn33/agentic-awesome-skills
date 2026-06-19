@@ -168,3 +168,8 @@ Related Skills
 - Easypay integration guides: `https://easypay.easypaisa.com.pk/easypay-merchant/faces/pg/site/IntegrationGuides.jsf`
 - SBP PSO/PSP: `https://www.sbp.org.pk/PS/PSOSP.htm`
 - SBP Raast P2M/P2P: `https://www.sbp.org.pk/dfs/Raast-P2M.html`
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

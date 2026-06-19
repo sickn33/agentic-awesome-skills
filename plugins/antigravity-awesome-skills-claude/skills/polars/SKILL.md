@@ -10,6 +10,11 @@ source: community
 
 # Polars
 
+## When to Use
+- You need a faster in-memory DataFrame workflow than pandas for data that still fits in RAM.
+- You are building ETL, analytics, or transformation pipelines that benefit from lazy evaluation and parallel execution.
+- You want expression-based tabular operations on top of Apache Arrow semantics.
+
 ## Overview
 
 Polars is a lightning-fast DataFrame library for Python and Rust built on Apache Arrow. Work with Polars' expression-based API, lazy evaluation framework, and high-performance data manipulation capabilities for efficient data processing, pandas migration, and data pipeline optimization.
@@ -384,3 +389,8 @@ This skill includes comprehensive reference documentation:
 - `best_practices.md` - Performance optimization tips and common patterns
 
 Load these references as needed when users require detailed information about specific topics.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

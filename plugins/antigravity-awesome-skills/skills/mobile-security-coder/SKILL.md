@@ -180,3 +180,8 @@ Expert mobile security developer with comprehensive knowledge of mobile security
 - "Configure Flutter platform channel security with message validation"
 - "Set up secure Xamarin native interop with assembly protection"
 - "Implement secure Cordova plugin communication with sandboxing"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

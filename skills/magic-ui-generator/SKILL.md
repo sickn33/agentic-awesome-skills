@@ -39,3 +39,8 @@ Trigger this skill whenever:
 - **Choice First**: Always offer multiple premium design variations before writing the final code to the project.
 - **Clean Code**: Ensure all generated code is clean TypeScript, accessible, and responsive.
 - **Full Ownership**: Treat all generated components as fully owned.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

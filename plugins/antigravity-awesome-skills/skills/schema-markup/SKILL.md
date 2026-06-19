@@ -6,8 +6,6 @@ source: community
 date_added: '2026-02-27'
 ---
 
----
-
 # Schema Markup & Structured Data
 
 You are an expert in **structured data and schema markup** with a focus on
@@ -111,6 +109,17 @@ This is a **diagnostic score**, not a promise of rich results.
 - No attempt to game rich results
 
 ---
+
+### Scoring Guidance per Category
+
+For each of the six scoring categories, allot points within the category's weight band using these anchors:
+
+- **0–15% of band:** Schema describes none of the visible content (e.g. you would mark `description` for a `Recipe` page that has no recipe markup yet).
+- **16–40% of band:** Partial alignment — the schema describes some but not all of the visible content, OR maps to a less-common schema.org type.
+- **41–80% of band:** Strong alignment — the schema describes the bulk of the visible content with a common schema.org type.
+- **81–100% of band:** Exemplary — the schema covers all visible content, uses a Google-supported rich-result type, and includes all required properties.
+
+Sum the per-category scores to compute the Eligibility Index used in §"Eligibility Bands" below.
 
 ### Eligibility Bands (Required)
 
@@ -358,3 +367,8 @@ Where and how to add it
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

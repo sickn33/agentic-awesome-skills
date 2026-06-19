@@ -459,3 +459,8 @@ trpc.notification.onNew.useSubscription(undefined, {
 - [create-t3-app](https://create.t3.gg) — Production Next.js starter with tRPC wired in
 - [tRPC GitHub](https://github.com/trpc/trpc)
 - [TanStack Query Docs](https://tanstack.com/query/latest)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

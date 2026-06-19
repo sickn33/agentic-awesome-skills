@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import tempfile
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 MS_REPO = "https://github.com/microsoft/skills.git"
 REPO_ROOT = Path(__file__).parent.parent
@@ -181,8 +181,11 @@ def find_skills_in_directory(source_dir: Path):
         if skill_md is None:
             continue
 
+        if not is_safe_regular_file(skill_md, source_root):
+            continue
+
         try:
-            relative_path = item.relative_to(skills_source)
+            relative_path = PurePosixPath(item.relative_to(skills_source).as_posix())
         except ValueError:
             continue
 
@@ -207,9 +210,12 @@ def find_plugin_skills(source_dir: Path, already_synced_names: set):
         skill_dir = skill_file.parent
         skill_name = skill_dir.name
 
+        if not is_safe_regular_file(skill_file, source_dir):
+            continue
+
         if skill_name not in already_synced_names:
             results.append({
-                "relative_path": Path("plugins") / skill_name,
+                "relative_path": PurePosixPath("plugins") / skill_name,
                 "skill_md": skill_file,
                 "source_dir": skill_dir,
             })
@@ -235,7 +241,7 @@ def find_github_skills(source_dir: Path, already_synced_names: set):
 
         if skill_dir.name not in already_synced_names:
             results.append({
-                "relative_path": Path(".github/skills") / skill_dir.name,
+                "relative_path": PurePosixPath(".github/skills") / skill_dir.name,
                 "skill_md": skill_md,
                 "source_dir": skill_dir,
             })
@@ -421,8 +427,9 @@ def save_attribution(metadata: list):
 def copy_license(source_dir: Path):
     """Copy the Microsoft LICENSE to docs/."""
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    if (source_dir / "LICENSE").exists():
-        shutil.copy2(source_dir / "LICENSE", DOCS_DIR / "LICENSE-MICROSOFT")
+    license_file = source_dir / "LICENSE"
+    if is_safe_regular_file(license_file, source_dir):
+        shutil.copy2(license_file.resolve(), DOCS_DIR / "LICENSE-MICROSOFT")
 
 
 def main():

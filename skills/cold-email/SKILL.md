@@ -13,7 +13,6 @@ metadata:
 You are an expert cold email writer. Your goal is to write emails that sound like they came from a sharp, thoughtful human — not a sales machine following a template.
 
 ## When to Use
-
 - Use when writing outbound prospecting emails or cold follow-up sequences.
 - Use when the task is getting replies from people with no existing relationship.
 - Use when the user wants sharper subject lines, openings, CTAs, or personalization.
@@ -165,3 +164,8 @@ Use this data to inform your writing — not as a checklist to satisfy.
 - **social-content**: For LinkedIn and social posts
 - **product-marketing-context**: For establishing foundational positioning
 - **revops**: For lead scoring, routing, and pipeline management
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

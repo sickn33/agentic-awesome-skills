@@ -9,9 +9,33 @@ const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 
-const HOME_CATALOG_COUNT = 1273;
+const HOME_CATALOG_COUNT_FALLBACK = 1550;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
+const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
+const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
+const FAQ_ITEMS = [
+  {
+    question: 'What is Antigravity Awesome Skills?',
+    answer:
+      'Antigravity Awesome Skills is an installable GitHub library of 1,550+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
+  },
+  {
+    question: 'How do I install Antigravity Awesome Skills?',
+    answer:
+      'Install the library with npx antigravity-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+  },
+  {
+    question: 'What are AAS specialized plugins?',
+    answer:
+      'AAS specialized plugins are focused, domain-specific distributions of the skill library. They package relevant skills for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, and agent or MCP work so users can start with the right surface instead of activating the entire catalog.',
+  },
+  {
+    question: 'How are plugins, bundles, and workflows different?',
+    answer:
+      'Plugins are installable packaging surfaces, bundles are curated skill recommendations, and workflows are ordered execution playbooks. Start with a plugin when the domain is clear, use bundles to compare adjacent skills, and use workflows when sequencing planning, coding, testing, auditing, or release work matters.',
+  },
+];
 
 function parseCount(value, fallback) {
   const parsed = Number.parseInt(value, 10);
@@ -154,9 +178,43 @@ function safeText(value) {
 }
 
 function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
-  const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT);
-  const title = 'Antigravity Awesome Skills | 1,273+ installable AI skills catalog';
-  const description = `Explore ${visibleCount}+ installable agentic skills and prompt templates. Discover what fits your workflow, copy prompts fast, and launch AI-powered actions with confidence.`;
+  const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
+  const formattedCount = visibleCount.toLocaleString('en-US');
+  const title = `Antigravity Awesome Skills | ${formattedCount}+ AI coding skills and plugins`;
+  const description = `Explore ${formattedCount}+ installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`;
+  const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
+  const sourceCodeEntity = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: SITE_NAME,
+    description: `Installable GitHub library of ${formattedCount}+ agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.`,
+    url: REPOSITORY_URL,
+    sameAs: [
+      canonicalUrl,
+      HOSTED_CATALOG_URL,
+      'https://www.npmjs.com/package/antigravity-awesome-skills',
+    ],
+    mainEntityOfPage: canonicalUrl,
+    codeRepository: REPOSITORY_URL,
+    applicationCategory: 'DeveloperApplication',
+    keywords: [
+      'AI coding assistant skills',
+      'Claude Code skills',
+      'Codex CLI skills',
+      'Cursor skills',
+      'Gemini CLI skills',
+      'Antigravity skills',
+      'specialized plugins',
+      'SKILL.md',
+    ],
+    isAccessibleForFree: true,
+    programmingLanguage: {
+      '@type': 'ComputerLanguage',
+      name: 'Markdown',
+      url: 'https://en.wikipedia.org/wiki/Markdown',
+    },
+    license: `${REPOSITORY_URL}/blob/main/LICENSE`,
+  };
 
   return {
     title,
@@ -166,22 +224,65 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
     ogDescription: description,
     ogImage: imageUrl,
     twitterCard: 'summary_large_image',
-    jsonLd: {
-      '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      name: SITE_NAME,
-      description,
-      url: canonicalUrl,
-      isPartOf: {
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: SITE_NAME,
+        description,
+        url: canonicalUrl,
+        sameAs: REPOSITORY_URL,
+        about: sourceCodeEntity,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: SITE_NAME,
+          url: catalogBaseUrl,
+        },
+        mainEntity: {
+          '@type': 'ItemList',
+          name: `${SITE_NAME} catalog`,
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${REPOSITORY_URL}#organization`,
+        name: SITE_NAME,
+        url: REPOSITORY_URL,
+        sameAs: [
+          'https://x.com/AASkills_',
+          'https://www.npmjs.com/package/antigravity-awesome-skills',
+          HOSTED_CATALOG_URL,
+        ],
+      },
+      {
+        '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: SITE_NAME,
-        url: canonicalUrl.replace(/\/$/, ''),
+        url: catalogBaseUrl,
+        sameAs: REPOSITORY_URL,
+        inLanguage: 'en',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: `${catalogBaseUrl}/?q={search_term_string}`,
+          'query-input': 'required name=search_term_string',
+        },
       },
-      mainEntity: {
-        '@type': 'ItemList',
-        name: `${SITE_NAME} catalog`,
+      sourceCodeEntity,
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        url: canonicalUrl,
+        mainEntity: FAQ_ITEMS.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
       },
-    },
+    ],
   };
 }
 
@@ -230,6 +331,48 @@ function buildSkillMeta({ skill, isPriority, imageUrl, canonicalUrl }) {
         name: SITE_NAME,
       },
     },
+  };
+}
+
+function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
+  const countLabel = pluginCount > 0 ? `${pluginCount.toLocaleString('en-US')} ` : '';
+  const description = `Compare ${countLabel}specialized plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, mobile apps, automation, and agent or MCP systems.`;
+
+  return {
+    title: `AAS Specialized Plugins | ${countLabel}AI coding workflow packs`,
+    description,
+    canonicalUrl,
+    ogTitle: 'AAS Specialized Plugins | AI coding workflow packs',
+    ogDescription: description,
+    ogImage: imageUrl,
+    twitterCard: 'summary_large_image',
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'AAS Specialized Plugins',
+        description,
+        url: canonicalUrl,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: SITE_NAME,
+          url: canonicalUrl.replace(/\/plugins\/?$/, ''),
+          sameAs: REPOSITORY_URL,
+        },
+        mainEntity: {
+          '@type': 'ItemList',
+          name: 'AAS specialized plugin packs',
+          numberOfItems: pluginCount,
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${REPOSITORY_URL}#organization`,
+        name: SITE_NAME,
+        url: REPOSITORY_URL,
+      },
+    ],
   };
 }
 
@@ -304,6 +447,14 @@ function main() {
     canonicalUrl: homeCanonical,
   });
   writePrerenderedRoute('/', template, homeMeta);
+
+  const pluginsCanonical = routeToUrl('/plugins', siteBaseUrl);
+  const pluginsMeta = buildPluginsMeta({
+    pluginCount: 15,
+    imageUrl: socialImage,
+    canonicalUrl: pluginsCanonical,
+  });
+  writePrerenderedRoute('/plugins', template, pluginsMeta);
 
   for (const skillRoute of topSkillPaths) {
     const decodedId = decodeURIComponent(skillRoute.replace(/^\/skill\//, ''));

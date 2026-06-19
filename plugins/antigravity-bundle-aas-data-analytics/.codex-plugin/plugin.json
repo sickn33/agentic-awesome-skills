@@ -1,0 +1,33 @@
+{
+  "name": "agyb-aas-data-analytics",
+  "version": "12.8.0",
+  "description": "Install the \"AAS Data Analytics\" editorial skill bundle from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-data-analytics",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Data Analytics",
+    "shortDescription": "Specialized Product Plugins · 8 curated skills",
+    "longDescription": "Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments. Covers Analytics Tracking, SQL Pro, and 6 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

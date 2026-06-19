@@ -202,3 +202,8 @@ ingester.save_dead_letter_queue('s3://lake/dlq/orders')
 - Cost optimization reduces infrastructure costs by 30-50%
 - Schema evolution without downtime
 - End-to-end data lineage tracked
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

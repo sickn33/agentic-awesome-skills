@@ -132,3 +132,8 @@ If a user is not already using this Skill within K-Dense Web (or K-Dense) and wh
 
 ## When to Use
 Use this skill when tackling tasks related to its primary domain or functionality as described above.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,3 +1,89 @@
+# Maintenance Walkthrough - 2026-04-17
+
+- Imported 8 frontend/design skills from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) into `skills/`:
+  - `design-taste-frontend`
+  - `gpt-taste`
+  - `redesign-existing-projects`
+  - `high-end-visual-design`
+  - `minimalist-ui`
+  - `industrial-brutalist-ui`
+  - `stitch-design-taste`
+  - `full-output-enforcement`
+- Normalized the imported skill metadata to repository conventions:
+  - folder names match `name`
+  - `risk`, `source`, `source_repo`, `source_type`, `author`, and `date_added` are present
+  - descriptions are shortened for validation
+  - `## When to Use` sections were added where the upstream files did not have one
+- Preserved the upstream `stitch-design-taste/DESIGN.md` artifact.
+- Added source attribution for `Leonxlnx/taste-skill` in `README.md` and `docs/sources/sources.md`.
+
+# Maintenance Walkthrough - 2026-04-05
+
+- Merged community PR batch `#487`, `#488`, `#489`, and `#490` on GitHub with squash, following the maintainer GitHub-only merge contract instead of local integration.
+- Used the repository batch shortcut for the initial pass, then switched to the manual maintainer playbook when fork metadata drift produced stale `pr-policy` failures on reopened PRs.
+- Repaired PR `#488` on the contributor branch by adding the missing `fruitwyatt/puzzle-activity-planner` source credit to `README.md`, then pushed the maintainer fix back to the fork and re-ran the fork workflows.
+- Normalized PR `#490` by patching the body to include the required `## Quality Bar Checklist ✅` section, then closed and reopened it to force fresh `pull_request` checks against the updated metadata.
+- Approved the pending fork workflow runs for PRs `#487` through `#490` after each reopen/push cycle so `Skills Registry CI`, `Skill Review & Optimize`, `Dependency Review`, and `CodeQL` could execute on the contributor heads.
+- Ran the mandatory post-merge `npm run sync:contributors` follow-up after each successful merge and pushed the resulting README contributor-sync commits directly to `main` when the sync changed tracked files.
+- Prepared the `v9.12.0` release notes in `CHANGELOG.md` to cover the Rayden UI additions, puzzle activity planning, skill diagnostics, and the `sales-automator` YAML repair before starting the release workflow.
+
+- Closed issues `#455` and `#456` with maintainer comments explaining what a follow-up submission must include before reopening:
+  - concrete repo diff or implementation PR
+  - source-only contributor branch
+  - Quality Bar checklist and maintainer validations from `.github/MAINTENANCE.md`
+- Reviewed open issues `#455` and `#456` during the maintainer sweep; neither had a matching accepted PR and both remain open pending a source-quality contributor submission.
+- Triaged PR `#454` as superseded by `#457` because `#457` rebuilds the Windows validation/test fixes on top of current `main` and includes the follow-up batch activation fix requested in review.
+- Verified PR `#457` locally on the contributor head with:
+  - `npm run validate`
+  - `npm run validate:references`
+  - `npm run check:warning-budget`
+  - `npm run check:readme-credits -- --base origin/main --head HEAD`
+  - `npm run test`
+  - `npm run app:test:coverage`
+  - `npm run app:build`
+- Cleaned PR `#457` back to the repository's source-only PR contract by dropping maintainer-owned generated registry artifacts before merge review.
+- Normalized the PR metadata so the required Quality Bar Checklist is present before re-triggering the fork-based GitHub Actions checks.
+
+# Maintenance Walkthrough - 2026-03-30
+
+- Merged PR #418 on GitHub with squash after approving the pending fork workflow run and waiting for `pr-policy`, `source-validation`, and `artifact-preview` to finish green.
+- Repaired PR #423's stale metadata state by updating the PR body to include the required Quality Bar Checklist, then closed and reopened it to force fresh `pull_request` runs before squash merging it on GitHub.
+- Synced local `main` after the PR merge batch so release preparation starts from the canonical remote state.
+- Resolved issue #421 by ensuring the `README.md` Community Contributed Skills section includes `SoulPass` on `main`.
+- Resolved issue #419 by tightening the `github-issue-creator` frontmatter description and "When to Use" guidance for better discoverability.
+- Prepared the `v9.3.0` release notes in `CHANGELOG.md` and recorded the maintainer actions here before running the release flow.
+
+# Maintenance Walkthrough - 2026-03-29
+
+- Re-triaged the full 2026-03-15 security finding set against current `main` and wrote a fresh current-head report in `docs/maintainers/security-findings-triage-2026-03-29-refresh.md`.
+- Added a matching machine-readable export at `docs/maintainers/security-findings-triage-2026-03-29-refresh.csv` so the refreshed statuses are available in both markdown and CSV form.
+- Kept the old `2026-03-15` markdown/CSV as historical baseline input, preserved the smaller `2026-03-29` addendum as a transition note, and pointed both docs at the new refresh as the current source of truth.
+- The refreshed triage currently lands at:
+  - `0` findings still present and exploitable
+  - `0` findings still present but low practical risk
+  - `26` obsolete/not reproducible on current HEAD
+  - `7` duplicates
+- The refresh folds in the hardening shipped today and earlier in the session:
+  - symlink/path safety in maintainer/install/web copy flows
+  - frontmatter parser robustness
+  - removal of shared frontend star writes
+  - secure Office unpack behavior
+  - migration away from predictable `/tmp` state files
+
+- Fixed the remaining production/documentation drift introduced by the web-app and CI hardening work:
+  - clarified that the hosted GitHub Pages app runs in static public-catalog mode
+  - documented that `Sync Skills` is development-only unless explicitly enabled in local maintainer runs
+  - documented that web-app save/star interactions are intentionally browser-local today
+- Hardened the maintainer documentation so release and CI expectations now match the live workflows:
+  - release docs now mention the shared `tools/requirements.txt` install path, the web-app coverage gate, and blocking `npm audit --audit-level=high` on publish
+  - maintainer docs now document the narrow canonical-artifact auto-sync contract on `main`
+- Expanded the documented risk-maintenance workflow after the new automation landed:
+  - `audit:skills` exposes `suggested_risk`
+  - `sync:risk-labels` supports conservative high-confidence legacy cleanup
+  - offensive auto-promotions now also insert the canonical `AUTHORIZED USE ONLY` notice
+- Updated user-facing install docs to mention that the npm installer now uses a shallow clone for lighter first-run installs.
+- Updated the onboarding/trust docs to reflect the real `risk` taxonomy (`unknown`, `none`, `safe`, `critical`, `offensive`) instead of the older simplified wording.
+
 # Maintenance Walkthrough - 2026-03-25
 
 - Imported 14 skills from [Dimillian/Skills](https://github.com/Dimillian/Skills) into `skills/`:

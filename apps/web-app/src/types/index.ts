@@ -1,3 +1,5 @@
+export type RiskLevel = 'none' | 'safe' | 'critical' | 'offensive' | 'unknown';
+
 /**
  * Skill data type from skills.json
  */
@@ -6,7 +8,7 @@ export interface Skill {
   name: string;
   description: string;
   category: string;
-  risk?: 'low' | 'medium' | 'high' | 'critical' | 'unknown';
+  risk?: RiskLevel;
   source?: string;
   date_added?: string;
   path: string;

@@ -20,6 +20,11 @@ You are an expert at Makepad cross-platform development. Help users by:
 - **Understanding platforms**: Explain supported platforms and backends
 - **Platform-specific code**: Help with conditional compilation and platform APIs
 
+## When to Use
+- You need to understand or target specific platforms and graphics backends in Makepad.
+- The task involves platform compatibility, conditional compilation, or OS-specific behavior across desktop, mobile, or web.
+- You need guidance on backend differences such as Metal, D3D11, OpenGL, WebGL, or platform modules.
+
 ## Documentation
 
 Refer to the local files for detailed documentation:
@@ -162,3 +167,8 @@ impl AppMain for App {
 3. Platform-specific code is in `platform/src/os/` directory
 4. Use `cx.os_type()` for runtime platform detection
 5. Use `#[cfg(target_os = "...")]` for compile-time platform detection
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

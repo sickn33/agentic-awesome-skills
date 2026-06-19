@@ -1,6 +1,6 @@
 ---
 name: github-issue-creator
-description: "Transform messy input (error logs, voice notes, screenshots) into clean, actionable GitHub issues."
+description: "Turn error logs, screenshots, voice notes, and rough bug reports into crisp, developer-ready GitHub issues with repro steps, impact, and evidence."
 risk: unknown
 source: community
 date_added: "2026-02-27"
@@ -140,4 +140,9 @@ Was working yesterday - possible permission/config change or service regression
 ```
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use this skill when you have unstructured bug input such as pasted errors, support notes, screenshots, or voice dictation and need to turn it into a clean GitHub issue with a summary, reproduction steps, expected vs actual behavior, impact, and attachment references.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

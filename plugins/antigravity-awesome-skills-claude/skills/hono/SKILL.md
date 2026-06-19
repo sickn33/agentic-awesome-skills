@@ -346,3 +346,8 @@ app.get('/stream', c =>
 - `@trpc-fullstack` — Alternative RPC approach for TypeScript full-stack apps
 - `@zod-validation-expert` — Detailed Zod schema patterns used with `@hono/zod-validator`
 - `@nodejs-backend-patterns` — When you need a Node.js-specific backend (not edge)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

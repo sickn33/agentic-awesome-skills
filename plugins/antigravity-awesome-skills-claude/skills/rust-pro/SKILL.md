@@ -174,3 +174,8 @@ Expert Rust developer mastering Rust 1.75+ features, advanced type system usage,
 - "Design a plugin system with dynamic loading and type safety"
 - "Implement a custom allocator for a specific use case"
 - "Debug and fix lifetime issues in this complex generic code"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

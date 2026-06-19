@@ -11,6 +11,11 @@ tools: Write, Bash, Read
 
 Launch the RSVP speed reader to display text one word at a time with Spritz-style ORP (Optimal Recognition Point) highlighting.
 
+## When to Use
+- You want to launch the RSVP speed reader for text in the current session.
+- The task is to turn either provided text or the assistant's prior response into a word-by-word reading view.
+- You need a quick reading aid rather than a document transformation or summary.
+
 ## Instructions
 
 1. **Get the text:**
@@ -35,3 +40,8 @@ Launch the RSVP speed reader to display text one word at a time with Spritz-styl
 
 ## Arguments
 $ARGUMENTS
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -330,3 +330,8 @@ For complete documentation beyond this methodology overview:
 - **Action Security Profiles:** See {baseDir}/references/action-profiles.md for per-action security field documentation, default configurations, and dangerous configuration patterns.
 - **Detection Vectors:** See {baseDir}/references/foundations.md for the shared attacker-controlled input model, and individual vector files `{baseDir}/references/vector-{a..i}-*.md` for per-vector detection heuristics.
 - **Cross-File Resolution:** See {baseDir}/references/cross-file-resolution.md for `uses:` reference classification, composite action and reusable workflow resolution procedures, input mapping traces, and depth-1 limit.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

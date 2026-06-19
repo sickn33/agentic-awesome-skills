@@ -9,6 +9,11 @@ source: community
 
 Scrape reviews, ratings, and brand mentions from multiple platforms using Apify Actors.
 
+## When to Use
+- You need to monitor reviews, ratings, or brand mentions across social, travel, or map platforms.
+- The task is to select and run an Apify Actor for brand sentiment or reputation tracking.
+- You need exported monitoring results and a summary of reputation signals.
+
 ## Prerequisites
 (No need to check it upfront)
 
@@ -120,3 +125,8 @@ After completion, report:
 `Actor not found` - Check Actor ID spelling
 `Run FAILED` - Ask user to check Apify console link in error output
 `Timeout` - Reduce input size or increase `--timeout`
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

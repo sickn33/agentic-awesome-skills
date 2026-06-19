@@ -32,11 +32,15 @@ const MAX_NAME_LENGTH = 64;
 const MAX_DESCRIPTION_LENGTH = 1024;
 const MAX_COMPATIBILITY_LENGTH = 500;
 const MAX_SKILL_LINES = 500;
+const SOURCE_REPO_PATTERN = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
+const VALID_SOURCE_TYPES = new Set(["official", "community", "self"]);
 const ALLOWED_FIELDS = new Set([
   "name",
   "description",
   "risk",
   "source",
+  "source_repo",
+  "source_type",
   "license",
   "compatibility",
   "metadata",
@@ -133,6 +137,36 @@ function addStrictSectionErrors(label, missing, baselineSet) {
   }
 }
 
+function validateSourceMetadata(data, skillId) {
+  const sourceErrors = [];
+
+  if (data.source_repo !== undefined) {
+    const sourceRepoError = validateStringField("source_repo", data.source_repo, {
+      min: 3,
+      max: 256,
+    });
+    if (sourceRepoError) {
+      sourceErrors.push(`${sourceRepoError} (${skillId})`);
+    } else if (!SOURCE_REPO_PATTERN.test(String(data.source_repo).trim())) {
+      sourceErrors.push(`source_repo must match OWNER/REPO. (${skillId})`);
+    }
+  }
+
+  if (data.source_type !== undefined) {
+    const sourceTypeError = validateStringField("source_type", data.source_type, {
+      min: 4,
+      max: 16,
+    });
+    if (sourceTypeError) {
+      sourceErrors.push(`${sourceTypeError} (${skillId})`);
+    } else if (!VALID_SOURCE_TYPES.has(String(data.source_type).trim())) {
+      sourceErrors.push(`source_type must be one of official, community, self. (${skillId})`);
+    }
+  }
+
+  return sourceErrors;
+}
+
 function run() {
   const skillIds = listSkillIds(SKILLS_DIR);
   const baseline = loadBaseline();
@@ -220,6 +254,8 @@ function run() {
         addError(`${compatibilityError} (${skillId})`);
       }
     }
+
+    validateSourceMetadata(data, skillId).forEach(addError);
 
     if (data["allowed-tools"] !== undefined) {
       if (typeof data["allowed-tools"] !== "string") {
@@ -354,6 +390,10 @@ if (require.main === module) {
 }
 
 module.exports = {
+  ALLOWED_FIELDS,
+  SOURCE_REPO_PATTERN,
+  VALID_SOURCE_TYPES,
   hasUseSection,
   run,
+  validateSourceMetadata,
 };

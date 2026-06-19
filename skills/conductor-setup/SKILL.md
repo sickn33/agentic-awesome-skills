@@ -12,6 +12,11 @@ metadata:
 
 Set up this Rails project for Conductor, the Mac app for parallel coding agents.
 
+## When to Use
+- You need to configure a Rails project so it runs correctly inside Conductor workspaces.
+- The project should support parallel coding agents with isolated ports, Redis settings, and shared secrets.
+- You want the standard `conductor.json`, `bin/conductor-setup`, and `script/server` scaffolding for a Rails repo.
+
 # What to Create
 
 ## 1. conductor.json (project root)
@@ -113,3 +118,8 @@ After creating the files:
 1. Confirm all Conductor files exist and scripts are executable
 2. Run `script/server` to verify it starts without errors
 3. Check that Rails configs properly reference `ENV['REDIS_URL']` or `ENV.fetch('REDIS_URL', ...)`
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

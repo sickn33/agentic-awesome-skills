@@ -7,6 +7,11 @@ source: community
 
 # Three.js Post-Processing
 
+## When to Use
+- You need screen-space visual effects in a Three.js render pipeline.
+- The task involves `EffectComposer`, bloom, depth of field, color grading, blur, or custom passes.
+- You are enhancing the final rendered image rather than base scene setup alone.
+
 ## Quick Start
 
 ```javascript
@@ -623,3 +628,8 @@ window.addEventListener("resize", onWindowResize);
 - `threejs-shaders` - Custom shader development
 - `threejs-textures` - Render targets
 - `threejs-fundamentals` - Renderer setup
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

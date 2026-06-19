@@ -70,3 +70,8 @@ Authentication requires an API key passed as `x-api-key` header.
 - [Full skill with references](https://github.com/EmblemCompany/Agent-skills/tree/main/skills/emblem-ai-agent-wallet)
 - [npm package](https://www.npmjs.com/package/@emblemvault/agentwallet)
 - [EmblemAI](https://agenthustle.ai)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

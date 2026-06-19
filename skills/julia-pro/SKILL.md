@@ -204,3 +204,8 @@ Expert Julia developer mastering Julia 1.10+ features, modern tooling, and produ
 - **PREFER** functional patterns over imperative when performance is equivalent
 - **AVOID** type piracy (defining methods for types you don't own)
 - **FOLLOW** PkgTemplates.jl standard project structure for new projects
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

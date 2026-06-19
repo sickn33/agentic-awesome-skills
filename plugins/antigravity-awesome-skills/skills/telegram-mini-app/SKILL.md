@@ -1,12 +1,19 @@
 ---
 name: telegram-mini-app
-description: "You build apps where 800M+ Telegram users already are. You understand the Mini App ecosystem is exploding - games, DeFi, utilities, social apps. You know TON blockchain and how to monetize with crypto. You design for the Telegram UX paradigm, not traditional web."
+description: Expert in building Telegram Mini Apps (TWA) - web apps that run
+  inside Telegram with native-like experience. Covers the TON ecosystem,
+  Telegram Web App API, payments, user authentication, and building viral mini
+  apps that monetize.
 risk: unknown
-source: "vibeship-spawner-skills (Apache 2.0)"
-date_added: "2026-02-27"
+source: vibeship-spawner-skills (Apache 2.0)
+date_added: 2026-02-27
 ---
 
 # Telegram Mini App
+
+Expert in building Telegram Mini Apps (TWA) - web apps that run inside Telegram
+with native-like experience. Covers the TON ecosystem, Telegram Web App API,
+payments, user authentication, and building viral mini apps that monetize.
 
 **Role**: Telegram Mini App Architect
 
@@ -14,6 +21,15 @@ You build apps where 800M+ Telegram users already are. You understand
 the Mini App ecosystem is exploding - games, DeFi, utilities, social
 apps. You know TON blockchain and how to monetize with crypto. You
 design for the Telegram UX paradigm, not traditional web.
+
+### Expertise
+
+- Telegram Web App API
+- TON blockchain
+- Mini App UX
+- TON Connect
+- Viral mechanics
+- Crypto payments
 
 ## Capabilities
 
@@ -34,7 +50,6 @@ Getting started with Telegram Mini Apps
 
 **When to use**: When starting a new Mini App
 
-```javascript
 ## Mini App Setup
 
 ### Basic Structure
@@ -101,7 +116,6 @@ bot.command('app', (ctx) => {
   });
 });
 ```
-```
 
 ### TON Connect Integration
 
@@ -109,7 +123,6 @@ Wallet connection for TON blockchain
 
 **When to use**: When building Web3 Mini Apps
 
-```python
 ## TON Connect Integration
 
 ### Setup
@@ -169,7 +182,6 @@ function PaymentButton({ amount, to }) {
   return <button onClick={handlePay}>Pay {amount} TON</button>;
 }
 ```
-```
 
 ### Mini App Monetization
 
@@ -177,7 +189,6 @@ Making money from Mini Apps
 
 **When to use**: When planning Mini App revenue
 
-```javascript
 ## Mini App Monetization
 
 ### Revenue Streams
@@ -227,58 +238,452 @@ function ReferralShare() {
 - Leaderboards
 - Achievement badges
 - Referral bonuses
+
+### Mini App UX Patterns
+
+UX specific to Telegram Mini Apps
+
+**When to use**: When designing Mini App interfaces
+
+## Mini App UX
+
+### Platform Conventions
+| Element | Implementation |
+|---------|----------------|
+| Main Button | tg.MainButton |
+| Back Button | tg.BackButton |
+| Theme | tg.themeParams |
+| Haptics | tg.HapticFeedback |
+
+### Main Button
+```javascript
+const tg = window.Telegram.WebApp;
+
+// Show main button
+tg.MainButton.setText('Continue');
+tg.MainButton.show();
+tg.MainButton.onClick(() => {
+  // Handle click
+  submitForm();
+});
+
+// Loading state
+tg.MainButton.showProgress();
+// ...
+tg.MainButton.hideProgress();
 ```
 
-## Anti-Patterns
+### Theme Adaptation
+```css
+:root {
+  --tg-theme-bg-color: var(--tg-theme-bg-color, #ffffff);
+  --tg-theme-text-color: var(--tg-theme-text-color, #000000);
+  --tg-theme-button-color: var(--tg-theme-button-color, #3390ec);
+}
 
-### ❌ Ignoring Telegram Theme
+body {
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
+}
+```
 
-**Why bad**: Feels foreign in Telegram.
-Bad user experience.
-Jarring transitions.
-Users don't trust it.
+### Haptic Feedback
+```javascript
+// Light feedback
+tg.HapticFeedback.impactOccurred('light');
 
-**Instead**: Use tg.themeParams.
-Match Telegram colors.
-Use native-feeling UI.
-Test in both light/dark.
+// Success
+tg.HapticFeedback.notificationOccurred('success');
 
-### ❌ Desktop-First Mini App
+// Selection
+tg.HapticFeedback.selectionChanged();
+```
 
-**Why bad**: 95% of Telegram is mobile.
-Touch targets too small.
-Doesn't fit in Telegram UI.
-Scrolling issues.
+## Sharp Edges
 
-**Instead**: Mobile-first always.
-Test on real phones.
-Touch-friendly buttons.
-Fit within Telegram frame.
+### Not validating initData from Telegram
 
-### ❌ No Loading States
+Severity: HIGH
 
-**Why bad**: Users think it's broken.
-Poor perceived performance.
-High exit rate.
-Confusion.
+Situation: Backend trusts user data without verification
 
-**Instead**: Show skeleton UI.
-Loading indicators.
-Progressive loading.
-Optimistic updates.
+Symptoms:
+- Trusting client data blindly
+- No server-side validation
+- Using initDataUnsafe directly
+- Security audit failures
 
-## ⚠️ Sharp Edges
+Why this breaks:
+initData can be spoofed.
+Security vulnerability.
+Users can impersonate others.
+Data tampering possible.
 
-| Issue | Severity | Solution |
-|-------|----------|----------|
-| Not validating initData from Telegram | high | ## Validating initData |
-| TON Connect not working on mobile | high | ## TON Connect Mobile Issues |
-| Mini App feels slow and janky | medium | ## Mini App Performance |
-| Custom buttons instead of MainButton | medium | ## Using MainButton Properly |
+Recommended fix:
+
+## Validating initData
+
+### Why Validate
+- initData contains user info
+- Must verify it came from Telegram
+- Prevent spoofing/tampering
+
+### Node.js Validation
+```javascript
+import crypto from 'crypto';
+
+function validateInitData(initData, botToken) {
+  const params = new URLSearchParams(initData);
+  const hash = params.get('hash');
+  params.delete('hash');
+
+  // Sort and join
+  const dataCheckString = Array.from(params.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
+    .join('\n');
+
+  // Create secret key
+  const secretKey = crypto
+    .createHmac('sha256', 'WebAppData')
+    .update(botToken)
+    .digest();
+
+  // Calculate hash
+  const calculatedHash = crypto
+    .createHmac('sha256', secretKey)
+    .update(dataCheckString)
+    .digest('hex');
+
+  return calculatedHash === hash;
+}
+```
+
+### Using in API
+```javascript
+app.post('/api/action', (req, res) => {
+  const { initData } = req.body;
+
+  if (!validateInitData(initData, process.env.BOT_TOKEN)) {
+    return res.status(401).json({ error: 'Invalid initData' });
+  }
+
+  // Safe to use data
+  const params = new URLSearchParams(initData);
+  const user = JSON.parse(params.get('user'));
+  // ...
+});
+```
+
+### TON Connect not working on mobile
+
+Severity: HIGH
+
+Situation: Wallet connection fails on mobile Telegram
+
+Symptoms:
+- Works on desktop, fails mobile
+- Wallet app doesn't open
+- Connection stuck
+- Users can't pay
+
+Why this breaks:
+Deep linking issues.
+Wallet app not opening.
+Return URL problems.
+Different behavior iOS vs Android.
+
+Recommended fix:
+
+## TON Connect Mobile Issues
+
+### Common Problems
+1. Wallet doesn't open
+2. Return to Mini App fails
+3. Transaction confirmation lost
+
+### Fixes
+```jsx
+// Use correct manifest
+const manifestUrl = 'https://your-domain.com/tonconnect-manifest.json';
+
+// Ensure HTTPS
+// Localhost won't work on mobile
+
+// Handle connection states
+const [tonConnectUI] = useTonConnectUI();
+
+useEffect(() => {
+  return tonConnectUI.onStatusChange((wallet) => {
+    if (wallet) {
+      console.log('Connected:', wallet.account.address);
+    }
+  });
+}, []);
+```
+
+### Testing
+- Test on real devices
+- Test with multiple wallets (Tonkeeper, OpenMask)
+- Test both iOS and Android
+- Use ngrok for local dev + mobile test
+
+### Fallback
+```jsx
+// Show QR for desktop
+// Show wallet list for mobile
+<TonConnectButton />
+// Automatically handles this
+```
+
+### Mini App feels slow and janky
+
+Severity: MEDIUM
+
+Situation: App lags, slow transitions, poor UX
+
+Symptoms:
+- Slow initial load
+- Laggy interactions
+- Users complaining about speed
+- High bounce rate
+
+Why this breaks:
+Too much JavaScript.
+No code splitting.
+Large bundle size.
+No loading optimization.
+
+Recommended fix:
+
+## Mini App Performance
+
+### Bundle Size
+- Target < 200KB gzipped
+- Use code splitting
+- Lazy load routes
+- Tree shake dependencies
+
+### Quick Wins
+```jsx
+// Lazy load heavy components
+const HeavyChart = lazy(() => import('./HeavyChart'));
+
+// Optimize images
+<img loading="lazy" src="..." />
+
+// Use CSS instead of JS animations
+```
+
+### Loading Strategy
+```jsx
+function App() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    // Show skeleton immediately
+    // Load data in background
+    Promise.all([
+      loadUserData(),
+      loadAppConfig(),
+    ]).then(() => setReady(true));
+  }, []);
+
+  if (!ready) return <Skeleton />;
+  return <MainApp />;
+}
+```
+
+### Vite Optimization
+```javascript
+// vite.config.js
+export default {
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+        }
+      }
+    }
+  }
+};
+```
+
+### Custom buttons instead of MainButton
+
+Severity: MEDIUM
+
+Situation: App has custom submit buttons that feel non-native
+
+Symptoms:
+- Custom submit buttons
+- MainButton never used
+- Inconsistent UX
+- Users confused about actions
+
+Why this breaks:
+MainButton is expected UX.
+Custom buttons feel foreign.
+Inconsistent with Telegram.
+Users don't know what to tap.
+
+Recommended fix:
+
+## Using MainButton Properly
+
+### When to Use MainButton
+- Form submission
+- Primary actions
+- Continue/Next flows
+- Checkout/Payment
+
+### Implementation
+```javascript
+const tg = window.Telegram.WebApp;
+
+// Show for forms
+function showMainButton(text, onClick) {
+  tg.MainButton.setText(text);
+  tg.MainButton.onClick(onClick);
+  tg.MainButton.show();
+}
+
+// Hide when not needed
+function hideMainButton() {
+  tg.MainButton.hide();
+  tg.MainButton.offClick();
+}
+
+// Loading state
+function setMainButtonLoading(loading) {
+  if (loading) {
+    tg.MainButton.showProgress();
+    tg.MainButton.disable();
+  } else {
+    tg.MainButton.hideProgress();
+    tg.MainButton.enable();
+  }
+}
+```
+
+### React Hook
+```jsx
+function useMainButton(text, onClick, visible = true) {
+  const tg = window.Telegram?.WebApp;
+
+  useEffect(() => {
+    if (!tg) return;
+
+    if (visible) {
+      tg.MainButton.setText(text);
+      tg.MainButton.onClick(onClick);
+      tg.MainButton.show();
+    } else {
+      tg.MainButton.hide();
+    }
+
+    return () => {
+      tg.MainButton.offClick(onClick);
+    };
+  }, [text, onClick, visible]);
+}
+```
+
+## Validation Checks
+
+### No initData Validation
+
+Severity: HIGH
+
+Message: Not validating initData - security vulnerability.
+
+Fix action: Implement server-side initData validation with hash verification
+
+### Missing Telegram Web App Script
+
+Severity: HIGH
+
+Message: Telegram Web App script not included.
+
+Fix action: Add <script src='https://telegram.org/js/telegram-web-app.js'></script>
+
+### Not Calling tg.ready()
+
+Severity: MEDIUM
+
+Message: Not calling tg.ready() - Telegram may show loading state.
+
+Fix action: Call window.Telegram.WebApp.ready() when app is ready
+
+### Not Using Telegram Theme
+
+Severity: MEDIUM
+
+Message: Not adapting to Telegram theme colors.
+
+Fix action: Use CSS variables from tg.themeParams for colors
+
+### Missing Viewport Meta Tag
+
+Severity: MEDIUM
+
+Message: Missing viewport meta tag for mobile.
+
+Fix action: Add <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+## Collaboration
+
+### Delegation Triggers
+
+- bot|command|handler -> telegram-bot-builder (Bot integration)
+- TON|smart contract|blockchain -> blockchain-defi (TON blockchain features)
+- react|vue|frontend -> frontend (Frontend framework)
+- viral|referral|share -> viral-generator-builder (Viral mechanics)
+- game|gamification -> gamification-loops (Game mechanics)
+
+### Tap-to-Earn Game
+
+Skills: telegram-mini-app, gamification-loops, telegram-bot-builder
+
+Workflow:
+
+```
+1. Design game mechanics
+2. Build Mini App with tap mechanics
+3. Add referral/viral features
+4. Integrate TON payments
+5. Bot for notifications/onboarding
+6. Launch and grow
+```
+
+### DeFi Mini App
+
+Skills: telegram-mini-app, blockchain-defi, frontend
+
+Workflow:
+
+```
+1. Design DeFi feature (swap, stake, etc.)
+2. Integrate TON Connect
+3. Build transaction UI
+4. Add wallet management
+5. Implement security measures
+6. Deploy and audit
+```
 
 ## Related Skills
 
 Works well with: `telegram-bot-builder`, `frontend`, `blockchain-defi`, `viral-generator-builder`
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+- User mentions or implies: telegram mini app
+- User mentions or implies: TWA
+- User mentions or implies: telegram web app
+- User mentions or implies: TON app
+- User mentions or implies: mini app
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

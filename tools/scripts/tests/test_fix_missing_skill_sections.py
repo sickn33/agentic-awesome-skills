@@ -10,6 +10,8 @@ TOOLS_SCRIPTS_DIR = REPO_ROOT / "tools" / "scripts"
 if str(TOOLS_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_SCRIPTS_DIR))
 
+from symlink_test_utils import symlink_or_skip
+
 
 def load_module(relative_path: str, module_name: str):
     module_path = REPO_ROOT / relative_path
@@ -66,8 +68,10 @@ Intro paragraph.
             self.assertTrue(changed)
             self.assertIn("added_when_to_use", changes)
             self.assertIn("added_examples", changes)
+            self.assertIn("added_limitations", changes)
             self.assertIn("## When to Use", updated)
             self.assertIn("## Examples", updated)
+            self.assertIn("## Limitations", updated)
             self.assertIn("Use @demo for this task:", updated)
 
     def test_update_skill_file_only_adds_examples_when_when_section_exists(self):
@@ -93,8 +97,10 @@ description: Build and distribute Expo development clients locally or via TestFl
             self.assertTrue(changed)
             self.assertNotIn("added_when_to_use", changes)
             self.assertIn("added_examples", changes)
+            self.assertIn("added_limitations", changes)
             self.assertEqual(updated.count("## When to Use"), 1)
             self.assertIn("## Examples", updated)
+            self.assertIn("## Limitations", updated)
 
     def test_update_skill_file_defaults_to_normalization_only(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -140,13 +146,70 @@ description: Demo description.
 """
             target.write_text(original, encoding="utf-8")
             skill_path = skill_dir / "SKILL.md"
-            skill_path.symlink_to(target)
+            symlink_or_skip(self, target, skill_path)
 
             changed, changes = fix_missing_skill_sections.update_skill_file(skill_path, add_missing=True)
 
             self.assertFalse(changed)
             self.assertEqual(changes, [])
             self.assertEqual(target.read_text(encoding="utf-8"), original)
+
+    def test_update_skill_file_only_adds_limitations_when_other_sections_exist(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_path = Path(temp_dir) / "SKILL.md"
+            skill_path.write_text(
+                """---
+name: demo
+description: Demo description.
+---
+
+# Demo
+
+## When to Use
+- Use this skill when the workflow matches the task.
+
+## Examples
+```text
+Use @demo to inspect the current setup.
+```
+""",
+                encoding="utf-8",
+            )
+
+            changed, changes = fix_missing_skill_sections.update_skill_file(skill_path, add_missing=True)
+            updated = skill_path.read_text(encoding="utf-8")
+
+            self.assertTrue(changed)
+            self.assertEqual(changes, ["added_limitations"])
+            self.assertIn("## Limitations", updated)
+
+    def test_update_skill_file_add_limitations_only_does_not_add_other_sections(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_path = Path(temp_dir) / "SKILL.md"
+            skill_path.write_text(
+                """---
+name: demo
+description: Demo description.
+---
+
+# Demo
+
+Intro paragraph.
+""",
+                encoding="utf-8",
+            )
+
+            changed, changes = fix_missing_skill_sections.update_skill_file(
+                skill_path,
+                add_limitations_only=True,
+            )
+            updated = skill_path.read_text(encoding="utf-8")
+
+            self.assertTrue(changed)
+            self.assertEqual(changes, ["added_limitations"])
+            self.assertIn("## Limitations", updated)
+            self.assertNotIn("## When to Use", updated)
+            self.assertNotIn("## Examples", updated)
 
 
 if __name__ == "__main__":

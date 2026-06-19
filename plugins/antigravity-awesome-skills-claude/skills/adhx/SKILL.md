@@ -125,3 +125,8 @@ User: "How many likes did this tweet get? https://x.com/handle/status/123"
 
 - [ADHX GitHub Repository](https://github.com/itsmemeworks/adhx)
 - [ADHX Website](https://adhx.com)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

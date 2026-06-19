@@ -394,3 +394,8 @@ metadata:
  - **code-explainer**: For generating detailed code comments and documentation.
  - **example-generator**: For creating diverse code examples and edge cases.
    - **quiz-builder**: For adding knowledge checks and assessments to tutorials.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -11,6 +11,11 @@ tags: [fp-ts, option, nullable, maybe, quick-reference]
 
 Option = value that might not exist. `Some(value)` or `None`.
 
+## When to Use
+- You need a quick fp-ts reference for nullable or optional values.
+- The task involves eliminating null checks, safe property access, or optional chaining with `Option`.
+- You want a short reference card rather than a full migration guide.
+
 ## Create
 
 ```typescript
@@ -79,3 +84,8 @@ pipe(
 ```
 
 Use Option when you need to **chain** operations on optional values.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -18,7 +18,7 @@ Kiro is AWS's agentic AI IDE that combines:
 
 Kiro's agentic capabilities are enhanced by skills that provide:
 
-- **Domain expertise** across 1,331+ specialized areas
+- **Domain expertise** across 1,646+ specialized areas
 - **Best practices** from Anthropic, OpenAI, Google, Microsoft, and AWS
 - **Workflow automation** for common development tasks
 - **AWS-specific patterns** for serverless, infrastructure, and cloud architecture
@@ -46,7 +46,7 @@ git clone https://github.com/sickn33/antigravity-awesome-skills.git ~/.kiro/skil
 ```bash
 # Verify installation
 test -d ~/.kiro/skills && echo "✓ Skills installed successfully"
-ls ~/.kiro/skills/skills/ | head -10
+ls ~/.kiro/skills/ | head -10
 ```
 
 ## Using Skills with Kiro
@@ -225,7 +225,7 @@ Ensure you're using the correct skill name:
 
 ```bash
 # List all available skills
-ls ~/.kiro/skills/skills/
+ls ~/.kiro/skills/
 ```
 
 ### Permission Issues

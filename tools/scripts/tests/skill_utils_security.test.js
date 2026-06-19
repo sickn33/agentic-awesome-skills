@@ -3,7 +3,8 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
-const { listSkillIds, listSkillIdsRecursive } = require("../../lib/skill-utils");
+const { listSkillIds, listSkillIdsRecursive, readSkill } = require("../../lib/skill-utils");
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
 
 function withTempDir(fn) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "skill-utils-security-"));
@@ -25,7 +26,10 @@ withTempDir((root) => {
   fs.writeFileSync(path.join(skillsDir, "safe-skill", "SKILL.md"), "# safe\n");
 
   fs.writeFileSync(path.join(outsideDir, "SKILL.md"), "# secret\n");
-  fs.symlinkSync(outsideDir, path.join(skillsDir, "linked-secret"));
+  const createdSymlink = createSymlinkOrSkip(outsideDir, path.join(skillsDir, "linked-secret"), "dir");
+  if (!createdSymlink) {
+    return;
+  }
 
   const skillIds = listSkillIds(skillsDir);
 
@@ -47,7 +51,14 @@ withTempDir((root) => {
   fs.writeFileSync(path.join(skillsDir, "nested", "safe-skill", "SKILL.md"), "# safe\n");
 
   fs.mkdirSync(path.join(outsideDir, "loop-target"), { recursive: true });
-  fs.symlinkSync(outsideDir, path.join(skillsDir, "nested", "linked-secret"));
+  const createdSymlink = createSymlinkOrSkip(
+    outsideDir,
+    path.join(skillsDir, "nested", "linked-secret"),
+    "dir",
+  );
+  if (!createdSymlink) {
+    return;
+  }
 
   const skillIds = listSkillIdsRecursive(skillsDir);
 
@@ -109,4 +120,34 @@ withTempDir((root) => {
     fs.readdirSync = originalReaddirSync;
     fs.lstatSync = originalLstatSync;
   }
+});
+
+withTempDir((root) => {
+  const skillsDir = path.join(root, "skills");
+  const skillDir = path.join(skillsDir, "metadata-skill");
+  fs.mkdirSync(skillDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(skillDir, "SKILL.md"),
+    `---
+name: metadata-skill
+category: backend
+risk: safe
+metadata:
+  tags: "[api, saas]"
+---
+
+# metadata-skill
+`,
+    "utf8",
+  );
+
+  const skill = readSkill(skillsDir, "metadata-skill");
+
+  assert.strictEqual(skill.category, "backend", "readSkill should expose category metadata");
+  assert.strictEqual(skill.risk, "safe", "readSkill should expose risk metadata");
+  assert.deepStrictEqual(
+    skill.tags,
+    ["api", "saas"],
+    "readSkill should normalize inline tag lists from metadata.tags",
+  );
 });

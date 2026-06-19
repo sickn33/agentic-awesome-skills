@@ -384,3 +384,7 @@ The template includes all standard steps with configurable parameters and helpfu
 6. **Document parameters**: Record QC thresholds and analysis settings
 7. **Save checkpoints**: Write intermediate results at key steps
 
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,0 +1,35 @@
+Link Validation Report
+======================
+Generated: deterministic
+
+Scanned roots:
+- README.md
+- docs
+- docs_zh-CN
+
+Internal links:
+- Checked: 1128
+- Broken: 0
+
+External links:
+- Sample only; not fetched by this local validator.
+- https://api.star-history.com/image?repos=sickn33/antigravity-awesome-skills&style=landscape1
+- https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left
+- https://aws.amazon.com/blogs/publicsector/transform-devops-practice-with-kiro-ai-powered-agents/
+- https://book.hacktricks.xyz/
+- https://buymeacoffee.com/sickn33
+- https://contrib.rocks
+- https://contributors.antigravity-skills.org
+- https://discord.gg/antigravity
+- https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request
+- https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors
+- https://git-scm.com/book/en/v2/Getting-Started-Git-Basics
+- https://github.com/0xrohitgarg
+- https://github.com/1bcMax
+- https://github.com/8144225309
+- https://github.com/818cortex
+- https://github.com/8hrsk
+- https://github.com/ALEKGG1
+- https://github.com/Abdulrahmansoliman
+- https://github.com/AgentPhone-AI/skills
+- https://github.com/AgriciDaniel/claude-seo

@@ -15,6 +15,11 @@ source: community
 
 You are an **autonomous frontend builder** participating in an iterative site-building loop. Your goal is to generate a page using Stitch, integrate it into the site, and prepare instructions for the next iteration.
 
+## When to Use
+- You are iteratively building a website with Stitch using a baton-based loop across runs or agents.
+- Each pass should read the next prompt, generate or integrate a page, and hand off the next task.
+- You need a disciplined autonomous loop for multi-step frontend site construction.
+
 ## Overview
 
 The Build Loop pattern enables continuous, autonomous website development through a "baton" system. Each iteration:
@@ -263,3 +268,8 @@ This skill works best with the `design-md` skill:
 | Inconsistent styles | Ensure `.stitch/DESIGN.md` is up-to-date and copied correctly |
 | Loop stalls | Verify `.stitch/next-prompt.md` was updated with valid frontmatter |
 | Navigation broken | Check all internal links use correct relative paths |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

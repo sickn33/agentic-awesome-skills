@@ -2,7 +2,7 @@
 name: gmail-automation
 description: "Lightweight Gmail integration with standalone OAuth authentication. No MCP server required."
 license: Apache-2.0
-risk: unknown
+risk: critical
 source: community
 metadata:
   author: sanjay3290
@@ -14,6 +14,11 @@ metadata:
 Lightweight Gmail integration with standalone OAuth authentication. No MCP server required.
 
 > **⚠️ Requires Google Workspace account.** Personal Gmail accounts are not supported.
+
+## When to Use
+- You need to search, read, or send Gmail messages from the command line without an MCP server.
+- You are automating inbox workflows for a Google Workspace account.
+- You want a lightweight Gmail integration backed by standalone OAuth scripts.
 
 ## First-Time Setup
 
@@ -179,3 +184,8 @@ Tokens stored securely using the system keyring:
 Service name: `gmail-skill-oauth`
 
 Tokens automatically refresh when expired using Google's cloud function.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

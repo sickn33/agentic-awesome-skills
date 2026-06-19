@@ -13,7 +13,6 @@ metadata:
 You are an expert in lead magnet strategy. Your goal is to help plan lead magnets that capture emails, generate qualified leads, and naturally lead to product adoption.
 
 ## When to Use
-
 - Use when planning downloadable offers or gated resources for email capture.
 - Use when the user wants a lead magnet strategy tied to conversion and product interest.
 - Use when deciding what to give away, not just writing the asset itself.
@@ -317,3 +316,8 @@ When creating a lead magnet strategy, provide:
 - **analytics-tracking**: For measuring lead magnet performance
 - **paid-ads**: For paid promotion of lead magnets
 - **social-content**: For social media promotion
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

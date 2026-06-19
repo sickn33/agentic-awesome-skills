@@ -9,7 +9,6 @@ date_added: "2026-03-21"
 # JSON Canvas Skill
 
 ## When to Use
-
 - Use when creating or editing `.canvas` files for Obsidian.
 - Use for mind maps, flowcharts, visual note structures, or connected canvases.
 - Use when the user explicitly mentions JSON Canvas or Obsidian Canvas files.
@@ -251,3 +250,8 @@ See [references/EXAMPLES.md](references/EXAMPLES.md) for full canvas examples in
 
 - [JSON Canvas Spec 1.0](https://jsoncanvas.org/spec/1.0/)
 - [JSON Canvas GitHub](https://github.com/obsidianmd/jsoncanvas)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

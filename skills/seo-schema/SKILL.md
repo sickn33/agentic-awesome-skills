@@ -21,7 +21,6 @@ allowed-tools:
 # Schema Markup Analysis & Generation
 
 ## When to Use
-
 - Use when detecting, validating, or generating Schema.org structured data.
 - Use when the user asks about JSON-LD, rich results, or markup opportunities.
 - Use when schema validation is the main task, rather than a broader SEO audit.
@@ -176,3 +175,8 @@ When generating schema for a page:
 | No schema markup found | Report that no JSON-LD, Microdata, or RDFa was detected. Recommend appropriate schema types based on page content analysis. |
 | Invalid JSON-LD syntax | Parse and report specific syntax errors (missing brackets, trailing commas, unquoted keys). Provide corrected JSON-LD output. |
 | Deprecated schema type detected | Flag the deprecated type with its retirement date. Recommend the current replacement type or advise removal if no replacement exists. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

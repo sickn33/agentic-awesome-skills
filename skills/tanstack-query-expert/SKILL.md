@@ -240,3 +240,8 @@ export default function PostsList() {
 
 **Problem:** `staleTime` vs `gcTime` (formerly `cacheTime`) confusion.
 **Solution:** `staleTime` governs when a background refetch is triggered. `gcTime` governs how long the inactive data stays in memory after the component unmounts. If `gcTime` < `staleTime`, data will be deleted before it even gets stale!
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

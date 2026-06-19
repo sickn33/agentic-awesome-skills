@@ -598,3 +598,8 @@ See attached `create_quiz_from_categories.php` for a comprehensive example inclu
 - Consider transaction safety for write operations
 - Purge caches after service registration changes
 - Keep API methods focused and single-purpose
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

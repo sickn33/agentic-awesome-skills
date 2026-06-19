@@ -7,6 +7,11 @@ source: community
 
 # 性健康分析技能
 
+## When to Use
+- 需要分析性健康记录、筛查情况、避孕效果或相关风险模式时使用。
+- 任务涉及 IIEF-5 评分、STD 筛查管理、性活动统计或跨模块关联分析。
+- 用户请求性健康趋势报告或结构化风险分析时使用。
+
 ## 技能概述
 
 本技能提供全面的性健康数据分析功能,包括IIEF-5评分分析、STD筛查管理、避孕效果评估、性活动统计以及与用药、慢性病、心理、营养、运动等模块的深度关联分析。
@@ -1118,3 +1123,8 @@ source: community
 **版本**: v1.0.0
 **最后更新**: 2025-01-06
 **维护者**: WellAlly Tech
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

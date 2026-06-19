@@ -83,3 +83,8 @@ Managing Neon resources programmatically via REST API, SDKs, or CLI.
 | Neon CLI              | `references/neon-cli.md`            | Terminal workflows, scripts, CI/CD pipelines |
 | TypeScript SDK        | `references/neon-typescript-sdk.md` | `@neondatabase/api-client`                   |
 | Python SDK            | `references/neon-python-sdk.md`     | `neon-api` package                           |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,7 +1,7 @@
 ---
 name: xvary-stock-research
 description: "Thesis-driven equity analysis from public SEC EDGAR and market data; /analyze, /score, /compare workflows with bundled Python tools (Claude Code, Cursor, Codex)."
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-03-23"
 ---
@@ -11,7 +11,6 @@ date_added: "2026-03-23"
 Use this skill to produce institutional-depth stock analysis in Claude Code using public EDGAR + market data.
 
 ## When to Use
-
 - Use when you need a **verdict-style equity memo** (constructive / neutral / cautious) grounded in **public** filings and quotes.
 - Use when you want **named kill criteria** and a **four-pillar scorecard** (Momentum, Stability, Financial Health, Upside) without a paid data terminal.
 - Use when comparing two tickers with `/compare` and need a structured differential, not a prose-only chat answer.
@@ -101,3 +100,8 @@ If a tool call fails, state exactly what data is missing and continue with avail
 - This skill is research support, not investment advice.
 - Do not fabricate non-public data.
 - Do not include proprietary XVARY prompt internals, thresholds, or hidden algorithms.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

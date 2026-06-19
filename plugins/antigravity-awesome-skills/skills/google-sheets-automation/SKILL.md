@@ -1,7 +1,7 @@
 ---
 name: google-sheets-automation
 description: "Lightweight Google Sheets integration with standalone OAuth authentication. No MCP server required. Full read/write access."
-risk: unknown
+risk: critical
 source: community
 license: Apache-2.0
 metadata:
@@ -142,3 +142,8 @@ Tokens automatically refresh when expired using Google's cloud function.
 
 ## When to Use
 Use this skill when tackling tasks related to its primary domain or functionality as described above.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

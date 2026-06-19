@@ -15,8 +15,7 @@ Best practices for building AI chat interfaces with Makepad using MolyKit - a to
 
 **Source codebase**: `/Users/zhangalex/Work/Projects/FW/robius/moly/moly-kit`
 
-## Triggers
-
+## When to Use
 Use this skill when:
 - Building AI chat interfaces with Makepad
 - Integrating OpenAI or other LLM APIs
@@ -364,3 +363,8 @@ fn send(&mut self, ...) -> BoxPlatformSendStream<...> {
 ## Reference Files
 
 - `llms.txt` - Complete MolyKit API reference
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

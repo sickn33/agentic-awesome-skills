@@ -1,10 +1,54 @@
 const assert = require("assert");
+const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 const installer = require(path.resolve(__dirname, "..", "..", "bin", "install.js"));
+const packageMetadata = require(path.resolve(__dirname, "..", "..", "..", "package.json"));
+
+assert.deepStrictEqual(
+  installer.buildCloneArgs("https://example.com/repo.git", "/tmp/skills"),
+  ["clone", "--depth", "1", "https://example.com/repo.git", "/tmp/skills"],
+  "installer should use a shallow clone by default",
+);
+
+assert.deepStrictEqual(
+  installer.buildCloneArgs("https://example.com/repo.git", "/tmp/skills", "v1.2.3"),
+  ["clone", "--depth", "1", "--branch", "v1.2.3", "https://example.com/repo.git", "/tmp/skills"],
+  "installer should keep versioned installs shallow while selecting the requested ref",
+);
+
+assert.strictEqual(
+  installer.resolveInstallRef({}),
+  `v${packageMetadata.version}`,
+  "default installs should pin the clone to the npm package release tag",
+);
+
+assert.strictEqual(
+  installer.resolveInstallRef({ versionArg: "1.2.3" }),
+  "v1.2.3",
+  "version installs should normalize bare versions to release tags",
+);
+
+assert.strictEqual(
+  installer.resolveInstallRef({ tagArg: "main", versionArg: "1.2.3" }),
+  "main",
+  "explicit tags should override the npm package release tag",
+);
+
+assert.strictEqual(installer.isSafeGitRef("main"), true);
+assert.strictEqual(installer.isSafeGitRef("release/v1.2.3"), true);
+assert.strictEqual(installer.isSafeGitRef("--upload-pack=touch"), false);
+assert.strictEqual(installer.isSafeGitRef("feature/../main"), false);
+assert.strictEqual(installer.isSafeGitRef("feature branch"), false);
+assert.throws(
+  () => installer.buildCloneArgs("https://example.com/repo.git", "/tmp/skills", "--upload-pack=touch"),
+  /Unsafe git ref/,
+  "clone args should reject unsafe refs before invoking git",
+);
 
 const antigravityMessages = installer.getPostInstallMessages([
-  { name: "Antigravity", path: "/tmp/.gemini/antigravity/skills" },
+  { name: "Antigravity", path: "/tmp/.agents/skills" },
 ]);
 
 assert.ok(
@@ -19,6 +63,19 @@ assert.ok(
   antigravityMessages.some((message) => message.includes("activate-skills.bat")),
   "Antigravity installs should mention the Windows activation flow",
 );
+assert.ok(
+  antigravityMessages.some((message) => message.includes("--agy")),
+  "Antigravity installs should point agy CLI users to the dedicated CLI layout",
+);
+
+const agyMessages = installer.getPostInstallMessages([
+  { name: "Antigravity CLI", path: "/tmp/.gemini/antigravity-cli/skills" },
+]);
+
+assert.ok(
+  agyMessages.some((message) => message.includes("/skills")),
+  "Antigravity CLI installs should tell users how to verify slash commands",
+);
 
 const codexMessages = installer.getPostInstallMessages([
   { name: "Codex CLI", path: "/tmp/.codex/skills" },
@@ -29,3 +86,73 @@ assert.strictEqual(
   false,
   "Non-Antigravity installs should not emit the Antigravity-specific overload hint",
 );
+
+const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "agy-install-fixture-"));
+try {
+  const tempDir = path.join(fixtureRoot, "repo");
+  const targetDir = path.join(fixtureRoot, "agy-skills");
+  const alphaDir = path.join(tempDir, "skills", "alpha");
+  const nestedDir = path.join(tempDir, "skills", "security", "audit");
+  fs.mkdirSync(alphaDir, { recursive: true });
+  fs.mkdirSync(nestedDir, { recursive: true });
+  fs.mkdirSync(path.join(tempDir, "docs"), { recursive: true });
+  fs.mkdirSync(targetDir, { recursive: true });
+  fs.writeFileSync(path.join(alphaDir, "SKILL.md"), "---\nname: alpha\n---\n\n# Alpha\n", "utf8");
+  fs.writeFileSync(path.join(nestedDir, "SKILL.md"), "---\nname: audit\n---\n\n# Audit\n", "utf8");
+  fs.writeFileSync(path.join(tempDir, "docs", "README.md"), "# Docs\n", "utf8");
+
+  assert.deepStrictEqual(
+    installer.getManagedEntries(["alpha", "security/audit", "docs"], {}),
+    ["alpha", "security/audit", "docs"],
+    "agy CLI installs should track skill directories with nested SKILL.md files",
+  );
+
+  installer.installSkillsIntoTarget(tempDir, targetDir, [
+    "alpha",
+    "security/audit",
+    "docs",
+  ]);
+
+  assert.strictEqual(
+    fs.readFileSync(path.join(targetDir, "alpha", "SKILL.md"), "utf8"),
+    "---\nname: alpha\n---\n\n# Alpha\n",
+  );
+  assert.strictEqual(
+    fs.readFileSync(path.join(targetDir, "security", "audit", "SKILL.md"), "utf8"),
+    "---\nname: audit\n---\n\n# Audit\n",
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(targetDir, "docs")),
+    true,
+    "agy CLI installs should preserve the standard skills-only layout, including docs",
+  );
+
+  const unsafeTargetDir = path.join(fixtureRoot, "agy-unsafe");
+  const outsideDir = path.join(fixtureRoot, "outside");
+  fs.mkdirSync(unsafeTargetDir, { recursive: true });
+  fs.mkdirSync(outsideDir, { recursive: true });
+  let createdIntermediateSymlink = false;
+  try {
+    fs.symlinkSync(outsideDir, path.join(unsafeTargetDir, "security"), "dir");
+    createdIntermediateSymlink = true;
+  } catch (error) {
+    if (!["EPERM", "EACCES", "ENOTSUP"].includes(error.code)) {
+      throw error;
+    }
+  }
+
+  if (createdIntermediateSymlink) {
+    assert.throws(
+      () => installer.installSkillsIntoTarget(tempDir, unsafeTargetDir, ["security/audit"]),
+      /unsafe destination symlink component/i,
+      "agy CLI installs must refuse symlinked intermediate target directories",
+    );
+    assert.strictEqual(
+      fs.existsSync(path.join(outsideDir, "audit")),
+      false,
+      "agy CLI installs must not copy nested skills outside the install root",
+    );
+  }
+} finally {
+  fs.rmSync(fixtureRoot, { recursive: true, force: true });
+}

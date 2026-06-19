@@ -10,6 +10,8 @@ If you recognize your work here and it is not properly attributed, please open a
 | `owasp-top-10`              | [OWASP](https://owasp.org/)                                                | CC-BY-SA       | Methodology adapted.          |
 | `burp-suite-testing`        | [PortSwigger](https://portswigger.net/burp)                                | N/A            | Usage guide only (no binary). |
 | `crewai`                    | [CrewAI](https://github.com/joaomdmoura/crewAI)                            | MIT            | Framework guides.             |
+| `hasdata`, `hasdata-cli`    | [HasData CLI](https://github.com/HasData/hasdata-cli)                      | MIT            | Official HasData API and CLI guidance. |
+| `runapi-cli`                | [RunAPI CLI Skill](https://github.com/runapi-ai/cli-skill)                 | Apache-2.0     | Official RunAPI CLI skill for generating AI images, videos, and music/audio, plus other model API jobs. |
 | `langgraph`                 | [LangGraph](https://github.com/langchain-ai/langgraph)                     | MIT            | Framework guides.             |
 | `react-patterns`            | [React Docs](https://react.dev/)                                           | CC-BY          | Official patterns.            |
 | **All Official Skills**     | [Anthropic / Google / OpenAI / Microsoft / Supabase / Apify / Vercel Labs] | Proprietary    | Usage encouraged by vendors.  |
@@ -24,7 +26,7 @@ The following skills were added from the curated collection at [VoltAgent/awesom
 | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ | :--------- | :--------------------------------- |
 | `vercel-deploy-claimable`                                                                    | [Vercel Labs](https://github.com/vercel-labs/agent-skills)                | MIT        | Official Vercel skill              |
 | `design-md`                                                                                  | [Google Labs (Stitch)](https://github.com/google-labs-code/stitch-skills) | Compatible | Google Labs Stitch skills          |
-| `hugging-face-cli`, `hugging-face-jobs`                                                      | [Hugging Face](https://github.com/huggingface/skills)                     | Compatible | Official Hugging Face skills       |
+| `hugging-face-cli`, `hugging-face-community-evals`, `hugging-face-dataset-viewer`, `hugging-face-gradio`, `hugging-face-jobs`, `hugging-face-model-trainer`, `hugging-face-paper-publisher`, `hugging-face-papers`, `hugging-face-trackio`, `hugging-face-vision-trainer`, `transformers-js` | [Hugging Face](https://github.com/huggingface/skills) | Compatible | Official Hugging Face skills |
 | `culture-index`, `fix-review`, `sharp-edges`                                                 | [Trail of Bits](https://github.com/trailofbits/skills)                    | Compatible | Security skills from Trail of Bits |
 | `expo-deployment`, `upgrading-expo`                                                          | [Expo](https://github.com/expo/skills)                                    | Compatible | Official Expo skills               |
 | `commit`, `create-pr`, `find-bugs`, `iterate-pr`                                             | [Sentry](https://github.com/getsentry/skills)                             | Compatible | Sentry dev team skills             |
@@ -90,6 +92,15 @@ The following skills were added from [Dimillian/Skills](https://github.com/Dimil
 | `ios-debugger-agent`, `macos-menubar-tuist-app`, `macos-spm-app-packaging`, `swift-concurrency-expert` | [Dimillian/Skills](https://github.com/Dimillian/Skills) | MIT | Apple-platform debugging, packaging, and Swift concurrency guidance. |
 | `swiftui-liquid-glass`, `swiftui-performance-audit`, `swiftui-ui-patterns`, `swiftui-view-refactor` | [Dimillian/Skills](https://github.com/Dimillian/Skills) | MIT | SwiftUI-specific implementation, performance, and refactoring patterns. |
 
+## Skills from Leonxlnx/taste-skill
+
+The following skills were added from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill), a frontend design taste collection focused on premium UI generation, redesign audits, motion, and anti-generic output rules.
+
+| Skill / Group | Original Source | License | Notes |
+| :------------ | :-------------- | :------ | :---- |
+| `design-taste-frontend`, `gpt-taste`, `high-end-visual-design`, `minimalist-ui`, `industrial-brutalist-ui` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | Not declared upstream | Frontend visual design protocols for high-agency, motion-rich, minimalist, and brutalist UI generation. |
+| `redesign-existing-projects`, `stitch-design-taste`, `full-output-enforcement` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | Not declared upstream | Redesign audit workflow, Google Stitch design-system export, and full-output enforcement protocol. |
+
 ---
 
 ## Recently Added Skills (March 2026)
@@ -118,7 +129,7 @@ The following skills were added during the March 2026 skills update:
 ### Machine Learning & Data
 | Skill | Source | License | Notes |
 |-------|--------|---------|-------|
-| `hugging-face-dataset-viewer`, `hugging-face-datasets`, `hugging-face-evaluation`, `hugging-face-model-trainer`, `hugging-face-paper-publisher`, `hugging-face-tool-builder` | [huggingface/skills](https://github.com/huggingface/skills) | Compatible | HuggingFace ML tools |
+| `hugging-face-datasets`, `hugging-face-evaluation`, `hugging-face-tool-builder` | [huggingface/skills](https://github.com/huggingface/skills) | Compatible | Hugging Face ecosystem extensions |
 | `numpy`, `pandas`, `scipy`, `matplotlib`, `scikit-learn`, `jupyter-workflow` | [K-Dense-AI/claude-scientific-skills](https://github.com/K-Dense-AI/claude-scientific-skills) | Compatible | Data science essentials |
 | `biopython`, `scanpy`, `uniprot-database`, `pubmed-database` | [K-Dense-AI/claude-scientific-skills](https://github.com/K-Dense-AI/claude-scientific-skills) | Compatible | Bioinformatics tools |
 

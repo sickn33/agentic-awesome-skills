@@ -11,7 +11,6 @@ date_added: "2026-03-25"
 Review changed code for reuse, quality, efficiency, and clarity issues. Use Codex sub-agents to review in parallel, then optionally apply only high-confidence, behavior-preserving fixes.
 
 ## When to Use
-
 - When the user asks to simplify, clean up, refactor, or review changed code.
 - When you want high-confidence, behavior-preserving improvements on a scoped diff.
 
@@ -177,3 +176,8 @@ Close with a brief result:
 - whether validation ran
 
 If the code is already clean for this rubric, say that directly instead of manufacturing edits.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

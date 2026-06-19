@@ -1,7 +1,7 @@
 ---
 name: error-diagnostics-error-trace
 description: "You are an error tracking and observability expert specializing in implementing comprehensive error monitoring solutions. Set up error tracking systems, configure alerts, implement structured logging,"
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---
@@ -49,3 +49,8 @@ Focus on providing comprehensive error visibility, intelligent alerting, and qui
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed patterns and examples.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

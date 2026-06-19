@@ -9,6 +9,11 @@ source: community
 
 Security-focused code review for PRs, commits, and diffs.
 
+## When to Use
+- You need a security-focused review of a PR, commit range, or diff rather than a general code review.
+- The changes touch auth, crypto, external calls, value transfer, permissions, or other high-risk logic.
+- You need findings backed by code evidence, attack scenarios, and an explicit report artifact.
+
 ## Core Principles
 
 1. **Risk-First**: Focus on auth, crypto, value transfer, external calls
@@ -210,3 +215,8 @@ These patterns require adversarial analysis even in quick triage.
 **For first-time users:** Start with methodology.md to understand the complete workflow.
 
 **For experienced users:** Use this page's Quick Reference and Decision Tree to navigate directly to needed content.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

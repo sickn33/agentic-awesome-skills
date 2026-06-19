@@ -256,7 +256,7 @@ CLASSIFICAÇÃO:
 
 ---
 
-## Obrigatórias (Sempre, Para Qualquer Lote):
+### Obrigatórias (Sempre, Para Qualquer Lote):
 
 - [ ] Certidão de ônus reais (matrícula atualizada) — R$ 50-150
 - [ ] Certidão negativa de IPTU (ou extrato de débitos)
@@ -264,7 +264,7 @@ CLASSIFICAÇÃO:
 - [ ] Pesquisa do processo no sistema do TJ (ou cartório)
 - [ ] Verificar leiloeiro na Junta Comercial
 
-## Complementares (Quando Score > 5):
+### Complementares (Quando Score > 5):
 
 - [ ] Certidão do distribuidor cível (ações no imóvel)
 - [ ] Extrato de débitos de condomínio
@@ -493,3 +493,8 @@ Fontes normativas e referências de risco:
 - `leiloeiro-edital` - Complementary skill for enhanced analysis
 - `leiloeiro-ia` - Complementary skill for enhanced analysis
 - `leiloeiro-juridico` - Complementary skill for enhanced analysis
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

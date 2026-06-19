@@ -21,7 +21,6 @@ allowed-tools:
 # Hreflang & International SEO
 
 ## When to Use
-
 - Use when validating or generating hreflang for multilingual or multiregional sites.
 - Use when the user mentions international SEO, language tags, x-default, or hreflang issues.
 - Use when auditing locale alternates across HTML, headers, or sitemap implementations.
@@ -207,3 +206,8 @@ Key rules:
 | URL unreachable (DNS failure, connection refused) | Report the error clearly. Do not guess site structure. Suggest the user verify the URL and try again. |
 | No hreflang tags found | Report the absence. Check for other internationalization signals (subdirectories, subdomains, ccTLDs) and recommend the appropriate hreflang implementation method. |
 | Invalid language/region codes detected | List each invalid code with the correct replacement. Provide a corrected hreflang tag set ready to implement. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -21,6 +21,21 @@ function normalizeRepoPath(filePath) {
   return String(filePath || "").replace(/\\/g, "/").replace(/^\.\//, "");
 }
 
+function matchesContractEntry(filePath, entry) {
+  const normalizedPath = normalizeRepoPath(filePath);
+  const normalizedEntry = normalizeRepoPath(entry);
+
+  if (!normalizedEntry) {
+    return false;
+  }
+
+  if (normalizedEntry.endsWith("/")) {
+    return normalizedPath.startsWith(normalizedEntry);
+  }
+
+  return normalizedPath === normalizedEntry;
+}
+
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -57,11 +72,11 @@ function getManagedFiles(contract, options = {}) {
 }
 
 function isDerivedFile(filePath, contract) {
-  return contract.derivedFiles.includes(normalizeRepoPath(filePath));
+  return contract.derivedFiles.some((entry) => matchesContractEntry(filePath, entry));
 }
 
 function isMixedFile(filePath, contract) {
-  return contract.mixedFiles.includes(normalizeRepoPath(filePath));
+  return contract.mixedFiles.some((entry) => matchesContractEntry(filePath, entry));
 }
 
 function isDocLikeFile(filePath) {
@@ -177,5 +192,6 @@ module.exports = {
   isMixedFile,
   loadWorkflowContract,
   normalizeRepoPath,
+  matchesContractEntry,
   requiresReferencesValidation,
 };

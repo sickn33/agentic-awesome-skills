@@ -1,54 +1,58 @@
 ---
 title: Jetski/Cortex + Gemini Integration Guide
-description: "Come usare antigravity-awesome-skills con Jetski/Cortex evitando l’overflow di contesto con 1.331+ skill."
+description: "Use antigravity-awesome-skills with Jetski/Cortex without hitting context-window overflow with 1,646+ skills."
 ---
 
-# Jetski/Cortex + Gemini: integrazione sicura con 1.331+ skill
+# Jetski/Cortex + Gemini: safe integration with 1,646+ skills
 
-Questa guida mostra come integrare il repository `antigravity-awesome-skills` con un agente basato su **Jetski/Cortex + Gemini** (o framework simili) **senza superare il context window** del modello.
+This guide shows how to integrate the `antigravity-awesome-skills` repository with an agent based on **Jetski/Cortex + Gemini** (or similar frameworks) **without exceeding the model context window**.
 
-L’errore tipico visto in Jetski/Cortex è:
+The common error seen in Jetski/Cortex is:
 
 > `TrajectoryChatConverter: could not convert a single message before hitting truncation`
 
-Il problema non è nelle skill, ma **nel modo in cui vengono caricate**.
+The issue is not with the skills themselves, but **with how they are loaded**.
 
 ---
 
-## 1. Antipattern da evitare
+## 1. Anti-pattern to avoid
 
-Non bisogna mai:
+Never do:
 
-- leggere **tutte** le directory `skills/*/SKILL.md` all’avvio;
-- concatenare il contenuto di tutte le `SKILL.md` in un singolo system prompt;
-- reiniettare l’intera libreria per **ogni** richiesta.
+- read **all** `skills/*/SKILL.md` directories at startup;
+- concatenate all `SKILL.md` content into a single system prompt;
+- re-inject the entire library for **every** request.
 
-Con oltre 1.331 skill, questo approccio riempie il context window prima ancora di aggiungere i messaggi dell’utente, causando l’errore di truncation.
-
----
-
-## 2. Pattern raccomandato
-
-Principi chiave:
-
-- **Manifest leggero**: usare `data/skills_index.json` per sapere *quali* skill esistono, senza caricare i testi completi.
-- **Lazy loading**: leggere `SKILL.md` **solo** per le skill effettivamente invocate in una conversazione (es. quando compare `@skill-id`).
-- **Limiti espliciti**: imporre un massimo di skill/tokens caricati per turno, con fallback chiari.
-- **Path safety**: verificare che i path del manifest restino dentro `SKILLS_ROOT` prima di leggere `SKILL.md`.
-
-Il flusso consigliato è:
-
-1. **Bootstrap**: all’avvio dell’agente leggere `data/skills_index.json` e costruire una mappa `id -> meta`.
-2. **Parsing dei messaggi**: prima di chiamare il modello, estrarre tutti i riferimenti `@skill-id` dai messaggi utente/sistema.
-3. **Risoluzione**: mappare gli id trovati in oggetti `SkillMeta` usando la mappa di bootstrap.
-4. **Lazy load**: leggere i file `SKILL.md` solo per questi id (fino a un massimo configurabile).
-5. **Prompt building**: costruire i system messages del modello includendo solo le definizioni delle skill selezionate.
+With 1,646+ skills, this approach fills the context window before user messages are even added, causing truncation.
 
 ---
 
-## 3. Struttura di `skills_index.json`
+## 2. Recommended pattern
 
-Il file `data/skills_index.json` è un array di oggetti, ad esempio:
+Core principles:
+
+- **Stable manifest**: use the canonical root `skills_index.json` to know *which* skills exist without loading full text.
+- **Compatibility mirror**: treat `data/skills_index.json` as an exact mirror of the canonical manifest.
+- **Lazy loading**: read `SKILL.md` **only** for skills actually invoked in a conversation (for example, when `@skill-id` appears).
+- **Explicit limits**: enforce a maximum number of skills/tokens loaded per turn, with clear fallbacks.
+- **Path safety**: verify manifest paths remain inside `SKILLS_ROOT` before reading `SKILL.md`.
+- **Schema contract**: validate manifest entries against [`schemas/skills-index.v1.schema.json`](../../schemas/skills-index.v1.schema.json).
+
+The recommended flow is:
+
+1. **Bootstrap**: on agent startup, read `skills_index.json` (and `data/skills_index.json` if your host expects compatibility reads) and build an `id -> meta` map.
+2. **Message parsing**: before calling the model, extract all `@skill-id` references from user/system messages.
+3. **Resolution**: map the found IDs into `SkillMeta` objects using the bootstrap map.
+4. **Lazy load**: read `SKILL.md` files only for these IDs (up to a configurable maximum).
+5. **Prompt building**: build model system messages including only the selected skill definitions.
+
+---
+
+## 3. Structure of `skills_index.json`
+
+The file `skills_index.json` is an array of objects, for example:
+
+> `data/skills_index.json` is the compatibility mirror and should stay in sync with the canonical root manifest.
 
 ```json
 {
@@ -63,24 +67,28 @@ Il file `data/skills_index.json` è un array di oggetti, ad esempio:
 }
 ```
 
-Campi chiave:
+Key fields:
 
-- **`id`**: identificatore usato nelle menzioni `@id` (es. `@brainstorming`).
-- **`path`**: directory che contiene la `SKILL.md` (es. `skills/brainstorming/`).
+- **`id`**: identifier used in `@id` mentions (for example, `@brainstorming`).
+- **`path`**: directory containing `SKILL.md` (for example, `skills/brainstorming/`).
 
-Per ottenere il percorso alla definizione della skill:
+To resolve the path to a skill definition:
 
 - `fullPath = path.join(SKILLS_ROOT, meta.path, "SKILL.md")`.
 
-> Nota: `SKILLS_ROOT` è la directory radice dove avete installato il repository (es. `~/.agent/skills`).
+> Note: `SKILLS_ROOT` is the root directory where you installed the repository (for example, `~/.agent/skills`).
 
 ---
 
-## 4. Pseudo‑codice di integrazione (TypeScript)
+## 4. Integration pseudocode (TypeScript)
 
-> Esempio completo in: [`docs/integrations/jetski-gemini-loader/`](../../docs/integrations/jetski-gemini-loader/).
+The parser should validate against:
 
-### 4.1. Tipi di base
+- [`schemas/skills-index.v1.schema.json`](../../schemas/skills-index.v1.schema.json)
+
+> Full example in: [`docs/integrations/jetski-gemini-loader/`](../../docs/integrations/jetski-gemini-loader/).
+
+### 4.1. Core Types
 
 ```ts
 type SkillMeta = {
@@ -93,7 +101,7 @@ type SkillMeta = {
 };
 ```
 
-### 4.2. Bootstrap: caricare il manifest
+### 4.2. Bootstrap: load the manifest
 
 ```ts
 function loadSkillIndex(indexPath: string): Map<string, SkillMeta> {
@@ -107,7 +115,7 @@ function loadSkillIndex(indexPath: string): Map<string, SkillMeta> {
 }
 ```
 
-### 4.3. Parsing dei messaggi per trovare `@skill-id`
+### 4.3. Parse messages to find `@skill-id`
 
 ```ts
 const SKILL_ID_REGEX = /@([a-zA-Z0-9-_./]+)/g;
@@ -140,7 +148,7 @@ function resolveSkillsFromMessages(
 }
 ```
 
-### 4.4. Lazy loading dei file `SKILL.md`
+### 4.4. Lazy loading `SKILL.md` files
 
 ```ts
 async function loadSkillBodies(
@@ -159,9 +167,9 @@ async function loadSkillBodies(
 }
 ```
 
-### 4.5. Costruzione del prompt Jetski/Cortex
+### 4.5. Build the Jetski/Cortex prompt
 
-Pseudocodice per la fase di pre‑processing, prima del `TrajectoryChatConverter`:
+Pseudocode for the pre-processing phase before `TrajectoryChatConverter`:
 
 ```ts
 async function buildModelMessages(
@@ -203,70 +211,70 @@ async function buildModelMessages(
 }
 ```
 
-> Suggerimento: aggiungete una stima dei token per troncare o riassumere i `SKILL.md` se il context window si avvicina al limite.
-> Il reference loader di questo repo supporta anche un fallback esplicito: `overflowBehavior: "error"`.
+> Tip: Add token estimation to trim or summarize `SKILL.md` files when the context window approaches its limit.
+> This repository's reference loader also supports an explicit fallback: `overflowBehavior: "error"`.
 
 ---
 
-## 5. Gestione degli overflow di contesto
+## 5. Context overflow handling
 
-Per evitare errori difficili da capire per l’utente, impostate:
+To avoid unclear errors for the user, set:
 
-- una **soglia di sicurezza** (es. 70–80% del context window);
-- un **limite massimo di skill per turno** (es. 5–10).
+- a **safety threshold** (for example, 70–80% of the context window);
+- a **maximum number of skills per turn** (for example, 5–10).
 
-Strategie quando si supera la soglia:
+Strategies when the threshold is exceeded:
 
-- ridurre il numero di skill incluse (es. in base a recenza o priorità); oppure
-- restituire un errore chiaro all’utente, ad esempio:
+- reduce the number of included skills (for example, by recency or priority); or
+- return a clear error to the user, for example:
 
-> "Sono state richieste troppe skill in un singolo turno. Riduci il numero di `@skill-id` nel messaggio o dividili in più passaggi."
-
----
-
-## 6. Scenari di test raccomandati
-
-- **Scenario 1 – Messaggio semplice ("hi")**
-  - Nessun `@skill-id` → nessuna `SKILL.md` caricata → il prompt rimane piccolo → nessun errore.
-- **Scenario 2 – Poche skill**
-  - Messaggio con 1–2 `@skill-id` → solo le relative `SKILL.md` vengono caricate → nessun overflow.
-- **Scenario 3 – Molte skill**
-  - Messaggio con molte `@skill-id` → si attiva il limite `maxSkillsPerTurn` o il controllo di token → nessun overflow silenzioso.
+> "Too many skills were requested in a single turn. Reduce the number of `@skill-id` references in your message or split them into multiple turns."
 
 ---
 
-## 7. Sottoinsiemi di skill e bundle
+## 6. Recommended test scenarios
 
-Per ulteriore controllo:
+- **Scenario 1 – Simple message ("hi")**
+  - No `@skill-id` → no `SKILL.md` loaded → prompt remains small → no error.
+- **Scenario 2 – Few skills**
+  - Message with 1–2 `@skill-id` references → only related `SKILL.md` files are loaded → no overflow.
+- **Scenario 3 – Many skills**
+  - Message with many `@skill-id` references → `maxSkillsPerTurn` or token guardrails trigger → no silent overflow.
 
-- spostate le skill non necessarie in `skills/.disabled/` per escluderle in certi ambienti;
-- usate i **bundle** descritti in [`docs/users/bundles.md`](../users/bundles.md) per caricare solo gruppi tematici.
+---
 
-## 8. Recovery su Windows se siete gia in crash loop
+## 7. Skill subsets and bundles
 
-Se l’host continua a riaprire la stessa trajectory corrotta dopo un errore di truncation:
+For additional control:
 
-- rimuovete la skill o il pacchetto problematico;
-- cancellate Local Storage / Session Storage / IndexedDB usati da Antigravity;
-- svuotate `%TEMP%`;
-- riavviate con un loader lazy e limiti espliciti.
+- move unnecessary skills into `skills/.disabled/` to exclude them in certain environments;
+- use the **bundles** described in [`docs/users/bundles.md`](../users/bundles.md) to load only focused groups.
 
-Guida completa:
+## 8. Windows crash-loop recovery
+
+If the host keeps reopening the same corrupted trajectory after a truncation error:
+
+- remove the problematic skill or package;
+- clear Antigravity Local Storage / Session Storage / IndexedDB;
+- clear `%TEMP%`;
+- restart with lazy loading and explicit limits.
+
+Complete guide:
 
 - [`docs/users/windows-truncation-recovery.md`](../users/windows-truncation-recovery.md)
 
-Per evitare che il problema si ripresenti:
+To prevent recurrence:
 
-- mantenete `overflowBehavior: "error"` quando preferite un fallimento esplicito;
-- continuate a validare che i path risolti restino dentro `skillsRoot`.
+- keep `overflowBehavior: "error"` when you prefer explicit failure;
+- continue validating that resolved paths remain inside `skillsRoot`.
 
 ---
 
-## 9. Riepilogo
+## 9. Summary
 
-- Non concatenate mai tutte le `SKILL.md` in un singolo prompt.
-- Usate `data/skills_index.json` come manifest leggero.
-- Caricate le skill **on‑demand** in base a `@skill-id`.
-- Impostate limiti chiari (max skill per turno, soglia di token).
+- Do not concatenate all `SKILL.md` files into a single prompt.
+- Use `skills_index.json` as the canonical lightweight manifest.
+- Load skills **on demand** based on `@skill-id`.
+- Set clear limits (max skills per turn, token threshold).
 
-Seguendo questo pattern, Jetski/Cortex + Gemini può usare l’intera libreria di `antigravity-awesome-skills` in modo sicuro, scalabile e compatibile con il context window dei modelli moderni.
+Following this pattern, Jetski/Cortex + Gemini can use the full `antigravity-awesome-skills` library safely, at scale, and within modern model context-window limits.

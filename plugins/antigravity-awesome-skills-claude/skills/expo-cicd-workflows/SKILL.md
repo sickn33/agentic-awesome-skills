@@ -12,6 +12,11 @@ license: MIT License
 
 Help developers write and edit EAS CI/CD workflow YAML files.
 
+## When to Use
+- You need to create, edit, or validate `.eas/workflows/*.yml` files for an Expo project.
+- The task involves EAS build pipelines, deployment automation, workflow triggers, or Expo CI/CD configuration.
+- You need schema-backed workflow guidance rather than relying on stale memorized syntax.
+
 ## Reference Documentation
 
 Fetch these resources before generating or validating workflow files. Use the fetch script (implemented using Node.js) in this skill's `scripts/` directory; it caches responses using ETags for efficiency:
@@ -92,3 +97,8 @@ The validator fetches the latest schema and checks the YAML structure. Fix any r
 ## Answering Questions
 
 When users ask about available options (job types, triggers, runner types, etc.), fetch the schema and derive the answer from it rather than relying on potentially outdated information.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

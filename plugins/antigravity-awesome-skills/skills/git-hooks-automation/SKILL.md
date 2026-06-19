@@ -414,3 +414,8 @@ echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
 - `@verification-before-completion` - Verification before claiming work is done
 - `@bash-pro` - Advanced shell scripting for custom hooks
 - `@github-actions-templates` - CI/CD workflow templates
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

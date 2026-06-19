@@ -383,3 +383,8 @@ junit.jupiter.execution.parallel.config.fixed.parallelism=4
 - `@allure-reporting` — Deep-dive into Allure annotations, categories, and history trends
 - `@testcontainers-java` — Use alongside this skill when tests need a live database or service
 - `@github-actions-ci` — For building complete multi-browser matrix CI pipelines
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

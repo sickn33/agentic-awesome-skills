@@ -17,24 +17,27 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.10"
 
       - name: Install Python dependencies
-        run: pip install pyyaml
+        run: pip install -r tools/requirements.txt
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
 
       - name: Validate references
         run: npm run validate:references
@@ -45,11 +48,14 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Run docs security checks
-        run: npm run security:docs
-
       - name: Install web-app dependencies
         run: npm run app:install
+
+      - name: Run web app coverage
+        run: npm run app:test:coverage
+
+      - name: Run docs security checks
+        run: npm run security:docs
 
       - name: Build web app
         run: npm run app:build

@@ -14,7 +14,6 @@ Use this skill to run high-throughput refactors safely.
 Analyze scope in parallel, synthesize a single plan, then execute independent work packets with sub-agents.
 
 ## When to Use
-
 - When a refactor spans many files or subsystems and needs clear work partitioning.
 - When you need dependency-aware planning before parallel implementation.
 
@@ -95,3 +94,8 @@ Run in this order:
 3. Full project safety checks when scope is broad.
 
 Prefer fast feedback loops, but never skip required behavior checks.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -77,3 +77,8 @@ Since Google's Gemini API has a different message format than OpenAI's standard 
 - `@voice-agents` - General principles of voice AI.
 - `@agent-tool-builder` - Add tools (Search, Lights, etc.) to your Friday agent.
 - `@llm-architect` - Optimizing the LLM layer.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

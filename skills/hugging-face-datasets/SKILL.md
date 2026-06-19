@@ -8,6 +8,11 @@ source: community
 # Overview
 This skill provides tools to manage datasets on the Hugging Face Hub with a focus on creation, configuration, content management, and SQL-based data manipulation. It is designed to complement the existing Hugging Face MCP server by providing dataset editing and querying capabilities.
 
+## When to Use
+- You need to create, configure, or update datasets on the Hugging Face Hub.
+- You want SQL-style querying, transformation, or export flows over Hub datasets.
+- You are managing dataset content and metadata directly rather than only searching existing datasets.
+
 ## Integration with HF MCP Server
 - **Use HF MCP Server for**: Dataset discovery, search, and metadata retrieval
 - **Use This Skill for**: Dataset creation, content editing, SQL queries, data transformation, and structured data formatting
@@ -542,3 +547,8 @@ uv run scripts/dataset_manager.py add_rows \
   --template qa \
   --rows_json "$(cat processed_data.json)"
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

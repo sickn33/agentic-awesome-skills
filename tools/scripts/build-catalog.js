@@ -214,6 +214,24 @@ const CATEGORY_RULES = [
     ],
   },
   {
+    name: "education",
+    keywords: [
+      "education",
+      "student",
+      "syllabus",
+      "exam",
+      "study",
+      "teacher",
+      "curriculum",
+      "classroom",
+      "school",
+      "examprep",
+      "roadmap",
+      "academic",
+      "university",
+    ],
+  },
+  {
     name: "data-ai",
     keywords: [
       "data",

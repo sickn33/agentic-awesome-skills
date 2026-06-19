@@ -2,81 +2,58 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useSkillStars } from '../useSkillStars';
 
-const STORAGE_KEY = 'user_stars';
-
-const supabaseMocks = vi.hoisted(() => {
-  const maybeSingle = vi.fn();
-  const upsert = vi.fn();
-  const select = vi.fn(() => ({ eq: vi.fn(() => ({ maybeSingle })) }));
-  const from = vi.fn(() => ({ select, upsert }));
-
-  return { maybeSingle, upsert, select, from };
-});
-
-vi.mock('../../lib/supabase', () => ({
-  supabase: {
-    from: supabaseMocks.from,
-  },
-}));
+const STORAGE_KEY = 'saved_skills';
+const LEGACY_STORAGE_KEY = 'user_stars';
 
 describe('useSkillStars', () => {
   beforeEach(() => {
-    // Clear localStorage mock before each test
     localStorage.clear();
     vi.clearAllMocks();
-    supabaseMocks.from.mockReturnValue({ select: supabaseMocks.select, upsert: supabaseMocks.upsert });
-    supabaseMocks.select.mockReturnValue({ eq: vi.fn(() => ({ maybeSingle: supabaseMocks.maybeSingle })) });
-    supabaseMocks.maybeSingle.mockResolvedValue({ data: null, error: null });
-    supabaseMocks.upsert.mockResolvedValue({ error: null });
   });
 
   describe('Initialization', () => {
-    it('should initialize with zero stars when no skillId provided', () => {
+    it('should initialize as unsaved when no skillId is provided', () => {
       const { result } = renderHook(() => useSkillStars(undefined));
 
-      expect(result.current.starCount).toBe(0);
-      expect(result.current.hasStarred).toBe(false);
-      expect(result.current.isLoading).toBe(false);
+      expect(result.current.hasSaved).toBe(false);
+      expect(result.current.isSaving).toBe(false);
     });
 
-    it('should initialize with zero stars for new skill', () => {
+    it('should initialize as unsaved for a new skill', () => {
       const { result } = renderHook(() => useSkillStars('new-skill'));
 
-      expect(result.current.starCount).toBe(0);
-      expect(result.current.hasStarred).toBe(false);
+      expect(result.current.hasSaved).toBe(false);
     });
 
-    it('should overlay a local star on top of the shared count', async () => {
+    it('should read saved state from the new storage key', async () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ 'test-skill': true }));
-      supabaseMocks.maybeSingle.mockResolvedValue({ data: { star_count: 7 }, error: null });
 
       const { result } = renderHook(() => useSkillStars('test-skill'));
 
       await waitFor(() => {
-        expect(result.current.starCount).toBe(8);
+        expect(result.current.hasSaved).toBe(true);
       });
-
-      expect(result.current.hasStarred).toBe(true);
     });
 
-    it('should read starred status from localStorage on init', () => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ 'test-skill': true }));
+    it('should read saved state from the legacy storage key', async () => {
+      localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify({ 'test-skill': true }));
 
       const { result } = renderHook(() => useSkillStars('test-skill'));
 
-      expect(result.current.hasStarred).toBe(true);
+      await waitFor(() => {
+        expect(result.current.hasSaved).toBe(true);
+      });
     });
 
     it('should handle corrupted localStorage gracefully', () => {
-      // Mock getItem to return invalid JSON
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       localStorage.setItem(STORAGE_KEY, 'invalid-json');
 
       const { result } = renderHook(() => useSkillStars('test-skill'));
 
-      expect(result.current.hasStarred).toBe(false);
+      expect(result.current.hasSaved).toBe(false);
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to parse user_stars from localStorage:',
+        `Failed to parse ${STORAGE_KEY} from localStorage:`,
         expect.any(Error)
       );
 
@@ -84,80 +61,69 @@ describe('useSkillStars', () => {
     });
   });
 
-  describe('handleStarClick', () => {
-    it('should not allow starring without skillId', async () => {
+  describe('handleSaveClick', () => {
+    it('should not allow saving without skillId', async () => {
       const { result } = renderHook(() => useSkillStars(undefined));
 
       await act(async () => {
-        await result.current.handleStarClick();
+        await result.current.handleSaveClick();
       });
 
-      expect(result.current.starCount).toBe(0);
+      expect(result.current.hasSaved).toBe(false);
       expect(localStorage.setItem).not.toHaveBeenCalled();
     });
 
-    it('should not allow double-starring same skill', async () => {
+    it('should not allow double-saving the same skill', async () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ 'skill-1': true }));
 
       const { result } = renderHook(() => useSkillStars('skill-1'));
 
       await act(async () => {
-        await result.current.handleStarClick();
+        await result.current.handleSaveClick();
       });
 
-      // Star count should remain unchanged (already starred)
-      expect(result.current.starCount).toBe(0);
-      expect(result.current.hasStarred).toBe(true);
+      expect(result.current.hasSaved).toBe(true);
     });
 
-    it('should optimistically update star count', async () => {
+    it('should optimistically mark the skill as saved', async () => {
       const { result } = renderHook(() => useSkillStars('optimistic-skill'));
 
-      // Initial state
-      expect(result.current.starCount).toBe(0);
+      expect(result.current.hasSaved).toBe(false);
 
-      // Click star
       await act(async () => {
-        await result.current.handleStarClick();
+        await result.current.handleSaveClick();
       });
 
-      // Should be optimistically updated
       await waitFor(() => {
-        expect(result.current.starCount).toBe(1);
-        expect(result.current.hasStarred).toBe(true);
+        expect(result.current.hasSaved).toBe(true);
       });
-      expect(supabaseMocks.upsert).not.toHaveBeenCalled();
     });
 
-    it('should persist starred status to localStorage', async () => {
+    it('should persist saved status to localStorage', async () => {
       const { result } = renderHook(() => useSkillStars('persist-skill'));
 
       await act(async () => {
-        await result.current.handleStarClick();
+        await result.current.handleSaveClick();
       });
 
       expect(localStorage.setItem).toHaveBeenCalledWith(
         STORAGE_KEY,
         JSON.stringify({ 'persist-skill': true })
       );
-      expect(supabaseMocks.upsert).not.toHaveBeenCalled();
     });
 
-    it('should set loading state during operation', async () => {
+    it('should expose a settled saving state after completion', async () => {
       const { result } = renderHook(() => useSkillStars('loading-skill'));
 
-      // Wait for initial render
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
+        expect(result.current.isSaving).toBe(false);
       });
 
-      // Click star - the loading state may change very quickly due to the async nature
       await act(async () => {
-        await result.current.handleStarClick();
+        await result.current.handleSaveClick();
       });
 
-      // After completion, loading should be false
-      expect(result.current.isLoading).toBe(false);
+      expect(result.current.isSaving).toBe(false);
     });
   });
 
@@ -165,21 +131,19 @@ describe('useSkillStars', () => {
     it('should handle setItem errors gracefully', async () => {
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-      // Mock setItem to throw
       localStorage.setItem = vi.fn(() => {
         throw new Error('Storage quota exceeded');
       });
 
       const { result } = renderHook(() => useSkillStars('error-skill'));
 
-      // Should still optimistically update UI
       await act(async () => {
-        await result.current.handleStarClick();
+        await result.current.handleSaveClick();
       });
 
-      expect(result.current.starCount).toBe(1);
+      expect(result.current.hasSaved).toBe(true);
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to save user_stars to localStorage:',
+        `Failed to save ${STORAGE_KEY} to localStorage:`,
         expect.any(Error)
       );
 
@@ -191,16 +155,15 @@ describe('useSkillStars', () => {
     it('should return all expected properties', () => {
       const { result } = renderHook(() => useSkillStars('test'));
 
-      expect(result.current).toHaveProperty('starCount');
-      expect(result.current).toHaveProperty('hasStarred');
-      expect(result.current).toHaveProperty('handleStarClick');
-      expect(result.current).toHaveProperty('isLoading');
+      expect(result.current).toHaveProperty('hasSaved');
+      expect(result.current).toHaveProperty('handleSaveClick');
+      expect(result.current).toHaveProperty('isSaving');
     });
 
-    it('should expose handleStarClick as function', () => {
+    it('should expose handleSaveClick as function', () => {
       const { result } = renderHook(() => useSkillStars('test'));
 
-      expect(typeof result.current.handleStarClick).toBe('function');
+      expect(typeof result.current.handleSaveClick).toBe('function');
     });
   });
 });

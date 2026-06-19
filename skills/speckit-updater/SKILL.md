@@ -11,6 +11,11 @@ This skill provides safe update capabilities for GitHub SpecKit installations, p
 
 **Installation**: Available via plugin (`/plugin marketplace add NotMyself/claude-plugins` then `/plugin install speckit-updater`) or manual Git clone. See README.md for details.
 
+## When to Use
+- You need to update or install SpecKit templates while preserving project customizations.
+- You want a safe approval flow around update, rollback, or version-specific SpecKit operations.
+- The task is to operate the SpecKit updater conversationally instead of running raw commands blindly.
+
 ## What to do when this skill is invoked
 
 When the user invokes `/speckit-updater`, you should:
@@ -165,3 +170,8 @@ pwsh -NoProfile -Command "& '{skill_path}/scripts/update-wrapper.ps1' [parameter
 | 4 | Git error |
 | 5 | User cancelled |
 | 6 | Rollback required (automatic) |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

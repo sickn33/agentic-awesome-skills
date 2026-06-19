@@ -1,13 +1,17 @@
 const assert = require("assert");
 const fs = require("fs");
-const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
-const repoRoot = path.resolve(__dirname, "../..", "..");
-const scriptPath = path.join(repoRoot, "scripts", "activate-skills.sh");
+if (process.platform === "win32") {
+  console.log("Skipping activate-skills.sh smoke test on Windows; use the batch-script coverage instead.");
+  process.exit(0);
+}
 
-const root = fs.mkdtempSync(path.join(os.tmpdir(), "activate-skills-shell-"));
+const repoRoot = path.resolve(__dirname, "../..", "..");
+const scriptPath = path.posix.join("scripts", "activate-skills.sh");
+
+const root = fs.mkdtempSync(path.join(repoRoot, ".tmp-activate-skills-shell-"));
 const baseDir = path.join(root, "antigravity");
 const repoSkills = path.join(root, "repo-skills");
 const outsideDir = path.join(root, "outside-skill-root");
@@ -37,8 +41,8 @@ try {
       cwd: repoRoot,
       env: {
         ...process.env,
-        AG_BASE_DIR: baseDir,
-        AG_REPO_SKILLS_DIR: repoSkills,
+        AG_BASE_DIR: path.relative(repoRoot, baseDir).split(path.sep).join("/"),
+        AG_REPO_SKILLS_DIR: path.relative(repoRoot, repoSkills).split(path.sep).join("/"),
         AG_PYTHON_BIN: "python3",
       },
       encoding: "utf8",

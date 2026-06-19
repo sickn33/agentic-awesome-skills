@@ -98,3 +98,8 @@ The skill uses `get_application_stats` for an aggregated overview - total counts
 - [MCP Server Repo](https://github.com/6figr-com/jobgpt-mcp-server) - Source code and setup guides
 - [Skills Repo](https://github.com/6figr-com/skills) - This skill's source
 - [npm Package](https://www.npmjs.com/package/jobgpt-mcp-server) - Install via npm
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

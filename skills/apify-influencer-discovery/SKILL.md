@@ -9,6 +9,11 @@ source: community
 
 Discover and analyze influencers across multiple platforms using Apify Actors.
 
+## When to Use
+- You need to discover creators or influencers for outreach, partnerships, or campaign planning.
+- The task is to evaluate authenticity, engagement, niche fit, or audience signals across social platforms.
+- You need Apify-based extraction plus a shortlist or summary of suitable influencer candidates.
+
 ## Prerequisites
 (No need to check it upfront)
 
@@ -117,3 +122,8 @@ After completion, report:
 `Actor not found` - Check Actor ID spelling
 `Run FAILED` - Ask user to check Apify console link in error output
 `Timeout` - Reduce input size or increase `--timeout`
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -9,6 +9,11 @@ source: community
 
 Proven architectural patterns for building n8n workflows.
 
+## When to Use
+- You need to choose an architectural pattern for an n8n workflow before building it.
+- The task involves webhook processing, API integration, scheduled jobs, database sync, or AI-agent workflow design.
+- You want a high-level workflow structure rather than node-by-node troubleshooting.
+
 ---
 
 ## The 5 Core Patterns
@@ -411,3 +416,8 @@ Use `search_templates` and `get_template` from n8n-mcp tools to find examples!
 - n8n Expression Syntax - Write expressions correctly
 - n8n Validation Expert - Validate and fix errors
 - n8n Node Configuration - Configure specific operations
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -5,7 +5,7 @@ description: |
   makepad event, makepad action, Event enum, ActionTrait, handle_event,
   MouseDown, KeyDown, TouchUpdate, Hit, FingerDown, post_action,
   makepad 事件, makepad action, 事件处理
-risk: unknown
+risk: safe
 source: community
 ---
 
@@ -19,6 +19,11 @@ You are an expert at Makepad event and action handling. Help users by:
 - **Handling events**: Mouse, keyboard, touch, lifecycle events
 - **Creating actions**: Widget-to-parent communication
 - **Event flow**: Understanding event propagation
+
+## When to Use
+- You need to handle input, lifecycle, or UI interaction events in Makepad.
+- The task involves `handle_event`, `Event` variants, `Hit` processing, or widget action propagation.
+- You need to design or debug Makepad event/action flow between widgets and parents.
 
 ## Documentation
 
@@ -250,3 +255,8 @@ if let Event::NextFrame(ne) = event {
 3. Use `cx.capture_actions()` to intercept child actions
 4. `Cx::post_action()` is thread-safe for async operations
 5. `DefaultNone` derive macro auto-implements Default for enums
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

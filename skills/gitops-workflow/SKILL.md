@@ -1,7 +1,7 @@
 ---
 name: gitops-workflow
 description: "Complete guide to implementing GitOps workflows with ArgoCD and Flux for automated Kubernetes deployments."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -138,7 +138,14 @@ spec:
 
 ```bash
 # Install Flux CLI
-curl -s https://fluxcd.io/install.sh | sudo bash
+brew install fluxcd/tap/flux
+
+# Alternative: download the official installer, inspect it, then execute it
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSLo "$tmpdir/flux-install.sh" https://fluxcd.io/install.sh
+cat "$tmpdir/flux-install.sh"  # review the full installer before sudo
+sudo bash "$tmpdir/flux-install.sh"
 
 # Bootstrap Flux
 flux bootstrap github \
@@ -304,3 +311,8 @@ argocd app sync my-app --force
 
 - `k8s-manifest-generator` - For creating manifests
 - `helm-chart-scaffolding` - For packaging applications
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

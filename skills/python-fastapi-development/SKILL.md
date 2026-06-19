@@ -213,3 +213,8 @@ Use @docker-expert to containerize FastAPI application
 - `database` - Database operations
 - `security-audit` - Security testing
 - `api-development` - API patterns
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

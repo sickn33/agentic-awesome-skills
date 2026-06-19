@@ -10,6 +10,11 @@ source: community
 
 # Qiskit
 
+## When to Use
+- You are building or optimizing quantum circuits with Qiskit for simulators or real hardware.
+- You need IBM Quantum-style tooling for transpilation, execution, visualization, or algorithm libraries.
+- You want guidance on moving from a simple circuit prototype to backend-aware execution.
+
 ## Overview
 
 Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on simulators or real quantum computers, and analyze results. Supports IBM Quantum (100+ qubit systems), IonQ, Amazon Braket, and other providers.
@@ -272,3 +277,8 @@ with Session(backend=backend) as session:
 - **Qiskit Textbook**: https://qiskit.org/learn
 - **API Reference**: https://docs.quantum.ibm.com/api/qiskit
 - **Patterns Guide**: https://quantum.cloud.ibm.com/docs/en/guides/intro-to-patterns
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,6 +1,6 @@
 # CI Drift Fix Guide
 
-**Problem**: The failing job is caused by uncommitted changes detected in `README.md`, `skills_index.json`, or catalog files after the update scripts run.
+**Problem**: The failing job is caused by tracked drift left behind after the canonical sync steps run on `main`.
 
 **Error**:
 
@@ -9,7 +9,16 @@
 ```
 
 **Cause**:
-Scripts like `tools/scripts/generate_index.py`, `tools/scripts/update_readme.py`, and `tools/scripts/build-catalog.js` modify `README.md`, `skills_index.json`, `data/catalog.json`, `data/bundles.json`, `data/aliases.json`, and `CATALOG.md`. The workflow expects these files to have no changes after the scripts run. Any differences mean the committed repo is out-of-sync with what the generation scripts produce.
+The canonical sync contract is broader than just the root registry files. Scripts such as `generate_index.py`, `update_readme.py`, `build-catalog.js`, `setup_web.js`, and plugin sync helpers can legitimately update:
+
+- `README.md`
+- `CATALOG.md`
+- `skills_index.json`
+- `data/*.json`
+- tracked web assets under `apps/web-app/public/`
+- generated plugin metadata and plugin-safe copies
+
+The workflow expects the repository to be clean after those sync steps finish. Any remaining tracked or unmanaged changes mean `main` is out of sync with what the generation pipeline actually produces.
 
 ## Pull Requests vs Main
 
@@ -18,32 +27,36 @@ Scripts like `tools/scripts/generate_index.py`, `tools/scripts/update_readme.py`
 
 ## How to Fix on `main`
 
-1. Run the **FULL Validation Chain** locally:
+1. Run the canonical maintainer sync locally:
 
    ```bash
-   npm run chain
-   npm run catalog
+   npm run sync:repo-state
    ```
 
-2. Check for changes:
+2. Check whether anything is still dirty:
 
    ```bash
    git status
    git diff
    ```
 
-3. Commit and push any updates:
+3. If the sync produced only canonical/generated changes, stage and commit them. Prefer the generated-files contract instead of a hand-maintained file list:
+
    ```bash
-   git add README.md skills_index.json data/skills_index.json data/catalog.json data/bundles.json data/aliases.json CATALOG.md
-   git commit -m "chore: sync generated registry files"
+   node tools/scripts/generated_files.js --include-mixed
+   git add $(node tools/scripts/generated_files.js --include-mixed)
+   git commit -m "chore: sync canonical artifacts"
    git push
    ```
+
+4. If `sync:repo-state` leaves unrelated or unmanaged drift, stop and inspect it. The bot on `main` is only allowed to push the canonical/generated subset; anything else should fail the workflow instead of being silently auto-committed.
 
 ## Maintainer guidance for PRs
 
 - Validate the source change, not the absence of committed generated artifacts.
 - If a contributor PR includes direct edits to `CATALOG.md`, `skills_index.json`, or `data/*.json`, ask them to drop those files from the PR or remove them while refreshing the branch.
 - If merge conflicts touch generated registry files, keep `main`'s version for those files and let `main` auto-sync the final generated artifact set after merge.
+- If CI on `main` later creates a bot commit with `[ci skip]`, that is expected only for the canonical/generated subset. It is not a license to push arbitrary extra drift.
 
 **Summary**:
 Use generator drift as a hard failure only on `main`. On PRs, the contract is simpler: source-only changes are reviewed, generated output is previewed, and `main` produces the final canonical artifact set.

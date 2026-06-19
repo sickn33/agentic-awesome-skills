@@ -340,34 +340,34 @@ StateFlow como processo reativo S = (State, Ev
 
 ```
 
-## 1. Estrutura Formal
+### 1. Estrutura Formal
 
 [Definição matemática do componente]
 
-## 2. Invariantes Identificados
+### 2. Invariantes Identificados
 
 1. INV-01: [invariante em notação matemática ou pseudocódigo formal]
 2. INV-02: ...
 
-## 3. Propriedades Verificadas
+### 3. Propriedades Verificadas
 
 ✅ [Propriedade que foi verificada como correta + argumento]
 ⚠️  [Propriedade suspeita + evidência]
 ❌ [Violação encontrada + contra-exemplo]
 
-## 4. Análise De Complexidade
+### 4. Análise De Complexidade
 
 - Tempo: O(?) com argumento
 - Espaço: O(?) com argumento
 - Caso médio: Θ(?) com análise probabilística se relevante
 
-## 5. Riscos Matemáticos Prioritizados
+### 5. Riscos Matemáticos Prioritizados
 
 | Rank | Risco | Severidade | P(ocorrência) | Score |
 |------|-------|-----------|--------------|-------|
 | 1 | ... | 9/10 | 0.8 | 7.2 |
 
-## 6. Recomendações Provadas
+### 6. Recomendações Provadas
 
 #### R-01: [Título]
 **Argumento**: [Por que matematicamente esta mudança é correta]
@@ -668,3 +668,8 @@ Para análise detalhada, consulte:
 
 - `007` - Complementary skill for enhanced analysis
 - `claude-code-expert` - Complementary skill for enhanced analysis
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

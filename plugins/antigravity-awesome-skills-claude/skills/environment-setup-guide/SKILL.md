@@ -83,7 +83,11 @@ Provide verification steps to ensure everything works:
 **macOS (using Homebrew):**
 \`\`\`bash
 # Install Homebrew if not installed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSLo "$tmpdir/homebrew-install.sh" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+cat "$tmpdir/homebrew-install.sh"  # review the full installer before executing
+/bin/bash "$tmpdir/homebrew-install.sh"
 
 # Install Node.js
 brew install node
@@ -95,7 +99,11 @@ brew install node
 sudo apt update
 
 # Install Node.js and npm
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSLo "$tmpdir/nodesource-setup.sh" https://deb.nodesource.com/setup_20.x
+cat "$tmpdir/nodesource-setup.sh"  # review the full installer before sudo
+sudo -E bash "$tmpdir/nodesource-setup.sh"
 sudo apt install -y nodejs
 \`\`\`
 
@@ -480,3 +488,8 @@ echo "✅ Setup complete! Run 'npm run dev' to start"
 ---
 
 **Pro Tip:** Create a `setup.sh` or `setup.ps1` script to automate the entire setup process. Test it on a clean system to ensure it works!
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

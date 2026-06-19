@@ -10,6 +10,11 @@ source: community
 
 分析健康目标数据,识别目标模式和进度,评估目标达成情况,并提供个性化目标管理建议。
 
+## When to Use
+- 你需要评估健康目标是否符合 SMART 原则，并识别目标设定中的薄弱点。
+- 你想跟踪目标进度，并结合营养、运动、睡眠等健康数据做关联分析。
+- 你需要面向个人健康管理的目标优化建议、风险提示和阶段性调整方案。
+
 ## 功能
 
 ### 1. SMART目标验证
@@ -605,3 +610,8 @@ def validate_smart_goal(goal):
 ---
 
 **使用此技能时,始终优先考虑用户的健康和安全!**
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -34,7 +34,7 @@ antigravity-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 1,331+ skills live here
+├── 📁 skills/                          ← 1,646+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -47,7 +47,7 @@ antigravity-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (1,331+ total)
+│   └── ... (1,646+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -100,7 +100,7 @@ antigravity-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,331+ SKILLS          │
+                    │  1,646+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -186,7 +186,7 @@ antigravity-awesome-skills/
 │ $ npx antigravity-awesome-skills        │
 │                                         │
 │ ✓ Installing to                         │
-│   ~/.gemini/antigravity/skills/         │
+│   ~/.agents/skills/                     │
 └─────────────────────────────────────────┘
 ```
 
@@ -197,11 +197,11 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 ┌─────────────────────────────────────────┐
 │ File Explorer                           │
 ├─────────────────────────────────────────┤
-│ 📁 ~/.gemini/antigravity/skills/        │
+│ 📁 ~/.agents/skills/                    │
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (1,331+ total)                │
+│   └── ... (1,646+ total)                │
 └─────────────────────────────────────────┘
 ```
 

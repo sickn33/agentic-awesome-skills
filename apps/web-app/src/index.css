@@ -4,8 +4,120 @@
 @import 'highlight.js/styles/github.css' (prefers-color-scheme: light);
 @import 'highlight.js/styles/github-dark.css' (prefers-color-scheme: dark);
 
+:root {
+  --font-sans: 'Outfit', 'Avenir Next', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+  --surface-canvas: #f3f5f8;
+  --surface-card: #fcfdff;
+  --surface-elevated: #f8fafc;
+  --stroke-subtle: #d8dee8;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #546178;
+
+  --accent-solid: #0f766e;
+  --accent-border: #0d9488;
+  --accent-soft: #ccfbf1;
+  --accent-ring: #14b8a6;
+
+  --radius-sm: 0.6rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.35rem;
+
+  --shadow-soft: 0 8px 22px rgba(15, 23, 42, 0.08);
+  --shadow-medium: 0 14px 34px rgba(15, 23, 42, 0.12);
+
+  --motion-fast: 180ms;
+  --motion-base: 260ms;
+  --motion-ease: cubic-bezier(0.2, 0.9, 0.28, 1);
+
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-canvas: #070b12;
+    --surface-card: #0b1220;
+    --surface-elevated: #131c2d;
+    --stroke-subtle: #1f2a3d;
+
+    --text-primary: #e2e8f0;
+    --text-secondary: #c5d0dd;
+    --text-muted: #9ba9be;
+
+    --accent-solid: #2dd4bf;
+    --accent-border: #14b8a6;
+    --accent-soft: rgba(20, 184, 166, 0.14);
+    --accent-ring: #2dd4bf;
+
+    --shadow-soft: 0 10px 32px rgba(0, 0, 0, 0.45);
+    --shadow-medium: 0 16px 46px rgba(0, 0, 0, 0.5);
+  }
+}
+
+* {
+  border-color: var(--stroke-subtle);
+}
+
+*::selection {
+  background-color: var(--accent-soft);
+  color: var(--text-primary);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: 2px;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  background-color: var(--surface-canvas);
+  color: var(--text-primary);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--surface-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .markdown-body {
-  color: var(--color-slate-800);
+  color-scheme: light;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  line-height: 1.7;
 }
 
 .markdown-body h1,
@@ -14,7 +126,17 @@
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
-  color: var(--color-slate-900);
+  color: var(--text-primary);
+  letter-spacing: -0.012em;
+}
+
+.markdown-body a {
+  color: var(--accent-solid);
+  text-decoration-color: color-mix(in oklab, var(--accent-solid) 42%, transparent);
+}
+
+.markdown-body a:hover {
+  text-decoration-color: var(--accent-border);
 }
 
 .markdown-body hr,
@@ -22,17 +144,24 @@
 .markdown-body table th,
 .markdown-body table td,
 .markdown-body blockquote {
-  border-color: var(--color-slate-200);
+  border-color: var(--stroke-subtle);
+}
+
+.markdown-body blockquote {
+  color: var(--text-muted);
+  background-color: color-mix(in oklab, var(--surface-elevated) 68%, transparent);
 }
 
 .markdown-body code {
-  background-color: var(--color-slate-100);
-  color: var(--color-slate-900);
+  background-color: color-mix(in oklab, var(--surface-elevated) 82%, white 18%);
+  color: var(--text-primary);
 }
 
 .markdown-body pre {
-  background-color: var(--color-slate-100);
-  border: 1px solid var(--color-slate-200);
+  background-color: color-mix(in oklab, var(--surface-elevated) 80%, white 20%);
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
 }
 
 .markdown-body pre code {
@@ -42,34 +171,16 @@
 @media (prefers-color-scheme: dark) {
   .markdown-body {
     color-scheme: dark;
-    color: var(--color-slate-200);
-  }
-
-  .markdown-body h1,
-  .markdown-body h2,
-  .markdown-body h3,
-  .markdown-body h4,
-  .markdown-body h5,
-  .markdown-body h6 {
-    color: var(--color-slate-100);
-  }
-
-  .markdown-body hr,
-  .markdown-body table tr,
-  .markdown-body table th,
-  .markdown-body table td,
-  .markdown-body blockquote {
-    border-color: var(--color-slate-700);
+    color: var(--text-secondary);
   }
 
   .markdown-body code {
-    background-color: var(--color-slate-800);
-    color: var(--color-slate-100);
+    background-color: color-mix(in oklab, var(--surface-elevated) 88%, black 12%);
   }
 
   .markdown-body pre {
-    background-color: var(--color-slate-900);
-    border-color: var(--color-slate-700);
+    background-color: color-mix(in oklab, var(--surface-elevated) 94%, black 6%);
+    border-color: var(--stroke-subtle);
   }
 
   .markdown-body pre code,
@@ -78,12 +189,12 @@
   .markdown-body pre .hljs-subst,
   .markdown-body pre .hljs-punctuation,
   .markdown-body pre .hljs-operator {
-    color: var(--color-slate-100) !important;
+    color: var(--text-primary) !important;
   }
 
   .markdown-body pre .hljs-comment,
   .markdown-body pre .hljs-quote {
-    color: var(--color-slate-200) !important;
+    color: var(--text-secondary) !important;
   }
 
   .markdown-body pre .hljs-keyword,
@@ -92,7 +203,7 @@
   .markdown-body pre .hljs-section,
   .markdown-body pre .hljs-title,
   .markdown-body pre .hljs-name {
-    color: var(--color-sky-300) !important;
+    color: #67e8f9 !important;
   }
 
   .markdown-body pre .hljs-string,
@@ -101,23 +212,6 @@
   .markdown-body pre .hljs-attr,
   .markdown-body pre .hljs-template-tag,
   .markdown-body pre .hljs-template-variable {
-    color: var(--color-emerald-300) !important;
-  }
-}
-
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-}
-
-body {
-  background-color: var(--color-slate-50);
-  color: var(--color-slate-900);
-  overflow-x: hidden;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: var(--color-slate-950);
-    color: var(--color-slate-50);
+    color: #a7f3d0 !important;
   }
 }

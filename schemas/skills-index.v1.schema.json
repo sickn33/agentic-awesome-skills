@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sickn33.github.io/antigravity-awesome-skills/schemas/skills-index.v1.schema.json",
+  "title": "Antigravity Awesome Skills Index v1",
+  "description": "Array-compatible public discovery manifest for antigravity-awesome-skills.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": true,
+    "required": [
+      "id",
+      "path",
+      "category",
+      "name",
+      "description",
+      "risk",
+      "source",
+      "date_added"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "path": {
+        "type": "string",
+        "pattern": "^skills/"
+      },
+      "category": {
+        "type": "string",
+        "minLength": 1
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": {
+        "type": "string"
+      },
+      "risk": {
+        "type": "string",
+        "minLength": 1
+      },
+      "source": {
+        "type": "string",
+        "minLength": 1
+      },
+      "date_added": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "plugin": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "targets": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "setup": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

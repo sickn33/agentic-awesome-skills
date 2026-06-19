@@ -24,7 +24,6 @@ Create high-converting comparison and alternatives pages that target
 competitive intent keywords with accurate, structured content.
 
 ## When to Use
-
 - Use when creating `X vs Y` comparison pages or alternatives pages.
 - Use when targeting competitor-intent keywords with SEO landing pages.
 - Use when the user needs structured comparison content, feature matrices, or conversion-oriented competitor pages.
@@ -227,3 +226,8 @@ competitive intent keywords with accurate, structured content.
 | Competitor URL unreachable | Report which competitor URLs failed. Proceed with available data and note gaps in the comparison. |
 | Insufficient competitor data (pricing, features unavailable) | Flag missing data points clearly. Use "Not publicly available" in comparison tables rather than guessing. |
 | No product/service overlap found | Report that the products serve different markets. Suggest alternative competitors that share feature overlap, or pivot to a category roundup format. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

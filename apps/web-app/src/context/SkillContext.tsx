@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import type { Skill, StarMap } from '../types';
 import { supabase } from '../lib/supabase';
+import { getSkillsIndexCandidateUrls } from '../utils/publicAssetUrls';
 
 interface SkillContextType {
     skills: Skill[];
@@ -10,66 +11,7 @@ interface SkillContextType {
     refreshSkills: () => Promise<void>;
 }
 
-interface SkillsIndexUrlInput {
-    baseUrl: string;
-    origin: string;
-    pathname: string;
-    documentBaseUrl?: string;
-}
-
 const SkillContext = createContext<SkillContextType | undefined>(undefined);
-
-function normalizeBasePath(baseUrl: string): string {
-    const normalizedSegments = baseUrl
-        .trim()
-        .split('/')
-        .filter((segment) => segment.length > 0 && segment !== '.');
-
-    const normalizedPath = normalizedSegments.length > 0
-        ? `/${normalizedSegments.join('/')}`
-        : '/';
-
-    return normalizedPath.endsWith('/') ? normalizedPath : `${normalizedPath}/`;
-}
-
-function appendBackupCandidates(urls: string[]): string[] {
-    const candidates = new Set<string>();
-
-    urls.forEach((url) => {
-        candidates.add(url);
-
-        if (url.endsWith('skills.json')) {
-            candidates.add(`${url}.backup`);
-        }
-    });
-
-    return Array.from(candidates);
-}
-
-export function getSkillsIndexCandidateUrls({
-    baseUrl,
-    origin,
-    pathname,
-    documentBaseUrl,
-}: SkillsIndexUrlInput): string[] {
-    const normalizedPathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
-    const baseCandidate = new URL(
-        'skills.json',
-        documentBaseUrl || new URL(normalizeBasePath(baseUrl), origin),
-    ).href;
-    const pathSegments = normalizedPathname.split('/').filter(Boolean);
-    const pathCandidates = pathSegments.map((_, index) => {
-        const prefix = `/${pathSegments.slice(0, index + 1).join('/')}/`;
-        return `${origin}${prefix}skills.json`;
-    });
-
-    return appendBackupCandidates([
-        baseCandidate,
-        new URL('skills.json', new URL(normalizeBasePath(baseUrl), origin)).href,
-        `${origin}/skills.json`,
-        ...pathCandidates,
-    ]);
-}
 
 export function SkillProvider({ children }: { children: React.ReactNode }) {
     const [skills, setSkills] = useState<Skill[]>([]);

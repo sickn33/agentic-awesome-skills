@@ -12,7 +12,6 @@ date_added: "2026-03-25"
 Use XcodeBuildMCP to build and run the current project scheme on a booted iOS simulator, interact with the UI, and capture logs. Prefer the MCP tools for simulator control, logs, and view inspection.
 
 ## When to Use
-
 - When the user asks to run, debug, or inspect an iOS app on a simulator.
 - When you need simulator UI interaction, screenshots, or runtime logs via XcodeBuildMCP.
 
@@ -57,3 +56,8 @@ Use these when asked to inspect or interact with the running app.
 - If build fails, ask whether to retry with `preferXcodebuild: true`.
 - If the wrong app launches, confirm the scheme and bundle id.
 - If UI elements are not hittable, re-run `describe_ui` after layout changes.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

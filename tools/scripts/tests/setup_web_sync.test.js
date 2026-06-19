@@ -4,7 +4,7 @@ const os = require("os");
 const path = require("path");
 
 async function main() {
-  const { copyIndexFiles } = await import("../../scripts/setup_web.js");
+  const { copyFolderSync, copyIndexFiles } = require("../../scripts/setup_web.js");
 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "setup-web-sync-"));
   try {
@@ -25,12 +25,25 @@ async function main() {
       JSON.parse(fs.readFileSync(backup, "utf8")),
       JSON.parse(fs.readFileSync(source, "utf8")),
     );
+
+    const skillsSource = path.join(root, "skills");
+    const skillsDest = path.join(root, "public", "skills");
+    fs.mkdirSync(path.join(skillsSource, "visible-skill"), { recursive: true });
+    fs.mkdirSync(path.join(skillsSource, ".disabled", "hidden-skill"), { recursive: true });
+    fs.writeFileSync(path.join(skillsSource, "visible-skill", "SKILL.md"), "# Visible\n", "utf8");
+    fs.writeFileSync(path.join(skillsSource, ".disabled", "hidden-skill", "SKILL.md"), "# Hidden\n", "utf8");
+
+    copyFolderSync(skillsSource, skillsDest, skillsSource);
+
+    assert.ok(fs.existsSync(path.join(skillsDest, "visible-skill", "SKILL.md")));
+    assert.strictEqual(
+      fs.existsSync(path.join(skillsDest, ".disabled")),
+      false,
+      "web asset setup must not publish dot-prefixed skills directories",
+    );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main();

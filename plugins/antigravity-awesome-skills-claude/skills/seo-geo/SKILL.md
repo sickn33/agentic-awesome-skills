@@ -17,7 +17,6 @@ allowed-tools:
 # AI Search / GEO Optimization (February 2026)
 
 ## When to Use
-
 - Use when improving visibility in AI Overviews, ChatGPT, Perplexity, or similar AI search systems.
 - Use when evaluating llms.txt readiness, AI crawler access, or citation-oriented content structure.
 - Use when the user asks about GEO, AI SEO, LLM visibility, or AI citations.
@@ -252,3 +251,8 @@ If DataForSEO MCP tools are available, use `ai_optimization_chat_gpt_scraper` to
 | AI crawlers blocked by robots.txt | Report exactly which crawlers are blocked and which are allowed. Provide specific robots.txt directives to add for enabling AI search visibility. |
 | No llms.txt found | Note the absence and provide a ready-to-use llms.txt template based on the site's content structure. |
 | No structured data detected | Report the gap and provide specific schema recommendations (Article, Organization, Person) for improving AI discoverability. |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

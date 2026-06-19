@@ -350,3 +350,8 @@ registerRoute(({ request }) => request.destination === 'script', new StaleWhileR
 - [ ] `offline.html` fallback is cached and served when navigation fails offline
 - [ ] Lighthouse PWA audit passes (Chrome DevTools → Lighthouse tab)
 - [ ] Tested on iOS Safari (manual install flow) and Android Chrome (install prompt)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

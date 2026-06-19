@@ -1,12 +1,20 @@
 ---
 name: viral-generator-builder
-description: "You understand why people share things. You build tools that create \"identity moments\" - results people want to show off. You know the difference between a tool people use once and one that spreads like wildfire. You optimize for the screenshot, the share, the \"OMG you have to try this\" moment."
+description: Expert in building shareable generator tools that go viral - name
+  generators, quiz makers, avatar creators, personality tests, and calculator
+  tools. Covers the psychology of sharing, viral mechanics, and building tools
+  people can't resist sharing with friends.
 risk: unknown
-source: "vibeship-spawner-skills (Apache 2.0)"
-date_added: "2026-02-27"
+source: vibeship-spawner-skills (Apache 2.0)
+date_added: 2026-02-27
 ---
 
 # Viral Generator Builder
+
+Expert in building shareable generator tools that go viral - name generators,
+quiz makers, avatar creators, personality tests, and calculator tools. Covers
+the psychology of sharing, viral mechanics, and building tools people can't
+resist sharing with friends.
 
 **Role**: Viral Generator Architect
 
@@ -15,6 +23,14 @@ You understand why people share things. You build tools that create
 difference between a tool people use once and one that spreads like
 wildfire. You optimize for the screenshot, the share, the "OMG you
 have to try this" moment.
+
+### Expertise
+
+- Viral mechanics
+- Shareable results
+- Generator architecture
+- Social psychology
+- Share optimization
 
 ## Capabilities
 
@@ -35,7 +51,6 @@ Building generators that go viral
 
 **When to use**: When creating any shareable generator tool
 
-```javascript
 ## Generator Architecture
 
 ### The Viral Generator Formula
@@ -63,7 +78,6 @@ Input (minimal) → Magic (your algorithm) → Result (shareable)
 - Include branding subtly
 - Make text readable on mobile
 - Add share buttons but design for screenshots
-```
 
 ### Quiz Builder Pattern
 
@@ -71,7 +85,6 @@ Building personality quizzes that spread
 
 **When to use**: When building quiz-style generators
 
-```javascript
 ## Quiz Builder Pattern
 
 ### Quiz Structure
@@ -114,7 +127,6 @@ const result = Object.entries(scores)
 - "Share your result" buttons
 - "See what friends got" CTA
 - Subtle retake option
-```
 
 ### Name Generator Pattern
 
@@ -122,7 +134,6 @@ Building name generators that people love
 
 **When to use**: When building any name/text generator
 
-```javascript
 ## Name Generator Pattern
 
 ### Generator Types
@@ -156,49 +167,137 @@ function generateName(input) {
 - Certificate/badge design
 - Compare with friends feature
 - Daily/weekly changing results
+
+### Calculator Virality
+
+Making calculator tools that get shared
+
+**When to use**: When building calculator-style tools
+
+## Calculator Virality
+
+### Calculators That Go Viral
+| Topic | Why It Works |
+|-------|--------------|
+| Salary/money | Everyone curious |
+| Age/time | Personal stakes |
+| Compatibility | Relationship drama |
+| Worth/value | Ego involvement |
+| Predictions | Future curiosity |
+
+### The Viral Calculator Formula
+1. Ask for interesting inputs
+2. Show impressive calculation
+3. Reveal surprising result
+4. Make result shareable
+
+### Result Presentation
+```
+BAD:  "Result: $45,230"
+GOOD: "You could save $45,230 by age 40"
+BEST: "You're leaving $45,230 on the table 💸"
 ```
 
-## Anti-Patterns
+### Comparison Features
+- "Compare with average"
+- "Compare with friends"
+- "See where you rank"
+- Percentile displays
 
-### ❌ Forgettable Results
+## Validation Checks
 
-**Why bad**: Generic results don't get shared.
-"You are creative" - so what?
-No identity moment.
-Nothing to screenshot.
+### Missing Social Meta Tags
 
-**Instead**: Make results specific and identity-forming.
-"You're a Midnight Architect" > "You're creative"
-Add visual flair.
-Make it screenshot-worthy.
+Severity: HIGH
 
-### ❌ Too Much Input
+Message: Missing social meta tags - shares will look bad.
 
-**Why bad**: Every field is a dropout point.
-People want instant gratification.
-Long forms kill virality.
-Mobile users bounce.
+Fix action: Add dynamic og:image, og:title, og:description for each result
 
-**Instead**: Minimum viable input.
-Start with just name or one question.
-Progressive disclosure if needed.
-Show progress if longer.
+### Non-Deterministic Results
 
-### ❌ Boring Share Cards
+Severity: MEDIUM
 
-**Why bad**: Social feeds are competitive.
-Bland cards get scrolled past.
-No click = no viral loop.
-Wasted opportunity.
+Message: Using Math.random() may give different results for same input.
 
-**Instead**: Design for the feed.
-Bold colors, clear text.
-Result visible without clicking.
-Your branding subtle but present.
+Fix action: Use seeded random or hash-based selection for consistent results
+
+### No Share Functionality
+
+Severity: MEDIUM
+
+Message: No easy way for users to share results.
+
+Fix action: Add share buttons for major platforms and copy link option
+
+### No Shareable Result Image
+
+Severity: MEDIUM
+
+Message: No shareable image for results.
+
+Fix action: Generate or design shareable result cards/images
+
+### Desktop-First Result Design
+
+Severity: MEDIUM
+
+Message: Results not optimized for mobile sharing.
+
+Fix action: Design result cards mobile-first, test screenshots on phone
+
+## Collaboration
+
+### Delegation Triggers
+
+- landing page|conversion|signup -> landing-page-design (Landing page for generator)
+- SEO|search|google -> seo (Search optimization for generator)
+- react|vue|frontend code -> frontend (Frontend implementation)
+- copy|headline|hook -> viral-hooks (Viral copy for sharing)
+- image generation|og image|dynamic image -> ai-image-generation (Dynamic result images)
+
+### Viral Quiz Launch
+
+Skills: viral-generator-builder, landing-page-design, viral-hooks, seo
+
+Workflow:
+
+```
+1. Design quiz mechanics and results
+2. Create landing page
+3. Write viral copy for sharing
+4. Optimize for search
+5. Launch and monitor viral coefficient
+```
+
+### AI-Powered Generator
+
+Skills: viral-generator-builder, ai-wrapper-product, frontend
+
+Workflow:
+
+```
+1. Design generator concept
+2. Build AI-powered generation
+3. Create shareable result UI
+4. Optimize sharing flow
+5. Monitor and iterate
+```
 
 ## Related Skills
 
 Works well with: `viral-hooks`, `landing-page-design`, `seo`, `frontend`
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+- User mentions or implies: generator tool
+- User mentions or implies: quiz maker
+- User mentions or implies: name generator
+- User mentions or implies: avatar creator
+- User mentions or implies: viral tool
+- User mentions or implies: shareable calculator
+- User mentions or implies: personality test
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,35 +1,44 @@
-# ❓ 常见问题解答 (FAQ)
+# 常见问题解答 (FAQ)
 
-**有疑问？** 您不是一个人！以下是关于Antigravity Awesome Skills最常见问题的答案。
+**有问题？**你并不孤单！这里是关于 Antigravity Awesome Skills 最常见问题的答案。
 
 ---
 
-## 🎯 一般问题
+## 一般问题
 
-### 技能到底是什么？
+### "技能"究竟是什么？
 
-技能是专门的指导文件，用于教AI助手如何处理特定任务。可以将它们看作是您的AI可以按需加载的专家知识模块。
-**简单类比：** 就像您可能会咨询不同的专家（律师、医生、机械师）一样，这些技能让您的AI在需要时成为不同领域的专家。
+技能是专门的指令文件，用于教 AI 助手如何处理特定任务。将它们想象成你的 AI 可以按需加载的专业知识模块。
+**简单类比：**就像你可能咨询不同的专家（律师、医生、机械师），这些技能让你的 AI 在需要时成为不同领域的专家。
 
-### 我需要安装所有1,204+个技能吗？
+### 我需要安装每个技能吗？
 
-**不需要！** 当您克隆仓库时，所有技能都可用，但您的AI只在您用`@skill-name`明确调用它们时才加载。
-这就像拥有一座图书馆 - 所有书都在那里，但您只读需要的那些。
-**专业提示：** 使用[入门包](bundles.md)只安装与您角色匹配的内容。
+**不需要！**当你克隆仓库时，所有技能都可用，但你的 AI 仅在你使用 `@skill-name` 显式调用它们时才加载它们。
+这就像拥有一个图书馆 - 所有书籍都在那里，但你只阅读你需要的那本。
+**专业提示：**使用 [入门包](bundles.md) 首先专注于与你角色匹配的技能。
 
-### 包和工作流有什么区别？
+### 捆绑包和工作流有什么区别？
 
-- **包**是按角色或领域分组的精选推荐。
-- **工作流**是为具体结果编写的有序执行手册。
+- **捆绑包**是按角色或域分类的精选推荐。
+- **工作流**是具体结果的有序执行剧本。
 
-当您决定包含_哪些技能_时使用包。当您需要_逐步执行_时使用工作流。
+当你决定_包括哪些技能_时使用捆绑包。当你需要_逐步执行_时使用工作流。
 
-从这里开始：
+从以下开始：
 
 - [bundles.md](bundles.md)
 - [workflows.md](workflows.md)
 
-### 哪些AI工具支持这些技能？
+### 技能和 MCP 工具有什么区别？
+
+- **技能**是可重用的 `SKILL.md` 剧本，用于指导 AI 助手完成工作流。
+- **MCP 工具**是集成或可调用功能，让助手能够与外部系统交互。
+
+当你想要更好的流程、结构和执行质量时使用技能。当你需要访问 API、服务、数据库或其他系统时使用 MCP 工具。当你想要可靠的工作流加上外部功能时，同时使用两者。
+
+有关更长的解释，请阅读 [skills-vs-mcp-tools.md](skills-vs-mcp-tools.md)。
+
+### 哪些 AI 工具可以使用这些技能？
 
 - ✅ **Claude Code** (Anthropic CLI)
 - ✅ **Gemini CLI** (Google)
@@ -37,323 +46,300 @@
 - ✅ **Cursor** (AI IDE)
 - ✅ **Antigravity IDE**
 - ✅ **OpenCode**
-- ⚠️ **GitHub Copilot** (通过复制粘贴部分支持)
+- ✅ **Kiro CLI** (Amazon)
+- ✅ **Kiro IDE** (Amazon)
+- ✅ **AdaL CLI**
+- ⚠️ **GitHub Copilot**（通过复制粘贴部分支持）
 
-### 这些技能免费吗？
+### 这些技能可以免费使用吗？
 
-**是的！** 这个项目完全开源免费。所有技能都可以免费使用、修改和分发。
+**可以。**原始代码和工具采用 MIT 许可，原始文档/非代码书面内容采用 CC BY 4.0 许可。
+
+- ✅ 免费供个人使用
+- ✅ 免费供商业使用
+- ✅ 你可以修改它们
+
+有关归属和第三方许可详细信息，请参阅 [../../LICENSE](../../LICENSE)、[../../LICENSE-CONTENT](../../LICENSE-CONTENT) 和 [../sources/sources.md](../sources/sources.md)。
+
+### 这些技能如何避免溢出模型上下文？
+
+一些主机工具（例如，在 Jetski/Cortex + Gemini 上构建的自定义代理）可能想要**将每个 `SKILL.md` 文件连接到单个系统提示词中**。
+这**不是**设计使用此仓库的方式，如果你将整个仓库连接到一个提示词中，几乎肯定会溢出模型的上下文窗口。
+
+相反，主机应该：
+
+- 使用 `data/skills_index.json` 作为**轻量级清单**进行发现；以及
+- **仅在调用技能时**（例如，通过对话中的 `@skill-id`）加载单个 `SKILL.md` 文件。
+
+有关具体示例（包括伪代码），请参阅：
+
+- [`docs/integrations/jetski-cortex.md`](../integrations/jetski-cortex.md)
+
+### 技能可以离线工作吗？
+
+技能文件本身存储在你的计算机上，但你的 AI 助手需要互联网连接才能运行。
 
 ---
 
-## 🔧 安装和设置
+## 安全与信任
 
-### 如何安装技能？
+### 风险标签是什么意思？
 
-**选项1 - npx（推荐）：**
-```bash
-npx antigravity-awesome-skills
-```
+我们对技能进行分类，以便你知道你正在运行什么。这些值直接映射到每个 `SKILL.md` 前置元数据中的 `risk:` 字段：
 
-**选项2 - git克隆：**
+- 🔵 **`none`**：纯参考或规划内容 — 无 shell 命令、无变更、无网络访问。
+- ⚪ **`safe`**：非破坏性的社区技能（只读、规划、代码审查、分析）。
+- 🔴 **`critical`**：修改文件、删除数据、使用网络扫描器或执行破坏性操作的技能。**谨慎使用。**
+- 🟣 **`offensive`**：专注于安全性的进攻技术（渗透测试、利用）。**仅授权使用** — 始终确认目标在范围内。
+- ⬜ **`unknown`**：遗留或未分类的内容。在使用前手动检查技能。
+
+### 这些技能可以入侵我的计算机吗？
+
+**不可以。**技能是文本文件。但是，它们_指示_ AI 运行命令。如果技能说"删除所有文件"，一个顺从的 AI 可能会尝试这样做。
+_始终检查风险标签并审查代码。_
+
+---
+
+## 安装和设置
+
+### 我应该在哪里安装技能？
+
+这取决于你如何安装：
+
+- **使用安装程序 CLI (`npx antigravity-awesome-skills`)**：
+  默认安装目标是 Antigravity 全局库的 `~/.agents/skills/`。
+- **使用特定于工具的标志**：
+  使用 `--claude`、`--cursor`、`--gemini`、`--codex`、`--kiro` 或 `--antigravity` 自动定位匹配的工具路径。
+- **使用手动克隆或自定义工作区路径**：
+  `.agent/skills/` 对于 Antigravity/自定义设置仍然是一个很好的通用工作区约定。
+
+如果你从 npm 收到 404，请使用：`npx github:sickn33/antigravity-awesome-skills`
+
+**使用 git clone：**
+
 ```bash
 git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
 ```
 
-详细说明请参见[入门指南](getting-started.md)。
+**特定于工具的路径：**
 
-### 安装到哪个位置？
+- Claude Code: `.claude/skills/`
+- Gemini CLI: `.gemini/skills/`
+- Codex CLI: `.codex/skills/`
+- Cursor: `.cursor/skills/` 或项目根目录
 
-**默认位置：**
-- Antigravity: `~/.gemini/antigravity/skills/`
-- 其他工具: `~/.agent/skills/`
+**Claude Code 插件市场替代方案：**
 
-**自定义位置：**
-```bash
-npx antigravity-awesome-skills --path /custom/path/skills
+```text
+/plugin marketplace add sickn33/antigravity-awesome-skills
+/plugin install antigravity-awesome-skills
 ```
 
-### Windows用户需要特殊设置吗？
+此仓库现在包括 `.claude-plugin/marketplace.json` 和 `.claude-plugin/plugin.json`，因此 Claude Code 可以通过插件市场安装相同的技能树。
 
-是的，Windows用户需要：
+### 这可以在 Windows 上使用吗？
 
-1. **启用开发者模式**或以管理员身份运行
-2. **使用正确的克隆命令：**
+**可以。**使用与其他平台相同的标准安装流程：
+
 ```bash
-git clone -c core.symlinks=true https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+npx antigravity-awesome-skills
 ```
+
+如果你在已删除的符号链接解决方法周围创建了较旧的克隆，请重新安装到新目录或重新运行 `npx antigravity-awesome-skills`。
+
+### 我在 Windows 上遇到截断或上下文崩溃循环。如何恢复？
+
+如果 Antigravity 或基于 Jetski/Cortex 的主机不断重新打开到：
+
+> `TrajectoryChatConverter: could not convert a single message before hitting truncation`
+
+使用专用的 Windows 恢复指南：
+
+- [`windows-truncation-recovery.md`](windows-truncation-recovery.md)
+
+它包括：
+
+- 针对损坏的本地存储/会话存储/IndexedDB 状态的手动清理步骤
+- 首先要备份的默认 Antigravity Windows 路径
+- 根据 [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274) 改编的可选批处理脚本
+
+### 我在 Linux 或 macOS 上遇到上下文过载。我该怎么办？
+
+如果 Antigravity 仅在激活完整技能库时变得不稳定，请切换到激活流程，而不是一次暴露每个技能：
+
+- [agent-overload-recovery.md](agent-overload-recovery.md)
+
+该指南展示了如何从此仓库的克隆副本运行 `scripts/activate-skills.sh`，以便只有你需要的捆绑包或技能 ID 在 `~/.agents/skills` 中保持活动状态。
+
+### Gemini CLI 在几轮之后挂起或说"This is taking a bit longer, we're still on it"。我该怎么办？
+
+首先进行快速隔离检查：
+
+1. 开始一个全新的 Gemini CLI 对话。
+2. 尝试一个完全没有技能的提示词。
+3. 仅使用一个小技能（例如 `brainstorming`）再次尝试相同的任务。
+4. 临时将你的活动技能集减少到 2-5 个技能并重试。
+
+如何解释结果：
+
+- 如果即使没有技能，普通 Gemini CLI 也挂起，则问题可能出在 Gemini CLI/运行时方面，而不是此仓库。
+- 如果普通 Gemini 可以工作，但仅当存在技能时或在几轮之后挂起，则可能的原因是对话/上下文增长。
+
+在这种情况下：
+
+- 保持更小的活动集
+- 更频繁地开始新对话
+- 使用过载指南：[agent-overload-recovery.md](agent-overload-recovery.md)
 
 ### 如何更新技能？
 
-```bash
-cd ~/.gemini/antigravity/skills  # 或您的安装路径
-git pull
-```
+导航到你的技能目录并拉取最新更改：
 
-或重新运行安装程序：
 ```bash
-npx antigravity-awesome-skills
+cd .agent/skills
+git pull origin main
 ```
 
 ---
 
-## 💬 使用问题
+## 使用技能
 
-### AI说找不到技能怎么办？
+> **💡 有关包含示例的完整指南，请参阅 [usage.md](usage.md)**
 
-**检查清单：**
-1. ✅ 确认安装路径正确
-2. ✅ 确认技能文件存在
-3. ✅ 确认语法正确（`@skill-name`）
-4. ✅ 确认AI工具支持技能功能
+### 如何调用技能？
 
-**诊断命令：**
-```bash
-# 检查安装
-ls ~/.gemini/antigravity/skills/
-
-# 查看可用技能
-ls ~/.gemini/antigravity/skills/*/SKILL.md | head -10
-```
-
-### 技能效果不理想怎么办？
-
-**常见原因和解决方案：**
-
-1. **缺少上下文**
-   - ❌ "使用@api-design设计API"
-   - ✅ "使用@api-design设计用户管理API，需要JWT认证"
-
-2. **技能不匹配**
-   - ❌ 用通用技能处理专门问题
-   - ✅ 使用更具体的技能（如`@sql-injection-testing`而不是`@security-audit`）
-
-3. **提示太模糊**
-   - ❌ "优化这个代码"
-   - ✅ "使用@performance-analyzer优化这个React组件的渲染性能"
-
-### 可以同时使用多个技能吗？
-
-**当然可以！** 事实上，组合使用是最佳实践：
+使用 `@` 符号后跟技能名称：
 
 ```bash
-"使用@react-patterns构建组件，然后用@test-driven-development编写测试"
+@brainstorming help me design a todo app
 ```
 
-### 如何知道该用哪个技能？
+### 我可以调用整个捆绑包，如 `@Essentials` 或 `/web-wizard` 吗？
 
-**方法1：直接询问**
+不可以。捆绑包是技能的精选列表，不是独立的可调用超级技能。
+
+通过以下两种方式之一使用它们：
+
+- 从捆绑包中选择单个技能并直接调用它们
+- 如果你只想在 Antigravity 中激活该捆绑包的技能，请使用激活脚本
+
+示例：
+
 ```bash
-"我需要优化数据库查询，有什么推荐技能？"
+./scripts/activate-skills.sh --clear Essentials
+./scripts/activate-skills.sh --clear "Web Wizard"
 ```
 
-**方法2：浏览包**
-查看[bundles.md](bundles.md)中您的角色相关技能。
+### 我可以一次使用多个技能吗？
 
-**方法3：按任务查找**
-- 安全相关 → `@security-audit`, `@pen-testing`, `@vulnerability-scanner`
-- 性能优化 → `@performance-analyzer`, `@optimization`
-- API开发 → `@api-design`, `@openapi-spec`
-- 前端开发 → `@react-patterns`, `@tailwind-mastery`
+**可以！**你可以调用多个技能：
 
----
-
-## 🛠️ 高级问题
-
-### 可以自定义技能吗？
-
-**可以！** 详细步骤：
-
-1. **复制现有技能模板**
-2. **修改内容**以符合您的需求
-3. **测试技能**确保工作正常
-4. **贡献给社区**（可选）
-
-详细指南请参见[贡献文档](../../CONTRIBUTING.md)。
-
-### 技能可以离线使用吗？
-
-**是的！** 一旦安装，所有技能都在本地，无需网络连接。
-
-### 技能会访问外部API吗？
-
-**通常不会。** 大部分技能是基于知识的指导。少数特殊技能（如web抓取）会使用外部API，但会在技能描述中明确说明。
-
-### 如何贡献新技能？
-
-**贡献流程：**
-1. Fork仓库
-2. 创建技能目录和SKILL.md文件
-3. 遵循[技能模板](../contributors/skill-template.md)
-4. 运行验证：`npm run validate`
-5. 提交Pull Request
-
-详细指南请参见[贡献指南](../../CONTRIBUTING.md)。
-
----
-
-## 🔄 更新和维护
-
-### 多久更新一次技能？
-
-**不定期更新。** 当有：
-- 新技能添加
-- 现有技能改进
-- 错误修复
-- 安全更新
-
-**如何保持更新：**
 ```bash
-# 每周更新一次
-cd ~/.gemini/antigravity/skills
-git pull
-
-# 或重新安装
-npx antigravity-awesome-skills
+@brainstorming help me design this, then use @writing-plans to create a task list.
 ```
 
-### 如何报告技能问题？
+### 我如何知道使用哪个技能？
 
-**报告步骤：**
-1. 在GitHub上创建[issue](https://github.com/sickn33/antigravity-awesome-skills/issues)
-2. 详细描述问题
-3. 提供示例
-4. 标明技能名称
-
-### 更新时会发生什么？
-
-**安全更新：** 您的更改会被保留
-**重大更新：** 可能需要手动合并
-
-建议：如果您有自定义修改，请在更新前备份。
+1. **浏览目录**：查看[技能目录](../../CATALOG.md)。
+2. **搜索**：`ls skills/ | grep "keyword"`
+3. **询问你的 AI**："你有哪些关于测试的技能？"
 
 ---
 
-## 🎯 特定工具问题
+## 故障排除
 
-### Claude Code特定问题
+### 我的 AI 助手无法识别技能
 
-**语法：** `> 使用 @skill-name 做某事`
+**可能的原因：**
 
-**常见问题：**
-- 忘记`>`前缀
-- 技能名称拼写错误
-- 使用了错误的分隔符（应该是`@`，不是`#`）
+1. **错误的安装路径**：检查你的工具文档。尝试 `.agent/skills/`。
+2. **需要重启**：安装后重启你的 AI/IDE。
+3. **拼写错误**：你是输入了 `@brain-storming` 而不是 `@brainstorming` 吗？
 
-### Gemini CLI特定问题
+### 技能给出了不正确或过时的建议
 
-**语法：** 在消息中提及技能名称
+请[打开问题](https://github.com/sickn33/antigravity-awesome-skills/issues)！包括：
 
-**示例：**
+- 哪个技能
+- 出了什么问题
+- 应该发生什么
+
+---
+
+## 贡献
+
+### 我是开源新手。我可以贡献吗？
+
+**当然可以！**我们欢迎初学者。
+
+- 修复拼写错误
+- 添加示例
+- 改进文档
+  查看有关说明的 [CONTRIBUTING.md](../../CONTRIBUTING.md)。
+
+### 我的 PR 未通过"质量标准"检查。为什么？
+
+仓库强制执行自动质量控制。你的技能可能缺少：
+
+1. 有效的 `description`。
+2. 清晰的使用指导或示例。
+3. PR 主体中的预期 PR 模板检查清单。
+
+在推送之前在本地运行 `npm run validate`，并确保你使用默认模板打开了 PR，以便存在质量标准检查清单。
+
+### 我的 PR 未通过"安全文档"检查。我该怎么办？
+
+在本地运行安全文档门并处理发现的问题：
+
 ```bash
-"使用 security-audit 检查这个代码"
+npm run security:docs
 ```
 
-### Cursor特定问题
+常见修复：
 
-**语法：** `@skill-name`
+- 用更安全的替代方案替换有风险的示例，如 `curl ... | bash`、`wget ... | sh`、`irm ... | iex`。
+- 删除或编辑类似令牌的命令行示例。
+- 对于故意的高风险指导，通过以下方式添加明确的理由：
 
-**注意：** 确保在聊天窗口中使用，不是在代码编辑器中。
+```markdown
+<!-- security-allowlist: reason and scope -->
+```
 
-### GitHub Copilot特定问题
+### 我的 PR 触发了 `skill-review` 自动检查。它是什么？
 
-**限制：** 不直接支持，需要复制粘贴
+从 v8.0.0 开始，GitHub 会自动在任何添加或修改 `SKILL.md` 文件的 PR 上运行 `skill-review` 工作流。它根据质量标准审查你的技能，并标记常见问题 — 缺少部分、触发器弱或有风险的命令模式。
 
-**变通方法：**
-1. 复制技能内容
-2. 粘贴到Copilot聊天
-3. 添加您的具体问题
+**如果它报告发现：**
 
----
+1. 在你的 PR 上打开**检查**选项卡并阅读 `skill-review` 作业输出。
+2. 解决任何**可操作的**发现（缺少"何时使用"、触发器不清晰、被阻止的安全模式）。
+3. 将新提交推送到同一分支 — 检查会自动重新运行。
 
-## 📊 性能和规模
+你不需要关闭并重新打开 PR。信息性或仅风格的发现不会阻止合并。
 
-### 技能会影响AI响应速度吗？
+### 社区 PR 需要生成的文件，如 `CATALOG.md` 或 `skills_index.json` 吗？
 
-**轻微影响。** 加载技能需要额外时间，但通常值得：
+**不需要。**社区 PR 应该保持**仅源代码**。
 
-- **简单技能：** 几乎没有延迟
-- **复杂技能：** 额外1-3秒
-- **组合技能：** 按技能数量线性增加
+**不要**包括生成的注册表工件，例如：
 
-### 有多少技能？
+- `CATALOG.md`
+- `skills_index.json`
+- `data/*.json`
 
-**当前统计：**
-- 总技能数：1,204+
-- 分类数：8个主要类别
-- 语言：主要是英语
-- 维护者：50+贡献者
+维护者在合并后在 `main` 上重新生成和规范化这些文件。如果你接触文档、工作流或基础设施，请在本地改为运行 `npm run validate:references` 和 `npm test`。
 
-### 技能有多大？
+### 我可以更新"官方"技能吗？
 
-**大小范围：**
-- 小技能：< 1KB
-- 中等技能：1-10KB
-- 大技能：> 10KB（通常包含代码示例）
-
-**总仓库大小：** ~50MB
+**不可以。**官方技能（在 `skills/official/` 中）是从供应商镜像的。改为打开问题。
 
 ---
 
-## 🔒 安全和隐私
+## 专业提示
 
-### 技能会收集我的数据吗？
+- 在构建任何新内容之前使用 `@brainstorming`
+- 在遇到错误时使用 `@systematic-debugging`
+- 尝试 `@test-driven-development` 以获得更好的代码质量
+- 探索 `@skill-creator` 制作你自己的技能
 
-**不会。** 技能是静态markdown文件，不包含任何数据收集代码。
-
-### 技能安全吗？
-
-**审核过程：**
-1. 社区审核
-2. 自动化验证
-3. 安全扫描
-4. 手工检查
-
-**报告安全问题：**
-- 📧 security@antigravity-skills.org
-- 🔒 [私有报告](https://github.com/sickn33/antigravity-awesome-skills/security/advisories)
-
-### 企业环境可以使用吗？
-
-**可以。** 建议：
-1. 在私有环境中部署
-2. 审核所有技能内容
-3. 建立内部技能库
-4. 定期更新
-
----
-
-## 🆘 获取帮助
-
-### 社区资源
-
-- 📋 [GitHub讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions) - 与用户交流
-- 🐛 [问题报告](https://github.com/sickn33/antigravity-awesome-skills/issues) - 报告bug
-- 💡 [功能建议](https://github.com/sickn33/antigravity-awesome-skills/issues/new?template=feature_request.md) - 建议改进
-- 📖 [完整文档](https://github.com/sickn33/antigravity-awesome-skills/tree/main/docs) - 深入学习
-
-### 联系方式
-
-- 📧 Email: support@antigravity-skills.org
-- 💬 Discord: [邀请链接](https://discord.gg/antigravity)
-- 🐦 Twitter: @antigravity_ai
-
-### 常用链接
-
-- 📚 [入门指南](getting-started.md) - 新手必读
-- 🎯 [技能包](bundles.md) - 按角色选择
-- 🔧 [使用指南](usage.md) - 详细说明
-- 🤝 [贡献指南](../../CONTRIBUTING.md) - 参与贡献
-
----
-
-## 🎉 结语
-
-我们希望这个FAQ解答了您的疑问！如果您有任何其他问题，请不要犹豫：
-
-1. **搜索现有讨论** - 您的问题可能已被回答
-2. **在GitHub上提问** - 社区很乐意帮助
-3. **加入Discord** - 实时交流
-
-记住，使用技能的最佳方式是：**开始简单，逐步深入，持续改进**。
-
-祝您使用愉快！🚀
+**仍然困惑？**[打开讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions)，我们会帮助你！🙌

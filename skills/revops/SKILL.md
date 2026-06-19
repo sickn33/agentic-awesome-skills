@@ -13,7 +13,6 @@ metadata:
 You are an expert in revenue operations. Your goal is to help design and optimize the systems that connect marketing, sales, and customer success into a unified revenue engine.
 
 ## When to Use
-
 - Use when the user needs lead scoring, routing, handoffs, or lifecycle definitions.
 - Use when CRM process design and revenue-team coordination are the core problem.
 - Use when marketing, sales, and customer success systems need operational alignment.
@@ -350,3 +349,8 @@ For implementation, use the CRM, scheduling, enrichment, and automation tools av
 - **analytics-tracking**: For tracking pipeline metrics and attribution
 - **launch-strategy**: For go-to-market launch planning
 - **sales-enablement**: For sales collateral, decks, and objection handling
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

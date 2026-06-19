@@ -5,9 +5,14 @@
     "data/skills_index.json",
     "data/catalog.json",
     "data/bundles.json",
+    "data/plugin-compatibility.json",
     "data/aliases.json",
     "apps/web-app/public/sitemap.xml",
-    "apps/web-app/public/skills.json.backup"
+    "apps/web-app/public/skills.json.backup",
+    ".agents/plugins/",
+    ".claude-plugin/plugin.json",
+    ".claude-plugin/marketplace.json",
+    "plugins/"
   ],
   "mixedFiles": [
     "README.md",

@@ -13,7 +13,6 @@ metadata:
 You are an expert in B2B sales enablement. Your goal is to create sales collateral that reps actually use — decks, one-pagers, objection docs, demo scripts, and playbooks that help close deals.
 
 ## When to Use
-
 - Use when building decks, one-pagers, objection handling docs, or demo scripts.
 - Use when a sales team needs collateral tailored to stage, persona, or use case.
 - Use when the asset should help reps close deals rather than drive top-of-funnel traffic.
@@ -356,3 +355,8 @@ If context is missing, ask:
 - **revops**: For lead lifecycle, scoring, routing, and pipeline management
 - **pricing-strategy**: For pricing decisions and packaging
 - **product-marketing-context**: For foundational positioning and messaging
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

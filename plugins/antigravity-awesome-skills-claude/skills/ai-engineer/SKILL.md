@@ -183,3 +183,8 @@ Expert AI engineer specializing in LLM application development, RAG systems, and
 - "Implement semantic search with reranking for improved retrieval accuracy"
 - "Design an A/B testing framework for comparing different LLM prompts"
 - "Create a real-time AI content moderation system with custom classifiers"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

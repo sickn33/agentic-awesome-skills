@@ -1,7 +1,7 @@
 ---
 name: data-storytelling
 description: "Transform raw data into compelling narratives that drive decisions and inspire action."
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---
@@ -466,3 +466,8 @@ Present ranges:
 - [Storytelling with Data (Cole Nussbaumer)](https://www.storytellingwithdata.com/)
 - [The Pyramid Principle (Barbara Minto)](https://www.amazon.com/Pyramid-Principle-Logic-Writing-Thinking/dp/0273710516)
 - [Resonate (Nancy Duarte)](https://www.duarte.com/resonate/)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

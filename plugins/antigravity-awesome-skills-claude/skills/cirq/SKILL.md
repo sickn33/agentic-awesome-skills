@@ -12,6 +12,11 @@ source: community
 
 Cirq is Google Quantum AI's open-source framework for designing, simulating, and running quantum circuits on quantum computers and simulators.
 
+## When to Use
+- You are designing, simulating, or executing quantum circuits with the Cirq ecosystem.
+- You need Google Quantum AI-style primitives, parameterized circuits, or integrations like `cirq-google` and `cirq-ionq`.
+- You are prototyping or teaching quantum workflows in Python and want concrete circuit examples.
+
 ## Installation
 
 ```bash
@@ -343,3 +348,8 @@ results = noise_comparison_study(circuit, noise_levels)
 - Density matrix simulation is O(2^2n) - consider reducing qubits
 - Use noise models selectively on critical operations only
 - See `simulation.md` for performance optimization
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

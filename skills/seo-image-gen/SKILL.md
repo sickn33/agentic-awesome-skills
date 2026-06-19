@@ -22,7 +22,6 @@ via the banana Creative Director pipeline. Maps SEO needs to optimized domain mo
 aspect ratios, and resolution defaults.
 
 ## When to Use
-
 - Use when generating OG images, hero images, schema visuals, infographics, or similar SEO assets.
 - Use when image generation is part of a broader SEO or publishing workflow.
 - Use only when the required image-generation extension is available.
@@ -181,3 +180,8 @@ After generating, always provide:
 3. **Settings**:model, aspect ratio, resolution
 4. **SEO checklist**:alt text suggestion, file naming, WebP conversion
 5. **Schema snippet**:ImageObject or og:image markup if applicable
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

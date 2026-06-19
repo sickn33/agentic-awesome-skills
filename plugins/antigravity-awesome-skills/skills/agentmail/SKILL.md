@@ -11,6 +11,11 @@ AgentMail gives AI agents real email addresses (`@theagentmail.net`) with a REST
 
 Base URL: `https://api.theagentmail.net`
 
+## When to Use
+- An AI agent needs a real inbox/outbox for signups, verification flows, or transactional communication.
+- You need to provision AgentMail accounts, send messages, read inbox contents, or register inbound webhooks.
+- You need to monitor karma usage or wire email events into agent automation.
+
 ## Quick start
 
 All requests require `Authorization: Bearer am_...` header (API key from dashboard).
@@ -245,3 +250,8 @@ type AttachmentMeta = { id: string; filename: string; contentType: string; size:
 type KarmaBalance = { balance: number; events: KarmaEvent[] };
 type KarmaEvent = { id: string; type: string; amount: number; timestamp: number; metadata?: Record<string, unknown> };
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

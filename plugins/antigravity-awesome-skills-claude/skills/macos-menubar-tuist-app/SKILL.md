@@ -11,7 +11,6 @@ date_added: "2026-03-25"
 Build and maintain macOS menubar apps with a Tuist-first workflow and stable launch scripts. Preserve strict architecture boundaries so networking, state, and UI remain testable and predictable.
 
 ## When to Use
-
 - When working on LSUIElement menubar utilities built with Tuist and SwiftUI.
 - When you need Tuist manifests, launch scripts, or architecture guidance for a menubar app.
 
@@ -107,3 +106,8 @@ Trace root cause in model/client/store before changing row/menu presentation.
 - Keep Tuist manifests and run scripts aligned with actual build/run flow.
 - Run the validation matrix for touched areas.
 - Report concrete commands run and outcomes.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

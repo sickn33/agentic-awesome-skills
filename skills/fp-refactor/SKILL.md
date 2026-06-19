@@ -21,6 +21,11 @@ tags:
 
 This skill provides comprehensive patterns and strategies for migrating existing imperative TypeScript code to fp-ts functional programming patterns.
 
+## When to Use
+- You are refactoring an existing imperative TypeScript codebase toward fp-ts patterns.
+- The task involves converting `try/catch`, null checks, callbacks, DI, or loops into functional equivalents.
+- You need migration guidance and tradeoffs, not just isolated fp-ts examples.
+
 ## Table of Contents
 
 1. [Converting try-catch to Either/TaskEither](#1-converting-try-catch-to-eithertaskeither)
@@ -1781,3 +1786,8 @@ Migrating to fp-ts is a journey, not a destination. Key principles:
 6. **Review benefits**: Ensure the added complexity provides value
 
 The goal is more maintainable, type-safe code—not functional programming for its own sake.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

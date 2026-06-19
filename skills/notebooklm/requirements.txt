@@ -7,4 +7,4 @@
 patchright==1.55.2
 
 # Environment management
-python-dotenv==1.0.0
+python-dotenv==1.2.2

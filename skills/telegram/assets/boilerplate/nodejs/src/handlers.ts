@@ -1,23 +1,29 @@
 import { TelegramBotClient } from './bot-client';
-import TelegramBot from 'node-telegram-bot-api';
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 export function registerHandlers(client: TelegramBotClient): void {
   const bot = client.bot;
 
-  // /start command
-  bot.onText(/\/start/, async (msg) => {
-    const name = msg.from?.first_name || 'usuario';
+  bot.start(async (ctx) => {
+    const name = escapeHtml(ctx.from?.first_name || 'usuario');
     await client.sendMessageSafe(
-      msg.chat.id,
+      ctx.chat.id,
       `Ola, ${name}! Bem-vindo ao bot.\n\nComandos disponiveis:\n/start - Iniciar\n/help - Ajuda\n/about - Sobre`,
       { parse_mode: 'HTML' }
     );
   });
 
-  // /help command
-  bot.onText(/\/help/, async (msg) => {
+  bot.help(async (ctx) => {
     await client.sendMessageSafe(
-      msg.chat.id,
+      ctx.chat.id,
       '<b>Comandos:</b>\n' +
         '/start - Iniciar o bot\n' +
         '/help - Ver esta mensagem\n' +
@@ -27,52 +33,40 @@ export function registerHandlers(client: TelegramBotClient): void {
     );
   });
 
-  // /about command
-  bot.onText(/\/about/, async (msg) => {
-    const me = await bot.getMe();
+  bot.command('about', async (ctx) => {
+    const me = await bot.telegram.getMe();
+    const firstName = escapeHtml(me.first_name);
+    const username = escapeHtml(me.username || 'sem_username');
     await client.sendMessageSafe(
-      msg.chat.id,
-      `<b>${me.first_name}</b>\n@${me.username}\n\nBot criado com Telegram Bot API`,
+      ctx.chat.id,
+      `<b>${firstName}</b>\n@${username}\n\nBot criado com Telegram Bot API`,
       { parse_mode: 'HTML' }
     );
   });
 
-  // /echo command
-  bot.onText(/\/echo (.+)/, async (msg, match) => {
-    const text = match?.[1] || '';
-    await client.sendMessageSafe(msg.chat.id, text);
+  bot.hears(/^\/echo (.+)/, async (ctx) => {
+    const text = ctx.match?.[1] || '';
+    await client.sendMessageSafe(ctx.chat.id, text);
   });
 
-  // Callback query handler (for inline keyboards)
-  bot.on('callback_query', async (query) => {
-    await bot.answerCallbackQuery(query.id, { text: `Opcao: ${query.data}` });
+  bot.on('callback_query', async (ctx) => {
+    const data = 'data' in ctx.callbackQuery ? ctx.callbackQuery.data : '';
+    await ctx.answerCbQuery(`Opcao: ${data}`);
 
-    if (query.message) {
-      await bot.editMessageText(`Voce escolheu: ${query.data}`, {
-        chat_id: query.message.chat.id,
-        message_id: query.message.message_id,
-      });
+    if (ctx.callbackQuery.message) {
+      await ctx.editMessageText(`Voce escolheu: ${data}`);
     }
   });
 
-  // Default message handler (echo)
-  bot.on('message', async (msg) => {
-    // Skip commands
-    if (msg.text?.startsWith('/')) return;
+  bot.on('text', async (ctx) => {
+    if (ctx.message.text.startsWith('/')) return;
 
-    // Echo non-command text messages
-    if (msg.text) {
-      await client.sendMessageSafe(msg.chat.id, `Voce disse: ${msg.text}`);
-    }
+    await client.sendMessageSafe(ctx.chat.id, `Voce disse: ${ctx.message.text}`);
   });
 
-  // Error handler
-  bot.on('polling_error', (error) => {
-    console.error('Polling error:', error.message);
-  });
-
-  bot.on('webhook_error', (error) => {
-    console.error('Webhook error:', error.message);
+  bot.catch((error) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Telegram bot error:', message);
   });
 
   console.log('All handlers registered');

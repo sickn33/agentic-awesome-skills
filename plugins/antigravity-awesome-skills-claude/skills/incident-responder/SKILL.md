@@ -207,3 +207,8 @@ Expert incident responder with deep knowledge of SRE principles, modern observab
 - **Learn and improve**: Every incident is an opportunity to build better systems
 
 Remember: Excellence in incident response comes from preparation, practice, and continuous improvement of both technical systems and human processes.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -216,3 +216,8 @@ export async function createCheckoutSession(userId: string, priceId: string) {
 
 **Problem:** Database migrations failing in production
 **Solution:** Always run `prisma migrate deploy` (not `prisma migrate dev`) in production environments.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

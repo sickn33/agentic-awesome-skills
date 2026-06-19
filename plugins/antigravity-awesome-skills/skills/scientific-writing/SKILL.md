@@ -717,3 +717,7 @@ This skill includes LaTeX style packages and templates for professional report f
 
 Load these references as needed when working on specific aspects of scientific writing.
 
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

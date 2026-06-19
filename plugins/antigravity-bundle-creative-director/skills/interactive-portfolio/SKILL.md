@@ -1,12 +1,20 @@
 ---
 name: interactive-portfolio
-description: "You know a portfolio isn't a resume - it's a first impression that needs to convert. You balance creativity with usability. You understand that hiring managers spend 30 seconds on each portfolio. You make those 30 seconds count. You help people stand out without being gimmicky."
+description: Expert in building portfolios that actually land jobs and clients -
+  not just showing work, but creating memorable experiences. Covers developer
+  portfolios, designer portfolios, creative portfolios, and portfolios that
+  convert visitors into opportunities.
 risk: unknown
-source: "vibeship-spawner-skills (Apache 2.0)"
-date_added: "2026-02-27"
+source: vibeship-spawner-skills (Apache 2.0)
+date_added: 2026-02-27
 ---
 
 # Interactive Portfolio
+
+Expert in building portfolios that actually land jobs and clients - not just
+showing work, but creating memorable experiences. Covers developer portfolios,
+designer portfolios, creative portfolios, and portfolios that convert visitors
+into opportunities.
 
 **Role**: Portfolio Experience Designer
 
@@ -14,6 +22,15 @@ You know a portfolio isn't a resume - it's a first impression that needs
 to convert. You balance creativity with usability. You understand that
 hiring managers spend 30 seconds on each portfolio. You make those 30
 seconds count. You help people stand out without being gimmicky.
+
+### Expertise
+
+- Portfolio UX
+- Project presentation
+- Personal branding
+- Conversion optimization
+- Creative coding
+- Memorable experiences
 
 ## Capabilities
 
@@ -34,7 +51,6 @@ Structure that works for portfolios
 
 **When to use**: When planning portfolio structure
 
-```javascript
 ## Portfolio Architecture
 
 ### The 30-Second Test
@@ -79,7 +95,6 @@ Option 3: Hybrid
 [One line that differentiates you]
 [CTA: View Work / Contact]
 ```
-```
 
 ### Project Showcase
 
@@ -87,7 +102,6 @@ How to present work effectively
 
 **When to use**: When building project sections
 
-```javascript
 ## Project Showcase
 
 ### Project Card Elements
@@ -125,7 +139,6 @@ How to present work effectively
 - Process artifacts (wireframes, etc.)
 - Video walkthroughs for complex work
 - Hover effects for engagement
-```
 
 ### Developer Portfolio Specifics
 
@@ -133,7 +146,6 @@ What works for dev portfolios
 
 **When to use**: When building developer portfolio
 
-```javascript
 ## Developer Portfolio
 
 ### What Hiring Managers Look For
@@ -171,58 +183,348 @@ What works for dev portfolios
 - Problem-solving stories
 - Learning journeys
 - Shows communication skills
+
+### Portfolio Interactivity
+
+Adding memorable interactive elements
+
+**When to use**: When wanting to stand out
+
+## Portfolio Interactivity
+
+### Levels of Interactivity
+| Level | Example | Risk |
+|-------|---------|------|
+| Subtle | Hover effects, smooth scroll | Low |
+| Medium | Scroll animations, transitions | Medium |
+| High | 3D, games, custom cursors | High |
+
+### High-Impact, Low-Risk
+- Custom cursor on desktop
+- Smooth page transitions
+- Project card hover effects
+- Scroll-triggered reveals
+- Dark/light mode toggle
+
+### Creative Ideas
+```
+- Terminal-style interface (for devs)
+- OS desktop metaphor
+- Game-like navigation
+- Interactive timeline
+- 3D workspace scene
+- Generative art background
 ```
 
-## Anti-Patterns
+### The Balance
+- Creativity shows skill
+- But usability wins jobs
+- Mobile must work perfectly
+- Don't hide content behind interactions
+- Have a "skip" option for complex intros
 
-### ❌ Template Portfolio
+## Sharp Edges
 
-**Why bad**: Looks like everyone else.
-No memorable impression.
-Doesn't show creativity.
-Easy to forget.
+### Portfolio more complex than your actual work
 
-**Instead**: Add personal touches.
-Custom design elements.
-Unique project presentations.
-Your voice in the copy.
+Severity: MEDIUM
 
-### ❌ All Style No Substance
+Situation: Spent 6 months on portfolio, have 2 projects to show
 
-**Why bad**: Fancy animations, weak projects.
-Style over substance.
-Hiring managers see through it.
-No proof of skills.
+Symptoms:
+- Been "working on portfolio" for months
+- More excited about portfolio than projects
+- Portfolio tech more impressive than work
+- Afraid to launch
 
-**Instead**: Projects first, style second.
-Real work with real impact.
-Quality over quantity.
-Depth over breadth.
+Why this breaks:
+Procrastination disguised as work.
+Portfolio IS a project, but not THE project.
+Diminishing returns on polish.
+Ship it and iterate.
 
-### ❌ Resume Website
+Recommended fix:
 
-**Why bad**: Boring, forgettable.
-Doesn't use the medium.
-No personality.
-Lists instead of stories.
+## Right-Sizing Your Portfolio
 
-**Instead**: Show, don't tell.
-Visual case studies.
-Interactive elements.
-Personality throughout.
+### The MVP Portfolio
+| Element | MVP Version |
+|---------|-------------|
+| Hero | Name + title + one line |
+| Projects | 3-4 best pieces |
+| About | 2-3 paragraphs |
+| Contact | Email + LinkedIn |
 
-## ⚠️ Sharp Edges
+### Time Budget
+```
+Week 1: Design and structure
+Week 2: Build core pages
+Week 3: Add 3-4 projects
+Week 4: Polish and launch
+```
 
-| Issue | Severity | Solution |
-|-------|----------|----------|
-| Portfolio more complex than your actual work | medium | ## Right-Sizing Your Portfolio |
-| Portfolio looks great on desktop, broken on mobile | high | ## Mobile-First Portfolio |
-| Visitors don't know what to do next | medium | ## Portfolio CTAs |
-| Portfolio shows old or irrelevant work | medium | ## Portfolio Freshness |
+### The Truth
+- Your portfolio is not your best project
+- Shipping beats perfecting
+- You can always iterate
+- Better projects > better portfolio
+
+### When to Stop
+- Core pages work on mobile
+- 3-4 solid projects showcased
+- Contact form works
+- Loads in < 3 seconds
+- Ship it.
+
+### Portfolio looks great on desktop, broken on mobile
+
+Severity: HIGH
+
+Situation: Recruiters check on phone, everything breaks
+
+Symptoms:
+- Looks great in browser DevTools
+- Broken on actual phone
+- Text too small
+- Buttons hard to tap
+- Navigation hidden
+
+Why this breaks:
+Built desktop-first.
+Didn't test on real devices.
+Complex interactions don't translate.
+Forgot about thumb zones.
+
+Recommended fix:
+
+## Mobile-First Portfolio
+
+### Mobile Reality
+- 60%+ traffic is mobile
+- Recruiters browse on phones
+- First impression = mobile impression
+
+### Mobile Must-Haves
+- Readable without zooming
+- Tappable links (min 44px)
+- Navigation works
+- Projects load fast
+- Contact easy to find
+
+### Testing Checklist
+```
+[ ] iPhone Safari
+[ ] Android Chrome
+[ ] Tablet sizes
+[ ] Slow 3G simulation
+[ ] Real device (not just DevTools)
+```
+
+### Graceful Degradation
+```css
+/* Complex hover → simple tap */
+@media (hover: none) {
+  .hover-effect {
+    /* Show content directly */
+  }
+}
+```
+
+### Visitors don't know what to do next
+
+Severity: MEDIUM
+
+Situation: Great portfolio, zero contacts
+
+Symptoms:
+- Lots of views, no contacts
+- People don't know you're available
+- Contact page is afterthought
+- No clear ask
+
+Why this breaks:
+No clear CTA.
+Contact buried at bottom.
+Multiple competing actions.
+Assuming visitors will figure it out.
+
+Recommended fix:
+
+## Portfolio CTAs
+
+### Primary CTAs
+| Goal | CTA |
+|------|-----|
+| Get hired | "Let's work together" |
+| Freelance | "Start a project" |
+| Network | "Say hello" |
+| Specific role | "Hire me for [X]" |
+
+### CTA Placement
+```
+Hero section: Main CTA
+After projects: Secondary CTA
+Footer: Final CTA
+Floating: Optional persistent CTA
+```
+
+### Making Contact Easy
+- Email link (mailto:)
+- LinkedIn (opens new tab)
+- Calendar link (Calendly)
+- Simple contact form
+- Copy email button
+
+### What to Avoid
+- Contact form only (people hate forms)
+- Hidden contact info
+- Too many options
+- Vague CTAs ("Learn more")
+
+### Portfolio shows old or irrelevant work
+
+Severity: MEDIUM
+
+Situation: Best work is 3 years old, newer work not shown
+
+Symptoms:
+- jQuery projects in 2024
+- I did this in college
+- Tech stack doesn't match target jobs
+- Haven't touched portfolio in 2+ years
+
+Why this breaks:
+Haven't updated in years.
+Newer work is "not ready."
+Scared to remove old favorites.
+Portfolio drift.
+
+Recommended fix:
+
+## Portfolio Freshness
+
+### Update Cadence
+| Action | Frequency |
+|--------|-----------|
+| Add new project | When completed |
+| Remove old project | Yearly review |
+| Update copy | Every 6 months |
+| Tech refresh | Every 1-2 years |
+
+### Project Pruning
+Keep if:
+- Still proud of it
+- Relevant to target jobs
+- Shows important skills
+- Has good results/story
+
+Remove if:
+- Embarrassed by code/design
+- Tech is obsolete
+- Not relevant to goals
+- Better work exists
+
+### Showing Growth
+- Latest work first
+- Date projects (or don't)
+- Show evolution if relevant
+- Archive instead of delete
+
+## Validation Checks
+
+### No Clear Contact CTA
+
+Severity: HIGH
+
+Message: No clear way for visitors to contact you.
+
+Fix action: Add prominent contact CTA in hero and after projects section
+
+### Missing Mobile Viewport
+
+Severity: HIGH
+
+Message: Portfolio may not be mobile-responsive.
+
+Fix action: Add <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+### Unoptimized Portfolio Images
+
+Severity: MEDIUM
+
+Message: Portfolio images may be slowing down load time.
+
+Fix action: Use WebP, implement lazy loading, add srcset for responsive images
+
+### Projects Missing Live Links
+
+Severity: MEDIUM
+
+Message: Projects should have live links or source code.
+
+Fix action: Add live demo URLs and GitHub links where possible
+
+### Projects Missing Impact/Results
+
+Severity: LOW
+
+Message: Projects don't show impact or results.
+
+Fix action: Add metrics, outcomes, or testimonials to project descriptions
+
+## Collaboration
+
+### Delegation Triggers
+
+- scroll animation|parallax|GSAP -> scroll-experience (Scroll experience for portfolio)
+- 3D|WebGL|three.js|spline -> 3d-web-experience (3D portfolio elements)
+- brand|logo|colors|identity -> branding (Personal branding)
+- copy|writing|about me|bio -> copywriting (Portfolio copy)
+- SEO|search|google -> seo (Portfolio SEO)
+
+### Developer Portfolio
+
+Skills: interactive-portfolio, frontend, scroll-experience
+
+Workflow:
+
+```
+1. Plan portfolio structure
+2. Select 3-5 best projects
+3. Design hero and project sections
+4. Add subtle scroll animations
+5. Implement and optimize
+6. Launch and share
+```
+
+### Creative Portfolio
+
+Skills: interactive-portfolio, 3d-web-experience, scroll-experience, branding
+
+Workflow:
+
+```
+1. Define personal brand
+2. Design unique experience
+3. Build interactive elements
+4. Showcase work creatively
+5. Ensure mobile works
+6. Launch
+```
 
 ## Related Skills
 
 Works well with: `scroll-experience`, `3d-web-experience`, `landing-page-design`, `personal-branding`
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+- User mentions or implies: portfolio
+- User mentions or implies: personal website
+- User mentions or implies: showcase work
+- User mentions or implies: developer portfolio
+- User mentions or implies: designer portfolio
+- User mentions or implies: creative portfolio
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

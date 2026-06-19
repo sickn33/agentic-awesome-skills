@@ -8,6 +8,11 @@ source: community
 
 # 旅行健康分析技能
 
+## When to Use
+- 需要做旅行前健康准备、目的地健康风险评估或疫苗建议时使用。
+- 任务涉及 WHO/CDC 风险信息、旅行药箱、预防措施或多语言医疗卡片。
+- 用户请求旅行健康规划或目的地卫生风险分析时使用。
+
 ## 🚨 重要医学免责声明
 
 **本技能提供的所有健康建议和信息仅供参考,不能替代专业医疗建议。**
@@ -421,3 +426,8 @@ Write: data/travel-health-logs/pre-trip-assessment-YYYY-MM-DD.json
 **版本**: v1.0.0
 **最后更新**: 2025-01-08
 **维护者**: WellAlly Tech
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

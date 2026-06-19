@@ -41,28 +41,28 @@ Build and ship a minimal but production-minded SaaS product.
 1. **Plan the scope**
    - **Goal:** Define MVP boundaries and acceptance criteria.
    - **Skills:** [`@brainstorming`](../../skills/brainstorming/), [`@concise-planning`](../../skills/concise-planning/), [`@writing-plans`](../../skills/writing-plans/)
-   - **Prompt example:** `Usa @concise-planning per definire milestones e criteri di accettazione del mio MVP SaaS.`
+   - **Prompt example:** `Use @concise-planning to define milestones and acceptance criteria for my SaaS MVP.`
 
 2. **Build backend and API**
    - **Goal:** Implement core entities, APIs, and auth baseline.
    - **Skills:** [`@backend-dev-guidelines`](../../skills/backend-dev-guidelines/), [`@api-patterns`](../../skills/api-patterns/), [`@database-design`](../../skills/database-design/)
-   - **Prompt example:** `Usa @backend-dev-guidelines per creare API e servizi del dominio billing.`
+   - **Prompt example:** `Use @backend-dev-guidelines to create APIs and services for the billing domain.`
 
 3. **Build frontend**
    - **Goal:** Ship core user flow with clear UX states.
    - **Skills:** [`@frontend-developer`](../../skills/frontend-developer/), [`@react-patterns`](../../skills/react-patterns/), [`@frontend-design`](../../skills/frontend-design/)
-   - **Prompt example:** `Usa @frontend-developer per implementare onboarding, empty state e dashboard iniziale.`
+   - **Prompt example:** `Use @frontend-developer to implement onboarding, the empty state, and the initial dashboard.`
 
 4. **Test and validate**
    - **Goal:** Cover critical user journeys before release.
    - **Skills:** [`@test-driven-development`](../../skills/test-driven-development/), [`@browser-automation`](../../skills/browser-automation/), `@go-playwright` (optional, Go stack)
-   - **Prompt example:** `Usa @browser-automation per creare test E2E sui flussi signup e checkout.`
-   - **Go note:** Se il progetto QA e tooling sono in Go, preferisci `@go-playwright`.
+   - **Prompt example:** `Use @browser-automation to create E2E tests for the signup and checkout flows.`
+   - **Go note:** If the QA project and tooling are in Go, prefer `@go-playwright`.
 
 5. **Ship safely**
    - **Goal:** Release with observability and rollback plan.
    - **Skills:** [`@deployment-procedures`](../../skills/deployment-procedures/), [`@observability-engineer`](../../skills/observability-engineer/)
-   - **Prompt example:** `Usa @deployment-procedures per una checklist di rilascio con rollback.`
+   - **Prompt example:** `Use @deployment-procedures for a release checklist with rollback steps.`
 
 ---
 
@@ -83,22 +83,22 @@ Run a focused security review from scope definition to remediation validation.
 1. **Define scope and threat model**
    - **Goal:** Identify assets, trust boundaries, and attack paths.
    - **Skills:** [`@ethical-hacking-methodology`](../../skills/ethical-hacking-methodology/), [`@threat-modeling-expert`](../../skills/threat-modeling-expert/), [`@attack-tree-construction`](../../skills/attack-tree-construction/)
-   - **Prompt example:** `Usa @threat-modeling-expert per mappare asset critici e trust boundaries della mia web app.`
+   - **Prompt example:** `Use @threat-modeling-expert to map critical assets and trust boundaries for my web app.`
 
 2. **Review auth and access control**
    - **Goal:** Detect account takeover and authorization flaws.
    - **Skills:** [`@broken-authentication`](../../skills/broken-authentication/), [`@auth-implementation-patterns`](../../skills/auth-implementation-patterns/), [`@idor-testing`](../../skills/idor-testing/)
-   - **Prompt example:** `Usa @idor-testing per verificare accessi non autorizzati su endpoint multitenant.`
+   - **Prompt example:** `Use @idor-testing to verify unauthorized access on multitenant endpoints.`
 
 3. **Assess API and input security**
    - **Goal:** Uncover high-impact API and injection vulnerabilities.
    - **Skills:** [`@api-security-best-practices`](../../skills/api-security-best-practices/), [`@api-fuzzing-bug-bounty`](../../skills/api-fuzzing-bug-bounty/), [`@top-web-vulnerabilities`](../../skills/top-web-vulnerabilities/)
-   - **Prompt example:** `Usa @api-security-best-practices per audit endpoint auth, billing e admin.`
+   - **Prompt example:** `Use @api-security-best-practices to audit auth, billing, and admin endpoints.`
 
 4. **Harden and verify**
    - **Goal:** Convert findings into fixes and verify evidence of mitigation.
    - **Skills:** [`@security-auditor`](../../skills/security-auditor/), [`@sast-configuration`](../../skills/sast-configuration/), [`@verification-before-completion`](../../skills/verification-before-completion/)
-   - **Prompt example:** `Usa @verification-before-completion per provare che le mitigazioni sono effettive.`
+   - **Prompt example:** `Use @verification-before-completion to prove that the mitigations are effective.`
 
 ---
 
@@ -119,22 +119,22 @@ Design and deliver a production-grade agent with measurable reliability.
 1. **Define target behavior and KPIs**
    - **Goal:** Set quality, latency, and failure thresholds.
    - **Skills:** [`@ai-agents-architect`](../../skills/ai-agents-architect/), [`@agent-evaluation`](../../skills/agent-evaluation/), [`@product-manager-toolkit`](../../skills/product-manager-toolkit/)
-   - **Prompt example:** `Usa @agent-evaluation per definire benchmark e criteri di successo del mio agente.`
+   - **Prompt example:** `Use @agent-evaluation to define benchmarks and success criteria for my agent.`
 
 2. **Design retrieval and memory**
    - **Goal:** Build reliable retrieval and context architecture.
    - **Skills:** [`@llm-app-patterns`](../../skills/llm-app-patterns/), [`@rag-implementation`](../../skills/rag-implementation/), [`@vector-database-engineer`](../../skills/vector-database-engineer/)
-   - **Prompt example:** `Usa @rag-implementation per progettare pipeline di chunking, embedding e retrieval.`
+   - **Prompt example:** `Use @rag-implementation to design chunking, embedding, and retrieval pipelines.`
 
 3. **Implement orchestration**
    - **Goal:** Implement deterministic orchestration and tool boundaries.
    - **Skills:** [`@langgraph`](../../skills/langgraph/), [`@mcp-builder`](../../skills/mcp-builder/), [`@workflow-automation`](../../skills/workflow-automation/)
-   - **Prompt example:** `Usa @langgraph per implementare il grafo agente con fallback e human-in-the-loop.`
+   - **Prompt example:** `Use @langgraph to implement the agent graph with fallbacks and human-in-the-loop flows.`
 
 4. **Evaluate and iterate**
    - **Goal:** Improve weak points with a structured loop.
    - **Skills:** [`@agent-evaluation`](../../skills/agent-evaluation/), [`@langfuse`](../../skills/langfuse/), [`@kaizen`](../../skills/kaizen/)
-   - **Prompt example:** `Usa @kaizen per prioritizzare le correzioni sulle failure modes rilevate dai test.`
+   - **Prompt example:** `Use @kaizen to prioritize fixes for the failure modes identified by testing.`
 
 ---
 
@@ -155,17 +155,17 @@ Create resilient browser automation with deterministic execution in CI.
 1. **Prepare test strategy**
    - **Goal:** Scope journeys, fixtures, and execution environments.
    - **Skills:** [`@e2e-testing-patterns`](../../skills/e2e-testing-patterns/), [`@test-driven-development`](../../skills/test-driven-development/)
-   - **Prompt example:** `Usa @e2e-testing-patterns per definire suite E2E minima ma ad alto impatto.`
+   - **Prompt example:** `Use @e2e-testing-patterns to define a minimal but high-impact E2E suite.`
 
 2. **Implement browser tests**
    - **Goal:** Build robust test coverage with stable selectors.
    - **Skills:** [`@browser-automation`](../../skills/browser-automation/), `@go-playwright` (optional, Go stack)
-   - **Prompt example:** `Usa @go-playwright per implementare browser automation in un progetto Go.`
+   - **Prompt example:** `Use @go-playwright to implement browser automation in a Go project.`
 
 3. **Triage and harden**
    - **Goal:** Remove flaky behavior and enforce repeatability.
    - **Skills:** [`@systematic-debugging`](../../skills/systematic-debugging/), [`@test-fixing`](../../skills/test-fixing/), [`@verification-before-completion`](../../skills/verification-before-completion/)
-   - **Prompt example:** `Usa @systematic-debugging per classificare e risolvere le flakiness in CI.`
+   - **Prompt example:** `Use @systematic-debugging to classify and resolve flaky behavior in CI.`
 
 ---
 

@@ -101,3 +101,8 @@ Fiscal Position (created separately):
 - ✅ **Do:** Test e-invoicing in the **SAT/tax authority test environment** before going live.
 - ❌ **Don't:** Manually create a chart of accounts if a localization module exists for your country.
 - ❌ **Don't:** Mix localization tax accounts with custom accounts — it breaks fiscal reports.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

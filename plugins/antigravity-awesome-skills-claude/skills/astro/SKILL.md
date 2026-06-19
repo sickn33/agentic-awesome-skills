@@ -357,3 +357,8 @@ import SearchBox from '../components/SearchBox.tsx';
 - `@nextjs-app-router-patterns` — When you need a React-first full-stack framework
 - `@tailwind-patterns` — Styling Astro sites with Tailwind CSS
 - `@progressive-web-app` — Adding PWA capabilities to an Astro site
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

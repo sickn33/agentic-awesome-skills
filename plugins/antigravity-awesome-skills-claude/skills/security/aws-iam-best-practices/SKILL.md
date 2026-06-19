@@ -112,7 +112,7 @@ while read user; do
 done
 
 # Rotate access key
-OLD_KEY="AKIAIOSFODNN7EXAMPLE"
+OLD_KEY="<AWS_ACCESS_KEY_ID>"
 USER="myuser"
 
 # Create new key
@@ -395,3 +395,8 @@ kiro-cli chat "Create a least privilege policy with aws-iam-best-practices"
 - [IAM Best Practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 - [IAM Policy Simulator](https://policysim.aws.amazon.com/)
 - [IAM Access Analyzer](https://aws.amazon.com/iam/features/analyze-access/)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -204,3 +204,8 @@ Expert blockchain developer specializing in smart contract development, DeFi pro
 - "Create a multi-signature treasury management system with time-locked transactions"
 - "Build a decentralized social media platform with token-based incentives"
 - "Implement a blockchain voting system with zero-knowledge privacy preservation"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

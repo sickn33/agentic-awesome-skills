@@ -227,9 +227,14 @@ Track these metrics weekly and trend monthly:
 - For the comprehensive edge case library with full analysis, see [edge-cases.md](references/edge-cases.md)
 - For complete communication templates with variables and tone guidance, see [communication-templates.md](references/communication-templates.md)
 
-## When to Use
+### When to Use
 Use this skill when you need to **run or improve non‑conformance and CAPA processes in regulated manufacturing**:
 
 - Investigating NCRs, selecting root‑cause methods, and defining MRB dispositions and CAPA actions.
 - Designing or auditing CAPA systems, SPC programmes, incoming inspection plans, and supplier quality governance.
 - Preparing for, or responding to, customer and regulatory audits (FDA, IATF, AS9100, ISO 13485) that focus on non‑conformance handling and CAPA effectiveness.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

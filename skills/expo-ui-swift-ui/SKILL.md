@@ -12,6 +12,11 @@ description: `@expo/ui/swift-ui` package lets you use SwiftUI Views and modifier
 
 > The instructions in this skill apply to SDK 55 only. For other SDK versions, refer to the Expo UI SwiftUI docs for that version for the most accurate information.
 
+## When to Use
+- You need to build iOS-native UI in Expo using `@expo/ui/swift-ui`.
+- The task involves selecting SwiftUI views or modifiers, wrapping trees in `Host`, or embedding React Native components with `RNHostView`.
+- You are targeting Expo SDK 55 behavior for SwiftUI integration and extension guidance.
+
 ## Installation
 
 ```bash
@@ -44,3 +49,8 @@ import { Pressable } from "react-native";
 ```
 
 - If a required modifier or View is missing in Expo UI, it can be extended via a local Expo module. See: https://docs.expo.dev/guides/expo-ui-swift-ui/extending/index.md. Confirm with the user before extending.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -154,3 +154,8 @@ Expert Python developer mastering Python 3.12+ features, modern tooling, and pro
 - "Create a production-ready Dockerfile for a Python application"
 - "Design a scalable background task system with Celery"
 - "Implement modern authentication patterns in FastAPI"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

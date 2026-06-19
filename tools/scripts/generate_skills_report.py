@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 import yaml
 from _project_paths import find_repo_root
+from risk_classifier import suggest_risk
 
 def get_project_root():
     """Get the project root directory."""
@@ -32,9 +33,10 @@ def parse_frontmatter(content):
     except yaml.YAMLError:
         return None
 
-def generate_skills_report(output_file=None, sort_by='date'):
+def generate_skills_report(output_file=None, sort_by='date', project_root=None):
     """Generate a report of all skills with their metadata."""
-    skills_dir = os.path.join(get_project_root(), 'skills')
+    root = str(project_root or get_project_root())
+    skills_dir = os.path.join(root, 'skills')
     skills_data = []
     
     for root, dirs, files in os.walk(skills_dir):
@@ -52,14 +54,22 @@ def generate_skills_report(output_file=None, sort_by='date'):
                 metadata = parse_frontmatter(content)
                 if metadata is None:
                     continue
+
+                suggested_risk = suggest_risk(content, metadata)
                 
+                date_added = metadata.get('date_added', None)
+                if date_added is not None:
+                    date_added = date_added.isoformat() if hasattr(date_added, 'isoformat') else str(date_added)
+
                 skill_info = {
                     'id': metadata.get('id', skill_name),
                     'name': metadata.get('name', skill_name),
                     'description': metadata.get('description', ''),
-                    'date_added': metadata.get('date_added', None),
+                    'date_added': date_added,
                     'source': metadata.get('source', 'unknown'),
                     'risk': metadata.get('risk', 'unknown'),
+                    'suggested_risk': suggested_risk.risk,
+                    'suggested_risk_reasons': list(suggested_risk.reasons),
                     'category': metadata.get('category', metadata.get('id', '').split('-')[0] if '-' in metadata.get('id', '') else 'other'),
                 }
                 
@@ -80,6 +90,11 @@ def generate_skills_report(output_file=None, sort_by='date'):
         'total_skills': len(skills_data),
         'skills_with_dates': sum(1 for s in skills_data if s['date_added']),
         'skills_without_dates': sum(1 for s in skills_data if not s['date_added']),
+        'skills_with_suggested_risk': sum(1 for s in skills_data if s['suggested_risk'] != 'unknown'),
+        'suggested_risk_counts': {
+            risk: sum(1 for skill in skills_data if skill['suggested_risk'] == risk)
+            for risk in sorted({skill['suggested_risk'] for skill in skills_data if skill['suggested_risk'] != 'unknown'})
+        },
         'coverage_percentage': round(
             sum(1 for s in skills_data if s['date_added']) / len(skills_data) * 100 if skills_data else 0, 
             1

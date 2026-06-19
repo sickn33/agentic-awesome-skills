@@ -23,7 +23,6 @@ listings, AI visibility checking, and LLM mention tracking across
 9 API modules with 79 MCP tools.
 
 ## When to Use
-
 - Use when the user needs live SEO data instead of static best-practice guidance.
 - Use for SERP lookups, keyword volumes, backlink checks, competitor data, or AI visibility tracking.
 - Use only when the DataForSEO extension is available in the environment.
@@ -393,3 +392,8 @@ Match existing claude-seo output patterns:
 - Include specific, actionable recommendations
 - Show scores as XX/100 where applicable
 - Note data source as "DataForSEO (live)" to distinguish from static analysis
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

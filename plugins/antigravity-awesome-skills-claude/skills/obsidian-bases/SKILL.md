@@ -9,7 +9,6 @@ date_added: "2026-03-21"
 # Obsidian Bases Skill
 
 ## When to Use
-
 - Use when creating or editing `.base` files in Obsidian.
 - Use for database-like note views with filters, formulas, summaries, or cards/tables.
 - Use when the user asks about Obsidian Bases specifically.
@@ -504,3 +503,8 @@ formulas:
 - [Views](https://help.obsidian.md/bases/views)
 - [Formulas](https://help.obsidian.md/formulas)
 - [Complete Functions Reference](references/FUNCTIONS_REFERENCE.md)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

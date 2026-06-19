@@ -9,6 +9,11 @@ license: MIT
 
 Use EAS Build to create development clients for testing native code changes on physical devices. Use this for creating custom Expo Go clients for testing branches of your app.
 
+## When to Use
+- You need an Expo development client because the app depends on custom native code or targets not supported by Expo Go.
+- The task involves building, distributing, or testing EAS development builds on physical devices.
+- You need guidance on when to choose a dev client versus staying on plain Expo Go.
+
 ## Important: When Development Clients Are Needed
 
 **Only create development clients when your app requires custom native code.** Most apps work fine in Expo Go.
@@ -164,3 +169,8 @@ eas build -p ios --profile development --clear-cache
 eas --version
 eas update
 ```
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

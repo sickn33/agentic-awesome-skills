@@ -1,0 +1,1035 @@
+{
+  "metadata": {
+    "version": "1.0.14",
+    "created": "2026-03-27",
+    "last_updated": "2026-03-27",
+    "total_terms": 168
+  },
+  "terms": {
+    "skills": {
+      "translation": "技能",
+      "context": "AI assistant capabilities - core concept",
+      "examples": ["use skills", "skill library", "skill execution"]
+    },
+    "repository": {
+      "translation": "仓库",
+      "context": "Git repository or code storage",
+      "examples": ["clone the repository", "repository structure"]
+    },
+    "installation": {
+      "translation": "安装",
+      "context": "Software installation process",
+      "examples": ["installation guide", "install skills"]
+    },
+    "bundles": {
+      "translation": "捆绑包",
+      "context": "Curated skill collections",
+      "examples": ["starter bundles", "bundle recommendations"]
+    },
+    "workflows": {
+      "translation": "工作流",
+      "context": "Step-by-step execution guides",
+      "examples": ["workflow automation", "execution workflows"]
+    },
+    "agents": {
+      "translation": "代理",
+      "context": "AI agents or AI assistants",
+      "examples": ["AI agent", "agent system"]
+    },
+    "cli": {
+      "translation": "命令行界面",
+      "context": "Command Line Interface - keep as CLI in code",
+      "examples": ["CLI tool", "command line"]
+    },
+    "contributor": {
+      "translation": "贡献者",
+      "context": "People contributing to the project",
+      "examples": ["contributors guide", "become a contributor"]
+    },
+    "maintainer": {
+      "translation": "维护者",
+      "context": "People maintaining the project",
+      "examples": ["maintainers guide", "maintainer docs"]
+    },
+    "documentation": {
+      "translation": "文档",
+      "context": "Project documentation",
+      "examples": ["documentation files", "read the docs"]
+    },
+    "github": {
+      "translation": "GitHub",
+      "context": "Platform name - keep in English",
+      "examples": ["GitHub repository", "GitHub stars"]
+    },
+    "claude": {
+      "translation": "Claude",
+      "context": "AI model/assistant name - keep in English",
+      "examples": ["Claude Code", "Claude API"]
+    },
+    "cursor": {
+      "translation": "Cursor",
+      "context": "IDE name - keep in English",
+      "examples": ["Cursor IDE", "Cursor skills"]
+    },
+    "gemini": {
+      "translation": "Gemini",
+      "context": "Google AI - keep in English",
+      "examples": ["Gemini CLI", "Gemini API"]
+    },
+    "codex": {
+      "translation": "Codex",
+      "context": "OpenAI CLI tool - keep in English",
+      "examples": ["Codex CLI", "Codex skills"]
+    },
+    "mcp": {
+      "translation": "MCP",
+      "context": "Model Context Protocol - keep as MCP",
+      "examples": ["MCP server", "MCP tools"]
+    },
+    "npm": {
+      "translation": "npm",
+      "context": "Node package manager - keep in English",
+      "examples": ["npm install", "npm package"]
+    },
+    "plugin": {
+      "translation": "插件",
+      "context": "Software plugin/extension",
+      "examples": ["plugin marketplace", "install plugin"]
+    },
+    "marketplace": {
+      "translation": "市场",
+      "context": "Plugin marketplace",
+      "examples": ["marketplace add", "plugin marketplace"]
+    },
+    "directory": {
+      "translation": "目录",
+      "context": "File system directory",
+      "examples": ["project directory", "skills directory"]
+    },
+    "terminal": {
+      "translation": "终端",
+      "context": "Command line terminal",
+      "examples": ["open terminal", "terminal command"]
+    },
+    "features": {
+      "translation": "功能",
+      "context": "Software features",
+      "examples": ["key features", "feature set"]
+    },
+    "categories": {
+      "translation": "类别",
+      "context": "Classification categories",
+      "examples": ["skill categories", "category list"]
+    },
+    "integration": {
+      "translation": "集成",
+      "context": "Software integration",
+      "examples": ["integration guide", "tool integration"]
+    },
+    "configuration": {
+      "translation": "配置",
+      "context": "Software configuration",
+      "examples": ["configuration file", "setup configuration"]
+    },
+    "development": {
+      "translation": "开发",
+      "context": "Software development",
+      "examples": ["development workflow", "development guide"]
+    },
+    "security": {
+      "translation": "安全",
+      "context": "Security practices",
+      "examples": ["security review", "security guidelines"]
+    },
+    "testing": {
+      "translation": "测试",
+      "context": "Software testing",
+      "examples": ["testing guide", "test files"]
+    },
+    "deployment": {
+      "translation": "部署",
+      "context": "Software deployment",
+      "examples": ["deployment guide", "deploy skills"]
+    },
+    "guide": {
+      "translation": "指南",
+      "context": "Documentation guide",
+      "examples": ["user guide", "getting started guide"]
+    },
+    "tutorial": {
+      "translation": "教程",
+      "context": "Tutorial content",
+      "examples": ["tutorial section", "follow tutorial"]
+    },
+    "example": {
+      "translation": "示例",
+      "context": "Code or usage examples",
+      "examples": ["example code", "usage examples"]
+    },
+    "community": {
+      "translation": "社区",
+      "context": "User/developer community",
+      "examples": ["community guidelines", "join community"]
+    },
+    "feedback": {
+      "translation": "反馈",
+      "context": "User feedback",
+      "examples": ["provide feedback", "feedback loop"]
+    },
+    "release": {
+      "translation": "发布",
+      "context": "Software release",
+      "examples": ["latest release", "release notes"]
+    },
+    "version": {
+      "translation": "版本",
+      "context": "Software version",
+      "examples": ["version number", "check version"]
+    },
+    "playbook": {
+      "translation": "剧本",
+      "context": "Step-by-step execution guide or instructions",
+      "examples": ["SKILL.md playbook", "workflow playbook", "execution playbook"]
+    },
+    "persona": {
+      "translation": "角色",
+      "context": "User role or character type",
+      "examples": ["developer persona", "select your persona"]
+    },
+    "wizard": {
+      "translation": "向导",
+      "context": "Guided tool or assistant",
+      "examples": ["Web Wizard", "setup wizard"]
+    },
+    "starter pack": {
+      "translation": "入门包",
+      "context": "Curated collection for beginners",
+      "examples": ["starter packs", "web wizard starter pack"]
+    },
+    "clone": {
+      "translation": "克隆",
+      "context": "Git clone operation",
+      "examples": ["clone the repository", "git clone"]
+    },
+    "endpoint": {
+      "translation": "端点",
+      "context": "API endpoint",
+      "examples": ["API endpoints", "REST endpoint"]
+    },
+    "audit": {
+      "translation": "审计",
+      "context": "Security or code audit",
+      "examples": ["security audit", "code audit"]
+    },
+    "lint": {
+      "translation": "代码检查",
+      "context": "Code linting process",
+      "examples": ["lint rules", "lint and validate"]
+    },
+    "validate": {
+      "translation": "验证",
+      "context": "Validation process",
+      "examples": ["validate input", "lint and validate"]
+    },
+    "workspace": {
+      "translation": "工作区",
+      "context": "Development workspace",
+      "examples": ["workspace directory", "global vs workspace"]
+    },
+    "global": {
+      "translation": "全局",
+      "context": "Global configuration or scope",
+      "examples": ["global settings", "global path"]
+    },
+    "native": {
+      "translation": "原生",
+      "context": "Native support or integration",
+      "examples": ["native support", "native integration"]
+    },
+    "manual": {
+      "translation": "手动",
+      "context": "Manual operation",
+      "examples": ["manual copy-paste", "manual setup"]
+    },
+    "official": {
+      "translation": "官方",
+      "context": "Official or vendor-maintained",
+      "examples": ["official skills", "official support"]
+    },
+    "vendor": {
+      "translation": "供应商",
+      "context": "Software vendor or provider",
+      "examples": ["vendor tools", "third-party vendor"]
+    },
+    "risk": {
+      "translation": "风险",
+      "context": "Risk level or category",
+      "examples": ["risk skills", "security risk"]
+    },
+    "authorized": {
+      "translation": "授权",
+      "context": "Authorized use only",
+      "examples": ["authorized use", "unauthorized access"]
+    },
+    "spec": {
+      "translation": "规范",
+      "context": "Specification document",
+      "examples": ["technical spec", "API spec"]
+    },
+    "prompt": {
+      "translation": "提示词",
+      "context": "AI prompt or instruction",
+      "examples": ["write a prompt", "prompt engineering"]
+    },
+    "context": {
+      "translation": "上下文",
+      "context": "Conversation context or background information",
+      "examples": ["provide context", "context window"]
+    },
+    "invoke": {
+      "translation": "调用",
+      "context": "Call or trigger a skill",
+      "examples": ["invoke a skill", "skill invocation"]
+    },
+    "syntax": {
+      "translation": "语法",
+      "context": "Command or code syntax",
+      "examples": ["skill syntax", "correct syntax"]
+    },
+    "frontmatter": {
+      "translation": "前置元数据",
+      "context": "YAML metadata at top of markdown files",
+      "examples": ["SKILL.md frontmatter", "frontmatter fields"]
+    },
+    "toolbox": {
+      "translation": "工具箱",
+      "context": "Collection of tools or skills",
+      "examples": ["skills toolbox", "toolbox analogy"]
+    },
+    "installer": {
+      "translation": "安装程序",
+      "context": "Installation program or script",
+      "examples": ["installer CLI", "run installer"]
+    },
+    "flag": {
+      "translation": "标志",
+      "context": "Command line flag or option",
+      "examples": ["install flag", "command flag"]
+    },
+    "narrow": {
+      "translation": "狭窄",
+      "context": "Limited scope or focus",
+      "examples": ["narrow single-domain", "narrow focus"]
+    },
+    "single-domain": {
+      "translation": "单一域",
+      "context": "Focused on one domain or area",
+      "examples": ["single-domain starter pack", "single-domain skills"]
+    },
+    "onboarding": {
+      "translation": "入门",
+      "context": "Getting started with a tool or system",
+      "examples": ["onboarding docs", "user onboarding"]
+    },
+    "pr": {
+      "translation": "拉取请求",
+      "context": "Pull request - keep as PR in code",
+      "examples": ["create PR", "PR summary", "pull request"]
+    },
+    "chat": {
+      "translation": "聊天",
+      "context": "Chat conversation interface",
+      "examples": ["chat workflows", "in chat", "chat interface"]
+    },
+    "coverage": {
+      "translation": "覆盖",
+      "context": "Scope or extent of something",
+      "examples": ["large coverage", "skill coverage"]
+    },
+    "broad": {
+      "translation": "广泛",
+      "context": "Wide scope or comprehensive",
+      "examples": ["broad starting point", "broad coverage"]
+    },
+    "workflow-oriented": {
+      "translation": "工作流导向",
+      "context": "Organized around workflows",
+      "examples": ["workflow-oriented skill", "workflow-oriented approach"]
+    },
+    "task framing": {
+      "translation": "任务框架",
+      "context": "How a task is structured or framed",
+      "examples": ["task framing", "improve task framing"]
+    },
+    "orchestration": {
+      "translation": "编排",
+      "context": "Coordinating multiple components or services",
+      "examples": ["workflow orchestration", "agent orchestration"]
+    },
+    "retrieval": {
+      "translation": "检索",
+      "context": "Fetching data or information",
+      "examples": ["retrieval augmented generation", "data retrieval"]
+    },
+    "embedding": {
+      "translation": "嵌入",
+      "context": "Vector embeddings for AI/ML",
+      "examples": ["embedding strategies", "vector embeddings"]
+    },
+    "vector database": {
+      "translation": "向量数据库",
+      "context": "Database for vector embeddings",
+      "examples": ["vector database engineer", "vector search"]
+    },
+    "observability": {
+      "translation": "可观察性",
+      "context": "System monitoring and observability",
+      "examples": ["observability engineer", "observability tools"]
+    },
+    "tracing": {
+      "translation": "追踪",
+      "context": "Distributed tracing or request tracking",
+      "examples": ["distributed tracing", "request tracing"]
+    },
+    "mvp": {
+      "translation": "MVP",
+      "context": "Minimum Viable Product - keep as MVP",
+      "examples": ["SaaS MVP", "MVP release"]
+    },
+    "saas": {
+      "translation": "SaaS",
+      "context": "Software as a Service - keep as SaaS",
+      "examples": ["SaaS product", "SaaS MVP"]
+    },
+    "kpi": {
+      "translation": "KPI",
+      "context": "Key Performance Indicator - keep as KPI",
+      "examples": ["KPI dashboard", "define KPIs"]
+    },
+    "domain": {
+      "translation": "域",
+      "context": "Domain or field of expertise",
+      "examples": ["domain expert", "domain-driven design"]
+    },
+    "bounded context": {
+      "translation": "限界上下文",
+      "context": "DDD bounded context",
+      "examples": ["bounded contexts", "context mapping"]
+    },
+    "ubiquitous language": {
+      "translation": "通用语言",
+      "context": "DDD ubiquitous language",
+      "examples": ["define ubiquitous language", "shared language"]
+    },
+    "aggregate": {
+      "translation": "聚合",
+      "context": "DDD aggregate pattern",
+      "examples": ["aggregate root", "design aggregates"]
+    },
+    "invariant": {
+      "translation": "不变量",
+      "context": "Business rules or invariants",
+      "examples": ["encode invariants", "domain invariants"]
+    },
+    "cqrs": {
+      "translation": "CQRS",
+      "context": "Command Query Responsibility Segregation - keep as CQRS",
+      "examples": ["CQRS implementation", "CQRS pattern"]
+    },
+    "event sourcing": {
+      "translation": "事件溯源",
+      "context": "Event sourcing pattern",
+      "examples": ["event sourcing architect", "event store"]
+    },
+    "projection": {
+      "translation": "投影",
+      "context": "Read model projection in event sourcing",
+      "examples": ["projection patterns", "materialized projections"]
+    },
+    "saga": {
+      "translation": "Saga",
+      "context": "Saga pattern for distributed transactions",
+      "examples": ["saga orchestration", "saga pattern"]
+    },
+    "threat modeling": {
+      "translation": "威胁建模",
+      "context": "Security threat modeling",
+      "examples": ["threat modeling expert", "threat model"]
+    },
+    "attack tree": {
+      "translation": "攻击树",
+      "context": "Security attack tree analysis",
+      "examples": ["attack tree construction", "attack paths"]
+    },
+    "penetration testing": {
+      "translation": "渗透测试",
+      "context": "Security penetration testing",
+      "examples": ["pen testing", "penetration testing methodology"]
+    },
+    "fuzzing": {
+      "translation": "模糊测试",
+      "context": "API fuzzing or fuzz testing",
+      "examples": ["API fuzzing", "fuzz testing"]
+    },
+    "idor": {
+      "translation": "IDOR",
+      "context": "Insecure Direct Object Reference - keep as IDOR",
+      "examples": ["IDOR testing", "IDOR vulnerability"]
+    },
+    "e2e": {
+      "translation": "端到端",
+      "context": "End-to-end testing - keep as E2E in code",
+      "examples": ["E2E testing", "E2E patterns"]
+    },
+    "truncation": {
+      "translation": "截断",
+      "context": "Context truncation or data truncation",
+      "examples": ["context truncation", "truncation error"]
+    },
+    "trajectory": {
+      "translation": "轨迹",
+      "context": "Agent trajectory or execution path",
+      "examples": ["trajectory conversion", "agent trajectory"]
+    },
+    "truncation crash loop": {
+      "translation": "截断崩溃循环",
+      "context": "Restart loop caused by context truncation errors",
+      "examples": ["truncation crash loop on Windows", "crash loop recovery"]
+    },
+    "restart loop": {
+      "translation": "重启循环",
+      "context": "Application repeatedly crashes and restarts",
+      "examples": ["stuck in restart loop", "restart loop error"]
+    },
+    "database": {
+      "translation": "数据库",
+      "context": "Data storage system",
+      "examples": ["browser database", "delete database folders"]
+    },
+    "backup": {
+      "translation": "备份",
+      "context": "Data backup or backup folder",
+      "examples": ["back up these folders", "emergency backup"]
+    },
+    "crash": {
+      "translation": "崩溃",
+      "context": "Application crash or failure",
+      "examples": ["app crashes", "crash immediately"]
+    },
+    "session": {
+      "translation": "会话",
+      "context": "User session or conversation session",
+      "examples": ["broken session", "resume session"]
+    },
+    "cleanup": {
+      "translation": "清理",
+      "context": "Clean up files or data",
+      "examples": ["recovery cleanup", "cleanup completed"]
+    },
+    "recovery": {
+      "translation": "恢复",
+      "context": "System or data recovery",
+      "examples": ["recovery steps", "disaster recovery"]
+    },
+    "repair": {
+      "translation": "修复",
+      "context": "Repair or fix something broken",
+      "examples": ["repair tool", "start the repair"]
+    },
+    "kiro": {
+      "translation": "Kiro",
+      "context": "AWS AI IDE name - keep in English",
+      "examples": ["Kiro CLI", "Kiro integration"]
+    },
+    "symlink": {
+      "translation": "符号链接",
+      "context": "Symbolic link in file system",
+      "examples": ["create symlink", "symbolic link"]
+    },
+    "tier": {
+      "translation": "层级",
+      "context": "Classification level or rank",
+      "examples": ["Tier S skills", "priority tier"]
+    },
+    "expertise": {
+      "translation": "专业知识",
+      "context": "Specialized knowledge or skills",
+      "examples": ["domain expertise", "technical expertise"]
+    },
+    "pattern": {
+      "translation": "模式",
+      "context": "Design or architectural pattern",
+      "examples": ["design patterns", "security patterns"]
+    },
+    "vulnerability": {
+      "translation": "漏洞",
+      "context": "Security vulnerability",
+      "examples": ["security vulnerability", "vulnerability scanner"]
+    },
+    "remediation": {
+      "translation": "修复",
+      "context": "Security remediation or fix",
+      "examples": ["remediation plan", "vulnerability remediation"]
+    },
+    "compliance": {
+      "translation": "合规",
+      "context": "Regulatory compliance",
+      "examples": ["GDPR compliance", "compliance audit"]
+    },
+    "hardening": {
+      "translation": "加固",
+      "context": "Security hardening",
+      "examples": ["security hardening", "system hardening"]
+    },
+    "exploit": {
+      "translation": "利用",
+      "context": "Security exploit or vulnerability exploitation",
+      "examples": ["exploit vulnerability", "security exploit"]
+    },
+    "payload": {
+      "translation": "负载",
+      "context": "Exploit payload or data payload",
+      "examples": ["exploit payload", "data payload"]
+    },
+    "reconnaissance": {
+      "translation": "侦察",
+      "context": "Security reconnaissance phase",
+      "examples": ["passive reconnaissance", "reconnaissance scan"]
+    },
+    "injection": {
+      "translation": "注入",
+      "context": "Code injection or data injection",
+      "examples": ["SQL injection", "code injection"]
+    },
+    "bypass": {
+      "translation": "绕过",
+      "context": "Security bypass",
+      "examples": ["authentication bypass", "security bypass"]
+    },
+    "credential": {
+      "translation": "凭据",
+      "context": "Authentication credentials",
+      "examples": ["user credentials", "credential theft"]
+    },
+    "privilege escalation": {
+      "translation": "权限提升",
+      "context": "Security privilege escalation",
+      "examples": ["privilege escalation vulnerability", "privesc"]
+    },
+    "lateral movement": {
+      "translation": "横向移动",
+      "context": "Network lateral movement in security",
+      "examples": ["lateral movement techniques", "network movement"]
+    },
+    "enumeration": {
+      "translation": "枚举",
+      "context": "Security enumeration or scanning",
+      "examples": ["network enumeration", "service enumeration"]
+    },
+    "exploitation": {
+      "translation": "利用",
+      "context": "Vulnerability exploitation",
+      "examples": ["exploitation phase", "vulnerability exploitation"]
+    },
+    "post-exploitation": {
+      "translation": "利用后",
+      "context": "Post-exploitation activities",
+      "examples": ["post-exploitation activities", "post-exploitation phase"]
+    },
+    "shell": {
+      "translation": "Shell",
+      "context": "Command shell - keep as Shell in code",
+      "examples": ["reverse shell", "shell access"]
+    },
+    "root": {
+      "translation": "root",
+      "context": "Root user or administrator - keep as root in code",
+      "examples": ["root access", "root privileges"]
+    },
+    "container": {
+      "translation": "容器",
+      "context": "Docker/container technology",
+      "examples": ["container orchestration", "Docker container"]
+    },
+    "microservices": {
+      "translation": "微服务",
+      "context": "Microservices architecture",
+      "examples": ["microservices pattern", "microservices architecture"]
+    },
+    "serverless": {
+      "translation": "无服务器",
+      "context": "Serverless computing",
+      "examples": ["serverless architecture", "AWS Lambda"]
+    },
+    "infrastructure": {
+      "translation": "基础设施",
+      "context": "IT infrastructure",
+      "examples": ["cloud infrastructure", "infrastructure as code"]
+    },
+    "quality bar": {
+      "translation": "质量标准",
+      "context": "Quality standards and validation criteria",
+      "examples": ["quality bar standards", "meet the quality bar"]
+    },
+    "validation": {
+      "translation": "验证",
+      "context": "Validation or verification process",
+      "examples": ["skill validation", "automated validation"]
+    },
+    "badge": {
+      "translation": "徽章",
+      "context": "Quality or status badge",
+      "examples": ["validated badge", "official badge"]
+    },
+    "frontmatter": {
+      "translation": "前置元数据",
+      "context": "YAML metadata at top of markdown files",
+      "examples": ["SKILL.md frontmatter", "frontmatter fields"]
+    },
+    "trigger": {
+      "translation": "触发",
+      "context": "When to activate or invoke a skill",
+      "examples": ["skill triggers", "trigger conditions"]
+    },
+    "kebab-case": {
+      "translation": "短横线命名法",
+      "context": "lowercase-with-hyphens naming convention",
+      "examples": ["kebab-case naming", "use kebab-case"]
+    },
+    "value prop": {
+      "translation": "价值主张",
+      "context": "Value proposition - why something is useful",
+      "examples": ["clear value prop", "value proposition"]
+    },
+    "risk level": {
+      "translation": "风险级别",
+      "context": "Safety classification level",
+      "examples": ["risk level classification", "assess risk level"]
+    },
+    "command pipeline": {
+      "translation": "命令管道",
+      "context": "Chained commands with pipe operator",
+      "examples": ["curl | bash", "command pipelines"]
+    },
+    "allowlist": {
+      "translation": "允许列表",
+      "context": "Security allowlist for approved commands",
+      "examples": ["security allowlist", "allowlist comment"]
+    },
+    "compliance": {
+      "translation": "合规",
+      "context": "Regulatory or standards compliance",
+      "examples": ["compliance audit", "security compliance"]
+    },
+    "positioning": {
+      "translation": "定位",
+      "context": "Market or product positioning strategy",
+      "examples": ["preferred positioning", "market positioning"]
+    },
+    "framing": {
+      "translation": "框架",
+      "context": "How something is presented or structured",
+      "examples": ["key framing", "narrative framing"]
+    },
+    "discovery": {
+      "translation": "发现",
+      "context": "User acquisition or content discovery",
+      "examples": ["GitHub-facing discovery", "content discovery"]
+    },
+    "compatibility": {
+      "translation": "兼容性",
+      "context": "System or tool compatibility",
+      "examples": ["multi-tool compatibility", "backward compatibility"]
+    },
+    "preview": {
+      "translation": "预览",
+      "context": "Preview or sneak peek",
+      "examples": ["social preview", "preview image"]
+    },
+    "SEO": {
+      "translation": "SEO",
+      "context": "Search Engine Optimization - keep as SEO",
+      "examples": ["SEO-focused", "SEO optimization"]
+    },
+    "codename": {
+      "translation": "代号",
+      "context": "Internal project code name",
+      "examples": ["internal codename", "release codename"]
+    },
+    "use case": {
+      "translation": "用例",
+      "context": "Use case or user scenario",
+      "examples": ["user-facing use case", "common use cases"]
+    },
+    "search intent": {
+      "translation": "搜索意图",
+      "context": "User search intent or purpose",
+      "examples": ["search intent", "user intent"]
+    },
+    "cannibalization": {
+      "translation": "蚕食",
+      "context": "Content competing with itself in search",
+      "examples": ["avoid cannibalization", "search cannibalization"]
+    },
+    "artifact": {
+      "translation": "工件",
+      "context": "Generated files or build artifacts",
+      "examples": ["generated artifacts", "build artifacts"]
+    },
+    "refactor": {
+      "translation": "重构",
+      "context": "Code refactoring",
+      "examples": ["structural refactor", "refactor code"]
+    },
+    "rollback": {
+      "translation": "回滚",
+      "context": "Reverting to a previous state",
+      "examples": ["rollback procedure", "rollback changes"]
+    },
+    "merge": {
+      "translation": "合并",
+      "context": "Git merge operation",
+      "examples": ["merge PR", "merge conflict"]
+    },
+    "squash": {
+      "translation": "压缩",
+      "context": "Git squash merge",
+      "examples": ["squash and merge", "squash commits"]
+    },
+    "contribution graph": {
+      "translation": "贡献图",
+      "context": "GitHub contribution graph",
+      "examples": ["contribution graph", "contributions"]
+    },
+    "attribution": {
+      "translation": "署名",
+      "context": "Credit or attribution to contributors",
+      "examples": ["author attribution", "give attribution"]
+    },
+    "conflict": {
+      "translation": "冲突",
+      "context": "Git merge conflict",
+      "examples": ["merge conflict", "resolve conflicts"]
+    },
+    "derived": {
+      "translation": "派生",
+      "context": "Generated from source files",
+      "examples": ["derived artifacts", "derived files"]
+    },
+    "ownership": {
+      "translation": "所有权",
+      "context": "File or code ownership",
+      "examples": ["mixed ownership", "contributor-owned"]
+    },
+    "canonical": {
+      "translation": "规范",
+      "context": "Authoritative or standard version",
+      "examples": ["canonical docs", "canonical source"]
+    },
+    "safety branch": {
+      "translation": "安全分支",
+      "context": "Temporary branch for safe operations",
+      "examples": ["safety branch", "rollback safety"]
+    },
+    "history-rewriting": {
+      "translation": "历史重写",
+      "context": "Git operations that change history",
+      "examples": ["history-rewriting commands", "rewrite Git history"]
+    },
+    "commit": {
+      "translation": "提交",
+      "context": "Git commit",
+      "examples": ["merge commit", "commit changes"]
+    },
+    "coverage": {
+      "translation": "覆盖率",
+      "context": "Percentage or extent of coverage",
+      "examples": ["repository-wide coverage", "test coverage"]
+    },
+    "operational": {
+      "translation": "操作",
+      "context": "Day-to-day operations",
+      "examples": ["operational contributor gate", "operational validator"]
+    },
+    "gate": {
+      "translation": "门槛",
+      "context": "Quality or validation threshold",
+      "examples": ["contributor gate", "quality gate"]
+    },
+    "hardening": {
+      "translation": "加固",
+      "context": "Security or quality hardening",
+      "examples": ["hardening target", "security hardening"]
+    },
+    "legacy": {
+      "translation": "遗留",
+      "context": "Old or inherited code",
+      "examples": ["legacy cleanup", "legacy code"]
+    },
+    "date tracking": {
+      "translation": "日期跟踪",
+      "context": "Tracking dates for skills",
+      "examples": ["date tracking feature", "track creation dates"]
+    },
+    "versioning": {
+      "translation": "版本控制",
+      "context": "Version control or versioning",
+      "examples": ["understanding skill age", "API versioning"]
+    },
+    "changelog": {
+      "translation": "变更日志",
+      "context": "Log of changes",
+      "examples": ["changelog generation", "release changelog"]
+    },
+    "normalization": {
+      "translation": "规范化",
+      "context": "Standardizing format or structure",
+      "examples": ["normalized frontmatter", "data normalization"]
+    },
+    "dangling": {
+      "translation": "悬空",
+      "context": "Broken or orphaned references",
+      "examples": ["dangling links", "dangling references"]
+    },
+    "harvest": {
+      "translation": "丰收",
+      "context": "Collection or gathering phase",
+      "examples": ["PR harvest", "community harvest"]
+    },
+    "cleanup": {
+      "translation": "清理",
+      "context": "Cleaning up code or registry",
+      "examples": ["registry cleanup", "code cleanup"]
+    },
+    "keyword library": {
+      "translation": "关键词库",
+      "context": "Collection of keywords for categorization",
+      "examples": ["keyword libraries", "keyword matching"]
+    },
+    "auto-categorization": {
+      "translation": "自动分类",
+      "context": "Automatic categorization system",
+      "examples": ["intelligent auto-categorization", "auto-categorize"]
+    },
+    "uncategorized": {
+      "translation": "未分类",
+      "context": "Not assigned to a category",
+      "examples": ["uncategorized skills", "remove uncategorized"]
+    },
+    "distribution": {
+      "translation": "分布",
+      "context": "How items are spread across categories",
+      "examples": ["category distribution", "skill distribution"]
+    },
+    "triage": {
+      "translation": "分类",
+      "context": "Security issue classification and prioritization",
+      "examples": ["security findings triage", "triage process"]
+    },
+    "findings": {
+      "translation": "发现",
+      "context": "Security findings or audit results",
+      "examples": ["security findings", "triage findings"]
+    },
+    "baseline": {
+      "translation": "基准",
+      "context": "Reference point or baseline for comparison",
+      "examples": ["baseline commit", "establish baseline"]
+    },
+    "ground truth": {
+      "translation": "真实依据",
+      "context": "Verified or authoritative source of truth",
+      "examples": ["not ground truth", "verify ground truth"]
+    },
+    "remediation": {
+      "translation": "修复",
+      "context": "Security remediation actions",
+      "examples": ["remediation buckets", "vulnerability remediation"]
+    },
+    "bucket": {
+      "translation": "分类",
+      "context": "Grouping or categorization of issues",
+      "examples": ["remediation buckets", "issue buckets"]
+    },
+    "exploitable": {
+      "translation": "可利用",
+      "context": "Vulnerability that can be exploited",
+      "examples": ["exploitable vulnerability", "still present and exploitable"]
+    },
+    "obsolete": {
+      "translation": "过时",
+      "context": "No longer applicable or reproducible",
+      "examples": ["obsolete finding", "obsolete on current HEAD"]
+    },
+    "reproducible": {
+      "translation": "可复现",
+      "context": "Can be reproduced or demonstrated",
+      "examples": ["not reproducible", "reproducible vulnerability"]
+    },
+    "duplicate": {
+      "translation": "重复",
+      "context": "Duplicate of another finding",
+      "examples": ["duplicate finding", "duplicate of another issue"]
+    },
+    "delimiter": {
+      "translation": "分隔符",
+      "context": "YAML or data format delimiter",
+      "examples": ["frontmatter delimiter", "delimiter token"]
+    },
+    "sanitization": {
+      "translation": "过滤",
+      "context": "Input sanitization or cleaning",
+      "examples": ["unsanitized input", "sanitize filenames"]
+    },
+    "dereference": {
+      "translation": "解引用",
+      "context": "Follow or resolve symlinks",
+      "examples": ["dereference symlinks", "symbolic link dereference"]
+    },
+    "exfiltration": {
+      "translation": "泄露",
+      "context": "Unauthorized data export or leakage",
+      "examples": ["file exfiltration", "data exfiltration"]
+    },
+    "bytecode": {
+      "translation": "字节码",
+      "context": "Compiled Python bytecode",
+      "examples": ["Python bytecode", "tracked bytecode artifacts"]
+    },
+    "pyc": {
+      "translation": "pyc",
+      "context": "Python bytecode file extension - keep as .pyc",
+      "examples": [".pyc files", "bytecode compilation"]
+    },
+    "suppress": {
+      "translation": "抑制",
+      "context": "Suppress warnings or errors",
+      "examples": ["suppress warnings", "error suppression"]
+    },
+    "adversarial": {
+      "translation": "对抗性",
+      "context": "Malicious or attacking actor",
+      "examples": ["adversarial input", "adversarial conditions"]
+    },
+    "manifest": {
+      "translation": "清单",
+      "context": "List or inventory of items/files",
+      "examples": ["global manifest", "skills manifest"]
+    },
+    "bootstrap": {
+      "translation": "引导",
+      "context": "Initial setup or loading process",
+      "examples": ["bootstrap phase", "bootstrap once at startup"]
+    },
+    "lazy loading": {
+      "translation": "延迟加载",
+      "context": "Load resources only when needed",
+      "examples": ["lazy loading pattern", "lazy load skills"]
+    },
+    "overflow": {
+      "translation": "溢出",
+      "context": "Exceeding capacity or limits",
+      "examples": ["context overflow", "overflow behavior"]
+    }
+  }
+}

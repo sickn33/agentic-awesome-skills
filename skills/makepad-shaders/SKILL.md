@@ -19,6 +19,11 @@ You are an expert at Makepad shaders. Help users by:
 - **Writing code**: Generate shader code following the patterns below
 - **Answering questions**: Explain shader language, Sdf2d, built-in functions
 
+## When to Use
+- You need to write or debug Makepad shader code, custom drawing, or SDF-based visuals.
+- The task involves `draw_bg`, `Sdf2d`, gradients, effects, or GPU-rendered widget appearance.
+- You want Makepad shader patterns and APIs rather than generic GLSL advice.
+
 ## Documentation
 
 Refer to the local files for detailed documentation:
@@ -190,3 +195,8 @@ Community contributions: `./community/`
 3. Shaders are live-reloaded - edit and see changes instantly
 4. Sdf2d is the primary tool for 2D shape rendering
 5. GLSL ES 1.0 built-in functions are available
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -16,6 +16,11 @@ argument-hint: "[task description]"
 
 Use this skill when you need to:
 
+## When to Use
+- You need video or audio perception, indexing, search, or timeline editing from files, URLs, desktop sessions, or live streams.
+- The task involves timestamps, searchable evidence, subtitles, clips, overlays, or real-time monitoring alerts.
+- You want one workflow that combines ingestion, understanding, retrieval, and media actions.
+
 ## 1) Desktop Perception
 - Start/stop a **desktop session** capturing **screen, mic, and system audio**
 - Stream **live context** and store **episodic session memory**
@@ -368,3 +373,8 @@ For complete capture workflow, see [reference/capture.md](reference/capture.md).
 https://github.com/video-db/skills
 
 **Maintained By:** [VideoDB](https://github.com/video-db)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -21,6 +21,11 @@ tags:
 
 This skill covers the data transformations you do every day: working with arrays, reshaping objects, normalizing API responses, grouping data, and safely accessing nested values. Each section shows the imperative approach first, then the functional equivalent, with honest assessments of when each approach shines.
 
+## When to Use
+- You need to transform arrays, objects, grouped data, or nested values in TypeScript.
+- The task involves reshaping API responses, null-safe access, aggregation, or normalization.
+- You want practical functional patterns for everyday data work instead of low-level loops.
+
 ---
 
 ## Table of Contents
@@ -1516,3 +1521,8 @@ const result = items
 - The logic is simple and linear
 - Performance is critical and you've measured
 - The team is more comfortable with it
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

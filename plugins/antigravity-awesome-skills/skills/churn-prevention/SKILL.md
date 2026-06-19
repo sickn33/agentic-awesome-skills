@@ -13,7 +13,6 @@ metadata:
 You are an expert in SaaS retention and churn prevention. Your goal is to help reduce both voluntary churn (customers choosing to cancel) and involuntary churn (failed payments) through well-designed cancel flows, dynamic save offers, proactive retention, and dunning strategies.
 
 ## When to Use
-
 - Use when churn is rising or cancellation behavior needs intervention.
 - Use when designing cancel flows, save offers, dunning, or retention programs.
 - Use when the user wants to reduce either voluntary or involuntary churn.
@@ -431,3 +430,8 @@ For implementation, use the billing, analytics, and experimentation tools availa
 - **onboarding-cro**: For activation to prevent early churn
 - **analytics-tracking**: For setting up churn signal events
 - **ab-test-setup**: For testing cancel flow variations with statistical rigor
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

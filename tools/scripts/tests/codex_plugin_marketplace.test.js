@@ -14,6 +14,22 @@ const compatibility = JSON.parse(fs.readFileSync(compatibilityPath, "utf8")).ski
 const compatibilityById = new Map(compatibility.map((skill) => [skill.id, skill]));
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
+function sleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+function waitForPathState(filePath, shouldExist, attempts = 5, delayMs = 50) {
+  for (let index = 0; index < attempts; index += 1) {
+    if (fs.existsSync(filePath) === shouldExist) {
+      return true;
+    }
+    if (index < attempts - 1) {
+      sleep(delayMs);
+    }
+  }
+  return fs.existsSync(filePath) === shouldExist;
+}
+
 assert.strictEqual(
   marketplace.name,
   "antigravity-awesome-skills",
@@ -72,14 +88,21 @@ assert.ok(fs.statSync(pluginSkillsPath).isDirectory(), "Codex plugin skills path
 for (const skill of compatibility) {
   const copiedPath = path.join(pluginSkillsPath, ...skill.id.split("/"));
   if (skill.targets.codex === "supported") {
-    assert.ok(fs.existsSync(copiedPath), `Codex root plugin should include supported skill ${skill.id}`);
+    assert.ok(
+      waitForPathState(copiedPath, true),
+      `Codex root plugin should include supported skill ${skill.id}`,
+    );
   } else {
-    assert.ok(!fs.existsSync(copiedPath), `Codex root plugin should exclude blocked skill ${skill.id}`);
+    assert.ok(
+      waitForPathState(copiedPath, false),
+      `Codex root plugin should exclude blocked skill ${skill.id}`,
+    );
   }
 }
 
 for (const bundle of editorialBundles) {
-  const bundlePluginName = `antigravity-bundle-${bundle.id}`;
+  const bundlePluginName = `agyb-${bundle.id}`;
+  const bundlePluginPath = `antigravity-bundle-${bundle.id}`;
   const bundleEntry = marketplace.plugins.find((plugin) => plugin.name === bundlePluginName);
   const codexSupported = bundle.skills.every(
     (skill) => compatibilityById.get(skill.id)?.targets?.codex === "supported",
@@ -95,7 +118,7 @@ for (const bundle of editorialBundles) {
     bundleEntry.source,
     {
       source: "local",
-      path: `./plugins/${bundlePluginName}`,
+      path: `./plugins/${bundlePluginPath}`,
     },
     `bundle plugin ${bundlePluginName} should resolve to the expected repo-local directory`,
   );

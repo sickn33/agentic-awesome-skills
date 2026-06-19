@@ -1,8 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-// Public Supabase credentials for the shared community stars database.
-// The anon key is a public key by design — security is enforced via RLS policies.
-// .env values override these defaults if provided.
+// Public Supabase credentials for the read-only community save counts feed.
+// The browser UI does not perform shared writes; .env values can override these defaults.
 const supabaseUrl =
   (import.meta as ImportMeta & { env: Record<string, string> }).env.VITE_SUPABASE_URL
   || 'https://gczhgcbtjbvfrgfmpbmv.supabase.co'

@@ -42,3 +42,8 @@ Generar el código para los siguientes archivos:
 ## ⚠️ Reglas de Oro
 - **Prefijos Numéricos:** Asignar un número correlativo a la carpeta (ej. 11, 12, 13) para mantener el orden.
 - **Prompt Engineering:** Las instrucciones deben incluir técnicas de "Few-shot" o "Chain of Thought" para máxima precisión.
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

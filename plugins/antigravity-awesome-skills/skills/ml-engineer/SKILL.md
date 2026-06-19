@@ -164,3 +164,8 @@ Expert ML engineer specializing in production-ready machine learning systems. Ma
 - "Implement cost-optimized batch inference pipeline for processing millions of records"
 - "Build ML serving architecture with auto-scaling and load balancing"
 - "Create continuous training pipeline that automatically retrains models based on performance"
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

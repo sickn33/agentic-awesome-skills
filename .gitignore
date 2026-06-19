@@ -9,11 +9,18 @@ __pycache__/
 antigravity-awesome-skills-*.tgz
 
 .agent/rules/
-.claude-plugin/
+/.claude-plugin/*
+!/.claude-plugin/plugin.json
+!/.claude-plugin/marketplace.json
 .codex/
 .gemini/
 .release-clone-*/
 data/node_modules
+
+# Generated skill registry outputs (maintainer-owned, never committed in PRs)
+data/drift-baseline.json
+data/registry-report.json
+data/scores.json
 
 # Temporary analysis and report files
 *_REPORT.md
@@ -41,5 +48,7 @@ validation-baseline.json
 apps/web-app/public/skills/
 apps/web-app/public/skills.json
 
-# Local duplicate/download artifacts
 skills/spline-3d-integration/*.zip
+
+# Temporary plugin staging directories
+plugins/.antigravity-awesome-skills.staging-*/

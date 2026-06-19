@@ -216,7 +216,7 @@ Responda para saber mais 😊"
 
 ---
 
-## 6. Horarios Otimizados
+## 3. Horarios Otimizados
 
 | Canal | Horarios de Pico | Dias Melhores |
 |-------|-----------------|---------------|
@@ -226,7 +226,7 @@ Responda para saber mais 😊"
 
 ---
 
-## 7. Formato De Resposta
+## 4. Formato De Resposta
 
 Para cada operacao cross-canal, reportar:
 
@@ -252,7 +252,7 @@ SOCIAL-ORCHESTRATOR — [acao]
 
 ---
 
-## 8. Gestao De Erros Cross-Canal
+## 5. Gestao De Erros Cross-Canal
 
 Se um canal falha:
 
@@ -267,7 +267,7 @@ Estrategia: Publish-or-Skip (nao cancela toda campanha)
 
 ---
 
-## 9. Integracao Com Ecossistema
+## 6. Integracao Com Ecossistema
 
 | Skill | Quando usar |
 |-------|------------|
@@ -297,3 +297,8 @@ Estrategia: Publish-or-Skip (nao cancela toda campanha)
 - `instagram` - Complementary skill for enhanced analysis
 - `telegram` - Complementary skill for enhanced analysis
 - `whatsapp-cloud-api` - Complementary skill for enhanced analysis
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

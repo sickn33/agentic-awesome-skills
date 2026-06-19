@@ -9,6 +9,7 @@ from pathlib import Path
 
 from _safe_files import is_safe_regular_file
 from _project_paths import find_repo_root
+from audit_skills import has_limitations
 from validate_skills import configure_utf8_output, has_when_to_use_section, parse_frontmatter
 
 
@@ -89,6 +90,17 @@ def build_examples_section(skill_name: str, description: str) -> str:
     )
 
 
+def build_limitations_section() -> str:
+    return "\n".join(
+        [
+            "## Limitations",
+            "- Use this skill only when the task clearly matches the scope described above.",
+            "- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.",
+            "- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.",
+        ]
+    )
+
+
 def find_insert_after_intro(content: str) -> int:
     body_start = 0
     match = FRONTMATTER_PATTERN.search(content)
@@ -115,7 +127,12 @@ def append_section(content: str, section_text: str) -> str:
     return content.rstrip() + "\n\n" + section_text + "\n"
 
 
-def update_skill_file(skill_path: Path, *, add_missing: bool = False) -> tuple[bool, list[str]]:
+def update_skill_file(
+    skill_path: Path,
+    *,
+    add_missing: bool = False,
+    add_limitations_only: bool = False,
+) -> tuple[bool, list[str]]:
     if not is_safe_regular_file(skill_path):
         return False, []
 
@@ -133,13 +150,21 @@ def update_skill_file(skill_path: Path, *, add_missing: bool = False) -> tuple[b
         if updated != content:
             changes.append("normalized_when_heading")
 
-        if add_missing and not has_when_to_use_section(updated):
+        add_when = add_missing
+        add_examples = add_missing
+        add_limitations = add_missing or add_limitations_only
+
+        if add_when and not has_when_to_use_section(updated):
             updated = insert_section_after_intro(updated, build_when_section(skill_name, description))
             changes.append("added_when_to_use")
 
-        if add_missing and not has_examples(updated):
+        if add_examples and not has_examples(updated):
             updated = append_section(updated, build_examples_section(skill_name, description))
             changes.append("added_examples")
+
+        if add_limitations and not has_limitations(updated):
+            updated = append_section(updated, build_limitations_section())
+            changes.append("added_limitations")
 
     if updated != content:
         skill_path.write_text(updated, encoding="utf-8")
@@ -156,7 +181,12 @@ def main() -> int:
     parser.add_argument(
         "--add-missing",
         action="store_true",
-        help="Also synthesize missing 'When to Use' and 'Examples' sections from the description.",
+        help="Also synthesize missing 'When to Use', 'Examples', and 'Limitations' sections from the description.",
+    )
+    parser.add_argument(
+        "--add-limitations-only",
+        action="store_true",
+        help="Only synthesize missing 'Limitations' sections.",
     )
     args = parser.parse_args()
 
@@ -181,7 +211,8 @@ def main() -> int:
         simulated = normalize_when_heading_variants(content)
         needs_when = args.add_missing and not has_when_to_use_section(simulated)
         needs_examples = args.add_missing and not has_examples(simulated)
-        if not needs_when and not needs_examples and simulated == content:
+        needs_limitations = (args.add_missing or args.add_limitations_only) and not has_limitations(simulated)
+        if not needs_when and not needs_examples and not needs_limitations and simulated == content:
             continue
 
         if args.dry_run:
@@ -192,11 +223,17 @@ def main() -> int:
                 change_labels.append("added_when_to_use")
             if needs_examples:
                 change_labels.append("added_examples")
+            if needs_limitations:
+                change_labels.append("added_limitations")
             modified += 1
             print(f"FIX  {skill_path.relative_to(repo_root)} [{', '.join(change_labels)}]")
             continue
 
-        changed, changes = update_skill_file(skill_path, add_missing=args.add_missing)
+        changed, changes = update_skill_file(
+            skill_path,
+            add_missing=args.add_missing,
+            add_limitations_only=args.add_limitations_only,
+        )
         if changed:
             modified += 1
             print(f"FIX  {skill_path.relative_to(repo_root)} [{', '.join(changes)}]")

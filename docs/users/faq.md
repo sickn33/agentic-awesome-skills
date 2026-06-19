@@ -70,8 +70,15 @@ This is **not** how this repository is designed to be used, and it will almost c
 
 Instead, hosts should:
 
-- use `data/skills_index.json` as a **lightweight manifest** for discovery; and
+- use `skills_index.json` as the **canonical array-format manifest** for discovery;
+- use `data/skills_index.json` as the compatibility mirror in `data/` when needed;
+- validate each discovered `path` against `SKILLS_ROOT` before reading; and
 - load individual `SKILL.md` files **only when a skill is invoked** (e.g. via `@skill-id` in the conversation).
+
+Manifest contract references:
+
+- [`schemas/skills-index.v1.schema.json`](../../schemas/skills-index.v1.schema.json)
+- [`discovery-manifest.md`](discovery-manifest.md)
 
 For a concrete example (including pseudo‑code) see:
 
@@ -80,6 +87,13 @@ For a concrete example (including pseudo‑code) see:
 ### Do skills work offline?
 
 The skill files themselves are stored locally on your computer, but your AI assistant needs an internet connection to function.
+
+### Does the hosted web app write anything back to the repository?
+
+No. The public site is a static GitHub Pages deploy.
+
+- The maintainer `Sync Skills` flow is local-development only and is not a public production endpoint.
+- Browser save/star interactions are intentionally local-first for now. Until the project has a real backend contract, treat them as browser-local state rather than shared repository writes.
 
 ---
 
@@ -109,7 +123,7 @@ _Always check the Risk label and review the code._
 It depends on how you install:
 
 - **Using the installer CLI (`npx antigravity-awesome-skills`)**:
-  The default install target is `~/.gemini/antigravity/skills/` for Antigravity's global library.
+  The default install target is `~/.agents/skills/` for Antigravity's global library.
 - **Using a tool-specific flag**:
   Use `--claude`, `--cursor`, `--gemini`, `--codex`, `--kiro`, or `--antigravity` to target the matching tool path automatically.
 - **Using a manual clone or custom workspace path**:
@@ -122,6 +136,8 @@ If you get a 404 from npm, use: `npx github:sickn33/antigravity-awesome-skills`
 ```bash
 git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
 ```
+
+The installer CLI is the recommended path for most users because it performs a lighter shallow clone of the current library. Manual `git clone` is still the right option when you want the full repository history or plan to contribute from the same checkout.
 
 **Tool-specific paths:**
 
@@ -147,6 +163,28 @@ This repository also includes repo-local plugin metadata for Codex:
 - `plugins/antigravity-awesome-skills/.codex-plugin/plugin.json`
 
 That path exposes the new plugin-safe Codex root plugin plus generated bundle plugins. For the full explanation, read [plugins.md](plugins.md).
+
+### Why do I not see `Sync Skills` on the hosted website?
+
+Because the public site is a static GitHub Pages catalog, not a maintainer control surface.
+
+`Sync Skills` is only meant for local maintainer/development runs behind the Vite dev server, and it stays hidden unless the local environment explicitly enables it.
+
+### What does `Public catalog mode` mean?
+
+It means you are looking at the published static catalog build.
+
+In that mode:
+
+- catalog browsing and skill detail pages work normally
+- dev-only `/api/refresh-skills` behavior is not available
+- anything that would require a backend or mutable server state is intentionally disabled or reduced to local-only behavior
+
+### Are saves/stars global or just local?
+
+Right now they are local to your browser.
+
+The app may show optional read-only community counts when configured, but clicking save/star does not create a shared server-side vote. Until the project ships a real backend write contract with abuse controls, treat saves as a personal local bookmark signal.
 
 ### What does `plugin-safe` mean?
 
@@ -192,7 +230,48 @@ If Antigravity becomes unstable only when the full skills library is active, swi
 
 - [agent-overload-recovery.md](agent-overload-recovery.md)
 
-That guide shows how to run `scripts/activate-skills.sh` from a cloned copy of this repository so only the bundles or skill ids you need stay active in `~/.gemini/antigravity/skills`.
+That guide shows how to run `scripts/activate-skills.sh` from a cloned copy of this repository so only the bundles or skill ids you need stay active in `~/.agents/skills`.
+
+### I use OpenCode with `.agents/skills`. Should I install the whole library?
+
+Usually no. For OpenCode and other hosts that read from `.agents/skills`, start with a reduced install instead of copying the full library:
+
+```bash
+npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
+```
+
+You can narrow further with `--tags` or exclude values with a trailing `-`:
+
+```bash
+npx antigravity-awesome-skills --path .agents/skills --tags debugging,typescript-
+```
+
+The filter rules are:
+
+- comma-separated values are ORed within one flag
+- exclusions use a trailing `-`, for example `legal-`
+- `--risk`, `--category`, and `--tags` combine with AND
+
+This keeps the installed skill set smaller and reduces the chance of context overload in OpenCode-style runtimes.
+
+### OpenCode on Windows crashes with Bun or enters repeated compaction loops after adding many skills. What should I do?
+
+Treat this as two separate problems:
+
+- **Binary crash on startup (`bun.exe` segfault):** this is usually an OpenCode runtime issue, not a skill-content issue. Verify OpenCode can run without this repository loaded first.
+- **Compaction/summary loops after loading many skills:** this is usually context overload from too many active skills at once.
+
+Practical mitigation:
+
+1. Start with a reduced install in `.agents/skills`:
+
+```bash
+npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
+```
+
+2. Avoid loading large autonomy/conductor-style skills until the base flow is stable.
+3. Add skills incrementally and retest after each addition.
+4. If loops continue, follow the overload recovery guide: [agent-overload-recovery.md](agent-overload-recovery.md)
 
 ### Gemini CLI hangs after a few turns or says "This is taking a bit longer, we're still on it". What should I do?
 

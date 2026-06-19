@@ -2,22 +2,47 @@
 """Unpack and format XML contents of Office files (.docx, .pptx, .xlsx)"""
 
 import random
+import shutil
+import stat
 import sys
 import zipfile
 from pathlib import Path
 
 
+def _is_zip_symlink(member: zipfile.ZipInfo) -> bool:
+    return stat.S_ISLNK(member.external_attr >> 16)
+
+
+def _is_safe_destination(output_root: Path, member_name: str) -> bool:
+    destination = output_root / member_name
+    return destination.resolve().is_relative_to(output_root.resolve())
+
+
+def _extract_member(archive: zipfile.ZipFile, member: zipfile.ZipInfo, output_root: Path):
+    destination = output_root / member.filename
+    if member.is_dir():
+        destination.mkdir(parents=True, exist_ok=True)
+        return
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with archive.open(member, "r") as source, open(destination, "wb") as target:
+        shutil.copyfileobj(source, target)
+
+
 def extract_archive_safely(input_file: str | Path, output_dir: str | Path):
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
+    output_root = output_path.resolve()
 
     with zipfile.ZipFile(input_file) as archive:
         for member in archive.infolist():
-            destination = output_path / member.filename
-            if not destination.resolve().is_relative_to(output_path.resolve()):
+            if _is_zip_symlink(member):
+                raise ValueError(f"Unsafe archive entry: {member.filename}")
+            if not _is_safe_destination(output_root, member.filename):
                 raise ValueError(f"Unsafe archive entry: {member.filename}")
 
-        archive.extractall(output_path)
+        for member in archive.infolist():
+            _extract_member(archive, member, output_path)
 
 
 def pretty_print_xml(output_path: Path):

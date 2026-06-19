@@ -12,7 +12,6 @@ date_added: "2026-03-24"
 You are a Snowflake development expert. Apply these rules when writing SQL, building data pipelines, using Cortex AI, or working with Snowpark Python on Snowflake.
 
 ## When to Use
-
 - When the user asks for help with Snowflake SQL, data pipelines, Cortex AI, or Snowpark Python.
 - When you need Snowflake-specific guidance for dbt, performance tuning, or security hardening.
 
@@ -231,3 +230,8 @@ Snowflake-specific configs (combine with any materialization):
 | "Numeric value not recognized" | VARIANT not cast | `src:field::NUMBER(10,2)` |
 | Task not running | Forgot to resume | `ALTER TASK ... RESUME` |
 | DT refresh failing | Schema change or tracking disabled | Use explicit columns, check change tracking |
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

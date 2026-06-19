@@ -338,3 +338,8 @@ istioctl proxy-config log deploy/my-app --level debug
 - [Istio Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/)
 - [Virtual Service Reference](https://istio.io/latest/docs/reference/config/networking/virtual-service/)
 - [Destination Rule Reference](https://istio.io/latest/docs/reference/config/networking/destination-rule/)
+
+## Limitations
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

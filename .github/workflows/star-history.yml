@@ -13,7 +13,7 @@ jobs:
   update-star-history:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install SVG renderer
         run: |
@@ -30,14 +30,41 @@ jobs:
             -o /tmp/star-history.svg
           rsvg-convert /tmp/star-history.svg -o assets/star-history.png
 
+      - name: Refresh README chart cache busters
+        run: |
+          set -euo pipefail
+          cache_bust="$(date -u +%Y%m%d%H%M)"
+          python3 - <<'PY' "$cache_bust"
+          import re
+          import sys
+          from pathlib import Path
+
+          cache_bust = sys.argv[1]
+          readme_path = Path("README.md")
+          readme = readme_path.read_text()
+
+          def refresh_url(match):
+              url = match.group(0)
+              url = re.sub(r"([?&])cache_bust=\d+", "", url)
+              separator = "&" if "?" in url else "?"
+              return f"{url}{separator}cache_bust={cache_bust}"
+
+          updated = re.sub(
+              r"https://api\.star-history\.com/(?:svg|chart)\?[^\"<\s]+",
+              refresh_url,
+              readme,
+          )
+          readme_path.write_text(updated)
+          PY
+
       - name: Commit and push if changed
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/star-history.png
+          git add README.md assets/star-history.png
           if git diff --cached --quiet; then
-            echo "No changes in star-history.png"
+            echo "No changes in star history assets"
             exit 0
           fi
           git commit -m "chore: update star history chart"
