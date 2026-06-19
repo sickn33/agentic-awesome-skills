@@ -154,6 +154,28 @@
     }
   },
   {
+    "id": "3d-ui",
+    "path": "skills/design-it/3d-ui",
+    "category": "design-it",
+    "name": "3d-ui",
+    "description": "Web and App implementation guide for 3D UI. Trigger when user wants actual 3D objects, perspective effects, and spatial depth.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "3d-web-experience",
     "path": "skills/3d-web-experience",
     "category": "design",
@@ -1130,6 +1152,28 @@
     }
   },
   {
+    "id": "ai-native-ui",
+    "path": "skills/design-it/ai-native-ui",
+    "category": "design-it",
+    "name": "ai-native-ui",
+    "description": "Web and App implementation guide for AI Native UI. Trigger when user wants conversational interfaces, adaptive layouts, and generative AI aesthetics.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ai-product",
     "path": "skills/ai-product",
     "category": "ai-ml",
@@ -1558,6 +1602,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "android-ui-journey-testing",
+    "path": "skills/android-ui-journey-testing",
+    "category": "testing",
+    "name": "android-ui-journey-testing",
+    "description": "XML-specified Android UI journey testing, interactive step execution, assertion verification, and JSON outcome reporting.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-06-18",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -2921,6 +2987,28 @@
       "reasons": [
         "absolute_host_path"
       ]
+    }
+  },
+  {
+    "id": "aurora-ui",
+    "path": "skills/design-it/aurora-ui",
+    "category": "design-it",
+    "name": "aurora-ui",
+    "description": "Web and App implementation guide for Aurora UI. Trigger when user wants gradient glows, color blobs, and atmospheric lighting effects.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
     }
   },
   {
@@ -6378,6 +6466,28 @@
     }
   },
   {
+    "id": "bento-ui",
+    "path": "skills/design-it/bento-ui",
+    "category": "design-it",
+    "name": "bento-ui",
+    "description": "Web and App implementation guide for Bento UI. Trigger when user wants modular grid cards, Apple-like dashboard style, or sections arranged like a bento box.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "bevy-ecs-expert",
     "path": "skills/bevy-ecs-expert",
     "category": "uncategorized",
@@ -6876,6 +6986,50 @@
     "risk": "unknown",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "brutalism",
+    "path": "skills/design-it/brutalism",
+    "category": "design-it",
+    "name": "brutalism",
+    "description": "Web and App implementation guide for Brutalism. Trigger when user wants a raw appearance, intentionally unfinished look, and rejection of standard design conventions.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "brutalist-typography",
+    "path": "skills/design-it/brutalist-typography",
+    "category": "design-it",
+    "name": "brutalist-typography",
+    "description": "Web and App implementation guide for Brutalist Typography. Trigger when user wants huge fonts, raw presentation, and aggressive layout decisions.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -7404,6 +7558,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "card-based-design",
+    "path": "skills/design-it/card-based-design",
+    "category": "design-it",
+    "name": "card-based-design",
+    "description": "Web and App implementation guide for Card-Based Design. Trigger when user wants information cards, Pinterest-style layouts, and bite-sized content containers.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8152,6 +8328,28 @@
     }
   },
   {
+    "id": "claymorphism",
+    "path": "skills/design-it/claymorphism",
+    "category": "design-it",
+    "name": "claymorphism",
+    "description": "Web and App implementation guide for Claymorphism. Trigger when user wants soft 3D elements, rounded shapes, and a playful, tactile appearance.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "clean-code",
     "path": "skills/clean-code",
     "category": "code-quality",
@@ -8790,6 +8988,28 @@
     }
   },
   {
+    "id": "color-blocking",
+    "path": "skills/design-it/color-blocking",
+    "category": "design-it",
+    "name": "color-blocking",
+    "description": "Web and App implementation guide for Color Blocking. Trigger when user wants large color sections, striking layout divisions, and Mondrian-style grids.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "comfyui-gateway",
     "path": "skills/comfyui-gateway",
     "category": "backend",
@@ -8798,6 +9018,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "command-center-ui",
+    "path": "skills/design-it/command-center-ui",
+    "category": "design-it",
+    "name": "command-center-ui",
+    "description": "Web and App implementation guide for Command Center UI. Trigger when user wants monitoring systems, enterprise dashboards, NOCs, and global maps.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10374,6 +10616,50 @@
     }
   },
   {
+    "id": "cyber-y2k",
+    "path": "skills/design-it/cyber-y2k",
+    "category": "design-it",
+    "name": "cyber-y2k",
+    "description": "Web and App implementation guide for Cyber Y2K. Trigger when user wants modern Y2K, holographic visuals, and glitch aesthetics.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "cyberpunk-ui",
+    "path": "skills/design-it/cyberpunk-ui",
+    "category": "design-it",
+    "name": "cyberpunk-ui",
+    "description": "Web and App implementation guide for Cyberpunk UI. Trigger when user wants neon colors, dark backgrounds, high-tech dystopian aesthetics, and hacking interfaces.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "daily",
     "path": "skills/daily",
     "category": "uncategorized",
@@ -10440,6 +10726,28 @@
     }
   },
   {
+    "id": "dark-mode",
+    "path": "skills/design-it/dark-mode",
+    "category": "design-it",
+    "name": "dark-mode",
+    "description": "Web and App implementation guide for Dark Mode Design. Trigger when user wants dark surfaces, reduced eye strain, and premium sleek aesthetics.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "dart",
     "path": "skills/super-code/dart",
     "category": "super-code",
@@ -10448,6 +10756,50 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-06-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "dashboard-design",
+    "path": "skills/design-it/dashboard-design",
+    "category": "design-it",
+    "name": "dashboard-design",
+    "description": "Web and App implementation guide for Dashboard Design. Trigger when user wants analytics-focused layouts, data visualization, and modular overview screens.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "data-dense-design",
+    "path": "skills/design-it/data-dense-design",
+    "category": "design-it",
+    "name": "data-dense-design",
+    "description": "Web and App implementation guide for Data-Dense Design. Trigger when user wants professional tools, maximum information density, and expert interfaces (like Bloomberg terminals or IDEs).",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -11366,6 +11718,28 @@
     }
   },
   {
+    "id": "design-it",
+    "path": "skills/design-it",
+    "category": "frontend",
+    "name": "design-it",
+    "description": "Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "design-md",
     "path": "skills/design-md",
     "category": "design",
@@ -12160,6 +12534,28 @@
     }
   },
   {
+    "id": "duotone-design",
+    "path": "skills/design-it/duotone-design",
+    "category": "design-it",
+    "name": "duotone-design",
+    "description": "Web and App implementation guide for Duotone Design. Trigger when user wants two-color schemes, striking imagery, and Spotify-like playlist aesthetics.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "dwarf-expert",
     "path": "skills/dwarf-expert",
     "category": "development",
@@ -12278,6 +12674,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-06-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "editorial-design",
+    "path": "skills/design-it/editorial-design",
+    "category": "design-it",
+    "name": "editorial-design",
+    "description": "Web and App implementation guide for Editorial Design. Trigger when user wants a magazine-inspired layout, large headlines, and elegant typography pairing.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13922,6 +14340,72 @@
     }
   },
   {
+    "id": "flat-design",
+    "path": "skills/design-it/flat-design",
+    "category": "design-it",
+    "name": "flat-design",
+    "description": "Web and App implementation guide for the Flat Design style. Trigger when the user wants no shadows, simple shapes, and bold colors.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "flat-design-2",
+    "path": "skills/design-it/flat-design-2",
+    "category": "design-it",
+    "name": "flat-design-2",
+    "description": "Web and App implementation guide for Flat Design 2.0 (Semi-Flat). Trigger when the user wants flat design with subtle shadows and improved usability.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "floating-ui",
+    "path": "skills/design-it/floating-ui",
+    "category": "design-it",
+    "name": "floating-ui",
+    "description": "Web and App implementation guide for Floating UI. Trigger when user wants detached cards, elevated components, and a light, airy feel.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "flowhunt-skill",
     "path": "skills/flowhunt-skill",
     "category": "automation",
@@ -14670,6 +15154,28 @@
     }
   },
   {
+    "id": "frutiger-aero",
+    "path": "skills/design-it/frutiger-aero",
+    "category": "design-it",
+    "name": "frutiger-aero",
+    "description": "Web and App implementation guide for Frutiger Aero. Trigger when user wants glossy gradients, early 2000s nature-inspired tech, glass, and water motifs.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "fsi-compliance-checker",
     "path": "skills/fsi-compliance-checker",
     "category": "security",
@@ -15396,6 +15902,28 @@
     }
   },
   {
+    "id": "glassmorphism",
+    "path": "skills/design-it/glassmorphism",
+    "category": "design-it",
+    "name": "glassmorphism",
+    "description": "Web and App implementation guide for Glassmorphism. Trigger when user wants a frosted glass effect, blurred backgrounds, transparency, or a sleek MacOS-like feel.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "global-chat-agent-discovery",
     "path": "skills/global-chat-agent-discovery",
     "category": "development",
@@ -15778,6 +16306,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "gradient-design",
+    "path": "skills/design-it/gradient-design",
+    "category": "design-it",
+    "name": "gradient-design",
+    "description": "Web and App implementation guide for Gradient Design. Trigger when user wants heavy gradient usage, vibrant transitions, and modern energetic feels.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -16410,6 +16960,28 @@
     }
   },
   {
+    "id": "high-contrast",
+    "path": "skills/design-it/high-contrast",
+    "category": "design-it",
+    "name": "high-contrast",
+    "description": "Web and App implementation guide for High Contrast Design. Trigger when user wants accessibility-focused design, extreme legibility, or stark visual impact.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "high-end-visual-design",
     "path": "skills/high-end-visual-design",
     "category": "frontend",
@@ -16418,6 +16990,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "holographic-ui",
+    "path": "skills/design-it/holographic-ui",
+    "category": "design-it",
+    "name": "holographic-ui",
+    "description": "Web and App implementation guide for Holographic UI. Trigger when user wants light-based appearance, projected interfaces, and transparent floating elements.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17664,6 +18258,28 @@
     }
   },
   {
+    "id": "isometric-design",
+    "path": "skills/design-it/isometric-design",
+    "category": "design-it",
+    "name": "isometric-design",
+    "description": "Web and App implementation guide for Isometric Design. Trigger when user wants angled 3D appearances without vanishing points, often used for technical illustrations.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "issues",
     "path": "skills/issues",
     "category": "workflow",
@@ -18598,6 +19214,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "layered-design",
+    "path": "skills/design-it/layered-design",
+    "category": "design-it",
+    "name": "layered-design",
+    "description": "Web and App implementation guide for Layered Design. Trigger when user wants multiple depth levels, floating panels, and overlapping content.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20296,6 +20934,28 @@
     }
   },
   {
+    "id": "material-design",
+    "path": "skills/design-it/material-design",
+    "category": "design-it",
+    "name": "material-design",
+    "description": "Web and App implementation guide for Material Design. Trigger when user wants Google's aesthetic, elevation, motion, and consistent components.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "mathguard",
     "path": "skills/mathguard",
     "category": "uncategorized",
@@ -20370,6 +21030,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "maximalism",
+    "path": "skills/design-it/maximalism",
+    "category": "design-it",
+    "name": "maximalism",
+    "description": "Web and App implementation guide for Controlled Maximalism. Trigger when user wants lots of elements, dense content, but a highly curated and artistic presentation.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20724,6 +21406,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "minimalism",
+    "path": "skills/design-it/minimalism",
+    "category": "design-it",
+    "name": "minimalism",
+    "description": "Web and App implementation guide for the Minimalism design style. Trigger when the user wants simple layouts, lots of whitespace, few colors, and clear hierarchy.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -21124,6 +21828,28 @@
     "risk": "none",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "monochromatic-ui",
+    "path": "skills/design-it/monochromatic-ui",
+    "category": "design-it",
+    "name": "monochromatic-ui",
+    "description": "Web and App implementation guide for Monochromatic UI. Trigger when user wants a single-color palette, high elegance, and strict color discipline.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -21732,6 +22458,28 @@
     }
   },
   {
+    "id": "neo-brutalism",
+    "path": "skills/design-it/neo-brutalism",
+    "category": "design-it",
+    "name": "neo-brutalism",
+    "description": "Web and App implementation guide for Neo-Brutalism. Trigger when user wants thick borders, hard shadows, bright colors, and a playful yet structured look.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "neon-postgres",
     "path": "skills/neon-postgres",
     "category": "database",
@@ -21872,6 +22620,28 @@
     "risk": "unknown",
     "source": "https://github.com/networkx/networkx",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "neumorphism",
+    "path": "skills/design-it/neumorphism",
+    "category": "design-it",
+    "name": "neumorphism",
+    "description": "Web and App implementation guide for Neumorphism (Soft UI). Trigger when user wants soft shadows, extruded appearance, and light source simulation.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26229,6 +26999,50 @@
     }
   },
   {
+    "id": "retro-design",
+    "path": "skills/design-it/retro-design",
+    "category": "design-it",
+    "name": "retro-design",
+    "description": "Web and App implementation guide for Retro Design (60s-80s). Trigger when user wants vintage aesthetics, warm muted colors, and nostalgic layouts.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "retro-futurism",
+    "path": "skills/design-it/retro-futurism",
+    "category": "design-it",
+    "name": "retro-futurism",
+    "description": "Web and App implementation guide for Retro Futurism. Trigger when user wants vintage future concepts, 1950s space age aesthetics, or atompunk vibes.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "returns-reverse-logistics",
     "path": "skills/returns-reverse-logistics",
     "category": "business",
@@ -27051,6 +27865,28 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-05-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "sci-fi-interface",
+    "path": "skills/design-it/sci-fi-interface",
+    "category": "design-it",
+    "name": "sci-fi-interface",
+    "description": "Web and App implementation guide for Sci-Fi Interface Design. Trigger when user wants HUDs, spacecraft dashboards, or tactical military readouts.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -28921,6 +29757,28 @@
     }
   },
   {
+    "id": "skeuomorphism",
+    "path": "skills/design-it/skeuomorphism",
+    "category": "design-it",
+    "name": "skeuomorphism",
+    "description": "Web and App implementation guide for Skeuomorphism. Trigger when user wants UI to mimic real-world objects, realistic textures, or physical metaphors.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "skill-audit",
     "path": "skills/skill-audit",
     "category": "security",
@@ -29639,6 +30497,28 @@
     }
   },
   {
+    "id": "soft-pastel",
+    "path": "skills/design-it/soft-pastel",
+    "category": "design-it",
+    "name": "soft-pastel",
+    "description": "Web and App implementation guide for Soft Pastel Design. Trigger when user wants gentle colors, calming UI, baby/lifestyle branding, or low-contrast aesthetics.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "software-architecture",
     "path": "skills/software-architecture",
     "category": "architecture",
@@ -29691,6 +30571,50 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "spatial-computing-ui",
+    "path": "skills/design-it/spatial-computing-ui",
+    "category": "design-it",
+    "name": "spatial-computing-ui",
+    "description": "Web and App implementation guide for Spatial Computing UI. Trigger when user wants floating elements, environmental awareness, and Apple Vision Pro style.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "spatial-design",
+    "path": "skills/design-it/spatial-design",
+    "category": "design-it",
+    "name": "spatial-design",
+    "description": "Web and App implementation guide for Spatial Design. Trigger when user wants environment-aware layouts, Apple Vision Pro inspiration, and mixed reality aesthetics.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -30653,6 +31577,28 @@
     }
   },
   {
+    "id": "swiss-design",
+    "path": "skills/design-it/swiss-design",
+    "category": "design-it",
+    "name": "swiss-design",
+    "description": "Web and App implementation guide for Swiss Design (International Typographic Style). Trigger when user wants strict grid systems, strong typography, and clean, asymmetrical alignment.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "sympy",
     "path": "skills/sympy",
     "category": "science",
@@ -30661,6 +31607,28 @@
     "risk": "unknown",
     "source": "https://github.com/sympy/sympy",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "synthwave",
+    "path": "skills/design-it/synthwave",
+    "category": "design-it",
+    "name": "synthwave",
+    "description": "Web and App implementation guide for Synthwave. Trigger when user wants 80s-inspired neon, dark backgrounds, outrun grids, and Miami Vice aesthetics.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31865,6 +32833,28 @@
     }
   },
   {
+    "id": "tile-design",
+    "path": "skills/design-it/tile-design",
+    "category": "design-it",
+    "name": "tile-design",
+    "description": "Web and App implementation guide for Tile Design. Trigger when user wants Microsoft Metro style, sharp square information units, and horizontal scrolling grids.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "tmux",
     "path": "skills/tmux",
     "category": "development",
@@ -32337,6 +33327,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "typography-first",
+    "path": "skills/design-it/typography-first",
+    "category": "design-it",
+    "name": "typography-first",
+    "description": "Web and App implementation guide for Typography First Design. Trigger when user wants text as the absolute main visual element, with minimal UI chroming.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33103,6 +34115,28 @@
     }
   },
   {
+    "id": "vaporwave",
+    "path": "skills/design-it/vaporwave",
+    "category": "design-it",
+    "name": "vaporwave",
+    "description": "Web and App implementation guide for Vaporwave. Trigger when user wants neon colors, retro digital aesthetics, 90s OS elements, and Roman statues.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "variant-analysis",
     "path": "skills/variant-analysis",
     "category": "uncategorized",
@@ -33509,6 +34543,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "vibrant-maximalism",
+    "path": "skills/design-it/vibrant-maximalism",
+    "category": "design-it",
+    "name": "vibrant-maximalism",
+    "description": "Web and App implementation guide for Vibrant Maximalism. Trigger when user wants rich colors, dense layouts, extreme sensory input, and \"more is more\".",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -34147,6 +35203,28 @@
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "widget-based-design",
+    "path": "skills/design-it/widget-based-design",
+    "category": "design-it",
+    "name": "widget-based-design",
+    "description": "Web and App implementation guide for Widget-Based Design. Trigger when user wants modular blocks, iOS Home Screen aesthetics, and customizable mini-apps.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -34809,6 +35887,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "y2k-design",
+    "path": "skills/design-it/y2k-design",
+    "category": "design-it",
+    "name": "y2k-design",
+    "description": "Web and App implementation guide for Y2K Design. Trigger when user wants chrome effects, futuristic 2000s look, blob shapes, and tech optimism.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-17",
     "plugin": {
       "targets": {
         "codex": "supported",

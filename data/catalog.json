@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1596,
+  "total": 1646,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1913,6 +1913,35 @@
         "material"
       ],
       "path": "skills/android-jetpack-compose-expert/SKILL.md"
+    },
+    {
+      "id": "android-ui-journey-testing",
+      "name": "android-ui-journey-testing",
+      "description": "XML-specified Android UI journey testing, interactive step execution, assertion verification, and JSON outcome reporting.",
+      "category": "development",
+      "tags": [
+        "android",
+        "journey-testing",
+        "ui-verification",
+        "testing",
+        "adb",
+        "automation"
+      ],
+      "triggers": [
+        "android",
+        "journey-testing",
+        "ui-verification",
+        "testing",
+        "adb",
+        "automation",
+        "ui",
+        "journey",
+        "xml",
+        "specified",
+        "interactive",
+        "step"
+      ],
+      "path": "skills/android-ui-journey-testing/SKILL.md"
     },
     {
       "id": "android_ui_verification",
@@ -12728,6 +12757,1214 @@
         "configurations"
       ],
       "path": "skills/deployment-validation-config-validate/SKILL.md"
+    },
+    {
+      "id": "design-it",
+      "name": "design-it",
+      "description": "Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic.",
+      "category": "development",
+      "tags": [
+        "design",
+        "ui",
+        "frontend"
+      ],
+      "triggers": [
+        "design",
+        "ui",
+        "frontend",
+        "routes",
+        "tasks",
+        "48",
+        "specific",
+        "styles",
+        "triggers",
+        "websites",
+        "app",
+        "screens"
+      ],
+      "path": "skills/design-it/SKILL.md"
+    },
+    {
+      "id": "design-it/3d-ui",
+      "name": "3d-ui",
+      "description": "Web and App implementation guide for 3D UI. Trigger when user wants actual 3D objects, perspective effects, and spatial depth.",
+      "category": "general",
+      "tags": [
+        "it/3d",
+        "ui"
+      ],
+      "triggers": [
+        "it/3d",
+        "ui",
+        "3d",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "actual",
+        "objects",
+        "perspective",
+        "effects"
+      ],
+      "path": "skills/design-it/3d-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/ai-native-ui",
+      "name": "ai-native-ui",
+      "description": "Web and App implementation guide for AI Native UI. Trigger when user wants conversational interfaces, adaptive layouts, and generative AI aesthetics.",
+      "category": "data-ai",
+      "tags": [
+        "it/ai",
+        "native",
+        "ui"
+      ],
+      "triggers": [
+        "it/ai",
+        "native",
+        "ui",
+        "ai",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "conversational",
+        "interfaces",
+        "adaptive"
+      ],
+      "path": "skills/design-it/ai-native-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/aurora-ui",
+      "name": "aurora-ui",
+      "description": "Web and App implementation guide for Aurora UI. Trigger when user wants gradient glows, color blobs, and atmospheric lighting effects.",
+      "category": "general",
+      "tags": [
+        "it/aurora",
+        "ui"
+      ],
+      "triggers": [
+        "it/aurora",
+        "ui",
+        "aurora",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "gradient",
+        "glows",
+        "color",
+        "blobs"
+      ],
+      "path": "skills/design-it/aurora-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/bento-ui",
+      "name": "bento-ui",
+      "description": "Web and App implementation guide for Bento UI. Trigger when user wants modular grid cards, Apple-like dashboard style, or sections arranged like a bento box.",
+      "category": "general",
+      "tags": [
+        "it/bento",
+        "ui"
+      ],
+      "triggers": [
+        "it/bento",
+        "ui",
+        "bento",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "modular",
+        "grid",
+        "cards",
+        "apple"
+      ],
+      "path": "skills/design-it/bento-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/brutalism",
+      "name": "brutalism",
+      "description": "Web and App implementation guide for Brutalism. Trigger when user wants a raw appearance, intentionally unfinished look, and rejection of standard design conventions.",
+      "category": "general",
+      "tags": [
+        "it/brutalism"
+      ],
+      "triggers": [
+        "it/brutalism",
+        "brutalism",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "raw",
+        "appearance",
+        "intentionally",
+        "unfinished",
+        "look"
+      ],
+      "path": "skills/design-it/brutalism/SKILL.md"
+    },
+    {
+      "id": "design-it/brutalist-typography",
+      "name": "brutalist-typography",
+      "description": "Web and App implementation guide for Brutalist Typography. Trigger when user wants huge fonts, raw presentation, and aggressive layout decisions.",
+      "category": "general",
+      "tags": [
+        "it/brutalist",
+        "typography"
+      ],
+      "triggers": [
+        "it/brutalist",
+        "typography",
+        "brutalist",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "huge",
+        "fonts",
+        "raw",
+        "presentation"
+      ],
+      "path": "skills/design-it/brutalist-typography/SKILL.md"
+    },
+    {
+      "id": "design-it/card-based-design",
+      "name": "card-based-design",
+      "description": "Web and App implementation guide for Card-Based Design. Trigger when user wants information cards, Pinterest-style layouts, and bite-sized content containers.",
+      "category": "general",
+      "tags": [
+        "it/card",
+        "based"
+      ],
+      "triggers": [
+        "it/card",
+        "based",
+        "card",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "information",
+        "cards",
+        "pinterest",
+        "style"
+      ],
+      "path": "skills/design-it/card-based-design/SKILL.md"
+    },
+    {
+      "id": "design-it/claymorphism",
+      "name": "claymorphism",
+      "description": "Web and App implementation guide for Claymorphism. Trigger when user wants soft 3D elements, rounded shapes, and a playful, tactile appearance.",
+      "category": "general",
+      "tags": [
+        "it/claymorphism"
+      ],
+      "triggers": [
+        "it/claymorphism",
+        "claymorphism",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "soft",
+        "3d",
+        "elements",
+        "rounded",
+        "shapes"
+      ],
+      "path": "skills/design-it/claymorphism/SKILL.md"
+    },
+    {
+      "id": "design-it/color-blocking",
+      "name": "color-blocking",
+      "description": "Web and App implementation guide for Color Blocking. Trigger when user wants large color sections, striking layout divisions, and Mondrian-style grids.",
+      "category": "general",
+      "tags": [
+        "it/color",
+        "blocking"
+      ],
+      "triggers": [
+        "it/color",
+        "blocking",
+        "color",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "large",
+        "sections",
+        "striking",
+        "layout"
+      ],
+      "path": "skills/design-it/color-blocking/SKILL.md"
+    },
+    {
+      "id": "design-it/command-center-ui",
+      "name": "command-center-ui",
+      "description": "Web and App implementation guide for Command Center UI. Trigger when user wants monitoring systems, enterprise dashboards, NOCs, and global maps.",
+      "category": "infrastructure",
+      "tags": [
+        "it/command",
+        "center",
+        "ui"
+      ],
+      "triggers": [
+        "it/command",
+        "center",
+        "ui",
+        "command",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "monitoring",
+        "enterprise",
+        "dashboards"
+      ],
+      "path": "skills/design-it/command-center-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/cyber-y2k",
+      "name": "cyber-y2k",
+      "description": "Web and App implementation guide for Cyber Y2K. Trigger when user wants modern Y2K, holographic visuals, and glitch aesthetics.",
+      "category": "general",
+      "tags": [
+        "it/cyber",
+        "y2k"
+      ],
+      "triggers": [
+        "it/cyber",
+        "y2k",
+        "cyber",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "holographic",
+        "visuals",
+        "glitch",
+        "aesthetics"
+      ],
+      "path": "skills/design-it/cyber-y2k/SKILL.md"
+    },
+    {
+      "id": "design-it/cyberpunk-ui",
+      "name": "cyberpunk-ui",
+      "description": "Web and App implementation guide for Cyberpunk UI. Trigger when user wants neon colors, dark backgrounds, high-tech dystopian aesthetics, and hacking interfaces.",
+      "category": "general",
+      "tags": [
+        "it/cyberpunk",
+        "ui"
+      ],
+      "triggers": [
+        "it/cyberpunk",
+        "ui",
+        "cyberpunk",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "neon",
+        "colors",
+        "dark",
+        "backgrounds"
+      ],
+      "path": "skills/design-it/cyberpunk-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/dark-mode",
+      "name": "dark-mode",
+      "description": "Web and App implementation guide for Dark Mode Design. Trigger when user wants dark surfaces, reduced eye strain, and premium sleek aesthetics.",
+      "category": "general",
+      "tags": [
+        "it/dark",
+        "mode"
+      ],
+      "triggers": [
+        "it/dark",
+        "mode",
+        "dark",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "surfaces",
+        "reduced",
+        "eye",
+        "strain"
+      ],
+      "path": "skills/design-it/dark-mode/SKILL.md"
+    },
+    {
+      "id": "design-it/dashboard-design",
+      "name": "dashboard-design",
+      "description": "Web and App implementation guide for Dashboard Design. Trigger when user wants analytics-focused layouts, data visualization, and modular overview screens.",
+      "category": "data-ai",
+      "tags": [
+        "it/dashboard"
+      ],
+      "triggers": [
+        "it/dashboard",
+        "dashboard",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "analytics",
+        "layouts",
+        "data",
+        "visualization",
+        "modular"
+      ],
+      "path": "skills/design-it/dashboard-design/SKILL.md"
+    },
+    {
+      "id": "design-it/data-dense-design",
+      "name": "data-dense-design",
+      "description": "Web and App implementation guide for Data-Dense Design. Trigger when user wants professional tools, maximum information density, and expert interfaces (like Bloomberg terminals or IDEs).",
+      "category": "data-ai",
+      "tags": [
+        "it/data",
+        "dense"
+      ],
+      "triggers": [
+        "it/data",
+        "dense",
+        "data",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "professional",
+        "maximum",
+        "information",
+        "density"
+      ],
+      "path": "skills/design-it/data-dense-design/SKILL.md"
+    },
+    {
+      "id": "design-it/duotone-design",
+      "name": "duotone-design",
+      "description": "Web and App implementation guide for Duotone Design. Trigger when user wants two-color schemes, striking imagery, and Spotify-like playlist aesthetics.",
+      "category": "general",
+      "tags": [
+        "it/duotone"
+      ],
+      "triggers": [
+        "it/duotone",
+        "duotone",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "two",
+        "color",
+        "schemes",
+        "striking",
+        "imagery"
+      ],
+      "path": "skills/design-it/duotone-design/SKILL.md"
+    },
+    {
+      "id": "design-it/editorial-design",
+      "name": "editorial-design",
+      "description": "Web and App implementation guide for Editorial Design. Trigger when user wants a magazine-inspired layout, large headlines, and elegant typography pairing.",
+      "category": "general",
+      "tags": [
+        "it/editorial"
+      ],
+      "triggers": [
+        "it/editorial",
+        "editorial",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "magazine",
+        "inspired",
+        "layout",
+        "large",
+        "headlines"
+      ],
+      "path": "skills/design-it/editorial-design/SKILL.md"
+    },
+    {
+      "id": "design-it/flat-design",
+      "name": "flat-design",
+      "description": "Web and App implementation guide for the Flat Design style. Trigger when the user wants no shadows, simple shapes, and bold colors.",
+      "category": "general",
+      "tags": [
+        "it/flat"
+      ],
+      "triggers": [
+        "it/flat",
+        "flat",
+        "web",
+        "app",
+        "style",
+        "trigger",
+        "user",
+        "wants",
+        "no",
+        "shadows",
+        "simple",
+        "shapes"
+      ],
+      "path": "skills/design-it/flat-design/SKILL.md"
+    },
+    {
+      "id": "design-it/flat-design-2",
+      "name": "flat-design-2",
+      "description": "Web and App implementation guide for Flat Design 2.0 (Semi-Flat). Trigger when the user wants flat design with subtle shadows and improved usability.",
+      "category": "general",
+      "tags": [
+        "it/flat",
+        "2"
+      ],
+      "triggers": [
+        "it/flat",
+        "2",
+        "flat",
+        "web",
+        "app",
+        "semi",
+        "trigger",
+        "user",
+        "wants",
+        "subtle",
+        "shadows",
+        "improved"
+      ],
+      "path": "skills/design-it/flat-design-2/SKILL.md"
+    },
+    {
+      "id": "design-it/floating-ui",
+      "name": "floating-ui",
+      "description": "Web and App implementation guide for Floating UI. Trigger when user wants detached cards, elevated components, and a light, airy feel.",
+      "category": "general",
+      "tags": [
+        "it/floating",
+        "ui"
+      ],
+      "triggers": [
+        "it/floating",
+        "ui",
+        "floating",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "detached",
+        "cards",
+        "elevated",
+        "components"
+      ],
+      "path": "skills/design-it/floating-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/frutiger-aero",
+      "name": "frutiger-aero",
+      "description": "Web and App implementation guide for Frutiger Aero. Trigger when user wants glossy gradients, early 2000s nature-inspired tech, glass, and water motifs.",
+      "category": "general",
+      "tags": [
+        "it/frutiger",
+        "aero"
+      ],
+      "triggers": [
+        "it/frutiger",
+        "aero",
+        "frutiger",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "glossy",
+        "gradients",
+        "early",
+        "2000s"
+      ],
+      "path": "skills/design-it/frutiger-aero/SKILL.md"
+    },
+    {
+      "id": "design-it/glassmorphism",
+      "name": "glassmorphism",
+      "description": "Web and App implementation guide for Glassmorphism. Trigger when user wants a frosted glass effect, blurred backgrounds, transparency, or a sleek MacOS-like feel.",
+      "category": "general",
+      "tags": [
+        "it/glassmorphism"
+      ],
+      "triggers": [
+        "it/glassmorphism",
+        "glassmorphism",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "frosted",
+        "glass",
+        "effect",
+        "blurred",
+        "backgrounds"
+      ],
+      "path": "skills/design-it/glassmorphism/SKILL.md"
+    },
+    {
+      "id": "design-it/gradient-design",
+      "name": "gradient-design",
+      "description": "Web and App implementation guide for Gradient Design. Trigger when user wants heavy gradient usage, vibrant transitions, and modern energetic feels.",
+      "category": "general",
+      "tags": [
+        "it/gradient"
+      ],
+      "triggers": [
+        "it/gradient",
+        "gradient",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "heavy",
+        "usage",
+        "vibrant",
+        "transitions",
+        "energetic"
+      ],
+      "path": "skills/design-it/gradient-design/SKILL.md"
+    },
+    {
+      "id": "design-it/high-contrast",
+      "name": "high-contrast",
+      "description": "Web and App implementation guide for High Contrast Design. Trigger when user wants accessibility-focused design, extreme legibility, or stark visual impact.",
+      "category": "general",
+      "tags": [
+        "it/high",
+        "contrast"
+      ],
+      "triggers": [
+        "it/high",
+        "contrast",
+        "high",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "accessibility",
+        "extreme",
+        "legibility",
+        "stark"
+      ],
+      "path": "skills/design-it/high-contrast/SKILL.md"
+    },
+    {
+      "id": "design-it/holographic-ui",
+      "name": "holographic-ui",
+      "description": "Web and App implementation guide for Holographic UI. Trigger when user wants light-based appearance, projected interfaces, and transparent floating elements.",
+      "category": "general",
+      "tags": [
+        "it/holographic",
+        "ui"
+      ],
+      "triggers": [
+        "it/holographic",
+        "ui",
+        "holographic",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "light",
+        "appearance",
+        "projected",
+        "interfaces"
+      ],
+      "path": "skills/design-it/holographic-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/isometric-design",
+      "name": "isometric-design",
+      "description": "Web and App implementation guide for Isometric Design. Trigger when user wants angled 3D appearances without vanishing points, often used for technical illustrations.",
+      "category": "general",
+      "tags": [
+        "it/isometric"
+      ],
+      "triggers": [
+        "it/isometric",
+        "isometric",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "angled",
+        "3d",
+        "appearances",
+        "without",
+        "vanishing"
+      ],
+      "path": "skills/design-it/isometric-design/SKILL.md"
+    },
+    {
+      "id": "design-it/layered-design",
+      "name": "layered-design",
+      "description": "Web and App implementation guide for Layered Design. Trigger when user wants multiple depth levels, floating panels, and overlapping content.",
+      "category": "general",
+      "tags": [
+        "it/layered"
+      ],
+      "triggers": [
+        "it/layered",
+        "layered",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "multiple",
+        "depth",
+        "levels",
+        "floating",
+        "panels"
+      ],
+      "path": "skills/design-it/layered-design/SKILL.md"
+    },
+    {
+      "id": "design-it/material-design",
+      "name": "material-design",
+      "description": "Web and App implementation guide for Material Design. Trigger when user wants Google's aesthetic, elevation, motion, and consistent components.",
+      "category": "general",
+      "tags": [
+        "it/material"
+      ],
+      "triggers": [
+        "it/material",
+        "material",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "google",
+        "aesthetic",
+        "elevation",
+        "motion",
+        "consistent"
+      ],
+      "path": "skills/design-it/material-design/SKILL.md"
+    },
+    {
+      "id": "design-it/maximalism",
+      "name": "maximalism",
+      "description": "Web and App implementation guide for Controlled Maximalism. Trigger when user wants lots of elements, dense content, but a highly curated and artistic presentation.",
+      "category": "general",
+      "tags": [
+        "it/maximalism"
+      ],
+      "triggers": [
+        "it/maximalism",
+        "maximalism",
+        "web",
+        "app",
+        "controlled",
+        "trigger",
+        "user",
+        "wants",
+        "lots",
+        "elements",
+        "dense",
+        "content"
+      ],
+      "path": "skills/design-it/maximalism/SKILL.md"
+    },
+    {
+      "id": "design-it/minimalism",
+      "name": "minimalism",
+      "description": "Web and App implementation guide for the Minimalism design style. Trigger when the user wants simple layouts, lots of whitespace, few colors, and clear hierarchy.",
+      "category": "general",
+      "tags": [
+        "it/minimalism"
+      ],
+      "triggers": [
+        "it/minimalism",
+        "minimalism",
+        "web",
+        "app",
+        "style",
+        "trigger",
+        "user",
+        "wants",
+        "simple",
+        "layouts",
+        "lots",
+        "whitespace"
+      ],
+      "path": "skills/design-it/minimalism/SKILL.md"
+    },
+    {
+      "id": "design-it/monochromatic-ui",
+      "name": "monochromatic-ui",
+      "description": "Web and App implementation guide for Monochromatic UI. Trigger when user wants a single-color palette, high elegance, and strict color discipline.",
+      "category": "general",
+      "tags": [
+        "it/monochromatic",
+        "ui"
+      ],
+      "triggers": [
+        "it/monochromatic",
+        "ui",
+        "monochromatic",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "single",
+        "color",
+        "palette",
+        "high"
+      ],
+      "path": "skills/design-it/monochromatic-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/neo-brutalism",
+      "name": "neo-brutalism",
+      "description": "Web and App implementation guide for Neo-Brutalism. Trigger when user wants thick borders, hard shadows, bright colors, and a playful yet structured look.",
+      "category": "general",
+      "tags": [
+        "it/neo",
+        "brutalism"
+      ],
+      "triggers": [
+        "it/neo",
+        "brutalism",
+        "neo",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "thick",
+        "borders",
+        "hard",
+        "shadows"
+      ],
+      "path": "skills/design-it/neo-brutalism/SKILL.md"
+    },
+    {
+      "id": "design-it/neumorphism",
+      "name": "neumorphism",
+      "description": "Web and App implementation guide for Neumorphism (Soft UI). Trigger when user wants soft shadows, extruded appearance, and light source simulation.",
+      "category": "general",
+      "tags": [
+        "it/neumorphism"
+      ],
+      "triggers": [
+        "it/neumorphism",
+        "neumorphism",
+        "web",
+        "app",
+        "soft",
+        "ui",
+        "trigger",
+        "user",
+        "wants",
+        "shadows",
+        "extruded",
+        "appearance"
+      ],
+      "path": "skills/design-it/neumorphism/SKILL.md"
+    },
+    {
+      "id": "design-it/retro-design",
+      "name": "retro-design",
+      "description": "Web and App implementation guide for Retro Design (60s-80s). Trigger when user wants vintage aesthetics, warm muted colors, and nostalgic layouts.",
+      "category": "general",
+      "tags": [
+        "it/retro"
+      ],
+      "triggers": [
+        "it/retro",
+        "retro",
+        "web",
+        "app",
+        "60s",
+        "80s",
+        "trigger",
+        "user",
+        "wants",
+        "vintage",
+        "aesthetics",
+        "warm"
+      ],
+      "path": "skills/design-it/retro-design/SKILL.md"
+    },
+    {
+      "id": "design-it/retro-futurism",
+      "name": "retro-futurism",
+      "description": "Web and App implementation guide for Retro Futurism. Trigger when user wants vintage future concepts, 1950s space age aesthetics, or atompunk vibes.",
+      "category": "general",
+      "tags": [
+        "it/retro",
+        "futurism"
+      ],
+      "triggers": [
+        "it/retro",
+        "futurism",
+        "retro",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "vintage",
+        "future",
+        "concepts",
+        "1950s"
+      ],
+      "path": "skills/design-it/retro-futurism/SKILL.md"
+    },
+    {
+      "id": "design-it/sci-fi-interface",
+      "name": "sci-fi-interface",
+      "description": "Web and App implementation guide for Sci-Fi Interface Design. Trigger when user wants HUDs, spacecraft dashboards, or tactical military readouts.",
+      "category": "general",
+      "tags": [
+        "it/sci",
+        "fi",
+        "interface"
+      ],
+      "triggers": [
+        "it/sci",
+        "fi",
+        "interface",
+        "sci",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "huds",
+        "spacecraft",
+        "dashboards"
+      ],
+      "path": "skills/design-it/sci-fi-interface/SKILL.md"
+    },
+    {
+      "id": "design-it/skeuomorphism",
+      "name": "skeuomorphism",
+      "description": "Web and App implementation guide for Skeuomorphism. Trigger when user wants UI to mimic real-world objects, realistic textures, or physical metaphors.",
+      "category": "general",
+      "tags": [
+        "it/skeuomorphism"
+      ],
+      "triggers": [
+        "it/skeuomorphism",
+        "skeuomorphism",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "ui",
+        "mimic",
+        "real",
+        "world",
+        "objects"
+      ],
+      "path": "skills/design-it/skeuomorphism/SKILL.md"
+    },
+    {
+      "id": "design-it/soft-pastel",
+      "name": "soft-pastel",
+      "description": "Web and App implementation guide for Soft Pastel Design. Trigger when user wants gentle colors, calming UI, baby/lifestyle branding, or low-contrast aesthetics.",
+      "category": "general",
+      "tags": [
+        "it/soft",
+        "pastel"
+      ],
+      "triggers": [
+        "it/soft",
+        "pastel",
+        "soft",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "gentle",
+        "colors",
+        "calming",
+        "ui"
+      ],
+      "path": "skills/design-it/soft-pastel/SKILL.md"
+    },
+    {
+      "id": "design-it/spatial-computing-ui",
+      "name": "spatial-computing-ui",
+      "description": "Web and App implementation guide for Spatial Computing UI. Trigger when user wants floating elements, environmental awareness, and Apple Vision Pro style.",
+      "category": "general",
+      "tags": [
+        "it/spatial",
+        "computing",
+        "ui"
+      ],
+      "triggers": [
+        "it/spatial",
+        "computing",
+        "ui",
+        "spatial",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "floating",
+        "elements",
+        "environmental"
+      ],
+      "path": "skills/design-it/spatial-computing-ui/SKILL.md"
+    },
+    {
+      "id": "design-it/spatial-design",
+      "name": "spatial-design",
+      "description": "Web and App implementation guide for Spatial Design. Trigger when user wants environment-aware layouts, Apple Vision Pro inspiration, and mixed reality aesthetics.",
+      "category": "general",
+      "tags": [
+        "it/spatial"
+      ],
+      "triggers": [
+        "it/spatial",
+        "spatial",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "environment",
+        "aware",
+        "layouts",
+        "apple",
+        "vision"
+      ],
+      "path": "skills/design-it/spatial-design/SKILL.md"
+    },
+    {
+      "id": "design-it/swiss-design",
+      "name": "swiss-design",
+      "description": "Web and App implementation guide for Swiss Design (International Typographic Style). Trigger when user wants strict grid systems, strong typography, and clean, asymmetrical alignment.",
+      "category": "general",
+      "tags": [
+        "it/swiss"
+      ],
+      "triggers": [
+        "it/swiss",
+        "swiss",
+        "web",
+        "app",
+        "international",
+        "typographic",
+        "style",
+        "trigger",
+        "user",
+        "wants",
+        "strict",
+        "grid"
+      ],
+      "path": "skills/design-it/swiss-design/SKILL.md"
+    },
+    {
+      "id": "design-it/synthwave",
+      "name": "synthwave",
+      "description": "Web and App implementation guide for Synthwave. Trigger when user wants 80s-inspired neon, dark backgrounds, outrun grids, and Miami Vice aesthetics.",
+      "category": "general",
+      "tags": [
+        "it/synthwave"
+      ],
+      "triggers": [
+        "it/synthwave",
+        "synthwave",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "80s",
+        "inspired",
+        "neon",
+        "dark",
+        "backgrounds"
+      ],
+      "path": "skills/design-it/synthwave/SKILL.md"
+    },
+    {
+      "id": "design-it/tile-design",
+      "name": "tile-design",
+      "description": "Web and App implementation guide for Tile Design. Trigger when user wants Microsoft Metro style, sharp square information units, and horizontal scrolling grids.",
+      "category": "general",
+      "tags": [
+        "it/tile"
+      ],
+      "triggers": [
+        "it/tile",
+        "tile",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "microsoft",
+        "metro",
+        "style",
+        "sharp",
+        "square"
+      ],
+      "path": "skills/design-it/tile-design/SKILL.md"
+    },
+    {
+      "id": "design-it/typography-first",
+      "name": "typography-first",
+      "description": "Web and App implementation guide for Typography First Design. Trigger when user wants text as the absolute main visual element, with minimal UI chroming.",
+      "category": "general",
+      "tags": [
+        "it/typography",
+        "first"
+      ],
+      "triggers": [
+        "it/typography",
+        "first",
+        "typography",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "text",
+        "absolute",
+        "main",
+        "visual"
+      ],
+      "path": "skills/design-it/typography-first/SKILL.md"
+    },
+    {
+      "id": "design-it/vaporwave",
+      "name": "vaporwave",
+      "description": "Web and App implementation guide for Vaporwave. Trigger when user wants neon colors, retro digital aesthetics, 90s OS elements, and Roman statues.",
+      "category": "general",
+      "tags": [
+        "it/vaporwave"
+      ],
+      "triggers": [
+        "it/vaporwave",
+        "vaporwave",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "neon",
+        "colors",
+        "retro",
+        "digital",
+        "aesthetics"
+      ],
+      "path": "skills/design-it/vaporwave/SKILL.md"
+    },
+    {
+      "id": "design-it/vibrant-maximalism",
+      "name": "vibrant-maximalism",
+      "description": "Web and App implementation guide for Vibrant Maximalism. Trigger when user wants rich colors, dense layouts, extreme sensory input, and \"more is more\".",
+      "category": "general",
+      "tags": [
+        "it/vibrant",
+        "maximalism"
+      ],
+      "triggers": [
+        "it/vibrant",
+        "maximalism",
+        "vibrant",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "rich",
+        "colors",
+        "dense",
+        "layouts"
+      ],
+      "path": "skills/design-it/vibrant-maximalism/SKILL.md"
+    },
+    {
+      "id": "design-it/widget-based-design",
+      "name": "widget-based-design",
+      "description": "Web and App implementation guide for Widget-Based Design. Trigger when user wants modular blocks, iOS Home Screen aesthetics, and customizable mini-apps.",
+      "category": "development",
+      "tags": [
+        "it/widget",
+        "based"
+      ],
+      "triggers": [
+        "it/widget",
+        "based",
+        "widget",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "modular",
+        "blocks",
+        "ios",
+        "home"
+      ],
+      "path": "skills/design-it/widget-based-design/SKILL.md"
+    },
+    {
+      "id": "design-it/y2k-design",
+      "name": "y2k-design",
+      "description": "Web and App implementation guide for Y2K Design. Trigger when user wants chrome effects, futuristic 2000s look, blob shapes, and tech optimism.",
+      "category": "general",
+      "tags": [
+        "it/y2k"
+      ],
+      "triggers": [
+        "it/y2k",
+        "y2k",
+        "web",
+        "app",
+        "trigger",
+        "user",
+        "wants",
+        "chrome",
+        "effects",
+        "futuristic",
+        "2000s",
+        "look"
+      ],
+      "path": "skills/design-it/y2k-design/SKILL.md"
     },
     {
       "id": "design-md",
