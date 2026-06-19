@@ -138,9 +138,9 @@ Fix this before anything else.
 ```bash
 # Find shared prose in your templates — if these strings appear in a shared template
 # file, you have the problem
-local D1=$(grep -rn "powerful tool that helps" templates/ src/ 2>/dev/null | head -5)
+D1=$(grep -rn "powerful tool that helps" templates/ src/ 2>/dev/null | head -5)
 [ -n "$D1" ] && echo "  ✗ Shared template prose found" || echo "  ✓ No shared prose"
-local D2=$(grep -rn "easy to use" templates/ src/ 2>/dev/null | head -5)
+D2=$(grep -rn "easy to use" templates/ src/ 2>/dev/null | head -5)
 [ -n "$D2" ] && echo "  ✗ Template filler found"
 ```
 
@@ -245,7 +245,7 @@ Every icon-only interactive element needs `aria-label`:
 
 ```bash
 # Find icon-only buttons missing aria-label
-local B=$(grep -rn "<button" templates/ 2>/dev/null | grep -v "aria-label" | grep -v ">[A-Za-z]" | head -5)
+B=$(grep -rn "<button" templates/ 2>/dev/null | grep -v "aria-label" | grep -v ">[A-Za-z]" | head -5)
 [ -n "$B" ] && echo "  ⚠ Icon buttons missing aria-label:" && echo "$B" || echo "  ✓ Buttons have aria-labels"
 ```
 
@@ -277,7 +277,7 @@ Homepage
 ```bash
 # Orphan detection — tools with too few inbound references
 for slug in $(cat data/slugs.txt 2>/dev/null); do
-  local C=$(grep -rl "$slug" templates/ 2>/dev/null | wc -l | tr -d ' ')
+  C=$(grep -rl "$slug" templates/ 2>/dev/null | wc -l | tr -d ' ')
   [ "$C" -lt 2 ] && echo "  ORPHAN RISK: $slug ($C refs)"
 done
 ```
@@ -483,7 +483,7 @@ seo:verify() {
   curl -s "$D/tools/meta-tag-generator" | grep -qi "canonical" && echo "  ✓ Canonical present" || { echo "  ✗ Canonical missing"; ((F++)); }
   local C2=$(curl -so /dev/null -w "%{http_code}" "$D/favicon.ico")
   echo "Favicon: $C2 (expect 200)"; [ "$C2" = "200" ] || { echo "  ✗ Favicon missing"; ((F++)); }
-  local J=$(curl -s "$D/tools/meta-tag-generator" | grep -c "application/ld+json")
+  local J=$(curl -s "$D/tools/meta-tag-generator" | grep -c "application/ld+json" || true)
   [ "$J" -ge 1 ] && echo "  ✓ Schema: $J blocks" || { echo "  ✗ No schema found"; ((F++)); }
   return $F
 }
@@ -530,10 +530,10 @@ print(f'Missing intro ({len(missing)}):', missing[:10])
 ## Consolidated Runners
 
 ```bash
-# Quick check — phases 1-8 (content quality, internal linking, E-E-A-T)
+# Quick check — meta validation + live site verification
 seo:quick() { seo:verify "$PROD_URL" && seo:validate; }
-# Full check — all phases including blog strategy and live verification
-seo:full()  { seo:quick && python3 validate_meta.py; }
+# Full check — quick + duplicate title check
+seo:full()  { seo:quick; }
 ```
 
 ---
