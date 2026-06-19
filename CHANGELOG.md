@@ -9,6 +9,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.9.0] - 2026-06-19 - "Design Skills and Registry Quality Tools"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 19 maintainer batch: 51 new canonical skills, a production QA skill rewrite, optional registry quality tooling, generated catalog sync, and the hosted catalog refreshed to 1,646+ skills.
+
+## New Skills
+
+- **design-it** - a large design-direction suite covering 3D UI, AI-native UI, aurora UI, bento layouts, brutalism, cyberpunk, dashboards, data-dense interfaces, editorial design, glassmorphism, gradients, material design, minimalism, neumorphism, retro styles, spatial UI, Swiss design, typography-first design, vaporwave, Y2K, and related visual systems (PR #717).
+- **android-ui-journey-testing** - Android UI journey testing workflow for validating navigation, state, screenshots, and mobile flows (PR #721).
+- **tools-page-seo-optimizer** - 11-phase SEO workflow for tool and feature pages, including positioning, keyword targeting, metadata, schema, internal links, and launch checks (PR #722).
+
+## Skill Fixes
+
+- Reworked **vibecode-production-qa-validator** into a 13-phase conditional production QA workflow for fullstack Next.js apps, covering build verification, SEO tags, OG images, favicon checks, API auth, performance, database state, cleanup, and launch readiness (PR #719).
+
+## Maintainer Tooling
+
+- Added optional Python registry quality tooling for skill scoring, security scanning, drift detection, and consolidated registry reports, with schema docs and tests (PR #718).
+- Added scripts for `score:skills`, `security:scan`, `drift:check`, `drift:update`, and `registry:report` without changing the normal PR merge gates.
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, contributor data, and release metadata for the 1,646+ skill catalog.
+- Removed an unimported README-only NotFair source entry so community/source credits continue to represent repositories actually imported, mirrored, or used by this repo.
+- Verified the release preflight path, including reference validation, repo-state sync, tests, web-app install/build, and npm package dry-run.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #717 (`design-it` suite).
+- **[@GeekLuffy](https://github.com/GeekLuffy)** for PR #721 (`android-ui-journey-testing`).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #722 (`tools-page-seo-optimizer`) and PR #719 (`vibecode-production-qa-validator` rewrite).
+- **[@fkauanGIT](https://github.com/fkauanGIT)** for PR #718 (registry quality tooling).
+
 ## [12.8.0] - 2026-06-17 - "Community Skills and Maintainer Fixes"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
