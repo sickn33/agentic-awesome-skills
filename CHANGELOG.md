@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [12.10.0] - 2026-06-19 - "Bug Hunting and Mailtrap Email Skills"
+## [12.10.0] - 2026-06-19 - "External Skill Imports and Email Workflows"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
 
@@ -21,25 +21,33 @@ Start here:
 - Bundles: [docs/users/bundles.md](docs/users/bundles.md)
 - Workflows: [docs/users/workflows.md](docs/users/workflows.md)
 
-This release packages the June 19 follow-up maintainer batch: five new community skills, generated registry sync, and refreshed hosted-catalog SEO metadata for the 1,678+ skill catalog.
+This release packages the June 19 follow-up maintainer batch: 32 new skills from manual external imports and community PRs, generated registry sync, and refreshed hosted-catalog SEO metadata for the 1,678+ skill catalog.
 
 ## New Skills
 
 - **bugs-are-annoying** - aggressive bug-hunting workflow for logic errors, edge cases, null safety, security flaws, and prioritized `bugs.md` reports (PR #724).
-- **mailtrap-sending-emails** - Mailtrap Email API and SMTP sending workflow for transactional email delivery (PR #725).
-- **mailtrap-testing-with-sandbox** - Mailtrap Sandbox workflow for safe dev and staging email capture (PR #725).
-- **mailtrap-setting-up-sending-domain** - Mailtrap sending-domain setup workflow covering DNS, SPF, DKIM, DMARC, and verification (PR #725).
-- **mailtrap-managing-contacts** - Mailtrap contacts, lists, and segments workflow for contact-management operations (PR #725).
+- **Browserbase competitor analysis** - added **competitor-analysis** from `browserbase/skills` for Browserbase-backed competitor discovery, enrichment lanes, screenshots, matrices, and HTML reports.
+- **DAIR Academy skills** - imported `dair-ai/dair-academy-plugins` as standalone skills instead of plugins: **image-generator**, **learn**, **lesson-generator**, **llm-council**, **survey-generator**, **wiki-builder**, and **youtube-notetaker**.
+- **Loop Library** - added **loop-library** from `Forward-Future/loop-library` for finding, adapting, and designing bounded AI-agent feedback loops with checks, stop rules, guardrails, and handoffs.
+- **Mailtrap email skill suite** - added **mailtrap-sending-emails**, **mailtrap-testing-with-sandbox**, **mailtrap-setting-up-sending-domain**, and **mailtrap-managing-contacts** for sending, sandbox testing, DNS/domain setup, and contact operations (PR #725).
+- **Matt Pocock workflow suite** - imported 17 workflow skills from `mattpocock/skills`: **ask-matt**, **codebase-design**, **diagnosing-bugs**, **domain-modeling**, **grill-me**, **grill-with-docs**, **grilling**, **handoff**, **improve-codebase-architecture**, **prototype**, **setup-matt-pocock-skills**, **tdd**, **teach**, **to-issues**, **to-prd**, **triage**, and **writing-great-skills**.
+- **Yao Meta Skill** - added **yao-meta-skill** from `yaojingang/yao-meta-skill` for governed skill creation, refactoring, evaluation, packaging, review, and distribution workflows.
 
 ## Maintainer Sync
 
 - Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, contributor data, and release metadata for the 1,678+ skill catalog.
 - Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current catalog count and release metadata.
+- Added README source credits for the official/community external imports from Browserbase, DAIR Academy, Forward Future, Matt Pocock, and Yao Jingang.
 
 ## Credits
 
 - **[@Prince-1652](https://github.com/Prince-1652)** for PR #724 (`bugs-are-annoying`).
 - **[@dieudonneAwa](https://github.com/dieudonneAwa)** for PR #725 (Mailtrap email skill suite).
+- **[Browserbase](https://github.com/browserbase/skills)** for the upstream `competitor-analysis` skill.
+- **[DAIR.AI](https://github.com/dair-ai/dair-academy-plugins)** for the upstream DAIR Academy skill workflows.
+- **[Forward Future](https://github.com/Forward-Future/loop-library)** for the upstream Loop Library skill.
+- **[Matt Pocock](https://github.com/mattpocock/skills)** for the upstream workflow skill suite.
+- **[Yao Jingang](https://github.com/yaojingang/yao-meta-skill)** for the upstream `yao-meta-skill` workflow.
 
 ## [12.9.0] - 2026-06-19 - "Design Skills and Registry Quality Tools"
 
