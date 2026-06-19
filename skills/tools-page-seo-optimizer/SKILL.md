@@ -2,7 +2,7 @@
 name: tools-page-seo-optimizer
 description: "Framework-agnostic SEO workflow for any site with multiple tool, product, or feature pages. Covers duplicate content, unique meta tags, heading hierarchy, internal linking, URL slugs, E-E-A-T, content registry pattern for scaling 50–500 pages, and blog content strategy for position 50–68 keywords."
 category: seo
-risk: medium
+risk: safe
 source: community
 source_type: community
 author: whoisabhishekadhikari
