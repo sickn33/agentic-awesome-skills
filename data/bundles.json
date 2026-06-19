@@ -415,6 +415,7 @@
         "backend-security-coder",
         "bdistill-behavioral-xray",
         "broken-authentication",
+        "bugs-are-annoying",
         "bumblebee",
         "burp-suite-testing",
         "burpsuite-project-parser",

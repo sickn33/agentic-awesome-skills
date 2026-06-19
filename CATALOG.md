@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1673
+Total skills: 1674
 
 ## architecture (104)
 
@@ -1370,7 +1370,7 @@ Total skills: 1673
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (187)
+## security (188)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1404,6 +1404,7 @@ Total skills: 1673
 | `backend-security-coder` | Expert in secure backend coding practices specializing in input validation, authentication, and API security. Use PROACTIVELY for backend security implementa... | backend, security, coder | backend, security, coder, secure, coding, specializing, input, validation, authentication, api, proactively, implementations |
 | `bdistill-behavioral-xray` | X-ray any AI model's behavioral patterns — refusal boundaries, hallucination tendencies, reasoning style, formatting defaults. No API key needed. | ai, testing, behavioral-analysis, model-evaluation, red-team, compliance, mcp | ai, testing, behavioral-analysis, model-evaluation, red-team, compliance, mcp, bdistill, behavioral, xray, ray, any |
 | `broken-authentication` | Identify and exploit authentication and session management vulnerabilities in web applications. Broken authentication consistently ranks in the OWASP Top 10 ... | broken, authentication | broken, authentication, identify, exploit, session, vulnerabilities, web, applications, consistently, ranks, owasp, top |
+| `bugs-are-annoying` | Adversarial code auditor that hunts down bugs, logic errors, and security flaws. Use for deep correctness passes, not style reviews. | bugs, are, annoying | bugs, are, annoying, adversarial, code, auditor, hunts, down, logic, errors, security, flaws |
 | `bumblebee` | Run Bumblebee supply-chain inventory and exposure scans on macOS/Linux to detect compromised packages, extensions, and MCP host configs. | security, supply-chain, incident-response, npm, pypi, tooling | security, supply-chain, incident-response, npm, pypi, tooling, bumblebee, run, supply, chain, inventory, exposure |
 | `burp-suite-testing` | Execute comprehensive web application security testing using Burp Suite's integrated toolset, including HTTP traffic interception and modification, request a... | burp, suite | burp, suite, testing, execute, web, application, security, integrated, toolset, including, http, traffic |
 | `burpsuite-project-parser` | Searches and explores Burp Suite project files (.burp) from the command line. Use when searching response headers or bodies with regex patterns, extracting s... | burpsuite, parser | burpsuite, parser, searches, explores, burp, suite, files, command, line, searching, response, headers |

@@ -6035,6 +6035,25 @@
       "runtime_files": []
     },
     {
+      "id": "bugs-are-annoying",
+      "path": "skills/bugs-are-annoying",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "build",
       "path": "skills/build",
       "targets": {
@@ -32083,10 +32102,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1673,
+    "total_skills": 1674,
     "supported": {
-      "codex": 1621,
-      "claude": 1639
+      "codex": 1622,
+      "claude": 1640
     },
     "blocked": {
       "codex": 52,

@@ -7088,6 +7088,28 @@
     }
   },
   {
+    "id": "bugs-are-annoying",
+    "path": "skills/bugs-are-annoying",
+    "category": "uncategorized",
+    "name": "bugs-are-annoying",
+    "description": "Adversarial code auditor that hunts down bugs, logic errors, and security flaws. Use for deep correctness passes, not style reviews.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "build",
     "path": "skills/build",
     "category": "workflow",
