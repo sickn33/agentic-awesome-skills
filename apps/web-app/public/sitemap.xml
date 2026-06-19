@@ -13,6 +13,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>http://localhost/skill/loop-library</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>http://localhost/skill/tools-page-seo-optimizer</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -242,12 +248,6 @@
   </url>
   <url>
     <loc>http://localhost/skill/sci-fi-interface</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>http://localhost/skill/skeuomorphism</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

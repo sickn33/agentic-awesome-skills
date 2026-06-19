@@ -20160,6 +20160,28 @@
     }
   },
   {
+    "id": "loop-library",
+    "path": "skills/loop-library",
+    "category": "ai-agents",
+    "name": "loop-library",
+    "description": "Find, compare, adapt, and design bounded AI-agent feedback loops with explicit checks, stop rules, guardrails, and handoffs.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "loss-aversion-designer",
     "path": "skills/loss-aversion-designer",
     "category": "uncategorized",
