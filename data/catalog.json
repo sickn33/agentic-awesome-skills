@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1646,
+  "total": 1673,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3193,6 +3193,32 @@
         "always"
       ],
       "path": "skills/asana-automation/SKILL.md"
+    },
+    {
+      "id": "ask-matt",
+      "name": "ask-matt",
+      "description": "Ask which skill or flow fits your situation. A router over the user-invoked skills in this repo.",
+      "category": "workflow",
+      "tags": [
+        "productivity",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "productivity",
+        "workflow",
+        "coding-agents",
+        "ask",
+        "matt",
+        "which",
+        "skill",
+        "flow",
+        "fits",
+        "situation",
+        "router",
+        "user"
+      ],
+      "path": "skills/ask-matt/SKILL.md"
     },
     {
       "id": "ask-questions-if-underspecified",
@@ -9892,6 +9918,32 @@
       "path": "skills/codebase-cleanup-tech-debt/SKILL.md"
     },
     {
+      "id": "codebase-design",
+      "name": "codebase-design",
+      "description": "Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.",
+      "category": "data-ai",
+      "tags": [
+        "architecture",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "architecture",
+        "workflow",
+        "coding-agents",
+        "codebase",
+        "shared",
+        "vocabulary",
+        "designing",
+        "deep",
+        "modules",
+        "user",
+        "wants",
+        "improve"
+      ],
+      "path": "skills/codebase-design/SKILL.md"
+    },
+    {
       "id": "codebase-to-wordpress-converter",
       "name": "codebase-to-wordpress-converter",
       "description": "Expert skill for converting any codebase (React/HTML/Next.js) into a pixel-perfect, SEO-optimized, and dynamic WordPress theme.",
@@ -10095,6 +10147,33 @@
         "provide"
       ],
       "path": "skills/competitor-alternatives/SKILL.md"
+    },
+    {
+      "id": "competitor-analysis",
+      "name": "competitor-analysis",
+      "description": "Research competitors with Browserbase discovery, enrichment lanes, screenshots, matrices, and HTML reports.",
+      "category": "general",
+      "tags": [
+        "competitor-analysis",
+        "browserbase",
+        "market-research",
+        "browser-automation"
+      ],
+      "triggers": [
+        "competitor-analysis",
+        "browserbase",
+        "market-research",
+        "browser-automation",
+        "competitor",
+        "analysis",
+        "research",
+        "competitors",
+        "discovery",
+        "enrichment",
+        "lanes",
+        "screenshots"
+      ],
+      "path": "skills/competitor-analysis/SKILL.md"
     },
     {
       "id": "complexity-cuts",
@@ -14181,6 +14260,32 @@
       "path": "skills/devops-troubleshooter/SKILL.md"
     },
     {
+      "id": "diagnosing-bugs",
+      "name": "diagnosing-bugs",
+      "description": "Diagnosis loop for hard bugs and performance regressions. Use when the user says \"diagnose\"/\"debug this\", or reports something broken/throwing/failing/slow.",
+      "category": "workflow",
+      "tags": [
+        "engineering",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "engineering",
+        "workflow",
+        "coding-agents",
+        "diagnosing",
+        "bugs",
+        "diagnosis",
+        "loop",
+        "hard",
+        "performance",
+        "regressions",
+        "user",
+        "says"
+      ],
+      "path": "skills/diagnosing-bugs/SKILL.md"
+    },
+    {
       "id": "diary",
       "name": "diary",
       "description": "Unified Diary System: A context-preserving automated logger for multi-project development.",
@@ -14652,6 +14757,32 @@
         "evented"
       ],
       "path": "skills/domain-driven-design/SKILL.md"
+    },
+    {
+      "id": "domain-modeling",
+      "name": "domain-modeling",
+      "description": "Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to maintain the domain model.",
+      "category": "architecture",
+      "tags": [
+        "architecture",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "architecture",
+        "workflow",
+        "coding-agents",
+        "domain",
+        "modeling",
+        "sharpen",
+        "model",
+        "user",
+        "wants",
+        "pin",
+        "down",
+        "terminology"
+      ],
+      "path": "skills/domain-modeling/SKILL.md"
     },
     {
       "id": "dos-verify-done-claims",
@@ -19030,6 +19161,81 @@
       "path": "skills/graphql-architect/SKILL.md"
     },
     {
+      "id": "grill-me",
+      "name": "grill-me",
+      "description": "A relentless interview to sharpen a plan or design.",
+      "category": "workflow",
+      "tags": [
+        "productivity",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "productivity",
+        "workflow",
+        "coding-agents",
+        "grill",
+        "me",
+        "relentless",
+        "interview",
+        "sharpen",
+        "plan"
+      ],
+      "path": "skills/grill-me/SKILL.md"
+    },
+    {
+      "id": "grill-with-docs",
+      "name": "grill-with-docs",
+      "description": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+      "category": "development",
+      "tags": [
+        "productivity",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "productivity",
+        "workflow",
+        "coding-agents",
+        "grill",
+        "docs",
+        "relentless",
+        "interview",
+        "sharpen",
+        "plan",
+        "which",
+        "creates",
+        "adr"
+      ],
+      "path": "skills/grill-with-docs/SKILL.md"
+    },
+    {
+      "id": "grilling",
+      "name": "grilling",
+      "description": "Interview the user relentlessly about a plan or design. Use when the user wants to stress-test a plan before building, or uses any 'grill' trigger phrases.",
+      "category": "testing",
+      "tags": [
+        "productivity",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "productivity",
+        "workflow",
+        "coding-agents",
+        "grilling",
+        "interview",
+        "user",
+        "relentlessly",
+        "about",
+        "plan",
+        "wants",
+        "stress",
+        "test"
+      ],
+      "path": "skills/grilling/SKILL.md"
+    },
+    {
       "id": "growth-engine",
       "name": "growth-engine",
       "description": "Motor de crescimento para produtos digitais -- growth hacking, SEO, ASO, viral loops, email marketing, CRM, referral programs e aquisicao organica.",
@@ -19081,6 +19287,32 @@
         "secure"
       ],
       "path": "skills/grpc-golang/SKILL.md"
+    },
+    {
+      "id": "handoff",
+      "name": "handoff",
+      "description": "Compact the current conversation into a handoff document for another agent to pick up.",
+      "category": "workflow",
+      "tags": [
+        "productivity",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "productivity",
+        "workflow",
+        "coding-agents",
+        "handoff",
+        "compact",
+        "current",
+        "conversation",
+        "document",
+        "another",
+        "agent",
+        "pick",
+        "up"
+      ],
+      "path": "skills/handoff/SKILL.md"
     },
     {
       "id": "hasdata",
@@ -20477,6 +20709,32 @@
       "path": "skills/ilya-sutskever/SKILL.md"
     },
     {
+      "id": "image-generator",
+      "name": "image-generator",
+      "description": "Generate and edit images using Gemini's Nano Banana Pro model (gemini-3-pro-image-preview). Use this skill when the user asks you to generate images, create visuals, edit photos, create logos, generate product mockups, or perform any image generation/editing task.",
+      "category": "data-ai",
+      "tags": [
+        "dair-academy",
+        "ai",
+        "workflow"
+      ],
+      "triggers": [
+        "dair-academy",
+        "ai",
+        "workflow",
+        "image",
+        "generator",
+        "generate",
+        "edit",
+        "images",
+        "gemini",
+        "nano",
+        "banana",
+        "pro"
+      ],
+      "path": "skills/image-generator/SKILL.md"
+    },
+    {
       "id": "image-studio",
       "name": "image-studio",
       "description": "Studio de geracao de imagens inteligente — roteamento automatico entre ai-studio-image (fotos humanizadas/influencer) e stability-ai (arte/ ilustracao/edicao). Detecta o tipo de imagem solicitada e escolhe o modelo ideal automaticamente.",
@@ -20526,6 +20784,32 @@
         "content"
       ],
       "path": "skills/imagen/SKILL.md"
+    },
+    {
+      "id": "improve-codebase-architecture",
+      "name": "improve-codebase-architecture",
+      "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+      "category": "architecture",
+      "tags": [
+        "engineering",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "engineering",
+        "workflow",
+        "coding-agents",
+        "improve",
+        "codebase",
+        "architecture",
+        "scan",
+        "deepening",
+        "opportunities",
+        "present",
+        "them",
+        "visual"
+      ],
+      "path": "skills/improve-codebase-architecture/SKILL.md"
     },
     {
       "id": "incident-responder",
@@ -22081,6 +22365,32 @@
       "path": "skills/lead-magnets/SKILL.md"
     },
     {
+      "id": "learn",
+      "name": "learn",
+      "description": "Help a user learn a topic through adaptive tutoring, lesson planning, practice, retrieval checks, explanations, study guides, or exercises. Use when the user asks to learn, understand, practice, drill, review, study, or be tutored on something.",
+      "category": "education",
+      "tags": [
+        "dair-academy",
+        "ai",
+        "workflow"
+      ],
+      "triggers": [
+        "dair-academy",
+        "ai",
+        "workflow",
+        "learn",
+        "user",
+        "topic",
+        "through",
+        "adaptive",
+        "tutoring",
+        "lesson",
+        "planning",
+        "retrieval"
+      ],
+      "path": "skills/learn/SKILL.md"
+    },
+    {
       "id": "legacy-modernizer",
       "name": "legacy-modernizer",
       "description": "Refactor legacy codebases, migrate outdated frameworks, and implement gradual modernization. Handles technical debt, dependency updates, and backward compatibility.",
@@ -22320,6 +22630,32 @@
         "big"
       ],
       "path": "skills/lemmaly/SKILL.md"
+    },
+    {
+      "id": "lesson-generator",
+      "name": "lesson-generator",
+      "description": "Build compact, standalone multi-lesson course artifacts with lesson navigation, objectives, flashcards, quizzes, and source links.",
+      "category": "data-ai",
+      "tags": [
+        "dair-academy",
+        "ai",
+        "workflow"
+      ],
+      "triggers": [
+        "dair-academy",
+        "ai",
+        "workflow",
+        "lesson",
+        "generator",
+        "compact",
+        "standalone",
+        "multi",
+        "course",
+        "artifacts",
+        "navigation",
+        "objectives"
+      ],
+      "path": "skills/lesson-generator/SKILL.md"
     },
     {
       "id": "lex",
@@ -22918,6 +23254,32 @@
       "path": "skills/llm-application-dev-prompt-optimize/SKILL.md"
     },
     {
+      "id": "llm-council",
+      "name": "llm-council",
+      "description": "Run Fireworks-hosted open-weight model councils that compare responses and synthesize a final answer.",
+      "category": "data-ai",
+      "tags": [
+        "dair-academy",
+        "ai",
+        "workflow"
+      ],
+      "triggers": [
+        "dair-academy",
+        "ai",
+        "workflow",
+        "llm",
+        "council",
+        "run",
+        "fireworks",
+        "hosted",
+        "open",
+        "weight",
+        "model",
+        "councils"
+      ],
+      "path": "skills/llm-council/SKILL.md"
+    },
+    {
       "id": "llm-evaluation",
       "name": "llm-evaluation",
       "description": "Master comprehensive evaluation strategies for LLM applications, from automated metrics to human evaluation and A/B testing.",
@@ -23232,6 +23594,34 @@
         "model"
       ],
       "path": "skills/lookdev-auto/SKILL.md"
+    },
+    {
+      "id": "loop-library",
+      "name": "loop-library",
+      "description": "Find, compare, adapt, and design bounded AI-agent feedback loops with explicit checks, stop rules, guardrails, and handoffs.",
+      "category": "data-ai",
+      "tags": [
+        "ai-agents",
+        "workflows",
+        "loops",
+        "automation",
+        "evaluation"
+      ],
+      "triggers": [
+        "ai-agents",
+        "workflows",
+        "loops",
+        "automation",
+        "evaluation",
+        "loop",
+        "library",
+        "find",
+        "compare",
+        "adapt",
+        "bounded",
+        "ai"
+      ],
+      "path": "skills/loop-library/SKILL.md"
     },
     {
       "id": "loss-aversion-designer",
@@ -29397,6 +29787,32 @@
       "path": "skills/protocol-reverse-engineering/SKILL.md"
     },
     {
+      "id": "prototype",
+      "name": "prototype",
+      "description": "Build a throwaway prototype to flesh out a design — a runnable terminal app for state/business-logic questions, or several radically different UI variations toggleable from one route.",
+      "category": "business",
+      "tags": [
+        "engineering",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "engineering",
+        "workflow",
+        "coding-agents",
+        "prototype",
+        "throwaway",
+        "flesh",
+        "runnable",
+        "terminal",
+        "app",
+        "state",
+        "business",
+        "logic"
+      ],
+      "path": "skills/prototype/SKILL.md"
+    },
+    {
       "id": "pubmed-database",
       "name": "pubmed-database",
       "description": "Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopython (Bio.Entrez). Use this for direct HTTP/REST work or custom API implementations.",
@@ -33325,6 +33741,32 @@
       "path": "skills/service-mesh-observability/SKILL.md"
     },
     {
+      "id": "setup-matt-pocock-skills",
+      "name": "setup-matt-pocock-skills",
+      "description": "Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+      "category": "architecture",
+      "tags": [
+        "engineering",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "engineering",
+        "workflow",
+        "coding-agents",
+        "setup",
+        "matt",
+        "pocock",
+        "skills",
+        "configure",
+        "repo",
+        "set",
+        "up",
+        "issue"
+      ],
+      "path": "skills/setup-matt-pocock-skills/SKILL.md"
+    },
+    {
       "id": "sexual-health-analyzer",
       "name": "sexual-health-analyzer",
       "description": "Sexual Health Analyzer",
@@ -35719,6 +36161,32 @@
       "path": "skills/supply-chain-risk-auditor/SKILL.md"
     },
     {
+      "id": "survey-generator",
+      "name": "survey-generator",
+      "description": "Generate source-backed AI/ML survey paper artifacts with curated bibliographies and Fireworks/Kimi HTML rendering.",
+      "category": "data-ai",
+      "tags": [
+        "dair-academy",
+        "ai",
+        "workflow"
+      ],
+      "triggers": [
+        "dair-academy",
+        "ai",
+        "workflow",
+        "survey",
+        "generator",
+        "generate",
+        "source",
+        "backed",
+        "ml",
+        "paper",
+        "artifacts",
+        "curated"
+      ],
+      "path": "skills/survey-generator/SKILL.md"
+    },
+    {
       "id": "sveltekit",
       "name": "sveltekit",
       "description": "Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework.",
@@ -36098,6 +36566,32 @@
       "path": "skills/tcm-constitution-analyzer/SKILL.md"
     },
     {
+      "id": "tdd",
+      "name": "tdd",
+      "description": "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.",
+      "category": "testing",
+      "tags": [
+        "engineering",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "engineering",
+        "workflow",
+        "coding-agents",
+        "tdd",
+        "test",
+        "driven",
+        "development",
+        "user",
+        "wants",
+        "features",
+        "fix",
+        "bugs"
+      ],
+      "path": "skills/tdd/SKILL.md"
+    },
+    {
       "id": "tdd-orchestrator",
       "name": "tdd-orchestrator",
       "description": "Master TDD orchestrator specializing in red-green-refactor discipline, multi-agent workflow coordination, and comprehensive test-driven development practices.",
@@ -36236,6 +36730,30 @@
         "working"
       ],
       "path": "skills/tdd-workflows-tdd-refactor/SKILL.md"
+    },
+    {
+      "id": "teach",
+      "name": "teach",
+      "description": "Teach the user a new skill or concept, within this workspace.",
+      "category": "education",
+      "tags": [
+        "education",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "education",
+        "workflow",
+        "coding-agents",
+        "teach",
+        "user",
+        "new",
+        "skill",
+        "concept",
+        "within",
+        "workspace"
+      ],
+      "path": "skills/teach/SKILL.md"
     },
     {
       "id": "team-collaboration-issue",
@@ -37146,6 +37664,58 @@
       "path": "skills/tmux/SKILL.md"
     },
     {
+      "id": "to-issues",
+      "name": "to-issues",
+      "description": "Break a plan, spec, or PRD into independently-grabbable issues on the project issue tracker using tracer-bullet vertical slices.",
+      "category": "workflow",
+      "tags": [
+        "project-management",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "project-management",
+        "workflow",
+        "coding-agents",
+        "issues",
+        "break",
+        "plan",
+        "spec",
+        "prd",
+        "independently",
+        "grabbable",
+        "issue",
+        "tracker"
+      ],
+      "path": "skills/to-issues/SKILL.md"
+    },
+    {
+      "id": "to-prd",
+      "name": "to-prd",
+      "description": "Turn the current conversation into a PRD and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.",
+      "category": "workflow",
+      "tags": [
+        "project-management",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "project-management",
+        "workflow",
+        "coding-agents",
+        "prd",
+        "turn",
+        "current",
+        "conversation",
+        "publish",
+        "issue",
+        "tracker",
+        "no",
+        "interview"
+      ],
+      "path": "skills/to-prd/SKILL.md"
+    },
+    {
       "id": "todoist-automation",
       "name": "todoist-automation",
       "description": "Automate Todoist task management, projects, sections, filtering, and bulk operations via Rube MCP (Composio). Always search tools first for current schemas.",
@@ -37401,6 +37971,32 @@
         "members"
       ],
       "path": "skills/trello-automation/SKILL.md"
+    },
+    {
+      "id": "triage",
+      "name": "triage",
+      "description": "Move issues and external PRs through a state machine of triage roles — categorise, verify, grill if needed, and write agent-ready briefs.",
+      "category": "workflow",
+      "tags": [
+        "engineering",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "engineering",
+        "workflow",
+        "coding-agents",
+        "triage",
+        "move",
+        "issues",
+        "external",
+        "prs",
+        "through",
+        "state",
+        "machine",
+        "roles"
+      ],
+      "path": "skills/triage/SKILL.md"
     },
     {
       "id": "trigger-dev",
@@ -39718,6 +40314,32 @@
       "path": "skills/wiki-architect/SKILL.md"
     },
     {
+      "id": "wiki-builder",
+      "name": "wiki-builder",
+      "description": "Create and maintain reusable research wikis with source provenance, configurable structure, and local markdown outputs.",
+      "category": "data-ai",
+      "tags": [
+        "dair-academy",
+        "ai",
+        "workflow"
+      ],
+      "triggers": [
+        "dair-academy",
+        "ai",
+        "workflow",
+        "wiki",
+        "builder",
+        "maintain",
+        "reusable",
+        "research",
+        "wikis",
+        "source",
+        "provenance",
+        "configurable"
+      ],
+      "path": "skills/wiki-builder/SKILL.md"
+    },
+    {
       "id": "wiki-changelog",
       "name": "wiki-changelog",
       "description": "Generate structured changelogs from git history. Use when user asks \"what changed recently\", \"generate a changelog\", \"summarize commits\" or user wants to understand recent development activity.",
@@ -40180,6 +40802,32 @@
       "path": "skills/wrike-automation/SKILL.md"
     },
     {
+      "id": "writing-great-skills",
+      "name": "writing-great-skills",
+      "description": "Reference for writing and editing skills well — the vocabulary and principles that make a skill predictable.",
+      "category": "workflow",
+      "tags": [
+        "skill-authoring",
+        "workflow",
+        "coding-agents"
+      ],
+      "triggers": [
+        "skill-authoring",
+        "workflow",
+        "coding-agents",
+        "writing",
+        "great",
+        "skills",
+        "reference",
+        "editing",
+        "well",
+        "vocabulary",
+        "principles",
+        "skill"
+      ],
+      "path": "skills/writing-great-skills/SKILL.md"
+    },
+    {
       "id": "writing-plans",
       "name": "writing-plans",
       "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
@@ -40521,6 +41169,33 @@
       "path": "skills/yann-lecun-tecnico/SKILL.md"
     },
     {
+      "id": "yao-meta-skill",
+      "name": "yao-meta-skill",
+      "description": "Create, refactor, evaluate, and package agent skills from workflows, prompts, transcripts, docs, or notes. Use for skill creation, reusable workflow packaging, skill improvement, evals, and team-ready distribution.",
+      "category": "workflow",
+      "tags": [
+        "skill-authoring",
+        "agent-skills",
+        "evaluation",
+        "packaging"
+      ],
+      "triggers": [
+        "skill-authoring",
+        "agent-skills",
+        "evaluation",
+        "packaging",
+        "yao",
+        "meta",
+        "skill",
+        "refactor",
+        "evaluate",
+        "package",
+        "agent",
+        "skills"
+      ],
+      "path": "skills/yao-meta-skill/SKILL.md"
+    },
+    {
       "id": "yes-md",
       "name": "yes-md",
       "description": "6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest.",
@@ -40623,6 +41298,32 @@
         "browse"
       ],
       "path": "skills/youtube-full/SKILL.md"
+    },
+    {
+      "id": "youtube-notetaker",
+      "name": "youtube-notetaker",
+      "description": "Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer.",
+      "category": "education",
+      "tags": [
+        "dair-academy",
+        "ai",
+        "workflow"
+      ],
+      "triggers": [
+        "dair-academy",
+        "ai",
+        "workflow",
+        "youtube",
+        "notetaker",
+        "turn",
+        "talks",
+        "local",
+        "study",
+        "notes",
+        "slides",
+        "transcripts"
+      ],
+      "path": "skills/youtube-notetaker/SKILL.md"
     },
     {
       "id": "youtube-seo-optimizer",
