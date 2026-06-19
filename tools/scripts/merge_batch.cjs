@@ -242,7 +242,7 @@ function buildSquashMergeBody(prDetails) {
 }
 
 function loadPullRequestTemplate(projectRoot) {
-  return fs.readFileSync(path.join(projectRoot, ".github", "PULL_REQUEST_TEMPLATE", "skill_pr.md"), "utf8");
+  return fs.readFileSync(path.join(projectRoot, ".github", "PULL_REQUEST_TEMPLATE.md"), "utf8");
 }
 
 function loadPullRequestDetails(projectRoot, repoSlug, prNumber) {

@@ -214,7 +214,7 @@
 - Added `tools/config/generated-files.json` as the single contract for derived registry artifacts so CI, maintainer scripts, and docs share the same file list.
 - Added scripted workflow entrypoints: `npm run pr:preflight`, `npm run release:preflight`, `npm run release:prepare -- X.Y.Z`, and `npm run release:publish -- X.Y.Z`.
 - Split PR CI into `pr-policy`, `source-validation`, and `artifact-preview` so PRs stay source-only, policy failures are explicit, and generated drift is previewed separately from source validation.
-- Updated `CONTRIBUTING.md` and `.github/PULL_REQUEST_TEMPLATE/` so contributors are told not to commit derived files and to enable `Allow edits from maintainers`.
+- Updated `CONTRIBUTING.md` and `.github/PULL_REQUEST_TEMPLATE.md` so contributors are told not to commit derived files and to enable `Allow edits from maintainers`.
 
 # Maintenance Walkthrough - 2026-03-14
 
