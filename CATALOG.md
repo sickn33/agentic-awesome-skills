@@ -1207,7 +1207,7 @@ Total skills: 1646
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (143)
+## infrastructure (142)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1350,12 +1350,11 @@ Total skills: 1646
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `unity-developer` | Build Unity games with optimized C# scripts, efficient rendering, and proper asset management. Masters Unity 6 LTS, URP/HDRP pipelines, and cross-platform de... | unity | unity, developer, games, optimized, scripts, efficient, rendering, proper, asset, masters, lts, urp |
 | `vercel-deployment` | Expert knowledge for deploying to Vercel with Next.js | vercel, deployment | vercel, deployment, knowledge, deploying, next, js |
-| `vibecode-production-qa-validator` | End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps. Covers TypeScript, linting, tests, build, SEO tags, ... | qa, testing, nextjs, production, build-validation, deployment, seo | qa, testing, nextjs, production, build-validation, deployment, seo, vibecode, validator, verification, launch, readiness |
 | `whatsapp-cloud-api` | Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhooks HMAC-SHA256, automacao de atendimento. Boilerplates Node.js e Python. | messaging, whatsapp, meta, webhooks | messaging, whatsapp, meta, webhooks, cloud, api, integracao, com, business, mensagens, hmac, sha256 |
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (186)
+## security (187)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1534,6 +1533,7 @@ Total skills: 1646
 | `using-neon` | Neon is a serverless Postgres platform that separates compute and storage to offer autoscaling, branching, instant restore, and scale-to-zero. It's fully com... | using, neon | using, neon, serverless, postgres, platform, separates, compute, storage, offer, autoscaling, branching, instant |
 | `variant-analysis` | Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzin... | variant | variant, analysis, find, similar, vulnerabilities, bugs, codebases, hunting, bug, variants, building, codeql |
 | `varlock-claude-skill` | Secure environment variable management ensuring secrets are never exposed in Claude sessions, terminals, logs, or git commits | varlock, claude, skill | varlock, claude, skill, secure, environment, variable, ensuring, secrets, never, exposed, sessions, terminals |
+| `vibecode-production-qa-validator` | 13-phase production QA for fullstack Next.js apps: build verification, SEO tags, OG images, favicon, route regression, API auth, page speed, lazy load, vulne... | qa, nextjs, production, deployment, seo, authentication, api, performance, favicon, cleanup, lighthouse, database, security, ui-ux | qa, nextjs, production, deployment, seo, authentication, api, performance, favicon, cleanup, lighthouse, database |
 | `vibers-code-review` | Human review workflow for AI-generated GitHub projects with spec-based feedback, security review, and follow-up PRs from the Vibers service. | vibers, code | vibers, code, review, human, ai, generated, github, spec, feedback, security, follow, up |
 | `vulnerability-scanner` | Advanced vulnerability analysis principles. OWASP 2025, Supply Chain Security, attack surface mapping, risk prioritization. | vulnerability, scanner | vulnerability, scanner, analysis, principles, owasp, 2025, supply, chain, security, attack, surface, mapping |
 | `web-design-guidelines` | Review files for compliance with Web Interface Guidelines. | web, guidelines | web, guidelines, review, files, compliance, interface |

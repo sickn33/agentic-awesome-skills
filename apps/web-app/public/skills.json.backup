@@ -34495,7 +34495,7 @@
     "path": "skills/vibecode-production-qa-validator",
     "category": "devops",
     "name": "vibecode-production-qa-validator",
-    "description": "End-to-end production QA, build verification, and launch-readiness checklist for fullstack Next.js apps. Covers TypeScript, linting, tests, build, SEO tags, route regression, and sitemap validation.",
+    "description": "13-phase production QA for fullstack Next.js apps: build verification, SEO tags, OG images, favicon, route regression, API auth, page speed, lazy load, vulnerability scan, UI/UX cards, error boundaries, database, secure rendering, and cleanup.",
     "risk": "safe",
     "source": "self",
     "date_added": "2026-05-31",
