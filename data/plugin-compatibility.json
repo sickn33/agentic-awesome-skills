@@ -27876,6 +27876,25 @@
       "runtime_files": []
     },
     {
+      "id": "tools-page-seo-optimizer",
+      "path": "skills/tools-page-seo-optimizer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "top-web-vulnerabilities",
       "path": "skills/top-web-vulnerabilities",
       "targets": {
@@ -30597,10 +30616,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1595,
+    "total_skills": 1596,
     "supported": {
-      "codex": 1544,
-      "claude": 1561
+      "codex": 1545,
+      "claude": 1562
     },
     "blocked": {
       "codex": 51,

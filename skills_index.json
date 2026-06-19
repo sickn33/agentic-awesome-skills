@@ -31977,6 +31977,28 @@
     }
   },
   {
+    "id": "tools-page-seo-optimizer",
+    "path": "skills/tools-page-seo-optimizer",
+    "category": "seo",
+    "name": "tools-page-seo-optimizer",
+    "description": "Framework-agnostic SEO workflow for any site with multiple tool, product, or feature pages. Covers duplicate content, unique meta tags, heading hierarchy, internal linking, URL slugs, E-E-A-T, content registry pattern for scaling 50\u2013500 pages, and blog content strategy for position 50\u201368 keywords.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "top-web-vulnerabilities",
     "path": "skills/top-web-vulnerabilities",
     "category": "security",
