@@ -9,6 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.10.0] - 2026-06-19 - "Bug Hunting and Mailtrap Email Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 19 follow-up maintainer batch: five new community skills, generated registry sync, and refreshed hosted-catalog SEO metadata for the 1,678+ skill catalog.
+
+## New Skills
+
+- **bugs-are-annoying** - aggressive bug-hunting workflow for logic errors, edge cases, null safety, security flaws, and prioritized `bugs.md` reports (PR #724).
+- **mailtrap-sending-emails** - Mailtrap Email API and SMTP sending workflow for transactional email delivery (PR #725).
+- **mailtrap-testing-with-sandbox** - Mailtrap Sandbox workflow for safe dev and staging email capture (PR #725).
+- **mailtrap-setting-up-sending-domain** - Mailtrap sending-domain setup workflow covering DNS, SPF, DKIM, DMARC, and verification (PR #725).
+- **mailtrap-managing-contacts** - Mailtrap contacts, lists, and segments workflow for contact-management operations (PR #725).
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, contributor data, and release metadata for the 1,678+ skill catalog.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current catalog count and release metadata.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #724 (`bugs-are-annoying`).
+- **[@dieudonneAwa](https://github.com/dieudonneAwa)** for PR #725 (Mailtrap email skill suite).
+
 ## [12.9.0] - 2026-06-19 - "Design Skills and Registry Quality Tools"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
