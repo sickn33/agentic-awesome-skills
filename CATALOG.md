@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1674
+Total skills: 1678
 
 ## architecture (104)
 
@@ -519,7 +519,7 @@ Total skills: 1674
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (232)
+## development (234)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -652,6 +652,8 @@ Total skills: 1674
 | `landing-page-generator` | Generates high-converting Next.js/React landing pages with Tailwind CSS. Uses PAS, AIDA, and BAB frameworks for optimized copy/components (Heroes, Features, ... | nextjs, react, tailwind, landing-page, marketing, seo, cro | nextjs, react, tailwind, landing-page, marketing, seo, cro, landing, page, generator, generates, high |
 | `lovable-cleanup` | Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans gen... | lovable, cleanup, vite, react, shadcn, devtools | lovable, cleanup, vite, react, shadcn, devtools, audits, strips, scaffolding, removes, tagger, swaps |
 | `m365-agents-ts` | Microsoft 365 Agents SDK for TypeScript/Node.js. | m365, agents, ts | m365, agents, ts, microsoft, 365, sdk, typescript, node, js |
+| `mailtrap-managing-contacts` | Manage Mailtrap contacts, lists, segments, custom fields, imports, CRM syncs, and campaign audiences through the UI or API. | mailtrap, managing, contacts | mailtrap, managing, contacts, lists, segments, custom, fields, imports, crm, syncs, campaign, audiences |
+| `mailtrap-sending-emails` | Configure or troubleshoot Mailtrap live email sending with Email API, SMTP, transactional streams, bulk streams, or batches. | mailtrap, sending, emails | mailtrap, sending, emails, configure, troubleshoot, live, email, api, smtp, transactional, streams, bulk |
 | `makepad-platform` | CRITICAL: Use for Makepad cross-platform support. Triggers on: makepad platform, makepad os, makepad macos, makepad windows, makepad linux, makepad android, ... | makepad, platform | makepad, platform, critical, cross, triggers, os, macos, windows, linux, android, ios, web |
 | `makepad-skills` | Makepad UI development skills for Rust apps: setup, patterns, shaders, packaging, and troubleshooting. | makepad, skills | makepad, skills, ui, development, rust, apps, setup, shaders, packaging, troubleshooting |
 | `matplotlib` | Matplotlib is Python's foundational visualization library for creating static, animated, and interactive plots. | matplotlib | matplotlib, python, foundational, visualization, library, creating, static, animated, interactive, plots |
@@ -1223,7 +1225,7 @@ Total skills: 1674
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (142)
+## infrastructure (143)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1322,6 +1324,7 @@ Total skills: 1674
 | `lightning-channel-factories` | Technical reference on Lightning Network channel factories, multi-party channels, LSP architectures, and Bitcoin Layer 2 scaling without soft forks. Covers D... | lightning, channel, factories | lightning, channel, factories, technical, reference, network, multi, party, channels, lsp, architectures, bitcoin |
 | `linux-troubleshooting` | Linux system troubleshooting workflow for diagnosing and resolving system issues, performance problems, and service failures. | linux, troubleshooting | linux, troubleshooting, diagnosing, resolving, issues, performance, problems, failures |
 | `machine-learning-ops-ml-pipeline` | Design and implement a complete ML pipeline for: $ARGUMENTS | machine, learning, ops, ml, pipeline | machine, learning, ops, ml, pipeline, complete, arguments |
+| `mailtrap-testing-with-sandbox` | Capture outbound email in Mailtrap Email Sandbox for development, staging, CI, HTML inspection, spam checks, and fake inbox tests. | mailtrap, with, sandbox | mailtrap, with, sandbox, testing, capture, outbound, email, development, staging, ci, html, inspection |
 | `makepad-deployment` | CRITICAL: Use for Makepad packaging and deployment. Triggers on: deploy, package, APK, IPA, 打包, 部署, cargo-packager, cargo-makepad, WASM, Android, iOS, distri... | makepad, deployment | makepad, deployment, critical, packaging, triggers, deploy, package, apk, ipa, cargo, packager, wasm |
 | `manifest` | Install and configure the Manifest observability plugin for your agents. Use when setting up telemetry, configuring API keys, or troubleshooting the plugin. | manifest | manifest, install, configure, observability, plugin, agents, setting, up, telemetry, configuring, api, keys |
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
@@ -1370,7 +1373,7 @@ Total skills: 1674
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (188)
+## security (189)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1472,6 +1475,7 @@ Total skills: 1674
 | `loki-mode` | Version 2.35.0 \| PRD to Production \| Zero Human Intervention > Research-enhanced: OpenAI SDK, DeepMind, Anthropic, AWS Bedrock, Agent SDK, HN Production (2025) | loki, mode | loki, mode, version, 35, prd, zero, human, intervention, research, enhanced, openai, sdk |
 | `m365-agents-dotnet` | Microsoft 365 Agents SDK for .NET. Build multichannel agents for Teams/M365/Copilot Studio with ASP.NET Core hosting, AgentApplication routing, and MSAL-base... | m365, agents, dotnet | m365, agents, dotnet, microsoft, 365, sdk, net, multichannel, teams, copilot, studio, asp |
 | `m365-agents-py` | Microsoft 365 Agents SDK for Python. Build multichannel agents for Teams/M365/Copilot Studio with aiohttp hosting, AgentApplication routing, streaming respon... | m365, agents, py | m365, agents, py, microsoft, 365, sdk, python, multichannel, teams, copilot, studio, aiohttp |
+| `mailtrap-setting-up-sending-domain` | Add or verify a Mailtrap sending domain, troubleshoot DNS propagation, publish SPF/DKIM/DMARC records, and complete compliance. | mailtrap, setting, up, sending, domain | mailtrap, setting, up, sending, domain, add, verify, troubleshoot, dns, propagation, publish, spf |
 | `malware-analyst` | Expert malware analyst specializing in defensive malware research, threat intelligence, and incident response. Masters sandbox analysis, behavioral analysis,... | malware, analyst | malware, analyst, specializing, defensive, research, threat, intelligence, incident, response, masters, sandbox, analysis |
 | `memory-forensics` | Comprehensive techniques for acquiring, analyzing, and extracting artifacts from memory dumps for incident response and malware analysis. | memory, forensics | memory, forensics, techniques, acquiring, analyzing, extracting, artifacts, dumps, incident, response, malware, analysis |
 | `metasploit-framework` | ⚠️ AUTHORIZED USE ONLY > This skill is for educational purposes or authorized security assessments only. > You must have explicit, written permission from th... | metasploit, framework | metasploit, framework, authorized, skill, educational, purposes, security, assessments, must, explicit, written, permission |

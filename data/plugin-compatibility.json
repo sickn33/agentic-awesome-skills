@@ -18417,6 +18417,82 @@
       "runtime_files": []
     },
     {
+      "id": "mailtrap-managing-contacts",
+      "path": "skills/mailtrap-managing-contacts",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "mailtrap-sending-emails",
+      "path": "skills/mailtrap-sending-emails",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "mailtrap-setting-up-sending-domain",
+      "path": "skills/mailtrap-setting-up-sending-domain",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "mailtrap-testing-with-sandbox",
+      "path": "skills/mailtrap-testing-with-sandbox",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "make-automation",
       "path": "skills/make-automation",
       "targets": {
@@ -32102,10 +32178,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1674,
+    "total_skills": 1678,
     "supported": {
-      "codex": 1622,
-      "claude": 1640
+      "codex": 1626,
+      "claude": 1644
     },
     "blocked": {
       "codex": 52,

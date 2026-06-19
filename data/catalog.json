@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1674,
+  "total": 1678,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -23951,6 +23951,112 @@
         "via"
       ],
       "path": "skills/mailchimp-automation/SKILL.md"
+    },
+    {
+      "id": "mailtrap-managing-contacts",
+      "name": "mailtrap-managing-contacts",
+      "description": "Manage Mailtrap contacts, lists, segments, custom fields, imports, CRM syncs, and campaign audiences through the UI or API.",
+      "category": "development",
+      "tags": [
+        "mailtrap",
+        "managing",
+        "contacts"
+      ],
+      "triggers": [
+        "mailtrap",
+        "managing",
+        "contacts",
+        "lists",
+        "segments",
+        "custom",
+        "fields",
+        "imports",
+        "crm",
+        "syncs",
+        "campaign",
+        "audiences"
+      ],
+      "path": "skills/mailtrap-managing-contacts/SKILL.md"
+    },
+    {
+      "id": "mailtrap-sending-emails",
+      "name": "mailtrap-sending-emails",
+      "description": "Configure or troubleshoot Mailtrap live email sending with Email API, SMTP, transactional streams, bulk streams, or batches.",
+      "category": "development",
+      "tags": [
+        "mailtrap",
+        "sending",
+        "emails"
+      ],
+      "triggers": [
+        "mailtrap",
+        "sending",
+        "emails",
+        "configure",
+        "troubleshoot",
+        "live",
+        "email",
+        "api",
+        "smtp",
+        "transactional",
+        "streams",
+        "bulk"
+      ],
+      "path": "skills/mailtrap-sending-emails/SKILL.md"
+    },
+    {
+      "id": "mailtrap-setting-up-sending-domain",
+      "name": "mailtrap-setting-up-sending-domain",
+      "description": "Add or verify a Mailtrap sending domain, troubleshoot DNS propagation, publish SPF/DKIM/DMARC records, and complete compliance.",
+      "category": "security",
+      "tags": [
+        "mailtrap",
+        "setting",
+        "up",
+        "sending",
+        "domain"
+      ],
+      "triggers": [
+        "mailtrap",
+        "setting",
+        "up",
+        "sending",
+        "domain",
+        "add",
+        "verify",
+        "troubleshoot",
+        "dns",
+        "propagation",
+        "publish",
+        "spf"
+      ],
+      "path": "skills/mailtrap-setting-up-sending-domain/SKILL.md"
+    },
+    {
+      "id": "mailtrap-testing-with-sandbox",
+      "name": "mailtrap-testing-with-sandbox",
+      "description": "Capture outbound email in Mailtrap Email Sandbox for development, staging, CI, HTML inspection, spam checks, and fake inbox tests.",
+      "category": "infrastructure",
+      "tags": [
+        "mailtrap",
+        "with",
+        "sandbox"
+      ],
+      "triggers": [
+        "mailtrap",
+        "with",
+        "sandbox",
+        "testing",
+        "capture",
+        "outbound",
+        "email",
+        "development",
+        "staging",
+        "ci",
+        "html",
+        "inspection"
+      ],
+      "path": "skills/mailtrap-testing-with-sandbox/SKILL.md"
     },
     {
       "id": "make-automation",

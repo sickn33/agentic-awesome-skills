@@ -153,6 +153,8 @@
     "llm-application-agent": "llm-application-dev-langchain-agent",
     "llm-application-optimize": "llm-application-dev-prompt-optimize",
     "machine-learning-pipeline": "machine-learning-ops-ml-pipeline",
+    "mailtrap-setting-domain": "mailtrap-setting-up-sending-domain",
+    "mailtrap-testing-sandbox": "mailtrap-testing-with-sandbox",
     "microsoft-azure-dotnet": "microsoft-azure-webjobs-extensions-authentication-events-dotnet",
     "patterns": "monopoly/patterns",
     "scale-benchmarks": "monopoly/scale-benchmarks",

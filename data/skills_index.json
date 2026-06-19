@@ -20800,6 +20800,94 @@
     }
   },
   {
+    "id": "mailtrap-managing-contacts",
+    "path": "skills/mailtrap-managing-contacts",
+    "category": "uncategorized",
+    "name": "mailtrap-managing-contacts",
+    "description": "Manage Mailtrap contacts, lists, segments, custom fields, imports, CRM syncs, and campaign audiences through the UI or API.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "mailtrap-sending-emails",
+    "path": "skills/mailtrap-sending-emails",
+    "category": "uncategorized",
+    "name": "mailtrap-sending-emails",
+    "description": "Configure or troubleshoot Mailtrap live email sending with Email API, SMTP, transactional streams, bulk streams, or batches.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "mailtrap-setting-up-sending-domain",
+    "path": "skills/mailtrap-setting-up-sending-domain",
+    "category": "uncategorized",
+    "name": "mailtrap-setting-up-sending-domain",
+    "description": "Add or verify a Mailtrap sending domain, troubleshoot DNS propagation, publish SPF/DKIM/DMARC records, and complete compliance.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "mailtrap-testing-with-sandbox",
+    "path": "skills/mailtrap-testing-with-sandbox",
+    "category": "uncategorized",
+    "name": "mailtrap-testing-with-sandbox",
+    "description": "Capture outbound email in Mailtrap Email Sandbox for development, staging, CI, HTML inspection, spam checks, and fake inbox tests.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "make-automation",
     "path": "skills/make-automation",
     "category": "automation",
