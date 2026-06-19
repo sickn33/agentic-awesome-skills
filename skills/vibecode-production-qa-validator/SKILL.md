@@ -16,6 +16,12 @@ version: 2.0.0
 
 Run phases in order. Fix failures before moving to next.
 
+## When to Use
+
+- Use before shipping or promoting a fullstack Next.js app to production.
+- Use after large UI, SEO, auth, API, database, or dependency changes need a concrete launch-readiness pass.
+- Use when you need a compact command-driven checklist for build, route, metadata, performance, security, and cleanup checks.
+
 ```bash
 export PROD_URL="https://yourdomain.com"
 export QA_AUTH_HEADER=""       # optional: "Bearer eyJ..."
