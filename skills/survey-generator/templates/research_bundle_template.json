@@ -1,0 +1,69 @@
+{
+  "title": "Survey Title: A Descriptive Subtitle",
+  "authors_placeholder": "Anonymous",
+  "anchor_source": "https://example.com/public-resource-used-as-anchor",
+  "abstract_hints": [
+    "One sentence framing the problem space.",
+    "One sentence describing why the field is coalescing now.",
+    "One sentence previewing the taxonomy and contributions of this survey."
+  ],
+  "taxonomy": {
+    "root": "Survey Topic",
+    "branches": [
+      { "name": "Branch A", "children": ["Leaf A1", "Leaf A2", "Leaf A3"] },
+      { "name": "Branch B", "children": ["Leaf B1", "Leaf B2"] },
+      { "name": "Branch C", "children": ["Leaf C1", "Leaf C2", "Leaf C3"] },
+      { "name": "Branch D", "children": ["Leaf D1", "Leaf D2"] },
+      { "name": "Branch E", "children": ["Leaf E1", "Leaf E2", "Leaf E3"] }
+    ]
+  },
+  "paradigms": [
+    {
+      "name": "Paradigm 1",
+      "nodes": ["Step A", "Step B", "Step C"],
+      "flow": "Step A -> Step B -> Step C -> Step A"
+    },
+    {
+      "name": "Paradigm 2",
+      "nodes": ["Plan", "Subtask 1", "Subtask 2", "Subtask 3"],
+      "flow": "Plan -> Subtask 1; Plan -> Subtask 2; Plan -> Subtask 3"
+    },
+    {
+      "name": "Paradigm 3",
+      "nodes": ["Act", "Reflect", "Memory"],
+      "flow": "Act -> Reflect -> Act; bi: Reflect -> Memory"
+    }
+  ],
+  "stack": [
+    { "name": "Layer 1 (foundational)", "role": "Short italic role description for layer 1." },
+    { "name": "Layer 2", "role": "Short italic role description for layer 2." },
+    { "name": "Layer 3", "role": "Short italic role description for layer 3." },
+    { "name": "Layer 4", "role": "Short italic role description for layer 4." },
+    { "name": "Layer 5", "role": "Short italic role description for layer 5." },
+    { "name": "Layer 6 (topmost)", "role": "Short italic role description for layer 6." }
+  ],
+  "sections": [
+    { "id": "1", "title": "Introduction", "guidance": "Frame the problem and preview the taxonomy." },
+    { "id": "2", "title": "Foundations", "guidance": "Cover the core primitives.", "papers": ["Key1", "Key2"] },
+    { "id": "3", "title": "Methods", "guidance": "Survey the main methodological families.", "papers": ["Key3", "Key4"] },
+    { "id": "4", "title": "Systems", "guidance": "Compare representative systems.", "papers": ["Key5", "Key6"] },
+    { "id": "5", "title": "Evaluation", "guidance": "Review benchmarks and metrics.", "papers": ["Key7"] },
+    { "id": "6", "title": "Open Problems and Future Directions", "guidance": "Discuss reliability, cost, portability, and open research questions." }
+  ],
+  "table": {
+    "columns": ["System", "Primary Mechanism", "Key Contribution", "Primary Evaluation"],
+    "rows": [
+      { "System": "Example System", "Primary Mechanism": "Short description", "Key Contribution": "Short description", "Primary Evaluation": "Short description" }
+    ]
+  },
+  "bibliography": [
+    {
+      "key": "Key1",
+      "authors": "Author, A. et al.",
+      "year": "2024",
+      "title": "Paper Title",
+      "venue": "Venue Year",
+      "summary": "One to two sentence summary of the paper's contribution."
+    }
+  ]
+}

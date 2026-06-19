@@ -2454,6 +2454,25 @@
       "runtime_files": []
     },
     {
+      "id": "ask-matt",
+      "path": "skills/ask-matt",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ask-questions-if-underspecified",
       "path": "skills/ask-questions-if-underspecified",
       "targets": {
@@ -7539,6 +7558,25 @@
       "runtime_files": []
     },
     {
+      "id": "codebase-design",
+      "path": "skills/codebase-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "codebase-to-wordpress-converter",
       "path": "skills/codebase-to-wordpress-converter",
       "targets": {
@@ -7686,6 +7724,29 @@
       "reasons": [],
       "blocked_reasons": {
         "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "competitor-analysis",
+      "path": "skills/competitor-analysis",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
         "claude": []
       },
       "runtime_files": []
@@ -10868,6 +10929,25 @@
       "runtime_files": []
     },
     {
+      "id": "diagnosing-bugs",
+      "path": "skills/diagnosing-bugs",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "diary",
       "path": "skills/diary",
       "targets": {
@@ -11239,6 +11319,25 @@
     {
       "id": "domain-driven-design",
       "path": "skills/domain-driven-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "domain-modeling",
+      "path": "skills/domain-modeling",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -14663,6 +14762,63 @@
       "runtime_files": []
     },
     {
+      "id": "grill-me",
+      "path": "skills/grill-me",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "grill-with-docs",
+      "path": "skills/grill-with-docs",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "grilling",
+      "path": "skills/grilling",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "growth-engine",
       "path": "skills/growth-engine",
       "targets": {
@@ -14684,6 +14840,25 @@
     {
       "id": "grpc-golang",
       "path": "skills/grpc-golang",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "handoff",
+      "path": "skills/handoff",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -15769,6 +15944,25 @@
       "runtime_files": []
     },
     {
+      "id": "image-generator",
+      "path": "skills/image-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "image-studio",
       "path": "skills/image-studio",
       "targets": {
@@ -15790,6 +15984,25 @@
     {
       "id": "imagen",
       "path": "skills/imagen",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "improve-codebase-architecture",
+      "path": "skills/improve-codebase-architecture",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -17008,6 +17221,25 @@
       "runtime_files": []
     },
     {
+      "id": "learn",
+      "path": "skills/learn",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "legacy-modernizer",
       "path": "skills/legacy-modernizer",
       "targets": {
@@ -17162,6 +17394,25 @@
     {
       "id": "lemmaly",
       "path": "skills/lemmaly",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "lesson-generator",
+      "path": "skills/lesson-generator",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -17626,6 +17877,25 @@
     {
       "id": "llm-application-dev-prompt-optimize",
       "path": "skills/llm-application-dev-prompt-optimize",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "llm-council",
+      "path": "skills/llm-council",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -22687,6 +22957,25 @@
       "runtime_files": []
     },
     {
+      "id": "prototype",
+      "path": "skills/prototype",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pubmed-database",
       "path": "skills/pubmed-database",
       "targets": {
@@ -25679,6 +25968,25 @@
       "runtime_files": []
     },
     {
+      "id": "setup-matt-pocock-skills",
+      "path": "skills/setup-matt-pocock-skills",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "sexual-health-analyzer",
       "path": "skills/sexual-health-analyzer",
       "targets": {
@@ -27623,6 +27931,25 @@
       "runtime_files": []
     },
     {
+      "id": "survey-generator",
+      "path": "skills/survey-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "sveltekit",
       "path": "skills/sveltekit",
       "targets": {
@@ -27927,6 +28254,25 @@
       "runtime_files": []
     },
     {
+      "id": "tdd",
+      "path": "skills/tdd",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tdd-orchestrator",
       "path": "skills/tdd-orchestrator",
       "targets": {
@@ -28043,6 +28389,25 @@
     {
       "id": "tdd-workflows-tdd-refactor",
       "path": "skills/tdd-workflows-tdd-refactor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "teach",
+      "path": "skills/teach",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28763,6 +29128,44 @@
       "runtime_files": []
     },
     {
+      "id": "to-issues",
+      "path": "skills/to-issues",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "to-prd",
+      "path": "skills/to-prd",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "todoist-automation",
       "path": "skills/todoist-automation",
       "targets": {
@@ -28942,6 +29345,25 @@
     {
       "id": "trello-automation",
       "path": "skills/trello-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "triage",
+      "path": "skills/triage",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -30704,6 +31126,25 @@
       "runtime_files": []
     },
     {
+      "id": "wiki-builder",
+      "path": "skills/wiki-builder",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "wiki-changelog",
       "path": "skills/wiki-changelog",
       "targets": {
@@ -31065,6 +31506,25 @@
       "runtime_files": []
     },
     {
+      "id": "writing-great-skills",
+      "path": "skills/writing-great-skills",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "writing-plans",
       "path": "skills/writing-plans",
       "targets": {
@@ -31318,6 +31778,25 @@
       "runtime_files": []
     },
     {
+      "id": "yao-meta-skill",
+      "path": "skills/yao-meta-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "yes-md",
       "path": "skills/yes-md",
       "targets": {
@@ -31385,6 +31864,25 @@
         "type": "none",
         "summary": "TranscriptAPI OAuth provisions the API key on first skill invocation. No manual credential setup. 100 free credits included.",
         "docs": "https://transcriptapi.com/docs"
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "youtube-notetaker",
+      "path": "skills/youtube-notetaker",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
       },
       "reasons": [],
       "blocked_reasons": {
@@ -31585,13 +32083,13 @@
     }
   ],
   "summary": {
-    "total_skills": 1647,
+    "total_skills": 1673,
     "supported": {
-      "codex": 1596,
-      "claude": 1613
+      "codex": 1621,
+      "claude": 1639
     },
     "blocked": {
-      "codex": 51,
+      "codex": 52,
       "claude": 34
     },
     "manual_setup": 5

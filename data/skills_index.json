@@ -2744,6 +2744,28 @@
     }
   },
   {
+    "id": "ask-matt",
+    "path": "skills/ask-matt",
+    "category": "productivity",
+    "name": "ask-matt",
+    "description": "Ask which skill or flow fits your situation. A router over the user-invoked skills in this repo.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ask-questions-if-underspecified",
     "path": "skills/ask-questions-if-underspecified",
     "category": "workflow",
@@ -8900,6 +8922,28 @@
     }
   },
   {
+    "id": "codebase-design",
+    "path": "skills/codebase-design",
+    "category": "architecture",
+    "name": "codebase-design",
+    "description": "Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "codebase-to-wordpress-converter",
     "path": "skills/codebase-to-wordpress-converter",
     "category": "development",
@@ -9117,6 +9161,30 @@
         "docs": null
       },
       "reasons": []
+    }
+  },
+  {
+    "id": "competitor-analysis",
+    "path": "skills/competitor-analysis",
+    "category": "marketing",
+    "name": "competitor-analysis",
+    "description": "Research competitors with Browserbase discovery, enrichment lanes, screenshots, matrices, and HTML reports.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
     }
   },
   {
@@ -11938,6 +12006,28 @@
     }
   },
   {
+    "id": "diagnosing-bugs",
+    "path": "skills/diagnosing-bugs",
+    "category": "development",
+    "name": "diagnosing-bugs",
+    "description": "Diagnosis loop for hard bugs and performance regressions. Use when the user says \"diagnose\"/\"debug this\", or reports something broken/throwing/failing/slow.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "diary",
     "path": "skills/diary",
     "category": "meta",
@@ -12366,6 +12456,28 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "domain-modeling",
+    "path": "skills/domain-modeling",
+    "category": "architecture",
+    "name": "domain-modeling",
+    "description": "Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to maintain the domain model.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -16408,6 +16520,72 @@
     }
   },
   {
+    "id": "grill-me",
+    "path": "skills/grill-me",
+    "category": "productivity",
+    "name": "grill-me",
+    "description": "A relentless interview to sharpen a plan or design.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "grill-with-docs",
+    "path": "skills/grill-with-docs",
+    "category": "productivity",
+    "name": "grill-with-docs",
+    "description": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "grilling",
+    "path": "skills/grilling",
+    "category": "productivity",
+    "name": "grilling",
+    "description": "Interview the user relentlessly about a plan or design. Use when the user wants to stress-test a plan before building, or uses any 'grill' trigger phrases.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "growth-engine",
     "path": "skills/growth-engine",
     "category": "marketing",
@@ -16438,6 +16616,28 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "handoff",
+    "path": "skills/handoff",
+    "category": "productivity",
+    "name": "handoff",
+    "description": "Compact the current conversation into a handoff document for another agent to pick up.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17730,6 +17930,28 @@
     }
   },
   {
+    "id": "image-generator",
+    "path": "skills/image-generator",
+    "category": "media",
+    "name": "image-generator",
+    "description": "Generate and edit images using Gemini's Nano Banana Pro model (gemini-3-pro-image-preview). Use this skill when the user asks you to generate images, create visuals, edit photos, create logos, generate product mockups, or perform any image generation/editing task.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "image-studio",
     "path": "skills/image-studio",
     "category": "graphics-processing",
@@ -17782,6 +18004,28 @@
     "risk": "safe",
     "source": "personal",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "improve-codebase-architecture",
+    "path": "skills/improve-codebase-architecture",
+    "category": "development",
+    "name": "improve-codebase-architecture",
+    "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19272,6 +19516,28 @@
     }
   },
   {
+    "id": "learn",
+    "path": "skills/learn",
+    "category": "education",
+    "name": "learn",
+    "description": "Help a user learn a topic through adaptive tutoring, lesson planning, practice, retrieval checks, explanations, study guides, or exercises. Use when the user asks to learn, understand, practice, drill, review, study, or be tutored on something.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "legacy-modernizer",
     "path": "skills/legacy-modernizer",
     "category": "development",
@@ -19456,6 +19722,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-05-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "lesson-generator",
+    "path": "skills/lesson-generator",
+    "category": "education",
+    "name": "lesson-generator",
+    "description": "Build compact, standalone multi-lesson course artifacts with lesson navigation, objectives, flashcards, quizzes, and source links.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19878,6 +20166,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "llm-council",
+    "path": "skills/llm-council",
+    "category": "ai-agents",
+    "name": "llm-council",
+    "description": "Run Fireworks-hosted open-weight model councils that compare responses and synthesize a final answer.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -25899,6 +26209,28 @@
     }
   },
   {
+    "id": "prototype",
+    "path": "skills/prototype",
+    "category": "development",
+    "name": "prototype",
+    "description": "Build a throwaway prototype to flesh out a design \u2014 a runnable terminal app for state/business-logic questions, or several radically different UI variations toggleable from one route.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "pubmed-database",
     "path": "skills/pubmed-database",
     "category": "backend",
@@ -29471,6 +29803,28 @@
     }
   },
   {
+    "id": "setup-matt-pocock-skills",
+    "path": "skills/setup-matt-pocock-skills",
+    "category": "development",
+    "name": "setup-matt-pocock-skills",
+    "description": "Configure this repo for the engineering skills \u2014 set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "sexual-health-analyzer",
     "path": "skills/sexual-health-analyzer",
     "category": "health",
@@ -31423,6 +31777,28 @@
     }
   },
   {
+    "id": "survey-generator",
+    "path": "skills/survey-generator",
+    "category": "research",
+    "name": "survey-generator",
+    "description": "Generate source-backed AI/ML survey paper artifacts with curated bibliographies and Fireworks/Kimi HTML rendering.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "sveltekit",
     "path": "skills/sveltekit",
     "category": "frontend",
@@ -31841,6 +32217,28 @@
     }
   },
   {
+    "id": "tdd",
+    "path": "skills/tdd",
+    "category": "development",
+    "name": "tdd",
+    "description": "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "tdd-orchestrator",
     "path": "skills/tdd-orchestrator",
     "category": "testing",
@@ -31981,6 +32379,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "teach",
+    "path": "skills/teach",
+    "category": "education",
+    "name": "teach",
+    "description": "Teach the user a new skill or concept, within this workspace.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32899,6 +33319,50 @@
     }
   },
   {
+    "id": "to-issues",
+    "path": "skills/to-issues",
+    "category": "project-management",
+    "name": "to-issues",
+    "description": "Break a plan, spec, or PRD into independently-grabbable issues on the project issue tracker using tracer-bullet vertical slices.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "to-prd",
+    "path": "skills/to-prd",
+    "category": "project-management",
+    "name": "to-prd",
+    "description": "Turn the current conversation into a PRD and publish it to the project issue tracker \u2014 no interview, just synthesis of what you've already discussed.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "todoist-automation",
     "path": "skills/todoist-automation",
     "category": "project-management",
@@ -33107,6 +33571,28 @@
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "triage",
+    "path": "skills/triage",
+    "category": "development",
+    "name": "triage",
+    "description": "Move issues and external PRs through a state machine of triage roles \u2014 categorise, verify, grill if needed, and write agent-ready briefs.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -35283,6 +35769,28 @@
     }
   },
   {
+    "id": "wiki-builder",
+    "path": "skills/wiki-builder",
+    "category": "knowledge-management",
+    "name": "wiki-builder",
+    "description": "Create and maintain reusable research wikis with source provenance, configurable structure, and local markdown outputs.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "wiki-changelog",
     "path": "skills/wiki-changelog",
     "category": "content",
@@ -35723,6 +36231,28 @@
     }
   },
   {
+    "id": "writing-great-skills",
+    "path": "skills/writing-great-skills",
+    "category": "skill-authoring",
+    "name": "writing-great-skills",
+    "description": "Reference for writing and editing skills well \u2014 the vocabulary and principles that make a skill predictable.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "writing-plans",
     "path": "skills/writing-plans",
     "category": "planning",
@@ -36033,6 +36563,28 @@
     }
   },
   {
+    "id": "yao-meta-skill",
+    "path": "skills/yao-meta-skill",
+    "category": "skill-authoring",
+    "name": "yao-meta-skill",
+    "description": "Create, refactor, evaluate, and package agent skills from workflows, prompts, transcripts, docs, or notes. Use for skill creation, reusable workflow packaging, skill improvement, evals, and team-ready distribution.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "yes-md",
     "path": "skills/yes-md",
     "category": "uncategorized",
@@ -36116,6 +36668,28 @@
         "type": "none",
         "summary": "TranscriptAPI OAuth provisions the API key on first skill invocation. No manual credential setup. 100 free credits included.",
         "docs": "https://transcriptapi.com/docs"
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "youtube-notetaker",
+    "path": "skills/youtube-notetaker",
+    "category": "video",
+    "name": "youtube-notetaker",
+    "description": "Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-06-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
       },
       "reasons": []
     }
