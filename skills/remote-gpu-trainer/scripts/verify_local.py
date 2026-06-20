@@ -9,11 +9,11 @@ For each <name>/ in the target dir, check:
   - reports best epoch + main metric per ablation
 
 Usage:
-    python verify_local.py <path_to_final_ckpts_dir>
+    python verify_local.py <path_to_final_ckpts_dir> [--expect N] [--list-metrics]
 
 Exit code:
     0 = all OK
-    1 = at least one error
+    1 = at least one error, an empty input dir, or a dir count != --expect
 """
 from __future__ import annotations
 import argparse
@@ -26,11 +26,28 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("ckpt_dir", help="Directory containing ablation subdirs (each with best.pth + best_metrics.json)")
     ap.add_argument("--list-metrics", action="store_true", help="Print per-ablation epoch + main metric")
+    ap.add_argument("--expect", type=int, default=None,
+                    help="Assert exactly N ablation subdirs are present -- guards a teardown gate against a partial/empty pull")
     args = ap.parse_args()
 
     root = Path(args.ckpt_dir)
     if not root.exists():
         print(f"ERROR: {root} does not exist")
+        return 1
+    if not root.is_dir():
+        print(f"ERROR: {root} is not a directory")
+        return 1
+
+    # Structural checks BEFORE importing torch: an empty (or short) input must fail
+    # LOUDLY here -- never silently print "OK: 0/0" and return success, which would let
+    # a Phase-5 teardown gate destroy the rented disk having verified nothing
+    # (principle #3: trust the artifact, not a success line; the teardown Iron Law).
+    dirs = sorted([d for d in root.iterdir() if d.is_dir()])
+    if not dirs:
+        print(f"ERROR: no ablation subdirectories found in {root} -- refusing to report success on an empty input")
+        return 1
+    if args.expect is not None and len(dirs) != args.expect:
+        print(f"ERROR: expected {args.expect} ablation dirs but found {len(dirs)} in {root} -- partial/incomplete pull")
         return 1
 
     try:
@@ -39,7 +56,6 @@ def main() -> int:
         print("ERROR: torch not installed in this environment")
         return 1
 
-    dirs = sorted([d for d in root.iterdir() if d.is_dir()])
     print(f"Found {len(dirs)} ablation dirs in {root}")
     print()
 

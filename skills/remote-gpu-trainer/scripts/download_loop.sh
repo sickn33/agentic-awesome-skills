@@ -25,11 +25,21 @@ mkdir -p "$LOCAL_TARGET"
 cd "$LOCAL_TARGET" || exit 1
 
 echo "Listing remote dirs in $REMOTE_ALIAS:$REMOTE_PATH ..."
-# mapfile preserves names that contain spaces; no word-splitting of `ls` output.
-mapfile -t remote_dirs < <(ssh -o ConnectTimeout=15 "$REMOTE_ALIAS" "ls -1 '$REMOTE_PATH'")
+# Capture the listing AND its exit status separately. A bare `mapfile < <(ssh ...)`
+# discards ssh's exit code, so an unreachable host or a wrong path yields an empty
+# array that then reads as "nothing to download" -- a silent success right before a
+# pre-teardown pull (principle #3). Fail loud on a listing error instead.
+remote_listing=$(ssh -o ConnectTimeout=15 "$REMOTE_ALIAS" "ls -1 '$REMOTE_PATH'")
+ssh_rc=$?
+if [ "$ssh_rc" -ne 0 ]; then
+    echo "ERROR: could not list $REMOTE_ALIAS:$REMOTE_PATH (ssh/ls exit $ssh_rc) -- refusing to treat an unreachable host as an empty download." >&2
+    exit 1
+fi
+# mapfile preserves names with spaces; guard the empty string so it yields 0 elems, not 1.
+if [ -z "$remote_listing" ]; then remote_dirs=(); else mapfile -t remote_dirs <<< "$remote_listing"; fi
 n_total=${#remote_dirs[@]}
 echo "Found $n_total remote dirs"
-if [ "$n_total" -eq 0 ]; then echo "Nothing to download (empty or unreachable)."; exit 0; fi
+if [ "$n_total" -eq 0 ]; then echo "Remote dir is reachable but empty -- nothing to download."; exit 0; fi
 
 ok=0; skip=0; fail=0
 for d in "${remote_dirs[@]}"; do

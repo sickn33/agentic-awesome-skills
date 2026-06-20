@@ -39,6 +39,8 @@ fi
 HOSTNAME_SHORT=$(hostname -s)
 TOTAL=$(wc -l < "$QUEUE")
 i=0
+fail=0
+failed_names=()
 
 echo "=== Queue $(basename "$QUEUE"): $TOTAL ablations, starting from $START on $HOSTNAME_SHORT ==="
 
@@ -57,10 +59,18 @@ while IFS=$' \t' read -r cfg task epochs; do
 
     bash "$RUN_ONE" "$cfg" "$task" "$EPOCHS"
     RC=$?
+    if [ "$RC" -ne 0 ]; then fail=$((fail+1)); failed_names+=("$NAME"); fi
 
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$i/$TOTAL] FINISHED $NAME (exit=$RC)"
 done < "$QUEUE"
 
 echo "================================================================"
-echo "[$(date +'%Y-%m-%d %H:%M:%S')] === QUEUE DONE on $HOSTNAME_SHORT ==="
+if [ "$fail" -eq 0 ]; then
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] === QUEUE DONE on $HOSTNAME_SHORT -- all $TOTAL cell(s) exited 0 ==="
+else
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] === QUEUE DONE on $HOSTNAME_SHORT -- $fail cell(s) FAILED: ${failed_names[*]} ==="
+fi
 echo "================================================================"
+# Propagate failure: a queue with any failed cell must NOT exit 0, or tmux/patrol
+# automation reads "QUEUE DONE" as success and a broken ablation hides for hours.
+[ "$fail" -eq 0 ] || exit 1
