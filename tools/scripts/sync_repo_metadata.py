@@ -206,7 +206,7 @@ def sync_bundles_doc(content: str, metadata: dict, base_dir: str | Path | None =
     content, _ = replace_if_present(
         content,
         BUNDLES_FOOTER_RE,
-        f"_Last updated: March 2026 | Total Skills: {metadata['total_skills_label']} | Total Bundles: {bundle_count}_",
+        f"_Last updated: June 2026 | Total Skills: {metadata['total_skills_label']} | Total Bundles: {bundle_count}_",
     )
     return content
 

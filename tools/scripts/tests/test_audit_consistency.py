@@ -103,7 +103,7 @@ class AuditConsistencyTests(unittest.TestCase):
             encoding="utf-8",
         )
         (root / "docs" / "users" / "bundles.md").write_text(
-            f'### 🚀 The "Essentials" Pack\n_Last updated: March 2026 | Total Skills: {count_label} | Total Bundles: 1_\n',
+            f'### 🚀 The "Essentials" Pack\n_Last updated: June 2026 | Total Skills: {count_label} | Total Bundles: 1_\n',
             encoding="utf-8",
         )
         (root / "docs" / "users" / "kiro-integration.md").write_text(

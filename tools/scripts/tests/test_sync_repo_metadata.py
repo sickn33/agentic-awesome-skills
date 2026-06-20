@@ -81,7 +81,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (root / "docs" / "users" / "bundles.md").write_text(
-                '### 🚀 The "Essentials" Pack\n### 🌐 The "Web Wizard" Pack\n_Last updated: March 2026 | Total Skills: 1,254+ | Total Bundles: 99_\n',
+                '### 🚀 The "Essentials" Pack\n### 🌐 The "Web Wizard" Pack\n_Last updated: June 2026 | Total Skills: 1,254+ | Total Bundles: 99_\n',
                 encoding="utf-8",
             )
             (root / "docs" / "users" / "kiro-integration.md").write_text(

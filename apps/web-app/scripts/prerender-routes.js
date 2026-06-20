@@ -9,7 +9,7 @@ const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 
-const HOME_CATALOG_COUNT_FALLBACK = 1550;
+const HOME_CATALOG_COUNT_FALLBACK = 1678;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
@@ -18,7 +18,7 @@ const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
     answer:
-      'Antigravity Awesome Skills is an installable GitHub library of 1,550+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
+      'Antigravity Awesome Skills is an installable GitHub library of 1,678+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
   },
   {
     question: 'How do I install Antigravity Awesome Skills?',

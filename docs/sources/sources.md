@@ -103,7 +103,7 @@ The following skills were added from [Leonxlnx/taste-skill](https://github.com/L
 
 ---
 
-## Recently Added Skills (March 2026)
+## March 2026 Skill Imports
 
 The following skills were added during the March 2026 skills update:
 
