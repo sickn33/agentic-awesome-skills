@@ -96,8 +96,7 @@ Create the following structure:
 plugins/<plugin-name>/
 ├── plugin.json
 ├── agents/
-│   └── <agent-name>/
-│       └── AGENT.md
+│   └── <agent-name>.md
 └── skills/                    (only if companion skill requested)
     └── use-<agent-name>/
         └── SKILL.md
@@ -117,9 +116,9 @@ If creating a new plugin, write a minimal `plugin.json`:
 
 If adding to an existing plugin, do NOT modify the existing `plugin.json`.
 
-### Step 5: Write the AGENT.md
+### Step 5: Write the agent file
 
-Write the AGENT.md file following this exact structure. Ensure you include the YAML frontmatter and the Prompt Defense Baseline verbatim. For the `model` field in the frontmatter, dynamically insert the name of the model currently powering the session you are running in (e.g., `gemini-3.1-pro`, `opus`, `sonnet`).
+Write the `<agent-name>.md` file in the `agents/` folder following this exact structure. Ensure you include the YAML frontmatter and the Prompt Defense Baseline verbatim. For the `model` field in the frontmatter, dynamically insert the name of the model currently powering the session you are running in (e.g., `gemini-3.1-pro`, `opus`, `sonnet`).
 
 ```markdown
 ---
@@ -205,7 +204,7 @@ the subagent, so it knows how to present results to the user.>
 After creating all files, present the user with:
 
 1. A tree view of everything that was created
-2. The full AGENT.md content for review
+2. The full `<agent-name>.md` content for review
 3. Instructions on how to trigger the new agent (both manually and
    via the companion skill if created)
 4. An offer to modify the persona or add more agents to the same plugin
@@ -228,14 +227,10 @@ plugin. For example, a "dev-team-plugin" might contain:
 plugins/dev-team-plugin/
 ├── plugin.json
 ├── agents/
-│   ├── architect/
-│   │   └── AGENT.md
-│   ├── frontend-dev/
-│   │   └── AGENT.md
-│   ├── backend-dev/
-│   │   └── AGENT.md
-│   └── qa-tester/
-│       └── AGENT.md
+│   ├── architect.md
+│   ├── frontend-dev.md
+│   ├── backend-dev.md
+│   └── qa-tester.md
 └── skills/
     └── dev-team-router/
         └── SKILL.md
@@ -248,4 +243,4 @@ plugin based on the type of task.
 
 - **Not for simple tasks**: If a task can be done with a single command or one-line request, a full subagent is overkill. Just ask the main thread to do it.
 - **Context passing**: Subagents do not automatically see the main chat history. When the companion skill routes a task to the subagent, it only sends the specific prompt packaged for that turn.
-- **Tool access**: By default, subagents are spun up with standard access. If they need highly specialized tools (like browser automation or custom APIs), those tools need to be explicitly granted in their AGENT.md setup or plugin configuration.
+- **Tool access**: By default, subagents are spun up with standard access. If they need highly specialized tools (like browser automation or custom APIs), those tools need to be explicitly granted in their `<agent-name>.md` setup or plugin configuration.
