@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# Per-job (per-ablation) wrapper — platform-agnostic skeleton.
+#
+# Parameterize the PROFILE BLOCK below from your platform profile's "SCRIPT OVERRIDES"
+# section (profiles/<platform>.md §8). The defaults shown are AutoDL's.
+#
+# Mandatory: run the network-acceleration hook before any external call (wandb / HF / pip / git).
+# On AutoDL that is `source /etc/network_turbo`; on a clean box set PROXY_HOOK=":" (a no-op).
+# Without the right hook, wandb.init can hang and a flaky link can drop already-uploaded cloud
+# runs — see references/gotchas_universal.md and references/china-network.md.
+#
+# Usage: ./run_one.sh <config_yaml> <task> [epochs]
+#
+# Disclose every CLI override applied below in any paper's Implementation Details — reproducibility
+# depends on the list being complete (the yaml/source stay untouched). See references/gotchas_universal.md.
+set -u
+
+# Arg-count guard FIRST — under `set -u`, CFG="$1" below would abort with an unbound-variable
+# error (and no usage hint) when run with no args. Fail with a readable usage line instead.
+if [ "$#" -lt 2 ]; then
+    echo "usage: $0 <config_yaml> <task> [epochs]" >&2
+    exit 1
+fi
+
+# ===== PROFILE BLOCK — override from profiles/<platform>.md §8 (defaults = AutoDL) =====
+PROJECT_REPO_DIR="${PROJECT_REPO_DIR:-/root/PROJECT_NAME}"   # where your code lives on the instance
+DATA_DIR="${DATA_DIR:-/root/autodl-tmp}"                     # fast per-instance scratch (checkpoints land here)
+DURABLE_DIR="${DURABLE_DIR:-/root/autodl-fs}"                # survives teardown (profile survival matrix); set "" to skip sync
+PROXY_HOOK="${PROXY_HOOK:-source /etc/network_turbo}"        # network-accel hook; ":" (no-op) on a clean box
+CRED_FILE="${CRED_FILE:-/root/.wandb_key}"                   # file holding the tracker key; "" if WANDB_API_KEY already in env
+# =======================================================================================
+
+eval "${PROXY_HOOK}" 2>/dev/null || true
+# The prebuilt base IS the env on most rentals (do not conda create). Activate if present.
+source /root/miniconda3/etc/profile.d/conda.sh 2>/dev/null && conda activate base 2>/dev/null || true
+if [ -n "$CRED_FILE" ] && [ -f "$CRED_FILE" ]; then export WANDB_API_KEY="$(cat "$CRED_FILE")"; fi
+
+export WANDB_MODE="${WANDB_MODE:-online}"     # offline without a key => W&B silently DISABLED (gotchas_universal)
+export WANDB_START_METHOD=thread
+export PYTHONUNBUFFERED=1
+
+CKPT_ROOT="$DATA_DIR/checkpoints"
+LOG_DIR="$DATA_DIR/runs/logs"
+mkdir -p "$DATA_DIR/wandb" "$LOG_DIR" "$CKPT_ROOT"
+
+cd "${PROJECT_REPO_DIR}" || { echo "PROJECT_REPO_DIR not found: $PROJECT_REPO_DIR"; exit 1; }
+
+CFG="$1"
+TASK="$2"
+EPOCHS="${3:-20}"
+NAME="$(basename "$CFG" .yaml)"
+
+# CUSTOMIZE: classify the ablation by name pattern -> tracker group + tags (example scheme; extend freely)
+case "$NAME" in
+    aug_*|seg_aug_*|det_aug_*)            GRP="${TASK}_aug";       TAGS="[$TASK,aug]" ;;
+    *_no_*)                              GRP="${TASK}_module";    TAGS="[$TASK,module]" ;;
+    precision_*|seg_precision_*|det_precision_*) GRP="${TASK}_precision"; TAGS="[$TASK,precision]" ;;
+    *mask_*)                             GRP="${TASK}_rate";      TAGS="[$TASK,rate]" ;;
+    baseline_*)                          GRP="${TASK}_baseline";  TAGS="[$TASK,baseline]" ;;
+    *)                                   GRP="${TASK}_other";     TAGS="[$TASK,other]" ;;
+esac
+
+CKPT_DIR="$CKPT_ROOT/$NAME"
+mkdir -p "$CKPT_DIR"
+
+# CUSTOMIZE: replace `src.train` with your project's training entrypoint module + its override flags
+python -m src.train --no-strict \
+    -o wandb.group="$GRP" \
+    -o wandb.tags="$TAGS" \
+    -o data.num_workers=2 \
+    -o data.pin_memory=False \
+    -o training.val_metric_sample_cap=256 \
+    -o training.checkpoint_dir="$CKPT_DIR" \
+    -c "$CFG" --task "$TASK" --epochs "$EPOCHS" \
+    --experiment-name "abla_$NAME" \
+    2>&1 | tee "$LOG_DIR/$NAME.log"
+
+EXIT=${PIPESTATUS[0]}
+
+# Post-success: keep best.pth only, prune scratch latest.pth (disk-budget, principle #5).
+if [ "$EXIT" -eq 0 ] && [ -f "$CKPT_DIR/best.pth" ]; then
+    rm -f "$CKPT_DIR/latest.pth"
+    echo "[$(date +%H:%M:%S)] kept best.pth, pruned latest.pth for $NAME"
+fi
+
+# Auto-sync to durable storage. GATE the success line on the actual copy result — an unconditional
+# "synced" echo lies when the durable FS is full / inode-exhausted (references/gotchas_universal.md,
+# silent-sync). Verify best.pth landed before claiming success (principle #3). Skip if DURABLE_DIR="".
+if [ "$EXIT" -eq 0 ] && [ -f "$CKPT_DIR/best.pth" ] && [ -n "$DURABLE_DIR" ]; then
+    FS_DIR="$DURABLE_DIR/final_ckpts/$NAME"
+    if mkdir -p "$FS_DIR" && cp -f "$CKPT_DIR/best.pth" "$FS_DIR/" && [ -f "$FS_DIR/best.pth" ]; then
+        cp -f "$CKPT_DIR/best_metrics.json" "$FS_DIR/" 2>/dev/null || true
+        cp -rf "$CKPT_DIR/protocol" "$FS_DIR/" 2>/dev/null || true
+        cp -f "$LOG_DIR/$NAME.log" "$FS_DIR/" 2>/dev/null || true
+        echo "[$(date +%H:%M:%S)] synced $NAME to durable storage ($FS_DIR)"
+    else
+        echo "[$(date +%H:%M:%S)] !! DURABLE SYNC FAILED for $NAME — check 'df -i $DURABLE_DIR'. The data-disk copy is source-of-truth."
+    fi
+fi
+
+exit $EXIT

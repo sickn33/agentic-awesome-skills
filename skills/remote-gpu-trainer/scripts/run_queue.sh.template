@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Queue iterator for multi-ablation deployment — platform-agnostic.
+#
+# Network-accel hook so every child (incl. the tracker client) inherits it; ":" no-op on a clean box.
+# See references/gotchas_universal.md and references/china-network.md.
+PROXY_HOOK="${PROXY_HOOK:-source /etc/network_turbo}"
+eval "${PROXY_HOOK}" 2>/dev/null || true
+#
+# Each queue line: <config_yaml_path> <task> [epochs]   (epochs defaults to 20)
+# Calls $RUN_ONE per line — defaults to $DURABLE_DIR/run_one.sh (the durable/shared mount from
+# profiles/<platform>.md §8). Export DURABLE_DIR, or set RUN_ONE directly if run_one.sh lives elsewhere.
+#
+# Usage: ./run_queue.sh <queue_file> [start_index]
+#   start_index defaults to 1 (run all). Pass N to RESUME from ablation N (principle #8 — see
+#   references/parallel_ablation.md §5).
+#
+# IMPORTANT: tmux/bash loads THIS script into memory at launch. Editing it mid-flight does NOT affect
+# the running queue; only a NEW launch sees changes. Never overwrite it while a queue reads it
+# (references/gotchas_universal.md, never-mutate-inputs-under-a-live-run; principle #6).
+set -u
+
+RUN_ONE="${RUN_ONE:-${DURABLE_DIR:-/root/autodl-fs}/run_one.sh}"   # = <durable mount>/run_one.sh; export DURABLE_DIR (profile §8) or set RUN_ONE directly
+
+# Arg-count guard FIRST — under `set -u`, QUEUE="$1" below would abort with an unbound-variable
+# error before the Usage check could run. Guard so the Usage message is reachable.
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <queue_file> [start_index]"
+    exit 1
+fi
+
+QUEUE="$1"
+START="${2:-1}"
+
+if [ -z "$QUEUE" ] || [ ! -f "$QUEUE" ]; then
+    echo "Usage: $0 <queue_file> [start_index]"
+    exit 1
+fi
+
+HOSTNAME_SHORT=$(hostname -s)
+TOTAL=$(wc -l < "$QUEUE")
+i=0
+
+echo "=== Queue $(basename "$QUEUE"): $TOTAL ablations, starting from $START on $HOSTNAME_SHORT ==="
+
+while IFS=$' \t' read -r cfg task epochs; do
+    i=$((i+1))
+    if [ "$i" -lt "$START" ]; then continue; fi
+    if [ -z "$cfg" ]; then continue; fi
+    case "$cfg" in \#*) continue ;; esac   # skip #-prefixed comment lines
+
+    EPOCHS="${epochs:-20}"
+    NAME=$(basename "$cfg" .yaml)
+
+    echo "================================================================"
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$i/$TOTAL] STARTING $NAME ($task, ${EPOCHS}ep)"
+    echo "================================================================"
+
+    bash "$RUN_ONE" "$cfg" "$task" "$EPOCHS"
+    RC=$?
+
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$i/$TOTAL] FINISHED $NAME (exit=$RC)"
+done < "$QUEUE"
+
+echo "================================================================"
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] === QUEUE DONE on $HOSTNAME_SHORT ==="
+echo "================================================================"
