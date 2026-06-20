@@ -19,7 +19,7 @@ Use this skill whenever you need a dedicated, isolated "brain" to handle a speci
 
 ## Why this exists
 
-Subagents live inside plugins at `C:\Users\ASUS\.gemini\config\plugins\`. For
+Subagents live inside plugins at `<appDataDir>\config\plugins\`. For
 a subagent to be properly registered and invokable, it needs to be inside a
 plugin's `agents/` directory with a valid `plugin.json`. Getting this structure
 right manually is tedious and error-prone. This skill automates the entire
@@ -30,7 +30,7 @@ functional, properly structured subagent in under a minute.
 
 All agents are created inside plugins at:
 ```
-C:\Users\ASUS\.gemini\config\plugins\<plugin-name>\
+<appDataDir>\config\plugins\<plugin-name>\
 ```
 
 If the user wants the agent inside an **existing plugin**, add the agent folder
@@ -54,7 +54,7 @@ appropriate, or ask conversationally if the flow is natural):
    - Example: "review code", "write SQL queries", "generate unit tests"
 
 3. **Plugin placement** — Should this go into an existing plugin or a new one?
-   - List the user's existing plugins from `C:\Users\ASUS\.gemini\config\plugins\`
+   - List the user's existing plugins from `<appDataDir>\config\plugins\`
    - Default: create a new plugin named `<agent-name>-plugin`
 
 4. **Companion skill** — Should I also create a routing skill that auto-triggers
