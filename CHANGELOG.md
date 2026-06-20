@@ -9,6 +9,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.0.0] - 2026-06-20 - "Specialized Plugins and Security Metadata"
+
+> Major installable plugin update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Specialized plugin roadmap: [docs/users/specialized-plugin-roadmap.md](docs/users/specialized-plugin-roadmap.md)
+
+This release packages the June 20 plugin and security-maintenance batch: expanded specialized plugin coverage, seven new bundle plugins built only from existing repository skills, installability metadata for higher-risk skills, CodeQL and CSV security fixes, generated registry sync, and release metadata for the 1,678+ skill catalog.
+
+## Breaking / Installability Changes
+
+- Reclassified high-risk skills including **android-cli**, **apple-notes-search**, **atlas-contract**, **atlas-ledger**, **codex-fable5**, **dos-verify-done-claims**, **macos-screen-recorder**, and **screenstudio-alt** so generated plugin mirrors no longer expose them as safe default installs.
+- Removed newly-blocked high-risk skills from the general Codex and Claude plugin mirrors while keeping their canonical source skills in `skills/`.
+- Added explicit plugin setup metadata for manual-only skills that require pinned third-party tools, host permissions, or local system access.
+
+## New Specialized Plugin Bundles
+
+- **AAS Accessibility & Inclusive UX** - accessibility audit, screen-reader testing, UI a11y, Playwright, and webapp testing workflows.
+- **AAS API Platform Builder** - API design, documentation, auth patterns, OpenAPI, load testing, observability, and backend architecture workflows.
+- **AAS AI Product & Evaluation Ops** - agent evaluation, LLM app patterns, analytics, KPI dashboards, Langfuse, A/B tests, and product-management workflows.
+- **AAS Data Engineering Platform** - Airflow, dbt, data engineering, database architecture, Postgres best practices, SQL, RAG, embeddings, and vector database workflows.
+- **AAS Localization & International Growth** - i18n, hreflang, SEO content, schema markup, analytics, copywriting, and market-research workflows.
+- **AAS Privacy & Compliance Engineering** - GDPR, PCI, FSI compliance, privacy-by-design, security audit, and spec-to-code compliance workflows.
+- **AAS SaaS Launch & Revenue** - launch strategy, pricing, monetization, referrals, Stripe, email sequences, SEO audit, and SaaS MVP workflows.
+
+## Plugin Bundle Expansion
+
+- Expanded existing AAS bundles with additional existing skills, including prompt engineering, n8n expressions, Zapier/Make patterns, analytics-product, business-analyst, DevOps troubleshooting, Google Docs automation, SEO content planning, multi-platform app workflows, Claude monitoring, UI review, OpenAPI generation, Pydantic models, screen-reader testing, broken-authentication review, Django access review, web security testing, and UI accessibility.
+- Updated generated Codex and Claude plugin manifests with richer positioning, recommended audience, exclusions, rationale, and default prompt metadata.
+- Refreshed marketplace data and user-facing bundle docs so specialized plugin candidates now reflect 22 evaluated installable bundles.
+
+## Security Fixes
+
+- Hardened **youtube-notetaker** local artifact server path handling, media serving, content-type handling, and write behavior; PATCH writes are disabled by default unless a write token is explicitly configured.
+- Hardened **competitor-analysis** HTML stripping to avoid script/style regex bypasses and entity-decoding order issues.
+- Replaced mutable or unsafe install guidance in **android-cli**, **apple-notes-search**, **codex-fable5**, and **dos-verify-done-claims** with reviewable, pinned, or manually confirmed setup flows.
+- Added prompt-injection guardrails for **loop-library** live prompt-catalog usage and Atlas workspace documents.
+- Redacted sensitive Android UI journey logging examples and avoided storing password/token/OTP/payment input values in journey logs.
+- Bound ECL harness database service examples to localhost and removed destructive volume deletion from teardown guidance.
+- Replaced predictable `/tmp` paths in cleanup/build examples with `mktemp`-based temporary paths.
+- Added payment/privacy guardrails to **event-staffing-ordering**.
+- Updated Mailtrap and screen-recording related risk labels to avoid safe-install misclassification.
+
+## Maintainer Tooling
+
+- Fixed drift detection normalization so `author:` and `date_added:` are ignored only inside YAML frontmatter, not in meaningful skill body content.
+- Added regression coverage for body-level drift detection.
+- Clarified **2slides-ppt-generator** dependency setup and removed scanner-triggering API-key placeholder examples.
+- Refreshed `apps/web-app/public/social-card.svg` so catalog-count metadata matches the current release surface.
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, bundle manifests, web catalog data, README release metadata, specialized plugin roadmap, and marketplace surfaces for the 1,678+ skill catalog.
+- Added the repo-local `AGENTS.md` contributor/agent guidance file to the release.
+- Verified the release path with validation, generated bundle checks, plugin-compatibility checks, docs security tests, repository tests, targeted self-tests, and whitespace checks.
+
 ## [12.10.0] - 2026-06-19 - "External Skill Imports and Email Workflows"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
