@@ -127,6 +127,10 @@ class EditorialBundlesTests(unittest.TestCase):
                 bundle,
             )
             self.assertEqual(manifest["name"], plugin_name)
+            if bundle.get("defaultPrompts"):
+                self.assertEqual(manifest["interface"]["defaultPrompt"], bundle["defaultPrompts"])
+            if bundle.get("positioning"):
+                self.assertEqual(manifest["interface"]["shortDescription"], bundle["positioning"])
             self.assertLessEqual(
                 len(plugin_name),
                 max_name_length,

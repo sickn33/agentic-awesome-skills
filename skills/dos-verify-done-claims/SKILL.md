@@ -2,7 +2,7 @@
 name: dos-verify-done-claims
 description: "Before accepting an agent's 'done / shipped / fixed' claim, verify it against ground truth (git ancestry + the commit's own diff) using the DOS kernel's `dos verify` and `dos commit-audit` — never the agent's own narration."
 category: quality
-risk: safe
+risk: critical
 source: community
 source_repo: anthony-chaudhary/dos-kernel
 source_type: community
@@ -12,6 +12,14 @@ tags: [verification, git, ai-agents, trust, quality-gate]
 tools: [claude, cursor, gemini]
 license: "MIT"
 license_source: "https://github.com/anthony-chaudhary/dos-kernel/blob/master/LICENSE"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Setup installs and executes an external PyPI CLI; keep out of plugin-safe bundles."
+    docs: SKILL.md
 ---
 
 # Verify done-claims against ground truth, not the agent's word
@@ -48,7 +56,9 @@ This skill adapts the DOS reference "witness-claim" pattern
 ### Step 1: Install the kernel (once)
 
 ```bash
-pip install dos-kernel        # provides the `dos` CLI; deterministic, no key
+python3 -m venv .dos-venv
+. .dos-venv/bin/activate
+python -m pip install 'dos-kernel==<reviewed-version>'  # provides the `dos` CLI
 ```
 
 ### Step 2: Audit the latest commit's claim vs its diff
@@ -144,7 +154,8 @@ dos verify --workspace . AUTH AUTH2 --json --no-ci
 
 ## Security & Safety Notes
 
-- This skill runs shell commands: `pip install dos-kernel` and the read-only
+- This skill runs shell commands: installing `dos-kernel` into an isolated
+  virtualenv and the read-only
   `dos` verbs (`dos commit-audit`, `dos verify`). These verbs never **mutate**
   the repo or push. `dos commit-audit` only reads git history and the working
   tree (no network). `dos verify` is also git-only **unless** the workspace has
@@ -153,7 +164,8 @@ dos verify --workspace . AUTH AUTH2 --json --no-ci
   (as the examples above do) to force the git-only path and guarantee no network.
 - `pip install dos-kernel` installs from PyPI. The distribution name is
   `dos-kernel` (the bare `dos` on PyPI is an unrelated package — do not install
-  it). Pin a version in locked environments.
+  it). Pin a reviewed version; do not install an unpinned latest release into a
+  global Python environment.
 - Run in the repository you intend to adjudicate; the `--workspace .` argument
   scopes every verdict to that repo.
 

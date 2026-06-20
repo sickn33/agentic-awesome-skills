@@ -2,16 +2,22 @@
 name: android-cli
 description: Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line tool.
 category: tools
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-06-15"
 author: Owais
 tags: [android, cli, adb, mobile, build, emulator]
 tools: [claude, cursor, gemini, antigravity]
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Installer guidance executes remote Android CLI setup scripts; keep out of plugin-safe bundles."
+    docs: SKILL.md
 ---
-
-<!-- security-allowlist: curl-pipe-bash -->
 
 # Android CLI Specialist
 
@@ -26,11 +32,17 @@ This skill provides instructions for using the `android` CLI tool. The tool incl
 
 ## Installation
 
-If the `android` tool is not in the path, install it. To install, run the following command:
+If the `android` tool is not in the path, download the platform installer to a private temporary directory, inspect it, then run it only after the user confirms the source and contents:
 
-- **Linux:** `curl -fsSL https://dl.google.com/android/cli/latest/linux_x86_64/install.sh | bash`
-- **macOS:** `curl -fsSL https://dl.google.com/android/cli/latest/darwin_arm64/install.sh | bash`
-- **Windows:** `curl.exe -fsSL https://dl.google.com/android/cli/latest/windows_x86_64/install.cmd -o "%TEMP%\i.cmd" && "%TEMP%\i.cmd"`
+```bash
+tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/android-cli.XXXXXX")" || exit 1
+curl -fsSL https://dl.google.com/android/cli/latest/linux_x86_64/install.sh -o "$tmpdir/install.sh"
+sed -n '1,160p' "$tmpdir/install.sh"
+# After review and explicit user confirmation:
+bash "$tmpdir/install.sh"
+```
+
+Use the matching `darwin_arm64/install.sh` or `windows_x86_64/install.cmd` URL for macOS or Windows. Do not pipe mutable network installer scripts directly into a shell.
 
 ## SDK Management
 

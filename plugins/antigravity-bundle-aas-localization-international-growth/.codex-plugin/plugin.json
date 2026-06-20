@@ -1,0 +1,38 @@
+{
+  "name": "agyb-aas-localization-international-growth",
+  "version": "12.10.0",
+  "description": "Install the \"AAS Localization & International Growth\" workflow plugin from Antigravity Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/antigravity-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+  "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-localization-international-growth",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Localization & International Growth",
+    "shortDescription": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research.",
+    "longDescription": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research. Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills into an international growth workflow. Recommended for: Growth teams, International SEO teams, Product teams localizing UI. Not for: Legal localization certification, Backend-only API services. Covers I18n Localization, SEO Hreflang, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to plan international SEO and localization for this product, including hreflang and content priorities.",
+      "Use this plugin to audit this site for i18n, localized content, schema, analytics, and market research gaps.",
+      "Use this plugin to create a market-localized content plan with copy, SEO, and measurement."
+    ]
+  }
+}

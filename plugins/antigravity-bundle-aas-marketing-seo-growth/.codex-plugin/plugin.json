@@ -1,7 +1,7 @@
 {
   "name": "agyb-aas-marketing-seo-growth",
   "version": "12.10.0",
-  "description": "Install the \"AAS Marketing, SEO & Growth\" editorial skill bundle from Antigravity Awesome Skills.",
+  "description": "Install the \"AAS Marketing, SEO & Growth\" workflow plugin from Antigravity Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
     "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Marketing, SEO & Growth",
-    "shortDescription": "Specialized Product Plugins - Next Wave · 9 curated skills",
-    "longDescription": "Founders and growth teams creating content, SEO systems, experiments, and email campaigns. Covers Content Creator, SEO Audit, and 7 more skills.",
+    "shortDescription": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows.",
+    "longDescription": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows. A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work. Recommended for: Founders, Growth teams, Content and SEO operators. Not for: Backend API design, Security assessment. Covers Content Creator, SEO Audit, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -28,6 +28,11 @@
       "Write"
     ],
     "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
-    "brandColor": "#111827"
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to audit this site for SEO, content, analytics, and conversion opportunities.",
+      "Use this plugin to create a growth experiment backlog with measurement and email follow-up.",
+      "Use this plugin to plan a programmatic SEO cluster and the tracking needed to evaluate it."
+    ]
   }
 }

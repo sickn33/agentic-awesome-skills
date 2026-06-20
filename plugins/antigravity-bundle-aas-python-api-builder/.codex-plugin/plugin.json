@@ -1,7 +1,7 @@
 {
   "name": "agyb-aas-python-api-builder",
   "version": "12.10.0",
-  "description": "Install the \"AAS Python API Builder\" editorial skill bundle from Antigravity Awesome Skills.",
+  "description": "Install the \"AAS Python API Builder\" workflow plugin from Antigravity Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
     "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Python API Builder",
-    "shortDescription": "Specialized Product Plugins - Next Wave · 8 curated skills",
-    "longDescription": "Python developers building APIs, services, and tests. Covers Python Pro, Python Patterns, and 6 more skills.",
+    "shortDescription": "Build Python APIs and services with FastAPI, Django, Pydantic, OpenAPI, async patterns, tests, and API design.",
+    "longDescription": "Build Python APIs and services with FastAPI, Django, Pydantic, OpenAPI, async patterns, tests, and API design. A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together. Recommended for: Python backend teams, FastAPI and Django builders, API maintainers. Not for: Language-agnostic API governance, Frontend-only implementation. Covers Python Pro, Python Patterns, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -28,6 +28,11 @@
       "Write"
     ],
     "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
-    "brandColor": "#111827"
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to design a FastAPI service with routes, Pydantic models, validation, async boundaries, and tests.",
+      "Use this plugin to review this Django API for structure, performance, OpenAPI coverage, and test coverage.",
+      "Use this plugin to refactor this Python service toward clearer API and async patterns."
+    ]
   }
 }

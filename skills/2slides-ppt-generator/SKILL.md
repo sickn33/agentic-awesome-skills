@@ -47,7 +47,14 @@ Users must have a 2slides API key and credits:
 3. **Set API Key:** Store the key in environment variable: `SLIDES_2SLIDES_API_KEY`
 
 ```bash
-export SLIDES_2SLIDES_API_KEY="your_api_key_here"
+read -r -s SLIDES_2SLIDES_API_KEY
+export SLIDES_2SLIDES_API_KEY
+```
+
+4. **Install Script Dependencies:** From this skill directory, install the pinned local requirements before using the Python scripts:
+
+```bash
+python -m pip install -r requirements.txt
 ```
 
 **Credit Costs:**
@@ -273,12 +280,6 @@ Section 2: [Subtopic]
 **Step 2: Generate Slides**
 
 Use the `create_pdf_slides.py` script:
-
-Install the Python dependency first if it is not already available:
-
-```bash
-python -m pip install -r requirements.txt
-```
 
 ```bash
 # Basic generation

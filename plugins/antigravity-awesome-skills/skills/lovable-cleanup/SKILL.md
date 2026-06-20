@@ -251,21 +251,22 @@ Remove any Lovable-specific `.gitignore` entries or commit hooks.
 
 **Step 1 — Map what's actually imported**
 
-<!-- security-allowlist: grep over source files, read-only, writes to /tmp only -->
+<!-- security-allowlist: grep over source files, read-only, writes to private temp dir only -->
 ```bash
+tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/lovable-cleanup.XXXXXX")" || exit 1
 grep -rh "from [\"']@radix-ui/" src/ --include="*.tsx" --include="*.ts" \
-  | grep -oP "from [\"']\K@radix-ui/[^\"']+" | sort -u > /tmp/radix-used.txt
+  | grep -oP "from [\"']\K@radix-ui/[^\"']+" | sort -u > "$tmpdir/radix-used.txt"
 
 grep -rh "from [\"']@/components/ui/" src/ --include="*.tsx" \
-  | grep -oP "from [\"']\K@/components/ui/[^\"']+" | sort -u > /tmp/shadcn-used.txt
+  | grep -oP "from [\"']\K@/components/ui/[^\"']+" | sort -u > "$tmpdir/shadcn-used.txt"
 ```
 
 **Step 2 — Diff against installed**
 
-<!-- security-allowlist: grep and diff on local package.json and /tmp files, read-only -->
+<!-- security-allowlist: grep and diff on local package.json and private temp files, read-only -->
 ```bash
-grep -oP '"@radix-ui/[^"]+' package.json | tr -d '"' | sort > /tmp/radix-installed.txt
-diff /tmp/radix-installed.txt /tmp/radix-used.txt
+grep -oP '"@radix-ui/[^"]+' package.json | tr -d '"' | sort > "$tmpdir/radix-installed.txt"
+diff "$tmpdir/radix-installed.txt" "$tmpdir/radix-used.txt"
 ```
 
 **Step 3 — Bulk remove & verify**
@@ -299,7 +300,8 @@ grep -rn "lovable\|Lovable\|LOVABLE\|lovable-tagger\|lovable\.dev" \
   --include="*.json" --include="*.md" --include="*.html" --include="*.toml" \
   --include="*.yaml" --include="*.yml" --include="*.txt" \
   . 2>/dev/null \
-  | grep -v "node_modules\|\.git\|dist\|build"
+  | grep -v "node_modules\|\.git\|dist\|build" \
+  | sed -E 's/([A-Za-z_][A-Za-z0-9_]*LOVABLE[A-Za-z0-9_]*=).*/\1[REDACTED]/I'
 ```
 
 ---

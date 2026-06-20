@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from _project_paths import find_repo_root
-from validate_skills import configure_utf8_output, parse_frontmatter
+from validate_skills import configure_utf8_output
 
 
 # ---------------------------------------------------------------------------
@@ -38,6 +38,7 @@ BASELINE_FILE = Path("data") / "drift-baseline.json"
 BASELINE_SCHEMA_VERSION = 1
 
 # Fields excluded from hash to prevent false positives on metadata-only edits.
+_FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n?---(?:\s*\n|$)", re.DOTALL)
 _STRIP_PATTERNS = [
     re.compile(r"^date_added:.*$", re.MULTILINE),
     re.compile(r"^author:.*$", re.MULTILINE),
@@ -109,8 +110,12 @@ def _normalize(content: str) -> str:
     whitespace changes or metadata-only edits (date_added, author).
     """
     normalized = content
-    for pattern in _STRIP_PATTERNS:
-        normalized = pattern.sub("", normalized)
+    fm_match = _FRONTMATTER_RE.search(content)
+    if fm_match:
+        frontmatter = fm_match.group(1)
+        for pattern in _STRIP_PATTERNS:
+            frontmatter = pattern.sub("", frontmatter)
+        normalized = f"---\n{frontmatter}\n---\n{content[fm_match.end():]}"
     # Collapse multiple blank lines and strip trailing whitespace per line
     lines = [line.rstrip() for line in normalized.splitlines()]
     normalized = "\n".join(line for line in lines if line or lines)

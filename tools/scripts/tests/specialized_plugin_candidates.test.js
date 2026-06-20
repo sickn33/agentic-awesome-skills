@@ -35,6 +35,11 @@ for (const candidate of candidates) {
   const bundle = bundlesById.get(candidate.id);
   assert.ok(bundle, `candidate ${candidate.id} must be enabled in data/editorial-bundles.json`);
   assert.strictEqual(bundle.name, candidate.name, `candidate ${candidate.id} bundle name should match`);
+  assert.strictEqual(bundle.why, candidate.why, `candidate ${candidate.id} should carry candidate rationale into bundles`);
+  assert.ok(
+    Array.isArray(bundle.defaultPrompts) && bundle.defaultPrompts.length >= 2,
+    `candidate ${candidate.id} should include productized default prompts`,
+  );
   assert.deepStrictEqual(
     bundle.skills.map((skill) => skill.id),
     candidate.skills,

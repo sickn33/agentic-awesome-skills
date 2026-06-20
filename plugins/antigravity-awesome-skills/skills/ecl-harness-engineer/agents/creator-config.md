@@ -98,7 +98,7 @@ set -euo pipefail
 
 # Start PostgreSQL
 docker run -d --name harness-postgres \
-  -p 5432:5432 \
+  -p 127.0.0.1:5432:5432 \
   -e POSTGRES_PASSWORD=testpass \
   postgres:16
 

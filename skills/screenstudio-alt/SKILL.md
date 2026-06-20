@@ -1,7 +1,7 @@
 ---
 name: screenstudio-alt
 description: "Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9:16 vertical export that follows the action — post-production for screen recordings from the CLI."
-risk: safe
+risk: critical
 source: community
 source_type: community
 source_repo: connerkward/screenstudio-alternative-skill
@@ -21,6 +21,14 @@ tools:
   - cursor
   - gemini-cli
   - codex-cli
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Screen/input capture requires sensitive local permissions; keep out of plugin-safe bundles."
+    docs: SKILL.md
 ---
 ## When to Use
 

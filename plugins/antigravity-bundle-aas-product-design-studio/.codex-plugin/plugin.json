@@ -1,7 +1,7 @@
 {
   "name": "agyb-aas-product-design-studio",
   "version": "12.10.0",
-  "description": "Install the \"AAS Product Design Studio\" editorial skill bundle from Antigravity Awesome Skills.",
+  "description": "Install the \"AAS Product Design Studio\" workflow plugin from Antigravity Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
     "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Product Design Studio",
-    "shortDescription": "Specialized Product Plugins · 8 curated skills",
-    "longDescription": "Builders who want richer UI, brand, portfolio, and visual product work. Covers UI UX Pro Max, High End Visual Design, and 6 more skills.",
+    "shortDescription": "Shape product UI through design critique, visual direction, accessibility, responsive UX, motion, and asset generation.",
+    "longDescription": "Shape product UI through design critique, visual direction, accessibility, responsive UX, motion, and asset generation. Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation. Recommended for: Product designers, Frontend teams, Founders polishing a product surface. Not for: Backend-only services, Security audits. Covers UI UX Pro Max, High End Visual Design, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -28,6 +28,11 @@
       "Write"
     ],
     "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
-    "brandColor": "#111827"
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to critique this UI and propose a stronger visual direction.",
+      "Use this plugin to design a responsive accessible product screen and handoff notes for implementation.",
+      "Use this plugin to improve the visual polish, motion, and accessibility of this interface."
+    ]
   }
 }

@@ -1415,18 +1415,24 @@
       "id": "android-cli",
       "path": "skills/android-cli",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Installer guidance executes remote Android CLI setup scripts; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -2284,19 +2290,22 @@
         "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Requires third-party MCP setup and macOS Full Disk Access; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
       "reasons": [
-        "absolute_host_path"
+        "absolute_host_path",
+        "explicit_target_restriction"
       ],
       "blocked_reasons": {
         "codex": [
-          "absolute_host_path"
+          "absolute_host_path",
+          "explicit_target_restriction"
         ],
         "claude": [
-          "absolute_host_path"
+          "absolute_host_path",
+          "explicit_target_restriction"
         ]
       },
       "runtime_files": []
@@ -2552,18 +2561,24 @@
       "id": "atlas-contract",
       "path": "skills/atlas-contract",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Reads workspace Atlas.md as untrusted project memory; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -2571,18 +2586,24 @@
       "id": "atlas-ledger",
       "path": "skills/atlas-ledger",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Writes durable Atlas.md project memory after confirmation; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -7618,18 +7639,24 @@
       "id": "codex-fable5",
       "path": "skills/codex-fable5",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Optional external plugin/helper setup executes mutable third-party code; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -11377,18 +11404,24 @@
       "id": "dos-verify-done-claims",
       "path": "skills/dos-verify-done-claims",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Setup installs and executes an external PyPI CLI; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -18325,18 +18358,24 @@
       "id": "macos-screen-recorder",
       "path": "skills/macos-screen-recorder",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Screen/audio/input capture requires sensitive macOS permissions; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -24708,18 +24747,24 @@
       "id": "screenstudio-alt",
       "path": "skills/screenstudio-alt",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Screen/input capture requires sensitive local permissions; keep out of plugin-safe bundles.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -32180,13 +32225,13 @@
   "summary": {
     "total_skills": 1678,
     "supported": {
-      "codex": 1626,
-      "claude": 1644
+      "codex": 1619,
+      "claude": 1637
     },
     "blocked": {
-      "codex": 52,
-      "claude": 34
+      "codex": 59,
+      "claude": 41
     },
-    "manual_setup": 5
+    "manual_setup": 13
   }
 }

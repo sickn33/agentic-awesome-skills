@@ -88,6 +88,20 @@ class HashComputationTests(unittest.TestCase):
         h_b = detect_drift.compute_hash(content_b)
         self.assertEqual(h_a, h_b, "author change should not affect hash")
 
+    def test_body_author_line_affects_hash(self):
+        content_a = "---\nname: skill\n---\n\n## Notes\nauthor: alice"
+        content_b = "---\nname: skill\n---\n\n## Notes\nauthor: bob"
+        h_a = detect_drift.compute_hash(content_a)
+        h_b = detect_drift.compute_hash(content_b)
+        self.assertNotEqual(h_a, h_b, "body author lines are meaningful content")
+
+    def test_body_date_added_line_affects_hash(self):
+        content_a = "---\nname: skill\n---\n\n## Notes\ndate_added: 2026-01-01"
+        content_b = "---\nname: skill\n---\n\n## Notes\ndate_added: 2026-06-15"
+        h_a = detect_drift.compute_hash(content_a)
+        h_b = detect_drift.compute_hash(content_b)
+        self.assertNotEqual(h_a, h_b, "body date_added lines are meaningful content")
+
     def test_meaningful_content_change_changes_hash(self):
         content_a = "---\nname: skill\n---\n\nOriginal body."
         content_b = "---\nname: skill\n---\n\nCompletely different body content."

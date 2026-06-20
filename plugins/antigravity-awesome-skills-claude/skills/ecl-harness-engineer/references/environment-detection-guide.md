@@ -223,7 +223,7 @@ if ! docker ps -q -f name={{name}} | grep -q .; then
   echo "Starting PostgreSQL ({{name}})..."
   docker run -d \
     --name {{name}} \
-    -p {{connection.default_port}}:5432 \
+    -p 127.0.0.1:{{connection.default_port}}:5432 \
     -e POSTGRES_USER=${{{connection.user_env}}:-postgres} \
     -e POSTGRES_PASSWORD=${{{connection.password_env}}:-postgres} \
     -e POSTGRES_DB=${{{connection.database_env}}:-{{../project_name}}} \
@@ -241,7 +241,7 @@ if ! docker ps -q -f name={{name}} | grep -q .; then
   echo "Starting MySQL ({{name}})..."
   docker run -d \
     --name {{name}} \
-    -p {{connection.default_port}}:3306 \
+    -p 127.0.0.1:{{connection.default_port}}:3306 \
     -e MYSQL_ROOT_PASSWORD=${{{connection.password_env}}:-root} \
     -e MYSQL_DATABASE=${{{connection.database_env}}:-{{../project_name}}} \
     {{setup.docker_image}}
@@ -262,7 +262,7 @@ fi
 {{#if (eq type "redis")}}
 if ! docker ps -q -f name={{name}} | grep -q .; then
   echo "Starting Redis ({{name}})..."
-  docker run -d --name {{name}} -p 6379:6379 {{setup.docker_image}}
+  docker run -d --name {{name}} -p 127.0.0.1:6379:6379 {{setup.docker_image}}
   echo "Redis started."
 fi
 {{/if}}
@@ -507,7 +507,7 @@ services:
   postgres:
     image: postgres:16
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
 ```

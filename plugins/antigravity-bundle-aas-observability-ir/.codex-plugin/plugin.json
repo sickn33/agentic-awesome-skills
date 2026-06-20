@@ -1,7 +1,7 @@
 {
   "name": "agyb-aas-observability-ir",
   "version": "12.10.0",
-  "description": "Install the \"AAS Observability IR\" editorial skill bundle from Antigravity Awesome Skills.",
+  "description": "Install the \"AAS Observability IR\" workflow plugin from Antigravity Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
     "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Observability IR",
-    "shortDescription": "Specialized Product Plugins - Next Wave · 8 curated skills",
-    "longDescription": "Engineering teams monitoring systems, debugging production issues, and writing postmortems. Covers Observability Engineer, Distributed Tracing, and 6 more skills.",
+    "shortDescription": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows.",
+    "longDescription": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows. Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts. Recommended for: SRE teams, Backend teams owning production, Incident responders. Not for: Marketing campaign planning, Static document conversion. Covers Observability Engineer, Distributed Tracing, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -28,6 +28,11 @@
       "Write"
     ],
     "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
-    "brandColor": "#111827"
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to review this service for logging, tracing, SLO, monitoring, and dashboard gaps.",
+      "Use this plugin to build an incident response plan and rollback checklist for this system.",
+      "Use this plugin to draft a blameless postmortem from this timeline and identify action items."
+    ]
   }
 }

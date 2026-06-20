@@ -12,6 +12,14 @@ metadata:
   version: "6.2.0"
   author: wede-wx
   repository: https://github.com/wede-wx/atlas
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Reads workspace Atlas.md as untrusted project memory; keep out of plugin-safe bundles."
+    docs: SKILL.md
 ---
 
 # Atlas Contract v6.2

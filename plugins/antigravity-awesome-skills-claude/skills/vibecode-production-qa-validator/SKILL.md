@@ -58,7 +58,7 @@ qa:code() { npx tsc --noEmit && npx eslint . --ext .js,.jsx,.ts,.tsx --max-warni
 - [ ] Build log has no errors
 
 ```bash
-qa:build() { npm run build 2>&1 | tee /tmp/qa-build.log && ! grep -qi "error\|failed" /tmp/qa-build.log; }
+qa:build() { local log; log="$(mktemp "${TMPDIR:-/tmp}/qa-build.XXXXXX.log")" || return 1; set -o pipefail; npm run build 2>&1 | tee "$log"; local rc=$?; set +o pipefail; [ "$rc" -eq 0 ] && ! grep -qi "error\|failed" "$log"; local ok=$?; rm -f "$log"; return "$ok"; }
 ```
 
 | Symbol | Meaning |

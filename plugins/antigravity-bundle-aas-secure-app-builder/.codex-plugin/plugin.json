@@ -1,7 +1,7 @@
 {
   "name": "agyb-aas-secure-app-builder",
   "version": "12.10.0",
-  "description": "Install the \"AAS Secure App Builder\" editorial skill bundle from Antigravity Awesome Skills.",
+  "description": "Install the \"AAS Secure App Builder\" workflow plugin from Antigravity Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
     "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Secure App Builder",
-    "shortDescription": "Specialized Product Plugins · 8 curated skills",
-    "longDescription": "Application developers who want security embedded while building features. Covers API Security Best Practices, Auth Implementation Patterns, and 6 more skills.",
+    "shortDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in.",
+    "longDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in. Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams. Recommended for: Application developers, Product engineering teams, Security-conscious backend and frontend builders. Not for: Offensive pentest engagements, Infrastructure-only reviews. Covers API Security Best Practices, Auth Implementation Patterns, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -28,6 +28,11 @@
       "Write"
     ],
     "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
-    "brandColor": "#111827"
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to review this PR for auth, access control, data exposure, injection, and secrets risks.",
+      "Use this plugin to design a secure API feature with validation, authorization, and auditability.",
+      "Use this plugin to harden this payment, authentication, or user-data flow before release."
+    ]
   }
 }

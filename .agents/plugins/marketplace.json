@@ -627,6 +627,90 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Maintainer & OSS"
+    },
+    {
+      "name": "agyb-aas-accessibility-inclusive-ux",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-accessibility-inclusive-ux"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-api-platform-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-api-platform-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-saas-launch-revenue",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-saas-launch-revenue"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-ai-product-evaluation-ops",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-ai-product-evaluation-ops"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "agyb-aas-data-engineering-platform",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-data-engineering-platform"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-aas-privacy-compliance-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-privacy-compliance-engineering"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "agyb-aas-localization-international-growth",
+      "source": {
+        "source": "local",
+        "path": "./plugins/antigravity-bundle-aas-localization-international-growth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
     }
   ]
 }

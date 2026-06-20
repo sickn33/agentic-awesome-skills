@@ -21,6 +21,8 @@ arbitrary and kept only so the same artifact HTML works unmodified):
 """
 import argparse, json, os, sys, re, mimetypes, posixpath
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 try:
     import yaml
@@ -29,6 +31,9 @@ except ImportError:
 
 API = "/api/video-deepdives"
 FM_RE = re.compile(r"^---\n(.*?)\n---\n?(.*)$", re.DOTALL)
+SAFE_SLUG_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+SAFE_MEDIA_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+SAFE_CTYPE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*(?:; charset=[A-Za-z0-9._-]+)?$")
 
 
 def split_frontmatter(text):
@@ -45,20 +50,37 @@ def dump_file(meta, body):
     return out + body
 
 
-def load_item(lib, slug):
-    path = os.path.join(lib, slug + ".md")
-    if not os.path.isfile(path):
+def library_path(lib, *parts):
+    root = Path(lib).resolve()
+    candidate = root.joinpath(*parts).resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError:
         return None
-    meta, body = split_frontmatter(open(path, encoding="utf-8").read())
+    return candidate
+
+
+def safe_content_type(ctype):
+    return ctype if isinstance(ctype, str) and SAFE_CTYPE_RE.match(ctype) else "application/octet-stream"
+
+
+def load_item(lib, slug):
+    if not SAFE_SLUG_RE.match(slug):
+        return None
+    path = library_path(lib, slug + ".md")
+    if not path or not path.is_file():
+        return None
+    meta, body = split_frontmatter(path.read_text(encoding="utf-8"))
     return path, meta, body
 
 
 def list_items(lib):
     items = []
-    for fn in sorted(os.listdir(lib)):
-        if not fn.endswith(".md") or fn.startswith("_"):
+    for path in sorted(Path(lib).iterdir()):
+        fn = path.name
+        if not path.is_file() or not fn.endswith(".md") or fn.startswith("_"):
             continue
-        slug = fn[:-3]
+        slug = path.stem
         loaded = load_item(lib, slug)
         if not loaded:
             continue
@@ -74,11 +96,13 @@ def list_items(lib):
 class Handler(BaseHTTPRequestHandler):
     lib = None
     artifact = None
+    write_token = None
 
     def log_message(self, *a):
         pass  # quiet
 
     def _send(self, code, body, ctype="application/json"):
+        ctype = safe_content_type(ctype)
         if isinstance(body, (dict, list)):
             body = json.dumps(body).encode()
         elif isinstance(body, str):
@@ -87,8 +111,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, PATCH, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Video-Library-Token")
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(body)
@@ -110,12 +134,13 @@ class Handler(BaseHTTPRequestHandler):
 
         if path.startswith(API + "/_media/"):
             fn = posixpath.basename(path)  # strip any traversal
-            fp = os.path.join(self.lib, "_media", fn)
-            if not os.path.isfile(fp):
+            if not SAFE_MEDIA_RE.match(fn):
+                return self._send(400, {"error": "bad media name"})
+            fp = library_path(self.lib, "_media", fn)
+            if not fp or not fp.is_file():
                 return self._send(404, {"error": "no such media"})
-            ctype = mimetypes.guess_type(fp)[0] or "application/octet-stream"
-            with open(fp, "rb") as f:
-                return self._send(200, f.read(), ctype)
+            ctype = mimetypes.guess_type(str(fp))[0] or "application/octet-stream"
+            return self._send(200, fp.read_bytes(), ctype)
 
         if path.startswith(API + "/"):
             slug = posixpath.basename(path)
@@ -128,6 +153,10 @@ class Handler(BaseHTTPRequestHandler):
         return self._send(404, {"error": "not found"})
 
     def do_PATCH(self):
+        if not self.write_token:
+            return self._send(403, {"error": "writes disabled"})
+        if self.headers.get("X-Video-Library-Token") != self.write_token:
+            return self._send(403, {"error": "bad write token"})
         path = self.path.split("?", 1)[0].rstrip("/")
         if not path.startswith(API + "/"):
             return self._send(404, {"error": "not found"})
@@ -145,26 +174,46 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(fields, dict):
             return self._send(400, {"error": "fields must be an object"})
         meta.update(fields)
-        open(fp, "w", encoding="utf-8").write(dump_file(meta, body))
+        fp.write_text(dump_file(meta, body), encoding="utf-8")
         return self._send(200, {"ok": True, "slug": slug, "updated": list(fields.keys())})
+
+
+def self_test():
+    with TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "video_1.md").write_text("---\ntitle: Demo\n---\nBody", encoding="utf-8")
+        (root / "_media").mkdir()
+        (root / "_media" / "video_1-slide-01.jpg").write_bytes(b"x")
+        assert load_item(str(root), "video_1")
+        assert load_item(str(root), "../secret") is None
+        assert library_path(str(root), "_media", "../video_1.md") == root.resolve() / "video_1.md"
+        assert safe_content_type("text/html; charset=utf-8") == "text/html; charset=utf-8"
+        assert safe_content_type("text/html\r\nX-Bad: 1") == "application/octet-stream"
 
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--self-test", action="store_true")
     ap.add_argument("--dir", default=os.path.expanduser(os.environ.get("VIDEO_LIBRARY_DIR", "~/video-deepdives")))
     ap.add_argument("--port", type=int, default=int(os.environ.get("VIDEO_LIBRARY_PORT", "8000")))
     ap.add_argument("--host", default="127.0.0.1")
+    ap.add_argument("--write-token", default=os.environ.get("VIDEO_LIBRARY_WRITE_TOKEN"))
     here = os.path.dirname(os.path.abspath(__file__))
     ap.add_argument("--artifact", default=os.path.join(here, "..", "reference", "artifact.html"))
     a = ap.parse_args()
+    if a.self_test:
+        self_test()
+        return
 
     lib = os.path.abspath(os.path.expanduser(a.dir))
     os.makedirs(lib, exist_ok=True)
     Handler.lib = lib
     Handler.artifact = os.path.abspath(a.artifact)
+    Handler.write_token = a.write_token
     n = len([f for f in os.listdir(lib) if f.endswith(".md") and not f.startswith("_")])
     print(f"Library: {lib}  ({n} videos)")
     print(f"Artifact: {Handler.artifact}")
+    print("Writes: " + ("enabled with X-Video-Library-Token" if Handler.write_token else "disabled (set VIDEO_LIBRARY_WRITE_TOKEN to enable PATCH)"))
     print(f"Serving on http://{a.host}:{a.port}/   (Ctrl-C to stop)")
     ThreadingHTTPServer((a.host, a.port), Handler).serve_forever()
 

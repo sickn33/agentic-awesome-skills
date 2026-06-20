@@ -100,7 +100,7 @@ Format the execution results into a standardized JSON schema and write it to the
       <action>Tap the username input field</action>
       <action>Type "testuser" into the input</action>
       <action>Tap the password input field</action>
-      <action>Type "password123" into the input</action>
+      <action>Type a redacted test password into the input</action>
       <action>Tap the "Login" button</action>
       <action>Verify that the Home dashboard is visible and user profile photo is shown</action>
    </actions>
@@ -144,12 +144,12 @@ Format the execution results into a standardized JSON schema and write it to the
       "comment": "Tapped center of password input."
     },
     {
-      "action": "Type \"password123\" into the input",
+      "action": "Type a redacted test password into the input",
       "status": "PASSED",
       "commands": [
-        "adb shell input text \"password123\""
+        "adb shell input text \"[REDACTED_PASSWORD]\""
       ],
-      "comment": "Password typed successfully."
+      "comment": "Password typed successfully. The actual input value was not stored in the report."
     },
     {
       "action": "Tap the \"Login\" button",
@@ -177,7 +177,7 @@ Format the execution results into a standardized JSON schema and write it to the
   $$x_{center} = \frac{x_1 + x_2}{2}, \quad y_{center} = \frac{y_1 + y_2}{2}$$
 - ✅ **Include Sleep Buffers**: Always add a short delay (e.g., 1-2 seconds) after interactive actions (like button taps) to let layouts and transitions render before executing assertions.
 - ✅ **Fail Fast**: Stop the test immediately upon encountering the first failure. Continuing after a failure leads to invalid results.
-- ✅ **Log Precise Commands**: Include every raw command (such as `adb shell input tap`) in the JSON output list for diagnostics.
+- ✅ **Log Precise Commands Safely**: Include non-sensitive raw commands (such as `adb shell input tap`) in the JSON output list for diagnostics. Redact text entered into password, OTP, token, payment, or personal-data fields; never persist the literal secret in reports, CI logs, or shared artifacts.
 
 ## Limitations
 

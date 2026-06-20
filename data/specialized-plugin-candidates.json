@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source_catalog": "data/skills_index.json",
-  "evaluated_skill_count": 1494,
+  "evaluated_skill_count": 1678,
   "selection_rules": [
     "Prefer focused plugins with a clear user job over broad library replicas.",
     "Include only skill IDs present in data/skills_index.json.",
@@ -29,7 +29,8 @@
         "tailwind-patterns",
         "shadcn",
         "form-cro",
-        "seo-audit"
+        "seo-audit",
+        "ui-a11y"
       ]
     },
     {
@@ -46,7 +47,9 @@
         "3d-web-experience",
         "canvas-design",
         "scroll-experience",
-        "interactive-portfolio"
+        "interactive-portfolio",
+        "ui-a11y",
+        "ui-review"
       ]
     },
     {
@@ -64,7 +67,8 @@
         "cloud-penetration-testing",
         "security-auditor",
         "vulnerability-scanner",
-        "sast-configuration"
+        "sast-configuration",
+        "web-security-testing"
       ]
     },
     {
@@ -81,7 +85,9 @@
         "cc-skill-security-review",
         "pci-compliance",
         "sast-configuration",
-        "sql-injection-testing"
+        "sql-injection-testing",
+        "broken-authentication",
+        "django-access-review"
       ]
     },
     {
@@ -97,6 +103,7 @@
         "pptx-official",
         "pdf-official",
         "pdf-conversion-router",
+        "google-docs-automation",
         "google-sheets-automation",
         "google-slides-automation"
       ]
@@ -109,13 +116,15 @@
       "why": "Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.",
       "skills": [
         "analytics-tracking",
+        "analytics-product",
         "sql-pro",
         "postgres-best-practices",
         "database-architect",
         "dbt-transformation-patterns",
         "claude-d3js-skill",
         "kpi-dashboard-design",
-        "ab-test-setup"
+        "ab-test-setup",
+        "business-analyst"
       ]
     },
     {
@@ -133,7 +142,8 @@
         "rag-engineer",
         "langgraph",
         "langfuse",
-        "context-window-management"
+        "context-window-management",
+        "prompt-engineering"
       ]
     },
     {
@@ -170,7 +180,8 @@
         "webapp-testing",
         "k6-load-testing",
         "test-fixing",
-        "code-review-checklist"
+        "code-review-checklist",
+        "screen-reader-testing"
       ]
     },
     {
@@ -188,7 +199,8 @@
         "environment-setup-guide",
         "deployment-procedures",
         "bash-linux",
-        "incident-responder"
+        "incident-responder",
+        "devops-troubleshooter"
       ]
     },
     {
@@ -201,6 +213,7 @@
         "content-creator",
         "seo-audit",
         "seo-fundamentals",
+        "seo-content-planner",
         "programmatic-seo",
         "analytics-tracking",
         "ab-test-setup",
@@ -219,11 +232,13 @@
         "workflow-automation",
         "mcp-builder",
         "make-automation",
+        "zapier-make-patterns",
         "airtable-automation",
         "notion-automation",
         "slack-automation",
         "googlesheets-automation",
-        "github-automation"
+        "github-automation",
+        "n8n-expression-syntax"
       ]
     },
     {
@@ -240,7 +255,9 @@
         "postmortem-writing",
         "performance-engineer",
         "grafana-dashboards",
-        "langfuse"
+        "langfuse",
+        "devops-troubleshooter",
+        "claude-monitor"
       ]
     },
     {
@@ -257,7 +274,9 @@
         "django-pro",
         "python-testing-patterns",
         "async-python-patterns",
-        "api-design-principles"
+        "api-design-principles",
+        "pydantic-models-py",
+        "openapi-spec-generation"
       ]
     },
     {
@@ -275,7 +294,136 @@
         "expo-deployment",
         "flutter-expert",
         "ios-developer",
-        "app-store-optimization"
+        "app-store-optimization",
+        "multi-platform-apps-multi-platform"
+      ]
+    },
+    {
+      "id": "aas-accessibility-inclusive-ux",
+      "name": "AAS Accessibility & Inclusive UX",
+      "priority": "tier-1",
+      "audience": "Design, frontend, QA, and product teams improving accessible user experiences.",
+      "why": "Accessibility is a standalone product quality workflow spanning audit, automated scanning, screen-reader checks, high contrast, fixes, and regression testing.",
+      "skills": [
+        "accesslint-audit",
+        "accesslint-scan",
+        "screen-reader-testing",
+        "accesslint-diff",
+        "fixing-accessibility",
+        "ui-a11y",
+        "webapp-testing",
+        "playwright-skill"
+      ]
+    },
+    {
+      "id": "aas-api-platform-builder",
+      "name": "AAS API Platform Builder",
+      "priority": "tier-1",
+      "audience": "Backend and platform teams designing APIs, contracts, auth, security, load tests, and observability.",
+      "why": "Complements Python API Builder with a language-agnostic API platform workflow from design and OpenAPI contracts to auth, security, documentation, load testing, and observability.",
+      "skills": [
+        "api-design-principles",
+        "api-patterns",
+        "openapi-spec-generation",
+        "api-documentation",
+        "api-endpoint-builder",
+        "auth-implementation-patterns",
+        "api-security-best-practices",
+        "backend-architect",
+        "k6-load-testing",
+        "observability-engineer"
+      ]
+    },
+    {
+      "id": "aas-saas-launch-revenue",
+      "name": "AAS SaaS Launch & Revenue",
+      "priority": "tier-1",
+      "audience": "Founders and product teams launching, pricing, monetizing, measuring, and improving SaaS products.",
+      "why": "Turns scattered startup, pricing, payments, analytics, lifecycle, referral, and SEO skills into one launch-to-revenue workflow.",
+      "skills": [
+        "saas-mvp-launcher",
+        "micro-saas-launcher",
+        "pricing-strategy",
+        "monetization",
+        "stripe-integration",
+        "analytics-product",
+        "launch-strategy",
+        "referral-program",
+        "email-sequence",
+        "seo-audit"
+      ]
+    },
+    {
+      "id": "aas-ai-product-evaluation-ops",
+      "name": "AAS AI Product & Evaluation Ops",
+      "priority": "tier-1",
+      "audience": "PMs, founders, and AI product teams defining, measuring, and improving AI features.",
+      "why": "Covers the product side of AI work: wrapper strategy, evals, tracing, product metrics, experiments, model evaluation, and context constraints.",
+      "skills": [
+        "ai-wrapper-product",
+        "agent-evaluation",
+        "langfuse",
+        "llm-app-patterns",
+        "context-window-management",
+        "kpi-dashboard-design",
+        "analytics-product",
+        "product-manager",
+        "ab-test-setup",
+        "hugging-face-evaluation"
+      ]
+    },
+    {
+      "id": "aas-data-engineering-platform",
+      "name": "AAS Data Engineering Platform",
+      "priority": "tier-2",
+      "audience": "Data and AI platform teams building pipelines, warehouses, transforms, embeddings, and RAG-ready data foundations.",
+      "why": "Connects data pipelines, dbt, Postgres, vector databases, embeddings, RAG, SQL, and transformation practice into a modern data platform plugin.",
+      "skills": [
+        "data-engineer",
+        "airflow-dag-patterns",
+        "dbt-transformation-patterns",
+        "postgres-best-practices",
+        "database-architect",
+        "vector-database-engineer",
+        "embedding-strategies",
+        "rag-engineer",
+        "sql-pro",
+        "fp-data-transforms"
+      ]
+    },
+    {
+      "id": "aas-privacy-compliance-engineering",
+      "name": "AAS Privacy & Compliance Engineering",
+      "priority": "tier-2",
+      "audience": "Teams building privacy-aware and compliance-sensitive SaaS, AI, finance, and cloud systems.",
+      "why": "Uses existing privacy, GDPR, PCI, compliance, cloud, spec, and security review skills to create a practical engineering compliance workflow.",
+      "skills": [
+        "privacy-by-design",
+        "gdpr-data-handling",
+        "pci-compliance",
+        "fsi-compliance-checker",
+        "spec-to-code-compliance",
+        "security-audit",
+        "cc-skill-security-review"
+      ]
+    },
+    {
+      "id": "aas-localization-international-growth",
+      "name": "AAS Localization & International Growth",
+      "priority": "tier-2",
+      "audience": "Growth, content, and product teams expanding sites and products across languages and markets.",
+      "why": "Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills into an international growth workflow.",
+      "skills": [
+        "i18n-localization",
+        "seo-hreflang",
+        "seo-fundamentals",
+        "seo-content-planner",
+        "seo-content-writer",
+        "schema-markup",
+        "content-creator",
+        "copywriting",
+        "analytics-tracking",
+        "apify-market-research"
       ]
     }
   ]

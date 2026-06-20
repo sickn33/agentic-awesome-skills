@@ -157,8 +157,31 @@ def _humanize_skill_label(skill_id: str) -> str:
     return " ".join(words)
 
 
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _bundle_codex_short_description(bundle: dict[str, Any], category: str, skill_count: int) -> str:
+    positioning = str(bundle.get("positioning", "")).strip()
+    if positioning:
+        return positioning
+    return f"{category} · {skill_count} curated skills"
+
+
+def _format_codex_audience(prefix: str, values: list[str]) -> str:
+    if not values:
+        return ""
+    return f"{prefix}: {', '.join(values)}."
+
+
 def _bundle_codex_long_description(bundle: dict[str, Any]) -> str:
-    audience = bundle.get("audience") or bundle["description"]
+    audience = str(bundle.get("audience") or bundle["description"]).strip()
+    positioning = str(bundle.get("positioning", "")).strip()
+    why = str(bundle.get("why", "")).strip()
+    recommended_for = _string_list(bundle.get("recommendedFor"))
+    not_for = _string_list(bundle.get("notFor"))
     highlights = [
         _humanize_skill_label(skill["id"])
         for skill in bundle["skills"][:2]
@@ -167,15 +190,27 @@ def _bundle_codex_long_description(bundle: dict[str, Any]) -> str:
     remaining = len(bundle["skills"]) - len(highlights)
 
     if not highlights:
-        return f'{audience} Includes {len(bundle["skills"])} curated skills from Antigravity Awesome Skills.'
+        coverage = f'Includes {len(bundle["skills"])} curated skills from Antigravity Awesome Skills.'
+    elif remaining > 0:
+        coverage = f"Covers {', '.join(highlights)}, and {remaining} more skills."
+    elif len(highlights) == 1:
+        coverage = f"Covers {highlights[0]}."
+    else:
+        coverage = f"Covers {' and '.join(highlights)}."
 
-    if remaining > 0:
-        return f"{audience} Covers {', '.join(highlights)}, and {remaining} more skills."
-
-    if len(highlights) == 1:
-        return f"{audience} Covers {highlights[0]}."
-
-    return f"{audience} Covers {' and '.join(highlights)}."
+    parts = [positioning or audience]
+    if why and why not in parts:
+        parts.append(why)
+    parts.extend(
+        part
+        for part in (
+            _format_codex_audience("Recommended for", recommended_for),
+            _format_codex_audience("Not for", not_for),
+            coverage,
+        )
+        if part
+    )
+    return " ".join(parts)
 
 
 def _format_count_label(count: int) -> str:
@@ -225,6 +260,10 @@ def _validate_editorial_bundles(root: Path, payload: dict[str, Any]) -> list[dic
         for key in ("group", "emoji", "tagline", "audience", "description"):
             if not str(bundle.get(key, "")).strip():
                 raise ValueError(f"Editorial bundle '{bundle_id}' is missing required field '{key}'.")
+
+        for key in ("recommendedFor", "notFor", "defaultPrompts"):
+            if key in bundle and not _string_list(bundle[key]):
+                raise ValueError(f"Editorial bundle '{bundle_id}' field '{key}' must be a non-empty string array.")
 
         skills = bundle.get("skills")
         if not isinstance(skills, list) or not skills:
@@ -438,12 +477,30 @@ def _bundle_codex_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, An
     category = _clean_group_label(bundle["group"])
     plugin_name = _bundle_codex_plugin_name(bundle["id"])
     skill_count = len(bundle["skills"])
+    is_productized = bool(str(bundle.get("positioning", "")).strip() or _string_list(bundle.get("defaultPrompts")))
+    description = (
+        f'Install the "{bundle["name"]}" workflow plugin from Antigravity Awesome Skills.'
+        if is_productized
+        else f'Install the "{bundle["name"]}" editorial skill bundle from Antigravity Awesome Skills.'
+    )
+    interface = {
+        "displayName": bundle["name"],
+        "shortDescription": _bundle_codex_short_description(bundle, category, skill_count),
+        "longDescription": _bundle_codex_long_description(bundle),
+        "developerName": AUTHOR["name"],
+        "category": category,
+        "capabilities": ["Interactive", "Write"],
+        "websiteURL": REPO_URL,
+        "brandColor": "#111827",
+    }
+    default_prompts = _string_list(bundle.get("defaultPrompts"))
+    if default_prompts:
+        interface["defaultPrompt"] = default_prompts
+
     return {
         "name": plugin_name,
         "version": metadata["version"],
-        "description": (
-            f'Install the "{bundle["name"]}" editorial skill bundle from Antigravity Awesome Skills.'
-        ),
+        "description": description,
         "author": AUTHOR,
         "homepage": REPO_URL,
         "repository": REPO_URL,
@@ -456,16 +513,7 @@ def _bundle_codex_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, An
             "productivity",
         ],
         "skills": "./skills/",
-        "interface": {
-            "displayName": bundle["name"],
-            "shortDescription": f"{category} · {skill_count} curated skills",
-            "longDescription": _bundle_codex_long_description(bundle),
-            "developerName": AUTHOR["name"],
-            "category": category,
-            "capabilities": ["Interactive", "Write"],
-            "websiteURL": REPO_URL,
-            "brandColor": "#111827",
-        },
+        "interface": interface,
     }
 
 

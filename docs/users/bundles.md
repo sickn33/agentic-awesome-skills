@@ -378,6 +378,7 @@ _Frontend and full-stack developers shipping modern web apps._
 - [`shadcn`](../../skills/shadcn/): Build polished interfaces with shadcn/ui.
 - [`form-cro`](../../skills/form-cro/): Improve form conversion and usability.
 - [`seo-audit`](../../skills/seo-audit/): Audit technical SEO and discoverability.
+- [`ui-a11y`](../../skills/ui-a11y/): Audit WCAG, contrast, focus, labels, motion, and semantic HTML.
 
 ### 🎨 The "AAS Product Design Studio" Plugin
 
@@ -393,6 +394,8 @@ _Builders who want richer UI, brand, portfolio, and visual product work._
 - [`canvas-design`](../../skills/canvas-design/): Generate visual assets, posters, and diagrams.
 - [`scroll-experience`](../../skills/scroll-experience/): Design scroll-driven web experiences.
 - [`interactive-portfolio`](../../skills/interactive-portfolio/): Create compelling interactive portfolios.
+- [`ui-a11y`](../../skills/ui-a11y/): Audit WCAG, contrast, focus, labels, motion, and semantic HTML.
+- [`ui-review`](../../skills/ui-review/): Review UI quality, usability, and product fit.
 
 ### 🛡️ The "AAS Security Engineer" Plugin
 
@@ -409,6 +412,7 @@ _Authorized security testing, audit, and hardening teams._
 - [`security-auditor`](../../skills/security-auditor/): Run comprehensive security audits.
 - [`vulnerability-scanner`](../../skills/vulnerability-scanner/): Analyze and validate vulnerability findings.
 - [`sast-configuration`](../../skills/sast-configuration/): Configure static application security testing.
+- [`web-security-testing`](../../skills/web-security-testing/): Test web application security defensively.
 
 ### 🔐 The "AAS Secure App Builder" Plugin
 
@@ -424,6 +428,8 @@ _Application developers who want security embedded while building features._
 - [`pci-compliance`](../../skills/pci-compliance/): Handle payment security and PCI expectations.
 - [`sast-configuration`](../../skills/sast-configuration/): Configure static application security testing.
 - [`sql-injection-testing`](../../skills/sql-injection-testing/): Find and validate SQL injection risks.
+- [`broken-authentication`](../../skills/broken-authentication/): Find and prevent authentication implementation flaws.
+- [`django-access-review`](../../skills/django-access-review/): Review Django access control and authorization behavior.
 
 ### 📄 The "AAS Documents & Presentations" Plugin
 
@@ -437,6 +443,7 @@ _Users creating, editing, converting, and automating office documents._
 - [`pptx-official`](../../skills/pptx-official/): Create and edit PowerPoint-compatible presentations.
 - [`pdf-official`](../../skills/pdf-official/): Extract, generate, and manipulate PDFs.
 - [`pdf-conversion-router`](../../skills/pdf-conversion-router/): Choose high-fidelity PDF conversion routes.
+- [`google-docs-automation`](../../skills/google-docs-automation/): Automate Google Docs creation and updates.
 - [`google-sheets-automation`](../../skills/google-sheets-automation/): Automate Google Sheets reads and writes.
 - [`google-slides-automation`](../../skills/google-slides-automation/): Automate Google Slides updates.
 
@@ -447,6 +454,7 @@ _Operators, analysts, and builders working with product analytics, SQL, dashboar
 **Plugin status:** Codex plugin-safe · Claude plugin-safe
 
 - [`analytics-tracking`](../../skills/analytics-tracking/): Set up reliable product analytics.
+- [`analytics-product`](../../skills/analytics-product/): Model product analytics and product metrics.
 - [`sql-pro`](../../skills/sql-pro/): Query and model data with modern SQL.
 - [`postgres-best-practices`](../../skills/postgres-best-practices/): Optimize Postgres schemas and queries.
 - [`database-architect`](../../skills/database-architect/): Design robust database structures.
@@ -454,6 +462,7 @@ _Operators, analysts, and builders working with product analytics, SQL, dashboar
 - [`claude-d3js-skill`](../../skills/claude-d3js-skill/): Create custom D3 visualizations.
 - [`kpi-dashboard-design`](../../skills/kpi-dashboard-design/): Design dashboards for decision-making.
 - [`ab-test-setup`](../../skills/ab-test-setup/): Plan and validate experiments.
+- [`business-analyst`](../../skills/business-analyst/): Analyze business context, requirements, and tradeoffs.
 
 ### 🤖 The "AAS Agent & MCP Builder" Plugin
 
@@ -470,6 +479,7 @@ _Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.
 - [`langgraph`](../../skills/langgraph/): Implement stateful agent workflows.
 - [`langfuse`](../../skills/langfuse/): Trace, evaluate, and monitor LLM apps.
 - [`context-window-management`](../../skills/context-window-management/): Manage long context effectively.
+- [`prompt-engineering`](../../skills/prompt-engineering/): Design effective prompts and LLM interaction patterns.
 
 ### 🧰 The "AAS OSS Maintainer" Plugin
 
@@ -503,6 +513,7 @@ _Engineers and QA teams writing, debugging, and stabilizing test suites._
 - [`k6-load-testing`](../../skills/k6-load-testing/): Run load and scalability tests.
 - [`test-fixing`](../../skills/test-fixing/): Fix failing tests systematically.
 - [`code-review-checklist`](../../skills/code-review-checklist/): Catch common bugs in reviews.
+- [`screen-reader-testing`](../../skills/screen-reader-testing/): Test interfaces with screen-reader expectations.
 
 ### ☁️ The "AAS DevOps & Cloud" Plugin
 
@@ -519,6 +530,7 @@ _Teams shipping infrastructure, deployments, and operational workflows._
 - [`deployment-procedures`](../../skills/deployment-procedures/): Roll out changes safely.
 - [`bash-linux`](../../skills/bash-linux/): Use Linux shell workflows effectively.
 - [`incident-responder`](../../skills/incident-responder/): Respond to incidents with clear procedure.
+- [`devops-troubleshooter`](../../skills/devops-troubleshooter/): Diagnose infrastructure and deployment issues.
 
 
 ---
@@ -534,6 +546,7 @@ _Founders and growth teams creating content, SEO systems, experiments, and email
 - [`content-creator`](../../skills/content-creator/): Create SEO-aware marketing content.
 - [`seo-audit`](../../skills/seo-audit/): Audit technical SEO and discoverability.
 - [`seo-fundamentals`](../../skills/seo-fundamentals/): Apply durable SEO principles.
+- [`seo-content-planner`](../../skills/seo-content-planner/): Plan SEO content clusters and calendars.
 - [`programmatic-seo`](../../skills/programmatic-seo/): Create scalable SEO page systems.
 - [`analytics-tracking`](../../skills/analytics-tracking/): Set up reliable product analytics.
 - [`ab-test-setup`](../../skills/ab-test-setup/): Plan and validate experiments.
@@ -550,11 +563,13 @@ _Teams designing reliable automations across tools, data stores, and communicati
 - [`workflow-automation`](../../skills/workflow-automation/): Design durable automation workflows.
 - [`mcp-builder`](../../skills/mcp-builder/): Create MCP interfaces for agents.
 - [`make-automation`](../../skills/make-automation/): Build Make/Integromat automations.
+- [`zapier-make-patterns`](../../skills/zapier-make-patterns/): Design Zapier and Make automation patterns.
 - [`airtable-automation`](../../skills/airtable-automation/): Automate Airtable data and views.
 - [`notion-automation`](../../skills/notion-automation/): Automate Notion pages and databases.
 - [`slack-automation`](../../skills/slack-automation/): Automate Slack workflows.
 - [`googlesheets-automation`](../../skills/googlesheets-automation/): Automate Google Sheets operations.
 - [`github-automation`](../../skills/github-automation/): Automate GitHub issues and repository work.
+- [`n8n-expression-syntax`](../../skills/n8n-expression-syntax/): Use n8n expressions safely in automations.
 
 ### 📡 The "AAS Observability IR" Plugin
 
@@ -570,6 +585,8 @@ _Engineering teams monitoring systems, debugging production issues, and writing 
 - [`performance-engineer`](../../skills/performance-engineer/): Diagnose and improve application performance.
 - [`grafana-dashboards`](../../skills/grafana-dashboards/): Create useful Grafana dashboards.
 - [`langfuse`](../../skills/langfuse/): Trace, evaluate, and monitor LLM apps.
+- [`devops-troubleshooter`](../../skills/devops-troubleshooter/): Diagnose infrastructure and deployment issues.
+- [`claude-monitor`](../../skills/claude-monitor/): Monitor Claude usage and operational behavior.
 
 ### 🐍 The "AAS Python API Builder" Plugin
 
@@ -585,6 +602,8 @@ _Python developers building APIs, services, and tests._
 - [`python-testing-patterns`](../../skills/python-testing-patterns/): Test Python code with pytest patterns.
 - [`async-python-patterns`](../../skills/async-python-patterns/): Use asyncio and async Python safely.
 - [`api-design-principles`](../../skills/api-design-principles/): Design clear and maintainable APIs.
+- [`pydantic-models-py`](../../skills/pydantic-models-py/): Design Pydantic models for Python APIs.
+- [`openapi-spec-generation`](../../skills/openapi-spec-generation/): Generate and maintain OpenAPI specifications.
 
 ### 📱 The "AAS Mobile App Builder" Plugin
 
@@ -601,6 +620,7 @@ _Mobile teams shipping Expo, React Native, Flutter, and iOS apps._
 - [`flutter-expert`](../../skills/flutter-expert/): Build Flutter multi-platform apps.
 - [`ios-developer`](../../skills/ios-developer/): Develop iOS apps with Swift.
 - [`app-store-optimization`](../../skills/app-store-optimization/): Improve App Store and Play Store visibility.
+- [`multi-platform-apps-multi-platform`](../../skills/multi-platform-apps-multi-platform/): Plan and build multi-platform app experiences.
 
 
 ---
@@ -826,6 +846,130 @@ _For creating and maintaining high-quality SKILL.md assets._
 - [`lint-and-validate`](../../skills/lint-and-validate/): Validate quality after edits.
 - [`verification-before-completion`](../../skills/verification-before-completion/): Confirm changes before claiming done.
 
+
+---
+
+## ⭐ Specialized Product Plugins
+
+### ♿ The "AAS Accessibility & Inclusive UX" Plugin
+
+_Design, frontend, QA, and product teams improving accessible user experiences._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe · Requires manual setup
+
+- [`accesslint-audit`](../../skills/accesslint-audit/): Audit accessibility issues with AccessLint workflows.
+- [`accesslint-scan`](../../skills/accesslint-scan/): Scan interfaces for accessibility regressions.
+- [`screen-reader-testing`](../../skills/screen-reader-testing/): Test interfaces with screen-reader expectations.
+- [`accesslint-diff`](../../skills/accesslint-diff/): Review accessibility changes and regressions in diffs.
+- [`fixing-accessibility`](../../skills/fixing-accessibility/): Fix accessibility issues in product UI.
+- [`ui-a11y`](../../skills/ui-a11y/): Audit WCAG, contrast, focus, labels, motion, and semantic HTML.
+- [`webapp-testing`](../../skills/webapp-testing/): Use webapp-testing in this workflow.
+- [`playwright-skill`](../../skills/playwright-skill/): Use playwright-skill in this workflow. _(manual setup)_
+
+### 🔌 The "AAS API Platform Builder" Plugin
+
+_Backend and platform teams designing APIs, contracts, auth, security, load tests, and observability._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe
+
+- [`api-design-principles`](../../skills/api-design-principles/): Design clear and maintainable APIs.
+- [`api-patterns`](../../skills/api-patterns/): Choose REST, GraphQL, tRPC, and API patterns.
+- [`openapi-spec-generation`](../../skills/openapi-spec-generation/): Generate and maintain OpenAPI specifications.
+- [`api-documentation`](../../skills/api-documentation/): Document APIs for users and maintainers.
+- [`api-endpoint-builder`](../../skills/api-endpoint-builder/): Build API endpoints with sound boundaries.
+- [`auth-implementation-patterns`](../../skills/auth-implementation-patterns/): Implement auth, sessions, JWT, and OAuth2 safely.
+- [`api-security-best-practices`](../../skills/api-security-best-practices/): Apply secure API design practices.
+- [`backend-architect`](../../skills/backend-architect/): Architect backend services and platform boundaries.
+- [`k6-load-testing`](../../skills/k6-load-testing/): Run API and service load tests.
+- [`observability-engineer`](../../skills/observability-engineer/): Design monitoring and observability systems.
+
+### 💸 The "AAS SaaS Launch & Revenue" Plugin
+
+_Founders and product teams launching, pricing, monetizing, measuring, and improving SaaS products._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe
+
+- [`saas-mvp-launcher`](../../skills/saas-mvp-launcher/): Launch SaaS MVPs with practical product flow.
+- [`micro-saas-launcher`](../../skills/micro-saas-launcher/): Plan and ship micro-SaaS products.
+- [`pricing-strategy`](../../skills/pricing-strategy/): Design pricing and packaging strategy.
+- [`monetization`](../../skills/monetization/): Design monetization systems deliberately.
+- [`stripe-integration`](../../skills/stripe-integration/): Integrate Stripe payments and subscriptions.
+- [`analytics-product`](../../skills/analytics-product/): Model product analytics and product metrics.
+- [`launch-strategy`](../../skills/launch-strategy/): Plan product launches and go-to-market steps.
+- [`referral-program`](../../skills/referral-program/): Design referral and growth loops.
+- [`email-sequence`](../../skills/email-sequence/): Write automated lifecycle email campaigns.
+- [`seo-audit`](../../skills/seo-audit/): Audit technical SEO and discoverability.
+
+### 🧠 The "AAS AI Product & Evaluation Ops" Plugin
+
+_PMs, founders, and AI product teams defining, measuring, and improving AI features._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe
+
+- [`ai-wrapper-product`](../../skills/ai-wrapper-product/): Shape AI wrapper products with clearer value.
+- [`agent-evaluation`](../../skills/agent-evaluation/): Evaluate agent reliability and performance.
+- [`langfuse`](../../skills/langfuse/): Trace, evaluate, and monitor LLM apps.
+- [`llm-app-patterns`](../../skills/llm-app-patterns/): Use production LLM application patterns.
+- [`context-window-management`](../../skills/context-window-management/): Manage long context effectively.
+- [`kpi-dashboard-design`](../../skills/kpi-dashboard-design/): Design dashboards for decision-making.
+- [`analytics-product`](../../skills/analytics-product/): Model product analytics and product metrics.
+- [`product-manager`](../../skills/product-manager/): Apply product management judgment and planning.
+- [`ab-test-setup`](../../skills/ab-test-setup/): Plan and validate experiments.
+- [`hugging-face-evaluation`](../../skills/hugging-face-evaluation/): Evaluate AI models and datasets with Hugging Face workflows.
+
+
+---
+
+## 🧩 Specialized Product Plugins - Next Wave
+
+### 🛠️ The "AAS Data Engineering Platform" Plugin
+
+_Data and AI platform teams building pipelines, warehouses, transforms, embeddings, and RAG-ready data foundations._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe
+
+- [`data-engineer`](../../skills/data-engineer/): Design and operate data pipelines.
+- [`airflow-dag-patterns`](../../skills/airflow-dag-patterns/): Build maintainable Airflow DAGs.
+- [`dbt-transformation-patterns`](../../skills/dbt-transformation-patterns/): Build dbt transformation pipelines.
+- [`postgres-best-practices`](../../skills/postgres-best-practices/): Optimize Postgres schemas and queries.
+- [`database-architect`](../../skills/database-architect/): Design robust database structures.
+- [`vector-database-engineer`](../../skills/vector-database-engineer/): Design vector database systems.
+- [`embedding-strategies`](../../skills/embedding-strategies/): Choose and operate embedding strategies.
+- [`rag-engineer`](../../skills/rag-engineer/): Build retrieval-augmented generation systems.
+- [`sql-pro`](../../skills/sql-pro/): Query and model data with modern SQL.
+- [`fp-data-transforms`](../../skills/fp-data-transforms/): Build reliable data transformation flows.
+
+### 🧾 The "AAS Privacy & Compliance Engineering" Plugin
+
+_Teams building privacy-aware and compliance-sensitive SaaS, AI, finance, and cloud systems._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe
+
+- [`privacy-by-design`](../../skills/privacy-by-design/): Apply privacy-by-design principles.
+- [`gdpr-data-handling`](../../skills/gdpr-data-handling/): Handle GDPR-sensitive data safely.
+- [`pci-compliance`](../../skills/pci-compliance/): Handle payment security and PCI expectations.
+- [`fsi-compliance-checker`](../../skills/fsi-compliance-checker/): Check financial-services compliance requirements.
+- [`spec-to-code-compliance`](../../skills/spec-to-code-compliance/): Verify implementation against written specs.
+- [`security-audit`](../../skills/security-audit/): Audit security posture and controls.
+- [`cc-skill-security-review`](../../skills/cc-skill-security-review/): Review features with a security checklist.
+
+### 🌍 The "AAS Localization & International Growth" Plugin
+
+_Growth, content, and product teams expanding sites and products across languages and markets._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe
+
+- [`i18n-localization`](../../skills/i18n-localization/): Internationalize and localize product interfaces.
+- [`seo-hreflang`](../../skills/seo-hreflang/): Implement hreflang and international SEO signals.
+- [`seo-fundamentals`](../../skills/seo-fundamentals/): Apply durable SEO principles.
+- [`seo-content-planner`](../../skills/seo-content-planner/): Plan SEO content clusters and calendars.
+- [`seo-content-writer`](../../skills/seo-content-writer/): Write search-aware content drafts.
+- [`schema-markup`](../../skills/schema-markup/): Add structured data for search visibility.
+- [`content-creator`](../../skills/content-creator/): Create SEO-aware marketing content.
+- [`copywriting`](../../skills/copywriting/): Write conversion-focused copy.
+- [`analytics-tracking`](../../skills/analytics-tracking/): Set up reliable product analytics.
+- [`apify-market-research`](../../skills/apify-market-research/): Research markets and competitors with Apify workflows.
+
 ## 📚 How to Use Bundles
 
 ### 1) Pick by immediate goal
@@ -917,4 +1061,4 @@ Found a skill that should be in a bundle? Or want to create a new bundle? [Open 
 
 ---
 
-_Last updated: March 2026 | Total Skills: 1,678+ | Total Bundles: 52_
+_Last updated: March 2026 | Total Skills: 1,678+ | Total Bundles: 59_

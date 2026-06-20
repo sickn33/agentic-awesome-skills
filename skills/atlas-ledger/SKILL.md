@@ -12,6 +12,14 @@ metadata:
   version: "2.2.0"
   author: wede-wx
   repository: https://github.com/wede-wx/atlas
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Writes durable Atlas.md project memory after confirmation; keep out of plugin-safe bundles."
+    docs: SKILL.md
 ---
 
 # Atlas Ledger v2.2

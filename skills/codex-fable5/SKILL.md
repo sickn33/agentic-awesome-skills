@@ -2,7 +2,7 @@
 name: codex-fable5
 description: "Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt Claude/Fable prompt guidance without identity or provider claims."
 category: agent-behavior
-risk: safe
+risk: critical
 source: community
 source_repo: baskduf/FableCodex
 source_type: community
@@ -12,6 +12,14 @@ tags: [codex, fable-style, agent-workflow, verification, prompt-adaptation]
 tools: [codex, antigravity]
 license: "AGPL-3.0-or-later"
 license_source: "https://github.com/baskduf/FableCodex/blob/main/LICENSE"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Optional external plugin/helper setup executes mutable third-party code; keep out of plugin-safe bundles."
+    docs: SKILL.md
 ---
 
 # Codex Fable5
@@ -64,7 +72,7 @@ Decide which operating mode fits the task:
 For durable local ledgers, install the source plugin and use its helper CLI. Only do this in an authorized local workspace.
 
 ```bash
-codex plugin marketplace add baskduf/FableCodex --ref main
+codex plugin marketplace add baskduf/FableCodex --ref <reviewed-tag-or-commit>
 codex plugin add codex-fable5@fablecodex
 ```
 

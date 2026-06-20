@@ -55,7 +55,7 @@ Guide for collecting complete environment information and generating `harness/co
       "type": "database",
       "required": true,
       "image": "postgres:15",
-      "ports": ["5432:5432"],
+      "ports": ["127.0.0.1:5432:5432"],
       "env": {
         "POSTGRES_USER": "${DB_USER:-postgres}",
         "POSTGRES_PASSWORD": "${DB_PASSWORD}",
@@ -441,7 +441,7 @@ echo "=== Tearing down environment ==="
 
 # Stop Docker services
 if [ -f "$PROJECT_ROOT/docker-compose.yml" ]; then
-    docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down -v
+    docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down
 fi
 
 # Clean up optional runtime verification artifacts when advanced tracing is enabled

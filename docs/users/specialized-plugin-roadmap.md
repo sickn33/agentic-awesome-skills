@@ -2,7 +2,7 @@
 
 This roadmap shifts Antigravity Awesome Skills from "one giant plugin with every safe skill" toward a smaller set of focused, high-value Codex and Claude plugins.
 
-The full catalog remains useful as a repository and installer. The plugin product should be different: clear jobs, narrow install surfaces, strong names, and skill groups that users can trust without browsing 1,494 options.
+The full catalog remains useful as a repository and installer. The plugin product should be different: clear jobs, narrow install surfaces, strong names, and skill groups that users can trust without browsing 1,678 options.
 
 ## Official Codex Basis
 
@@ -19,7 +19,7 @@ That makes specialized plugins the better default product shape. A root plugin c
 
 This pass evaluated the full local catalog in `data/skills_index.json`:
 
-- Total skills evaluated: 1,494.
+- Total skills evaluated: 1,678.
 - Broadest categories: development, cloud, AI/ML, security, business, workflow, content, marketing, automation, and web development.
 - Existing editorial bundles are all small and mostly plugin-compatible, which makes them a good starting point.
 - The stronger opportunity is to turn the best bundles into first-class product plugins with sharper names, richer descriptions, and optional app/MCP extensions.
@@ -44,6 +44,10 @@ These should become the primary marketplace surface.
 | AAS OSS Maintainer | Manage PRs, reviews, releases, changelogs, and repo guidance. | Very useful for this repository's own maintainer workflow. |
 | AAS QA & Test Automation | Write, debug, stabilize, and scale tests. | Testing is a workflow chain: TDD, browser automation, failure diagnosis, and regression prevention. |
 | AAS DevOps & Cloud | Ship infrastructure, deployment, and operational workflows. | Strong fit for scripts, deployment gates, incident practice, and cloud patterns. |
+| AAS Accessibility & Inclusive UX | Audit, test, and fix accessible product experiences. | Accessibility is a standalone product-quality workflow across audit, automated scans, screen readers, fixes, and QA. |
+| AAS API Platform Builder | Design language-agnostic API platforms. | Complements Python API Builder with OpenAPI, auth, security, documentation, load testing, and observability. |
+| AAS SaaS Launch & Revenue | Launch, price, monetize, measure, and grow SaaS products. | Turns startup, pricing, payments, analytics, lifecycle, referral, and SEO skills into one revenue workflow. |
+| AAS AI Product & Evaluation Ops | Define, evaluate, instrument, and improve AI product features. | Covers the PM/product side of AI: metrics, evals, tracing, experiments, model evaluation, and context constraints. |
 
 ## Tier 2 Plugins
 
@@ -56,6 +60,9 @@ These are promising and should be hardened after Tier 1.
 | AAS Observability IR | Monitor systems, debug production, and write postmortems. | Operational work benefits from consistent proof gates. |
 | AAS Python API Builder | Build Python APIs and services with tests. | Language-specialized plugin with practical framework coverage. |
 | AAS Mobile App Builder | Ship Expo, React Native, Flutter, and iOS apps. | Covers architecture, release, CI, native platforms, and store optimization. |
+| AAS Data Engineering Platform | Build pipelines, transforms, warehouses, embeddings, and RAG-ready data foundations. | Connects analytics engineering, data pipelines, vector databases, and AI data foundations. |
+| AAS Privacy & Compliance Engineering | Engineer privacy and compliance controls. | Uses existing GDPR, PCI, privacy-by-design, compliance, spec, and security review skills without inventing new skills. |
+| AAS Localization & International Growth | Expand products across languages and markets. | Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills. |
 
 ## Recommended Product Changes
 
@@ -86,10 +93,10 @@ These are promising and should be hardened after Tier 1.
 
 Implemented in the repository:
 
-- `data/editorial-bundles.json` includes all 15 specialized plugin candidates.
+- `data/editorial-bundles.json` includes all 22 specialized plugin candidates.
 - `data/specialized-plugin-candidates.json` remains the source-of-truth shortlist and rationale.
 - `plugins/antigravity-bundle-aas-*` contains the generated plugin folders.
 - `.agents/plugins/marketplace.json` and `.claude-plugin/marketplace.json` expose the generated plugin entries.
 - `docs/users/bundles.md` renders the specialized plugin sections for users.
 
-Future improvements should focus on richer per-plugin `interface.defaultPrompt` examples, brand metadata, and optional MCP/app integrations where a plugin naturally needs live tools.
+Future improvements should focus on brand metadata, optional MCP/app integrations where a plugin naturally needs live tools, and keeping every plugin backed by existing canonical skills.

@@ -1048,6 +1048,146 @@
         "marketplace"
       ],
       "source": "./plugins/antigravity-bundle-oss-maintainer"
+    },
+    {
+      "name": "antigravity-bundle-aas-accessibility-inclusive-ux",
+      "version": "12.10.0",
+      "description": "Install the \"AAS Accessibility & Inclusive UX\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-accessibility-inclusive-ux",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-aas-accessibility-inclusive-ux"
+    },
+    {
+      "name": "antigravity-bundle-aas-api-platform-builder",
+      "version": "12.10.0",
+      "description": "Install the \"AAS API Platform Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-api-platform-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-aas-api-platform-builder"
+    },
+    {
+      "name": "antigravity-bundle-aas-saas-launch-revenue",
+      "version": "12.10.0",
+      "description": "Install the \"AAS SaaS Launch & Revenue\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-saas-launch-revenue",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-aas-saas-launch-revenue"
+    },
+    {
+      "name": "antigravity-bundle-aas-ai-product-evaluation-ops",
+      "version": "12.10.0",
+      "description": "Install the \"AAS AI Product & Evaluation Ops\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-ai-product-evaluation-ops",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-aas-ai-product-evaluation-ops"
+    },
+    {
+      "name": "antigravity-bundle-aas-data-engineering-platform",
+      "version": "12.10.0",
+      "description": "Install the \"AAS Data Engineering Platform\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-data-engineering-platform",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-aas-data-engineering-platform"
+    },
+    {
+      "name": "antigravity-bundle-aas-privacy-compliance-engineering",
+      "version": "12.10.0",
+      "description": "Install the \"AAS Privacy & Compliance Engineering\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-privacy-compliance-engineering",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-aas-privacy-compliance-engineering"
+    },
+    {
+      "name": "antigravity-bundle-aas-localization-international-growth",
+      "version": "12.10.0",
+      "description": "Install the \"AAS Localization & International Growth\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/antigravity-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/antigravity-awesome-skills",
+      "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-localization-international-growth",
+        "marketplace"
+      ],
+      "source": "./plugins/antigravity-bundle-aas-localization-international-growth"
     }
   ]
 }

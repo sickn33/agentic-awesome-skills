@@ -102,18 +102,22 @@ All specialized plugins are generated as Claude Code and Codex plugin bundles. F
 
 | Plugin | Skills | Best for |
 | --- | ---: | --- |
-| AAS Web App Builder | 9 | Frontend and full-stack developers shipping modern web apps. |
-| AAS Product Design Studio | 8 | Product UI, brand, portfolio, and richer visual work. |
-| AAS Security Engineer | 9 | Authorized security testing, audit, and hardening. |
-| AAS Secure App Builder | 8 | Developers who want security embedded while building features. |
-| AAS Documents & Presentations | 8 | Office files, document conversion, decks, and slide workflows. |
-| AAS Data Analytics | 8 | Product analytics, SQL, dashboards, and experiments. |
-| AAS Agent & MCP Builder | 9 | Agentic apps, MCP tools, RAG systems, and evaluation loops. |
+| AAS Web App Builder | 10 | Frontend and full-stack developers shipping modern web apps. |
+| AAS Product Design Studio | 10 | Product UI, brand, portfolio, accessibility, and richer visual work. |
+| AAS Security Engineer | 10 | Authorized security testing, audit, and hardening. |
+| AAS Secure App Builder | 10 | Developers who want security embedded while building features. |
+| AAS Documents & Presentations | 9 | Office files, document conversion, decks, and slide workflows. |
+| AAS Data Analytics | 10 | Product analytics, SQL, dashboards, and experiments. |
+| AAS Agent & MCP Builder | 10 | Agentic apps, MCP tools, RAG systems, and evaluation loops. |
 | AAS OSS Maintainer | 10 | PRs, releases, reviews, and contributor handoffs. |
-| AAS QA & Test Automation | 9 | Test suites, browser automation, and QA stabilization. |
-| AAS DevOps & Cloud | 9 | Infrastructure, deployments, and operational workflows. |
+| AAS QA & Test Automation | 10 | Test suites, browser automation, and QA stabilization. |
+| AAS DevOps & Cloud | 10 | Infrastructure, deployments, and operational workflows. |
+| AAS Accessibility & Inclusive UX | 8 | WCAG audits, automated scans, screen-reader checks, and accessible QA. |
+| AAS API Platform Builder | 10 | API design, OpenAPI contracts, auth, security, load tests, and observability. |
+| AAS SaaS Launch & Revenue | 10 | SaaS MVPs, pricing, payments, analytics, lifecycle, referrals, and SEO. |
+| AAS AI Product & Evaluation Ops | 10 | AI product metrics, evals, tracing, experiments, and model-quality loops. |
 
-Next-wave plugins cover marketing/SEO/growth, automation, observability/incident response, Python APIs, and mobile apps.
+Next-wave plugins cover marketing/SEO/growth, automation, observability/incident response, Python APIs, mobile apps, data engineering, privacy/compliance, and localization/international growth.
 
 - Read the [specialized plugin roadmap](docs/users/specialized-plugin-roadmap.md).
 - Read the [plugin guide for Claude Code and Codex](docs/users/plugins.md).

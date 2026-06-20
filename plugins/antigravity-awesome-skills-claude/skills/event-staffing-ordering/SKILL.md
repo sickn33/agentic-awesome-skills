@@ -50,6 +50,10 @@ Collect before submitting:
 - **Attire/uniform requirements**
 - **Special requirements** (bilingual staff, certifications, overnight shifts)
 
+Do not collect payment details, credentials, private attendee data, venue
+contracts, or other sensitive documents in chat. Route those through TempGuru's
+human-reviewed submission and contracting process instead.
+
 ### 2. Validate with the MCP tools
 
 1. `get_cities` — confirm coverage and market tier.

@@ -1,7 +1,7 @@
 {
   "name": "agyb-aas-automation-builder",
   "version": "12.10.0",
-  "description": "Install the \"AAS Automation Builder\" editorial skill bundle from Antigravity Awesome Skills.",
+  "description": "Install the \"AAS Automation Builder\" workflow plugin from Antigravity Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
     "url": "https://github.com/sickn33/antigravity-awesome-skills"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Automation Builder",
-    "shortDescription": "Specialized Product Plugins - Next Wave · 8 curated skills",
-    "longDescription": "Teams designing reliable automations across tools, data stores, and communication platforms. Covers Workflow Automation, MCP Builder, and 6 more skills.",
+    "shortDescription": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n.",
+    "longDescription": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n. Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows. Recommended for: Ops teams, Automation builders, Teams connecting SaaS workflows. Not for: One-off copywriting tasks, Deep infrastructure provisioning. Covers Workflow Automation, MCP Builder, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -28,6 +28,11 @@
       "Write"
     ],
     "websiteURL": "https://github.com/sickn33/antigravity-awesome-skills",
-    "brandColor": "#111827"
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to map this manual workflow into a reliable automation with failure handling.",
+      "Use this plugin to design an MCP-backed automation and the tool schemas it needs.",
+      "Use this plugin to review this automation for idempotency, permissions, expressions, and observability gaps."
+    ]
   }
 }
