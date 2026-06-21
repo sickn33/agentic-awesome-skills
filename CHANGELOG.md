@@ -39,6 +39,13 @@ This release packages the June 21 maintainer batch: three new community skills, 
 - Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current 1,681+ skill catalog.
 - Verified the PR batch through fork-run approvals, source validation, skill review, repository tests, docs security checks, and main registry sync.
 
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #727 (`agent-creator`).
+- **[@kriptoburak](https://github.com/kriptoburak)** for PR #728 (Xquik source-credit update).
+- **[@Hanyuyuan6](https://github.com/Hanyuyuan6)** and **[Hanyuyuan6/remote-gpu-trainer](https://github.com/Hanyuyuan6/remote-gpu-trainer)** for PR #729 (`remote-gpu-trainer`).
+- **[@Necmttn](https://github.com/Necmttn)** and **[Necmttn/ax](https://github.com/Necmttn/ax)** for PR #730 (`ax-extract-workflow`).
+
 ## [13.0.0] - 2026-06-20 - "Specialized Plugins and Security Metadata"
 
 > Major installable plugin update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
