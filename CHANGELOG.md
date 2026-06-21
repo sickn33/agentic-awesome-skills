@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.1.0] - 2026-06-21 - "Remote GPU, Agent Creation, and Workflow Reconstruction"
+
+> Community skill intake and maintainer-sync release for the 1,680+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+
+This release packages the June 21 maintainer batch: three new community skills, README source-credit cleanup, generated registry sync, and plugin mirror updates.
+
+## New Skills
+
+- **agent-creator** - creates custom subagents inside plugin structures with persona generation and optional routing skills (PR #727).
+- **ax-extract-workflow** - reconstructs the workflow behind past coding-agent artifacts from local ax sessions, commits, skills, and tool traces (PR #730).
+- **remote-gpu-trainer** - rented and remote GPU job orchestration with monitoring, teardown safety, spot resilience, checkpoint verification, and DL-debug workflows (PR #729).
+
+## Credits and Source Metadata
+
+- Updated the **Xquik x-twitter-scraper** README credit to match the current X/Twitter data workflow scope (PR #728).
+- Added the **Hanyuyuan6/remote-gpu-trainer** community source credit and MIT license provenance for `remote-gpu-trainer`.
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, web catalog data, contributor/source credits, and Codex/Claude plugin mirrors after the merged PR batch.
+- Verified the PR batch through fork-run approvals, source validation, skill review, repository tests, docs security checks, and main registry sync.
+
 ## [13.0.0] - 2026-06-20 - "Specialized Plugins and Security Metadata"
 
 > Major installable plugin update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
