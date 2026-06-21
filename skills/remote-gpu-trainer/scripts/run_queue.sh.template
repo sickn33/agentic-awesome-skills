@@ -37,7 +37,10 @@ if [ -z "$QUEUE" ] || [ ! -f "$QUEUE" ]; then
 fi
 
 HOSTNAME_SHORT=$(hostname -s)
-TOTAL=$(wc -l < "$QUEUE")
+# Count ablation CELLS only (skip #-comments + blank lines) so $TOTAL and the resume index are
+# CELL numbers, not raw line numbers — `start_index=N` then resumes from ablation N regardless of how
+# many comment/blank lines precede it (the loop below increments i only after the same skip guards).
+TOTAL=$(grep -cvE '^[[:space:]]*(#|$)' "$QUEUE")
 i=0
 fail=0
 failed_names=()
@@ -45,10 +48,11 @@ failed_names=()
 echo "=== Queue $(basename "$QUEUE"): $TOTAL ablations, starting from $START on $HOSTNAME_SHORT ==="
 
 while IFS=$' \t' read -r cfg task epochs; do
-    i=$((i+1))
-    if [ "$i" -lt "$START" ]; then continue; fi
+    # Skip comment/blank lines BEFORE counting so i (and the START resume index) count CELLS, not lines.
     if [ -z "$cfg" ]; then continue; fi
     case "$cfg" in \#*) continue ;; esac   # skip #-prefixed comment lines
+    i=$((i+1))
+    if [ "$i" -lt "$START" ]; then continue; fi
 
     EPOCHS="${epochs:-20}"
     NAME=$(basename "$cfg" .yaml)

@@ -76,13 +76,23 @@ def main() -> int:
             errors.append((name, "missing best_metrics.json"))
             continue
 
+        # Load safe-by-default: weights_only=True refuses to execute pickle, so a poisoned or
+        # compromised remote checkpoint cannot run code on the operator's machine. Fall back to
+        # weights_only=False ONLY if that fails (a legit checkpoint may pickle a non-tensor object —
+        # e.g. an argparse Namespace under 'args') and warn, since the fallback executes pickle and is
+        # only safe for checkpoints YOU produced. Pass --allow-pickle is not needed; the warning is the gate.
         try:
-            # weights_only=False unpickles arbitrary objects (executes pickle); intentional here
-            # because these are the user's own checkpoints, not untrusted third-party files.
-            ckpt = torch.load(pth, map_location="cpu", weights_only=False)
-        except Exception as e:
-            errors.append((name, f"torch.load failed: {str(e)[:100]}"))
-            continue
+            ckpt = torch.load(pth, map_location="cpu", weights_only=True)
+        except Exception:
+            try:
+                print(
+                    f"  [warn] {name}: weights_only=True load failed; retrying weights_only=False "
+                    "(executes pickle — only safe for checkpoints you produced yourself)"
+                )
+                ckpt = torch.load(pth, map_location="cpu", weights_only=False)
+            except Exception as e:
+                errors.append((name, f"torch.load failed: {str(e)[:100]}"))
+                continue
 
         if not isinstance(ckpt, dict) or not any(k in ckpt for k in ("model_state_dict", "model", "state_dict")):
             errors.append((name, "no model/model_state_dict/state_dict key in checkpoint"))
@@ -96,6 +106,8 @@ def main() -> int:
             continue
 
         epoch = m.get("epoch", "?")
+        if epoch is None:  # {"epoch": null} → .get returns None (not the default); guard the :3 format. `or` would wrongly eat epoch 0.
+            epoch = "?"
         # Pick main metric (PSNR for recon, mAP50 for det, dice for seg, fall back to loss)
         main_metric_key = next(
             (k for k in ["psnr", "mAP50", "dice"] if k in m),

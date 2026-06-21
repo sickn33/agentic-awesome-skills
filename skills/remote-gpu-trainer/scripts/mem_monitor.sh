@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # 5-second resolution memory + CPU + GPU profiler for AutoDL training.
 # Catches val-phase memory spikes that can cgroup-wedge an instance.
 #
