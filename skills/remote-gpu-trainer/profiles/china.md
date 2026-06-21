@@ -2,7 +2,7 @@
 platform: china-family       # 矩池云 Matpool · 恒源云 Gpushare · Featurize · 揽睿星舟 LanRui
 kind: ssh-rental             # all four: SSH + Jupyter + tmux, cgroup-isolated, prebuilt conda base
 meter_stop_verb: per-platform   # 停止并释放 (Matpool) | 关机→释放 (Gpushare) | 实例归还 (Featurize) | 停止+销毁数据盘 (LanRui)
-meter_stop_irreversible: mixed  # releasing the instance is; the persistent vol survives — EXCEPT LanRui 数据盘 bills while stopped
+meter_stop_irreversible: mixed  # release is irreversible; the persistent vol survives it. (LanRui 数据盘 billing-while-stopped is a cost trap, not irreversibility — §5/LR1)
 detach_primitive: tmux       # preinstalled on most images; backgrounded python survives tab-close too
 spot_available: false        # on-demand only — NO mid-run spot reclaim (see §4)
 spot_grace: n/a              # the involuntary-loss vector is auto-release of STOPPED instances, not preemption

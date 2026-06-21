@@ -127,7 +127,7 @@ overnight idle instance is the most expensive single mistake on metered hardware
 - **GEN1 — Forgotten box bills 24/7.** Symptom: a week-old invoice for an instance that finished
   training on day one. → Root cause: nothing on a bare box reclaims it; the human is the only janitor.
   → Fix: make teardown a tracked Phase-5 step; after the verified pull, prompt the user to stop/destroy
-  (never auto-act — principle #9); for cross-session safety set a `/schedule` reminder to re-check.
+  (never auto-act — principle #9); for cross-session safety set a recurring reminder (Claude Code `/schedule`; other hosts → `references/monitoring_patterns.md` §7) to re-check.
 - **GEN2 — SSH drop kills the run (no tmux).** Symptom: training dies the moment the laptop sleeps or
   the network blips. → Root cause: the job is a child of the SSH shell; the drop sends SIGHUP.
   → Fix: launch inside `tmux` (or `nohup … & disown`) **before** the long run starts — not after it is

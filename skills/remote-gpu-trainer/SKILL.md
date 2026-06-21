@@ -76,7 +76,7 @@ form with cross-platform nuance is in **`references/principles.md`** (read it be
 9. **Cost and destructive actions are the user's call.** Never auto-release/terminate, never delete durable files without confirmation; if cleanup can't free space, **ask to expand the disk** rather than silently shrink the experiment.
 10. **Teach the user the platform, don't just drive it.** Most users don't know a platform's non-obvious **conveniences** (one-click SSH-key registration, GPU-availability notifications, built-in panels) or its **danger clocks** (auto-release/auto-delete timers on a *stopped* box — AutoDL releases a 关机 instance after 15 days → data disk gone; a stop that keeps billing; low-balance purge). Surface them on first contact — #9 stops the agent *doing* the dangerous thing, #10 *warns the human* before the clock fires. Per-platform list → each profile's **Surface to the user** block.
 
-> **Monitoring physics (substrate for #3):** foreground Bash hard-caps at 600 s; `run_in_background` has no cap and notifies on exit; a never-exiting watcher never notifies; an unquoted `|` in a poll regex reads stdin and hangs forever. The four-layer monitoring architecture is built on these facts → `references/monitoring_patterns.md`.
+> **Monitoring physics (substrate for #3)** — the `600 s` cap and `run_in_background` are **Claude Code** harness primitives (on another Agent-Skills host, map them per `references/monitoring_patterns.md` §7); the hang-physics are pure shell and universal: foreground Bash hard-caps at 600 s; `run_in_background` has no cap and notifies on exit; a never-exiting watcher never notifies; an unquoted `|` in a poll regex reads stdin and hangs forever. The four-layer monitoring architecture is built on these facts → `references/monitoring_patterns.md`.
 
 ## Code discipline (the wrapper & training scripts you write)
 
@@ -203,6 +203,11 @@ cited current docs.
 These are **separate** Agent Skills, not bundled here — install them for the full experience. On an
 agent where a companion isn't installed, treat its pointer below as an optional cross-reference; this
 skill still works standalone.
+
+> **On a non-Claude host:** a `**REQUIRED:** superpowers:… / huggingface-skills:…` pointer names a *step*,
+> not a hard dependency — do the equivalent with your agent's own tools (a verification-before-completion
+> gate, parallel-task dispatch, the HF CLI, a hosted tracker). The companion skill is the Claude-Code-native
+> way to get it; the *step* is what's required, not that specific skill.
 
 - **`verifying-dl-experiments`** — owns *is-the-number-real*: smoke content, retry-vs-safeguard, keepable-checkpoint, eval sizing, tracker forensics, GPU-0%-util diagnosis. This skill owns *where/when/how-much-$*.
 - **`huggingface-skills:hf-cli`** — the transport verbs (`hf download --resume`, `hf upload-large-folder`, `hf cache verify`); this skill owns the China-mirror swap + stall-retry (`references/china-network.md`).

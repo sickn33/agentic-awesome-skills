@@ -20,6 +20,7 @@ To jump: `grep -in '<keyword>' references/training/distributed-launch.md` (e.g. 
 - **DDP** — D8 find_unused_parameters · D9 uneven-inputs-Join · D10 SyncBN-&-buffers · D11 effective-batch/LR
 - **FSDP** — D12 wrapping-policy · D13 sharding-strategy · D14 mixed-precision · D15 state_dict-type
 - **DeepSpeed** — D16 ZeRO-stages · D17 config.json-knobs · D18 auto-&-engine.backward
+- **Tensor & 2-D parallel (DeviceMesh)** — D24 slice-mesh-to-1D · D25 mesh×world / divide-heads · D26 TP-intra-node
 - **The HANGS** (highest-value) — D19 desync-debug-toolkit · D20 one-rank-diverged · D21 rank-conditional-collective · D22 dataloader-length-mismatch · D23 eval/print/save-on-one-rank
 - **Pointers** — inter-node NCCL/NIC/timeout → multinode.md · OOM/sharding-to-fit → oom-memory.md · spot-restart → spot-resilience.md
 
@@ -139,7 +140,8 @@ via `--config_file` and let it spawn the workers — don't mix both launchers.
 - **Model fits on one GPU, just want more throughput** → **DDP** (`torchrun`), simplest, fastest. Each rank holds a full replica.
 - **Model does NOT fit (params+optim+grads ≈ 18 B/param, see oom-memory.md M1)** → shard it: **FSDP** (PyTorch-native) or **DeepSpeed ZeRO** (richer offload). Sharding-to-fit ladder → `references/training/oom-memory.md` M9.
 - **HF ecosystem / Trainer** → **Accelerate** as the launcher; flip a config field to choose DDP/FSDP/ZeRO.
-- **Need CPU/NVMe offload of params *and* optimizer separately, or ZeRO-Infinity** → **DeepSpeed** (FSDP1 offload is all-or-nothing; [HF concept guide](https://github.com/huggingface/accelerate/blob/main/docs/source/concept_guides/fsdp_and_deepspeed.md)).
+- **Need CPU/NVMe offload of params *and* optimizer separately, or ZeRO-Infinity** → **DeepSpeed** (FSDP**1** offload is all-or-nothing; FSDP2/`fully_shard` is finer-grained; [HF concept guide](https://github.com/huggingface/accelerate/blob/main/docs/source/concept_guides/fsdp_and_deepspeed.md)).
+- **A single layer / activation is too big even when sharded (huge hidden or vocab), or you want to scale past data-parallel limits** → **Tensor Parallel + 2-D DeviceMesh** (compose TP with FSDP2) → D24–D26 below.
 
 ---
 
@@ -332,6 +334,35 @@ skips scaling ([DeepSpeed engine](https://github.com/microsoft/DeepSpeed/blob/ma
 **Fix**: set accumulation in **one** place (use `"auto"` in the JSON and let HF fill it); in a manual
 loop call `model_engine.backward(loss); model_engine.step()` — never `loss.backward()` /
 `optimizer.step()` directly under DeepSpeed.
+
+---
+
+## Tensor & 2-D parallelism (DeviceMesh)
+
+When the model (or one layer) is too big even when sharded, split layers across GPUs with **Tensor
+Parallel (TP)** and compose it with FSDP/DP on a 2-D **DeviceMesh**. Launch mechanics, not modeling — the
+failures here are "won't start / mis-shards / hangs / slow", not accuracy.
+
+> **Current API** (`torch.distributed.tensor.parallel` + `torch.distributed.device_mesh`): build the mesh
+> `m = init_device_mesh("cuda", (dp, tp), mesh_dim_names=("dp","tp"))`; apply TP with
+> `parallelize_module(model, m["tp"], plan)` mapping submodules to `ColwiseParallel` / `RowwiseParallel` /
+> `SequenceParallel`; then shard the data dim with FSDP2 `fully_shard(model, mesh=m["dp"])`.
+> ([PyTorch TP docs](https://docs.pytorch.org/docs/stable/distributed.tensor.parallel.html))
+
+### D24 — `parallelize_module` errors / mis-shards on an N-D mesh — slice to 1-D first
+**Symptom**: passing the full 2-D mesh to `parallelize_module` raises, or TP shards across the wrong axis.
+**Root cause**: `parallelize_module` **only accepts a 1-D `DeviceMesh`**; handed an N-D mesh it can't tell which dim is the TP group.
+**Fix**: slice it — `parallelize_module(model, mesh["tp"], plan)` for TP, and give FSDP2 `mesh["dp"]`. (PyTorch TP docs: "only accepts a 1-D DeviceMesh, … slice the DeviceMesh to a 1-D sub DeviceMesh first.")
+
+### D25 — Mesh shape must equal world size, and TP degree must divide the model
+**Symptom**: launch aborts at `init_device_mesh` (mesh size ≠ world size), or shapes mismatch at the first forward / a shard is uneven.
+**Root cause**: the mesh dims must multiply to the launched world (`dp × tp == nproc_per_node × nnodes`); and a `ColwiseParallel`/`RowwiseParallel` split needs the TP degree to **divide** the sharded dimension — attention heads, hidden size, and the embedding/vocab dim (`ColwiseParallel` supports `nn.Linear`/`nn.Embedding`).
+**Fix**: choose `tp` so `dp×tp == world` AND `tp | num_heads` and `tp | hidden`; don't pass a `torchrun --nproc-per-node` that disagrees with the mesh shape.
+
+### D26 — Cross-node TP silently tanks throughput — keep the TP group inside one node
+**Symptom**: a 2-node TP run is correct but far slower than 1 node with the same GPU count; `nvidia-smi` shows GPUs idling on comms.
+**Root cause**: TP does a collective **every layer**; if the TP group spans the slow inter-node link, that per-layer comm dominates. TP wants NVLink, not cross-node Ethernet/IB.
+**Fix**: make `tp` the **innermost** mesh dim mapped to GPUs on one host (`tp ≤ GPUs-per-node`), let `dp`/FSDP span nodes — then only the (less frequent) DP reduction crosses nodes. A frozen TP group is the same hang physics as D19–D21 (a rank-conditional collective inside the TP group deadlocks identically).
 
 ---
 

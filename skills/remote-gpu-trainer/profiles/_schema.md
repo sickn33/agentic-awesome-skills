@@ -80,6 +80,8 @@ platform: `RUN_ONE` (the queue runner's path to `run_one.sh`) defaults to `$DURA
 `PROJECT_REPO_DIR` (where *this run's* code lives) is a per-run value — see "Portable job request" below;
 set either explicitly only if your layout differs.
 
+Some profiles also surface connection facts like `SSH_USER` (e.g. Lambda's non-root `ubuntu`) or `SSH_HOST` — these are **informational** for that profile's own `ssh`/`scp` lines, **not** read by the `scripts/` templates.
+
 ---
 
 ## Portable job request (NOT in the profile — keep it per-run)

@@ -18,7 +18,7 @@ export CRED_FILE=/root/.wandb_key
 ### Phase 0 — Environment audit
 ```bash
 ssh autodl-1 'df -h /root/autodl-tmp /root/autodl-fs / && df -i /root/autodl-fs && \
-              cat /sys/fs/cgroup/memory.max | numfmt --to=iec && nvidia-smi'
+              { cat /sys/fs/cgroup/memory.max 2>/dev/null || cat /sys/fs/cgroup/memory/memory.limit_in_bytes; } | numfmt --to=iec 2>/dev/null; nvidia-smi'
 bash scripts/gpu_health.sh 0     # run ON the box: Xid / throttle pre-flight (U22/U23)
 ```
 Budget the disk: `ckpt_size × cells_in_queue + scratch`. **Verify:** `nvidia-smi` shows the expected
@@ -44,7 +44,7 @@ python -m src.train -c configs/ablation/baseline.yaml --task reconstruction \
 ### Phase 3 — Detached launch
 ```bash
 # Push the parameterized wrappers + queue to the shared FS (ONE copy, all instances read it):
-scp run_one.sh run_queue.sh examples/autodl_sweep/queue_1.txt autodl-1:/root/autodl-fs/
+scp run_one.sh run_queue.sh scripts/aggregate_to_fs.sh examples/autodl_sweep/queue_1.txt autodl-1:/root/autodl-fs/
 ssh autodl-1 "RUN_ONE=/root/autodl-fs/run_one.sh tmux new -d -s q1 \
   'bash /root/autodl-fs/run_queue.sh /root/autodl-fs/queue_1.txt 2>&1 | tee /root/autodl-tmp/runs/logs/q1_master.log'"
 ```

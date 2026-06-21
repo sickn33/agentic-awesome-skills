@@ -225,7 +225,7 @@ uninterruptible `D`). Reading host load as your own → a false "overloaded / OO
 needless kill-and-restart of a healthy run.
 
 **Fix**: judge YOUR container from cgroup-scoped readings, not host tools:
-- memory — `/sys/fs/cgroup/memory.current` vs `memory.max` (not `free -m`);
+- memory — `/sys/fs/cgroup/memory.current` vs `memory.max` (cgroup v2; v1 = `memory/memory.usage_in_bytes` vs `memory/memory.limit_in_bytes`) — not `free -m`;
 - were YOU OOM-killed — the **`oom_kill` counter** in `/sys/fs/cgroup/memory.events`
   (`grep oom_kill /sys/fs/cgroup/memory.events`); a non-incrementing counter means you were **not**
   OOM-killed, however red host `free` looks;
@@ -289,6 +289,12 @@ resume). Pairs with U25 (tar shards compress and transfer as one stream).
 ---
 
 ## Monitoring
+
+> **Host-portability note:** `run_in_background`, `TaskStop`, `Monitor`, the ~600 s foreground cap, and
+> `/loop` / `/schedule` in this section are **Claude Code** harness primitives. On another Agent-Skills host
+> (Codex / Cursor / Gemini / Antigravity / …) map them to that agent's equivalents per
+> `references/monitoring_patterns.md` §7; the hang/exit physics (an unquoted `|` reading stdin, a
+> never-*exiting* waiter) are pure shell and hold everywhere.
 
 ### U16 — Stale background waiters pile up; supersede a run → STOP its waiter; pick the right lifetime
 

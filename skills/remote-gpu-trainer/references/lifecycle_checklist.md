@@ -77,7 +77,7 @@ hardcodes a mount, verb, or proxy. Each phase ends in the runnable check from `S
 
 - [ ] Launch via the *profile detach primitive* (tmux / `sbatch` / k8s Job / commit) — survives an SSH drop; confirm whether it also survives an instance restart (profile DAEMON section).
 - [ ] Push code/data with a resumable transfer (`rsync --partial` or `timeout`+resume loop — principle #7); never edit a script under a live run — version filenames (principle #6).
-- [ ] Probe briefly: log head + process alive + no traceback, then **hand control back**. Never a blocking foreground `sleep` (foreground Bash hard-caps at 600 s).
+- [ ] Probe briefly: log head + process alive + no traceback, then **hand control back**. Never a blocking foreground `sleep` (foreground Bash hard-caps at 600 s on Claude Code; other hosts have their own turn limit — `monitoring_patterns.md` §7).
 
 > **verify:** within 60 s, the detach session is alive and the first log line shows the expected step/epoch.
 

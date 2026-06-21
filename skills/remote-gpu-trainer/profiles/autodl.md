@@ -253,7 +253,7 @@ probe.
 enforces a **hard ~200K inode cap independent of bytes**; per-sample eval visualization (many tiny files)
 exhausts it. *Fix:* monitor `df -i`; cap per-sample eval vis on large test sets (sizing → verifying-dl-
 experiments); once a results dir is verified locally, prune its per-sample image subdir from FS; recover by
-`find /root/autodl-fs -type d -name '<vis-dir>' -exec rm -rf {} +` to free inodes fast.
+`find /root/autodl-fs -depth -type d -name '<vis-dir>' -exec rm -rf {} +` to free inodes fast.
 
 **AD5 — data disk full; HF cache is the hidden hog; agent `rm` auto-denied.** *Symptom:*
 `/root/autodl-tmp` at 100% though `runs/` looks small; an agent `rm -rf` of "obvious junk" is auto-denied.

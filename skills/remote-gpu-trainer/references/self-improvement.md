@@ -70,5 +70,5 @@ Platform prices, billing verbs, and limits **change**. Every platform fact is an
 irreversible ones (`terminate` / `destroy` / release) — **re-verify it against the platform's current
 docs in the same session.** If a fact is stale, fix it (the §2 correction row) and re-stamp the date. A
 quarterly re-verification of each profile's §5 TEARDOWN/BILLING section keeps the highest-stakes facts
-honest — schedulable via the host's `/schedule`. Run `scripts/check_staleness.py` to list every `verified`
+honest — schedulable via the host's recurring runner (on Claude Code `/schedule`; other hosts → `references/monitoring_patterns.md` §7). Run `scripts/check_staleness.py` to list every `verified`
 stamp older than N months (a mechanical reminder of WHAT to re-check — it does not verify the fact itself).

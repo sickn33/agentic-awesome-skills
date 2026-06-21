@@ -17,7 +17,7 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 
 - **LLM** — L1 pad-side · L2 loss-mask-−100 · L3 pad-token-unset · L4 packing-cross-contamination · L5 RoPE-context-extension · L6 grad-explosion+z-loss · L7 eval-perplexity-mask · L8 SFT/DPO/RLHF-data-format · L9 DPO-collapse+KL · L10 gated-token-before-Trainer
 - **Vision (cls/det/seg)** — V1 normalization-mismatch · V2 aug-on-eval · V3 mAP=0 · V4 anchor/NMS/conf-thresh · V5 mIoU=0 ignore_index/off-by-one · V6 class-imbalance · V7 BN-tiny-batch
-- **Diffusion** — DF1 loss-low-samples-bad (cross-link) · DF2 EMA-weights · DF3 VAE-scaling · DF4 noise-schedule/timestep · DF5 CFG-conditioning-dropout · DF6 sampler-vs-model · DF7 SNR-weighting
+- **Diffusion** — DF1 loss-low-samples-bad (cross-link) · DF2 EMA-weights · DF3 VAE-scaling · DF4 noise-schedule/timestep · DF5 CFG-conditioning-dropout · DF6 sampler-vs-model · DF7 SNR-weighting · DF8 flow-matching-shift/schedule
 - **RL** — R1 reward-collapse · R2 KL-blowup · R3 whitening · R4 replay/obs-normalization · R5 non-stationarity · R6 seed-variance (cross-link)
 - **VLM** — X1 stage-freeze · X2 projector-only-stage1 · X3 per-group-LR · X4 image-token-truncation · X5 alignment-collapse (cross-link)
 - **Pointers** — precision-stability.md, oom-memory.md, gotchas_universal.md, verifying-dl-experiments (skill)
@@ -153,6 +153,11 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 **Symptom**: samples are systematically blurry / low-detail despite long training.
 **Root cause**: uniform loss weight over-weights high-noise (easy) steps relative to low-noise steps that carry fine detail; the gradient is dominated by the easy regime.
 **Fix**: apply **Min-SNR-γ** weighting (γ≈5) so low-noise steps get their share; `diffusers` scripts expose `--snr_gamma`. Compounds with DF2/DF3 — fix these details together, not in isolation. ([Min-SNR](https://arxiv.org/abs/2303.09556))
+
+### DF8 — Flow-matching / rectified-flow objective: wrong shift or schedule → garbage samples at low loss
+**Symptom**: training or fine-tuning an SD3 / Flux-class **flow-matching** model; the loss is low and stable but samples are noisy/structureless — and noticeably worse away from the training resolution.
+**Root cause**: flow matching predicts a constant-velocity path between noise and data (not ε-noise like DDPM — DF4), and its schedule is **resolution-dependent**: `FlowMatchEulerDiscreteScheduler` shifts the sigma/timestep distribution by image sequence length (`use_dynamic_shifting`, `base_shift`/`max_shift`, `mu`). Train with a `shift`/`prediction_type` that doesn't match the sampler — or sample a resolution the shift wasn't set for — and the model runs off its trained noise distribution → the trajectory drifts → bad samples while per-step loss still looks fine.
+**Fix**: keep training and sampling on the **identical** schedule — same flow-matching scheduler, same `shift`/`use_dynamic_shifting`, and set `mu` from the actual image sequence length at inference. A mismatched scheduler/`prediction_type` yields pure-noise/artifact output. Loss-low-samples-bad verdict → **verifying-dl-experiments** (REQUIRED); base case + EMA → DF1/DF2; schedule/sampler mechanics → DF4/DF6. ([FlowMatchEulerDiscreteScheduler](https://huggingface.co/docs/diffusers/en/api/schedulers/flow_match_euler_discrete); [SD3 paper](https://huggingface.co/papers/2403.03206))
 
 ---
 

@@ -195,6 +195,11 @@ def save_full_state(model, opt, sched, epoch, step):
         f.flush()
         os.fsync(f.fileno())                 # bytes hit disk BEFORE the rename
     os.replace(tmp, CKPT)                     # POSIX-atomic swap; prev file valid until this returns
+    dfd = os.open(os.path.dirname(CKPT) or ".", os.O_DIRECTORY)
+    try:
+        os.fsync(dfd)                         # fsync the DIR too — the rename entry itself must reach disk
+    finally:
+        os.close(dfd)
 
 def load_latest_if_any(model, opt, sched):
     """Unconditional load-latest: identical command resumes OR starts fresh. Returns (epoch, step)."""

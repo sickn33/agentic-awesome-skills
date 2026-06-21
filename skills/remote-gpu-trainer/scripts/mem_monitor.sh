@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 5-second resolution memory + CPU + GPU profiler for AutoDL training.
+# 5-second resolution memory + CPU + GPU profiler for a rented GPU box (AutoDL paths as defaults).
 # Catches val-phase memory spikes that can cgroup-wedge an instance.
 #
 # Usage: bash mem_monitor.sh > /root/autodl-tmp/runs/logs/mem.tsv 2>&1 &
@@ -20,8 +20,8 @@ printf "timestamp\tcgroup_gb\tcpu_pct\tmain_pid\tmain_rss_gb\tmain_threads\tmain
 while true; do
     ts=$(date '+%Y-%m-%d %H:%M:%S')
 
-    # cgroup current memory (bytes → GB)
-    cgroup_bytes=$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo 0)
+    # cgroup current memory (bytes → GB); cgroup v2 path first, fall back to v1 (memory/memory.usage_in_bytes)
+    cgroup_bytes=$(cat /sys/fs/cgroup/memory.current 2>/dev/null || cat /sys/fs/cgroup/memory/memory.usage_in_bytes 2>/dev/null || echo 0)
     cgroup_gb=$(awk "BEGIN{printf \"%.2f\", $cgroup_bytes/1073741824}")
 
     # Total CPU usage from /proc/stat (rough; just diff once)

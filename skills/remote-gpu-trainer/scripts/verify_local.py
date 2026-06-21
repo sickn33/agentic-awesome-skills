@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Verify integrity of downloaded ckpt directories.
 
 For each <name>/ in the target dir, check:

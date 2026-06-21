@@ -46,10 +46,12 @@ dies on context reset while the job runs on. Reconcile watchers against the job'
 artifacts (`tmux ls` / `squeue` / `pgrep`, output `mtime`, a load-test), tear a watcher down when you
 supersede its job, and match a watcher's lifetime to the wait's duration.
 
-> **Monitoring physics this rests on:** foreground Bash hard-caps at 600 s (a long foreground wait is
-> killed at 10 min); `run_in_background` has **no** cap and notifies on exit; a never-*exiting* watcher
-> never notifies; an unquoted `|` inside a poll regex splits into piped commands and the first reads
-> stdin → hangs forever. See `references/monitoring_patterns.md`.
+> **Monitoring physics this rests on** (the 600 s cap and `run_in_background` are **Claude Code** harness
+> primitives — on another Agent-Skills host map them per `references/monitoring_patterns.md` §7; the
+> hang-physics below are pure shell and hold everywhere): foreground Bash hard-caps at 600 s (a long
+> foreground wait is killed at 10 min); `run_in_background` has **no** cap and notifies on exit; a
+> never-*exiting* watcher never notifies; an unquoted `|` inside a poll regex splits into piped commands
+> and the first reads stdin → hangs forever. See `references/monitoring_patterns.md`.
 
 *Universal — the load-bearing spine.* It is the platform instance of
 `superpowers:verification-before-completion`'s Iron Law ("no completion claim without fresh verification

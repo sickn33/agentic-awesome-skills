@@ -134,7 +134,7 @@ DDP, reentrant checkpointing can break — use `use_reentrant=False`.
 (M2); common with **variable shapes** (changing batch/seq-len, dynamic padding).
 
 **Fix**: launch with `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` (env var, set *before* the process
-starts; the modern alias is `PYTORCH_ALLOC_CONF`). It backs segments with CUDA VMM so they grow/shrink
+starts; `PYTORCH_CUDA_ALLOC_CONF` is the canonical name). It backs segments with CUDA VMM so they grow/shrink
 instead of each `cudaMalloc` being an unmergeable block — which is the root of fragmentation.
 Source: PyTorch CUDA notes (https://docs.pytorch.org/docs/stable/notes/cuda.html) and the allocator devlog
 (https://docs.pytorch.org/devlogs/eager/2026-06-01-cuda-caching-allocator/). Alternative knob if fragmenting
