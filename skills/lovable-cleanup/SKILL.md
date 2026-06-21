@@ -187,7 +187,8 @@ grep -n '"lovable' package.json
 
 <!-- security-allowlist: grep over local env files, read-only, no credentials transmitted -->
 ```bash
-grep -rin "lovable" .env .env.local .env.example 2>/dev/null
+grep -rin "lovable" .env .env.local .env.example 2>/dev/null \
+  | sed -E 's/([A-Za-z_][A-Za-z0-9_]*LOVABLE[A-Za-z0-9_]*=).*/\1[REDACTED]/I'
 ```
 
 Remove any Lovable API keys or project IDs. If a variable is Lovable-only, delete the
