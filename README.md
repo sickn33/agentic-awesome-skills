@@ -272,6 +272,7 @@ Support is optional. The project stays free and open-source for everyone.
 [![Buy me a coffee](assets/buy-me-a-coffee-banner.png)](https://buymeacoffee.com/sickn33)
 
 - [Buy me a book on Buy Me a Coffee](https://buymeacoffee.com/sickn33)
+- Security tooling support: [Snyk](https://snyk.io/)
 - Star the repository
 - Open reproducible issues
 - Contribute docs, fixes, and skills
