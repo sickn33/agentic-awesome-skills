@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [13.1.0] - 2026-06-21 - "Remote GPU, Agent Creation, and Workflow Reconstruction"
 
-> Community skill intake and maintainer-sync release for the 1,680+ skill catalog.
+> Community skill intake and maintainer-sync release for the 1,681+ skill catalog.
 
 Start here:
 
@@ -36,6 +36,7 @@ This release packages the June 21 maintainer batch: three new community skills, 
 ## Maintainer Sync
 
 - Synced generated registry artifacts, web catalog data, contributor/source credits, and Codex/Claude plugin mirrors after the merged PR batch.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current 1,681+ skill catalog.
 - Verified the PR batch through fork-run approvals, source validation, skill review, repository tests, docs security checks, and main registry sync.
 
 ## [13.0.0] - 2026-06-20 - "Specialized Plugins and Security Metadata"
