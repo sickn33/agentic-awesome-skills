@@ -275,6 +275,13 @@ ssh "$HOST" "grep -B2 -A20 'Traceback' '$RUN_LOG' | head -50"
 - Early-stop far below baseline with a grad_norm P99 spike in epoch 1–2 → likely **probabilistic
   divergence**; whether it's a bug or a real effect, and the retry-the-identical-config rule, belong to
   `verifying-dl-experiments` (REQUIRED) — this skill owns *running* the retry, not judging the number.
+- log frozen (no new lines) but checkpoint `mtime` advances → **block-buffered stdout**, not a hang
+  (`references/gotchas_universal.md` U43; run `python -u`/`PYTHONUNBUFFERED=1`).
+- `uptime`/`free` on the box look maxed but your cgroup is roomy → **noisy neighbor** on the shared host,
+  not your job (`references/gotchas_universal.md` U41; the authoritative OOM check is the `oom_kill` counter
+  in `/sys/fs/cgroup/memory.events`).
+- GPU SM% pinned low while a python thread-storm pegs the cores → **intra-op thread oversubscription** on a
+  vCPU slice (`references/gotchas_universal.md` U40; cap `OMP_NUM_THREADS` to the cgroup quota).
 
 Universal gotchas (silent sync, CRLF, mid-run script overwrite, inode caps) are NOT restated here —
 see `references/gotchas_universal.md` (`grep -in '<keyword>' references/gotchas_universal.md` to jump).

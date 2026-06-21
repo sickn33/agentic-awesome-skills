@@ -14,12 +14,12 @@ To jump: `grep -in '<keyword>' references/gotchas_universal.md` (e.g. `inode`, `
 
 - **Process & SSH** — U1 SSH-dies-on-kill · U2 tmux-holds-script-in-memory · U3 vanished-process-4-causes · U4 kill-drops-SSH-before-relaunch · U5 hook-safe-launch
 - **Disk & Storage** — U6 disk-full-crashes-torch.save · U7 storage-fails-on-inodes · U8 stage-hot-data-to-NVMe
-- **Memory & OOM** — U9 cgroup-OOM-num_workers×tensor · U10 VRAM-OOM-vs-cgroup-OOM · U11 zombie-VRAM-nvidia-smi-cant-see
+- **Memory & OOM** — U9 cgroup-OOM-num_workers×tensor · U10 VRAM-OOM-vs-cgroup-OOM · U11 zombie-VRAM-nvidia-smi-cant-see · U41 host-metrics-lie/oom_kill-counter
 - **Transfer & Download** — U12 scp-resets→resumable-loop · U13 scp-into-uncreated-dir · U14 egress-surcharge+same-AZ · U15 compress-before-the-wire
-- **Monitoring** — U16 stale-waiters/zombie-monitors · U17 unquoted-pipe-grep-hang+robust-poll · U18 two-leg-remote-self-completion · U19 tracker-deletion-lags · U20 hosted-tracker-survives-teardown · U39 live-panel/TB-silently-empty (path/port/process mismatch)
+- **Monitoring** — U16 stale-waiters/zombie-monitors · U17 unquoted-pipe-grep-hang+robust-poll · U18 two-leg-remote-self-completion · U19 tracker-deletion-lags · U20 hosted-tracker-survives-teardown · U39 live-panel/TB-silently-empty (path/port/process mismatch) · U43 block-buffered-stdout-looks-frozen
 - **GPU health** — U21 nvidia-smi-util%-is-a-liar · U22 Xid-48/79-dead-GPU-re-rent · U23 thermal/power-throttle-steals-25-40%
-- **Dataloader & IO** — U24 dataloader-starvation-knobs · U25 many-small-files→shard-into-tar
-- **Env & Container** — U26 CRLF-breaks-sh · U27 overlay-config-files · U28 CUDA-toolkit-vs-driver-vs-torch · U29 install-from-lockfile · U30 pin-image-by-sha256 · U31 container-runs-but-no-GPU
+- **Dataloader & IO** — U24 dataloader-starvation-knobs · U25 many-small-files→shard-into-tar · U40 intra-op-thread-oversubscription-starves-GPU
+- **Env & Container** — U26 CRLF-breaks-sh · U27 overlay-config-files · U28 CUDA-toolkit-vs-driver-vs-torch · U29 install-from-lockfile · U30 pin-image-by-sha256 · U31 container-runs-but-no-GPU · U42 box-code-drift/verify-deploy
 - **Cost & teardown** — U32 task-epoch-default · U33 silent-checked-sync
 - **Secrets & trackers** — U34 secrets-via-stdin · U35 tracker-offline-without-key
 - **Delegated (cross-link only)** — U36 cuDNN-nondeterminism · U37 matplotlib-2^16 · U38 GPU-0%-util-data-bound
@@ -59,6 +59,12 @@ file is safe (`while read < file` sees appended bytes); changing structure is no
 restart the detach session so fresh bash reads from the top. Recovery: kill the session, copy the finished
 `best.pth` to durable storage, restart `run_queue.sh queue.txt <start_index>` to skip done items, delete any
 duplicate tracker run (cross-link verifying-dl-experiments **REQUIRED**).
+
+**Related detach trap — a non-exported var doesn't cross into the detach primitive.** A `VAR=x` set in
+your shell before `tmux new-session` / `nohup` is **not** in the detached job's environment unless
+**exported** (or inlined in the launched command) — the job sees it empty, and a launcher/monitor that
+interpolates it silently misdirects (writes output to the wrong path, mis-reports "died"). `export VAR`
+before launch, or inline it: `tmux new-session -d "VAR=$VAR bash run.sh"`.
 
 ### U3 — A vanished remote process ≠ OOM: enumerate the 4 causes
 
@@ -206,6 +212,30 @@ fuser -v /dev/nvidia* 2>/dev/null   # or: lsof /dev/nvidia*  → kill -9 the lis
 If containerized, restart the container. Ship a small reaper that flags any PID with persistent VRAM + ~0%
 util beyond a timeout — cross-link `scripts/reap_vram_zombies.sh`.
 
+### U41 — On a shared box, `uptime`/`free` describe the whole physical host, not your container — use cgroup-scoped readings + the `oom_kill` counter
+
+**Symptom**: a detached run looks "dead" or "the host is overloaded" — `uptime` shows load average 400+,
+`top`/`free -m` look maxed — so you suspect contention or an OOM-kill. But the job's own checkpoint `mtime`
+keeps advancing and its log still grows.
+
+**Root cause**: on a multi-tenant rental, host tools (`uptime`, `top`, `free -m`, `vmstat`) report the
+**physical node you share with other tenants**, not your cgroup. A neighbor's job spikes the host load
+average to ~490 while your container sits near-idle (your processes in `R`/`S`, none stuck in
+uninterruptible `D`). Reading host load as your own → a false "overloaded / OOM-killed" verdict and a
+needless kill-and-restart of a healthy run.
+
+**Fix**: judge YOUR container from cgroup-scoped readings, not host tools:
+- memory — `/sys/fs/cgroup/memory.current` vs `memory.max` (not `free -m`);
+- were YOU OOM-killed — the **`oom_kill` counter** in `/sys/fs/cgroup/memory.events`
+  (`grep oom_kill /sys/fs/cgroup/memory.events`); a non-incrementing counter means you were **not**
+  OOM-killed, however red host `free` looks;
+- CPU pressure — `/sys/fs/cgroup/cpu.stat` / `cpu.pressure`.
+
+A high host load with your cgroup roomy and `oom_kill 0` is a **noisy neighbor**, not your bug — don't
+shrink your batch or blame your code (a neighbor genuinely starving you on the shared card is U21/U23
+throttle territory or a re-rent, not a code fix). Sharpens the **U3** vanished-process ladder: the
+authoritative OOM check is the cgroup `oom_kill` counter, not host `dmesg`/`free` noise.
+
 ---
 
 ## Transfer & Download
@@ -335,6 +365,22 @@ metric history lived only there.
 as the monitor instead of brittle ssh-tail. Cross-link huggingface-skills:huggingface-trackio **REQUIRED**
 for the `init/log/finish/alert` mechanics and `space_id` sync.
 
+### U43 — A detached run's log looks frozen for minutes though training is fine: stdout is block-buffered off a TTY
+
+**Symptom**: a `nohup`/`tmux` run prints a few lines then nothing for many minutes; it reads as
+"hung / died" and the reflex is to kill it — but checkpoint `mtime`, TB scalars, and `nvidia-smi` all show
+it advancing.
+
+**Root cause**: Python (and libc stdio) **line-buffer when stdout is a TTY but block-buffer (~4–8 KB) when
+it is a pipe or file** — exactly the detached case. The log only flushes when the buffer fills, so a
+healthy run looks silent and a `grep`-on-log liveness check false-alarms on the gap.
+
+**Fix**: run unbuffered — `python -u` or `PYTHONUNBUFFERED=1` (the shipped `scripts/run_one.sh.template`
+already exports it); for a shell pipeline use `stdbuf -oL`. And judge liveness by **artifacts, not stdout
+cadence** — checkpoint `mtime`, the TB scalar API, `nvidia-smi` (monitoring_patterns §0 corollary; the
+deeper "is it actually hung?" attach is py-spy, throughput-profiling **T21**). A frozen log is the single
+most common false "dead run."
+
 ---
 
 ## GPU health
@@ -404,6 +450,26 @@ metadata cost scales with file *count*, not bytes.
 the only sane pattern for streaming from S3. This is the **general form** of the inode-exhaustion trap (U7)
 and the per-sample-vis trap — cap and shard rather than emitting a file per sample. Pairs with U8 (stage the
 shards to local NVMe) and U15 (shards compress as one stream).
+
+### U40 — A vCPU-sliced rental starves its own GPU: torch intra-op threads default to the HOST core count, not your cgroup quota
+
+**Symptom**: GPU `sm%` sits ~5–15% and runs grind, but the dataloader is not the bottleneck (few/no
+workers, data already on-device, the U24 knobs don't help); `top` shows dozens of python threads fighting
+over a handful of cores.
+
+**Root cause**: you rent a **cgroup CPU slice** (e.g. 12 vCPUs of a 64-core host), but torch/OpenMP size
+their intra-op thread pools to the **physical** core count — `torch.get_num_threads()` / `OMP_NUM_THREADS`
+come up ~64. ~57 runnable threads thrashing 12 cores burn the slice on context-switching, so the CPU side
+that launches kernels and feeds the GPU can't keep up and the card idles. No OOM, no error — pure scheduler
+thrash (the *host scheduling* starves the GPU, the inverse of being data-bound).
+
+**Fix**: cap the pools to your **slice's** vCPU count before launch —
+`export OMP_NUM_THREADS=4 MKL_NUM_THREADS=4` (and/or `torch.set_num_threads(4)`); confirm torch honoured it
+(`python -c "import torch; print(torch.get_num_threads())"` → 4, not 64). Read the real quota from the
+cgroup, not `nproc` (which reports host cores): `cat /sys/fs/cgroup/cpu.max` → `quota period`, vCPUs ≈
+quota/period. Bake the cap into the launch wrapper so every queue cell inherits it. Distinct from **U9**
+(workers × RAM → cgroup OOM) and **U24** (dataloader starvation); the triage that catches it is
+throughput-profiling **T3** (GPU SM% low while a python thread-storm pegs the cores).
 
 ---
 
@@ -486,6 +552,27 @@ missing/too old, so CUDA silently fell back to CPU.
 
 **Fix**: `docker run --gpus all …`, NVIDIA Container Toolkit ≥1.14, and **validate `nvidia-smi` *inside* the
 container before training** — never assume GPU attachment from a clean `docker run`.
+
+### U42 — The box runs a hand-synced copy with no git remote; a fix you "committed" may not be deployed — verify it is ON the box before trusting a run or tearing down
+
+**Symptom**: a bug you fixed and committed locally still reproduces on the box, or an eval runs on stale
+logic (wrong default, missing speedup, pathologically slow), even though local `git log` shows the fix
+landed.
+
+**Root cause**: most rentals have **no git remote** — the box holds a working tree you pushed by
+`scp`/`rsync`/`tar-over-ssh`, so its code only advances when you re-sync. A local commit changes nothing on
+the box; an interrupted or wrong-path sync, or simply forgetting, leaves the box pre-fix. "I committed it"
+≠ "it's running on the box."
+
+**Fix**: treat code deploy like the checked-sync (**U33**) — **verify, don't assume**. After syncing, grep
+the box for the change before relying on it:
+```bash
+ssh "$HOST" "grep -n '<new symbol / changed line>' /root/<proj>/path/file.py" || echo 'NOT DEPLOYED'
+```
+or compare a hash (`ssh host 'sha256sum file'` vs local). Make it a pre-flight for any run whose result
+depends on the fix, and part of the **Phase-5 teardown gate** — a verdict produced by stale code is not the
+verdict you think it is (principle #3). Pairs with **U29/U30** (pin deps/image): code AND environment must
+both be the version you believe.
 
 ---
 

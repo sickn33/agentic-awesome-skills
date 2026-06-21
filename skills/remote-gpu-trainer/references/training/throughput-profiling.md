@@ -67,7 +67,9 @@ top -b -n 1 | grep -i python | head        # a worker pegged at ~100% CPU = CPU-
 ```
 GPU SM% high and steady ⇒ GPU-bound (stop here, go to kernels/precision). GPU SM% sawtoothing while a
 python worker is CPU-pegged ⇒ data-bound (T4–T8). Both idle ⇒ I/O-bound (stage to NVMe, U8). Then confirm
-with a real trace (T19) before investing in a fix.
+with a real trace (T19) before investing in a fix. **GPU SM% low while *many* python threads thrash a few
+cores (not one worker pegged) ⇒ intra-op thread oversubscription** on a vCPU slice, not data-bound — cap
+`OMP_NUM_THREADS` to your cgroup quota (gotchas_universal.md **U40**), don't add dataloader workers.
 
 ---
 
