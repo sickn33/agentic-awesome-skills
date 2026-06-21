@@ -222,6 +222,13 @@ generalizable → propose adding to `references/gotchas_universal.md` / the prof
 paths + tracker entity into memory so later runs are pre-parameterized. Platform facts carry a `verified
 <month>` stamp — re-verify any teardown/billing fact against current docs before betting money or data.
 
+## Limitations
+
+- Does not replace a real cloud orchestrator or managed provisioner; use it to make rented-box work survivable, not to optimize multi-cloud procurement.
+- Platform billing, stop, destroy, and data-retention behavior can drift; re-check current provider docs before destructive or money-impacting actions.
+- Requires user-owned credentials, SSH/API access, and explicit confirmation before teardown, deletion, or other irreversible cleanup.
+- Companion skills named above are not bundled here; treat them as optional references unless installed in the current agent environment.
+
 ## Bundled resources
 
 Load only what the current phase needs.
