@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# health_patrol.sh.template — ONE read-only patrol tick for a detached remote GPU job.
+#
+# Fire on a cadence from the host's recurring runner (Claude Code `/loop 30m`; cron
+# `3,33 * * * *` — offset off :00/:30 to dodge platform load spikes; Codex/Cursor
+# Automations → references/monitoring_patterns.md §7). This is the §3 **L2 patrol** body:
+# one combined ssh round-trip → a decision → a 3-5 line report EVEN IF nothing changed.
+#
+# READ-ONLY: never edits, restarts, or deletes anything (principles #6/#9). Watches
+# LIVENESS only; to make the RESULT outlive the box, pair with an on-box L1 self-
+# completion chain (§3 L1). Exit 0 = healthy / in-progress / cleanly done;
+# exit 1 = ESCALATE ("崩了") so the loop/cron surfaces the tick loudly.
+set -u
+
+# ── PROFILE BLOCK — bind from profiles/<platform>.md §8 SCRIPT OVERRIDES ────────────────
+HOST="${HOST:-autodl-1}"                                    # ssh alias (profile §1)
+RUN_GLOB="${RUN_GLOB:-scripts.train}"                       # pgrep -af pattern for the train process
+RESULT_DIR="${RESULT_DIR:-/root/autodl-tmp/runs/results}"  # dir holding one file per finished cell
+RUN_LOG="${RUN_LOG:-/root/autodl-tmp/runs/logs/train.log}" # the PER-RUN log (NOT a tee'd master — see ‡)
+DATA_MOUNT="${DATA_MOUNT:-/root/autodl-tmp}"               # disk to watch (bytes AND inodes)
+N_TOTAL="${N_TOTAL:-0}"                                     # expected cell count (0 = don't grade completion)
+DISK_PCT_MAX="${DISK_PCT_MAX:-95}"                          # escalate when used% (bytes or inodes) >= this
+
+# ── ONE combined READ-ONLY round-trip (quoted heredoc → sent verbatim; safe args via bash -s) ──
+OUT="$(ssh -o ConnectTimeout=15 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 "$HOST" \
+        bash -s "$RUN_GLOB" "$RESULT_DIR" "$RUN_LOG" "$DATA_MOUNT" <<'REMOTE'
+set -u
+RUN_GLOB=$1; RESULT_DIR=$2; RUN_LOG=$3; DATA_MOUNT=$4
+RESULT_GLOB='*.json'                                        # CUSTOMIZE: one file per finished cell
+CRASH_RE='Traceback|Error|CUDA out of memory|OutOfMemory|Killed'  # CUSTOMIZE; QUOTED → | is alternation, never a pipe
+echo "ALIVE=$(pgrep -af "$RUN_GLOB" 2>/dev/null | grep -v grep | wc -l)"
+echo "DONE=$(ls "$RESULT_DIR"/$RESULT_GLOB 2>/dev/null | wc -l)"
+echo "EPOCH=$(grep -hoE 'Epoch[ =:]*[0-9]+(/[0-9]+)?' "$RUN_LOG" 2>/dev/null | tail -1)"
+echo "CRASH=$(grep -hE "$CRASH_RE" "$RUN_LOG" 2>/dev/null | wc -l)"   # ‡ scope to per-run log, never run_all.out (§2)
+echo "DISK=$(df -h "$DATA_MOUNT" 2>/dev/null | awk 'NR==2{print $5}')"
+echo "INODE=$(df -i "$DATA_MOUNT" 2>/dev/null | awk 'NR==2{print $5}')"
+REMOTE
+)" || { echo "PATROL $HOST: ssh FAILED — only YOU can see the console (balance / power / preemption). Check it."; exit 1; }
+
+# ── parse ──
+g(){ printf '%s\n' "$OUT" | sed -n "s/^$1=//p"; }
+ALIVE=$(g ALIVE); DONE=$(g DONE); EPOCH=$(g EPOCH); CRASH=$(g CRASH); DISK=$(g DISK); INODE=$(g INODE)
+dp=${DISK%\%}; ip=${INODE%\%}
+
+# ── always report, even if nothing changed (§3-L2) ──
+echo "PATROL $HOST: proc=${ALIVE:-?} done=${DONE:-?}/${N_TOTAL} epoch=${EPOCH:-n/a} disk=${DISK:-?} inode=${INODE:-?}"
+
+# ── escalate? crash signature / disk / inode / process-gone-while-incomplete ──
+esc=0; why=""
+[ "${CRASH:-0}" -gt 0 ] 2>/dev/null            && { esc=1; why="crash x${CRASH} in $(basename "$RUN_LOG")"; }
+[ "${dp:-0}" -ge "$DISK_PCT_MAX" ] 2>/dev/null && { esc=1; why="${why:+$why; }disk ${DISK}"; }
+[ "${ip:-0}" -ge "$DISK_PCT_MAX" ] 2>/dev/null && { esc=1; why="${why:+$why; }inodes ${INODE}"; }
+if [ "${ALIVE:-0}" -eq 0 ] 2>/dev/null && [ "${N_TOTAL:-0}" -gt 0 ] && [ "${DONE:-0}" -lt "$N_TOTAL" ] 2>/dev/null; then
+  esc=1; why="${why:+$why; }process gone at ${DONE}/${N_TOTAL} (incomplete)"
+fi
+
+if [ "$esc" -eq 1 ]; then
+  echo "PATROL: 崩了 — ${why}. Triage: ssh $HOST \"grep -B2 -A20 -E 'Traceback' '$RUN_LOG' | head -50\" (§6). Do NOT blind-restart; classify → fixed remediation."
+  exit 1
+fi
+if [ "${N_TOTAL:-0}" -gt 0 ] && [ "${DONE:-0}" -ge "$N_TOTAL" ] 2>/dev/null && [ "${ALIVE:-0}" -eq 0 ] 2>/dev/null; then
+  echo "PATROL: all ${N_TOTAL} done, process exited → load-verify + pull, THEN teardown (SKILL.md Phase 5 Iron Law)."; exit 0
+fi
+if [ "${ALIVE:-0}" -eq 0 ] 2>/dev/null && [ "${N_TOTAL:-0}" -eq 0 ]; then
+  echo "PATROL: process not running and completion-grading off — set N_TOTAL to auto-classify, or verify by hand."; exit 0
+fi
+echo "PATROL: healthy / in progress — nothing to do."; exit 0

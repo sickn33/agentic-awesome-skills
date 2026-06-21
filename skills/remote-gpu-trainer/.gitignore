@@ -1,0 +1,35 @@
+# Agent / session artifacts — never publish
+.claude/
+*.log
+
+# Secrets — never commit (common secret shapes)
+.env
+.env.*
+*.key
+*.pem
+*.token
+id_rsa*
+id_ed25519*
+.netrc
+credentials.json
+.credentials.json
+secrets.toml
+.npmrc
+.pypirc
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# ML run artifacts must never live in a skill repo
+wandb/
+runs/
+checkpoints/
+*.pth
+*.pt
+*.ckpt
