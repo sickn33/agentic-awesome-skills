@@ -3459,6 +3459,28 @@
     }
   },
   {
+    "id": "ax-extract-workflow",
+    "path": "skills/ax-extract-workflow",
+    "category": "development",
+    "name": "ax-extract-workflow",
+    "description": "Reconstruct workflow behind a past coding-agent artifact using local ax sessions/commits/skills/tool traces. Use when asked how X was built.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "axiom",
     "path": "skills/axiom",
     "category": "uncategorized",

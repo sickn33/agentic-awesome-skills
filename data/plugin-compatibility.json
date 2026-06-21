@@ -3000,6 +3000,25 @@
       "runtime_files": []
     },
     {
+      "id": "ax-extract-workflow",
+      "path": "skills/ax-extract-workflow",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "axiom",
       "path": "skills/axiom",
       "targets": {
@@ -32242,10 +32261,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1679,
+    "total_skills": 1680,
     "supported": {
-      "codex": 1620,
-      "claude": 1638
+      "codex": 1621,
+      "claude": 1639
     },
     "blocked": {
       "codex": 59,

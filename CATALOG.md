@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1679
+Total skills: 1680
 
 ## architecture (104)
 
@@ -1226,7 +1226,7 @@ Total skills: 1679
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (143)
+## infrastructure (144)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1243,6 +1243,7 @@ Total skills: 1679
 | `aws-penetration-testing` | Provide comprehensive techniques for penetration testing AWS cloud environments. Covers IAM enumeration, privilege escalation, SSRF to metadata endpoint, S3 ... | aws, penetration | aws, penetration, testing, provide, techniques, cloud, environments, covers, iam, enumeration, privilege, escalation |
 | `aws-serverless` | Specialized skill for building production-ready serverless applications on AWS. Covers Lambda functions, API Gateway, DynamoDB, SQS/SNS event-driven patterns... | aws, serverless | aws, serverless, specialized, skill, building, applications, covers, lambda, functions, api, gateway, dynamodb |
 | `aws-skills` | AWS development with infrastructure automation and cloud architecture patterns | aws, skills | aws, skills, development, infrastructure, automation, cloud, architecture |
+| `ax-extract-workflow` | Reconstruct workflow behind a past coding-agent artifact using local ax sessions/commits/skills/tool traces. Use when asked how X was built. | ai-coding, workflow-reconstruction, session-analysis, observability | ai-coding, workflow-reconstruction, session-analysis, observability, ax, extract, reconstruct, behind, past, coding, agent, artifact |
 | `azd-deployment` | Deploy containerized frontend + backend applications to Azure Container Apps with remote builds, managed identity, and idempotent infrastructure. | azd, deployment | azd, deployment, deploy, containerized, frontend, backend, applications, azure, container, apps, remote, managed |
 | `azure-ai-anomalydetector-java` | Build anomaly detection applications with Azure AI Anomaly Detector SDK for Java. Use when implementing univariate/multivariate anomaly detection, time-serie... | azure, ai, anomalydetector, java | azure, ai, anomalydetector, java, anomaly, detection, applications, detector, sdk, implementing, univariate, multivariate |
 | `azure-identity-dotnet` | Azure Identity SDK for .NET. Authentication library for Azure SDK clients using Microsoft Entra ID. Use for DefaultAzureCredential, managed identity, service... | azure, identity, dotnet | azure, identity, dotnet, sdk, net, authentication, library, clients, microsoft, entra, id, defaultazurecredential |

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1679,
+  "total": 1680,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3862,6 +3862,33 @@
         "scenarios"
       ],
       "path": "skills/awt-e2e-testing/SKILL.md"
+    },
+    {
+      "id": "ax-extract-workflow",
+      "name": "ax-extract-workflow",
+      "description": "Reconstruct workflow behind a past coding-agent artifact using local ax sessions/commits/skills/tool traces. Use when asked how X was built.",
+      "category": "infrastructure",
+      "tags": [
+        "ai-coding",
+        "workflow-reconstruction",
+        "session-analysis",
+        "observability"
+      ],
+      "triggers": [
+        "ai-coding",
+        "workflow-reconstruction",
+        "session-analysis",
+        "observability",
+        "ax",
+        "extract",
+        "reconstruct",
+        "behind",
+        "past",
+        "coding",
+        "agent",
+        "artifact"
+      ],
+      "path": "skills/ax-extract-workflow/SKILL.md"
     },
     {
       "id": "axiom",
