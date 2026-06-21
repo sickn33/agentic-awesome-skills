@@ -552,6 +552,28 @@
     }
   },
   {
+    "id": "agent-creator",
+    "path": "skills/agent-creator",
+    "category": "ai-ml",
+    "name": "agent-creator",
+    "description": "Create custom AI subagents with proper plugin structure, persona generation, and companion routing skills.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "agent-evaluation",
     "path": "skills/agent-evaluation",
     "category": "ai-agents",
