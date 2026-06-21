@@ -178,7 +178,7 @@ CKPT = os.path.join(DURABLE_DIR, "latest.pt")
 CKPT_EVERY_ITERS = 400                     # = round_down(Young/Daly W / sec_per_iter); see section 2
 
 def save_full_state(model, opt, sched, epoch, step):
-    """Atomic write: tmp -> fsync -> os.rename. A kill at any point leaves one intact file."""
+    """Atomic write: tmp -> fsync -> os.replace. A kill at any point leaves one intact file."""
     state = {
         "model": model.state_dict(),
         "opt": opt.state_dict(),

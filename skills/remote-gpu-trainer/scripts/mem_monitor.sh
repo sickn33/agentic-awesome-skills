@@ -10,6 +10,10 @@
 
 set -u
 
+# Which training process to track for the "main" RSS columns. Override to match your launcher's
+# `pgrep -f` pattern, e.g. TRAIN_PROC=train.py or TRAIN_PROC=accelerate (default: src.train).
+TRAIN_PROC="${TRAIN_PROC:-src.train}"
+
 # Header
 printf "timestamp\tcgroup_gb\tcpu_pct\tmain_pid\tmain_rss_gb\tmain_threads\tmain_fds\tn_python\ttotal_python_rss_gb\twandb_pid\twandb_rss_gb\tgpu_util_pct\tgpu_mem_mb\n"
 
@@ -23,8 +27,8 @@ while true; do
     # Total CPU usage from /proc/stat (rough; just diff once)
     cpu_pct=$(top -bn1 | grep "Cpu(s)" | awk '{print $2+$4}')
 
-    # Main src.train python PID + RSS
-    main_pid=$(pgrep -f 'src.train' | head -1)
+    # Main training python PID + RSS (pattern overridable via $TRAIN_PROC)
+    main_pid=$(pgrep -f "$TRAIN_PROC" | head -1)
     if [ -n "$main_pid" ]; then
         main_rss=$(awk '/VmRSS/ {print $2}' /proc/$main_pid/status 2>/dev/null || echo 0)
         main_rss_gb=$(awk "BEGIN{printf \"%.2f\", $main_rss/1048576}")
