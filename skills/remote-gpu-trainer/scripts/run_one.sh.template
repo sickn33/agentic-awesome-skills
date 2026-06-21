@@ -30,6 +30,9 @@ PROXY_HOOK="${PROXY_HOOK:-source /etc/network_turbo}"        # network-accel hoo
 CRED_FILE="${CRED_FILE:-/root/.wandb_key}"                   # file holding the tracker key; "" if WANDB_API_KEY already in env
 # =======================================================================================
 
+# PROXY_HOOK is an OPERATOR-supplied snippet from your platform profile (e.g. `source /etc/network_turbo`,
+# `module load cuda`, or empty). It is eval'd intentionally so a profile can run an arbitrary setup hook —
+# set it ONLY from your own trusted profile, never from untrusted or remote-derived input.
 eval "${PROXY_HOOK}" 2>/dev/null || true
 # The prebuilt base IS the env on most rentals (do not conda create). Activate if present.
 source /root/miniconda3/etc/profile.d/conda.sh 2>/dev/null && conda activate base 2>/dev/null || true

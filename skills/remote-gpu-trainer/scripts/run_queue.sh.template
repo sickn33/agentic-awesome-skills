@@ -4,6 +4,9 @@
 # Network-accel hook so every child (incl. the tracker client) inherits it; ":" no-op on a clean box.
 # See references/gotchas_universal.md and references/china-network.md.
 PROXY_HOOK="${PROXY_HOOK:-source /etc/network_turbo}"
+# PROXY_HOOK is an OPERATOR-supplied profile snippet (source a file / module load / export ...), eval'd
+# on purpose to run an arbitrary setup hook. Set it ONLY from your own trusted profile, never from
+# untrusted or remote-derived input.
 eval "${PROXY_HOOK}" 2>/dev/null || true
 #
 # Each queue line: <config_yaml_path> <task> [epochs]   (epochs defaults to 20)

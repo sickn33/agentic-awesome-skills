@@ -28,6 +28,9 @@ def main() -> int:
     ap.add_argument("--list-metrics", action="store_true", help="Print per-ablation epoch + main metric")
     ap.add_argument("--expect", type=int, default=None,
                     help="Assert exactly N ablation subdirs are present -- guards a teardown gate against a partial/empty pull")
+    ap.add_argument("--allow-pickle", action="store_true",
+                    help="Permit the weights_only=False fallback (executes pickle) for checkpoints you trust -- "
+                         "needed only when a checkpoint pickles non-tensor objects (e.g. an args Namespace); OFF by default")
     args = ap.parse_args()
 
     root = Path(args.ckpt_dir)
@@ -77,17 +80,21 @@ def main() -> int:
             continue
 
         # Load safe-by-default: weights_only=True refuses to execute pickle, so a poisoned or
-        # compromised remote checkpoint cannot run code on the operator's machine. Fall back to
-        # weights_only=False ONLY if that fails (a legit checkpoint may pickle a non-tensor object —
-        # e.g. an argparse Namespace under 'args') and warn, since the fallback executes pickle and is
-        # only safe for checkpoints YOU produced. Pass --allow-pickle is not needed; the warning is the gate.
+        # compromised remote checkpoint cannot run code on the operator's machine. The unsafe
+        # weights_only=False path (which DOES execute pickle) is OPT-IN via --allow-pickle: an attacker
+        # who controls the remote file could otherwise craft one that fails the safe load to FORCE the
+        # fallback, so auto-falling-back would defeat the gate. Pass --allow-pickle ONLY for your own ckpts.
         try:
             ckpt = torch.load(pth, map_location="cpu", weights_only=True)
-        except Exception:
+        except Exception as e_safe:
+            if not args.allow_pickle:
+                errors.append((name, f"safe load (weights_only=True) failed: {str(e_safe)[:70]} "
+                                     "-- re-run with --allow-pickle if this is your own checkpoint"))
+                continue
             try:
                 print(
-                    f"  [warn] {name}: weights_only=True load failed; retrying weights_only=False "
-                    "(executes pickle — only safe for checkpoints you produced yourself)"
+                    f"  [warn] {name}: weights_only=True failed; --allow-pickle set, retrying "
+                    "weights_only=False (executes pickle -- trust this file)"
                 )
                 ckpt = torch.load(pth, map_location="cpu", weights_only=False)
             except Exception as e:
