@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1678,
+  "total": 1679,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -573,6 +573,31 @@
         "kernel"
       ],
       "path": "skills/aegisops-ai/SKILL.md"
+    },
+    {
+      "id": "agent-creator",
+      "name": "agent-creator",
+      "description": "Create custom AI subagents with proper plugin structure, persona generation, and companion routing skills.",
+      "category": "data-ai",
+      "tags": [
+        "agent",
+        "creator"
+      ],
+      "triggers": [
+        "agent",
+        "creator",
+        "custom",
+        "ai",
+        "subagents",
+        "proper",
+        "plugin",
+        "structure",
+        "persona",
+        "generation",
+        "companion",
+        "routing"
+      ],
+      "path": "skills/agent-creator/SKILL.md"
     },
     {
       "id": "agent-evaluation",

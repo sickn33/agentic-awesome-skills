@@ -425,6 +425,25 @@
       "runtime_files": []
     },
     {
+      "id": "agent-creator",
+      "path": "skills/agent-creator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-evaluation",
       "path": "skills/agent-evaluation",
       "targets": {
@@ -32223,10 +32242,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1678,
+    "total_skills": 1679,
     "supported": {
-      "codex": 1619,
-      "claude": 1637
+      "codex": 1620,
+      "claude": 1638
     },
     "blocked": {
       "codex": 59,
