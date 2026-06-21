@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1680
+Total skills: 1681
 
 ## architecture (104)
 
@@ -1226,7 +1226,7 @@ Total skills: 1680
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (144)
+## infrastructure (145)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1354,6 +1354,7 @@ Total skills: 1680
 | `prometheus-configuration` | Complete guide to Prometheus setup, metric collection, scrape configuration, and recording rules. | prometheus, configuration | prometheus, configuration, complete, setup, metric, collection, scrape, recording, rules |
 | `pubmed-database` | Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopyth... | pubmed, database | pubmed, database, direct, rest, api, access, boolean, mesh, queries, utilities, batch, processing |
 | `recsys-pipeline-architect` | Designs composable recommendation, ranking, and feed pipelines using the six-stage Source→Hydrator→Filter→Scorer→Selector→SideEffect framework | recommender-system, ranking, feed-algorithm, recsys, personalization, for-you-feed, rag-reranker, pipeline-architecture | recommender-system, ranking, feed-algorithm, recsys, personalization, for-you-feed, rag-reranker, pipeline-architecture, pipeline, architect, designs, composable |
+| `remote-gpu-trainer` | Deploy, monitor, and debug long GPU jobs on RENTED/remote instances (AutoDL, RunPod, vast.ai, Lambda, Slurm, K8s): teardown/billing safety, spot resilience, ... | remote, gpu, trainer | remote, gpu, trainer, deploy, monitor, debug, long, jobs, rented, instances, autodl, runpod |
 | `seo-aeo-landing-page-writer` | Writes complete, structured landing pages optimized for SEO ranking, AEO citation, and visitor conversion. Activate when the user wants to write or generate ... | seo, aeo, landing, page, writer | seo, aeo, landing, page, writer, writes, complete, structured, pages, optimized, ranking, citation |
 | `server-management` | Server management principles and decision-making. Process management, monitoring strategy, and scaling decisions. Teaches thinking, not commands. | server | server, principles, decision, making, process, monitoring, scaling, decisions, teaches, thinking, commands |
 | `service-mesh-observability` | Complete guide to observability patterns for Istio, Linkerd, and service mesh deployments. | service, mesh, observability | service, mesh, observability, complete, istio, linkerd, deployments |

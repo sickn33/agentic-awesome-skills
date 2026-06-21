@@ -27432,6 +27432,28 @@
     }
   },
   {
+    "id": "remote-gpu-trainer",
+    "path": "skills/remote-gpu-trainer",
+    "category": "ml-ops",
+    "name": "remote-gpu-trainer",
+    "description": "Deploy, monitor, and debug long GPU jobs on RENTED/remote instances (AutoDL, RunPod, vast.ai, Lambda, Slurm, K8s): teardown/billing safety, spot resilience, resumable checkpointing, OOM/NaN triage.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "remotion",
     "path": "skills/remotion",
     "category": "media",

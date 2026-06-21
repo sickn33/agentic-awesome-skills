@@ -24003,6 +24003,25 @@
       "runtime_files": []
     },
     {
+      "id": "remote-gpu-trainer",
+      "path": "skills/remote-gpu-trainer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "remotion",
       "path": "skills/remotion",
       "targets": {
@@ -32261,10 +32280,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1680,
+    "total_skills": 1681,
     "supported": {
-      "codex": 1621,
-      "claude": 1639
+      "codex": 1622,
+      "claude": 1640
     },
     "blocked": {
       "codex": 59,
