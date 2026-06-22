@@ -14,7 +14,7 @@ from __future__ import annotations
 import argparse
 import os
 
-from collect_metadata import collect
+from collect_metadata import _require_bq_identifier, collect
 from push_metadata import push
 
 
@@ -48,6 +48,10 @@ def main() -> None:
     missing = [k for k in required_push if getattr(args, k) is None]
     if missing:
         parser.error(f"Missing required push arguments/env vars: {missing}")
+
+    args.project_id = _require_bq_identifier(args.project_id, "project_id")
+    args.datasets = [_require_bq_identifier(d, "dataset") for d in args.datasets or []] or None
+    args.tables = [_require_bq_identifier(t, "table") for t in args.tables or []] or None
 
     collect(
         project_id=args.project_id,

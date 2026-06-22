@@ -9,12 +9,16 @@ import sys
 import json
 import pytest
 import subprocess
+import uuid
 from pathlib import Path
 from unittest.mock import Mock, patch, mock_open, MagicMock
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from shopify_init import EnvLoader, EnvConfig, ShopifyInitializer
+
+DUMMY_API_KEY = f"dummy-{uuid.uuid4().hex}"
+DUMMY_API_SECRET = f"dummy-{uuid.uuid4().hex}"
 
 
 class TestEnvLoader:
@@ -23,9 +27,9 @@ class TestEnvLoader:
     def test_load_env_file_success(self, tmp_path):
         """Test loading valid .env file."""
         env_file = tmp_path / ".env"
-        env_file.write_text("""
-SHOPIFY_API_KEY=test_key
-SHOPIFY_API_SECRET=test_secret
+        env_file.write_text(f"""
+SHOPIFY_API_KEY={DUMMY_API_KEY}
+SHOPIFY_API_SECRET={DUMMY_API_SECRET}
 SHOP_DOMAIN=test.myshopify.com
 # Comment line
 SCOPES=read_products,write_products
@@ -128,8 +132,8 @@ class TestShopifyInitializer:
     def config(self):
         """Create test config."""
         return EnvConfig(
-            shopify_api_key="test_key",
-            shopify_api_secret="test_secret",
+            shopify_api_key=DUMMY_API_KEY,
+            shopify_api_secret=DUMMY_API_SECRET,
             shop_domain="test.myshopify.com",
             scopes="read_products,write_products"
         )
@@ -367,13 +371,13 @@ class TestEnvConfig:
     def test_env_config_with_values(self):
         """Test EnvConfig with values."""
         config = EnvConfig(
-            shopify_api_key="key",
-            shopify_api_secret="secret",
+            shopify_api_key=DUMMY_API_KEY,
+            shopify_api_secret=DUMMY_API_SECRET,
             shop_domain="test.myshopify.com",
             scopes="read_products"
         )
 
-        assert config.shopify_api_key == "key"
-        assert config.shopify_api_secret == "secret"
+        assert config.shopify_api_key == DUMMY_API_KEY
+        assert config.shopify_api_secret == DUMMY_API_SECRET
         assert config.shop_domain == "test.myshopify.com"
         assert config.scopes == "read_products"

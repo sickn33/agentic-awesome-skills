@@ -10,11 +10,21 @@ Usage:
 """
 
 import argparse
+import http.client
 import json
 import os
+import re
 import sys
-from urllib.request import urlopen, Request
-from urllib.error import HTTPError
+from urllib.parse import urlparse
+
+ALLOWED_METHODS = {
+    "sendMessage",
+    "sendPhoto",
+    "sendDocument",
+    "sendLocation",
+    "sendPoll",
+}
+BOT_TOKEN_RE = re.compile(r"^\d{6,20}:[A-Za-z0-9_-]{20,}$")
 
 
 def _mask_token(token: str) -> str:
@@ -24,18 +34,38 @@ def _mask_token(token: str) -> str:
     return f"{token[:8]}...masked"
 
 
+def _safe_api_url(token: str, method: str) -> str:
+    if not BOT_TOKEN_RE.match(token or ""):
+        raise ValueError("Invalid Telegram bot token format")
+    if method not in ALLOWED_METHODS:
+        raise ValueError(f"Unsupported Telegram method: {method}")
+    url = f"https://api.telegram.org/bot{token}/{method}"
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname != "api.telegram.org":
+        raise ValueError("Refusing unsafe Telegram API URL")
+    return url
+
+
+def _safe_api_path(token: str, method: str) -> str:
+    _safe_api_url(token, method)
+    return f"/bot{token}/{method}"
+
+
 def api_call(token: str, method: str, data: dict) -> dict:
     """Make a Telegram Bot API call."""
-    url = f"https://api.telegram.org/bot{token}/{method}"
+    api_path = _safe_api_path(token, method)
     payload = json.dumps(data).encode("utf-8")
-    req = Request(url, data=payload, headers={"Content-Type": "application/json"})
+    headers = {"Content-Type": "application/json"}
+    conn = http.client.HTTPSConnection("api.telegram.org", timeout=30)
 
     try:
-        with urlopen(req, timeout=30) as resp:
-            return json.loads(resp.read().decode())
-    except HTTPError as e:
-        error_body = json.loads(e.read().decode())
-        return error_body
+        conn.request("POST", api_path, body=payload, headers=headers)
+        resp = conn.getresponse()
+        body = resp.read().decode()
+        parsed = json.loads(body)
+        return parsed
+    finally:
+        conn.close()
 
 
 def send_text(token: str, chat_id: str, text: str, parse_mode: str = None,

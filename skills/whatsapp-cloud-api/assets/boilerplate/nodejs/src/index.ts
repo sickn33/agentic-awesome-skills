@@ -29,6 +29,7 @@ const templates = new TemplateManager(config);
 // === Express Setup ===
 
 const app = express();
+app.disable('x-powered-by');
 const PORT = process.env.PORT || 3000;
 
 // Raw body capture MUST come before express.json()

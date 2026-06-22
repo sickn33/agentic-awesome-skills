@@ -19,11 +19,36 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from config import EXPORTS_DIR
-from db import Database
+_db = None
 
-db = Database()
-db.init()
+
+def get_db():
+    global _db
+    if _db is None:
+        from db import Database
+        _db = Database()
+        _db.init()
+    return _db
+
+
+def safe_output_dir(output: str | Path) -> Path:
+    output_dir = Path(output).expanduser().resolve()
+    skill_dir = Path(__file__).resolve().parents[1]
+    try:
+        output_dir.relative_to(skill_dir)
+    except ValueError:
+        return output_dir
+    raise ValueError("Refusing to export inside the skill source directory")
+
+
+def self_test() -> None:
+    skill_dir = Path(__file__).resolve().parents[1]
+    safe_output_dir(skill_dir.parent / "instagram-exports")
+    try:
+        safe_output_dir(skill_dir / "scripts" / "exports")
+    except ValueError:
+        return
+    raise AssertionError("accepted export directory inside skill source")
 
 
 def export_json(records: list, output_dir: Path, name: str) -> Path:
@@ -67,7 +92,7 @@ def export_csv_file(records: list, output_dir: Path, name: str) -> Path:
 
 def get_data(data_type: str) -> tuple:
     """Retorna (records, name) para o tipo de dados."""
-    conn = db._connect()
+    conn = get_db()._connect()
 
     if data_type == "posts":
         rows = conn.execute("SELECT * FROM posts ORDER BY created_at DESC").fetchall()
@@ -109,15 +134,23 @@ def do_export(records: list, name: str, fmt: str, output_dir: Path) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="Exportar dados do Instagram")
-    parser.add_argument("--type", required=True,
+    parser.add_argument("--type", required=False,
                         choices=["posts", "comments", "insights", "user_insights", "templates", "actions", "all"],
                         help="Tipo de dados")
     parser.add_argument("--format", default="csv", choices=["json", "jsonl", "csv", "all"],
                         help="Formato (default: csv)")
-    parser.add_argument("--output", default=str(EXPORTS_DIR), help=f"Diretório (default: {EXPORTS_DIR})")
+    default_exports_dir = Path(__file__).resolve().parents[1] / "data" / "exports"
+    parser.add_argument("--output", default=str(default_exports_dir), help=f"Diretório (default: {default_exports_dir})")
+    parser.add_argument("--self-test", action="store_true", help="Run safety self-checks")
     args = parser.parse_args()
 
-    output_dir = Path(args.output)
+    if args.self_test:
+        self_test()
+        return
+    if not args.type:
+        parser.error("--type is required unless --self-test is used")
+
+    output_dir = safe_output_dir(args.output)
 
     if args.type == "all":
         for dtype in ["posts", "comments", "insights", "user_insights", "templates", "actions"]:

@@ -78,6 +78,13 @@ _TABLE_TYPE_MAP = {
 }
 
 
+def _quote_identifier(identifier: str) -> str:
+    value = str(identifier).strip()
+    if not value:
+        raise ValueError("Identifier must not be empty")
+    return '"' + value.replace('"', '""') + '"'
+
+
 def _normalize_table_type(raw_type: str | None) -> str:
     """Map Snowflake's TABLE_TYPE value to MC-accepted 'TABLE' or 'VIEW'."""
     if not raw_type:
@@ -115,7 +122,7 @@ def _collect_assets(conn) -> list[dict]:
     for db in databases:
         # --- Discover schemas in each database ---
         try:
-            cursor.execute(f'SHOW SCHEMAS IN DATABASE "{db}"')
+            cursor.execute("SHOW SCHEMAS IN DATABASE IDENTIFIER(%s)", (db,))
         except Exception as exc:
             print(f"  WARNING: could not list schemas in {db}: {exc}")
             continue
@@ -142,10 +149,11 @@ def _collect_assets(conn) -> list[dict]:
                     BYTES,
                     LAST_ALTERED,
                     COMMENT
-                FROM "{db}".INFORMATION_SCHEMA.TABLES
+                FROM IDENTIFIER(%s)
                 WHERE TABLE_SCHEMA != 'INFORMATION_SCHEMA'
                 ORDER BY TABLE_SCHEMA, TABLE_NAME
-                """
+                """,
+                (f"{db}.INFORMATION_SCHEMA.TABLES",),
             )
         except Exception as exc:
             print(f"  WARNING: could not query INFORMATION_SCHEMA.TABLES in {db}: {exc}")
@@ -172,11 +180,11 @@ def _collect_assets(conn) -> list[dict]:
                 cursor.execute(
                     f"""
                     SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COMMENT
-                    FROM "{db}".INFORMATION_SCHEMA.COLUMNS
+                    FROM IDENTIFIER(%s)
                     WHERE TABLE_SCHEMA = %s
                     ORDER BY TABLE_NAME, ORDINAL_POSITION
                     """,
-                    (schema,),
+                    (f"{db}.INFORMATION_SCHEMA.COLUMNS", schema),
                 )
             except Exception as exc:
                 print(f"  WARNING: could not fetch columns for {db}.{schema}: {exc}")

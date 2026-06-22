@@ -41,10 +41,35 @@ Dependencies: All required packages are declared in PEP 723 header above.
 import os
 import sys
 import torch
+import re
+import shutil
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 from huggingface_hub import HfApi
 import subprocess
+
+HF_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)?$")
+SAFE_FILENAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+
+def require_hf_id(value, name):
+    if not HF_ID_RE.match(value or ""):
+        raise ValueError(f"{name} must be a Hugging Face model/repo id")
+    return value
+
+
+def safe_filename(value, name):
+    if not SAFE_FILENAME_RE.match(value or ""):
+        raise ValueError(f"{name} must be a safe filename segment")
+    return value
+
+
+def safe_output_file(root, filename):
+    root_path = os.path.abspath(root)
+    target = os.path.abspath(os.path.join(root_path, filename))
+    if os.path.commonpath([root_path, target]) != root_path:
+        raise ValueError(f"Output path escapes {root_path}")
+    return target
 
 
 def check_system_dependencies():
@@ -78,24 +103,19 @@ def run_command(cmd, description):
     """Run a command with error handling."""
     print(f"   {description}...")
     try:
-        result = subprocess.run(
-            cmd,
-            check=True,
-            capture_output=True,
-            text=True
-        )
-        if result.stdout:
-            print(f"   {result.stdout[:200]}")  # Show first 200 chars
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"   ❌ Command failed: {' '.join(cmd)}")
-        if e.stdout:
-            print(f"   STDOUT: {e.stdout[:500]}")
-        if e.stderr:
-            print(f"   STDERR: {e.stderr[:500]}")
+        args = [str(part) for part in cmd]
+        if not args or any("\0" in part for part in args):
+            raise ValueError("Command arguments must be non-empty strings without NUL bytes")
+        executable = args[0] if os.path.isabs(args[0]) else shutil.which(args[0])
+        if not executable:
+            raise FileNotFoundError(args[0])
+        return_code = os.spawnv(os.P_WAIT, executable, args)
+        if return_code == 0:
+            return True
+        print(f"   ❌ Command failed with exit code {return_code}: {' '.join(args)}")
         return False
-    except FileNotFoundError:
-        print(f"   ❌ Command not found: {cmd[0]}")
+    except (FileNotFoundError, OSError, ValueError) as e:
+        print(f"   ❌ Command failed: {e}")
         return False
 
 
@@ -108,10 +128,10 @@ if not check_system_dependencies():
     sys.exit(1)
 
 # Configuration from environment variables
-ADAPTER_MODEL = os.environ.get("ADAPTER_MODEL", "evalstate/qwen-capybara-medium")
-BASE_MODEL = os.environ.get("BASE_MODEL", "Qwen/Qwen2.5-0.5B")
-OUTPUT_REPO = os.environ.get("OUTPUT_REPO", "evalstate/qwen-capybara-medium-gguf")
-username = os.environ.get("HF_USERNAME", ADAPTER_MODEL.split('/')[0])
+ADAPTER_MODEL = require_hf_id(os.environ.get("ADAPTER_MODEL", "evalstate/qwen-capybara-medium"), "ADAPTER_MODEL")
+BASE_MODEL = require_hf_id(os.environ.get("BASE_MODEL", "Qwen/Qwen2.5-0.5B"), "BASE_MODEL")
+OUTPUT_REPO = require_hf_id(os.environ.get("OUTPUT_REPO", "evalstate/qwen-capybara-medium-gguf"), "OUTPUT_REPO")
+username = require_hf_id(os.environ.get("HF_USERNAME", ADAPTER_MODEL.split('/')[0]), "HF_USERNAME")
 
 print(f"\n📦 Configuration:")
 print(f"   Base model: {BASE_MODEL}")
@@ -203,7 +223,8 @@ os.makedirs(gguf_output_dir, exist_ok=True)
 
 convert_script = "/tmp/llama.cpp/convert_hf_to_gguf.py"
 model_name = ADAPTER_MODEL.split('/')[-1]
-gguf_file = f"{gguf_output_dir}/{model_name}-f16.gguf"
+model_name = safe_filename(model_name, "model_name")
+gguf_file = safe_output_file(gguf_output_dir, f"{model_name}-f16.gguf")
 
 print(f"   Running conversion...")
 if not run_command(
@@ -259,7 +280,7 @@ quant_formats = [
 quantized_files = []
 for quant_type, description in quant_formats:
     print(f"   Creating {quant_type} quantization ({description})...")
-    quant_file = f"{gguf_output_dir}/{model_name}-{quant_type.lower()}.gguf"
+    quant_file = safe_output_file(gguf_output_dir, f"{model_name}-{quant_type.lower()}.gguf")
 
     if not run_command(
         [quantize_bin, gguf_file, quant_file, quant_type],

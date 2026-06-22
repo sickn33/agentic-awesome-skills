@@ -3,9 +3,27 @@ Base validator with common validation logic for document files.
 """
 
 import re
+import shutil
 from pathlib import Path
 
 import lxml.etree
+
+
+def safe_extract_all(zip_ref, destination):
+    """Extract a zip archive without allowing members to escape destination."""
+    destination = Path(destination).resolve()
+    for member in zip_ref.infolist():
+        target = (destination / member.filename).resolve()
+        try:
+            target.relative_to(destination)
+        except ValueError as exc:
+            raise ValueError(f"Unsafe archive member: {member.filename}") from exc
+        if member.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with zip_ref.open(member) as src, target.open("wb") as dst:
+            shutil.copyfileobj(src, dst)
 
 
 class BaseSchemaValidator:
@@ -888,7 +906,7 @@ class BaseSchemaValidator:
 
             # Extract original file
             with zipfile.ZipFile(self.original_file, "r") as zip_ref:
-                zip_ref.extractall(temp_path)
+                safe_extract_all(zip_ref, temp_path)
 
             # Find corresponding file in original
             original_xml_file = temp_path / relative_path

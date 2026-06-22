@@ -30,7 +30,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from api_client import InstagramAPI
 from auth import auto_refresh_if_needed
-from db import Database
+from db import Database, normalize_media_type
 from governance import GovernanceManager
 
 db = Database()
@@ -173,12 +173,13 @@ async def publish_video(
     as_draft: bool = False,
 ) -> dict:
     """Publica vídeo, reel ou story de vídeo."""
+    media_type = normalize_media_type(media_type)
     video_url = await upload_if_local(api, video)
 
     if as_draft:
         post_id = db.insert_post({
             "account_id": api.account_id,
-            "media_type": media_type.upper(),
+            "media_type": media_type,
             "media_url": video_url,
             "local_path": video if _is_local_file(video) else None,
             "caption": caption,
@@ -195,7 +196,7 @@ async def publish_video(
         )
 
     # Step 1: Container
-    ig_type = {"VIDEO": "VIDEO", "REEL": "REELS", "STORY": "STORIES"}[media_type.upper()]
+    ig_type = {"VIDEO": "VIDEO", "REEL": "REELS", "STORY": "STORIES"}[media_type]
     container = await api.create_media_container(
         media_type=ig_type,
         video_url=video_url,
@@ -205,8 +206,8 @@ async def publish_video(
     container_id = container["id"]
 
     post_id = db.insert_post({
-        "account_id": api.account_id,
-        "media_type": media_type.upper(),
+            "account_id": api.account_id,
+            "media_type": media_type,
         "media_url": video_url,
         "caption": caption,
         "status": "container_created",
@@ -386,7 +387,6 @@ async def run(args) -> None:
 
         # Aplicar template se especificado
         if args.template:
-            from db import Database
             tpl = Database().get_template_by_name(args.template)
             if tpl:
                 caption = tpl["caption_template"]
@@ -397,7 +397,7 @@ async def run(args) -> None:
                 variables = dict(v.split("=", 1) for v in args.vars)
                 caption = _apply_template(caption, variables)
 
-        media_type = args.type.upper()
+        media_type = normalize_media_type(args.type)
 
         if media_type == "PHOTO":
             result = await publish_photo(api, args.image, caption, as_draft=args.draft)

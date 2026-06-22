@@ -30,7 +30,7 @@ import argparse
 import json
 import os
 
-from collect_metadata import collect
+from collect_metadata import _bounded_int, collect
 from push_metadata import DEFAULT_BATCH_SIZE, DEFAULT_TIMEOUT_SECONDS, push
 
 
@@ -94,6 +94,8 @@ def main() -> None:
         parser.error("--key-id and --key-token are required (or set MCD_INGEST_ID / MCD_INGEST_TOKEN)")
     if not args.resource_uuid:
         parser.error("--resource-uuid is required (or set MCD_RESOURCE_UUID)")
+
+    args.hive_port = _bounded_int(args.hive_port, "hive_port", minimum=1, maximum=65535)
 
     manifest = collect(
         hive_host=args.hive_host,

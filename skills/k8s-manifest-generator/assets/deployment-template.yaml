@@ -51,26 +51,38 @@ spec:
       # Pod-level security context
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
         seccompProfile:
           type: RuntimeDefault
 
       # Init containers (optional)
       initContainers:
       - name: init-wait
-        image: busybox:1.36
+        image: busybox:1.37.0
+        imagePullPolicy: Always
         command: ['sh', '-c', 'echo "Initializing..."']
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
         securityContext:
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
-          runAsUser: 1000
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - ALL
 
       containers:
       - name: <container-name>
-        image: <registry>/<image>:<tag>  # Never use :latest
-        imagePullPolicy: IfNotPresent
+        image: <registry>/<image>@sha256:<digest>
+        imagePullPolicy: Always
 
         ports:
         - name: http
@@ -155,7 +167,7 @@ spec:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
-          runAsUser: 1000
+          runAsUser: 10001
           capabilities:
             drop:
             - ALL

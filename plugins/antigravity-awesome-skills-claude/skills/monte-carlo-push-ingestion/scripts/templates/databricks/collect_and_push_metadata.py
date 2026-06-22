@@ -27,7 +27,7 @@ import argparse
 import logging
 import os
 
-from collect_metadata import collect
+from collect_metadata import _quote_identifier, collect
 from push_metadata import DEFAULT_BATCH_SIZE, push
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -51,6 +51,8 @@ def main() -> None:
     missing = [k for k in required if getattr(args, k) is None]
     if missing:
         parser.error(f"Missing required arguments/env vars: {missing}")
+
+    _quote_identifier(args.catalog)
 
     log.info("Step 1: Collecting metadata …")
     collect(

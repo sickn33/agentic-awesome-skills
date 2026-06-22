@@ -19,6 +19,27 @@ import socket
 import time
 import sys
 import argparse
+import shlex
+from pathlib import Path
+
+ALLOWED_EXECUTABLES = {
+    "npm", "npx", "pnpm", "yarn", "node", "python", "python3",
+    "uv", "pytest", "vitest", "playwright",
+}
+SHELL_METACHARS = {";", "&&", "||", "|", "`", "$(", ">", "<"}
+
+
+def validate_argv(parts):
+    if not parts:
+        raise ValueError("empty command")
+    exe = Path(parts[0]).name
+    if exe not in ALLOWED_EXECUTABLES:
+        raise ValueError(f"unsupported executable: {parts[0]}")
+    for part in parts:
+        if any(token in part for token in SHELL_METACHARS):
+            raise ValueError(f"unsupported shell metacharacter in argument: {part}")
+    return parts
+
 
 def is_server_ready(port, timeout=30):
     """Wait for server to be ready by polling the port."""
@@ -32,14 +53,46 @@ def is_server_ready(port, timeout=30):
     return False
 
 
+def parse_server_command(command):
+    """Parse a server command without invoking a shell."""
+    parts = shlex.split(command)
+    cwd = None
+    if len(parts) >= 4 and parts[0] == "cd" and parts[2] == "&&":
+        cwd = Path(parts[1]).expanduser()
+        parts = parts[3:]
+    if not parts:
+        raise ValueError("empty server command")
+    return validate_argv(parts), cwd
+
+
+def self_test():
+    assert parse_server_command("npm run dev") == (["npm", "run", "dev"], None)
+    cmd, cwd = parse_server_command("cd backend && python server.py")
+    assert cmd == ["python", "server.py"]
+    assert str(cwd) == "backend"
+    try:
+        validate_argv(["sh", "-c", "npm run dev"])
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("shell launcher should be rejected")
+
+
 def main():
     parser = argparse.ArgumentParser(description='Run command with one or more servers')
-    parser.add_argument('--server', action='append', dest='servers', required=True, help='Server command (can be repeated)')
-    parser.add_argument('--port', action='append', dest='ports', type=int, required=True, help='Port for each server (must match --server count)')
+    parser.add_argument('--self-test', action='store_true', help='Run parser self-test and exit')
+    parser.add_argument('--server', action='append', dest='servers', help='Server command (can be repeated)')
+    parser.add_argument('--port', action='append', dest='ports', type=int, help='Port for each server (must match --server count)')
     parser.add_argument('--timeout', type=int, default=30, help='Timeout in seconds per server (default: 30)')
     parser.add_argument('command', nargs=argparse.REMAINDER, help='Command to run after server(s) ready')
 
     args = parser.parse_args()
+    if args.self_test:
+        self_test()
+        return
+    if not args.servers or not args.ports:
+        print("Error: --server and --port are required")
+        sys.exit(1)
 
     # Remove the '--' separator if present
     if args.command and args.command[0] == '--':
@@ -65,10 +118,10 @@ def main():
         for i, server in enumerate(servers):
             print(f"Starting server {i+1}/{len(servers)}: {server['cmd']}")
 
-            # Use shell=True to support commands with cd and &&
+            server_cmd, server_cwd = parse_server_command(server['cmd'])
             process = subprocess.Popen(
-                server['cmd'],
-                shell=True,
+                server_cmd,
+                cwd=server_cwd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
@@ -84,8 +137,9 @@ def main():
         print(f"\nAll {len(servers)} server(s) ready")
 
         # Run the command
-        print(f"Running: {' '.join(args.command)}\n")
-        result = subprocess.run(args.command)
+        test_command = validate_argv(args.command)
+        print(f"Running: {' '.join(test_command)}\n")
+        result = subprocess.run(test_command)
         sys.exit(result.returncode)
 
     finally:

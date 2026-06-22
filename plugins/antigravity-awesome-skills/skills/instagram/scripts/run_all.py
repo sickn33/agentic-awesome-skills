@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from api_client import InstagramAPI
 from auth import auto_refresh_if_needed
-from db import Database
+from db import Database, normalize_media_type
 
 logging.basicConfig(
     level=logging.INFO,
@@ -58,7 +58,7 @@ async def sync_media(api: InstagramAPI, limit: int = 50) -> dict:
         if m["id"] not in existing_ig_ids:
             db.insert_post({
                 "account_id": api.account_id,
-                "media_type": m.get("media_type", "IMAGE"),
+                "media_type": normalize_media_type(m.get("media_type", "IMAGE")),
                 "media_url": m.get("media_url", ""),
                 "caption": m.get("caption", ""),
                 "status": "published",

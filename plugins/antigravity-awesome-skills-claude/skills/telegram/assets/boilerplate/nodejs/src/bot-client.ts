@@ -19,6 +19,7 @@ export class TelegramBotClient {
 
   async startWebhook(port: number, webhookUrl: string, secret?: string): Promise<void> {
     const app = express();
+    app.disable('x-powered-by');
     app.use(express.json());
 
     app.post('/webhook', async (req, res) => {

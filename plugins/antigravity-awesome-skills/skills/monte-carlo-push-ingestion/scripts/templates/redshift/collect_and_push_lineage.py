@@ -24,7 +24,7 @@ import argparse
 import logging
 import os
 
-from collect_lineage import LOOKBACK_HOURS, collect
+from collect_lineage import LOOKBACK_HOURS, _bounded_int, collect, validate_redshift_host
 from push_lineage import DEFAULT_BATCH_SIZE, push
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -50,6 +50,13 @@ def main() -> None:
     missing = [k for k in required if getattr(args, k) is None]
     if missing:
         parser.error(f"Missing required arguments/env vars: {missing}")
+
+    args.host = validate_redshift_host(
+        args.host,
+        allow_private=os.getenv("REDSHIFT_ALLOW_PRIVATE_HOST", "").lower() in {"1", "true", "yes"},
+    )
+    args.port = _bounded_int(args.port, "port", minimum=1, maximum=65535)
+    args.lookback_hours = _bounded_int(args.lookback_hours, "lookback_hours", minimum=1, maximum=24 * 31)
 
     log.info("Step 1: Collecting lineage …")
     collect(

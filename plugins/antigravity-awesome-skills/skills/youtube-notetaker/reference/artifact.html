@@ -126,6 +126,9 @@ var CURRENT_ID=null, YTID=null, INDEX=null;
 function onYouTubeIframeAPIReady(){player=new YT.Player('ytplayer',{events:{'onReady':function(){ready=true;if(pending!=null){doPlay(pending);pending=null;}}}});}
 function fmt(t){t=Math.floor(t);return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');}
 function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+function clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
+function node(tag,cls,text){var el=document.createElement(tag);if(cls)el.className=cls;if(text!=null)el.textContent=text;return el;}
+function safeUrl(url,fallback){try{var u=new URL(url||'',window.location.href);return /^https?:$/.test(u.protocol)?u.href:(fallback||'#');}catch(e){return fallback||'#';}}
 
 /* ---------------- Router ---------------- */
 function route(){
@@ -154,16 +157,19 @@ async function loadIndex(){
     var r=await fetch(API_URL); if(!r.ok) throw new Error('HTTP '+r.status);
     var d=await r.json();
     INDEX=(d.items||[]).filter(function(it){return it.youtube_id;});
-    var g=document.getElementById('grid'); g.innerHTML='';
-    if(!INDEX.length){g.innerHTML='<p style="color:#7a6f5d">No videos in the library yet.</p>';return;}
+    var g=document.getElementById('grid'); clear(g);
+    if(!INDEX.length){var empty=node('p','', 'No videos in the library yet.');empty.style.color='#7a6f5d';g.appendChild(empty);return;}
     INDEX.forEach(function(it){
       var slides=it.slides||[]; var thumb=(slides[0]&&slides[0].img)||'';
-      var tags=(it.tags||[]).slice(0,3).map(function(t){return '<span class="tag">'+esc(t)+'</span>';}).join('');
       var a=document.createElement('a'); a.className='card'; a.href='#/'+encodeURIComponent(it.id);
-      a.innerHTML='<div class="thumb">'+(thumb?'<img src="'+esc(thumb)+'" alt="">':'')+'<span class="play">▶</span><span class="badge">'+(it.slide_count||slides.length)+' slides</span></div>'
-        +'<div class="body"><div class="ct">'+esc(it.title||it.id)+'</div>'
-        +'<div class="cs">'+esc(it.speaker||'')+'</div>'
-        +(tags?'<div class="tags">'+tags+'</div>':'')+'</div>';
+      var thumbBox=node('div','thumb');
+      if(thumb){var img=document.createElement('img');img.src=safeUrl(thumb,'');img.alt='';thumbBox.appendChild(img);}
+      thumbBox.appendChild(node('span','play','▶'));
+      thumbBox.appendChild(node('span','badge',(it.slide_count||slides.length)+' slides'));
+      var body=node('div','body');body.appendChild(node('div','ct',it.title||it.id));body.appendChild(node('div','cs',it.speaker||''));
+      var tagList=(it.tags||[]).slice(0,3);
+      if(tagList.length){var tags=node('div','tags');tagList.forEach(function(t){tags.appendChild(node('span','tag',t));});body.appendChild(tags);}
+      a.appendChild(thumbBox);a.appendChild(body);
       g.appendChild(a);
     });
   }catch(e){var el=document.getElementById('homeErr');el.style.display='block';el.textContent='Could not load the video library: '+e.message+'. Is the backend running?';}
@@ -183,7 +189,8 @@ async function loadVideo(id){
     SLIDES=(m.slides||[]).slice().sort(function(a,b){return a.t-b.t;});
     document.title=m.title||'Video deep-dive';
     document.getElementById('title').textContent=m.title||'';
-    document.getElementById('speaker').innerHTML=esc(m.speaker||'')+' · <a target="_blank" href="'+(m.source_url||'#')+'">watch on YouTube ↗</a>';
+    var speaker=document.getElementById('speaker');clear(speaker);speaker.appendChild(document.createTextNode((m.speaker||'')+' · '));
+    var watch=document.createElement('a');watch.target='_blank';watch.rel='noopener noreferrer';watch.href=safeUrl(m.source_url,'#');watch.textContent='watch on YouTube ↗';speaker.appendChild(watch);
     document.getElementById('deckcount').textContent=SLIDES.length+' slides · drag the divider ⋮⋮ to resize';
     document.getElementById('now-t').textContent='--:--';
     document.getElementById('now-tx').textContent='Click any slide to play the video from that point.';
@@ -198,25 +205,29 @@ function parseTranscript(body){
   return out;
 }
 function renderDeck(){
-  var deck=document.getElementById('deck');deck.innerHTML='';
+  var deck=document.getElementById('deck');clear(deck);
   SLIDES.forEach(function(s,i){
     var d=document.createElement('div');d.className='slide';d.id='slide-'+i;d.dataset.t=s.t;
-    d.innerHTML='<div class="slide-img"><img src="'+esc(s.img)+'" alt="'+esc(s.title)+'"><span class="play-badge">▶</span><span class="slide-t">'+esc(s.mmss||fmt(s.t))+'</span></div>'
-      +'<div class="slide-meta"><h3>'+esc(s.title)+'</h3><button class="btn">▶ Play '+esc(s.mmss||fmt(s.t))+'</button></div>'
-      +'<label class="note-lbl">Notes <span class="saved" id="saved-'+i+'"></span></label>'
-      +'<textarea class="note-area" id="note-'+i+'"></textarea>';
+    var imgBox=node('div','slide-img');
+    var img=document.createElement('img');img.src=safeUrl(s.img,'');img.alt=s.title||'';imgBox.appendChild(img);
+    imgBox.appendChild(node('span','play-badge','▶'));imgBox.appendChild(node('span','slide-t',s.mmss||fmt(s.t)));
+    var meta=node('div','slide-meta');meta.appendChild(node('h3','',s.title||''));
+    var playBtn=node('button','btn','▶ Play '+(s.mmss||fmt(s.t)));meta.appendChild(playBtn);
+    var label=node('label','note-lbl','Notes ');var saved=node('span','saved');saved.id='saved-'+i;label.appendChild(saved);
+    var note=document.createElement('textarea');note.className='note-area';note.id='note-'+i;
+    d.appendChild(imgBox);d.appendChild(meta);d.appendChild(label);d.appendChild(note);
     deck.appendChild(d);
-    d.querySelector('textarea').value=s.note||'';
+    note.value=s.note||'';
     d.querySelector('.slide-img').onclick=function(){play(i);};
-    d.querySelector('.btn').onclick=function(){play(i);};
-    d.querySelector('textarea').addEventListener('input',function(){onNote(i,this.value);});
+    playBtn.onclick=function(){play(i);};
+    note.addEventListener('input',function(){onNote(i,this.value);});
   });
 }
 function renderTranscript(){
-  var c=document.getElementById('transcript');c.innerHTML='';
+  var c=document.getElementById('transcript');clear(c);
   SEGS.forEach(function(seg){
     var r=document.createElement('div');r.className='trow';r.dataset.t=seg.t;r.dataset.text=seg.text.toLowerCase();
-    r.innerHTML='<span class="tt">'+fmt(seg.t)+'</span><span class="tx">'+esc(seg.text)+'</span>';
+    r.appendChild(node('span','tt',fmt(seg.t)));r.appendChild(node('span','tx',seg.text));
     r.onclick=function(){seekOnly(seg.t);};c.appendChild(r);
   });
 }

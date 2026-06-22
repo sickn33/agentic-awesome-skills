@@ -132,9 +132,9 @@ CAPABILITY_MAP = {
 
 # ── Utility Functions ──────────────────────────────────────────────────────
 
-def md5_file(path: Path) -> str:
-    """Compute MD5 hash of a file."""
-    h = hashlib.md5()
+def sha256_file(path: Path) -> str:
+    """Compute SHA-256 hash of a file."""
+    h = hashlib.sha256()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(8192), b""):
             h.update(chunk)
@@ -382,7 +382,7 @@ def scan(force: bool = False) -> dict:
     changed = False
 
     for path_str, path_obj in current_paths.items():
-        current_hash = md5_file(path_obj)
+        current_hash = sha256_file(path_obj)
         new_hashes[path_str] = current_hash
 
         if force or path_str not in stored_hashes or stored_hashes[path_str] != current_hash:

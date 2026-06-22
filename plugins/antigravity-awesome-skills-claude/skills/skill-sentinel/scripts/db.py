@@ -116,6 +116,66 @@ CREATE INDEX IF NOT EXISTS idx_history_time      ON score_history (recorded_at);
 CREATE INDEX IF NOT EXISTS idx_action_log_time   ON action_log (created_at);
 """
 
+_SKILL_SNAPSHOT_COLUMNS = frozenset({
+    "audit_run_id", "skill_name", "skill_path", "version", "file_count",
+    "line_count", "overall_score", "code_quality", "security", "performance",
+    "governance", "documentation", "dependencies", "raw_metrics", "created_at",
+})
+_FINDING_COLUMNS = frozenset({
+    "audit_run_id", "skill_name", "dimension", "severity", "category", "title",
+    "description", "file_path", "line_number", "recommendation", "effort",
+    "impact", "created_at",
+})
+_RECOMMENDATION_COLUMNS = frozenset({
+    "audit_run_id", "suggested_name", "rationale", "capabilities", "priority",
+    "skill_md_draft", "created_at",
+})
+_SKILL_SNAPSHOT_INSERT_COLUMNS = (
+    "audit_run_id", "skill_name", "skill_path", "version", "file_count",
+    "line_count", "overall_score", "code_quality", "security", "performance",
+    "governance", "documentation", "dependencies", "raw_metrics",
+)
+_FINDING_INSERT_COLUMNS = (
+    "audit_run_id", "skill_name", "dimension", "severity", "category", "title",
+    "description", "file_path", "line_number", "recommendation", "effort",
+    "impact",
+)
+_RECOMMENDATION_INSERT_COLUMNS = (
+    "audit_run_id", "suggested_name", "rationale", "capabilities", "priority",
+    "skill_md_draft",
+)
+_INSERT_SKILL_SNAPSHOT_SQL = """
+INSERT INTO skill_snapshots (
+    audit_run_id, skill_name, skill_path, version, file_count, line_count,
+    overall_score, code_quality, security, performance, governance,
+    documentation, dependencies, raw_metrics
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+"""
+_INSERT_FINDING_SQL = """
+INSERT INTO findings (
+    audit_run_id, skill_name, dimension, severity, category, title,
+    description, file_path, line_number, recommendation, effort, impact
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+"""
+_INSERT_RECOMMENDATION_SQL = """
+INSERT INTO skill_recommendations (
+    audit_run_id, suggested_name, rationale, capabilities, priority, skill_md_draft
+) VALUES (?, ?, ?, ?, ?, ?)
+"""
+
+
+def _quote_identifier(name: str, allowed: frozenset[str]) -> str:
+    if name not in allowed:
+        raise ValueError(f"Invalid column name: {name}")
+    return '"' + name.replace('"', '""') + '"'
+
+
+def _filter_allowed_columns(data: Dict[str, Any], allowed: frozenset[str]) -> Dict[str, Any]:
+    filtered = {k: v for k, v in data.items() if k in allowed}
+    if not filtered:
+        raise ValueError("No valid columns provided")
+    return filtered
+
 
 class Database:
     def __init__(self, db_path: Path = DB_PATH):
@@ -185,12 +245,10 @@ class Database:
         data["audit_run_id"] = run_id
         if "raw_metrics" in data and isinstance(data["raw_metrics"], dict):
             data["raw_metrics"] = json.dumps(data["raw_metrics"], ensure_ascii=False)
-        keys = list(data.keys())
-        placeholders = ", ".join(f":{k}" for k in keys)
-        columns = ", ".join(keys)
-        sql = f"INSERT INTO skill_snapshots ({columns}) VALUES ({placeholders})"
+        data = _filter_allowed_columns(data, _SKILL_SNAPSHOT_COLUMNS)
+        values = [data.get(column) for column in _SKILL_SNAPSHOT_INSERT_COLUMNS]
         with self._connect() as conn:
-            cursor = conn.execute(sql, data)
+            cursor = conn.execute(_INSERT_SKILL_SNAPSHOT_SQL, values)
             return cursor.lastrowid
 
     def get_snapshots_for_run(self, run_id: int) -> List[Dict[str, Any]]:
@@ -216,12 +274,10 @@ class Database:
     def insert_finding(self, run_id: int, data: Dict[str, Any]) -> int:
         """Insere um finding. Retorna o id."""
         data["audit_run_id"] = run_id
-        keys = list(data.keys())
-        placeholders = ", ".join(f":{k}" for k in keys)
-        columns = ", ".join(keys)
-        sql = f"INSERT INTO findings ({columns}) VALUES ({placeholders})"
+        data = _filter_allowed_columns(data, _FINDING_COLUMNS)
+        values = [data.get(column) for column in _FINDING_INSERT_COLUMNS]
         with self._connect() as conn:
-            cursor = conn.execute(sql, data)
+            cursor = conn.execute(_INSERT_FINDING_SQL, values)
             return cursor.lastrowid
 
     def insert_findings_batch(self, run_id: int, findings: List[Dict[str, Any]]) -> int:
@@ -269,12 +325,10 @@ class Database:
         data["audit_run_id"] = run_id
         if "capabilities" in data and isinstance(data["capabilities"], list):
             data["capabilities"] = json.dumps(data["capabilities"], ensure_ascii=False)
-        keys = list(data.keys())
-        placeholders = ", ".join(f":{k}" for k in keys)
-        columns = ", ".join(keys)
-        sql = f"INSERT INTO skill_recommendations ({columns}) VALUES ({placeholders})"
+        data = _filter_allowed_columns(data, _RECOMMENDATION_COLUMNS)
+        values = [data.get(column) for column in _RECOMMENDATION_INSERT_COLUMNS]
         with self._connect() as conn:
-            cursor = conn.execute(sql, data)
+            cursor = conn.execute(_INSERT_RECOMMENDATION_SQL, values)
             return cursor.lastrowid
 
     def get_recommendations_for_run(self, run_id: int) -> List[Dict[str, Any]]:

@@ -6,6 +6,7 @@ import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import crypto from 'crypto';
+import { ipKeyGenerator, rateLimit } from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +21,9 @@ const REPO_ZIP_URL = 'https://github.com/sickn33/antigravity-awesome-skills/arch
 const COMMITS_API_URL = 'https://api.github.com/repos/sickn33/antigravity-awesome-skills/commits/main';
 const SHA_FILE = path.join(__dirname, '.last-sync-sha');
 const ARCHIVE_ROOT = 'antigravity-awesome-skills-main/';
+const SAFE_SKILL_ASSET_RE = /^\/skills\/[A-Za-z0-9._/-]+$/;
+const REFRESH_RATE_LIMIT_MS = 30_000;
+const STATIC_RATE_LIMIT_MS = 25;
 
 // ─── Utility helpers ───
 
@@ -113,6 +117,45 @@ function isPathInside(parentPath, childPath) {
     const relative = path.relative(parentPath, childPath);
     return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }
+
+function getSafeSkillAssetPath(url = '') {
+    let pathname;
+    try {
+        pathname = new URL(url, 'http://localhost').pathname;
+    } catch {
+        return null;
+    }
+    if (!SAFE_SKILL_ASSET_RE.test(pathname)) return null;
+    const parts = pathname.split('/').filter(Boolean);
+    if (parts[0] !== 'skills' || parts.some((part) => part === '.' || part === '..')) return null;
+    return path.join(ROOT_DIR, ...parts);
+}
+
+const staticRateLimit = rateLimit({
+    windowMs: STATIC_RATE_LIMIT_MS,
+    limit: 1,
+    standardHeaders: false,
+    legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === 'test',
+    keyGenerator: (req) => `${ipKeyGenerator(getRequestRemoteAddress(req) || '127.0.0.1')}:${req.url || ''}`,
+    handler: (_req, res) => {
+        res.statusCode = 429;
+        res.end('Rate limit exceeded');
+    },
+});
+
+const refreshRateLimit = rateLimit({
+    windowMs: REFRESH_RATE_LIMIT_MS,
+    limit: 1,
+    standardHeaders: false,
+    legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === 'test',
+    keyGenerator: (req) => ipKeyGenerator(getRequestRemoteAddress(req) || '127.0.0.1'),
+    handler: (_req, res) => {
+        res.statusCode = 429;
+        res.end(JSON.stringify({ success: false, error: 'Refresh rate limit exceeded' }));
+    },
+});
 
 function normalizeArchiveEntryName(entryName) {
     return String(entryName || '').replace(/\\/g, '/').replace(/^\.\//, '');
@@ -512,6 +555,10 @@ export default function refreshSkillsPlugin() {
     return {
         name: 'refresh-skills',
         configureServer(server) {
+            server.middlewares.use('/skills.json', staticRateLimit);
+            server.middlewares.use('/skills', staticRateLimit);
+            server.middlewares.use('/api/refresh-skills', refreshRateLimit);
+
             // Serve /skills.json directly from ROOT_DIR
             server.middlewares.use('/skills.json', (req, res, next) => {
                 const filePath = path.join(ROOT_DIR, 'skills_index.json');
@@ -527,8 +574,8 @@ export default function refreshSkillsPlugin() {
             server.middlewares.use((req, res, next) => {
                 if (!req.url || !req.url.startsWith('/skills/')) return next();
 
-                const relativePath = decodeURIComponent(req.url.replace(/\?.*$/, ''));
-                const filePath = path.join(ROOT_DIR, relativePath);
+                const filePath = getSafeSkillAssetPath(req.url);
+                if (!filePath) return next();
                 const safeRealPath = fs.existsSync(filePath)
                     ? resolveSafeRealPath(path.join(ROOT_DIR, 'skills'), filePath)
                     : null;

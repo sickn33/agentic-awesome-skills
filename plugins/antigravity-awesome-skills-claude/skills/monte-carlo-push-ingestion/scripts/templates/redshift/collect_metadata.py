@@ -20,9 +20,11 @@ Prerequisites:
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import logging
 import os
+import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -42,6 +44,58 @@ SCHEMA_EXCLUSIONS: set[str] = {  # ← SUBSTITUTE: add internal schemas
     "pg_internal",
     "catalog_history",
 }
+
+_ALLOWED_REDSHIFT_HOST_RE = re.compile(
+    r"^[a-z0-9][a-z0-9.-]*\.(?:redshift|redshift-serverless)\.[a-z0-9-]+\.amazonaws\.com(?:\.cn)?$",
+    re.IGNORECASE,
+)
+
+
+def _sql_literal(value: str) -> str:
+    return "'" + str(value).replace("'", "''") + "'"
+
+
+def _explicitly_allowed_redshift_hosts() -> set[str]:
+    raw_hosts = os.getenv("REDSHIFT_ALLOWED_HOSTS", "")
+    return {host.strip().lower().rstrip(".") for host in raw_hosts.split(",") if host.strip()}
+
+
+def validate_redshift_host(host: str, *, allow_private: bool = False) -> str:
+    value = str(host).strip()
+    if not value or any(part in value for part in ("/", "\\", "@", ":")):
+        raise ValueError(f"Invalid Redshift host: {host!r}")
+    hostname = value.lower().rstrip(".")
+    allowed_hosts = _explicitly_allowed_redshift_hosts()
+    try:
+        address = ipaddress.ip_address(value)
+    except ValueError:
+        if hostname in allowed_hosts:
+            return value
+        if _ALLOWED_REDSHIFT_HOST_RE.fullmatch(hostname):
+            return value
+        raise ValueError(
+            "Redshift host must be an AWS Redshift endpoint or be listed in REDSHIFT_ALLOWED_HOSTS"
+        )
+    if hostname not in allowed_hosts:
+        raise ValueError("Redshift IP hosts must be listed in REDSHIFT_ALLOWED_HOSTS")
+    blocked = (
+        address.is_loopback
+        or address.is_link_local
+        or address.is_multicast
+        or address.is_unspecified
+        or address.is_reserved
+        or (address.is_private and not allow_private)
+    )
+    if blocked:
+        raise ValueError(f"Redshift host address is not allowed: {host!r}")
+    return value
+
+
+def _bounded_int(value: int, field: str, *, minimum: int, maximum: int) -> int:
+    value = int(value)
+    if value < minimum or value > maximum:
+        raise ValueError(f"{field} must be between {minimum} and {maximum}")
+    return value
 
 
 def _check_available_memory(min_gb: float = 2.0) -> None:
@@ -85,7 +139,7 @@ def collect_databases(cursor: Any) -> list[str]:
 
 
 def collect_tables(cursor: Any, db: str) -> list[dict[str, Any]]:
-    schema_list = ", ".join(f"'{s}'" for s in SCHEMA_EXCLUSIONS)
+    schema_list = ", ".join(_sql_literal(s) for s in sorted(SCHEMA_EXCLUSIONS))
     return _dictfetch(
         cursor,
         f"""
@@ -129,6 +183,9 @@ def collect(
 ) -> list[dict[str, Any]]:
     """Connect to Redshift, collect metadata, write a JSON manifest, and return asset dicts."""
     _check_available_memory()
+    allow_private_host = os.getenv("REDSHIFT_ALLOW_PRIVATE_HOST", "").lower() in {"1", "true", "yes"}
+    host = validate_redshift_host(host, allow_private=allow_private_host)
+    port = _bounded_int(port, "port", minimum=1, maximum=65535)
     collected_at = datetime.now(timezone.utc).isoformat()
     assets: list[dict[str, Any]] = []
 

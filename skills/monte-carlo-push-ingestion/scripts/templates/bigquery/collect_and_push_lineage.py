@@ -20,7 +20,7 @@ from __future__ import annotations
 import argparse
 import os
 
-from collect_lineage import collect, LOOKBACK_HOURS
+from collect_lineage import LOOKBACK_HOURS, _bounded_int, _require_bq_identifier, collect
 from push_lineage import push, _BATCH_SIZE
 
 
@@ -46,6 +46,10 @@ def main() -> None:
     missing = [k for k in required if getattr(args, k) is None]
     if missing:
         parser.error(f"Missing required arguments/env vars: {missing}")
+
+    args.project_id = _require_bq_identifier(args.project_id, "project_id")
+    args.region = _require_bq_identifier(args.region, "region")
+    args.lookback_hours = _bounded_int(args.lookback_hours, "lookback_hours", minimum=1, maximum=24 * 31)
 
     # Step 1: Collect
     collect(

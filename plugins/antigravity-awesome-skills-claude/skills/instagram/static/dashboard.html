@@ -146,39 +146,86 @@
             });
         }
 
+        function td(text) {
+            const cell = document.createElement('td');
+            cell.textContent = text == null || text === '' ? '-' : String(text);
+            return cell;
+        }
+
+        function safeURL(url) {
+            try {
+                const parsed = new URL(url, window.location.href);
+                return /^https?:$/.test(parsed.protocol) ? parsed.href : '';
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function emptyRow(tbody, cols, text) {
+            tbody.replaceChildren();
+            const tr = document.createElement('tr');
+            const cell = td(text);
+            cell.colSpan = cols;
+            tr.appendChild(cell);
+            tbody.appendChild(tr);
+        }
+
         async function loadPosts() {
             const data = await fetchJSON('/api/posts?limit=20');
             const tbody = document.getElementById('posts-body');
             const posts = data.data || [];
-            if (!posts.length) { tbody.innerHTML = '<tr><td colspan="5">Sem posts no banco.</td></tr>'; return; }
+            if (!posts.length) { emptyRow(tbody, 5, 'Sem posts no banco.'); return; }
 
-            tbody.innerHTML = posts.map(p => {
-                const badgeClass = `badge-${p.status}`;
+            tbody.replaceChildren();
+            posts.forEach(p => {
+                const status = String(p.status || '-');
+                const badgeClass = `badge-${status.replace(/[^a-z0-9_-]/gi, '')}`;
                 const caption = (p.caption || '').substring(0, 60) + ((p.caption||'').length > 60 ? '...' : '');
                 const date = p.published_at || p.created_at || '';
-                const link = p.permalink ? `<a href="${p.permalink}" target="_blank">Ver</a>` : '-';
-                return `<tr>
-                    <td>${p.media_type || '-'}</td>
-                    <td>${caption || '-'}</td>
-                    <td><span class="badge ${badgeClass}">${p.status}</span></td>
-                    <td>${date ? date.substring(0, 16) : '-'}</td>
-                    <td>${link}</td>
-                </tr>`;
-            }).join('');
+                const tr = document.createElement('tr');
+                tr.appendChild(td(p.media_type || '-'));
+                tr.appendChild(td(caption || '-'));
+                const statusCell = document.createElement('td');
+                const badge = document.createElement('span');
+                badge.className = `badge ${badgeClass}`;
+                badge.textContent = status;
+                statusCell.appendChild(badge);
+                tr.appendChild(statusCell);
+                tr.appendChild(td(date ? date.substring(0, 16) : '-'));
+                const linkCell = document.createElement('td');
+                const href = p.permalink ? safeURL(p.permalink) : '';
+                if (href) {
+                    const link = document.createElement('a');
+                    link.href = href;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.textContent = 'Ver';
+                    linkCell.appendChild(link);
+                } else {
+                    linkCell.textContent = '-';
+                }
+                tr.appendChild(linkCell);
+                tbody.appendChild(tr);
+            });
         }
 
         async function loadActions() {
             const data = await fetchJSON('/api/actions?limit=15');
             const tbody = document.getElementById('actions-body');
             const actions = data.data || [];
-            if (!actions.length) { tbody.innerHTML = '<tr><td colspan="3">Sem ações registradas.</td></tr>'; return; }
+            if (!actions.length) { emptyRow(tbody, 3, 'Sem ações registradas.'); return; }
 
-            tbody.innerHTML = actions.map(a => {
+            tbody.replaceChildren();
+            actions.forEach(a => {
                 const date = a.created_at ? a.created_at.substring(0, 16) : '-';
                 let details = '-';
                 try { const p = JSON.parse(a.params || '{}'); details = Object.entries(p).map(([k,v]) => `${k}: ${v}`).join(', '); } catch(e) {}
-                return `<tr><td>${a.action}</td><td>${date}</td><td>${(details||'').substring(0, 80)}</td></tr>`;
-            }).join('');
+                const tr = document.createElement('tr');
+                tr.appendChild(td(a.action));
+                tr.appendChild(td(date));
+                tr.appendChild(td((details || '').substring(0, 80)));
+                tbody.appendChild(tr);
+            });
         }
 
         // Load everything

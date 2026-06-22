@@ -1,4 +1,6 @@
 python-telegram-bot>=21.0
 python-dotenv>=1.0.0
 flask>=3.0.0
-requests>=2.31.0
+requests>=2.33.0
+urllib3>=2.7.0
+idna>=3.15

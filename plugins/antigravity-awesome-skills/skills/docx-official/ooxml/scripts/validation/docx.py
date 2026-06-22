@@ -3,12 +3,31 @@ Validator for Word document XML files against XSD schemas.
 """
 
 import re
+import shutil
 import tempfile
 import zipfile
+from pathlib import Path
 
 import lxml.etree
 
 from .base import BaseSchemaValidator
+
+
+def safe_extract_all(zip_ref, destination):
+    """Extract a zip archive without allowing members to escape destination."""
+    destination = Path(destination).resolve()
+    for member in zip_ref.infolist():
+        target = (destination / member.filename).resolve()
+        try:
+            target.relative_to(destination)
+        except ValueError as exc:
+            raise ValueError(f"Unsafe archive member: {member.filename}") from exc
+        if member.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with zip_ref.open(member) as src, target.open("wb") as dst:
+            shutil.copyfileobj(src, dst)
 
 
 class DOCXSchemaValidator(BaseSchemaValidator):
@@ -198,7 +217,7 @@ class DOCXSchemaValidator(BaseSchemaValidator):
             with tempfile.TemporaryDirectory() as temp_dir:
                 # Unpack original docx
                 with zipfile.ZipFile(self.original_file, "r") as zip_ref:
-                    zip_ref.extractall(temp_dir)
+                    safe_extract_all(zip_ref, temp_dir)
 
                 # Parse document.xml
                 doc_xml_path = temp_dir + "/word/document.xml"

@@ -34,7 +34,7 @@ Usage
 import argparse
 import os
 
-from collect_metadata import collect
+from collect_metadata import _quote_identifier, collect
 from push_metadata import push, _BATCH_SIZE
 
 
@@ -110,6 +110,8 @@ def main() -> None:
     ]
     if missing:
         parser.error(f"Missing required arguments: {', '.join(missing)}")
+
+    _quote_identifier(args.warehouse)
 
     # Step 1: Collect
     collect(

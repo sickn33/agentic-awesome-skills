@@ -4,6 +4,7 @@ import { initializeDatabase, closeDatabase } from './db';
 import todosRouter from './routes/todos';
 
 const app: Express = express();
+app.disable('x-powered-by');
 const PORT = process.env.PORT || 3001;
 
 // Middleware

@@ -110,11 +110,20 @@ async function loadRefreshHandler() {
   };
 
   refreshSkillsPlugin().configureServer(server);
-  const registration = registrations.find((item) => item.path === '/api/refresh-skills');
-  if (!registration) {
+  const apiHandlers = registrations
+    .filter((item) => item.path === '/api/refresh-skills')
+    .map((item) => item.handler);
+  if (!apiHandlers.length) {
     throw new Error('refresh-skills handler not registered');
   }
-  return registration.handler;
+  return async (req, res) => {
+    let index = 0;
+    const next = async () => {
+      const handler = apiHandlers[index++];
+      if (handler) await handler(req, res, next);
+    };
+    await next();
+  };
 }
 
 describe('refresh-skills plugin security', () => {

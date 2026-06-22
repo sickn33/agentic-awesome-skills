@@ -8,11 +8,33 @@ import os
 import sys
 import json
 import argparse
+import ipaddress
+import re
+import socket
 import requests
+from urllib.parse import urlparse
 from typing import Optional, Dict, Any
 
 
 API_BASE_URL = "https://2slides.com/api/v1"
+JOB_ID_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+
+
+def validate_job_id(job_id: str) -> str:
+    if not JOB_ID_RE.match(job_id or ""):
+        raise ValueError("Job ID contains unsupported characters")
+    return job_id
+
+
+def validate_public_https_url(url: str) -> str:
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or not parsed.hostname:
+        raise ValueError("Download URL must be HTTPS")
+    for info in socket.getaddrinfo(parsed.hostname, None):
+        ip = ipaddress.ip_address(info[4][0])
+        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved:
+            raise ValueError("Download URL resolves to a non-public address")
+    return url
 
 
 def get_api_key() -> str:
@@ -51,6 +73,7 @@ def download_slides_pages_voices(
     """
     if api_key is None:
         api_key = get_api_key()
+    job_id = validate_job_id(job_id)
 
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -83,6 +106,7 @@ def download_slides_pages_voices(
     download_url = data.get("downloadUrl")
     if not download_url:
         raise ValueError("No download URL in response")
+    download_url = validate_public_https_url(download_url)
 
     # Optional: log additional info
     file_name = data.get("fileName", "unknown.zip")

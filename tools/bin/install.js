@@ -361,15 +361,15 @@ function getInstallEntries(tempDir, selectors = buildInstallSelectors({})) {
 function installSkillsIntoTarget(tempDir, target, installEntries) {
   const repoSkills = path.join(tempDir, "skills");
   installEntries.forEach((name) => {
-    if (name === "docs") {
+    const destName = normalizeInstallEntry(name);
+    if (destName === "docs") {
       const repoDocs = path.join(tempDir, "docs");
       const docsDest = path.join(target, "docs");
       if (!fs.existsSync(docsDest)) fs.mkdirSync(docsDest, { recursive: true });
       copyRecursiveSync(repoDocs, docsDest, repoDocs, true, target);
       return;
     }
-    const src = path.join(repoSkills, name);
-    const destName = normalizeInstallEntry(name);
+    const src = path.join(repoSkills, normalizeSourceEntry(name));
     const dest = path.join(target, destName);
     copyRecursiveSync(src, dest, repoSkills, true, target);
   });
@@ -379,9 +379,39 @@ function normalizeInstallEntry(entry) {
   if (entry === "docs") {
     return entry;
   }
-  return typeof entry === "string" && entry.startsWith("skills/")
+  const normalized = typeof entry === "string" && entry.startsWith("skills/")
     ? entry.slice("skills/".length)
     : entry;
+  if (typeof normalized !== "string") {
+    return normalized;
+  }
+  const parts = normalized.split(/[\\/]+/);
+  if (
+    path.isAbsolute(normalized) ||
+    /[\\/]{2,}/.test(normalized) ||
+    parts.some((part) => !part || part === "." || part === "..")
+  ) {
+    throw new Error(`Unsafe install entry: ${entry}`);
+  }
+  return parts.join(path.sep);
+}
+
+function normalizeSourceEntry(entry) {
+  if (entry === "docs") {
+    return entry;
+  }
+  if (typeof entry !== "string") {
+    return entry;
+  }
+  const parts = entry.split(/[\\/]+/);
+  if (
+    path.isAbsolute(entry) ||
+    /[\\/]{2,}/.test(entry) ||
+    parts.some((part) => !part || part === "." || part === "..")
+  ) {
+    throw new Error(`Unsafe install source entry: ${entry}`);
+  }
+  return parts.join(path.sep);
 }
 
 function getManagedEntries(installEntries, target = {}) {

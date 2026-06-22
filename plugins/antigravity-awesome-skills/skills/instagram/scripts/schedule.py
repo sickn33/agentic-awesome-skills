@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from api_client import InstagramAPI
 from auth import auto_refresh_if_needed
-from db import Database
+from db import Database, normalize_media_type, normalize_post_status
 from governance import GovernanceManager, RateLimitExceeded
 
 db = Database()
@@ -45,15 +45,17 @@ async def process_pending() -> None:
 
     for post in posts:
         post_id = post["id"]
+        post_status = normalize_post_status(post["status"])
+        media_type = normalize_media_type(post["media_type"])
         try:
-            gov.check_rate_limit(f"publish_{post['media_type'].lower()}", account["id"])
+            gov.check_rate_limit(f"publish_{media_type.lower()}", account["id"])
         except RateLimitExceeded as e:
             results.append({"post_id": post_id, "status": "rate_limited", "error": str(e)})
             break
 
         try:
             # Recovery: se já tem container criado, tenta publicar direto
-            if post["status"] == "container_created" and post.get("ig_container_id"):
+            if post_status == "container_created" and post.get("ig_container_id"):
                 result = await api.publish_media(post["ig_container_id"])
                 ig_media_id = result.get("id")
                 details = await api.get_media_details(ig_media_id)
@@ -70,9 +72,8 @@ async def process_pending() -> None:
             media_url = post.get("media_url", "")
             if not media_url and post.get("local_path"):
                 media_url = await api.upload_to_imgur(post["local_path"])
-                db.update_post_status(post_id, post["status"], media_url=media_url)
+                db.update_post_status(post_id, post_status, media_url=media_url)
 
-            media_type = post["media_type"].upper()
             ig_type_map = {"PHOTO": "IMAGE", "VIDEO": "VIDEO", "REEL": "REELS", "STORY": "STORIES"}
             ig_type = ig_type_map.get(media_type, "IMAGE")
 

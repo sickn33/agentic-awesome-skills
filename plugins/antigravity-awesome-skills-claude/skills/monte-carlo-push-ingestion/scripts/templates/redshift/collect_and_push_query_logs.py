@@ -28,7 +28,15 @@ import argparse
 import logging
 import os
 
-from collect_query_logs import BATCH_SIZE, LOOKBACK_HOURS, LOOKBACK_LAG_HOURS, MAX_QUERIES, collect
+from collect_query_logs import (
+    BATCH_SIZE,
+    LOOKBACK_HOURS,
+    LOOKBACK_LAG_HOURS,
+    MAX_QUERIES,
+    _bounded_int,
+    collect,
+    validate_redshift_host,
+)
 from push_query_logs import DEFAULT_BATCH_SIZE, push
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -57,6 +65,16 @@ def main() -> None:
     missing = [k for k in required if getattr(args, k) is None]
     if missing:
         parser.error(f"Missing required arguments/env vars: {missing}")
+
+    args.host = validate_redshift_host(
+        args.host,
+        allow_private=os.getenv("REDSHIFT_ALLOW_PRIVATE_HOST", "").lower() in {"1", "true", "yes"},
+    )
+    args.port = _bounded_int(args.port, "port", minimum=1, maximum=65535)
+    args.lookback_hours = _bounded_int(args.lookback_hours, "lookback_hours", minimum=1, maximum=24 * 31)
+    args.lookback_lag_hours = _bounded_int(args.lookback_lag_hours, "lookback_lag_hours", minimum=0, maximum=24 * 7)
+    args.batch_size = _bounded_int(args.batch_size, "batch_size", minimum=1, maximum=10000)
+    args.max_queries = _bounded_int(args.max_queries, "max_queries", minimum=1, maximum=100000)
 
     log.info("Step 1: Collecting query logs …")
     collect(

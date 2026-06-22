@@ -853,10 +853,17 @@ def _generate_markdown_report(
         lines.append("")
         lines.append("| Check | Status | Details | Scanner |")
         lines.append("|-------|--------|---------|---------|")
+        def format_status(status: str) -> str:
+            if status == "PASS":
+                return "[PASS]"
+            if status == "WARN":
+                return "[WARN]"
+            if status == "FAIL":
+                return "[FAIL]"
+            return status
+
         for item in p3.get("checklist", []):
-            status_icon = {"PASS": "[PASS]", "WARN": "[WARN]", "FAIL": "[FAIL]"}.get(
-                item["status"], item["status"]
-            )
+            status_icon = format_status(item["status"])
             lines.append(
                 f"| {item['check']} | {status_icon} | {item['details']} | {item['scanner']} |"
             )

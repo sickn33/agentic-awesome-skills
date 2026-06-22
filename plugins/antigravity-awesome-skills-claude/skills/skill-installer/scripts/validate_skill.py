@@ -41,6 +41,14 @@ SKILLS_ROOT = Path(r"C:\Users\renat\skills")
 REGISTRY_PATH = SKILLS_ROOT / "agent-orchestrator" / "data" / "registry.json"
 
 
+def resolve_existing_dir(path) -> Path:
+    """Resolve a user-provided directory and require it to exist."""
+    resolved = Path(path).expanduser().resolve()
+    if not resolved.is_dir():
+        raise ValueError(f"Directory does not exist: {resolved}")
+    return resolved
+
+
 # ── YAML Frontmatter Parser ───────────────────────────────────────────────
 
 def parse_yaml_frontmatter(path: Path) -> dict:
@@ -347,15 +355,15 @@ def validate(skill_dir: Path, strict: bool = False, registry_path: Path = None) 
     if registry_path is None:
         registry_path = REGISTRY_PATH
 
-    skill_dir = Path(skill_dir).resolve()
-
-    if not skill_dir.exists():
+    try:
+        skill_dir = resolve_existing_dir(skill_dir)
+    except ValueError as e:
         return {
             "valid": False,
-            "skill_dir": str(skill_dir),
+            "skill_dir": str(Path(skill_dir).expanduser()),
             "checks": [],
             "warnings": [],
-            "errors": [f"Directory does not exist: {skill_dir}"],
+            "errors": [str(e)],
         }
 
     # Parse frontmatter once
@@ -411,14 +419,21 @@ def main():
         }, indent=2))
         sys.exit(1)
 
-    skill_dir = Path(sys.argv[1]).resolve()
+    try:
+        skill_dir = resolve_existing_dir(sys.argv[1])
+    except ValueError as e:
+        print(json.dumps({
+            "valid": False,
+            "error": str(e),
+        }, indent=2))
+        sys.exit(1)
     strict = "--strict" in sys.argv
     registry_path = None
 
     if "--registry" in sys.argv:
         idx = sys.argv.index("--registry")
         if idx + 1 < len(sys.argv):
-            registry_path = Path(sys.argv[idx + 1])
+            registry_path = Path(sys.argv[idx + 1]).expanduser().resolve()
 
     result = validate(skill_dir, strict=strict, registry_path=registry_path)
     print(json.dumps(result, indent=2, ensure_ascii=False))

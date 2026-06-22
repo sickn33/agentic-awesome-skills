@@ -7,11 +7,27 @@ import os
 import sys
 import json
 import argparse
+import re
 import requests
+from urllib.parse import urlparse
 from typing import Optional, Dict, Any
 
 
 API_BASE_URL = "https://2slides.com/api/v1"
+JOB_ID_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+
+
+def validate_job_id(job_id: str) -> str:
+    if not JOB_ID_RE.match(job_id or ""):
+        raise ValueError("Job ID contains unsupported characters")
+    return job_id
+
+
+def validate_api_url(url: str) -> str:
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname != "2slides.com" or not parsed.path.startswith("/api/v1/jobs/"):
+        raise ValueError("Refusing unsafe 2slides API URL")
+    return url
 
 
 def get_api_key() -> str:
@@ -41,13 +57,14 @@ def get_job_status(
     """
     if api_key is None:
         api_key = get_api_key()
+    job_id = validate_job_id(job_id)
 
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
 
-    url = f"{API_BASE_URL}/jobs/{job_id}"
+    url = validate_api_url(f"{API_BASE_URL}/jobs/{job_id}")
 
     print(f"Checking job status: {job_id}...", file=sys.stderr)
     response = requests.get(url, headers=headers)

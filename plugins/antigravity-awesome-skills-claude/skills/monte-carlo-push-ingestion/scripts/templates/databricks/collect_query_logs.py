@@ -57,6 +57,13 @@ LIMIT {max_rows}
 """  # ← SUBSTITUTE: adjust status filter or add warehouse_id filter as needed
 
 
+def _bounded_int(value: int, field: str, *, minimum: int, maximum: int) -> int:
+    value = int(value)
+    if value < minimum or value > maximum:
+        raise ValueError(f"{field} must be between {minimum} and {maximum}")
+    return value
+
+
 def _check_available_memory(min_gb: float = 2.0) -> None:
     """Warn if available memory is below the threshold."""
     try:
@@ -105,6 +112,9 @@ def collect_query_logs(
     lag_hours: int,
     max_rows: int,
 ) -> list[dict[str, Any]]:
+    lookback_hours = _bounded_int(lookback_hours, "lookback_hours", minimum=1, maximum=24 * 31)
+    lag_hours = _bounded_int(lag_hours, "lag_hours", minimum=0, maximum=24 * 7)
+    max_rows = _bounded_int(max_rows, "max_rows", minimum=1, maximum=100000)
     rendered_sql = _QUERY_LOG_SQL.format(
         lookback_hours=lookback_hours + lag_hours,  # offset from NOW() to cover the window
         lag_hours=lag_hours,
@@ -146,6 +156,9 @@ def collect(
 ) -> list[dict[str, Any]]:
     """Connect to Databricks, collect query logs, write a JSON manifest, and return entries."""
     _check_available_memory(min_gb=2.0)
+    lookback_hours = _bounded_int(lookback_hours, "lookback_hours", minimum=1, maximum=24 * 31)
+    lookback_lag_hours = _bounded_int(lookback_lag_hours, "lookback_lag_hours", minimum=0, maximum=24 * 7)
+    max_rows = _bounded_int(max_rows, "max_rows", minimum=1, maximum=100000)
     collected_at = datetime.now(timezone.utc).isoformat()
 
     with sql.connect(

@@ -138,6 +138,99 @@ _POSTS_COLUMNS = frozenset({
     "hashtags", "template_id", "status", "scheduled_at", "published_at",
     "ig_media_id", "ig_container_id", "permalink", "error_msg", "created_at",
 })
+_POST_STATUSES = frozenset({
+    "draft", "approved", "scheduled", "container_created", "published", "failed",
+})
+_MEDIA_TYPES = frozenset({"PHOTO", "VIDEO", "REEL", "STORY", "CAROUSEL"})
+_MEDIA_TYPE_ALIASES = {
+    "IMAGE": "PHOTO",
+    "REELS": "REEL",
+    "STORIES": "STORY",
+    "CAROUSEL_ALBUM": "CAROUSEL",
+}
+_POSTS_INSERT_COLUMNS = (
+    "account_id", "media_type", "media_url", "local_path", "caption",
+    "hashtags", "template_id", "status", "scheduled_at", "published_at",
+    "ig_media_id", "ig_container_id", "permalink", "error_msg",
+)
+_POSTS_UPDATE_COLUMNS = (
+    "media_type", "media_url", "local_path", "caption", "hashtags",
+    "template_id", "status", "scheduled_at", "published_at", "ig_media_id",
+    "ig_container_id", "permalink", "error_msg",
+)
+_INSERT_POST_SQL = """
+INSERT INTO posts (
+    account_id, media_type, media_url, local_path, caption, hashtags,
+    template_id, status, scheduled_at, published_at, ig_media_id,
+    ig_container_id, permalink, error_msg
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+"""
+_UPDATE_POST_SQL = """
+UPDATE posts SET
+    media_type = ?,
+    media_url = ?,
+    local_path = ?,
+    caption = ?,
+    hashtags = ?,
+    template_id = ?,
+    status = ?,
+    scheduled_at = ?,
+    published_at = ?,
+    ig_media_id = ?,
+    ig_container_id = ?,
+    permalink = ?,
+    error_msg = ?
+WHERE id = ?
+"""
+
+
+def _quote_identifier(name: str, allowed: frozenset[str]) -> str:
+    """Quote a SQLite identifier after checking it against an allowlist."""
+    if name not in allowed:
+        raise ValueError(f"Invalid column name: {name}")
+    return '"' + name.replace('"', '""') + '"'
+
+
+def normalize_post_status(status: str) -> str:
+    value = str(status).strip().lower()
+    if value not in _POST_STATUSES:
+        raise ValueError(f"Invalid post status: {status}")
+    return value
+
+
+def normalize_media_type(media_type: str) -> str:
+    value = str(media_type).strip().upper()
+    value = _MEDIA_TYPE_ALIASES.get(value, value)
+    if value not in _MEDIA_TYPES:
+        raise ValueError(f"Invalid media type: {media_type}")
+    return value
+
+
+def _positive_int(value: Any, field: str) -> int:
+    number = int(value)
+    if number < 1:
+        raise ValueError(f"{field} must be a positive integer")
+    return number
+
+
+def _bounded_int(value: Any, field: str, *, minimum: int, maximum: int) -> int:
+    number = int(value)
+    if number < minimum or number > maximum:
+        raise ValueError(f"{field} must be between {minimum} and {maximum}")
+    return number
+
+
+def _normalize_post_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    normalized = dict(data)
+    if "media_type" in normalized and normalized["media_type"] is not None:
+        normalized["media_type"] = normalize_media_type(normalized["media_type"])
+    if "status" in normalized and normalized["status"] is not None:
+        normalized["status"] = normalize_post_status(normalized["status"])
+    if "account_id" in normalized and normalized["account_id"] is not None:
+        normalized["account_id"] = _positive_int(normalized["account_id"], "account_id")
+    if "template_id" in normalized and normalized["template_id"] is not None:
+        normalized["template_id"] = _positive_int(normalized["template_id"], "template_id")
+    return normalized
 
 
 class Database:
@@ -211,30 +304,33 @@ class Database:
 
     def insert_post(self, data: Dict[str, Any]) -> int:
         """Cria um novo post (draft por padrão). Retorna o id."""
-        keys = [k for k in data.keys() if k != "id" and k in _POSTS_COLUMNS]
-        if not keys:
-            raise ValueError("No valid columns provided for insert_post")
-        placeholders = ", ".join("?" for _ in keys)
-        columns = ", ".join(keys)
-        values = [data[k] for k in keys]
-        sql = f"INSERT INTO posts ({columns}) VALUES ({placeholders})"
+        data = _normalize_post_data(data)
+        unknown = set(data) - _POSTS_COLUMNS - {"id"}
+        if unknown:
+            raise ValueError(f"Invalid columns for insert_post: {', '.join(sorted(unknown))}")
+        values = [data.get(column) for column in _POSTS_INSERT_COLUMNS]
         with self._connect() as conn:
-            cursor = conn.execute(sql, values)
+            cursor = conn.execute(_INSERT_POST_SQL, values)
             return cursor.lastrowid
 
     def update_post_status(self, post_id: int, status: str, **extra) -> None:
         """Atualiza status de um post e campos adicionais."""
-        sets = ["status = ?"]
-        params: list = [status]
-        for k, v in extra.items():
-            if k not in _POSTS_COLUMNS:
-                raise ValueError(f"Invalid column name for update_post_status: {k}")
-            sets.append(f"{k} = ?")
-            params.append(v)
-        params.append(post_id)
-        sql = f"UPDATE posts SET {', '.join(sets)} WHERE id = ?"
+        post_id = _positive_int(post_id, "post_id")
+        status = normalize_post_status(status)
+        extra = _normalize_post_data(extra)
+        unknown = set(extra) - _POSTS_COLUMNS
+        if unknown:
+            raise ValueError(f"Invalid columns for update_post_status: {', '.join(sorted(unknown))}")
         with self._connect() as conn:
-            conn.execute(sql, params)
+            row = conn.execute("SELECT * FROM posts WHERE id = ?", [post_id]).fetchone()
+            if not row:
+                raise ValueError(f"Post {post_id} not found")
+            merged = dict(row)
+            merged.update(extra)
+            merged["status"] = status
+            params = [merged.get(column) for column in _POSTS_UPDATE_COLUMNS]
+            params.append(post_id)
+            conn.execute(_UPDATE_POST_SQL, params)
 
     def get_posts(
         self,
@@ -246,11 +342,15 @@ class Database:
         conditions = []
         params: list = []
         if account_id:
+            account_id = _positive_int(account_id, "account_id")
             conditions.append("account_id = ?")
             params.append(account_id)
         if status:
+            status = normalize_post_status(status)
             conditions.append("status = ?")
             params.append(status)
+        limit = _bounded_int(limit, "limit", minimum=1, maximum=1000)
+        offset = _bounded_int(offset, "offset", minimum=0, maximum=100000)
         where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
         sql = f"SELECT * FROM posts {where} ORDER BY created_at DESC LIMIT ? OFFSET ?"
         params.extend([limit, offset])
@@ -260,6 +360,7 @@ class Database:
 
     def get_posts_for_publishing(self, account_id: int) -> List[Dict[str, Any]]:
         """Posts aprovados/agendados prontos para publicar."""
+        account_id = _positive_int(account_id, "account_id")
         now = datetime.now(timezone.utc).isoformat()
         sql = """
         SELECT * FROM posts
@@ -275,6 +376,7 @@ class Database:
         return [dict(r) for r in rows]
 
     def get_post_by_id(self, post_id: int) -> Optional[Dict[str, Any]]:
+        post_id = _positive_int(post_id, "post_id")
         with self._connect() as conn:
             row = conn.execute("SELECT * FROM posts WHERE id = ?", [post_id]).fetchone()
         return dict(row) if row else None

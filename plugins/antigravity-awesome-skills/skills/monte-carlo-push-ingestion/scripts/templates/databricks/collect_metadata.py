@@ -39,6 +39,17 @@ SCHEMA_EXCLUSIONS: set[str] = {  # ← SUBSTITUTE: add any internal schemas to s
 }
 
 
+def _quote_identifier(identifier: str) -> str:
+    value = str(identifier).strip()
+    if not value:
+        raise ValueError("Identifier must not be empty")
+    return "`" + value.replace("`", "``") + "`"
+
+
+def _sql_literal(value: str) -> str:
+    return "'" + str(value).replace("'", "''") + "'"
+
+
 def _check_available_memory(min_gb: float = 2.0) -> None:
     """Warn if available memory is below the threshold."""
     try:
@@ -59,8 +70,7 @@ def _check_available_memory(min_gb: float = 2.0) -> None:
         )
 
 
-def _query(cursor: Any, sql_text: str, params: tuple | None = None) -> list[dict[str, Any]]:
-    cursor.execute(sql_text, params)
+def _fetch_dict_rows(cursor: Any) -> list[dict[str, Any]]:
     cols = [d[0] for d in cursor.description]
     rows = []
     while True:
@@ -72,32 +82,40 @@ def _query(cursor: Any, sql_text: str, params: tuple | None = None) -> list[dict
 
 
 def collect_tables(cursor: Any, catalog: str) -> list[dict[str, Any]]:
-    return _query(
-        cursor,
+    exclusions = sorted(SCHEMA_EXCLUSIONS)
+    placeholders = ", ".join(["%s"] * len(exclusions))
+    cursor.execute(
         f"""
         SELECT table_catalog, table_schema, table_name, table_type, comment
-        FROM {catalog}.information_schema.tables
-        WHERE table_schema NOT IN ({", ".join(f"'{s}'" for s in SCHEMA_EXCLUSIONS)})
+        FROM system.information_schema.tables
+        WHERE table_catalog = %s AND table_schema NOT IN ({placeholders})
         ORDER BY table_schema, table_name
         """,  # ← SUBSTITUTE: add additional WHERE filters if needed
+        (catalog, *exclusions),
     )
+    return _fetch_dict_rows(cursor)
 
 
 def collect_columns(cursor: Any, catalog: str, schema: str, table: str) -> list[dict[str, Any]]:
-    return _query(
-        cursor,
-        f"""
+    cursor.execute(
+        """
         SELECT column_name, data_type, comment
-        FROM {catalog}.information_schema.columns
-        WHERE table_schema = '{schema}' AND table_name = '{table}'
+        FROM system.information_schema.columns
+        WHERE table_catalog = %s AND table_schema = %s AND table_name = %s
         ORDER BY ordinal_position
         """,
+        (catalog, schema, table),
     )
+    return _fetch_dict_rows(cursor)
 
 
 def collect_detail(cursor: Any, catalog: str, schema: str, table: str) -> dict[str, Any] | None:
     try:
-        rows = _query(cursor, f"DESCRIBE DETAIL `{catalog}`.`{schema}`.`{table}`")
+        cursor.execute(
+            "DESCRIBE DETAIL "
+            f"{_quote_identifier(catalog)}.{_quote_identifier(schema)}.{_quote_identifier(table)}",
+        )
+        rows = _fetch_dict_rows(cursor)
         return rows[0] if rows else None
     except Exception:
         log.debug("DESCRIBE DETAIL failed for %s.%s.%s", catalog, schema, table, exc_info=True)

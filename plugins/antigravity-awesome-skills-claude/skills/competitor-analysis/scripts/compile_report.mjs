@@ -7,7 +7,7 @@
 // Usage: node compile_report.mjs <research-dir> [--user-company "Acme"] [--template <path>] [--open]
 
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join, dirname } from 'path';
+import { basename, dirname, join, relative, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { parseFrontmatter, parseBody, parseSections } from './md_utils.mjs';
 
@@ -15,6 +15,68 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const args = process.argv.slice(2);
+const SAFE_SLUG_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+function safeJoin(base, ...parts) {
+  const root = resolve(base);
+  const target = resolve(root, ...parts);
+  const rel = relative(root, target);
+  if (rel.startsWith('..') || rel.startsWith('/')) {
+    throw new Error(`Path escapes research directory: ${parts.join('/')}`);
+  }
+  return target;
+}
+
+function safeResearchDir(rawDir) {
+  if (typeof rawDir !== 'string' || !rawDir.trim() || rawDir.includes('\0')) {
+    throw new Error('Research directory is required');
+  }
+  const root = resolve(process.cwd());
+  const target = resolve(root, rawDir);
+  const rel = relative(root, target);
+  if ((rel.startsWith('..') || rel.startsWith('/')) && process.env.COMPETITOR_ANALYSIS_ALLOW_EXTERNAL_DIR !== '1') {
+    throw new Error('Research directory must stay under the current working directory');
+  }
+  return target;
+}
+
+function safeTemplatePath(researchDir, rawPath) {
+  if (typeof rawPath !== 'string' || !rawPath.trim() || rawPath.includes('\0')) {
+    throw new Error('Template path is required');
+  }
+  const candidate = safeJoin(researchDir, rawPath);
+  if (!candidate.endsWith('.html')) {
+    throw new Error('Template path must point to an .html file inside the research directory');
+  }
+  return candidate;
+}
+
+function safeSlug(slug) {
+  if (!SAFE_SLUG_RE.test(slug) || slug.includes('..')) {
+    throw new Error(`Unsafe competitor slug: ${slug}`);
+  }
+  return slug;
+}
+
+function selfTest() {
+  const root = resolve('/tmp/research');
+  if (safeJoin(root, 'competitors', 'acme.html') !== resolve(root, 'competitors', 'acme.html')) {
+    throw new Error('safeJoin failed valid path');
+  }
+  for (const bad of ['../x', 'competitors/../../x']) {
+    try { safeJoin(root, bad); } catch { continue; }
+    throw new Error(`safeJoin accepted ${bad}`);
+  }
+  for (const bad of ['../acme', 'bad/name', '..']) {
+    try { safeSlug(bad); } catch { continue; }
+    throw new Error(`safeSlug accepted ${bad}`);
+  }
+}
+
+if (args.includes('--self-test')) {
+  selfTest();
+  process.exit(0);
+}
 
 if (args.includes('--help') || args.includes('-h') || args.length === 0) {
   console.error(`Usage: node compile_report.mjs <research-dir> [--user-company "<name>"] [--template <path>] [--open]
@@ -34,12 +96,12 @@ Options:
   process.exit(args.includes('--help') || args.includes('-h') ? 0 : 1);
 }
 
-const dir = args[0];
+const dir = safeResearchDir(args[0]);
 const shouldOpen = args.includes('--open');
 const userCompanyIdx = args.indexOf('--user-company');
 const userCompany = userCompanyIdx !== -1 ? args[userCompanyIdx + 1] : '';
 const templateIdx = args.indexOf('--template');
-let templatePath = templateIdx !== -1 ? args[templateIdx + 1] : null;
+let templatePath = templateIdx !== -1 ? safeTemplatePath(dir, args[templateIdx + 1]) : null;
 
 if (!templatePath) {
   const candidates = [
@@ -226,14 +288,14 @@ function mdToHtml(md) {
 
 const competitors = [];
 for (const file of files) {
-  const content = readFileSync(join(dir, file), 'utf-8');
+  const content = readFileSync(safeJoin(dir, file), 'utf-8');
   const fields = parseFrontmatter(content);
   if (!fields) continue;
   const body = parseBody(content);
   const sections = parseSections(body);
   const mentions = parseMentions(sections['Mentions']);
   const benchmarks = parseBenchmarks(sections['Benchmarks']);
-  const slug = file.replace('.md', '');
+  const slug = safeSlug(file.replace('.md', ''));
   competitors.push({ ...fields, body, sections, mentions, benchmarks, slug, file });
 }
 
@@ -253,7 +315,7 @@ const deduped = [...seen.values()].sort((a, b) => (a.competitor_name || '').loca
 // whole matrix. Keep this block above the first use site to avoid temporal dead zones.
 let curatedMatrix = null;
 try {
-  const p = join(dir, 'matrix.json');
+  const p = safeJoin(dir, 'matrix.json');
   if (existsSync(p)) curatedMatrix = JSON.parse(readFileSync(p, 'utf-8'));
 } catch (err) {
   console.error(`Warning: matrix.json present but unreadable — falling back to pipe split. ${err.message}`);
@@ -288,7 +350,7 @@ const totalMentions = competitorRows.reduce((sum, c) => sum + c.mentions.length,
 const totalBenchmarks = competitorRows.reduce((sum, c) => sum + c.benchmarks.length, 0);
 const withPricing = competitorRows.filter(c => c.pricing_tiers).length;
 
-const dirName = dir.split('/').pop();
+const dirName = basename(dir);
 const title = dirName.replace(/_/g, ' ').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 const genDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const metaLine = `${competitorRows.length} competitors · ${totalMentions} mentions · ${totalBenchmarks} benchmarks · ${genDate}`;
@@ -433,11 +495,11 @@ let indexHtml = template
   .replace(/\{\{STRATEGIC_SUMMARY\}\}/g, strategicSummary)
   .replace(/\{\{TABLE_ROWS\}\}/g, tableRows);
 
-writeFileSync(join(dir, 'index.html'), indexHtml);
+writeFileSync(safeJoin(dir, 'index.html'), indexHtml);
 
 // ---------- competitors/{slug}.html ----------
 
-try { mkdirSync(join(dir, 'competitors'), { recursive: true }); } catch {}
+try { mkdirSync(safeJoin(dir, 'competitors'), { recursive: true }); } catch {}
 
 const perCompetitorCss = `
   :root { --brand:#F03603; --blue:#4DA9E4; --black:#100D0D; --gray:#514F4F; --border:#edebeb; --bg:#F9F6F4; --card:#ffffff; --text:#100D0D; --muted:#514F4F; }
@@ -528,7 +590,7 @@ for (const c of competitorRows) {
   const findingsHtml = c.sections['Research Findings'] ? `<h2>Research Findings</h2>${mdToHtml(c.sections['Research Findings'])}` : '';
 
   // Screenshot — filename matches capture_screenshots.mjs output.
-  const heroShot = existsSync(join(dir, 'screenshots', `${c.slug}-hero.png`));
+  const heroShot = existsSync(safeJoin(dir, 'screenshots', `${c.slug}-hero.png`));
   const screenshotsHtml = heroShot ? `
   <div class="shots">
     <div class="shot shot-hero"><div class="shot-label">Homepage</div><img src="../screenshots/${escapeHtml(c.slug)}-hero.png" alt="${escapeHtml(c.competitor_name)} homepage hero" loading="lazy"></div>
@@ -586,7 +648,7 @@ for (const c of competitorRows) {
 </body>
 </html>`;
 
-  writeFileSync(join(dir, 'competitors', `${c.slug}.html`), companyHtml);
+  writeFileSync(safeJoin(dir, 'competitors', `${c.slug}.html`), companyHtml);
 }
 
 // ---------- matrix.html (side-by-side) ----------
@@ -739,7 +801,7 @@ const matrixHtml = `<!DOCTYPE html>
 </body>
 </html>`;
 
-writeFileSync(join(dir, 'matrix.html'), matrixHtml);
+writeFileSync(safeJoin(dir, 'matrix.html'), matrixHtml);
 
 // ---------- mentions.html (feed + filter) ----------
 
@@ -870,7 +932,7 @@ const mentionsHtml = `<!DOCTYPE html>
 </body>
 </html>`;
 
-writeFileSync(join(dir, 'mentions.html'), mentionsHtml);
+writeFileSync(safeJoin(dir, 'mentions.html'), mentionsHtml);
 
 // ---------- CSV ----------
 
@@ -900,7 +962,7 @@ function csvEscape(v) {
 
 const csvLines = [cols.join(',')];
 for (const row of flatRows) csvLines.push(cols.map(c => csvEscape(row[c] || '')).join(','));
-writeFileSync(join(dir, 'results.csv'), csvLines.join('\n') + '\n');
+writeFileSync(safeJoin(dir, 'results.csv'), csvLines.join('\n') + '\n');
 
 // ---------- Summary ----------
 
@@ -911,19 +973,19 @@ console.error(JSON.stringify({
   with_pricing: withPricing,
   user_company: userCompany,
   files_generated: {
-    index: join(dir, 'index.html'),
-    matrix: join(dir, 'matrix.html'),
-    mentions: join(dir, 'mentions.html'),
+    index: safeJoin(dir, 'index.html'),
+    matrix: safeJoin(dir, 'matrix.html'),
+    mentions: safeJoin(dir, 'mentions.html'),
     competitors: competitorRows.filter(c => c.body && c.body.length > 50).length,
-    csv: join(dir, 'results.csv')
+    csv: safeJoin(dir, 'results.csv')
   }
 }, null, 2));
 
-console.log(join(dir, 'index.html'));
+console.log(safeJoin(dir, 'index.html'));
 
 if (shouldOpen) {
   const { execFileSync } = await import('child_process');
   // Use execFileSync (not execSync with string interpolation) so a `dir` containing
   // shell metacharacters like `"`, `$`, or backticks can't break out into command exec.
-  try { execFileSync('open', [join(dir, 'index.html')]); } catch {}
+  try { execFileSync('open', [safeJoin(dir, 'index.html')]); } catch {}
 }

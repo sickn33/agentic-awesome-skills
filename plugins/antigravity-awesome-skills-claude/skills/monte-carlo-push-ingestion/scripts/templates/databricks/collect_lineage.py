@@ -37,6 +37,13 @@ RESOURCE_TYPE = "databricks"
 LOOKBACK_DAYS: int = int(os.getenv("LOOKBACK_DAYS", "30"))  # ← SUBSTITUTE
 
 
+def _bounded_int(value: int, field: str, *, minimum: int, maximum: int) -> int:
+    value = int(value)
+    if value < minimum or value > maximum:
+        raise ValueError(f"{field} must be between {minimum} and {maximum}")
+    return value
+
+
 def _check_available_memory(min_gb: float = 2.0) -> None:
     """Warn if available memory is below the threshold."""
     try:
@@ -80,6 +87,7 @@ def _parse_full_name(full_name: str) -> tuple[str, str, str]:
 
 
 def collect_table_lineage(cursor: Any, lookback_days: int) -> list[dict[str, Any]]:
+    lookback_days = _bounded_int(lookback_days, "lookback_days", minimum=1, maximum=366)
     rows = _query(
         cursor,
         f"""
@@ -114,6 +122,7 @@ def collect_table_lineage(cursor: Any, lookback_days: int) -> list[dict[str, Any
 
 
 def collect_column_lineage(cursor: Any, lookback_days: int) -> list[dict[str, Any]]:
+    lookback_days = _bounded_int(lookback_days, "lookback_days", minimum=1, maximum=366)
     rows = _query(
         cursor,
         f"""
@@ -176,6 +185,7 @@ def collect(
 ) -> list[dict[str, Any]]:
     """Connect to Databricks, collect lineage, write a JSON manifest, and return events."""
     _check_available_memory(min_gb=2.0)
+    lookback_days = _bounded_int(lookback_days, "lookback_days", minimum=1, maximum=366)
     collected_at = datetime.now(timezone.utc).isoformat()
 
     with sql.connect(

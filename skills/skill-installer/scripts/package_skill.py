@@ -48,6 +48,22 @@ EXCLUDE_EXTENSIONS = {
 }
 
 
+def resolve_existing_dir(path) -> Path:
+    """Resolve a user-provided directory and require it to exist."""
+    resolved = Path(path).expanduser().resolve()
+    if not resolved.is_dir():
+        raise ValueError(f"Directory not found: {resolved}")
+    return resolved
+
+
+def resolve_output_dir(path) -> Path:
+    """Resolve a user-provided output directory."""
+    resolved = Path(path).expanduser().resolve()
+    if resolved.exists() and not resolved.is_dir():
+        raise ValueError(f"Output path is not a directory: {resolved}")
+    return resolved
+
+
 # ── YAML Frontmatter Parser ───────────────────────────────────────────────
 
 def parse_yaml_frontmatter(path: Path) -> dict:
@@ -163,10 +179,10 @@ def package_skill(skill_dir: Path, output_dir: Path = None) -> dict:
               ├── references/
               └── ...
     """
-    skill_dir = Path(skill_dir).resolve()
-
-    if not skill_dir.exists():
-        return {"success": False, "error": f"Directory not found: {skill_dir}"}
+    try:
+        skill_dir = resolve_existing_dir(skill_dir)
+    except ValueError as e:
+        return {"success": False, "error": str(e)}
 
     # Validate
     validation = validate_for_web(skill_dir)
@@ -183,7 +199,10 @@ def package_skill(skill_dir: Path, output_dir: Path = None) -> dict:
     # Determine output path
     if output_dir is None:
         output_dir = DEFAULT_OUTPUT
-    output_dir = Path(output_dir).resolve()
+    try:
+        output_dir = resolve_output_dir(output_dir)
+    except ValueError as e:
+        return {"success": False, "error": str(e)}
     output_dir.mkdir(parents=True, exist_ok=True)
 
     zip_path = output_dir / f"{skill_name_lower}.zip"
@@ -382,10 +401,10 @@ def main():
     if "--output" in args:
         idx = args.index("--output")
         if idx + 1 < len(args):
-            output_dir = Path(args[idx + 1])
+            output_dir = resolve_output_dir(args[idx + 1])
 
     if do_verify:
-        result = verify_zips(Path(output_dir) if output_dir else None)
+        result = verify_zips(output_dir if output_dir else None)
         print(json.dumps(result, indent=2, ensure_ascii=False))
         sys.exit(0 if result["invalid"] == 0 else 1)
 
@@ -404,7 +423,7 @@ def main():
         sys.exit(1)
 
     if source:
-        result = package_skill(Path(source), output_dir)
+        result = package_skill(source, output_dir)
         print(json.dumps(result, indent=2, ensure_ascii=False))
         sys.exit(0 if result["success"] else 1)
     elif do_all:

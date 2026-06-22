@@ -18,6 +18,24 @@ def get_skill_dir() -> str:
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def _safe_target_path(path: str, skill_dir: str) -> str:
+    target_path = os.path.abspath(path)
+    skill_root = os.path.abspath(skill_dir)
+    if os.path.commonpath([target_path, skill_root]) == skill_root:
+        raise ValueError("Refusing to create a project inside the skill source directory")
+    return target_path
+
+
+def self_test() -> None:
+    skill_dir = get_skill_dir()
+    _safe_target_path(os.path.join(os.path.dirname(skill_dir), "my-whatsapp-project"), skill_dir)
+    try:
+        _safe_target_path(os.path.join(skill_dir, "assets", "x"), skill_dir)
+    except ValueError:
+        return
+    raise AssertionError("accepted target inside skill source directory")
+
+
 def setup_project(language: str, path: str, name: str | None = None) -> None:
     """Copy boilerplate and configure a new WhatsApp project."""
     skill_dir = get_skill_dir()
@@ -28,7 +46,7 @@ def setup_project(language: str, path: str, name: str | None = None) -> None:
         print(f"Available: nodejs, python")
         sys.exit(1)
 
-    target_path = os.path.abspath(path)
+    target_path = _safe_target_path(path, skill_dir)
 
     if os.path.exists(target_path) and os.listdir(target_path):
         print(f"Warning: Directory '{target_path}' already exists and is not empty.")
@@ -94,14 +112,19 @@ def setup_project(language: str, path: str, name: str | None = None) -> None:
 def main():
     parser = argparse.ArgumentParser(description="Setup a new WhatsApp Cloud API project")
     parser.add_argument(
+        "--self-test",
+        action="store_true",
+        help="Run safety self-checks",
+    )
+    parser.add_argument(
         "--language",
         choices=["nodejs", "python"],
-        required=True,
+        required=False,
         help="Project language (nodejs or python)",
     )
     parser.add_argument(
         "--path",
-        required=True,
+        required=False,
         help="Path where the project will be created",
     )
     parser.add_argument(
@@ -111,6 +134,11 @@ def main():
     )
 
     args = parser.parse_args()
+    if args.self_test:
+        self_test()
+        return
+    if not args.language or not args.path:
+        parser.error("--language and --path are required unless --self-test is used")
     setup_project(args.language, args.path, args.name)
 
 

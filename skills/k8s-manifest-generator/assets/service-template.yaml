@@ -54,9 +54,8 @@ spec:
     port: 443
     targetPort: https
     protocol: TCP
-  # Restrict access to specific IPs (optional)
-  # loadBalancerSourceRanges:
-  # - 203.0.113.0/24
+  loadBalancerSourceRanges:
+  - 203.0.113.0/24  # Replace with approved ingress CIDRs
 
 ---
 # Template 3: NodePort Service (Direct Node Access)

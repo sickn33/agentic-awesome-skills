@@ -18,7 +18,9 @@ def extract_reddit_path(url: str) -> Optional[str]:
     """
     try:
         parsed = urlparse(url)
-        if "reddit.com" not in parsed.netloc:
+        if parsed.scheme != "https" or parsed.netloc.lower() not in {"reddit.com", "www.reddit.com"}:
+            return None
+        if not re.match(r"^/r/[^/]+/comments/[^/]+/", parsed.path):
             return None
         return parsed.path
     except:
