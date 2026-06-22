@@ -647,6 +647,19 @@ We officially thank the following contributors for their help in making this rep
 - [@vssinghh](https://github.com/vssinghh)
 - [@wede-wx](https://github.com/wede-wx)
 - [@xwmxcz](https://github.com/xwmxcz)
+- [@baskduf](https://github.com/baskduf)
+- [@Bluemacro](https://github.com/Bluemacro)
+- [@connerkward](https://github.com/connerkward)
+- [@dieudonneAwa](https://github.com/dieudonneAwa)
+- [@fkauanGIT](https://github.com/fkauanGIT)
+- [@GeekLuffy](https://github.com/GeekLuffy)
+- [@Hanyuyuan6](https://github.com/Hanyuyuan6)
+- [@himanshu-2l](https://github.com/himanshu-2l)
+- [@maxbaluev](https://github.com/maxbaluev)
+- [@Necmttn](https://github.com/Necmttn)
+- [@specterslient95-lgtm](https://github.com/specterslient95-lgtm)
+- [@ununununium](https://github.com/ununununium)
+- [@xi-kari](https://github.com/xi-kari)
 
 ## Star History
 
