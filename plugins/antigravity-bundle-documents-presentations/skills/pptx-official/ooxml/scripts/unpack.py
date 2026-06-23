@@ -8,6 +8,11 @@ import sys
 import zipfile
 from pathlib import Path
 
+MAX_ARCHIVE_MEMBERS = 5000
+MAX_MEMBER_SIZE = 100 * 1024 * 1024
+MAX_TOTAL_UNCOMPRESSED = 512 * 1024 * 1024
+MAX_COMPRESSION_RATIO = 1000
+
 
 def _is_zip_symlink(member: zipfile.ZipInfo) -> bool:
     return stat.S_ISLNK(member.external_attr >> 16)
@@ -29,19 +34,35 @@ def _extract_member(archive: zipfile.ZipFile, member: zipfile.ZipInfo, output_ro
         shutil.copyfileobj(source, target)
 
 
+def _validate_archive_members(archive: zipfile.ZipFile, output_root: Path):
+    members = archive.infolist()
+    if len(members) > MAX_ARCHIVE_MEMBERS:
+        raise ValueError("Archive contains too many entries")
+
+    total_size = 0
+    for member in members:
+        if _is_zip_symlink(member):
+            raise ValueError(f"Unsafe archive entry: {member.filename}")
+        if not _is_safe_destination(output_root, member.filename):
+            raise ValueError(f"Unsafe archive entry: {member.filename}")
+        if member.file_size > MAX_MEMBER_SIZE:
+            raise ValueError(f"Archive entry too large: {member.filename}")
+        total_size += member.file_size
+        if total_size > MAX_TOTAL_UNCOMPRESSED:
+            raise ValueError("Archive uncompressed size is too large")
+        if member.compress_size and member.file_size / member.compress_size > MAX_COMPRESSION_RATIO:
+            raise ValueError(f"Archive entry compression ratio too high: {member.filename}")
+
+    return members
+
+
 def extract_archive_safely(input_file: str | Path, output_dir: str | Path):
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
     output_root = output_path.resolve()
 
     with zipfile.ZipFile(input_file) as archive:
-        for member in archive.infolist():
-            if _is_zip_symlink(member):
-                raise ValueError(f"Unsafe archive entry: {member.filename}")
-            if not _is_safe_destination(output_root, member.filename):
-                raise ValueError(f"Unsafe archive entry: {member.filename}")
-
-        for member in archive.infolist():
+        for member in _validate_archive_members(archive, output_root):
             _extract_member(archive, member, output_path)
 
 

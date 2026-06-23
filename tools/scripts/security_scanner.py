@@ -42,14 +42,14 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
     ),
     SecurityPattern(
         code="SEC002",
-        regex=r"curl\b[^\n]*\|\s*(?:bash|sh|zsh)",
+        regex=r"curl\b[^\n]*\|\s*(?:bash|sh|zsh)|(?:bash|sh|zsh)\s+<\s*\(\s*curl\b",
         severity="error",
         description="Remote code execution: curl piped to shell",
         rationale="Pipes untrusted remote content directly into a shell without integrity verification.",
     ),
     SecurityPattern(
         code="SEC003",
-        regex=r"wget\b[^\n]*\|\s*(?:sh|bash|zsh)",
+        regex=r"wget\b[^\n]*\|\s*(?:sh|bash|zsh)|(?:bash|sh|zsh)\s+<\s*\(\s*wget\b",
         severity="error",
         description="Remote code execution: wget | sh",
         rationale="Same class of risk as curl | bash — downloads and executes without verification.",
@@ -123,6 +123,8 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
 # Prefix match covers both bare (<!-- security-allowlist -->) and colon forms
 # (<!-- security-allowlist: reason -->) documented in skill-template.md.
 _ALLOWLIST_MARKERS = ("# security-allowlist", "<!-- security-allowlist")
+TEXT_EXTENSIONS = {".cjs", ".js", ".json", ".md", ".mjs", ".py", ".sh", ".ts", ".txt", ".yaml", ".yml"}
+SUPPORT_FILE_PATTERN_CODES = {"SEC002", "SEC003", "SEC004", "SEC005", "SEC008"}
 
 
 # ---------------------------------------------------------------------------
@@ -189,6 +191,26 @@ def _is_allowlisted(line: str) -> bool:
     return any(marker in line for marker in _ALLOWLIST_MARKERS)
 
 
+def _logical_lines(content: str) -> list[tuple[int, str]]:
+    lines: list[tuple[int, str]] = []
+    current = ""
+    start_line = 1
+
+    for line_no, line in enumerate(content.splitlines(), start=1):
+        if not current:
+            start_line = line_no
+        continued = line.rstrip().endswith("\\")
+        current = f"{current} {line.rstrip()[:-1] if continued else line}".strip()
+        if not continued:
+            lines.append((start_line, current))
+            current = ""
+
+    if current:
+        lines.append((start_line, current))
+
+    return lines
+
+
 def scan_content(
     skill_id: str,
     content: str,
@@ -210,9 +232,7 @@ def scan_content(
     """
     active_patterns = patterns if patterns is not None else SECURITY_PATTERNS
     result = ScanResult(skill_id=skill_id, is_offensive=is_offensive)
-    lines = content.splitlines()
-
-    for line_no, line in enumerate(lines, start=1):
+    for line_no, line in _logical_lines(content):
         if _is_allowlisted(line):
             continue
 
@@ -256,14 +276,26 @@ def scan_skill_file(skill_path: Path) -> ScanResult | None:
 
     is_offensive = str(metadata.get("risk", "")).lower() == "offensive"
 
-    # Strip frontmatter from content before scanning
-    body = re.sub(r"^---\s*\n.*?\n---\s*\n?", "", content, count=1, flags=re.DOTALL)
+    result = ScanResult(skill_id=skill_path.name, is_offensive=is_offensive)
+    for file_path in sorted(skill_path.rglob("*")):
+        if not file_path.is_file() or file_path.suffix.lower() not in TEXT_EXTENSIONS:
+            continue
+        body = file_path.read_text(encoding="utf-8", errors="replace")
+        patterns = SECURITY_PATTERNS
+        if file_path.name == "SKILL.md":
+            body = re.sub(r"^---\s*\n.*?\n---\s*\n?", "", body, count=1, flags=re.DOTALL)
+        else:
+            patterns = [pattern for pattern in SECURITY_PATTERNS if pattern.code in SUPPORT_FILE_PATTERN_CODES]
+        result.flags.extend(
+            scan_content(
+                skill_id=skill_path.name,
+                content=body,
+                is_offensive=is_offensive,
+                patterns=patterns,
+            ).flags
+        )
 
-    return scan_content(
-        skill_id=skill_path.name,
-        content=body,
-        is_offensive=is_offensive,
-    )
+    return result
 
 
 def scan_all_skills(skills_dir: Path) -> list[ScanResult]:

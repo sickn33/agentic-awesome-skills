@@ -16,6 +16,17 @@ import zipfile
 from pathlib import Path
 
 
+def validate_input_tree(input_dir: Path):
+    root = input_dir.resolve(strict=True)
+    for path in input_dir.rglob("*"):
+        if path.is_symlink():
+            raise ValueError(f"Refusing to pack symlink: {path}")
+        try:
+            path.resolve(strict=True).relative_to(root)
+        except (OSError, ValueError):
+            raise ValueError(f"Refusing to pack path outside input directory: {path}") from None
+
+
 def main():
     parser = argparse.ArgumentParser(description="Pack a directory into an Office file")
     parser.add_argument("input_directory", help="Unpacked Office document directory")
@@ -60,6 +71,7 @@ def pack_document(input_dir, output_file, validate=False):
         raise ValueError(f"{input_dir} is not a directory")
     if output_file.suffix.lower() not in {".docx", ".pptx", ".xlsx"}:
         raise ValueError(f"{output_file} must be a .docx, .pptx, or .xlsx file")
+    validate_input_tree(input_dir)
 
     # Work in temporary directory to avoid modifying original
     with tempfile.TemporaryDirectory() as temp_dir:

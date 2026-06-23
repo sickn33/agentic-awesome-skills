@@ -132,6 +132,7 @@ ADAPTER_MODEL = require_hf_id(os.environ.get("ADAPTER_MODEL", "evalstate/qwen-ca
 BASE_MODEL = require_hf_id(os.environ.get("BASE_MODEL", "Qwen/Qwen2.5-0.5B"), "BASE_MODEL")
 OUTPUT_REPO = require_hf_id(os.environ.get("OUTPUT_REPO", "evalstate/qwen-capybara-medium-gguf"), "OUTPUT_REPO")
 username = require_hf_id(os.environ.get("HF_USERNAME", ADAPTER_MODEL.split('/')[0]), "HF_USERNAME")
+TRUST_REMOTE_CODE = os.environ.get("TRUST_REMOTE_CODE", "").strip().lower() in {"1", "true", "yes"}
 
 print(f"\n📦 Configuration:")
 print(f"   Base model: {BASE_MODEL}")
@@ -147,7 +148,7 @@ try:
         BASE_MODEL,
         dtype=torch.float16,
         device_map="auto",
-        trust_remote_code=True,
+        trust_remote_code=TRUST_REMOTE_CODE,
     )
     print("   ✅ Base model loaded")
 except Exception as e:
@@ -169,7 +170,7 @@ except Exception as e:
 
 try:
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(ADAPTER_MODEL, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(ADAPTER_MODEL, trust_remote_code=TRUST_REMOTE_CODE)
     print("   ✅ Tokenizer loaded")
 except Exception as e:
     print(f"   ❌ Failed to load tokenizer: {e}")

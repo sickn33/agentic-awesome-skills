@@ -155,7 +155,7 @@ _DOCKER_COPY_SENSITIVE_RE = re.compile(
 )
 
 _DOCKER_CURL_PIPE_RE = re.compile(
-    r"""(?:curl|wget)\s+[^|]*\|\s*(?:bash|sh|zsh|python|perl|ruby|node)""",
+    r"""(?:curl|wget)\s+[^|]*\|\s*(?:bash|sh|zsh|python|perl|ruby|node)""",  # security-allowlist: curl-pipe-bash, wget-pipe-sh
     re.IGNORECASE,
 )
 
@@ -776,7 +776,7 @@ def analyze_dockerfile(filepath: Path, verbose: bool = False) -> dict:
                 file=file_str,
                 line=line_num,
                 severity="CRITICAL",
-                description="Pipe-to-shell pattern detected (curl|bash). Remote code execution risk",
+                description="Pipe-to-shell pattern detected (curl|bash). Remote code execution risk",  # security-allowlist: curl-pipe-bash
                 recommendation="Download scripts first, verify checksum, then execute",
                 pattern="curl_pipe_bash",
             ))

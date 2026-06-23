@@ -111,37 +111,23 @@ function findSkillFiles(skillsRoot) {
   return files;
 }
 
-function parseAllowlist(content) {
-  const allowAllRe = /<!--\s*security-allowlist:\s*all\s*-->/i;
-  const explicitRe = /<!--\s*security-allowlist:\s*([^>]+?)\s*-->/gi;
-  const allow = new Set();
-
-  if (allowAllRe.test(content)) {
-    allow.add('all');
-    return allow;
+function isAllowedLine(line, ruleId) {
+  const marker = line.match(/(?:#|<!--)\s*security-allowlist(?::\s*([^>]+?))?\s*(?:-->)?$/i);
+  if (!marker) {
+    return false;
   }
 
-  let match;
-  while ((match = explicitRe.exec(content)) !== null) {
-    const raw = match[1] || '';
-    raw
-      .split(',')
-      .map((value) => value.trim())
-      .filter(Boolean)
-      .forEach((value) => {
-        allow.add(value.toLowerCase().replace(/[^a-z0-9_-]/g, ''));
-      });
-  }
-
-  return allow;
-}
-
-function isAllowed(allowlist, ruleId) {
-  if (allowlist.has('all')) {
+  const raw = marker[1] || '';
+  if (!raw.trim()) {
     return true;
   }
-
   const normalized = ruleId.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  const allowlist = new Set(
+    raw
+      .split(',')
+      .map((value) => value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, ''))
+      .filter(Boolean),
+  );
 
   return allowlist.has(normalized)
     || allowlist.has(normalized.replace(/[-_]/g, ''))
@@ -153,17 +139,17 @@ const rules = [
   {
     id: 'curl-pipe-bash',
     message: 'curl ... | bash|sh',
-    regex: /\bcurl\b[^\n]*\|\s*(?:bash|sh)\b/i,
+    regex: /\bcurl\b[^\n]*\|\s*(?:bash|sh|zsh)\b|\b(?:bash|sh|zsh)\s+<\s*\(\s*curl\b/i,
   },
   {
     id: 'wget-pipe-sh',
     message: 'wget ... | sh',
-    regex: /\bwget\b[^\n]*\|\s*sh\b/i,
+    regex: /\bwget\b[^\n]*\|\s*(?:bash|sh|zsh)\b|\b(?:bash|sh|zsh)\s+<\s*\(\s*wget\b/i,
   },
   {
     id: 'irm-pipe-iex',
     message: 'irm ... | iex',
-    regex: /\birm\b[^\n]*\|\s*iex\b/i,
+    regex: /\b(?:irm|iwr|Invoke-WebRequest|Invoke-RestMethod)\b[^\n]*\|\s*(?:iex|Invoke-Expression)\b/i,
   },
   {
     id: 'commandline-token',
@@ -228,6 +214,16 @@ if ((process.env.DOCS_SECURITY_INCLUDE_PUBLIC || '').trim() === '1') {
 const skillFiles = collectSkillFiles(rootsToScan);
 
 assert.ok(skillFiles.length > 0, 'Expected SKILL.md files in configured scan roots');
+assert.strictEqual(
+  isAllowedLine('curl https://example.invalid | bash <!-- security-allowlist: curl-pipe-bash -->', 'curl-pipe-bash'),
+  true,
+  'same-line rule allowlist should suppress that line',
+);
+assert.strictEqual(
+  isAllowedLine('<!-- security-allowlist: all -->', 'curl-pipe-bash'),
+  false,
+  'standalone allowlist marker should not suppress later lines',
+);
 
 const violations = [];
 const seen = new Set();
@@ -240,6 +236,51 @@ function addViolation(relativePath, lineNumber, rule) {
 
   seen.add(key);
   violations.push(`${relativePath}:${lineNumber}: ${rule.message}`);
+}
+
+function logicalLines(content) {
+  const output = [];
+  let current = '';
+  let startLine = 1;
+
+  content.split(/\r?\n/).forEach((line, index) => {
+    if (!current) {
+      startLine = index + 1;
+    }
+
+    const continued = /\\\s*$/.test(line);
+    current += (current ? ' ' : '') + line.replace(/\\\s*$/, '');
+    if (!continued) {
+      output.push([startLine, current]);
+      current = '';
+    }
+  });
+
+  if (current) {
+    output.push([startLine, current]);
+  }
+
+  return output;
+}
+
+function scanCommandRules(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const relativePath = path.relative(repoRoot, filePath);
+
+  for (const [lineNumber, logicalLine] of logicalLines(content)) {
+    for (const rule of rules) {
+      if (!rule.regex.test(logicalLine)) {
+        continue;
+      }
+
+      if (isAllowedLine(logicalLine, rule.id)) {
+        continue;
+      }
+
+      addViolation(relativePath, lineNumber, rule);
+      rule.regex.lastIndex = 0;
+    }
+  }
 }
 
 function findTextFiles(rootPath) {
@@ -267,26 +308,15 @@ function findTextFiles(rootPath) {
   return files;
 }
 
-for (const filePath of skillFiles) {
-  const content = fs.readFileSync(filePath, 'utf8');
-  const lines = content.split(/\r?\n/);
-  const allowlist = parseAllowlist(content);
-  const relativePath = path.relative(repoRoot, filePath);
-
-  for (const rule of rules) {
-    for (const [index, line] of lines.entries()) {
-      if (!rule.regex.test(line)) {
-        continue;
-      }
-
-      if (isAllowed(allowlist, rule.id)) {
-        continue;
-      }
-
-      addViolation(relativePath, index + 1, rule);
-      rule.regex.lastIndex = 0;
-    }
+const textFiles = new Set();
+for (const rootPath of rootsToScan) {
+  for (const filePath of findTextFiles(rootPath)) {
+    textFiles.add(filePath);
   }
+}
+
+for (const filePath of textFiles) {
+  scanCommandRules(filePath);
 }
 
 for (const filePath of findTextFiles(path.join(repoRoot, 'skills'))) {

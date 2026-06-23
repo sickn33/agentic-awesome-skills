@@ -13,8 +13,13 @@ if [[ -z "${APP_STORE_CONNECT_API_KEY_P8:-}" || -z "${APP_STORE_CONNECT_KEY_ID:-
   exit 1
 fi
 
-echo "$APP_STORE_CONNECT_API_KEY_P8" | sed 's/\\n/\n/g' > /tmp/app-store-connect-key.p8
-trap 'rm -f /tmp/app-store-connect-key.p8 /tmp/${APP_NAME}Notarize.zip' EXIT
+TEMP_DIR=$(mktemp -d)
+chmod 700 "$TEMP_DIR"
+KEY_PATH="$TEMP_DIR/app-store-connect-key.p8"
+NOTARY_ZIP="$TEMP_DIR/${APP_NAME}Notarize.zip"
+trap 'rm -rf "$TEMP_DIR"' EXIT
+
+echo "$APP_STORE_CONNECT_API_KEY_P8" | sed 's/\\n/\n/g' > "$KEY_PATH"
 
 ARCHES_VALUE=${ARCHES:-"arm64 x86_64"}
 ARCH_LIST=( ${ARCHES_VALUE} )
@@ -31,10 +36,10 @@ codesign --force --timestamp --options runtime --sign "$APP_IDENTITY" \
   "$APP_BUNDLE"
 
 DITTO_BIN=${DITTO_BIN:-/usr/bin/ditto}
-"$DITTO_BIN" --norsrc -c -k --keepParent "$APP_BUNDLE" "/tmp/${APP_NAME}Notarize.zip"
+"$DITTO_BIN" --norsrc -c -k --keepParent "$APP_BUNDLE" "$NOTARY_ZIP"
 
-xcrun notarytool submit "/tmp/${APP_NAME}Notarize.zip" \
-  --key /tmp/app-store-connect-key.p8 \
+xcrun notarytool submit "$NOTARY_ZIP" \
+  --key "$KEY_PATH" \
   --key-id "$APP_STORE_CONNECT_KEY_ID" \
   --issuer "$APP_STORE_CONNECT_ISSUER_ID" \
   --wait

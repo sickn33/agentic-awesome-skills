@@ -711,21 +711,30 @@ generate_dashboard() {
             if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
             return Math.floor(seconds / 3600) + 'h ' + Math.floor((seconds % 3600) / 60) + 'm';
         }
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[char]);
+        }
         function renderAgent(agent) {
             const modelClass = getModelClass(agent.model);
-            const modelName = agent.model || 'Sonnet 4.5';
-            const agentType = agent.agent_type || 'general-purpose';
+            const modelName = escapeHtml(agent.model || 'Sonnet 4.5');
+            const agentType = escapeHtml(agent.agent_type || 'general-purpose');
             const status = agent.status === 'completed' ? 'completed' : 'active';
-            const currentTask = agent.current_task || (agent.tasks_completed && agent.tasks_completed.length > 0
+            const currentTask = escapeHtml(agent.current_task || (agent.tasks_completed && agent.tasks_completed.length > 0
                 ? 'Completed: ' + agent.tasks_completed.join(', ')
-                : 'Initializing...');
+                : 'Initializing...'));
             const duration = formatDuration(agent.spawned_at);
             const tasksCount = agent.tasks_completed ? agent.tasks_completed.length : 0;
 
             return `
                 <div class="agent-card">
                     <div class="agent-header">
-                        <div class="agent-id">${agent.agent_id || 'Unknown'}</div>
+                        <div class="agent-id">${escapeHtml(agent.agent_id || 'Unknown')}</div>
                         <div class="model-badge ${modelClass}">${modelName}</div>
                     </div>
                     <div class="agent-type">${agentType}</div>
@@ -740,9 +749,9 @@ generate_dashboard() {
         }
         function renderTask(task) {
             const payload = task.payload || {};
-            const title = payload.description || payload.action || task.type || 'Task';
-            const error = task.lastError ? `<div class="error">${task.lastError}</div>` : '';
-            return `<div class="task"><div class="id">${task.id}</div><span class="type">${task.type || 'general'}</span><div class="title">${title}</div>${error}</div>`;
+            const title = escapeHtml(payload.description || payload.action || task.type || 'Task');
+            const error = task.lastError ? `<div class="error">${escapeHtml(task.lastError)}</div>` : '';
+            return `<div class="task"><div class="id">${escapeHtml(task.id)}</div><span class="type">${escapeHtml(task.type || 'general')}</span><div class="title">${title}</div>${error}</div>`;
         }
         async function loadData() {
             const [pending, progress, completed, failed, agents] = await Promise.all([

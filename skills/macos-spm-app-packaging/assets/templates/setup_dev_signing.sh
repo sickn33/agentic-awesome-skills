@@ -14,8 +14,13 @@ fi
 
 echo "Creating self-signed certificate '$CERT_NAME'..."
 
-TEMP_CONFIG=$(mktemp)
-trap "rm -f $TEMP_CONFIG" EXIT
+TEMP_DIR=$(mktemp -d)
+chmod 700 "$TEMP_DIR"
+TEMP_CONFIG="$TEMP_DIR/dev.cnf"
+KEY_PATH="$TEMP_DIR/dev.key"
+CRT_PATH="$TEMP_DIR/dev.crt"
+P12_PATH="$TEMP_DIR/dev.p12"
+trap 'rm -rf "$TEMP_DIR"' EXIT
 
 cat > "$TEMP_CONFIG" <<EOFCONF
 [ req ]
@@ -34,17 +39,15 @@ extendedKeyUsage = codeSigning
 EOFCONF
 
 openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 \
-    -nodes -keyout /tmp/dev.key -out /tmp/dev.crt \
+    -nodes -keyout "$KEY_PATH" -out "$CRT_PATH" \
     -config "$TEMP_CONFIG" 2>/dev/null
 
-openssl pkcs12 -export -out /tmp/dev.p12 \
-    -inkey /tmp/dev.key -in /tmp/dev.crt \
+openssl pkcs12 -export -out "$P12_PATH" \
+    -inkey "$KEY_PATH" -in "$CRT_PATH" \
     -passout pass: 2>/dev/null
 
-security import /tmp/dev.p12 -k ~/Library/Keychains/login.keychain-db \
+security import "$P12_PATH" -k ~/Library/Keychains/login.keychain-db \
   -T /usr/bin/codesign -T /usr/bin/security
-
-rm -f /tmp/dev.{key,crt,p12}
 
 echo ""
 echo "Trust this certificate for code signing in Keychain Access."

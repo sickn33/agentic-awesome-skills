@@ -16,6 +16,16 @@ from pathlib import Path
 from quick_validate import validate_skill
 
 
+def should_include(file_path: Path, skill_path: Path) -> bool:
+    if file_path.is_symlink():
+        return False
+    try:
+        file_path.resolve(strict=True).relative_to(skill_path.resolve(strict=True))
+    except (OSError, ValueError):
+        return False
+    return file_path.is_file()
+
+
 def package_skill(skill_path, output_dir=None):
     """
     Package a skill folder into a .skill file.
@@ -68,7 +78,7 @@ def package_skill(skill_path, output_dir=None):
         with zipfile.ZipFile(skill_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
             # Walk through the skill directory
             for file_path in skill_path.rglob('*'):
-                if file_path.is_file():
+                if should_include(file_path, skill_path):
                     # Calculate the relative path within the zip
                     arcname = file_path.relative_to(skill_path.parent)
                     zipf.write(file_path, arcname)

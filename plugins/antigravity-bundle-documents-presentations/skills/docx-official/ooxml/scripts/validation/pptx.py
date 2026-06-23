@@ -4,7 +4,7 @@ Validator for PowerPoint presentation XML files against XSD schemas.
 
 import re
 
-from .base import BaseSchemaValidator
+from .base import BaseSchemaValidator, parse_xml
 
 
 class PPTXSchemaValidator(BaseSchemaValidator):
@@ -86,7 +86,7 @@ class PPTXSchemaValidator(BaseSchemaValidator):
 
         for xml_file in self.xml_files:
             try:
-                root = lxml.etree.parse(str(xml_file)).getroot()
+                root = parse_xml(str(xml_file)).getroot()
 
                 # Check all elements for ID attributes
                 for elem in root.iter():
@@ -142,7 +142,7 @@ class PPTXSchemaValidator(BaseSchemaValidator):
         for slide_master in slide_masters:
             try:
                 # Parse the slide master file
-                root = lxml.etree.parse(str(slide_master)).getroot()
+                root = parse_xml(str(slide_master)).getroot()
 
                 # Find the corresponding _rels file for this slide master
                 rels_file = slide_master.parent / "_rels" / f"{slide_master.name}.rels"
@@ -155,7 +155,7 @@ class PPTXSchemaValidator(BaseSchemaValidator):
                     continue
 
                 # Parse the relationships file
-                rels_root = lxml.etree.parse(str(rels_file)).getroot()
+                rels_root = parse_xml(str(rels_file)).getroot()
 
                 # Build a set of valid relationship IDs that point to slide layouts
                 valid_layout_rids = set()
@@ -209,7 +209,7 @@ class PPTXSchemaValidator(BaseSchemaValidator):
 
         for rels_file in slide_rels_files:
             try:
-                root = lxml.etree.parse(str(rels_file)).getroot()
+                root = parse_xml(str(rels_file)).getroot()
 
                 # Find all slideLayout relationships
                 layout_rels = [
@@ -258,7 +258,7 @@ class PPTXSchemaValidator(BaseSchemaValidator):
         for rels_file in slide_rels_files:
             try:
                 # Parse the relationships file
-                root = lxml.etree.parse(str(rels_file)).getroot()
+                root = parse_xml(str(rels_file)).getroot()
 
                 # Find all notesSlide relationships
                 for rel in root.findall(
