@@ -81,7 +81,7 @@ harness/
       },
       "test_alternatives": {
         "sqlite_in_memory": "DB_DRIVER=sqlite3 DB_URL=:memory:",
-        "docker": "docker run -d --name test-pg -p 5433:5432 -e POSTGRES_PASSWORD=test postgres:16"
+        "docker": "docker run -d --name test-pg -p 127.0.0.1:5433:5432 -e POSTGRES_PASSWORD=test postgres:16"
       }
     }
   ],

@@ -4,6 +4,10 @@ description: "Create custom AI subagents with proper plugin structure, persona g
 risk: critical
 source: community
 date_added: "2026-06-20"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
 ---
 
 # Agent Creator
@@ -36,6 +40,13 @@ All agents are created inside plugins at:
 If the user wants the agent inside an **existing plugin**, add the agent folder
 to that plugin's `agents/` directory. If no plugin is specified, create a new
 plugin named `<agent-name>-plugin`.
+
+Before creating any path, validate both `<agent-name>` and `<plugin-name>`:
+
+- accept only lowercase letters, numbers, and single hyphens: `^[a-z0-9]+(-[a-z0-9]+)*$`
+- reject `/`, `\`, `.`, `..`, absolute paths, whitespace, shell metacharacters, and YAML metacharacters
+- resolve the final target path and verify it stays under `<appDataDir>\config\plugins\`
+- stop and ask for a safe replacement instead of sanitizing a suspicious name silently
 
 ## Workflow
 
@@ -124,7 +135,7 @@ Write the `<agent-name>.md` file in the `agents/` folder following this exact st
 ---
 name: <agent-name>
 description: <One-line summary of what this agent does.>
-tools: ["Read", "Grep", "Glob", "Bash"]
+tools: ["Read", "Grep", "Glob"]
 model: <current-model>
 ---
 
@@ -159,6 +170,9 @@ model: <current-model>
 
 <A checklist the agent should mentally run through before returning its response, to ensure quality.>
 ```
+
+Grant `Bash` only when the user explicitly asks for command execution and the
+agent's task genuinely needs it. Keep the default tool set read-only.
 
 ### Step 6: Write the companion routing skill (if requested)
 

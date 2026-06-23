@@ -74,7 +74,7 @@ const config: CapacitorConfig = {
 
 ```typescript
 import { Camera, CameraResultType } from '@capacitor/camera';
-import { Preferences } from '@capacitor/preferences';
+import { SecureStorage } from '@aparajita/capacitor-secure-storage';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Geolocation } from '@capacitor/geolocation';
 
@@ -107,8 +107,8 @@ const initPush = async () => {
   if (permission.receive === 'granted') {
     await PushNotifications.register();
   }
-  PushNotifications.addListener('registration', ({ value: token }) => {
-    console.log('FCM Token:', token);
+  PushNotifications.addListener('registration', () => {
+    console.log('Push registration succeeded');
   });
 };
 ```

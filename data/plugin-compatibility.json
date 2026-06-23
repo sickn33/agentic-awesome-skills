@@ -428,18 +428,24 @@
       "id": "agent-creator",
       "path": "skills/agent-creator",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -32282,12 +32288,12 @@
   "summary": {
     "total_skills": 1681,
     "supported": {
-      "codex": 1622,
-      "claude": 1640
+      "codex": 1621,
+      "claude": 1639
     },
     "blocked": {
-      "codex": 59,
-      "claude": 41
+      "codex": 60,
+      "claude": 42
     },
     "manual_setup": 13
   }
