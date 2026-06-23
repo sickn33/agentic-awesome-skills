@@ -35,7 +35,10 @@ SAFE_SLUG_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_MEDIA_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_PATH_PART_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_CTYPE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*(?:; charset=[A-Za-z0-9._-]+)?$")
-LOCAL_ORIGIN_RE = re.compile(r"^(https?)://(127\.0\.0\.1|localhost)(:\d+)?$")
+LOCAL_ORIGINS = {
+    "http://127.0.0.1:8000": "http://127.0.0.1:8000",
+    "http://localhost:8000": "http://localhost:8000",
+}
 
 
 def split_frontmatter(text):
@@ -95,11 +98,7 @@ def safe_content_type(ctype):
 
 
 def safe_local_origin(origin):
-    m = LOCAL_ORIGIN_RE.fullmatch(origin or "")
-    if not m:
-        return None
-    scheme, host, port = m.groups()
-    return f"{scheme}://{host}{port or ''}"
+    return LOCAL_ORIGINS.get(origin or "")
 
 
 def load_item(lib, slug):
@@ -228,7 +227,8 @@ def self_test():
         assert library_path(str(root), "_media", "../video_1.md") is None
         assert safe_content_type("text/html; charset=utf-8") == "text/html; charset=utf-8"
         assert safe_content_type("text/html\r\nX-Bad: 1") == "application/octet-stream"
-        assert safe_local_origin("http://localhost:8000") == "http://localhost:8000"
+        assert safe_local_origin("http://localhost:8000") == LOCAL_ORIGINS["http://localhost:8000"]
+        assert safe_local_origin("http://localhost:3000") is None
         assert safe_local_origin("http://localhost:8000\r\nX-Bad: 1") is None
 
 
