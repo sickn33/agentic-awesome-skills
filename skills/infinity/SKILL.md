@@ -16,6 +16,16 @@ The #1 source of silent bugs, crashes, and vulnerabilities is external data that
 
 ---
 
+## When to Use This Skill
+
+- Use when you need to handle an API response
+- Use when reading user input or adding a form handler
+- Use when working with environment variables or CLI arguments
+- Use when parsing webhooks or reading from the filesystem
+- Use when any code calls `.body`, `.params`, `.query`, `.env`, `fs.read`, or a third-party SDK response
+
+---
+
 ## The Four Phases
 
 ### PHASE 1 — Boundary Detection
@@ -156,14 +166,6 @@ If any `UNTRUSTED` or `SEMI-TRUSTED` input reaches logic, storage, or rendering 
 | 4 — Verify | Trace each input, confirm filter exists | ❌ No |
 
 ---
-
-## When to Use This Skill
-
-- Use when you need to handle an API response
-- Use when reading user input or adding a form handler
-- Use when working with environment variables or CLI arguments
-- Use when parsing webhooks or reading from the filesystem
-- Use when any code calls `.body`, `.params`, `.query`, `.env`, `fs.read`, or a third-party SDK response
 
 ## Limitations
 
