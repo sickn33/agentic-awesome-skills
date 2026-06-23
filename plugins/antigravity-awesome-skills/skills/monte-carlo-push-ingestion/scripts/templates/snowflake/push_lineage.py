@@ -43,6 +43,7 @@ from pycarlo.features.ingestion.models import (
     LineageAssetRef,
     LineageEvent,
 )
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 # ← SUBSTITUTE: set RESOURCE_TYPE to match your Monte Carlo connection type
 RESOURCE_TYPE = "snowflake"
@@ -155,8 +156,7 @@ def push(
 
     Returns a result dict with invocation IDs for each batch.
     """
-    with open(input_file) as fh:
-        manifest = json.load(fh)
+    manifest = read_json_file(input_file)
 
     edges = manifest.get("edges", [])
     resource_type = manifest.get("resource_type", RESOURCE_TYPE)
@@ -182,8 +182,7 @@ def push(
             "batch_count": 0,
             "batch_size": batch_size,
         }
-        with open(output_file, "w") as fh:
-            json.dump(push_result, fh, indent=2)
+        write_json_file(output_file, push_result)
         return push_result
 
     # Split into batches
@@ -236,8 +235,7 @@ def push(
         "batch_size": batch_size,
         "edges": edges,  # preserve for downstream validation
     }
-    with open(output_file, "w") as fh:
-        json.dump(push_result, fh, indent=2)
+    write_json_file(output_file, push_result)
     print(f"Push result written to {output_file}")
 
     return push_result

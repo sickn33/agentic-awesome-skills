@@ -34,6 +34,7 @@ import os
 
 from collect_lineage import collect
 from push_lineage import DEFAULT_BATCH_SIZE, DEFAULT_TIMEOUT_SECONDS, push
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
 
 def main() -> None:
@@ -109,8 +110,7 @@ def main() -> None:
         timeout_seconds=args.timeout,
     )
 
-    with open(args.output_file, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(args.output_file, manifest)
     print(f"Lineage manifest written to {args.output_file}")
     print("Done.")
 

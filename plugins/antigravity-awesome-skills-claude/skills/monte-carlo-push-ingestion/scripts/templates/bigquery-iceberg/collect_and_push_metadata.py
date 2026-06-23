@@ -16,6 +16,7 @@ import os
 
 from collect_metadata import _require_bq_identifier, collect
 from push_metadata import push
+from _safe_paths import safe_output_json_path
 
 
 def main() -> None:
@@ -49,6 +50,9 @@ def main() -> None:
     if missing:
         parser.error(f"Missing required push arguments/env vars: {missing}")
 
+    manifest_path = str(safe_output_json_path(args.manifest_file))
+    push_result_path = str(safe_output_json_path(args.push_result_file))
+
     args.project_id = _require_bq_identifier(args.project_id, "project_id")
     args.datasets = [_require_bq_identifier(d, "dataset") for d in args.datasets or []] or None
     args.tables = [_require_bq_identifier(t, "table") for t in args.tables or []] or None
@@ -58,16 +62,16 @@ def main() -> None:
         datasets=args.datasets,
         tables=args.tables,
         only_freshness_and_volume=args.only_freshness_and_volume,
-        output_file=args.manifest_file,
+        output_file=manifest_path,
     )
 
     push(
-        input_file=args.manifest_file,
+        input_file=manifest_path,
         resource_uuid=args.resource_uuid,
         key_id=args.key_id,
         key_token=args.key_token,
         batch_size=args.batch_size,
-        output_file=args.push_result_file,
+        output_file=push_result_path,
     )
 
 

@@ -30,6 +30,7 @@ import os
 
 from collect_lineage import LOOKBACK_DAYS, collect
 from push_lineage import DEFAULT_BATCH_SIZE, push
+from _safe_paths import safe_output_json_path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -57,19 +58,21 @@ def main() -> None:
     if missing:
         parser.error(f"Missing required arguments/env vars: {missing}")
 
+    manifest_path = str(safe_output_json_path(args.manifest))
+
     log.info("Step 1: Collecting lineage …")
     collect(
         host=args.host,
         http_path=args.http_path,
         token=args.token,
-        manifest_path=args.manifest,
+        manifest_path=manifest_path,
         include_column_lineage=args.column_lineage,
         lookback_days=args.lookback_days,
     )
 
     log.info("Step 2: Pushing lineage to Monte Carlo …")
     push(
-        manifest_path=args.manifest,
+        manifest_path=manifest_path,
         resource_uuid=args.resource_uuid,
         key_id=args.key_id,
         key_token=args.key_token,

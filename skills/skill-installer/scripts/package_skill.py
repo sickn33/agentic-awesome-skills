@@ -46,6 +46,7 @@ EXCLUDE_EXTENSIONS = {
     ".pyc", ".pyo", ".db", ".sqlite", ".sqlite3",
     ".log", ".tmp", ".bak",
 }
+SAFE_ARCHIVE_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$")
 
 
 def resolve_existing_dir(path) -> Path:
@@ -147,6 +148,12 @@ def validate_for_web(skill_dir: Path) -> dict:
 
 def should_include(file_path: Path, skill_dir: Path) -> bool:
     """Check if a file should be included in the ZIP."""
+    if file_path.is_symlink():
+        return False
+    try:
+        file_path.resolve(strict=True).relative_to(skill_dir.resolve(strict=True))
+    except (OSError, ValueError):
+        return False
     rel = file_path.relative_to(skill_dir)
 
     # Check directory exclusions
@@ -195,6 +202,8 @@ def package_skill(skill_dir: Path, output_dir: Path = None) -> dict:
 
     skill_name = validation["name"] or skill_dir.name
     skill_name_lower = skill_name.lower()
+    if not SAFE_ARCHIVE_NAME_RE.fullmatch(skill_name_lower):
+        return {"success": False, "error": f"Unsafe archive skill name: {skill_name}"}
 
     # Determine output path
     if output_dir is None:

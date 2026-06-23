@@ -36,6 +36,7 @@ import os
 
 from collect_metadata import _quote_identifier, collect
 from push_metadata import push, _BATCH_SIZE
+from _safe_paths import safe_output_json_path
 
 
 def main() -> None:
@@ -111,6 +112,9 @@ def main() -> None:
     if missing:
         parser.error(f"Missing required arguments: {', '.join(missing)}")
 
+    output_path = str(safe_output_json_path(args.output_file))
+    push_result_path = str(safe_output_json_path(args.push_result_file))
+
     _quote_identifier(args.warehouse)
 
     # Step 1: Collect
@@ -119,17 +123,17 @@ def main() -> None:
         user=args.user,
         password=args.password,
         warehouse=args.warehouse,
-        output_file=args.output_file,
+        output_file=output_path,
     )
 
     # Step 2: Push
     push(
-        input_file=args.output_file,
+        input_file=output_path,
         resource_uuid=args.resource_uuid,
         key_id=args.key_id,
         key_token=args.key_token,
         batch_size=args.batch_size,
-        output_file=args.push_result_file,
+        output_file=push_result_path,
     )
 
     print("Done.")

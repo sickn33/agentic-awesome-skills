@@ -43,6 +43,7 @@ from pycarlo.features.ingestion.models import (
     LineageAssetRef,
     LineageEvent,
 )
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 # ← SUBSTITUTE: set RESOURCE_TYPE to match your Monte Carlo connection type
 RESOURCE_TYPE = "data-lake"
@@ -286,8 +287,7 @@ def main() -> None:
     if not args.resource_uuid:
         parser.error("--resource-uuid is required (or set MCD_RESOURCE_UUID)")
 
-    with open(args.input_file) as fh:
-        manifest = json.load(fh)
+    manifest = read_json_file(args.input_file)
 
     push(
         manifest=manifest,
@@ -299,8 +299,7 @@ def main() -> None:
         timeout_seconds=args.timeout,
     )
 
-    with open(args.input_file, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(args.input_file, manifest)
     print(f"Manifest updated in-place: {args.input_file}")
     print("Done.")
 

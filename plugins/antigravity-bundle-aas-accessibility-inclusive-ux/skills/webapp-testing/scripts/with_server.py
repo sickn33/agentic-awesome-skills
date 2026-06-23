@@ -20,7 +20,9 @@ import time
 import sys
 import argparse
 import shlex
+import shutil
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 ALLOWED_EXECUTABLES = {
     "npm", "npx", "pnpm", "yarn", "node", "python", "python3",
@@ -29,16 +31,39 @@ ALLOWED_EXECUTABLES = {
 SHELL_METACHARS = {";", "&&", "||", "|", "`", "$(", ">", "<"}
 
 
+def safe_working_directory(raw_path):
+    root = Path.cwd().resolve()
+    path = Path(raw_path).expanduser()
+    resolved = (path if path.is_absolute() else root / path).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"working directory escapes current project: {raw_path}") from exc
+    if not resolved.is_dir():
+        raise ValueError(f"working directory not found: {resolved}")
+    return resolved
+
+
+def resolve_allowed_executable(executable):
+    if Path(executable).name != executable:
+        raise ValueError(f"executable must be a bare command name: {executable}")
+    if executable not in ALLOWED_EXECUTABLES:
+        raise ValueError(f"unsupported executable: {executable}")
+    resolved = shutil.which(executable)
+    if not resolved:
+        raise ValueError(f"executable not found on PATH: {executable}")
+    return resolved
+
+
 def validate_argv(parts):
     if not parts:
         raise ValueError("empty command")
     exe = Path(parts[0]).name
-    if exe not in ALLOWED_EXECUTABLES:
-        raise ValueError(f"unsupported executable: {parts[0]}")
+    resolved_exe = resolve_allowed_executable(exe)
     for part in parts:
         if any(token in part for token in SHELL_METACHARS):
             raise ValueError(f"unsupported shell metacharacter in argument: {part}")
-    return parts
+    return [resolved_exe, *parts[1:]]
 
 
 def is_server_ready(port, timeout=30):
@@ -58,7 +83,7 @@ def parse_server_command(command):
     parts = shlex.split(command)
     cwd = None
     if len(parts) >= 4 and parts[0] == "cd" and parts[2] == "&&":
-        cwd = Path(parts[1]).expanduser()
+        cwd = safe_working_directory(parts[1])
         parts = parts[3:]
     if not parts:
         raise ValueError("empty server command")
@@ -66,16 +91,34 @@ def parse_server_command(command):
 
 
 def self_test():
-    assert parse_server_command("npm run dev") == (["npm", "run", "dev"], None)
-    cmd, cwd = parse_server_command("cd backend && python server.py")
-    assert cmd == ["python", "server.py"]
-    assert str(cwd) == "backend"
-    try:
-        validate_argv(["sh", "-c", "npm run dev"])
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("shell launcher should be rejected")
+    npm_path = shutil.which("npm")
+    python_path = shutil.which("python") or shutil.which("python3")
+    assert npm_path, "npm required for self-test"
+    assert python_path, "python required for self-test"
+    with TemporaryDirectory() as tmp:
+        previous_cwd = Path.cwd()
+        try:
+            import os
+            os.chdir(tmp)
+            assert parse_server_command("npm run dev") == ([npm_path, "run", "dev"], None)
+            Path("backend").mkdir()
+            cmd, cwd = parse_server_command("cd backend && python server.py")
+            assert cmd == [python_path, "server.py"]
+            assert cwd == (Path(tmp) / "backend").resolve()
+            try:
+                validate_argv(["sh", "-c", "npm run dev"])
+            except ValueError:
+                pass
+            else:
+                raise AssertionError("shell launcher should be rejected")
+            try:
+                parse_server_command("cd ../outside && python server.py")
+            except ValueError:
+                pass
+            else:
+                raise AssertionError("escaping working directory should be rejected")
+        finally:
+            os.chdir(previous_cwd)
 
 
 def main():

@@ -42,6 +42,7 @@ from pycarlo.features.ingestion.models import (
     AssetVolume,
     RelationalAsset,
 )
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 # ← SUBSTITUTE: set RESOURCE_TYPE to match your Monte Carlo connection type
 RESOURCE_TYPE = "snowflake"
@@ -102,8 +103,7 @@ def push(
 
     Returns a result dict with invocation IDs for each batch.
     """
-    with open(input_file) as fh:
-        manifest = json.load(fh)
+    manifest = read_json_file(input_file)
 
     asset_dicts = manifest.get("assets", [])
     resource_type = manifest.get("resource_type", RESOURCE_TYPE)
@@ -157,8 +157,7 @@ def push(
         "batch_count": total_batches,
         "batch_size": batch_size,
     }
-    with open(output_file, "w") as fh:
-        json.dump(push_result, fh, indent=2)
+    write_json_file(output_file, push_result)
     print(f"Push result written to {output_file}")
 
     return push_result

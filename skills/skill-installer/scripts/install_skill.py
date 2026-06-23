@@ -164,17 +164,23 @@ def md5_dir(path: Path, exclude_dirs: set = None) -> str:
     if exclude_dirs is None:
         exclude_dirs = {"backups", "staging", ".git", "__pycache__", "node_modules", ".venv"}
 
+    root_path = Path(path).resolve(strict=True)
+    if not root_path.is_dir():
+        raise ValueError(f"Hash target must be a directory: {root_path}")
+
     h = hashlib.sha256()
-    for root, dirs, files in os.walk(path):
+    for root, dirs, files in os.walk(root_path, followlinks=False):
         # Filter out excluded directories
         dirs[:] = [d for d in dirs if d not in exclude_dirs]
         for f in sorted(files):
             fp = Path(root) / f
             try:
+                resolved_fp = fp.resolve(strict=True)
+                resolved_fp.relative_to(root_path)
                 # Normalize to forward slashes for consistent hashing
-                rel = fp.relative_to(path).as_posix()
+                rel = resolved_fp.relative_to(root_path).as_posix()
                 h.update(rel.encode("utf-8"))
-                with open(fp, "rb") as fh:
+                with resolved_fp.open("rb") as fh:
                     for chunk in iter(lambda: fh.read(8192), b""):
                         h.update(chunk)
             except Exception:
@@ -367,6 +373,8 @@ def _backup_ignore(directory, contents):
     dir_path = Path(directory)
     for item in contents:
         item_path = dir_path / item
+        if item_path.is_symlink():
+            ignored.add(item)
         # Skip backup and staging directories to prevent recursion
         if item in ("backups", "staging") and dir_path.name == "data":
             ignored.add(item)

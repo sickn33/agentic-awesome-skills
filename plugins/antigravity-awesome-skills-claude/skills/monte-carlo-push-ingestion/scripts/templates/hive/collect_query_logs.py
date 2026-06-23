@@ -133,7 +133,7 @@ def _load_returned_rows(op_logs_dir: str) -> dict[str, int]:
     each file, which reflects the final number of rows delivered to the client.
     """
     rows_by_id: dict[str, int] = {}
-    for log_file in Path(op_logs_dir).glob("*.log"):
+    for log_file in safe_existing_directory(op_logs_dir).glob("*.log"):
         query_id = log_file.stem
         last_count: int | None = None
         try:
@@ -193,6 +193,7 @@ def collect(
         op_logs_dir: Optional directory containing per-query operation logs
                      (<queryId>.log). When provided, returned_rows is populated
                      from SelectOperator RECORDS_OUT counts.
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
     Returns:
         Manifest dict with keys: log_type, collected_at, entry_count,
@@ -274,8 +275,7 @@ def main() -> None:
 
     manifest = collect(log_file=args.log_file, op_logs_dir=args.op_logs_dir)
 
-    with open(args.output_file, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(args.output_file, manifest)
     print(f"Query log manifest written to {args.output_file}")
     print("Done.")
 

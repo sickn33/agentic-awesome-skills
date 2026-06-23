@@ -33,6 +33,7 @@ from pycarlo.features.ingestion.models import (
     AssetVolume,
     RelationalAsset,
 )
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -92,8 +93,7 @@ def push(
     """Read a metadata manifest and push assets to Monte Carlo in batches."""
     endpoint = _ENDPOINT
     log.info("Using endpoint: %s", endpoint)
-    with open(input_file) as fh:
-        manifest = json.load(fh)
+    manifest = read_json_file(input_file)
 
     asset_dicts = manifest.get("assets", [])
     resource_type = manifest.get("resource_type", RESOURCE_TYPE)
@@ -147,8 +147,7 @@ def push(
         "batch_count": total_batches,
         "batch_size": batch_size,
     }
-    with open(output_file, "w") as fh:
-        json.dump(push_result, fh, indent=2)
+    write_json_file(output_file, push_result)
     log.info("Push result written to %s", output_file)
 
     return push_result

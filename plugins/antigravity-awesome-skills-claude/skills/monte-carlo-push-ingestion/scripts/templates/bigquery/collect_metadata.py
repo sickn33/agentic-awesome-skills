@@ -24,6 +24,7 @@ import os
 from datetime import datetime, timezone
 
 from google.cloud import bigquery
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -131,8 +132,7 @@ def collect(
         "collected_at": datetime.now(timezone.utc).isoformat(),
         "assets": assets,
     }
-    with open(output_file, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(output_file, manifest)
     log.info("Asset manifest written to %s", output_file)
 
     return manifest

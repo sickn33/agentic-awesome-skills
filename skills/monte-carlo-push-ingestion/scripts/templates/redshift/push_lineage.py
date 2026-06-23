@@ -30,6 +30,7 @@ from pycarlo.features.ingestion.models import (
     LineageAssetRef,
     LineageEvent,
 )
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -68,8 +69,7 @@ def push(
 
     Returns a summary dict with invocation IDs and counts.
     """
-    with open(manifest_path) as fh:
-        manifest = json.load(fh)
+    manifest = read_json_file(manifest_path)
 
     event_dicts: list[dict[str, Any]] = manifest["events"]
     events = [_event_from_dict(d) for d in event_dicts]
@@ -87,8 +87,7 @@ def push(
             "batch_size": batch_size,
         }
         push_manifest_path = manifest_path.replace(".json", "_push_result.json")
-        with open(push_manifest_path, "w") as fh:
-            json.dump(summary, fh, indent=2)
+        write_json_file(push_manifest_path, summary)
         return summary
 
     # Split into batches
@@ -144,8 +143,7 @@ def push(
     }
 
     push_manifest_path = manifest_path.replace(".json", "_push_result.json")
-    with open(push_manifest_path, "w") as fh:
-        json.dump(summary, fh, indent=2)
+    write_json_file(push_manifest_path, summary)
     log.info("Push result written to %s", push_manifest_path)
 
     return summary

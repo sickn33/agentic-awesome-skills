@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 import psycopg2
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -55,9 +56,10 @@ def validate_redshift_host(host: str, *, allow_private: bool = False) -> str:
         address = ipaddress.ip_address(value)
     except ValueError:
         if hostname in allowed_hosts:
-            return value
-        if _ALLOWED_REDSHIFT_HOST_RE.fullmatch(hostname):
-            return value
+            return hostname
+        match = _ALLOWED_REDSHIFT_HOST_RE.fullmatch(hostname)
+        if match:
+            return match.group(0)
         raise ValueError(
             "Redshift host must be an AWS Redshift endpoint or be listed in REDSHIFT_ALLOWED_HOSTS"
         )
@@ -73,7 +75,7 @@ def validate_redshift_host(host: str, *, allow_private: bool = False) -> str:
     )
     if blocked:
         raise ValueError(f"Redshift host address is not allowed: {host!r}")
-    return value
+    return str(address)
 
 
 def _bounded_int(value: int, field: str, *, minimum: int, maximum: int) -> int:
@@ -252,8 +254,7 @@ def collect(
         "lineage_event_count": len(all_events),
         "events": all_events,
     }
-    with open(manifest_path, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(manifest_path, manifest)
     log.info("Manifest written to %s (%d events)", manifest_path, len(all_events))
 
     return all_events
@@ -261,7 +262,6 @@ def collect(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Redshift lineage to a manifest file")
-    parser.add_argument("--host", default=os.getenv("REDSHIFT_HOST"))         # ← SUBSTITUTE
     parser.add_argument("--db", default=os.getenv("REDSHIFT_DB"))             # ← SUBSTITUTE
     parser.add_argument("--user", default=os.getenv("REDSHIFT_USER"))         # ← SUBSTITUTE
     parser.add_argument("--password", default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
@@ -270,13 +270,21 @@ def main() -> None:
     parser.add_argument("--manifest", default="manifest_lineage.json")
     args = parser.parse_args()
 
-    required = ["host", "db", "user", "password"]
+    required = ["db", "user", "password"]
     missing = [k for k in required if getattr(args, k) is None]
     if missing:
         parser.error(f"Missing required arguments/env vars: {missing}")
 
+    redshift_host = os.getenv("REDSHIFT_HOST")
+    if not redshift_host:
+        parser.error("Missing required env var: REDSHIFT_HOST")
+    redshift_host = validate_redshift_host(
+        redshift_host,
+        allow_private=os.getenv("REDSHIFT_ALLOW_PRIVATE_HOST", "").lower() in {"1", "true", "yes"},
+    )
+
     collect(
-        host=args.host,
+        host=redshift_host,
         db=args.db,
         user=args.user,
         password=args.password,

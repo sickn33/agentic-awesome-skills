@@ -29,6 +29,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from databricks import sql
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -211,8 +212,7 @@ def collect(
         "column_lineage_events": len(col_events),
         "events": all_events,
     }
-    with open(manifest_path, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(manifest_path, manifest)
     log.info("Manifest written to %s (%d events)", manifest_path, len(all_events))
 
     return all_events

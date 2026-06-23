@@ -43,6 +43,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
 import snowflake.connector
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
 # ← SUBSTITUTE: set RESOURCE_TYPE to match your Monte Carlo connection type
 RESOURCE_TYPE = "snowflake"
@@ -251,8 +252,7 @@ def collect(
             "column_lineage": column_lineage,
             "edges": [],
         }
-        with open(output_file, "w") as fh:
-            json.dump(manifest, fh, indent=2)
+        write_json_file(output_file, manifest)
         return manifest
 
     edges = _parse_edges(rows)
@@ -281,8 +281,7 @@ def collect(
             for e in edges
         ],
     }
-    with open(output_file, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(output_file, manifest)
     print(f"Lineage manifest written to {output_file}")
 
     return manifest

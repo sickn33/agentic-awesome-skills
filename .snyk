@@ -1,0 +1,11 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+ignore: {}
+patch: {}
+exclude:
+  global:
+    - plugins/**:
+        reason: >-
+          Generated plugin mirrors duplicate canonical skills; scan canonical
+          skills/** sources instead.
+        created: 2026-06-23T04:44:17.255Z

@@ -29,6 +29,7 @@ import os
 
 from collect_metadata import _quote_identifier, collect
 from push_metadata import DEFAULT_BATCH_SIZE, push
+from _safe_paths import safe_output_json_path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -52,6 +53,8 @@ def main() -> None:
     if missing:
         parser.error(f"Missing required arguments/env vars: {missing}")
 
+    manifest_path = str(safe_output_json_path(args.manifest))
+
     _quote_identifier(args.catalog)
 
     log.info("Step 1: Collecting metadata …")
@@ -60,12 +63,12 @@ def main() -> None:
         http_path=args.http_path,
         token=args.token,
         catalog=args.catalog,
-        manifest_path=args.manifest,
+        manifest_path=manifest_path,
     )
 
     log.info("Step 2: Pushing metadata to Monte Carlo …")
     push(
-        manifest_path=args.manifest,
+        manifest_path=manifest_path,
         resource_uuid=args.resource_uuid,
         key_id=args.key_id,
         key_token=args.key_token,

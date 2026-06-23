@@ -22,15 +22,18 @@ import argparse
 import json
 import logging
 import os
+import re
 from datetime import datetime, timezone
 from typing import Any
 
 from databricks import sql
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
 RESOURCE_TYPE = "databricks"
+_SAFE_DATABRICKS_IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 # Schemas to skip across all catalogs
 SCHEMA_EXCLUSIONS: set[str] = {  # ← SUBSTITUTE: add any internal schemas to skip
@@ -43,6 +46,10 @@ def _quote_identifier(identifier: str) -> str:
     value = str(identifier).strip()
     if not value:
         raise ValueError("Identifier must not be empty")
+    if not _SAFE_DATABRICKS_IDENTIFIER_RE.fullmatch(value):
+        raise ValueError(
+            "Databricks identifier contains characters outside the safe default set"
+        )
     return "`" + value.replace("`", "``") + "`"
 
 
@@ -196,8 +203,7 @@ def collect(
         "asset_count": len(assets),
         "assets": assets,
     }
-    with open(manifest_path, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(manifest_path, manifest)
     log.info("Manifest written to %s (%d assets)", manifest_path, len(assets))
 
     return assets

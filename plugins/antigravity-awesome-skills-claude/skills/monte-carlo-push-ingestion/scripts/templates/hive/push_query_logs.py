@@ -39,6 +39,7 @@ from dateutil.parser import isoparse
 from pycarlo.core import Client, Session
 from pycarlo.features.ingestion import IngestionService
 from pycarlo.features.ingestion.models import QueryLogEntry
+from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 # ← SUBSTITUTE: default batch size for query log push (events per request)
 # Query logs include full SQL text — keep batches small to stay under the 1 MB
@@ -233,8 +234,7 @@ def main() -> None:
     if not args.key_id or not args.key_token:
         parser.error("--key-id and --key-token are required (or set MCD_INGEST_ID / MCD_INGEST_TOKEN)")
 
-    with open(args.input_file) as fh:
-        manifest = json.load(fh)
+    manifest = read_json_file(args.input_file)
 
     push(
         manifest=manifest,
@@ -245,8 +245,7 @@ def main() -> None:
         timeout_seconds=args.timeout,
     )
 
-    with open(args.input_file, "w") as fh:
-        json.dump(manifest, fh, indent=2)
+    write_json_file(args.input_file, manifest)
     print(f"Manifest updated in-place: {args.input_file}")
     print("Done.")
 
