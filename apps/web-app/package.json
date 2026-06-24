@@ -22,7 +22,7 @@
     "@supabase/supabase-js": "^2.98.0",
     "clsx": "^2.1.1",
     "express-rate-limit": "^8.5.2",
-    "framer-motion": "^12.34.2",
+    "framer-motion": "^12.40.0",
     "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.11.1",
     "react": "^19.2.0",
