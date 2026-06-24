@@ -25,7 +25,7 @@
     "framer-motion": "^12.34.2",
     "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.11.1",
-    "react": "^19.2.0",
+    "react": "^19.2.7",
     "react-dom": "^19.2.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.17.0",
