@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1681
+Total skills: 1682
 
 ## architecture (104)
 
@@ -779,7 +779,7 @@ Total skills: 1681
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (442)
+## general (443)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1170,6 +1170,7 @@ Total skills: 1681
 | `super-code/scala` | Language-specific super-code guidelines for scala. | super, code/scala | super, code/scala, scala, language, specific, code, guidelines |
 | `super-code/swift` | Language-specific super-code guidelines for swift. | super, code/swift | super, code/swift, swift, language, specific, code, guidelines |
 | `superpowers-lab` | Lab environment for Claude superpowers | superpowers, lab | superpowers, lab, environment, claude |
+| `surgical-fix` | Fix bugs, errors, and crashes using a strict 4-phase protocol (diagnose, declare, change, verify) to prevent silent regressions. | surgical, fix | surgical, fix, bugs, errors, crashes, strict, phase, protocol, diagnose, declare, change, verify |
 | `swift-concurrency-expert` | Review and fix Swift concurrency issues such as actor isolation and Sendable violations. | swift, concurrency | swift, concurrency, review, fix, issues, such, actor, isolation, sendable, violations |
 | `swiftui-liquid-glass` | Implement or review SwiftUI Liquid Glass APIs with correct fallbacks and modifier order. | swiftui, liquid, glass | swiftui, liquid, glass, review, apis, correct, fallbacks, modifier, order |
 | `swiftui-performance-audit` | Audit SwiftUI performance issues from code review and profiling evidence. | swiftui, performance, audit | swiftui, performance, audit, issues, code, review, profiling, evidence |

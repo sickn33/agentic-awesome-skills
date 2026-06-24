@@ -28134,6 +28134,25 @@
       "runtime_files": []
     },
     {
+      "id": "surgical-fix",
+      "path": "skills/surgical-fix",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "survey-generator",
       "path": "skills/survey-generator",
       "targets": {
@@ -32286,10 +32305,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1681,
+    "total_skills": 1682,
     "supported": {
-      "codex": 1621,
-      "claude": 1639
+      "codex": 1622,
+      "claude": 1640
     },
     "blocked": {
       "codex": 60,

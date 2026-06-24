@@ -31970,6 +31970,28 @@
     }
   },
   {
+    "id": "surgical-fix",
+    "path": "skills/surgical-fix",
+    "category": "uncategorized",
+    "name": "surgical-fix",
+    "description": "Fix bugs, errors, and crashes using a strict 4-phase protocol (diagnose, declare, change, verify) to prevent silent regressions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "survey-generator",
     "path": "skills/survey-generator",
     "category": "research",
