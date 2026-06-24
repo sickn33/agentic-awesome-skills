@@ -36,6 +36,6 @@ assert.ok(
 );
 assert.strictEqual(
   packageJson.dependencies?.yaml,
-  "^2.8.2",
+  "^2.9.0",
   "published package must declare yaml as a runtime dependency for the installer",
 );

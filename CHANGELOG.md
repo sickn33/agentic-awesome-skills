@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- Added **infinity**, a community defensive input-boundary skill for detecting, classifying, filtering, and verifying untrusted data entry points (PR #733).
+
+## Changed
+
+- Updated runtime and example dependencies from the Snyk maintenance batch: `yaml`, Loki example `better-sqlite3`, `cors`, and `express-rate-limit`.
+- Reverted **surgical-fix** after maintainer review found it overlapped existing debugging protocol skills; the useful ideas should land as focused improvements to existing skills instead of a duplicate standalone skill (PR #732).
+
 ## [13.1.1] - 2026-06-23 - "Security Scan Hardening"
 
 > Patch release for the June 23 Snyk and GitHub code-scanning cleanup.

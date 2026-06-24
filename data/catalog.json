@@ -21056,6 +21056,30 @@
       "path": "skills/infinite-gratitude/SKILL.md"
     },
     {
+      "id": "infinity",
+      "name": "infinity",
+      "description": "Enforces a strict input boundary protocol (detect, classify, filter, verify) to ensure untrusted data never reaches business logic raw.",
+      "category": "data-ai",
+      "tags": [
+        "infinity"
+      ],
+      "triggers": [
+        "infinity",
+        "enforces",
+        "strict",
+        "input",
+        "boundary",
+        "protocol",
+        "detect",
+        "classify",
+        "filter",
+        "verify",
+        "untrusted",
+        "data"
+      ],
+      "path": "skills/infinity/SKILL.md"
+    },
+    {
       "id": "ingest-youtube",
       "name": "ingest-youtube",
       "description": "Pull a YouTube video transcript into a queryable markdown vault with yt-dlp subtitle discovery, VTT cleanup, metadata frontmatter, and capture-seed stubs.",
@@ -36369,31 +36393,6 @@
         "surface"
       ],
       "path": "skills/supply-chain-risk-auditor/SKILL.md"
-    },
-    {
-      "id": "surgical-fix",
-      "name": "surgical-fix",
-      "description": "Fix bugs, errors, and crashes using a strict 4-phase protocol (diagnose, declare, change, verify) to prevent silent regressions.",
-      "category": "general",
-      "tags": [
-        "surgical",
-        "fix"
-      ],
-      "triggers": [
-        "surgical",
-        "fix",
-        "bugs",
-        "errors",
-        "crashes",
-        "strict",
-        "phase",
-        "protocol",
-        "diagnose",
-        "declare",
-        "change",
-        "verify"
-      ],
-      "path": "skills/surgical-fix/SKILL.md"
     },
     {
       "id": "survey-generator",

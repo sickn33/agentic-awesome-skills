@@ -18273,6 +18273,28 @@
     }
   },
   {
+    "id": "infinity",
+    "path": "skills/infinity",
+    "category": "uncategorized",
+    "name": "infinity",
+    "description": "Enforces a strict input boundary protocol (detect, classify, filter, verify) to ensure untrusted data never reaches business logic raw.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ingest-youtube",
     "path": "skills/ingest-youtube",
     "category": "uncategorized",
@@ -31956,28 +31978,6 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "surgical-fix",
-    "path": "skills/surgical-fix",
-    "category": "uncategorized",
-    "name": "surgical-fix",
-    "description": "Fix bugs, errors, and crashes using a strict 4-phase protocol (diagnose, declare, change, verify) to prevent silent regressions.",
-    "risk": "safe",
-    "source": "community",
-    "date_added": "2026-06-23",
     "plugin": {
       "targets": {
         "codex": "supported",

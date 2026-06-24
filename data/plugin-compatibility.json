@@ -16249,6 +16249,25 @@
       "runtime_files": []
     },
     {
+      "id": "infinity",
+      "path": "skills/infinity",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ingest-youtube",
       "path": "skills/ingest-youtube",
       "targets": {
@@ -28117,25 +28136,6 @@
     {
       "id": "supply-chain-risk-auditor",
       "path": "skills/supply-chain-risk-auditor",
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": [],
-      "blocked_reasons": {
-        "codex": [],
-        "claude": []
-      },
-      "runtime_files": []
-    },
-    {
-      "id": "surgical-fix",
-      "path": "skills/surgical-fix",
       "targets": {
         "codex": "supported",
         "claude": "supported"
