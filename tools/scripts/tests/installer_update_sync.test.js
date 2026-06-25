@@ -77,7 +77,7 @@ try {
   assert.ok(fs.existsSync(path.join(targetDir, "nested", "skill-c", "SKILL.md")));
   assert.deepStrictEqual(
     readManifestEntries(targetDir),
-    ["docs", "nested/skill-c"],
+    ["docs", path.join("nested", "skill-c")],
     "install manifest should mirror the latest filtered install entries",
   );
 
@@ -109,7 +109,7 @@ try {
   );
   assert.deepStrictEqual(
     readManifestEntries(legacyTargetDir),
-    ["docs", "nested/skill-c"],
+    ["docs", path.join("nested", "skill-c")],
     "legacy manifest entries should be normalized after update",
   );
 
