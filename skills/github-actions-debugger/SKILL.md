@@ -78,7 +78,7 @@ Error: API Key is required for deployment. Process exited with code 1.
 
 ## Security & Safety Notes
 
-- **Credential Exposure**: Never output raw secrets, API tokens, or private keys if they appear in logs. Recommend using masking (`::add-mask::`) or GitHub Secrets environment variables.
+- **Credential Exposure & Raw Log Redaction**: Under no circumstances should raw logs containing unmasked secrets, private URLs, deployment targets, or tokens be processed without prior redaction. Always ensure the user or agent redacts all sensitive info before ingestion.
 - **Dry-Run Mode**: When recommending modifications to bash script steps inside workflows, ensure you suggest adding flags like `--dry-run` or staging execution where possible to prevent unintended side effects in downstream environments during debugging.
 
 ## Limitations
@@ -86,6 +86,12 @@ Error: API Key is required for deployment. Process exited with code 1.
 - The skill cannot securely read repository secrets. It can only infer missing or malformed secrets if the log complains about undefined environment variables or authentication failures.
 - It cannot execute the GitHub action itself to test the fix; validation requires pushing the proposed fix to the repository and triggering a workflow run.
 - Network-related transient failures (e.g., a package registry being down temporarily) might be incorrectly diagnosed as structural workflow issues if not carefully analyzed.
+
+## Common Pitfalls
+
+- **Ignoring Transient Failures**: Mistaking temporary network dropouts or registry downtime (e.g., npm or pip install errors) for actual code or configuration bugs. Always check if a rerun succeeds before attempting heavy changes.
+- **Hardcoding Tokens**: Fixing authentication errors by hardcoding secrets or API tokens directly into the YAML files instead of utilizing GitHub Secrets (`${{ secrets.SECRET_NAME }}`).
+- **Overlooking Caching Side Effects**: Forgetting that outdated cache keys can keep corrupt dependencies loaded. If dependency installation is failing, try running a job with actions caching bypassed.
 
 ## Related Skills
 
