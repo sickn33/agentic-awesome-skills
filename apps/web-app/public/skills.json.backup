@@ -13145,6 +13145,28 @@
     }
   },
   {
+    "id": "emil-design-eng",
+    "path": "skills/emil-design-eng",
+    "category": "frontend",
+    "name": "emil-design-eng",
+    "description": "Use when designing or reviewing polished product UI with Emil Kowalski-inspired animation, interaction, and component craft guidance.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "emotional-arc-designer",
     "path": "skills/emotional-arc-designer",
     "category": "uncategorized",
@@ -27640,6 +27662,28 @@
     "risk": "offensive",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "review-animations",
+    "path": "skills/review-animations",
+    "category": "frontend",
+    "name": "review-animations",
+    "description": "Use when reviewing animation and motion code against a strict craft, performance, accessibility, and interaction-quality bar.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-25",
     "plugin": {
       "targets": {
         "codex": "supported",

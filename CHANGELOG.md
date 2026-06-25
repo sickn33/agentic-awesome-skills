@@ -9,14 +9,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.2.0] - 2026-06-25 - "Design Engineering and Web Dependency Refresh"
+
+> Community skill intake and maintainer dependency release for the 1,684+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1684-skills](README.md#browse-1684-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release packages the June 24-25 maintainer batch: Snyk dependency PRs, two Emil Kowalski design-engineering skills, generated registry sync, plugin mirror updates, and public SEO metadata refresh.
+
 ## Added
 
 - Added **infinity**, a community defensive input-boundary skill for detecting, classifying, filtering, and verifying untrusted data entry points (PR #733).
+- Added **emil-design-eng** from [emilkowalski/skills](https://github.com/emilkowalski/skills), a design engineering skill for UI polish, animation decisions, component craft, and interaction detail.
+- Added **review-animations** from [emilkowalski/skills](https://github.com/emilkowalski/skills), a strict motion-review skill with a dedicated `STANDARDS.md` reference for easing, duration, physicality, performance, gestures, and accessibility.
 
 ## Changed
 
 - Updated runtime and example dependencies from the Snyk maintenance batch: `yaml`, Loki example `better-sqlite3`, `cors`, and `express-rate-limit`.
+- Merged the web-app Snyk dependency batch: `@supabase/supabase-js` 2.107.0 (PR #738), `framer-motion` 12.40.0 (PR #739), `tailwind-merge` 3.6.0 (PR #740), `react-virtuoso` 4.18.7 (PR #741), and React 19.2.7 with React DOM aligned to 19.2.7 (PR #742 plus maintainer fix).
 - Reverted **surgical-fix** after maintainer review found it overlapped existing debugging protocol skills; the useful ideas should land as focused improvements to existing skills instead of a duplicate standalone skill (PR #732).
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, contributor/source metadata, sitemap, `llms.txt`, and public social-card metadata for the 1,684+ skill catalog.
+
+## Validation
+
+- Verified repository validation, warning budget, source credits, root script tests, documentation security checks, web app tests, web app production build, SEO asset verification, and production dependency audits.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #733 (`infinity`) and the reverted PR #732 follow-up review context.
+- **[emilkowalski/skills](https://github.com/emilkowalski/skills)** and Emil Kowalski for the imported design-engineering and animation-review skills.
+- **Snyk** and maintainer automation for PRs #738, #739, #740, #741, and #742.
 
 ## [13.1.1] - 2026-06-23 - "Security Scan Hardening"
 

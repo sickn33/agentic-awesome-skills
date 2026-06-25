@@ -11875,6 +11875,25 @@
       "runtime_files": []
     },
     {
+      "id": "emil-design-eng",
+      "path": "skills/emil-design-eng",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "emotional-arc-designer",
       "path": "skills/emotional-arc-designer",
       "targets": {
@@ -24161,6 +24180,25 @@
       "runtime_files": []
     },
     {
+      "id": "review-animations",
+      "path": "skills/review-animations",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "revops",
       "path": "skills/revops",
       "targets": {
@@ -32305,10 +32343,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1682,
+    "total_skills": 1684,
     "supported": {
-      "codex": 1622,
-      "claude": 1640
+      "codex": 1624,
+      "claude": 1642
     },
     "blocked": {
       "codex": 60,

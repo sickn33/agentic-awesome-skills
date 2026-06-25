@@ -2,7 +2,7 @@
 
 Generated at: 2026-02-08T00:00:00.000Z
 
-Total skills: 1682
+Total skills: 1684
 
 ## architecture (104)
 
@@ -521,7 +521,7 @@ Total skills: 1682
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (234)
+## development (236)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -609,6 +609,7 @@ Total skills: 1682
 | `dotnet-architect` | Expert .NET backend architect specializing in C#, ASP.NET Core, Entity Framework, Dapper, and enterprise application patterns. | dotnet | dotnet, architect, net, backend, specializing, asp, core, entity, framework, dapper, enterprise, application |
 | `dotnet-backend-patterns` | Master C#/.NET patterns for building production-grade APIs, MCP servers, and enterprise backends with modern best practices (2024/2025). | dotnet, backend | dotnet, backend, net, building, grade, apis, mcp, servers, enterprise, backends, 2024, 2025 |
 | `emblemai-crypto-wallet` | Crypto wallet management across 7 blockchains via EmblemAI Agent Hustle API. Balance checks, token swaps, portfolio analysis, and transaction execution for S... | emblemai, crypto, wallet | emblemai, crypto, wallet, blockchains, via, agent, hustle, api, balance, checks, token, swaps |
+| `emil-design-eng` | Use when designing or reviewing polished product UI with Emil Kowalski-inspired animation, interaction, and component craft guidance. | frontend, design, ui, animation, motion | frontend, design, ui, animation, motion, emil, eng, designing, reviewing, polished, product, kowalski |
 | `exa-search` | Semantic search, similar content discovery, and structured research using Exa API. Use when you need semantic/embeddings-based search, finding similar conten... | exa, search | exa, search, semantic, similar, content, discovery, structured, research, api, embeddings, finding, searching |
 | `expo-api-routes` | Guidelines for creating API routes in Expo Router with EAS Hosting | expo, api, routes | expo, api, routes, guidelines, creating, router, eas, hosting |
 | `expo-tailwind-setup` | Set up Tailwind CSS v4 in Expo with react-native-css and NativeWind v5 for universal styling | expo, tailwind, setup | expo, tailwind, setup, set, up, css, v4, react, native, nativewind, v5, universal |
@@ -706,6 +707,7 @@ Total skills: 1682
 | `redesign-existing-projects` | Use when upgrading existing websites or apps by auditing generic UI patterns and applying premium design fixes without rewrites. | frontend, redesign, design-audit, ui | frontend, redesign, design-audit, ui, existing, upgrading, websites, apps, auditing, generic, applying, premium |
 | `reference-builder` | Creates exhaustive technical references and API documentation. Generates comprehensive parameter listings, configuration guides, and searchable reference mat... | reference, builder | reference, builder, creates, exhaustive, technical, references, api, documentation, generates, parameter, listings, configuration |
 | `remotion-best-practices` | Best practices for Remotion - Video creation in React | remotion, video, react, animation, composition | remotion, video, react, animation, composition, creation |
+| `review-animations` | Use when reviewing animation and motion code against a strict craft, performance, accessibility, and interaction-quality bar. | frontend, animation, motion, review, accessibility | frontend, animation, motion, review, accessibility, animations, reviewing, code, against, strict, craft, performance |
 | `ruby-pro` | Write idiomatic Ruby code with metaprogramming, Rails patterns, and performance optimization. Specializes in Ruby on Rails, gem development, and testing fram... | ruby | ruby, pro, write, idiomatic, code, metaprogramming, rails, performance, optimization, specializes, gem, development |
 | `rust-async-patterns` | Master Rust async programming with Tokio, async traits, error handling, and concurrent patterns. Use when building async Rust applications, implementing conc... | rust, async | rust, async, programming, tokio, traits, error, handling, concurrent, building, applications, implementing, debugging |
 | `rust-pro` | Master Rust 1.75+ with modern async patterns, advanced type system features, and production-ready systems programming. | rust | rust, pro, 75, async, type, features, programming |

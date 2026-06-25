@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-02-08T00:00:00.000Z",
-  "total": 1682,
+  "total": 1684,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -15401,6 +15401,34 @@
         "json"
       ],
       "path": "skills/emergency-card/SKILL.md"
+    },
+    {
+      "id": "emil-design-eng",
+      "name": "emil-design-eng",
+      "description": "Use when designing or reviewing polished product UI with Emil Kowalski-inspired animation, interaction, and component craft guidance.",
+      "category": "development",
+      "tags": [
+        "frontend",
+        "design",
+        "ui",
+        "animation",
+        "motion"
+      ],
+      "triggers": [
+        "frontend",
+        "design",
+        "ui",
+        "animation",
+        "motion",
+        "emil",
+        "eng",
+        "designing",
+        "reviewing",
+        "polished",
+        "product",
+        "kowalski"
+      ],
+      "path": "skills/emil-design-eng/SKILL.md"
     },
     {
       "id": "emotional-arc-designer",
@@ -31302,6 +31330,34 @@
         "ghidra"
       ],
       "path": "skills/reverse-engineer/SKILL.md"
+    },
+    {
+      "id": "review-animations",
+      "name": "review-animations",
+      "description": "Use when reviewing animation and motion code against a strict craft, performance, accessibility, and interaction-quality bar.",
+      "category": "development",
+      "tags": [
+        "frontend",
+        "animation",
+        "motion",
+        "review",
+        "accessibility"
+      ],
+      "triggers": [
+        "frontend",
+        "animation",
+        "motion",
+        "review",
+        "accessibility",
+        "animations",
+        "reviewing",
+        "code",
+        "against",
+        "strict",
+        "craft",
+        "performance"
+      ],
+      "path": "skills/review-animations/SKILL.md"
     },
     {
       "id": "revops",
