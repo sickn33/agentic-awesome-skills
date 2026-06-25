@@ -27,6 +27,7 @@ Accepted headings: `## When to Use`, `## Use this skill when`, `## When to Use T
 
 Every skill must declare its risk level:
 
+- ⚪ **unknown**: Legacy or unclassified content. Avoid this for new skills unless maintainer triage is genuinely needed.
 - 🟢 **none**: Pure text/reasoning (e.g., Brainstorming).
 - 🔵 **safe**: Reads files, runs safe commands (e.g., Linter).
 - 🟠 **critical**: Modifies state, deletes files, pushes to prod (e.g., Git Push).

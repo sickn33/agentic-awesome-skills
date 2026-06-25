@@ -719,6 +719,25 @@ function renderCatalogMarkdown(catalog) {
   return lines.join("\n");
 }
 
+function readCatalogGeneratedAt() {
+  if (process.env.SOURCE_DATE_EPOCH) {
+    return new Date(process.env.SOURCE_DATE_EPOCH * 1000).toISOString();
+  }
+
+  const readmePath = path.join(ROOT, "README.md");
+  try {
+    const readme = fs.readFileSync(readmePath, "utf8");
+    const match = readme.match(/<!-- registry-sync: .*?updated_at=([^ ]+) -->/);
+    if (match) {
+      return new Date(match[1]).toISOString();
+    }
+  } catch {
+    // Keep catalog builds available in minimal fixtures without README.md.
+  }
+
+  return "2026-02-08T00:00:00.000Z";
+}
+
 function buildCatalog() {
   const skillRelPaths = listSkillIdsRecursive(SKILLS_DIR);
   const skills = skillRelPaths.map((relPath) => readSkill(SKILLS_DIR, relPath));
@@ -742,9 +761,7 @@ function buildCatalog() {
   }
 
   const catalog = {
-    generatedAt: process.env.SOURCE_DATE_EPOCH
-      ? new Date(process.env.SOURCE_DATE_EPOCH * 1000).toISOString()
-      : "2026-02-08T00:00:00.000Z",
+    generatedAt: readCatalogGeneratedAt(),
     total: catalogSkills.length,
     skills: catalogSkills.sort((a, b) =>
       a.id < b.id ? -1 : a.id > b.id ? 1 : 0,

@@ -103,11 +103,11 @@ No. The public site is a static GitHub Pages deploy.
 
 We classify skills so you know what you're running. These values map directly to the `risk:` field in every `SKILL.md` frontmatter:
 
-- 🔵 **`none`**: Pure reference or planning content — no shell commands, no mutations, no network access.
-- ⚪ **`safe`**: Community skills that are non-destructive (read-only, planning, code review, analysis).
-- 🔴 **`critical`**: Skills that modify files, drop data, use network scanners, or perform destructive actions. **Use with caution.**
-- 🟣 **`offensive`**: Security-focused offensive techniques (pentesting, exploitation). **Authorized use only** — always confirm the target is in scope.
-- ⬜ **`unknown`**: Legacy or unclassified content. Review the skill manually before use.
+- ⚪ **`unknown`**: Legacy or unclassified content. Review the skill manually before use.
+- 🟢 **`none`**: Pure reference or planning content — no shell commands, no mutations, no network access.
+- 🔵 **`safe`**: Non-destructive guidance such as read-only commands, planning, code review, and analysis.
+- 🟠 **`critical`**: Skills that modify files, drop data, use network scanners, or perform destructive actions. **Use with caution.**
+- 🔴 **`offensive`**: Security-focused offensive techniques (pentesting, exploitation). **Authorized use only** — always confirm the target is in scope.
 
 ### Can these skills hack my computer?
 

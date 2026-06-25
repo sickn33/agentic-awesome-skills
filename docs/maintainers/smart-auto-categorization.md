@@ -9,7 +9,7 @@ The skill collection now uses intelligent auto-categorization to eliminate "unca
 ✅ Current repository indexed through the generated catalog
 - Most skills are in meaningful categories
 - A smaller tail still needs manual review or better keyword coverage
-- 11 primary categories
+- 13 primary categories
 - Categories sorted by skill count (most first)
 
 ## Category Distribution

@@ -12,7 +12,7 @@ Phần frontmatter trong `SKILL.md` phải là mã YAML hợp lệ và chứa:
 
 - `name`: Định dạng Kebab-case, khớp với tên thư mục.
 - `description`: Dưới 200 ký tự, nêu rõ giá trị mang lại.
-- `risk`: Thuộc một trong các loại `[none, safe, critical, offensive]`.
+- `risk`: Thuộc một trong các loại `[none, safe, critical, offensive, unknown]`. Chỉ dùng `unknown` cho nội dung cũ hoặc chưa được phân loại; skill mới nên dùng mức cụ thể.
 - `source`: URL dẫn đến nguồn gốc (hoặc "self" nếu là nội dung gốc).
 
 ### 2. Điều kiện kích hoạt rõ ràng ("Khi nào nên dùng")
@@ -26,6 +26,7 @@ Skill BẮT BUỘC phải có một phần nêu rõ thời điểm nên kích ho
 
 Mỗi skill phải khai báo mức độ rủi ro của nó:
 
+- ⚪ **unknown**: Nội dung cũ hoặc chưa được phân loại. Tránh dùng cho skill mới trừ khi thật sự cần maintainer phân loại.
 - 🟢 **none**: Chỉ là văn bản/tư duy thuần túy (ví dụ: Brainstorming).
 - 🔵 **safe**: Đọc file, chạy các lệnh an toàn (ví dụ: Linter).
 - 🟠 **critical**: Sửa đổi trạng thái, xóa file, push lên môi trường production (ví dụ: Git Push).

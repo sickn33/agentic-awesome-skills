@@ -80,9 +80,17 @@ A: 详细回答...
 - `name`: 技能名称（小写，连字符分隔）
 - `description`: 一句话技能描述（200字符以内，以中文引号包围）
 - `category`: 技能分类（见下方分类列表）
-- `risk`: 风险级别（safe/medium/high）
-- `source`: 来源（community/official）
+- `risk`: 风险级别（none/safe/critical/offensive/unknown）
+- `source`: 来源（community/official/self）
 - `date_added`: 添加日期（YYYY-MM-DD格式）
+
+**外部 GitHub 来源必需字段：**
+
+- `source_repo`: 上游仓库（OWNER/REPO）
+- `source_type`: README 来源致谢分组（official/community/self）
+
+**可选字段：**
+
 - `author`: 作者名称或handle
 - `tags`: 标签列表（最大5个）
 - `tools`: 支持的工具列表（claude/cursor/gemini/codex/antigravity等）
@@ -144,20 +152,25 @@ tools: [claude, cursor, gemini]
 
 ### ⚠️ 风险级别定义
 
+**unknown（未知）：**
+- 遗留或未分类内容；新技能应尽量避免使用
+
+**none（无风险）：**
+- 纯文本或推理指导
+
 **safe（安全）：**
 - 代码审查和设计建议
 - 文档编写和规范指导
-- 标准操作流程
+- 只读命令或低风险操作流程
 
-**medium（中等）：**
+**critical（关键）：**
 - 系统修改和配置更改
 - 数据处理和转换
 - 自动化脚本执行
 
-**high（高风险）：**
-- 数据库修改和删除操作
-- 生产环境更改
-- 安全相关操作
+**offensive（进攻性）：**
+- Pentesting 或 red-team 技术
+- 必须包含 Authorized Use Only 警告
 
 ### 🏷️ 标签规范
 

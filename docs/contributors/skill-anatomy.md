@@ -45,10 +45,12 @@ The frontmatter is at the very top, wrapped in `---`:
 ---
 name: my-skill-name
 description: "Brief description of what this skill does"
+category: development
 risk: safe
 source: community
 source_repo: owner/repo
 source_type: community
+date_added: "YYYY-MM-DD"
 ---
 ```
 
@@ -65,6 +67,12 @@ source_type: community
 - **Format:** String in quotes
 - **Length:** Keep it under 200 characters
 - **Example:** `"Stripe payment integration patterns including checkout, subscriptions, and webhooks"`
+
+#### `category`
+- **What it is:** Primary grouping used by generated indexes and catalog surfaces
+- **Format:** Lowercase category label
+- **Example:** `category: development`
+- **Note:** Tooling can infer a category for legacy skills, but new skills should declare one explicitly.
 
 #### `risk`
 - **What it is:** The safety classification of the skill
@@ -95,6 +103,12 @@ source_type: community
 - **Examples:** `source_type: official`, `source_type: community`
 - **Rule:** `self` means no external README repo credit is required
 
+#### `date_added`
+- **What it is:** Date the skill entered this repository
+- **Format:** `YYYY-MM-DD`
+- **Example:** `date_added: "2026-03-06"`
+- **Note:** Validation treats this as advisory for legacy content, but new contributions should include it.
+
 ### Optional Fields
 
 Some skills include additional metadata:
@@ -103,10 +117,12 @@ Some skills include additional metadata:
 ---
 name: my-skill-name
 description: "Brief description"
+category: development
 risk: safe
 source: community
 source_repo: owner/repo
 source_type: community
+date_added: "YYYY-MM-DD"
 author: "your-name-or-handle"
 tags: ["react", "typescript", "testing"]
 tools: [claude, cursor, gemini]
@@ -355,17 +371,17 @@ references/
 ## Skill Size Guidelines
 
 ### Minimum Viable Skill
-- **Frontmatter:** name + description
+- **Frontmatter:** standard fields (`name`, `description`, `category`, `risk`, `source`, `date_added`)
 - **Content:** 100-200 words
 - **Sections:** Overview + Instructions
 
 ### Standard Skill
-- **Frontmatter:** name + description
+- **Frontmatter:** standard fields (`name`, `description`, `category`, `risk`, `source`, `date_added`)
 - **Content:** 300-800 words
 - **Sections:** Overview + When to Use + Instructions + Examples
 
 ### Comprehensive Skill
-- **Frontmatter:** name + description + optional fields
+- **Frontmatter:** standard fields plus `source_repo`/`source_type` for external GitHub-derived skills and optional fields where useful
 - **Content:** 800-2000 words
 - **Sections:** All recommended sections
 - **Extras:** Scripts, examples, templates

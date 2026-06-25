@@ -41,15 +41,17 @@ Bản thân các file skill được lưu trữ cục bộ trên máy tính củ
 
 ---
 
-## 🔒 Bảo mật & Tin cậy (Cập nhật V4)
+## 🔒 Bảo mật & Tin cậy
 
 ### Các Nhãn rủi ro (Risk Labels) có ý nghĩa gì?
 
-Chúng tôi phân loại các kỹ năng để bạn biết mình đang chạy cái gì:
+Chúng tôi phân loại các kỹ năng để bạn biết mình đang chạy cái gì. Các giá trị này khớp trực tiếp với trường `risk:` trong frontmatter của mỗi `SKILL.md`:
 
-- ⚪ **Safe (Trắng/Xanh)**: Các kỹ năng chỉ đọc, lập kế hoạch hoặc vô hại.
-- 🔴 **Risk (Đỏ)**: Các kỹ năng sửa đổi file (xóa), sử dụng công cụ quét mạng, hoặc thực hiện các hành động có tính phá hủy. **Hãy sử dụng thận trọng.**
-- 🟣 **Official (Tím)**: Được duy trì bởi các nhà cung cấp tin cậy (Anthropic, DeepMind, v.v.).
+- ⚪ **`unknown`**: Nội dung cũ hoặc chưa được phân loại. Hãy xem xét skill thủ công trước khi dùng.
+- 🟢 **`none`**: Nội dung tham khảo hoặc lập kế hoạch thuần túy; không có lệnh shell, thay đổi trạng thái hoặc truy cập mạng.
+- 🔵 **`safe`**: Hướng dẫn không phá hủy như lệnh chỉ đọc, lập kế hoạch, review code hoặc phân tích.
+- 🟠 **`critical`**: Skill sửa đổi file, xóa dữ liệu, dùng công cụ quét mạng hoặc thực hiện hành động có thể phá hủy. **Hãy sử dụng thận trọng.**
+- 🔴 **`offensive`**: Kỹ thuật tấn công bảo mật như pentesting hoặc khai thác. **Chỉ dùng khi được cấp phép** và luôn xác nhận mục tiêu nằm trong phạm vi cho phép.
 
 ### Những kỹ năng này có thể hack máy tính của tôi không?
 

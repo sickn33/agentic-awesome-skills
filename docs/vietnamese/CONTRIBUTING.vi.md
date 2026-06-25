@@ -9,7 +9,7 @@ Với phiên bản V3, chúng tôi đã nâng cao các tiêu chuẩn về chất
 
 **Quan trọng đối với các skill mới:** Mỗi skill được gửi đi phải vượt qua **5 bước Kiểm tra Chất lượng** (xem `docs/vietnamese/QUALITY_BAR.md` để biết chi tiết):
 
-1.  **Siêu dữ liệu (Metadata)**: Phần Frontmatter chính xác (`name`, `description`).
+1.  **Siêu dữ liệu (Metadata)**: Phần frontmatter chính xác (`name`, `description`, `category`, `risk`, `source`, `date_added`; thêm `source_repo` và `source_type` cho skill bắt nguồn từ GitHub bên ngoài).
 2.  **An toàn (Safety)**: Không chứa các lệnh gây hại mà không có nhãn rủi ro ("Risk").
 3.  **Rõ ràng (Clarity)**: Có phần "Khi nào nên dùng" (When to use) rõ ràng.
 4.  **Ví dụ (Examples)**: Ít nhất một ví dụ sử dụng có thể sao chép và dùng được ngay.

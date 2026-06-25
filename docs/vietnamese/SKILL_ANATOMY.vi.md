@@ -304,19 +304,19 @@ references/
 
 ### Skill Tối giản (Minimum Viable Skill)
 
-- **Frontmatter:** name + description
+- **Frontmatter:** `name`, `description`, `category`, `risk`, `source`, `date_added`
 - **Nội dung:** 100-200 từ
 - **Các mục:** Tổng quan + Hướng dẫn
 
 ### Skill Tiêu chuẩn (Standard Skill)
 
-- **Frontmatter:** name + description
+- **Frontmatter:** `name`, `description`, `category`, `risk`, `source`, `date_added`
 - **Nội dung:** 300-800 từ
 - **Các mục:** Tổng quan + Khi nào sử dụng + Hướng dẫn + Ví dụ
 
 ### Skill Toàn diện (Comprehensive Skill)
 
-- **Frontmatter:** name + description + các trường tùy chọn
+- **Frontmatter:** các trường chuẩn ở trên, cộng `source_repo`/`source_type` khi skill bắt nguồn từ GitHub bên ngoài và các trường tùy chọn khi hữu ích
 - **Nội dung:** 800-2000 từ
 - **Các mục:** Đầy đủ tất cả các mục đề xuất
 - **Bổ sung:** Scripts, ví dụ, templates

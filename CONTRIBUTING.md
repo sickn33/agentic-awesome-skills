@@ -146,15 +146,21 @@ touch SKILL.md
 
 Every skill should start from the canonical template in [`docs/contributors/skill-template.md`](docs/contributors/skill-template.md).
 
-Minimum frontmatter:
+Contributor baseline frontmatter:
 
 ```markdown
 ---
 name: my-awesome-skill
 description: "Brief one-line description of what this skill does"
+category: development
 risk: safe
 source: community
+source_repo: owner/repo
+source_type: community
 date_added: "2026-03-06"
+author: your-name-or-handle
+tags: [tag-one, tag-two]
+tools: [claude, cursor, gemini]
 ---
 
 # Skill Title
@@ -162,6 +168,8 @@ date_added: "2026-03-06"
 ## Overview
 
 Explain what this skill does and when to use it.
+
+If the skill adapts material from an external GitHub repository, declare both `source_repo: owner/repo` and `source_type: official` or `source_type: community`. For original repository content, use `source: self` and `source_type: self`.
 
 ## When to Use This Skill
 
@@ -348,9 +356,15 @@ The canonical template now lives at [`docs/contributors/skill-template.md`](docs
 ---
 name: your-skill-name
 description: "One sentence describing what this skill does and when to use it"
+category: development
 risk: safe
 source: community
+source_repo: owner/repo
+source_type: community
 date_added: "2026-03-06"
+author: your-name-or-handle
+tags: [tag-one, tag-two]
+tools: [claude, cursor, gemini]
 ---
 
 # Your Skill Name
@@ -458,7 +472,8 @@ date_added: "2026-03-06"
 Before submitting your contribution:
 
 - [ ] My skill has a clear, descriptive name
-- [ ] The `SKILL.md` has proper frontmatter (`name`, `description`, `risk`, `source`, `date_added`)
+- [ ] The `SKILL.md` starts from the canonical template and includes proper frontmatter (`name`, `description`, `category`, `risk`, `source`, `date_added`)
+- [ ] External GitHub-derived skills declare `source_repo` and `source_type`; original repository content uses `source: self` and `source_type: self`
 - [ ] I've included examples
 - [ ] I've tested the skill with an AI assistant
 - [ ] I've run `npm run validate`

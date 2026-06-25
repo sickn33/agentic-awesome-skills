@@ -76,13 +76,15 @@ Sau khi cài đặt, bạn chỉ cần trò chuyện với AI một cách tự n
 
 ---
 
-## 🛡️ Sự tin cậy & An toàn (Mới trong bản V4)
+## 🛡️ Sự tin cậy & An toàn
 
-Chúng tôi phân loại các kỹ năng để bạn biết mình đang chạy những gì:
+Chúng tôi phân loại các kỹ năng để bạn biết mình đang chạy những gì. Các giá trị này khớp trực tiếp với trường `risk:` trong frontmatter của mỗi `SKILL.md`:
 
-- 🟣 **Official (Chính thức)**: Được duy trì bởi Anthropic/Google/Nhà cung cấp (Độ tin cậy cao).
-- 🔵 **Safe (An toàn)**: Các kỹ năng cộng đồng không gây hại (Chỉ đọc/Lập kế hoạch).
-- 🔴 **Risk (Rủi ro)**: Các kỹ năng sửa đổi hệ thống hoặc thực hiện kiểm thử bảo mật (Sử dụng khi được cấp phép).
+- ⚪ **`unknown`**: Nội dung cũ hoặc chưa được phân loại, vẫn cần maintainer phân loại.
+- 🟢 **`none`**: Hướng dẫn thuần văn bản hoặc lập luận.
+- 🔵 **`safe`**: Hướng dẫn chỉ đọc hoặc vận hành rủi ro thấp.
+- 🟠 **`critical`**: Hướng dẫn thay đổi trạng thái hoặc có thể ảnh hưởng đến triển khai.
+- 🔴 **`offensive`**: Hướng dẫn pentesting/red-team với cảnh báo Authorized Use Only rõ ràng.
 
 _Kiểm tra [Danh mục Skill (Skill Catalog)](../../CATALOG.md) để xem danh sách đầy đủ._
 
