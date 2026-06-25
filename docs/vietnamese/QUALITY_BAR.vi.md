@@ -12,8 +12,11 @@ Phần frontmatter trong `SKILL.md` phải là mã YAML hợp lệ và chứa:
 
 - `name`: Định dạng Kebab-case, khớp với tên thư mục.
 - `description`: Dưới 200 ký tự, nêu rõ giá trị mang lại.
+- `category`: Danh mục chính của skill.
 - `risk`: Thuộc một trong các loại `[none, safe, critical, offensive, unknown]`. Chỉ dùng `unknown` cho nội dung cũ hoặc chưa được phân loại; skill mới nên dùng mức cụ thể.
-- `source`: URL dẫn đến nguồn gốc (hoặc "self" nếu là nội dung gốc).
+- `source`: Nguồn gốc của skill.
+- `date_added`: Ngày thêm skill theo định dạng `YYYY-MM-DD`.
+- `source_repo` và `source_type`: Bắt buộc khi skill bắt nguồn từ repository GitHub bên ngoài.
 
 ### 2. Điều kiện kích hoạt rõ ràng ("Khi nào nên dùng")
 
@@ -58,8 +61,9 @@ Chúng tôi cũng phân loại skill dựa trên người duy trì chúng:
 
 ## Cách Xác thực Skill của bạn
 
-Chạy script xác thực trước khi gửi Pull Request (PR):
+Chạy validator trước khi gửi Pull Request (PR):
 
 ```bash
-python3 scripts/validate_skills.py --strict
+npm run validate
+npm run validate:strict
 ```

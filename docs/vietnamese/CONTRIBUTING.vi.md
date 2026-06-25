@@ -1,13 +1,13 @@
-# 🤝 Hướng dẫn Đóng góp - Phiên bản V3 Enterprise
+# 🤝 Hướng dẫn Đóng góp
 
 **Cảm ơn bạn đã muốn làm cho repository này trở nên tốt hơn!** Hướng dẫn này sẽ chỉ cho bạn chính xác cách thức đóng góp, ngay cả khi bạn là người mới đối với mã nguồn mở.  
-Với phiên bản V3, chúng tôi đã nâng cao các tiêu chuẩn về chất lượng. Vui lòng đọc kỹ **Tiêu chuẩn Chất lượng mới** bên dưới.
+Chúng tôi duy trì tiêu chuẩn chất lượng tự động cho skill và tài liệu. Vui lòng đọc kỹ **Quality Bar** bên dưới.
 
 ---
 
-## 🧐 "Quy chuẩn Chất lượng" (Quality Bar - Tiêu chuẩn V3)
+## 🧐 "Quy chuẩn Chất lượng" (Quality Bar)
 
-**Quan trọng đối với các skill mới:** Mỗi skill được gửi đi phải vượt qua **5 bước Kiểm tra Chất lượng** (xem `docs/vietnamese/QUALITY_BAR.md` để biết chi tiết):
+**Quan trọng đối với các skill mới:** Mỗi skill được gửi đi phải vượt qua **5 bước Kiểm tra Chất lượng** (xem `docs/vietnamese/QUALITY_BAR.vi.md` để biết chi tiết):
 
 1.  **Siêu dữ liệu (Metadata)**: Phần frontmatter chính xác (`name`, `description`, `category`, `risk`, `source`, `date_added`; thêm `source_repo` và `source_type` cho skill bắt nguồn từ GitHub bên ngoài).
 2.  **An toàn (Safety)**: Không chứa các lệnh gây hại mà không có nhãn rủi ro ("Risk").
@@ -81,6 +81,9 @@ Mỗi kỹ năng đều cần cấu trúc cơ bản này. **Hãy sao chép mẫu
 ---
 name: my-awesome-skill
 description: "Mô tả ngắn gọn về chức năng của skill này"
+risk: safe
+source: community
+date_added: 2026-06-25
 ---
 
 # Tiêu đề Skill
@@ -112,16 +115,16 @@ code ví dụ ở đây
 - ❌ Không nên làm điều này
 ```
 
-#### Bước 4: Xác thực (BƯỚC V3 QUAN TRỌNG)
+#### Bước 4: Xác thực
 
 Chạy script xác thực (validation) tại máy của bạn. **Chúng tôi sẽ không chấp nhận các Pull Request (PR) thất bại ở bước kiểm tra này.**
 
 ```bash
-# Chế độ nhẹ (chỉ cảnh báo)
-python3 scripts/validate_skills.py
+# Chế độ thông thường
+npm run validate
 
 # Chế độ nghiêm ngặt (chế độ mà hệ thống CI sẽ chạy)
-python3 scripts/validate_skills.py --strict
+npm run validate:strict
 ```
 
 Bước này sẽ kiểm tra:
@@ -149,6 +152,9 @@ Tiết kiệm thời gian! Hãy sao chép bản mẫu này:
 ---
 name: your-skill-name
 description: "Mô tả trong một câu về chức năng của skill và khi nào cần dùng"
+risk: safe
+source: community
+date_added: 2026-06-25
 ---
 
 # Tên Kỹ năng của bạn

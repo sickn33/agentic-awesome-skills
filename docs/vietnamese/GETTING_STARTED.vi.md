@@ -1,4 +1,4 @@
-# Hướng dẫn Bắt đầu với Antigravity Awesome Skills (V4)
+# Hướng dẫn Bắt đầu với Antigravity Awesome Skills (V13.2.0)
 
 **Bạn mới đến đây? Hướng dẫn này sẽ giúp bạn tăng cường sức mạnh cho trợ lý trợ lý AI của mình chỉ trong 5 phút.**
 
@@ -6,7 +6,7 @@
 
 ## 🤔 "Skills" (Kỹ năng) là gì?
 
-Các trợ lý AI (như **Claude Code**, **Gemini**, **Cursor**) rất thông minh, nhưng chúng thiếu kiến thức cụ thể về các công cụ và quy trình làm việc của bạn.  
+Các trợ lý AI (như **Claude Code**, **Codex CLI**, **Gemini CLI**, **Cursor**, **Antigravity**, **Kiro** và **OpenCode**) rất thông minh, nhưng chúng thiếu kiến thức cụ thể về các công cụ và quy trình làm việc của bạn.
 **Skills** là các hướng dẫn sử dụng chuyên biệt (dưới dạng file markdown) dạy cho AI của bạn cách thực hiện các tác vụ cụ thể một cách hoàn hảo trong mọi lần thực hiện.
 
 **Một phép so sánh:** AI của bạn là một thực tập sinh xuất sắc. **Skills** là các SOP (Quy trình vận hành tiêu chuẩn) biến họ thành một Kỹ sư cao cấp.
@@ -15,17 +15,18 @@ Các trợ lý AI (như **Claude Code**, **Gemini**, **Cursor**) rất thông mi
 
 ## ⚡️ Khởi động nhanh: Các "Gói khởi đầu" (Starter Packs)
 
-Đừng lo lắng về con số hơn 560 kỹ năng. Bạn không cần dùng tất cả chúng cùng một lúc.  
+Đừng lo lắng về con số hơn 1,684 kỹ năng. Bạn không cần dùng tất cả chúng cùng một lúc.
 Chúng tôi đã tuyển chọn các **Gói khởi đầu** để bạn có thể bắt đầu sử dụng ngay lập tức.
 
 ### 1. Cài đặt Repository
 
-Sao chép các kỹ năng vào thư mục agent của bạn:
+Khuyến nghị dùng installer CLI. Mặc định, lệnh này cài vào `~/.agents/skills` cho Antigravity global:
 
 ```bash
-# Cài đặt phổ thông (hoạt động với hầu hết các agent)
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+npx antigravity-awesome-skills
 ```
+
+Bạn cũng có thể dùng cờ theo công cụ, ví dụ `--claude`, `--gemini`, `--codex`, `--cursor`, `--kiro`, `--antigravity`, `--agy`, hoặc `--path <dir>` để chọn thư mục đích.
 
 ### 2. Chọn vai trò của bạn
 
@@ -68,10 +69,15 @@ Sau khi cài đặt, bạn chỉ cần trò chuyện với AI một cách tự n
 
 | Công cụ          | Trạng thái      | Đường dẫn         |
 | :--------------- | :-------------- | :---------------- |
-| **Claude Code**  | ✅ Hỗ trợ đầy đủ | `.claude/skills/` |
+| **Claude Code**  | ✅ Hỗ trợ đầy đủ | `.claude/skills/` hoặc Claude plugin marketplace |
 | **Gemini CLI**   | ✅ Hỗ trợ đầy đủ | `.gemini/skills/` |
-| **Antigravity**  | ✅ Hỗ trợ gốc   | `.agent/skills/`  |
+| **Codex CLI**    | ✅ Hỗ trợ đầy đủ | `.codex/skills/` |
+| **Kiro CLI / IDE** | ✅ Hỗ trợ đầy đủ | `~/.kiro/skills/` hoặc `.kiro/skills/` |
+| **Antigravity**  | ✅ Hỗ trợ gốc   | `~/.agents/skills/` hoặc `.agent/skills/` |
+| **Antigravity CLI (`agy`)** | ✅ Hỗ trợ đầy đủ | `~/.gemini/antigravity-cli/skills/` |
 | **Cursor**       | ✅ Hỗ trợ gốc   | `.cursor/skills/` |
+| **OpenCode**     | ✅ Hỗ trợ đầy đủ | `.agents/skills/` |
+| **AdaL CLI**     | ✅ Hỗ trợ đầy đủ | `.adal/skills/` |
 | **Copilot**      | ⚠️ Chỉ văn bản  | Copy-paste thủ công |
 
 ---
@@ -92,7 +98,7 @@ _Kiểm tra [Danh mục Skill (Skill Catalog)](../../CATALOG.md) để xem danh 
 
 ## ❓ FAQ
 
-**H: Tôi có cần cài đặt tất cả 560 kỹ năng không?**  
+**H: Tôi có cần cài đặt tất cả 1,684+ kỹ năng không?**
 Đ: Bạn tải toàn bộ repo về, nhưng AI của bạn chỉ _đọc_ những kỹ năng bạn yêu cầu (hoặc những kỹ năng có liên quan). Nó rất nhẹ!
 
 **H: Tôi có thể tự tạo kỹ năng cho riêng mình không?**  

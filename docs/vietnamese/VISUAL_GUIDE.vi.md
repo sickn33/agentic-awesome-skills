@@ -33,7 +33,7 @@ antigravity-awesome-skills/
 ├── 📄 README.md                    ← Tổng quan & danh sách skill
 ├── 📄 CONTRIBUTING.md              ← Cách thức đóng góp
 │
-├── 📁 skills/                      ← Nơi chứa tất cả hơn 250 skills
+├── 📁 skills/                      ← Nguồn canonical cho 1,684+ skills
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md             ← Định nghĩa skill
@@ -42,11 +42,12 @@ antigravity-awesome-skills/
 │   │   ├── 📄 SKILL.md
 │   │   └── 📁 examples/            ← Các phần bổ sung tùy chọn
 │   │
-│   └── ... (Hơn 250 skills khác)
+│   └── ... (1,684+ skills khác)
 │
-├── 📁 scripts/                     ← Quản lý & Xác thực
-│   ├── validate_skills.py          ← Công cụ kiểm soát chất lượng
-│   └── generate_index.py           ← Công cụ tạo danh mục (registry)
+├── 📁 tools/
+│   ├── 📁 scripts/                 ← Quản lý, xác thực và tạo catalog
+│   ├── 📁 lib/                     ← Logic installer dùng chung
+│   └── 📁 bin/                     ← CLI entrypoint
 │
 ├── 📁 .github/
 │   └── 📄 MAINTENANCE.md           ← Hướng dẫn cho người duy trì
@@ -66,7 +67,7 @@ antigravity-awesome-skills/
 
 ```
 ┌──────────────┐
-│ 1. CÀI ĐẶT   │  Sao chép skills vào .agent/skills/
+│ 1. CÀI ĐẶT   │  npx antigravity-awesome-skills
 1 └──────┬───────┘
        │
        ↓
@@ -96,7 +97,7 @@ antigravity-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │   250+ AWESOME SKILLS   │
+                    │  1,684+ AWESOME SKILLS  │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -174,17 +175,15 @@ antigravity-awesome-skills/
 
 ## Cài đặt (Các bước Trực quan)
 
-### Bước 1: Sao chép Repository
+### Bước 1: Cài đặt bằng installer
 
 ```
 ┌─────────────────────────────────────────┐
 │ Terminal                                │
 ├─────────────────────────────────────────┤
-│ $ git clone https://github.com/        │
-│   sickn33/antigravity-awesome-skills    │
-│   .agent/skills                         │
+│ $ npx antigravity-awesome-skills        │
 │                                         │
-│ ✓ Đang sao chép vào '.agent/skills'... │
+│ ✓ Cài vào '~/.agents/skills'...         │
 │ ✓ Hoàn tất!                             │
 └─────────────────────────────────────────┘
 ```
@@ -195,12 +194,12 @@ antigravity-awesome-skills/
 ┌─────────────────────────────────────────┐
 │ File Explorer                           │
 ├─────────────────────────────────────────┤
-│ 📁 .agent/                              │
+│ 📁 ~/.agents/                           │
 │   └── 📁 skills/                        │
 │       ├── 📁 brainstorming/             │
 │       ├── 📁 stripe-integration/        │
 │       ├── 📁 react-best-practices/      │
-│       └── ... (Thêm 176 mục nữa)        │
+│       └── ... (1,684+ skills)           │
 └─────────────────────────────────────────┘
 ```
 
@@ -313,12 +312,12 @@ Mở file skills_index.json → Tìm từ khóa → Tìm đường dẫn đến 
        │
        ↓
 ┌──────────────┐
-│ 4. KIỂM THỬ  │  Sao chép vào .agent/skills/
+│ 4. KIỂM THỬ  │  Cài bằng npx hoặc --path thử nghiệm
 └──────┬───────┘  Thử: @docker-mastery
        │
        ↓
 ┌──────────────┐
-│ 5. XÁC THỰC  │  python3 scripts/validate_skills.py
+│ 5. XÁC THỰC  │  npm run validate
 └──────┬───────┘
        │
        ↓
@@ -437,7 +436,7 @@ BẮT ĐẦU TẠI ĐÂY
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  📥 CÀI ĐẶT                                                 │
-│  git clone [repo] .agent/skills                             │
+│  npx antigravity-awesome-skills                             │
 │                                                             │
 │  🎯 SỬ DỤNG                                                 │
 │  @ten-skill [yêu cầu của bạn]                               │
@@ -446,7 +445,7 @@ BẮT ĐẦU TẠI ĐÂY
 │  ls skills/ | grep "từ-khóa"                                │
 │                                                             │
 │  ✅ XÁC THỰC                                                │
-│  python3 scripts/validate_skills.py                         │
+│  npm run validate                                           │
 │                                                             │
 │  📝 TẠO SKILL                                               │
 │  1. mkdir skills/ten-skill-cua-ban                          │

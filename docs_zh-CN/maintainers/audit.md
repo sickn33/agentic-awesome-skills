@@ -15,8 +15,8 @@
 
 ### 1. 计数
 
-- `README.md`、`package.json` 和生成的工件与当前集合大小（`1,204+` 技能）保持一致。
-- `npm run sync:all` 和 `npm run catalog` 是保持计数和生成文件同步的规范命令。
+- `README.md`、`package.json` 和生成的工件应与当前集合大小（`1,684+` 技能）保持一致。
+- `npm run sync:repo-state`、`npm run catalog` 和发布流程中的 `npm run sync:release-state` 是保持计数和生成文件同步的规范命令。
 
 ### 2. 技能验证
 

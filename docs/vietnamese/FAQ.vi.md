@@ -11,9 +11,9 @@
 Skills là các tệp hướng dẫn chuyên biệt dạy cho các trợ lý AI cách xử lý những tác vụ cụ thể. Hãy coi chúng như những mô-đun kiến thức chuyên gia mà AI của bạn có thể tải khi cần.  
 **Một so sánh đơn giản:** Giống như việc bạn tham khảo ý kiến của các chuyên gia khác nhau (luật sư, bác sĩ, thợ máy), những kỹ năng này giúp AI của bạn trở thành chuyên gia trong các lĩnh vực khác nhau khi bạn cần.
 
-### Tôi có cần phải cài đặt tất cả hơn 560 skills không?
+### Tôi có cần phải cài đặt tất cả hơn 1,684 skills không?
 
-**Không!** Khi bạn clone (tải bản sao) repository này, tất cả các kỹ năng đều có sẵn, nhưng AI của bạn chỉ tải chúng khi bạn yêu cầu rõ ràng bằng lệnh `@ten-skill`.  
+**Không!** Khi bạn cài đặt repository này, tất cả các kỹ năng đều có sẵn, nhưng AI của bạn chỉ tải chúng khi bạn yêu cầu rõ ràng bằng lệnh `@ten-skill`.
 Nó giống như việc sở hữu một thư viện - tất cả sách đều ở đó, nhưng bạn chỉ đọc những cuốn bạn cần thôi.  
 **Mẹo:** Sử dụng [Bản mẫu Khởi đầu (Starter Packs)](BUNDLES.vi.md) để chỉ cài đặt những gì phù hợp với vai trò của bạn.
 
@@ -64,35 +64,43 @@ _Luôn kiểm tra nhãn rủi ro và xem xét mã nguồn trước khi dùng._
 
 ### Tôi nên cài đặt các kỹ năng này ở đâu?
 
-Đường dẫn phổ biến nhất hoạt động với mạng lưới các công cụ AI là `.agent/skills/`:
+Đường dẫn mặc định của installer là `~/.agents/skills/` cho Antigravity global:
 
 ```bash
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+npx antigravity-awesome-skills
 ```
 
 **Các đường dẫn cụ thể cho từng công cụ:**
 
 - Claude Code: `.claude/skills/`
 - Gemini CLI: `.gemini/skills/`
-- Cursor: `.cursor/skills/` hoặc gốc của dự án.
+- Codex CLI: `.codex/skills/`
+- Kiro CLI / IDE: `~/.kiro/skills/` hoặc `.kiro/skills/`
+- Antigravity: `~/.agents/skills/` hoặc `.agent/skills/`
+- Antigravity CLI (`agy`): `~/.gemini/antigravity-cli/skills/`
+- Cursor: `.cursor/skills/`
+- OpenCode: `.agents/skills/`
+- AdaL CLI: `.adal/skills/`
 
 ### Repo này có hoạt động trên Windows không?
 
-**Có**, nhưng một số kỹ năng "Official" (chính thức) sử dụng **symlinks** (liên kết tượng trưng) mà Windows xử lý không tốt theo mặc định.  
-Hãy chạy git clone với lệnh sau:
+**Có.** Hãy dùng lệnh cài đặt chuẩn:
 
 ```bash
-git clone -c core.symlinks=true https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+npx antigravity-awesome-skills
 ```
 
-Hoặc bật "Chế độ Nhà phát triển" (Developer Mode) trong phần Cài đặt của Windows.
+Không còn cần workaround cũ `core.symlinks=true` hoặc bật Developer Mode chỉ để cài repository này.
 
 ### Làm thế nào để cập nhật các kỹ năng?
 
-Chuyển hướng đến thư mục chứa kỹ năng của bạn và kéo (pull) những thay đổi mới nhất:
+Chạy lại installer để lấy phiên bản mới nhất, hoặc nếu bạn cài bằng git clone thì pull trong thư mục đã clone:
 
 ```bash
-cd .agent/skills
+npx antigravity-awesome-skills
+
+# hoặc, nếu bạn tự clone repository:
+cd ~/.agents/skills
 git pull origin main
 ```
 
@@ -130,7 +138,7 @@ Sử dụng biểu tượng `@` theo sau là tên skill:
 
 **Các nguyên nhân có thể xảy ra:**
 
-1. **Sai đường dẫn cài đặt**: Kiểm tra tài liệu hướng dẫn của công cụ bạn dùng. Hãy thử `.agent/skills/`.
+1. **Sai đường dẫn cài đặt**: Kiểm tra tài liệu hướng dẫn của công cụ bạn dùng. Hãy thử installer mặc định `~/.agents/skills/` hoặc cờ theo công cụ phù hợp.
 2. **Cần khởi động lại**: Khởi động lại AI/IDE sau khi cài đặt.
 3. **Lỗi đánh máy**: Bạn có gõ lầm `@brain-storming` thay vì `@brainstorming` không?
 
@@ -158,15 +166,15 @@ Hãy xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn ch
 
 ### Pull Request (PR) của tôi thất bại khi kiểm tra "Quality Bar". Tại sao?
 
-Phiên bản V3 áp dụng kiểm soát chất lượng tự động. Skill của bạn có thể đang thiếu:
+Quality Bar áp dụng kiểm soát chất lượng tự động. Skill của bạn có thể đang thiếu:
 
 1. Một `description` (mô tả) hợp lệ.
 2. Các ví dụ sử dụng.  
-Hãy chạy `python3 scripts/validate_skills.py` cục bộ để kiểm tra trước khi đẩy code lên.
+Hãy chạy `npm run validate` cục bộ để kiểm tra trước khi đẩy code lên.
 
 ### Tôi có thể cập nhật các kỹ năng "Official" không?
 
-**Không.** Các kỹ năng chính thức (trong thư mục `skills/official/`) được đồng bộ từ các nhà cung cấp. Thay vào đó, hãy mở một issue để báo lỗi.
+**Không trực tiếp.** Các skill nhập từ nguồn bên ngoài được phân biệt bằng frontmatter như `source`, `source_repo` và `source_type`. Nếu một skill bắt nguồn từ nhà cung cấp hoặc repository khác, hãy mở issue hoặc PR nhỏ kèm nguồn rõ ràng thay vì sửa tùy tiện.
 
 ---
 

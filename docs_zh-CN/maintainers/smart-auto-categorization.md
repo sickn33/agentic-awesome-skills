@@ -9,26 +9,28 @@
 ✅ 当前仓库通过生成的目录索引
 - 大多数技能都在有意义的类别中
 - 较小的尾部仍需要手动审查或更好的关键词覆盖
-- 13 个主要类别
-- 类别按技能数量排序（最多的在前）
+- `skills_index.json` 是当前类别标签和计数的事实来源
+- 类别过滤器应在构建时从生成索引派生
 
 ## 类别分布
 
-| 类别 | 数量 | 示例 |
-|----------|-------|----------|
-| Backend | 164 | Node.js、Django、Express、FastAPI |
-| Web Development | 107 | React、Vue、Tailwind、CSS |
-| Automation | 103 | Workflow、Scripting、RPA |
-| DevOps | 83 | Docker、Kubernetes、CI/CD、Git |
-| AI/ML | 79 | TensorFlow、PyTorch、NLP、LLM |
-| Content | 47 | Documentation、SEO、Writing |
-| Database | 44 | SQL、MongoDB、PostgreSQL |
-| Testing | 38 | Jest、Cypress、Unit Testing |
-| Security | 36 | Encryption、Authentication |
-| Cloud | 33 | AWS、Azure、GCP |
-| Mobile | 21 | React Native、Flutter、iOS |
-| Game Dev | 15 | Unity、WebGL、3D |
-| Data Science | 14 | Pandas、NumPy、Analytics |
+不要把固定计数复制到面向用户的文档中。要查看当前分布，请从索引生成：
+
+```bash
+node - <<'NODE'
+const fs = require('fs');
+const skills = JSON.parse(fs.readFileSync('skills_index.json', 'utf8'));
+const counts = new Map();
+for (const skill of skills) {
+  const category = skill.category || 'uncategorized';
+  counts.set(category, (counts.get(category) || 0) + 1);
+}
+console.log(`skills=${skills.length} categories=${counts.size}`);
+for (const [category, count] of [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12)) {
+  console.log(`${category}: ${count}`);
+}
+NODE
+```
 
 ## 工作原理
 
@@ -91,20 +93,17 @@ Sample changes:
 
 **之后:**
 - 类别按技能数量排序（最多的在前，"未分类"最后）
-- 显示计数："Backend (164)" "Web Development (107)"
+- 显示从生成索引计算出的计数，而不是文档中的硬编码数字
 - 更易于浏览
 
 ### 示例下拉菜单
 
 **排序顺序:**
 1. All Categories
-2. Backend (164)
-3. Web Development (107)
-4. Automation (103)
-5. DevOps (83)
-6. AI/ML (79)
-7. ... 更多类别 ...
-8. Uncategorized (126) ← 在最后
+2. 技能数最高的生成类别
+3. 下一个生成类别
+4. ... 更多生成类别 ...
+5. Uncategorized（如果存在）放在最后
 
 ## 对于技能创建者
 

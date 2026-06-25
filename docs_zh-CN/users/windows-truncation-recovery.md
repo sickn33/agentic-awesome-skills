@@ -60,7 +60,7 @@
 ## 推荐的预防措施
 
 - 不要将每个 `SKILL.md` 连接到一个系统提示中。
-- 使用 `data/skills_index.json` 作为轻量级清单。
+- 使用根目录 `skills_index.json` 作为规范轻量级清单；仅在宿主必须读取 `data/` 子树时使用 `data/skills_index.json` 兼容性镜像。
 - 仅在实际请求技能时加载 `SKILL.md` 文件。
 - 为每个轮次的技能设置明确限制。
 - 在参考 Jetski/Gemini 加载器中首选 `overflowBehavior: "error"`,以便主机在上下文窗口被静默过度填充之前清晰地失败。

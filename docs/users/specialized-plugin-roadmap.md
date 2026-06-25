@@ -17,9 +17,9 @@ That makes specialized plugins the better default product shape. A root plugin c
 
 ## Selection Method
 
-This pass evaluated the full local catalog in `data/skills_index.json`:
+This snapshot pass evaluated the then-current local catalog. For current catalog checks, use the canonical root `skills_index.json` and treat `data/skills_index.json` only as the compatibility mirror:
 
-- Total skills evaluated: 1,678.
+- Total skills evaluated in this snapshot: 1,678.
 - Broadest categories: development, cloud, AI/ML, security, business, workflow, content, marketing, automation, and web development.
 - Existing editorial bundles are all small and mostly plugin-compatible, which makes them a good starting point.
 - The stronger opportunity is to turn the best bundles into first-class product plugins with sharper names, richer descriptions, and optional app/MCP extensions.
@@ -71,7 +71,7 @@ These are promising and should be hardened after Tier 1.
 3. Rename or reframe bundle plugins as product plugins where the job is clear.
 4. Add richer `interface` metadata to the strongest plugin manifests: display name, short description, brand color, and default prompt.
 5. Add per-plugin quality gates:
-   - every skill exists in `data/skills_index.json`;
+  - every skill exists in canonical `skills_index.json`;
    - every skill is Codex-supported before Codex publication;
    - every skill is Claude-supported before Claude publication;
    - every plugin has a 5-10 skill target range unless it has a concrete reason to be larger;

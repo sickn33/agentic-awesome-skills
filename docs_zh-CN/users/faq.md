@@ -68,7 +68,7 @@
 
 相反，主机应该：
 
-- 使用 `data/skills_index.json` 作为**轻量级清单**进行发现；以及
+- 使用根目录 `skills_index.json` 作为**规范轻量级清单**进行发现；`data/skills_index.json` 仅作为兼容性镜像；以及
 - **仅在调用技能时**（例如，通过对话中的 `@skill-id`）加载单个 `SKILL.md` 文件。
 
 有关具体示例（包括伪代码），请参阅：
