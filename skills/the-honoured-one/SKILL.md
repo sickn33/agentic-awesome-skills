@@ -8,7 +8,7 @@ date_added: "2026-06-25"
 
 # the-honoured-one — Full Context Load Protocol
 
-## Core Philosophy
+## Overview
 
 > Gojo at full power means all six eyes open — everything visible, nothing assumed, no blind spots. The Honoured One doesn't act on guesses. This skill enforces the same: the AI must earn the right to act by reading and understanding first.
 
@@ -27,7 +27,7 @@ The most common AI coding failure is **confident wrongness** — the AI proposes
 
 ---
 
-## The Four Phases
+## How It Works
 
 ### PHASE 1 — Context Audit
 
@@ -177,6 +177,34 @@ Before writing any code or making any proposal, the AI must answer:
 - "why is this not working" (on unread code)
 - Any task touching more than one file
 - Any task where the AI would need to know how existing code is structured to do it correctly
+
+---
+
+## Examples
+
+*(Examples of the Context Audit and Orientation Statement output are provided inline within Phase 1 and Phase 3 above.)*
+
+---
+
+## Best Practices
+
+- ✅ **Do:** Ensure all blind spots are read before proceeding.
+- ✅ **Do:** Confirm the AI's orientation statement matches reality.
+- ❌ **Don't:** Allow the AI to skip reading just because a file name seems obvious.
+
+---
+
+## Common Pitfalls
+
+- **Problem:** The AI assumes an implementation matches a common pattern without reading it.
+  **Solution:** Enforce Phase 2 (Mandatory Read Pass) without exceptions.
+
+---
+
+## Related Skills
+
+- `@brainstorming` - Use before execution to figure out what needs to be built.
+- `@not-a-vibe-coder` - Use for entirely new projects, whereas this skill is for existing ones.
 
 ---
 
