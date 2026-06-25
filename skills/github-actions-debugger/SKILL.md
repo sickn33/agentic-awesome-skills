@@ -43,6 +43,44 @@ This skill is designed to act as an expert CI/CD diagnostician. It focuses speci
 - **Permissions Audit:** Ensure the workflow has the correct `permissions:` block if it's attempting to write to the repository, packages, or deploy environments.
 - **Reproducibility:** If a test fails in CI but passes locally, investigate environment differences such as timezone, headless browser state, memory limits, or parallel execution race conditions.
 
+## Examples
+
+### Example 1: Fixing a Deprecated Node.js Action Version Error
+**Failing Log:**
+```text
+Warning: The Go/Node.js/Python version used by this action is deprecated.
+Error: Node.js 16 actions are deprecated. Please update to use Node.js 20.
+```
+
+**Proposed Fix Diff:**
+```diff
+       - name: Checkout Code
+-        uses: actions/checkout@v2
++        uses: actions/checkout@v4
+```
+
+### Example 2: Diagnosing and Fixing a Missing Repository Secret
+**Failing Log:**
+```text
+Run npm run deploy
+  npm run deploy
+  shell: /usr/bin/bash -e {0}
+Error: API Key is required for deployment. Process exited with code 1.
+```
+
+**Proposed Fix Diff:**
+```diff
+       - name: Deploy App
+         run: npm run deploy
++        env:
++          DEPLOY_API_KEY: ${{ secrets.DEPLOY_API_KEY }}
+```
+
+## Security & Safety Notes
+
+- **Credential Exposure**: Never output raw secrets, API tokens, or private keys if they appear in logs. Recommend using masking (`::add-mask::`) or GitHub Secrets environment variables.
+- **Dry-Run Mode**: When recommending modifications to bash script steps inside workflows, ensure you suggest adding flags like `--dry-run` or staging execution where possible to prevent unintended side effects in downstream environments during debugging.
+
 ## Limitations
 
 - The skill cannot securely read repository secrets. It can only infer missing or malformed secrets if the log complains about undefined environment variables or authentication failures.
