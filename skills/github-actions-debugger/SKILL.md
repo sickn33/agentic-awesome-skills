@@ -3,8 +3,8 @@ name: github-actions-debugger
 description: "Specialized skill for diagnosing, analyzing, and fixing failing GitHub Actions workflows by parsing run logs and pipeline definitions."
 category: devops
 risk: safe
-source: self
-source_type: self
+source: community
+source_type: community
 date_added: "2026-06-25"
 author: Owais
 tags: [github-actions, ci-cd, devops, debugging, workflows]
@@ -26,7 +26,7 @@ This skill is designed to act as an expert CI/CD diagnostician. It focuses speci
 
 ## How It Works
 
-1. **Log Ingestion:** Analyze the provided GitHub Actions workflow log (often exported as a raw text file or pasted directly).
+1. **Log Ingestion & Redaction:** Analyze the provided GitHub Actions workflow log (often exported as a raw text file or pasted directly). **CRITICAL SAFETY REQUIREMENT:** The user/agent must redact all sensitive credentials, secrets, tokens, private keys, and internal system paths from the logs before pasting or uploading them.
 2. **Context Mapping:** Cross-reference the failure point with the specific step and job in the `.github/workflows/*.yml` definition.
 3. **Root Cause Analysis:** Identify if the failure is due to:
    - Missing or misconfigured secrets (`${{ secrets.API_KEY }}`).
