@@ -103,7 +103,7 @@ try {
 
   assert.deepStrictEqual(
     installer.getManagedEntries(["alpha", "security/audit", "docs"], {}),
-    ["alpha", "security/audit", "docs"],
+    ["alpha", path.join("security", "audit"), "docs"],
     "agy CLI installs should track skill directories with nested SKILL.md files",
   );
 
