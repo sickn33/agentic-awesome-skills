@@ -14364,6 +14364,25 @@
       "runtime_files": []
     },
     {
+      "id": "github-actions-debugger",
+      "path": "skills/github-actions-debugger",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "github-actions-templates",
       "path": "skills/github-actions-templates",
       "targets": {
@@ -22620,6 +22639,25 @@
     {
       "id": "pr-writer",
       "path": "skills/pr-writer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "premium-3d-website",
+      "path": "skills/premium-3d-website",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -32362,10 +32400,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1685,
+    "total_skills": 1687,
     "supported": {
-      "codex": 1625,
-      "claude": 1643
+      "codex": 1627,
+      "claude": 1645
     },
     "blocked": {
       "codex": 60,

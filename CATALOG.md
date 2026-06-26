@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-25T06:37:39.000Z
 
-Total skills: 1685
+Total skills: 1687
 
 ## architecture (104)
 
@@ -783,7 +783,7 @@ Total skills: 1685
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (442)
+## general (443)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1114,6 +1114,7 @@ Total skills: 1685
 | `posix-shell-pro` | Expert in strict POSIX sh scripting for maximum portability across Unix-like systems. Specializes in shell scripts that run on any POSIX-compliant shell (das... | posix, shell | posix, shell, pro, strict, sh, scripting, maximum, portability, unix, like, specializes, scripts |
 | `pptx-official` | A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resourc... | pptx, official | pptx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 | `pr-writer` | Create pull requests following Sentry's engineering practices. | pr, writer | pr, writer, pull, requests, following, sentry, engineering |
+| `premium-3d-website` | Guidelines for building premium 3D websites, focusing on custom WebGL shaders, post-processing, physics-based interactions, smooth animations, preloaders, an... | threejs, webgl, shaders, post-processing, creative-coding, premium-design | threejs, webgl, shaders, post-processing, creative-coding, premium-design, premium, 3d, website, guidelines, building, websites |
 | `price-psychology-strategist` | One sentence - what this skill does and when to invoke it | price, psychology, strategist | price, psychology, strategist, one, sentence, what, skill, does, invoke |
 | `production-scheduling` | Codified expertise for production scheduling, job sequencing, line balancing, changeover optimisation, and bottleneck resolution in discrete and batch manufa... | production, scheduling | production, scheduling, codified, expertise, job, sequencing, line, balancing, changeover, optimisation, bottleneck, resolution |
 | `professional-proofreader` | Use when a user asks to "proofread", "review and correct", "fix grammar", "improve readability while keeping my voice", and to proofread a document file and ... | professional, proofreader | professional, proofreader, user, asks, proofread, review, correct, fix, grammar, improve, readability, while |
@@ -1230,7 +1231,7 @@ Total skills: 1685
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (145)
+## infrastructure (146)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1307,6 +1308,7 @@ Total skills: 1685
 | `gcp-cloud-run` | Specialized skill for building production-ready serverless applications on GCP. Covers Cloud Run services (containerized), Cloud Run Functions (event-driven)... | gcp, cloud, run | gcp, cloud, run, specialized, skill, building, serverless, applications, covers, containerized, functions, event |
 | `git-hooks-automation` | Master Git hooks setup with Husky, lint-staged, pre-commit framework, and commitlint. Automate code quality gates, formatting, linting, and commit message en... | git, hooks | git, hooks, automation, setup, husky, lint, staged, pre, commit, framework, commitlint, automate |
 | `git-pr-workflows-git-workflow` | Orchestrate a comprehensive git workflow from code review through PR creation, leveraging specialized agents for quality assurance, testing, and deployment r... | git, pr | git, pr, orchestrate, code, review, through, creation, leveraging, specialized, agents, quality, assurance |
+| `github-actions-debugger` | Specialized skill for diagnosing, analyzing, and fixing failing GitHub Actions workflows by parsing run logs and pipeline definitions. | github-actions, ci-cd, devops, debugging, workflows | github-actions, ci-cd, devops, debugging, workflows, github, actions, debugger, specialized, skill, diagnosing, analyzing |
 | `github-automation` | Automate GitHub repositories, issues, pull requests, branches, CI/CD, and permissions via Rube MCP (Composio). Manage code workflows, review PRs, search code... | github | github, automation, automate, repositories, issues, pull, requests, branches, ci, cd, permissions, via |
 | `github-workflow-automation` | Patterns for automating GitHub workflows with AI assistance, inspired by [Gemini CLI](https://github.com/google-gemini/gemini-cli) and modern DevOps practices. | github | github, automation, automating, ai, assistance, inspired, gemini, cli, https, com, google, devops |
 | `gitlab-ci-patterns` | Comprehensive GitLab CI/CD pipeline patterns for automated testing, building, and deployment. | gitlab, ci | gitlab, ci, cd, pipeline, automated, testing, building, deployment |

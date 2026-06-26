@@ -15961,6 +15961,28 @@
     }
   },
   {
+    "id": "github-actions-debugger",
+    "path": "skills/github-actions-debugger",
+    "category": "devops",
+    "name": "github-actions-debugger",
+    "description": "Specialized skill for diagnosing, analyzing, and fixing failing GitHub Actions workflows by parsing run logs and pipeline definitions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "github-actions-templates",
     "path": "skills/github-actions-templates",
     "category": "workflow",
@@ -25790,6 +25812,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "premium-3d-website",
+    "path": "skills/premium-3d-website",
+    "category": "frontend",
+    "name": "premium-3d-website",
+    "description": "Guidelines for building premium 3D websites, focusing on custom WebGL shaders, post-processing, physics-based interactions, smooth animations, preloaders, and device optimization.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-25",
     "plugin": {
       "targets": {
         "codex": "supported",
