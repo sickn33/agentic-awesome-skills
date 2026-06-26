@@ -7,6 +7,15 @@ source: community
 
 # AI-Loop Skill
 
+## When to use
+Use this skill when you need a feature built from scratch or heavily modified, and you want the agent to autonomously handle the entire lifecycle (specification, implementation, and verification) in a single uninterrupted workflow.
+
+## Limitations
+- This skill requires sufficient context about the feature to be provided during the Spec phase.
+- It is best suited for isolated features or tasks with clear boundaries, rather than open-ended architectural refactoring.
+- The review phase relies on the agent's self-assessment against the generated spec; manual review is still recommended for critical systems.
+
+## Instructions
 This skill executes a complete, autonomous development loop composed of three phases: Spec, Build, and Review. When invoked, act as an autonomous agent that transitions through these phases seamlessly to deliver a fully verified feature.
 
 ## Phase 1: Spec (Planning)
