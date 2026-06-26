@@ -9,6 +9,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.3.0] - 2026-06-26 - "Agent Discipline, 3D Web, and GitHub Media"
+
+> Community skill intake and dependency-maintenance release for the 1,689+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1689-skills](README.md#browse-1689-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release packages the June 26 maintainer batch: five community skill PRs, source-credit and license-provenance fixes, generated registry and plugin mirror sync, Windows path test hardening, and a React/React DOM dependency refresh for the Loki generated frontend example.
+
+## Added
+
+- Added **the-honoured-one**, a context-loading discipline skill for complex multi-file tasks, architecture changes, and debugging work (PR #749).
+- Added **github-actions-debugger**, a CI/CD diagnostic skill for reading GitHub Actions logs, identifying root causes, and proposing focused workflow or code fixes (PR #750).
+- Added **premium-3d-website**, a Three.js/WebGL guidance skill for high-end 3D websites, shaders, post-processing, interaction physics, asset loading, and mobile performance (PR #751).
+- Added **arrowspace** from [Genefold/arrowspace-skills](https://github.com/Genefold/arrowspace-skills), a spectral vector-search skill using graph Laplacian eigenstructure for structurally aware retrieval (PR #752).
+- Added **gh-image** from [drogers0/gh-image](https://github.com/drogers0/gh-image), a GitHub CLI image-upload skill for producing canonical `user-attachments` URLs for PRs, issues, comments, and README screenshots (PR #753).
+
+## Changed
+
+- Normalized Windows path-separator expectations in installer manifest tests (PR #751).
+- Updated the Loki generated frontend example to React 19.2.7 and React DOM 19.2.7, combining the Snyk upgrade intent from PRs #754 and #755 into a maintainer patch because those PRs directly touched generated example files.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, contributor/source metadata, sitemap, package description, and public docs for the 1,689+ skill catalog.
+
+## Validation
+
+- Verified PR checks for source validation, skill review, artifact preview, CodeQL, Dependency Review, Socket, and Snyk before merging the community skill PRs.
+- Ran `npm run sync:repo-state`, including validation, plugin compatibility sync, index/catalog generation, web asset sync, contributor sync, consistency audit, and warning-budget enforcement.
+- Ran focused dependency and documentation checks for the Snyk maintainer patch, including the Loki example `npm install --package-lock-only` audit result and `npm run security:docs`.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #749 (`the-honoured-one`).
+- **[@GeekLuffy](https://github.com/GeekLuffy)** for PR #750 (`github-actions-debugger`).
+- **[@Rsmiyani](https://github.com/Rsmiyani)** for PR #751 (`premium-3d-website`) and the Windows path test fix.
+- **[@genefold-ai](https://github.com/genefold-ai)** and **[Genefold/arrowspace-skills](https://github.com/Genefold/arrowspace-skills)** for PR #752 (`arrowspace`).
+- **[@drogers0](https://github.com/drogers0)** and **[drogers0/gh-image](https://github.com/drogers0/gh-image)** for PR #753 (`gh-image`).
+- **Snyk** and maintainer automation for the React and React DOM upgrade signal in PRs #754 and #755.
+
 ## [13.2.0] - 2026-06-25 - "Design Engineering and Web Dependency Refresh"
 
 > Community skill intake and maintainer dependency release for the 1,684+ skill catalog.
