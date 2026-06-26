@@ -3,11 +3,13 @@ name: arrowspace
 description: "Spectral vector search using graph Laplacian eigenstructure. Use when cosine/L2 similarity misses latent structure in your embeddings."
 category: data
 risk: safe
-source: self
+source: community
 source_repo: Genefold/arrowspace-skills
 source_type: community
 date_added: "2026-06-25"
 author: Genefold AI
+license: Apache-2.0
+license_source: "https://github.com/Genefold/arrowspace-skills/blob/main/LICENSE"
 tags: [vector-search, spectral-analysis, graph-laplacian, embeddings, lambda-tau]
 tools: [claude, cursor, codex, gemini, opencode]
 ---
