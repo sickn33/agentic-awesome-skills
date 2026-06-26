@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-25T06:37:39.000Z",
-  "total": 1684,
+  "total": 1687,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -18635,6 +18635,34 @@
       "path": "skills/github-actions-advanced/SKILL.md"
     },
     {
+      "id": "github-actions-debugger",
+      "name": "github-actions-debugger",
+      "description": "Specialized skill for diagnosing, analyzing, and fixing failing GitHub Actions workflows by parsing run logs and pipeline definitions.",
+      "category": "infrastructure",
+      "tags": [
+        "github-actions",
+        "ci-cd",
+        "devops",
+        "debugging",
+        "workflows"
+      ],
+      "triggers": [
+        "github-actions",
+        "ci-cd",
+        "devops",
+        "debugging",
+        "workflows",
+        "github",
+        "actions",
+        "debugger",
+        "specialized",
+        "skill",
+        "diagnosing",
+        "analyzing"
+      ],
+      "path": "skills/github-actions-debugger/SKILL.md"
+    },
+    {
       "id": "github-actions-templates",
       "name": "github-actions-templates",
       "description": "Production-ready GitHub Actions workflow patterns for testing, building, and deploying applications.",
@@ -29326,6 +29354,35 @@
       "path": "skills/pr-writer/SKILL.md"
     },
     {
+      "id": "premium-3d-website",
+      "name": "premium-3d-website",
+      "description": "Guidelines for building premium 3D websites, focusing on custom WebGL shaders, post-processing, physics-based interactions, smooth animations, preloaders, and device optimization.",
+      "category": "general",
+      "tags": [
+        "threejs",
+        "webgl",
+        "shaders",
+        "post-processing",
+        "creative-coding",
+        "premium-design"
+      ],
+      "triggers": [
+        "threejs",
+        "webgl",
+        "shaders",
+        "post-processing",
+        "creative-coding",
+        "premium-design",
+        "premium",
+        "3d",
+        "website",
+        "guidelines",
+        "building",
+        "websites"
+      ],
+      "path": "skills/premium-3d-website/SKILL.md"
+    },
+    {
       "id": "price-psychology-strategist",
       "name": "price-psychology-strategist",
       "description": "One sentence - what this skill does and when to invoke it",
@@ -37547,6 +37604,32 @@
         "assurance"
       ],
       "path": "skills/testing-qa/SKILL.md"
+    },
+    {
+      "id": "the-honoured-one",
+      "name": "the-honoured-one",
+      "description": "Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting on assumptions.",
+      "category": "data-ai",
+      "tags": [
+        "the",
+        "honoured",
+        "one"
+      ],
+      "triggers": [
+        "the",
+        "honoured",
+        "one",
+        "forces",
+        "ai",
+        "fully",
+        "load",
+        "context",
+        "read",
+        "relevant",
+        "files",
+        "before"
+      ],
+      "path": "skills/the-honoured-one/SKILL.md"
     },
     {
       "id": "theme-factory",

@@ -14364,6 +14364,25 @@
       "runtime_files": []
     },
     {
+      "id": "github-actions-debugger",
+      "path": "skills/github-actions-debugger",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "github-actions-templates",
       "path": "skills/github-actions-templates",
       "targets": {
@@ -22637,6 +22656,25 @@
       "runtime_files": []
     },
     {
+      "id": "premium-3d-website",
+      "path": "skills/premium-3d-website",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "price-psychology-strategist",
       "path": "skills/price-psychology-strategist",
       "targets": {
@@ -29084,6 +29122,25 @@
       "runtime_files": []
     },
     {
+      "id": "the-honoured-one",
+      "path": "skills/the-honoured-one",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "theme-factory",
       "path": "skills/theme-factory",
       "targets": {
@@ -32343,10 +32400,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1684,
+    "total_skills": 1687,
     "supported": {
-      "codex": 1624,
-      "claude": 1642
+      "codex": 1627,
+      "claude": 1645
     },
     "blocked": {
       "codex": 60,

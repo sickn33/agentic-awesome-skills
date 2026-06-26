@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-25T06:37:39.000Z
 
-Total skills: 1684
+Total skills: 1687
 
 ## architecture (104)
 
@@ -207,7 +207,7 @@ Total skills: 1684
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (309)
+## data-ai (310)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -494,6 +494,7 @@ Total skills: 1684
 | `team-collaboration-standup-notes` | You are an expert team communication specialist focused on async-first standup practices, AI-assisted note generation from commit history, and effective remo... | team, collaboration, standup, notes | team, collaboration, standup, notes, communication, async, first, ai, assisted, note, generation, commit |
 | `technical-change-tracker` | Track code changes with structured JSON records, state machine enforcement, and AI session handoff for bot continuity | change-tracking, session-handoff, documentation, accessibility, state-machine | change-tracking, session-handoff, documentation, accessibility, state-machine, technical, change, tracker, track, code, changes, structured |
 | `telegram-bot-builder` | Expert in building Telegram bots that solve real problems - from simple automation to complex AI-powered bots. Covers bot architecture, the Telegram Bot API,... | telegram, bot, builder | telegram, bot, builder, building, bots, solve, real, problems, simple, automation, complex, ai |
+| `the-honoured-one` | Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting... | the, honoured, one | the, honoured, one, forces, ai, fully, load, context, read, relevant, files, before |
 | `travel-health-analyzer` | 分析旅行健康数据、评估目的地健康风险、提供疫苗接种建议、生成多语言紧急医疗信息卡片。支持WHO/CDC数据集成的专业级旅行健康风险评估。 | travel, health, analyzer | travel, health, analyzer, who, cdc |
 | `trigger-dev` | Trigger.dev expert for background jobs, AI workflows, and reliable async execution with excellent developer experience and TypeScript-first design. | trigger, dev | trigger, dev, background, jobs, ai, reliable, async, execution, excellent, developer, experience, typescript |
 | `uniprot-database` | Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bio... | uniprot, database | uniprot, database, direct, rest, api, access, protein, searches, fasta, retrieval, id, mapping |
@@ -782,7 +783,7 @@ Total skills: 1684
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (442)
+## general (443)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1113,6 +1114,7 @@ Total skills: 1684
 | `posix-shell-pro` | Expert in strict POSIX sh scripting for maximum portability across Unix-like systems. Specializes in shell scripts that run on any POSIX-compliant shell (das... | posix, shell | posix, shell, pro, strict, sh, scripting, maximum, portability, unix, like, specializes, scripts |
 | `pptx-official` | A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resourc... | pptx, official | pptx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 | `pr-writer` | Create pull requests following Sentry's engineering practices. | pr, writer | pr, writer, pull, requests, following, sentry, engineering |
+| `premium-3d-website` | Guidelines for building premium 3D websites, focusing on custom WebGL shaders, post-processing, physics-based interactions, smooth animations, preloaders, an... | threejs, webgl, shaders, post-processing, creative-coding, premium-design | threejs, webgl, shaders, post-processing, creative-coding, premium-design, premium, 3d, website, guidelines, building, websites |
 | `price-psychology-strategist` | One sentence - what this skill does and when to invoke it | price, psychology, strategist | price, psychology, strategist, one, sentence, what, skill, does, invoke |
 | `production-scheduling` | Codified expertise for production scheduling, job sequencing, line balancing, changeover optimisation, and bottleneck resolution in discrete and batch manufa... | production, scheduling | production, scheduling, codified, expertise, job, sequencing, line, balancing, changeover, optimisation, bottleneck, resolution |
 | `professional-proofreader` | Use when a user asks to "proofread", "review and correct", "fix grammar", "improve readability while keeping my voice", and to proofread a document file and ... | professional, proofreader | professional, proofreader, user, asks, proofread, review, correct, fix, grammar, improve, readability, while |
@@ -1229,7 +1231,7 @@ Total skills: 1684
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (145)
+## infrastructure (146)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1306,6 +1308,7 @@ Total skills: 1684
 | `gcp-cloud-run` | Specialized skill for building production-ready serverless applications on GCP. Covers Cloud Run services (containerized), Cloud Run Functions (event-driven)... | gcp, cloud, run | gcp, cloud, run, specialized, skill, building, serverless, applications, covers, containerized, functions, event |
 | `git-hooks-automation` | Master Git hooks setup with Husky, lint-staged, pre-commit framework, and commitlint. Automate code quality gates, formatting, linting, and commit message en... | git, hooks | git, hooks, automation, setup, husky, lint, staged, pre, commit, framework, commitlint, automate |
 | `git-pr-workflows-git-workflow` | Orchestrate a comprehensive git workflow from code review through PR creation, leveraging specialized agents for quality assurance, testing, and deployment r... | git, pr | git, pr, orchestrate, code, review, through, creation, leveraging, specialized, agents, quality, assurance |
+| `github-actions-debugger` | Specialized skill for diagnosing, analyzing, and fixing failing GitHub Actions workflows by parsing run logs and pipeline definitions. | github-actions, ci-cd, devops, debugging, workflows | github-actions, ci-cd, devops, debugging, workflows, github, actions, debugger, specialized, skill, diagnosing, analyzing |
 | `github-automation` | Automate GitHub repositories, issues, pull requests, branches, CI/CD, and permissions via Rube MCP (Composio). Manage code workflows, review PRs, search code... | github | github, automation, automate, repositories, issues, pull, requests, branches, ci, cd, permissions, via |
 | `github-workflow-automation` | Patterns for automating GitHub workflows with AI assistance, inspired by [Gemini CLI](https://github.com/google-gemini/gemini-cli) and modern DevOps practices. | github | github, automation, automating, ai, assistance, inspired, gemini, cli, https, com, google, devops |
 | `gitlab-ci-patterns` | Comprehensive GitLab CI/CD pipeline patterns for automated testing, building, and deployment. | gitlab, ci | gitlab, ci, cd, pipeline, automated, testing, building, deployment |
