@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-25T06:37:39.000Z
 
-Total skills: 1684
+Total skills: 1685
 
 ## architecture (104)
 
@@ -207,7 +207,7 @@ Total skills: 1684
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (309)
+## data-ai (310)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -494,6 +494,7 @@ Total skills: 1684
 | `team-collaboration-standup-notes` | You are an expert team communication specialist focused on async-first standup practices, AI-assisted note generation from commit history, and effective remo... | team, collaboration, standup, notes | team, collaboration, standup, notes, communication, async, first, ai, assisted, note, generation, commit |
 | `technical-change-tracker` | Track code changes with structured JSON records, state machine enforcement, and AI session handoff for bot continuity | change-tracking, session-handoff, documentation, accessibility, state-machine | change-tracking, session-handoff, documentation, accessibility, state-machine, technical, change, tracker, track, code, changes, structured |
 | `telegram-bot-builder` | Expert in building Telegram bots that solve real problems - from simple automation to complex AI-powered bots. Covers bot architecture, the Telegram Bot API,... | telegram, bot, builder | telegram, bot, builder, building, bots, solve, real, problems, simple, automation, complex, ai |
+| `the-honoured-one` | Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting... | the, honoured, one | the, honoured, one, forces, ai, fully, load, context, read, relevant, files, before |
 | `travel-health-analyzer` | 分析旅行健康数据、评估目的地健康风险、提供疫苗接种建议、生成多语言紧急医疗信息卡片。支持WHO/CDC数据集成的专业级旅行健康风险评估。 | travel, health, analyzer | travel, health, analyzer, who, cdc |
 | `trigger-dev` | Trigger.dev expert for background jobs, AI workflows, and reliable async execution with excellent developer experience and TypeScript-first design. | trigger, dev | trigger, dev, background, jobs, ai, reliable, async, execution, excellent, developer, experience, typescript |
 | `uniprot-database` | Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bio... | uniprot, database | uniprot, database, direct, rest, api, access, protein, searches, fasta, retrieval, id, mapping |

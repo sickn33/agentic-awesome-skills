@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-25T06:37:39.000Z",
-  "total": 1684,
+  "total": 1685,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -37547,6 +37547,32 @@
         "assurance"
       ],
       "path": "skills/testing-qa/SKILL.md"
+    },
+    {
+      "id": "the-honoured-one",
+      "name": "the-honoured-one",
+      "description": "Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting on assumptions.",
+      "category": "data-ai",
+      "tags": [
+        "the",
+        "honoured",
+        "one"
+      ],
+      "triggers": [
+        "the",
+        "honoured",
+        "one",
+        "forces",
+        "ai",
+        "fully",
+        "load",
+        "context",
+        "read",
+        "relevant",
+        "files",
+        "before"
+      ],
+      "path": "skills/the-honoured-one/SKILL.md"
     },
     {
       "id": "theme-factory",

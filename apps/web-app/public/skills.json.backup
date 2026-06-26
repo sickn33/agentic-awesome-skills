@@ -33204,6 +33204,28 @@
     }
   },
   {
+    "id": "the-honoured-one",
+    "path": "skills/the-honoured-one",
+    "category": "uncategorized",
+    "name": "the-honoured-one",
+    "description": "Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting on assumptions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "theme-factory",
     "path": "skills/theme-factory",
     "category": "design",
