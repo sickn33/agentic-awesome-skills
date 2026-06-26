@@ -15741,6 +15741,28 @@
     }
   },
   {
+    "id": "gh-image",
+    "path": "skills/gh-image",
+    "category": "developer-tools",
+    "name": "gh-image",
+    "description": "Upload local images to GitHub and get canonical user-attachments embed URLs; use when asked to attach a screenshot to a PR, issue, or comment, or to embed before/after images in a README.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "gh-review-requests",
     "path": "skills/gh-review-requests",
     "category": "workflow",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-25T06:37:39.000Z
 
-Total skills: 1688
+Total skills: 1689
 
 ## architecture (104)
 
@@ -784,7 +784,7 @@ Total skills: 1688
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (443)
+## general (444)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -988,6 +988,7 @@ Total skills: 1688
 | `game-development/vr-ar` | VR/AR development principles. Comfort, interaction, performance requirements. | game, development/vr, ar | game, development/vr, ar, vr, development, principles, comfort, interaction, performance, requirements |
 | `game-development/web-games` | Web browser game development principles. Framework selection, WebGPU, optimization, PWA. | game, development/web, games | game, development/web, games, web, browser, development, principles, framework, selection, webgpu, optimization, pwa |
 | `geoffrey-hinton` | Agente que simula Geoffrey Hinton — Godfather of Deep Learning, Prêmio Turing 2018, criador do backpropagation e das Deep Belief Networks. | persona, deep-learning, ai-safety, neural-networks | persona, deep-learning, ai-safety, neural-networks, geoffrey, hinton, agente, que, simula, godfather, deep, learning |
+| `gh-image` | Upload local images to GitHub and get canonical user-attachments embed URLs; use when asked to attach a screenshot to a PR, issue, or comment, or to embed be... | github, images, screenshots, gh-extension, cli | github, images, screenshots, gh-extension, cli, gh, image, upload, local, get, canonical, user |
 | `gh-review-requests` | Fetch unread GitHub notifications for open PRs where review is requested from a specified team or opened by a team member. Use when asked to "find PRs I need... | gh, requests | gh, requests, review, fetch, unread, github, notifications, open, prs, where, requested, specified |
 | `git-advanced-workflows` | Master advanced Git techniques to maintain clean history, collaborate effectively, and recover from any situation with confidence. | git, advanced | git, advanced, techniques, maintain, clean, history, collaborate, effectively, recover, any, situation, confidence |
 | `git-pr-review` | Generate a concise and structured PR description from commit history with minimal token usage | git, pr | git, pr, review, generate, concise, structured, description, commit, history, minimal, token, usage |

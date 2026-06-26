@@ -14174,6 +14174,25 @@
       "runtime_files": []
     },
     {
+      "id": "gh-image",
+      "path": "skills/gh-image",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "gh-review-requests",
       "path": "skills/gh-review-requests",
       "targets": {
@@ -32419,10 +32438,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1688,
+    "total_skills": 1689,
     "supported": {
-      "codex": 1628,
-      "claude": 1646
+      "codex": 1629,
+      "claude": 1647
     },
     "blocked": {
       "codex": 60,

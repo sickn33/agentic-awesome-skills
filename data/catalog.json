@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-25T06:37:39.000Z",
-  "total": 1688,
+  "total": 1689,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -18386,6 +18386,34 @@
         "learning"
       ],
       "path": "skills/geoffrey-hinton/SKILL.md"
+    },
+    {
+      "id": "gh-image",
+      "name": "gh-image",
+      "description": "Upload local images to GitHub and get canonical user-attachments embed URLs; use when asked to attach a screenshot to a PR, issue, or comment, or to embed before/after images in a README.",
+      "category": "general",
+      "tags": [
+        "github",
+        "images",
+        "screenshots",
+        "gh-extension",
+        "cli"
+      ],
+      "triggers": [
+        "github",
+        "images",
+        "screenshots",
+        "gh-extension",
+        "cli",
+        "gh",
+        "image",
+        "upload",
+        "local",
+        "get",
+        "canonical",
+        "user"
+      ],
+      "path": "skills/gh-image/SKILL.md"
     },
     {
       "id": "gh-review-requests",
