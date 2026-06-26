@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-25T06:37:39.000Z",
-  "total": 1687,
+  "total": 1688,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3166,6 +3166,34 @@
         "teensy"
       ],
       "path": "skills/arm-cortex-expert/SKILL.md"
+    },
+    {
+      "id": "arrowspace",
+      "name": "arrowspace",
+      "description": "Spectral vector search using graph Laplacian eigenstructure. Use when cosine/L2 similarity misses latent structure in your embeddings.",
+      "category": "data-ai",
+      "tags": [
+        "vector-search",
+        "spectral-analysis",
+        "graph-laplacian",
+        "embeddings",
+        "lambda-tau"
+      ],
+      "triggers": [
+        "vector-search",
+        "spectral-analysis",
+        "graph-laplacian",
+        "embeddings",
+        "lambda-tau",
+        "arrowspace",
+        "spectral",
+        "vector",
+        "search",
+        "graph",
+        "laplacian",
+        "eigenstructure"
+      ],
+      "path": "skills/arrowspace/SKILL.md"
     },
     {
       "id": "article-illustrations",

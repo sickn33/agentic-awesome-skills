@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-25T06:37:39.000Z
 
-Total skills: 1687
+Total skills: 1688
 
 ## architecture (104)
 
@@ -207,7 +207,7 @@ Total skills: 1687
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (310)
+## data-ai (311)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -246,6 +246,7 @@ Total skills: 1687
 | `apify-ecommerce` | Extract product data, prices, reviews, and seller information from any e-commerce platform using Apify's E-commerce Scraping Tool. | apify, ecommerce | apify, ecommerce, extract, product, data, prices, reviews, seller, information, any, commerce, platform |
 | `apify-ultimate-scraper` | AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task. | apify, ultimate, scraper | apify, ultimate, scraper, ai, driven, data, extraction, 55, actors, all, major, platforms |
 | `appdeploy` | Deploy web apps with backend APIs, database, and file storage. Use when the user asks to deploy or publish a website or web app and wants a public URL. Uses ... | appdeploy | appdeploy, deploy, web, apps, backend, apis, database, file, storage, user, asks, publish |
+| `arrowspace` | Spectral vector search using graph Laplacian eigenstructure. Use when cosine/L2 similarity misses latent structure in your embeddings. | vector-search, spectral-analysis, graph-laplacian, embeddings, lambda-tau | vector-search, spectral-analysis, graph-laplacian, embeddings, lambda-tau, arrowspace, spectral, vector, search, graph, laplacian, eigenstructure |
 | `astropy` | Astropy is the core Python package for astronomy, providing essential functionality for astronomical research and data analysis. | astropy | astropy, core, python, package, astronomy, providing, essential, functionality, astronomical, research, data, analysis |
 | `audio-transcriber` | Transform audio recordings into professional Markdown documentation with intelligent summaries using LLM integration | audio, transcription, whisper, meeting-minutes, speech-to-text | audio, transcription, whisper, meeting-minutes, speech-to-text, transcriber, transform, recordings, professional, markdown, documentation, intelligent |
 | `autonomous-agents` | Autonomous agents are AI systems that can independently decompose goals, plan actions, execute tools, and self-correct without constant human guidance. The c... | autonomous, agents | autonomous, agents, ai, independently, decompose, goals, plan, actions, execute, self, correct, without |

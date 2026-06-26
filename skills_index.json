@@ -2727,6 +2727,28 @@
     }
   },
   {
+    "id": "arrowspace",
+    "path": "skills/arrowspace",
+    "category": "data",
+    "name": "arrowspace",
+    "description": "Spectral vector search using graph Laplacian eigenstructure. Use when cosine/L2 similarity misses latent structure in your embeddings.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "article-illustrations",
     "path": "skills/article-illustrations",
     "category": "creative",

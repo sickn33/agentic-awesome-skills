@@ -2450,6 +2450,25 @@
       "runtime_files": []
     },
     {
+      "id": "arrowspace",
+      "path": "skills/arrowspace",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "article-illustrations",
       "path": "skills/article-illustrations",
       "targets": {
@@ -32400,10 +32419,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1687,
+    "total_skills": 1688,
     "supported": {
-      "codex": 1627,
-      "claude": 1645
+      "codex": 1628,
+      "claude": 1646
     },
     "blocked": {
       "codex": 60,
