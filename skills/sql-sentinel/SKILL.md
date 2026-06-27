@@ -124,7 +124,7 @@ Run the test suite to verify each rule fires on real SQL:
 cd scripts && node test.js   # 26 tests, zero dependencies
 ```
 
-## Honest Limitations
+## Limitations
 
 - This is a **static** analyzer. It finds anti-patterns in the *text* of SQL; it does not read query plans, row counts, or billing. A flagged query on a 100-row table is cheap; the same query on a billion-row table is the problem the rule exists to prevent.
 - The fact-table heuristic (SQL015) keys off table *names* (`*_events`, `*_log`) and is advisory, not definitive.
