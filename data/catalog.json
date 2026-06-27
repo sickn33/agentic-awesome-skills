@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-26T06:38:23.000Z",
-  "total": 1690,
+  "total": 1693,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1375,6 +1375,35 @@
         "scoring"
       ],
       "path": "skills/ai-engineering-toolkit/SKILL.md"
+    },
+    {
+      "id": "ai-loop",
+      "name": "ai-loop",
+      "description": "Runs a bounded spec-build-review development loop with explicit scope, stop conditions, and human approval gates for risky or ambiguous work.",
+      "category": "data-ai",
+      "tags": [
+        "agent-workflow",
+        "specification",
+        "implementation",
+        "review",
+        "verification",
+        "feedback-loop"
+      ],
+      "triggers": [
+        "agent-workflow",
+        "specification",
+        "implementation",
+        "review",
+        "verification",
+        "feedback-loop",
+        "ai",
+        "loop",
+        "runs",
+        "bounded",
+        "spec",
+        "development"
+      ],
+      "path": "skills/ai-loop/SKILL.md"
     },
     {
       "id": "ai-md",
@@ -11405,6 +11434,36 @@
         "companies"
       ],
       "path": "skills/crewai/SKILL.md"
+    },
+    {
+      "id": "cron-doctor",
+      "name": "cron-doctor",
+      "description": "Diagnose and validate cron expressions before they ship. Catches the five silent death-traps: impossible dates that never fire, OR-semantics that fire too often, midnight spikes, uneven step drift, and leap-year February 29.",
+      "category": "infrastructure",
+      "tags": [
+        "cron",
+        "crontab",
+        "scheduling",
+        "devops",
+        "debugging",
+        "kubernetes",
+        "validation"
+      ],
+      "triggers": [
+        "cron",
+        "crontab",
+        "scheduling",
+        "devops",
+        "debugging",
+        "kubernetes",
+        "validation",
+        "doctor",
+        "diagnose",
+        "validate",
+        "expressions",
+        "before"
+      ],
+      "path": "skills/cron-doctor/SKILL.md"
     },
     {
       "id": "crossframe",
@@ -35543,6 +35602,39 @@
         "tuning"
       ],
       "path": "skills/sql-pro/SKILL.md"
+    },
+    {
+      "id": "sql-sentinel",
+      "name": "sql-sentinel",
+      "description": "Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan for BigQuery, Snowflake, Redshift, and Postgres.",
+      "category": "data-ai",
+      "tags": [
+        "sql",
+        "bigquery",
+        "snowflake",
+        "redshift",
+        "postgres",
+        "data-warehouse",
+        "cost-optimization",
+        "performance",
+        "audit",
+        "finops"
+      ],
+      "triggers": [
+        "sql",
+        "bigquery",
+        "snowflake",
+        "redshift",
+        "postgres",
+        "data-warehouse",
+        "cost-optimization",
+        "performance",
+        "audit",
+        "finops",
+        "sentinel",
+        "cost"
+      ],
+      "path": "skills/sql-sentinel/SKILL.md"
     },
     {
       "id": "sqlmap-database-pentesting",

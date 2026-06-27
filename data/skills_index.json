@@ -1108,6 +1108,28 @@
     }
   },
   {
+    "id": "ai-loop",
+    "path": "skills/ai-loop",
+    "category": "workflow",
+    "name": "ai-loop",
+    "description": "Runs a bounded spec-build-review development loop with explicit scope, stop conditions, and human approval gates for risky or ambiguous work.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ai-md",
     "path": "skills/ai-md",
     "category": "ai-ml",
@@ -10351,6 +10373,28 @@
     "risk": "unknown",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "cron-doctor",
+    "path": "skills/cron-doctor",
+    "category": "devops",
+    "name": "cron-doctor",
+    "description": "Diagnose and validate cron expressions before they ship. Catches the five silent death-traps: impossible dates that never fire, OR-semantics that fire too often, midnight spikes, uneven step drift, and leap-year February 29.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-26",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31494,6 +31538,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "sql-sentinel",
+    "path": "skills/sql-sentinel",
+    "category": "data",
+    "name": "sql-sentinel",
+    "description": "Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan for BigQuery, Snowflake, Redshift, and Postgres.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-26",
     "plugin": {
       "targets": {
         "codex": "supported",

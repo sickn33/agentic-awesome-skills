@@ -1066,6 +1066,25 @@
       "runtime_files": []
     },
     {
+      "id": "ai-loop",
+      "path": "skills/ai-loop",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-md",
       "path": "skills/ai-md",
       "targets": {
@@ -8756,6 +8775,25 @@
     {
       "id": "crewai",
       "path": "skills/crewai",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "cron-doctor",
+      "path": "skills/cron-doctor",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -27431,6 +27469,25 @@
       "runtime_files": []
     },
     {
+      "id": "sql-sentinel",
+      "path": "skills/sql-sentinel",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "sqlmap-database-pentesting",
       "path": "skills/sqlmap-database-pentesting",
       "targets": {
@@ -32457,10 +32514,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1690,
+    "total_skills": 1693,
     "supported": {
-      "codex": 1630,
-      "claude": 1648
+      "codex": 1633,
+      "claude": 1651
     },
     "blocked": {
       "codex": 60,

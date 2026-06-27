@@ -9,6 +9,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.4.0] - 2026-06-27 - "Planning Loops, Cron Safety, and SQL Cost Review"
+
+> Community skill intake and maintainer-sync release for the 1,693+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1693-skills](README.md#browse-1693-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release packages the June 27 maintainer batch: four community skill PRs, source-credit fixes for imported MIT-licensed community repositories, generated registry and plugin mirror sync, and public count refresh for the 1,693+ skill catalog.
+
+## Added
+
+- Added **web-project-brainstorming**, a project-scoping skill for web concepts, UX flows, responsive layouts, design-system direction, technical architecture, SEO, and MVP planning (PR #756).
+- Added **cron-doctor** from [takeaseatventure/devops-skills](https://github.com/takeaseatventure/devops-skills), a cron expression diagnosis skill with a bundled zero-dependency parser, validator, CLI, and trap checklist for silent schedule failures (PR #757).
+- Added **sql-sentinel** from [takeaseatventure/sql-sentinel](https://github.com/takeaseatventure/sql-sentinel), a SQL warehouse cost and performance audit skill for BigQuery, Snowflake, Redshift, and Postgres anti-pattern review (PR #758).
+- Added **ai-loop**, a bounded spec-build-review workflow skill for scoped development loops with explicit verification evidence, iteration budgets, and human approval gates (PR #759).
+
+## Changed
+
+- Added README source credits for the `takeaseatventure/devops-skills` and `takeaseatventure/sql-sentinel` community repositories.
+- Hardened the **ai-loop** contribution during maintainer review so it describes bounded, approval-gated workflows rather than unqualified autonomous execution.
+- Normalized the **sql-sentinel** limitations heading to the repository's canonical quality gate.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, contributor/source metadata, sitemap, package description, and public docs for the 1,693+ skill catalog.
+
+## Validation
+
+- Verified PR checks for source validation, skill review, artifact preview, CodeQL, Dependency Review, Socket, Snyk, and PR policy before merging PRs #756, #757, #758, and #759.
+- Ran `npm run check:readme-credits -- --base origin/main --head HEAD` on the source-credit fixes for `cron-doctor` and `sql-sentinel`.
+- Ran the focused audit-skills test after normalizing `sql-sentinel` limitations: `node tools/scripts/run-python.js tools/scripts/tests/test_audit_skills.py`.
+- Ran `npm run validate` after the maintainer edits.
+- Ran `npm run sync:repo-state`, including validation, plugin compatibility sync, index/catalog generation, web asset sync, contributor sync, consistency audit, and warning-budget enforcement.
+
+## Credits
+
+- **[@Rsmiyani](https://github.com/Rsmiyani)** for PR #756 (`web-project-brainstorming`).
+- **[@takeaseatventure](https://github.com/takeaseatventure)** and **[takeaseatventure/devops-skills](https://github.com/takeaseatventure/devops-skills)** for PR #757 (`cron-doctor`).
+- **[@takeaseatventure](https://github.com/takeaseatventure)** and **[takeaseatventure/sql-sentinel](https://github.com/takeaseatventure/sql-sentinel)** for PR #758 (`sql-sentinel`).
+- **[@PzocikErwin](https://github.com/PzocikErwin)** for PR #759 (`ai-loop`).
+
 ## [13.3.0] - 2026-06-26 - "Agent Discipline, 3D Web, and GitHub Media"
 
 > Community skill intake and dependency-maintenance release for the 1,689+ skill catalog.

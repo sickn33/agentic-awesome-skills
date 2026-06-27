@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-26T06:38:23.000Z
 
-Total skills: 1690
+Total skills: 1693
 
 ## architecture (105)
 
@@ -208,7 +208,7 @@ Total skills: 1690
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (311)
+## data-ai (313)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -229,6 +229,7 @@ Total skills: 1690
 | `ai-analyzer` | AI驱动的综合健康分析系统，整合多维度健康数据、识别异常模式、预测健康风险、提供个性化建议。支持智能问答和AI健康报告生成。 | ai, analyzer | ai, analyzer |
 | `ai-dev-jobs-mcp` | Search 8,400+ AI and ML jobs across 489 companies, inspect listings and employers, match roles, and view salary and market stats via AI Dev Jobs MCP | mcp, jobs, ai-jobs, ml-jobs, recruiting, job-search, career | mcp, jobs, ai-jobs, ml-jobs, recruiting, job-search, career, ai, dev, search, 400, ml |
 | `ai-engineer` | Build production-ready LLM applications, advanced RAG systems, and intelligent agents. Implements vector search, multimodal AI, agent orchestration, and ente... | ai | ai, engineer, llm, applications, rag, intelligent, agents, implements, vector, search, multimodal, agent |
+| `ai-loop` | Runs a bounded spec-build-review development loop with explicit scope, stop conditions, and human approval gates for risky or ambiguous work. | agent-workflow, specification, implementation, review, verification, feedback-loop | agent-workflow, specification, implementation, review, verification, feedback-loop, ai, loop, runs, bounded, spec, development |
 | `ai-ml` | AI and machine learning workflow covering LLM application development, RAG implementation, agent architecture, ML pipelines, and AI-powered features. | ai, ml | ai, ml, machine, learning, covering, llm, application, development, rag, agent, architecture, pipelines |
 | `ai-native-cli` | Design spec with 98 rules for building CLI tools that AI agents can safely use. Covers structured JSON output, error handling, input contracts, safety guardr... | ai, native, cli | ai, native, cli, spec, 98, rules, building, agents, safely, covers, structured, json |
 | `ai-product` | Every product will be AI-powered. The question is whether you'll build it right or ship a demo that falls apart in production. | ai, product | ai, product, every, powered, question, whether, ll, right, ship, demo, falls, apart |
@@ -486,6 +487,7 @@ Total skills: 1690
 | `spark-optimization` | Optimize Apache Spark jobs with partitioning, caching, shuffle optimization, and memory tuning. Use when improving Spark performance, debugging slow jobs, or... | spark, optimization | spark, optimization, optimize, apache, jobs, partitioning, caching, shuffle, memory, tuning, improving, performance |
 | `spline-3d-integration` | Use when adding interactive 3D scenes from Spline.design to web projects, including React embedding and runtime control API. | spline, 3d, integration | spline, 3d, integration, adding, interactive, scenes, web, including, react, embedding, runtime, control |
 | `sql-optimization-patterns` | Transform slow database queries into lightning-fast operations through systematic optimization, proper indexing, and query plan analysis. | sql, optimization | sql, optimization, transform, slow, database, queries, lightning, fast, operations, through, systematic, proper |
+| `sql-sentinel` | Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan f... | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops, sentinel, cost |
 | `sqlmap-database-pentesting` | Provide systematic methodologies for automated SQL injection detection and exploitation using SQLMap. | sqlmap, database, pentesting | sqlmap, database, pentesting, provide, systematic, methodologies, automated, sql, injection, detection, exploitation |
 | `stability-ai` | Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos. | image-generation, stable-diffusion, ai-art, api | image-generation, stable-diffusion, ai-art, api, stability, ai, geracao, de, imagens, via, sd3, ultra |
 | `stitch-ui-design` | Expert guidance for crafting effective prompts in Google Stitch, the AI-powered UI design tool by Google Labs. This skill helps create precise, actionable pr... | stitch, ui | stitch, ui, guidance, crafting, effective, prompts, google, ai, powered, labs, skill, helps |
@@ -1234,7 +1236,7 @@ Total skills: 1690
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (146)
+## infrastructure (147)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1279,6 +1281,7 @@ Total skills: 1690
 | `cloud-devops` | Cloud infrastructure and DevOps workflow covering AWS, Azure, GCP, Kubernetes, Terraform, CI/CD, monitoring, and cloud-native development. | cloud, devops | cloud, devops, infrastructure, covering, aws, azure, gcp, kubernetes, terraform, ci, cd, monitoring |
 | `code-review-ai-ai-review` | You are an expert AI-powered code review specialist combining automated static analysis, intelligent pattern recognition, and modern DevOps practices. Levera... | code, ai | code, ai, review, powered, combining, automated, static, analysis, intelligent, recognition, devops, leverage |
 | `cost-optimization` | Strategies and patterns for optimizing cloud costs across AWS, Azure, and GCP. | cost, optimization | cost, optimization, optimizing, cloud, costs, aws, azure, gcp |
+| `cron-doctor` | Diagnose and validate cron expressions before they ship. Catches the five silent death-traps: impossible dates that never fire, OR-semantics that fire too of... | cron, crontab, scheduling, devops, debugging, kubernetes, validation | cron, crontab, scheduling, devops, debugging, kubernetes, validation, doctor, diagnose, validate, expressions, before |
 | `daily-gift` | Relationship-aware daily gift engine with five-stage creative pipeline — editorial judgment, synthesis, concept generation, visual strategy, and rendering in... | creative, gift, personalization, h5, image-generation, video-generation, relationship | creative, gift, personalization, h5, image-generation, video-generation, relationship, daily, aware, engine, five, stage |
 | `data-engineer` | Build scalable data pipelines, modern data warehouses, and real-time streaming architectures. Implements Apache Spark, dbt, Airflow, and cloud-native data pl... | data | data, engineer, scalable, pipelines, warehouses, real, time, streaming, architectures, implements, apache, spark |
 | `data-engineering-data-pipeline` | You are a data pipeline architecture expert specializing in scalable, reliable, and cost-effective data pipelines for batch and streaming data processing. | data, engineering, pipeline | data, engineering, pipeline, architecture, specializing, scalable, reliable, cost, effective, pipelines, batch, streaming |
