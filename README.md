@@ -350,6 +350,7 @@ Key source families include:
 - **[mattpocock/skills](https://github.com/mattpocock/skills)**: Source for 17 Matt Pocock workflow skills - codebase design, TDD, bug diagnosis, triage, PRDs, issues, prototyping, handoff, teaching, and skill-writing guidance (MIT).
 - **[emilkowalski/skills](https://github.com/emilkowalski/skills)**: Source for Emil Kowalski design engineering skills - UI polish, motion review, animation standards, component craft, and high-taste frontend guidance (MIT).
 - **[takeaseatventure/sql-sentinel](https://github.com/takeaseatventure/sql-sentinel)**: Source for the `sql-sentinel` skill - SQL warehouse cost and performance anti-pattern audits across BigQuery, Snowflake, Redshift, and Postgres (MIT).
+- **[takeaseatventure/devops-skills](https://github.com/takeaseatventure/devops-skills)**: Source for the `cron-doctor` skill - cron expression diagnosis, validation, trap detection, and zero-dependency schedule analysis tooling (MIT).
 - **[drogers0/gh-image](https://github.com/drogers0/gh-image)**: Source for the `gh-image` skill - GitHub CLI image uploads that return canonical `user-attachments` embed URLs for PRs, issues, comments, and README screenshots (MIT).
 - **[Genefold/arrowspace-skills](https://github.com/Genefold/arrowspace-skills)**: Source for the `arrowspace` skill - spectral vector search using graph Laplacian eigenstructure for structurally aware retrieval (Apache-2.0).
 - **[yaojingang/yao-meta-skill](https://github.com/yaojingang/yao-meta-skill)**: Source for the `yao-meta-skill` skill - governed skill creation, refactoring, evaluation, packaging, review, and distribution workflows (MIT).
@@ -521,14 +522,14 @@ We officially thank the following contributors for their help in making this rep
 ## Star History
 
 <a href="https://www.star-history.com/#sickn33/antigravity-awesome-skills&type=date&legend=top-left">
- <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left&cache_bust=202606260720" />
+ <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left&cache_bust=202606270707" />
 </a>
 
 <a href="https://www.star-history.com/sickn33/antigravity-awesome-skills">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&theme=dark&cache_bust=202606260720" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606260720" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606260720" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&theme=dark&cache_bust=202606270707" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606270707" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202606270707" />
  </picture>
 </a>
 
