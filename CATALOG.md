@@ -2,9 +2,9 @@
 
 Generated at: 2026-06-26T06:38:23.000Z
 
-Total skills: 1689
+Total skills: 1690
 
-## architecture (104)
+## architecture (105)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -106,6 +106,7 @@ Total skills: 1689
 | `user-thoughts` | Persist user decisions and project constraints to mdbase across sessions. Trigger on /user-thoughts or /ustht, or when the user discusses architecture, tech ... | userthoughts, documentation, project-management, mdbase | userthoughts, documentation, project-management, mdbase, user, thoughts, persist, decisions, constraints, sessions, trigger, ustht |
 | `ux-flow` | Design user flows and screen structure using StyleSeed UX patterns such as progressive disclosure, hub-and-spoke navigation, and information pyramids. | ux, flows, navigation, product-design, styleseed | ux, flows, navigation, product-design, styleseed, flow, user, screen, structure, such, progressive, disclosure |
 | `wcag-audit-patterns` | Comprehensive guide to auditing web content against WCAG 2.2 guidelines with actionable remediation strategies. | wcag, audit | wcag, audit, auditing, web, content, against, guidelines, actionable, remediation |
+| `web-project-brainstorming` | Masterclass framework for brainstorming web development projects and page designs. Outlines structural phases for concept, UX flow, styling aesthetics, techn... | brainstorming, project-planning, web-development, product-scoping, design-system, architecture | brainstorming, project-planning, web-development, product-scoping, design-system, architecture, web, masterclass, framework, development, page, designs |
 | `web3-testing` | Master comprehensive testing strategies for smart contracts using Hardhat, Foundry, and advanced testing patterns. | web3 | web3, testing, smart, contracts, hardhat, foundry |
 | `wechat-official-account-strategist` | Grow WeChat Official Accounts (微信公众号) with high-conversion content strategy, title formulas, article architecture, and Mini-Program integration. | wechat, chinese-market, content-strategy, marketing, 公众号, 微信 | wechat, chinese-market, content-strategy, marketing, 公众号, 微信, official, account, strategist, grow, accounts, high |
 | `wordpress-theme-development` | WordPress theme development workflow covering theme architecture, template hierarchy, custom post types, block editor support, responsive design, and WordPre... | wordpress, theme | wordpress, theme, development, covering, architecture, hierarchy, custom, post, types, block, editor, responsive |

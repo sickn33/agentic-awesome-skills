@@ -35874,6 +35874,28 @@
     }
   },
   {
+    "id": "web-project-brainstorming",
+    "path": "skills/web-project-brainstorming",
+    "category": "consulting",
+    "name": "web-project-brainstorming",
+    "description": "Masterclass framework for brainstorming web development projects and page designs. Outlines structural phases for concept, UX flow, styling aesthetics, technical architecture, and SEO.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-06-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "web-scraper",
     "path": "skills/web-scraper",
     "category": "data",

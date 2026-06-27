@@ -31272,6 +31272,25 @@
       "runtime_files": []
     },
     {
+      "id": "web-project-brainstorming",
+      "path": "skills/web-project-brainstorming",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "web-scraper",
       "path": "skills/web-scraper",
       "targets": {
@@ -32438,10 +32457,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1689,
+    "total_skills": 1690,
     "supported": {
-      "codex": 1629,
-      "claude": 1647
+      "codex": 1630,
+      "claude": 1648
     },
     "blocked": {
       "codex": 60,

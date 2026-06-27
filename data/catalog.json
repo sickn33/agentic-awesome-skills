@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-26T06:38:23.000Z",
-  "total": 1689,
+  "total": 1690,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -40483,6 +40483,35 @@
         "bundle"
       ],
       "path": "skills/web-performance-optimization/SKILL.md"
+    },
+    {
+      "id": "web-project-brainstorming",
+      "name": "web-project-brainstorming",
+      "description": "Masterclass framework for brainstorming web development projects and page designs. Outlines structural phases for concept, UX flow, styling aesthetics, technical architecture, and SEO.",
+      "category": "architecture",
+      "tags": [
+        "brainstorming",
+        "project-planning",
+        "web-development",
+        "product-scoping",
+        "design-system",
+        "architecture"
+      ],
+      "triggers": [
+        "brainstorming",
+        "project-planning",
+        "web-development",
+        "product-scoping",
+        "design-system",
+        "architecture",
+        "web",
+        "masterclass",
+        "framework",
+        "development",
+        "page",
+        "designs"
+      ],
+      "path": "skills/web-project-brainstorming/SKILL.md"
     },
     {
       "id": "web-scraper",
