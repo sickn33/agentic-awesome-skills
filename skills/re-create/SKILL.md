@@ -201,6 +201,29 @@ The AI must answer all four before Phase 4 begins:
 
 ---
 
+## Security & Safety Notes
+
+- **Authorized Use Only:** This skill involves destructive capabilities (deleting files). Always ensure you have appropriate authorization and backups before triggering a full rebuild.
+- **Explicit Confirmation Required:** No code should ever be deleted without explicit user confirmation of the Erasure Plan.
+
+---
+
+## Examples
+
+### Example 1: Triggering a full module rewrite
+```text
+User: "The authentication module is beyond saving. Rewrite this from scratch."
+
+AI: [Outputs HOLLOW PURPLE — ERASURE PLAN]
+"Confirm to proceed with erasure and rebuild."
+
+User: "Confirmed."
+
+AI: [Executes Phase 4 and 5: Controlled Erasure and Rebuild against the Preservation List]
+```
+
+---
+
 ## Trigger Phrases
 
 - "rewrite this from scratch"
