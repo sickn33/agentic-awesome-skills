@@ -222,6 +222,14 @@ User: "Confirmed."
 AI: [Executes Phase 4 and 5: Controlled Erasure and Rebuild against the Preservation List]
 ```
 
+### Example 2: Erasure correctly rejected in Phase 1
+```text
+User: "This data formatting script is a mess, rewrite it from scratch."
+
+AI: [Evaluates Phase 1 criteria]
+"I cannot justify a full rewrite. While the code is messy, the structural rot is not deep enough to make patching impossible. The blast radius is limited, and targeted edits will improve it without the risk of erasing undocumented behaviors. I will proceed with surgical refactoring instead."
+```
+
 ---
 
 ## Trigger Phrases
