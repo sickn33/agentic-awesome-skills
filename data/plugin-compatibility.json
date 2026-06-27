@@ -32514,10 +32514,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1693,
+    "total_skills": 1692,
     "supported": {
-      "codex": 1633,
-      "claude": 1651
+      "codex": 1632,
+      "claude": 1650
     },
     "blocked": {
       "codex": 60,

@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-26T06:38:23.000Z
 
-Total skills: 1693
+Total skills: 1692
 
 ## architecture (105)
 
@@ -208,7 +208,7 @@ Total skills: 1693
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (313)
+## data-ai (312)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
