@@ -1,7 +1,7 @@
 ---
 name: re-create
 description: "Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-06-27"
 ---
