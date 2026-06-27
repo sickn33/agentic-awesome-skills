@@ -1,25 +1,35 @@
 ---
 name: ai-loop
-description: Executes a complete, autonomous development loop composed of three phases (Spec, Build, Review) without manual intervention.
+description: Runs a bounded spec-build-review development loop with explicit scope, stop conditions, and human approval gates for risky or ambiguous work.
+category: workflow
 risk: safe
 source: community
+date_added: "2026-06-27"
+tags: [agent-workflow, specification, implementation, review, verification, feedback-loop]
+tools: [claude, cursor, codex, gemini]
 ---
 
 # AI-Loop Skill
 
 ## Overview
 
-The `ai-loop` skill automates the complete development cycle for agentic workflows. By dividing the process into distinct planning (Spec), implementation (Build), and validation (Review) phases, it enables autonomous construction and correction of code features without requiring constant human intervention.
+The `ai-loop` skill structures a bounded development cycle for agentic workflows. By dividing the process into distinct planning (Spec), implementation (Build), and validation (Review) phases, it helps an agent build and correct scoped code changes while keeping requirements, risk gates, and stop conditions explicit.
 
 ## When to Use This Skill
 
-- Use when you need a feature built from scratch or heavily modified, and you want the agent to autonomously handle the entire lifecycle (specification, implementation, and verification) in a single uninterrupted workflow.
+- Use when you need a feature built from scratch or heavily modified, and you want the agent to handle the lifecycle (specification, implementation, and verification) inside one clearly bounded workflow.
 - Use when working with isolated components, modules, or features that have well-defined scopes and constraints.
-- Use when the user asks for a complete autonomous run of a feature development task.
+- Use when the user asks for a complete development pass but the work still has clear success criteria, a reasonable verification path, and no unresolved safety or product decisions.
 
 ## How It Works
 
-This skill executes a complete, autonomous development loop composed of three phases: Spec, Build, and Review. When invoked, the agent transitions through these phases seamlessly to deliver a fully verified feature.
+This skill executes a controlled development loop composed of three phases: Spec, Build, and Review. When invoked, the agent moves through those phases until the scoped requirements pass verification, a stop condition is reached, or human approval is needed.
+
+Before starting, define:
+
+- The maximum number of build-review iterations.
+- The verification commands or manual checks that count as evidence.
+- The actions that require explicit approval, such as destructive commands, production changes, external service writes, or broad architectural pivots.
 
 ### Phase 1: Spec (Planning)
 
@@ -30,7 +40,8 @@ This skill executes a complete, autonomous development loop composed of three ph
    - The objective
    - The exact requirements
    - Edge cases to handle
-   - A concrete definition of done that someone could check the build against.
+   - A concrete definition of done that someone could check the build against
+   - The iteration budget, verification commands, and approval gates.
 
 ### Phase 2: Build (Implementation)
 
@@ -43,8 +54,9 @@ This skill executes a complete, autonomous development loop composed of three ph
 
 1. Compare your implementation against `specs/<feature-name>.md`.
 2. Go requirement by requirement and verify if it was met. List every gap, bug, or missing piece, naming the exact spec item each one fails.
-3. If anything fails, write the specific fixes needed and **loop back to Phase 2 (Build)** to address them.
-4. Only pass the build and conclude the skill execution when every requirement in the spec is fully met.
+3. If anything fails and the iteration budget is not exhausted, write the specific fixes needed and **loop back to Phase 2 (Build)** to address them.
+4. Stop and ask for human input when the next fix would change the spec, exceed the iteration budget, require risky operations, or depend on product decisions not captured in the spec.
+5. Only pass the build and conclude the skill execution when every requirement in the spec is fully met and the declared verification evidence has passed.
 
 ## Examples
 
@@ -90,20 +102,26 @@ This skill executes a complete, autonomous development loop composed of three ph
 - ✅ Do ask clarifying questions one at a time to avoid overwhelming the user during the planning phase.
 - ✅ Do document edge cases explicitly in `specs/<feature-name>.md` before writing any code.
 - ✅ Do stick strictly to the approved specification during the build phase.
+- ✅ Do cap the loop with a small iteration budget and report exactly what remains if the budget is exhausted.
+- ✅ Do pause for explicit approval before destructive, production, credentialed, or externally visible actions.
 - ❌ Don't implement extra features or perform unrelated refactorings that aren't specified.
 - ❌ Don't skip the review phase or pass it without verifying every single requirement.
+- ❌ Don't keep retrying the same failing fix without new evidence or a changed approach.
 
 ## Limitations
 
 - This skill requires sufficient context about the feature to be provided during the Spec phase.
 - It is best suited for isolated features or tasks with clear boundaries, rather than open-ended architectural refactoring.
 - The review phase relies on the agent's self-assessment against the generated spec; manual review is still recommended for critical systems.
+- It is not a replacement for human approval on security-sensitive, destructive, production, compliance, or externally visible changes.
+- It should stop rather than continue if requirements conflict, tests cannot run, or verification depends on unavailable credentials or systems.
 
 ## Security & Safety Notes
 
 - Be cautious when running or testing code generated during the Build phase. Always run tests in a safe, sandboxed environment.
 - Avoid executing arbitrary shell commands provided directly by the user without validating their safety.
 - Make sure no hardcoded secrets, keys, or credentials are added to the code or specifications.
+- Treat production deploys, data migrations, payment flows, credential changes, and external write actions as approval-gated work.
 
 ## Common Pitfalls
 
