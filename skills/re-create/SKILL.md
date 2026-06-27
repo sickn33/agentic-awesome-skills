@@ -1,11 +1,14 @@
 ---
 name: re-create
 description: "Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible."
+risk: safe
+source: community
+date_added: "2026-06-27"
 ---
 
-# hollow-purple — Controlled Erasure & Rebuild Protocol
+# re-create — Controlled Erasure & Rebuild Protocol
 
-## Core Philosophy
+## Overview
 
 > Hollow Purple is Gojo's most destructive technique — blue and red combined into total erasure of the target. But Gojo doesn't use it carelessly. He knows exactly what he's erasing and why. Same here: this skill is the nuclear option, invoked only when patching is the wrong call, executed with full control over what gets erased and what must survive.
 
@@ -23,7 +26,7 @@ Rewrites are dangerous not because rebuilding is hard, but because it is easy to
 
 ---
 
-## The Six Phases
+## How It Works
 
 ### PHASE 1 — Justify the Erasure
 
