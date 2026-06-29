@@ -23724,6 +23724,25 @@
       "runtime_files": []
     },
     {
+      "id": "re-create",
+      "path": "skills/re-create",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "react-best-practices",
       "path": "skills/react-best-practices",
       "targets": {
@@ -32514,10 +32533,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1692,
+    "total_skills": 1694,
     "supported": {
-      "codex": 1632,
-      "claude": 1650
+      "codex": 1634,
+      "claude": 1652
     },
     "blocked": {
       "codex": 60,

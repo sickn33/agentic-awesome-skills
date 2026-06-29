@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-27T07:55:42.000Z
 
-Total skills: 1692
+Total skills: 1694
 
 ## architecture (105)
 
@@ -787,7 +787,7 @@ Total skills: 1692
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (444)
+## general (445)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1130,6 +1130,7 @@ Total skills: 1692
 | `qiskit` | Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on sim... | qiskit | qiskit, world, most, popular, open, source, quantum, computing, framework, 13m, downloads, circuits |
 | `quality-nonconformance` | Codified expertise for quality control, non-conformance investigation, root cause analysis, corrective action, and supplier quality management in regulated m... | quality, nonconformance | quality, nonconformance, codified, expertise, control, non, conformance, investigation, root, cause, analysis, corrective |
 | `rayden-use` | Build and maintain Rayden UI components and screens in Figma via Figma MCP with full design token enforcement | figma, design-system, ui, components, mcp, rayden, rayna-ui | figma, design-system, ui, components, mcp, rayden, rayna-ui, maintain, screens, via, full, token |
+| `re-create` | Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible. | re, create | re, create, completely, delete, rewrite, file, module, scratch, structural, rot, makes, patching |
 | `readme` | You are an expert technical writer creating comprehensive project documentation. Your goal is to write a README.md that is absurdly thorough—the kind of docu... | readme | readme, technical, writer, creating, documentation, goal, write, md, absurdly, thorough, kind, wish |
 | `receiving-code-review` | Code review requires technical evaluation, not emotional performance. | receiving, code | receiving, code, review, requires, technical, evaluation, emotional, performance |
 | `rehabilitation-analyzer` | 分析康复训练数据、识别康复模式、评估康复进展，并提供个性化康复建议 | rehabilitation, analyzer | rehabilitation, analyzer |

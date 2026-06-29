@@ -27104,6 +27104,28 @@
     }
   },
   {
+    "id": "re-create",
+    "path": "skills/re-create",
+    "category": "uncategorized",
+    "name": "re-create",
+    "description": "Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "react-best-practices",
     "path": "skills/react-best-practices",
     "category": "web-development",

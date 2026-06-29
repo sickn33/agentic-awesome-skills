@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-27T07:55:42.000Z",
-  "total": 1693,
+  "total": 1694,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -30772,6 +30772,31 @@
         "token"
       ],
       "path": "skills/rayden-use/SKILL.md"
+    },
+    {
+      "id": "re-create",
+      "name": "re-create",
+      "description": "Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible.",
+      "category": "general",
+      "tags": [
+        "re",
+        "create"
+      ],
+      "triggers": [
+        "re",
+        "create",
+        "completely",
+        "delete",
+        "rewrite",
+        "file",
+        "module",
+        "scratch",
+        "structural",
+        "rot",
+        "makes",
+        "patching"
+      ],
+      "path": "skills/re-create/SKILL.md"
     },
     {
       "id": "react-best-practices",
