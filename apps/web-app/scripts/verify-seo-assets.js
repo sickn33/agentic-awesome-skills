@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { getSeoLandingPaths } from './generate-sitemap.js';
 
 export function extractSitemapLocations(xmlText) {
   const raw = String(xmlText ?? '');
@@ -165,12 +166,23 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
     `${normalizedRoot}/plugins`,
     `${normalizedRoot}/plugins/`,
   ]);
+  const topicPathVariants = new Set(
+    getSeoLandingPaths().flatMap((topicPath) => [
+      `${normalizedRoot}${topicPath}`,
+      `${normalizedRoot}${topicPath}/`,
+    ]),
+  );
   const skillRoutes = extraRoutes.filter(({ parsed: parsedUrl }) =>
     parsedUrl.pathname.startsWith(skillPrefix),
   );
+  const topicRoutes = extraRoutes.filter(({ parsed: parsedUrl }) =>
+    topicPathVariants.has(parsedUrl.pathname),
+  );
   const unsupportedRoutes = extraRoutes.filter(
     ({ parsed: parsedUrl }) =>
-      !parsedUrl.pathname.startsWith(skillPrefix) && !allowedExtraPathVariants.has(parsedUrl.pathname),
+      !parsedUrl.pathname.startsWith(skillPrefix) &&
+      !allowedExtraPathVariants.has(parsedUrl.pathname) &&
+      !topicPathVariants.has(parsedUrl.pathname),
   );
 
   assert(
@@ -188,6 +200,7 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
     rootPath: rootUrl.pathname,
     normalizedRootPath: normalizedRoot,
     skillUrls: skillRoutes.map(({ raw }) => raw),
+    topicUrls: topicRoutes.map(({ raw }) => raw),
     pluginUrls: extraRoutes
       .filter(({ parsed: parsedUrl }) => allowedExtraPathVariants.has(parsedUrl.pathname))
       .map(({ raw }) => raw),
@@ -293,6 +306,7 @@ export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '
     combined.includes(expectedSkillCountLabel),
     `Home SEO metadata must expose the current ${expectedSkillCountLabel} skill count.`,
   );
+  assert(combined.includes('GitHub library'), 'Home SEO metadata must mention the GitHub library.');
   assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
   assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
@@ -308,6 +322,20 @@ export function assertPluginsDiscoveryMeta(htmlText) {
   assert(combined.includes('AAS Specialized Plugins'), 'Plugins page SEO metadata must expose the plugin landing title.');
   assert(combined.includes('specialized plugin packs'), 'Plugins page SEO metadata must mention specialized plugin packs.');
   assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization']);
+}
+
+export function assertTopicDiscoveryMeta(htmlText) {
+  const title = extractTitle(htmlText);
+  const description = extractMetaContent(htmlText, 'name', 'description') || '';
+  const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
+  const combined = [title, description, ogTitle].join(' ');
+
+  assert(combined.includes('Antigravity') || combined.includes('GitHub'), 'Topic page SEO metadata must expose a relevant discovery title.');
+  assert(
+    combined.includes('skills') || combined.includes('Skills') || combined.includes('plugins') || combined.includes('Plugins'),
+    'Topic page SEO metadata must mention skills or plugins.',
+  );
+  assertJsonLdTypes(htmlText, ['WebPage', 'BreadcrumbList', 'Organization', 'WebSite', 'SoftwareSourceCode']);
 }
 
 function routePathToDistFile(routePath, normalizedRootPath) {
@@ -340,6 +368,18 @@ export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', norm
       `Missing prerendered page for plugin route: ${parsed.pathname}. Expected ${filePath}.`,
     );
     assertPluginsDiscoveryMeta(readFile(filePath));
+  }
+}
+
+export function assertPrerenderedTopicRoutes(topicUrls, distDir = 'dist', normalizedRootPath = '') {
+  for (const topicUrl of topicUrls) {
+    const parsed = new URL(topicUrl);
+    const filePath = path.join(distDir, routePathToDistFile(parsed.pathname, normalizedRootPath));
+    assert(
+      fs.existsSync(filePath),
+      `Missing prerendered page for topic route: ${parsed.pathname}. Expected ${filePath}.`,
+    );
+    assertTopicDiscoveryMeta(readFile(filePath));
   }
 }
 
@@ -403,6 +443,7 @@ export function runVerification({
   const expectedSkillCountLabel = readSkillCountLabel(distDir);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
+  assertPrerenderedTopicRoutes(sitemapReport.topicUrls, distDir, sitemapReport.normalizedRootPath);
   assertIndexSocialMeta(indexHtml);
   assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel });
   assertRobots(readFile(robotsPath));

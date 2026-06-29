@@ -7,6 +7,7 @@ import type { SyncMessage, CategoryStats } from '../types';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildHomeMeta, getHomeFaqItems } from '../utils/seo';
 import { Link } from 'react-router-dom';
+import { seoLandingPages } from '../data/seoLandingPages';
 
 const conceptCards = [
   {
@@ -51,6 +52,11 @@ const integrationGuides = [
     name: 'Gemini CLI',
     href: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/gemini-cli-skills.md',
     body: 'A broad starting point for engineering, agent systems, integrations, and applied AI workflows.',
+  },
+  {
+    name: 'Antigravity',
+    href: 'https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool',
+    body: 'Installer targets for Antigravity IDE and Antigravity CLI, with reduced activation paths when the full library is too broad.',
   },
 ] as const;
 
@@ -173,9 +179,9 @@ export function Home(): React.ReactElement {
             Build agent workflows with production-grade skill playbooks
           </h1>
           <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            Antigravity Awesome Skills is a curated catalog for the official GitHub repository of installable
-            capabilities for AI assistants. Search fast, shortlist by category, and launch your first tested
-            workflow from one focused workspace.
+            Antigravity Awesome Skills is the searchable catalog for the official GitHub repository of installable
+            AI agent skills, Antigravity CLI playbooks, specialized plugins, bundles, and workflows. Search fast,
+            shortlist by category, and launch your first tested workflow from one focused workspace.
           </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-stretch">
@@ -214,6 +220,12 @@ export function Home(): React.ReactElement {
               className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
             >
               Compare specialized plugins
+            </Link>
+            <Link
+              to="/topics/github-ai-skills-repository"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              GitHub skills guide
             </Link>
           </div>
 
@@ -432,6 +444,33 @@ export function Home(): React.ReactElement {
                 <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">{guide.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{guide.body}</p>
               </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-7 dark:border-slate-800 dark:bg-slate-900">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+            Search Topics
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            Direct entry points for high-intent searches
+          </h2>
+          <p className="mt-3 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
+            These guides map common discovery queries to the right catalog surface, GitHub source, and plugin or installer path.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {seoLandingPages.map((page) => (
+              <Link
+                key={page.slug}
+                to={`/topics/${page.slug}`}
+                className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 transition-colors hover:border-slate-400 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950 dark:hover:border-slate-600"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  {page.eyebrow}
+                </p>
+                <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">{page.h1}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{page.summary}</p>
+              </Link>
             ))}
           </div>
         </section>

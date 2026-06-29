@@ -8,6 +8,7 @@ const DIST_DIR = path.join(ROOT_DIR, 'dist');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
+const SEO_LANDING_PAGES_PATH = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
 
 const HOME_CATALOG_COUNT_FALLBACK = 1689;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
@@ -24,6 +25,11 @@ const FAQ_ITEMS = [
     question: 'How do I install Antigravity Awesome Skills?',
     answer:
       'Install the library with npx antigravity-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+  },
+  {
+    question: 'Is Antigravity Awesome Skills a GitHub repository?',
+    answer:
+      'Yes. The GitHub repository at https://github.com/sickn33/antigravity-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
   },
   {
     question: 'What are AAS specialized plugins?',
@@ -180,8 +186,8 @@ function safeText(value) {
 function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
   const formattedCount = visibleCount.toLocaleString('en-US');
-  const title = `Antigravity Awesome Skills | ${formattedCount}+ AI coding skills and plugins`;
-  const description = `Explore ${formattedCount}+ installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`;
+  const title = `Antigravity Awesome Skills GitHub | ${formattedCount}+ AI coding skills`;
+  const description = `Explore the GitHub library of ${formattedCount}+ installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`;
   const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
   const sourceCodeEntity = {
     '@context': 'https://schema.org',
@@ -204,6 +210,9 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
       'Cursor skills',
       'Gemini CLI skills',
       'Antigravity skills',
+      'Antigravity CLI skills',
+      'GitHub AI skills repository',
+      'AI agent skills GitHub',
       'specialized plugins',
       'SKILL.md',
     ],
@@ -376,6 +385,122 @@ function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
   };
 }
 
+function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
+  const catalogBaseUrl = canonicalUrl.replace(/\/topics\/[^/]+\/?$/, '');
+  const keywords = Array.isArray(page.keywords) ? page.keywords.join(', ') : '';
+  const sourceCodeEntity = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: SITE_NAME,
+    description: 'Installable GitHub library of agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.',
+    url: REPOSITORY_URL,
+    sameAs: [
+      canonicalUrl,
+      HOSTED_CATALOG_URL,
+      'https://www.npmjs.com/package/antigravity-awesome-skills',
+    ],
+    mainEntityOfPage: canonicalUrl,
+    codeRepository: REPOSITORY_URL,
+    applicationCategory: 'DeveloperApplication',
+    keywords: [
+      ...(Array.isArray(page.keywords) ? page.keywords : []),
+      'specialized plugins',
+      'SKILL.md',
+    ],
+    isAccessibleForFree: true,
+    programmingLanguage: {
+      '@type': 'ComputerLanguage',
+      name: 'Markdown',
+      url: 'https://en.wikipedia.org/wiki/Markdown',
+    },
+    license: `${REPOSITORY_URL}/blob/main/LICENSE`,
+  };
+
+  return {
+    title: page.title,
+    description: page.description,
+    canonicalUrl,
+    ogTitle: page.title,
+    ogDescription: page.description,
+    ogImage: imageUrl,
+    twitterCard: 'summary_large_image',
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: page.h1,
+        headline: page.h1,
+        description: page.description,
+        url: canonicalUrl,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: SITE_NAME,
+          url: catalogBaseUrl,
+          sameAs: REPOSITORY_URL,
+        },
+        about: sourceCodeEntity,
+        keywords,
+        mainEntity: {
+          '@type': 'ItemList',
+          name: `${page.eyebrow} topics`,
+          itemListElement: Array.isArray(page.sections)
+            ? page.sections.map((section, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              name: section.heading,
+              description: section.body,
+            }))
+            : [],
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: SITE_NAME,
+            item: HOSTED_CATALOG_URL,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: page.h1,
+            item: canonicalUrl,
+          },
+        ],
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${REPOSITORY_URL}#organization`,
+        name: SITE_NAME,
+        url: REPOSITORY_URL,
+        sameAs: [
+          'https://x.com/AASkills_',
+          'https://www.npmjs.com/package/antigravity-awesome-skills',
+          HOSTED_CATALOG_URL,
+        ],
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        url: catalogBaseUrl,
+        sameAs: REPOSITORY_URL,
+        inLanguage: 'en',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: `${catalogBaseUrl}/?q={search_term_string}`,
+          'query-input': 'required name=search_term_string',
+        },
+      },
+      sourceCodeEntity,
+    ],
+  };
+}
+
 function applySeoMeta(templateHtml, meta) {
   let output = templateHtml;
   const title = safeText(meta.title);
@@ -426,6 +551,21 @@ function readCatalog() {
   return parsed;
 }
 
+function readSeoLandingPages() {
+  if (!fs.existsSync(SEO_LANDING_PAGES_PATH)) {
+    return [];
+  }
+
+  const raw = fs.readFileSync(SEO_LANDING_PAGES_PATH, 'utf-8');
+  const parsed = JSON.parse(raw);
+
+  if (!Array.isArray(parsed)) {
+    throw new Error('SEO landing pages data must be an array.');
+  }
+
+  return parsed;
+}
+
 function main() {
   if (!fs.existsSync(TEMPLATE_PATH)) {
     throw new Error(`Built index file not found at ${TEMPLATE_PATH}. Run npm run build before prerender.`);
@@ -433,6 +573,7 @@ function main() {
 
   const template = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
   const skills = readCatalog();
+  const landingPages = readSeoLandingPages();
   const siteBaseUrl = getSiteBaseUrl();
   const topCount = parseCount(process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT, 40);
   const topSkillPaths = selectTopSkillEntries(skills, topCount);
@@ -455,6 +596,21 @@ function main() {
     canonicalUrl: pluginsCanonical,
   });
   writePrerenderedRoute('/plugins', template, pluginsMeta);
+
+  for (const page of landingPages) {
+    if (!page?.slug) {
+      continue;
+    }
+
+    const routePath = `/topics/${encodeURIComponent(page.slug)}`;
+    const canonicalUrl = routeToUrl(routePath, siteBaseUrl);
+    const landingMeta = buildTopicLandingMeta({
+      page,
+      imageUrl: socialImage,
+      canonicalUrl,
+    });
+    writePrerenderedRoute(routePath, template, landingMeta);
+  }
 
   for (const skillRoute of topSkillPaths) {
     const decodedId = decodeURIComponent(skillRoute.replace(/^\/skill\//, ''));

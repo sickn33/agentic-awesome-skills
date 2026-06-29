@@ -6,6 +6,31 @@ export const DEFAULT_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
 const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
+const TOPIC_ROUTE_PREFIX = '/topics';
+
+export interface SeoLandingPageLink {
+  label: string;
+  href?: string;
+  to?: string;
+}
+
+export interface SeoLandingPageSection {
+  heading: string;
+  body: string;
+}
+
+export interface SeoLandingPage {
+  slug: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  h1: string;
+  summary: string;
+  primaryIntent: string;
+  keywords: string[];
+  sections: SeoLandingPageSection[];
+  links: SeoLandingPageLink[];
+}
 const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
@@ -16,6 +41,11 @@ const FAQ_ITEMS = [
     question: 'How do I install Antigravity Awesome Skills?',
     answer:
       'Install the library with npx antigravity-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+  },
+  {
+    question: 'Is Antigravity Awesome Skills a GitHub repository?',
+    answer:
+      'Yes. The GitHub repository at https://github.com/sickn33/antigravity-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
   },
   {
     question: 'What are AAS specialized plugins?',
@@ -139,6 +169,9 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
       'Cursor skills',
       'Gemini CLI skills',
       'Antigravity skills',
+      'Antigravity CLI skills',
+      'GitHub AI skills repository',
+      'AI agent skills GitHub',
       'specialized plugins',
       'SKILL.md',
     ],
@@ -320,11 +353,11 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
   const visibleCountLabel = visibleCount > 0 ? `${visibleCount.toLocaleString('en-US')}+` : '';
   const title = visibleCount > 0
-    ? `Antigravity Awesome Skills | ${visibleCountLabel} AI coding skills and plugins`
-    : 'Antigravity Awesome Skills | AI coding skills and plugins';
+    ? `Antigravity Awesome Skills GitHub | ${visibleCountLabel} AI coding skills`
+    : 'Antigravity Awesome Skills GitHub | AI coding skills';
   const description = visibleCount > 0
-    ? `Explore ${visibleCount.toLocaleString('en-US')} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`
-    : 'Explore installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.';
+    ? `Explore the GitHub library of ${visibleCountLabel} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`
+    : 'Explore the GitHub library of installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.';
   return {
     title,
     description,
@@ -386,6 +419,81 @@ export function buildPluginsMeta(pluginCount: number): SeoMeta {
       buildOrganizationSchema(),
       buildWebSiteSchema(canonicalUrl),
     ],
+  };
+}
+
+export function buildTopicLandingMeta(page: SeoLandingPage): SeoMeta {
+  const canonicalPath = `${TOPIC_ROUTE_PREFIX}/${page.slug}`;
+  const keywords = page.keywords.join(', ');
+
+  return {
+    title: page.title,
+    description: page.description,
+    canonicalPath,
+    ogTitle: page.title,
+    ogDescription: page.description,
+    ogImage: DEFAULT_SOCIAL_IMAGE,
+    twitterCard: 'summary_large_image',
+    jsonLd: (canonicalUrl: string) => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: page.h1,
+        headline: page.h1,
+        description: page.description,
+        url: canonicalUrl,
+        isPartOf: buildWebSiteSchema(canonicalUrl),
+        about: buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+        keywords,
+        mainEntity: {
+          '@type': 'ItemList',
+          name: `${page.eyebrow} topics`,
+          itemListElement: page.sections.map((section, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: section.heading,
+            description: section.body,
+          })),
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: SITE_NAME,
+            item: HOSTED_CATALOG_URL,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: page.h1,
+            item: canonicalUrl,
+          },
+        ],
+      },
+      buildOrganizationSchema(),
+      buildWebSiteSchema(canonicalUrl),
+      buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+    ],
+  };
+}
+
+export function buildTopicLandingFallbackMeta(slug: string | undefined): SeoMeta {
+  const safeSlug = encodeURIComponent((slug || 'topic').trim() || 'topic');
+  const title = `Topic guide loading | ${SITE_NAME}`;
+  const description = 'This Antigravity Awesome Skills topic guide is loading from the hosted catalog.';
+
+  return {
+    title,
+    description,
+    canonicalPath: `${TOPIC_ROUTE_PREFIX}/${safeSlug}`,
+    ogTitle: title,
+    ogDescription: description,
+    ogImage: DEFAULT_SOCIAL_IMAGE,
+    twitterCard: 'summary',
   };
 }
 

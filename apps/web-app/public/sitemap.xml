@@ -13,6 +13,30 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>http://localhost/topics/antigravity-cli-skills</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost/topics/github-ai-skills-repository</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost/topics/antigravity-plugins</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost/topics/skills-para-antigravity</loc>
+    <lastmod>2026-06-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>http://localhost/skill/browser-testing-with-devtools</loc>
     <lastmod>2026-06-29</lastmod>
     <changefreq>weekly</changefreq>

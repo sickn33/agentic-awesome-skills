@@ -5,12 +5,14 @@ import {
   buildHomeMeta,
   buildSkillFallbackMeta,
   buildSkillMeta,
+  buildTopicLandingMeta,
   getCanonicalUrl,
   isTopSkill,
   selectTopSkills,
   setPageMeta,
   toCanonicalPath,
 } from '../seo';
+import { seoLandingPages } from '../../data/seoLandingPages';
 
 function createSkill(overrides: Record<string, unknown> = {}) {
   return {
@@ -28,8 +30,9 @@ describe('SEO helpers', () => {
   it('builds homepage metadata with the canonical catalog message', () => {
     const meta = buildHomeMeta(10);
 
-    expect(meta.title).toContain('10+ AI coding skills and plugins');
-    expect(meta.description).toContain('10 installable agentic skills');
+    expect(meta.title).toContain('Antigravity Awesome Skills GitHub');
+    expect(meta.title).toContain('10+ AI coding skills');
+    expect(meta.description).toContain('GitHub library of 10+ installable agentic skills');
     expect(meta.canonicalPath).toBe('/');
     expect(meta.ogTitle).toBe(meta.title);
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
@@ -76,6 +79,19 @@ describe('SEO helpers', () => {
     expect(meta.description).toContain('Added 2026-03-01.');
     expect(meta.canonicalPath).toBe('/skill/react-patterns');
     expect(meta.ogTitle).toContain('@react-patterns');
+    expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
+    expect(typeof meta.jsonLd).toBe('function');
+  });
+
+  it('builds topic landing metadata for high-intent search pages', () => {
+    const topic = seoLandingPages.find((page) => page.slug === 'github-ai-skills-repository');
+    expect(topic).toBeDefined();
+
+    const meta = buildTopicLandingMeta(topic!);
+
+    expect(meta.title).toContain('GitHub AI Skills Repository');
+    expect(meta.description).toContain('GitHub repository');
+    expect(meta.canonicalPath).toBe('/topics/github-ai-skills-repository');
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
     expect(typeof meta.jsonLd).toBe('function');
   });

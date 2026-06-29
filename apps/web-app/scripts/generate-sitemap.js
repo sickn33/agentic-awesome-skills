@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const SKILLS_JSON = path.join(PUBLIC_DIR, 'skills.json');
+const SEO_LANDING_PAGES_JSON = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
 const OUTPUT_PATH = path.join(PUBLIC_DIR, 'sitemap.xml');
 const BASE_PATH =
   (process.env.VITE_BASE_PATH || '/').trim().replace(/\/+$/, '');
@@ -81,6 +82,24 @@ export function selectTopSkillEntries(skills, topCount = TOP_SKILL_COUNT) {
   return dedupedEntries;
 }
 
+export function getSeoLandingPaths() {
+  if (!fs.existsSync(SEO_LANDING_PAGES_JSON)) {
+    return [];
+  }
+
+  const raw = fs.readFileSync(SEO_LANDING_PAGES_JSON, 'utf-8');
+  const pages = JSON.parse(raw);
+
+  if (!Array.isArray(pages)) {
+    return [];
+  }
+
+  return pages
+    .map((page) => String(page?.slug || '').trim())
+    .filter(Boolean)
+    .map((slug) => `/topics/${encodeURIComponent(slug)}`);
+}
+
 export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD }) {
   const normalizedBase = String(baseUrl).replace(/\/$/, '');
   const uniquePaths = [...new Set(paths)];
@@ -106,9 +125,10 @@ function readSkillsCatalog() {
 
 export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_URL) {
   const topSkillPaths = selectTopSkillEntries(skills, topCount);
+  const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
     baseUrl,
-    paths: ['/', '/plugins', ...topSkillPaths],
+    paths: ['/', '/plugins', ...landingPaths, ...topSkillPaths],
   });
 }
 

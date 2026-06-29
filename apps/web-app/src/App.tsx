@@ -5,6 +5,7 @@ import { Icon } from './components/ui/Icon';
 const Home = lazy(() => import('./pages/Home'));
 const SkillDetail = lazy(() => import('./pages/SkillDetail'));
 const Plugins = lazy(() => import('./pages/Plugins'));
+const TopicLanding = lazy(() => import('./pages/TopicLanding'));
 
 function App(): React.ReactElement {
   const logoSrc = `${import.meta.env.BASE_URL}Antigravity-Skills-logo.png`;
@@ -57,6 +58,7 @@ function App(): React.ReactElement {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/plugins" element={<Plugins />} />
+                <Route path="/topics/:slug" element={<TopicLanding />} />
                 <Route path="/skill/:id" element={<SkillDetail />} />
               </Routes>
             </Suspense>
