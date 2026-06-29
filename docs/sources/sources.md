@@ -12,6 +12,10 @@ If you recognize your work here and it is not properly attributed, please open a
 | `crewai`                    | [CrewAI](https://github.com/joaomdmoura/crewAI)                            | MIT            | Framework guides.             |
 | `hasdata`, `hasdata-cli`    | [HasData CLI](https://github.com/HasData/hasdata-cli)                      | MIT            | Official HasData API and CLI guidance. |
 | `runapi-cli`                | [RunAPI CLI Skill](https://github.com/runapi-ai/cli-skill)                 | Apache-2.0     | Official RunAPI CLI skill for generating AI images, videos, and music/audio, plus other model API jobs. |
+| `weaviate`, `weaviate-cookbooks` | [Weaviate Agent Skills](https://github.com/weaviate/agent-skills)     | BSD-3-Clause   | Official Weaviate vector database operations, RAG cookbooks, and agentic app blueprints. |
+| `pre-release-review`, `drizzle-migration-conflict` | [chaunsin/agent-skills](https://github.com/chaunsin/agent-skills) | Apache-2.0 | Release-readiness and Drizzle Kit migration-conflict workflows. |
+| `frontend-lighthouse`       | [stareezy-1/frontend-architecture-skill](https://github.com/stareezy-1/frontend-architecture-skill) | MIT | Lighthouse CI Core Web Vitals gate adapted for the skill catalog. |
+| `browser-testing-with-devtools` | [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)  | MIT            | Chrome DevTools MCP browser verification and security-boundary guidance. |
 | `langgraph`                 | [LangGraph](https://github.com/langchain-ai/langgraph)                     | MIT            | Framework guides.             |
 | `react-patterns`            | [React Docs](https://react.dev/)                                           | CC-BY          | Official patterns.            |
 | **All Official Skills**     | [Anthropic / Google / OpenAI / Microsoft / Supabase / Apify / Vercel Labs] | Proprietary    | Usage encouraged by vendors.  |

@@ -6119,6 +6119,25 @@
       "runtime_files": []
     },
     {
+      "id": "browser-testing-with-devtools",
+      "path": "skills/browser-testing-with-devtools",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "bug-hunter",
       "path": "skills/bug-hunter",
       "targets": {
@@ -11584,6 +11603,29 @@
       "runtime_files": []
     },
     {
+      "id": "drizzle-migration-conflict",
+      "path": "skills/drizzle-migration-conflict",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "drizzle-orm-expert",
       "path": "skills/drizzle-orm-expert",
       "targets": {
@@ -13682,6 +13724,25 @@
     {
       "id": "frontend-developer",
       "path": "skills/frontend-developer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "frontend-lighthouse",
+      "path": "skills/frontend-lighthouse",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -22732,6 +22793,25 @@
       "runtime_files": []
     },
     {
+      "id": "pre-release-review",
+      "path": "skills/pre-release-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "premium-3d-website",
       "path": "skills/premium-3d-website",
       "targets": {
@@ -31272,6 +31352,44 @@
       "runtime_files": []
     },
     {
+      "id": "weaviate",
+      "path": "skills/weaviate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "weaviate-cookbooks",
+      "path": "skills/weaviate-cookbooks",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "web-artifacts-builder",
       "path": "skills/web-artifacts-builder",
       "targets": {
@@ -32533,13 +32651,13 @@
     }
   ],
   "summary": {
-    "total_skills": 1694,
+    "total_skills": 1700,
     "supported": {
-      "codex": 1634,
-      "claude": 1652
+      "codex": 1639,
+      "claude": 1658
     },
     "blocked": {
-      "codex": 60,
+      "codex": 61,
       "claude": 42
     },
     "manual_setup": 13

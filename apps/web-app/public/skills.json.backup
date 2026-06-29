@@ -7119,6 +7119,28 @@
     }
   },
   {
+    "id": "browser-testing-with-devtools",
+    "path": "skills/browser-testing-with-devtools",
+    "category": "testing",
+    "name": "browser-testing-with-devtools",
+    "description": "Test browser apps with Chrome DevTools MCP by inspecting live DOM, console logs, network traffic, screenshots, accessibility, and performance traces.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "brutalism",
     "path": "skills/design-it/brutalism",
     "category": "design-it",
@@ -12747,6 +12769,30 @@
     }
   },
   {
+    "id": "drizzle-migration-conflict",
+    "path": "skills/drizzle-migration-conflict",
+    "category": "databases",
+    "name": "drizzle-migration-conflict",
+    "description": "Diagnose, repair, and prevent Drizzle Kit migration conflicts involving generated SQL, snapshots, journals, merge queues, and team workflows.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-29",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    }
+  },
+  {
     "id": "drizzle-orm-expert",
     "path": "skills/drizzle-orm-expert",
     "category": "database",
@@ -15309,6 +15355,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "frontend-lighthouse",
+    "path": "skills/frontend-lighthouse",
+    "category": "frontend",
+    "name": "frontend-lighthouse",
+    "description": "Add a portable Lighthouse CI gate for production frontend builds with Core Web Vitals budgets, category floors, median runs, and CI artifacts.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-29",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -25914,6 +25982,28 @@
     }
   },
   {
+    "id": "pre-release-review",
+    "path": "skills/pre-release-review",
+    "category": "operations",
+    "name": "pre-release-review",
+    "description": "Run a read-only pre-release review for deploy readiness, migrations, config, secrets, rollout order, rollback risk, and launch blockers.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "premium-3d-website",
     "path": "skills/premium-3d-website",
     "category": "frontend",
@@ -35838,6 +35928,50 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "weaviate",
+    "path": "skills/weaviate",
+    "category": "databases",
+    "name": "weaviate",
+    "description": "Search, query, inspect, create, and import data into Weaviate vector database collections using official scripts and references.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-06-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "weaviate-cookbooks",
+    "path": "skills/weaviate-cookbooks",
+    "category": "ai",
+    "name": "weaviate-cookbooks",
+    "description": "Build Weaviate AI apps from official cookbook blueprints for RAG, agentic RAG, data exploration, multimodal PDF search, async clients, and frontends.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-29",
     "plugin": {
       "targets": {
         "codex": "supported",

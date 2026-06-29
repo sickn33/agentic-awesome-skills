@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-27T07:55:42.000Z
 
-Total skills: 1694
+Total skills: 1700
 
 ## architecture (105)
 
@@ -208,7 +208,7 @@ Total skills: 1694
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (312)
+## data-ai (315)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -517,6 +517,8 @@ Total skills: 1694
 | `voice-agents` | Voice agents represent the frontier of AI interaction - humans speaking naturally with AI systems. | voice, agents | voice, agents, represent, frontier, ai, interaction, humans, speaking, naturally |
 | `voice-ai-development` | Expert in building voice AI applications - from real-time voice agents to voice-enabled apps. Covers OpenAI Realtime API, Vapi for voice agents, Deepgram for... | voice, ai | voice, ai, development, building, applications, real, time, agents, enabled, apps, covers, openai |
 | `voice-ai-engine-development` | Build real-time conversational AI voice engines using async worker pipelines, streaming transcription, LLM agents, and TTS synthesis with interrupt handling ... | voice, ai, engine | voice, ai, engine, development, real, time, conversational, engines, async, worker, pipelines, streaming |
+| `weaviate` | Search, query, inspect, create, and import data into Weaviate vector database collections using official scripts and references. | weaviate, vector-database, semantic-search, hybrid-search, data-import | weaviate, vector-database, semantic-search, hybrid-search, data-import, search, query, inspect, import, data, vector, database |
+| `weaviate-cookbooks` | Build Weaviate AI apps from official cookbook blueprints for RAG, agentic RAG, data exploration, multimodal PDF search, async clients, and frontends. | weaviate, rag, agents, vector-database, ai-apps | weaviate, rag, agents, vector-database, ai-apps, cookbooks, ai, apps, official, cookbook, blueprints, agentic |
 | `web-artifacts-builder` | To build powerful frontend claude.ai artifacts, follow these steps: | web, artifacts, builder | web, artifacts, builder, powerful, frontend, claude, ai, follow, these, steps |
 | `wellally-tech` | Integrate multiple digital health data sources, connect to [WellAlly.tech](https://www.wellally.tech/) knowledge base, providing data import and knowledge re... | wellally, tech | wellally, tech, integrate, multiple, digital, health, data, sources, connect, https, www, knowledge |
 | `wiki-builder` | Create and maintain reusable research wikis with source provenance, configurable structure, and local markdown outputs. | dair-academy, ai, workflow | dair-academy, ai, workflow, wiki, builder, maintain, reusable, research, wikis, source, provenance, configurable |
@@ -1237,7 +1239,7 @@ Total skills: 1694
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (147)
+## infrastructure (150)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1274,6 +1276,7 @@ Total skills: 1694
 | `bash-defensive-patterns` | Master defensive Bash programming techniques for production-grade scripts. Use when writing robust shell scripts, CI/CD pipelines, or system utilities requir... | bash, defensive | bash, defensive, programming, techniques, grade, scripts, writing, robust, shell, ci, cd, pipelines |
 | `bash-pro` | Master of defensive Bash scripting for production automation, CI/CD pipelines, and system utilities. Expert in safe, portable, and testable shell scripts. | bash | bash, pro, defensive, scripting, automation, ci, cd, pipelines, utilities, safe, portable, testable |
 | `bats-testing-patterns` | Master Bash Automated Testing System (Bats) for comprehensive shell script testing. Use when writing tests for shell scripts, CI/CD pipelines, or requiring t... | bats | bats, testing, bash, automated, shell, script, writing, tests, scripts, ci, cd, pipelines |
+| `browser-testing-with-devtools` | Test browser apps with Chrome DevTools MCP by inspecting live DOM, console logs, network traffic, screenshots, accessibility, and performance traces. | browser-testing, chrome-devtools, mcp, frontend, performance | browser-testing, chrome-devtools, mcp, frontend, performance, browser, testing, devtools, test, apps, chrome, inspecting |
 | `cdk-patterns` | Common AWS CDK patterns and constructs for building cloud infrastructure with TypeScript, Python, or Java. Use when designing reusable CDK stacks and L3 cons... | cdk | cdk, common, aws, constructs, building, cloud, infrastructure, typescript, python, java, designing, reusable |
 | `chrome-extension-developer` | Expert in building Chrome Extensions using Manifest V3. Covers background scripts, service workers, content scripts, and cross-context communication. | chrome, extension | chrome, extension, developer, building, extensions, manifest, v3, covers, background, scripts, workers, content |
 | `claude-monitor` | Monitor de performance do Claude Code e sistema local. Diagnostica lentidao, mede CPU/RAM/disco, verifica API latency e gera relatorios de saude do sistema. | monitoring, performance, diagnostics, system-health | monitoring, performance, diagnostics, system-health, claude, monitor, de, do, code, sistema, local, diagnostica |
@@ -1299,6 +1302,7 @@ Total skills: 1694
 | `distributed-debugging-debug-trace` | You are a debugging expert specializing in setting up comprehensive debugging environments, distributed tracing, and diagnostic tools. Configure debugging wo... | distributed, debugging, debug, trace | distributed, debugging, debug, trace, specializing, setting, up, environments, tracing, diagnostic, configure, solutions |
 | `distributed-tracing` | Implement distributed tracing with Jaeger and Tempo for request flow visibility across microservices. | distributed, tracing | distributed, tracing, jaeger, tempo, request, flow, visibility, microservices |
 | `django-pro` | Master Django 5.x with async views, DRF, Celery, and Django Channels. Build scalable web applications with proper architecture, testing, and deployment. | django | django, pro, async, views, drf, celery, channels, scalable, web, applications, proper, architecture |
+| `drizzle-migration-conflict` | Diagnose, repair, and prevent Drizzle Kit migration conflicts involving generated SQL, snapshots, journals, merge queues, and team workflows. | drizzle, migrations, database, ci, merge-conflicts | drizzle, migrations, database, ci, merge-conflicts, migration, conflict, diagnose, repair, prevent, kit, conflicts |
 | `e2e-testing` | End-to-end testing workflow with Playwright for browser automation, visual regression, cross-browser testing, and CI/CD integration. | e2e | e2e, testing, playwright, browser, automation, visual, regression, cross, ci, cd, integration |
 | `earllm-build` | Build, maintain, and extend the EarLLM One Android project — a Kotlin/Compose app that connects Bluetooth earbuds to an LLM via voice pipeline. | android, kotlin, bluetooth, llm, voice | android, kotlin, bluetooth, llm, voice, earllm, maintain, extend, one, compose, app, connects |
 | `ecl-harness-engineer` | Create or audit ECL Agent Harness infrastructure: AGENTS.md, change tracking, repository guidance, lint checks, CI gates, and agent handoff docs. | codex, agent-harness, ecl, workflow, ci | codex, agent-harness, ecl, workflow, ci, harness, engineer, audit, agent, infrastructure, agents, md |
@@ -1311,6 +1315,7 @@ Total skills: 1694
 | `file-uploads` | Expert at handling file uploads and cloud storage. Covers S3, Cloudflare R2, presigned URLs, multipart uploads, and image optimization. Knows how to handle l... | file, uploads | file, uploads, handling, cloud, storage, covers, s3, cloudflare, r2, presigned, urls, multipart |
 | `flutter-expert` | Master Flutter development with Dart 3, advanced widgets, and multi-platform deployment. | flutter | flutter, development, dart, widgets, multi, platform, deployment |
 | `freshservice-automation` | Automate Freshservice ITSM tasks via Rube MCP (Composio): create/update tickets, bulk operations, service requests, and outbound emails. Always search tools ... | freshservice | freshservice, automation, automate, itsm, tasks, via, rube, mcp, composio, update, tickets, bulk |
+| `frontend-lighthouse` | Add a portable Lighthouse CI gate for production frontend builds with Core Web Vitals budgets, category floors, median runs, and CI artifacts. | frontend, lighthouse, performance, core-web-vitals, ci | frontend, lighthouse, performance, core-web-vitals, ci, add, portable, gate, core, web, vitals, budgets |
 | `game-development/game-art` | Game art principles. Visual style selection, asset pipeline, animation workflow. | game, development/game, art | game, development/game, art, principles, visual, style, selection, asset, pipeline, animation |
 | `gcp-cloud-run` | Specialized skill for building production-ready serverless applications on GCP. Covers Cloud Run services (containerized), Cloud Run Functions (event-driven)... | gcp, cloud, run | gcp, cloud, run, specialized, skill, building, serverless, applications, covers, containerized, functions, event |
 | `git-hooks-automation` | Master Git hooks setup with Husky, lint-staged, pre-commit framework, and commitlint. Automate code quality gates, formatting, linting, and commit message en... | git, hooks | git, hooks, automation, setup, husky, lint, staged, pre, commit, framework, commitlint, automate |
@@ -1389,7 +1394,7 @@ Total skills: 1694
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (189)
+## security (190)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1514,6 +1519,7 @@ Total skills: 1694
 | `plaid-fintech` | Expert patterns for Plaid API integration including Link token flows, transactions sync, identity verification, Auth for ACH, balance checks, webhook handlin... | plaid, fintech | plaid, fintech, api, integration, including, link, token, flows, transactions, sync, identity, verification |
 | `popup-cro` | Create and optimize popups, modals, overlays, slide-ins, and banners to increase conversions without harming user experience or brand trust. | popup, cro | popup, cro, optimize, popups, modals, overlays, slide, ins, banners, increase, conversions, without |
 | `postmortem-writing` | Comprehensive guide to writing effective, blameless postmortems that drive organizational learning and prevent incident recurrence. | postmortem, writing | postmortem, writing, effective, blameless, postmortems, drive, organizational, learning, prevent, incident, recurrence |
+| `pre-release-review` | Run a read-only pre-release review for deploy readiness, migrations, config, secrets, rollout order, rollback risk, and launch blockers. | release, deploy-readiness, ci-cd, rollback, production | release, deploy-readiness, ci-cd, rollback, production, pre, review, run, read, deploy, readiness, migrations |
 | `privacy-by-design` | Use when building apps that collect user data. Ensures privacy protections are built in from the start—data minimization, consent, encryption. | privacy, by | privacy, by, building, apps, collect, user, data, ensures, protections, built, start, minimization |
 | `product-manager` | Senior PM agent with 6 knowledge domains, 30+ frameworks, 12 templates, and 32 SaaS metrics with formulas. Pure Markdown, zero scripts. | product-management, saas, frameworks, metrics, strategy | product-management, saas, frameworks, metrics, strategy, product, manager, senior, pm, agent, knowledge, domains |
 | `production-audit` | Audit a shipped repo for production-readiness gaps across RLS, webhooks, secrets, grants, Stripe idempotency, mobile UX, and deployment health. | security, audit, production, vibe-coding, rls, webhook, stripe, supabase, mobile | security, audit, production, vibe-coding, rls, webhook, stripe, supabase, mobile, shipped, repo, readiness |

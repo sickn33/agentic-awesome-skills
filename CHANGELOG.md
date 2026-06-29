@@ -9,6 +9,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.5.0] - 2026-06-29 - "Release Readiness, Weaviate, and Browser Runtime Gates"
+
+> Community skill intake and curated-source release for the 1,700+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1700-skills](README.md#browse-1700-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release packages the June 29 maintainer batch: one community PR, six curated external skill imports, source-credit updates, generated registry and plugin mirror sync, and public count refresh for the 1,700+ skill catalog.
+
+## Added
+
+- Added **re-create**, a controlled erasure and rebuild protocol for cases where a file or module must be rewritten from scratch after explicitly preserving public interfaces, working behavior, and blast-radius knowledge (PR #760).
+- Added **pre-release-review** from [chaunsin/agent-skills](https://github.com/chaunsin/agent-skills), a read-only production release-readiness audit for migrations, config, secrets, deploy ordering, rollback risk, and launch blockers.
+- Added **drizzle-migration-conflict** from [chaunsin/agent-skills](https://github.com/chaunsin/agent-skills), a focused Drizzle Kit migration-conflict diagnosis, repair, and prevention workflow with references and a database-free helper script.
+- Added **weaviate** from [weaviate/agent-skills](https://github.com/weaviate/agent-skills), an official Weaviate operations skill for collection inspection, semantic/hybrid/keyword search, data imports, and query-agent workflows.
+- Added **weaviate-cookbooks** from [weaviate/agent-skills](https://github.com/weaviate/agent-skills), an official cookbook index for Weaviate RAG, agentic RAG, multimodal PDF search, data explorer, chatbot, frontend, and async-client blueprints.
+- Added **frontend-lighthouse** from [stareezy-1/frontend-architecture-skill](https://github.com/stareezy-1/frontend-architecture-skill), a portable Lighthouse CI performance gate for Core Web Vitals budgets, category floors, median runs, and CI artifacts.
+- Added **browser-testing-with-devtools** from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), a Chrome DevTools MCP browser-verification skill for live DOM, console, network, screenshot, accessibility, and performance evidence.
+
+## Changed
+
+- Added README source credits for `chaunsin/agent-skills`, `weaviate/agent-skills`, `stareezy-1/frontend-architecture-skill`, and `addyosmani/agent-skills`.
+- Normalized imported skill metadata with repository categories, risk labels, source provenance, dates, authors, tags, tools, license fields, `When to Use` sections, and explicit `Limitations`.
+- Rewrote Weaviate cookbook install snippets that piped remote install scripts into a shell so the docs-security check keeps download, inspection, and execution as separate steps.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, package description, README counters, and public docs for the 1,700+ skill catalog.
+
+## Validation
+
+- Verified PR #760 checks for source validation, artifact preview, review, CodeQL, Dependency Review, Socket, Snyk, and PR policy before merging.
+- Ran `npm run validate`.
+- Ran `npm run security:docs` after normalizing the imported Weaviate install snippets.
+- Ran `npm run check:warning-budget`.
+- Ran `npm run chain`, including validation, plugin compatibility sync, index generation, bundle sync, and metadata sync.
+- Ran `npm run catalog`.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #760 (`re-create`).
+- **[@chaunsin](https://github.com/chaunsin)** and **[chaunsin/agent-skills](https://github.com/chaunsin/agent-skills)** for `pre-release-review` and `drizzle-migration-conflict` (Apache-2.0).
+- **[Weaviate](https://github.com/weaviate)** and **[weaviate/agent-skills](https://github.com/weaviate/agent-skills)** for `weaviate` and `weaviate-cookbooks` (BSD-3-Clause).
+- **[@stareezy-1](https://github.com/stareezy-1)** and **[stareezy-1/frontend-architecture-skill](https://github.com/stareezy-1/frontend-architecture-skill)** for `frontend-lighthouse` (MIT).
+- **[@addyosmani](https://github.com/addyosmani)** and **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)** for `browser-testing-with-devtools` (MIT).
+
 ## [13.4.0] - 2026-06-27 - "Planning Loops, Cron Safety, and SQL Cost Review"
 
 > Community skill intake and maintainer-sync release for the 1,693+ skill catalog.

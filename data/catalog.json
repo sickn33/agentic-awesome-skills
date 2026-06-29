@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-27T07:55:42.000Z",
-  "total": 1694,
+  "total": 1700,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -8060,6 +8060,34 @@
       "path": "skills/browser-extension-builder/SKILL.md"
     },
     {
+      "id": "browser-testing-with-devtools",
+      "name": "browser-testing-with-devtools",
+      "description": "Test browser apps with Chrome DevTools MCP by inspecting live DOM, console logs, network traffic, screenshots, accessibility, and performance traces.",
+      "category": "infrastructure",
+      "tags": [
+        "browser-testing",
+        "chrome-devtools",
+        "mcp",
+        "frontend",
+        "performance"
+      ],
+      "triggers": [
+        "browser-testing",
+        "chrome-devtools",
+        "mcp",
+        "frontend",
+        "performance",
+        "browser",
+        "testing",
+        "devtools",
+        "test",
+        "apps",
+        "chrome",
+        "inspecting"
+      ],
+      "path": "skills/browser-testing-with-devtools/SKILL.md"
+    },
+    {
       "id": "bug-hunter",
       "name": "bug-hunter",
       "description": "Systematically finds and fixes bugs using proven debugging techniques. Traces from symptoms to root cause, implements fixes, and prevents regression.",
@@ -15050,6 +15078,34 @@
       "path": "skills/dotnet-backend-patterns/SKILL.md"
     },
     {
+      "id": "drizzle-migration-conflict",
+      "name": "drizzle-migration-conflict",
+      "description": "Diagnose, repair, and prevent Drizzle Kit migration conflicts involving generated SQL, snapshots, journals, merge queues, and team workflows.",
+      "category": "infrastructure",
+      "tags": [
+        "drizzle",
+        "migrations",
+        "database",
+        "ci",
+        "merge-conflicts"
+      ],
+      "triggers": [
+        "drizzle",
+        "migrations",
+        "database",
+        "ci",
+        "merge-conflicts",
+        "migration",
+        "conflict",
+        "diagnose",
+        "repair",
+        "prevent",
+        "kit",
+        "conflicts"
+      ],
+      "path": "skills/drizzle-migration-conflict/SKILL.md"
+    },
+    {
       "id": "drizzle-orm-expert",
       "name": "drizzle-orm-expert",
       "description": "Expert in Drizzle ORM for TypeScript — schema design, relational queries, migrations, and serverless database integration. Use when building type-safe database layers with Drizzle.",
@@ -17773,6 +17829,34 @@
         "19"
       ],
       "path": "skills/frontend-developer/SKILL.md"
+    },
+    {
+      "id": "frontend-lighthouse",
+      "name": "frontend-lighthouse",
+      "description": "Add a portable Lighthouse CI gate for production frontend builds with Core Web Vitals budgets, category floors, median runs, and CI artifacts.",
+      "category": "infrastructure",
+      "tags": [
+        "frontend",
+        "lighthouse",
+        "performance",
+        "core-web-vitals",
+        "ci"
+      ],
+      "triggers": [
+        "frontend",
+        "lighthouse",
+        "performance",
+        "core-web-vitals",
+        "ci",
+        "add",
+        "portable",
+        "gate",
+        "core",
+        "web",
+        "vitals",
+        "budgets"
+      ],
+      "path": "skills/frontend-lighthouse/SKILL.md"
     },
     {
       "id": "frontend-mobile-development-component-scaffold",
@@ -29469,6 +29553,34 @@
       "path": "skills/pr-writer/SKILL.md"
     },
     {
+      "id": "pre-release-review",
+      "name": "pre-release-review",
+      "description": "Run a read-only pre-release review for deploy readiness, migrations, config, secrets, rollout order, rollback risk, and launch blockers.",
+      "category": "security",
+      "tags": [
+        "release",
+        "deploy-readiness",
+        "ci-cd",
+        "rollback",
+        "production"
+      ],
+      "triggers": [
+        "release",
+        "deploy-readiness",
+        "ci-cd",
+        "rollback",
+        "production",
+        "pre",
+        "review",
+        "run",
+        "read",
+        "deploy",
+        "readiness",
+        "migrations"
+      ],
+      "path": "skills/pre-release-review/SKILL.md"
+    },
+    {
       "id": "premium-3d-website",
       "name": "premium-3d-website",
       "description": "Guidelines for building premium 3D websites, focusing on custom WebGL shaders, post-processing, physics-based interactions, smooth animations, preloaders, and device optimization.",
@@ -40501,6 +40613,62 @@
         "remediation"
       ],
       "path": "skills/wcag-audit-patterns/SKILL.md"
+    },
+    {
+      "id": "weaviate",
+      "name": "weaviate",
+      "description": "Search, query, inspect, create, and import data into Weaviate vector database collections using official scripts and references.",
+      "category": "data-ai",
+      "tags": [
+        "weaviate",
+        "vector-database",
+        "semantic-search",
+        "hybrid-search",
+        "data-import"
+      ],
+      "triggers": [
+        "weaviate",
+        "vector-database",
+        "semantic-search",
+        "hybrid-search",
+        "data-import",
+        "search",
+        "query",
+        "inspect",
+        "import",
+        "data",
+        "vector",
+        "database"
+      ],
+      "path": "skills/weaviate/SKILL.md"
+    },
+    {
+      "id": "weaviate-cookbooks",
+      "name": "weaviate-cookbooks",
+      "description": "Build Weaviate AI apps from official cookbook blueprints for RAG, agentic RAG, data exploration, multimodal PDF search, async clients, and frontends.",
+      "category": "data-ai",
+      "tags": [
+        "weaviate",
+        "rag",
+        "agents",
+        "vector-database",
+        "ai-apps"
+      ],
+      "triggers": [
+        "weaviate",
+        "rag",
+        "agents",
+        "vector-database",
+        "ai-apps",
+        "cookbooks",
+        "ai",
+        "apps",
+        "official",
+        "cookbook",
+        "blueprints",
+        "agentic"
+      ],
+      "path": "skills/weaviate-cookbooks/SKILL.md"
     },
     {
       "id": "web-artifacts-builder",
