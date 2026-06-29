@@ -690,6 +690,10 @@ We officially thank the following contributors for their help in making this rep
 - [@specterslient95-lgtm](https://github.com/specterslient95-lgtm)
 - [@ununununium](https://github.com/ununununium)
 - [@xi-kari](https://github.com/xi-kari)
+- [@drogers0](https://github.com/drogers0)
+- [@genefold-ai](https://github.com/genefold-ai)
+- [@Rsmiyani](https://github.com/Rsmiyani)
+- [@takeaseatventure](https://github.com/takeaseatventure)
 
 ## Star History
 
