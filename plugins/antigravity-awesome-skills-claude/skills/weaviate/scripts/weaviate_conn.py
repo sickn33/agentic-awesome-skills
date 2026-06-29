@@ -120,6 +120,16 @@ def get_detected_providers() -> list[str]:
     return sorted(detected_providers)
 
 
+def _detected_provider_summary(detected_providers: list[str] | None) -> str | None:
+    """Return a safe verbose summary without exposing credential env var names."""
+    if not detected_providers:
+        return None
+
+    provider_count = len(detected_providers)
+    label = "provider" if provider_count == 1 else "providers"
+    return f"Detected {provider_count} {label}."
+
+
 @contextmanager
 def get_client(
     url: str | None = None,
@@ -160,9 +170,9 @@ def get_client(
         detected_providers = None
 
     if verbose:
-        detected = sorted(detected_providers) if detected_providers is not None else []
-        if detected:
-            print(f"Detected providers: {', '.join(detected)}", file=sys.stderr)
+        provider_summary = _detected_provider_summary(detected_providers)
+        if provider_summary:
+            print(provider_summary, file=sys.stderr)
         print("Connecting to Weaviate...", file=sys.stderr)
 
     client = weaviate.connect_to_weaviate_cloud(
@@ -214,9 +224,9 @@ def connect_client(
         detected_providers = None
 
     if verbose:
-        detected = sorted(detected_providers) if detected_providers is not None else []
-        if detected:
-            print(f"Detected providers: {', '.join(detected)}", file=sys.stderr)
+        provider_summary = _detected_provider_summary(detected_providers)
+        if provider_summary:
+            print(provider_summary, file=sys.stderr)
         print("Connecting to Weaviate...", file=sys.stderr)
 
     client = weaviate.connect_to_weaviate_cloud(
