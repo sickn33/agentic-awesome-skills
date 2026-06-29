@@ -18,7 +18,7 @@ const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
     answer:
-      'Antigravity Awesome Skills is an installable GitHub library of 1,689+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
+      'Antigravity Awesome Skills is an installable GitHub library of 1,700+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
   },
   {
     question: 'How do I install Antigravity Awesome Skills?',
