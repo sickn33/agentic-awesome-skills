@@ -338,6 +338,18 @@ export function assertTopicDiscoveryMeta(htmlText) {
   assertJsonLdTypes(htmlText, ['WebPage', 'BreadcrumbList', 'Organization', 'WebSite', 'SoftwareSourceCode']);
 }
 
+function assertStaticRelatedTopicLinks(htmlText, routeType) {
+  const html = String(htmlText ?? '');
+  assert(
+    html.includes('data-prerender-fallback="true"'),
+    `${routeType} prerendered page must expose a static fallback body.`,
+  );
+  assert(
+    /<a\s+href=["'][^"']*\/topics\/[^"']+["'][^>]*>[^<]+<\/a>/i.test(html),
+    `${routeType} prerendered page must include static related topic links.`,
+  );
+}
+
 function routePathToDistFile(routePath, normalizedRootPath) {
   const normalizedPath = (routePath || '/').replace(/\/+$/, '') || '/';
   const normalizedRoot = normalizedRootPath === '/' ? '' : String(normalizedRootPath || '').replace(/\/+$/, '');
@@ -356,6 +368,7 @@ export function assertPrerenderedSkillRoutes(skillUrls, distDir = 'dist', normal
       fs.existsSync(filePath),
       `Missing prerendered page for skill route: ${parsed.pathname}. Expected ${filePath}.`,
     );
+    assertStaticRelatedTopicLinks(readFile(filePath), 'Skill');
   }
 }
 
@@ -379,7 +392,9 @@ export function assertPrerenderedTopicRoutes(topicUrls, distDir = 'dist', normal
       fs.existsSync(filePath),
       `Missing prerendered page for topic route: ${parsed.pathname}. Expected ${filePath}.`,
     );
-    assertTopicDiscoveryMeta(readFile(filePath));
+    const html = readFile(filePath);
+    assertTopicDiscoveryMeta(html);
+    assertStaticRelatedTopicLinks(html, 'Topic');
   }
 }
 

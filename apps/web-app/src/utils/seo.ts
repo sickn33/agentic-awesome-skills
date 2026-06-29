@@ -28,6 +28,8 @@ export interface SeoLandingPage {
   summary: string;
   primaryIntent: string;
   keywords: string[];
+  relatedTerms?: string[];
+  relatedCategories?: string[];
   sections: SeoLandingPageSection[];
   links: SeoLandingPageLink[];
 }

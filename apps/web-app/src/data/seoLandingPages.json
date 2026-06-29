@@ -13,6 +13,26 @@
       "AI agent skills",
       "SKILL.md playbooks"
     ],
+    "relatedTerms": [
+      "antigravity",
+      "cli",
+      "agent",
+      "coding agent",
+      "codex",
+      "claude",
+      "cursor",
+      "gemini",
+      "playbook",
+      "workflow"
+    ],
+    "relatedCategories": [
+      "ai-agents",
+      "agent-orchestration",
+      "coding",
+      "development",
+      "developer-tools",
+      "workflow"
+    ],
     "sections": [
       {
         "heading": "What to install first",
@@ -55,6 +75,26 @@
       "AI agent skills GitHub",
       "awesome skills GitHub",
       "coding assistant skills"
+    ],
+    "relatedTerms": [
+      "github",
+      "repository",
+      "source",
+      "open source",
+      "oss",
+      "skill",
+      "skills",
+      "assistant",
+      "coding assistant"
+    ],
+    "relatedCategories": [
+      "code",
+      "code-quality",
+      "coding",
+      "development",
+      "developer-tools",
+      "github",
+      "tool-quality"
     ],
     "sections": [
       {
@@ -99,6 +139,34 @@
       "AI coding plugins",
       "specialized skill plugins"
     ],
+    "relatedTerms": [
+      "plugin",
+      "plugins",
+      "bundle",
+      "pack",
+      "security",
+      "frontend",
+      "backend",
+      "data",
+      "devops",
+      "qa",
+      "testing",
+      "mobile",
+      "documents",
+      "web app"
+    ],
+    "relatedCategories": [
+      "backend",
+      "data",
+      "devops",
+      "document-processing",
+      "frontend",
+      "mobile",
+      "security",
+      "test-automation",
+      "testing",
+      "web-development"
+    ],
     "sections": [
       {
         "heading": "Focused distributions",
@@ -141,6 +209,27 @@
       "Antigravity skills",
       "skills Antigravity GitHub",
       "AI coding assistant skills"
+    ],
+    "relatedTerms": [
+      "para",
+      "espanol",
+      "español",
+      "portugues",
+      "portuguese",
+      "spanish",
+      "international",
+      "antigravity",
+      "assistant"
+    ],
+    "relatedCategories": [
+      "andruia",
+      "business-strategy",
+      "content",
+      "education",
+      "leiloeiro",
+      "marketing",
+      "research",
+      "writing"
     ],
     "sections": [
       {

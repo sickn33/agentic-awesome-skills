@@ -183,6 +183,156 @@ function safeText(value) {
   return String(value || '').trim();
 }
 
+function normalizeMatchText(value) {
+  return safeText(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function getLandingPageMatchTerms(page) {
+  return [
+    page.slug,
+    page.eyebrow,
+    page.h1,
+    page.summary,
+    page.primaryIntent,
+    ...(Array.isArray(page.keywords) ? page.keywords : []),
+    ...(Array.isArray(page.relatedTerms) ? page.relatedTerms : []),
+  ];
+}
+
+function scoreLandingPageForSkill(page, skill) {
+  const haystack = normalizeMatchText([
+    skill.id,
+    skill.name,
+    skill.description,
+    skill.category,
+    skill.source,
+    skill.path,
+  ].filter(Boolean).join(' '));
+  const category = normalizeMatchText(skill.category);
+  const relatedCategories = Array.isArray(page.relatedCategories)
+    ? page.relatedCategories.map(normalizeMatchText)
+    : [];
+  let score = relatedCategories.includes(category) ? 12 : 0;
+
+  for (const term of getLandingPageMatchTerms(page)) {
+    const normalizedTerm = normalizeMatchText(term);
+
+    if (!normalizedTerm || normalizedTerm.length < 3) {
+      continue;
+    }
+
+    if (haystack.includes(normalizedTerm)) {
+      score += Math.min(12, 3 + normalizedTerm.split(' ').length * 2);
+      continue;
+    }
+
+    const matchedTokens = normalizedTerm
+      .split(' ')
+      .filter((token) => token.length >= 4 && haystack.includes(token));
+
+    score += Math.min(6, matchedTokens.length);
+  }
+
+  return score;
+}
+
+function getRelatedLandingPagesForSkill(landingPages, skill, limit = 3) {
+  const maxItems = Math.max(0, limit);
+
+  if (maxItems === 0) {
+    return [];
+  }
+
+  const scoredPages = landingPages
+    .map((page, index) => ({
+      page,
+      index,
+      score: scoreLandingPageForSkill(page, skill),
+    }))
+    .sort((a, b) => {
+      if (a.score !== b.score) {
+        return b.score - a.score;
+      }
+
+      return a.index - b.index;
+    });
+  const selected = scoredPages.filter(({ score }) => score > 0).map(({ page }) => page);
+
+  for (const { page } of scoredPages) {
+    if (selected.length >= maxItems) {
+      break;
+    }
+
+    if (!selected.includes(page)) {
+      selected.push(page);
+    }
+  }
+
+  return selected.slice(0, maxItems);
+}
+
+function buildStaticLinkList(links) {
+  return links
+    .map((link) => `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`)
+    .join('');
+}
+
+function buildPrerenderFallback({ heading, description, links }) {
+  const items = buildStaticLinkList(links);
+
+  return [
+    '<main data-prerender-fallback="true">',
+    `<h1>${escapeHtml(heading)}</h1>`,
+    `<p>${escapeHtml(description)}</p>`,
+    items ? `<nav aria-label="Related topic guides"><ul>${items}</ul></nav>` : '',
+    '</main>',
+  ].join('');
+}
+
+function buildTopicFallback({ page, landingPages, siteBaseUrl }) {
+  const relatedLinks = landingPages
+    .filter((landing) => landing.slug && landing.slug !== page.slug)
+    .slice(0, 3)
+    .map((landing) => ({
+      href: routeToUrl(`/topics/${encodeURIComponent(landing.slug)}`, siteBaseUrl),
+      label: landing.h1,
+    }));
+
+  return buildPrerenderFallback({
+    heading: page.h1,
+    description: page.summary,
+    links: relatedLinks,
+  });
+}
+
+function buildSkillFallback({ skill, landingPages, siteBaseUrl }) {
+  const relatedLinks = getRelatedLandingPagesForSkill(landingPages, skill).map((page) => ({
+    href: routeToUrl(`/topics/${encodeURIComponent(page.slug)}`, siteBaseUrl),
+    label: page.h1,
+  }));
+
+  return buildPrerenderFallback({
+    heading: `@${safeText(skill.name) || safeText(skill.id) || 'Skill'}`,
+    description: safeText(skill.description) || 'Installable skill from Antigravity Awesome Skills.',
+    links: relatedLinks,
+  });
+}
+
+function setRootFallback(html, fallbackHtml) {
+  const rootPattern = /<div\s+id=["']root["']><\/div>/i;
+
+  if (!fallbackHtml || !rootPattern.test(html)) {
+    return html;
+  }
+
+  return html.replace(rootPattern, `<div id="root">${fallbackHtml}</div>`);
+}
+
 function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
   const formattedCount = visibleCount.toLocaleString('en-US');
@@ -528,9 +678,9 @@ function applySeoMeta(templateHtml, meta) {
   return output;
 }
 
-function writePrerenderedRoute(routePath, templateHtml, meta) {
+function writePrerenderedRoute(routePath, templateHtml, meta, fallbackHtml = '') {
   const filePath = routeToFilePath(routePath);
-  const rendered = applySeoMeta(templateHtml, meta);
+  const rendered = setRootFallback(applySeoMeta(templateHtml, meta), fallbackHtml);
   const directory = path.dirname(filePath);
   ensureDirectory(directory);
   fs.writeFileSync(filePath, rendered, 'utf-8');
@@ -609,7 +759,12 @@ function main() {
       imageUrl: socialImage,
       canonicalUrl,
     });
-    writePrerenderedRoute(routePath, template, landingMeta);
+    writePrerenderedRoute(
+      routePath,
+      template,
+      landingMeta,
+      buildTopicFallback({ page, landingPages, siteBaseUrl }),
+    );
   }
 
   for (const skillRoute of topSkillPaths) {
@@ -626,7 +781,12 @@ function main() {
       imageUrl: socialImage,
       canonicalUrl,
     });
-    writePrerenderedRoute(skillRoute, template, skillMeta);
+    writePrerenderedRoute(
+      skillRoute,
+      template,
+      skillMeta,
+      buildSkillFallback({ skill, landingPages, siteBaseUrl }),
+    );
   }
 }
 

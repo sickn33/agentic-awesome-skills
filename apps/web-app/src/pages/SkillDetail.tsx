@@ -6,6 +6,7 @@ import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildSkillFallbackMeta, buildSkillMeta, selectTopSkills } from '../utils/seo';
 import { getSkillMarkdownCandidateUrls } from '../utils/publicAssetUrls';
+import { getRelatedSeoLandingPagesForSkill } from '../data/seoLandingPages';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 
@@ -100,6 +101,10 @@ export function SkillDetail(): React.ReactElement {
   const communityCount = useMemo(() => (id ? stars[id] || 0 : 0), [stars, id]);
   const { frontmatter, body: markdownBody } = useMemo(() => splitFrontmatter(content), [content]);
   const frontmatterRows = useMemo(() => parseFrontmatterRows(frontmatter), [frontmatter]);
+  const relatedTopicPages = useMemo(
+    () => skill ? getRelatedSeoLandingPagesForSkill(skill) : [],
+    [skill],
+  );
 
   useEffect(() => {
     if (contextLoading || !skill) return;
@@ -336,6 +341,49 @@ export function SkillDetail(): React.ReactElement {
           />
         </div>
       </div>
+
+      {relatedTopicPages.length > 0 && (
+        <section className="mb-8 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+            Related topic guides
+          </p>
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                Place @{skill.name} in the larger AAS catalog
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                These entry points connect this skill to installable Antigravity skills, the GitHub repository, and focused plugin packs.
+              </p>
+            </div>
+            <Link
+              to="/topics/github-ai-skills-repository"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              GitHub skills guide
+            </Link>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {relatedTopicPages.map((page) => (
+              <Link
+                key={page.slug}
+                to={`/topics/${page.slug}`}
+                className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 transition-colors hover:border-slate-400 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900 dark:hover:border-slate-600"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  {page.eyebrow}
+                </p>
+                <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">
+                  {page.h1}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  {page.primaryIntent}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="p-6 sm:p-8">

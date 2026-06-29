@@ -104,6 +104,11 @@ describe('SkillDetail', () => {
       await waitFor(() => {
         expect(screen.getByText('@react-patterns')).toBeInTheDocument();
         expect(screen.getByText('React design patterns and best practices')).toBeInTheDocument();
+        expect(screen.getByText(/Related topic guides/i)).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Antigravity plugins/i })).toHaveAttribute(
+          'href',
+          '/topics/antigravity-plugins',
+        );
         expect(screen.getByTestId('markdown-content')).toHaveTextContent('This is the skill content.');
         expect(document.title).toContain('react-patterns');
         expect(document.querySelector('meta[name="twitter:title"]')).toHaveAttribute(

@@ -155,7 +155,7 @@ describe('seo assets verification helpers', () => {
     fs.mkdirSync(path.dirname(routeFile), { recursive: true });
     fs.writeFileSync(
       routeFile,
-      '<html><head><title>Antigravity CLI Skills | Installable AI agent playbooks</title><meta name="description" content="Install Antigravity CLI skills from the GitHub repository." /><meta property="og:title" content="Antigravity CLI Skills" /><script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebPage"},{"@context":"https://schema.org","@type":"BreadcrumbList"},{"@context":"https://schema.org","@type":"Organization"},{"@context":"https://schema.org","@type":"WebSite"},{"@context":"https://schema.org","@type":"SoftwareSourceCode"}]</script></head></html>',
+      '<html><head><title>Antigravity CLI Skills | Installable AI agent playbooks</title><meta name="description" content="Install Antigravity CLI skills from the GitHub repository." /><meta property="og:title" content="Antigravity CLI Skills" /><script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebPage"},{"@context":"https://schema.org","@type":"BreadcrumbList"},{"@context":"https://schema.org","@type":"Organization"},{"@context":"https://schema.org","@type":"WebSite"},{"@context":"https://schema.org","@type":"SoftwareSourceCode"}]</script></head><body><div id="root"><main data-prerender-fallback="true"><a href="https://owner.github.io/repo/topics/github-ai-skills-repository">A GitHub repository for installable AI agent skills</a></main></div></body></html>',
     );
 
     const xml = `
@@ -174,7 +174,10 @@ describe('seo assets verification helpers', () => {
     const distDir = path.join(tmpDir, 'dist');
     const routeFile = path.join(distDir, 'skill', 'agent-a', 'index.html');
     fs.mkdirSync(path.dirname(routeFile), { recursive: true });
-    fs.writeFileSync(routeFile, '<html></html>');
+    fs.writeFileSync(
+      routeFile,
+      '<html><body><div id="root"><main data-prerender-fallback="true"><a href="https://owner.github.io/repo/topics/antigravity-cli-skills">Antigravity CLI skills for agentic coding workflows</a></main></div></body></html>',
+    );
 
     const xml = `
       <urlset>

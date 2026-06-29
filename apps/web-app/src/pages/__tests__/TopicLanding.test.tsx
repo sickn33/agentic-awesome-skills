@@ -13,6 +13,11 @@ describe('TopicLanding', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: /Antigravity CLI skills/i })).toBeInTheDocument();
     expect(screen.getByText(/Search intent covered/i)).toBeInTheDocument();
+    expect(screen.getByText(/Related topic guides/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /GitHub repository for installable AI agent skills/i })).toHaveAttribute(
+      'href',
+      '/topics/github-ai-skills-repository',
+    );
     expect(screen.getAllByText(/Antigravity CLI skills/i).length).toBeGreaterThan(0);
 
     await waitFor(() => {

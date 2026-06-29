@@ -43,6 +43,8 @@ export function TopicLanding(): React.ReactElement {
     );
   }
 
+  const relatedTopicPages = seoLandingPages.filter((landing) => landing.slug !== page.slug).slice(0, 3);
+
   return (
     <article className="space-y-10 px-6 py-8 sm:px-8 lg:px-10">
       <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
@@ -132,6 +134,22 @@ export function TopicLanding(): React.ReactElement {
             <Icon name="search" size={16} className="h-4 w-4" />
             Search all skills
           </Link>
+        </div>
+        <div className="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
+          <h2 className="text-base font-semibold tracking-normal text-slate-900 dark:text-slate-100">
+            Related topic guides
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {relatedTopicPages.map((landing) => (
+              <Link
+                key={landing.slug}
+                to={`/topics/${landing.slug}`}
+                className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-3.5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                {landing.h1}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </article>
