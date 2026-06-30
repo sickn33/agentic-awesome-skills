@@ -19,7 +19,7 @@
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
     "@phosphor-icons/react": "^2.1.10",
-    "@supabase/supabase-js": "^2.107.0",
+    "@supabase/supabase-js": "^2.108.0",
     "clsx": "^2.1.1",
     "express-rate-limit": "^8.5.2",
     "framer-motion": "^12.40.0",
