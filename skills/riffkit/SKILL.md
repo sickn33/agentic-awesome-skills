@@ -82,10 +82,11 @@ riff https://www.tiktok.com/@user/video/123 into my product video, in Spanish
 
 ## Best Practices
 
-- Lock the source first; everything else has a sensible default, so a one-line request works.
-- Confirm exactly once before submitting (rendering is billed by the second) — never auto-submit or auto-retry a failed task.
-- Keep the `vee_session` token out of logs and output.
-- Defer to https://riffkit.ai/SKILL.md for the exhaustive, current API contract.
+- ✅ Lock the source first; everything else has a sensible default, so a one-line request works.
+- ✅ Confirm exactly once before submitting (rendering is billed by the second).
+- ❌ Never auto-submit, and never auto-retry a failed task (a retry re-charges).
+- ✅ Keep the `vee_session` token out of logs and output.
+- ✅ Defer to https://riffkit.ai/SKILL.md for the exhaustive, current API contract.
 
 ## Security & Safety Notes
 
@@ -103,9 +104,12 @@ riff https://www.tiktok.com/@user/video/123 into my product video, in Spanish
 
 ## Common Pitfalls
 
-- Don't auto-submit just because the user said "riff this" — deciding the source and config is fine, but the submit must wait for a go-ahead.
-- Don't treat picking a character or product as mandatory — character defaults to Auto, product to none.
-- Don't proactively query or report the credit balance — it only surfaces on an HTTP 402 or when the user explicitly asks.
+- **Problem:** Auto-submitting as soon as the user says "riff this."
+  **Solution:** Decide the source and config, but wait for an explicit go-ahead before calling `POST /api/riffs`.
+- **Problem:** Treating character or product selection as a mandatory step.
+  **Solution:** Use the defaults — character = Auto, product = none — unless the user asks for either.
+- **Problem:** Proactively querying or reporting the credit balance.
+  **Solution:** Only surface balance on an HTTP 402 or when the user explicitly asks.
 
 ## Requirements
 
