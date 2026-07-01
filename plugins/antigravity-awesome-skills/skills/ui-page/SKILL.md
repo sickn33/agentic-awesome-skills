@@ -1,100 +1,90 @@
 ---
 name: ui-page
-description: "Scaffold a new mobile-first page using StyleSeed Toss layout patterns, section rhythm, and existing shell components."
-category: design
-risk: safe
-source: community
+description: Scaffold a new mobile page/screen using the StyleSeed layout patterns
+risk: unknown
+source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-page
 source_repo: bitjaru/styleseed
 source_type: community
-date_added: "2026-04-08"
-author: bitjaru
-tags: [ui, page-design, mobile, layout, styleseed]
-tools: [claude, cursor, codex, gemini]
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/bitjaru/styleseed/blob/main/LICENSE
 ---
 
-# UI Page
-
-## Overview
-
-Part of [StyleSeed](https://github.com/bitjaru/styleseed), this skill scaffolds a complete page or screen using the Toss seed's mobile-first composition rules. It keeps page structure consistent by building on the existing shell, top bar, bottom navigation, and card rhythm instead of producing disconnected sections.
-
+# Mobile Page Scaffolder
 ## When to Use
-- Use when you need a new page in a Toss-seed app
-- Use when you want a consistent page shell, spacing, and navigation structure
-- Use when you are adding a new product flow and need a solid starting layout
-- Use when you want to stay mobile-first even if the project later expands to larger breakpoints
 
-## How It Works
+Use this skill when you need scaffold a new mobile page/screen using the StyleSeed layout patterns.
 
-### Step 1: Inspect the Existing Shell
 
-Read the current page scaffolding patterns first, especially:
-- page shell
-- top bar
-- bottom navigation
-- representative pages using the same route family
+## When NOT to use
 
-### Step 2: Define the Page Purpose
+- For a single composed pattern within an existing page → use `/ss-pattern`
+- For desktop-only screens — this skill is mobile-first
+- For multi-page navigation structure → use `/ss-flow` first
+- For tweaking an existing page — edit the file directly
 
-Clarify:
-- the page name
-- the primary user question the screen answers
-- the top one or two actions the user should take
+Create a new page: **$0**
+Description: $ARGUMENTS
 
-Every screen should have one dominant purpose.
+## Instructions
 
-### Step 3: Use the Information Pyramid
+1. Read the design system reference:
+   - `CLAUDE.md` for file structure and conventions
+   - `components/patterns/page-shell.tsx` for page layout
+   - `components/patterns/top-bar.tsx` for header pattern
+   - `components/patterns/bottom-nav.tsx` for navigation
 
-Lay out the page from highest importance to lowest:
-1. Hero or top summary
-2. KPI or key actions
-3. detail cards or supporting modules
-4. lists, history, or secondary content
+2. Page structure template:
+```tsx
+import { PageShell, PageContent } from "@/components/patterns/page-shell"
+import { TopBar, TopBarAction } from "@/components/patterns/top-bar"
+import { BottomNav } from "@/components/patterns/bottom-nav"
 
-Avoid repeating the same section type mechanically from top to bottom.
+export default function PageName() {
+  return (
+    <PageShell>
+      <TopBar
+        logo={/* logo or page title */}
+        subtitle={/* optional subtitle */}
+        actions={/* optional action buttons */}
+      />
+      <PageContent>
+        {/* Page sections with space-y-6 */}
+      </PageContent>
+      <BottomNav items={[/* nav items */]} activeIndex={0} />
+    </PageShell>
+  )
+}
+```
 
-### Step 4: Apply the Toss Layout Rules
+3. Layout rules:
+   - Container: `max-w-[430px]` (mobile viewport)
+   - Page background: `bg-background`
+   - Section horizontal padding: `px-6`
+   - Section vertical spacing: `space-y-6`
+   - Bottom padding for nav: `pb-24`
+   - Cards: `bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]`
 
-Default layout choices:
-- mobile viewport width around `max-w-[430px]`
-- page background on `bg-background`
-- horizontal padding around `px-6`
-- section rhythm with `space-y-6`
-- generous bottom padding if a bottom nav is present
-- cards using semantic surface tokens, rounded corners, and light shadows
+4. Use semantic tokens for all colors — never hardcode hex values.
 
-### Step 5: Compose Instead of Rebuilding
+5. Compose the page from existing components (ui/ and patterns/) wherever possible.
 
-Use existing `ui/` and `patterns/` components wherever possible. New pages should primarily orchestrate existing building blocks, not recreate them.
+6. Safe area: include `env(safe-area-inset-*)` padding for modern devices.
 
-### Step 6: Account for Real Device Constraints
-
-- handle safe-area insets
-- avoid horizontal overflow
-- keep interactive clusters thumb-friendly
-- ensure long content scrolls cleanly without clipping the bottom navigation
-
-## Output
-
-Return:
-1. The page scaffold
-2. The chosen section structure
-3. Reused components and any newly required components
-4. Empty, loading, and error states that the page will need next
-
-## Best Practices
-
-- Keep the first version structurally correct before adding decoration
-- Use one strong hero instead of multiple competing highlights
-- Preserve navigation consistency across sibling screens
-- Prefer reusable section components when the page will likely repeat
-
-## Additional Resources
-
-- [StyleSeed repository](https://github.com/bitjaru/styleseed)
-- [Source skill](https://github.com/bitjaru/styleseed/blob/main/seeds/toss/.claude/skills/ui-page/SKILL.md)
+7. **Post-generation verification (MANDATORY):**
+   After creating the page, verify against the Golden Rules:
+   - [ ] All content is inside cards (no bare background content)
+   - [ ] Only `--brand` color used for accents (no other accent colors)
+   - [ ] No hardcoded hex values (all semantic tokens)
+   - [ ] Section types alternate (no two identical types in a row)
+   - [ ] Numbers have 2:1 ratio with units
+   - [ ] Spacing uses 6px multiples (p-1.5, p-3, p-6)
+   - [ ] `mx-6` for single cards, `px-6` for grids/carousels
+   - [ ] Touch targets ≥ 44px on all interactive elements
+   If any violation is found, fix it before presenting the page to the user.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

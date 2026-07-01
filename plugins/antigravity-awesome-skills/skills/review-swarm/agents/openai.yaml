@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Swarm"
+  short_description: "Parallel multi-agent diff review swarm"
+  default_prompt: "Use $review-swarm to review the current diff with four focused read-only reviewers and summarize the highest-signal issues."

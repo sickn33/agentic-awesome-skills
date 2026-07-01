@@ -1,11 +1,20 @@
 ---
 name: fixing-motion-performance
 description: Audit and fix animation performance issues including layout thrashing, compositor properties, scroll-linked motion, and blur effects. Use when animations stutter, transitions jank, or reviewing CSS/JS animation performance.
-risk: safe
-source: community
+risk: unknown
+source: https://github.com/ibelick/ui-skills/tree/main/skills/fixing-motion-performance
+source_repo: ibelick/ui-skills
+source_type: community
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/ibelick/ui-skills/blob/main/LICENSE
 ---
 
 # fixing-motion-performance
+## When to Use
+
+Use this skill when you need audit and fix animation performance issues including layout thrashing, compositor properties, scroll-linked motion, and blur effects. Use when animations stutter, transitions jank, or reviewing CSS/JS animation performance.
+
 
 Fix animation performance issues.
 
@@ -22,7 +31,8 @@ Fix animation performance issues.
 
 Do not migrate animation libraries unless explicitly requested. Apply rules within the existing stack.
 
-## When to Use
+## when to apply
+
 Reference these guidelines when:
 - adding or changing UI animations (CSS, WAAPI, Motion, rAF, GSAP)
 - refactoring janky interactions or transitions
@@ -152,6 +162,7 @@ requestAnimationFrame(() => { el.style.transition = 'transform 0.3s'; el.style.t
 - when reviewing, prefer actionable notes and concrete alternatives over theory
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

@@ -1,20 +1,18 @@
 ---
-source: "https://github.com/huggingface/skills/tree/main/skills/transformers-js"
 name: transformers-js
-description: Run Hugging Face models in JavaScript or TypeScript with Transformers.js in Node.js or the browser.
-license: Apache-2.0
+description: Use Transformers.js to run state-of-the-art machine learning models directly in JavaScript/TypeScript. Supports NLP (text classification, translation, summarization), computer vision (image classification, object detection), audio (speech recognition, audio classification), and...
 risk: unknown
-metadata:
-  author: huggingface
-  version: "3.8.1"
-  category: machine-learning
-  repository: https://github.com/huggingface/transformers.js
-compatibility: Requires Node.js 18+ or modern browser with ES modules support. WebGPU support requires compatible browser/environment. Internet access needed for downloading models from Hugging Face Hub (optional if using local models).
+source: https://github.com/huggingface/skills/tree/main/skills/transformers-js
+source_repo: huggingface/skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
 # Transformers.js - Machine Learning for JavaScript
 
-Transformers.js enables running state-of-the-art machine learning models directly in JavaScript, both in browsers and Node.js environments, with no server required.
+Transformers.js enables running state-of-the-art machine learning models directly in JavaScript across browsers and server-side runtimes (Node.js, Bun, Deno), with no Python server required.
 
 ## When to Use This Skill
 
@@ -55,7 +53,7 @@ const result = await pipe('I love transformers!');
 // Output: [{ label: 'POSITIVE', score: 0.999817686 }]
 
 // IMPORTANT: Always dispose when done to free memory
-await classifier.dispose();
+await pipe.dispose();
 ```
 
 **⚠️ Memory Management:** All pipelines must be disposed with `pipe.dispose()` when finished to prevent memory leaks. See examples in [Code Examples](./references/EXAMPLES.md) for cleanup patterns across different environments.
@@ -88,7 +86,7 @@ Choose where to run the model:
 // Run on CPU (default for WASM)
 const pipe = await pipeline('sentiment-analysis', 'model-id');
 
-// Run on GPU (WebGPU - experimental)
+// Run on GPU (WebGPU)
 const pipe = await pipeline('sentiment-analysis', 'model-id', {
   device: 'webgpu',
 });
@@ -361,7 +359,7 @@ await generator.dispose();
 2. **Check ONNX Support**: Ensure the model has ONNX files (look for `onnx` folder in model repo)
 3. **Read Model Cards**: Model cards contain usage examples, limitations, and benchmarks
 4. **Test Locally**: Benchmark inference speed and memory usage in your environment
-5. **Community Models**: Look for models by `Xenova` (Transformers.js maintainer) or `onnx-community`
+5. **Filter by Library**: Use `library=transformers.js` to find compatible models: https://huggingface.co/models?library=transformers.js
 6. **Version Pin**: Use specific git commits in production for stability:
    ```javascript
    const pipe = await pipeline('task', 'model-id', { revision: 'abc123' });
@@ -376,10 +374,10 @@ The `env` object provides comprehensive control over Transformers.js execution, 
 **Quick Overview:**
 
 ```javascript
-import { env } from '@huggingface/transformers';
+import { env, LogLevel } from '@huggingface/transformers';
 
 // View version
-console.log(env.version); // e.g., '3.8.1'
+console.log(env.version); // e.g., '4.x'
 
 // Common settings
 env.allowRemoteModels = true;  // Load from Hugging Face Hub
@@ -388,6 +386,18 @@ env.localModelPath = '/models/'; // Local model directory
 env.useFSCache = true;         // Cache models on disk (Node.js)
 env.useBrowserCache = true;    // Cache models in browser
 env.cacheDir = './.cache';     // Cache directory location
+// Optional: override logging level (default is LogLevel.WARNING)
+env.logLevel = LogLevel.INFO;
+
+// Optional: custom fetch for auth headers, retries, abort signals, etc.
+env.fetch = (url, options) =>
+  fetch(url, {
+    ...options,
+    headers: {
+      ...options?.headers,
+      Authorization: `Bearer ${HF_TOKEN}`,
+    },
+  });
 ```
 
 **Configuration Patterns:**
@@ -413,6 +423,43 @@ env.useBrowserCache = false;
 For complete documentation on all configuration options, caching strategies, cache management, pre-downloading models, and more, see:
 
 **→ [Configuration Reference](./references/CONFIGURATION.md)**
+
+### ModelRegistry (v4)
+
+`ModelRegistry` gives you visibility and control over model assets before loading a pipeline. Use it to estimate download size, check cache status, inspect available dtypes, and clear cached artifacts for a specific task/model/options tuple.
+
+```javascript
+import { ModelRegistry } from '@huggingface/transformers';
+
+const task = 'feature-extraction';
+const modelId = 'onnx-community/all-MiniLM-L6-v2-ONNX';
+const modelOptions = { dtype: 'fp32' };
+
+// List required files for this pipeline
+const files = await ModelRegistry.get_pipeline_files(task, modelId, modelOptions);
+
+// Check if assets are already cached
+const cached = await ModelRegistry.is_pipeline_cached(task, modelId, modelOptions);
+
+// Inspect precision formats available for this model
+const dtypes = await ModelRegistry.get_available_dtypes(modelId);
+
+console.log({ files: files.length, cached, dtypes });
+```
+
+For production patterns and full API coverage, see **[ModelRegistry Reference](./references/MODEL_REGISTRY.md)**.
+
+### Standalone Tokenization (`@huggingface/tokenizers`)
+
+For tokenization-only workflows, use `@huggingface/tokenizers`. It is a separate lightweight package useful when you need fast tokenization/encoding without loading full model inference pipelines.
+
+```bash
+npm install @huggingface/tokenizers
+```
+
+```javascript
+import { Tokenizer } from '@huggingface/tokenizers';
+```
 
 ### Working with Tensors
 
@@ -443,10 +490,10 @@ const results = await classifier([
 ]);
 ```
 
-## Browser-Specific Considerations
+## Runtime-Specific Considerations
 
 ### WebGPU Usage
-WebGPU provides GPU acceleration in browsers:
+WebGPU provides GPU acceleration in browsers and server-side runtimes (when supported):
 
 ```javascript
 const pipe = await pipeline('text-generation', 'onnx-community/gemma-3-270m-it-ONNX', {
@@ -455,10 +502,10 @@ const pipe = await pipeline('text-generation', 'onnx-community/gemma-3-270m-it-O
 });
 ```
 
-**Note**: WebGPU is experimental. Check browser compatibility and file issues if problems occur.
+**Note**: Use `webgpu` when available and fall back to WASM/CPU when not supported in the current runtime.
 
 ### WASM Performance
-Default browser execution uses WASM:
+WASM is the most compatible execution backend across runtimes:
 
 ```javascript
 // Optimized for browsers with quantization
@@ -478,13 +525,18 @@ import { pipeline } from '@huggingface/transformers';
 const fileProgress = {};
 
 function onProgress(info) {
-  console.log(`${info.status}: ${info.file}`);
-  
+  if (info.status === 'progress_total') {
+    console.log(`Total: ${info.progress.toFixed(1)}%`);
+    return;
+  }
+
+  console.log(`${info.status}: ${info.file ?? ''}`);
+
   if (info.status === 'progress') {
     fileProgress[info.file] = info.progress;
     console.log(`${info.file}: ${info.progress.toFixed(1)}%`);
   }
-  
+
   if (info.status === 'done') {
     console.log(`✓ ${info.file} complete`);
   }
@@ -500,10 +552,10 @@ const classifier = await pipeline('sentiment-analysis', null, {
 
 ```typescript
 interface ProgressInfo {
-  status: 'initiate' | 'download' | 'progress' | 'done' | 'ready';
+  status: 'initiate' | 'download' | 'progress' | 'progress_total' | 'done' | 'ready';
   name: string;      // Model id or path
-  file: string;      // File being processed
-  progress?: number; // Percentage (0-100, only for 'progress' status)
+  file?: string;     // File being processed (per-file events)
+  progress?: number; // Percentage (0-100, for 'progress' and 'progress_total')
   loaded?: number;   // Bytes downloaded (only for 'progress' status)
   total?: number;    // Total bytes (only for 'progress' status)
 }
@@ -581,6 +633,7 @@ For detailed patterns (React cleanup, servers, browser), see **[Code Examples](.
 ### This Skill
 - **[Pipeline Options](./references/PIPELINE_OPTIONS.md)** - Configure `pipeline()` with `progress_callback`, `device`, `dtype`, etc.
 - **[Configuration Reference](./references/CONFIGURATION.md)** - Global `env` configuration for caching and model loading
+- **[ModelRegistry Reference](./references/MODEL_REGISTRY.md)** - Inspect files, cache status, dtypes, and clear cache before loading pipelines
 - **[Caching Reference](./references/CACHE.md)** - Browser Cache API, Node.js filesystem cache, and custom cache implementations
 - **[Text Generation Guide](./references/TEXT_GENERATION.md)** - Streaming, chat format, and generation parameters
 - **[Model Architectures](./references/MODEL_ARCHITECTURES.md)** - Supported models and selection tips
@@ -591,7 +644,7 @@ For detailed patterns (React cleanup, servers, browser), see **[Code Examples](.
 - API reference: https://huggingface.co/docs/transformers.js/api/pipelines
 - Model hub: https://huggingface.co/models?library=transformers.js
 - GitHub: https://github.com/huggingface/transformers.js
-- Examples: https://github.com/huggingface/transformers.js/tree/main/examples
+- Examples: https://github.com/huggingface/transformers.js-examples
 
 ## Best Practices
 
@@ -639,6 +692,7 @@ For detailed patterns (React cleanup, servers, browser), see **[Code Examples](.
 This skill enables you to integrate state-of-the-art machine learning capabilities directly into JavaScript applications without requiring separate ML servers or Python environments.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

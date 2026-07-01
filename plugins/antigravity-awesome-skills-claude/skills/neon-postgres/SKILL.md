@@ -1,619 +1,384 @@
 ---
 name: neon-postgres
-description: Expert patterns for Neon serverless Postgres, branching, connection
-  pooling, and Prisma/Drizzle integration
-risk: safe
-source: vibeship-spawner-skills (Apache 2.0)
-date_added: 2026-02-27
+description: Guides and best practices for working with Neon Serverless Postgres. Covers setup, connection methods, branching, autoscaling, scale-to-zero, read replicas, connection pooling, Neon Auth, and the Neon CLI, MCP server, REST API, TypeScript SDK, and Python SDK. Use when users ask about...
+risk: unknown
+source: https://github.com/neondatabase/agent-skills/tree/main/skills/neon-postgres
+source_repo: neondatabase/agent-skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/neondatabase/agent-skills/blob/main/LICENSE
 ---
 
-# Neon Postgres
+# Neon Serverless Postgres
+## When to Use
 
-Expert patterns for Neon serverless Postgres, branching, connection pooling, and Prisma/Drizzle integration
+Use this skill when you need guides and best practices for working with Neon Serverless Postgres. Covers setup, connection methods, branching, autoscaling, scale-to-zero, read replicas, connection pooling, Neon Auth, and the Neon CLI, MCP server, REST API, TypeScript SDK, and Python SDK. Use when users ask about...
 
-## Patterns
 
-### Prisma with Neon Connection
+Guide the user through any Neon-related task: setup, connections, branching, and advanced features. Deliver a working Neon connection, a completed feature configuration, or a specific answer from the official Neon docs.
 
-Configure Prisma for Neon with connection pooling.
+Neon is a serverless Postgres platform that separates compute and storage to offer autoscaling, branching, instant restore, and scale-to-zero. It's fully compatible with Postgres and works with any language, framework, or ORM that supports Postgres.
 
-Use two connection strings:
-- DATABASE_URL: Pooled connection for Prisma Client
-- DIRECT_URL: Direct connection for Prisma Migrate
+## Neon Documentation
 
-The pooled connection uses PgBouncer for up to 10K connections.
-Direct connection required for migrations (DDL operations).
+The Neon documentation is the source of truth for all Neon-related information. Always verify claims against the official docs before responding. Neon features and APIs evolve, so prefer fetching current docs over relying on training data.
 
-### Code_example
+### Fetching Docs as Markdown
 
-# .env
-# Pooled connection for application queries
-DATABASE_URL="postgres://user:password@ep-xxx-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
-# Direct connection for migrations
-DIRECT_URL="postgres://user:password@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require"
+Any Neon doc page can be fetched as markdown in two ways:
 
-// prisma/schema.prisma
-generator client {
-  provider = "prisma-client-js"
-}
+1. **Append `.md` to the URL** (simplest): https://neon.com/docs/introduction/branching.md
+2. **Request `text/markdown`** on the standard URL: `curl -H "Accept: text/markdown" https://neon.com/docs/introduction/branching`
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
+Both return the same markdown content. Use whichever method your tools support.
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+### Finding the Right Page
 
-// lib/prisma.ts
-import { PrismaClient } from '@prisma/client';
+The docs index lists every available page with its URL and a short description:
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+```
+https://neon.com/docs/llms.txt
+```
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development'
-    ? ['query', 'error', 'warn']
-    : ['error'],
-});
+Common doc URLs are organized in the topic links below. If you need a page not listed here, search the docs index: https://neon.com/docs/llms.txt. Don't guess URLs.
 
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
+## What Is Neon
 
-// Run migrations
-// Uses DIRECT_URL automatically
-npx prisma migrate dev
-npx prisma migrate deploy
+Use this for architecture explanations and terminology (organizations, projects, branches, endpoints) before giving implementation advice.
 
-### Anti_patterns
+Link: https://neon.com/docs/introduction/architecture-overview.md
 
-- Pattern: Using pooled connection for migrations | Why: DDL operations fail through PgBouncer | Fix: Set directUrl in schema.prisma
-- Pattern: Not using connection pooling | Why: Serverless functions exhaust connection limits | Fix: Use -pooler endpoint in DATABASE_URL
+## Getting Started
 
-### References
+Use this section when guiding a user through first-time Neon setup.
 
-- https://neon.com/docs/guides/prisma
-- https://www.prisma.io/docs/orm/overview/databases/neon
+### Check Status Quo
 
-### Drizzle with Neon Serverless Driver
+Before starting setup, inspect the user's codebase and environment:
 
-Use Drizzle ORM with Neon's serverless HTTP driver for
-edge/serverless environments.
+- Existing database connection code
+- Existing Neon MCP server or Neon CLI configuration
+- Existence of a `.env` file and `DATABASE_URL` environment variable
+- Existing ORM (Prisma, Drizzle, TypeORM) configuration
 
-Two driver options:
-- neon-http: Single queries over HTTP (fastest for one-off queries)
-- neon-serverless: WebSocket for transactions and sessions
+### Self-Driving Setup With Neon's CLI or MCP Server
 
-### Code_example
+Offer to inspect existing connected Neon projects or create new ones using the Neon CLI or MCP server. If neither is set up yet, run init with the `--agent` flag. Use `npx -y` to skip the package install prompt. Auth is handled automatically. If the user is not logged in, it opens their browser for OAuth and waits for completion before proceeding.
 
-# Install dependencies
-npm install drizzle-orm @neondatabase/serverless
-npm install -D drizzle-kit
+```bash
+npx -y neon@latest init --agent <agent-name>
+```
 
-// lib/db/schema.ts
-import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+Supported `--agent` values: `cursor`, `copilot`, `claude`, `claude-desktop`, `codex`, `opencode`, `cline`, `gemini-cli`, `goose`, `zed`.
 
-export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
-  email: text('email').notNull().unique(),
-  name: text('name'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+This installs the Neon extension (for Cursor/VS Code) or MCP server (for other agents), creates an API key, and adds the `neon-postgres` agent skill to the project.
 
-// lib/db/index.ts (for serverless - HTTP driver)
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import * as schema from './schema';
+If `init` is not suitable, the individual steps can be run non-interactively:
 
-const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle(sql, { schema });
+- **Extension:** `cursor --install-extension databricks.neon-local-connect`
+- **MCP server:** `npx -y add-mcp https://mcp.neon.tech/mcp -g -n Neon -y -a <agent-name>`
+- **Agent skill:** `npx skills add neondatabase/agent-skills --skill neon-postgres --agent <agent-name> -y`
 
-// Usage in API route
-import { db } from '@/lib/db';
-import { users } from '@/lib/db/schema';
+For full CLI installation options, see https://neon.com/docs/reference/cli-install.md
 
-export async function GET() {
-  const allUsers = await db.select().from(users);
-  return Response.json(allUsers);
-}
+### Setup Flow
 
-// lib/db/index.ts (for WebSocket - transactions)
-import { Pool } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import * as schema from './schema';
+**1. Select Organization and Project**
+
+Use MCP server or CLI to list organizations and projects. Let the user select an existing project or create a new one.
+
+**2. Get Connection String**
+
+Use MCP server or CLI to get the connection string. Store it in `.env` as `DATABASE_URL`. Read the file first before modifying to avoid overwriting existing values.
+
+**3. Pick Connection Method & Driver**
+
+Refer to the connection methods guide to pick the correct driver based on deployment platform: https://neon.com/docs/connect/choose-connection.md
+
+**4. User Authentication with Neon Auth (if needed)**
+
+Skip for CLI tools, scripts, or apps without user accounts. If the app needs auth: use MCP server `provision_neon_auth` tool, then see the auth overview (https://neon.com/docs/auth/overview.md) for setup. For auth + database queries, see the JavaScript SDK reference (https://neon.com/docs/reference/javascript-sdk.md).
+
+**5. ORM Setup (optional)**
+
+Check for existing ORM (Prisma, Drizzle, TypeORM). If none, ask if they want one. For Drizzle integration, see https://neon.com/docs/guides/drizzle.md.
+
+**6. Schema Setup**
+
+- Check for existing migration files or ORM schemas
+- If none: offer to create an example schema or design one together
+
+### Resume Support
+
+If resuming setup, check what's already configured (MCP connection, `.env` with `DATABASE_URL`, dependencies, schema) and continue from the next incomplete step.
+
+### Security Reminders
+
+Remind users to use environment variables for credentials, never commit connection strings, and use least-privilege database roles.
+
+## Connection Methods & Drivers
+
+Use this when you need to pick the correct transport and driver based on runtime constraints (TCP, HTTP, WebSocket, edge, serverless, long-running).
+
+Link: https://neon.com/docs/connect/choose-connection.md
+
+### Recommended: Drizzle + the right driver for your runtime
+
+Always pair Neon with an ORM such as **Drizzle** for easy schema management and migrations. Pick the driver based on how the runtime treats your code:
+
+- **Long-running or shared-runtime environments → node-postgres (`pg`).** Neon Functions, and any host where the function runtime is shared across requests / runs on fluid compute (e.g. **Vercel** with Fluid compute), keep a module-scope process alive across many requests. Open a `pg` pool **once at module scope** and reuse it across requests.
+- **Fully isolated serverless (Lambda-style) → Neon's serverless driver (`@neondatabase/serverless`).** Hosts like **Netlify** spin up a fresh, isolated instance per request, so a persistent TCP pool can't be reused; the serverless driver queries over HTTP and is built for this.
+
+**Neon Functions / Vercel / fluid compute — Drizzle + node-postgres:**
+
+```typescript
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+import * as schema from "./schema";
+
+// Created once at module scope; reused by every request the instance handles.
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 5 });
+const db = drizzle({ client: pool, schema });
+```
+
+On **Vercel** (Fluid compute) also attach the pool with `attachDatabasePool` from `@vercel/functions`, so the function runtime drains idle connections before an instance suspends:
+
+```typescript
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+import { attachDatabasePool } from "@vercel/functions";
+import * as schema from "./schema";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle(pool, { schema });
+attachDatabasePool(pool); // let the Vercel runtime manage the pooled connections
+const db = drizzle({ client: pool, schema });
+```
 
-// With transactions
-await db.transaction(async (tx) => {
-  await tx.insert(users).values({ email: 'test@example.com' });
-  await tx.update(users).set({ name: 'Updated' });
-});
+**Netlify and other fully-isolated serverless — Drizzle + Neon serverless driver:**
 
-// drizzle.config.ts
-import { defineConfig } from 'drizzle-kit';
+```typescript
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzle({ client: sql });
+```
+
+### Serverless Driver
+
+Use this for `@neondatabase/serverless` patterns, including HTTP queries, WebSocket transactions, and runtime-specific optimizations.
+
+Link: https://neon.com/docs/serverless/serverless-driver.md
+
+### Neon JS SDK
+
+Use this for combined Neon Auth + Data API workflows with PostgREST-style querying and typed client setup.
+
+Link: https://neon.com/docs/reference/javascript-sdk.md
+
+## Developer Tools
+
+Use this for local development enablement with `npx -y neon@latest init --agent <agent-name>`, VSCode extension setup, and Neon MCP server configuration.
+
+| Tool             | URL                                             |
+| ---------------- | ----------------------------------------------- |
+| CLI Init Command | https://neon.com/docs/reference/cli-init.md     |
+| VSCode Extension | https://neon.com/docs/local/vscode-extension.md |
+| MCP Server       | https://neon.com/docs/ai/neon-mcp-server.md     |
+| Neon CLI         | https://neon.com/docs/reference/neon-cli.md     |
+
+### Neon CLI
+
+Use this for terminal-first workflows, scripts, and CI/CD automation with `neon`.
+
+Link: https://neon.com/docs/reference/neon-cli.md
+
+## Neon Admin API
+
+The Neon Admin API can be used to manage Neon resources programmatically. It is used behind the scenes by the Neon CLI and MCP server, but can also be used directly for more complex automation workflows or when embedding Neon in other applications.
+
+### Neon REST API
+
+Use this for direct HTTP automation, endpoint-level control, API key auth, rate-limit handling, and operation polling.
+
+Link: https://neon.com/docs/reference/api-reference.md
+
+### Neon TypeScript SDK
+
+Use this when implementing typed programmatic control of Neon resources in TypeScript via `@neondatabase/api-client`.
+
+Link: https://neon.com/docs/reference/typescript-sdk.md
+
+### Neon Python SDK
+
+Use this when implementing programmatic Neon management in Python with the `neon-api` package.
+
+Link: https://neon.com/docs/reference/python-sdk.md
+
+## Neon Auth
+
+Use this for managed user authentication setup, UI components, auth methods, and Neon Auth integration pitfalls in Next.js and React apps.
+
+Link: https://neon.com/docs/auth/overview.md
+
+Neon Auth is also embedded in the Neon JS SDK. Depending on your use case, you may want to use the Neon JS SDK instead of Neon Auth alone. See https://neon.com/docs/connect/choose-connection.md for more details.
+
+## Neon Infrastructure as Code (`neon.ts`)
+
+`neon.ts` is Neon's branch config and infrastructure-as-code file: declare which services your branches have, get type-safe env vars, and program per-branch compute — all in TypeScript (see the `neon` skill for the full reference). Postgres always exists on every branch, so you never declare the database itself; what you codify here is the Postgres-adjacent surface — Neon Auth, the Data API, and per-branch compute settings (autoscaling and scale-to-zero).
+
+Add it with `@neon/config`:
+
+```bash
+npm i @neon/config
+```
+
+```typescript
+// neon.ts
+import { defineConfig } from "@neon/config/v1";
 
 export default defineConfig({
-  schema: './lib/db/schema.ts',
-  out: './drizzle',
-  dialect: 'postgresql',
-  dbCredentials: {
-    url: process.env.DATABASE_URL!,
+  auth: true, // Neon Auth (adds NEON_AUTH_* env vars)
+  dataApi: true, // Data API (adds NEON_DATA_API_URL); requires auth: true (or an external IdP)
+  // Postgres exists on every branch; tune its compute per branch:
+  branch: (branch) => {
+    if (branch.exists) return {}; // leave existing branches untouched
+    if (branch.isDefault) return { protected: true }; // prod keeps default compute
+    return {
+      ttl: "7d", // non-prod branches auto-expire (max 30d)
+      postgres: {
+        computeSettings: {
+          autoscalingLimitMinCu: 0.25, // scale to zero
+          autoscalingLimitMaxCu: 1, // keep dev/preview cheap
+          suspendTimeout: "5m",
+        },
+      },
+    };
   },
 });
+```
 
-// Run migrations
-npx drizzle-kit generate
-npx drizzle-kit migrate
+Reconcile the declaration from the CLI — the Neon equivalent of `terraform plan` / `apply`:
 
-### Anti_patterns
+```bash
+neon config status   # print the branch's live config
+neon config plan     # dry-run diff of what apply would change
+neon config apply    # provision the declared services / settings
+neon deploy          # alias for `neon config apply`
+```
 
-- Pattern: Using pg driver in serverless | Why: TCP connections don't work in all edge environments | Fix: Use @neondatabase/serverless driver
-- Pattern: HTTP driver for transactions | Why: HTTP driver doesn't support transactions | Fix: Use WebSocket driver (Pool) for transactions
+Because `neon checkout` applies the policy as it **creates** a branch, a fresh branch comes up with these compute settings (and Auth / Data API) already in place. Checking out an _existing_ branch never reconciles it — run `neon deploy` to apply changes.
 
-### References
+Since `neon.ts` is TypeScript, invalid combinations fail to compile with an actionable message: the Data API verifies requests with Neon Auth by default, so `dataApi: true` without `auth: true` is a type error (the fix — `auth: true`, or `authProvider: 'external'` with a `jwksUrl` — is in the message). See the `neon` skill's type-safe config note.
 
-- https://neon.com/docs/guides/drizzle
-- https://orm.drizzle.team/docs/connect-neon
+Read the resulting env back, typed and validated against the policy, with `parseEnv` from `@neon/env`:
 
-### Connection Pooling with PgBouncer
+```typescript
+import { parseEnv } from "@neon/env";
+import config from "./neon";
 
-Neon provides built-in connection pooling via PgBouncer.
+const env = parseEnv(config);
+env.postgres.databaseUrl; // typed; enabling auth / dataApi above surfaces env.auth / env.dataApi
+```
 
-Key limits:
-- Up to 10,000 concurrent connections to pooler
-- Connections still consume underlying Postgres connections
-- 7 connections reserved for Neon superuser
+## Branching
 
-Use pooled endpoint for application, direct for migrations.
+Use this when the user is planning isolated environments, schema migration testing, preview deployments, or branch lifecycle automation.
 
-### Code_example
+Key points:
 
-# Connection string formats
+- Branches are instant, copy-on-write clones (no full data copy).
+- Each branch has its own compute endpoint.
+- Use the neon CLI or MCP server to create, inspect, and compare branches.
 
-# Pooled connection (for application)
-# Note: -pooler in hostname
-postgres://user:pass@ep-cool-name-pooler.us-east-2.aws.neon.tech/neondb
+Link: https://neon.com/docs/introduction/branching.md
 
-# Direct connection (for migrations)
-# Note: No -pooler
-postgres://user:pass@ep-cool-name.us-east-2.aws.neon.tech/neondb
+For detailed branch creation workflows (normal vs schema-only branches, reset-from-parent, CLI/MCP selection), use the `neon-postgres-branches` skill if available
 
-// Prisma with pooling
-// prisma/schema.prisma
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")      // Pooled
-  directUrl = env("DIRECT_URL")        // Direct
-}
+Or fetch the full branching skill from the following URL:
 
-// Connection pool settings for high-traffic
-// lib/prisma.ts
-import { PrismaClient } from '@prisma/client';
+https://neon.com/docs/ai/skills/neon-postgres-branches/SKILL.md
 
-export const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-  // Connection pool settings
-  // Adjust based on compute size
-});
-
-// For Drizzle with connection pool
-import { Pool } from '@neondatabase/serverless';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  max: 10,  // Max connections in local pool
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
-});
+If this skill is not installed you can use the following command to install it:
 
-// Compute size connection limits
-// 0.25 CU: 112 connections (105 available after reserved)
-// 0.5 CU: 225 connections
-// 1 CU: 450 connections
-// 2 CU: 901 connections
-// 4 CU: 1802 connections
-// 8 CU: 3604 connections
+```bash
+npx skills add neondatabase/agent-skills --skill neon-postgres-branches
+```
 
-### Anti_patterns
+## Autoscaling
 
-- Pattern: Opening new connection per request | Why: Exhausts connection limits quickly | Fix: Use connection pooling, reuse connections
-- Pattern: High max pool size in serverless | Why: Many function instances = many pools = many connections | Fix: Keep local pool size low (5-10), rely on PgBouncer
+Use this when the user needs compute to scale automatically with workload and wants guidance on CU sizing and runtime behavior.
 
-### References
+Link: https://neon.com/docs/introduction/autoscaling.md
 
-- https://neon.com/docs/connect/connection-pooling
+## Scale to Zero
 
-### Database Branching for Development
+Use this when optimizing idle costs and discussing suspend/resume behavior, including cold-start trade-offs.
 
-Create instant copies of your database for development,
-testing, and preview environments.
+Key points:
 
-Branches share underlying storage (copy-on-write),
-making them instant and cost-effective.
+- Idle computes suspend automatically (default 5 minutes, configurable) (unless disabled - launch & scale plan only)
+- First query after suspend typically has a cold-start penalty (around hundreds of ms)
+- Storage remains active while compute is suspended.
 
-### Code_example
+Link: https://neon.com/docs/introduction/scale-to-zero.md
 
-# Create branch via Neon CLI
-neon branches create --name feature/new-feature --parent main
+## Instant Restore
 
-# Create branch from specific point in time
-neon branches create --name debug/yesterday \
-  --parent main \
-  --timestamp "2024-01-15T10:00:00Z"
-
-# List branches
-neon branches list
-
-# Get connection string for branch
-neon connection-string feature/new-feature
-
-# Delete branch when done
-neon branches delete feature/new-feature
-
-// In CI/CD (GitHub Actions)
-// .github/workflows/preview.yml
-name: Preview Environment
-on:
-  pull_request:
-    types: [opened, synchronize]
-
-jobs:
-  create-branch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: neondatabase/create-branch-action@v5
-        id: create-branch
-        with:
-          project_id: ${{ secrets.NEON_PROJECT_ID }}
-          branch_name: preview/pr-${{ github.event.pull_request.number }}
-          api_key: ${{ secrets.NEON_API_KEY }}
-          username: ${{ secrets.NEON_ROLE_NAME }}
-
-      - name: Run migrations
-        env:
-          DATABASE_URL: ${{ steps.create-branch.outputs.db_url_with_pooler }}
-        run: npx prisma migrate deploy
-
-      - name: Deploy to Vercel
-        env:
-          DATABASE_URL: ${{ steps.create-branch.outputs.db_url_with_pooler }}
-        run: vercel deploy --prebuilt
-
-// Cleanup on PR close
-on:
-  pull_request:
-    types: [closed]
-
-jobs:
-  delete-branch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: neondatabase/delete-branch-action@v3
-        with:
-          project_id: ${{ secrets.NEON_PROJECT_ID }}
-          branch: preview/pr-${{ github.event.pull_request.number }}
-          api_key: ${{ secrets.NEON_API_KEY }}
-
-### Anti_patterns
-
-- Pattern: Sharing production database for development | Why: Risk of data corruption, no isolation | Fix: Create development branches from production
-- Pattern: Not cleaning up old branches | Why: Accumulates storage and clutter | Fix: Auto-delete branches on PR close
-
-### References
-
-- https://neon.com/blog/branching-with-preview-environments
-- https://github.com/neondatabase/create-branch-action
-
-### Vercel Preview Environment Integration
-
-Automatically create database branches for Vercel preview
-deployments. Each PR gets its own isolated database.
-
-Two integration options:
-- Vercel-Managed: Billing in Vercel, auto-setup
-- Neon-Managed: Billing in Neon, more control
-
-### Code_example
-
-# Vercel-Managed Integration
-# 1. Go to Vercel Dashboard > Storage > Create Database
-# 2. Select Neon Postgres
-# 3. Enable "Create a branch for each preview deployment"
-# 4. Environment variables automatically injected
-
-# Neon-Managed Integration
-# 1. Install from Neon Dashboard > Integrations > Vercel
-# 2. Select Vercel project to connect
-# 3. Enable "Create a branch for each preview deployment"
-# 4. Optionally enable auto-delete on branch delete
-
-// vercel.json - Add migration to build
-{
-  "buildCommand": "prisma migrate deploy && next build",
-  "framework": "nextjs"
-}
-
-// Or in package.json
-{
-  "scripts": {
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
-  }
-}
-
-// Environment variables injected by integration
-// DATABASE_URL - Pooled connection for preview branch
-// DATABASE_URL_UNPOOLED - Direct connection for migrations
-// PGHOST, PGUSER, PGDATABASE, PGPASSWORD - Individual vars
-
-// Prisma schema for Vercel integration
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_UNPOOLED")  // Vercel variable
-}
-
-// For Drizzle in Next.js on Vercel
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-
-// Use pooled URL for queries
-const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle(sql);
-
-### Anti_patterns
-
-- Pattern: Same database for all previews | Why: Previews interfere with each other | Fix: Enable branch-per-preview in integration
-- Pattern: Not running migrations on preview | Why: Schema mismatch between code and database | Fix: Add migrate command to build step
-
-### References
-
-- https://neon.com/docs/guides/vercel-managed-integration
-- https://neon.com/docs/guides/neon-managed-vercel-integration
-
-### Autoscaling and Cold Start Management
-
-Neon autoscales compute resources and scales to zero.
-
-Cold start latency: 500ms - few seconds when waking from idle.
-Production recommendation: Disable scale-to-zero, set minimum compute.
+Use this when the user needs point-in-time recovery or wants to restore data state without traditional backup restore workflows.
 
-### Code_example
+Key points:
 
-# Neon Console settings for production
-# Project Settings > Compute > Default compute size
-# - Set minimum to 0.5 CU or higher
-# - Disable "Suspend compute after inactivity"
+- History windows for instant restore depend on plan limits.
+- Users can create branches from historical points-in-time.
+- Time Travel queries can be used for historical inspection workflows.
 
-// Handle cold starts in application
-// lib/db-with-retry.ts
-import { prisma } from './prisma';
+Link: https://neon.com/docs/introduction/branch-restore.md
 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000;
+## Read Replicas
 
-export async function queryWithRetry<T>(
-  query: () => Promise<T>
-): Promise<T> {
-  let lastError: Error | undefined;
+Use this for read-heavy workloads where the user needs dedicated read-only compute without duplicating storage.
 
-  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      return await query();
-    } catch (error) {
-      lastError = error as Error;
+Key points:
 
-      // Retry on connection errors (cold start)
-      if (error.code === 'P1001' || error.code === 'P1002') {
-        console.log(`Retry attempt ${attempt}/${MAX_RETRIES}`);
-        await new Promise(r => setTimeout(r, RETRY_DELAY * attempt));
-        continue;
-      }
+- Replicas are read-only compute endpoints sharing the same storage.
+- Creation is fast and scaling is independent from primary compute.
+- Typical use cases: analytics, reporting, and read-heavy APIs.
 
-      throw error;
-    }
-  }
+Link: https://neon.com/docs/introduction/read-replicas.md
 
-  throw lastError;
-}
+## Connection Pooling
 
-// Usage
-const users = await queryWithRetry(() =>
-  prisma.user.findMany()
-);
+Use this when the user is in serverless or high-concurrency environments and needs safe, scalable Postgres connection management.
 
-// Reduce cold start latency with SSL direct negotiation
-# PostgreSQL 17+ connection string
-postgres://user:pass@ep-xxx-pooler.aws.neon.tech/db?sslmode=require&sslnegotiation=direct
+Key points:
 
-// Keep-alive for long-running apps
-// lib/db-keepalive.ts
-import { prisma } from './prisma';
+- Neon pooling uses PgBouncer.
+- Add `-pooler` to endpoint hostnames to use pooled connections.
+- Pooling is especially important in serverless runtimes with bursty concurrency.
 
-// Ping database every 4 minutes to prevent suspend
-const KEEPALIVE_INTERVAL = 4 * 60 * 1000;
+Link: https://neon.com/docs/connect/connection-pooling.md
 
-if (process.env.NEON_KEEPALIVE === 'true') {
-  setInterval(async () => {
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-    } catch (error) {
-      console.error('Keepalive failed:', error);
-    }
-  }, KEEPALIVE_INTERVAL);
-}
+## IP Allow Lists
 
-// Compute sizing recommendations
-// Development: 0.25 CU, scale-to-zero enabled
-// Staging: 0.5 CU, scale-to-zero enabled
-// Production: 1+ CU, scale-to-zero DISABLED
-// High-traffic: 2-4 CU minimum, autoscaling enabled
+Use this when the user needs to restrict database access by trusted networks, IPs, or CIDR ranges.
 
-### Anti_patterns
+Link: https://neon.com/docs/introduction/ip-allow.md
 
-- Pattern: Scale-to-zero in production | Why: Cold starts add 500ms+ latency to first request | Fix: Disable scale-to-zero for production branch
-- Pattern: No retry logic for cold starts | Why: First connection after idle may timeout | Fix: Add retry with exponential backoff
+## Logical Replication
 
-### References
+Use this when integrating CDC pipelines, external Postgres sync, or replication-based data movement.
 
-- https://neon.com/blog/scaling-serverless-postgres
-- https://neon.com/docs/connect/connection-latency
+Key points:
 
-## Sharp Edges
+- Neon supports native logical replication workflows.
+- Useful for replicating to/from external Postgres systems.
 
-### Cold Start Latency After Scale-to-Zero
-
-Severity: HIGH
-
-### Using Pooled Connection for Migrations
-
-Severity: HIGH
-
-### Connection Pool Exhaustion in Serverless
-
-Severity: HIGH
-
-### PgBouncer Feature Limitations
-
-Severity: MEDIUM
-
-### Branch Storage Accumulation
-
-Severity: MEDIUM
-
-### Reserved Connections Reduce Available Pool
-
-Severity: LOW
-
-### HTTP Driver Doesn't Support Transactions
-
-Severity: MEDIUM
-
-### Deleting Parent Branch Affects Children
-
-Severity: HIGH
-
-### Schema Drift Between Branches
-
-Severity: MEDIUM
-
-## Validation Checks
-
-### Direct Database URL in Client Code
-
-Severity: ERROR
-
-Direct database URLs should never be exposed to client
-
-Message: Direct URL exposed to client. Only pooled URLs for server-side use.
-
-### Hardcoded Database Connection String
-
-Severity: ERROR
-
-Connection strings should use environment variables
-
-Message: Hardcoded connection string. Use environment variables.
-
-### Missing SSL Mode in Connection String
-
-Severity: WARNING
-
-Neon requires SSL connections
-
-Message: Missing sslmode=require. Add to connection string.
-
-### Prisma Missing directUrl for Migrations
-
-Severity: ERROR
-
-Prisma needs directUrl for migrations through PgBouncer
-
-Message: Using pooled URL without directUrl. Migrations will fail.
-
-### Prisma directUrl Points to Pooler
-
-Severity: ERROR
-
-directUrl should be non-pooled connection
-
-Message: directUrl points to pooler. Use non-pooled endpoint for migrations.
-
-### High Pool Size in Serverless Function
-
-Severity: WARNING
-
-High pool sizes exhaust connections with many function instances
-
-Message: Pool size too high for serverless. Use max: 5-10.
-
-### Creating New Client Per Request
-
-Severity: WARNING
-
-Creating new clients per request wastes connections
-
-Message: Creating client per request. Use connection pool or neon() driver.
-
-### Branch Creation Without Cleanup Strategy
-
-Severity: WARNING
-
-Branches should have cleanup automation
-
-Message: Creating branch without cleanup. Add delete-branch-action to PR close.
-
-### Scale-to-Zero Enabled on Production
-
-Severity: WARNING
-
-Scale-to-zero adds latency in production
-
-Message: Scale-to-zero on production. Disable for low-latency.
-
-### HTTP Driver Used for Transactions
-
-Severity: ERROR
-
-neon() HTTP driver doesn't support transactions
-
-Message: HTTP driver with transaction. Use Pool from @neondatabase/serverless.
-
-## Collaboration
-
-### Delegation Triggers
-
-- user needs authentication -> clerk-auth (User table with clerkId column)
-- user needs caching -> redis-specialist (Query caching, session storage)
-- user needs search -> algolia-search (Full-text search beyond Postgres capabilities)
-- user needs analytics -> segment-cdp (Track database events, user actions)
-- user needs deployment -> vercel-deployment (Environment variables, preview databases)
-
-## When to Use
-- User mentions or implies: neon database
-- User mentions or implies: serverless postgres
-- User mentions or implies: database branching
-- User mentions or implies: neon postgres
-- User mentions or implies: postgres serverless
-- User mentions or implies: connection pooling
-- User mentions or implies: preview environments
-- User mentions or implies: database per preview
+Link: https://neon.com/docs/guides/logical-replication-guide.md
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

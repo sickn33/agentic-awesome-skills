@@ -1,14 +1,20 @@
 ---
-source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-datasets"
 name: hugging-face-dataset-viewer
-description: Query Hugging Face datasets through the Dataset Viewer API for splits, rows, search, filters, and parquet links.
+description: Hugging Face Dataset Viewer
 risk: unknown
+source: https://github.com/huggingface/skills/tree/main/skills/huggingface-datasets
+source_repo: huggingface/skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
 # Hugging Face Dataset Viewer
-
 ## When to Use
-Use this skill when you need read-only exploration of a Hugging Face dataset through the Dataset Viewer API.
+
+Use this skill when you need hugging Face Dataset Viewer.
+
 
 Use this skill to execute read-only Dataset Viewer API calls for dataset exploration and extraction.
 
@@ -58,36 +64,7 @@ Search/filter notes:
 - `/filter` requires predicate syntax in `where` and optional sort in `orderby`.
 - Keep filtering and searches read-only and side-effect free.
 
-## Querying Datasets
-
-Use `npx parquetlens` with Hub parquet alias paths for SQL querying.
-
-Parquet alias shape:
-
-```text
-hf://datasets/<namespace>/<repo>@~parquet/<config>/<split>/<shard>.parquet
-```
-
-Derive `<config>`, `<split>`, and `<shard>` from Dataset Viewer `/parquet`:
-
-```bash
-curl -s "https://datasets-server.huggingface.co/parquet?dataset=cfahlgren1/hub-stats" \
-  | jq -r '.parquet_files[] | "hf://datasets/\(.dataset)@~parquet/\(.config)/\(.split)/\(.filename)"'
-```
-
-Run SQL query:
-
-```bash
-npx -y -p parquetlens -p @parquetlens/sql parquetlens \
-  "hf://datasets/<namespace>/<repo>@~parquet/<config>/<split>/<shard>.parquet" \
-  --sql "SELECT * FROM data LIMIT 20"
-```
-
-### SQL export
-
-- CSV: `--sql "COPY (SELECT * FROM data LIMIT 1000) TO 'export.csv' (FORMAT CSV, HEADER, DELIMITER ',')"`
-- JSON: `--sql "COPY (SELECT * FROM data LIMIT 1000) TO 'export.json' (FORMAT JSON)"`
-- Parquet: `--sql "COPY (SELECT * FROM data LIMIT 1000) TO 'export.parquet' (FORMAT PARQUET)"`
+For CLI-based parquet URL discovery or SQL, use the `hf-cli` skill with `hf datasets parquet` and `hf datasets sql`.
 
 ## Creating and Uploading Datasets
 
@@ -125,7 +102,23 @@ npx -y @huggingface/hub upload datasets/<namespace>/<repo> ./local/parquet-folde
 
 After upload, call `/parquet` to discover `<config>/<split>/<shard>` values for querying with `@~parquet`.
 
+## Agent Traces
+
+The Hub supports raw agent session traces from Claude Code, Codex, and Pi Agent. Upload them to Hugging Face Datasets as original JSONL files and the Hub can auto-detect the trace format, tag the dataset as `Traces`, and enable the trace viewer for browsing sessions, turns, tool calls, and model responses. Common local session directories:
+
+- Claude Code: `~/.claude/projects`
+- Codex: `~/.codex/sessions`
+- Pi: `~/.pi/agent/sessions`
+
+Default to private dataset repos because traces can contain prompts, file paths, tool outputs, secrets, or PII. Preserve the raw `.jsonl` files and nest them by project/cwd instead of uploading every session at the dataset root.
+
+```bash
+hf repos create <namespace>/<repo> --type dataset --private --exist-ok
+hf upload <namespace>/<repo> ~/.codex/sessions codex/<project-or-cwd> --type dataset
+```
+
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

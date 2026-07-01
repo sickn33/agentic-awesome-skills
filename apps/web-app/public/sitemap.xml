@@ -37,241 +37,241 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/browser-testing-with-devtools</loc>
+    <loc>http://localhost/skill/ab-testing</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/drizzle-migration-conflict</loc>
+    <loc>http://localhost/skill/accint-commitments</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/frontend-lighthouse</loc>
+    <loc>http://localhost/skill/accint-frames</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/pre-release-review</loc>
+    <loc>http://localhost/skill/accint-solve</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/weaviate</loc>
+    <loc>http://localhost/skill/add-app-clip</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/weaviate-cookbooks</loc>
+    <loc>http://localhost/skill/agent-memory</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ai-loop</loc>
+    <loc>http://localhost/skill/alternatives-pages</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/re-create</loc>
+    <loc>http://localhost/skill/analytics</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/cron-doctor</loc>
+    <loc>http://localhost/skill/anti-deception</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/sql-sentinel</loc>
+    <loc>http://localhost/skill/api-analyzer</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/web-project-brainstorming</loc>
+    <loc>http://localhost/skill/api-and-interface-design</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/arrowspace</loc>
+    <loc>http://localhost/skill/api-designer</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/emil-design-eng</loc>
+    <loc>http://localhost/skill/api-integration</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/gh-image</loc>
+    <loc>http://localhost/skill/api-onboarding</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/github-actions-debugger</loc>
+    <loc>http://localhost/skill/api-sdk-generator</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/premium-3d-website</loc>
+    <loc>http://localhost/skill/appium-skill</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/review-animations</loc>
+    <loc>http://localhost/skill/applicationinsights-web-ts</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/the-honoured-one</loc>
+    <loc>http://localhost/skill/automated-triage</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/infinity</loc>
+    <loc>http://localhost/skill/aws-agentic-ai</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ax-extract-workflow</loc>
+    <loc>http://localhost/skill/aws-cdk-development</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/agent-creator</loc>
+    <loc>http://localhost/skill/aws-cost-operations</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/remote-gpu-trainer</loc>
+    <loc>http://localhost/skill/aws-mcp-setup</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/ask-matt</loc>
+    <loc>http://localhost/skill/aws-serverless-eda</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/bugs-are-annoying</loc>
+    <loc>http://localhost/skill/aws-sst-development</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/codebase-design</loc>
+    <loc>http://localhost/skill/azure-ai-language-conversations-py</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/competitor-analysis</loc>
+    <loc>http://localhost/skill/azure-servicebus-rust</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/diagnosing-bugs</loc>
+    <loc>http://localhost/skill/azure-storage-queue-rust</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/domain-modeling</loc>
+    <loc>http://localhost/skill/baseline-ui</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/grill-me</loc>
+    <loc>http://localhost/skill/brooks-audit</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/grill-with-docs</loc>
+    <loc>http://localhost/skill/brooks-debt</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/grilling</loc>
+    <loc>http://localhost/skill/brooks-harness</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/handoff</loc>
+    <loc>http://localhost/skill/brooks-review</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/image-generator</loc>
+    <loc>http://localhost/skill/brooks-sweep</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/improve-codebase-architecture</loc>
+    <loc>http://localhost/skill/brooks-test</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/learn</loc>
+    <loc>http://localhost/skill/bug-hunt-swarm</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/lesson-generator</loc>
+    <loc>http://localhost/skill/building-native-ui</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/llm-council</loc>
+    <loc>http://localhost/skill/changelog-updates</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/loop-library</loc>
+    <loc>http://localhost/skill/ci-cd-and-automation</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/mailtrap-managing-contacts</loc>
+    <loc>http://localhost/skill/claimable-postgres</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost/skill/mailtrap-sending-emails</loc>
+    <loc>http://localhost/skill/co-marketing</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

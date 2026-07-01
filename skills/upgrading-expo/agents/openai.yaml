@@ -1,0 +1,4 @@
+interface:
+  display_name: "Upgrading Expo"
+  short_description: "Upgrade Expo SDKs, fix dependencies, adopt React 19 / React Compiler, and migrate deprecated Expo packages"
+  default_prompt: "Use $upgrading-expo to upgrade an Expo SDK, run diagnostics, fix dependency conflicts, decide whether prebuild/cache clearing applies, and migrate away from deprecated Expo packages."

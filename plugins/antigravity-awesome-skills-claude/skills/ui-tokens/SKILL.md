@@ -1,73 +1,65 @@
 ---
 name: ui-tokens
-description: "List, add, and update StyleSeed design tokens while keeping JSON sources, CSS variables, and dark-mode values in sync."
-category: design
-risk: safe
-source: community
+description: View, add, or modify design tokens in the StyleSeed design system
+risk: unknown
+source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-tokens
 source_repo: bitjaru/styleseed
 source_type: community
-date_added: "2026-04-08"
-author: bitjaru
-tags: [ui, tokens, design-system, theming, styleseed]
-tools: [claude, cursor, codex, gemini]
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/bitjaru/styleseed/blob/main/LICENSE
 ---
 
-# UI Tokens
-
-## Overview
-
-Part of [StyleSeed](https://github.com/bitjaru/styleseed), this skill manages design tokens without letting the source-of-truth files drift apart. It is meant for teams using the Toss seed's JSON token files and CSS implementation together.
-
+# Design Token Manager
 ## When to Use
-- Use when you need to inspect the current token set
-- Use when you want to add a new color, shadow, radius, spacing, or typography token
-- Use when you need to update a token and propagate the change safely
-- Use when the project has both JSON token files and CSS variables that must stay aligned
 
-## How It Works
+Use this skill when you need view, add, or modify design tokens in the StyleSeed design system.
 
-### Supported Actions
 
-- `list`: show the current tokens in a human-readable form
-- `add`: introduce a new token and wire it through the implementation
-- `update`: change an existing token value and audit the downstream usage
+## When NOT to use
 
-### Typical Source-of-Truth Split
+- For applying tokens in components → use `/ss-component` or `/ss-pattern`
+- For finding token violations in existing code → use `/ss-lint`
+- For brand-wide color/font choices that don't exist yet — define a skin first, then add tokens
+- For non-CSS token systems (Figma, native iOS/Android) — Tailwind v4 / CSS variables only
 
-For the Toss seed:
-- JSON under `tokens/`
-- CSS variables and theme wiring under `css/theme.css`
-- typography support in the font and base CSS files
+Action: **$0** | Token type: **$1**
+Arguments: $ARGUMENTS
 
-### Rules
+## Token File Locations
 
-- keep JSON and CSS in sync
-- prefer semantic names over descriptive names
-- provide dark-mode support where relevant
-- update the token implementation, not just the source manifest
-- check for direct component usage that might now be stale
+| Type | JSON Source | CSS Implementation |
+|------|-----------|-------------------|
+| Colors | `tokens/colors.json` | `css/theme.css` `:root` + `@theme inline` |
+| Typography | `tokens/typography.json` | `css/fonts.css` + `css/base.css` |
+| Spacing | `tokens/spacing.json` | Tailwind utilities (no custom CSS needed) |
+| Radius | `tokens/radii.json` | `css/theme.css` `@theme inline` |
+| Shadows | `tokens/shadows.json` | `css/theme.css` `:root` |
 
-## Output
+## Instructions
 
-Return:
-1. The requested token inventory or change summary
-2. Every file touched
-3. Any affected components or utilities that should be reviewed
-4. Follow-up actions if the new token requires broader adoption
+### `list` — Show current tokens
+Read and display the requested token file in a formatted table.
 
-## Best Practices
+### `add` — Add new token
+1. Add the token to the JSON source file (`tokens/*.json`)
+2. Add the CSS custom property to `css/theme.css` under `:root`
+3. If it needs a Tailwind utility, add to the `@theme inline` block
+4. If it has a dark mode variant, add to the `.dark` block
 
-- Add semantic intent, not one-off brand shades
-- Avoid token sprawl by extending existing scales first
-- Keep naming consistent with the rest of the system
-- Review contrast and accessibility when introducing new colors
+### `update` — Modify existing token
+1. Update the value in the JSON source file
+2. Update the CSS custom property in `theme.css`
+3. Check all components for direct usage that might need updating
 
-## Additional Resources
-
-- [StyleSeed repository](https://github.com/bitjaru/styleseed)
-- [Source skill](https://github.com/bitjaru/styleseed/blob/main/seeds/toss/.claude/skills/ui-tokens/SKILL.md)
+## Rules
+- Always keep JSON and CSS in sync
+- Use semantic names, not descriptive names (`--success` not `--green-500`)
+- Colors should support both light and dark modes
+- New tokens must be added to BOTH the JSON source AND the CSS implementation
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

@@ -1,14 +1,20 @@
 ---
-source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-community-evals"
 name: hugging-face-community-evals
-description: Run local evaluations for Hugging Face Hub models with inspect-ai or lighteval.
+description: Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate. Not for HF Jobs orchestration, model-card PRs, .eval_results publication, or community-evals...
 risk: unknown
+source: https://github.com/huggingface/skills/tree/main/skills/huggingface-community-evals
+source_repo: huggingface/skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
 # Overview
-
 ## When to Use
-Use this skill for local model evaluation, backend selection, and GPU smoke tests outside the Hugging Face Jobs workflow.
+
+Use this skill when you need run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate. Not for HF Jobs orchestration, model-card PRs, .eval_results publication, or community-evals...
+
 
 This skill is for **running evaluations against models on the Hugging Face Hub on local hardware**.
 
@@ -212,6 +218,7 @@ See:
 - `scripts/lighteval_vllm_uv.py`
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

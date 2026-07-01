@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building Native UI"
+  short_description: "Build beautiful Expo Router UI with native-feeling navigation, controls, media, animation, and visual effects"
+  default_prompt: "Use $building-native-ui to build or refactor Expo Router UI, choose native-feeling navigation and controls, structure routes, style screens, and decide when Expo Go is enough before creating native builds."

@@ -14,8 +14,8 @@ If you came in through a **Claude Code** or **Codex** plugin instead of a full l
 
 When you ran `npx antigravity-awesome-skills` or cloned the repository, you:
 
-✅ **Downloaded 1,700+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
-✅ **Made them available** to your AI assistant  
+✅ **Downloaded 1,890+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
+✅ **Made them available** to your AI assistant
 ❌ **Did NOT enable them all automatically** (they're just sitting there, waiting)
 
 Think of it like installing a toolbox. You have all the tools now, but you need to **pick which ones to use** for each job.
@@ -34,13 +34,13 @@ Bundles are **curated groups** of skills organized by role. They help you decide
 
 **Analogy:**
 
-- You installed a toolbox with 1,700+ tools (✅ done)
+- You installed a toolbox with 1,890+ tools (✅ done)
 - Bundles are like **labeled organizer trays** saying: "If you're a carpenter, start with these 10 tools"
 - You can either **pick skills from the tray** or install that tray as a focused marketplace bundle plugin
 
 ### What Bundles Are NOT
 
-❌ Separate skill downloads  
+❌ Separate skill downloads
 ❌ Invokable mega-skills like `@essentials` or `/web-wizard`
 ❌ Something most users need to activate during normal install
 ❌ A replacement for invoking the individual skills inside the bundle
@@ -212,7 +212,7 @@ Let's actually use a skill right now. Follow these steps:
 
 ## Step 5: Picking Your First Skills (Practical Advice)
 
-Don't try to use all 1,700+ skills at once. Here's a sensible approach:
+Don't try to use all 1,890+ skills at once. Here's a sensible approach:
 
 If you want a tool-specific starting point before choosing skills, use:
 
@@ -257,7 +257,7 @@ Find your role in [bundles.md](bundles.md) and pick 5-10 skills from that bundle
 
 Keep the [CATALOG.md](../../CATALOG.md) open as reference. When you need something specific:
 
-> "I need to integrate Stripe payments"  
+> "I need to integrate Stripe payments"
 > → Search catalog → Find `@stripe-integration` → Use it!
 
 ---
@@ -343,7 +343,7 @@ Usually no, but if your AI doesn't recognize a skill:
 
 ### "Can I load all skills into the model at once?"
 
-No. Even though you have 1,700+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
+No. Even though you have 1,890+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
 
 The intended pattern is:
 
@@ -415,7 +415,7 @@ Now that you understand how to use skills:
 
 ### Tip 3: Be Specific in Prompts
 
-> Bad: "Use @react-patterns"  
+> Bad: "Use @react-patterns"
 > Good: "Use @react-patterns to build a modal component with animations"
 
 ### Tip 4: Reference File Paths

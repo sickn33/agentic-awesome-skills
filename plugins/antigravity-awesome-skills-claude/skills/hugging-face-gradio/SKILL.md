@@ -1,14 +1,20 @@
 ---
-source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-gradio"
 name: hugging-face-gradio
-description: Build or edit Gradio apps, layouts, components, and chat interfaces in Python.
+description: Build Gradio web UIs and demos in Python. Use when creating or editing Gradio apps, components, event listeners, layouts, or chatbots.
 risk: unknown
+source: https://github.com/huggingface/skills/tree/main/skills/huggingface-gradio
+source_repo: huggingface/skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
 # Gradio
-
 ## When to Use
-Use this skill when a user wants a Gradio demo, UI prototype, or Python-based ML interface.
+
+Use this skill when you need build Gradio web UIs and demos in Python. Use when creating or editing Gradio apps, components, event listeners, layouts, or chatbots.
+
 
 Gradio is a Python library for building interactive web UIs and ML demos. This skill covers the core API, patterns, and examples.
 
@@ -303,6 +309,7 @@ Both commands accept `--token` for accessing private Spaces.
 - [End-to-End Examples](examples.md) — complete working apps
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

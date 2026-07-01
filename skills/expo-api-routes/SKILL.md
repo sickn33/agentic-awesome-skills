@@ -2,9 +2,12 @@
 name: expo-api-routes
 description: Guidelines for creating API routes in Expo Router with EAS Hosting
 risk: unknown
-source: community
-version: 1.0.0
+source: https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-api-routes
+source_repo: expo/skills
+source_type: official
+date_added: 2026-07-01
 license: MIT
+license_source: https://github.com/expo/skills/blob/main/LICENSE
 ---
 
 ## When to Use API Routes
@@ -370,6 +373,7 @@ export async function GET(request: Request) {
 - Log errors server-side for debugging
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

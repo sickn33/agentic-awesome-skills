@@ -1,8 +1,13 @@
 ---
-source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-papers"
 name: hugging-face-papers
-description: Read and analyze Hugging Face paper pages or arXiv papers with markdown and papers API metadata.
+description: Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github repo and project page. Use when the user shares a Hugging Face paper page URL, an arXiv URL or ID, or asks to summarize, explain,...
 risk: unknown
+source: https://github.com/huggingface/skills/tree/main/skills/huggingface-papers
+source_repo: huggingface/skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
 # Hugging Face Paper Pages
@@ -18,6 +23,7 @@ Whenever someone mentions a HF paper or arXiv abstract/PDF URL in a model card, 
 The Hugging Face team has built an easy-to-use API to interact with paper pages. Content of the papers can be fetched as markdown, or structured metadata can be returned such as author names, linked models/datasets/spaces, linked Github repo and project page.
 
 ## When to Use
+
 - User shares a Hugging Face paper page URL (e.g. `https://huggingface.co/papers/2602.08025`)
 - User shares a Hugging Face markdown paper page URL (e.g. `https://huggingface.co/papers/2602.08025.md`)
 - User shares an arXiv URL (e.g. `https://arxiv.org/abs/2602.08025` or  `https://arxiv.org/pdf/2602.08025`)
@@ -240,6 +246,7 @@ If the Hugging Face paper page does not contain enough detail for the user's que
 - Prefer `/api/papers/{PAPER_ID}` when you need structured JSON fields instead of page markdown.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

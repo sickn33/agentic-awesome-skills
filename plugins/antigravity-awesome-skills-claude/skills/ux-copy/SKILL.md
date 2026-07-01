@@ -1,83 +1,115 @@
 ---
 name: ux-copy
-description: "Generate UX microcopy in StyleSeed's Toss-inspired voice for buttons, empty states, errors, toasts, confirmations, and form guidance."
-category: design
-risk: safe
-source: community
+description: Generate UX microcopy (button labels, error messages, empty states, toasts) following a casual-but-polite voice and tone
+risk: unknown
+source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-copy
 source_repo: bitjaru/styleseed
 source_type: community
-date_added: "2026-04-08"
-author: bitjaru
-tags: [ux, copywriting, microcopy, frontend, styleseed]
-tools: [claude, cursor, codex, gemini]
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/bitjaru/styleseed/blob/main/LICENSE
 ---
 
-# UX Copy
-
-## Overview
-
-Part of [StyleSeed](https://github.com/bitjaru/styleseed), this skill generates concise product copy for common UI states. It follows the Toss-inspired tone: casual but polite, direct, active, and specific enough to help the user recover or proceed.
-
+# UX Microcopy Generator
 ## When to Use
-- Use when you need button labels, helper text, toasts, empty states, or error messages
-- Use when a feature has functional UI but weak or robotic wording
-- Use when you want consistent product voice across a flow
-- Use when confirmation dialogs or state feedback need better phrasing
 
-## Tone Rules
+Use this skill when you need generate UX microcopy (button labels, error messages, empty states, toasts) following a casual-but-polite voice and tone.
 
-- casual but polite
-- active voice over passive voice
-- positive framing where it stays honest
-- plain language instead of internal jargon
-- concise wording where every word earns its place
 
-## Common Patterns
+## When NOT to use
 
-### Buttons
+- For long-form content (blog posts, docs, marketing pages) — out of scope
+- For full feedback state design (not just text) → use `/ss-feedback`
+- For brand voice/tone definition itself — this skill consumes a voice spec, doesn't create it
+- For translations to non-English languages — single-language only
 
-Use a short action verb plus object when needed.
+Context: **$0**
+Description: $ARGUMENTS
 
-### Empty States
+> **Read `engine/UX-WRITING.md` first** — it's the rule set this skill applies: buttons
+> name the action (not "Submit"), errors help instead of blame, empty states invite,
+> money copy stays calm, one term per concept. Korean/CJK projects: see §W8 for the
+> clear-calm-human "Toss feel" (존댓말 일관성, 사용자 관점 "내 계좌", 군더더기 빼기).
 
-Start with a friendly observation, then suggest the next action.
+## Instructions
 
-### Errors
+1. Read the design language reference:
+   - `DESIGN-LANGUAGE.md` sections on Microcopy Tone Guide and UX Writing
 
-Explain what happened in user-facing language and what to do next. Do not surface raw internal error strings.
+2. Apply the voice principles:
 
-### Toasts
+### Tone Rules
+- **Casual but polite**: Friendly, not robotic. Like talking to a helpful friend.
+- **Active voice**: "We saved your changes" not "Your changes have been saved"
+- **Positive framing**: "Free shipping on orders over $30" not "Orders under $30 have shipping fees"
+- **Plain language**: "Send money" not "Initiate transfer"
+- **Concise**: Every word must earn its place
 
-Confirm the result quickly. Add an undo action for reversible destructive behavior.
+### Copy Patterns by Context
 
-### Forms
+#### Button Labels (CTA)
+```
+Format: [Action verb] + [Object] (optional)
+Good: "Place order", "Get started", "Save changes", "Try again"
+Bad:  "Submit", "OK", "Click here", "Proceed to next step"
+```
+- One primary CTA per screen
+- Label must clearly describe what happens next
+- Max 3 words for primary CTA
 
-Use clear labels, useful placeholders, specific helper text, and corrective error messages.
+#### Empty States
+```
+Format: [Friendly observation] + [Suggested action]
+Good: "No activity yet. Create your first project to get started."
+Bad:  "No data found."
+```
+- Always suggest a next action
+- Use a relevant icon (32px, text-text-tertiary)
+- Tone: encouraging, not blaming
 
-### Confirmation Dialogs
+#### Error Messages
+```
+Format: [What happened] + [What to do]
+Good: "Couldn't load the data. Please try again."
+Bad:  "Error 500: Internal Server Error"
+```
+- Never show technical errors to users
+- Blame the system, not the user
+- Always provide a recovery action
 
-State the action in plain language and explain the consequence if the decision is risky or irreversible.
+#### Toast Notifications
+```
+Format: [Confirmation of what happened]
+Good: "Saved!", "Changes applied", "Item deleted · Undo"
+Bad:  "Operation completed successfully"
+```
+- Max 2 lines
+- Include "Undo" link for reversible destructive actions
+- Info toasts: 3 seconds. Action toasts: 5 seconds.
 
-## Output
+#### Form Labels & Helpers
+```
+Label: Noun phrase ("Email address", "Password")
+Placeholder: Example or hint ("name@example.com")
+Helper: Format guidance ("Must be at least 8 characters")
+Error: Specific issue ("This email is already registered")
+```
 
-Return:
-1. The requested microcopy grouped by UI surface
-2. Notes on tone or localization considerations if relevant
-3. Any places where the UX likely needs a structural fix in addition to better copy
+#### Confirmation Dialogs
+```
+Title: [Question about the action]
+Body: [Consequence explanation]
+Primary: [Action verb] ("Delete", "Confirm")
+Secondary: "Close" (not "Cancel" — avoids confusion)
+```
 
-## Best Practices
-
-- Make the next action obvious
-- Avoid generic labels like "Submit" or "OK" when the action can be named precisely
-- Blame the system, not the user, when something fails
-- Keep error and empty states useful even without visual context
-
-## Additional Resources
-
-- [StyleSeed repository](https://github.com/bitjaru/styleseed)
-- [Source skill](https://github.com/bitjaru/styleseed/blob/main/seeds/toss/.claude/skills/ux-copy/SKILL.md)
+3. Generate copy for the requested context, providing:
+   - Primary copy (what to display)
+   - Variants (if context varies)
+   - Do's and Don'ts for the specific context
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

@@ -1,72 +1,73 @@
 ---
 name: ux-flow
-description: "Design user flows and screen structure using StyleSeed UX patterns such as progressive disclosure, hub-and-spoke navigation, and information pyramids."
-category: design
-risk: safe
-source: community
+description: Design user flows and navigation structure following proven UX patterns
+risk: unknown
+source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-flow
 source_repo: bitjaru/styleseed
 source_type: community
-date_added: "2026-04-08"
-author: bitjaru
-tags: [ux, flows, navigation, product-design, styleseed]
-tools: [claude, cursor, codex, gemini]
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/bitjaru/styleseed/blob/main/LICENSE
 ---
 
-# UX Flow
-
-## Overview
-
-Part of [StyleSeed](https://github.com/bitjaru/styleseed), this skill designs flows before screens. It uses proven UX patterns to define entry points, exits, screen inventory, and navigation structure so the implementation has a coherent user journey instead of a pile of disconnected pages.
-
+# UX Flow Designer
 ## When to Use
-- Use when planning onboarding, checkout, account management, dashboards, or drill-down flows
-- Use when a new feature spans multiple screens or modal states
-- Use when users need a clear path through a task instead of a single isolated page
-- Use when the UI needs navigation logic before components are built
 
-## How It Works
+Use this skill when you need design user flows and navigation structure following proven UX patterns.
 
-### Information Architecture Principles
 
-- progressive disclosure: reveal complexity only when needed
-- Miller's Law: chunk content into manageable groups
-- Hick's Law: minimize decision overload on each screen
+## When NOT to use
 
-### Common Navigation Models
+- For implementing a single page → use `/ss-page` after the flow is settled
+- For copy on each step → use `/ss-copy` after the structure is settled
+- For information architecture of an entire product — narrow scope to one flow first
+- For high-fidelity mockups — this produces a flow map, not pixel-perfect designs
 
-- hub and spoke for dashboards and detail views
-- linear flow for onboarding, forms, and checkout
-- tab navigation for 3 to 5 top-level areas
+Design a user flow: **$0**
+Description: $ARGUMENTS
 
-### Flow Rules
+## Instructions
 
-- every flow has a clear entry point
-- every flow has a clear exit or success condition
-- key features should usually be reachable within three taps from home
-- non-root screens need back navigation
-- loading, empty, and error states need explicit recovery paths
+1. Read the design system reference:
+   - `CLAUDE.md` for component inventory
+   - `DESIGN-LANGUAGE.md` for layout patterns (sections 13-14, 19-20)
+   - `components/patterns/` for available building blocks
 
-## Output
+2. Apply these UX principles:
 
-Provide:
-1. An ASCII flow diagram
-2. A screen inventory with each screen's purpose
-3. Edge cases for loading, empty, and error states
-4. Recommended page scaffolds and reusable patterns to implement next
+### Information Architecture
+- **Progressive Disclosure**: Show only what's needed at each step. Hide complexity behind logical drill-downs.
+- **Miller's Law**: Chunk information into groups of 5-9 items maximum.
+- **Hick's Law**: Minimize choices per screen. Fewer options = faster decisions.
 
-## Best Practices
+### Navigation Patterns
+- **Hub & Spoke**: Dashboard → detail pages → back to dashboard (default for mobile apps)
+- **Linear Flow**: Step 1 → Step 2 → Step 3 (for forms, onboarding, checkout)
+- **Tab Navigation**: 3-5 top-level sections via BottomNav
 
-- Optimize for clarity before density
-- Let one screen answer one primary question
-- Keep escape hatches visible for risky or destructive steps
-- Define state transitions before drawing detailed layouts
+### Screen Flow Rules
+- Every flow must have a **clear entry point** and **clear exit point**
+- Maximum **3 taps** to reach any key feature from the home screen
+- Back navigation must always be available (except root screens)
+- Error states must provide **recovery paths** (retry, go back, contact support)
+- Loading states must use skeleton screens (never spinners in cards)
 
-## Additional Resources
+### Page Composition (from DESIGN-LANGUAGE.md)
+- Follow the **Information Pyramid**: Hero → KPI Grid → Details → Lists
+- Each screen should answer ONE primary question
+- Above the fold: the most important metric or action
+- Use the 4 section types: Full Card (A), Grid (B), Carousel (C), Hero (D)
 
-- [StyleSeed repository](https://github.com/bitjaru/styleseed)
-- [Source skill](https://github.com/bitjaru/styleseed/blob/main/seeds/toss/.claude/skills/ux-flow/SKILL.md)
+3. Output format:
+   - **Flow diagram** in ASCII showing screen connections
+   - **Screen inventory** listing each screen's purpose and key components
+   - **Edge cases** (empty states, errors, loading) for each screen
+   - **Scaffolded pages** using `PageShell`, `TopBar`, `BottomNav` patterns
+
+4. Generate the actual page files using `/ss-page` conventions.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

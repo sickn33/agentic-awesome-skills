@@ -1,9 +1,13 @@
 ---
-source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-llm-trainer"
 name: hugging-face-model-trainer
-description: Train or fine-tune TRL language models on Hugging Face Jobs, including SFT, DPO, GRPO, and GGUF export.
-license: Complete terms in LICENSE.txt
+description: Train or fine-tune language and vision models using TRL (Transformer Reinforcement Learning) or Unsloth with Hugging Face Jobs infrastructure. Covers SFT, DPO, GRPO and reward modeling training methods, plus GGUF conversion for local deployment. Includes guidance on the TRL Jobs...
 risk: unknown
+source: https://github.com/huggingface/skills/tree/main/skills/huggingface-llm-trainer
+source_repo: huggingface/skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
 # TRL Training on Hugging Face Jobs
@@ -76,7 +80,7 @@ Before starting any training job, verify:
 - Hugging Face Account with [Pro](https://hf.co/pro), [Team](https://hf.co/enterprise), or [Enterprise](https://hf.co/enterprise) plan (Jobs require paid plan)
 - Authenticated login: Check with `hf_whoami()`
 - **HF_TOKEN for Hub Push** ⚠️ CRITICAL - Training environment is ephemeral, must push to Hub or ALL training results are lost
-- Token must have write permissions  
+- Token must have write permissions
 - **MUST pass `secrets={"HF_TOKEN": "$HF_TOKEN"}` in job config** to make token available (the `$HF_TOKEN` syntax
   references your actual token value)
 
@@ -422,6 +426,26 @@ Before submitting:
 
 **On timeout:** Job killed immediately, all unsaved progress lost, must restart from beginning
 
+## Choose a Base Model (Model Selection)
+
+**Identify models to train based on task type or benchmark results.**
+
+Use `scripts/hf_benchmarks.py` to identify top-performing models for specific tasks. This helps the user select a model as the base for training, whilst keeping size and hardware constraints in mind.
+
+```bash
+# Get help on the benchmarks command:
+uv run scripts/hf_benchmarks.py --help
+```
+
+### Example -- choosing an OCR base model
+```bash
+# Search for benchmarks containing whose name contains the text `ocr`
+uv run scripts/hf_benchmarks.py search --query ocr
+
+# Get the ranked leaderboard for the allenai/olmOCR-bench benchmark
+uv run scripts/hf_benchmarks.py leaderboard allenai/olmOCR-bench
+```
+
 ## Cost Estimation
 
 **Offer to estimate cost when planning jobs with known parameters.** Use `scripts/estimate_cost.py`:
@@ -467,7 +491,7 @@ These scripts demonstrate proper Hub saving, Trackio integration, checkpoint man
 - **Space ID**: `{username}/trackio` (use "trackio" as default space name)
 - **Run naming**: Unless otherwise specified, name the run in a way the user will recognize (e.g., descriptive of the task, model, or purpose)
 - **Config**: Keep minimal - only include hyperparameters and model/dataset info
-- **Project Name**: Use a Project Name to associate runs with a particular Project 
+- **Project Name**: Use a Project Name to associate runs with a particular Project
 
 **User overrides:** If user requests specific trackio configuration (custom space, run naming, grouping, or additional config), apply their preferences instead of defaults.
 
@@ -617,9 +641,9 @@ See `references/training_patterns.md` for detailed examples including:
 ### Out of Memory (OOM)
 
 **Fix (try in order):**
-1. Reduce batch size: `per_device_train_batch_size=1`, increase `gradient_accumulation_steps=8`. Effective batch size is `per_device_train_batch_size` x `gradient_accumulation_steps`. For best performance keep effective batch size close to 128. 
+1. Reduce batch size: `per_device_train_batch_size=1`, increase `gradient_accumulation_steps=8`. Effective batch size is `per_device_train_batch_size` x `gradient_accumulation_steps`. For best performance keep effective batch size close to 128.
 2. Enable: `gradient_checkpointing=True`
-3. Upgrade hardware: t4-small → l4x1, a10g-small → a10g-large etc. 
+3. Upgrade hardware: t4-small → l4x1, a10g-small → a10g-large etc.
 
 ### Dataset Misformatted
 
@@ -692,6 +716,7 @@ Add to PEP 723 header:
 - `scripts/unsloth_sft_example.py` - Unsloth text LLM training template (faster, less VRAM)
 - `scripts/estimate_cost.py` - Estimate time and cost (offer when appropriate)
 - `scripts/convert_to_gguf.py` - Complete GGUF conversion script
+- `scripts/hf_benchmarks.py` - Search for benchmark results and leaderboards by task, alias or free text.
 
 ### External Scripts
 - [Dataset Inspector](https://huggingface.co/datasets/mcp-tools/skills/raw/main/dataset_inspector.py) - Validate dataset format before training (use via `uv run` or `hf_jobs`)
@@ -719,6 +744,7 @@ Add to PEP 723 header:
 10. **Choose appropriate hardware** for model size; use LoRA for models >7B
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

@@ -1,18 +1,27 @@
 ---
 name: claimable-postgres
-description: Provision instant temporary Postgres databases via Claimable Postgres by Neon (pg.new). No login or credit card required. Use for quick Postgres environments and throwaway DATABASE_URL for prototyping.
+description: Provision instant temporary Postgres databases via Claimable Postgres by Neon (neon.new) with no login, signup, or credit card. Supports REST API, CLI, and SDK. Use when users ask for a quick Postgres environment, a throwaway DATABASE_URL for prototyping/tests, or "just give me a DB...
 risk: unknown
-source: community
+source: https://github.com/neondatabase/agent-skills/tree/main/skills/claimable-postgres
+source_repo: neondatabase/agent-skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/neondatabase/agent-skills/blob/main/LICENSE
 ---
 
 # Claimable Postgres
+## When to Use
+
+Use this skill when you need provision instant temporary Postgres databases via Claimable Postgres by Neon (neon.new) with no login, signup, or credit card. Supports REST API, CLI, and SDK. Use when users ask for a quick Postgres environment, a throwaway DATABASE_URL for prototyping/tests, or "just give me a DB...
+
 
 Instant Postgres databases for local development, demos, prototyping, and test environments. No account required. Databases expire after 72 hours unless claimed to a Neon account.
 
 ## Quick Start
 
 ```bash
-curl -s -X POST "https://pg.new/api/v1/database" \
+curl -s -X POST "https://neon.new/api/v1/database" \
   -H "Content-Type: application/json" \
   -d '{"ref": "agent-skills"}'
 ```
@@ -24,27 +33,27 @@ For other methods (CLI, SDK, Vite plugin), see [Which Method?](#which-method) be
 ## Which Method?
 
 - **REST API**: Returns structured JSON. No runtime dependency beyond `curl`. Preferred when the agent needs predictable output and error handling.
-- **CLI** (`npx get-db@latest --yes`): Provisions and writes `.env` in one command. Convenient when Node.js is available and the user wants a simple setup.
-- **SDK** (`get-db/sdk`): Scripts or programmatic provisioning in Node.js.
-- **Vite plugin** (`vite-plugin-db`): Auto-provisions on `vite dev` if `DATABASE_URL` is missing. Use when the user has a Vite project.
-- **Browser**: User cannot run CLI or API. Direct to https://pg.new.
+- **CLI** (`npx neon-new@latest --yes`): Provisions and writes `.env` in one command. Convenient when Node.js is available and the user wants a simple setup.
+- **SDK** (`neon-new/sdk`): Scripts or programmatic provisioning in Node.js.
+- **Vite plugin** (`vite-plugin-neon-new`): Auto-provisions on `vite dev` if `DATABASE_URL` is missing. Use when the user has a Vite project.
+- **Browser**: User cannot run CLI or API. Direct to https://neon.new.
 
 ## REST API
 
-**Base URL:** `https://pg.new/api/v1`
+**Base URL:** `https://neon.new/api/v1`
 
 ### Create a database
 
 ```bash
-curl -s -X POST "https://pg.new/api/v1/database" \
+curl -s -X POST "https://neon.new/api/v1/database" \
   -H "Content-Type: application/json" \
   -d '{"ref": "agent-skills"}'
 ```
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `ref` | Yes | Tracking tag that identifies who provisioned the database. Use `"agent-skills"` when provisioning through this skill. |
-| `enable_logical_replication` | No | Enable logical replication (default: false, cannot be disabled once enabled) |
+| Parameter                    | Required | Description                                                                                                           |
+| ---------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `ref`                        | Yes      | Tracking tag that identifies who provisioned the database. Use `"agent-skills"` when provisioning through this skill. |
+| `enable_logical_replication` | No       | Enable logical replication (default: false, cannot be disabled once enabled)                                          |
 
 The `connection_string` returned by the API is a pooled connection URL. For a direct (non-pooled) connection (e.g. Prisma migrations), remove `-pooler` from the hostname. The CLI writes both pooled and direct URLs automatically.
 
@@ -56,7 +65,7 @@ The `connection_string` returned by the API is a pooled connection URL. For a di
   "status": "UNCLAIMED",
   "neon_project_id": "gentle-scene-06438508",
   "connection_string": "postgresql://...",
-  "claim_url": "https://pg.new/claim/019beb39-...",
+  "claim_url": "https://neon.new/claim/019beb39-...",
   "expires_at": "2026-01-26T14:19:14.580Z",
   "created_at": "2026-01-23T14:19:14.580Z",
   "updated_at": "2026-01-23T14:19:14.580Z"
@@ -66,23 +75,23 @@ The `connection_string` returned by the API is a pooled connection URL. For a di
 ### Check status
 
 ```bash
-curl -s "https://pg.new/api/v1/database/{id}"
+curl -s "https://neon.new/api/v1/database/{id}"
 ```
 
 Returns the same response shape. Status transitions: `UNCLAIMED` -> `CLAIMING` -> `CLAIMED`. After the database is claimed, `connection_string` returns `null`.
 
 ### Error responses
 
-| Condition | HTTP | Message |
-|-----------|------|---------|
-| Missing or empty `ref` | 400 | `Missing referrer` |
-| Invalid database ID | 400 | `Database not found` |
-| Invalid JSON body | 500 | `Failed to create the database.` |
+| Condition              | HTTP | Message                          |
+| ---------------------- | ---- | -------------------------------- |
+| Missing or empty `ref` | 400  | `Missing referrer`               |
+| Invalid database ID    | 400  | `Database not found`             |
+| Invalid JSON body      | 500  | `Failed to create the database.` |
 
 ## CLI
 
 ```bash
-npx get-db@latest --yes
+npx neon-new@latest --yes
 ```
 
 Provisions a database and writes the connection string to `.env` in one step. Always use `@latest` and `--yes` (skips interactive prompts that would stall the agent).
@@ -101,17 +110,17 @@ Get confirmation before proceeding.
 
 ### Options
 
-| Option | Alias | Description | Default |
-|--------|-------|-------------|---------|
-| `--yes` | `-y` | Skip prompts, use defaults | `false` |
-| `--env` | `-e` | .env file path | `./.env` |
-| `--key` | `-k` | Connection string env var key | `DATABASE_URL` |
-| `--prefix` | `-p` | Prefix for generated public env vars | `PUBLIC_` |
-| `--seed` | `-s` | Path to seed SQL file | none |
-| `--logical-replication` | `-L` | Enable logical replication | `false` |
-| `--ref` | `-r` | Referrer id (use `agent-skills` when provisioning through this skill) | none |
+| Option                  | Alias | Description                                                           | Default        |
+| ----------------------- | ----- | --------------------------------------------------------------------- | -------------- |
+| `--yes`                 | `-y`  | Skip prompts, use defaults                                            | `false`        |
+| `--env`                 | `-e`  | .env file path                                                        | `./.env`       |
+| `--key`                 | `-k`  | Connection string env var key                                         | `DATABASE_URL` |
+| `--prefix`              | `-p`  | Prefix for generated public env vars                                  | `PUBLIC_`      |
+| `--seed`                | `-s`  | Path to seed SQL file                                                 | none           |
+| `--logical-replication` | `-L`  | Enable logical replication                                            | `false`        |
+| `--ref`                 | `-r`  | Referrer id (use `agent-skills` when provisioning through this skill) | none           |
 
-Alternative package managers: `yarn dlx get-db@latest`, `pnpm dlx get-db@latest`, `bunx get-db@latest`, `deno run -A get-db@latest`.
+Alternative package managers: `yarn dlx neon-new@latest`, `pnpm dlx neon-new@latest`, `bunx neon-new@latest`, `deno run -A neon-new@latest`.
 
 ### Output
 
@@ -120,7 +129,7 @@ The CLI writes to the target `.env`:
 ```
 DATABASE_URL=postgresql://...              # pooled (use for application queries)
 DATABASE_URL_DIRECT=postgresql://...       # direct (use for migrations, e.g. Prisma)
-PUBLIC_POSTGRES_CLAIM_URL=https://pg.new/claim/...
+PUBLIC_POSTGRES_CLAIM_URL=https://neon.new/claim/...
 ```
 
 ## SDK
@@ -128,26 +137,27 @@ PUBLIC_POSTGRES_CLAIM_URL=https://pg.new/claim/...
 Use for scripts and programmatic provisioning flows.
 
 ```typescript
-import { instantPostgres } from 'get-db';
+import { instantPostgres } from "neon-new";
 
-const { databaseUrl, databaseUrlDirect, claimUrl, claimExpiresAt } = await instantPostgres({
-  referrer: 'agent-skills',
-  seed: { type: 'sql-script', path: './init.sql' },
-});
+const { databaseUrl, databaseUrlDirect, claimUrl, claimExpiresAt } =
+  await instantPostgres({
+    referrer: "agent-skills",
+    seed: { type: "sql-script", path: "./init.sql" },
+  });
 ```
 
 Returns `databaseUrl` (pooled), `databaseUrlDirect` (direct, for migrations), `claimUrl`, and `claimExpiresAt` (Date object). The `referrer` parameter is required.
 
 ## Vite Plugin
 
-For Vite projects, `vite-plugin-db` auto-provisions a database on `vite dev` if `DATABASE_URL` is missing. Install with `npm install -D vite-plugin-db`. See the [Claimable Postgres docs](https://neon.com/docs/reference/claimable-postgres#vite-plugin) for configuration.
+For Vite projects, `vite-plugin-neon-new` auto-provisions a database on `vite dev` if `DATABASE_URL` is missing. Install with `npm install -D vite-plugin-neon-new`. See the [Claimable Postgres docs](https://neon.com/docs/reference/claimable-postgres#vite-plugin) for configuration.
 
 ## Agent Workflow
 
 ### API path
 
 1. **Confirm intent:** If the request is ambiguous, confirm the user wants a temporary, no-signup database. Skip this if they explicitly asked for a quick or temporary database.
-2. **Provision:** POST to `https://pg.new/api/v1/database` with `{"ref": "agent-skills"}`.
+2. **Provision:** POST to `https://neon.new/api/v1/database` with `{"ref": "agent-skills"}`.
 3. **Parse response:** Extract `connection_string`, `claim_url`, and `expires_at` from the JSON response.
 4. **Write .env:** Write `DATABASE_URL=<connection_string>` to the project's `.env` (or the user's preferred file and key). Do not overwrite an existing key without confirmation.
 5. **Seed (if needed):** If the user has a seed SQL file, run it against the new database:
@@ -164,7 +174,7 @@ For Vite projects, `vite-plugin-db` auto-provisions a database on `vite dev` if 
 3. **Gather options:** Use defaults unless context suggests otherwise (e.g., user mentions a custom env file, seed SQL, or logical replication).
 4. **Run:** Execute with `@latest --yes` plus the confirmed options. Always use `@latest` to avoid stale cached versions. `--yes` skips interactive prompts that would stall the agent.
    ```bash
-   npx get-db@latest --yes --ref agent-skills --env .env.local --seed ./schema.sql
+   npx neon-new@latest --yes --ref agent-skills --env .env.local --seed ./schema.sql
    ```
 5. **Verify:** Confirm the connection string was written to the intended file.
 6. **Report:** Tell the user where the connection string was written, which key was used, and that a claim URL is in the env file. Remind them: the database works now; claim within 72 hours to keep it permanently.
@@ -184,26 +194,51 @@ Always report:
 Claiming is optional. The database works immediately without it. To optionally claim, the user opens the claim URL in a browser, where they sign in or create a Neon account to claim the database.
 
 - **API/SDK:** Give the user the `claim_url` from the create response.
-- **CLI:** `npx get-db@latest claim` reads the claim URL from `.env` and opens the browser automatically.
+- **CLI:** `npx neon-new@latest claim` reads the claim URL from `.env` and opens the browser automatically.
 
 Users cannot claim into Vercel-linked orgs; they must choose another Neon org.
 
+## Neon Infrastructure as Code (`neon.ts`)
+
+Claimable databases are deliberately throwaway and provisioned through `neon.new` (above), so they aren't managed by `neon.ts`. Once a user **claims** a database into a Neon account it becomes a normal Neon project — at which point `neon.ts`, Neon's infrastructure-as-code file, is how you manage it going forward (see the `neon` skill for the full reference): declare the services its branches should have, program per-branch compute, and get type-safe env vars.
+
+```bash
+npm i @neon/config
+```
+
+```typescript
+// neon.ts
+import { defineConfig } from "@neon/config/v1";
+
+export default defineConfig({
+  auth: true, // Neon Auth, once you outgrow a bare connection string
+  dataApi: true, // Data API
+  branch: (branch) => (branch.exists ? {} : { ttl: "7d" }), // ephemeral non-default branches
+});
+```
+
+```bash
+neon config apply   # provision the declared services (neon deploy is an alias)
+```
+
+If a project needs branching, multiple services, or durable infrastructure tracked in version control, recommend claiming first and then adopting `neon.ts` — rather than re-provisioning throwaway claimable databases.
+
 ## Defaults and Limits
 
-| Parameter | Value |
-|-----------|-------|
-| Provider | AWS |
-| Region | us-east-2 |
-| Postgres | 17 |
+| Parameter | Value     |
+| --------- | --------- |
+| Provider  | AWS       |
+| Region    | us-east-2 |
+| Postgres  | 17        |
 
 Region cannot be changed for claimable databases. Unclaimed databases have stricter quotas. Claiming resets limits to free plan defaults.
 
-| | Unclaimed | Claimed (Free plan) |
-|---|-----------|---------------------|
-| Storage | 100 MB | 512 MB |
-| Transfer | 1 GB | ~5 GB |
-| Branches | No | Yes |
-| Expiration | 72 hours | None |
+|            | Unclaimed | Claimed (Free plan) |
+| ---------- | --------- | ------------------- |
+| Storage    | 100 MB    | 512 MB              |
+| Transfer   | 1 GB      | ~5 GB               |
+| Branches   | No        | Yes                 |
+| Expiration | 72 hours  | None                |
 
 ## Auto-provisioning
 
@@ -217,11 +252,8 @@ If the agent needs a database to fulfill a task (e.g. "build me a todo app with 
 - If users need long-term persistence, instruct them to open the claim URL right away.
 - After writing credentials to an .env file, check that it's covered by .gitignore. If not, warn the user. Do not modify `.gitignore` without confirmation.
 
-
-## When to Use
-Use this skill when tackling tasks related to its primary domain or functionality as described above.
-
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

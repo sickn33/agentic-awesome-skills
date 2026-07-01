@@ -1,11 +1,19 @@
 ---
 name: fixing-metadata
-description: "Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives. Use when adding or reviewing SEO and social metadata."
-risk: safe
-source: community
-version: 1.0.1
+description: Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives. Use when adding SEO metadata, fixing social share previews, reviewing Open Graph tags, setting up canonical...
+risk: unknown
+source: https://github.com/ibelick/ui-skills/tree/main/skills/fixing-metadata
+source_repo: ibelick/ui-skills
+source_type: community
+date_added: 2026-07-01
 license: MIT
+license_source: https://github.com/ibelick/ui-skills/blob/main/LICENSE
 ---
+
+
+## When to Use
+
+Use this skill when you need audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives. Use when adding SEO metadata, fixing social share previews, reviewing Open Graph tags, setting up canonical...
 
 ## Workflow
 
@@ -14,7 +22,8 @@ license: MIT
 3. Ensure title, description, canonical, and og:url all agree with each other
 4. Verify social cards render correctly on a real URL, not localhost
 5. Keep diffs minimal and scoped to metadata only — do not refactor unrelated code
-## When to Use
+## when to apply
+
 Reference these guidelines when:
 - adding or changing page titles, descriptions, canonical, robots
 - implementing Open Graph or Twitter card metadata
@@ -109,6 +118,7 @@ Reference these guidelines when:
 - keep diffs minimal and scoped to metadata only
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

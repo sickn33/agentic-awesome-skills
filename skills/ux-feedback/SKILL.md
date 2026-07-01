@@ -1,68 +1,116 @@
 ---
 name: ux-feedback
-description: "Add loading, empty, error, and success feedback states to StyleSeed components and pages with practical mobile-first rules."
-category: design
-risk: safe
-source: community
+description: Add appropriate user feedback states (loading, success, error, empty) to a component or page
+risk: unknown
+source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-feedback
 source_repo: bitjaru/styleseed
 source_type: community
-date_added: "2026-04-08"
-author: bitjaru
-tags: [ux, states, loading, error-handling, styleseed]
-tools: [claude, cursor, codex, gemini]
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/bitjaru/styleseed/blob/main/LICENSE
 ---
 
-# UX Feedback
-
-## Overview
-
-Part of [StyleSeed](https://github.com/bitjaru/styleseed), this skill ensures data-dependent UI does not stop at the happy path. It adds the four core feedback states every serious product needs: loading, empty, error, and success.
-
+# UX Feedback States Generator
 ## When to Use
-- Use when a component or page fetches, mutates, or depends on async data
-- Use when a flow currently renders only the success path
-- Use when a card, list, or page needs better state communication
-- Use when the product needs clear recovery and confirmation behavior
 
-## The Four Required States
+Use this skill when you need add appropriate user feedback states (loading, success, error, empty) to a component or page.
 
-### Loading
 
-Use skeletons that match the final layout. Avoid spinners inside cards unless the pattern genuinely requires them. Delay skeletons slightly to avoid flashes on fast responses.
+## When NOT to use
 
-### Empty
+- For only the words inside a state → use `/ss-copy`
+- For accessibility issues in existing states → use `/ss-a11y`
+- For brand-new component creation → use `/ss-component`
+- For analytics or error-logging plumbing — UI presentation only
 
-Provide a friendly explanation and a next action. Zero values should still render meaningfully instead of disappearing.
+Target: **$ARGUMENTS**
 
-### Error
+## Instructions
 
-Use plain-language failure messages and always offer recovery where possible. Localize failures to the affected card or section if the rest of the page can still work.
+1. Read the target file and identify all data-dependent areas.
 
-### Success
+2. Read the design language reference:
+   - `DESIGN-LANGUAGE.md` sections on Loading States (Skeleton), Empty States, Error States
 
-Use toasts or equivalent lightweight confirmation for completed actions. Add undo for reversible destructive changes.
+3. For each data-dependent area, implement ALL 4 states:
 
-## Output
+### State 1: Loading (Skeleton)
+```tsx
+// Skeleton must match the final layout shape
+<div className="bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]">
+  <div className="flex items-center gap-2 mb-3">
+    <div className="size-7 bg-surface-muted rounded-lg animate-pulse" />
+    <div className="h-3 w-16 bg-surface-muted rounded animate-pulse" />
+  </div>
+  <div className="h-9 w-24 bg-surface-muted rounded-lg animate-pulse mb-3" />
+  <div className="h-3 w-12 bg-surface-muted rounded animate-pulse" />
+</div>
+```
+Rules:
+- Show skeleton for 300ms minimum (prevent flash)
+- Delay skeleton display by 300ms (fast loads skip skeleton entirely)
+- Use `animate-pulse` (1.5s cycle)
+- Match skeleton shapes to real content dimensions
+- Never use spinners inside cards
 
-Return:
-1. The data-dependent areas identified
-2. The loading, empty, error, and success states added for each one
-3. Any reusable empty-state or toast patterns created
-4. Follow-up work needed for analytics, retries, or accessibility
+### State 2: Empty (Zero Data)
+```tsx
+<EmptyState
+  icon={PackageIcon}
+  title="No activity yet"
+  description="Create your first project to get started."
+  action={<Button>Create Project</Button>}
+/>
+```
+Rules:
+- Center-aligned in the card
+- Icon: 32px, `text-text-tertiary`
+- Title: 14px, `text-text-secondary`
+- Always suggest a next action
+- Zero values show as "0" (don't hide or dash)
 
-## Best Practices
+### State 3: Error (Load Failed)
+```tsx
+<div className="flex flex-col items-center justify-center py-8 text-center">
+  <AlertCircle className="size-8 text-destructive mb-3" />
+  <p className="text-[14px] text-text-secondary mb-4">Couldn't load the data</p>
+  <Button variant="brandGhost" size="sm" onClick={retry}>Try again</Button>
+</div>
+```
+Rules:
+- Partial failure: only affected card shows error, rest loads normally
+- Full page failure: full-screen EmptyState with retry
+- Error message: plain language, blame the system
+- Always provide retry button
 
-- Match loading placeholders to the real layout
-- Keep partial failure isolated whenever possible
-- Make recovery obvious, not hidden in logs or developer tools
-- Use success feedback sparingly but clearly
+### State 4: Success (Action Feedback)
+```tsx
+// Toast notification for action confirmations
+toast("Changes saved")
 
-## Additional Resources
+// With undo for destructive actions
+toast("Item deleted", { action: { label: "Undo", onClick: handleUndo } })
+```
+Rules:
+- Info toast: 3s display
+- Action toast (with undo): 5s display
+- Toast position: above BottomNav
+- One toast at a time (new replaces old)
 
-- [StyleSeed repository](https://github.com/bitjaru/styleseed)
-- [Source skill](https://github.com/bitjaru/styleseed/blob/main/seeds/toss/.claude/skills/ux-feedback/SKILL.md)
+4. Implementation pattern:
+```tsx
+function DataCard({ data, isLoading, error }) {
+  if (isLoading) return <DataCardSkeleton />
+  if (error) return <DataCardError onRetry={refetch} />
+  if (!data || data.length === 0) return <DataCardEmpty />
+  return <DataCardContent data={data} />
+}
+```
+
+5. Check `prefers-reduced-motion` — disable `animate-pulse` when reduced motion is preferred.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

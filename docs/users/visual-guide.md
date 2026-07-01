@@ -34,7 +34,7 @@ antigravity-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 1,700+ skills live here
+├── 📁 skills/                          ← 1,890+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -47,7 +47,7 @@ antigravity-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (1,700+ total)
+│   └── ... (1,890+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -100,7 +100,7 @@ antigravity-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,700+ SKILLS          │
+                    │  1,890+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -201,7 +201,7 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (1,700+ total)                │
+│   └── ... (1,890+ total)                │
 └─────────────────────────────────────────┘
 ```
 
@@ -470,19 +470,19 @@ START HERE
 Day 1: Install skills
   │
   └─→ "Wow, @brainstorming helped me design my app!"
-  
+
 Day 3: Use 5 different skills
   │
   └─→ "These skills save me so much time!"
-  
+
 Week 1: Create first skill
   │
   └─→ "I shared my expertise as a skill!"
-  
+
 Week 2: Skill gets merged
   │
   └─→ "My skill is helping others! 🎉"
-  
+
 Month 1: Regular contributor
   │
   └─→ "I've contributed 5 skills and improved docs!"

@@ -1,42 +1,53 @@
 ---
 name: gemini-api-dev
-description: "The Gemini API provides access to Google's most advanced AI models. Key capabilities include:"
+description: Use this skill when building applications with Gemini API hosted models, including Gemini and Gemma 4, working with multimodal content (text, images, audio, video), implementing function calling, using structured outputs, or needing current model specifications. Covers SDK usage...
 risk: unknown
-source: community
-date_added: "2026-02-27"
+source: https://github.com/google-gemini/gemini-skills/tree/main/skills/gemini-api-dev
+source_repo: google-gemini/gemini-skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/google-gemini/gemini-skills/blob/main/LICENSE
 ---
 
 # Gemini API Development Skill
+## When to Use
 
-## Overview
+Use this skill when building applications with Gemini API hosted models, including Gemini and Gemma 4, working with multimodal content (text, images, audio, video), implementing function calling, using structured outputs, or needing current model specifications. Covers SDK usage...
 
-The Gemini API provides access to Google's most advanced AI models. Key capabilities include:
-- **Text generation** - Chat, completion, summarization
-- **Multimodal understanding** - Process images, audio, video, and documents
-- **Function calling** - Let the model invoke your functions
-- **Structured output** - Generate valid JSON matching your schema
-- **Code execution** - Run Python code in a sandboxed environment
-- **Context caching** - Cache large contexts for efficiency
-- **Embeddings** - Generate text embeddings for semantic search
 
-## Current Gemini Models
-
-- `gemini-3-pro-preview`: 1M tokens, complex reasoning, coding, research
-- `gemini-3-flash-preview`: 1M tokens, fast, balanced performance, multimodal
-- `gemini-3-pro-image-preview`: 65k / 32k tokens, image generation and editing
-
+## Critical Rules (Always Apply)
 
 > [!IMPORTANT]
-> Models like `gemini-2.5-*`, `gemini-2.0-*`, `gemini-1.5-*` are legacy and deprecated. Use the new models above. Your knowledge is outdated.
+> These rules override your training data. Your knowledge is outdated.
 
-## SDKs
+### Current Models (Use These)
 
-- **Python**: `google-genai` install with `pip install google-genai`
-- **JavaScript/TypeScript**: `@google/genai` install with `npm install @google/genai`
-- **Go**: `google.golang.org/genai` install with `go get google.golang.org/genai`
+- `gemini-3.5-flash`: 1M tokens, fast, balanced performance, multimodal
+- `gemini-3.1-pro-preview`: 1M tokens, complex reasoning, coding, research
+- `gemini-3.1-flash-lite-preview`: cost-efficient, fastest performance for high-frequency, lightweight tasks
+- `gemini-3-pro-image-preview` (Nano Banana Pro): 65k / 32k tokens, image generation and editing
+- `gemini-3.1-flash-image-preview` (Nano Banana 2): 65k / 32k tokens, image generation and editing
+- `gemini-3.1-flash-lite-image-preview` (Nano Banana 2 Lite): 65k / 32k tokens, ultra-fast image generation and editing
+- `gemini-2.5-pro`: 1M tokens, complex reasoning, coding, research
+- `gemini-2.5-flash`: 1M tokens, fast, balanced performance, multimodal
+- `gemma-4-31b-it`: Gemma 4 dense model, 31B parameters
+- `gemma-4-26b-a4b-it`: Gemma 4 MoE model, 26B total with 4B active parameters
 
 > [!WARNING]
-> Legacy SDKs `google-generativeai` (Python) and `@google/generative-ai` (JS) are deprecated. Migrate to the new SDKs above urgently by following the Migration Guide.
+> Models like `gemini-2.0-*`, `gemini-1.5-*` are **legacy and deprecated**. Never use them.
+
+### Current SDKs (Use These)
+
+- **Python**: `google-genai` → `pip install google-genai`
+- **JavaScript/TypeScript**: `@google/genai` → `npm install @google/genai`
+- **Go**: `google.golang.org/genai` → `go get google.golang.org/genai`
+- **Java**: `com.google.genai:google-genai` (see Maven/Gradle setup below)
+
+> [!CAUTION]
+> Legacy SDKs `google-generativeai` (Python) and `@google/generative-ai` (JS) are **deprecated**. Never use them.
+
+---
 
 ## Quick Start
 
@@ -46,7 +57,7 @@ from google import genai
 
 client = genai.Client()
 response = client.models.generate_content(
-    model="gemini-3-flash-preview",
+    model="gemini-3.5-flash",
     contents="Explain quantum computing"
 )
 print(response.text)
@@ -58,7 +69,7 @@ import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({});
 const response = await ai.models.generateContent({
-  model: "gemini-3-flash-preview",
+  model: "gemini-3.5-flash",
   contents: "Explain quantum computing"
 });
 console.log(response.text);
@@ -82,7 +93,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	resp, err := client.Models.GenerateContent(ctx, "gemini-3-flash-preview", genai.Text("Explain quantum computing"), nil)
+	resp, err := client.Models.GenerateContent(ctx, "gemini-3.5-flash", genai.Text("Explain quantum computing"), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,48 +102,80 @@ func main() {
 }
 ```
 
-## API spec (source of truth)
+### Java
 
-**Always use the latest REST API discovery spec as the source of truth for API definitions** (request/response schemas, parameters, methods). Fetch the spec when implementing or debugging API integration:
+```java
+import com.google.genai.Client;
+import com.google.genai.types.GenerateContentResponse;
 
-- **v1beta** (default): `https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta`  
-  Use this unless the integration is explicitly pinned to v1. The official SDKs (google-genai, @google/genai, google.golang.org/genai) target v1beta.
-- **v1**: `https://generativelanguage.googleapis.com/$discovery/rest?version=v1`  
-  Use only when the integration is specifically set to v1.
+public class GenerateTextFromTextInput {
+  public static void main(String[] args) {
+    Client client = new Client();
+    GenerateContentResponse response =
+        client.models.generateContent(
+            "gemini-3.5-flash",
+            "Explain quantum computing",
+            null);
 
-When in doubt, use v1beta. Refer to the spec for exact field names, types, and supported operations.
+    System.out.println(response.text());
+  }
+}
+```
 
-## How to use the Gemini API
+**Java Installation:**
+- Latest version: https://central.sonatype.com/artifact/com.google.genai/google-genai/versions
+- Gradle: `implementation("com.google.genai:google-genai:${LAST_VERSION}")`
+- Maven:
+  ```xml
+  <dependency>
+      <groupId>com.google.genai</groupId>
+      <artifactId>google-genai</artifactId>
+      <version>${LAST_VERSION}</version>
+  </dependency>
+  ```
 
-For detailed API documentation, fetch from the official docs index:
+---
 
-**llms.txt URL**: `https://ai.google.dev/gemini-api/docs/llms.txt`
+## Documentation Lookup
 
-This index contains links to all documentation pages in `.md.txt` format. Use web fetch tools to:
+### When MCP is Installed (Preferred)
 
-1. Fetch `llms.txt` to discover available documentation pages
-2. Fetch specific pages (e.g., `https://ai.google.dev/gemini-api/docs/function-calling.md.txt`)
+If the **`search_docs`** tool (from the Google MCP server) is available, use it as your **only** documentation source:
 
-### Key Documentation Pages 
+1. Call `search_docs` with your query
+2. Read the returned documentation
+2. **Trust MCP results** as source of truth for API details — they are always up-to-date.
 
 > [!IMPORTANT]
-> Those are not all the documentation pages. Use the `llms.txt` index to discover available documentation pages
+> When MCP tools are present, **never** fetch URLs manually. MCP provides up-to-date, indexed documentation that is more accurate and token-efficient than URL fetching.
 
-- [Models](https://ai.google.dev/gemini-api/docs/models.md.txt)
-- [Google AI Studio quickstart](https://ai.google.dev/gemini-api/docs/ai-studio-quickstart.md.txt)
-- [Nano Banana image generation](https://ai.google.dev/gemini-api/docs/image-generation.md.txt)
-- [Function calling with the Gemini API](https://ai.google.dev/gemini-api/docs/function-calling.md.txt)
-- [Structured outputs](https://ai.google.dev/gemini-api/docs/structured-output.md.txt)
+### When MCP is NOT Installed (Fallback Only)
+
+If no MCP documentation tools are available, fetch from the official docs:
+
+**Index URL**: `https://ai.google.dev/gemini-api/docs/llms.txt`
+
+This index contains links to all documentation pages in .md.txt format. Use web fetch tools to:
+1. Fetch `llms.txt` to discover available pages
+2. Fetch specific pages (e.g., `https://ai.google.dev/gemini-api/docs/function-calling.md.txt`)
+
+Key pages:
 - [Text generation](https://ai.google.dev/gemini-api/docs/text-generation.md.txt)
+- [Function calling](https://ai.google.dev/gemini-api/docs/function-calling.md.txt)
+- [Structured outputs](https://ai.google.dev/gemini-api/docs/structured-output.md.txt)
+- [Image generation](https://ai.google.dev/gemini-api/docs/image-generation.md.txt)
 - [Image understanding](https://ai.google.dev/gemini-api/docs/image-understanding.md.txt)
 - [Embeddings](https://ai.google.dev/gemini-api/docs/embeddings.md.txt)
-- [Interactions API](https://ai.google.dev/gemini-api/docs/interactions.md.txt)
 - [SDK migration guide](https://ai.google.dev/gemini-api/docs/migrate.md.txt)
 
-## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+---
+
+## Gemini Live API
+
+For real-time, bidirectional audio/video/text streaming with the Gemini Live API, install the **`google-gemini/gemini-live-api-dev`** skill. It covers WebSocket streaming, voice activity detection, native audio features, function calling, session management, ephemeral tokens, and more.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

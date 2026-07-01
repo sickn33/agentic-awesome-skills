@@ -1,8 +1,13 @@
 ---
-source: "https://github.com/huggingface/skills/tree/main/skills/huggingface-trackio"
 name: hugging-face-trackio
-description: Track ML experiments with Trackio using Python logging, alerts, and CLI metric retrieval.
+description: Track and visualize ML training experiments with Trackio. Use when logging metrics during training (Python API), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (CLI). Supports real-time dashboard visualization, alerts with webhooks, HF Space syncing, and...
 risk: unknown
+source: https://github.com/huggingface/skills/tree/main/skills/huggingface-trackio
+source_repo: huggingface/skills
+source_type: official
+date_added: 2026-07-01
+license: Apache-2.0
+license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
 # Trackio - Experiment Tracking for ML Training
@@ -117,6 +122,7 @@ trackio list alerts --project my-project --json --since "2025-01-01T00:00:00"
 ```
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

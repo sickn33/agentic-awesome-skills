@@ -9,8 +9,9 @@ Complete guide to configuring Transformers.js behavior using the `env` object.
 3. [Local Model Configuration](#local-model-configuration)
 4. [Cache Configuration](#cache-configuration)
 5. [WASM Configuration](#wasm-configuration)
-6. [Common Configuration Patterns](#common-configuration-patterns)
-7. [Environment Best Practices](#environment-best-practices)
+6. [Network and Logging Controls](#network-and-logging-controls)
+7. [Common Configuration Patterns](#common-configuration-patterns)
+8. [Environment Best Practices](#environment-best-practices)
 
 ## Overview
 
@@ -20,7 +21,7 @@ The `env` object provides comprehensive control over Transformers.js execution, 
 import { env } from '@huggingface/transformers';
 
 // View current version
-console.log(env.version); // e.g., '3.8.1'
+console.log(env.version); // e.g., '4.x'
 ```
 
 ### Available Properties
@@ -29,22 +30,22 @@ console.log(env.version); // e.g., '3.8.1'
 interface TransformersEnvironment {
   // Version info
   version: string;
-  
+
   // Backend configuration
   backends: {
     onnx: Partial<ONNXEnv>;
   };
-  
+
   // Remote model settings
   allowRemoteModels: boolean;
   remoteHost: string;
   remotePathTemplate: string;
-  
+
   // Local model settings
   allowLocalModels: boolean;
   localModelPath: string;
   useFS: boolean;
-  
+
   // Cache settings
   useBrowserCache: boolean;
   useFSCache: boolean;
@@ -53,6 +54,10 @@ interface TransformersEnvironment {
   customCache: CacheInterface | null;
   useWasmCache: boolean;
   cacheKey: string;
+
+  // Networking and logging (v4)
+  fetch: typeof globalThis.fetch;
+  logLevel: LogLevel;
 }
 ```
 
@@ -242,6 +247,49 @@ env.backends.onnx.wasm.wasmPaths = '/static/wasm/';
 - `ort-wasm-simd.wasm` - SIMD-enabled WASM binary
 - `ort-wasm-threaded.wasm` - Multi-threaded WASM binary
 - `ort-wasm-simd-threaded.wasm` - SIMD + multi-threaded WASM binary
+
+## Network and Logging Controls
+
+Transformers.js v4 adds environment controls for authenticated fetching and cleaner runtime logs.
+
+### Custom Fetch (`env.fetch`)
+
+Use `env.fetch` to inject auth headers, retries, custom routing, or abort handling.
+
+```javascript
+import { env } from '@huggingface/transformers';
+
+const HF_TOKEN = process.env.HF_TOKEN;
+
+env.fetch = (url, options) =>
+  fetch(url, {
+    ...options,
+    headers: {
+      ...options?.headers,
+      Authorization: `Bearer ${HF_TOKEN}`,
+    },
+  });
+```
+
+### Logging Level (`env.logLevel`)
+
+Use `env.logLevel` to override runtime verbosity. The default is `LogLevel.WARNING`.
+
+```javascript
+import { env, LogLevel } from '@huggingface/transformers';
+
+// Enable more detailed logs during development
+env.logLevel = LogLevel.INFO;
+```
+
+Common values:
+- `LogLevel.DEBUG`
+- `LogLevel.INFO`
+- `LogLevel.WARNING`
+- `LogLevel.ERROR`
+- `LogLevel.NONE`
+
+For ONNX Runtime session-level logging controls, see `session_options` in **[Pipeline Options](./PIPELINE_OPTIONS.md)**.
 
 ## Common Configuration Patterns
 

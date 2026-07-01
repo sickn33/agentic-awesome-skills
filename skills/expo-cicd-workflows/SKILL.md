@@ -1,29 +1,30 @@
 ---
 name: expo-cicd-workflows
 description: Helps understand and write EAS workflow YAML files for Expo projects. Use this skill when the user asks about CI/CD or workflows in an Expo or EAS context, mentions .eas/workflows/, or wants help with EAS build pipelines or deployment automation.
-allowed-tools: "Read,Write,Bash(node:*)"
 risk: unknown
-source: community
-version: 1.0.0
-license: MIT License
+source: https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-cicd-workflows
+source_repo: expo/skills
+source_type: official
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/expo/skills/blob/main/LICENSE
 ---
 
 # EAS Workflows Skill
+## When to Use
+
+Use this skill when you need helps understand and write EAS workflow YAML files for Expo projects. Use this skill when the user asks about CI/CD or workflows in an Expo or EAS context, mentions .eas/workflows/, or wants help with EAS build pipelines or deployment automation.
+
 
 Help developers write and edit EAS CI/CD workflow YAML files.
 
-## When to Use
-- You need to create, edit, or validate `.eas/workflows/*.yml` files for an Expo project.
-- The task involves EAS build pipelines, deployment automation, workflow triggers, or Expo CI/CD configuration.
-- You need schema-backed workflow guidance rather than relying on stale memorized syntax.
-
 ## Reference Documentation
 
-Fetch these resources before generating or validating workflow files. Use the fetch script (implemented using Node.js) in this skill's `scripts/` directory; it caches responses using ETags for efficiency:
+Fetch these resources before generating or validating workflow files. First resolve this skill's directory, then use the fetch script in its `scripts/` directory. It is implemented using Node.js and caches responses using ETags for efficiency:
 
 ```bash
 # Fetch resources
-node {baseDir}/scripts/fetch.js <url>
+node <skill-dir>/scripts/fetch.js <url>
 ```
 
 1. **JSON Schema** — https://api.expo.dev/v2/workflows/schema
@@ -87,9 +88,9 @@ After generating or editing a workflow file, validate it against the schema:
 
 ```sh
 # Install dependencies if missing
-[ -d "{baseDir}/scripts/node_modules" ] || npm install --prefix {baseDir}/scripts
+[ -d "<skill-dir>/scripts/node_modules" ] || npm install --prefix <skill-dir>/scripts
 
-node {baseDir}/scripts/validate.js <workflow.yml> [workflow2.yml ...]
+node <skill-dir>/scripts/validate.js <workflow.yml> [workflow2.yml ...]
 ```
 
 The validator fetches the latest schema and checks the YAML structure. Fix any reported errors before considering the workflow complete.
@@ -99,6 +100,7 @@ The validator fetches the latest schema and checks the YAML structure. Fix any r
 When users ask about available options (job types, triggers, runner types, etc.), fetch the schema and derive the answer from it rather than relying on potentially outdated information.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream product or API scope.
+- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
+- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

@@ -1,92 +1,74 @@
 ---
 name: ui-pattern
-description: "Generate reusable UI patterns such as card sections, grids, lists, forms, and chart wrappers using StyleSeed Toss primitives."
-category: design
-risk: safe
-source: community
+description: Generate a composed UI pattern (card layout, list, form section, grid, etc.) using design system primitives
+risk: unknown
+source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-pattern
 source_repo: bitjaru/styleseed
 source_type: community
-date_added: "2026-04-08"
-author: bitjaru
-tags: [ui, patterns, design-system, reuse, styleseed]
-tools: [claude, cursor, codex, gemini]
+date_added: 2026-07-01
+license: MIT
+license_source: https://github.com/bitjaru/styleseed/blob/main/LICENSE
 ---
 
-# UI Pattern
-
-## Overview
-
-Part of [StyleSeed](https://github.com/bitjaru/styleseed), this skill builds reusable composed patterns from the seed's primitives. It is intended for sections like card lists, grids, form blocks, ranking lists, and chart wrappers that appear across multiple pages and need to look deliberate rather than ad hoc.
-
+# UI Pattern Generator
 ## When to Use
-- Use when you need a reusable layout pattern rather than a one-off page section
-- Use when a page repeats the same arrangement of cards, rows, filters, or data blocks
-- Use when you want to build from existing StyleSeed primitives instead of copying markup
-- Use when you want a pattern component with props for dynamic content
 
-## How It Works
+Use this skill when you need generate a composed UI pattern (card layout, list, form section, grid, etc.) using design system primitives.
 
-### Step 1: Identify the Pattern Type
 
-Common pattern families include:
-- card section
-- two-column grid
-- horizontal scroller
-- list section
-- form section
-- stat grid
-- data table
-- detail card
-- chart card
-- filter bar
-- action sheet
+## When NOT to use
 
-### Step 2: Read the Available Building Blocks
+- For a single primitive component → use `/ss-component`
+- For a full mobile screen → use `/ss-page`
+- For an entire multi-page user flow → use `/ss-flow`
+- For design tokens and color/spacing decisions → use `/ss-tokens`
 
-Inspect both:
-- `components/ui/` for primitives
-- `components/patterns/` for neighboring patterns that can be extended
+Pattern type: **$0**
+Description: $ARGUMENTS
 
-The goal is composition, not duplication.
+## Available Pattern Types
 
-### Step 3: Apply StyleSeed Layout Rules
+### Layout Patterns
+- **card-section**: Card with title + content inside page section (`mx-6`)
+- **grid-2col**: 2-column grid of cards (`grid grid-cols-2 gap-4 px-6`)
+- **scroll-horizontal**: Horizontal scrolling card list (`flex gap-3 overflow-x-auto scrollbar-hide`)
+- **list-section**: Vertical list of items inside a card
+- **form-section**: Form with labeled inputs in a card
+- **stat-grid**: Grid of StatCard components
 
-Keep the Toss seed defaults intact:
-- card surfaces on semantic tokens
-- rounded corners from the system scale
-- shadow tokens instead of improvised shadow values
-- consistent internal padding
-- section wrappers that align with the page margin system
+### Data Display Patterns
+- **data-table**: Table with header and rows
+- **detail-card**: Key-value pair display
+- **chart-card**: Card wrapper for a Recharts chart
+- **ranking-list**: Numbered ranking with highlight
 
-### Step 4: Make the Pattern Dynamic
+### Interactive Patterns
+- **action-sheet**: Bottom sheet with action buttons
+- **filter-bar**: Horizontal filter/tab bar
+- **search-header**: Search input in header area
 
-Expose data through props instead of hardcoding content. If a pattern has multiple variants, keep the API explicit and small.
+## Instructions
 
-### Step 5: Keep the Pattern Reusable Across Pages
+1. Read the design system reference:
+   - `CLAUDE.md` for conventions
+   - `components/ui/` for available primitives
+   - `components/patterns/` for existing patterns
 
-Avoid page-specific assumptions unless the user explicitly wants a one-off section. If the markup only works on one route, it probably belongs in a page component, not a shared pattern.
+2. Compose the pattern from existing components — DO NOT recreate primitives.
 
-## Output
+3. Follow the design system layout rules:
+   - Cards: `bg-card rounded-2xl p-6 shadow-[var(--shadow-card)]`
+   - Section wrapper: `mx-6` for horizontal margin
+   - Section title: `text-foreground font-bold text-[18px] mb-4`
+   - List gap: `space-y-3`
+   - Grid gap: `gap-4`
 
-Provide:
-1. The generated pattern component
-2. The target location
-3. Expected props and usage example
-4. Notes on which existing primitives were reused
+4. Use semantic tokens for all visual properties.
 
-## Best Practices
-
-- Start from the smallest existing building block that solves the problem
-- Keep container, section, and item responsibilities separate
-- Use tokens and spacing rules consistently
-- Prefer extending a pattern over adding a near-duplicate sibling
-
-## Additional Resources
-
-- [StyleSeed repository](https://github.com/bitjaru/styleseed)
-- [Source skill](https://github.com/bitjaru/styleseed/blob/main/seeds/toss/.claude/skills/ui-pattern/SKILL.md)
+5. Make the pattern a reusable component with props for dynamic content.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use this skill only when the task clearly matches its upstream source and local project context.
+- Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
+- Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
