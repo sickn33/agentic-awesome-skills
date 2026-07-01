@@ -9,10 +9,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.6.0] - 2026-07-01 - "Source Catalog, Riffkit, and Tessl Review"
+
+> Maintainer source sweep, community intake, and workflow maintenance for the 1,890+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1890-skills](README.md#browse-1890-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release packages the July 1 maintainer batch: a source-repository refresh across official, community, inspiration, and additional source collections; editorial pruning and normalization; plugin mirror sync; two community PRs; and pull-request workflow maintenance.
+
+## Added
+
+- Added **riffkit**, a hosted short-form video skill for generating user-confirmed TikTok/UGC ad riffs from a source video, product, character, and language (PR #765).
+- Added **Vexilo** to the README comparison resources as a visual field guide for Claude Code primitives and workflows (PR #766).
+- Added and refreshed source-backed skills across Expo, Hugging Face, Supabase, RClone, Redis, UI/UX, testing, documentation, DevRel, workflow, and release-maintenance families.
+
 ## Changed
 
 - Migrated the `skill-review` pull-request workflow from the deprecated Tessl Skill Review action to Tessl Review via `tesslio/setup-tessl` and a repository-owned changed-skill runner.
 - Paused the maintainer-only `/apply-optimize` shortcut and its manual runner until the new `tessl review fix` output contract is wired safely.
+- Normalized imported skill metadata, limitations, safety notes, source provenance, license fields, bundled references, scripts, and plugin compatibility surfaces.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, public docs, sitemap, package description, and README counters for the 1,890+ skill catalog.
+
+## Validation
+
+- Verified PR #765 checks for Devin Review, Socket, Snyk license, and Snyk security before merging.
+- Verified PR #766 checks for Devin Review, Socket, Snyk license, and Snyk security before merging.
+- Ran `npm run validate`.
+- Ran `npm run validate:references`.
+- Ran `npm run security:docs`.
+- Ran `env npm_config_cache=/private/tmp/aas-npm-cache npm run test:local`.
+- Ran `npm run check:readme-credits`.
+- Ran the maintainer source-credit gate and `git diff --cached --check` before publishing the source refresh.
+
+## Credits
+
+- **[@owengu-ai](https://github.com/owengu-ai)** and **[riffkit/skill](https://github.com/riffkit/skill)** for PR #765 (`riffkit`).
+- **[@lilhawk7077](https://github.com/lilhawk7077)** and **[lilhawk7077/claude-code-resources](https://github.com/lilhawk7077/claude-code-resources)** for PR #766 (`Vexilo`).
+- All official, community, inspiration, and additional source repositories reviewed during the July 1 source sweep.
 
 ## [13.5.0] - 2026-06-29 - "Release Readiness, Weaviate, and Browser Runtime Gates"
 
