@@ -113,4 +113,10 @@ riff https://www.tiktok.com/@user/video/123 into my product video, in Spanish
 
 ## Requirements
 
-Riffkit is a hosted service — generating videos requires a Riffkit account (billed by the second of finished video). No local GPU or models. Create an account and read the live skill at https://riffkit.ai.
+Riffkit is a hosted service — generating videos requires a Riffkit account (billed by the second of finished video). No local GPU or models. Create an account at https://riffkit.ai.
+
+**On the `risk: safe` label:** the skill performs no destructive or privileged actions — it only reads account data and submits render jobs a normal authenticated user can make. It *does* trigger a paid render, but that spend is gated behind an explicit, per-run user confirmation (see the workflow's Step 4 and the Security & Safety Notes) — it never spends autonomously. This matches other billed-API skills already in the catalog (e.g. `2slides-ppt-generator`).
+
+## Related Skills
+
+None — Riffkit is a self-contained, standalone hosted skill. For other short-form / media skills, browse this repository's Creative & Media category.
