@@ -1,4 +1,4 @@
-name: Apply Skill Optimization Run
+name: Apply Skill Optimization Run (Paused)
 on:
   workflow_dispatch:
     inputs:
@@ -15,15 +15,9 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: read
     steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-      - name: Apply latest Tessl optimization
-        run: node tools/scripts/apply_skill_optimization.cjs
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ inputs.pr_number }}
+      - name: Explain paused auto-apply
+        run: |
+          echo "::error title=/apply-optimize paused::This workflow depended on deprecated Tessl Skill Review comments. Re-enable it after wiring Tessl Review Fix safely."
+          exit 1

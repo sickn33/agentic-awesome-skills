@@ -1,19 +1,16 @@
-name: Queue Skill Optimization Apply
+name: Explain Skill Optimization Apply
 on:
   issue_comment:
     types: [created]
 
 jobs:
-  queue:
+  explain:
     if: >-
       github.event.issue.pull_request &&
       contains(github.event.comment.body, '/apply-optimize')
     runs-on: ubuntu-latest
     permissions:
-      actions: write
-      contents: read
       issues: write
-      pull-requests: read
     steps:
       - uses: actions/github-script@v7
         with:
@@ -28,12 +25,6 @@ jobs:
               return;
             }
 
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            });
-
             if (!trusted.has(association)) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -45,28 +36,6 @@ jobs:
               });
               return;
             }
-
-            if (pr.head.repo.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body:
-                  '⚠️ `/apply-optimize` only auto-applies for pull requests whose head branch ' +
-                  'lives in this repository. Fork PRs must apply the suggested changes manually.',
-              });
-              return;
-            }
-
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'skill-apply-optimize-run.yml',
-              ref: context.payload.repository.default_branch,
-              inputs: {
-                pr_number: String(prNumber),
-              },
-            });
 
             await github.rest.reactions.createForIssueComment({
               owner: context.repo.owner,
@@ -80,7 +49,8 @@ jobs:
               repo: context.repo.repo,
               issue_number: prNumber,
               body:
-                '👀 Queued the trusted `/apply-optimize` workflow for this PR. ' +
-                'It will fetch the repository branch from a separate workflow and apply the ' +
-                'latest Tessl optimization suggestion if one is available.',
+                '⚠️ `/apply-optimize` is paused while this repository migrates from ' +
+                'deprecated Tessl Skill Review comments to Tessl Review runs. ' +
+                'Please use the `skill-review` check output for now; maintainers can ' +
+                're-enable auto-fix once the `tessl review fix` output contract is wired safely.',
             });

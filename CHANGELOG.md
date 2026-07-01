@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Changed
+
+- Migrated the `skill-review` pull-request workflow from the deprecated Tessl Skill Review action to Tessl Review via `tesslio/setup-tessl` and a repository-owned changed-skill runner.
+- Paused the maintainer-only `/apply-optimize` shortcut and its manual runner until the new `tessl review fix` output contract is wired safely.
+
 ## [13.5.0] - 2026-06-29 - "Release Readiness, Weaviate, and Browser Runtime Gates"
 
 > Community skill intake and curated-source release for the 1,700+ skill catalog.
