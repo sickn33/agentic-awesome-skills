@@ -140,6 +140,13 @@ node bin/mdpr-skill.js accessibility --markdown deck.md --audience "executive re
 3. Report only evidence-backed visual concerns.
 4. Recommend deterministic MDPR fixes when the same issue repeats.
 
+```markdown
+Finding: Slide 4 has weak visual hierarchy between the metric and explanation.
+Evidence: rendered/slide-04.png, manifest slide id `s4`, heading "Revenue Mix".
+MDPR-owned fix: adjust the metric-card recipe spacing rule or choose a
+deterministic layout profile with stronger numeric emphasis.
+```
+
 ### Propose a Theme Candidate
 
 1. Treat the source design as a visual system, not content to copy.
@@ -149,6 +156,19 @@ node bin/mdpr-skill.js accessibility --markdown deck.md --audience "executive re
 4. Keep `mdprOwnsFinalLayout`, `mdprOwnsFinalThemeBinding`, and
    `noRawUseInAgentHints` true.
 
+```json
+{
+  "schema": "mdpr-theme-candidate-v1",
+  "source": "rendered reference set approved by user",
+  "useCases": ["executive review", "research update"],
+  "constraints": {
+    "mdprOwnsFinalLayout": true,
+    "mdprOwnsFinalThemeBinding": true,
+    "noRawUseInAgentHints": true
+  }
+}
+```
+
 ### Compare with codex-ppt Style Workflows
 
 Use codex-ppt only as a capability reference or image-only baseline. Preserve
@@ -156,13 +176,22 @@ the output-model distinction: codex-ppt style workflows may produce full-slide
 images, while MDPR defaults to editable PPTX/HTML/PDF with deterministic
 validation.
 
+```markdown
+Comparison note: codex-ppt style output may optimize for a single rasterized
+slide image. MDPR should instead preserve editable slide objects and route
+visual improvements through recipes, themes, and validation policies.
+```
+
 ## Best Practices
 
-- Prefer concise semantic hints over restating the source.
-- Keep review notes actionable for MDPR maintainers.
-- Call out missing evidence before making quality claims.
-- Treat LLM judgment as triage only; MDPR validation remains the release gate.
-- Keep generated asset prompts as semantic briefs, not final asset selections.
+- Do: Prefer concise semantic hints over restating the source.
+- Do: Keep review notes actionable for MDPR maintainers.
+- Do: Call out missing evidence before making quality claims.
+- Do: Treat LLM judgment as triage only; MDPR validation remains the release
+  gate.
+- Avoid: Turning generated asset prompts into final asset selections.
+- Avoid: Recommending raw colors, coordinates, or renderer object IDs from
+  agent judgment alone.
 
 ## Limitations
 
