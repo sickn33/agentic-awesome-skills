@@ -9,7 +9,7 @@ source_type: community
 date_added: "2026-07-01"
 author: ch040602
 tags: [mdpr, presentations, markdown, powerpoint, codex, visual-review, agent-hints]
-tools: [codex, antigravity]
+tools: [claude, cursor, gemini, codex, antigravity]
 license: "MIT"
 license_source: "https://github.com/ch040602/mdpr-skill/blob/main/LICENSE"
 ---
