@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-06-29T09:47:32.000Z",
-  "total": 1890,
+  "total": 1891,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -35688,6 +35688,37 @@
         "before"
       ],
       "path": "skills/rich-elicitation/SKILL.md"
+    },
+    {
+      "id": "riffkit",
+      "name": "riffkit",
+      "description": "Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (EN/ES). Also makes UGC ad creative.",
+      "category": "education",
+      "tags": [
+        "video",
+        "short-form",
+        "tiktok",
+        "ai-video",
+        "marketing",
+        "ads",
+        "ecommerce",
+        "api-integration"
+      ],
+      "triggers": [
+        "video",
+        "short-form",
+        "tiktok",
+        "ai-video",
+        "marketing",
+        "ads",
+        "ecommerce",
+        "api-integration",
+        "riffkit",
+        "riff",
+        "winning",
+        "own"
+      ],
+      "path": "skills/riffkit/SKILL.md"
     },
     {
       "id": "risk-manager",

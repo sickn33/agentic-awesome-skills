@@ -2,7 +2,7 @@
 
 Generated at: 2026-06-29T09:47:32.000Z
 
-Total skills: 1890
+Total skills: 1891
 
 ## architecture (113)
 
@@ -843,7 +843,7 @@ Total skills: 1890
 | `zod-validation-expert` | Expert in Zod — TypeScript-first schema validation. Covers parsing, custom errors, refinements, type inference, and integration with React Hook Form, Next.js... | zod, validation | zod, validation, typescript, first, schema, covers, parsing, custom, errors, refinements, type, inference |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
-## education (17)
+## education (18)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -860,6 +860,7 @@ Total skills: 1890
 | `marketing-plan` | When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product. Also use when the user mentions "marketing plan... | marketing, plan | marketing, plan, user, client, company, advise, own, product, mentions, growth, gtm, go |
 | `papers-skill` | Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-c... | research, academic, papers, citations, arxiv, semantic-scholar, pdf | research, academic, papers, citations, arxiv, semantic-scholar, pdf, skill, search, semantic, scholar, 200m |
 | `puzzle-activity-planner` | Plan puzzle-based activities for classrooms, parties, and events with pre-configured generator links | education, puzzle, classroom, activity-planning, event | education, puzzle, classroom, activity-planning, event, activity, planner, plan, activities, classrooms, parties, events |
+| `riffkit` | Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (EN/ES)... | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration, riffkit, riff, winning, own |
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `teach` | Teach the user a new skill or concept, within this workspace. | education, workflow, coding-agents | education, workflow, coding-agents, teach, user, new, skill, concept, within, workspace |
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |

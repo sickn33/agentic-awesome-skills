@@ -27476,6 +27476,25 @@
       "runtime_files": []
     },
     {
+      "id": "riffkit",
+      "path": "skills/riffkit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Sign in to a Riffkit account and pass a vee_session token; the skill calls the hosted Riffkit backend (rendering is billed by the second).",
+        "docs": "SKILL.md"
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "risk-manager",
       "path": "skills/risk-manager",
       "targets": {
@@ -36285,15 +36304,15 @@
     }
   ],
   "summary": {
-    "total_skills": 1890,
+    "total_skills": 1891,
     "supported": {
-      "codex": 1825,
-      "claude": 1844
+      "codex": 1826,
+      "claude": 1845
     },
     "blocked": {
       "codex": 65,
       "claude": 46
     },
-    "manual_setup": 13
+    "manual_setup": 14
   }
 }

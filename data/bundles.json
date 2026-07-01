@@ -1456,6 +1456,7 @@
         "production-audit",
         "remote-gpu-trainer",
         "revops",
+        "riffkit",
         "shopify-apps",
         "shopify-automation",
         "shopify-development",
