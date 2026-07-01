@@ -172,6 +172,20 @@ validation.
 - This skill should not be used to copy private deck designs or proprietary
   slide content.
 
+## Common Pitfalls
+
+- **Problem:** Treating mdpr-skill output as final slide layout.
+  **Solution:** Keep hints semantic and let MDPR choose final layout, geometry,
+  and renderer objects.
+
+- **Problem:** Reporting visual issues without evidence.
+  **Solution:** Link each finding to source Markdown, a manifest entry, rendered
+  previews, validation reports, or another concrete artifact.
+
+- **Problem:** Copying codex-ppt image-only behavior into MDPR.
+  **Solution:** Use image-only generators as comparison baselines while
+  preserving MDPR's editable PPTX/HTML/PDF output model.
+
 ## Security & Safety Notes
 
 - Review only files the user has provided or authorized.
