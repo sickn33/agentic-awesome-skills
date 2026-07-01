@@ -25,7 +25,7 @@ license_source: "https://github.com/riffkit/skill/blob/main/LICENSE"
 
 Riffkit takes one winning short video, studies its *formula* — the hook, pacing, and emotional beats that made it retain viewers — and generates a brand-new video around your product, character, and language (English or Spanish). It never re-uploads the source; the output is your own original. Rendering runs on Riffkit's hosted backend.
 
-> The canonical, always-current instructions live at **https://riffkit.ai/SKILL.md** — read that URL for the full API contract, endpoints, and options. This file is a catalog entry; the live skill is the source of truth.
+This file is self-contained for the core workflow below. The full, always-current API contract (every endpoint, param, and response) lives at **https://riffkit.ai/SKILL.md** — read it when you need exhaustive detail.
 
 ## When to Use This Skill
 
@@ -37,17 +37,28 @@ Riffkit takes one winning short video, studies its *formula* — the hook, pacin
 
 ## How It Works
 
-### Step 1: Read the live skill
+### Step 1: Authenticate
 
-Fetch `https://riffkit.ai/SKILL.md` and follow its setup — authentication is via a Riffkit account (a `vee_session` token). The live file is the full, current contract.
+Riffkit uses a Riffkit account session — a `vee_session` token (sign in at https://riffkit.ai). Pass it on API requests. Treat it as a secret: never print, log, or persist it beyond the request.
 
-### Step 2: Provide one source
+### Step 2: Pick exactly one source (required)
 
-Give a TikTok link, an uploaded video, or an analyzed template, plus optional settings: character, product, language, and creative angle. Every setting other than the source has a sensible default (character = Auto, product = none), so a one-line request works.
+One of: a TikTok link (`tiktok_url`), an uploaded video (`video`, ≤100MB), or an already-analyzed template (`formula_id`). This is the only required input.
 
-### Step 3: Submit and collect
+### Step 3: Optional settings (all have sensible defaults)
 
-A single call to `POST /api/riffs` kicks off the pipeline: source → formula → new footage → your product and character → captions, cover, hashtags. Collect the post-ready video when the task completes.
+- **character** — default **Auto** (AI-generated on-camera person; no avatar needed)
+- **product** — default **none**; attach a product to place it into the scene
+- **language** — default **English**; English or Spanish
+- **content_anchor** — optional creative direction (which selling point / angle)
+
+### Step 4: Confirm, then submit
+
+Restate the plan (source / character / product / language) and get **explicit confirmation** — the submit is the one financial commitment, since rendering is billed. Then make a single call: `POST /api/riffs`. If the account balance is insufficient, the API returns HTTP 402 with a top-up URL; relay it and stop (no silent retry).
+
+### Step 5: Monitor and collect
+
+Poll `GET /api/tasks/batch/{batch_id}` (every ~10–15s) until complete, then `GET /api/assets` for the finished video, caption, and hashtags.
 
 ## Examples
 
@@ -68,6 +79,33 @@ riff this winning ad into a branded creative for my product
 ```
 riff https://www.tiktok.com/@user/video/123 into my product video, in Spanish
 ```
+
+## Best Practices
+
+- Lock the source first; everything else has a sensible default, so a one-line request works.
+- Confirm exactly once before submitting (rendering is billed by the second) — never auto-submit or auto-retry a failed task.
+- Keep the `vee_session` token out of logs and output.
+- Defer to https://riffkit.ai/SKILL.md for the exhaustive, current API contract.
+
+## Security & Safety Notes
+
+- **Auth:** the `vee_session` token is tied to the user's Riffkit account. Treat it as a secret — never log, echo, or persist it beyond the API request.
+- **Billing:** `POST /api/riffs` starts a paid render (billed by the second). Always get explicit user confirmation before submitting, and do not auto-retry failed tasks (a retry re-charges).
+- **No destructive or privileged actions:** the skill only reads account data and submits render jobs a normal authenticated user can make. It calls no staff/admin or destructive endpoints, and it never publishes output to any platform — it returns a download link and lets the user post.
+
+## Limitations
+
+- Makes **riff videos only** — it analyzes a source video's formula and regenerates it. It does not do unrelated content formats or features the product doesn't have.
+- Output language is **English or Spanish only**.
+- **Hosted service:** requires an active Riffkit account; rendering is billed by the second (no local/self-hosted mode and no free tier).
+- **Never publishes** to any platform — it returns a video + caption; posting is the user's action.
+- Stop and ask for clarification when a required input, permission, or the pre-submit confirmation is missing.
+
+## Common Pitfalls
+
+- Don't auto-submit just because the user said "riff this" — deciding the source and config is fine, but the submit must wait for a go-ahead.
+- Don't treat picking a character or product as mandatory — character defaults to Auto, product to none.
+- Don't proactively query or report the credit balance — it only surfaces on an HTTP 402 or when the user explicitly asks.
 
 ## Requirements
 
