@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.6.1] - 2026-07-01 - "LLMS SEO Metadata Refresh"
+
+> Patch release for hosted catalog SEO metadata after the 1,891+ skill refresh.
+
+## Fixed
+
+- Refreshed `apps/web-app/public/llms.txt` so the GitHub Pages SEO verification gate matches the current V13.6.1 release metadata and 1,891+ skill count.
+
+## Validation
+
+- Ran `npm run release:preflight`.
+- Ran `npm run security:docs`.
+- Verified GitHub Pages deploy after publishing the patch release.
+
 ## [13.6.0] - 2026-07-01 - "Source Catalog, Riffkit, and Tessl Review"
 
 > Maintainer source sweep, community intake, and workflow maintenance for the 1,890+ skill catalog.
