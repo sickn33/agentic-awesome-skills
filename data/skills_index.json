@@ -13830,7 +13830,7 @@
     "category": "agent-behavior",
     "name": "dispatch",
     "description": "Delegate tasks to OpenAI Codex CLI and Google Antigravity CLI from Claude Code with topic-aware sessions",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-28",
     "plugin": {
