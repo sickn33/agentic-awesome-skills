@@ -8138,7 +8138,7 @@
       "id": "before-you-build",
       "name": "before-you-build",
       "description": "Review product risk before coding by checking demand, alternatives, channels, switching costs, and failure signals.",
-      "category": "security",
+      "category": "business",
       "tags": [
         "product-validation",
         "planning",
@@ -12907,7 +12907,7 @@
       "id": "crossframe-org",
       "name": "crossframe-org",
       "description": "Use when CrossFrame Suite routes explicit Chinese analysis of teams, projects, organizations, responsibility chains, feedback write-back, repair, or retrospectives.",
-      "category": "general",
+      "category": "business",
       "tags": [
         "crossframe",
         "chinese",
@@ -25820,7 +25820,7 @@
       "id": "lex",
       "name": "lex",
       "description": "Centralized 'Truth Engine' for cross-jurisdictional legal context (US, EU, CA) and contract scaffolding.",
-      "category": "security",
+      "category": "business",
       "tags": [
         "legal",
         "context",

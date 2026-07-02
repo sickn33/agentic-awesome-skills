@@ -11,6 +11,16 @@ buildCatalog();
 
 const bundleData = JSON.parse(fs.readFileSync(bundlesPath, "utf8"));
 const bundles = bundleData.bundles || {};
+const catalog = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, "data", "catalog.json"), "utf8"),
+);
+const skillsById = new Map(catalog.skills.map((skill) => [skill.id, skill]));
+
+assert.strictEqual(
+  skillsById.get("before-you-build").category,
+  "business",
+  "explicit product frontmatter should keep product-risk skills out of security",
+);
 
 for (const bundleId of [
   "core-dev",

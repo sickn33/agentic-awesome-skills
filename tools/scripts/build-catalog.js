@@ -337,6 +337,11 @@ const CATEGORY_RULES = [
   },
 ];
 
+const FRONTMATTER_CATEGORY_OVERRIDES = new Map([
+  ["business", "business"],
+  ["product", "business"],
+]);
+
 const BUNDLE_RULES = {
   "core-dev": {
     description:
@@ -559,6 +564,12 @@ function deriveTags(skill) {
 }
 
 function detectCategory(skill, tags) {
+  const explicitCategory =
+    typeof skill.category === "string" ? skill.category.trim().toLowerCase() : "";
+  if (FRONTMATTER_CATEGORY_OVERRIDES.has(explicitCategory)) {
+    return FRONTMATTER_CATEGORY_OVERRIDES.get(explicitCategory);
+  }
+
   const haystack = normalizeTokens([
     ...tags,
     ...tokenize(skill.name),

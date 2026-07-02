@@ -9,6 +9,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.7.0] - 2026-07-02 - "Security Hardening and Community Intake"
+
+> Maintainer security sweep, PR maintenance, and catalog sync for the 1,894+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1894-skills](README.md#browse-1894-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release packages the July 2 maintenance batch: three community PRs, hardening for the reviewed security findings CSV, generated registry and plugin mirror sync, and a catalog quality fix for product-risk skill categorization.
+
+## Added
+
+- Added **mdpr-skill**, a Codex-assisted MDPR presentation review skill for semantic hints, visual checks, theme candidates, and deterministic renderer boundaries (PR #767).
+- Added **dispatch**, a multi-CLI delegation skill for routing work from Claude Code to Codex, Antigravity, and Gemini agents (PR #768).
+- Added **before-you-build**, a product-risk review skill for checking demand, alternatives, switching costs, channels, and validation steps before coding (PR #769).
+
+## Changed
+
+- Hardened the `skill-review` workflow so Tessl credentials are only exposed to trusted, pinned setup steps while PR content is reviewed through repository-owned trusted scripts.
+- Hardened **hugging-face-model-trainer** GGUF conversion by validating Hugging Face repo IDs and making `trust_remote_code` an explicit `TRUST_REMOTE_CODE` opt-in.
+- Hardened **weaviate** connection handling so provider API keys are forwarded only through an explicit `WEAVIATE_PROVIDER_KEYS` allowlist.
+- Reclassified **sql-sentinel** and **gh-image** as `critical` and removed them from generated Codex/Claude plugin mirrors until their upstream execution and browser-session guidance is reviewed for plugin distribution.
+- Reclassified **riffkit** as `critical` because it can use a session token and paid generation endpoint.
+- Fixed symlink handling in **youtube-notetaker**, malformed numeric token parsing in **cron-doctor**, and the misplaced Hive helper import in **monte-carlo-push-ingestion**.
+- Updated catalog generation so explicit product/business skill frontmatter is kept in the business catalog lane instead of being misclassified as security because of generic risk wording.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, public docs, sitemap, `llms.txt`, package description, and README counters for the 1,894+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #767, PR #768, and PR #769 after required GitHub checks passed.
+- Ran `npm run sync:repo-state`.
+- Ran `npm run security:docs`.
+- Ran `npm_config_cache=/private/tmp/aas-npm-cache npm audit --json` with 0 vulnerabilities.
+- Ran `npm_config_cache=/private/tmp/aas-npm-cache npm run test`.
+- Ran `node tools/scripts/tests/build_catalog_bundles.test.js`.
+- Ran `npm run app:test`.
+- Ran `npm run app:build`.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@ch040602](https://github.com/ch040602)** and **[ch040602/mdpr-skill](https://github.com/ch040602/mdpr-skill)** for PR #767 (`mdpr-skill`).
+- **[@deveweber](https://github.com/deveweber)** and **[sparklingneuronics/sparkling-skills](https://github.com/sparklingneuronics/sparkling-skills)** for PR #768 (`dispatch`).
+- **[@bin1874](https://github.com/bin1874)** and **[bin1874/before-you-build-skill](https://github.com/bin1874/before-you-build-skill)** for PR #769 (`before-you-build`).
+
 ## [13.6.1] - 2026-07-01 - "LLMS SEO Metadata Refresh"
 
 > Patch release for hosted catalog SEO metadata after the 1,891+ skill refresh.
