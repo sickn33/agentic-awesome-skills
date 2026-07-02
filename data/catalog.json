@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-01T11:43:01.000Z",
-  "total": 1893,
+  "total": 1894,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -8133,6 +8133,33 @@
         "ai"
       ],
       "path": "skills/beautiful-prose/SKILL.md"
+    },
+    {
+      "id": "before-you-build",
+      "name": "before-you-build",
+      "description": "Review product risk before coding by checking demand, alternatives, channels, switching costs, and failure signals.",
+      "category": "security",
+      "tags": [
+        "product-validation",
+        "planning",
+        "ai-coding",
+        "risk-review"
+      ],
+      "triggers": [
+        "product-validation",
+        "planning",
+        "ai-coding",
+        "risk-review",
+        "before",
+        "review",
+        "product",
+        "risk",
+        "coding",
+        "checking",
+        "demand",
+        "alternatives"
+      ],
+      "path": "skills/before-you-build/SKILL.md"
     },
     {
       "id": "behavioral-modes",

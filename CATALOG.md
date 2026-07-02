@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-01T11:43:01.000Z
 
-Total skills: 1893
+Total skills: 1894
 
 ## architecture (113)
 
@@ -1567,7 +1567,7 @@ Total skills: 1893
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (201)
+## security (202)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1602,6 +1602,7 @@ Total skills: 1893
 | `azure-security-keyvault-secrets-java` | Azure Key Vault Secrets Java SDK for secret management. Use when storing, retrieving, or managing passwords, API keys, connection strings, or other sensitive... | azure, security, keyvault, secrets, java | azure, security, keyvault, secrets, java, key, vault, sdk, secret, storing, retrieving, managing |
 | `backend-security-coder` | Expert in secure backend coding practices specializing in input validation, authentication, and API security. Use PROACTIVELY for backend security implementa... | backend, security, coder | backend, security, coder, secure, coding, specializing, input, validation, authentication, api, proactively, implementations |
 | `bdistill-behavioral-xray` | X-ray any AI model's behavioral patterns — refusal boundaries, hallucination tendencies, reasoning style, formatting defaults. No API key needed. | ai, testing, behavioral-analysis, model-evaluation, red-team, compliance, mcp | ai, testing, behavioral-analysis, model-evaluation, red-team, compliance, mcp, bdistill, behavioral, xray, ray, any |
+| `before-you-build` | Review product risk before coding by checking demand, alternatives, channels, switching costs, and failure signals. | product-validation, planning, ai-coding, risk-review | product-validation, planning, ai-coding, risk-review, before, review, product, risk, coding, checking, demand, alternatives |
 | `broken-authentication` | Identify and exploit authentication and session management vulnerabilities in web applications. Broken authentication consistently ranks in the OWASP Top 10 ... | broken, authentication | broken, authentication, identify, exploit, session, vulnerabilities, web, applications, consistently, ranks, owasp, top |
 | `bugs-are-annoying` | Adversarial code auditor that hunts down bugs, logic errors, and security flaws. Use for deep correctness passes, not style reviews. | bugs, are, annoying | bugs, are, annoying, adversarial, code, auditor, hunts, down, logic, errors, security, flaws |
 | `bumblebee` | Run Bumblebee supply-chain inventory and exposure scans on macOS/Linux to detect compromised packages, extensions, and MCP host configs. | security, supply-chain, incident-response, npm, pypi, tooling | security, supply-chain, incident-response, npm, pypi, tooling, bumblebee, run, supply, chain, inventory, exposure |

@@ -7135,6 +7135,28 @@
     }
   },
   {
+    "id": "before-you-build",
+    "path": "skills/before-you-build",
+    "category": "product",
+    "name": "before-you-build",
+    "description": "Review product risk before coding by checking demand, alternatives, channels, switching costs, and failure signals.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "behavioral-modes",
     "path": "skills/behavioral-modes",
     "category": "meta",

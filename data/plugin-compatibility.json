@@ -6141,6 +6141,25 @@
       "runtime_files": []
     },
     {
+      "id": "before-you-build",
+      "path": "skills/before-you-build",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "behavioral-modes",
       "path": "skills/behavioral-modes",
       "targets": {
@@ -36354,10 +36373,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1893,
+    "total_skills": 1894,
     "supported": {
-      "codex": 1826,
-      "claude": 1845
+      "codex": 1827,
+      "claude": 1846
     },
     "blocked": {
       "codex": 67,

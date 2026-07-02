@@ -480,6 +480,7 @@
         "azure-security-keyvault-secrets-java",
         "backend-security-coder",
         "bdistill-behavioral-xray",
+        "before-you-build",
         "broken-authentication",
         "bugs-are-annoying",
         "bumblebee",
