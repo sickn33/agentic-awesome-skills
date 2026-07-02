@@ -19,7 +19,7 @@ arbitrary and kept only so the same artifact HTML works unmodified):
   GET   /api/video-deepdives/_media/<f>   a slide image
   PATCH /api/video-deepdives/<id>         merge {fields:{...}} into frontmatter, rewrite
 """
-import argparse, json, os, sys, re, mimetypes, posixpath
+import argparse, json, os, sys, re, posixpath
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -35,6 +35,13 @@ SAFE_SLUG_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_MEDIA_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_PATH_PART_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_CTYPE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*(?:; charset=[A-Za-z0-9._-]+)?$")
+MEDIA_CONTENT_TYPES = {
+    ".gif": "image/gif",
+    ".jpeg": "image/jpeg",
+    ".jpg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+}
 LOCAL_ORIGINS = {
     "http://127.0.0.1:8000": "http://127.0.0.1:8000",
     "http://localhost:8000": "http://localhost:8000",
@@ -55,46 +62,35 @@ def dump_file(meta, body):
     return out + body
 
 
-def library_path(lib, *parts):
-    root = Path(lib).resolve()
-    candidate = root
-    for part in parts:
-        value = str(part)
-        if not SAFE_PATH_PART_RE.fullmatch(value) or value in {".", ".."}:
-            return None
-        candidate = candidate / value
-    candidate = candidate.resolve()
-    try:
-        candidate.relative_to(root)
-    except ValueError:
+def listed_file(directory, filename):
+    if not SAFE_PATH_PART_RE.fullmatch(filename or "") or filename in {".", ".."}:
         return None
-    return candidate
+    try:
+        root = Path(directory).resolve(strict=True)
+        for path in root.iterdir():
+            if path.name != filename:
+                continue
+            if path.is_symlink() or not path.is_file():
+                return None
+            try:
+                path.resolve(strict=True).relative_to(root)
+            except (OSError, ValueError):
+                return None
+            return path
+    except OSError:
+        return None
 
 
 def media_path(lib, filename):
     if not SAFE_MEDIA_RE.fullmatch(filename or ""):
         return None
-    root = Path(lib).resolve()
-    candidate = root / "_media" / filename
-    if candidate.is_symlink():
-        return None
-    path = library_path(lib, "_media", filename)
-    if not path or not path.is_file():
-        return None
-    return path
+    return listed_file(Path(lib) / "_media", filename)
 
 
 def item_path(lib, slug):
     if not SAFE_SLUG_RE.fullmatch(slug or ""):
         return None
-    root = Path(lib).resolve()
-    candidate = root / (slug + ".md")
-    if candidate.is_symlink():
-        return None
-    path = library_path(lib, slug + ".md")
-    if not path or not path.is_file():
-        return None
-    return path
+    return listed_file(lib, slug + ".md")
 
 
 def safe_content_type(ctype):
@@ -103,6 +99,10 @@ def safe_content_type(ctype):
 
 def safe_local_origin(origin):
     return LOCAL_ORIGINS.get(origin or "")
+
+
+def media_content_type(filename):
+    return MEDIA_CONTENT_TYPES.get(Path(filename).suffix.lower(), "application/octet-stream")
 
 
 def load_item(lib, slug):
@@ -181,7 +181,7 @@ class Handler(BaseHTTPRequestHandler):
             fp = media_path(self.lib, fn)
             if not fp or not fp.is_file():
                 return self._send(404, {"error": "no such media"})
-            ctype = mimetypes.guess_type(str(fp))[0] or "application/octet-stream"
+            ctype = media_content_type(fn)
             return self._send(200, fp.read_bytes(), ctype)
 
         if path.startswith(API + "/"):
@@ -233,9 +233,11 @@ def self_test():
         assert load_item(str(root), "linked") is None
         assert media_path(str(root), "linked.jpg") is None
         assert load_item(str(root), "../secret") is None
-        assert library_path(str(root), "_media", "../video_1.md") is None
+        assert listed_file(root / "_media", "../video_1.md") is None
         assert safe_content_type("text/html; charset=utf-8") == "text/html; charset=utf-8"
         assert safe_content_type("text/html\r\nX-Bad: 1") == "application/octet-stream"
+        assert media_content_type("video_1-slide-01.jpg") == "image/jpeg"
+        assert media_content_type("video_1-slide-01.svg") == "application/octet-stream"
         assert safe_local_origin("http://localhost:8000") == LOCAL_ORIGINS["http://localhost:8000"]
         assert safe_local_origin("http://localhost:3000") is None
         assert safe_local_origin("http://localhost:8000\r\nX-Bad: 1") is None

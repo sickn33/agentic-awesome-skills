@@ -15,6 +15,7 @@ import sys
 import time
 import urllib.request
 import urllib.error
+import urllib.parse
 import uuid
 from google import genai
 
@@ -28,19 +29,32 @@ def get_api_key(args):
         return args.api_key
     return os.environ.get("GEMINI_API_KEY")
 
+FILE_ID_RE = re.compile(r'^[A-Za-z0-9_-]+$')
+
+
+def extract_file_id(uri):
+    """Returns a Gemini File API id from a local reference or trusted API URL."""
+    if not uri:
+        return None
+    if uri.startswith("files/"):
+        file_id = uri.removeprefix("files/")
+        return file_id if FILE_ID_RE.fullmatch(file_id) else None
+
+    parsed = urllib.parse.urlparse(uri)
+    if parsed.scheme != "https" or parsed.netloc != "generativelanguage.googleapis.com":
+        return None
+    path_match = re.fullmatch(r'/files/([A-Za-z0-9_-]+)', parsed.path)
+    return path_match.group(1) if path_match else None
+
+
 def is_file_uri(uri):
     """Returns True if the string is a standard Gemini File URI."""
-    if not uri:
-        return False
-    return "files/" in uri and ("generativelanguage.googleapis.com" in uri or uri.startswith("files/"))
+    return extract_file_id(uri) is not None
 
 def normalize_file_uri(uri):
     """Normalizes any File API URI/reference to the standard https://generativelanguage.googleapis.com/files/{id} format."""
-    if not uri:
-        return None
-    match = re.search(r'files/([a-zA-Z0-9]+)', uri)
-    if match:
-        file_id = match.group(1)
+    file_id = extract_file_id(uri)
+    if file_id:
         return f"https://generativelanguage.googleapis.com/files/{file_id}"
     return uri
 
