@@ -10,7 +10,7 @@ const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 const SEO_LANDING_PAGES_PATH = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
 
-const HOME_CATALOG_COUNT_FALLBACK = 1689;
+const HOME_CATALOG_COUNT_FALLBACK = 1894;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
@@ -18,8 +18,8 @@ const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills
 const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
-    answer:
-      'Antigravity Awesome Skills is an installable GitHub library of 1,700+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
+    answer: (countLabel) =>
+      `Antigravity Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
   },
   {
     question: 'How do I install Antigravity Awesome Skills?',
@@ -43,6 +43,13 @@ const FAQ_ITEMS = [
   },
 ];
 
+function buildFaqItems(countLabel) {
+  return FAQ_ITEMS.map((item) => ({
+    question: item.question,
+    answer: typeof item.answer === 'function' ? item.answer(countLabel) : item.answer,
+  }));
+}
+
 function parseCount(value, fallback) {
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) ? Math.max(parsed, 0) : fallback;
@@ -54,12 +61,7 @@ function getSiteBaseUrl() {
     return seoSiteUrl;
   }
 
-  const basePath = (process.env.VITE_BASE_PATH || '/').trim().replace(/\/+$/, '');
-  const normalizedBase = basePath || '/';
-  const withLeadingSlash = normalizedBase.startsWith('/') ? normalizedBase : `/${normalizedBase}`;
-  const withoutTrailing = withLeadingSlash.length > 1 ? withLeadingSlash : '';
-
-  return `http://localhost${withoutTrailing}`;
+  return HOSTED_CATALOG_URL.replace(/\/+$/, '');
 }
 
 function ensureDirectory(targetPath) {
@@ -432,7 +434,7 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
         url: canonicalUrl,
-        mainEntity: FAQ_ITEMS.map((item) => ({
+        mainEntity: buildFaqItems(`${formattedCount}+`).map((item) => ({
           '@type': 'Question',
           name: item.question,
           acceptedAnswer: {

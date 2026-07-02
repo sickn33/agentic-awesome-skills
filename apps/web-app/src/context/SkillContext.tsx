@@ -106,7 +106,7 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
-        fetchSkillsAndStars();
+        void Promise.resolve().then(() => fetchSkillsAndStars());
     }, [fetchSkillsAndStars]);
 
     const refreshSkills = useCallback(async () => {

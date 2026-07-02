@@ -4,7 +4,7 @@
 
 ## Key Facts
 
-- Current release: V13.6.1.
+- Current release: V13.7.0.
 - Skill count: 1,894+.
 - Primary install command: `npx antigravity-awesome-skills`.
 - Supported hosts include Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, Kiro, OpenCode, and GitHub Copilot.

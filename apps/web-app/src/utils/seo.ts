@@ -7,6 +7,7 @@ const SITE_NAME = 'Antigravity Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
 const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const TOPIC_ROUTE_PREFIX = '/topics';
+const HOME_CATALOG_COUNT_FALLBACK = 1894;
 
 export interface SeoLandingPageLink {
   label: string;
@@ -36,8 +37,8 @@ export interface SeoLandingPage {
 const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
-    answer:
-      'Antigravity Awesome Skills is an installable GitHub library of 1,700+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.',
+    answer: (countLabel: string) =>
+      `Antigravity Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
   },
   {
     question: 'How do I install Antigravity Awesome Skills?',
@@ -65,6 +66,19 @@ const FAQ_ITEMS = [
       'Plugins are installable packaging surfaces, bundles are curated skill recommendations, and workflows are ordered execution playbooks. Start with a plugin when the domain is clear, use bundles to compare adjacent skills, and use workflows when sequencing planning, coding, testing, auditing, or release work matters.',
   },
 ] as const;
+
+function getCatalogCountLabel(skillCount = 0): string {
+  const visibleCount = skillCount > 0 ? skillCount : HOME_CATALOG_COUNT_FALLBACK;
+  return `${visibleCount.toLocaleString('en-US')}+`;
+}
+
+function getResolvedHomeFaqItems(skillCount = 0): Array<{ question: string; answer: string }> {
+  const countLabel = getCatalogCountLabel(skillCount);
+  return FAQ_ITEMS.map((item) => ({
+    question: item.question,
+    answer: typeof item.answer === 'function' ? item.answer(countLabel) : item.answer,
+  }));
+}
 
 export function toCanonicalPath(pathname: string): string {
   if (!pathname || pathname === '/') {
@@ -187,12 +201,12 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
   };
 }
 
-function buildHomeFaqSchema(canonicalUrl: string): Record<string, unknown> {
+function buildHomeFaqSchema(canonicalUrl: string, skillCount: number): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     url: canonicalUrl,
-    mainEntity: FAQ_ITEMS.map((item) => ({
+    mainEntity: getResolvedHomeFaqItems(skillCount).map((item) => ({
       '@type': 'Question',
       name: item.question,
       acceptedAnswer: {
@@ -203,8 +217,8 @@ function buildHomeFaqSchema(canonicalUrl: string): Record<string, unknown> {
   };
 }
 
-export function getHomeFaqItems(): Array<{ question: string; answer: string }> {
-  return [...FAQ_ITEMS];
+export function getHomeFaqItems(skillCount = 0): Array<{ question: string; answer: string }> {
+  return getResolvedHomeFaqItems(skillCount);
 }
 
 function ensureMetaTag(name: string, content: string, attributeName: 'name' | 'property'): void {
@@ -353,7 +367,7 @@ export function isTopSkill(skillId: string, skills: ReadonlyArray<Skill>, limit 
 
 export function buildHomeMeta(skillCount: number): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
-  const visibleCountLabel = visibleCount > 0 ? `${visibleCount.toLocaleString('en-US')}+` : '';
+  const visibleCountLabel = visibleCount > 0 ? getCatalogCountLabel(visibleCount) : '';
   const title = visibleCount > 0
     ? `Antigravity Awesome Skills GitHub | ${visibleCountLabel} AI coding skills`
     : 'Antigravity Awesome Skills GitHub | AI coding skills';
@@ -386,7 +400,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
       buildOrganizationSchema(),
       buildWebSiteSchema(canonicalUrl),
       buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
-      buildHomeFaqSchema(canonicalUrl),
+      buildHomeFaqSchema(canonicalUrl, visibleCount),
     ],
   };
 }

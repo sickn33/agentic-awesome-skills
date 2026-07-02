@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { getSeoLandingPaths } from './generate-sitemap.js';
+
+const APP_ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const REPO_ROOT_DIR = path.resolve(APP_ROOT_DIR, '..', '..');
 
 export function extractSitemapLocations(xmlText) {
   const raw = String(xmlText ?? '');
@@ -30,8 +34,11 @@ function parseCliArgs(argv) {
     llmsPath: 'dist/llms.txt',
     manifestPath: 'dist/site.webmanifest',
     indexPath: 'dist/index.html',
+    sourceIndexPath: 'index.html',
+    socialImagePath: 'dist/social-card.svg',
     distDir: 'dist',
     minSkillUrls: String(defaultMinSkillUrls),
+    requireHostedUrl: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -44,6 +51,7 @@ function parseCliArgs(argv) {
         args.llmsPath = path.join(value, 'llms.txt');
         args.manifestPath = path.join(value, 'site.webmanifest');
         args.indexPath = path.join(value, 'index.html');
+        args.socialImagePath = path.join(value, 'social-card.svg');
         args.distDir = value;
         i += 1;
       }
@@ -86,13 +94,37 @@ function parseCliArgs(argv) {
       continue;
     }
 
+    if (arg === '--source-index' && argv[i + 1]) {
+      args.sourceIndexPath = argv[i + 1];
+      i += 1;
+      continue;
+    }
+
+    if (arg === '--social-image' && argv[i + 1]) {
+      args.socialImagePath = argv[i + 1];
+      i += 1;
+      continue;
+    }
+
     if (arg === '--min-skill-urls' && argv[i + 1]) {
       args.minSkillUrls = argv[i + 1];
       i += 1;
+      continue;
+    }
+
+    if (arg === '--require-hosted-url') {
+      args.requireHostedUrl = true;
     }
   }
 
   return args;
+}
+
+function getPackageReleaseLabel() {
+  const raw = readFile(path.join(REPO_ROOT_DIR, 'package.json'));
+  const pkg = JSON.parse(raw);
+  assert(typeof pkg.version === 'string' && pkg.version.trim(), 'Root package.json must define version.');
+  return `V${pkg.version.trim()}`;
 }
 
 function extractMetaContent(htmlText, selectorType, selectorValue) {
@@ -109,13 +141,29 @@ function extractTitle(htmlText) {
   return match?.[1]?.trim() || '';
 }
 
+function extractSkillCountLabels(text) {
+  return [...new Set(String(text ?? '').match(/\b\d{1,3}(?:,\d{3})\+/g) || [])];
+}
+
+function assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, label) {
+  const staleLabels = extractSkillCountLabels(text).filter((countLabel) => countLabel !== expectedSkillCountLabel);
+  assert(
+    staleLabels.length === 0,
+    `${label} contains stale skill count label(s): ${staleLabels.join(', ')}`,
+  );
+}
+
+function assertNoLocalhostUrl(text, label) {
+  assert(!/https?:\/\/localhost\b/i.test(String(text ?? '')), `${label} must not contain localhost URLs.`);
+}
+
 function assertMetaContent(htmlText, selectorType, selectorValue) {
   const content = extractMetaContent(htmlText, selectorType, selectorValue);
   assert(Boolean(content), `Missing required meta tag ${selectorType}="${selectorValue}".`);
   assert(content.length > 0, `Meta tag ${selectorType}="${selectorValue}" must have non-empty content.`);
 }
 
-export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
+export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = false } = {}) {
   const locations = extractSitemapLocations(urlText);
   const normalizedMinSkillUrls = Number.parseInt(String(minSkillUrls), 10);
   const effectiveMinSkillUrls = Number.isFinite(normalizedMinSkillUrls)
@@ -137,6 +185,9 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
       url.protocol === 'https:' || url.protocol === 'http:',
       `Sitemap URL must use http(s): ${location}`,
     );
+    if (requireHostedUrl) {
+      assert(url.hostname !== 'localhost', `Sitemap URL must not use localhost: ${location}`);
+    }
     return { raw: location, parsed: url };
   });
 
@@ -207,8 +258,8 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1 } = {}) {
   };
 }
 
-export function assertSitemap(urlText, { minSkillUrls = 1 } = {}) {
-  analyzeSitemap(urlText, { minSkillUrls });
+export function assertSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = false } = {}) {
+  analyzeSitemap(urlText, { minSkillUrls, requireHostedUrl });
 }
 
 function extractJsonLdEntries(htmlText) {
@@ -286,7 +337,7 @@ function readSkillCountLabel(distDir) {
   return '1,678+';
 }
 
-export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '1,678+' } = {}) {
+export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '1,678+', requireHostedUrl = false } = {}) {
   const title = extractTitle(htmlText);
   const description = extractMetaContent(htmlText, 'name', 'description') || '';
   const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
@@ -309,8 +360,47 @@ export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '
   assert(combined.includes('GitHub library'), 'Home SEO metadata must mention the GitHub library.');
   assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
+  assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Home SEO metadata');
+  const jsonLdText = JSON.stringify(extractJsonLdEntries(htmlText));
+  assertOnlyExpectedSkillCountLabel(jsonLdText, expectedSkillCountLabel, 'Home JSON-LD');
+  if (requireHostedUrl) {
+    assertNoLocalhostUrl(combined, 'Home SEO metadata');
+    assertNoLocalhostUrl(jsonLdText, 'Home JSON-LD');
+  }
   assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
   assertRepositoryJsonLdSignals(htmlText);
+}
+
+export function assertStaticIndexShell(htmlText, { expectedSkillCountLabel = '1,678+', requireHostedUrl = false } = {}) {
+  const title = extractTitle(htmlText);
+  const description = extractMetaContent(htmlText, 'name', 'description') || '';
+  const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
+  const ogDescription = extractMetaContent(htmlText, 'property', 'og:description') || '';
+  const twitterTitle = extractMetaContent(htmlText, 'name', 'twitter:title') || '';
+  const twitterDescription = extractMetaContent(htmlText, 'name', 'twitter:description') || '';
+  const combined = [title, description, ogTitle, ogDescription, twitterTitle, twitterDescription].join(' ');
+
+  assert(
+    combined.includes(expectedSkillCountLabel),
+    `Source index shell must expose the current ${expectedSkillCountLabel} skill count.`,
+  );
+  assert(combined.includes('GitHub library'), 'Source index shell must mention the GitHub library.');
+  assert(combined.includes('specialized plugins'), 'Source index shell must mention specialized plugins.');
+  assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Source index shell');
+  if (requireHostedUrl) {
+    assertNoLocalhostUrl(combined, 'Source index shell');
+  }
+}
+
+export function assertSocialCard(svgText, { expectedSkillCountLabel = '1,678+' } = {}) {
+  const text = String(svgText ?? '');
+  const countWords = expectedSkillCountLabel.replace(/\+$/, ' plus');
+  assert(
+    text.includes(expectedSkillCountLabel) || text.includes(countWords),
+    `Social card must expose the current ${expectedSkillCountLabel} skill count.`,
+  );
+  assert(text.includes('Antigravity Awesome Skills'), 'Social card must identify Antigravity Awesome Skills.');
+  assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, 'Social card');
 }
 
 export function assertPluginsDiscoveryMeta(htmlText) {
@@ -411,7 +501,7 @@ export function assertRobots(robotsText) {
   assert(allowsAiSearchCrawlers, 'robots.txt must explicitly expose AI search crawler directives.');
 }
 
-export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+' } = {}) {
+export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expectedReleaseLabel = '' } = {}) {
   const text = String(llmsText ?? '');
   const requiredSnippets = [
     '# Antigravity Awesome Skills',
@@ -426,6 +516,10 @@ export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+' } = {}
   for (const snippet of requiredSnippets) {
     assert(text.includes(snippet), `llms.txt missing required snippet: ${snippet}`);
   }
+  if (expectedReleaseLabel) {
+    assert(text.includes(`Current release: ${expectedReleaseLabel}.`), `llms.txt missing current release: ${expectedReleaseLabel}`);
+  }
+  assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, 'llms.txt');
 }
 
 export function assertManifest(manifestText) {
@@ -450,20 +544,30 @@ export function runVerification({
   llmsPath = 'dist/llms.txt',
   manifestPath,
   indexPath = 'dist/index.html',
+  sourceIndexPath = 'index.html',
+  socialImagePath = 'dist/social-card.svg',
   distDir = 'dist',
   minSkillUrls,
+  requireHostedUrl = false,
 }) {
-  const sitemapReport = analyzeSitemap(readFile(sitemapPath), { minSkillUrls });
+  const expectedReleaseLabel = getPackageReleaseLabel();
+  const sitemapText = readFile(sitemapPath);
+  const sitemapReport = analyzeSitemap(sitemapText, { minSkillUrls, requireHostedUrl });
   const indexHtml = readFile(indexPath);
   const expectedSkillCountLabel = readSkillCountLabel(distDir);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedTopicRoutes(sitemapReport.topicUrls, distDir, sitemapReport.normalizedRootPath);
   assertIndexSocialMeta(indexHtml);
-  assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel });
+  assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel, requireHostedUrl });
+  assertStaticIndexShell(readFile(sourceIndexPath), { expectedSkillCountLabel, requireHostedUrl });
+  assertSocialCard(readFile(socialImagePath), { expectedSkillCountLabel });
   assertRobots(readFile(robotsPath));
-  assertLlms(readFile(llmsPath), { expectedSkillCountLabel });
+  assertLlms(readFile(llmsPath), { expectedSkillCountLabel, expectedReleaseLabel });
   assertManifest(readFile(manifestPath));
+  if (requireHostedUrl) {
+    assertNoLocalhostUrl(sitemapText, 'Sitemap');
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

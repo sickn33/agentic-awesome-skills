@@ -1,9 +1,24 @@
 #!/usr/bin/env node
 
 const https = require('node:https');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const DEFAULT_BASE_URL = 'https://sickn33.github.io/antigravity-awesome-skills';
 const baseUrl = (process.env.SEO_LIVE_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, '');
+const repoRoot = path.resolve(__dirname, '..', '..');
+
+function readExpectedState() {
+  const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+  const skills = JSON.parse(fs.readFileSync(path.join(repoRoot, 'skills_index.json'), 'utf8'));
+  if (!Array.isArray(skills)) {
+    throw new Error('skills_index.json must contain an array');
+  }
+  return {
+    countLabel: `${skills.length.toLocaleString('en-US')}+`,
+    releaseLabel: `V${pkg.version}`,
+  };
+}
 
 function fetchText(url, redirectsRemaining = 5) {
   return new Promise((resolve, reject) => {
@@ -54,6 +69,7 @@ function assertNotIncludes(text, snippet, label) {
 }
 
 async function main() {
+  const expected = readExpectedState();
   const [home, plugins, sitemap, llms, robots] = await Promise.all([
     fetchText(`${baseUrl}/`),
     fetchText(`${baseUrl}/plugins`),
@@ -62,10 +78,11 @@ async function main() {
     fetchText(`${baseUrl}/robots.txt`),
   ]);
 
-  assertIncludes(home, 'Antigravity Awesome Skills | 1,508+ AI coding skills and plugins', 'home');
+  assertIncludes(home, `Antigravity Awesome Skills GitHub | ${expected.countLabel} AI coding skills`, 'home');
   assertIncludes(home, 'SoftwareSourceCode', 'home JSON-LD');
   assertIncludes(home, 'FAQPage', 'home JSON-LD');
   assertIncludes(home, 'specialized plugins', 'home');
+  assertIncludes(home, expected.countLabel, 'home');
   assertNotIncludes(home, 'prompt templates', 'home');
 
   assertIncludes(plugins, 'AAS Specialized Plugins | 15 AI coding workflow packs', 'plugins');
@@ -74,6 +91,8 @@ async function main() {
 
   assertIncludes(sitemap, `${baseUrl}/plugins`, 'sitemap');
   assertIncludes(llms, `${baseUrl}/plugins`, 'llms.txt');
+  assertIncludes(llms, `Current release: ${expected.releaseLabel}.`, 'llms.txt');
+  assertIncludes(llms, expected.countLabel, 'llms.txt');
   assertIncludes(robots, 'User-agent: GPTBot', 'robots.txt');
   assertIncludes(robots, 'User-agent: OAI-SearchBot', 'robots.txt');
   assertIncludes(robots, 'User-agent: ClaudeBot', 'robots.txt');

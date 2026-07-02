@@ -8,7 +8,7 @@
     "generate:sitemap": "node scripts/generate-sitemap.js",
     "prerender:seo": "node scripts/prerender-routes.js",
     "prebuild": "npm run generate:sitemap",
-    "verify:seo": "node scripts/verify-seo-assets.js",
+    "verify:seo": "node scripts/verify-seo-assets.js --require-hosted-url",
     "build": "tsc && vite build && npm run prerender:seo",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",

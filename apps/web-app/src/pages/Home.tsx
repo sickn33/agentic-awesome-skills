@@ -78,7 +78,7 @@ export function Home(): React.ReactElement {
   const repositoryLink = 'https://github.com/sickn33/antigravity-awesome-skills';
   const docsLink = 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/usage.md';
   const installLink = 'https://www.npmjs.com/package/antigravity-awesome-skills';
-  const faqItems = getHomeFaqItems();
+  const faqItems = getHomeFaqItems(skills.length);
   const catalogCountLabel = skills.length > 0 ? skills.length.toLocaleString('en-US') : 'installable';
 
   usePageMeta(buildHomeMeta(skills.length));

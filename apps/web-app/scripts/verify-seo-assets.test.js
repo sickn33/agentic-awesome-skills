@@ -5,6 +5,7 @@ import path from 'node:path';
 import {
   assertManifest,
   assertIndexDiscoveryMeta,
+  assertStaticIndexShell,
   assertPluginsDiscoveryMeta,
   analyzeSitemap,
   assertPrerenderedPluginRoutes,
@@ -14,6 +15,7 @@ import {
   assertLlms,
   assertRobots,
   assertSitemap,
+  assertSocialCard,
   extractSitemapLocations,
 } from './verify-seo-assets.js';
 
@@ -59,6 +61,17 @@ describe('seo assets verification helpers', () => {
     expect(() => assertSitemap(xml)).toThrow('duplicated');
   });
 
+  it('throws when hosted sitemap verification sees localhost URLs', () => {
+    const xml = `
+      <urlset>
+        <url><loc>http://localhost/repo/</loc></url>
+        <url><loc>http://localhost/repo/skill/agent-a</loc></url>
+      </urlset>
+    `;
+
+    expect(() => assertSitemap(xml, { requireHostedUrl: true })).toThrow('localhost');
+  });
+
   it('requires robots directives', () => {
     const robots = `
       User-agent: *
@@ -80,12 +93,25 @@ describe('seo assets verification helpers', () => {
   it('requires llms.txt discovery signals', () => {
     const llms = `
       # Antigravity Awesome Skills
+      Current release: V1.2.3.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/antigravity-awesome-skills
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
-    expect(() => assertLlms(llms)).not.toThrow();
+    expect(() => assertLlms(llms, { expectedReleaseLabel: 'V1.2.3' })).not.toThrow();
+  });
+
+  it('rejects stale llms.txt release labels', () => {
+    const llms = `
+      # Antigravity Awesome Skills
+      Current release: V1.2.2.
+      1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
+      https://github.com/sickn33/antigravity-awesome-skills
+      Canonical source of truth: the GitHub repository is the primary project URL.
+    `;
+
+    expect(() => assertLlms(llms, { expectedReleaseLabel: 'V1.2.3' })).toThrow('current release');
   });
 
   it('requires social image tags in rendered index html', () => {
@@ -126,6 +152,72 @@ describe('seo assets verification helpers', () => {
     `;
 
     expect(() => assertIndexDiscoveryMeta(html)).not.toThrow();
+  });
+
+  it('rejects stale count labels in rendered index JSON-LD', () => {
+    const html = `
+      <html>
+        <head>
+          <title>Antigravity Awesome Skills GitHub | 1,678+ AI coding skills</title>
+          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta property="og:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta name="twitter:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <script type="application/ld+json">
+            [
+              {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/antigravity-awesome-skills"},
+              {"@context":"https://schema.org","@type":"Organization","url":"https://github.com/sickn33/antigravity-awesome-skills"},
+              {"@context":"https://schema.org","@type":"WebSite"},
+              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/antigravity-awesome-skills","codeRepository":"https://github.com/sickn33/antigravity-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"},
+              {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"acceptedAnswer":{"text":"Old 1,700+ catalog copy"}}]}
+            ]
+          </script>
+        </head>
+      </html>
+    `;
+
+    expect(() => assertIndexDiscoveryMeta(html)).toThrow('stale skill count');
+  });
+
+  it('requires current discovery copy in the source index shell', () => {
+    const html = `
+      <html>
+        <head>
+          <title>Antigravity Awesome Skills GitHub | 1,678+ AI coding skills</title>
+          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta property="og:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <meta name="twitter:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+        </head>
+      </html>
+    `;
+
+    expect(() => assertStaticIndexShell(html)).not.toThrow();
+  });
+
+  it('requires current discovery copy in the social card', () => {
+    const svg = `
+      <svg>
+        <title>Antigravity Awesome Skills social card</title>
+        <desc>Social preview with 1,678 plus agentic skills.</desc>
+        <text>1,678+ Agentic Skills</text>
+      </svg>
+    `;
+
+    expect(() => assertSocialCard(svg)).not.toThrow();
+  });
+
+  it('rejects stale social card count labels', () => {
+    const svg = `
+      <svg>
+        <title>Antigravity Awesome Skills social card</title>
+        <text>1,700+ Agentic Skills</text>
+      </svg>
+    `;
+
+    expect(() => assertSocialCard(svg)).toThrow('Social card');
   });
 
   it('requires plugin landing discovery copy in rendered plugin html', () => {

@@ -10,7 +10,7 @@ const OUTPUT_PATH = path.join(PUBLIC_DIR, 'sitemap.xml');
 const BASE_PATH =
   (process.env.VITE_BASE_PATH || '/').trim().replace(/\/+$/, '');
 const NORMALIZED_BASE_PATH = BASE_PATH && BASE_PATH !== '/' ? BASE_PATH : '';
-const DEFAULT_SITE_URL = `http://localhost${NORMALIZED_BASE_PATH}`;
+const DEFAULT_SITE_URL = 'https://sickn33.github.io/antigravity-awesome-skills';
 
 const SITE_URL = (process.env.SEO_SITE_URL || process.env.WEBSITE_BASE_URL || DEFAULT_SITE_URL).replace(/\/$/, '');
 const TOP_SKILL_COUNT = Number.parseInt(process.env.TOP_SKILL_COUNT || '40', 10);
