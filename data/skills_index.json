@@ -13803,6 +13803,28 @@
     }
   },
   {
+    "id": "dispatch",
+    "path": "skills/dispatch",
+    "category": "agent-behavior",
+    "name": "dispatch",
+    "description": "Delegate tasks to OpenAI Codex CLI and Google Antigravity CLI from Claude Code with topic-aware sessions",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-06-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "dispatching-parallel-agents",
     "path": "skills/dispatching-parallel-agents",
     "category": "ai-agents",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-01T11:43:01.000Z
 
-Total skills: 1892
+Total skills: 1893
 
 ## architecture (113)
 
@@ -866,7 +866,7 @@ Total skills: 1892
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (508)
+## general (509)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1051,6 +1051,7 @@ Total skills: 1892
 | `developer-onboarding` | Get developers to "Hello World" fast with optimized quickstarts, tutorials, and sample apps. Trigger phrases: developer onboarding, time to first value, quic... | onboarding | onboarding, developer, get, developers, hello, world, fast, optimized, quickstarts, tutorials, sample, apps |
 | `devrel-content` | When the user wants to create technical content for developers including blog posts, tutorials, and documentation. Trigger phrases include "write a blog post... | devrel, content | devrel, content, user, wants, technical, developers, including, blog, posts, tutorials, documentation, trigger |
 | `diary` | Unified Diary System: A context-preserving automated logger for multi-project development. | diary | diary, unified, context, preserving, automated, logger, multi, development |
+| `dispatch` | Delegate tasks to OpenAI Codex CLI and Google Antigravity CLI from Claude Code with topic-aware sessions | delegation, codex, antigravity, gemini, multi-model, second-opinion, agent-workflow | delegation, codex, antigravity, gemini, multi-model, second-opinion, agent-workflow, dispatch, delegate, tasks, openai, cli |
 | `dispatching-parallel-agents` | Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies | dispatching, parallel, agents | dispatching, parallel, agents, facing, independent, tasks, worked, without, shared, state, sequential, dependencies |
 | `doc2math` | Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty. | doc2math | doc2math, convert, narrative, technical, documents, grounded, mathematical, problem, specifications, variables, constraints, objectives |
 | `documentation-and-adrs` | Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context tha... | documentation, and, adrs | documentation, and, adrs, records, decisions, making, architectural, changing, public, apis, shipping, features |

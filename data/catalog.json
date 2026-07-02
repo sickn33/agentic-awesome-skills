@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-01T11:43:01.000Z",
-  "total": 1892,
+  "total": 1893,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -16281,6 +16281,36 @@
         "python"
       ],
       "path": "skills/discord-bot-architect/SKILL.md"
+    },
+    {
+      "id": "dispatch",
+      "name": "dispatch",
+      "description": "Delegate tasks to OpenAI Codex CLI and Google Antigravity CLI from Claude Code with topic-aware sessions",
+      "category": "general",
+      "tags": [
+        "delegation",
+        "codex",
+        "antigravity",
+        "gemini",
+        "multi-model",
+        "second-opinion",
+        "agent-workflow"
+      ],
+      "triggers": [
+        "delegation",
+        "codex",
+        "antigravity",
+        "gemini",
+        "multi-model",
+        "second-opinion",
+        "agent-workflow",
+        "dispatch",
+        "delegate",
+        "tasks",
+        "openai",
+        "cli"
+      ],
+      "path": "skills/dispatch/SKILL.md"
     },
     {
       "id": "dispatching-parallel-agents",

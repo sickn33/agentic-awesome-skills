@@ -12515,6 +12515,25 @@
       "runtime_files": []
     },
     {
+      "id": "dispatch",
+      "path": "skills/dispatch",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dispatching-parallel-agents",
       "path": "skills/dispatching-parallel-agents",
       "targets": {
@@ -36335,10 +36354,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1892,
+    "total_skills": 1893,
     "supported": {
-      "codex": 1825,
-      "claude": 1844
+      "codex": 1826,
+      "claude": 1845
     },
     "blocked": {
       "codex": 67,
