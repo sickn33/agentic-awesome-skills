@@ -8,32 +8,40 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TESSL_REVIEW_THRESHOLD: '80'
-      TESSL_TOKEN: ${{ secrets.TESSL_TOKEN || secrets.TESSL_API_TOKEN }}
+      TESSL_TOKEN_CONFIGURED: ${{ (secrets.TESSL_TOKEN != '' || secrets.TESSL_API_TOKEN != '') && 'true' || 'false' }}
       TESSL_WORKSPACE: antigravity-awesome-skills
     permissions:
       contents: read
     steps:
       - name: Require Tessl token for repository branches
-        if: ${{ env.TESSL_TOKEN == '' && github.event.pull_request.head.repo.full_name == github.repository }}
+        if: ${{ env.TESSL_TOKEN_CONFIGURED != 'true' && github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
           echo "::error title=Missing Tessl token::Configure TESSL_TOKEN, or keep the legacy TESSL_API_TOKEN secret until the migration is complete."
           exit 1
       - name: Skip Tessl Review for fork PRs without secrets
-        if: ${{ env.TESSL_TOKEN == '' && github.event.pull_request.head.repo.full_name != github.repository }}
+        if: ${{ env.TESSL_TOKEN_CONFIGURED != 'true' && github.event.pull_request.head.repo.full_name != github.repository }}
         run: |
           echo "::warning title=Tessl Review skipped::GitHub does not expose repository secrets to this fork PR. Maintainers must review the changed SKILL.md files manually."
-      - uses: actions/checkout@v5
-        if: ${{ env.TESSL_TOKEN != '' }}
+      - name: Checkout trusted base scripts
+        uses: actions/checkout@v5
+        if: ${{ env.TESSL_TOKEN_CONFIGURED == 'true' }}
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted-base
+      - name: Checkout pull request content
+        uses: actions/checkout@v5
+        if: ${{ env.TESSL_TOKEN_CONFIGURED == 'true' }}
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: tesslio/setup-tessl@25ec223fc0da33b41b8044ff5ab2b85235f4f91e
-        if: ${{ env.TESSL_TOKEN != '' }}
+        if: ${{ env.TESSL_TOKEN_CONFIGURED == 'true' }}
         with:
-          token: ${{ env.TESSL_TOKEN }}
+          token: ${{ secrets.TESSL_TOKEN || secrets.TESSL_API_TOKEN }}
       - name: Review changed skills
-        if: ${{ env.TESSL_TOKEN != '' }}
-        run: node tools/scripts/review_changed_skills.cjs
+        if: ${{ env.TESSL_TOKEN_CONFIGURED == 'true' }}
+        run: node trusted-base/tools/scripts/review_changed_skills.cjs
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}

@@ -12515,6 +12515,25 @@
       "runtime_files": []
     },
     {
+      "id": "dispatch",
+      "path": "skills/dispatch",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dispatching-parallel-agents",
       "path": "skills/dispatching-parallel-agents",
       "targets": {
@@ -16036,18 +16055,24 @@
       "id": "gh-image",
       "path": "skills/gh-image",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Installs and runs a third-party gh extension that needs a GitHub user_session cookie or GH_SESSION_TOKEN.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -21574,6 +21599,25 @@
     {
       "id": "mcp-tool-developer",
       "path": "skills/mcp-tool-developer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "mdpr-skill",
+      "path": "skills/mdpr-skill",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -30768,18 +30812,24 @@
       "id": "sql-sentinel",
       "path": "skills/sql-sentinel",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Clone the upstream analyzer only after pinning or reviewing the exact commit to run.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -36304,15 +36354,15 @@
     }
   ],
   "summary": {
-    "total_skills": 1891,
+    "total_skills": 1893,
     "supported": {
       "codex": 1826,
       "claude": 1845
     },
     "blocked": {
-      "codex": 65,
-      "claude": 46
+      "codex": 67,
+      "claude": 48
     },
-    "manual_setup": 14
+    "manual_setup": 16
   }
 }

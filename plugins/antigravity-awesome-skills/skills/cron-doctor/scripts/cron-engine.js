@@ -91,13 +91,13 @@ function parseField(raw, fieldDef, fieldIndex) {
 }
 
 function parseSingleNum(token, fieldDef, fieldIndex) {
-  const n = parseInt(token, 10);
-  if (!isNaN(n)) return n;
-  const named = resolveName(token, fieldDef.named);
+  const value = String(token).trim();
+  if (/^\d+$/.test(value)) return Number(value);
+  const named = resolveName(value, fieldDef.named);
   if (named !== null) {
     return fieldDef.key === 'month' ? named + 1 : named;
   }
-  throw new CronError(`Invalid value "${token}" in ${fieldDef.name}`, fieldIndex);
+  throw new CronError(`Invalid value "${value}" in ${fieldDef.name}`, fieldIndex);
 }
 
 function parseItem(item, fieldDef, fieldIndex, values) {
@@ -110,9 +110,12 @@ function parseItem(item, fieldDef, fieldIndex, values) {
   }
 
   if (t.includes('/')) {
-    const [base, stepStr] = t.split('/');
-    const step = parseInt(stepStr, 10);
-    if (isNaN(step) || step < 1) throw new CronError(`Invalid step "${stepStr}" in ${fieldDef.name}`, fieldIndex);
+    const stepParts = t.split('/');
+    if (stepParts.length !== 2) throw new CronError(`Invalid step syntax "${t}" in ${fieldDef.name}`, fieldIndex);
+    const [base, stepStr] = stepParts;
+    if (!/^\d+$/.test(stepStr)) throw new CronError(`Invalid step "${stepStr}" in ${fieldDef.name}`, fieldIndex);
+    const step = Number(stepStr);
+    if (step < 1) throw new CronError(`Invalid step "${stepStr}" in ${fieldDef.name}`, fieldIndex);
     let lo, hi;
     if (base === '*' || base === '') {
       lo = fieldDef.min; hi = fieldDef.max;

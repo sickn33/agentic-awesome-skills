@@ -2,7 +2,7 @@
 name: sql-sentinel
 description: "Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan for BigQuery, Snowflake, Redshift, and Postgres."
 category: data
-risk: safe
+risk: critical
 source: community
 source_repo: takeaseatventure/sql-sentinel
 source_type: community
@@ -10,6 +10,14 @@ date_added: "2026-06-26"
 author: takeaseat
 tags: [sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops]
 tools: [claude, cursor, codex, gemini]
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Clone the upstream analyzer only after pinning or reviewing the exact commit to run."
+    docs: SKILL.md
 license: "MIT"
 license_source: "https://github.com/takeaseatventure/sql-sentinel/blob/main/LICENSE"
 ---
@@ -22,7 +30,7 @@ A static-analysis skill that audits SQL for the cost & performance anti-patterns
 
 Built for analytics engineers (dbt, Looker), data platform teams running FinOps / "reduce cloud spend" initiatives, and anyone reviewing a SQL pull request before it hits production. Works across BigQuery, Snowflake, Redshift, and Postgres. Zero dependencies, MIT licensed.
 
-The executable engine and full rule set live in the source repository: https://github.com/takeaseatventure/sql-sentinel
+The executable engine and full rule set live in the source repository: https://github.com/takeaseatventure/sql-sentinel. Treat that repository as third-party executable code.
 
 ## When to Use This Skill
 
@@ -38,11 +46,12 @@ The engine splits a SQL script into statements (honoring quotes and comments), r
 
 ### Step 1: Run the audit
 
-Install or clone the source repository, then run the zero-dependency engine:
+Install or clone the source repository only after choosing a reviewed commit, tag, or release to trust. Do not run code from a mutable default branch just because this skill links to it:
 
 ```bash
 git clone https://github.com/takeaseatventure/sql-sentinel.git
 cd sql-sentinel
+git checkout <reviewed-commit-or-tag>
 node scripts/sql-sentinel.js path/to/query.sql
 ```
 

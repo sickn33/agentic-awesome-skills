@@ -30,5 +30,8 @@ Use this reference when building apps that connect to Weaviate and require exter
 
 ## Usage Notes
 
+- Provider keys are not forwarded automatically. Set `WEAVIATE_PROVIDER_KEYS`
+  to a comma-separated allowlist, for example `OPENAI_API_KEY,COHERE_API_KEY`.
 - Set only the provider keys your collection configuration actually uses.
-- If multiple providers are configured, include all corresponding headers.
+- If multiple providers are configured, include only those corresponding
+  headers.

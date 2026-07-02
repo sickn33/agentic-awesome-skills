@@ -2,7 +2,7 @@
 name: gh-image
 description: "Upload local images to GitHub and get canonical user-attachments embed URLs; use when asked to attach a screenshot to a PR, issue, or comment, or to embed before/after images in a README."
 category: developer-tools
-risk: safe
+risk: critical
 source: community
 source_type: community
 source_repo: drogers0/gh-image
@@ -21,6 +21,14 @@ tools:
   - codex-cli
   - cursor
   - gemini-cli
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Installs and runs a third-party gh extension that needs a GitHub user_session cookie or GH_SESSION_TOKEN."
+    docs: SKILL.md
 ---
 
 # Upload images to GitHub (gh-image)
@@ -53,7 +61,7 @@ Use this skill when asked to:
 ```bash
 gh auth status                                   # gh installed & authenticated
 gh extension list | grep -q 'drogers0/gh-image' \
-  || gh extension install drogers0/gh-image      # idempotent install
+  || gh extension install drogers0/gh-image      # review/pin the extension source first
 ```
 
 `gh-image` does **not** use the `gh` token for the upload (that endpoint rejects

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-01T11:43:01.000Z",
-  "total": 1891,
+  "total": 1893,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -16283,6 +16283,36 @@
       "path": "skills/discord-bot-architect/SKILL.md"
     },
     {
+      "id": "dispatch",
+      "name": "dispatch",
+      "description": "Delegate tasks to OpenAI Codex CLI and Google Antigravity CLI from Claude Code with topic-aware sessions",
+      "category": "general",
+      "tags": [
+        "delegation",
+        "codex",
+        "antigravity",
+        "gemini",
+        "multi-model",
+        "second-opinion",
+        "agent-workflow"
+      ],
+      "triggers": [
+        "delegation",
+        "codex",
+        "antigravity",
+        "gemini",
+        "multi-model",
+        "second-opinion",
+        "agent-workflow",
+        "dispatch",
+        "delegate",
+        "tasks",
+        "openai",
+        "cli"
+      ],
+      "path": "skills/dispatch/SKILL.md"
+    },
+    {
       "id": "dispatching-parallel-agents",
       "name": "dispatching-parallel-agents",
       "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
@@ -28066,6 +28096,36 @@
         "servers"
       ],
       "path": "skills/mcp-tool-developer/SKILL.md"
+    },
+    {
+      "id": "mdpr-skill",
+      "name": "mdpr-skill",
+      "description": "Review MDPR Markdown presentation workflows with semantic hints, visual checks, and deterministic renderer boundaries.",
+      "category": "general",
+      "tags": [
+        "mdpr",
+        "presentations",
+        "markdown",
+        "powerpoint",
+        "codex",
+        "visual-review",
+        "agent-hints"
+      ],
+      "triggers": [
+        "mdpr",
+        "presentations",
+        "markdown",
+        "powerpoint",
+        "codex",
+        "visual-review",
+        "agent-hints",
+        "skill",
+        "review",
+        "presentation",
+        "semantic",
+        "hints"
+      ],
+      "path": "skills/mdpr-skill/SKILL.md"
     },
     {
       "id": "memory-forensics",
