@@ -2,7 +2,7 @@
 name: riffkit
 description: "Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (EN/ES). Also makes UGC ad creative."
 category: api-integration
-risk: safe
+risk: critical
 source: community
 source_repo: riffkit/skill
 source_type: community
@@ -115,7 +115,7 @@ riff https://www.tiktok.com/@user/video/123 into my product video, in Spanish
 
 Riffkit is a hosted service — generating videos requires a Riffkit account (billed by the second of finished video). No local GPU or models. Create an account at https://riffkit.ai.
 
-**On the `risk: safe` label:** the skill performs no destructive or privileged actions — it only reads account data and submits render jobs a normal authenticated user can make. It *does* trigger a paid render, but that spend is gated behind an explicit, per-run user confirmation (see the workflow's Step 4 and the Security & Safety Notes) — it never spends autonomously. This matches other billed-API skills already in the catalog (e.g. `2slides-ppt-generator`).
+**On the `risk: critical` label:** the skill handles a live account session token and `POST /api/riffs` starts a paid render. The workflow requires explicit, per-run confirmation before submitting, but the catalog risk label must still reflect token handling and billable mutation.
 
 ## Related Skills
 

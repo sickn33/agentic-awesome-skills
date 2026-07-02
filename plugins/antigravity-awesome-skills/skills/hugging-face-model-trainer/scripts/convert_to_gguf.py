@@ -34,11 +34,13 @@ Usage:
     - BASE_MODEL: Base model used for fine-tuning (e.g., "Qwen/Qwen2.5-0.5B")
     - OUTPUT_REPO: Where to upload GGUF files (e.g., "username/my-model-gguf")
     - HF_USERNAME: Your Hugging Face username (optional, for README)
+    - TRUST_REMOTE_CODE: Set to "1" only for reviewed model repositories that require custom code
 
 Dependencies: All required packages are declared in PEP 723 header above.
 """
 
 import os
+import re
 import sys
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -99,6 +101,23 @@ def run_command(cmd, description):
         return False
 
 
+HF_REPO_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
+
+
+def require_hf_repo_id(value, name):
+    """Reject local paths, URLs, and shell-like values before loading models."""
+    if not HF_REPO_ID_RE.fullmatch(value):
+        print(
+            f"   Invalid {name}: {value!r}. Use a Hugging Face repo id like owner/model.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+
+def env_flag(name):
+    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 print("🔄 GGUF Conversion Script")
 print("=" * 60)
 
@@ -112,11 +131,17 @@ ADAPTER_MODEL = os.environ.get("ADAPTER_MODEL", "evalstate/qwen-capybara-medium"
 BASE_MODEL = os.environ.get("BASE_MODEL", "Qwen/Qwen2.5-0.5B")
 OUTPUT_REPO = os.environ.get("OUTPUT_REPO", "evalstate/qwen-capybara-medium-gguf")
 username = os.environ.get("HF_USERNAME", ADAPTER_MODEL.split('/')[0])
+TRUST_REMOTE_CODE = env_flag("TRUST_REMOTE_CODE")
+
+require_hf_repo_id(ADAPTER_MODEL, "ADAPTER_MODEL")
+require_hf_repo_id(BASE_MODEL, "BASE_MODEL")
+require_hf_repo_id(OUTPUT_REPO, "OUTPUT_REPO")
 
 print(f"\n📦 Configuration:")
 print(f"   Base model: {BASE_MODEL}")
 print(f"   Adapter model: {ADAPTER_MODEL}")
 print(f"   Output repo: {OUTPUT_REPO}")
+print(f"   Trust remote code: {TRUST_REMOTE_CODE}")
 
 # Step 1: Load base model and adapter
 print("\n🔧 Step 1: Loading base model and LoRA adapter...")
@@ -127,7 +152,7 @@ try:
         BASE_MODEL,
         dtype=torch.float16,
         device_map="auto",
-        trust_remote_code=True,
+        trust_remote_code=TRUST_REMOTE_CODE,
     )
     print("   ✅ Base model loaded")
 except Exception as e:
@@ -149,7 +174,10 @@ except Exception as e:
 
 try:
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(ADAPTER_MODEL, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(
+        ADAPTER_MODEL,
+        trust_remote_code=TRUST_REMOTE_CODE,
+    )
     print("   ✅ Tokenizer loaded")
 except Exception as e:
     print(f"   ❌ Failed to load tokenizer: {e}")

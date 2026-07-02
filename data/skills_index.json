@@ -17886,20 +17886,22 @@
     "category": "developer-tools",
     "name": "gh-image",
     "description": "Upload local images to GitHub and get canonical user-attachments embed URLs; use when asked to attach a screenshot to a PR, issue, or comment, or to embed before/after images in a README.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-25",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Installs and runs a third-party gh extension that needs a GitHub user_session cookie or GH_SESSION_TOKEN.",
+        "docs": "SKILL.md"
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {
@@ -31497,7 +31499,7 @@
     "category": "api-integration",
     "name": "riffkit",
     "description": "Riff a winning TikTok into your own short video \u2014 study a proven video's emotion formula and regenerate it with your product, character, and language (EN/ES). Also makes UGC ad creative.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-07-01",
     "plugin": {
@@ -35351,20 +35353,22 @@
     "category": "data",
     "name": "sql-sentinel",
     "description": "Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan for BigQuery, Snowflake, Redshift, and Postgres.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-26",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Clone the upstream analyzer only after pinning or reviewing the exact commit to run.",
+        "docs": "SKILL.md"
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {

@@ -117,10 +117,15 @@ hf_jobs("uv", {
         "ADAPTER_MODEL": "username/my-finetuned-model",
         "BASE_MODEL": "Qwen/Qwen2.5-0.5B",
         "OUTPUT_REPO": "username/my-model-gguf",
+        "TRUST_REMOTE_CODE": "0",
         "HF_USERNAME": "username"  # Optional, for README
     }
 })
 ```
+
+Keep `TRUST_REMOTE_CODE=0` unless both model repositories have been reviewed and
+the architecture requires custom Python code. Setting it to `1` allows
+Transformers to import code from the model repository.
 
 ## Conversion Process
 

@@ -94,36 +94,44 @@ class WeaviateConnectionLoggingSecurityTests(unittest.TestCase):
         "aws-secret-value",
     ]
 
-    def _capture_stderr(self, callback):
+    def _capture_stderr(self, callback, env=None):
         stderr = io.StringIO()
-        with patch.dict(os.environ, self.ENV, clear=True):
+        with patch.dict(os.environ, env or self.ENV, clear=True):
             with contextlib.redirect_stderr(stderr):
                 callback()
         return stderr.getvalue()
 
-    def test_context_manager_verbose_output_omits_secret_names_and_values(self):
+    def test_context_manager_does_not_forward_provider_keys_by_default(self):
         for relative_path, module_name in self.MODULE_PATHS:
             with self.subTest(relative_path=relative_path):
                 module = load_module(relative_path, module_name)
+                headers_seen = []
 
                 def run_client():
+                    headers_seen.append(module.get_headers())
                     with module.get_client(verbose=True):
                         pass
 
                 output = self._capture_stderr(run_client)
 
-                self.assertIn("Detected 2 providers.", output)
+                self.assertEqual([None], headers_seen)
+                self.assertNotIn("Detected", output)
                 self.assertIn("Connecting to Weaviate...", output)
                 for forbidden in self.FORBIDDEN_OUTPUT:
                     self.assertNotIn(forbidden, output)
 
-    def test_connect_client_verbose_output_omits_secret_names_and_values(self):
+    def test_allowlisted_provider_verbose_output_omits_secret_names_and_values(self):
         for relative_path, module_name in self.MODULE_PATHS:
             with self.subTest(relative_path=relative_path):
                 module = load_module(relative_path, module_name)
+                env = {
+                    **self.ENV,
+                    "WEAVIATE_PROVIDER_KEYS": "OPENAI_API_KEY,AWS_SECRET_KEY",
+                }
 
                 output = self._capture_stderr(
-                    lambda: module.connect_client(verbose=True).close()
+                    lambda: module.connect_client(verbose=True).close(),
+                    env=env,
                 )
 
                 self.assertIn("Detected 2 providers.", output)

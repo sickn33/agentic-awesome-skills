@@ -3,8 +3,8 @@ Shared Weaviate connection utilities.
 
 This module handles:
 - Environment variable validation
-- API key to header mapping for all supported providers
-- Client connection with automatic header configuration
+- Explicit API key to header mapping for selected providers
+- Client connection with caller-controlled header configuration
 
 Usage in scripts:
     import sys
@@ -23,7 +23,11 @@ from weaviate.classes.init import Auth
 from weaviate.client import WeaviateClient
 from weaviate.classes.init import AdditionalConfig, Timeout
 
-# Canonical environment variable to Weaviate header mapping
+# Canonical environment variable to Weaviate header mapping.
+#
+# These values are never forwarded implicitly. Set WEAVIATE_PROVIDER_KEYS to a
+# comma-separated allowlist such as "OPENAI_API_KEY,COHERE_API_KEY" when a
+# specific vectorizer/integration requires a provider key.
 API_KEY_MAP = {
     "ANTHROPIC_API_KEY": "X-Anthropic-Api-Key",
     "ANYSCALE_API_KEY": "X-Anyscale-Api-Key",
@@ -45,17 +49,37 @@ API_KEY_MAP = {
 }
 
 
+def _selected_provider_keys() -> set[str]:
+    raw = os.environ.get("WEAVIATE_PROVIDER_KEYS", "").strip()
+    if not raw:
+        return set()
+
+    selected = {item.strip() for item in raw.split(",") if item.strip()}
+    unknown = sorted(selected - set(API_KEY_MAP))
+    if unknown:
+        print(
+            "Error: WEAVIATE_PROVIDER_KEYS contains unsupported key(s): "
+            + ", ".join(unknown),
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    return selected
+
+
 def _collect_headers_and_providers() -> tuple[dict[str, str], list[str]]:
     """
-    Scan env once to build Weaviate headers and detected key names.
+    Build Weaviate headers only for explicitly selected provider env vars.
 
     Returns:
         Tuple of (headers, detected_env_var_names)
     """
     headers: dict[str, str] = {}
     detected_providers: list[str] = []
+    selected = _selected_provider_keys()
 
     for env_var, header_name in API_KEY_MAP.items():
+        if env_var not in selected:
+            continue
         value = os.environ.get(env_var, "").strip()
         if not value:
             continue
@@ -97,13 +121,13 @@ def validate_env(require_weaviate: bool = True) -> tuple[str, str]:
 
 def get_headers() -> dict[str, str] | None:
     """
-    Build headers dict from all available API keys in environment.
+    Build headers dict from the WEAVIATE_PROVIDER_KEYS allowlist.
 
-    Scans environment for all known API key variables and builds
-    the appropriate headers dict for Weaviate client connection.
+    Provider keys are sensitive and often unrelated to the current Weaviate
+    operation, so this helper never scans and forwards every matching key.
 
     Returns:
-        Dict of headers if any API keys found, None otherwise
+        Dict of headers if selected API keys are present, None otherwise
     """
     headers, _ = _collect_headers_and_providers()
     return headers if headers else None
@@ -111,7 +135,7 @@ def get_headers() -> dict[str, str] | None:
 
 def get_detected_providers() -> list[str]:
     """
-    Get list of detected API key environment variable names.
+    Get list of selected API key environment variable names that are present.
 
     Returns:
         List of env var names (e.g., ["OPENAI_API_KEY", "COHERE_API_KEY"])
@@ -140,8 +164,8 @@ def get_client(
     """
     Context manager for Weaviate client connection.
 
-    Auto-detects credentials from environment if not provided.
-    Auto-builds headers from all available API keys if not provided.
+    Reads Weaviate credentials from environment if not provided.
+    Builds provider headers only from WEAVIATE_PROVIDER_KEYS when not provided.
 
     Args:
         url: Weaviate cluster URL (default: from WEAVIATE_URL env var)

@@ -37,6 +37,8 @@ from pathlib import Path
 
 from dateutil.parser import isoparse
 
+from _safe_paths import safe_existing_directory, write_json_file
+
 # NOTE: the normalizer requires "hive-s3" — do not change to "hive" or "data-lake"
 LOG_TYPE = "hive-s3"
 
@@ -193,7 +195,6 @@ def collect(
         op_logs_dir: Optional directory containing per-query operation logs
                      (<queryId>.log). When provided, returned_rows is populated
                      from SelectOperator RECORDS_OUT counts.
-from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
     Returns:
         Manifest dict with keys: log_type, collected_at, entry_count,

@@ -74,23 +74,27 @@ def library_path(lib, *parts):
 def media_path(lib, filename):
     if not SAFE_MEDIA_RE.fullmatch(filename or ""):
         return None
-    media_dir = library_path(lib, "_media")
-    if not media_dir or not media_dir.is_dir():
+    root = Path(lib).resolve()
+    candidate = root / "_media" / filename
+    if candidate.is_symlink():
         return None
-    for path in media_dir.iterdir():
-        if path.is_file() and path.name == filename:
-            return path
-    return None
+    path = library_path(lib, "_media", filename)
+    if not path or not path.is_file():
+        return None
+    return path
 
 
 def item_path(lib, slug):
     if not SAFE_SLUG_RE.fullmatch(slug or ""):
         return None
-    target = slug + ".md"
-    for path in Path(lib).resolve().iterdir():
-        if path.is_file() and path.name == target:
-            return path
-    return None
+    root = Path(lib).resolve()
+    candidate = root / (slug + ".md")
+    if candidate.is_symlink():
+        return None
+    path = library_path(lib, slug + ".md")
+    if not path or not path.is_file():
+        return None
+    return path
 
 
 def safe_content_type(ctype):
@@ -222,7 +226,12 @@ def self_test():
         (root / "video_1.md").write_text("---\ntitle: Demo\n---\nBody", encoding="utf-8")
         (root / "_media").mkdir()
         (root / "_media" / "video_1-slide-01.jpg").write_bytes(b"x")
+        (root / "secret.md").write_text("secret", encoding="utf-8")
+        (root / "linked.md").symlink_to(root / "secret.md")
+        (root / "_media" / "linked.jpg").symlink_to(root / "secret.md")
         assert load_item(str(root), "video_1")
+        assert load_item(str(root), "linked") is None
+        assert media_path(str(root), "linked.jpg") is None
         assert load_item(str(root), "../secret") is None
         assert library_path(str(root), "_media", "../video_1.md") is None
         assert safe_content_type("text/html; charset=utf-8") == "text/html; charset=utf-8"
