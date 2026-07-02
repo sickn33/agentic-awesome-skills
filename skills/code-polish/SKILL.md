@@ -1,7 +1,7 @@
 ---
 name: code-polish
 description: Rewrites unprofessional code comments into clear ones and performs non-semantic cleanup. Use to professionalize code without altering logic or behavior.
-risk: safe
+risk: critical
 source: community
 date_added: "2026-07-02"
 ---
@@ -67,7 +67,7 @@ Scope is strictly limited to changes that cannot alter behavior:
 
 - Consistent indentation and whitespace
 - Consistent brace/bracket style matching the surrounding file
-- Removing truly dead code (unreachable blocks, unused imports) — only when unambiguous, and flagged in the summary
+- Removing truly dead code (unreachable blocks) — only when unambiguous, and flagged in the summary
 - Splitting overly long lines for readability
 - Local variable renaming for clarity is allowed **only** for private/local-scope names, and only when the improvement is unambiguous — never rename anything exported, public, or referenced across files without calling it out explicitly first
 
@@ -113,12 +113,11 @@ Summarize for the user, don't just hand back a silent diff:
 **Junk / venting → professional**
 ```js
 // before
-// ugh this took forever to figure out, just leave it alone
+// ugh this took forever to figure out. api rate limits us super hard in prod so we have to do exponential backoff here. just leave it alone
 function retryFetch(url, attempts) { ... }
 
 // after
-// Retries with exponential backoff; external API rate-limits aggressively
-// under load, so a naive single retry was insufficient in production.
+// Uses exponential backoff to handle aggressive API rate-limiting in production.
 function retryFetch(url, attempts) { ... }
 ```
 
