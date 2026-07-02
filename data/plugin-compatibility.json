@@ -21597,6 +21597,25 @@
       "runtime_files": []
     },
     {
+      "id": "mdpr-skill",
+      "path": "skills/mdpr-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "memory-forensics",
       "path": "skills/memory-forensics",
       "targets": {
@@ -36316,10 +36335,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1891,
+    "total_skills": 1892,
     "supported": {
-      "codex": 1824,
-      "claude": 1843
+      "codex": 1825,
+      "claude": 1844
     },
     "blocked": {
       "codex": 67,

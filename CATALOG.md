@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-01T11:43:01.000Z
 
-Total skills: 1891
+Total skills: 1892
 
 ## architecture (113)
 
@@ -866,7 +866,7 @@ Total skills: 1891
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (507)
+## general (508)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1180,6 +1180,7 @@ Total skills: 1891
 | `matematico-tao` | Matemático ultra-avançado inspirado em Terence Tao. Análise rigorosa de código e arquitetura com teoria matemática profunda: teoria da informação, teoria dos... | mathematics, code-analysis, algorithms, formal-methods | mathematics, code-analysis, algorithms, formal-methods, matematico, tao, matem, tico, ultra, avan, ado, inspirado |
 | `mathguard` | Math-heavy escalation for n >= 10^6 — Bloom, HyperLogLog, Count-Min, MinHash/LSH, FFT, JL projection, sweep line. Use when classical O(n log n) is the floor ... | algorithms, probabilistic-data-structures, approximate-algorithms, bloom-filter, hyperloglog, fft, performance | algorithms, probabilistic-data-structures, approximate-algorithms, bloom-filter, hyperloglog, fft, performance, mathguard, math, heavy, escalation, 10 |
 | `mcp-builder` | Create MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. The quality of an MCP server is ... | mcp, builder | mcp, builder, model, context, protocol, servers, enable, llms, interact, external, through, well |
+| `mdpr-skill` | Review MDPR Markdown presentation workflows with semantic hints, visual checks, and deterministic renderer boundaries. | mdpr, presentations, markdown, powerpoint, codex, visual-review, agent-hints | mdpr, presentations, markdown, powerpoint, codex, visual-review, agent-hints, skill, review, presentation, semantic, hints |
 | `memory-systems` | Design short-term, long-term, and graph-based memory architectures. Use when building agents that must persist across sessions, needing to maintain entity co... | memory | memory, short, term, long, graph, architectures, building, agents, must, persist, sessions, needing |
 | `mental-health-analyzer` | 分析心理健康数据、识别心理模式、评估心理健康状况、提供个性化心理健康建议。支持与睡眠、运动、营养等其他健康数据的关联分析。 | mental, health, analyzer | mental, health, analyzer |
 | `mercury-mcp` | Cheatsheet for the Mercury (proton) MCP tools. Use when connected to the Mercury MCP server to look up which mercury_* tool to call for messaging teammates, ... | mercury, mcp | mercury, mcp, cheatsheet, proton, connected, server, look, up, which, call, messaging, teammates |

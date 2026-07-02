@@ -24503,6 +24503,28 @@
     }
   },
   {
+    "id": "mdpr-skill",
+    "path": "skills/mdpr-skill",
+    "category": "productivity",
+    "name": "mdpr-skill",
+    "description": "Review MDPR Markdown presentation workflows with semantic hints, visual checks, and deterministic renderer boundaries.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "memory-forensics",
     "path": "skills/memory-forensics",
     "category": "security",

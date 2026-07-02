@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-01T11:43:01.000Z",
-  "total": 1891,
+  "total": 1892,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -28066,6 +28066,36 @@
         "servers"
       ],
       "path": "skills/mcp-tool-developer/SKILL.md"
+    },
+    {
+      "id": "mdpr-skill",
+      "name": "mdpr-skill",
+      "description": "Review MDPR Markdown presentation workflows with semantic hints, visual checks, and deterministic renderer boundaries.",
+      "category": "general",
+      "tags": [
+        "mdpr",
+        "presentations",
+        "markdown",
+        "powerpoint",
+        "codex",
+        "visual-review",
+        "agent-hints"
+      ],
+      "triggers": [
+        "mdpr",
+        "presentations",
+        "markdown",
+        "powerpoint",
+        "codex",
+        "visual-review",
+        "agent-hints",
+        "skill",
+        "review",
+        "presentation",
+        "semantic",
+        "hints"
+      ],
+      "path": "skills/mdpr-skill/SKILL.md"
     },
     {
       "id": "memory-forensics",
