@@ -1,15 +1,11 @@
 ---
 name: your-skill-name
 description: "Brief one-sentence description of what this skill does (under 200 characters)"
-category: your-category
 risk: safe
 source: community
 source_repo: owner/repo
 source_type: community
 date_added: "YYYY-MM-DD"
-author: your-name-or-handle
-tags: [tag-one, tag-two]
-tools: [claude, cursor, gemini]
 # Optional: declare the upstream license if source_repo is set
 # license: "MIT"
 # license_source: "https://github.com/owner/repo/blob/main/LICENSE"
