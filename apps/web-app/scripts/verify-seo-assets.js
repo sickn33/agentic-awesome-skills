@@ -141,7 +141,7 @@ function parseCliArgs(argv) {
 }
 
 function getPackageReleaseLabel() {
-  const raw = readFile(path.join(REPO_ROOT_DIR, 'package.json'));
+  const raw = readFile(path.join(REPO_ROOT_DIR, 'package.json'), REPO_ROOT_DIR);
   const pkg = JSON.parse(raw);
   assert(typeof pkg.version === 'string' && pkg.version.trim(), 'Root package.json must define version.');
   return `V${pkg.version.trim()}`;
@@ -346,7 +346,7 @@ export function assertIndexSocialMeta(htmlText) {
 
 function readSkillCountLabel(distDir) {
   try {
-    const skills = JSON.parse(readFile(path.join(distDir, 'skills.json')));
+    const skills = JSON.parse(readFile(path.join(distDir, 'skills.json'), distDir));
     if (Array.isArray(skills) && skills.length > 0) {
       return `${skills.length.toLocaleString('en-US')}+`;
     }
@@ -478,7 +478,7 @@ export function assertPrerenderedSkillRoutes(skillUrls, distDir = 'dist', normal
       fs.existsSync(filePath),
       `Missing prerendered page for skill route: ${parsed.pathname}. Expected ${filePath}.`,
     );
-    assertStaticRelatedTopicLinks(readFile(filePath), 'Skill');
+    assertStaticRelatedTopicLinks(readFile(filePath, distDir), 'Skill');
   }
 }
 
@@ -490,7 +490,7 @@ export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', norm
       fs.existsSync(filePath),
       `Missing prerendered page for plugin route: ${parsed.pathname}. Expected ${filePath}.`,
     );
-    assertPluginsDiscoveryMeta(readFile(filePath));
+    assertPluginsDiscoveryMeta(readFile(filePath, distDir));
   }
 }
 
@@ -502,7 +502,7 @@ export function assertPrerenderedTopicRoutes(topicUrls, distDir = 'dist', normal
       fs.existsSync(filePath),
       `Missing prerendered page for topic route: ${parsed.pathname}. Expected ${filePath}.`,
     );
-    const html = readFile(filePath);
+    const html = readFile(filePath, distDir);
     assertTopicDiscoveryMeta(html);
     assertStaticRelatedTopicLinks(html, 'Topic');
   }
@@ -554,8 +554,8 @@ export function assertManifest(manifestText) {
   assert(manifest.icons.length > 0, 'Manifest icons array must not be empty.');
 }
 
-function readFile(filePath) {
-  return fs.readFileSync(safeUserPath(filePath), 'utf-8');
+function readFile(filePath, baseDir = process.cwd()) {
+  return fs.readFileSync(safeUserPath(filePath, baseDir), 'utf-8');
 }
 
 export function runVerification({
