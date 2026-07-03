@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-03T08:08:42.000Z",
-  "total": 1895,
+  "total": 1896,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -46360,6 +46360,34 @@
         "commits"
       ],
       "path": "skills/workflow-patterns/SKILL.md"
+    },
+    {
+      "id": "workorai",
+      "name": "workorai",
+      "description": "WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with white-box fit explanations.",
+      "category": "general",
+      "tags": [
+        "job-search",
+        "hiring",
+        "recruiting",
+        "talent-marketplace",
+        "mcp"
+      ],
+      "triggers": [
+        "job-search",
+        "hiring",
+        "recruiting",
+        "talent-marketplace",
+        "mcp",
+        "workorai",
+        "talent",
+        "marketplace",
+        "skill",
+        "candidates",
+        "search",
+        "jobs"
+      ],
+      "path": "skills/workorai/SKILL.md"
     },
     {
       "id": "wrike-automation",

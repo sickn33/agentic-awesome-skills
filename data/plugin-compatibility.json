@@ -35796,6 +35796,25 @@
       "runtime_files": []
     },
     {
+      "id": "workorai",
+      "path": "skills/workorai",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "wrike-automation",
       "path": "skills/wrike-automation",
       "targets": {
@@ -36392,10 +36411,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1895,
+    "total_skills": 1896,
     "supported": {
-      "codex": 1828,
-      "claude": 1847
+      "codex": 1829,
+      "claude": 1848
     },
     "blocked": {
       "codex": 67,

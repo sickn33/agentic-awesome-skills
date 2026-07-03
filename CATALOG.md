@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-03T08:08:42.000Z
 
-Total skills: 1895
+Total skills: 1896
 
 ## architecture (113)
 
@@ -869,7 +869,7 @@ Total skills: 1895
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (509)
+## general (510)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1374,6 +1374,7 @@ Total skills: 1895
 | `wiki-researcher` | You are an expert software engineer and systems analyst. Use when user asks "how does X work" with expectation of depth, user wants to understand a complex s... | wiki, researcher | wiki, researcher, software, engineer, analyst, user, asks, how, does, work, expectation, depth |
 | `wiki-vitepress` | Transform generated wiki Markdown files into a polished VitePress static site with dark theme and interactive Mermaid diagrams. Use when user asks to "build ... | wiki, vitepress | wiki, vitepress, transform, generated, markdown, files, polished, static, site, dark, theme, interactive |
 | `windows-shell-reliability` | Reliable command execution on Windows: paths, encoding, and common binary pitfalls. | windows, shell, reliability | windows, shell, reliability, reliable, command, execution, paths, encoding, common, binary, pitfalls |
+| `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
 | `writing-plans` | Use when you have a spec or requirements for a multi-step task, before touching code | writing, plans | writing, plans, spec, requirements, multi, step, task, before, touching, code |
 | `writing-skills` | Use when creating, updating, or improving agent skills. | writing, skills | writing, skills, creating, updating, improving, agent |
 | `x-article-publisher-skill` | Publish articles to X/Twitter | x, article, publisher, skill | x, article, publisher, skill, publish, articles, twitter |
