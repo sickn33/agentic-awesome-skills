@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-02T05:56:17.000Z
 
-Total skills: 1894
+Total skills: 1895
 
 ## architecture (113)
 
@@ -869,7 +869,7 @@ Total skills: 1894
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (508)
+## general (509)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -949,6 +949,7 @@ Total skills: 1894
 | `claude-win11-speckit-update-skill` | Windows 11 system management | claude, win11, speckit, update, skill | claude, win11, speckit, update, skill, windows, 11 |
 | `clean-code` | This skill embodies the principles of "Clean Code" by Robert C. Martin (Uncle Bob). Use it to transform "code that works" into "code that is clean." | clean, code | clean, code, skill, embodies, principles, robert, martin, uncle, bob, transform, works |
 | `cloudflare-workers-expert` | Expert in Cloudflare Workers and the Edge Computing ecosystem. Covers Wrangler, KV, D1, Durable Objects, and R2 storage. | cloudflare, workers | cloudflare, workers, edge, computing, ecosystem, covers, wrangler, kv, d1, durable, objects, r2 |
+| `code-polish` | Rewrites unprofessional code comments into clear ones and performs non-semantic cleanup. Use to professionalize code without altering logic or behavior. | code, polish | code, polish, rewrites, unprofessional, comments, clear, ones, performs, non, semantic, cleanup, professionalize |
 | `code-refactoring-context-restore` | Use when working with code refactoring context restore | code, refactoring, restore | code, refactoring, restore, context, working |
 | `code-refactoring-tech-debt` | You are a technical debt expert specializing in identifying, quantifying, and prioritizing technical debt in software projects. Analyze the codebase to uncov... | code, refactoring, tech, debt | code, refactoring, tech, debt, technical, specializing, identifying, quantifying, prioritizing, software, analyze, codebase |
 | `code-review-and-quality` | Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to ... | code, and, quality | code, and, quality, review, conducts, multi, axis, before, merging, any, change, reviewing |

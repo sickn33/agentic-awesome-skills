@@ -9613,6 +9613,28 @@
     }
   },
   {
+    "id": "code-polish",
+    "path": "skills/code-polish",
+    "category": "development",
+    "name": "code-polish",
+    "description": "Rewrites unprofessional code comments into clear ones and performs non-semantic cleanup. Use to professionalize code without altering logic or behavior.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "code-refactoring-context-restore",
     "path": "skills/code-refactoring-context-restore",
     "category": "development",

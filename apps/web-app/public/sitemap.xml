@@ -43,6 +43,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/antigravity-awesome-skills/skill/code-polish</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/antigravity-awesome-skills/skill/ab-testing</loc>
     <lastmod>2026-07-03</lastmod>
     <changefreq>weekly</changefreq>
@@ -266,12 +272,6 @@
   </url>
   <url>
     <loc>https://sickn33.github.io/antigravity-awesome-skills/skill/ci-cd-and-automation</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/antigravity-awesome-skills/skill/claimable-postgres</loc>
     <lastmod>2026-07-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-02T05:56:17.000Z",
-  "total": 1894,
+  "total": 1895,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -10716,6 +10716,31 @@
         "user"
       ],
       "path": "skills/code-documentation-doc-generate/SKILL.md"
+    },
+    {
+      "id": "code-polish",
+      "name": "code-polish",
+      "description": "Rewrites unprofessional code comments into clear ones and performs non-semantic cleanup. Use to professionalize code without altering logic or behavior.",
+      "category": "general",
+      "tags": [
+        "code",
+        "polish"
+      ],
+      "triggers": [
+        "code",
+        "polish",
+        "rewrites",
+        "unprofessional",
+        "comments",
+        "clear",
+        "ones",
+        "performs",
+        "non",
+        "semantic",
+        "cleanup",
+        "professionalize"
+      ],
+      "path": "skills/code-polish/SKILL.md"
     },
     {
       "id": "code-refactoring-context-restore",

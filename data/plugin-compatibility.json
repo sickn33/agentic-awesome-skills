@@ -8174,6 +8174,25 @@
       "runtime_files": []
     },
     {
+      "id": "code-polish",
+      "path": "skills/code-polish",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "code-refactoring-context-restore",
       "path": "skills/code-refactoring-context-restore",
       "targets": {
@@ -36373,10 +36392,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1894,
+    "total_skills": 1895,
     "supported": {
-      "codex": 1827,
-      "claude": 1846
+      "codex": 1828,
+      "claude": 1847
     },
     "blocked": {
       "codex": 67,
