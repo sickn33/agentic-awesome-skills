@@ -189,7 +189,7 @@ def apply_metadata(content: str, metadata: dict) -> str:
         r"^# 🌌 Antigravity Awesome Skills: .*?$",
         (
             f"# 🌌 Antigravity Awesome Skills: {total_skills_label} "
-            "Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More"
+            "Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More"
         ),
         content,
         count=1,

@@ -9,6 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.9.0] - 2026-07-03 - "WorkorAI, Autohand, and Web Dependency Refresh"
+
+> Community skill intake, host documentation, dependency maintenance, and catalog sync for the 1,896+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1896-skills](README.md#browse-1896-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release completes the July 3 maintenance batch after v13.8.0: the WorkorAI community skill, Autohand Code install notes, a web-app Supabase dependency refresh, generated registry and public catalog updates, and refreshed SEO/public surfaces for the 1,896+ skill catalog.
+
+## Added
+
+- Added **workorai**, a critical-risk WorkorAI MCP skill for candidate job search/application flows and employer job lifecycle, candidate discovery, invitations, and applicant review workflows (PR #773).
+- Added Autohand Code as a documented host in the README tool matrix, badges, intro copy, and install FAQ using the generic `--path ~/.autohand/skills` and `--path .autohand/skills` installer flow (manual integration of PR #772).
+
+## Changed
+
+- Updated README metadata sync tooling so Autohand Code remains part of generated README copy instead of being removed by future maintainer sync runs.
+- Updated the web app `@supabase/supabase-js` dependency manifest to `^2.110.0`, matching the current lockfile resolution and superseding the stale Snyk 2.108.1 upgrade PR (#770).
+- Refreshed generated registry artifacts, plugin compatibility metadata, catalog data, sitemap, public web skill assets, package description, and README counters for the 1,896+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #773 after GitHub reported it mergeable and external security checks were successful.
+- Reviewed PR #772 and integrated its README changes against the current 13.8.0/1,896+ public copy instead of applying its stale 13.7.0 patch.
+- Reviewed PR #770 and applied the newer resolved Supabase dependency state rather than downgrading from the current lockfile to 2.108.1.
+- Ran `npm install @supabase/supabase-js@^2.110.0 --package-lock-only` in `apps/web-app` with 0 vulnerabilities.
+- Ran `npm run sync:repo-state`.
+- Ran the release prepare suite for v13.9.0, including reference validation, release-state sync, tests, web-app install, web-app build, and package dry run.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@m1amgn](https://github.com/m1amgn)** and **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)** for PR #773 (`workorai`).
+- **[@igorcosta](https://github.com/igorcosta)** for PR #772 (Autohand Code README install notes).
+- **Snyk** for PR #770 dependency-maintenance signal.
+
 ## [13.8.0] - 2026-07-03 - "Code Polish and Catalog Sync"
 
 > Community skill intake and maintainer sync for the 1,895+ skill catalog.

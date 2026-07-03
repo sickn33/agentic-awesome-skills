@@ -37,7 +37,7 @@ RECOMMENDED_TOPICS = [
     "mcp",
 ]
 README_TAGLINE_RE = re.compile(
-    r"^> \*\*Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants\.\*\*$",
+    r"^> \*\*Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, (?:Autohand Code, )?Gemini CLI, Antigravity, and other AI coding assistants\.\*\*$",
     re.MULTILINE,
 )
 README_RELEASE_RE = re.compile(r"^\*\*Current release: V[\d.]+\.\*\* .*?$", re.MULTILINE)
@@ -68,7 +68,7 @@ BUNDLES_FOOTER_RE = re.compile(
 def build_about_description(metadata: dict) -> str:
     return (
         f"Installable GitHub library of {metadata['total_skills_label']} agentic skills for "
-        "Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and more. "
+        "Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and more. "
         "Includes specialized plugins, installer CLI, bundles, workflows, and official/community skill collections."
     )
 
@@ -138,7 +138,7 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
             README_TAGLINE_RE,
             (
                 f"> **Installable GitHub library of {metadata['total_skills_label']} agentic skills "
-                "for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.**"
+                "for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.**"
             ),
         ),
         (
@@ -162,7 +162,7 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
                 f"**Antigravity Awesome Skills** (Release {metadata['version']}) is a large, installable "
                 f"skill library for AI coding assistants. It packages {metadata['total_skills_label']} reusable "
                 "`SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI "
-                "installer so Claude Code, Codex CLI, Cursor, Gemini CLI, Antigravity, and similar tools can "
+                "installer so Claude Code, Codex CLI, Autohand Code, Cursor, Gemini CLI, Antigravity, and similar tools can "
                 "reuse proven operating instructions instead of one-off prompts."
             ),
         ),
