@@ -48,8 +48,8 @@ this section, even for a one-line change, even if the user is in a hurry.**
 4. **After any PHP file edit, lint it before reloading the site**:
    ```
    php -l wp-config.php
-   php -l .htaccess    # not applicable — .htaccess isn't PHP, skip; use apachectl configtest instead if available
    ```
+   For `.htaccess` changes, run `apachectl configtest` if available, or check the site immediately.
    A syntax error in `wp-config.php` takes the entire site down immediately. Do not skip the lint check to
    save a step.
 5. **Change one thing at a time, then verify the site still loads** (homepage + wp-admin) before making
@@ -80,7 +80,7 @@ Input is usually one of:
 - Pasted plain text copied from `Tools > Site Health` (Status tab)
 - Pasted plain text from `Tools > Site Health > Info` (the debug data export)
 - A screenshot of the Status tab
-- WP-CLI output (`wp site-health check` is not a core command; note that up front, don't invent one — see Phase 5)
+- WP-CLI output (`wp site-health check` is not a core command; note that up front, don't invent one — see Phase 4)
 
 Extract three buckets exactly as WordPress labels them:
 1. **Critical issues** (red) — always fix first, always confirm before touching.
@@ -91,7 +91,7 @@ Extract three buckets exactly as WordPress labels them:
 
 If the report is a screenshot, transcribe item titles + category tags (Security/Performance/SEO/Privacy)
 verbatim before triaging — don't paraphrase the WordPress-generated title, it's used for the fix lookup in
-Phase 4.
+Phase 3.
 
 If no report was pasted and the user just says "audit my site health," ask them to paste the Status tab
 text (fastest) rather than guessing — Site Health results are host- and config-specific and guessing wastes
@@ -172,12 +172,17 @@ Where to set it (pick whichever the host supports, in this order of preference):
    ```
    A malformed `.htaccess` directive can 500 the entire site. Run `apachectl configtest` if available
    before reloading, or check the live site immediately after saving.
-4. `wp-config.php` (last resort, doesn't work on all hosts) — back up first, lint after
-   (`php -l wp-config.php`), add near the top:
-   ```php
-   @ini_set( 'upload_max_filesize', '64M' );
-   @ini_set( 'post_max_size', '128M' );
+4. `.user.ini` (CGI/FastCGI hosts; not mod_php) — back up first, create or edit `.user.ini`
+   in the WordPress root:
+   ```ini
+   upload_max_filesize = 64M
+   post_max_size = 128M
    ```
+   ⚠️ **Do not use `ini_set()` in `wp-config.php` for these directives** — `upload_max_filesize`
+   and `post_max_size` are `PHP_INI_PERDIR`, which means they can only be set before the
+   request starts (php.ini, .htaccess, .user.ini). `ini_set()` calls silently fail for both,
+   leaving the problem unfixed.
+
 Always set `post_max_size` strictly greater than `upload_max_filesize`. Confirm the current values first
 (`wp cli info` doesn't show these — check `phpinfo()` or the host panel) rather than assuming defaults.
 
@@ -207,7 +212,7 @@ plugin alone can create out of nothing.
 Back up `wp-config.php` first, lint after editing:
 ```php
 // wp-config.php
-define( 'WP_DEBUG', true );          // keep true only if actively debugging
+define( 'WP_DEBUG', false );         // set to true only while actively debugging
 define( 'WP_DEBUG_DISPLAY', false ); // never show errors to visitors
 define( 'WP_DEBUG_LOG', true );      // logs to wp-content/debug.log instead
 ```
