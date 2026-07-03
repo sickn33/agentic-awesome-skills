@@ -15,6 +15,19 @@ import sys
 import argparse
 from datetime import datetime
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 import yaml
 from _project_paths import find_repo_root
 
@@ -63,7 +76,7 @@ def reconstruct_frontmatter(metadata):
 def update_skill_frontmatter(skill_path, metadata):
     """Update a skill's frontmatter with new metadata."""
     try:
-        with open(skill_path, 'r', encoding='utf-8') as f:
+        with safe_user_path(skill_path).open('r', encoding='utf-8') as f:
             content = f.read()
         
         old_metadata, body_content = parse_frontmatter(content)
@@ -88,7 +101,7 @@ def update_skill_frontmatter(skill_path, metadata):
         
         new_content = new_frontmatter + body
         
-        with open(skill_path, 'w', encoding='utf-8') as f:
+        with safe_user_path(skill_path).open('w', encoding='utf-8') as f:
             f.write(new_content)
         
         return True
@@ -111,7 +124,7 @@ def list_skills():
             skill_path = os.path.join(root, "SKILL.md")
             
             try:
-                with open(skill_path, 'r', encoding='utf-8') as f:
+                with safe_user_path(skill_path).open('r', encoding='utf-8') as f:
                     content = f.read()
                 
                 metadata, _ = parse_frontmatter(content)
@@ -174,7 +187,7 @@ def add_missing_dates(date_str=None):
             skill_path = os.path.join(root, "SKILL.md")
             
             try:
-                with open(skill_path, 'r', encoding='utf-8') as f:
+                with safe_user_path(skill_path).open('r', encoding='utf-8') as f:
                     content = f.read()
                 
                 metadata, _ = parse_frontmatter(content)

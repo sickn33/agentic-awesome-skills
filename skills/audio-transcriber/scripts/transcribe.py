@@ -12,6 +12,19 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 # Rich for beautiful terminal output
 try:
     from rich.console import Console
@@ -386,9 +399,9 @@ def save_outputs(transcript_text, ata_text, audio_file, output_dir="."):
     
     # Sempre salva transcript
     transcript_filename = f"transcript-{timestamp}.md"
-    transcript_path = Path(output_dir) / transcript_filename
+    transcript_path = safe_user_path(output_dir) / transcript_filename
     
-    with open(transcript_path, 'w', encoding='utf-8') as f:
+    with transcript_path.open('w', encoding='utf-8') as f:
         f.write(transcript_text)
     
     console.print(f"[green]✅ Transcript salvo:[/green] {transcript_filename}")
@@ -397,9 +410,9 @@ def save_outputs(transcript_text, ata_text, audio_file, output_dir="."):
     ata_path = None
     if ata_text:
         ata_filename = f"ata-{timestamp}.md"
-        ata_path = Path(output_dir) / ata_filename
+        ata_path = safe_user_path(output_dir) / ata_filename
         
-        with open(ata_path, 'w', encoding='utf-8') as f:
+        with ata_path.open('w', encoding='utf-8') as f:
             f.write(ata_text)
         
         console.print(f"[green]✅ Ata salva:[/green] {ata_filename}")

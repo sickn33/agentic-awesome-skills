@@ -4,6 +4,7 @@ const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
+const sanitizeFilename = require("sanitize-filename");
 const { getRealPath, isPathInside, resolveSafeRealPath } = require("../lib/symlink-safety");
 const { listSkillIdsRecursive, readSkill } = require("../lib/skill-utils");
 const packageMetadata = require("../../package.json");
@@ -16,7 +17,20 @@ const DEFAULT_RELEASE_REF = packageMetadata.version ? `v${packageMetadata.versio
 function resolveDir(p) {
   if (!p) return null;
   const s = p.replace(/^~($|\/)/, HOME + "$1");
-  return path.resolve(s);
+  const root = path.isAbsolute(s) ? path.parse(path.resolve(s)).root : process.cwd();
+  const sanitizedSegments = path
+    .resolve(s)
+    .slice(path.parse(path.resolve(s)).root.length)
+    .split(path.sep)
+    .filter(Boolean)
+    .map((segment) => {
+      const sanitized = sanitizeFilename(segment);
+      if (sanitized !== segment || !sanitized) {
+        throw new Error(`Unsafe path segment: ${segment}`);
+      }
+      return sanitized;
+    });
+  return path.resolve(root, ...sanitizedSegments);
 }
 
 function parseArgs() {
@@ -318,18 +332,25 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true, destRoot = 
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest, { recursive: true });
     }
-    fs.readdirSync(resolvedSource).forEach((child) => {
-      if (skipGit && child === ".git") return;
-      copyRecursiveSync(
-        path.join(resolvedSource, child),
-        path.join(dest, child),
-        rootDir,
-        skipGit,
-        destRoot,
-      );
-    });
+    const dir = fs.opendirSync(resolvedSource);
+    try {
+      for (;;) {
+        const child = dir.readSync();
+        if (!child) break;
+        if (skipGit && child.name === ".git") continue;
+        copyRecursiveSync(
+          path.join(resolvedSource, child.name),
+          path.join(dest, child.name),
+          rootDir,
+          skipGit,
+          destRoot,
+        );
+      }
+    } finally {
+      dir.closeSync();
+    }
   } else {
-    fs.copyFileSync(resolvedSource, dest);
+    fs.cpSync(resolvedSource, dest);
   }
 }
 
@@ -429,13 +450,21 @@ function resolveManagedPath(targetPath, entry) {
   return candidate;
 }
 
-function readInstallManifest(targetPath) {
+function resolveInstallManifestPath(targetPath) {
   const manifestPath = path.join(targetPath, INSTALL_MANIFEST_FILE);
+  assertSafeDestinationPath(manifestPath, targetPath);
+  return manifestPath;
+}
+
+function readInstallManifest(targetPath) {
+  const manifestPath = resolveInstallManifestPath(targetPath);
   if (!fs.existsSync(manifestPath)) {
     return [];
   }
+  let fd = null;
   try {
-    const parsed = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    fd = fs.openSync(manifestPath, "r");
+    const parsed = JSON.parse(fs.readFileSync(fd, "utf8"));
     if (!parsed || !Array.isArray(parsed.entries)) {
       return [];
     }
@@ -443,25 +472,31 @@ function readInstallManifest(targetPath) {
   } catch (error) {
     console.warn(`  Ignoring invalid install manifest at ${manifestPath}`);
     return [];
+  } finally {
+    if (fd !== null) {
+      fs.closeSync(fd);
+    }
   }
 }
 
 function writeInstallManifest(targetPath, installEntries) {
-  const manifestPath = path.join(targetPath, INSTALL_MANIFEST_FILE);
+  const manifestPath = resolveInstallManifestPath(targetPath);
   const normalizedEntries = [...new Set(installEntries.map(normalizeInstallEntry).filter(Boolean))].sort();
-  fs.writeFileSync(
-    manifestPath,
-    JSON.stringify(
-      {
-        schemaVersion: 1,
-        updatedAt: new Date().toISOString(),
-        entries: normalizedEntries,
-      },
-      null,
-      2,
-    ) + "\n",
-    "utf8",
-  );
+  const manifest = JSON.stringify(
+    {
+      schemaVersion: 1,
+      updatedAt: new Date().toISOString(),
+      entries: normalizedEntries,
+    },
+    null,
+    2,
+  ) + "\n";
+  const fd = fs.openSync(manifestPath, "w", 0o600);
+  try {
+    fs.writeFileSync(fd, manifest, "utf8");
+  } finally {
+    fs.closeSync(fd);
+  }
 }
 
 function pruneRemovedEntries(targetPath, previousEntries, installEntries) {
@@ -568,7 +603,8 @@ function installForTarget(tempDir, target, selectors = buildInstallSelectors({})
       console.log(`  Migrating from full-repo install to skills-only layout…`);
       const backupPath = `${target.path}_backup_${Date.now()}`;
       try { 
-        fs.renameSync(target.path, backupPath);
+        fs.cpSync(target.path, backupPath, { recursive: true });
+        fs.rmSync(target.path, { recursive: true, force: true });
         console.log(`  ⚠️  Safety Backup created at: ${backupPath}`);
         fs.mkdirSync(target.path, { recursive: true, mode: targetStats.mode });
       } catch (err) {

@@ -24,6 +24,19 @@ import sys
 import time
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 # ---------------------------------------------------------------------------
 # Imports from the 007 config hub (same directory)
 # ---------------------------------------------------------------------------
@@ -141,18 +154,17 @@ def _collect_source_files(target: Path) -> list[Path]:
     files: list[Path] = []
     max_files = LIMITS["max_files_per_scan"]
 
-    for root, dirs, filenames in os.walk(target):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRECTORIES]
-        for fname in filenames:
-            if len(files) >= max_files:
-                return files
-            fpath = Path(root) / fname
-            suffix = fpath.suffix.lower()
-            name = fpath.name.lower()
-            for ext in SCANNABLE_EXTENSIONS:
-                if name.endswith(ext) or suffix == ext:
-                    files.append(fpath)
-                    break
+    for fpath in safe_user_path(target).rglob("*"):
+        if not fpath.is_file() or any(part in SKIP_DIRECTORIES for part in fpath.parts):
+            continue
+        if len(files) >= max_files:
+            return files
+        suffix = fpath.suffix.lower()
+        name = fpath.name.lower()
+        for ext in SCANNABLE_EXTENSIONS:
+            if name.endswith(ext) or suffix == ext:
+                files.append(fpath)
+                break
 
     return files
 
@@ -529,7 +541,7 @@ def run_score(
 
     ensure_directories()
 
-    target = Path(target_path).resolve()
+    target = safe_user_path(target_path).resolve()
     if not target.exists():
         logger.error("Target path does not exist: %s", target)
         sys.exit(1)

@@ -58,6 +58,14 @@ def normalize_file_uri(uri):
         return f"https://generativelanguage.googleapis.com/files/{file_id}"
     return uri
 
+
+def media_download_url(file_uri):
+    """Build a media URL only for validated Gemini File API references."""
+    file_id = extract_file_id(file_uri)
+    if not file_id:
+        raise ValueError("Generated video URI must be a Gemini File API reference.")
+    return f"https://generativelanguage.googleapis.com/files/{file_id}?alt=media"
+
 def slugify(text):
     """Converts a text prompt into a safe, descriptive filename slug."""
     text = text.lower()
@@ -171,8 +179,7 @@ def resolve_or_upload_asset(asset_path, mime_type, api_key, strip_audio=False):
 
 def download_video_file(file_uri, output_path, api_key):
     """Downloads generated video file from URI using alt=media standard in a memory-safe, chunked manner."""
-    separator = "&" if "?" in file_uri else "?"
-    download_url = f"{file_uri}{separator}alt=media"
+    download_url = media_download_url(file_uri)
 
     print(f"Downloading video from {file_uri} to {output_path} in chunked mode...")
     req = urllib.request.Request(download_url)

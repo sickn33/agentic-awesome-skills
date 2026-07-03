@@ -23,7 +23,21 @@ import sys
 import json
 import re
 import zipfile
+import tempfile
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 # ── Configuration ──────────────────────────────────────────────────────────
 
@@ -51,7 +65,7 @@ SAFE_ARCHIVE_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$")
 
 def resolve_existing_dir(path) -> Path:
     """Resolve a user-provided directory and require it to exist."""
-    resolved = Path(path).expanduser().resolve()
+    resolved = safe_user_path(path).expanduser().resolve()
     if not resolved.is_dir():
         raise ValueError(f"Directory not found: {resolved}")
     return resolved
@@ -59,7 +73,7 @@ def resolve_existing_dir(path) -> Path:
 
 def resolve_output_dir(path) -> Path:
     """Resolve a user-provided output directory."""
-    resolved = Path(path).expanduser().resolve()
+    resolved = safe_user_path(path).expanduser().resolve()
     if resolved.exists() and not resolved.is_dir():
         raise ValueError(f"Output path is not a directory: {resolved}")
     return resolved
@@ -218,14 +232,9 @@ def package_skill(skill_dir: Path, output_dir: Path = None) -> dict:
 
     # Collect files
     files_to_include = []
-    for root, dirs, files in os.walk(skill_dir):
-        # Filter directories in-place to skip excluded ones
-        dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
-
-        for f in files:
-            fp = Path(root) / f
-            if should_include(fp, skill_dir):
-                files_to_include.append(fp)
+    for fp in safe_user_path(skill_dir).rglob("*"):
+        if fp.is_file() and should_include(fp, skill_dir):
+            files_to_include.append(fp)
 
     if not files_to_include:
         return {"success": False, "error": "No files to package"}
@@ -233,13 +242,16 @@ def package_skill(skill_dir: Path, output_dir: Path = None) -> dict:
     # Create ZIP with skill folder as root
     # CRITICAL: ZIP paths MUST use forward slashes, not Windows backslashes
     try:
-        with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-            for fp in sorted(files_to_include):
-                rel_path = fp.relative_to(skill_dir)
-                # Convert Windows backslash to forward slash for ZIP compatibility
-                rel_posix = rel_path.as_posix()
-                archive_path = f"{skill_name_lower}/{rel_posix}"
-                zf.write(fp, archive_path)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_zip_path = Path(temp_dir) / "skill.zip"
+            with zipfile.ZipFile(temp_zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+                for fp in sorted(files_to_include):
+                    rel_path = fp.relative_to(skill_dir)
+                    # Convert Windows backslash to forward slash for ZIP compatibility
+                    rel_posix = rel_path.as_posix()
+                    archive_path = f"{skill_name_lower}/{rel_posix}"
+                    zf.write(fp, archive_path)
+            zip_path.write_bytes(temp_zip_path.read_bytes())
 
         # Verify ZIP is not empty and valid
         with zipfile.ZipFile(zip_path, "r") as zf_check:

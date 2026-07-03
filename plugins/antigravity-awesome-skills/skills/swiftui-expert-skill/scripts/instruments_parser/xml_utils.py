@@ -6,9 +6,13 @@ a global id cache for later ref lookups.
 """
 from __future__ import annotations
 
-import xml.etree.ElementTree as ET
 from collections.abc import Iterator
 from dataclasses import dataclass
+
+try:
+    from defusedxml import ElementTree as ET
+except ImportError:  # pragma: no cover - guidance for direct script use
+    ET = None
 
 
 @dataclass(frozen=True)
@@ -26,6 +30,8 @@ class RowStream:
     """
 
     def __init__(self, xml_bytes: bytes):
+        if ET is None:
+            raise RuntimeError("Install defusedxml before parsing xctrace XML exports.")
         self._xml = xml_bytes
         self.columns: list[Column] = []
         self._id_cache: dict[str, ET.Element] = {}

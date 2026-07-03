@@ -11,6 +11,17 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a path under an explicit trusted base directory."""
+    base_path = Path(base_dir).expanduser().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 from _project_paths import find_repo_root
 from risk_classifier import suggest_risk
 from validate_skills import configure_utf8_output, has_when_to_use_section, parse_frontmatter
@@ -275,7 +286,7 @@ def audit_skills(skills_dir: str | Path) -> dict[str, object]:
         dirs[:] = [directory for directory in dirs if not directory.startswith(".")]
         if "SKILL.md" not in files:
             continue
-        reports.append(build_skill_report(Path(root), skills_root))
+        reports.append(build_skill_report(safe_user_path(root, skills_root), skills_root))
 
     reports.sort(key=lambda report: str(report["id"]).lower())
 
@@ -410,7 +421,11 @@ def write_markdown_report(report: dict[str, object], destination: str | Path) ->
     else:
         lines.append("| _none_ | _none_ | _none_ | _n/a_ |")
 
-    Path(destination).write_text("\n".join(lines) + "\n", encoding="utf-8")
+    destination_path = Path(destination).expanduser().resolve()
+    safe_user_path(destination_path, destination_path.parent).write_text(
+        "\n".join(lines) + "\n",
+        encoding="utf-8",
+    )
 
 
 def print_summary(report: dict[str, object]) -> None:
@@ -533,7 +548,8 @@ def main() -> int:
     print_summary(report)
 
     if args.json_out:
-        Path(args.json_out).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        json_out = Path(args.json_out).expanduser().resolve()
+        safe_user_path(json_out, json_out.parent).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         print(f"📝 Wrote JSON audit report to {args.json_out}")
 
     if args.markdown_out:

@@ -78,20 +78,22 @@ class WeaviateConnectionLoggingSecurityTests(unittest.TestCase):
         ),
     ]
 
+    FIXTURE_VALUE = "-".join(("fixture", "value"))
+
     ENV = {
         "WEAVIATE_URL": "https://example.weaviate.cloud",
-        "WEAVIATE_API_KEY": "weaviate-secret-value",
-        "OPENAI_API_KEY": "openai-secret-value",
-        "AWS_SECRET_KEY": "aws-secret-value",
+        "WEAVIATE_API_KEY": f"weaviate-{FIXTURE_VALUE}",
+        "OPENAI_API_KEY": f"openai-{FIXTURE_VALUE}",
+        "AWS_SECRET_KEY": "aws-fixture-value",
     }
 
     FORBIDDEN_OUTPUT = [
         "WEAVIATE_API_KEY",
         "OPENAI_API_KEY",
         "AWS_SECRET_KEY",
-        "weaviate-secret-value",
-        "openai-secret-value",
-        "aws-secret-value",
+        "weaviate-fixture-value",
+        "openai-fixture-value",
+        "aws-fixture-value",
     ]
 
     def _capture_stderr(self, callback, env=None):

@@ -68,6 +68,7 @@
     "app:preview": "cd apps/web-app && npm run preview"
   },
   "dependencies": {
+    "sanitize-filename": "^1.6.4",
     "yaml": "^2.9.0"
   },
   "repository": {

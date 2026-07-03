@@ -1,10 +1,29 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sanitizeFilename from 'sanitize-filename';
 import { getSeoLandingPaths } from './generate-sitemap.js';
 
 const APP_ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const REPO_ROOT_DIR = path.resolve(APP_ROOT_DIR, '..', '..');
+
+function safeUserPath(pathValue, baseDir = process.cwd()) {
+  const basePath = path.resolve(baseDir);
+  const resolvedPath = path.resolve(basePath, String(pathValue ?? ''));
+  const relativePath = path.relative(basePath, resolvedPath);
+  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+    throw new Error(`Path escapes allowed directory: ${pathValue}`);
+  }
+  const sanitizedSegments = [];
+  for (const segment of relativePath.split(path.sep).filter(Boolean)) {
+    const sanitizedSegment = sanitizeFilename(segment);
+    if (sanitizedSegment !== segment || !sanitizedSegment) {
+      throw new Error(`Unsafe path segment: ${segment}`);
+    }
+    sanitizedSegments.push(sanitizedSegment);
+  }
+  return path.resolve(basePath, ...sanitizedSegments);
+}
 
 export function extractSitemapLocations(xmlText) {
   const raw = String(xmlText ?? '');
@@ -46,62 +65,63 @@ function parseCliArgs(argv) {
     if (arg === '--artifacts-dir') {
       const value = argv[i + 1];
       if (value) {
-        args.sitemapPath = path.join(value, 'sitemap.xml');
-        args.robotsPath = path.join(value, 'robots.txt');
-        args.llmsPath = path.join(value, 'llms.txt');
-        args.manifestPath = path.join(value, 'site.webmanifest');
-        args.indexPath = path.join(value, 'index.html');
-        args.socialImagePath = path.join(value, 'social-card.svg');
-        args.distDir = value;
+        const artifactsDir = safeUserPath(value);
+        args.sitemapPath = path.join(artifactsDir, 'sitemap.xml');
+        args.robotsPath = path.join(artifactsDir, 'robots.txt');
+        args.llmsPath = path.join(artifactsDir, 'llms.txt');
+        args.manifestPath = path.join(artifactsDir, 'site.webmanifest');
+        args.indexPath = path.join(artifactsDir, 'index.html');
+        args.socialImagePath = path.join(artifactsDir, 'social-card.svg');
+        args.distDir = artifactsDir;
         i += 1;
       }
       continue;
     }
 
     if (arg === '--dist-dir' && argv[i + 1]) {
-      args.distDir = argv[i + 1];
+      args.distDir = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
 
     if (arg === '--sitemap' && argv[i + 1]) {
-      args.sitemapPath = argv[i + 1];
+      args.sitemapPath = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
 
     if (arg === '--robots' && argv[i + 1]) {
-      args.robotsPath = argv[i + 1];
+      args.robotsPath = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
 
     if (arg === '--llms' && argv[i + 1]) {
-      args.llmsPath = argv[i + 1];
+      args.llmsPath = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
 
     if (arg === '--manifest' && argv[i + 1]) {
-      args.manifestPath = argv[i + 1];
+      args.manifestPath = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
 
     if (arg === '--index' && argv[i + 1]) {
-      args.indexPath = argv[i + 1];
+      args.indexPath = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
 
     if (arg === '--source-index' && argv[i + 1]) {
-      args.sourceIndexPath = argv[i + 1];
+      args.sourceIndexPath = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
 
     if (arg === '--social-image' && argv[i + 1]) {
-      args.socialImagePath = argv[i + 1];
+      args.socialImagePath = safeUserPath(argv[i + 1]);
       i += 1;
       continue;
     }
@@ -453,7 +473,7 @@ function routePathToDistFile(routePath, normalizedRootPath) {
 export function assertPrerenderedSkillRoutes(skillUrls, distDir = 'dist', normalizedRootPath = '') {
   for (const skillUrl of skillUrls) {
     const parsed = new URL(skillUrl);
-    const filePath = path.join(distDir, routePathToDistFile(parsed.pathname, normalizedRootPath));
+    const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
     assert(
       fs.existsSync(filePath),
       `Missing prerendered page for skill route: ${parsed.pathname}. Expected ${filePath}.`,
@@ -465,7 +485,7 @@ export function assertPrerenderedSkillRoutes(skillUrls, distDir = 'dist', normal
 export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', normalizedRootPath = '') {
   for (const pluginUrl of pluginUrls) {
     const parsed = new URL(pluginUrl);
-    const filePath = path.join(distDir, routePathToDistFile(parsed.pathname, normalizedRootPath));
+    const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
     assert(
       fs.existsSync(filePath),
       `Missing prerendered page for plugin route: ${parsed.pathname}. Expected ${filePath}.`,
@@ -477,7 +497,7 @@ export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', norm
 export function assertPrerenderedTopicRoutes(topicUrls, distDir = 'dist', normalizedRootPath = '') {
   for (const topicUrl of topicUrls) {
     const parsed = new URL(topicUrl);
-    const filePath = path.join(distDir, routePathToDistFile(parsed.pathname, normalizedRootPath));
+    const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
     assert(
       fs.existsSync(filePath),
       `Missing prerendered page for topic route: ${parsed.pathname}. Expected ${filePath}.`,
@@ -535,7 +555,7 @@ export function assertManifest(manifestText) {
 }
 
 function readFile(filePath) {
-  return fs.readFileSync(filePath, 'utf-8');
+  return fs.readFileSync(safeUserPath(filePath), 'utf-8');
 }
 
 export function runVerification({
@@ -550,6 +570,15 @@ export function runVerification({
   minSkillUrls,
   requireHostedUrl = false,
 }) {
+  sitemapPath = safeUserPath(sitemapPath);
+  robotsPath = safeUserPath(robotsPath);
+  llmsPath = safeUserPath(llmsPath);
+  manifestPath = safeUserPath(manifestPath);
+  indexPath = safeUserPath(indexPath);
+  sourceIndexPath = safeUserPath(sourceIndexPath);
+  socialImagePath = safeUserPath(socialImagePath);
+  distDir = safeUserPath(distDir);
+
   const expectedReleaseLabel = getPackageReleaseLabel();
   const sitemapText = readFile(sitemapPath);
   const sitemapReport = analyzeSitemap(sitemapText, { minSkillUrls, requireHostedUrl });

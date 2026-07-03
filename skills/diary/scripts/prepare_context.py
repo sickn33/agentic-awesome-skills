@@ -15,6 +15,19 @@ import sys
 import json
 import glob
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from datetime import datetime
 
 
@@ -159,7 +172,7 @@ def prepare_context(root_path):
 
     context_file = root / "AGENT_CONTEXT.md"
 
-    with open(context_file, "w", encoding="utf-8") as f:
+    with safe_user_path(context_file).open("w", encoding="utf-8") as f:
         # Header
         f.write(f"# 專案上下文 (Agent Context)：{root.name}\n\n")
         f.write(f"> **最後更新時間**：{now}\n")
@@ -240,5 +253,5 @@ def prepare_context(root_path):
 
 
 if __name__ == "__main__":
-    target = sys.argv[1] if len(sys.argv) > 1 else "."
+    target = safe_user_path(sys.argv[1]) if len(sys.argv) > 1 else "."
     prepare_context(target)

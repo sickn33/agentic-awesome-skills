@@ -18,6 +18,19 @@ import json
 import argparse
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 # Fix Unicode output on Windows (cp1252 terminal)
 if sys.platform == 'win32':
     try:
@@ -498,7 +511,7 @@ def main():
         analyzer.print_report(report)
 
     if args.output:
-        output_path = Path(args.output)
+        output_path = safe_user_path(args.output)
         if args.json:
             output_path.write_text(json.dumps(report, indent=2, ensure_ascii=False))
         else:

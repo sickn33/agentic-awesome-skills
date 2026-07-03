@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
+const sanitizeFilename = require("sanitize-filename");
 
 const { findProjectRoot } = require("../lib/project-root");
 const {
@@ -52,6 +53,23 @@ function parseArgs(argv) {
   }
 
   return args;
+}
+
+function safeUserPath(pathValue, baseDir = process.cwd()) {
+  const root = path.resolve(baseDir);
+  const segments = String(pathValue || "").split(/[\\/]+/).filter(Boolean).map((segment) => {
+    const sanitized = sanitizeFilename(segment);
+    if (sanitized !== segment || !sanitized) {
+      throw new Error(`Unsafe path segment: ${segment}`);
+    }
+    return sanitized;
+  });
+  const target = path.resolve(root, ...segments);
+  const rel = path.relative(root, target);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    throw new Error(`Path escapes allowed directory: ${pathValue}`);
+  }
+  return target;
 }
 
 function runGit(args, options = {}) {
@@ -122,7 +140,7 @@ function loadPullRequestBody(eventPath) {
     return null;
   }
 
-  const rawEvent = fs.readFileSync(path.resolve(eventPath), "utf8");
+  const rawEvent = fs.readFileSync(safeUserPath(eventPath), "utf8");
   const event = JSON.parse(rawEvent);
   return event.pull_request?.body || "";
 }

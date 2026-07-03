@@ -13,9 +13,27 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const sanitizeFilename = require('sanitize-filename');
 
 // Change to skill directory for proper module resolution
 process.chdir(__dirname);
+
+function safeUserPath(pathValue, baseDir = process.cwd()) {
+  const root = path.resolve(baseDir);
+  const segments = String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
+    const sanitized = sanitizeFilename(segment);
+    if (sanitized !== segment || !sanitized) {
+      throw new Error(`Unsafe path segment: ${segment}`);
+    }
+    return sanitized;
+  });
+  const target = path.resolve(root, ...segments);
+  const rel = path.relative(root, target);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) {
+    throw new Error(`Path escapes allowed directory: ${pathValue}`);
+  }
+  return target;
+}
 
 /**
  * Check if Playwright is installed
@@ -54,7 +72,7 @@ function getCodeToExecute() {
 
   // Case 1: File path provided
   if (args.length > 0 && fs.existsSync(args[0])) {
-    const filePath = path.resolve(args[0]);
+    const filePath = safeUserPath(args[0]);
     console.log(`📄 Executing file: ${filePath}`);
     return fs.readFileSync(filePath, 'utf8');
   }

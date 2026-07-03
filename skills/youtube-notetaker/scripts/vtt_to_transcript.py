@@ -8,6 +8,20 @@ previous cue, so we keep only newly-added words per cue and emit one line per cu
 time. Strips inline <00:00:00.000> word-timing tags and HTML tags.
 """
 import sys, re, html
+from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 TS=re.compile(r'(\d{2}):(\d{2}):(\d{2})\.\d{3}\s*-->\s*(\d{2}):(\d{2}):(\d{2})')
 INLINE=re.compile(r'<[^>]+>')
@@ -21,7 +35,7 @@ def clean(text):
 
 def main():
     if len(sys.argv)!=3: sys.exit("usage: vtt_to_transcript.py <in.vtt> <out.txt>")
-    raw=open(sys.argv[1],encoding='utf-8',errors='replace').read().splitlines()
+    raw=safe_user_path(sys.argv[1]).open(encoding='utf-8',errors='replace').read().splitlines()
     cues=[]  # (start_label, text)
     i=0; cur=None
     while i<len(raw):
@@ -52,7 +66,7 @@ def main():
         if new:
             out.append(f"{label} {' '.join(new)}")
         seen_words=(seen_words+new)[-40:]  # bounded window
-    with open(sys.argv[2],'w',encoding='utf-8') as f:
+    with safe_user_path(sys.argv[2]).open('w',encoding='utf-8') as f:
         f.write('\n'.join(out)+'\n')
     print(f"wrote {len(out)} transcript lines -> {sys.argv[2]}")
 

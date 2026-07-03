@@ -84,6 +84,7 @@ def run_command(cmd, description):
             cmd,
             check=True,
             capture_output=True,
+            shell=False,
             text=True
         )
         if result.stdout:
@@ -112,6 +113,14 @@ def require_hf_repo_id(value, name):
             file=sys.stderr,
         )
         sys.exit(1)
+
+
+def safe_filename_component(value, name):
+    """Allow repo-name text only where it becomes a local filename component."""
+    if not re.fullmatch(r"[A-Za-z0-9._-]{1,96}", value):
+        print(f"   Invalid {name}: {value!r}. Use letters, numbers, dots, dashes, or underscores.", file=sys.stderr)
+        sys.exit(1)
+    return value
 
 
 def env_flag(name):
@@ -230,7 +239,7 @@ gguf_output_dir = "/tmp/gguf_output"
 os.makedirs(gguf_output_dir, exist_ok=True)
 
 convert_script = "/tmp/llama.cpp/convert_hf_to_gguf.py"
-model_name = ADAPTER_MODEL.split('/')[-1]
+model_name = safe_filename_component(ADAPTER_MODEL.split('/')[-1], "ADAPTER_MODEL repo name")
 gguf_file = f"{gguf_output_dir}/{model_name}-f16.gguf"
 
 print(f"   Running conversion...")

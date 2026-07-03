@@ -2,9 +2,13 @@
 from __future__ import annotations
 
 import subprocess
-import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
+
+try:
+    from defusedxml import ElementTree as ET
+except ImportError:  # pragma: no cover - guidance for direct script use
+    ET = None
 
 
 @dataclass(frozen=True)
@@ -43,6 +47,8 @@ def toc(trace_path: Path) -> TraceInfo:
 
     The TOC is small (a few KB) so we load it fully rather than streaming.
     """
+    if ET is None:
+        raise RuntimeError("Install defusedxml before parsing xctrace XML exports.")
     xml_bytes = _run_export(trace_path, ["--toc"])
     root = ET.fromstring(xml_bytes)
 

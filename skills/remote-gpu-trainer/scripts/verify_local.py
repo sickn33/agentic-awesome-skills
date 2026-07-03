@@ -22,6 +22,19 @@ import sys
 from pathlib import Path
 
 
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("ckpt_dir", help="Directory containing ablation subdirs (each with best.pth + best_metrics.json)")
@@ -33,7 +46,7 @@ def main() -> int:
                          "needed only when a checkpoint pickles non-tensor objects (e.g. an args Namespace); OFF by default")
     args = ap.parse_args()
 
-    root = Path(args.ckpt_dir)
+    root = safe_user_path(args.ckpt_dir)
     if not root.exists():
         print(f"ERROR: {root} does not exist")
         return 1

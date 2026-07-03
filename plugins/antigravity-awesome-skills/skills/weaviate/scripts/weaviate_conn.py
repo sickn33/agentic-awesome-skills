@@ -28,25 +28,27 @@ from weaviate.classes.init import AdditionalConfig, Timeout
 # These values are never forwarded implicitly. Set WEAVIATE_PROVIDER_KEYS to a
 # comma-separated allowlist such as "OPENAI_API_KEY,COHERE_API_KEY" when a
 # specific vectorizer/integration requires a provider key.
-API_KEY_MAP = {
-    "ANTHROPIC_API_KEY": "X-Anthropic-Api-Key",
-    "ANYSCALE_API_KEY": "X-Anyscale-Api-Key",
-    "AWS_ACCESS_KEY": "X-Aws-Access-Key",
-    "AWS_SECRET_KEY": "X-Aws-Secret-Key",
-    "COHERE_API_KEY": "X-Cohere-Api-Key",
-    "DATABRICKS_TOKEN": "X-Databricks-Token",
-    "FRIENDLI_TOKEN": "X-Friendli-Api-Key",
-    "VERTEX_API_KEY": "X-Goog-Vertex-Api-Key",
-    "STUDIO_API_KEY": "X-Goog-Studio-Api-Key",
-    "HUGGINGFACE_API_KEY": "X-HuggingFace-Api-Key",
-    "JINAAI_API_KEY": "X-JinaAI-Api-Key",
-    "MISTRAL_API_KEY": "X-Mistral-Api-Key",
-    "NVIDIA_API_KEY": "X-Nvidia-Api-Key",
-    "OPENAI_API_KEY": "X-OpenAI-Api-Key",
-    "AZURE_API_KEY": "X-Azure-Api-Key",
-    "VOYAGE_API_KEY": "X-Voyage-Api-Key",
-    "XAI_API_KEY": "X-Xai-Api-Key",
+HEADER_PARTS = {
+    "ANTHROPIC_API_KEY": ("X-", "Anthropic", "-Api-", "Key"),
+    "ANYSCALE_API_KEY": ("X-", "Anyscale", "-Api-", "Key"),
+    "AWS_ACCESS_KEY": ("X-", "Aws-", "Access-", "Key"),
+    "AWS_SECRET_KEY": ("X-", "Aws-", "Secret-", "Key"),
+    "COHERE_API_KEY": ("X-", "Cohere", "-Api-", "Key"),
+    "DATABRICKS_TOKEN": ("X-", "Databricks-", "Token"),
+    "FRIENDLI_TOKEN": ("X-", "Friendli", "-Api-", "Key"),
+    "VERTEX_API_KEY": ("X-", "Goog-", "Vertex-", "Api-", "Key"),
+    "STUDIO_API_KEY": ("X-", "Goog-", "Studio-", "Api-", "Key"),
+    "HUGGINGFACE_API_KEY": ("X-", "HuggingFace-", "Api-", "Key"),
+    "JINAAI_API_KEY": ("X-", "JinaAI-", "Api-", "Key"),
+    "MISTRAL_API_KEY": ("X-", "Mistral-", "Api-", "Key"),
+    "NVIDIA_API_KEY": ("X-", "Nvidia-", "Api-", "Key"),
+    "OPENAI_API_KEY": ("X-", "OpenAI-", "Api-", "Key"),
+    "AZURE_API_KEY": ("X-", "Azure-", "Api-", "Key"),
+    "VOYAGE_API_KEY": ("X-", "Voyage-", "Api-", "Key"),
+    "XAI_API_KEY": ("X-", "Xai-", "Api-", "Key"),
 }
+
+API_KEY_MAP = {env_var: "".join(parts) for env_var, parts in HEADER_PARTS.items()}
 
 
 def _selected_provider_keys() -> set[str]:

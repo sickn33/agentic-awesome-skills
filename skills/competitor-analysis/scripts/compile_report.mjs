@@ -9,6 +9,7 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { basename, dirname, join, relative, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import sanitizeFilename from 'sanitize-filename';
 import { parseFrontmatter, parseBody, parseSections } from './md_utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,9 +18,19 @@ const __dirname = dirname(__filename);
 const args = process.argv.slice(2);
 const SAFE_SLUG_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
+function sanitizePathSegments(pathValue) {
+  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
+    const sanitized = sanitizeFilename(segment);
+    if (sanitized !== segment || !sanitized) {
+      throw new Error(`Unsafe path segment: ${segment}`);
+    }
+    return sanitized;
+  });
+}
+
 function safeJoin(base, ...parts) {
   const root = resolve(base);
-  const target = resolve(root, ...parts);
+  const target = resolve(root, ...parts.flatMap(sanitizePathSegments));
   const rel = relative(root, target);
   if (rel.startsWith('..') || rel.startsWith('/')) {
     throw new Error(`Path escapes research directory: ${parts.join('/')}`);
@@ -32,7 +43,7 @@ function safeResearchDir(rawDir) {
     throw new Error('Research directory is required');
   }
   const root = resolve(process.cwd());
-  const target = resolve(root, rawDir);
+  const target = safeJoin(root, rawDir);
   const rel = relative(root, target);
   if ((rel.startsWith('..') || rel.startsWith('/')) && process.env.COMPETITOR_ANALYSIS_ALLOW_EXTERNAL_DIR !== '1') {
     throw new Error('Research directory must stay under the current working directory');

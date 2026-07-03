@@ -9,9 +9,21 @@ import re
 import yaml
 from pathlib import Path
 
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 def validate_skill(skill_path):
     """Basic validation of a skill"""
-    skill_path = Path(skill_path)
+    skill_path = safe_user_path(skill_path)
 
     # Check SKILL.md exists
     skill_md = skill_path / 'SKILL.md'

@@ -12,7 +12,21 @@ Example:
 
 import sys
 import zipfile
+import tempfile
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from quick_validate import validate_skill
 
 
@@ -37,7 +51,7 @@ def package_skill(skill_path, output_dir=None):
     Returns:
         Path to the created .skill file, or None if error
     """
-    skill_path = Path(skill_path).resolve()
+    skill_path = safe_user_path(skill_path).resolve()
 
     # Validate skill folder exists
     if not skill_path.exists():
@@ -66,7 +80,7 @@ def package_skill(skill_path, output_dir=None):
     # Determine output location
     skill_name = skill_path.name
     if output_dir:
-        output_path = Path(output_dir).resolve()
+        output_path = safe_user_path(output_dir).resolve()
         output_path.mkdir(parents=True, exist_ok=True)
     else:
         output_path = Path.cwd()
@@ -75,14 +89,17 @@ def package_skill(skill_path, output_dir=None):
 
     # Create the .skill file (zip format)
     try:
-        with zipfile.ZipFile(skill_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            # Walk through the skill directory
-            for file_path in skill_path.rglob('*'):
-                if should_include(file_path, skill_path):
-                    # Calculate the relative path within the zip
-                    arcname = file_path.relative_to(skill_path.parent)
-                    zipf.write(file_path, arcname)
-                    print(f"  Added: {arcname}")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_zip_path = Path(temp_dir) / "skill.zip"
+            with zipfile.ZipFile(temp_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                # Walk through the skill directory
+                for file_path in skill_path.rglob('*'):
+                    if should_include(file_path, skill_path):
+                        # Calculate the relative path within the zip
+                        arcname = file_path.relative_to(skill_path.parent)
+                        zipf.write(file_path, arcname)
+                        print(f"  Added: {arcname}")
+            skill_filename.write_bytes(temp_zip_path.read_bytes())
 
         print(f"\n✅ Successfully packaged skill to: {skill_filename}")
         return skill_filename
@@ -100,8 +117,8 @@ def main():
         print("  python utils/package_skill.py skills/public/my-skill ./dist")
         sys.exit(1)
 
-    skill_path = sys.argv[1]
-    output_dir = sys.argv[2] if len(sys.argv) > 2 else None
+    skill_path = safe_user_path(sys.argv[1])
+    output_dir = safe_user_path(sys.argv[2]) if len(sys.argv) > 2 else None
 
     print(f"📦 Packaging skill: {skill_path}")
     if output_dir:

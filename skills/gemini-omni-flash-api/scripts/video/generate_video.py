@@ -22,6 +22,20 @@ from google import genai
 # Load local upload helper logic inline to prevent dependency issues
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from upload_file import upload_file, wait_for_active
+from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 def get_api_key(args):
     """Retrieves API key from command args or environment."""
@@ -57,6 +71,14 @@ def normalize_file_uri(uri):
     if file_id:
         return f"https://generativelanguage.googleapis.com/files/{file_id}"
     return uri
+
+
+def media_download_url(file_uri):
+    """Build a media URL only for validated Gemini File API references."""
+    file_id = extract_file_id(file_uri)
+    if not file_id:
+        raise ValueError("Generated video URI must be a Gemini File API reference.")
+    return f"https://generativelanguage.googleapis.com/files/{file_id}?alt=media"
 
 def slugify(text):
     """Converts a text prompt into a safe, descriptive filename slug."""
@@ -158,7 +180,7 @@ def resolve_or_upload_asset(asset_path, mime_type, api_key, strip_audio=False):
         # Clean up temporary stripped file if we created one
         if temp_stripped_path and os.path.exists(temp_stripped_path):
             try:
-                os.remove(temp_stripped_path)
+                safe_user_path(temp_stripped_path).unlink()
                 print(f"Cleaned up temporary video file: {temp_stripped_path}")
             except Exception as e:
                 print(f"Warning: Failed to remove temporary file {temp_stripped_path}: {e}", file=sys.stderr)
@@ -171,8 +193,7 @@ def resolve_or_upload_asset(asset_path, mime_type, api_key, strip_audio=False):
 
 def download_video_file(file_uri, output_path, api_key):
     """Downloads generated video file from URI using alt=media standard in a memory-safe, chunked manner."""
-    separator = "&" if "?" in file_uri else "?"
-    download_url = f"{file_uri}{separator}alt=media"
+    download_url = media_download_url(file_uri)
 
     print(f"Downloading video from {file_uri} to {output_path} in chunked mode...")
     req = urllib.request.Request(download_url)
@@ -184,7 +205,7 @@ def download_video_file(file_uri, output_path, api_key):
             if parent_dir:
                 os.makedirs(parent_dir, exist_ok=True)
 
-            with open(output_path, "wb") as f:
+            with safe_user_path(output_path).open("wb") as f:
                 while True:
                     chunk = resp.read(8192)
                     if not chunk:
@@ -357,7 +378,7 @@ def main():
             print(f"Error: Batch JSON file '{args.batch}' not found.", file=sys.stderr)
             sys.exit(1)
         try:
-            with open(args.batch, "r", encoding="utf-8") as f:
+            with safe_user_path(args.batch).open("r", encoding="utf-8") as f:
                 jobs = json.load(f)
             if not isinstance(jobs, list):
                 print("Error: Batch JSON file must contain a list/array of job objects.", file=sys.stderr)
@@ -375,7 +396,7 @@ def main():
             sys.exit(1)
 
         jobs = []
-        with open(args.prompts_file, "r", encoding="utf-8") as f:
+        with safe_user_path(args.prompts_file).open("r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith("#"):

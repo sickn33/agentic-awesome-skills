@@ -15,8 +15,12 @@
 
 const fs = require('fs');
 const path = require('path');
+const sanitizeFilename = require('sanitize-filename');
 
-const projectPath = process.argv[2];
+const rawProjectPath = process.argv[2];
+const projectPath = rawProjectPath
+  ? path.resolve(process.cwd(), sanitizeFilename(path.basename(rawProjectPath)))
+  : null;
 const withDocs = process.argv.includes('--docs');
 
 if (!projectPath) {

@@ -42,6 +42,19 @@ import sys
 import time
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 import polars as pl
 from ascii_graph import Pyasciigraph
 from datasets import Dataset
@@ -401,7 +414,7 @@ def main():
         print("The 'text' column is never loaded, making this very fast.\n")
 
     # Create output directory
-    output_dir = Path(args.output_dir)
+    output_dir = safe_user_path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Single scan: compute temporal stats

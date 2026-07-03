@@ -14,6 +14,7 @@
 //   { "url": "https://foo.com", "status": "PASS" | "REJECT" | "UNKNOWN",
 //     "matched_includes": [...], "matched_excludes": [...], "title": "...", "hero": "..." }
 
+import sanitizeFilename from 'sanitize-filename';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { readFileSync } from 'fs';
@@ -25,6 +26,26 @@ import { readFileSync } from 'fs';
 const execFileAsync = promisify(execFile);
 
 const args = process.argv.slice(2);
+function sanitizePathSegments(pathValue) {
+  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
+    const sanitized = sanitizeFilename(segment);
+    if (sanitized !== segment || !sanitized) {
+      throw new Error(`Unsafe path segment: ${segment}`);
+    }
+    return sanitized;
+  });
+}
+
+function safeCliPath(pathValue, baseDir = process.cwd()) {
+  const root = resolve(baseDir);
+  const target = resolve(root, ...sanitizePathSegments(pathValue));
+  const rel = relative(root, target);
+  if (rel.startsWith('..') || isAbsolute(rel)) {
+    throw new Error(`Path escapes allowed directory: ${pathValue}`);
+  }
+  return target;
+}
+
 
 if (args.includes('--help') || args.includes('-h')) {
   console.error(`Usage: cat urls.txt | node gate_candidates.mjs [options]

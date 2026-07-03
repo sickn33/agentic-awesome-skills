@@ -13,6 +13,17 @@ import sys
 import argparse
 from datetime import datetime
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a path under an explicit trusted base directory."""
+    base_path = Path(base_dir).expanduser().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 import yaml
 from _project_paths import find_repo_root
 from risk_classifier import suggest_risk
@@ -35,8 +46,8 @@ def parse_frontmatter(content):
 
 def generate_skills_report(output_file=None, sort_by='date', project_root=None):
     """Generate a report of all skills with their metadata."""
-    root = str(project_root or get_project_root())
-    skills_dir = os.path.join(root, 'skills')
+    project_root_path = Path(project_root or get_project_root()).resolve()
+    skills_dir = project_root_path / 'skills'
     skills_data = []
     
     for root, dirs, files in os.walk(skills_dir):
@@ -48,7 +59,7 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
             skill_path = os.path.join(root, "SKILL.md")
             
             try:
-                with open(skill_path, 'r', encoding='utf-8') as f:
+                with safe_user_path(skill_path, skills_dir).open('r', encoding='utf-8') as f:
                     content = f.read()
                 
                 metadata = parse_frontmatter(content)
@@ -106,8 +117,9 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
     # Output
     if output_file:
         try:
-            with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump(report, f, indent=2, ensure_ascii=False)
+            output_path = Path(output_file).expanduser().resolve()
+            with safe_user_path(output_path, output_path.parent).open('w', encoding='utf-8') as f:
+                f.write(json.dumps(report, indent=2, ensure_ascii=False))
             print(f"✅ Report saved to: {output_file}")
         except Exception as e:
             print(f"❌ Error saving report: {str(e)}")

@@ -21,6 +21,19 @@ import requests
 from datetime import datetime
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 # ── Configuration ──────────────────────────────────────────────
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN", "")
 NOTION_DIARY_DB = os.environ.get("NOTION_DIARY_DB", "")
@@ -430,7 +443,7 @@ def main():
         print("      python sync_to_notion.py --create-db <parent_page_id>")
         sys.exit(1)
 
-    diary_path = Path(sys.argv[1])
+    diary_path = safe_user_path(sys.argv[1])
     if not diary_path.exists():
         print(f"❌ 找不到日記文件：{diary_path}")
         sys.exit(1)

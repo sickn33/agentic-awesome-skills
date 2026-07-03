@@ -15,6 +15,19 @@ import sys
 from pathlib import Path
 
 
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
+
 SKILL_TEMPLATE = """---
 name: {skill_name}
 description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
@@ -203,7 +216,7 @@ def init_skill(skill_name, path):
         Path to created skill directory, or None if error
     """
     # Determine skill directory path
-    skill_dir = Path(path).resolve() / skill_name
+    skill_dir = safe_user_path(path).resolve() / skill_name
 
     # Check if directory already exists
     if skill_dir.exists():
@@ -285,7 +298,7 @@ def main():
         sys.exit(1)
 
     skill_name = sys.argv[1]
-    path = sys.argv[3]
+    path = safe_user_path(sys.argv[3])
 
     print(f"🚀 Initializing skill: {skill_name}")
     print(f"   Location: {path}")
