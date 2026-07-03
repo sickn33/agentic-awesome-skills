@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.8.0] - 2026-07-03 - "Code Polish and Catalog Sync"
+
+> Community skill intake and maintainer sync for the 1,895+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1895-skills](README.md#browse-1895-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release packages the July 3 maintenance pass: one fully-checked community skill PR, generated registry and plugin mirror sync, public catalog counters, and a clean SEO/public-surface refresh for the 1,895+ skill catalog.
+
+## Added
+
+- Added **code-polish**, a constraint-based cleanup skill for professionalizing code comments, removing redundant or stale comment noise, and keeping behavior changes out of scope (PR #771).
+
+## Changed
+
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, public docs, sitemap, package description, and README counters for the 1,895+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #771 after required GitHub checks passed.
+- Ran `npm run sync:repo-state`.
+- Ran `npm_config_cache=/private/tmp/aas-npm-cache npm audit --audit-level=moderate` with 0 vulnerabilities.
+- Ran the release prepare suite for v13.8.0, including reference validation, release-state sync, tests, web-app install, web-app build, and package dry run.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #771 (`code-polish`).
+
 ## [13.7.0] - 2026-07-02 - "Security Hardening and Community Intake"
 
 > Maintainer security sweep, PR maintenance, and catalog sync for the 1,894+ skill catalog.
