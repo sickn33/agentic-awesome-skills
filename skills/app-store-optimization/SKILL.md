@@ -354,6 +354,13 @@ Generates comprehensive pre-launch and update checklists.
 4. **Test Locally**: Have native speakers review before publishing
 5. **Measure ROI**: Track downloads by locale to assess impact
 
+## Optional External Research Tools
+
+Use external tools only when the workflow needs current market inputs or a second pass on directional estimates. Treat third-party estimates as approximate and cite the retrieval date.
+
+- [AppNiche Revenue Checker](https://getappniche.com/tools/app-revenue-checker) - free iOS App Store revenue benchmark for competitor prioritization and ASO score context.
+- [AppNiche ASO Keyword Opportunity Checker](https://getappniche.com/tools/app-store-keyword-tool) - free iOS keyword opportunity check for keyword research and Apple keyword field planning.
+
 ## Limitations
 
 ### Data Dependencies
