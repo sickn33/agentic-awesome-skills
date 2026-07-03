@@ -107,7 +107,7 @@
       },
       {
         "heading": "Reusable across agents",
-        "body": "The same library supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related assistant runtimes."
+        "body": "The same library supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related assistant runtimes."
       }
     ],
     "links": [

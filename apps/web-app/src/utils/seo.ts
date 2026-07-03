@@ -38,7 +38,7 @@ const FAQ_ITEMS = [
   {
     question: 'What is Antigravity Awesome Skills?',
     answer: (countLabel: string) =>
-      `Antigravity Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
+      `Antigravity Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
   },
   {
     question: 'How do I install Antigravity Awesome Skills?',
@@ -372,8 +372,8 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
     ? `Antigravity Awesome Skills GitHub | ${visibleCountLabel} AI coding skills`
     : 'Antigravity Awesome Skills GitHub | AI coding skills';
   const description = visibleCount > 0
-    ? `Explore the GitHub library of ${visibleCountLabel} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.`
-    : 'Explore the GitHub library of installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.';
+    ? `Explore the GitHub library of ${visibleCountLabel} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.`
+    : 'Explore the GitHub library of installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.';
   return {
     title,
     description,
