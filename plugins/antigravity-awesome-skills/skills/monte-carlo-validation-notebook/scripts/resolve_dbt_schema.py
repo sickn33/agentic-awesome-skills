@@ -12,6 +12,19 @@ import argparse
 import re
 import sys
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from typing import Dict, List, Optional, Tuple, Union
 
 import yaml
@@ -141,8 +154,8 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    dbt_project_path = Path(args.dbt_project_path)
-    model_path = Path(args.model_path)
+    dbt_project_path = safe_user_path(args.dbt_project_path)
+    model_path = safe_user_path(args.model_path)
 
     if not dbt_project_path.exists():
         print(f"Error: dbt_project.yml not found: {dbt_project_path}", file=sys.stderr)

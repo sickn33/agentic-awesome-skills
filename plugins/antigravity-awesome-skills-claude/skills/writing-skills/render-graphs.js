@@ -16,10 +16,21 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const sanitizeFilename = require('sanitize-filename');
+
+function sanitizePathSegments(pathValue) {
+  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
+    const sanitized = sanitizeFilename(segment);
+    if (sanitized !== segment || !sanitized) {
+      throw new Error(`Unsafe path segment: ${segment}`);
+    }
+    return sanitized;
+  });
+}
 
 function safeJoin(base, ...parts) {
   const root = path.resolve(base);
-  const target = path.resolve(root, ...parts);
+  const target = path.resolve(root, ...parts.flatMap(sanitizePathSegments));
   const rel = path.relative(root, target);
   if (rel.startsWith('..') || path.isAbsolute(rel)) {
     throw new Error(`Path escapes skill directory: ${parts.join('/')}`);
@@ -123,7 +134,7 @@ function main() {
     process.exit(1);
   }
 
-  const skillDir = path.resolve(skillDirArg);
+  const skillDir = safeJoin(process.cwd(), skillDirArg);
   const skillFile = safeJoin(skillDir, 'SKILL.md');
   const skillName = path.basename(skillDir).replace(/-/g, '_');
 

@@ -20,6 +20,19 @@ import re
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from typing import Any, Iterable
 
 CONFIG_NAME_PATTERN = re.compile(r"^drizzle(?:[.-].+)?\.config\.(?:ts|js|mjs|cjs|mts|cts)$")
@@ -169,15 +182,14 @@ def iter_config_files(
     if explicit_configs:
         return configs, issues
 
-    for current_root, dirnames, filenames in os.walk(root):
-        dirnames[:] = [name for name in dirnames if name not in SKIP_DIR_NAMES]
-        base = Path(current_root)
-        for filename in filenames:
-            if CONFIG_NAME_PATTERN.match(filename):
-                path = (base / filename).resolve()
-                if path not in seen:
-                    seen.add(path)
-                    configs.append(path)
+    for path in safe_user_path(root).rglob("*"):
+        if not path.is_file() or any(part in SKIP_DIR_NAMES for part in path.parts):
+            continue
+        if CONFIG_NAME_PATTERN.match(path.name):
+            resolved = path.resolve()
+            if resolved not in seen:
+                seen.add(resolved)
+                configs.append(resolved)
     return configs, issues
 
 
@@ -283,13 +295,11 @@ def discover_dirs(args: argparse.Namespace, root: Path) -> tuple[list[Path], lis
 
 
 def iter_text_files(directory: Path) -> Iterable[Path]:
-    for current_root, dirnames, filenames in os.walk(directory):
-        dirnames[:] = [name for name in dirnames if name not in SKIP_DIR_NAMES]
-        base = Path(current_root)
-        for filename in filenames:
-            path = base / filename
-            if path.suffix in TEXT_SUFFIXES:
-                yield path
+    for path in safe_user_path(directory).rglob("*"):
+        if not path.is_file() or any(part in SKIP_DIR_NAMES for part in path.parts):
+            continue
+        if path.suffix in TEXT_SUFFIXES:
+            yield path
 
 
 def has_conflict_markers(path: Path) -> bool:
@@ -696,7 +706,7 @@ def report_as_text(root: Path, reports: list[DirectoryReport]) -> str:
 
 def main() -> int:
     args = parse_args()
-    root = Path(args.root).resolve()
+    root = safe_user_path(args.root).resolve()
     dirs, discovery_issues = discover_dirs(args, root)
     reports: list[DirectoryReport] = []
     if discovery_issues:

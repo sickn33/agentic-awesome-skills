@@ -19,6 +19,20 @@ Writes  $VIDEO_LIBRARY_DIR/<YTID>.md  (default ~/video-deepdives/<YTID>.md)
 with YAML frontmatter + transcript body. No em dashes or arrows in titles/notes.
 """
 import argparse, json, os, sys, datetime
+from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 try:
     import yaml
 except ImportError:
@@ -58,7 +72,7 @@ def main():
     body=open(a.transcript,encoding="utf-8").read().strip()
     os.makedirs(LIB,exist_ok=True)
     path=os.path.join(LIB,f"{a.id}.md")
-    with open(path,"w",encoding="utf-8") as f:
+    with safe_user_path(path).open("w",encoding="utf-8") as f:
         f.write("---\n")
         yaml.safe_dump(fm,f,sort_keys=False,allow_unicode=True,width=100)
         f.write("---\n## Transcript\n")

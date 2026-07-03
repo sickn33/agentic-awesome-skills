@@ -6,6 +6,20 @@ Brand Voice Analyzer - Analyzes content to establish and maintain brand voice co
 import re
 from typing import Dict, List, Tuple
 import json
+from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 class BrandVoiceAnalyzer:
     def __init__(self):
@@ -176,7 +190,7 @@ if __name__ == "__main__":
     import sys
     
     if len(sys.argv) > 1:
-        with open(sys.argv[1], 'r') as f:
+        with safe_user_path(sys.argv[1]).open('r') as f:
             content = f.read()
         
         output_format = sys.argv[2] if len(sys.argv) > 2 else 'text'

@@ -2,6 +2,20 @@ import json
 import sys
 
 from PIL import Image, ImageDraw
+from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 
 # Creates "validation" images with rectangles for the bounding box information that
@@ -35,7 +49,7 @@ if __name__ == "__main__":
         print("Usage: create_validation_image.py [page number] [fields.json file] [input image path] [output image path]")
         sys.exit(1)
     page_number = int(sys.argv[1])
-    fields_json_path = sys.argv[2]
-    input_image_path = sys.argv[3]
-    output_image_path = sys.argv[4]
+    fields_json_path = safe_user_path(sys.argv[2])
+    input_image_path = safe_user_path(sys.argv[3])
+    output_image_path = safe_user_path(sys.argv[4])
     create_validation_image(page_number, fields_json_path, input_image_path, output_image_path)

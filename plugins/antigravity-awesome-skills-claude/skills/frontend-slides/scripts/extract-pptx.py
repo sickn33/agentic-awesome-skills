@@ -13,6 +13,20 @@ import json
 import os
 import sys
 from pptx import Presentation
+from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 
 def extract_pptx(file_path, output_dir="."):
@@ -54,7 +68,7 @@ def extract_pptx(file_path, output_dir="."):
                 image_name = f"slide{slide_num + 1}_img{len(slide_data['images']) + 1}.{image_ext}"
                 image_path = os.path.join(assets_dir, image_name)
 
-                with open(image_path, "wb") as f:
+                with safe_user_path(image_path).open("wb") as f:
                     f.write(image_bytes)
 
                 slide_data["images"].append(
@@ -81,14 +95,14 @@ if __name__ == "__main__":
         sys.exit(1)
 
     input_file = sys.argv[1]
-    output_dir = sys.argv[2] if len(sys.argv) > 2 else "."
+    output_dir = safe_user_path(sys.argv[2]) if len(sys.argv) > 2 else "."
 
     slides = extract_pptx(input_file, output_dir)
 
     # Write extracted data as JSON
     output_path = os.path.join(output_dir, "extracted-slides.json")
-    with open(output_path, "w") as f:
-        json.dump(slides, f, indent=2)
+    with safe_user_path(output_path).open("w") as f:
+        f.write(json.dumps(slides, indent=2))
 
     print(f"Extracted {len(slides)} slides to {output_path}")
     for s in slides:

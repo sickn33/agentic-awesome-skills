@@ -16,6 +16,19 @@ import zipfile
 from pathlib import Path
 
 
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
+
 def validate_input_tree(input_dir: Path):
     root = input_dir.resolve(strict=True)
     for path in input_dir.rglob("*"):
@@ -25,6 +38,18 @@ def validate_input_tree(input_dir: Path):
             path.resolve(strict=True).relative_to(root)
         except (OSError, ValueError):
             raise ValueError(f"Refusing to pack path outside input directory: {path}") from None
+
+
+def copy_tree_contents(source_dir: Path, target_dir: Path) -> None:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for source_path in source_dir.rglob("*"):
+        relative_path = source_path.relative_to(source_dir)
+        target_path = target_dir / relative_path
+        if source_path.is_dir():
+            target_path.mkdir(parents=True, exist_ok=True)
+        elif source_path.is_file():
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            target_path.write_bytes(source_path.read_bytes())
 
 
 def main():
@@ -65,7 +90,7 @@ def pack_document(input_dir, output_file, validate=False):
         bool: True if successful, False if validation failed
     """
     input_dir = Path(input_dir)
-    output_file = Path(output_file)
+    output_file = safe_user_path(output_file)
 
     if not input_dir.is_dir():
         raise ValueError(f"{input_dir} is not a directory")
@@ -76,7 +101,7 @@ def pack_document(input_dir, output_file, validate=False):
     # Work in temporary directory to avoid modifying original
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_content_dir = Path(temp_dir) / "content"
-        shutil.copytree(input_dir, temp_content_dir)
+        copy_tree_contents(input_dir, temp_content_dir)
 
         # Process XML files to remove pretty-printing whitespace
         for pattern in ["*.xml", "*.rels"]:
@@ -85,10 +110,12 @@ def pack_document(input_dir, output_file, validate=False):
 
         # Create final Office file as zip archive
         output_file.parent.mkdir(parents=True, exist_ok=True)
-        with zipfile.ZipFile(output_file, "w", zipfile.ZIP_DEFLATED) as zf:
+        temp_zip_path = Path(temp_dir) / "office.zip"
+        with zipfile.ZipFile(temp_zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
             for f in temp_content_dir.rglob("*"):
                 if f.is_file():
                     zf.write(f, f.relative_to(temp_content_dir))
+        output_file.write_bytes(temp_zip_path.read_bytes())
 
         # Validate if requested
         if validate:

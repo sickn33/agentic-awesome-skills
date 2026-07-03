@@ -6,6 +6,19 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 try:
     import tomllib
 except ModuleNotFoundError:  # pragma: no cover
@@ -177,7 +190,7 @@ def main():
 
     payload = json.dumps(result, indent=2, sort_keys=True)
     if args.output:
-        output = Path(args.output)
+        output = safe_user_path(args.output)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(payload + "\n", encoding="utf-8")
     else:

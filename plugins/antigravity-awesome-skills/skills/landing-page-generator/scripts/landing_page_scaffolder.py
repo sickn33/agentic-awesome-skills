@@ -16,6 +16,20 @@ import sys
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import html as html_module
+from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 
 def escape(text: str) -> str:
@@ -557,7 +571,7 @@ def main():
         output = generate_html(config)
 
     if args.output:
-        with open(args.output, "w") as f:
+        with safe_user_path(args.output).open("w") as f:
             f.write(output)
         print(f"Landing page written to {args.output}")
     else:

@@ -30,6 +30,19 @@ import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from typing import Any
 
 
@@ -336,11 +349,11 @@ def build_report(records: list[dict[str, Any]], source_path: Path) -> str:
 
 def main(argv: list[str]) -> int:
     if len(argv) != 3:
-        print(f"usage: {Path(argv[0]).name} <input.ndjson> <output.md>", file=sys.stderr)
+        print(f"usage: {safe_user_path(argv[0]).name} <input.ndjson> <output.md>", file=sys.stderr)
         return 1
 
-    input_path = Path(argv[1])
-    output_path = Path(argv[2])
+    input_path = safe_user_path(argv[1])
+    output_path = safe_user_path(argv[2])
 
     if not input_path.exists() or input_path.stat().st_size == 0:
         print(f"error: {input_path} is missing or empty", file=sys.stderr)

@@ -11,14 +11,6 @@ def _allow_external_paths() -> bool:
     return os.getenv("MCD_ALLOW_EXTERNAL_PATHS", "").lower() in {"1", "true", "yes"}
 
 
-def _is_relative_to(path: Path, root: Path) -> bool:
-    try:
-        path.relative_to(root)
-        return True
-    except ValueError:
-        return False
-
-
 def _resolve_local_path(raw_path: str, *, expect_file: bool = False, create_parent: bool = False) -> Path:
     value = str(raw_path).strip()
     if not value or "\0" in value:
@@ -26,8 +18,13 @@ def _resolve_local_path(raw_path: str, *, expect_file: bool = False, create_pare
     base = Path.cwd().resolve()
     candidate = Path(value).expanduser()
     resolved = (candidate if candidate.is_absolute() else base / candidate).resolve()
-    if not _allow_external_paths() and not _is_relative_to(resolved, base):
-        raise ValueError(f"Path must stay under the current working directory: {raw_path!r}")
+    if not _allow_external_paths():
+        try:
+            resolved.relative_to(base)
+        except ValueError as exc:
+            raise ValueError(
+                f"Path must stay under the current working directory: {raw_path!r}"
+            ) from exc
     if expect_file and not resolved.is_file():
         raise FileNotFoundError(f"Input file not found: {resolved}")
     if create_parent:
@@ -62,5 +59,5 @@ def read_json_file(raw_path: str):
 
 
 def write_json_file(raw_path: str, payload, *, indent: int = 2, default=None) -> None:
-    with safe_output_json_path(raw_path).open("w") as fh:
-        json.dump(payload, fh, indent=indent, default=default)
+    output_path = safe_output_json_path(raw_path)
+    output_path.write_text(json.dumps(payload, indent=indent, default=default), encoding="utf-8")

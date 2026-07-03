@@ -33,6 +33,39 @@ import re
 from pathlib import Path
 from datetime import datetime
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
+
+def copy_tree_contents(source_dir: Path, target_dir: Path, *, ignore=None) -> None:
+    ignored_by_dir = {}
+    if ignore is not None:
+        for current_dir in [source_dir, *[p for p in source_dir.rglob("*") if p.is_dir()]]:
+            ignored_by_dir[current_dir] = set(ignore(str(current_dir), [p.name for p in current_dir.iterdir()]))
+
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for source_path in source_dir.rglob("*"):
+        ignored_names = ignored_by_dir.get(source_path.parent, set())
+        if source_path.name in ignored_names:
+            continue
+        relative_path = source_path.relative_to(source_dir)
+        target_path = target_dir / relative_path
+        if source_path.is_dir():
+            target_path.mkdir(parents=True, exist_ok=True)
+        elif source_path.is_file():
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            target_path.write_bytes(source_path.read_bytes())
+
 # Add scripts directory to path for imports
 SCRIPT_DIR = Path(__file__).parent.resolve()
 sys.path.insert(0, str(SCRIPT_DIR))
@@ -147,7 +180,7 @@ def safe_skill_path(root: Path, skill_name: str) -> Path:
 
 def resolve_skill_source(source: str) -> Path:
     """Resolve and validate a local skill source directory."""
-    source_path = Path(source).expanduser().resolve()
+    source_path = safe_user_path(source).expanduser().resolve()
     if not source_path.is_dir():
         raise ValueError(f"Source does not exist or is not a directory: {source_path}")
     if not (source_path / "SKILL.md").is_file():
@@ -164,7 +197,7 @@ def md5_dir(path: Path, exclude_dirs: set = None) -> str:
     if exclude_dirs is None:
         exclude_dirs = {"backups", "staging", ".git", "__pycache__", "node_modules", ".venv"}
 
-    root_path = Path(path).resolve(strict=True)
+    root_path = safe_user_path(path).resolve(strict=True)
     if not root_path.is_dir():
         raise ValueError(f"Hash target must be a directory: {root_path}")
 
@@ -173,7 +206,7 @@ def md5_dir(path: Path, exclude_dirs: set = None) -> str:
         # Filter out excluded directories
         dirs[:] = [d for d in dirs if d not in exclude_dirs]
         for f in sorted(files):
-            fp = Path(root) / f
+            fp = safe_user_path(root) / f
             try:
                 resolved_fp = fp.resolve(strict=True)
                 resolved_fp.relative_to(root_path)
@@ -370,7 +403,7 @@ def step4_check_conflicts(skill_name: str) -> dict:
 def _backup_ignore(directory, contents):
     """Ignore function for shutil.copytree to skip backup/staging dirs."""
     ignored = set()
-    dir_path = Path(directory)
+    dir_path = safe_user_path(directory)
     for item in contents:
         item_path = dir_path / item
         if item_path.is_symlink():
@@ -436,7 +469,7 @@ def step6_copy_to_skills_root(source_path: Path, skill_name: str) -> dict:
 
     # Copy to staging first (skip backups/staging to prevent recursion)
     try:
-        shutil.copytree(source_path, staging, ignore=_backup_ignore, dirs_exist_ok=True)
+        copy_tree_contents(source_path, staging, ignore=_backup_ignore)
     except Exception as e:
         return {"success": False, "error": f"Copy to staging failed: {e}"}
 
@@ -470,7 +503,7 @@ def step6_copy_to_skills_root(source_path: Path, skill_name: str) -> dict:
     except Exception as e:
         # Try copy + delete as fallback (cross-device moves)
         try:
-            shutil.copytree(staging, dest, dirs_exist_ok=True)
+            copy_tree_contents(staging, dest)
             shutil.rmtree(staging, ignore_errors=True)
         except Exception as e2:
             shutil.rmtree(staging, ignore_errors=True)
@@ -496,7 +529,7 @@ def step7_register_claude(skill_name: str) -> dict:
 
     # Copy SKILL.md
     try:
-        shutil.copy2(source_skill_md, claude_dest_dir / "SKILL.md")
+        (claude_dest_dir / "SKILL.md").write_bytes(source_skill_md.read_bytes())
     except Exception as e:
         return {"success": False, "error": f"Failed to copy SKILL.md to Claude skills: {e}"}
 
@@ -507,7 +540,7 @@ def step7_register_claude(skill_name: str) -> dict:
         try:
             if claude_refs.exists():
                 shutil.rmtree(claude_refs)
-            shutil.copytree(refs_dir, claude_refs)
+            copy_tree_contents(refs_dir, claude_refs)
         except Exception:
             pass  # Non-critical
 

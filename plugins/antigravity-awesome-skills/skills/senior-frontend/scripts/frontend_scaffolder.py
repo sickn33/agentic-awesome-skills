@@ -16,6 +16,19 @@ import json
 import os
 import sys
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from typing import Dict, List, Optional
 
 
@@ -989,7 +1002,7 @@ def main():
 
     result = scaffold_project(
         name=args.name,
-        output_dir=Path(args.dir),
+        output_dir=safe_user_path(args.dir),
         template=args.template,
         features=features,
         dry_run=args.dry_run,

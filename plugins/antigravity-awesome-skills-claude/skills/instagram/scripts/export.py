@@ -17,6 +17,19 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 sys.path.insert(0, str(Path(__file__).parent))
 
 _db = None
@@ -55,11 +68,9 @@ def export_json(records: list, output_dir: Path, name: str) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = output_dir / f"instagram_{name}_{ts}.json"
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(
-            {"exported_at": datetime.now(timezone.utc).isoformat(), "total": len(records), "data": records},
-            f, ensure_ascii=False, indent=2,
-        )
+    payload = {"exported_at": datetime.now(timezone.utc).isoformat(), "total": len(records), "data": records}
+    with safe_user_path(path).open("w", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=False, indent=2))
     print(f"[JSON] {len(records)} registros ->{path}")
     return path
 
@@ -68,7 +79,7 @@ def export_jsonl(records: list, output_dir: Path, name: str) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = output_dir / f"instagram_{name}_{ts}.jsonl"
-    with open(path, "w", encoding="utf-8") as f:
+    with safe_user_path(path).open("w", encoding="utf-8") as f:
         for rec in records:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     print(f"[JSONL] {len(records)} registros ->{path}")
@@ -82,7 +93,7 @@ def export_csv_file(records: list, output_dir: Path, name: str) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = output_dir / f"instagram_{name}_{ts}.csv"
-    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+    with safe_user_path(path).open("w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=list(records[0].keys()), extrasaction="ignore")
         writer.writeheader()
         writer.writerows(records)

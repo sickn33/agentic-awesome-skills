@@ -27,6 +27,19 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 # ---------------------------------------------------------------------------
 # Imports from the 007 config hub (same directory)
 # ---------------------------------------------------------------------------
@@ -397,31 +410,30 @@ def _phase1_surface_mapping(target: Path, verbose: bool = False) -> dict:
 
     _config_extensions = {".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf", ".env"}
 
-    for root, dirs, filenames in os.walk(target):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRECTORIES]
+    for fpath in safe_user_path(target).rglob("*"):
+        if not fpath.is_file() or any(part in SKIP_DIRECTORIES for part in fpath.parts):
+            continue
+        fname = fpath.name
+        total_files += 1
+        suffix = fpath.suffix.lower()
 
-        for fname in filenames:
-            total_files += 1
-            fpath = Path(root) / fname
-            suffix = fpath.suffix.lower()
+        # Categorize by extension
+        ext_key = suffix if suffix else "(no extension)"
+        files_by_type[ext_key] = files_by_type.get(ext_key, 0) + 1
 
-            # Categorize by extension
-            ext_key = suffix if suffix else "(no extension)"
-            files_by_type[ext_key] = files_by_type.get(ext_key, 0) + 1
+        # Detect entry points
+        for pat in _entry_point_patterns:
+            if pat.search(fname) or pat.search(str(fpath)):
+                entry_points.append(str(fpath))
+                break
 
-            # Detect entry points
-            for pat in _entry_point_patterns:
-                if pat.search(fname) or pat.search(str(fpath)):
-                    entry_points.append(str(fpath))
-                    break
+        # Detect dependency files
+        if fname.lower() in _dep_file_names:
+            dependency_files.append(str(fpath))
 
-            # Detect dependency files
-            if fname.lower() in _dep_file_names:
-                dependency_files.append(str(fpath))
-
-            # Detect config files
-            if suffix in _config_extensions or fname.lower().startswith(".env"):
-                config_files.append(str(fpath))
+        # Detect config files
+        if suffix in _config_extensions or fname.lower().startswith(".env"):
+            config_files.append(str(fpath))
 
     # Sort by count descending
     sorted_types = sorted(files_by_type.items(), key=lambda x: x[1], reverse=True)
@@ -1053,7 +1065,7 @@ def run_audit(
 
     ensure_directories()
 
-    target = Path(target_path).resolve()
+    target = safe_user_path(target_path).resolve()
     if not target.exists():
         logger.error("Target path does not exist: %s", target)
         sys.exit(1)

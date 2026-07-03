@@ -28,6 +28,19 @@ import platform
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from PIL import Image, ImageDraw, ImageFont
@@ -79,7 +92,7 @@ The output JSON includes:
 
     args = parser.parse_args()
 
-    input_path = Path(args.input)
+    input_path = safe_user_path(args.input)
     if not input_path.exists():
         print(f"Error: Input file not found: {args.input}")
         sys.exit(1)
@@ -96,7 +109,7 @@ The output JSON includes:
             )
         inventory = extract_text_inventory(input_path, issues_only=args.issues_only)
 
-        output_path = Path(args.output)
+        output_path = safe_user_path(args.output)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         save_inventory(inventory, output_path)
 
@@ -1012,8 +1025,8 @@ def save_inventory(inventory: InventoryData, output_path: Path) -> None:
             shape_key: shape_data.to_dict() for shape_key, shape_data in shapes.items()
         }
 
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(json_inventory, f, indent=2, ensure_ascii=False)
+    with safe_user_path(output_path).open("w", encoding="utf-8") as f:
+        f.write(json.dumps(json_inventory, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

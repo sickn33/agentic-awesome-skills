@@ -12,12 +12,33 @@
 //
 // Usage: node capture_screenshots.mjs <research-dir> [--mode remote|local] [--concurrency 2]
 
+import sanitizeFilename from 'sanitize-filename';
 import { readdirSync, readFileSync, mkdirSync, existsSync } from 'fs';
-import { join } from 'path';
+import { isAbsolute, join, relative, resolve } from 'path';
 import { spawnSync } from 'child_process';
 import { parseFrontmatter } from './md_utils.mjs';
 
 const args = process.argv.slice(2);
+function sanitizePathSegments(pathValue) {
+  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
+    const sanitized = sanitizeFilename(segment);
+    if (sanitized !== segment || !sanitized) {
+      throw new Error(`Unsafe path segment: ${segment}`);
+    }
+    return sanitized;
+  });
+}
+
+function safeCliPath(pathValue, baseDir = process.cwd()) {
+  const root = resolve(baseDir);
+  const target = resolve(root, ...sanitizePathSegments(pathValue));
+  const rel = relative(root, target);
+  if (rel.startsWith('..') || isAbsolute(rel)) {
+    throw new Error(`Path escapes allowed directory: ${pathValue}`);
+  }
+  return target;
+}
+
 
 if (args.includes('--help') || args.includes('-h') || args.length === 0) {
   console.error(`Usage: node capture_screenshots.mjs <research-dir> [options]
@@ -38,7 +59,7 @@ Options:
   process.exit(args.includes('--help') || args.includes('-h') ? 0 : 1);
 }
 
-const dir = args[0];
+const dir = safeCliPath(args[0]);
 const modeIdx = args.indexOf('--mode');
 const browseMode = modeIdx !== -1 ? args[modeIdx + 1] : 'remote';
 const modeFlag = browseMode === 'local' ? '--local' : '--remote';
@@ -63,7 +84,7 @@ if (concurrency > 1) {
   concurrency = 1;
 }
 
-const shotsDir = join(dir, 'screenshots');
+const shotsDir = safeCliPath('screenshots', dir);
 mkdirSync(shotsDir, { recursive: true });
 
 function run(cmd, args, { timeout = 30000 } = {}) {

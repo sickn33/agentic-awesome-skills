@@ -15,6 +15,19 @@ import sys
 from copy import deepcopy
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 import six
 from pptx import Presentation
 
@@ -53,13 +66,13 @@ Note: Slide indices are 0-based (first slide is 0, second is 1, etc.)
         sys.exit(1)
 
     # Check template exists
-    template_path = Path(args.template)
+    template_path = safe_user_path(args.template)
     if not template_path.exists():
         print(f"Error: Template file not found: {args.template}")
         sys.exit(1)
 
     # Create output directory if needed
-    output_path = Path(args.output)
+    output_path = safe_user_path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     try:

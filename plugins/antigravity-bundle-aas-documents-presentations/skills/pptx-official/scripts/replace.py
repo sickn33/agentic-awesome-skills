@@ -12,6 +12,19 @@ unless "paragraphs" is specified in the replacements for that shape.
 import json
 import sys
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from typing import Any, Dict, List
 
 from inventory import InventoryData, extract_text_inventory
@@ -359,9 +372,9 @@ def main():
         print(__doc__)
         sys.exit(1)
 
-    input_pptx = Path(sys.argv[1])
-    replacements_json = Path(sys.argv[2])
-    output_pptx = Path(sys.argv[3])
+    input_pptx = safe_user_path(sys.argv[1])
+    replacements_json = safe_user_path(sys.argv[2])
+    output_pptx = safe_user_path(sys.argv[3])
 
     if not input_pptx.exists():
         print(f"Error: Input file '{input_pptx}' not found")

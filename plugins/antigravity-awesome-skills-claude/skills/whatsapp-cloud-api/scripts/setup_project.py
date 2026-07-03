@@ -11,6 +11,7 @@ import argparse
 import os
 import shutil
 import sys
+from pathlib import Path
 
 
 def get_skill_dir() -> str:
@@ -36,6 +37,20 @@ def self_test() -> None:
     raise AssertionError("accepted target inside skill source directory")
 
 
+def copy_tree_contents(source_dir: str, target_dir: str) -> None:
+    source_root = Path(source_dir)
+    target_root = Path(target_dir)
+    target_root.mkdir(parents=True, exist_ok=True)
+    for source_path in source_root.rglob("*"):
+        relative_path = source_path.relative_to(source_root)
+        target_path = target_root / relative_path
+        if source_path.is_dir():
+            target_path.mkdir(parents=True, exist_ok=True)
+        elif source_path.is_file():
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            target_path.write_bytes(source_path.read_bytes())
+
+
 def setup_project(language: str, path: str, name: str | None = None) -> None:
     """Copy boilerplate and configure a new WhatsApp project."""
     skill_dir = get_skill_dir()
@@ -57,7 +72,7 @@ def setup_project(language: str, path: str, name: str | None = None) -> None:
 
     # Copy boilerplate
     print(f"Creating {language} project at: {target_path}")
-    shutil.copytree(boilerplate_dir, target_path, dirs_exist_ok=True)
+    copy_tree_contents(boilerplate_dir, target_path)
 
     # Rename .env.example to .env
     env_example = os.path.join(target_path, ".env.example")

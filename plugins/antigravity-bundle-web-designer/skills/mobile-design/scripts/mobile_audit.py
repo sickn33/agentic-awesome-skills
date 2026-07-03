@@ -71,6 +71,19 @@ import re
 import json
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 class MobileAuditor:
     def __init__(self):
         self.issues = []
@@ -612,11 +625,12 @@ class MobileAuditor:
 
     def audit_directory(self, directory: str) -> None:
         extensions = {'.tsx', '.ts', '.jsx', '.js', '.dart'}
-        for root, dirs, files in os.walk(directory):
-            dirs[:] = [d for d in dirs if d not in {'node_modules', '.git', 'dist', 'build', '.next', 'ios', 'android', 'build', '.idea'}]
-            for file in files:
-                if Path(file).suffix in extensions:
-                    self.audit_file(os.path.join(root, file))
+        skipped = {'node_modules', '.git', 'dist', 'build', '.next', 'ios', 'android', 'build', '.idea'}
+        for path in safe_user_path(directory).rglob("*"):
+            if not path.is_file() or any(part in skipped for part in path.parts):
+                continue
+            if path.suffix in extensions:
+                self.audit_file(str(path))
 
     def get_report(self):
         return {
@@ -633,7 +647,7 @@ def main():
         print("Usage: python mobile_audit.py <directory>")
         sys.exit(1)
 
-    path = sys.argv[1]
+    path = safe_user_path(sys.argv[1])
     is_json = "--json" in sys.argv
 
     auditor = MobileAuditor()

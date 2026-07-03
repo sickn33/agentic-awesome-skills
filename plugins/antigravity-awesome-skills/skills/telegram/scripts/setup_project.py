@@ -12,10 +12,25 @@ import argparse
 import os
 import shutil
 import sys
+from pathlib import Path
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
 BOILERPLATE_DIR = os.path.join(SKILL_DIR, "assets", "boilerplate")
+
+
+def copy_tree_contents(source_dir: str, target_dir: str) -> None:
+    source_root = Path(source_dir)
+    target_root = Path(target_dir)
+    target_root.mkdir(parents=True, exist_ok=True)
+    for source_path in source_root.rglob("*"):
+        relative_path = source_path.relative_to(source_root)
+        target_path = target_root / relative_path
+        if source_path.is_dir():
+            target_path.mkdir(parents=True, exist_ok=True)
+        elif source_path.is_file():
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            target_path.write_bytes(source_path.read_bytes())
 
 
 def setup_nodejs(project_path: str, with_webhook: bool = False, with_ai: bool = False):
@@ -27,7 +42,7 @@ def setup_nodejs(project_path: str, with_webhook: bool = False, with_ai: bool = 
         sys.exit(1)
 
     # Copy boilerplate
-    shutil.copytree(src_dir, project_path, dirs_exist_ok=True)
+    copy_tree_contents(src_dir, project_path)
 
     print(f"Node.js project created at: {project_path}")
     print("\nNext steps:")
@@ -52,7 +67,7 @@ def setup_python(project_path: str, with_webhook: bool = False, with_ai: bool = 
         sys.exit(1)
 
     # Copy boilerplate
-    shutil.copytree(src_dir, project_path, dirs_exist_ok=True)
+    copy_tree_contents(src_dir, project_path)
 
     print(f"Python project created at: {project_path}")
     print("\nNext steps:")

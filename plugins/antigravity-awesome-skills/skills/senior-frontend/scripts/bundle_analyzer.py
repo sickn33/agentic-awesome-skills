@@ -17,6 +17,19 @@ import os
 import re
 import sys
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 from typing import Dict, List, Optional, Any, Tuple
 
 
@@ -375,7 +388,7 @@ def main():
     )
 
     args = parser.parse_args()
-    project_dir = Path(args.project_dir).resolve()
+    project_dir = safe_user_path(args.project_dir).resolve()
 
     if not project_dir.exists():
         print(f"Error: Directory not found: {project_dir}", file=sys.stderr)

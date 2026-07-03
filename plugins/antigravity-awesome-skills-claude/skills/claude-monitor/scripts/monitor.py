@@ -20,6 +20,19 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
+
 try:
     import psutil
 except ImportError:
@@ -281,8 +294,8 @@ def main():
     else:
         output_path = f"monitor_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(output_data, f, indent=2, ensure_ascii=False)
+    with safe_user_path(output_path).open("w", encoding="utf-8") as f:
+        f.write(json.dumps(output_data, indent=2, ensure_ascii=False))
 
     print(f"\nLog salvo em: {output_path}\n")
 
