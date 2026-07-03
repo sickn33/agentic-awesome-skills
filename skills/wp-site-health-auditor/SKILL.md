@@ -111,12 +111,12 @@ anything. Fix directly once the user confirms the item list.
   wants logging)
 - Enable search engine indexing / fix robots visibility toggle
 - Update the site tagline off "Just another WordPress site"
-- Fix permalink structure to include post name
 
 **Tier 2 — Requires host/server-level access — Claude drafts the change, user or host applies it**
 Cannot be fixed purely from wp-admin; needs php.ini, .htaccess, wp-config.php, or hosting panel access.
 Draft the exact snippet, explain where it goes, remind the user of the backup + lint steps above, and flag
 that a server restart or host support ticket may be needed.
+- Permalink structure change (migration — existing URLs break without redirects; require a redirect plan and CDN/cache flush before applying)
 - `post_max_size` < `upload_max_filesize` mismatch
 - Persistent object cache not available (Redis/Memcached)
 - Page cache not detected
