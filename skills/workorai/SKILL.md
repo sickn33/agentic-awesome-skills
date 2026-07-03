@@ -1,8 +1,8 @@
 ---
 name: workorai
-description: "Talent-marketplace skill for the WorkorAI MCP server: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate discovery with white-box match explanations (fit score, proven skills, gaps)."
+description: "WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with white-box fit explanations."
 category: productivity
-risk: safe
+risk: critical
 source: community
 source_repo: work0r-ai/agent-kit
 source_type: community
@@ -59,16 +59,17 @@ the onboarding it returns.
 Detect whether the request is a candidate flow or an employer flow, then use
 the matching tool group:
 
-- Candidate: `candidate_search_jobs`, `candidate_get_job`,
-  `candidate_apply_to_job`, `candidate_get_applications`,
-  `candidate_accept_invitation` / `candidate_decline_invitation`,
-  `candidate_withdraw_application`, `candidate_set_saved_job`.
-- Employer: `employer_create_job` → `employer_publish_job` →
-  `employer_close_job` / `employer_archive_job` for the lifecycle;
-  `employer_search_candidates_for_job` or
-  `employer_search_candidates_by_query` for discovery;
-  `employer_invite_candidate`, `employer_list_applicants`,
-  `employer_get_applicant_detail`, `employer_set_review_status` for
+- Candidate: `candidate.search_jobs`, `candidate.get_job`,
+  `candidate.apply_to_job`, `candidate.get_applications`,
+  `candidate.accept_invitation` / `candidate.decline_invitation`,
+  `candidate.withdraw_application`, `candidate.set_saved_job`,
+  `candidate.get_saved_jobs`.
+- Employer: `employer.create_job` → `employer.publish_job` →
+  `employer.close_job` / `employer.archive_job` for the lifecycle;
+  `employer.search_candidates_for_job` or
+  `employer.search_candidates_by_query` for discovery;
+  `employer.invite_candidate`, `employer.list_applicants`,
+  `employer.get_applicant_detail`, `employer.set_review_status` for
   pipeline work.
 
 ### Step 3: Explain matches with white-box data
@@ -76,8 +77,8 @@ the matching tool group:
 When presenting employer search results, keep the tier structure
 (best/good/weak) and surface each candidate's `matchExplanation`: fit score,
 interview-proven skills, gaps, and rationale. For deeper comparison, fetch
-per-candidate interview evidence with `employer_get_candidate_evidence` and
-`employer_get_applicant_transcript`.
+per-candidate interview evidence with `employer.get_candidate_evidence` and
+`employer.get_applicant_transcript`.
 
 ## Examples
 
@@ -85,18 +86,18 @@ per-candidate interview evidence with `employer_get_candidate_evidence` and
 
 ```
 User: "Find me remote TypeScript jobs and apply to the best one."
-Agent: candidate_search_jobs(query="TypeScript", remote=true)
-       → present ranked results → candidate_get_job(id)
-       → confirm with the user → candidate_apply_to_job(id)
+Agent: candidate.search_jobs(query="TypeScript", remote=true)
+       → present ranked results → candidate.get_job(id)
+       → confirm with the user → candidate.apply_to_job(id)
 ```
 
 ### Example 2: Employer candidate discovery
 
 ```
 User: "Who are the best candidates for my Senior Backend role?"
-Agent: employer_search_candidates_for_job(jobId)
+Agent: employer.search_candidates_for_job(jobId)
        → report Best tier with each candidate's fit score, proven
-         skills, and gaps → employer_invite_candidate on approval
+         skills, and gaps → employer.invite_candidate on approval
 ```
 
 ## Best Practices
