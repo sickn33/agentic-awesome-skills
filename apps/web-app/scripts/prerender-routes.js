@@ -76,7 +76,10 @@ function normalizeRoute(routePath) {
 function routeToUrl(routePath, siteBaseUrl) {
   const normalizedRoute = normalizeRoute(routePath);
   const normalizedBase = siteBaseUrl.replace(/\/+$/, '');
-  return `${normalizedBase}${normalizedRoute}`;
+  const indexableRoute = normalizedRoute === '/' || normalizedRoute.endsWith('/')
+    ? normalizedRoute
+    : `${normalizedRoute}/`;
+  return `${normalizedBase}${indexableRoute}`;
 }
 
 function routeToFilePath(routePath) {
