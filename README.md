@@ -558,8 +558,6 @@ If Antigravity Awesome Skills has been useful, consider ⭐ starring the repo!
 
 <!-- GitHub Topics (for maintainers): claude-code, gemini-cli, codex-cli, antigravity, cursor, github-copilot, opencode, agentic-skills, ai-coding, llm-tools, ai-agents, autonomous-coding, mcp, ai-developer-tools, ai-pair-programming, vibe-coding, skill, skills, SKILL.md, rules.md, CLAUDE.md, GEMINI.md, CURSOR.md -->
 
-- **[Context Kit](https://github.com/JDDavenport/context-kit)** — Personal Context Artifacts: 4 Markdown templates + 5 Claude Code skills (crm-everything, open-loops, watchers, morning-briefing, session-digest). Start every session context-full, not context-zero. MIT, one-command install.
-
 ## License
 
 Original code and tooling are licensed under the MIT License. See [LICENSE](LICENSE).
