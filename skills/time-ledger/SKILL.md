@@ -37,7 +37,7 @@ The companion Notion template (free, linked in the source repo) ships this field
 - `Entry` (title) — the user's words or a clear title
 - `Activity` (select): Reading / Coding / Practice / Fitness / Investing / Meeting / Writing / Life / Other
 - `Minutes` (number)
-- `Date` (date) — expand to `"date:Date:start": "YYYY-MM-DD"` (a bare value 400s)
+- `Date` (date) — expand to `"date:Date:start": "YYYY-MM-DD"`; a bare `Date` value fails with HTTP 400
 - `Status` (select): To-sort / To-confirm / Done
 - `Compounding` (select): Compounding / Consuming / Neutral
 - `Notes` (text) — clue from the user's words / your question
@@ -106,6 +106,8 @@ Agent: 3 rows need confirmation — answering in one go works:
 
 - **Problem:** Notion API returns 400 on the date field.
   **Solution:** Expand to `"date:Date:start": "YYYY-MM-DD"` — a bare `Date` value fails.
+- **Problem:** `create-pages` succeeds but the Date column is empty (known Notion MCP issue: [notion-mcp-server#121](https://github.com/makenotion/notion-mcp-server/issues/121) — expanded date fields silently dropped).
+  **Solution:** After the session's first create, read the row back; if `Date` is empty, fill it with `update-page`.
 - **Problem:** Search returns example-row pages instead of the database.
   **Solution:** Filter for type `database` when resolving "time-ledger".
 - **Problem:** Model clock vs user timezone differ around midnight.
