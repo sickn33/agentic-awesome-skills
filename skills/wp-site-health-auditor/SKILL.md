@@ -66,7 +66,7 @@ sequence and tell them you did. Refuse to skip step 1 or step 4 entirely; those 
 regardless of urgency, since the failure mode (corrupted `wp-config.php`, dead site) is worse than the ten
 seconds a backup costs.
 
-## Why this exists
+## Overview
 
 The Site Health screen is diagnostic, not prescriptive. It tells the site owner *that* something is wrong
 (e.g. "you should use a persistent object cache") but not *how* to fix it, and it mixes items that are
@@ -263,11 +263,57 @@ Give the user:
 Keep the whole response scannable — this is a punch list, not an essay. Use the table + short recipe
 blocks above, not prose paragraphs, unless the user asks for more explanation on a specific item.
 
+## Examples
+
+### Example: Site Health reports "You should use a persistent object cache"
+
+1. Triage → Tier 2 (requires Redis/Memcached at server level)
+2. Ask the user to check with their host whether Redis is available
+3. If yes, run:
+   ```
+   wp plugin install redis-cache --activate
+   wp redis enable
+   ```
+4. Verify: `ls wp-content/object-cache.php` exists
+5. Re-run Site Health to confirm the item clears
+
+### Example: Site Health reports "Your site is not set to output debug information"
+
+1. Triage → Tier 1 (safe, reversible via wp-config.php)
+2. Back up `wp-config.php`:
+   ```
+   cp wp-config.php wp-config.php.bak-$(date +%Y%m%d-%H%M%S)
+   ```
+3. Edit and lint:
+   ```php
+   define( 'WP_DEBUG', false );
+   define( 'WP_DEBUG_DISPLAY', false );
+   ```
+4. Verify `php -l wp-config.php` passes
+5. Confirm the site homepage + wp-admin still load
+
+## Best Practices
+
+- ✅ Back up the specific file before every edit — `cp` takes seconds, restoring a dead site takes hours
+- ✅ Change one thing at a time and verify the site loads between each change
+- ✅ Always run `php -l` after editing `wp-config.php` before reloading the site
+- ✅ Run `wp search-replace` with `--dry-run` first and show the output to the user
+- ❌ Never batch multiple Tier-2 file edits into one pass — you won't know which change broke the site
+- ❌ Never skip the backup step, even for a one-line comment change
+
 ## Reference
 
 `references/catalog.md` — extended list of less-common Site Health items (SEO category items like llms.txt
 generation, Privacy items, rarer Security items) with the same tier classification, for reports that
 include items not covered above.
+
+## Common Pitfalls
+
+- **Treating every yellow item as actionable** — Some recommended improvements (e.g. persistent object cache) are host-level and may not be fixable. Always triage by tier before acting.
+- **Changing permalinks without a redirect plan** — Flipping to "Post name" on an indexed site breaks every existing URL. Always plan 301 redirects first.
+- **Using `ini_set()` for upload limits** — `upload_max_filesize` and `post_max_size` are `PHP_INI_PERDIR`; `ini_set()` silently fails. Use `php.ini`, `.htaccess`, or `.user.ini` instead.
+- **Skipping the dry-run on `wp search-replace`** — A wrong pattern can corrupt serialized data. Never run it without `--dry-run` first.
+- **Installing two caching plugins** — Stacking page cache plugins causes conflicts and obscure bugs. If one is already active but not detected, debug it rather than adding another.
 
 ## Limitations
 
@@ -281,4 +327,9 @@ include items not covered above.
   mid-2026 — item titles/wording can change across core versions, so an unmatched item should be reported
   as unmatched, not force-fit to the closest recipe.
 - Does not replace a full security audit or compromise scan — Site Health flags configuration hygiene
-  issues, not signs that a site has already been broken into.
+   issues, not signs that a site has already been broken into.
+
+## Related Skills
+
+- `@security-hardening` — For deeper WordPress security audits beyond Site Health's surface checks
+- `@wp-performance` — For targeted performance optimization after Site Health flags are resolved
