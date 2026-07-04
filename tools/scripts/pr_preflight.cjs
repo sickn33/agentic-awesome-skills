@@ -56,6 +56,10 @@ function parseArgs(argv) {
 }
 
 function safeUserPath(pathValue, baseDir = process.cwd()) {
+  if (path.isAbsolute(String(pathValue || ""))) {
+    return path.resolve(pathValue);
+  }
+
   const root = path.resolve(baseDir);
   const segments = String(pathValue || "").split(/[\\/]+/).filter(Boolean).map((segment) => {
     const sanitized = sanitizeFilename(segment);

@@ -31,6 +31,9 @@ jobs:
         with:
           node-version: "lts/*"
 
+      - name: Install npm dependencies
+        run: npm ci
+
       - name: Fetch base branch
         run: git fetch origin "${{ github.base_ref }}"
 

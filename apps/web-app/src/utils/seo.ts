@@ -91,15 +91,20 @@ export function toCanonicalPath(pathname: string): string {
   return normalized || '/';
 }
 
+export function toIndexableRoutePath(pathname: string): string {
+  const canonicalPath = toCanonicalPath(pathname);
+  return canonicalPath === '/' ? '/' : `${canonicalPath}/`;
+}
+
 export function getCanonicalUrl(canonicalPath: string, siteBaseUrl?: string): string {
-  const base = toCanonicalPath(canonicalPath);
+  const base = toIndexableRoutePath(canonicalPath);
   const siteBase = siteBaseUrl?.trim() || window.location.origin;
   const normalizedBase = siteBase.replace(/\/+$/, '');
   return `${normalizedBase}${base === '/' ? '/' : base}`;
 }
 
 export function getAssetCanonicalUrl(canonicalPath: string): string {
-  return getAbsolutePublicAssetUrl(toCanonicalPath(canonicalPath), {
+  return getAbsolutePublicAssetUrl(toIndexableRoutePath(canonicalPath), {
     baseUrl: import.meta.env.BASE_URL || '/',
     origin: window.location.origin,
   });

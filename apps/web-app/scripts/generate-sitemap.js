@@ -40,6 +40,16 @@ function normalizeSkillId(skillId) {
   return encodeURIComponent(String(skillId).trim());
 }
 
+function toIndexableRoutePath(pathName) {
+  const normalized = String(pathName || '/').trim();
+  if (!normalized || normalized === '/') {
+    return '/';
+  }
+
+  const withLeadingSlash = normalized.startsWith('/') ? normalized : `/${normalized}`;
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+}
+
 export function selectTopSkillEntries(skills, topCount = TOP_SKILL_COUNT) {
   const max = Math.max(Number.parseInt(topCount, 10) || 0, 0);
   if (!Array.isArray(skills) || max === 0) {
@@ -97,12 +107,12 @@ export function getSeoLandingPaths() {
   return pages
     .map((page) => String(page?.slug || '').trim())
     .filter(Boolean)
-    .map((slug) => `/topics/${encodeURIComponent(slug)}`);
+    .map((slug) => toIndexableRoutePath(`/topics/${encodeURIComponent(slug)}`));
 }
 
 export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD }) {
   const normalizedBase = String(baseUrl).replace(/\/$/, '');
-  const uniquePaths = [...new Set(paths)];
+  const uniquePaths = [...new Set(paths.map(toIndexableRoutePath))];
 
   const urlsXml = uniquePaths
     .map((pathName) => {
@@ -128,7 +138,7 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
   const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
     baseUrl,
-    paths: ['/', '/plugins', ...landingPaths, ...topSkillPaths],
+    paths: ['/', toIndexableRoutePath('/plugins'), ...landingPaths, ...topSkillPaths.map(toIndexableRoutePath)],
   });
 }
 
