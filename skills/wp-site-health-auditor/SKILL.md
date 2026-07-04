@@ -327,7 +327,7 @@ include items not covered above.
   mid-2026 — item titles/wording can change across core versions, so an unmatched item should be reported
   as unmatched, not force-fit to the closest recipe.
 - Does not replace a full security audit or compromise scan — Site Health flags configuration hygiene
-   issues, not signs that a site has already been broken into.
+  issues, not signs that a site has already been broken into.
 
 ## Related Skills
 
