@@ -37,7 +37,7 @@ The companion Notion template (free, linked in the source repo) ships this schem
 - `Entry` (title); `Ticker` (text — strikes/expiries here: NVDA / NVDA 0620C150 / ESU6)
 - `Market` (select): US Stocks / US Options / US Futures / A-Shares / HK Stocks / CN Futures / Crypto / Other
 - `Direction` (select): Long / Short · `Size` (text, with units)
-- `Entry Price` / `Exit Price` (number) · `Entry Date` / `Exit Date` (date — expand to `"date:Entry Date:start": "YYYY-MM-DD"`; bare values 400)
+- `Entry Price` / `Exit Price` (number) · `Entry Date` / `Exit Date` (date — expand to `"date:Entry Date:start": "YYYY-MM-DD"`; a bare value fails with HTTP 400)
 - `Thesis` (text) — **the soul of the journal; if missing, ask on the spot**
 - `Plan` (text) — stop / target / contingency; ask if missing
 - `Emotion` (select): Calm / FOMO / Panic / Revenge / Boredom / Overconfidence — tag only what the user admits or what is plain in their words; don't diagnose
@@ -64,12 +64,12 @@ Parsing rules: infer `Market` from symbol and context (ambiguous → ask); bough
 ### Example 1: Opening with a missing plan
 
 ```text
-User:  bought 1 TSM July call this morning, same thesis as before earnings
-Agent: Logged ✅ TSM 0731C475 · Long · Open
-       ❓ To-confirm: how many contracts, at what price?
+User:  picked up some TSM July calls this morning, same thesis as before earnings
+Agent: Logged ✅ TSM July calls · Long · Open
+       ❓ To-confirm: which strike/expiry, how many contracts, at what price?
        ❓ And the plan — holding through earnings, or is there a stop?
-User:  1 contract at 18.50, holding to earnings
-Agent: Updated ✅ Thesis: pre-earnings run-up · Plan: hold through earnings
+User:  0731 475C, 1 contract at 18.50, holding to earnings
+Agent: Updated ✅ Ticker: TSM 0731C475 · Thesis: pre-earnings run-up · Plan: hold through earnings
 ```
 
 ### Example 2: Review day
@@ -108,6 +108,8 @@ Agent: 3 closed since last review:
 
 - **Problem:** Notion API 400 on date fields.
   **Solution:** Expand to `"date:Entry Date:start": "YYYY-MM-DD"`.
+- **Problem:** `create-pages` succeeds but the date column is empty (known Notion MCP issue: [notion-mcp-server#121](https://github.com/makenotion/notion-mcp-server/issues/121) — expanded date fields silently dropped).
+  **Solution:** After the session's first create, read the row back; if the date is empty, fill it with `update-page`.
 - **Problem:** Close matched to the wrong row when the same ticker was traded twice.
   **Solution:** Match on `Status=Open` + ticker; if multiple open rows match, ask which one.
 - **Problem:** Overnight US fills dated to the wrong day for non-US users.
