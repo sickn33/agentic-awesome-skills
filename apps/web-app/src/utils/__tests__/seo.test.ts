@@ -11,6 +11,7 @@ import {
   selectTopSkills,
   setPageMeta,
   toCanonicalPath,
+  toIndexableRoutePath,
 } from '../seo';
 import { seoLandingPages } from '../../data/seoLandingPages';
 
@@ -134,10 +135,11 @@ describe('SEO helpers', () => {
     expect(toCanonicalPath('/')).toBe('/');
     expect(toCanonicalPath('skill/react/')).toBe('/skill/react');
     expect(toCanonicalPath('/skill//react/')).toBe('/skill/react');
+    expect(toIndexableRoutePath('/skill/react')).toBe('/skill/react/');
   });
 
   it('builds canonical urls with optional overrides', () => {
-    expect(getCanonicalUrl('/skill/react', 'https://example.com/site')).toBe('https://example.com/site/skill/react');
+    expect(getCanonicalUrl('/skill/react', 'https://example.com/site')).toBe('https://example.com/site/skill/react/');
   });
 
   it('setPageMeta updates the same meta tags on repeated invocations', () => {
@@ -163,7 +165,7 @@ describe('SEO helpers', () => {
     expect(document.querySelectorAll('meta[name="twitter:image:alt"]')).toHaveLength(1);
     expect(document.querySelectorAll('script[data-seo-jsonld="true"]')).toHaveLength(4);
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
-    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/skill/react-patterns');
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/skill/react-patterns/');
   });
 
 });
