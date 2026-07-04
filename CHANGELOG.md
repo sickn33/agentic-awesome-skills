@@ -9,6 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.10.0] - 2026-07-04 - "Context, WordPress, and PR Intake Hardening"
+
+> Community skill intake, ASO research guidance, pull-request CI hardening, and catalog sync for the 1,898+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1898-skills](README.md#browse-1898-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release ships the July 4 maintenance batch: two new source-backed skills, one ASO documentation improvement, repaired pull-request intake checks for fork contributions, generated registry and plugin mirror sync, and refreshed public catalog surfaces for the 1,898+ skill catalog.
+
+## Added
+
+- Added **wp-site-health-auditor**, a critical-risk WordPress Site Health skill that turns Site Health reports into risk-tiered, backup-first remediation plans with WP-CLI, PHP, `.htaccess`, cache, HTTPS, and rollback guidance (PR #775).
+- Added **context-kit**, a critical-risk personal-context hygiene skill for safely evaluating, adapting, and installing Context Kit-style Personal Context Artifact workflows without leaking secrets or private Markdown context (PR #776).
+- Added the **JDDavenport/context-kit** source reference to README Community Contributors so the new external-source-backed skill has explicit attribution.
+
+## Changed
+
+- Updated **app-store-optimization** with optional AppNiche external research tools for directional iOS revenue benchmarks and keyword opportunity checks, with retrieval-date and approximation guidance (PR #774).
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, public web skill assets, sitemap, package description, and README/docs counters for the 1,898+ skill catalog.
+
+## Fixed
+
+- Fixed PR intake CI by installing npm dependencies before `tools/scripts/pr_preflight.cjs` runs in the `pr-policy` job.
+- Fixed `tools/scripts/pr_preflight.cjs` so GitHub Actions absolute `GITHUB_EVENT_PATH` values are read correctly, with a regression test for absolute event paths.
+
+## Validation
+
+- Verified and merged PR #774, PR #775, and PR #776 after required GitHub checks passed.
+- Ran `npm run test` after the PR intake fix.
+- Ran `npm run sync:repo-state`.
+- Ran `npm run validate` and `npm run security:docs` during the Context Kit repair pass.
+- Ran `npm run check:readme-credits -- --base origin/main --head HEAD` for the Context Kit source-credit gate.
+
+## Credits
+
+- **[@skiffer](https://github.com/skiffer)** and **[GetAppNiche](https://getappniche.com/)** for PR #774 (`app-store-optimization` AppNiche research links).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #775 (`wp-site-health-auditor`).
+- **[@JDDavenport](https://github.com/JDDavenport)** and **[JDDavenport/context-kit](https://github.com/JDDavenport/context-kit)** for PR #776 (`context-kit` source reference).
+
 ## [13.9.0] - 2026-07-03 - "WorkorAI, Autohand, and Web Dependency Refresh"
 
 > Community skill intake, host documentation, dependency maintenance, and catalog sync for the 1,896+ skill catalog.
