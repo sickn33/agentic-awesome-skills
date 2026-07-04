@@ -41124,6 +41124,28 @@
     }
   },
   {
+    "id": "wp-site-health-auditor",
+    "path": "skills/wp-site-health-auditor",
+    "category": "development",
+    "name": "wp-site-health-auditor",
+    "description": "Turns a WordPress Site Health report into a risk-tiered, backup-first fix plan with exact WP-CLI/PHP snippets. Use for site health, recommended improvements, or critical issue reports.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-07-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "wrike-automation",
     "path": "skills/wrike-automation",
     "category": "project-management",

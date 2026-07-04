@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-03T08:28:21.000Z",
-  "total": 1896,
+  "total": 1897,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -46388,6 +46388,36 @@
         "jobs"
       ],
       "path": "skills/workorai/SKILL.md"
+    },
+    {
+      "id": "wp-site-health-auditor",
+      "name": "wp-site-health-auditor",
+      "description": "Turns a WordPress Site Health report into a risk-tiered, backup-first fix plan with exact WP-CLI/PHP snippets. Use for site health, recommended improvements, or critical issue reports.",
+      "category": "security",
+      "tags": [
+        "wordpress",
+        "site-health",
+        "wp-cli",
+        "seo",
+        "performance",
+        "security",
+        "hardening"
+      ],
+      "triggers": [
+        "wordpress",
+        "site-health",
+        "wp-cli",
+        "seo",
+        "performance",
+        "security",
+        "hardening",
+        "wp",
+        "site",
+        "health",
+        "auditor",
+        "turns"
+      ],
+      "path": "skills/wp-site-health-auditor/SKILL.md"
     },
     {
       "id": "wrike-automation",

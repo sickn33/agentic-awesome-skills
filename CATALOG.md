@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-03T08:28:21.000Z
 
-Total skills: 1896
+Total skills: 1897
 
 ## architecture (113)
 
@@ -1571,7 +1571,7 @@ Total skills: 1896
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (200)
+## security (201)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1772,6 +1772,7 @@ Total skills: 1896
 | `wordpress` | Complete WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardenin... | wordpress | wordpress, complete, development, covering, theme, plugin, creation, woocommerce, integration, performance, optimization, security |
 | `wordpress-penetration-testing` | Assess WordPress installations for common vulnerabilities and WordPress 7.0 attack surfaces. | wordpress, penetration | wordpress, penetration, testing, assess, installations, common, vulnerabilities, attack, surfaces |
 | `wordpress-plugin-development` | WordPress plugin development workflow covering plugin architecture, hooks, admin interfaces, REST API, security best practices, and WordPress 7.0 features: R... | wordpress, plugin | wordpress, plugin, development, covering, architecture, hooks, admin, interfaces, rest, api, security, features |
+| `wp-site-health-auditor` | Turns a WordPress Site Health report into a risk-tiered, backup-first fix plan with exact WP-CLI/PHP snippets. Use for site health, recommended improvements,... | wordpress, site-health, wp-cli, seo, performance, security, hardening | wordpress, site-health, wp-cli, seo, performance, security, hardening, wp, site, health, auditor, turns |
 | `xss-html-injection` | Execute comprehensive client-side injection vulnerability assessments on web applications to identify XSS and HTML injection flaws, demonstrate exploitation ... | xss, html, injection | xss, html, injection, execute, client, side, vulnerability, assessments, web, applications, identify, flaws |
 | `yield-intelligence` | Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yi... | yield, intelligence | yield, intelligence, passive, income, portfolio, analysis, activate, user, asks, about, dividend, yields |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
