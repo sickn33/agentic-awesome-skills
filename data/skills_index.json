@@ -10959,6 +10959,30 @@
     }
   },
   {
+    "id": "context-kit",
+    "path": "skills/context-kit",
+    "category": "productivity",
+    "name": "context-kit",
+    "description": "Evaluate, adapt, and safely install Context Kit personal context artifacts for Claude Code or adjacent agent workflows.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-04",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    }
+  },
+  {
     "id": "context-management-context-restore",
     "path": "skills/context-management-context-restore",
     "category": "ai-ml",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-03T08:28:21.000Z",
-  "total": 1897,
+  "total": 1898,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -12167,6 +12167,34 @@
         "criticos"
       ],
       "path": "skills/context-guardian/SKILL.md"
+    },
+    {
+      "id": "context-kit",
+      "name": "context-kit",
+      "description": "Evaluate, adapt, and safely install Context Kit personal context artifacts for Claude Code or adjacent agent workflows.",
+      "category": "general",
+      "tags": [
+        "personal-context",
+        "claude-code",
+        "memory",
+        "knowledge-management",
+        "agent-workflows"
+      ],
+      "triggers": [
+        "personal-context",
+        "claude-code",
+        "memory",
+        "knowledge-management",
+        "agent-workflows",
+        "context",
+        "kit",
+        "evaluate",
+        "adapt",
+        "safely",
+        "install",
+        "personal"
+      ],
+      "path": "skills/context-kit/SKILL.md"
     },
     {
       "id": "context-management-context-restore",

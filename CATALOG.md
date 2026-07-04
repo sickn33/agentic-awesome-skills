@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-03T08:28:21.000Z
 
-Total skills: 1897
+Total skills: 1898
 
 ## architecture (113)
 
@@ -869,7 +869,7 @@ Total skills: 1897
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (510)
+## general (511)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -972,6 +972,7 @@ Total skills: 1897
 | `context-compression` | When agent sessions generate millions of tokens of conversation history, compression becomes mandatory. The naive approach is aggressive compression to minim... | compression | compression, context, agent, sessions, generate, millions, tokens, conversation, history, becomes, mandatory, naive |
 | `context-engineering` | Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configu... | engineering | engineering, context, optimizes, agent, setup, starting, new, session, output, quality, degrades, switching |
 | `context-fundamentals` | Context is the complete state available to a language model at inference time. It includes everything the model can attend to when generating responses: syst... | fundamentals | fundamentals, context, complete, state, available, language, model, inference, time, includes, everything, attend |
+| `context-kit` | Evaluate, adapt, and safely install Context Kit personal context artifacts for Claude Code or adjacent agent workflows. | personal-context, claude-code, memory, knowledge-management, agent-workflows | personal-context, claude-code, memory, knowledge-management, agent-workflows, context, kit, evaluate, adapt, safely, install, personal |
 | `context-management-context-restore` | Use when working with context management context restore | restore | restore, context, working |
 | `context-management-context-save` | Use when working with context management context save | save | save, context, working |
 | `context-optimization` | Context optimization extends the effective capacity of limited context windows through strategic compression, masking, caching, and partitioning. The goal is... | optimization | optimization, context, extends, effective, capacity, limited, windows, through, strategic, compression, masking, caching |

@@ -9305,6 +9305,29 @@
       "runtime_files": []
     },
     {
+      "id": "context-kit",
+      "path": "skills/context-kit",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "context-management-context-restore",
       "path": "skills/context-management-context-restore",
       "targets": {
@@ -36430,13 +36453,13 @@
     }
   ],
   "summary": {
-    "total_skills": 1897,
+    "total_skills": 1898,
     "supported": {
       "codex": 1830,
-      "claude": 1849
+      "claude": 1850
     },
     "blocked": {
-      "codex": 67,
+      "codex": 68,
       "claude": 48
     },
     "manual_setup": 16
