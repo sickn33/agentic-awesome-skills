@@ -7,7 +7,7 @@ const SITE_NAME = 'Antigravity Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
 const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const TOPIC_ROUTE_PREFIX = '/topics';
-const HOME_CATALOG_COUNT_FALLBACK = 1894;
+const HOME_CATALOG_COUNT_FALLBACK = 1898;
 
 export interface SeoLandingPageLink {
   label: string;
