@@ -830,7 +830,7 @@ webhook = create_webhook(
         {"type": "org", "name": "your-org-name"}
     ],
     domains=["repo", "discussion"],
-    secret="your-secret"
+    secret=os.environ["HF_WEBHOOK_SECRET"]
 )
 ```
 

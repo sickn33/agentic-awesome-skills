@@ -25,6 +25,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Node
         uses: actions/setup-node@v5
@@ -32,7 +33,7 @@ jobs:
           node-version: "lts/*"
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Fetch base branch
         run: git fetch origin "${{ github.base_ref }}"

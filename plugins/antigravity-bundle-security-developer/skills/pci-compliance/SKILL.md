@@ -146,8 +146,10 @@ class TokenizedPayment:
     @staticmethod
     def charge_with_token(token_id, amount):
         """Charge using token (server-side)."""
+        import os
+
         # Your server only sees the token, never the card number
-        stripe.api_key = "sk_..."
+        stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 
         charge = stripe.Charge.create(
             amount=amount,

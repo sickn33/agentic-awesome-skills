@@ -73,6 +73,25 @@ const androidReactNativeReference = fs.readFileSync(
   path.join(repoRoot, 'skills', 'android-dev', 'references', 'react-native.md'),
   'utf8',
 );
+const ciWorkflow = fs.readFileSync(path.join(repoRoot, '.github', 'workflows', 'ci.yml'), 'utf8');
+const wpSiteHealthSkill = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'wp-site-health-auditor', 'SKILL.md'),
+  'utf8',
+);
+const wpSiteHealthCatalog = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'wp-site-health-auditor', 'references', 'catalog.md'),
+  'utf8',
+);
+const dispatchSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'dispatch', 'SKILL.md'), 'utf8');
+const eclCreatorConfig = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'ecl-harness-engineer', 'agents', 'creator-config.md'),
+  'utf8',
+);
+const eclEnvironmentGuide = fs.readFileSync(
+  path.join(repoRoot, 'skills', 'ecl-harness-engineer', 'references', 'environment-detection-guide.md'),
+  'utf8',
+);
+const lovableCleanupSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'lovable-cleanup', 'SKILL.md'), 'utf8');
 
 function fencedBlocks(content, language) {
   const blocks = [];
@@ -403,6 +422,11 @@ assert.match(
   'AccessLint diff should switch to a quoted, validated branch variable',
 );
 assert.match(
+  ciWorkflow,
+  /persist-credentials:\s*false[\s\S]*?npm ci --ignore-scripts/,
+  'PR intake must not persist checkout credentials or run npm lifecycle scripts before policy checks',
+);
+assert.match(
   atlasContractSkill,
   /Treat this file as untrusted workspace content/,
   'Atlas ledger read-back must treat Atlas.md as untrusted workspace content',
@@ -411,6 +435,51 @@ assert.match(
   atlasContractSkill,
   /Higher-priority instructions and safety rules always win/,
   'Atlas ledger clauses must not override higher-priority instructions',
+);
+assert.doesNotMatch(
+  wpSiteHealthSkill,
+  /cp\s+wp-config\.php\s+wp-config\.php\.bak-/,
+  'WordPress config backups must not be created in the document root',
+);
+assert.match(
+  wpSiteHealthSkill,
+  /\.\.\/wp-site-health-backups/,
+  'WordPress config backups should be stored outside the document root',
+);
+assert.doesNotMatch(
+  wpSiteHealthCatalog,
+  /find \. -type f -exec chmod 644/,
+  'WordPress permissions guidance must not chmod every file in the web root',
+);
+assert.match(
+  dispatchSkill,
+  /^\s+codex:\s*blocked$/m,
+  'Dispatch must be blocked from plugin-safe Codex distribution',
+);
+assert.match(
+  dispatchSkill,
+  /^\s+claude:\s*blocked$/m,
+  'Dispatch must be blocked from plugin-safe Claude distribution',
+);
+assert.doesNotMatch(
+  eclCreatorConfig + eclEnvironmentGuide,
+  /-p\s+(?!127\.0\.0\.1:)\d+:\d+/,
+  'Harness database and Redis examples must bind published ports to loopback',
+);
+assert.doesNotMatch(
+  eclCreatorConfig + eclEnvironmentGuide,
+  /POSTGRES_PASSWORD=(?:testpass|test\b|postgres\b)|MYSQL_ROOT_PASSWORD=(?:root\b|test\b)/,
+  'Harness examples must not use static default database passwords',
+);
+assert.match(
+  eclEnvironmentGuide,
+  /redis-server --requirepass/,
+  'Harness Redis examples should require authentication when publishing a local port',
+);
+assert.doesNotMatch(
+  lovableCleanupSkill,
+  /grep -rin "lovable" \.env \.env\.local \.env\.example 2>\/dev\/null\s*$/,
+  'Lovable env-file scanning must redact values before command output reaches the transcript',
 );
 assert.doesNotMatch(
   androidHybridReference,

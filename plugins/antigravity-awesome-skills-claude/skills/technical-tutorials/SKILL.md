@@ -379,7 +379,7 @@ export API_KEY=your_key
 set API_KEY=your_key
 
 # Windows PowerShell
-$env:API_KEY="your_key"
+$env:API_KEY = Read-Host -AsSecureString "API key"
 \`\`\`
 ```
 

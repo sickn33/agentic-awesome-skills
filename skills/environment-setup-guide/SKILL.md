@@ -107,13 +107,10 @@ sudo -E bash "$tmpdir/nodesource-setup.sh"
 sudo apt install -y nodejs
 \`\`\`
 
-**Windows (using Chocolatey):**
+**Windows (using winget):**
 \`\`\`powershell
-# Install Chocolatey if not installed
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
 # Install Node.js
-choco install nodejs
+winget install OpenJS.NodeJS.LTS
 \`\`\`
 
 ### Step 2: Verify Installation

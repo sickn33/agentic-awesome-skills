@@ -81,7 +81,7 @@ harness/
       },
       "test_alternatives": {
         "sqlite_in_memory": "DB_DRIVER=sqlite3 DB_URL=:memory:",
-        "docker": "docker run -d --name test-pg -p 127.0.0.1:5433:5432 -e POSTGRES_PASSWORD=test postgres:16"
+        "docker": "HARNESS_POSTGRES_PASSWORD=$(openssl rand -hex 24); docker run -d --name test-pg -p 127.0.0.1:5433:5432 -e POSTGRES_PASSWORD=\"$HARNESS_POSTGRES_PASSWORD\" postgres:16"
       }
     }
   ],
@@ -94,7 +94,7 @@ harness/
       "required": false,
       "connection": {
         "url_env": "REDIS_URL",
-        "default_url": "redis://localhost:6379"
+        "default_url": "redis://:${HARNESS_REDIS_PASSWORD}@localhost:6379"
       },
       "setup": {
         "docker_image": "redis:7",
@@ -221,11 +221,12 @@ echo "==> Setting up environment for ${PROJECT_NAME}..."
 {{#if (eq type "postgres")}}
 if ! docker ps -q -f name={{name}} | grep -q .; then
   echo "Starting PostgreSQL ({{name}})..."
+  : "${{{connection.password_env}}:=$(openssl rand -hex 24)}"
   docker run -d \
     --name {{name}} \
     -p 127.0.0.1:{{connection.default_port}}:5432 \
     -e POSTGRES_USER=${{{connection.user_env}}:-postgres} \
-    -e POSTGRES_PASSWORD=${{{connection.password_env}}:-postgres} \
+    -e POSTGRES_PASSWORD="${{{connection.password_env}}}" \
     -e POSTGRES_DB=${{{connection.database_env}}:-{{../project_name}}} \
     {{setup.docker_image}}
   echo "Waiting for PostgreSQL to be ready..."
@@ -239,10 +240,11 @@ fi
 {{#if (eq type "mysql")}}
 if ! docker ps -q -f name={{name}} | grep -q .; then
   echo "Starting MySQL ({{name}})..."
+  : "${{{connection.password_env}}:=$(openssl rand -hex 24)}"
   docker run -d \
     --name {{name}} \
     -p 127.0.0.1:{{connection.default_port}}:3306 \
-    -e MYSQL_ROOT_PASSWORD=${{{connection.password_env}}:-root} \
+    -e MYSQL_ROOT_PASSWORD="${{{connection.password_env}}}" \
     -e MYSQL_DATABASE=${{{connection.database_env}}:-{{../project_name}}} \
     {{setup.docker_image}}
   echo "Waiting for MySQL to be ready..."
@@ -262,7 +264,9 @@ fi
 {{#if (eq type "redis")}}
 if ! docker ps -q -f name={{name}} | grep -q .; then
   echo "Starting Redis ({{name}})..."
-  docker run -d --name {{name}} -p 127.0.0.1:6379:6379 {{setup.docker_image}}
+  : "${HARNESS_REDIS_PASSWORD:=$(openssl rand -hex 24)}"
+  docker run -d --name {{name}} -p 127.0.0.1:6379:6379 {{setup.docker_image}} \
+    redis-server --requirepass "$HARNESS_REDIS_PASSWORD"
   echo "Redis started."
 fi
 {{/if}}

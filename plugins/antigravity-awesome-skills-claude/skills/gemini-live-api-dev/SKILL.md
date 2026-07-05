@@ -85,9 +85,10 @@ To streamline real-time audio/video app development, use a third-party integrati
 #### Python
 
 ```python
+import os
 from google import genai
 
-client = genai.Client(api_key="YOUR_API_KEY")
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 ```
 
 #### JavaScript

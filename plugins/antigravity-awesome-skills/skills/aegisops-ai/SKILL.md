@@ -88,7 +88,7 @@ Create a `.env` file in the root directory to securely
 store your credentials:
 
 ```bash
-echo "GEMINI_API_KEY='your_api_key_here'" > .env
+printf 'GEMINI_API_KEY=%s\n' "$GEMINI_API_KEY" > .env
 ```
 ## 🏁 Operational Dashboard
 

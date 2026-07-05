@@ -451,7 +451,7 @@ docker run \
   --security-opt no-new-privileges:true \    # Prevent privilege escalation via setuid
   --security-opt seccomp=seccomp.json \      # Custom seccomp profile
   --security-opt apparmor=docker-default \   # AppArmor profile
-  --pids-limit 100 \                         # Prevent fork bombs
+  --pids-limit 100 \                         # Prevent runaway process spawning
   --memory 512m \                            # OOM protection
   --memory-swap 512m \                       # Disable swap
   --cpus 1.0 \                               # CPU limit

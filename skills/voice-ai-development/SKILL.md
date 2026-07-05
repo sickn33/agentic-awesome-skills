@@ -96,8 +96,9 @@ import asyncio
 import websockets
 import json
 import base64
+import os
 
-OPENAI_API_KEY = "sk-..."
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 async def voice_session():
     url = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"

@@ -437,8 +437,9 @@ shodan search 'ssl.cert.issuer.cn:self-signed'
 #!/usr/bin/env python3
 import shodan
 import json
+import os
 
-API_KEY = 'YOUR_API_KEY'
+API_KEY = os.environ["SHODAN_API_KEY"]
 api = shodan.Shodan(API_KEY)
 
 def recon_organization(org_name):

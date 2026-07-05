@@ -56,7 +56,7 @@ if [ -z "$FIREWORKS_API_KEY" ]; then
   echo "ERROR: FIREWORKS_API_KEY is not set."
   echo "Create a Fireworks AI account at: https://fireworks.ai/"
   echo "Then export it in your shell profile (~/.zshrc or ~/.bashrc):"
-  echo '  export FIREWORKS_API_KEY="your_api_key_here"'
+  echo '  read -rsp "Fireworks API key: " FIREWORKS_API_KEY; echo; export FIREWORKS_API_KEY'
   exit 1
 fi
 echo "FIREWORKS_API_KEY is set."
@@ -589,7 +589,9 @@ PYEOF
 1. Create a Fireworks AI account at https://fireworks.ai/ and grab your API key from the dashboard
 2. Export it in your shell profile:
    ```bash
-   export FIREWORKS_API_KEY="your_api_key_here"
+   read -rsp "Fireworks API key: " FIREWORKS_API_KEY
+   echo
+   export FIREWORKS_API_KEY
    ```
 3. Restart your terminal or run `source ~/.zshrc`
 4. Invoke this skill when you want multiple open-weight AI perspectives on a question

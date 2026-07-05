@@ -12579,18 +12579,24 @@
       "id": "dispatch",
       "path": "skills/dispatch",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Requires separately installed and authenticated Codex CLI and/or Google Antigravity CLI; every external delegation must be explicitly approved by the user.",
+        "docs": "SKILL.md"
       },
-      "reasons": [],
+      "reasons": [
+        "explicit_target_restriction"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
       },
       "runtime_files": []
     },
@@ -36512,13 +36518,13 @@
   "summary": {
     "total_skills": 1901,
     "supported": {
-      "codex": 1833,
-      "claude": 1853
+      "codex": 1832,
+      "claude": 1852
     },
     "blocked": {
-      "codex": 68,
-      "claude": 48
+      "codex": 69,
+      "claude": 49
     },
-    "manual_setup": 16
+    "manual_setup": 17
   }
 }

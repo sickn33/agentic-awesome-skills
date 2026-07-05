@@ -247,6 +247,7 @@ if hasattr(keys.properties, 'properties'):
 ### Create Connection Setting
 
 ```python
+import os
 from azure.mgmt.botservice.models import (
     ConnectionSetting,
     ConnectionSettingProperties
@@ -260,7 +261,7 @@ connection = client.bot_connection.create(
         location="global",
         properties=ConnectionSettingProperties(
             client_id="<oauth-client-id>",
-            client_secret="<oauth-client-secret>",
+            client_secret=os.environ["BOT_OAUTH_CLIENT_SECRET"],
             scopes="User.Read",
             service_provider_id="<service-provider-id>"
         )

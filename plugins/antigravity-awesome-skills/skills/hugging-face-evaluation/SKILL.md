@@ -192,7 +192,7 @@ Fetch benchmark scores from Artificial Analysis API and add them to a model card
 
 **Basic Usage:**
 ```bash
-AA_API_KEY="your-api-key" uv run scripts/evaluation_manager.py import-aa \
+env "AA_API_KEY=${AA_API_KEY:?set AA_API_KEY first}" uv run scripts/evaluation_manager.py import-aa \
   --creator-slug "anthropic" \
   --model-name "claude-sonnet-4" \
   --repo-id "username/model-name"

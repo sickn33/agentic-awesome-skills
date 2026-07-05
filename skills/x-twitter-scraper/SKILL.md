@@ -84,7 +84,9 @@ Use TweetClaw when the agent should search tweets, post tweets, post replies, se
 3. Set it as an environment variable or pass it directly
 
 ```bash
-export XQUIK_API_KEY="xq_YOUR_KEY_HERE"
+read -rsp "X API key: " XQUIK_API_KEY
+echo
+export XQUIK_API_KEY
 ```
 
 ## Capabilities

@@ -48,23 +48,24 @@ def safe_user_path(path_value, base_dir="."):
 
 
 def copy_tree_contents(source_dir: Path, target_dir: Path, *, ignore=None) -> None:
-    ignored_by_dir = {}
-    if ignore is not None:
-        for current_dir in [source_dir, *[p for p in source_dir.rglob("*") if p.is_dir()]]:
-            ignored_by_dir[current_dir] = set(ignore(str(current_dir), [p.name for p in current_dir.iterdir()]))
-
     target_dir.mkdir(parents=True, exist_ok=True)
-    for source_path in source_dir.rglob("*"):
-        ignored_names = ignored_by_dir.get(source_path.parent, set())
-        if source_path.name in ignored_names:
-            continue
-        relative_path = source_path.relative_to(source_dir)
-        target_path = target_dir / relative_path
-        if source_path.is_dir():
-            target_path.mkdir(parents=True, exist_ok=True)
-        elif source_path.is_file():
-            target_path.parent.mkdir(parents=True, exist_ok=True)
-            target_path.write_bytes(source_path.read_bytes())
+
+    for current_dir, dirs, files in os.walk(source_dir, followlinks=False):
+        current_path = Path(current_dir)
+        ignored_names = set(ignore(str(current_path), dirs + files)) if ignore is not None else set()
+        dirs[:] = [directory for directory in dirs if directory not in ignored_names]
+
+        relative_dir = current_path.relative_to(source_dir)
+        target_current_dir = target_dir / relative_dir
+        target_current_dir.mkdir(parents=True, exist_ok=True)
+
+        for file_name in files:
+            if file_name in ignored_names:
+                continue
+            source_path = current_path / file_name
+            if not source_path.is_file():
+                continue
+            (target_current_dir / file_name).write_bytes(source_path.read_bytes())
 
 # Add scripts directory to path for imports
 SCRIPT_DIR = Path(__file__).parent.resolve()

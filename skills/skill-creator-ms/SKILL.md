@@ -412,7 +412,7 @@ client = MyClient(endpoint, credential)
 
 #### ❌ INCORRECT: Hardcoded Credentials
 \`\`\`python
-client = MyClient(endpoint, api_key="hardcoded")  # Security risk
+client = MyClient(endpoint, credential="[redacted API key]")  # Security risk
 \`\`\`
 ```
 

@@ -37,7 +37,9 @@ pip install google-generativeai
 
 Set your API key securely:
 ```bash
-export GEMINI_API_KEY="your-api-key-here"
+read -rsp "Gemini API key: " GEMINI_API_KEY
+echo
+export GEMINI_API_KEY
 ```
 
 ### 2. Basic Text Generation

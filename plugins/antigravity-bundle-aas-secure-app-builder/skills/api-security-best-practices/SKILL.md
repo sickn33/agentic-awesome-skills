@@ -732,7 +732,7 @@ Retry-After: 900
 **Solution:**
 \`\`\`javascript
 // ❌ Bad
-const JWT_SECRET = 'my-secret-key';
+const tokenSigningKey = '[redacted weak value]';
 
 // ✅ Good
 const JWT_SECRET = process.env.JWT_SECRET;

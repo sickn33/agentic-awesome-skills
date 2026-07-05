@@ -77,9 +77,10 @@ Master Stripe payment processing integration for robust, PCI-compliant payment f
 ## Quick Start
 
 ```python
+import os
 import stripe
 
-stripe.api_key = "sk_test_..."
+stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 
 # Create a checkout session
 session = stripe.checkout.Session.create(
@@ -222,12 +223,13 @@ def create_customer_portal_session(customer_id):
 
 ### Secure Webhook Endpoint
 ```python
+import os
 from flask import Flask, request
 import stripe
 
 app = Flask(__name__)
 
-endpoint_secret = 'whsec_...'
+endpoint_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -392,7 +394,9 @@ def handle_dispute(charge_id, evidence):
 
 ```python
 # Use test mode keys
-stripe.api_key = "sk_test_..."
+import os
+
+stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 
 # Test card numbers
 TEST_CARDS = {

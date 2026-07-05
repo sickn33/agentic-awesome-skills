@@ -590,7 +590,7 @@ Recommended fix:
 ### Credential Management
 ```javascript
 // Never in code
-const API_KEY = 'sk-xxx'; // BAD
+const leakedToken = '[redacted API key]'; // BAD
 
 // Environment variable
 const API_KEY = process.env.MY_API_KEY;

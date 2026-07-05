@@ -21,6 +21,10 @@ assert.strictEqual(
   "business",
   "explicit product frontmatter should keep product-risk skills out of security",
 );
+assert.ok(
+  !bundles["security-core"].skills.includes("before-you-build"),
+  "explicit product frontmatter should keep product-risk skills out of the security bundle",
+);
 
 for (const bundleId of [
   "core-dev",

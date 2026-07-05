@@ -948,6 +948,7 @@ cloud-sql-python-connector[pg8000]
 ```
 
 ```python
+import os
 from google.cloud.sql.connector import Connector
 import sqlalchemy
 
@@ -958,7 +959,7 @@ def getconn():
         "project:region:instance",
         "pg8000",
         user="user",
-        password="password",
+        password=os.environ["DB_PASSWORD"],
         db="database"
     )
 

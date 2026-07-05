@@ -372,6 +372,7 @@ const BUNDLE_RULES = {
   },
   "security-core": {
     description: "Security, privacy, and compliance essentials.",
+    excludeCategories: new Set(["business"]),
     keywords: [
       "security",
       "sast",
@@ -663,8 +664,13 @@ function buildBundles(skills) {
   for (const [bundleName, rule] of Object.entries(BUNDLE_RULES)) {
     const bundleSkills = [];
     const keywords = rule.keywords.map((keyword) => keyword.toLowerCase());
+    const excludeCategories = rule.excludeCategories || new Set();
 
     for (const skill of skills) {
+      if (excludeCategories.has(skill.category)) {
+        continue;
+      }
+
       const tokenSet = skillTokens.get(skill.id) || new Set();
       if (keywords.some((keyword) => tokenSet.has(keyword))) {
         bundleSkills.push(skill.id);

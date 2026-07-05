@@ -13881,15 +13881,17 @@
     "date_added": "2026-06-28",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Requires separately installed and authenticated Codex CLI and/or Google Antigravity CLI; every external delegation must be explicitly approved by the user.",
+        "docs": "SKILL.md"
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     }
   },
   {

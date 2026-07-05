@@ -224,7 +224,7 @@ After signup, track and adapt:
 
 | Behavior | Adaptation |
 |----------|------------|
-| Copies cURL example | Show more cURL, less SDK |
+| Copies HTTP request | Prefer HTTP examples over SDK-only flow |
 | Views pricing page early | Surface free tier limits in dashboard |
 | Creates multiple projects | Suggest team features |
 | Frequent docs visits | Add "Stuck?" help widget |

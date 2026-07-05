@@ -19,12 +19,13 @@ most shared hosts disable this and there is no performance downside for
 standard WP installs. No action needed.
 
 ### File permissions should be reviewed — Tier 2
-`wp-config.php` and `/wp-content/` directory permissions. Draft the expected
-permissions:
+`wp-config.php` and `/wp-content/` directory permissions. Do not recursively
+chmod the whole web root, because it may contain host-managed files or private
+backup material. Draft the expected permissions for the WordPress-owned paths:
 ```bash
-find . -type f -exec chmod 644 {} \;
-find . -type d -exec chmod 755 {} \;
 chmod 600 wp-config.php
+find wp-content -type d -exec chmod 755 {} +
+find wp-content -type f -exec chmod 644 {} +
 chmod 400 .htaccess # if Apache; nginx ignores it
 ```
 The user must verify with their host that the filesystem supports these

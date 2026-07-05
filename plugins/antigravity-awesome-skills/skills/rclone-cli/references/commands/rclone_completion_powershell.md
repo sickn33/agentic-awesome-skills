@@ -18,10 +18,11 @@ Generate the autocompletion script for powershell.
 To load completions in your current shell session:
 
 ```console
-rclone completion powershell | Out-String | Invoke-Expression
+rclone completion powershell | Out-File -Encoding utf8 "$HOME\Documents\PowerShell\rclone-completion.ps1"
 ```
 
-To load completions for every new session, add the output of the above command
+Inspect the generated script, then dot-source it from your profile if you want completions
+for every new session.
 to your powershell profile.
 
 If output_file is "-" or missing, then the output will be written to stdout.

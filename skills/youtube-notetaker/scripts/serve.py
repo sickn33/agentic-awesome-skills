@@ -62,11 +62,14 @@ def dump_file(meta, body):
     return out + body
 
 
-def listed_file(directory, filename):
+def listed_file(directory, filename, *, allow_directory_symlink=False):
     if not SAFE_PATH_PART_RE.fullmatch(filename or "") or filename in {".", ".."}:
         return None
     try:
-        root = Path(directory).resolve(strict=True)
+        directory_path = Path(directory)
+        if directory_path.is_symlink() and not allow_directory_symlink:
+            return None
+        root = directory_path.resolve(strict=True)
         for path in root.iterdir():
             if path.name != filename:
                 continue
@@ -90,7 +93,7 @@ def media_path(lib, filename):
 def item_path(lib, slug):
     if not SAFE_SLUG_RE.fullmatch(slug or ""):
         return None
-    return listed_file(lib, slug + ".md")
+    return listed_file(lib, slug + ".md", allow_directory_symlink=True)
 
 
 def safe_content_type(ctype):
@@ -226,12 +229,17 @@ def self_test():
         (root / "video_1.md").write_text("---\ntitle: Demo\n---\nBody", encoding="utf-8")
         (root / "_media").mkdir()
         (root / "_media" / "video_1-slide-01.jpg").write_bytes(b"x")
+        media_target = root / "media-target"
+        media_target.mkdir()
+        (media_target / "outside.jpg").write_bytes(b"outside")
         (root / "secret.md").write_text("secret", encoding="utf-8")
         (root / "linked.md").symlink_to(root / "secret.md")
         (root / "_media" / "linked.jpg").symlink_to(root / "secret.md")
+        (root / "_media_link").symlink_to(media_target)
         assert load_item(str(root), "video_1")
         assert load_item(str(root), "linked") is None
         assert media_path(str(root), "linked.jpg") is None
+        assert listed_file(root / "_media_link", "outside.jpg") is None
         assert load_item(str(root), "../secret") is None
         assert listed_file(root / "_media", "../video_1.md") is None
         assert safe_content_type("text/html; charset=utf-8") == "text/html; charset=utf-8"

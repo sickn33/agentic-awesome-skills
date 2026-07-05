@@ -31,10 +31,13 @@ themes. All three are one bad edit away from a white-screen-of-death or a broken
 this section, even for a one-line change, even if the user is in a hurry.**
 
 **Before any edit or deletion, in this order:**
-1. **Back up the specific file(s) you're about to touch**, not just "have a backup somewhere":
+1. **Back up the specific file(s) you're about to touch outside the web root**, not just "have a backup somewhere":
    ```
-   cp wp-config.php wp-config.php.bak-$(date +%Y%m%d-%H%M%S)
-   cp .htaccess .htaccess.bak-$(date +%Y%m%d-%H%M%S)
+   umask 077
+   backup_dir="../wp-site-health-backups/$(date +%Y%m%d-%H%M%S)"
+   mkdir -p "$backup_dir"
+   cp -p wp-config.php "$backup_dir/wp-config.php"
+   cp -p .htaccess "$backup_dir/.htaccess"
    ```
    If shell access isn't available, tell the user to download the current file via SFTP/host file
    manager first, and don't proceed until they confirm they have it.
@@ -57,7 +60,7 @@ this section, even for a one-line change, even if the user is in a hurry.**
    know which change did it.
 6. **Give the user the exact rollback command** alongside every edit:
    ```
-   cp wp-config.php.bak-<timestamp> wp-config.php
+   cp ../wp-site-health-backups/<timestamp>/wp-config.php wp-config.php
    ```
    State this even if nothing goes wrong — it costs one line and saves a panicked user later.
 
@@ -282,7 +285,10 @@ blocks above, not prose paragraphs, unless the user asks for more explanation on
 1. Triage → Tier 1 (safe, reversible via wp-config.php)
 2. Back up `wp-config.php`:
    ```
-   cp wp-config.php wp-config.php.bak-$(date +%Y%m%d-%H%M%S)
+   umask 077
+   backup_dir="../wp-site-health-backups/$(date +%Y%m%d-%H%M%S)"
+   mkdir -p "$backup_dir"
+   cp -p wp-config.php "$backup_dir/wp-config.php"
    ```
 3. Edit and lint:
    ```php

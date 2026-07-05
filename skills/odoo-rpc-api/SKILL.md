@@ -29,12 +29,13 @@ Odoo exposes a powerful external API via JSON-RPC and XML-RPC, allowing any exte
 ### Example 1: Authenticate and Read Records (Python)
 
 ```python
+import os
 import xmlrpc.client
 
 url = 'https://myodoo.example.com'
 db = 'my_database'
 username = 'admin'
-password = 'my_api_key'  # Use API keys, not passwords, in production
+password = os.environ["ODOO_API_KEY"]  # Use API keys, not passwords, in production
 
 # Step 1: Authenticate
 common = xmlrpc.client.ServerProxy(f'{url}/xmlrpc/2/common')

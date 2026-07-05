@@ -12,6 +12,14 @@ tags: [delegation, codex, antigravity, gemini, multi-model, second-opinion, agen
 tools: [claude, codex, antigravity]
 license: "MIT"
 license_source: "https://github.com/sparklingneuronics/sparkling-skills/blob/main/LICENSE"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Requires separately installed and authenticated Codex CLI and/or Google Antigravity CLI; every external delegation must be explicitly approved by the user."
+    docs: SKILL.md
 ---
 
 # Dispatch

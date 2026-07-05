@@ -281,7 +281,7 @@ await db.query(query, [email]);
 2. ✅ Hardcoded Secrets Removed
 \`\`\`typescript
 // Before (INSECURE)
-const JWT_SECRET = 'my-secret-key-123';
+const tokenSigningKey = '[redacted weak value]';
 
 // After (SECURE)
 const JWT_SECRET = process.env.JWT_SECRET;

@@ -41,7 +41,7 @@ The runtime ecosystem contract. Describes what the application needs to run.
     }
   ],
   "services": [
-    {"type": "redis", "env_vars": {"REDIS_URL": "redis://localhost:6379"}}
+    {"type": "redis", "env_vars": {"REDIS_URL": "redis://:${HARNESS_REDIS_PASSWORD}@localhost:6379"}}
   ],
   "secrets": [
     {"name": "JWT_SECRET", "description": "JWT signing key", "test_value": "test-secret-do-not-use-in-prod"}
@@ -95,11 +95,24 @@ Start external dependencies (DB, Redis, etc.):
 ```bash
 #!/bin/bash
 set -euo pipefail
+umask 077
+
+mkdir -p harness/.runtime
+HARNESS_ENV_FILE="${HARNESS_ENV_FILE:-harness/.runtime/env}"
+if [ ! -f "$HARNESS_ENV_FILE" ]; then
+  HARNESS_POSTGRES_PASSWORD="$(openssl rand -hex 24)"
+  HARNESS_REDIS_PASSWORD="$(openssl rand -hex 24)"
+  {
+    printf 'HARNESS_POSTGRES_PASSWORD=%s\n' "$HARNESS_POSTGRES_PASSWORD"
+    printf 'HARNESS_REDIS_PASSWORD=%s\n' "$HARNESS_REDIS_PASSWORD"
+  } > "$HARNESS_ENV_FILE"
+fi
+. "$HARNESS_ENV_FILE"
 
 # Start PostgreSQL
 docker run -d --name harness-postgres \
   -p 127.0.0.1:5432:5432 \
-  -e POSTGRES_PASSWORD=testpass \
+  -e POSTGRES_PASSWORD="$HARNESS_POSTGRES_PASSWORD" \
   postgres:16
 
 # Wait for ready
@@ -120,7 +133,8 @@ set -euo pipefail
 
 export PORT=8081
 export ENV=test
-export DATABASE_URL="postgres://postgres:testpass@localhost:5432/testdb?sslmode=disable"
+. harness/.runtime/env
+export DATABASE_URL="postgres://postgres:${HARNESS_POSTGRES_PASSWORD}@localhost:5432/testdb?sslmode=disable"
 
 # Start server
 go run cmd/api/main.go &

@@ -60,6 +60,7 @@ Subscription
 ### 1. Create PostgreSQL Flexible Server
 
 ```csharp
+using System;
 using Azure.ResourceManager.PostgreSql.FlexibleServers;
 using Azure.ResourceManager.PostgreSql.FlexibleServers.Models;
 
@@ -74,7 +75,7 @@ PostgreSqlFlexibleServerData data = new PostgreSqlFlexibleServerData(AzureLocati
 {
     Sku = new PostgreSqlFlexibleServerSku("Standard_D2ds_v4", PostgreSqlFlexibleServerSkuTier.GeneralPurpose),
     AdministratorLogin = "pgadmin",
-    AdministratorLoginPassword = "YourSecurePassword123!",
+    AdministratorLoginPassword = Environment.GetEnvironmentVariable("POSTGRES_ADMIN_PASSWORD") ?? throw new InvalidOperationException("POSTGRES_ADMIN_PASSWORD is required"),
     Version = PostgreSqlFlexibleServerVersion.Ver16,
     Storage = new PostgreSqlFlexibleServerStorage
     {
