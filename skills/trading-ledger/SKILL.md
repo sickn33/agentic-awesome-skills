@@ -95,6 +95,7 @@ Agent: 3 closed since last review:
 ## Limitations
 
 - Requires the user's own Notion workspace, the companion database (duplicate the template from the source repo), and the official Notion connector granted access — connector/skill setups currently live on paid Claude tiers.
+- Close, reconcile, and review flows require reliable Notion database query/search access to open, closed, and `To-confirm` rows. If the connector cannot query the ledger, stop after logging the user's new facts and ask them to provide the relevant row details instead of guessing matches.
 - No broker integration, by design: the broker knows the fills; only the user knows the reasons. The user must self-report.
 - Grading honesty depends on input honesty: a thesis backfilled three days later defeats the point (the skill nags, but cannot prevent it).
 
