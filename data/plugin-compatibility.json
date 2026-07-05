@@ -33042,6 +33042,25 @@
       "runtime_files": []
     },
     {
+      "id": "time-ledger",
+      "path": "skills/time-ledger",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tmux",
       "path": "skills/tmux",
       "targets": {
@@ -36453,10 +36472,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1898,
+    "total_skills": 1899,
     "supported": {
-      "codex": 1830,
-      "claude": 1850
+      "codex": 1831,
+      "claude": 1851
     },
     "blocked": {
       "codex": 68,

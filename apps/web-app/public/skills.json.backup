@@ -37774,6 +37774,28 @@
     }
   },
   {
+    "id": "time-ledger",
+    "path": "skills/time-ledger",
+    "category": "productivity",
+    "name": "time-ledger",
+    "description": "Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database \u2014 asking instead of guessing when unsure.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "tmux",
     "path": "skills/tmux",
     "category": "development",

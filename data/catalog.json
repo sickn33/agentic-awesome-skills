@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-04T15:00:26.000Z",
-  "total": 1898,
+  "total": 1899,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -42784,6 +42784,34 @@
         "post"
       ],
       "path": "skills/tiktok-automation/SKILL.md"
+    },
+    {
+      "id": "time-ledger",
+      "name": "time-ledger",
+      "description": "Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database — asking instead of guessing when unsure.",
+      "category": "data-ai",
+      "tags": [
+        "time-tracking",
+        "notion",
+        "quantified-self",
+        "productivity",
+        "journaling"
+      ],
+      "triggers": [
+        "time-tracking",
+        "notion",
+        "quantified-self",
+        "productivity",
+        "journaling",
+        "time",
+        "ledger",
+        "natural",
+        "language",
+        "tracking",
+        "parse",
+        "what"
+      ],
+      "path": "skills/time-ledger/SKILL.md"
     },
     {
       "id": "tmux",

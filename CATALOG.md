@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-04T15:00:26.000Z
 
-Total skills: 1898
+Total skills: 1899
 
 ## architecture (113)
 
@@ -230,7 +230,7 @@ Total skills: 1898
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (345)
+## data-ai (346)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -546,6 +546,7 @@ Total skills: 1898
 | `telegram-bot-builder` | Expert in building Telegram bots that solve real problems - from simple automation to complex AI-powered bots. Covers bot architecture, the Telegram Bot API,... | telegram, bot, builder | telegram, bot, builder, building, bots, solve, real, problems, simple, automation, complex, ai |
 | `testng-skill` | Generates TestNG tests in Java with groups, data providers, parallel execution, XML suite configuration, and listeners. Use when user mentions "TestNG", "@Da... | testng, skill | testng, skill, generates, tests, java, groups, data, providers, parallel, execution, xml, suite |
 | `the-honoured-one` | Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting... | the, honoured, one | the, honoured, one, forces, ai, fully, load, context, read, relevant, files, before |
+| `time-ledger` | Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database — asking instead of guessing w... | time-tracking, notion, quantified-self, productivity, journaling | time-tracking, notion, quantified-self, productivity, journaling, time, ledger, natural, language, tracking, parse, what |
 | `train-sentence-transformers` | Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, cluster... | train, sentence, transformers | train, sentence, transformers, fine, tune, models, sentencetransformer, bi, encoder, dense, static, embedding |
 | `travel-health-analyzer` | 分析旅行健康数据、评估目的地健康风险、提供疫苗接种建议、生成多语言紧急医疗信息卡片。支持WHO/CDC数据集成的专业级旅行健康风险评估。 | travel, health, analyzer | travel, health, analyzer, who, cdc |
 | `trigger-dev` | Trigger.dev expert for background jobs, AI workflows, and reliable async execution with excellent developer experience and TypeScript-first design. | trigger, dev | trigger, dev, background, jobs, ai, reliable, async, execution, excellent, developer, experience, typescript |
