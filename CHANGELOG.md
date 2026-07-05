@@ -9,6 +9,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.11.0] - 2026-07-05 - "Ledger Skills, WGM, and Loki Dependency Maintenance"
+
+> Notion-backed ledger skills, a governed build-loop methodology, and synchronized dependency maintenance for the 1,901+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1899-skills](README.md#browse-1899-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release ships the July 5 maintenance batch: three source-backed skills, README upstream credits, a maintainer-side Snyk dependency repair for the Loki generated todo example, and refreshed registry/public catalog state for the 1,901+ skill catalog.
+
+## Added
+
+- Added **time-ledger**, a critical-risk Notion skill that parses natural-language time reports into a user-owned Notion database while marking uncertain entries `To-confirm` instead of guessing (PR #777).
+- Added **trading-ledger**, a critical-risk Notion trading journal skill that records thesis, plan, emotion, fills, closes, and reviews while explicitly avoiding financial advice and market-data lookups (PR #778).
+- Added **wgm**, a safe meta skill for governed build loops with triage, alignment, planning, deterministic backpressure, holdout-scenario judging, and handoff audits (PR #782).
+- Added README upstream credits for **cruisekkk/time-ledger**, **cruisekkk/trading-ledger**, and **agent-frontier/wgm**.
+
+## Changed
+
+- Updated the Loki generated todo backend example dependency `better-sqlite3` from `^12.10.0` to `^12.10.1` in both the canonical skill source and Claude plugin mirror, superseding the generated-only Snyk PR #779 with a source-synchronized maintainer patch.
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, public web skill assets, sitemap, package description, and README/docs counters for the 1,901+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #777, PR #778, and PR #782 after required GitHub checks passed.
+- Ran `npm run security:docs` and `git diff --check` for the Loki dependency maintenance patch.
+- Ran `npm run validate:references`, `npm run check:readme-credits -- --base origin/main --head HEAD`, and `git diff --check` during the maintainer fixes for PR #778 and PR #782.
+- Ran `npm run sync:repo-state` before release preparation.
+- Ran the release prepare suite for v13.11.0, including reference validation, release-state sync, tests, web-app install, web-app build, and package dry run.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@cruisekkk](https://github.com/cruisekkk)** and **[cruisekkk/time-ledger](https://github.com/cruisekkk/time-ledger)** for PR #777 (`time-ledger`).
+- **[@cruisekkk](https://github.com/cruisekkk)** and **[cruisekkk/trading-ledger](https://github.com/cruisekkk/trading-ledger)** for PR #778 (`trading-ledger`).
+- **[@SchwartzKamel](https://github.com/SchwartzKamel)** and **[agent-frontier/wgm](https://github.com/agent-frontier/wgm)** for PR #782 (`wgm`).
+- **Snyk** for the `better-sqlite3` maintenance signal in PR #779.
+
 ## [13.10.0] - 2026-07-04 - "Context, WordPress, and PR Intake Hardening"
 
 > Community skill intake, ASO research guidance, pull-request CI hardening, and catalog sync for the 1,898+ skill catalog.
