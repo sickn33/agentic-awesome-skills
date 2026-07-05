@@ -359,6 +359,7 @@ Key source families include:
 ### Community Contributors
 
 - **[cruisekkk/trading-ledger](https://github.com/cruisekkk/trading-ledger)**: Source for the `trading-ledger` skill - decision-quality trade journaling that captures entry thesis, plan, and emotion into the user's own Notion database (MIT).
+- **[cruisekkk/time-ledger](https://github.com/cruisekkk/time-ledger)**: Source for the `time-ledger` skill - natural-language time tracking parsed into the user's own Notion database with ask-instead-of-guessing reconciliation (MIT).
 - **[mattpocock/skills](https://github.com/mattpocock/skills)**: Source for 17 Matt Pocock workflow skills - codebase design, TDD, bug diagnosis, triage, PRDs, issues, prototyping, handoff, teaching, and skill-writing guidance (MIT).
 - **[emilkowalski/skills](https://github.com/emilkowalski/skills)**: Source for Emil Kowalski design engineering skills - UI polish, motion review, animation standards, component craft, and high-taste frontend guidance (MIT).
 - **[chaunsin/agent-skills](https://github.com/chaunsin/agent-skills)**: Source for the `pre-release-review` and `drizzle-migration-conflict` skills - deploy-readiness audits and Drizzle Kit migration-conflict workflows (Apache-2.0).
@@ -545,14 +546,14 @@ We officially thank the following contributors for their help in making this rep
 ## Star History
 
 <a href="https://www.star-history.com/#sickn33/antigravity-awesome-skills&type=date&legend=top-left">
- <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left&cache_bust=202607040701" />
+ <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left&cache_bust=202607050707" />
 </a>
 
 <a href="https://www.star-history.com/sickn33/antigravity-awesome-skills">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&theme=dark&cache_bust=202607040701" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202607040701" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202607040701" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&theme=dark&cache_bust=202607050707" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202607050707" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/antigravity-awesome-skills&style=landscape1&cache_bust=202607050707" />
  </picture>
 </a>
 
