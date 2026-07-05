@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-04T15:00:26.000Z
 
-Total skills: 1899
+Total skills: 1901
 
 ## architecture (113)
 
@@ -230,7 +230,7 @@ Total skills: 1899
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (346)
+## data-ai (347)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -547,6 +547,7 @@ Total skills: 1899
 | `testng-skill` | Generates TestNG tests in Java with groups, data providers, parallel execution, XML suite configuration, and listeners. Use when user mentions "TestNG", "@Da... | testng, skill | testng, skill, generates, tests, java, groups, data, providers, parallel, execution, xml, suite |
 | `the-honoured-one` | Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting... | the, honoured, one | the, honoured, one, forces, ai, fully, load, context, read, relevant, files, before |
 | `time-ledger` | Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database — asking instead of guessing w... | time-tracking, notion, quantified-self, productivity, journaling | time-tracking, notion, quantified-self, productivity, journaling, time, ledger, natural, language, tracking, parse, what |
+| `trading-ledger` | A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database;... | trading-journal, notion, journaling, market-wizards, decision-making | trading-journal, notion, journaling, market-wizards, decision-making, trading, ledger, journal, captures, decision, just, fill |
 | `train-sentence-transformers` | Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, cluster... | train, sentence, transformers | train, sentence, transformers, fine, tune, models, sentencetransformer, bi, encoder, dense, static, embedding |
 | `travel-health-analyzer` | 分析旅行健康数据、评估目的地健康风险、提供疫苗接种建议、生成多语言紧急医疗信息卡片。支持WHO/CDC数据集成的专业级旅行健康风险评估。 | travel, health, analyzer | travel, health, analyzer, who, cdc |
 | `trigger-dev` | Trigger.dev expert for background jobs, AI workflows, and reliable async execution with excellent developer experience and TypeScript-first design. | trigger, dev | trigger, dev, background, jobs, ai, reliable, async, execution, excellent, developer, experience, typescript |
@@ -870,7 +871,7 @@ Total skills: 1899
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (511)
+## general (512)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1369,6 +1370,7 @@ Total skills: 1899
 | `web-media-getter` | One query across free image / video / GIF APIs (stock + historical/archival + GIF engines), returning normalized, license-tagged results with optional top-K ... | media, images, video, gif, stock, archival, attribution | media, images, video, gif, stock, archival, attribution, web, getter, one, query, free |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 | `weightloss-analyzer` | 分析减肥数据、计算代谢率、追踪能量缺口、管理减肥阶段 | weightloss, analyzer | weightloss, analyzer |
+| `wgm` | Turns a rough request into working software via a governed build loop: align first, plan, then iterate one task at a time with deterministic backpressure and... | build-loop, spec-driven, ralph-loop, self-improving, agentic-development, methodology | build-loop, spec-driven, ralph-loop, self-improving, agentic-development, methodology, wgm, turns, rough, request, working, software |
 | `wiki-architect` | You are a documentation architect that produces structured wiki catalogues and onboarding guides from codebases. | wiki | wiki, architect, documentation, produces, structured, catalogues, onboarding, guides, codebases |
 | `wiki-changelog` | Generate structured changelogs from git history. Use when user asks "what changed recently", "generate a changelog", "summarize commits" or user wants to und... | wiki, changelog | wiki, changelog, generate, structured, changelogs, git, history, user, asks, what, changed, recently |
 | `wiki-onboarding` | Generate two complementary onboarding documents that together give any engineer — from newcomer to principal — a complete understanding of a codebase. Use wh... | wiki, onboarding | wiki, onboarding, generate, two, complementary, documents, together, give, any, engineer, newcomer, principal |

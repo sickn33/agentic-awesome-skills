@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-04T15:00:26.000Z",
-  "total": 1899,
+  "total": 1901,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -43087,6 +43087,34 @@
       "path": "skills/track-management/SKILL.md"
     },
     {
+      "id": "trading-ledger",
+      "name": "trading-ledger",
+      "description": "A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database; reviews grade decisions, not P&L.",
+      "category": "data-ai",
+      "tags": [
+        "trading-journal",
+        "notion",
+        "journaling",
+        "market-wizards",
+        "decision-making"
+      ],
+      "triggers": [
+        "trading-journal",
+        "notion",
+        "journaling",
+        "market-wizards",
+        "decision-making",
+        "trading",
+        "ledger",
+        "journal",
+        "captures",
+        "decision",
+        "just",
+        "fill"
+      ],
+      "path": "skills/trading-ledger/SKILL.md"
+    },
+    {
       "id": "train-sentence-transformers",
       "name": "train-sentence-transformers",
       "description": "Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, clustering, classification, paraphrase mining, dedup, multimodal), `CrossEncoder` (reranker; pair scoring for two-stage retrieval / pair...",
@@ -45830,6 +45858,35 @@
         "knowledge"
       ],
       "path": "skills/wellally-tech/SKILL.md"
+    },
+    {
+      "id": "wgm",
+      "name": "wgm",
+      "description": "Turns a rough request into working software via a governed build loop: align first, plan, then iterate one task at a time with deterministic backpressure and holdout-scenario judging.",
+      "category": "general",
+      "tags": [
+        "build-loop",
+        "spec-driven",
+        "ralph-loop",
+        "self-improving",
+        "agentic-development",
+        "methodology"
+      ],
+      "triggers": [
+        "build-loop",
+        "spec-driven",
+        "ralph-loop",
+        "self-improving",
+        "agentic-development",
+        "methodology",
+        "wgm",
+        "turns",
+        "rough",
+        "request",
+        "working",
+        "software"
+      ],
+      "path": "skills/wgm/SKILL.md"
     },
     {
       "id": "whatsapp-automation",

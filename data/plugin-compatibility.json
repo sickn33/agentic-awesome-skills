@@ -33257,6 +33257,25 @@
       "runtime_files": []
     },
     {
+      "id": "trading-ledger",
+      "path": "skills/trading-ledger",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "train-sentence-transformers",
       "path": "skills/train-sentence-transformers",
       "targets": {
@@ -35382,6 +35401,25 @@
       "runtime_files": []
     },
     {
+      "id": "wgm",
+      "path": "skills/wgm",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "whatsapp-automation",
       "path": "skills/whatsapp-automation",
       "targets": {
@@ -36472,10 +36510,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1899,
+    "total_skills": 1901,
     "supported": {
-      "codex": 1831,
-      "claude": 1851
+      "codex": 1833,
+      "claude": 1853
     },
     "blocked": {
       "codex": 68,

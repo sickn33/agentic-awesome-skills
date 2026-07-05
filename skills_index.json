@@ -38018,6 +38018,28 @@
     }
   },
   {
+    "id": "trading-ledger",
+    "path": "skills/trading-ledger",
+    "category": "productivity",
+    "name": "trading-ledger",
+    "description": "A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database; reviews grade decisions, not P&L.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "train-sentence-transformers",
     "path": "skills/train-sentence-transformers",
     "category": "ai-ml",
@@ -40584,6 +40606,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "wgm",
+    "path": "skills/wgm",
+    "category": "meta",
+    "name": "wgm",
+    "description": "Turns a rough request into working software via a governed build loop: align first, plan, then iterate one task at a time with deterministic backpressure and holdout-scenario judging.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-05",
     "plugin": {
       "targets": {
         "codex": "supported",
