@@ -694,6 +694,16 @@ We officially thank the following contributors for their help in making this rep
 - [@genefold-ai](https://github.com/genefold-ai)
 - [@Rsmiyani](https://github.com/Rsmiyani)
 - [@takeaseatventure](https://github.com/takeaseatventure)
+- [@bin1874](https://github.com/bin1874)
+- [@ch040602](https://github.com/ch040602)
+- [@cruisekkk](https://github.com/cruisekkk)
+- [@deveweber](https://github.com/deveweber)
+- [@JDDavenport](https://github.com/JDDavenport)
+- [@lilhawk7077](https://github.com/lilhawk7077)
+- [@m1amgn](https://github.com/m1amgn)
+- [@owengu-ai](https://github.com/owengu-ai)
+- [@SchwartzKamel](https://github.com/SchwartzKamel)
+- [@skiffer](https://github.com/skiffer)
 
 ## Star History
 
