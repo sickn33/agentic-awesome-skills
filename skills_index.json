@@ -862,6 +862,28 @@
     }
   },
   {
+    "id": "agent-self-scheduling",
+    "path": "skills/agent-self-scheduling",
+    "category": "agent-orchestration",
+    "name": "agent-self-scheduling",
+    "description": "Schedule AI agent runs with cron, loops, or external clocks while avoiding unsafe tight autonomous timers.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "agent-squad",
     "path": "skills/agent-squad",
     "category": "ai-ml",
@@ -2024,6 +2046,28 @@
     "risk": "offensive",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "anti-sleep",
+    "path": "skills/anti-sleep",
+    "category": "operations",
+    "name": "anti-sleep",
+    "description": "Keep a Mac awake with caffeinate during long builds, downloads, or supervised automation runs.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -7471,6 +7515,28 @@
     }
   },
   {
+    "id": "brain-to-docs",
+    "path": "skills/brain-to-docs",
+    "category": "productivity",
+    "name": "brain-to-docs",
+    "description": "Interview the user to turn project vision and decisions into README and ADR documentation.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "brainstorming",
     "path": "skills/brainstorming",
     "category": "uncategorized",
@@ -7831,6 +7897,28 @@
     "risk": "unknown",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "browser-harness",
+    "path": "skills/browser-harness",
+    "category": "browser-automation",
+    "name": "browser-harness",
+    "description": "Drive an existing browser through CDP for authenticated, visual, or interactive web automation.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -9525,6 +9613,28 @@
     }
   },
   {
+    "id": "cmux",
+    "path": "skills/cmux",
+    "category": "development",
+    "name": "cmux",
+    "description": "Control cmux workspaces, panes, surfaces, and agent sessions safely from macOS terminal workflows.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "co-marketing",
     "path": "skills/co-marketing",
     "category": "uncategorized",
@@ -10118,6 +10228,30 @@
         "docs": null
       },
       "reasons": []
+    }
+  },
+  {
+    "id": "codex-subagent",
+    "path": "skills/codex-subagent",
+    "category": "agent-orchestration",
+    "name": "codex-subagent",
+    "description": "Launch Codex CLI as an isolated subagent for bounded coding, review, or verification tasks.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
     }
   },
   {
@@ -11995,6 +12129,28 @@
     }
   },
   {
+    "id": "cyber-audit",
+    "path": "skills/cyber-audit",
+    "category": "security",
+    "name": "cyber-audit",
+    "description": "Run read-only exposure checks for security advisories and write a structured local audit report.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "cyber-y2k",
     "path": "skills/design-it/cyber-y2k",
     "category": "design-it",
@@ -12941,6 +13097,28 @@
     }
   },
   {
+    "id": "deepapi",
+    "path": "skills/deepapi",
+    "category": "research",
+    "name": "deepapi",
+    "description": "Use DeepAPI for supported scraping, research, and email workflows with explicit credentials and approval.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "defi-protocol-templates",
     "path": "skills/defi-protocol-templates",
     "category": "blockchain",
@@ -12982,6 +13160,30 @@
         "docs": null
       },
       "reasons": []
+    }
+  },
+  {
+    "id": "delegating-to-agents",
+    "path": "skills/delegating-to-agents",
+    "category": "agent-orchestration",
+    "name": "delegating-to-agents",
+    "description": "Delegate bounded work to other AI agents while preserving context, ownership, and progress checks.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
     }
   },
   {
@@ -13917,6 +14119,30 @@
     }
   },
   {
+    "id": "distribute-skill-to-all-agents",
+    "path": "skills/distribute-skill-to-all-agents",
+    "category": "development",
+    "name": "distribute-skill-to-all-agents",
+    "description": "Distribute a skill across configured agent skill folders while respecting local symlink layouts.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    }
+  },
+  {
     "id": "distributed-debugging-debug-trace",
     "path": "skills/distributed-debugging-debug-trace",
     "category": "reliability",
@@ -14699,6 +14925,28 @@
     "risk": "safe",
     "source": "self",
     "date_added": "2026-06-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "effective-agent-skills",
+    "path": "skills/effective-agent-skills",
+    "category": "development",
+    "name": "effective-agent-skills",
+    "description": "Author and review high-quality agent skills with triggers, progressive disclosure, and safety notes.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -15771,6 +16019,28 @@
     }
   },
   {
+    "id": "fable-safe-prompt",
+    "path": "skills/fable-safe-prompt",
+    "category": "agent-behavior",
+    "name": "fable-safe-prompt",
+    "description": "Rewrite allowed prompts to reduce false-positive safety triggers without bypassing policy or changing intent.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "faf-context",
     "path": "skills/faf-context",
     "category": "uncategorized",
@@ -16615,6 +16885,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "folder-specific-claude-and-agents-md",
+    "path": "skills/folder-specific-claude-and-agents-md",
+    "category": "development",
+    "name": "folder-specific-claude-and-agents-md",
+    "description": "Create folder-scoped CLAUDE.md and AGENTS.md guidance for future agents working in that area.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18621,6 +18913,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "goal-loop",
+    "path": "skills/goal-loop",
+    "category": "agent-orchestration",
+    "name": "goal-loop",
+    "description": "Draft and explain persistent goal-loop prompts for long-running agent work with clear stop conditions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -21177,6 +21491,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "interview-style-doc-building",
+    "path": "skills/interview-style-doc-building",
+    "category": "productivity",
+    "name": "interview-style-doc-building",
+    "description": "Build structured strategy documents by asking one question at a time and patching the file.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24284,6 +24620,28 @@
       "reasons": [
         "target_specific_home_path"
       ]
+    }
+  },
+  {
+    "id": "markdown-rendering",
+    "path": "skills/markdown-rendering",
+    "category": "productivity",
+    "name": "markdown-rendering",
+    "description": "Open Markdown reliably in cmux panes and recover from blank rendered surfaces.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
     }
   },
   {
@@ -28656,6 +29014,50 @@
     }
   },
   {
+    "id": "pi-custom-model",
+    "path": "skills/pi-custom-model",
+    "category": "operations",
+    "name": "pi-custom-model",
+    "description": "Register custom Pi Agent model slugs so saved OpenRouter variants resolve correctly.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "pi-web-search",
+    "path": "skills/pi-web-search",
+    "category": "research",
+    "name": "pi-web-search",
+    "description": "Give Pi Agents a safe web-search and fetch workflow using the installed pi-web-access package.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "pipecat-friday-agent",
     "path": "skills/pipecat-friday-agent",
     "category": "voice-agents",
@@ -30156,6 +30558,28 @@
     }
   },
   {
+    "id": "push-skill-to-github",
+    "path": "skills/push-skill-to-github",
+    "category": "development",
+    "name": "push-skill-to-github",
+    "description": "Commit and push skill changes to the configured skills repository after review and validation.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "puzzle-activity-planner",
     "path": "skills/puzzle-activity-planner",
     "category": "education",
@@ -30970,6 +31394,28 @@
     }
   },
   {
+    "id": "read-all-adrs",
+    "path": "skills/read-all-adrs",
+    "category": "productivity",
+    "name": "read-all-adrs",
+    "description": "Read every ADR in a project before summarizing architectural context or decisions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "readme",
     "path": "skills/readme",
     "category": "content",
@@ -31374,6 +31820,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "research-prompt",
+    "path": "skills/research-prompt",
+    "category": "research",
+    "name": "research-prompt",
+    "description": "Turn vague research needs into one precise deep-research prompt with context and output criteria.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31858,6 +32326,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "run-deep-swe",
+    "path": "skills/run-deep-swe",
+    "category": "agent-evaluation",
+    "name": "run-deep-swe",
+    "description": "Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -34038,6 +34528,28 @@
     }
   },
   {
+    "id": "setup-help",
+    "path": "skills/setup-help",
+    "category": "productivity",
+    "name": "setup-help",
+    "description": "Walk a user through setup or installation one step at a time with the remaining steps visible.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "setup-matt-pocock-skills",
     "path": "skills/setup-matt-pocock-skills",
     "category": "development",
@@ -34288,6 +34800,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "short",
+    "path": "skills/short",
+    "category": "writing",
+    "name": "short",
+    "description": "Rewrite the previous response more briefly while preserving the substance.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -36528,6 +37062,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "taisly-social-media-posting",
+    "path": "skills/taisly-social-media-posting",
+    "category": "marketing",
+    "name": "taisly-social-media-posting",
+    "description": "Use Taisly Agent Kit to prepare and publish approved short-form video posts across TikTok, Instagram Reels, YouTube Shorts, X, and Facebook.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40160,6 +40716,28 @@
     }
   },
   {
+    "id": "vps-server-management",
+    "path": "skills/vps-server-management",
+    "category": "operations",
+    "name": "vps-server-management",
+    "description": "Manage authorized VPS hosts and server-side agents through cautious SSH and operations workflows.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "vr-ar",
     "path": "skills/game-development/vr-ar",
     "category": "game-development",
@@ -41798,6 +42376,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "youtube-transcript",
+    "path": "skills/youtube-transcript",
+    "category": "research",
+    "name": "youtube-transcript",
+    "description": "Fetch YouTube transcripts through DeepAPI or local fallback tooling and save clean text output.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",

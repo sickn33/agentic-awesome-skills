@@ -9,6 +9,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.12.0] - 2026-07-07 - "Agent Workflow Skills, Social Publishing, and Loki Dependency Refresh"
+
+> Agent-orchestration workflows, social publishing coverage, LinkedIn writing support, and synchronized dependency maintenance for the 1,929+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1929-skills](README.md#browse-1929-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release ships the July 7 maintenance batch: three merged PRs, a source-backed Taisly follow-up skill, 26 imported David Ondrej agent workflow skills, a LinkedIn post-writing skill with bundled hook references, a canonical Loki example dependency refresh, and regenerated registry/public catalog state for the 1,929+ skill catalog.
+
+## Added
+
+- Added **linkedin-post-writer**, a community LinkedIn post drafting skill adapted from `sergebulaev/linkedin-skills`, including bundled reference material for 16 hook formulas mapped to engagement goals (PR #785).
+- Added **taisly-social-media-posting**, a critical-risk social video publishing workflow skill backed by `taisly/agent`, with explicit approval gates for publishing, scheduling, account-linking, and metadata updates (PR #783 plus maintainer source-backed skill follow-up).
+- Imported 26 non-colliding MIT-licensed skills from **davidondrej/skills**:
+  - **agent-self-scheduling**
+  - **anti-sleep**
+  - **brain-to-docs**
+  - **browser-harness**
+  - **cmux**
+  - **codex-subagent**
+  - **cyber-audit**
+  - **deepapi**
+  - **delegating-to-agents**
+  - **distribute-skill-to-all-agents**
+  - **effective-agent-skills**
+  - **fable-safe-prompt**
+  - **folder-specific-claude-and-agents-md**
+  - **goal-loop**
+  - **interview-style-doc-building**
+  - **markdown-rendering**
+  - **pi-custom-model**
+  - **pi-web-search**
+  - **push-skill-to-github**
+  - **read-all-adrs**
+  - **research-prompt**
+  - **run-deep-swe**
+  - **setup-help**
+  - **short**
+  - **vps-server-management**
+  - **youtube-transcript**
+- Added README source credits for **sergebulaev/linkedin-skills**, **taisly/agent**, and **davidondrej/skills**.
+
+## Changed
+
+- Updated the Loki generated todo backend example dependency `better-sqlite3` from `^12.10.1` to `^12.11.1` in the canonical skill source, then synchronized plugin mirror state from the maintained source (PR #784).
+- Normalized imported David Ondrej skills with AAS frontmatter, concise descriptions, source/license metadata, `## When to Use` sections, and safety-oriented limitations.
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, public web skill assets, sitemap, package description, and README/docs counters for the 1,929+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #783, PR #784, and PR #785 after required GitHub checks passed.
+- Repaired PR #784 from a generated mirror-only dependency bump into a source-only canonical Loki example dependency update before merge.
+- Ran `npm run validate`, `npm run security:docs`, `npm run check:warning-budget`, and `npm run check:readme-credits -- --base origin/main --head HEAD` during the maintainer import pass.
+- Ran `npm run sync:repo-state` after merging PRs and importing new skills.
+
+## Credits
+
+- **[@sergebulaev](https://github.com/sergebulaev)** and **[sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills)** for PR #785 (`linkedin-post-writer`).
+- **[@taisly](https://github.com/taisly)** and **[taisly/agent](https://github.com/taisly/agent)** for PR #783 and the Taisly Agent Kit source used by `taisly-social-media-posting`.
+- **[@davidondrej](https://github.com/davidondrej)** and **[davidondrej/skills](https://github.com/davidondrej/skills)** for the imported agent workflow skills.
+- **Snyk** for the `better-sqlite3` maintenance signal in PR #784.
+
 ## [13.11.0] - 2026-07-05 - "Ledger Skills, WGM, and Loki Dependency Maintenance"
 
 > Notion-backed ledger skills, a governed build-loop methodology, and synchronized dependency maintenance for the 1,901+ skill catalog.

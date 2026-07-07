@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-05T15:55:06.000Z",
-  "total": 1902,
+  "total": 1929,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -924,6 +924,33 @@
         "os"
       ],
       "path": "skills/agent-orchestrator/SKILL.md"
+    },
+    {
+      "id": "agent-self-scheduling",
+      "name": "agent-self-scheduling",
+      "description": "Schedule AI agent runs with cron, loops, or external clocks while avoiding unsafe tight autonomous timers.",
+      "category": "data-ai",
+      "tags": [
+        "agents",
+        "scheduling",
+        "automation",
+        "cron"
+      ],
+      "triggers": [
+        "agents",
+        "scheduling",
+        "automation",
+        "cron",
+        "agent",
+        "self",
+        "schedule",
+        "ai",
+        "runs",
+        "loops",
+        "external",
+        "clocks"
+      ],
+      "path": "skills/agent-self-scheduling/SKILL.md"
     },
     {
       "id": "agent-squad",
@@ -2387,6 +2414,32 @@
         "bypass"
       ],
       "path": "skills/anti-reversing-techniques/SKILL.md"
+    },
+    {
+      "id": "anti-sleep",
+      "name": "anti-sleep",
+      "description": "Keep a Mac awake with caffeinate during long builds, downloads, or supervised automation runs.",
+      "category": "workflow",
+      "tags": [
+        "macos",
+        "caffeinate",
+        "operations"
+      ],
+      "triggers": [
+        "macos",
+        "caffeinate",
+        "operations",
+        "anti",
+        "sleep",
+        "keep",
+        "mac",
+        "awake",
+        "during",
+        "long",
+        "downloads",
+        "supervised"
+      ],
+      "path": "skills/anti-sleep/SKILL.md"
     },
     {
       "id": "anti-sycophancy",
@@ -8475,6 +8528,31 @@
       "path": "skills/box-automation/SKILL.md"
     },
     {
+      "id": "brain-to-docs",
+      "name": "brain-to-docs",
+      "description": "Interview the user to turn project vision and decisions into README and ADR documentation.",
+      "category": "architecture",
+      "tags": [
+        "documentation",
+        "adr",
+        "planning"
+      ],
+      "triggers": [
+        "documentation",
+        "adr",
+        "planning",
+        "brain",
+        "docs",
+        "interview",
+        "user",
+        "turn",
+        "vision",
+        "decisions",
+        "readme"
+      ],
+      "path": "skills/brain-to-docs/SKILL.md"
+    },
+    {
       "id": "brainstorming",
       "name": "brainstorming",
       "description": "Use before creative or constructive work (features, architecture, behavior). Transforms vague ideas into validated designs through disciplined reasoning and collaboration.",
@@ -8892,6 +8970,33 @@
         "covers"
       ],
       "path": "skills/browser-extension-builder/SKILL.md"
+    },
+    {
+      "id": "browser-harness",
+      "name": "browser-harness",
+      "description": "Drive an existing browser through CDP for authenticated, visual, or interactive web automation.",
+      "category": "workflow",
+      "tags": [
+        "browser",
+        "cdp",
+        "automation",
+        "scraping"
+      ],
+      "triggers": [
+        "browser",
+        "cdp",
+        "automation",
+        "scraping",
+        "harness",
+        "drive",
+        "existing",
+        "through",
+        "authenticated",
+        "visual",
+        "interactive",
+        "web"
+      ],
+      "path": "skills/browser-harness/SKILL.md"
     },
     {
       "id": "browser-testing-with-devtools",
@@ -10616,6 +10721,32 @@
       "path": "skills/cloudformation-best-practices/SKILL.md"
     },
     {
+      "id": "cmux",
+      "name": "cmux",
+      "description": "Control cmux workspaces, panes, surfaces, and agent sessions safely from macOS terminal workflows.",
+      "category": "general",
+      "tags": [
+        "cmux",
+        "terminal",
+        "agents",
+        "macos"
+      ],
+      "triggers": [
+        "cmux",
+        "terminal",
+        "agents",
+        "macos",
+        "control",
+        "workspaces",
+        "panes",
+        "surfaces",
+        "agent",
+        "sessions",
+        "safely"
+      ],
+      "path": "skills/cmux/SKILL.md"
+    },
+    {
       "id": "co-marketing",
       "name": "co-marketing",
       "description": "When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities. Use when the user says 'co-marketing,' 'partner marketing,' 'joint campaign,' 'who should we partner with,' 'integration marketing,' 'cross-promotion,' 'collaborate with...",
@@ -11300,6 +11431,32 @@
         "commits"
       ],
       "path": "skills/codex-review/SKILL.md"
+    },
+    {
+      "id": "codex-subagent",
+      "name": "codex-subagent",
+      "description": "Launch Codex CLI as an isolated subagent for bounded coding, review, or verification tasks.",
+      "category": "general",
+      "tags": [
+        "codex",
+        "subagents",
+        "delegation"
+      ],
+      "triggers": [
+        "codex",
+        "subagents",
+        "delegation",
+        "subagent",
+        "launch",
+        "cli",
+        "isolated",
+        "bounded",
+        "coding",
+        "review",
+        "verification",
+        "tasks"
+      ],
+      "path": "skills/codex-subagent/SKILL.md"
     },
     {
       "id": "cold-email",
@@ -13300,6 +13457,32 @@
       "path": "skills/cv-generator/SKILL.md"
     },
     {
+      "id": "cyber-audit",
+      "name": "cyber-audit",
+      "description": "Run read-only exposure checks for security advisories and write a structured local audit report.",
+      "category": "security",
+      "tags": [
+        "security",
+        "audit",
+        "read-only"
+      ],
+      "triggers": [
+        "security",
+        "audit",
+        "read-only",
+        "cyber",
+        "run",
+        "read",
+        "exposure",
+        "checks",
+        "advisories",
+        "write",
+        "structured",
+        "local"
+      ],
+      "path": "skills/cyber-audit/SKILL.md"
+    },
+    {
       "id": "cypress-skill",
       "name": "cypress-skill",
       "description": "Generates production-grade Cypress E2E and component tests in JavaScript or TypeScript. Supports local execution and TestMu AI cloud. Use when the user asks to write Cypress tests, set up Cypress, test with cy commands, or mentions \"Cypress\", \"cy.visit\", \"cy.get\", \"cy.intercept\"....",
@@ -14207,6 +14390,30 @@
       "path": "skills/deep-research/SKILL.md"
     },
     {
+      "id": "deepapi",
+      "name": "deepapi",
+      "description": "Use DeepAPI for supported scraping, research, and email workflows with explicit credentials and approval.",
+      "category": "development",
+      "tags": [
+        "deepapi",
+        "scraping",
+        "email",
+        "api"
+      ],
+      "triggers": [
+        "deepapi",
+        "scraping",
+        "email",
+        "api",
+        "supported",
+        "research",
+        "explicit",
+        "credentials",
+        "approval"
+      ],
+      "path": "skills/deepapi/SKILL.md"
+    },
+    {
       "id": "defi-protocol-templates",
       "name": "defi-protocol-templates",
       "description": "Implement DeFi protocols with production-ready templates for staking, AMMs, governance, and lending systems. Use when building decentralized finance applications or smart contract protocols.",
@@ -14254,6 +14461,32 @@
         "save"
       ],
       "path": "skills/defuddle/SKILL.md"
+    },
+    {
+      "id": "delegating-to-agents",
+      "name": "delegating-to-agents",
+      "description": "Delegate bounded work to other AI agents while preserving context, ownership, and progress checks.",
+      "category": "data-ai",
+      "tags": [
+        "agents",
+        "delegation",
+        "orchestration"
+      ],
+      "triggers": [
+        "agents",
+        "delegation",
+        "orchestration",
+        "delegating",
+        "delegate",
+        "bounded",
+        "work",
+        "other",
+        "ai",
+        "while",
+        "preserving",
+        "context"
+      ],
+      "path": "skills/delegating-to-agents/SKILL.md"
     },
     {
       "id": "dependency-management-deps-audit",
@@ -16419,6 +16652,32 @@
       "path": "skills/dispatching-parallel-agents/SKILL.md"
     },
     {
+      "id": "distribute-skill-to-all-agents",
+      "name": "distribute-skill-to-all-agents",
+      "description": "Distribute a skill across configured agent skill folders while respecting local symlink layouts.",
+      "category": "general",
+      "tags": [
+        "skills",
+        "distribution",
+        "agents"
+      ],
+      "triggers": [
+        "skills",
+        "distribution",
+        "agents",
+        "distribute",
+        "skill",
+        "all",
+        "configured",
+        "agent",
+        "folders",
+        "while",
+        "respecting",
+        "local"
+      ],
+      "path": "skills/distribute-skill-to-all-agents/SKILL.md"
+    },
+    {
       "id": "distributed-debugging-debug-trace",
       "name": "distributed-debugging-debug-trace",
       "description": "You are a debugging expert specializing in setting up comprehensive debugging environments, distributed tracing, and diagnostic tools. Configure debugging workflows, implement tracing solutions, and establish troubleshooting practices for development and production environments.",
@@ -17234,6 +17493,32 @@
         "md"
       ],
       "path": "skills/ecl-harness-engineer/SKILL.md"
+    },
+    {
+      "id": "effective-agent-skills",
+      "name": "effective-agent-skills",
+      "description": "Author and review high-quality agent skills with triggers, progressive disclosure, and safety notes.",
+      "category": "general",
+      "tags": [
+        "skills",
+        "authoring",
+        "quality"
+      ],
+      "triggers": [
+        "skills",
+        "authoring",
+        "quality",
+        "effective",
+        "agent",
+        "author",
+        "review",
+        "high",
+        "triggers",
+        "progressive",
+        "disclosure",
+        "safety"
+      ],
+      "path": "skills/effective-agent-skills/SKILL.md"
     },
     {
       "id": "efficient-web-research",
@@ -18370,6 +18655,32 @@
       "path": "skills/expo-ui-swift-ui/SKILL.md"
     },
     {
+      "id": "fable-safe-prompt",
+      "name": "fable-safe-prompt",
+      "description": "Rewrite allowed prompts to reduce false-positive safety triggers without bypassing policy or changing intent.",
+      "category": "general",
+      "tags": [
+        "prompting",
+        "safety",
+        "guardrails"
+      ],
+      "triggers": [
+        "prompting",
+        "safety",
+        "guardrails",
+        "fable",
+        "safe",
+        "prompt",
+        "rewrite",
+        "allowed",
+        "prompts",
+        "reduce",
+        "false",
+        "positive"
+      ],
+      "path": "skills/fable-safe-prompt/SKILL.md"
+    },
+    {
       "id": "faf-context",
       "name": "faf-context",
       "description": "Get your project to 100% ✪ AI-readiness, fast — the AI auto-detects your stack and only asks for what it can't know (your goal and the human \"why\"). Least typing, maximum context. For time-conscious builders; feeds into faf-expert for depth.",
@@ -19208,6 +19519,32 @@
         "deployment"
       ],
       "path": "skills/flutter-expert/SKILL.md"
+    },
+    {
+      "id": "folder-specific-claude-and-agents-md",
+      "name": "folder-specific-claude-and-agents-md",
+      "description": "Create folder-scoped CLAUDE.md and AGENTS.md guidance for future agents working in that area.",
+      "category": "general",
+      "tags": [
+        "agents-md",
+        "claude-md",
+        "documentation"
+      ],
+      "triggers": [
+        "agents-md",
+        "claude-md",
+        "documentation",
+        "folder",
+        "specific",
+        "claude",
+        "agents",
+        "md",
+        "scoped",
+        "guidance",
+        "future",
+        "working"
+      ],
+      "path": "skills/folder-specific-claude-and-agents-md/SKILL.md"
     },
     {
       "id": "food-database-query",
@@ -21618,6 +21955,32 @@
         "analyzer"
       ],
       "path": "skills/goal-analyzer/SKILL.md"
+    },
+    {
+      "id": "goal-loop",
+      "name": "goal-loop",
+      "description": "Draft and explain persistent goal-loop prompts for long-running agent work with clear stop conditions.",
+      "category": "general",
+      "tags": [
+        "goals",
+        "autonomy",
+        "planning"
+      ],
+      "triggers": [
+        "goals",
+        "autonomy",
+        "planning",
+        "goal",
+        "loop",
+        "draft",
+        "explain",
+        "persistent",
+        "prompts",
+        "long",
+        "running",
+        "agent"
+      ],
+      "path": "skills/goal-loop/SKILL.md"
     },
     {
       "id": "godot-4-migration",
@@ -24380,6 +24743,32 @@
         "decoding"
       ],
       "path": "skills/interview-coach/SKILL.md"
+    },
+    {
+      "id": "interview-style-doc-building",
+      "name": "interview-style-doc-building",
+      "description": "Build structured strategy documents by asking one question at a time and patching the file.",
+      "category": "general",
+      "tags": [
+        "documentation",
+        "interview",
+        "planning"
+      ],
+      "triggers": [
+        "documentation",
+        "interview",
+        "planning",
+        "style",
+        "doc",
+        "building",
+        "structured",
+        "documents",
+        "asking",
+        "one",
+        "question",
+        "time"
+      ],
+      "path": "skills/interview-style-doc-building/SKILL.md"
     },
     {
       "id": "invariant-guard",
@@ -27914,6 +28303,30 @@
         "keys"
       ],
       "path": "skills/manifest/SKILL.md"
+    },
+    {
+      "id": "markdown-rendering",
+      "name": "markdown-rendering",
+      "description": "Open Markdown reliably in cmux panes and recover from blank rendered surfaces.",
+      "category": "general",
+      "tags": [
+        "markdown",
+        "cmux",
+        "rendering"
+      ],
+      "triggers": [
+        "markdown",
+        "cmux",
+        "rendering",
+        "open",
+        "reliably",
+        "panes",
+        "recover",
+        "blank",
+        "rendered",
+        "surfaces"
+      ],
+      "path": "skills/markdown-rendering/SKILL.md"
     },
     {
       "id": "market-sizing-analysis",
@@ -32623,6 +33036,58 @@
       "path": "skills/php-pro/SKILL.md"
     },
     {
+      "id": "pi-custom-model",
+      "name": "pi-custom-model",
+      "description": "Register custom Pi Agent model slugs so saved OpenRouter variants resolve correctly.",
+      "category": "general",
+      "tags": [
+        "pi-agent",
+        "models",
+        "openrouter"
+      ],
+      "triggers": [
+        "pi-agent",
+        "models",
+        "openrouter",
+        "pi",
+        "custom",
+        "model",
+        "register",
+        "agent",
+        "slugs",
+        "so",
+        "saved",
+        "variants"
+      ],
+      "path": "skills/pi-custom-model/SKILL.md"
+    },
+    {
+      "id": "pi-web-search",
+      "name": "pi-web-search",
+      "description": "Give Pi Agents a safe web-search and fetch workflow using the installed pi-web-access package.",
+      "category": "workflow",
+      "tags": [
+        "web-search",
+        "pi-agent",
+        "research"
+      ],
+      "triggers": [
+        "web-search",
+        "pi-agent",
+        "research",
+        "pi",
+        "web",
+        "search",
+        "give",
+        "agents",
+        "safe",
+        "fetch",
+        "installed",
+        "access"
+      ],
+      "path": "skills/pi-web-search/SKILL.md"
+    },
+    {
       "id": "pipecat-friday-agent",
       "name": "pipecat-friday-agent",
       "description": "Build a low-latency, Iron Man-inspired tactical voice assistant (F.R.I.D.A.Y.) using Pipecat, Gemini, and OpenAI.",
@@ -34324,6 +34789,32 @@
       "path": "skills/puppeteer-skill/SKILL.md"
     },
     {
+      "id": "push-skill-to-github",
+      "name": "push-skill-to-github",
+      "description": "Commit and push skill changes to the configured skills repository after review and validation.",
+      "category": "general",
+      "tags": [
+        "skills",
+        "git",
+        "publishing"
+      ],
+      "triggers": [
+        "skills",
+        "git",
+        "publishing",
+        "push",
+        "skill",
+        "github",
+        "commit",
+        "changes",
+        "configured",
+        "repository",
+        "after",
+        "review"
+      ],
+      "path": "skills/push-skill-to-github/SKILL.md"
+    },
+    {
       "id": "puzzle-activity-planner",
       "name": "puzzle-activity-planner",
       "description": "Plan puzzle-based activities for classrooms, parties, and events with pre-configured generator links",
@@ -35188,6 +35679,32 @@
       "path": "skills/react-ui-patterns/SKILL.md"
     },
     {
+      "id": "read-all-adrs",
+      "name": "read-all-adrs",
+      "description": "Read every ADR in a project before summarizing architectural context or decisions.",
+      "category": "architecture",
+      "tags": [
+        "adr",
+        "documentation",
+        "architecture"
+      ],
+      "triggers": [
+        "adr",
+        "documentation",
+        "architecture",
+        "read",
+        "all",
+        "adrs",
+        "every",
+        "before",
+        "summarizing",
+        "architectural",
+        "context",
+        "decisions"
+      ],
+      "path": "skills/read-all-adrs/SKILL.md"
+    },
+    {
       "id": "readme",
       "name": "readme",
       "description": "You are an expert technical writer creating comprehensive project documentation. Your goal is to write a README.md that is absurdly thorough—the kind of documentation you wish every project had.",
@@ -35657,6 +36174,32 @@
       "path": "skills/requesting-code-review/SKILL.md"
     },
     {
+      "id": "research-prompt",
+      "name": "research-prompt",
+      "description": "Turn vague research needs into one precise deep-research prompt with context and output criteria.",
+      "category": "general",
+      "tags": [
+        "research",
+        "prompting",
+        "briefs"
+      ],
+      "triggers": [
+        "research",
+        "prompting",
+        "briefs",
+        "prompt",
+        "turn",
+        "vague",
+        "one",
+        "precise",
+        "deep",
+        "context",
+        "output",
+        "criteria"
+      ],
+      "path": "skills/research-prompt/SKILL.md"
+    },
+    {
       "id": "resolving-merge-conflicts",
       "name": "resolving-merge-conflicts",
       "description": "Use when you need to resolve an in-progress git merge/rebase conflict.",
@@ -36117,6 +36660,33 @@
         "development"
       ],
       "path": "skills/ruby-pro/SKILL.md"
+    },
+    {
+      "id": "run-deep-swe",
+      "name": "run-deep-swe",
+      "description": "Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent.",
+      "category": "general",
+      "tags": [
+        "benchmark",
+        "deepswe",
+        "openrouter",
+        "evaluation"
+      ],
+      "triggers": [
+        "benchmark",
+        "deepswe",
+        "openrouter",
+        "evaluation",
+        "run",
+        "deep",
+        "swe",
+        "reproducible",
+        "coding",
+        "agent",
+        "evaluations",
+        "through"
+      ],
+      "path": "skills/run-deep-swe/SKILL.md"
     },
     {
       "id": "runapi-cli",
@@ -38611,6 +39181,32 @@
       "path": "skills/service-mesh-observability/SKILL.md"
     },
     {
+      "id": "setup-help",
+      "name": "setup-help",
+      "description": "Walk a user through setup or installation one step at a time with the remaining steps visible.",
+      "category": "general",
+      "tags": [
+        "setup",
+        "onboarding",
+        "installation"
+      ],
+      "triggers": [
+        "setup",
+        "onboarding",
+        "installation",
+        "walk",
+        "user",
+        "through",
+        "one",
+        "step",
+        "time",
+        "remaining",
+        "steps",
+        "visible"
+      ],
+      "path": "skills/setup-help/SKILL.md"
+    },
+    {
       "id": "setup-matt-pocock-skills",
       "name": "setup-matt-pocock-skills",
       "description": "Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
@@ -38886,6 +39482,31 @@
         "liquid"
       ],
       "path": "skills/shopify-development/SKILL.md"
+    },
+    {
+      "id": "short",
+      "name": "short",
+      "description": "Rewrite the previous response more briefly while preserving the substance.",
+      "category": "general",
+      "tags": [
+        "writing",
+        "editing",
+        "concise"
+      ],
+      "triggers": [
+        "writing",
+        "editing",
+        "concise",
+        "short",
+        "rewrite",
+        "previous",
+        "response",
+        "briefly",
+        "while",
+        "preserving",
+        "substance"
+      ],
+      "path": "skills/short/SKILL.md"
     },
     {
       "id": "signup-flow-cro",
@@ -41549,6 +42170,40 @@
         "architecture"
       ],
       "path": "skills/tailwind-patterns/SKILL.md"
+    },
+    {
+      "id": "taisly-social-media-posting",
+      "name": "taisly-social-media-posting",
+      "description": "Use Taisly Agent Kit to prepare and publish approved short-form video posts across TikTok, Instagram Reels, YouTube Shorts, X, and Facebook.",
+      "category": "general",
+      "tags": [
+        "social-media",
+        "video",
+        "publishing",
+        "mcp",
+        "cli",
+        "sdk",
+        "tiktok",
+        "instagram",
+        "youtube-shorts",
+        "x",
+        "facebook"
+      ],
+      "triggers": [
+        "social-media",
+        "video",
+        "publishing",
+        "mcp",
+        "cli",
+        "sdk",
+        "tiktok",
+        "instagram",
+        "youtube-shorts",
+        "x",
+        "facebook",
+        "taisly"
+      ],
+      "path": "skills/taisly-social-media-posting/SKILL.md"
     },
     {
       "id": "tanstack-query-expert",
@@ -45393,6 +46048,31 @@
       "path": "skills/voice-ai-engine-development/SKILL.md"
     },
     {
+      "id": "vps-server-management",
+      "name": "vps-server-management",
+      "description": "Manage authorized VPS hosts and server-side agents through cautious SSH and operations workflows.",
+      "category": "general",
+      "tags": [
+        "vps",
+        "ssh",
+        "server-management"
+      ],
+      "triggers": [
+        "vps",
+        "ssh",
+        "server-management",
+        "server",
+        "authorized",
+        "hosts",
+        "side",
+        "agents",
+        "through",
+        "cautious",
+        "operations"
+      ],
+      "path": "skills/vps-server-management/SKILL.md"
+    },
+    {
       "id": "vscode-extension-guide-en",
       "name": "vscode-extension-guide-en",
       "description": "Guide for VS Code extension development from scaffolding to Marketplace publication",
@@ -47162,6 +47842,32 @@
         "summaries"
       ],
       "path": "skills/youtube-summarizer/SKILL.md"
+    },
+    {
+      "id": "youtube-transcript",
+      "name": "youtube-transcript",
+      "description": "Fetch YouTube transcripts through DeepAPI or local fallback tooling and save clean text output.",
+      "category": "general",
+      "tags": [
+        "youtube",
+        "transcripts",
+        "research"
+      ],
+      "triggers": [
+        "youtube",
+        "transcripts",
+        "research",
+        "transcript",
+        "fetch",
+        "through",
+        "deepapi",
+        "local",
+        "fallback",
+        "tooling",
+        "save",
+        "clean"
+      ],
+      "path": "skills/youtube-transcript/SKILL.md"
     },
     {
       "id": "zapier-make-patterns",
