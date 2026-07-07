@@ -70,9 +70,11 @@ The full set of 16, with reference engagement:
 
 Important caveat: F1-F10 references are engagement counts or format multipliers against the author's own baseline; F11-F16 references are raw corpus reach, often inflated by a famous author or a reshare. The two groups measure different things, so never rank formulas across groups by number.
 
+The full skeletons for all 16 formulas are bundled with this skill in [references/hook-formulas.md](references/hook-formulas.md), along with per-formula warnings and the "Never do" list.
+
 ### Step 3: Draft the post
 
-Fill the formula skeleton with the user's voice and material, respecting the 2026 formatting rules:
+Read the chosen formula's skeleton from the bundled [references/hook-formulas.md](references/hook-formulas.md) and fill it with the user's voice and material, respecting the 2026 formatting rules:
 
 - Hook lands in the first 210 characters (before the "... see more" fold)
 - 900-1,300 characters is the sweet spot for text posts
