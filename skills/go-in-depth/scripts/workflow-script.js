@@ -89,7 +89,7 @@ const REPORT_SCHEMA = {
 
 // ─── Phase 0: Scope — decompose question into search angles ───
 phase("Scope")
-const QUESTION = (typeof args === "string" && args.trim()) || ""
+const QUESTION = (typeof args === "string" ? args.trim() : args?.query?.trim()) || ""
 if (!QUESTION) {
   return { error: "No research question provided. Pass it as args: Workflow({name: 'go-in-depth', args: '<question>'})." }
 }
@@ -185,7 +185,7 @@ const searchResults = await pipeline(
         dupes.push({ ...r, angle: searchResult.angle, dupOf: seen.get(key) })
         return false
       }
-      if (fetchSlots <= 0 && relRank[r.relevance] >= 1) {
+      if (fetchSlots <= 0) {
         budgetDropped.push({ ...r, angle: searchResult.angle })
         return false
       }
