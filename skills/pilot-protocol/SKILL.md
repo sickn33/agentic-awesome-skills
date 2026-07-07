@@ -2,7 +2,7 @@
 name: pilot-protocol
 description: "Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol"
 category: ai-agents
-risk: safe
+risk: critical
 source: community
 source_repo: pilot-protocol/pilotprotocol
 source_type: official
@@ -46,8 +46,12 @@ If this skill adapts material from an external GitHub repository, it declares:
 
 ### Step 1: Install the daemon
 
+Download the installer, inspect it, then run it — do not pipe it straight into a shell.
+
 ```bash
-curl -fsSL https://pilotprotocol.network/install.sh | sh
+curl -fsSL https://pilotprotocol.network/install.sh -o /tmp/pilot-install.sh
+less /tmp/pilot-install.sh   # review before executing
+sh /tmp/pilot-install.sh
 ```
 
 ### Step 2: Start the node and confirm it registered
@@ -119,9 +123,12 @@ pilotctl appstore call io.pilot.cosift cosift.answer '{"q":"What is HNSW?"}'
 
 ## Security & Safety Notes
 
-- The install script (`curl ... | sh`) fetches and runs an installer from
-  `pilotprotocol.network`; review it before running in a sensitive environment.
+- The install script fetches an installer from `pilotprotocol.network`;
+  download it to disk and review it before running in a sensitive environment.
 - `~/.pilot/identity.json` is a private keypair — never copy it between hosts.
+- Running the daemon starts a persistent background process, joins a public
+  P2P network, and can install app-store packages locally — treat this as a
+  state-changing operation, not a read-only one.
 
 ## Common Pitfalls
 
