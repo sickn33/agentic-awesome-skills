@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-05T15:55:06.000Z
 
-Total skills: 1901
+Total skills: 1902
 
 ## architecture (113)
 
@@ -230,7 +230,7 @@ Total skills: 1901
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (347)
+## data-ai (348)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -436,6 +436,7 @@ Total skills: 1901
 | `libreoffice/calc` | Spreadsheet creation, format conversion (ODS/XLSX/CSV), formulas, data automation with LibreOffice Calc. | libreoffice/calc | libreoffice/calc, calc, spreadsheet, creation, format, conversion, ods, xlsx, csv, formulas, data, automation |
 | `libreoffice/draw` | Vector graphics and diagram creation, format conversion (ODG/SVG/PDF) with LibreOffice Draw. | libreoffice/draw | libreoffice/draw, draw, vector, graphics, diagram, creation, format, conversion, odg, svg, pdf, libreoffice |
 | `linkedin-content-generator` | AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning pe... | linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, reinforcement-learning, seo, copywriting | linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, reinforcement-learning, seo, copywriting, content, generator |
+| `linkedin-post-writer` | Draft LinkedIn posts from 16 tested hook formulas mapped to engagement goals (comments, reposts, likes, saves), with 2026 algorithm formatting rules and an A... | linkedin, copywriting, hooks, social-media, personal-brand, content-marketing | linkedin, copywriting, hooks, social-media, personal-brand, content-marketing, post, writer, draft, posts, 16, tested |
 | `llm-app-patterns` | Production-ready patterns for building LLM applications, inspired by [Dify](https://github.com/langgenius/dify) and industry best practices. | llm, app | llm, app, building, applications, inspired, dify, https, github, com, langgenius, industry |
 | `llm-application-dev-ai-assistant` | You are an AI assistant development expert specializing in creating intelligent conversational interfaces, chatbots, and AI-powered applications. Design comp... | llm, application, dev, ai | llm, application, dev, ai, assistant, development, specializing, creating, intelligent, conversational, interfaces, chatbots |
 | `llm-application-dev-langchain-agent` | You are an expert LangChain agent developer specializing in production-grade AI systems using LangChain 0.1+ and LangGraph. | llm, application, dev, langchain, agent | llm, application, dev, langchain, agent, developer, specializing, grade, ai, langgraph |

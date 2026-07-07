@@ -22781,6 +22781,28 @@
     }
   },
   {
+    "id": "linkedin-post-writer",
+    "path": "skills/linkedin-post-writer",
+    "category": "marketing",
+    "name": "linkedin-post-writer",
+    "description": "Draft LinkedIn posts from 16 tested hook formulas mapped to engagement goals (comments, reposts, likes, saves), with 2026 algorithm formatting rules and an AI-tell scrub pass before publishing.",
+    "risk": "none",
+    "source": "community",
+    "date_added": "2026-07-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "linkedin-profile-optimizer",
     "path": "skills/linkedin-profile-optimizer",
     "category": "growth",

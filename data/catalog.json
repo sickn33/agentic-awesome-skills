@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-05T15:55:06.000Z",
-  "total": 1901,
+  "total": 1902,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -26214,6 +26214,35 @@
         "generator"
       ],
       "path": "skills/linkedin-content-generator/SKILL.md"
+    },
+    {
+      "id": "linkedin-post-writer",
+      "name": "linkedin-post-writer",
+      "description": "Draft LinkedIn posts from 16 tested hook formulas mapped to engagement goals (comments, reposts, likes, saves), with 2026 algorithm formatting rules and an AI-tell scrub pass before publishing.",
+      "category": "data-ai",
+      "tags": [
+        "linkedin",
+        "copywriting",
+        "hooks",
+        "social-media",
+        "personal-brand",
+        "content-marketing"
+      ],
+      "triggers": [
+        "linkedin",
+        "copywriting",
+        "hooks",
+        "social-media",
+        "personal-brand",
+        "content-marketing",
+        "post",
+        "writer",
+        "draft",
+        "posts",
+        "16",
+        "tested"
+      ],
+      "path": "skills/linkedin-post-writer/SKILL.md"
     },
     {
       "id": "linkedin-profile-optimizer",

@@ -20194,6 +20194,25 @@
       "runtime_files": []
     },
     {
+      "id": "linkedin-post-writer",
+      "path": "skills/linkedin-post-writer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linkedin-profile-optimizer",
       "path": "skills/linkedin-profile-optimizer",
       "targets": {
@@ -36516,10 +36535,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1901,
+    "total_skills": 1902,
     "supported": {
-      "codex": 1832,
-      "claude": 1852
+      "codex": 1833,
+      "claude": 1853
     },
     "blocked": {
       "codex": 69,

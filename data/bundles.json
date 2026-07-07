@@ -1664,6 +1664,7 @@
         "libreoffice/draw",
         "libreoffice/impress",
         "libreoffice/writer",
+        "linkedin-post-writer",
         "odoo-qweb-templates",
         "office-productivity",
         "papers-skill",
