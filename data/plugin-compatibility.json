@@ -8693,6 +8693,25 @@
       "runtime_files": []
     },
     {
+      "id": "codex-profiles",
+      "path": "skills/codex-profiles",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "codex-review",
       "path": "skills/codex-review",
       "targets": {
@@ -25501,6 +25520,25 @@
       "runtime_files": []
     },
     {
+      "id": "pilot-protocol",
+      "path": "skills/pilot-protocol",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pipecat-friday-agent",
       "path": "skills/pipecat-friday-agent",
       "targets": {
@@ -26100,6 +26138,25 @@
     {
       "id": "pre-release-review",
       "path": "skills/pre-release-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pre-ship-gate",
+      "path": "skills/pre-ship-gate",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28194,6 +28251,25 @@
     {
       "id": "robot-framework-skill",
       "path": "skills/robot-framework-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "routerbase-model-gateway",
+      "path": "skills/routerbase-model-gateway",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -33868,6 +33944,25 @@
       "runtime_files": []
     },
     {
+      "id": "tree-ring-memory",
+      "path": "skills/tree-ring-memory",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "trello-automation",
       "path": "skills/trello-automation",
       "targets": {
@@ -37083,10 +37178,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1930,
+    "total_skills": 1935,
     "supported": {
-      "codex": 1858,
-      "claude": 1879
+      "codex": 1863,
+      "claude": 1884
     },
     "blocked": {
       "codex": 72,

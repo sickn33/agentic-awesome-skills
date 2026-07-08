@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-07T07:02:03.000Z
 
-Total skills: 1930
+Total skills: 1935
 
 ## architecture (115)
 
@@ -232,7 +232,7 @@ Total skills: 1930
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (350)
+## data-ai (351)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -507,6 +507,7 @@ Total skills: 1930
 | `recursive-context-pruning-token-budgeting` | Optimizes AI agent performance by pruning redundant context, managing token usage, and enforcing ultra-concise, direct-to-value responses. | efficiency, token-optimization, brevity, context-management | efficiency, token-optimization, brevity, context-management, recursive, context, pruning, token, budgeting, optimizes, ai, agent |
 | `referral-program` | You are an expert in viral growth and referral marketing with access to referral program data and third-party tools. Your goal is to help design and optimize... | referral, program | referral, program, viral, growth, marketing, access, data, third, party, goal, optimize, programs |
 | `robius-state-management` | CRITICAL: Use for Robius state management patterns. Triggers on: AppState, persistence, theme switch, 状态管理, Scope::with_data, save state, load state, serde, ... | robius, state | robius, state, critical, triggers, appstate, persistence, theme, switch, scope, data, save, load |
+| `routerbase-model-gateway` | Integrate RouterBase as an OpenAI-compatible model gateway for routing GPT, Claude, Gemini, media, audio, and embedding requests. | routerbase, llm-routing, openai-compatible, model-gateway | routerbase, llm-routing, openai-compatible, model-gateway, model, gateway, integrate, openai, compatible, routing, gpt, claude |
 | `runapi-cli` | Generate AI images, videos, and music/audio from agents using the RunAPI CLI. | runapi, cli, models, automation, codex, claude, gemini | runapi, cli, models, automation, codex, claude, gemini, generate, ai, images, videos, music |
 | `runaway-guard` | Cost-safety discipline for paid AI / inference APIs: treat $-cost as a third complexity dimension alongside time and space. Forces a written per-run $-cap, p... | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway, runaway, guard, cost, safety |
 | `sankhya-dashboard-html-jsp-custom-best-pratices` | This skill should be used when the user asks for patterns, best practices, creation, or fixing of Sankhya dashboards using HTML, JSP, Java, and SQL. | sankhya, dashboard, jsp, html, sql, best-practices | sankhya, dashboard, jsp, html, sql, best-practices, custom, pratices, skill, should, used, user |
@@ -878,7 +879,7 @@ Total skills: 1930
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `youtube-notetaker` | Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer. | dair-academy, ai, workflow | dair-academy, ai, workflow, youtube, notetaker, turn, talks, local, study, notes, slides, transcripts |
 
-## general (530)
+## general (531)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -968,6 +969,7 @@ Total skills: 1930
 | `code-simplifier` | Simplifies and refines code for clarity, consistency, and maintainability while preserving all functionality. Use when asked to "simplify code", "clean up co... | code, simplifier | code, simplifier, simplifies, refines, clarity, consistency, maintainability, while, preserving, all, functionality, asked |
 | `codebase-cleanup-tech-debt` | You are a technical debt expert specializing in identifying, quantifying, and prioritizing technical debt in software projects. Analyze the codebase to uncov... | codebase, cleanup, tech, debt | codebase, cleanup, tech, debt, technical, specializing, identifying, quantifying, prioritizing, software, analyze, uncover |
 | `codex-fable5` | Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt C... | codex, fable-style, agent-workflow, verification, prompt-adaptation | codex, fable-style, agent-workflow, verification, prompt-adaptation, fable5, apply, fable, inspired, discipline, work, inspect |
+| `codex-profiles` | Use codex-profiles to run Codex CLI or Codex Desktop with isolated CODEX_HOME profiles for separate accounts, projects, and local state. | codex, codex-cli, profiles, code-home, account-isolation, desktop | codex, codex-cli, profiles, code-home, account-isolation, desktop, run, cli, isolated, home, separate, accounts |
 | `codex-subagent` | Launch Codex CLI as an isolated subagent for bounded coding, review, or verification tasks. | codex, subagents, delegation | codex, subagents, delegation, subagent, launch, cli, isolated, bounded, coding, review, verification, tasks |
 | `cold-email` | Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, sub... | cold, email | cold, email, write, b2b, emails, follow, up, sequences, earn, replies, creating, outbound |
 | `commit` | ALWAYS use this skill when committing code changes — never commit directly without it. Creates commits following Sentry conventions with proper conventional ... | commit | commit, always, skill, committing, code, changes, never, directly, without, creates, commits, following |
@@ -1413,7 +1415,7 @@ Total skills: 1930
 | `youtube-transcript` | Fetch YouTube transcripts through DeepAPI or local fallback tooling and save clean text output. | youtube, transcripts, research | youtube, transcripts, research, transcript, fetch, through, deepapi, local, fallback, tooling, save, clean |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## infrastructure (182)
+## infrastructure (184)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1566,8 +1568,10 @@ Total skills: 1930
 | `odoo-sales-crm-expert` | Expert guide for Odoo Sales and CRM: pipeline stages, quotation templates, pricelists, sales teams, lead scoring, and forecasting. | odoo, sales, crm | odoo, sales, crm, pipeline, stages, quotation, pricelists, teams, lead, scoring, forecasting |
 | `performance-engineer` | Expert performance engineer specializing in modern observability, | performance | performance, engineer, specializing, observability |
 | `performance-testing-review-ai-review` | You are an expert AI-powered code review specialist combining automated static analysis, intelligent pattern recognition, and modern DevOps practices. Levera... | performance, ai | performance, ai, testing, review, powered, code, combining, automated, static, analysis, intelligent, recognition |
+| `pilot-protocol` | Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol | agent-networking, p2p, nat-traversal, overlay-network, agent-apps | agent-networking, p2p, nat-traversal, overlay-network, agent-apps, pilot, protocol, give, ai, agent, permanent, network |
 | `pipedrive-automation` | Automate Pipedrive CRM operations including deals, contacts, organizations, activities, notes, and pipeline management via Rube MCP (Composio). Always search... | pipedrive | pipedrive, automation, automate, crm, operations, including, deals, contacts, organizations, activities, notes, pipeline |
 | `postman-newman-automation` | Generate Newman CLI commands, configuration files, Jenkins pipeline scripts, and shell automation for running Postman collections in CI/CD or local environme... | postman, newman | postman, newman, automation, generate, cli, commands, configuration, files, jenkins, pipeline, scripts, shell |
+| `pre-ship-gate` | A ship gate that runs before any production deploy: checks the silent failure modes that make a deploy 'succeed' while prod stays broken, then verifies the l... | deployment, quality-gate, verification, ci-cd, production | deployment, quality-gate, verification, ci-cd, production, pre, ship, gate, runs, before, any, deploy |
 | `progressive-web-app` | Build Progressive Web Apps (PWAs) with offline support, installability, and caching strategies. Trigger whenever the user mentions PWA, service workers, web ... | pwa, web-dev, service-worker, frontend, offline, caching | pwa, web-dev, service-worker, frontend, offline, caching, progressive, web, app, apps, pwas, installability |
 | `prometheus-configuration` | Complete guide to Prometheus setup, metric collection, scrape configuration, and recording rules. | prometheus, configuration | prometheus, configuration, complete, setup, metric, collection, scrape, recording, rules |
 | `pubmed-database` | Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopyth... | pubmed, database | pubmed, database, direct, rest, api, access, boolean, mesh, queries, utilities, batch, processing |
@@ -1600,7 +1604,7 @@ Total skills: 1930
 | `workflow-automation` | Workflow automation is the infrastructure that makes AI agents reliable. Without durable execution, a network hiccup during a 10-step payment flow means lost... |  | automation, infrastructure, makes, ai, agents, reliable, without, durable, execution, network, hiccup, during |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
-## security (202)
+## security (203)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1787,6 +1791,7 @@ Total skills: 1930
 | `threat-modeling-expert` | Expert in threat modeling methodologies, security architecture review, and risk assessment. Masters STRIDE, PASTA, attack trees, and security requirement ext... | threat, modeling | threat, modeling, methodologies, security, architecture, review, risk, assessment, masters, stride, pasta, attack |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 | `top-web-vulnerabilities` | Provide a comprehensive, structured reference for the 100 most critical web application vulnerabilities organized by category. This skill enables systematic ... | top, web, vulnerabilities | top, web, vulnerabilities, provide, structured, reference, 100, most, critical, application, organized, category |
+| `tree-ring-memory` | Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping. | agent-memory, local-first, recall, privacy, codex, sqlite, cli | agent-memory, local-first, recall, privacy, codex, sqlite, cli, tree, ring, memory, local, first |
 | `trust-calibrator` | One sentence - what this skill does and when to invoke it | trust, calibrator | trust, calibrator, one, sentence, what, skill, does, invoke |
 | `ui-review` | Review UI code for design system compliance, accessibility, and best practices | ui | ui, review, code, compliance, accessibility |
 | `ui-visual-validator` | Rigorous visual validation expert specializing in UI testing, design system compliance, and accessibility verification. | ui, visual, validator | ui, visual, validator, rigorous, validation, specializing, testing, compliance, accessibility, verification |

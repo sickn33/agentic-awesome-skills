@@ -10209,6 +10209,28 @@
     }
   },
   {
+    "id": "codex-profiles",
+    "path": "skills/codex-profiles",
+    "category": "productivity",
+    "name": "codex-profiles",
+    "description": "Use codex-profiles to run Codex CLI or Codex Desktop with isolated CODEX_HOME profiles for separate accounts, projects, and local state.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "codex-review",
     "path": "skills/codex-review",
     "category": "code-quality",
@@ -29080,6 +29102,28 @@
     }
   },
   {
+    "id": "pilot-protocol",
+    "path": "skills/pilot-protocol",
+    "category": "ai-agents",
+    "name": "pilot-protocol",
+    "description": "Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "pipecat-friday-agent",
     "path": "skills/pipecat-friday-agent",
     "category": "voice-agents",
@@ -29772,6 +29816,28 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-06-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "pre-ship-gate",
+    "path": "skills/pre-ship-gate",
+    "category": "quality",
+    "name": "pre-ship-gate",
+    "description": "A ship gate that runs before any production deploy: checks the silent failure modes that make a deploy 'succeed' while prod stays broken, then verifies the live revision instead of trusting deploy output.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32304,6 +32370,28 @@
     "risk": "unknown",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/robot-framework-skill",
     "date_added": "2026-07-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "routerbase-model-gateway",
+    "path": "skills/routerbase-model-gateway",
+    "category": "ai-ml",
+    "name": "routerbase-model-gateway",
+    "description": "Integrate RouterBase as an OpenAI-compatible model gateway for routing GPT, Claude, Gemini, media, audio, and embedding requests.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-07",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -38694,6 +38782,28 @@
     "risk": "unknown",
     "source": "community",
     "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
+    "id": "tree-ring-memory",
+    "path": "skills/tree-ring-memory",
+    "category": "development",
+    "name": "tree-ring-memory",
+    "description": "Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-08",
     "plugin": {
       "targets": {
         "codex": "supported",

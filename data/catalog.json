@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-07T07:02:03.000Z",
-  "total": 1930,
+  "total": 1935,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -11407,6 +11407,35 @@
         "inspect"
       ],
       "path": "skills/codex-fable5/SKILL.md"
+    },
+    {
+      "id": "codex-profiles",
+      "name": "codex-profiles",
+      "description": "Use codex-profiles to run Codex CLI or Codex Desktop with isolated CODEX_HOME profiles for separate accounts, projects, and local state.",
+      "category": "general",
+      "tags": [
+        "codex",
+        "codex-cli",
+        "profiles",
+        "code-home",
+        "account-isolation",
+        "desktop"
+      ],
+      "triggers": [
+        "codex",
+        "codex-cli",
+        "profiles",
+        "code-home",
+        "account-isolation",
+        "desktop",
+        "run",
+        "cli",
+        "isolated",
+        "home",
+        "separate",
+        "accounts"
+      ],
+      "path": "skills/codex-profiles/SKILL.md"
     },
     {
       "id": "codex-review",
@@ -33114,6 +33143,34 @@
       "path": "skills/pi-web-search/SKILL.md"
     },
     {
+      "id": "pilot-protocol",
+      "name": "pilot-protocol",
+      "description": "Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol",
+      "category": "infrastructure",
+      "tags": [
+        "agent-networking",
+        "p2p",
+        "nat-traversal",
+        "overlay-network",
+        "agent-apps"
+      ],
+      "triggers": [
+        "agent-networking",
+        "p2p",
+        "nat-traversal",
+        "overlay-network",
+        "agent-apps",
+        "pilot",
+        "protocol",
+        "give",
+        "ai",
+        "agent",
+        "permanent",
+        "network"
+      ],
+      "path": "skills/pilot-protocol/SKILL.md"
+    },
+    {
       "id": "pipecat-friday-agent",
       "name": "pipecat-friday-agent",
       "description": "Build a low-latency, Iron Man-inspired tactical voice assistant (F.R.I.D.A.Y.) using Pipecat, Gemini, and OpenAI.",
@@ -33912,6 +33969,34 @@
         "migrations"
       ],
       "path": "skills/pre-release-review/SKILL.md"
+    },
+    {
+      "id": "pre-ship-gate",
+      "name": "pre-ship-gate",
+      "description": "A ship gate that runs before any production deploy: checks the silent failure modes that make a deploy 'succeed' while prod stays broken, then verifies the live revision instead of trusting deploy output.",
+      "category": "infrastructure",
+      "tags": [
+        "deployment",
+        "quality-gate",
+        "verification",
+        "ci-cd",
+        "production"
+      ],
+      "triggers": [
+        "deployment",
+        "quality-gate",
+        "verification",
+        "ci-cd",
+        "production",
+        "pre",
+        "ship",
+        "gate",
+        "runs",
+        "before",
+        "any",
+        "deploy"
+      ],
+      "path": "skills/pre-ship-gate/SKILL.md"
     },
     {
       "id": "premium-3d-website",
@@ -36662,6 +36747,33 @@
         "requestslibrary"
       ],
       "path": "skills/robot-framework-skill/SKILL.md"
+    },
+    {
+      "id": "routerbase-model-gateway",
+      "name": "routerbase-model-gateway",
+      "description": "Integrate RouterBase as an OpenAI-compatible model gateway for routing GPT, Claude, Gemini, media, audio, and embedding requests.",
+      "category": "data-ai",
+      "tags": [
+        "routerbase",
+        "llm-routing",
+        "openai-compatible",
+        "model-gateway"
+      ],
+      "triggers": [
+        "routerbase",
+        "llm-routing",
+        "openai-compatible",
+        "model-gateway",
+        "model",
+        "gateway",
+        "integrate",
+        "openai",
+        "compatible",
+        "routing",
+        "gpt",
+        "claude"
+      ],
+      "path": "skills/routerbase-model-gateway/SKILL.md"
     },
     {
       "id": "ruby-pro",
@@ -43893,6 +44005,36 @@
         "cdc"
       ],
       "path": "skills/travel-health-analyzer/SKILL.md"
+    },
+    {
+      "id": "tree-ring-memory",
+      "name": "tree-ring-memory",
+      "description": "Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping.",
+      "category": "security",
+      "tags": [
+        "agent-memory",
+        "local-first",
+        "recall",
+        "privacy",
+        "codex",
+        "sqlite",
+        "cli"
+      ],
+      "triggers": [
+        "agent-memory",
+        "local-first",
+        "recall",
+        "privacy",
+        "codex",
+        "sqlite",
+        "cli",
+        "tree",
+        "ring",
+        "memory",
+        "local",
+        "first"
+      ],
+      "path": "skills/tree-ring-memory/SKILL.md"
     },
     {
       "id": "trello-automation",
