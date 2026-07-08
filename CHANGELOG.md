@@ -9,6 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.13.0] - 2026-07-08 - "Codex Profiles, Deep Research, and Agent Reliability Gates"
+
+> Codex profile isolation, deep research orchestration, pre-ship verification, agent networking, tree-ring memory, and synchronized public metadata for the 1,935+ skill catalog.
+
+Start here:
+
+- Install: `npx antigravity-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1935-skills](README.md#browse-1935-skills)
+- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
+
+This release ships the July 8 maintenance batch: five merged community PRs, a source-backed Codex Profiles follow-up for issue #789, generated registry/plugin mirror sync, and refreshed public SEO/LLM metadata for the 1,935+ skill catalog.
+
+## Added
+
+- Added **go-in-depth**, a self-authored deep research workflow skill with multi-agent fan-out, evidence synthesis, and verification guidance (PR #786).
+- Added **routerbase-model-gateway**, a community skill for RouterBase model gateway setup, routing, observability, and fallback operations (PR #787).
+- Added **pre-ship-gate**, a community pre-release verification skill for catching silent failures across migrations, feature flags, build caches, release pointers, staged rollouts, and environment drift (PR #788).
+- Added **pilot-protocol**, a community agent-networking skill for cross-agent coordination, handoff, and message protocol reliability (PR #790).
+- Added **tree-ring-memory**, a community memory governance skill for durable, append-only learning records and reviewable decision history (PR #791).
+- Added **codex-profiles**, a critical-risk Codex CLI/Desktop profile isolation skill sourced from `Ducksss/codex-profiles`, with guidance for separate `CODEX_HOME` profiles and explicit warnings not to copy or expose auth tokens (issue #789).
+
+## Changed
+
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, package metadata, public docs, sitemap, web catalog assets, `llms.txt`, social-card metadata, and SEO fallbacks for the 1,935+ skill catalog.
+- Added or repaired README source credits for RouterBase, pre-ship-gate, pilot-protocol, tree-ring-memory, and codex-profiles source material.
+
+## Validation
+
+- Verified and merged PR #786, PR #787, PR #788, PR #790, and PR #791 after maintainer review and targeted fixes.
+- Closed issue #789 after adding the source-backed `codex-profiles` skill and regenerated catalog surfaces.
+- Ran `npm run check:readme-credits`, `npm run validate`, `npm run security:docs`, `npm run app:build`, and `env npm_config_cache=/private/tmp/aas-npm-cache npm run test` during the maintainer sweep.
+- Ran `npm run sync:repo-state` and refreshed public SEO/LLM surfaces before release preparation.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #786 (`go-in-depth`).
+- **[@zenlee123](https://github.com/zenlee123)** and **[zenlee123/routerbase-agent-skills](https://github.com/zenlee123/routerbase-agent-skills)** for PR #787 (`routerbase-model-gateway`).
+- **[@Sharrmavishal](https://github.com/Sharrmavishal)** and **[Sharrmavishal/operating-kit](https://github.com/Sharrmavishal/operating-kit)** for PR #788 (`pre-ship-gate`).
+- **[@philip638](https://github.com/philip638)** for PR #790 (`pilot-protocol`).
+- **[@TerminallyLazy](https://github.com/TerminallyLazy)** and **[TerminallyLazy/Tree-Ring-Memory](https://github.com/TerminallyLazy/Tree-Ring-Memory)** for PR #791 (`tree-ring-memory`).
+- **[@Ducksss](https://github.com/Ducksss)** and **[Ducksss/codex-profiles](https://github.com/Ducksss/codex-profiles)** for the issue #789 source used by `codex-profiles`.
+
 ## [13.12.0] - 2026-07-07 - "Agent Workflow Skills, Social Publishing, and Loki Dependency Refresh"
 
 > Agent-orchestration workflows, social publishing coverage, LinkedIn writing support, and synchronized dependency maintenance for the 1,929+ skill catalog.

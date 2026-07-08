@@ -10,7 +10,7 @@ const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 const SEO_LANDING_PAGES_PATH = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
 
-const HOME_CATALOG_COUNT_FALLBACK = 1898;
+const HOME_CATALOG_COUNT_FALLBACK = 1935;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
 const SITE_NAME = 'Antigravity Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
