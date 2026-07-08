@@ -556,17 +556,13 @@ We officially thank the following contributors for their help in making this rep
 
 ## Star History
 
-<a href="https://www.star-history.com/#sickn33/agentic-awesome-skills&type=date&legend=top-left">
- <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left&cache_bust=202607080651" />
+<a href="https://www.star-history.com/sickn33/agentic-awesome-skills">
+ <img alt="Star History Chart" src="assets/star-history.png" />
 </a>
 
-<a href="https://www.star-history.com/sickn33/agentic-awesome-skills">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&style=landscape1&theme=dark&cache_bust=202607080651" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&style=landscape1&cache_bust=202607080651" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&style=landscape1&cache_bust=202607080651" />
- </picture>
-</a>
+GitHub restricted public stargazer history access in July 2026, so live
+Star History embeds may require a repository-readable token. The image above
+is a cached snapshot; open Star History directly for an authenticated live view.
 
 If Agentic Awesome Skills has been useful, consider ⭐ starring the repo!
 

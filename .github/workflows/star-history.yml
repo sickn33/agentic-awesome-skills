@@ -2,9 +2,6 @@ name: Update Star History Chart
 
 on:
   workflow_dispatch:
-  schedule:
-    # Daily at 06:00 UTC
-    - cron: "0 6 * * *"
 
 permissions:
   contents: write
@@ -25,6 +22,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p assets
+          echo "Star History requires repository-readable GitHub access after July 2026."
+          echo "Run this workflow manually only after confirming the endpoint works for this repo."
           curl -fsSL \
             "https://api.star-history.com/svg?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left" \
             -o /tmp/star-history.svg
