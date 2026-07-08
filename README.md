@@ -556,13 +556,13 @@ We officially thank the following contributors for their help in making this rep
 
 ## Star History
 
-<a href="https://www.star-history.com/sickn33/agentic-awesome-skills">
- <img alt="Star History Chart" src="assets/star-history.png" />
+<a href="https://www.star-history.com/?repos=sickn33%2Fagentic-awesome-skills&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&theme=dark&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
+ </picture>
 </a>
-
-GitHub restricted public stargazer history access in July 2026, so live
-Star History embeds may require a repository-readable token. The image above
-is a cached snapshot; open Star History directly for an authenticated live view.
 
 If Agentic Awesome Skills has been useful, consider ⭐ starring the repo!
 

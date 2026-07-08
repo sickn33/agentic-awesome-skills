@@ -186,4 +186,10 @@ Chúng tôi chính thức cảm ơn những người đóng góp sau đây đã 
 
 ## Lịch sử Star
 
-[![Star History Chart](../../assets/star-history.png)](https://www.star-history.com/sickn33/agentic-awesome-skills)
+<a href="https://www.star-history.com/?repos=sickn33%2Fagentic-awesome-skills&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&theme=dark&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
+ </picture>
+</a>
