@@ -16863,6 +16863,25 @@
       "runtime_files": []
     },
     {
+      "id": "go-in-depth",
+      "path": "skills/go-in-depth",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "go-playwright",
       "path": "skills/go-playwright",
       "targets": {
@@ -37064,10 +37083,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1929,
+    "total_skills": 1930,
     "supported": {
-      "codex": 1857,
-      "claude": 1878
+      "codex": 1858,
+      "claude": 1879
     },
     "blocked": {
       "codex": 72,

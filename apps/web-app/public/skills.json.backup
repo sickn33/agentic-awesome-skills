@@ -18861,6 +18861,28 @@
     }
   },
   {
+    "id": "go-in-depth",
+    "path": "skills/go-in-depth",
+    "category": "development",
+    "name": "go-in-depth",
+    "description": "Go in depth harness \u2014 fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-07-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "go-playwright",
     "path": "skills/go-playwright",
     "category": "test-automation",

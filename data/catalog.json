@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-07T07:02:03.000Z",
-  "total": 1929,
+  "total": 1930,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -21893,6 +21893,32 @@
         "worker"
       ],
       "path": "skills/go-concurrency-patterns/SKILL.md"
+    },
+    {
+      "id": "go-in-depth",
+      "name": "go-in-depth",
+      "description": "Go in depth harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.",
+      "category": "development",
+      "tags": [
+        "go",
+        "in",
+        "depth"
+      ],
+      "triggers": [
+        "go",
+        "in",
+        "depth",
+        "harness",
+        "fan",
+        "web",
+        "searches",
+        "fetch",
+        "sources",
+        "adversarially",
+        "verify",
+        "claims"
+      ],
+      "path": "skills/go-in-depth/SKILL.md"
     },
     {
       "id": "go-playwright",

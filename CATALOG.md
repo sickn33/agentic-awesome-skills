@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-07T07:02:03.000Z
 
-Total skills: 1929
+Total skills: 1930
 
 ## architecture (115)
 
@@ -587,7 +587,7 @@ Total skills: 1929
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## development (262)
+## development (263)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -722,6 +722,7 @@ Total skills: 1929
 | `gemini-omni-flash-api` | Use this skill for generative video editing, text-to-video, image-referenced video generation, and first-frame-to-video transition animations using the offic... | gemini, omni, flash, api | gemini, omni, flash, api, skill, generative, video, editing, text, image, referenced, generation |
 | `github` | Use the `gh` CLI for issues, pull requests, Actions runs, and GitHub API queries. | github | github, gh, cli, issues, pull, requests, actions, runs, api, queries |
 | `go-concurrency-patterns` | Master Go concurrency with goroutines, channels, sync primitives, and context. Use when building concurrent Go applications, implementing worker pools, or de... | go, concurrency | go, concurrency, goroutines, channels, sync, primitives, context, building, concurrent, applications, implementing, worker |
+| `go-in-depth` | Go in depth harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report. | go, in, depth | go, in, depth, harness, fan, web, searches, fetch, sources, adversarially, verify, claims |
 | `go-playwright` | Expert capability for robust, stealthy, and efficient browser automation using Playwright Go. | go, playwright | go, playwright, capability, robust, stealthy, efficient, browser, automation |
 | `go-rod-master` | Comprehensive guide for browser automation and web scraping with go-rod (Chrome DevTools Protocol) including stealth anti-bot-detection patterns. | go, rod, master | go, rod, master, browser, automation, web, scraping, chrome, devtools, protocol, including, stealth |
 | `golang-pro` | Master Go 1.21+ with modern patterns, advanced concurrency, performance optimization, and production-ready microservices. | golang | golang, pro, go, 21, concurrency, performance, optimization, microservices |
