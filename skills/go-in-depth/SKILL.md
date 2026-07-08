@@ -2,7 +2,8 @@
 name: go-in-depth
 description: Go in depth harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.
 risk: safe
-source: community
+source: self
+source_type: self
 date_added: "2026-07-07"
 ---
 

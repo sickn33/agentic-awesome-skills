@@ -6,7 +6,7 @@ export const meta = {
 }
 
 // go-in-depth: Scope → pipeline(Search → URL-dedup → Fetch+Extract) → 3-vote Verify → Synthesize
-// Ported from bughunter architecture. WebSearch/WebFetch instead of git/grep.
+// Uses a bug-hunting-style fan-out and verification pattern, adapted for web research.
 // Question is passed via Workflow({name: 'go-in-depth', args: '<question>'}).
 
 const VOTES_PER_CLAIM = 3
