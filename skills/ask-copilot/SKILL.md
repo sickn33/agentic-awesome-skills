@@ -1,0 +1,94 @@
+---
+name: ask-copilot
+description: "Use GitHub Copilot CLI in non-interactive mode to ask questions, review code, or generate snippets without manual interaction."
+category: development
+risk: safe
+source: self
+source_repo: cshara1/antigravity-awesome-skills
+source_type: self
+date_added: "2026-07-08"
+author: cshara1
+tags: [copilot, github, cli, review, prompt]
+tools: [claude, cursor, gemini]
+---
+
+# Ask Copilot
+
+## Overview
+
+This skill allows the agent to interact with GitHub Copilot CLI (`copilot`) in a non-interactive (headless) mode. Use this skill when you need secondary advice, code reviews, explanations, or code generation from GitHub Copilot's models.
+
+Use `source: self` and `source_type: self` when the skill is original to this repository and does not require README external-source credit.
+
+## When to Use This Skill
+
+- **User Request Only**: Use this skill **ONLY** when the user explicitly asks to "consult Copilot", "ask Copilot", "review with Copilot", or explicitly requests a second opinion using Copilot.
+- **Do NOT Invoke Automatically**: To comply with privacy policies, the agent must not invoke this skill automatically for its own second opinions or checks without explicit user consent.
+
+## How It Works
+
+### Step 1: Request User Consent for File Uploads
+
+Before executing any command that references local files and sends them to Copilot, you **MUST** obtain explicit user consent to upload their code to third-party servers.
+
+### Step 2: Execute with Minimal Permitted Flags
+
+To prevent TUI lockups, execute the `copilot` command with headless flags. Avoid using the blanket `--yolo` (or `--allow-all-tools`) bypass unless the task strictly requires mutation tools and is trusted by the user.
+
+- **For Read-Only / General Q&A**: Avoid `--yolo` and use `--allow-all-paths` instead. This allows Copilot CLI to directly access and read local files referenced in your prompt.
+- **For Trusted Mutation Tasks**: Only use `--yolo` if the user has explicitly authorized tool-execution / system mutations.
+
+### Step 3: Use Session Management (Optional)
+
+To maintain conversation context, use `--name` and `--resume` flags, or pass a `--session-id` on subsequent calls.
+
+## Examples
+
+### Example 1: General Question (Read-Only)
+
+Does not require `--yolo`. Use `--allow-all-paths` for path access.
+```bash
+copilot -p "Explain how to implement a debounce function in TypeScript" -s --allow-all-paths
+```
+
+### Example 2: Code Review (Direct File Reference)
+
+Always confirm with the user before executing. If consented, pass the file path directly in the prompt. Copilot CLI will read it using its path access permissions:
+```bash
+copilot -p "Review the file path/to/file.ts for potential memory leaks" -s --allow-all-paths
+```
+
+### Example 3: Named Session Management
+
+```bash
+copilot -p "My name is Taro. Remember this." -s --yolo --name "my-session-name"
+copilot -p "What is my name?" -s --yolo --resume "my-session-name"
+```
+
+## Best Practices
+
+- ✅ **Do:** Ask for user consent before uploading any project files to third-party endpoints.
+- ✅ **Do:** Pass file paths directly in the prompt text and let Copilot read them, instead of expanding them via shell `cat`.
+- ✅ **Do:** Use minimal permission flags like `--allow-all-paths` for read-only queries instead of `--yolo`.
+- ✅ **Do:** Use `-s` (silent) to suppress metadata and statistics, leaving only clean output.
+- ❌ **Don't:** Automatically trigger this skill for background second opinions without the user's explicit ask.
+- ❌ **Don't:** Run `copilot` without permission-bypass flags in background tasks, as it will hang waiting for interactive input.
+
+## Limitations
+
+- This skill does not replace environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, or safety boundaries are missing.
+
+## Security & Safety Notes
+
+- The `--yolo` flag bypasses all permission prompts and allows Copilot CLI to run arbitrary shell commands and mutate workspace files. It must be treated as a high-risk option and never used by default.
+- Always check that the code/files being sent do not contain sensitive credentials, API keys, or private environment variables.
+
+## Common Pitfalls
+
+- **Problem:** The terminal hangs or the command times out.
+  **Solution:** Ensure both `-p` (or `--prompt`) and a bypass flag (like `--allow-all-paths` or `--yolo`) are present in the command arguments. Without bypass flags, the CLI will prompt for confirmation which hangs headless processes.
+
+## Related Skills
+
+- `@cli-assistant` - How to interact with CLI tools in general.
