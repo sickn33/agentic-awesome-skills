@@ -521,6 +521,7 @@ Key source families include:
 - **[anthony-chaudhary/dos-kernel](https://github.com/anthony-chaudhary/dos-kernel)**: Source for the `dos-verify-done-claims` skill — gates an agent's "done / shipped / fixed" claim on git ground truth (ancestry + the commit's own diff) via the deterministic DOS kernel's read-only `dos verify` / `dos commit-audit` verbs (MIT).
 - **[maxbaluev/accreted-intelligence](https://github.com/maxbaluev/accreted-intelligence)**: Source for the `accint-solve` skill — routes coding-agent work through AccInt's MCP memory loop with retrieval, continuation frames, commitments, and outcome feedback (Apache 2.0).
 - **[sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills)**: Source for the `linkedin-post-writer` skill - LinkedIn post drafting from 16 tested hook formulas mapped to engagement goals, with 2026 formatting rules and an AI-tell scrub pass, from a 10-skill LinkedIn bundle for Claude Code and Codex (MIT).
+- **[Sharrmavishal/operating-kit](https://github.com/Sharrmavishal/operating-kit)**: Source for the `pre-ship-gate` skill - a pre-deploy gate that walks the silent failure modes (migrations, feature flags, stale build cache, release pointer, staged rollout, missing env) and verifies the live revision instead of trusting deploy output (MIT).
 
 </details>
 
