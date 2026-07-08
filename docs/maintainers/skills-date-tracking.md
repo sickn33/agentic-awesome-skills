@@ -209,7 +209,7 @@ Make sure the date is in `YYYY-MM-DD` format:
 
 Make sure you're running from the project root:
 ```bash
-cd path/to/antigravity-awesome-skills
+cd path/to/agentic-awesome-skills
 python tools/scripts/manage_skill_dates.py list
 ```
 

@@ -1,6 +1,6 @@
 # ❓ Câu hỏi thường gặp (FAQ)
 
-**Bạn có thắc mắc?** Bạn không hề cô đơn! Dưới đây là câu trả lời cho những câu hỏi thường gặp nhất về Antigravity Awesome Skills.
+**Bạn có thắc mắc?** Bạn không hề cô đơn! Dưới đây là câu trả lời cho những câu hỏi thường gặp nhất về Agentic Awesome Skills.
 
 ---
 
@@ -67,7 +67,7 @@ _Luôn kiểm tra nhãn rủi ro và xem xét mã nguồn trước khi dùng._
 Đường dẫn mặc định của installer là `~/.agents/skills/` cho Antigravity global:
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 ```
 
 **Các đường dẫn cụ thể cho từng công cụ:**
@@ -87,7 +87,7 @@ npx antigravity-awesome-skills
 **Có.** Hãy dùng lệnh cài đặt chuẩn:
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 ```
 
 Không còn cần workaround cũ `core.symlinks=true` hoặc bật Developer Mode chỉ để cài repository này.
@@ -97,7 +97,7 @@ Không còn cần workaround cũ `core.symlinks=true` hoặc bật Developer Mod
 Chạy lại installer để lấy phiên bản mới nhất, hoặc nếu bạn cài bằng git clone thì pull trong thư mục đã clone:
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 
 # hoặc, nếu bạn tự clone repository:
 cd ~/.agents/skills
@@ -144,7 +144,7 @@ Sử dụng biểu tượng `@` theo sau là tên skill:
 
 ### Một kỹ năng đưa ra lời khuyên sai hoặc lỗi thời
 
-Hãy [Mở một issue](https://github.com/sickn33/antigravity-awesome-skills/issues)!  
+Hãy [Mở một issue](https://github.com/sickn33/agentic-awesome-skills/issues)!  
 Vui lòng gửi kèm:
 
 - Skill nào?
@@ -185,4 +185,4 @@ Hãy chạy `npm run validate` cục bộ để kiểm tra trước khi đẩy c
 - Thử `@test-driven-development` để code có chất lượng tốt hơn.
 - Khám phá `@skill-creator` để tự tạo kỹ năng của riêng bạn.
 
-**Vẫn còn thắc mắc?** [Mở một cuộc thảo luận (Discussion)](https://github.com/sickn33/antigravity-awesome-skills/discussions) và chúng tôi sẽ giúp bạn! 🙌
+**Vẫn còn thắc mắc?** [Mở một cuộc thảo luận (Discussion)](https://github.com/sickn33/agentic-awesome-skills/discussions) và chúng tôi sẽ giúp bạn! 🙌

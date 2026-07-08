@@ -67,7 +67,7 @@ readme = replaceOrWarn(
 
 readme = replaceOrWarn(
   readme,
-  /(# 🌌 Antigravity Awesome Skills:\s*)[\d,]+\+/,
+  /(# 🌌 Agentic Awesome Skills:\s*)[\d,]+\+/,
   `$1${formatted}+`,
   "main title"
 );

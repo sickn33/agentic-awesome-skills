@@ -43,8 +43,8 @@ class SyncContributorsTests(unittest.TestCase):
     def test_update_repo_contributors_section_renders_latest_contributors(self):
         content = """## Repo Contributors
 
-<a href="https://github.com/sickn33/antigravity-awesome-skills/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=sickn33/antigravity-awesome-skills" alt="Repository contributors" />
+<a href="https://github.com/sickn33/agentic-awesome-skills/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sickn33/agentic-awesome-skills" alt="Repository contributors" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
@@ -62,8 +62,8 @@ We officially thank the following contributors for their help in making this rep
             ["alice", "github-actions[bot]", "Copilot", "new-user"],
         )
 
-        self.assertIn("https://contrib.rocks/image?repo=sickn33/antigravity-awesome-skills&max=500", updated)
-        self.assertIn("https://github.com/sickn33/antigravity-awesome-skills/graphs/contributors", updated)
+        self.assertIn("https://contrib.rocks/image?repo=sickn33/agentic-awesome-skills&max=500", updated)
+        self.assertIn("https://github.com/sickn33/agentic-awesome-skills/graphs/contributors", updated)
         self.assertNotIn("- [@alice]", updated)
         self.assertNotIn("- [@new-user]", updated)
         self.assertEqual(updated.count("## Repo Contributors"), 1)
@@ -83,8 +83,8 @@ We officially thank the following contributors for their help in making this rep
     def test_update_repo_contributors_section_removes_manual_list(self):
         content = """## Repo Contributors
 
-<a href="https://github.com/sickn33/antigravity-awesome-skills/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=sickn33/antigravity-awesome-skills" alt="Repository contributors" />
+<a href="https://github.com/sickn33/agentic-awesome-skills/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sickn33/agentic-awesome-skills" alt="Repository contributors" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).

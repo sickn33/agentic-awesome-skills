@@ -14,13 +14,13 @@ const require = createRequire(import.meta.url);
 const { resolveSafeRealPath } = require('../../tools/lib/symlink-safety');
 const ROOT_DIR = path.resolve(__dirname, '..', '..');
 
-const UPSTREAM_REPO = 'https://github.com/sickn33/antigravity-awesome-skills.git';
+const UPSTREAM_REPO = 'https://github.com/sickn33/agentic-awesome-skills.git';
 const UPSTREAM_NAME = 'upstream';
-const REPO_TAR_URL = 'https://github.com/sickn33/antigravity-awesome-skills/archive/refs/heads/main.tar.gz';
-const REPO_ZIP_URL = 'https://github.com/sickn33/antigravity-awesome-skills/archive/refs/heads/main.zip';
-const COMMITS_API_URL = 'https://api.github.com/repos/sickn33/antigravity-awesome-skills/commits/main';
+const REPO_TAR_URL = 'https://github.com/sickn33/agentic-awesome-skills/archive/refs/heads/main.tar.gz';
+const REPO_ZIP_URL = 'https://github.com/sickn33/agentic-awesome-skills/archive/refs/heads/main.zip';
+const COMMITS_API_URL = 'https://api.github.com/repos/sickn33/agentic-awesome-skills/commits/main';
 const SHA_FILE = path.join(__dirname, '.last-sync-sha');
-const ARCHIVE_ROOT = 'antigravity-awesome-skills-main/';
+const ARCHIVE_ROOT = 'agentic-awesome-skills-main/';
 const SAFE_SKILL_ASSET_RE = /^\/skills\/[A-Za-z0-9._/-]+$/;
 const REFRESH_RATE_LIMIT_MS = 30_000;
 const STATIC_RATE_LIMIT_MS = 25;
@@ -518,7 +518,7 @@ async function syncWithArchive() {
         }
 
         // 3. Move skills to root
-        const extractedRoot = path.join(tempDir, 'antigravity-awesome-skills-main');
+        const extractedRoot = path.join(tempDir, 'agentic-awesome-skills-main');
         const srcSkills = path.join(extractedRoot, 'skills');
         const srcIndex = path.join(extractedRoot, 'skills_index.json');
         const destSkills = path.join(ROOT_DIR, 'skills');

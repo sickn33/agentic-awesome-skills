@@ -28,7 +28,7 @@
 ## 📦 仓库结构（可视化）
 
 ```
-antigravity-awesome-skills/
+agentic-awesome-skills/
 │
 ├── 📄 README.md                         ← 概述和快速入门
 ├── 📄 CONTRIBUTING.md                  ← 贡献者工作流程
@@ -184,7 +184,7 @@ antigravity-awesome-skills/
 │ 终端                                     │
 ├─────────────────────────────────────────┤
 │ $ git clone https://github.com/          │
-│   sickn33/antigravity-awesome-skills     │
+│   sickn33/agentic-awesome-skills     │
 │   .agent/skills                          │
 │                                         │
 │ ✓ 正在克隆到 '.agent/skills'...          │

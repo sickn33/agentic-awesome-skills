@@ -1,6 +1,6 @@
 # Antigravity Web App
 
-This app is the static catalog and skill browser for `antigravity-awesome-skills`. It ships the generated registry, renders searchable skill detail pages, and publishes the public site to GitHub Pages.
+This app is the static catalog and skill browser for `agentic-awesome-skills`. It ships the generated registry, renders searchable skill detail pages, and publishes the public site to GitHub Pages.
 
 ## What This App Does
 

@@ -75,7 +75,7 @@ See:
 
 ## Optional Windows batch helper
 
-The following script is adapted from the community recovery workflow shared by [@DiggaX](https://github.com/DiggaX) in [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274). Review it before running it.
+The following script is adapted from the community recovery workflow shared by [@DiggaX](https://github.com/DiggaX) in [issue #274](https://github.com/sickn33/agentic-awesome-skills/issues/274). Review it before running it.
 
 ```bat
 @echo off

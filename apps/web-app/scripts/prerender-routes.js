@@ -12,24 +12,24 @@ const SEO_LANDING_PAGES_PATH = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPag
 
 const HOME_CATALOG_COUNT_FALLBACK = 1935;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
-const SITE_NAME = 'Antigravity Awesome Skills';
-const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
-const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
+const SITE_NAME = 'Agentic Awesome Skills';
+const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
+const HOSTED_CATALOG_URL = 'https://sickn33.github.io/agentic-awesome-skills/';
 const FAQ_ITEMS = [
   {
-    question: 'What is Antigravity Awesome Skills?',
+    question: 'What is Agentic Awesome Skills?',
     answer: (countLabel) =>
-      `Antigravity Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
+      `Agentic Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
   },
   {
-    question: 'How do I install Antigravity Awesome Skills?',
+    question: 'How do I install Agentic Awesome Skills?',
     answer:
-      'Install the library with npx antigravity-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+      'Install the library with npx agentic-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
   },
   {
-    question: 'Is Antigravity Awesome Skills a GitHub repository?',
+    question: 'Is Agentic Awesome Skills a GitHub repository?',
     answer:
-      'Yes. The GitHub repository at https://github.com/sickn33/antigravity-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
+      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
   },
   {
     question: 'What are AAS specialized plugins?',
@@ -323,7 +323,7 @@ function buildSkillFallback({ skill, landingPages, siteBaseUrl }) {
 
   return buildPrerenderFallback({
     heading: `@${safeText(skill.name) || safeText(skill.id) || 'Skill'}`,
-    description: safeText(skill.description) || 'Installable skill from Antigravity Awesome Skills.',
+    description: safeText(skill.description) || 'Installable skill from Agentic Awesome Skills.',
     links: relatedLinks,
   });
 }
@@ -341,7 +341,7 @@ function setRootFallback(html, fallbackHtml) {
 function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
   const formattedCount = visibleCount.toLocaleString('en-US');
-  const title = `Antigravity Awesome Skills GitHub | ${formattedCount}+ AI coding skills`;
+  const title = `Agentic Awesome Skills GitHub | ${formattedCount}+ AI coding skills`;
   const description = `Explore the GitHub library of ${formattedCount}+ installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.`;
   const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
   const sourceCodeEntity = {
@@ -353,7 +353,7 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
     sameAs: [
       canonicalUrl,
       HOSTED_CATALOG_URL,
-      'https://www.npmjs.com/package/antigravity-awesome-skills',
+      'https://www.npmjs.com/package/agentic-awesome-skills',
     ],
     mainEntityOfPage: canonicalUrl,
     codeRepository: REPOSITORY_URL,
@@ -415,7 +415,7 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
         url: REPOSITORY_URL,
         sameAs: [
           'https://x.com/AASkills_',
-          'https://www.npmjs.com/package/antigravity-awesome-skills',
+          'https://www.npmjs.com/package/agentic-awesome-skills',
           HOSTED_CATALOG_URL,
         ],
       },
@@ -552,7 +552,7 @@ function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
     sameAs: [
       canonicalUrl,
       HOSTED_CATALOG_URL,
-      'https://www.npmjs.com/package/antigravity-awesome-skills',
+      'https://www.npmjs.com/package/agentic-awesome-skills',
     ],
     mainEntityOfPage: canonicalUrl,
     codeRepository: REPOSITORY_URL,
@@ -634,7 +634,7 @@ function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
         url: REPOSITORY_URL,
         sameAs: [
           'https://x.com/AASkills_',
-          'https://www.npmjs.com/package/antigravity-awesome-skills',
+          'https://www.npmjs.com/package/agentic-awesome-skills',
           HOSTED_CATALOG_URL,
         ],
       },

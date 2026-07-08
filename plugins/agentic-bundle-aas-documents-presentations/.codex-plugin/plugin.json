@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-documents-presentations",
+  "version": "13.13.0",
+  "description": "Install the \"AAS Documents & Presentations\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-documents-presentations",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Documents & Presentations",
+    "shortDescription": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables.",
+    "longDescription": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables. Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations. Recommended for: Operators producing reports, Analysts packaging findings, Teams automating office documents. Not for: General web app development, Long-running data pipelines. Covers Office Productivity, DOCX Official, and 7 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to create a report pack with a DOCX summary, XLSX data table, and PPTX deck.",
+      "Use this plugin to inspect this spreadsheet for formula and formatting issues.",
+      "Use this plugin to convert this PDF content into an editable presentation outline."
+    ]
+  }
+}

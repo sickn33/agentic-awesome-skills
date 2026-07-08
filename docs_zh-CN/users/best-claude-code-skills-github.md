@@ -4,7 +4,7 @@
 
 ## 最佳的整体可安装库
 
-### 1. [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills)
+### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
 最适合想要一个带有入门文档、捆绑包、工作流以及对不仅仅是 Claude Code 支持的大型可安装库的团队和个人开发者。
 
@@ -52,11 +52,11 @@
 
 ## 如何快速选择
 
-- 如果您想要最实用的安装和使用路径,请选择 **Antigravity Awesome Skills**。
+- 如果您想要最实用的安装和使用路径,请选择 **Agentic Awesome Skills**。
 - 如果您想要最强大的精选列表,请选择 **VoltAgent Awesome Agent Skills**。
 - 如果官方供应商参考最重要,请选择 **anthropics/skills**。
 - 如果您想要一个较小的以社区为中心的 Claude 库,请选择 **karanb192/awesome-claude-skills**。
 
 ## 推荐的下一步
 
-如果您想快速提高生产力,请安装 [Antigravity Awesome Skills](https://github.com/sickn33/antigravity-awesome-skills) 并从 [`claude-code-skills.md`](claude-code-skills.md) 和 [`bundles.md`](bundles.md) 开始。
+如果您想快速提高生产力,请安装 [Agentic Awesome Skills](https://github.com/sickn33/agentic-awesome-skills) 并从 [`claude-code-skills.md`](claude-code-skills.md) 和 [`bundles.md`](bundles.md) 开始。

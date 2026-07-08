@@ -11,9 +11,9 @@
 1. **安装仓库：**
 
    ```bash
-   npx antigravity-awesome-skills
+   npx agentic-awesome-skills
    # 或手动克隆
-   git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+   git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
    ```
 
 2. **根据你的角色或兴趣**从下面的列表中选择你的捆绑包。
@@ -575,7 +575,7 @@ _用于创建和维护高质量的 SKILL.md 资产。_
 
 ## 贡献
 
-发现应该在捆绑包中的技能？或者想创建新的捆绑包？[提交 issue](https://github.com/sickn33/antigravity-awesome-skills/issues)或提交 PR！
+发现应该在捆绑包中的技能？或者想创建新的捆绑包？[提交 issue](https://github.com/sickn33/agentic-awesome-skills/issues)或提交 PR！
 
 ---
 

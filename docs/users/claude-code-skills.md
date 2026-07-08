@@ -2,11 +2,11 @@
 
 If you are looking for **Claude Code skills** you can install from GitHub, this repository is designed to get you from first clone to first useful prompt quickly.
 
-Antigravity Awesome Skills gives Claude Code users an installable library of `SKILL.md` playbooks, role-based bundles, and execution workflows. The goal is not just to collect prompts, but to make repeatable engineering tasks easier to invoke, review, and reuse.
+Agentic Awesome Skills gives Claude Code users an installable library of `SKILL.md` playbooks, role-based bundles, and execution workflows. The goal is not just to collect prompts, but to make repeatable engineering tasks easier to invoke, review, and reuse.
 
 Release `9.0.0` also adds a first-class Claude Code plugin distribution plus bundle plugins. If you want the full explanation of root plugin vs bundle plugin vs full install, read [plugins.md](plugins.md).
 
-## How to use Antigravity Awesome Skills with Claude Code
+## How to use Agentic Awesome Skills with Claude Code
 
 Install the library into Claude Code, then invoke focused skills directly in the conversation or through the plugin marketplace path. Claude Code benefits most when you keep the prompt specific about the skill, the scope, and the intended output.
 
@@ -23,14 +23,14 @@ Install the library into Claude Code, then invoke focused skills directly in the
 ### Option A: installer CLI
 
 ```bash
-npx antigravity-awesome-skills --claude
+npx agentic-awesome-skills --claude
 ```
 
 ### Option B: Claude Code plugin marketplace
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 The Claude marketplace plugin is a plugin-safe filtered distribution of the repo. Skills that still require portability hardening or explicit setup metadata remain available in the repository, but are excluded from the plugin until they are ready.

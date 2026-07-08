@@ -1,0 +1,33 @@
+{
+  "name": "aasb-agent-architect",
+  "version": "13.13.0",
+  "description": "Install the \"Agent Architect\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "agent-architect",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Architect",
+    "shortDescription": "AI & Agents · 6 curated skills",
+    "longDescription": "For building AI systems and autonomous agents. Covers Agent Evaluation, LangGraph, and 4 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "AI & Agents",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

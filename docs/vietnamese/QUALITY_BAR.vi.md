@@ -1,6 +1,6 @@
 # 🏆 Tiêu chuẩn Chất lượng & Xác thực
 
-Để biến **Antigravity Awesome Skills** từ một tập hợp các script thành một nền tảng đáng tin cậy, mỗi skill (kỹ năng) phải đáp ứng một tiêu chuẩn cụ thể về chất lượng và an toàn.
+Để biến **Agentic Awesome Skills** từ một tập hợp các script thành một nền tảng đáng tin cậy, mỗi skill (kỹ năng) phải đáp ứng một tiêu chuẩn cụ thể về chất lượng và an toàn.
 
 ## Huy hiệu "Đã xác thực" (Validated) ✅
 

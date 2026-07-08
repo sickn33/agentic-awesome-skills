@@ -287,8 +287,8 @@ skills/
 **资源链接：**
 - 📋 [技能结构详细说明](skill-anatomy.md)
 - 🎯 [质量标准](quality-bar.md)
-- 🤝 [社区讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions)
-- 🐛 [问题报告](https://github.com/sickn33/antigravity-awesome-skills/issues)
+- 🤝 [社区讨论](https://github.com/sickn33/agentic-awesome-skills/discussions)
+- 🐛 [问题报告](https://github.com/sickn33/agentic-awesome-skills/issues)
 
 **联系方式：**
 - 📧 skills@antigravity-skills.org
@@ -298,7 +298,7 @@ skills/
 
 ## 🎉 开始贡献
 
-感谢您考虑为Antigravity Awesome Skills贡献！使用这个模板，您可以帮助创建高质量、一致性的技能，让整个社区受益。
+感谢您考虑为Agentic Awesome Skills贡献！使用这个模板，您可以帮助创建高质量、一致性的技能，让整个社区受益。
 
 如果您有任何疑问或需要指导，请随时联系我们。
 

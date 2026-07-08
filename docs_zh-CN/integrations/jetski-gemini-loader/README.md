@@ -1,6 +1,6 @@
 # Jetski + Gemini 延迟技能加载器(示例)
 
-此示例展示了一种将 **antigravity-awesome-skills** 与 Jetski/Cortex 风格代理集成的方法,使用基于 `@skill-id` 提及的**延迟加载**,而不是将每个 `SKILL.md` 连接到提示词中。
+此示例展示了一种将 **agentic-awesome-skills** 与 Jetski/Cortex 风格代理集成的方法,使用基于 `@skill-id` 提及的**延迟加载**,而不是将每个 `SKILL.md` 连接到提示词中。
 
 > 这**不是**生产就绪的库 - 它是一个最小参考,您可以适应自己的主机/代理实现。
 
@@ -47,7 +47,7 @@ import {
   Message,
 } from "./loader.mjs";
 
-const REPO_ROOT = "/path/to/antigravity-awesome-skills";
+const REPO_ROOT = "/path/to/agentic-awesome-skills";
 const SKILLS_ROOT = REPO_ROOT;
 const INDEX_PATH = path.join(REPO_ROOT, "skills_index.json");
 

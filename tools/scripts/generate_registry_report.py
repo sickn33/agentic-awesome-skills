@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Registry Report Generator — Antigravity Awesome Skills
+Registry Report Generator — Agentic Awesome Skills
 Generates a consolidated health report for the skill registry.
 
 Combines scoring, security scanning, and drift detection into a single

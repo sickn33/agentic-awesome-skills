@@ -8,8 +8,8 @@
 
 ```bash
 # 1. Fork and clone
-git clone https://github.com/YOUR-USERNAME/antigravity-awesome-skills.git
-cd antigravity-awesome-skills
+git clone https://github.com/YOUR-USERNAME/agentic-awesome-skills.git
+cd agentic-awesome-skills
 
 # 2. Install dependencies
 npm install
@@ -85,8 +85,8 @@ You don't need to be an expert! Here are ways anyone can help:
 # 1. Fork the repo on GitHub (click the Fork button)
 
 # 2. Clone your fork
-git clone https://github.com/YOUR-USERNAME/antigravity-awesome-skills.git
-cd antigravity-awesome-skills
+git clone https://github.com/YOUR-USERNAME/agentic-awesome-skills.git
+cd agentic-awesome-skills
 
 # 3. Create a branch
 git checkout -b improve-docs
@@ -526,15 +526,15 @@ docs: add examples to react-best-practices
 
 ## Need Help?
 
-- **Questions?** Open a [Discussion](https://github.com/sickn33/antigravity-awesome-skills/discussions)
-- **Stuck?** Open an [Issue](https://github.com/sickn33/antigravity-awesome-skills/issues)
-- **Want feedback?** Open a [Draft Pull Request](https://github.com/sickn33/antigravity-awesome-skills/pulls)
+- **Questions?** Open a [Discussion](https://github.com/sickn33/agentic-awesome-skills/discussions)
+- **Stuck?** Open an [Issue](https://github.com/sickn33/agentic-awesome-skills/issues)
+- **Want feedback?** Open a [Draft Pull Request](https://github.com/sickn33/agentic-awesome-skills/pulls)
 
 ---
 
 ## Recognition
 
-All contributors are recognized in our [Contributors](https://github.com/sickn33/antigravity-awesome-skills/graphs/contributors) page.
+All contributors are recognized in our [Contributors](https://github.com/sickn33/agentic-awesome-skills/graphs/contributors) page.
 
 We **always merge accepted PRs via GitHub** ("Squash and merge") so your PR shows as **Merged** and you get full credit. We do not close PRs after integrating your work locally. If your PR has merge conflicts, we will resolve them on the branch (or ask you to merge main and push) so we can merge it on GitHub.
 

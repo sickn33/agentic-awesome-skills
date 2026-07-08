@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains how to use Antigravity Awesome Skills with **Kiro CLI**, AWS's agentic AI-powered coding assistant.
+This guide explains how to use Agentic Awesome Skills with **Kiro CLI**, AWS's agentic AI-powered coding assistant.
 
 ## What is Kiro?
 
@@ -29,7 +29,7 @@ Kiro's agentic capabilities are enhanced by skills that provide:
 
 ```bash
 # Install to Kiro's default skills directory
-npx antigravity-awesome-skills --kiro
+npx agentic-awesome-skills --kiro
 ```
 
 This installs skills to `~/.kiro/skills/`
@@ -38,7 +38,7 @@ This installs skills to `~/.kiro/skills/`
 
 ```bash
 # Clone directly to Kiro's skills directory
-git clone https://github.com/sickn33/antigravity-awesome-skills.git ~/.kiro/skills
+git clone https://github.com/sickn33/agentic-awesome-skills.git ~/.kiro/skills
 ```
 
 ### Verification
@@ -216,7 +216,7 @@ ls -la ~/.kiro/skills/
 
 # Reinstall if needed
 rm -rf ~/.kiro/skills
-npx antigravity-awesome-skills --kiro
+npx agentic-awesome-skills --kiro
 ```
 
 ### Skill Not Found
@@ -299,6 +299,6 @@ Found a Kiro-specific use case or workflow? Contribute to this guide:
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/sickn33/antigravity-awesome-skills/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/sickn33/antigravity-awesome-skills/discussions)
+- **Issues**: [GitHub Issues](https://github.com/sickn33/agentic-awesome-skills/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/sickn33/agentic-awesome-skills/discussions)
 - **Community**: [Community Guidelines](../contributors/community-guidelines.md)

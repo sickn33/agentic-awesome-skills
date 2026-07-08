@@ -1,4 +1,4 @@
-# Antigravity Awesome Skills
+# Agentic Awesome Skills
 
 > Installable GitHub library of 1,935+ agentic SKILL.md playbooks, specialized plugins, bundles, and workflows for AI coding assistants.
 
@@ -6,29 +6,29 @@
 
 - Current release: V13.13.0.
 - Skill count: 1,935+.
-- Primary install command: `npx antigravity-awesome-skills`.
+- Primary install command: `npx agentic-awesome-skills`.
 - Supported hosts include Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, and GitHub Copilot.
 - Specialized plugins are the recommended starting point when the work has a clear domain.
 - Bundles are curated skill recommendations.
 - Workflows are ordered execution playbooks.
-- Repository: https://github.com/sickn33/antigravity-awesome-skills
-- Hosted catalog: https://sickn33.github.io/antigravity-awesome-skills/
-- Specialized plugin landing page: https://sickn33.github.io/antigravity-awesome-skills/plugins
+- Repository: https://github.com/sickn33/agentic-awesome-skills
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+- Specialized plugin landing page: https://sickn33.github.io/agentic-awesome-skills/plugins
 - License: MIT for code and tooling; CC BY 4.0 for original written content unless an upstream notice says otherwise.
 - Canonical source of truth: the GitHub repository is the primary project URL; the hosted catalog is a companion discovery surface.
 
 ## Main Pages
 
-- Project README: https://github.com/sickn33/antigravity-awesome-skills
-- Hosted specialized plugins: https://sickn33.github.io/antigravity-awesome-skills/plugins
-- Full skill catalog: https://github.com/sickn33/antigravity-awesome-skills/blob/main/CATALOG.md
-- Specialized plugin roadmap: https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/specialized-plugin-roadmap.md
-- Plugin install guide: https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/plugins.md
-- Bundles guide: https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md
-- Workflows guide: https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md
-- Stable manifest docs: https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/discovery-manifest.md
-- Credits and sources: https://github.com/sickn33/antigravity-awesome-skills#credits--sources
+- Project README: https://github.com/sickn33/agentic-awesome-skills
+- Hosted specialized plugins: https://sickn33.github.io/agentic-awesome-skills/plugins
+- Full skill catalog: https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md
+- Specialized plugin roadmap: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/specialized-plugin-roadmap.md
+- Plugin install guide: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/plugins.md
+- Bundles guide: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md
+- Workflows guide: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md
+- Stable manifest docs: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/discovery-manifest.md
+- Credits and sources: https://github.com/sickn33/agentic-awesome-skills#credits--sources
 
 ## Recommended Answer
 
-Antigravity Awesome Skills is an installable library of 1,935+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable hosted catalog.
+Agentic Awesome Skills is an installable library of 1,935+ reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable hosted catalog.

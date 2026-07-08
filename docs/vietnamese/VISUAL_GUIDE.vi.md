@@ -28,7 +28,7 @@
 ## 📦 Cấu trúc Repository (Trực quan)
 
 ```
-antigravity-awesome-skills/
+agentic-awesome-skills/
 │
 ├── 📄 README.md                    ← Tổng quan & danh sách skill
 ├── 📄 CONTRIBUTING.md              ← Cách thức đóng góp
@@ -67,7 +67,7 @@ antigravity-awesome-skills/
 
 ```
 ┌──────────────┐
-│ 1. CÀI ĐẶT   │  npx antigravity-awesome-skills
+│ 1. CÀI ĐẶT   │  npx agentic-awesome-skills
 1 └──────┬───────┘
        │
        ↓
@@ -181,7 +181,7 @@ antigravity-awesome-skills/
 ┌─────────────────────────────────────────┐
 │ Terminal                                │
 ├─────────────────────────────────────────┤
-│ $ npx antigravity-awesome-skills        │
+│ $ npx agentic-awesome-skills        │
 │                                         │
 │ ✓ Cài vào '~/.agents/skills'...         │
 │ ✓ Hoàn tất!                             │
@@ -436,7 +436,7 @@ BẮT ĐẦU TẠI ĐÂY
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  📥 CÀI ĐẶT                                                 │
-│  npx antigravity-awesome-skills                             │
+│  npx agentic-awesome-skills                             │
 │                                                             │
 │  🎯 SỬ DỤNG                                                 │
 │  @ten-skill [yêu cầu của bạn]                               │

@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-agent-mcp-builder",
+  "version": "13.13.0",
+  "description": "Install the \"AAS Agent & MCP Builder\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-agent-mcp-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Agent & MCP Builder",
+    "shortDescription": "Build agentic apps, MCP tools, RAG systems, eval loops, tracing, prompts, and context-aware workflows.",
+    "longDescription": "Build agentic apps, MCP tools, RAG systems, eval loops, tracing, prompts, and context-aware workflows. Maps directly to plugin-based agent workflows because it can grow from skills into MCP server configuration and app/tool integrations. Recommended for: Agent engineers, MCP tool builders, LLM app teams. Not for: Marketing-only content work, Manual office document tasks. Covers AI Agents Architect, Agent Evaluation, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to design an MCP server for this workflow, including tools, schemas, and test cases.",
+      "Use this plugin to create an eval plan for this agent and define reliability metrics.",
+      "Use this plugin to review this RAG or LangGraph architecture for tool, memory, prompt, and observability gaps."
+    ]
+  }
+}

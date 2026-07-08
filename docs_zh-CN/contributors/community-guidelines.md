@@ -35,8 +35,8 @@
 如有行为准则相关问题，请联系：
 
 - 📧 conduct@antigravity-skills.org
-- 🐛 [GitHub Issues](https://github.com/sickn33/antigravity-awesome-skills/issues)
-- 💬 [GitHub Discussions](https://github.com/sickn33/antigravity-awesome-skills/discussions)
+- 🐛 [GitHub Issues](https://github.com/sickn33/agentic-awesome-skills/issues)
+- 💬 [GitHub Discussions](https://github.com/sickn33/agentic-awesome-skills/discussions)
 
 ---
 
@@ -136,8 +136,8 @@
 ## 沟通渠道
 
 ### 主要渠道
-- 📋 [GitHub Discussions](https://github.com/sickn33/antigravity-awesome-skills/discussions) - 一般讨论
-- 🐛 [GitHub Issues](https://github.com/sickn33/antigravity-awesome-skills/issues) - 技术问题
+- 📋 [GitHub Discussions](https://github.com/sickn33/agentic-awesome-skills/discussions) - 一般讨论
+- 🐛 [GitHub Issues](https://github.com/sickn33/agentic-awesome-skills/issues) - 技术问题
 - 📧 [邮件列表](mailto:dev@antigravity-skills.org) - 开发讨论
 
 ### 社交媒体

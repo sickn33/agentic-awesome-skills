@@ -13,7 +13,7 @@ from update_readme import configure_utf8_output, find_repo_root, load_metadata, 
 
 
 ABOUT_DESCRIPTION_RE = re.compile(r'"description"\s*:\s*"([^"]*)"')
-GITHUB_HOMEPAGE_URL = "https://sickn33.github.io/antigravity-awesome-skills/"
+GITHUB_HOMEPAGE_URL = "https://sickn33.github.io/agentic-awesome-skills/"
 RECOMMENDED_TOPICS = [
     "antigravity",
     "antigravity-skills",
@@ -46,7 +46,7 @@ README_BROAD_COVERAGE_RE = re.compile(
     re.MULTILINE,
 )
 README_NEW_HERE_RE = re.compile(
-    r"^\*\*Antigravity Awesome Skills\*\* \(Release [\d.]+\) is a large, installable skill library.*$",
+    r"^\*\*Agentic Awesome Skills\*\* \(Release [\d.]+\) is a large, installable skill library.*$",
     re.MULTILINE,
 )
 README_INLINE_BROWSE_RE = re.compile(
@@ -57,7 +57,7 @@ README_TOC_BROWSE_RE = re.compile(
     re.MULTILINE,
 )
 GETTING_STARTED_TITLE_RE = re.compile(
-    r"^# Getting Started with Antigravity Awesome Skills \(V[\d.]+\)$", re.MULTILINE
+    r"^# Getting Started with Agentic Awesome Skills \(V[\d.]+\)$", re.MULTILINE
 )
 BUNDLES_FOOTER_RE = re.compile(
     r"^_Last updated: .*? \| Total Skills: \d[\d,]*\+ \| Total Bundles: \d+_$",
@@ -159,7 +159,7 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
         (
             README_NEW_HERE_RE,
             (
-                f"**Antigravity Awesome Skills** (Release {metadata['version']}) is a large, installable "
+                f"**Agentic Awesome Skills** (Release {metadata['version']}) is a large, installable "
                 f"skill library for AI coding assistants. It packages {metadata['total_skills_label']} reusable "
                 "`SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI "
                 "installer so Claude Code, Codex CLI, Autohand Code, Cursor, Gemini CLI, Antigravity, and similar tools can "
@@ -186,7 +186,7 @@ def sync_getting_started(content: str, metadata: dict) -> str:
     content, _ = replace_if_present(
         content,
         GETTING_STARTED_TITLE_RE,
-        f"# Getting Started with Antigravity Awesome Skills (V{metadata['version']})",
+        f"# Getting Started with Agentic Awesome Skills (V{metadata['version']})",
     )
     return content
 

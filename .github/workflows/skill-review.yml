@@ -9,7 +9,7 @@ jobs:
     env:
       TESSL_REVIEW_THRESHOLD: '80'
       TESSL_TOKEN_CONFIGURED: ${{ (secrets.TESSL_TOKEN != '' || secrets.TESSL_API_TOKEN != '') && 'true' || 'false' }}
-      TESSL_WORKSPACE: antigravity-awesome-skills
+      TESSL_WORKSPACE: agentic-awesome-skills
     permissions:
       contents: read
     steps:

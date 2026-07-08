@@ -1,0 +1,19 @@
+{
+  "name": "agentic-bundle-integration-apis",
+  "version": "13.13.0",
+  "description": "Editorial \"Integration & APIs\" bundle for Claude Code from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "bundle",
+    "integration-apis",
+    "agentic-awesome-skills"
+  ]
+}

@@ -103,7 +103,7 @@ Made with [contrib.rocks](https://contrib.rocks). *(Image may be cached; [view l
 """
 
 
-def update_repo_contributors_section(content: str, contributors: list[str], repo: str = "sickn33/antigravity-awesome-skills") -> str:
+def update_repo_contributors_section(content: str, contributors: list[str], repo: str = "sickn33/agentic-awesome-skills") -> str:
     if CONTRIBUTOR_SECTION_HEADING not in content or "\n## " not in content:
         raise ValueError("README.md does not contain the expected Repo Contributors section structure.")
 

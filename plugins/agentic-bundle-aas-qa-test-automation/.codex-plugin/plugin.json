@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-qa-test-automation",
+  "version": "13.13.0",
+  "description": "Install the \"AAS QA & Test Automation\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-qa-test-automation",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS QA & Test Automation",
+    "shortDescription": "Plan test strategy, automate browser checks, debug failures, stabilize suites, and verify accessibility regressions.",
+    "longDescription": "Plan test strategy, automate browser checks, debug failures, stabilize suites, and verify accessibility regressions. Testing is a natural plugin because users need a workflow, not a single skill: plan tests, automate browsers, debug failures, and fix regressions. Recommended for: QA engineers, Frontend and full-stack teams, Maintainers fixing flaky CI. Not for: Pure visual design work, Manual document production. Covers Test Driven Development, Systematic Debugging, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to create a test strategy covering unit, integration, E2E, load, and accessibility risks.",
+      "Use this plugin to stabilize this flaky Playwright suite and explain the root cause.",
+      "Use this plugin to add regression coverage for this bug with the smallest useful test."
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Security Scanner — Antigravity Awesome Skills
+Security Scanner — Agentic Awesome Skills
 Scans skill content for dangerous command patterns.
 
 Can be used as a module or run standalone:

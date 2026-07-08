@@ -1,14 +1,14 @@
 blank_issues_enabled: false
 contact_links:
   - name: Ask a question or get help
-    url: https://github.com/sickn33/antigravity-awesome-skills/discussions/new?category=q-a
+    url: https://github.com/sickn33/agentic-awesome-skills/discussions/new?category=q-a
     about: Use Discussions Q&A for setup help, troubleshooting, and usage questions.
   - name: Share an idea first
-    url: https://github.com/sickn33/antigravity-awesome-skills/discussions/new?category=ideas
+    url: https://github.com/sickn33/agentic-awesome-skills/discussions/new?category=ideas
     about: Use Discussions Ideas for new skills, repo improvements, and early-stage proposals.
   - name: Show what you built
-    url: https://github.com/sickn33/antigravity-awesome-skills/discussions/new?category=show-and-tell
+    url: https://github.com/sickn33/agentic-awesome-skills/discussions/new?category=show-and-tell
     about: Share custom skills, bundles, integrations, demos, and wins with the community.
   - name: Report a security issue
-    url: https://github.com/sickn33/antigravity-awesome-skills/security/policy
+    url: https://github.com/sickn33/agentic-awesome-skills/security/policy
     about: Please use the security policy instead of opening a public issue for vulnerabilities.

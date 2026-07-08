@@ -9,7 +9,7 @@ const { getRealPath, isPathInside, resolveSafeRealPath } = require("../lib/symli
 const { listSkillIdsRecursive, readSkill } = require("../lib/skill-utils");
 const packageMetadata = require("../../package.json");
 
-const REPO = "https://github.com/sickn33/antigravity-awesome-skills.git";
+const REPO = "https://github.com/sickn33/agentic-awesome-skills.git";
 const HOME = process.env.HOME || process.env.USERPROFILE || "";
 const INSTALL_MANIFEST_FILE = ".antigravity-install-manifest.json";
 const DEFAULT_RELEASE_REF = packageMetadata.version ? `v${packageMetadata.version}` : null;
@@ -164,9 +164,9 @@ function getTargets(opts) {
 
 function printHelp() {
   console.log(`
-antigravity-awesome-skills — installer
+agentic-awesome-skills — installer
 
-  npx antigravity-awesome-skills [install] [options]
+  npx agentic-awesome-skills [install] [options]
 
   Shallow-clones the skills repo into your agent's skills directory.
 
@@ -186,16 +186,16 @@ Options:
   --tag <tag>      Clone this tag or branch (e.g. v4.6.0, main)
 
 Examples:
-  npx antigravity-awesome-skills
-  npx antigravity-awesome-skills --cursor
-  npx antigravity-awesome-skills --kiro
-  npx antigravity-awesome-skills --antigravity
-  npx antigravity-awesome-skills --agy
-  npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
-  npx antigravity-awesome-skills --path .agents/skills --tags debugging,typescript-legacy-
-  npx antigravity-awesome-skills --version 4.6.0
-  npx antigravity-awesome-skills --path ./my-skills
-  npx antigravity-awesome-skills --claude --codex    Install to multiple targets
+  npx agentic-awesome-skills
+  npx agentic-awesome-skills --cursor
+  npx agentic-awesome-skills --kiro
+  npx agentic-awesome-skills --antigravity
+  npx agentic-awesome-skills --agy
+  npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none
+  npx agentic-awesome-skills --path .agents/skills --tags debugging,typescript-legacy-
+  npx agentic-awesome-skills --version 4.6.0
+  npx agentic-awesome-skills --path ./my-skills
+  npx agentic-awesome-skills --claude --codex    Install to multiple targets
 `);
 }
 
@@ -670,7 +670,7 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
     messages.push(baseMessage);
     if (!hasInstallSelectors(selectors)) {
       messages.push(
-        "Example: npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none",
+        "Example: npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none",
       );
     }
   }

@@ -2,9 +2,9 @@
 
 如果您正在寻找可以从 GitHub 安装的 **Claude Code 技能**，此仓库旨在帮助您从首次克隆到快速上手第一个有用的提示词。
 
-Antigravity Awesome Skills 为 Claude Code 用户提供了一个可安装的 `SKILL.md` 剧本库、基于角色的捆绑包和执行工作流。我们的目标不仅是收集提示词，而是让可重复的工程任务更容易调用、审查和重用。
+Agentic Awesome Skills 为 Claude Code 用户提供了一个可安装的 `SKILL.md` 剧本库、基于角色的捆绑包和执行工作流。我们的目标不仅是收集提示词，而是让可重复的工程任务更容易调用、审查和重用。
 
-## 如何在 Claude Code 中使用 Antigravity Awesome Skills
+## 如何在 Claude Code 中使用 Agentic Awesome Skills
 
 将库安装到 Claude Code 中，然后直接在对话中或通过插件市场路径调用专注的技能。当您保持提示词具体针对技能、范围和预期输出时，Claude Code 效果最佳。
 
@@ -20,14 +20,14 @@ Antigravity Awesome Skills 为 Claude Code 用户提供了一个可安装的 `SK
 ### 选项 A：安装程序 CLI
 
 ```bash
-npx antigravity-awesome-skills --claude
+npx agentic-awesome-skills --claude
 ```
 
 ### 选项 B：Claude Code 插件市场
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 ### 验证安装

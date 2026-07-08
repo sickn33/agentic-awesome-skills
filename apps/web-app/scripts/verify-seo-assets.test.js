@@ -92,10 +92,10 @@ describe('seo assets verification helpers', () => {
 
   it('requires llms.txt discovery signals', () => {
     const llms = `
-      # Antigravity Awesome Skills
+      # Agentic Awesome Skills
       Current release: V1.2.3.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
-      https://github.com/sickn33/antigravity-awesome-skills
+      https://github.com/sickn33/agentic-awesome-skills
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -104,10 +104,10 @@ describe('seo assets verification helpers', () => {
 
   it('rejects stale llms.txt release labels', () => {
     const llms = `
-      # Antigravity Awesome Skills
+      # Agentic Awesome Skills
       Current release: V1.2.2.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
-      https://github.com/sickn33/antigravity-awesome-skills
+      https://github.com/sickn33/agentic-awesome-skills
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -132,18 +132,18 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Antigravity Awesome Skills GitHub | 1,678+ AI coding skills</title>
+          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
           <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
           <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
           <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
           <script type="application/ld+json">
             [
-              {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/antigravity-awesome-skills"},
-              {"@context":"https://schema.org","@type":"Organization","url":"https://github.com/sickn33/antigravity-awesome-skills"},
+              {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
+              {"@context":"https://schema.org","@type":"Organization","url":"https://github.com/sickn33/agentic-awesome-skills"},
               {"@context":"https://schema.org","@type":"WebSite"},
-              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/antigravity-awesome-skills","codeRepository":"https://github.com/sickn33/antigravity-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"},
+              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/agentic-awesome-skills","codeRepository":"https://github.com/sickn33/agentic-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"},
               {"@context":"https://schema.org","@type":"FAQPage"}
             ]
           </script>
@@ -158,18 +158,18 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Antigravity Awesome Skills GitHub | 1,678+ AI coding skills</title>
+          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
           <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
           <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
           <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
           <script type="application/ld+json">
             [
-              {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/antigravity-awesome-skills"},
-              {"@context":"https://schema.org","@type":"Organization","url":"https://github.com/sickn33/antigravity-awesome-skills"},
+              {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
+              {"@context":"https://schema.org","@type":"Organization","url":"https://github.com/sickn33/agentic-awesome-skills"},
               {"@context":"https://schema.org","@type":"WebSite"},
-              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/antigravity-awesome-skills","codeRepository":"https://github.com/sickn33/antigravity-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"},
+              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/agentic-awesome-skills","codeRepository":"https://github.com/sickn33/agentic-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"},
               {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"acceptedAnswer":{"text":"Old 1,700+ catalog copy"}}]}
             ]
           </script>
@@ -184,11 +184,11 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Antigravity Awesome Skills GitHub | 1,678+ AI coding skills</title>
+          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
           <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
           <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Antigravity Awesome Skills GitHub | 1,678+ AI coding skills" />
+          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
           <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
         </head>
       </html>
@@ -200,7 +200,7 @@ describe('seo assets verification helpers', () => {
   it('requires current discovery copy in the social card', () => {
     const svg = `
       <svg>
-        <title>Antigravity Awesome Skills social card</title>
+        <title>Agentic Awesome Skills social card</title>
         <desc>Social preview with 1,678 plus agentic skills.</desc>
         <text>1,678+ Agentic Skills</text>
       </svg>
@@ -212,7 +212,7 @@ describe('seo assets verification helpers', () => {
   it('rejects stale social card count labels', () => {
     const svg = `
       <svg>
-        <title>Antigravity Awesome Skills social card</title>
+        <title>Agentic Awesome Skills social card</title>
         <text>1,700+ Agentic Skills</text>
       </svg>
     `;

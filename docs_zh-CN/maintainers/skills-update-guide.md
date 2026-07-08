@@ -1,6 +1,6 @@
 # 技能更新指南
 
-本指南介绍如何在 Antigravity Awesome Skills Web 应用程序中更新技能。
+本指南介绍如何在 Agentic Awesome Skills Web 应用程序中更新技能。
 
 ## 自动更新（推荐）
 

@@ -4,7 +4,7 @@ const https = require('node:https');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const DEFAULT_BASE_URL = 'https://sickn33.github.io/antigravity-awesome-skills';
+const DEFAULT_BASE_URL = 'https://sickn33.github.io/agentic-awesome-skills';
 const baseUrl = (process.env.SEO_LIVE_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, '');
 const repoRoot = path.resolve(__dirname, '..', '..');
 
@@ -78,7 +78,7 @@ async function main() {
     fetchText(`${baseUrl}/robots.txt`),
   ]);
 
-  assertIncludes(home, `Antigravity Awesome Skills GitHub | ${expected.countLabel} AI coding skills`, 'home');
+  assertIncludes(home, `Agentic Awesome Skills GitHub | ${expected.countLabel} AI coding skills`, 'home');
   assertIncludes(home, 'SoftwareSourceCode', 'home JSON-LD');
   assertIncludes(home, 'FAQPage', 'home JSON-LD');
   assertIncludes(home, 'specialized plugins', 'home');

@@ -10,7 +10,7 @@
 
 ### 你刚刚做了什么
 
-当你运行 `npx antigravity-awesome-skills` 或克隆仓库时，你：
+当你运行 `npx agentic-awesome-skills` 或克隆仓库时，你：
 
 ✅ **下载了 1,684+ 个技能文件**到你的计算机（默认路径：`~/.agents/skills/`；如果你使用了 `--path`，则是自定义路径如 `~/.agent/skills/`）
 ✅ **使它们对你的 AI 助手可用**
@@ -329,7 +329,7 @@ AI: [创建测试，设置 CI/CD，部署到 Vercel]
 
 1. 尝试重启你的 IDE/CLI
 2. 检查安装路径是否与你的工具匹配
-3. 尝试显式路径：`npx antigravity-awesome-skills --claude`（或 `--cursor`、`--gemini` 等）
+3. 尝试显式路径：`npx agentic-awesome-skills --claude`（或 `--cursor`、`--gemini` 等）
 
 ### "我可以一次将所有技能加载到模型中吗？"
 
@@ -356,7 +356,7 @@ Use @skill-creator to help me build a custom skill for [your task]
 
 1. 直接在安装路径中检查技能的 `SKILL.md` 文件，例如：`~/.agents/skills/[skill-name]/SKILL.md`
 2. 阅读描述以确保你正确使用它
-3. [打开问题](https://github.com/sickn33/antigravity-awesome-skills/issues)并提供详细信息
+3. [打开问题](https://github.com/sickn33/agentic-awesome-skills/issues)并提供详细信息
 
 ---
 
@@ -418,7 +418,7 @@ Use @skill-creator to help me build a custom skill for [your task]
 
 1. 查看 [FAQ](faq.md)
 2. 查看[真实示例](../contributors/examples.md)
-3. [打开讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions)
-4. [提交问题](https://github.com/sickn33/antigravity-awesome-skills/issues)以帮助我们改进此指南！
+3. [打开讨论](https://github.com/sickn33/agentic-awesome-skills/discussions)
+4. [提交问题](https://github.com/sickn33/agentic-awesome-skills/issues)以帮助我们改进此指南！
 
 记住：你并不孤单！这个项目的全部意义是让 AI 助手更易于使用。如果本指南没有帮助，请告诉我们，以便我们修复它。🙌

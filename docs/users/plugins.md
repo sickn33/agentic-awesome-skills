@@ -6,7 +6,7 @@ This page is the canonical explanation of what those plugins are, how they diffe
 
 ## What a plugin is in this repo
 
-In Antigravity Awesome Skills, a plugin is a packaged, installable distribution of skills plus the metadata a host tool needs to expose that distribution through its plugin or marketplace flow.
+In Agentic Awesome Skills, a plugin is a packaged, installable distribution of skills plus the metadata a host tool needs to expose that distribution through its plugin or marketplace flow.
 
 Plugins are useful when you want:
 
@@ -26,8 +26,8 @@ You now have two valid ways to use this repository with Claude Code or Codex.
 Use the installer or clone the repository directly when you want the broadest possible coverage:
 
 ```bash
-npx antigravity-awesome-skills --claude
-npx antigravity-awesome-skills --codex
+npx agentic-awesome-skills --claude
+npx agentic-awesome-skills --codex
 ```
 
 Or clone manually into your preferred skills directory.
@@ -43,7 +43,7 @@ Choose the full library when you want:
 Use the plugin marketplace or repo-local plugin metadata when you want a curated, installable distribution:
 
 - **Claude Code** uses `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`
-- **Codex** uses `.agents/plugins/marketplace.json` and `plugins/antigravity-awesome-skills/.codex-plugin/plugin.json`
+- **Codex** uses `.agents/plugins/marketplace.json` and `plugins/agentic-awesome-skills/.codex-plugin/plugin.json`
 
 Choose the plugin route when you want:
 
@@ -112,8 +112,8 @@ Relevant files:
 Typical install flow:
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 Claude Code bundle plugins are also published through the same marketplace metadata, so you can install a focused bundle instead of the root plugin if you prefer.
@@ -125,7 +125,7 @@ Codex uses repo-local plugin metadata that points at the local plugin folders ge
 Relevant files:
 
 - `.agents/plugins/marketplace.json`
-- `plugins/antigravity-awesome-skills/.codex-plugin/plugin.json`
+- `plugins/agentic-awesome-skills/.codex-plugin/plugin.json`
 
 The Codex root plugin exposes the same plugin-safe library idea as Claude Code, but through Codex's plugin metadata conventions.
 
@@ -152,7 +152,7 @@ Choose a **specialized plugin** if:
 - you want plugin convenience without the breadth of the root plugin
 - you want the plugin itself to communicate a clear job, audience, and workflow
 
-The hosted [specialized plugin landing page](https://sickn33.github.io/antigravity-awesome-skills/plugins) is the quickest way to compare the current AAS plugin packs.
+The hosted [specialized plugin landing page](https://sickn33.github.io/agentic-awesome-skills/plugins) is the quickest way to compare the current AAS plugin packs.
 
 ## Related guides
 

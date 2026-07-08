@@ -3,10 +3,10 @@ import { specializedPlugins } from '../data/specializedPlugins';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildPluginsMeta } from '../utils/seo';
 
-const repoBaseUrl = 'https://github.com/sickn33/antigravity-awesome-skills';
+const repoBaseUrl = 'https://github.com/sickn33/agentic-awesome-skills';
 
 function pluginFolderUrl(pluginId: string): string {
-  return `${repoBaseUrl}/tree/main/plugins/antigravity-bundle-${pluginId}`;
+  return `${repoBaseUrl}/tree/main/plugins/agentic-bundle-${pluginId}`;
 }
 
 function pluginDocUrl(): string {

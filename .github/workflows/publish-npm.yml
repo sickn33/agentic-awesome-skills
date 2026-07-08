@@ -1,4 +1,4 @@
-# Publish antigravity-awesome-skills to npm on release.
+# Publish agentic-awesome-skills to npm on release.
 # Requires NPM_TOKEN secret (npm → Access Tokens → Granular token with Publish).
 # Before creating a Release: bump package.json "version" (npm forbids republishing the same version).
 # Release tag (e.g. v4.6.1) should match package.json version.

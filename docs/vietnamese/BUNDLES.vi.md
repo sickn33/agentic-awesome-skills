@@ -121,4 +121,4 @@ _Để tạo ra những trải nghiệm hoàn hảo đến từng pixel._
 
 ---
 
-_Để sử dụng một gói kỹ năng, hãy cài repository một lần bằng `npx antigravity-awesome-skills`, rồi yêu cầu trợ lý AI sử dụng các skill được liệt kê trong gói._
+_Để sử dụng một gói kỹ năng, hãy cài repository một lần bằng `npx agentic-awesome-skills`, rồi yêu cầu trợ lý AI sử dụng các skill được liệt kê trong gói._

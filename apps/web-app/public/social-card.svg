@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Antigravity Awesome Skills social card</title>
-  <desc id="desc">Social preview for Antigravity Awesome Skills with a 1,935 plus agentic skills headline and supported tools including Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity.</desc>
+  <title id="title">Agentic Awesome Skills social card</title>
+  <desc id="desc">Social preview for Agentic Awesome Skills with a 1,935 plus agentic skills headline and supported tools including Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#050816" />
@@ -41,7 +41,7 @@
 
   <g transform="translate(88 432)">
     <rect width="316" height="60" rx="18" fill="#081120" stroke="#1d4ed8" />
-    <text x="28" y="39" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" fill="#bfdbfe">npx antigravity-awesome-skills</text>
+    <text x="28" y="39" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" fill="#bfdbfe">npx agentic-awesome-skills</text>
   </g>
 
   <g transform="translate(88 514)">
@@ -58,5 +58,5 @@
     <text x="596" y="25" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#e2e8f0">Antigravity</text>
   </g>
 
-  <text x="88" y="562" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#93a4c3">github.com/sickn33/antigravity-awesome-skills</text>
+  <text x="88" y="562" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#93a4c3">github.com/sickn33/agentic-awesome-skills</text>
 </svg>

@@ -1,0 +1,33 @@
+{
+  "name": "aasb-indie-game-dev",
+  "version": "13.13.0",
+  "description": "Install the \"Indie Game Dev\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "indie-game-dev",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Indie Game Dev",
+    "shortDescription": "Game Development · 6 curated skills",
+    "longDescription": "For building games with AI assistants. Covers Game Design, 2d Games, and 4 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Game Development",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

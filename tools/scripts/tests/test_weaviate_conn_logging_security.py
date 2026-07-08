@@ -69,11 +69,11 @@ class WeaviateConnectionLoggingSecurityTests(unittest.TestCase):
     MODULE_PATHS = [
         ("skills/weaviate/scripts/weaviate_conn.py", "weaviate_conn_root"),
         (
-            "plugins/antigravity-awesome-skills/skills/weaviate/scripts/weaviate_conn.py",
+            "plugins/agentic-awesome-skills/skills/weaviate/scripts/weaviate_conn.py",
             "weaviate_conn_codex_plugin",
         ),
         (
-            "plugins/antigravity-awesome-skills-claude/skills/weaviate/scripts/weaviate_conn.py",
+            "plugins/agentic-awesome-skills-claude/skills/weaviate/scripts/weaviate_conn.py",
             "weaviate_conn_claude_plugin",
         ),
     ]

@@ -1,14 +1,14 @@
 {
-  "name": "antigravity-awesome-skills",
+  "name": "agentic-awesome-skills",
   "interface": {
-    "displayName": "Antigravity Awesome Skills"
+    "displayName": "Agentic Awesome Skills"
   },
   "plugins": [
     {
-      "name": "antigravity-awesome-skills",
+      "name": "agentic-awesome-skills",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-awesome-skills"
+        "path": "./plugins/agentic-awesome-skills"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -17,10 +17,10 @@
       "category": "Productivity"
     },
     {
-      "name": "agyb-essentials",
+      "name": "aasb-essentials",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-essentials"
+        "path": "./plugins/agentic-bundle-essentials"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -29,10 +29,10 @@
       "category": "Essentials & Core"
     },
     {
-      "name": "agyb-security-engineer",
+      "name": "aasb-security-engineer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-security-engineer"
+        "path": "./plugins/agentic-bundle-security-engineer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -41,10 +41,10 @@
       "category": "Security & Compliance"
     },
     {
-      "name": "agyb-security-developer",
+      "name": "aasb-security-developer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-security-developer"
+        "path": "./plugins/agentic-bundle-security-developer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -53,10 +53,10 @@
       "category": "Security & Compliance"
     },
     {
-      "name": "agyb-web-wizard",
+      "name": "aasb-web-wizard",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-web-wizard"
+        "path": "./plugins/agentic-bundle-web-wizard"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -65,10 +65,10 @@
       "category": "Web Development"
     },
     {
-      "name": "agyb-web-designer",
+      "name": "aasb-web-designer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-web-designer"
+        "path": "./plugins/agentic-bundle-web-designer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -77,10 +77,10 @@
       "category": "Web Development"
     },
     {
-      "name": "agyb-full-stack-developer",
+      "name": "aasb-full-stack-developer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-full-stack-developer"
+        "path": "./plugins/agentic-bundle-full-stack-developer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -89,10 +89,10 @@
       "category": "Web Development"
     },
     {
-      "name": "agyb-agent-architect",
+      "name": "aasb-agent-architect",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-agent-architect"
+        "path": "./plugins/agentic-bundle-agent-architect"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -101,10 +101,10 @@
       "category": "AI & Agents"
     },
     {
-      "name": "agyb-llm-application-developer",
+      "name": "aasb-llm-application-developer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-llm-application-developer"
+        "path": "./plugins/agentic-bundle-llm-application-developer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -113,10 +113,10 @@
       "category": "AI & Agents"
     },
     {
-      "name": "agyb-indie-game-dev",
+      "name": "aasb-indie-game-dev",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-indie-game-dev"
+        "path": "./plugins/agentic-bundle-indie-game-dev"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -125,10 +125,10 @@
       "category": "Game Development"
     },
     {
-      "name": "agyb-python-pro",
+      "name": "aasb-python-pro",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-python-pro"
+        "path": "./plugins/agentic-bundle-python-pro"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -137,10 +137,10 @@
       "category": "Backend & Languages"
     },
     {
-      "name": "agyb-typescript-javascript",
+      "name": "aasb-typescript-javascript",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-typescript-javascript"
+        "path": "./plugins/agentic-bundle-typescript-javascript"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -149,10 +149,10 @@
       "category": "Backend & Languages"
     },
     {
-      "name": "agyb-systems-programming",
+      "name": "aasb-systems-programming",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-systems-programming"
+        "path": "./plugins/agentic-bundle-systems-programming"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -161,10 +161,10 @@
       "category": "Backend & Languages"
     },
     {
-      "name": "agyb-startup-founder",
+      "name": "aasb-startup-founder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-startup-founder"
+        "path": "./plugins/agentic-bundle-startup-founder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -173,10 +173,10 @@
       "category": "Product & Business"
     },
     {
-      "name": "agyb-business-analyst",
+      "name": "aasb-business-analyst",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-business-analyst"
+        "path": "./plugins/agentic-bundle-business-analyst"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -185,10 +185,10 @@
       "category": "Product & Business"
     },
     {
-      "name": "agyb-marketing-growth",
+      "name": "aasb-marketing-growth",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-marketing-growth"
+        "path": "./plugins/agentic-bundle-marketing-growth"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -197,10 +197,10 @@
       "category": "Product & Business"
     },
     {
-      "name": "agyb-devops-cloud",
+      "name": "aasb-devops-cloud",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-devops-cloud"
+        "path": "./plugins/agentic-bundle-devops-cloud"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -209,10 +209,10 @@
       "category": "DevOps & Infrastructure"
     },
     {
-      "name": "agyb-observability-monitoring",
+      "name": "aasb-observability-monitoring",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-observability-monitoring"
+        "path": "./plugins/agentic-bundle-observability-monitoring"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -221,10 +221,10 @@
       "category": "DevOps & Infrastructure"
     },
     {
-      "name": "agyb-data-analytics",
+      "name": "aasb-data-analytics",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-data-analytics"
+        "path": "./plugins/agentic-bundle-data-analytics"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -233,10 +233,10 @@
       "category": "Data & Analytics"
     },
     {
-      "name": "agyb-data-engineering",
+      "name": "aasb-data-engineering",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-data-engineering"
+        "path": "./plugins/agentic-bundle-data-engineering"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -245,10 +245,10 @@
       "category": "Data & Analytics"
     },
     {
-      "name": "agyb-creative-director",
+      "name": "aasb-creative-director",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-creative-director"
+        "path": "./plugins/agentic-bundle-creative-director"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -257,10 +257,10 @@
       "category": "Creative & Content"
     },
     {
-      "name": "agyb-qa-testing",
+      "name": "aasb-qa-testing",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-qa-testing"
+        "path": "./plugins/agentic-bundle-qa-testing"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -269,10 +269,10 @@
       "category": "Quality Assurance"
     },
     {
-      "name": "agyb-aas-web-app-builder",
+      "name": "aasb-aas-web-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-web-app-builder"
+        "path": "./plugins/agentic-bundle-aas-web-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -281,10 +281,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-product-design-studio",
+      "name": "aasb-aas-product-design-studio",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-product-design-studio"
+        "path": "./plugins/agentic-bundle-aas-product-design-studio"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -293,10 +293,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-security-engineer",
+      "name": "aasb-aas-security-engineer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-security-engineer"
+        "path": "./plugins/agentic-bundle-aas-security-engineer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -305,10 +305,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-secure-app-builder",
+      "name": "aasb-aas-secure-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-secure-app-builder"
+        "path": "./plugins/agentic-bundle-aas-secure-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -317,10 +317,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-documents-presentations",
+      "name": "aasb-aas-documents-presentations",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-documents-presentations"
+        "path": "./plugins/agentic-bundle-aas-documents-presentations"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -329,10 +329,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-data-analytics",
+      "name": "aasb-aas-data-analytics",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-data-analytics"
+        "path": "./plugins/agentic-bundle-aas-data-analytics"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -341,10 +341,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-agent-mcp-builder",
+      "name": "aasb-aas-agent-mcp-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-agent-mcp-builder"
+        "path": "./plugins/agentic-bundle-aas-agent-mcp-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -353,10 +353,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-oss-maintainer",
+      "name": "aasb-aas-oss-maintainer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-oss-maintainer"
+        "path": "./plugins/agentic-bundle-aas-oss-maintainer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -365,10 +365,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-qa-test-automation",
+      "name": "aasb-aas-qa-test-automation",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-qa-test-automation"
+        "path": "./plugins/agentic-bundle-aas-qa-test-automation"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -377,10 +377,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-devops-cloud",
+      "name": "aasb-aas-devops-cloud",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-devops-cloud"
+        "path": "./plugins/agentic-bundle-aas-devops-cloud"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -389,10 +389,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-marketing-seo-growth",
+      "name": "aasb-aas-marketing-seo-growth",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-marketing-seo-growth"
+        "path": "./plugins/agentic-bundle-aas-marketing-seo-growth"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -401,10 +401,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-aas-automation-builder",
+      "name": "aasb-aas-automation-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-automation-builder"
+        "path": "./plugins/agentic-bundle-aas-automation-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -413,10 +413,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-aas-observability-ir",
+      "name": "aasb-aas-observability-ir",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-observability-ir"
+        "path": "./plugins/agentic-bundle-aas-observability-ir"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -425,10 +425,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-aas-python-api-builder",
+      "name": "aasb-aas-python-api-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-python-api-builder"
+        "path": "./plugins/agentic-bundle-aas-python-api-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -437,10 +437,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-aas-mobile-app-builder",
+      "name": "aasb-aas-mobile-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-mobile-app-builder"
+        "path": "./plugins/agentic-bundle-aas-mobile-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -449,10 +449,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-mobile-developer",
+      "name": "aasb-mobile-developer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-mobile-developer"
+        "path": "./plugins/agentic-bundle-mobile-developer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -461,10 +461,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-integration-apis",
+      "name": "aasb-integration-apis",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-integration-apis"
+        "path": "./plugins/agentic-bundle-integration-apis"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -473,10 +473,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-architecture-design",
+      "name": "aasb-architecture-design",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-architecture-design"
+        "path": "./plugins/agentic-bundle-architecture-design"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -485,10 +485,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-ddd-evented-architecture",
+      "name": "aasb-ddd-evented-architecture",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-ddd-evented-architecture"
+        "path": "./plugins/agentic-bundle-ddd-evented-architecture"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -497,10 +497,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-automation-builder",
+      "name": "aasb-automation-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-automation-builder"
+        "path": "./plugins/agentic-bundle-automation-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -509,10 +509,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-revops-crm-automation",
+      "name": "aasb-revops-crm-automation",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-revops-crm-automation"
+        "path": "./plugins/agentic-bundle-revops-crm-automation"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -521,10 +521,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-commerce-payments",
+      "name": "aasb-commerce-payments",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-commerce-payments"
+        "path": "./plugins/agentic-bundle-commerce-payments"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -533,10 +533,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-odoo-erp",
+      "name": "aasb-odoo-erp",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-odoo-erp"
+        "path": "./plugins/agentic-bundle-odoo-erp"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -545,10 +545,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-azure-ai-cloud",
+      "name": "aasb-azure-ai-cloud",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-azure-ai-cloud"
+        "path": "./plugins/agentic-bundle-azure-ai-cloud"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -557,10 +557,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-expo-react-native",
+      "name": "aasb-expo-react-native",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-expo-react-native"
+        "path": "./plugins/agentic-bundle-expo-react-native"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -569,10 +569,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-apple-platform-design",
+      "name": "aasb-apple-platform-design",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-apple-platform-design"
+        "path": "./plugins/agentic-bundle-apple-platform-design"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -581,10 +581,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-makepad-builder",
+      "name": "aasb-makepad-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-makepad-builder"
+        "path": "./plugins/agentic-bundle-makepad-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -593,10 +593,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-seo-specialist",
+      "name": "aasb-seo-specialist",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-seo-specialist"
+        "path": "./plugins/agentic-bundle-seo-specialist"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -605,10 +605,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-documents-presentations",
+      "name": "aasb-documents-presentations",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-documents-presentations"
+        "path": "./plugins/agentic-bundle-documents-presentations"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -617,10 +617,10 @@
       "category": "Specialized Packs"
     },
     {
-      "name": "agyb-oss-maintainer",
+      "name": "aasb-oss-maintainer",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-oss-maintainer"
+        "path": "./plugins/agentic-bundle-oss-maintainer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -629,10 +629,10 @@
       "category": "Maintainer & OSS"
     },
     {
-      "name": "agyb-aas-accessibility-inclusive-ux",
+      "name": "aasb-aas-accessibility-inclusive-ux",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-accessibility-inclusive-ux"
+        "path": "./plugins/agentic-bundle-aas-accessibility-inclusive-ux"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -641,10 +641,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-api-platform-builder",
+      "name": "aasb-aas-api-platform-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-api-platform-builder"
+        "path": "./plugins/agentic-bundle-aas-api-platform-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -653,10 +653,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-saas-launch-revenue",
+      "name": "aasb-aas-saas-launch-revenue",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-saas-launch-revenue"
+        "path": "./plugins/agentic-bundle-aas-saas-launch-revenue"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -665,10 +665,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-ai-product-evaluation-ops",
+      "name": "aasb-aas-ai-product-evaluation-ops",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-ai-product-evaluation-ops"
+        "path": "./plugins/agentic-bundle-aas-ai-product-evaluation-ops"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -677,10 +677,10 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "agyb-aas-data-engineering-platform",
+      "name": "aasb-aas-data-engineering-platform",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-data-engineering-platform"
+        "path": "./plugins/agentic-bundle-aas-data-engineering-platform"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -689,10 +689,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-aas-privacy-compliance-engineering",
+      "name": "aasb-aas-privacy-compliance-engineering",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-privacy-compliance-engineering"
+        "path": "./plugins/agentic-bundle-aas-privacy-compliance-engineering"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -701,10 +701,10 @@
       "category": "Specialized Product Plugins - Next Wave"
     },
     {
-      "name": "agyb-aas-localization-international-growth",
+      "name": "aasb-aas-localization-international-growth",
       "source": {
         "source": "local",
-        "path": "./plugins/antigravity-bundle-aas-localization-international-growth"
+        "path": "./plugins/agentic-bundle-aas-localization-international-growth"
       },
       "policy": {
         "installation": "AVAILABLE",

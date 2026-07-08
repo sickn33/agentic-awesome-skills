@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Skill Quality Scorer — Antigravity Awesome Skills
+Skill Quality Scorer — Agentic Awesome Skills
 Computes a quality score for each skill across three dimensions:
   - Metadata completeness (30%)
   - Documentation structure (40%)

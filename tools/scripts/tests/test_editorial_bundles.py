@@ -77,7 +77,7 @@ class EditorialBundlesTests(unittest.TestCase):
         )
 
     def test_generated_bundle_plugin_contains_expected_skills(self):
-        essentials_plugin = REPO_ROOT / "plugins" / "antigravity-bundle-essentials" / "skills"
+        essentials_plugin = REPO_ROOT / "plugins" / "agentic-bundle-essentials" / "skills"
         expected_ids = {
             skill["id"]
             for skill in next(bundle for bundle in self.manifest_bundles if bundle["id"] == "essentials")["skills"]
@@ -95,10 +95,10 @@ class EditorialBundlesTests(unittest.TestCase):
         generated_plugins = sorted(
             path.name
             for path in (REPO_ROOT / "plugins").iterdir()
-            if path.is_dir() and path.name.startswith("antigravity-bundle-")
+            if path.is_dir() and path.name.startswith("agentic-bundle-")
         )
         expected_plugins = sorted(
-            f'antigravity-bundle-{bundle["id"]}'
+            f'agentic-bundle-{bundle["id"]}'
             for bundle in self.manifest_bundles
             if any(
                 all(
@@ -170,7 +170,7 @@ class EditorialBundlesTests(unittest.TestCase):
 
     def test_sample_bundle_copy_matches_source_file_inventory(self):
         sample_bundle = next(bundle for bundle in self.manifest_bundles if bundle["id"] == "documents-presentations")
-        plugin_skills_root = REPO_ROOT / "plugins" / "antigravity-bundle-documents-presentations" / "skills"
+        plugin_skills_root = REPO_ROOT / "plugins" / "agentic-bundle-documents-presentations" / "skills"
 
         for skill in sample_bundle["skills"]:
             source_dir = REPO_ROOT / "skills" / skill["id"]
@@ -190,8 +190,8 @@ class EditorialBundlesTests(unittest.TestCase):
             self.assertEqual(copied_files, source_files, f'copied bundle skill should match source inventory for {skill["id"]}')
 
     def test_root_plugins_only_include_supported_skills_for_target(self):
-        codex_root = REPO_ROOT / "plugins" / "antigravity-awesome-skills" / "skills"
-        claude_root = REPO_ROOT / "plugins" / "antigravity-awesome-skills-claude" / "skills"
+        codex_root = REPO_ROOT / "plugins" / "agentic-awesome-skills" / "skills"
+        claude_root = REPO_ROOT / "plugins" / "agentic-awesome-skills-claude" / "skills"
 
         for skill_id, compatibility in self.compatibility_by_id.items():
             codex_path = codex_root / skill_id
@@ -208,7 +208,7 @@ class EditorialBundlesTests(unittest.TestCase):
             )
 
     def test_remove_tree_retries_on_enotempty(self):
-        target = REPO_ROOT / "plugins" / "antigravity-awesome-skills" / "skills"
+        target = REPO_ROOT / "plugins" / "agentic-awesome-skills" / "skills"
         calls = {"count": 0}
 
         def flaky_rmtree(path):

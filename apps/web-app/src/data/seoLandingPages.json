@@ -2,10 +2,10 @@
   {
     "slug": "antigravity-cli-skills",
     "title": "Antigravity CLI Skills | Installable AI agent playbooks",
-    "description": "Install Antigravity CLI skills from the Antigravity Awesome Skills GitHub repository, with curated playbooks for coding agents, reviews, testing, and workflow automation.",
+    "description": "Install Antigravity CLI skills from the Agentic Awesome Skills GitHub repository, with curated playbooks for coding agents, reviews, testing, and workflow automation.",
     "eyebrow": "Antigravity CLI",
     "h1": "Antigravity CLI skills for agentic coding workflows",
-    "summary": "Use Antigravity Awesome Skills as a GitHub-backed library of reusable SKILL.md playbooks for Antigravity CLI and adjacent coding-agent runtimes.",
+    "summary": "Use Agentic Awesome Skills as a GitHub-backed library of reusable SKILL.md playbooks for Antigravity CLI and adjacent coding-agent runtimes.",
     "primaryIntent": "Find installable skills and workflow playbooks for Antigravity CLI.",
     "keywords": [
       "Antigravity CLI skills",
@@ -50,11 +50,11 @@
     "links": [
       {
         "label": "Open the GitHub repository",
-        "href": "https://github.com/sickn33/antigravity-awesome-skills"
+        "href": "https://github.com/sickn33/agentic-awesome-skills"
       },
       {
         "label": "Read installation docs",
-        "href": "https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/usage.md"
+        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/usage.md"
       },
       {
         "label": "Compare specialized plugins",
@@ -64,11 +64,11 @@
   },
   {
     "slug": "github-ai-skills-repository",
-    "title": "GitHub AI Skills Repository | Antigravity Awesome Skills",
-    "description": "Browse the Antigravity Awesome Skills GitHub repository: an installable library of AI agent skills, specialized plugins, bundles, and reusable coding workflows.",
+    "title": "GitHub AI Skills Repository | Agentic Awesome Skills",
+    "description": "Browse the Agentic Awesome Skills GitHub repository: an installable library of AI agent skills, specialized plugins, bundles, and reusable coding workflows.",
     "eyebrow": "GitHub repository",
     "h1": "A GitHub repository for installable AI agent skills",
-    "summary": "Antigravity Awesome Skills is the canonical GitHub source for SKILL.md playbooks, installer flows, plugin packs, bundles, and workflow documentation.",
+    "summary": "Agentic Awesome Skills is the canonical GitHub source for SKILL.md playbooks, installer flows, plugin packs, bundles, and workflow documentation.",
     "primaryIntent": "Find a GitHub repository of reusable AI coding assistant skills.",
     "keywords": [
       "GitHub AI skills repository",
@@ -113,11 +113,11 @@
     "links": [
       {
         "label": "Open GitHub source",
-        "href": "https://github.com/sickn33/antigravity-awesome-skills"
+        "href": "https://github.com/sickn33/agentic-awesome-skills"
       },
       {
         "label": "Install from npm",
-        "href": "https://www.npmjs.com/package/antigravity-awesome-skills"
+        "href": "https://www.npmjs.com/package/agentic-awesome-skills"
       },
       {
         "label": "Browse all skills",
@@ -178,7 +178,7 @@
       },
       {
         "heading": "Still backed by the full repo",
-        "body": "Each plugin remains part of the larger Antigravity Awesome Skills repository and can be traced back to canonical skill sources."
+        "body": "Each plugin remains part of the larger Agentic Awesome Skills repository and can be traced back to canonical skill sources."
       }
     ],
     "links": [
@@ -188,18 +188,18 @@
       },
       {
         "label": "Open GitHub plugins",
-        "href": "https://github.com/sickn33/antigravity-awesome-skills/tree/main/plugins"
+        "href": "https://github.com/sickn33/agentic-awesome-skills/tree/main/plugins"
       },
       {
         "label": "Read plugin docs",
-        "href": "https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/plugins.md"
+        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/plugins.md"
       }
     ]
   },
   {
     "slug": "skills-para-antigravity",
     "title": "Skills para Antigravity | Installable AI coding skills",
-    "description": "Find skills para Antigravity in the Antigravity Awesome Skills GitHub library, including installable playbooks for coding agents, plugins, bundles, and workflows.",
+    "description": "Find skills para Antigravity in the Agentic Awesome Skills GitHub library, including installable playbooks for coding agents, plugins, bundles, and workflows.",
     "eyebrow": "International search",
     "h1": "Skills para Antigravity and AI coding agents",
     "summary": "A practical entry point for users searching for skills para Antigravity, Antigravity skills, or GitHub playbooks for AI coding assistants.",
@@ -252,7 +252,7 @@
       },
       {
         "label": "Open the GitHub repository",
-        "href": "https://github.com/sickn33/antigravity-awesome-skills"
+        "href": "https://github.com/sickn33/agentic-awesome-skills"
       },
       {
         "label": "Compare plugins",

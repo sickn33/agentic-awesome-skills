@@ -1,0 +1,33 @@
+{
+  "name": "aasb-web-wizard",
+  "version": "13.13.0",
+  "description": "Install the \"Web Wizard\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "web-wizard",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Web Wizard",
+    "shortDescription": "Web Development · 7 curated skills",
+    "longDescription": "For building modern, high-performance web apps. Covers Frontend Design, React Best Practices, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Web Development",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

@@ -85,15 +85,15 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(document.title).toContain('Antigravity Awesome Skills');
+        expect(document.title).toContain('Agentic Awesome Skills');
       });
 
       expect(screen.getByRole('button', { name: /Copy install command/i })).toBeInTheDocument();
-      expect(screen.getAllByText(/npx antigravity-awesome-skills/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/npx agentic-awesome-skills/i).length).toBeGreaterThan(0);
       expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(
         'content',
-        expect.stringContaining('Antigravity Awesome Skills'),
+        expect.stringContaining('Agentic Awesome Skills'),
       );
     });
 
@@ -121,7 +121,7 @@ describe('Home', () => {
         vi.useRealTimers();
       }
 
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx antigravity-awesome-skills');
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx agentic-awesome-skills');
     });
   });
 

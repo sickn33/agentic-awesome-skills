@@ -249,7 +249,7 @@ def validate_skills(skills_dir, strict_mode=False):
     return True
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Validate Antigravity Skills")
+    parser = argparse.ArgumentParser(description="Validate Agentic Awesome Skills")
     parser.add_argument("--strict", action="store_true", help="Fail on warnings (for CI)")
     args = parser.parse_args()
 

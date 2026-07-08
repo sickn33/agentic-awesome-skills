@@ -1,6 +1,6 @@
 # Skills Update Guide
 
-This guide explains how to update the skills in the Antigravity Awesome Skills web application.
+This guide explains how to update the skills in the Agentic Awesome Skills web application.
 
 ## Automatic Updates (Recommended)
 

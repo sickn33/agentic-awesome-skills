@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-api-platform-builder",
+  "version": "13.13.0",
+  "description": "Install the \"AAS API Platform Builder\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-api-platform-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS API Platform Builder",
+    "shortDescription": "Design language-agnostic API platforms with contracts, docs, endpoints, auth, security, load testing, and observability.",
+    "longDescription": "Design language-agnostic API platforms with contracts, docs, endpoints, auth, security, load testing, and observability. Complements Python API Builder with a language-agnostic API platform workflow from design and OpenAPI contracts to auth, security, documentation, load testing, and observability. Recommended for: Backend teams, Platform teams, Full-stack teams designing shared APIs. Not for: Python-only implementation guidance, Frontend UI polish. Covers API Design Principles, API Patterns, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to design an API platform with OpenAPI contracts, auth, docs, and observability.",
+      "Use this plugin to review this API for versioning, endpoint design, security, and load-test gaps.",
+      "Use this plugin to turn these product requirements into API endpoints and a contract-first implementation plan."
+    ]
+  }
+}

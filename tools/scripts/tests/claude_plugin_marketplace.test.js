@@ -32,18 +32,18 @@ assert.ok(Array.isArray(marketplace.plugins), "marketplace.json must define a pl
 assert.ok(marketplace.plugins.length > 0, "marketplace.json must contain at least one plugin");
 assert.strictEqual(
   marketplace.plugins[0]?.name,
-  "antigravity-awesome-skills",
+  "agentic-awesome-skills",
   "full library Claude plugin should remain the first marketplace entry",
 );
 assert.strictEqual(
   marketplace.plugins[0]?.source,
-  "./plugins/antigravity-awesome-skills-claude",
+  "./plugins/agentic-awesome-skills-claude",
   "full library Claude plugin should resolve to the filtered plugin directory",
 );
 
 const expectedBundlePluginNames = editorialBundles
   .filter((bundle) => bundle.skills.every((skill) => compatibilityById.get(skill.id)?.targets?.claude === "supported"))
-  .map((bundle) => `antigravity-bundle-${bundle.id}`);
+  .map((bundle) => `agentic-bundle-${bundle.id}`);
 for (const pluginName of expectedBundlePluginNames) {
   assert.ok(
     marketplace.plugins.some((plugin) => plugin.name === pluginName),
@@ -52,7 +52,7 @@ for (const pluginName of expectedBundlePluginNames) {
 }
 
 for (const bundle of editorialBundles) {
-  const pluginName = `antigravity-bundle-${bundle.id}`;
+  const pluginName = `agentic-bundle-${bundle.id}`;
   const included = marketplace.plugins.some((plugin) => plugin.name === pluginName);
   const claudeSupported = bundle.skills.every(
     (skill) => compatibilityById.get(skill.id)?.targets?.claude === "supported",
@@ -64,7 +64,7 @@ for (const bundle of editorialBundles) {
   );
 }
 
-const pluginRoot = path.join(projectRoot, "plugins", "antigravity-awesome-skills-claude", "skills");
+const pluginRoot = path.join(projectRoot, "plugins", "agentic-awesome-skills-claude", "skills");
 for (const skill of compatibility) {
   const copiedPath = path.join(pluginRoot, ...skill.id.split("/"));
   if (skill.targets.claude === "supported") {

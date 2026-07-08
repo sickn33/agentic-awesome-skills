@@ -41,7 +41,7 @@ class MaintainerAuditTests(unittest.TestCase):
             (root / "package.json").write_text(
                 json.dumps(
                     {
-                        "name": "antigravity-awesome-skills",
+                        "name": "agentic-awesome-skills",
                         "version": "8.4.0",
                         "description": "1+ agentic skills for Claude Code, Gemini CLI, Cursor, Antigravity & more. Installer CLI.",
                     }
@@ -75,7 +75,7 @@ class MaintainerAuditTests(unittest.TestCase):
             (root / "package.json").write_text(
                 json.dumps(
                     {
-                        "name": "antigravity-awesome-skills",
+                        "name": "agentic-awesome-skills",
                         "version": "8.4.0",
                         "description": "1+ agentic skills for Claude Code, Gemini CLI, Cursor, Antigravity & more. Installer CLI.",
                     }

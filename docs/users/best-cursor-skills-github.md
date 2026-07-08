@@ -4,7 +4,7 @@ If you are searching for the **best Cursor skills on GitHub**, the best option d
 
 ## Best overall installable library
 
-### 1. [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills)
+### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
 Best for developers who want one repository they can install into Cursor and keep using across frontend, backend, testing, infra, product, and growth work.
 
@@ -52,11 +52,11 @@ Choose this if you want:
 
 ## How to choose quickly
 
-- Choose **Antigravity Awesome Skills** if you want the strongest install-and-use path for real day-to-day Cursor work.
+- Choose **Agentic Awesome Skills** if you want the strongest install-and-use path for real day-to-day Cursor work.
 - Choose **VoltAgent Awesome Agent Skills** if you want curation first and installation later.
 - Choose **Ai-Agent-Skills** if you want a smaller installable library.
 - Choose **cursor-skills** if you want the most Cursor-specific starting point.
 
 ## Recommended next step
 
-If your goal is to start working in Cursor today, install [Antigravity Awesome Skills](https://github.com/sickn33/antigravity-awesome-skills) and continue with [`cursor-skills.md`](cursor-skills.md).
+If your goal is to start working in Cursor today, install [Agentic Awesome Skills](https://github.com/sickn33/agentic-awesome-skills) and continue with [`cursor-skills.md`](cursor-skills.md).

@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-privacy-compliance-engineering",
+  "version": "13.13.0",
+  "description": "Install the \"AAS Privacy & Compliance Engineering\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-privacy-compliance-engineering",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Privacy & Compliance Engineering",
+    "shortDescription": "Engineer privacy and compliance controls with GDPR, PCI, compliance checks, cloud posture, specs, and security review.",
+    "longDescription": "Engineer privacy and compliance controls with GDPR, PCI, compliance checks, cloud posture, specs, and security review. Uses existing privacy, GDPR, PCI, compliance, cloud, spec, and security review skills to create a practical engineering compliance workflow. Recommended for: SaaS teams, AI app teams, Compliance-sensitive engineering teams. Not for: Legal advice as a substitute for counsel, Offensive security testing. Covers Privacy By Design, Gdpr Data Handling, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to review this feature for privacy-by-design, GDPR handling, PCI exposure, and security controls.",
+      "Use this plugin to map compliance-sensitive data flows and identify engineering changes before launch.",
+      "Use this plugin to check whether this implementation matches the spec and expected compliance controls."
+    ]
+  }
+}

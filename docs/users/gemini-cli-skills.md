@@ -2,9 +2,9 @@
 
 If you are evaluating **Gemini CLI skills** on GitHub, this repository is a strong broad starting point: installable skills, large coverage, and clear onboarding for day-one use.
 
-Antigravity Awesome Skills supports Gemini CLI through the `.gemini/skills/` path and combines general engineering playbooks with specialized skills for AI systems, integrations, infrastructure, testing, product, and growth.
+Agentic Awesome Skills supports Gemini CLI through the `.gemini/skills/` path and combines general engineering playbooks with specialized skills for AI systems, integrations, infrastructure, testing, product, and growth.
 
-## How to use Antigravity Awesome Skills with Gemini CLI
+## How to use Agentic Awesome Skills with Gemini CLI
 
 Install into the Gemini skills path, then ask Gemini to apply one skill at a time to a specific task. This works best when you keep the active set small and choose a clear workflow-oriented skill for the job in front of you.
 
@@ -18,7 +18,7 @@ Install into the Gemini skills path, then ask Gemini to apply one skill at a tim
 ## Install Gemini CLI Skills
 
 ```bash
-npx antigravity-awesome-skills --gemini
+npx agentic-awesome-skills --gemini
 ```
 
 ### Verify the install

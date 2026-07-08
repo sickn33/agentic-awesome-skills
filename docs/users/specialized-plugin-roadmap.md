@@ -1,6 +1,6 @@
 # Specialized Plugin Roadmap
 
-This roadmap shifts Antigravity Awesome Skills from "one giant plugin with every safe skill" toward a smaller set of focused, high-value Codex and Claude plugins.
+This roadmap shifts Agentic Awesome Skills from "one giant plugin with every safe skill" toward a smaller set of focused, high-value Codex and Claude plugins.
 
 The full catalog remains useful as a repository and installer. The plugin product should be different: clear jobs, narrow install surfaces, strong names, and skill groups that users can trust without browsing 1,678 options.
 
@@ -26,7 +26,7 @@ This snapshot pass evaluated the then-current local catalog. For current catalog
 
 Candidate details live in `data/specialized-plugin-candidates.json`. Each listed skill ID exists in the catalog and was checked as Codex-supported.
 
-The candidates are now enabled as editorial bundle plugins. Running `npm run bundles:sync` materializes them under `plugins/antigravity-bundle-aas-*`, adds Codex marketplace entries in `.agents/plugins/marketplace.json`, adds Claude marketplace entries in `.claude-plugin/marketplace.json`, and refreshes `docs/users/bundles.md`.
+The candidates are now enabled as editorial bundle plugins. Running `npm run bundles:sync` materializes them under `plugins/agentic-bundle-aas-*`, adds Codex marketplace entries in `.agents/plugins/marketplace.json`, adds Claude marketplace entries in `.claude-plugin/marketplace.json`, and refreshes `docs/users/bundles.md`.
 
 ## Tier 1 Plugins
 
@@ -95,7 +95,7 @@ Implemented in the repository:
 
 - `data/editorial-bundles.json` includes all 22 specialized plugin candidates.
 - `data/specialized-plugin-candidates.json` remains the source-of-truth shortlist and rationale.
-- `plugins/antigravity-bundle-aas-*` contains the generated plugin folders.
+- `plugins/agentic-bundle-aas-*` contains the generated plugin folders.
 - `.agents/plugins/marketplace.json` and `.claude-plugin/marketplace.json` expose the generated plugin entries.
 - `docs/users/bundles.md` renders the specialized plugin sections for users.
 

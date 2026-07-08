@@ -40,7 +40,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             (root / "README.md").write_text(
-                """# 🌌 Antigravity Awesome Skills: 1,304+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More
+                """# 🌌 Agentic Awesome Skills: 1,304+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More
 
 > **Installable GitHub library of 1,273+ agentic skills for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.**
 
@@ -52,7 +52,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
 - [Browse 1,273+ Skills](#browse-1273-skills)
 
-**Antigravity Awesome Skills** (Release 8.3.0) is a large, installable skill library for AI coding assistants. It packages 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Autohand Code, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
+**Agentic Awesome Skills** (Release 8.3.0) is a large, installable skill library for AI coding assistants. It packages 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Autohand Code, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
 """,
                 encoding="utf-8",
             )
@@ -61,7 +61,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
             (root / "docs" / "integrations" / "jetski-gemini-loader").mkdir(parents=True)
 
             (root / "docs" / "users" / "getting-started.md").write_text(
-                "# Getting Started with Antigravity Awesome Skills (V8.3.0)\n",
+                "# Getting Started with Agentic Awesome Skills (V8.3.0)\n",
                 encoding="utf-8",
             )
             (root / "docs" / "users" / "claude-code-skills.md").write_text(
@@ -138,7 +138,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
         sync_repo_metadata.sync_github_about(
             {
-                "repo": "sickn33/antigravity-awesome-skills",
+                "repo": "sickn33/agentic-awesome-skills",
                 "total_skills_label": "1,304+",
             },
             dry_run=True,
@@ -151,12 +151,12 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
         self.assertTrue(repo_edit_dry_run)
         self.assertTrue(topics_dry_run)
-        self.assertEqual(repo_edit_args[:4], ["gh", "repo", "edit", "sickn33/antigravity-awesome-skills"])
+        self.assertEqual(repo_edit_args[:4], ["gh", "repo", "edit", "sickn33/agentic-awesome-skills"])
         self.assertIn("--description", repo_edit_args)
         self.assertIn("--homepage", repo_edit_args)
-        self.assertIn("https://sickn33.github.io/antigravity-awesome-skills/", repo_edit_args)
+        self.assertIn("https://sickn33.github.io/agentic-awesome-skills/", repo_edit_args)
 
-        self.assertEqual(topics_args[:4], ["gh", "api", "repos/sickn33/antigravity-awesome-skills/topics", "--method"])
+        self.assertEqual(topics_args[:4], ["gh", "api", "repos/sickn33/agentic-awesome-skills/topics", "--method"])
         self.assertIn("PUT", topics_args)
         self.assertIn("names[]=claude-code", topics_args)
         self.assertIn("names[]=skill-library", topics_args)

@@ -2,9 +2,9 @@
 
 如果您在 GitHub 上搜索了 **Cursor 技能**，此仓库旨在作为一个实用的起点：可安装的技能、清晰的使用文档，以及与 Cursor 聊天工作流良好配合的大型库。
 
-Antigravity Awesome Skills 通过 `.cursor/skills/` 路径支持 Cursor，并保持入口点简单：一次安装，然后在聊天中调用您需要的技能。
+Agentic Awesome Skills 通过 `.cursor/skills/` 路径支持 Cursor，并保持入口点简单：一次安装，然后在聊天中调用您需要的技能。
 
-## 如何在 Cursor 中使用 Antigravity Awesome Skills
+## 如何在 Cursor 中使用 Agentic Awesome Skills
 
 将库安装到 Cursor 的技能目录中，然后使用 `@skill-name` 在聊天中直接调用技能。当您在一个对话中结合规划、实施和验证技能时，Cursor 的效果特别好。
 
@@ -18,7 +18,7 @@ Antigravity Awesome Skills 通过 `.cursor/skills/` 路径支持 Cursor，并保
 ## 安装 Cursor 技能
 
 ```bash
-npx antigravity-awesome-skills --cursor
+npx agentic-awesome-skills --cursor
 ```
 
 ### 验证安装

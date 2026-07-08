@@ -32,29 +32,29 @@ function waitForPathState(filePath, shouldExist, attempts = 5, delayMs = 50) {
 
 assert.strictEqual(
   marketplace.name,
-  "antigravity-awesome-skills",
+  "agentic-awesome-skills",
   "Codex marketplace name should match the repository plugin name",
 );
 assert.strictEqual(
   marketplace.interface?.displayName,
-  "Antigravity Awesome Skills",
+  "Agentic Awesome Skills",
   "Codex marketplace display name should be present",
 );
 assert.ok(Array.isArray(marketplace.plugins), "marketplace.json must define a plugins array");
 assert.ok(marketplace.plugins.length > 0, "marketplace.json must contain at least one plugin");
 assert.strictEqual(
   marketplace.plugins[0]?.name,
-  "antigravity-awesome-skills",
+  "agentic-awesome-skills",
   "full library Codex plugin should remain the first marketplace entry",
 );
 
-const pluginEntry = marketplace.plugins.find((plugin) => plugin.name === "antigravity-awesome-skills");
-assert.ok(pluginEntry, "marketplace.json must include the antigravity-awesome-skills plugin entry");
+const pluginEntry = marketplace.plugins.find((plugin) => plugin.name === "agentic-awesome-skills");
+assert.ok(pluginEntry, "marketplace.json must include the agentic-awesome-skills plugin entry");
 assert.deepStrictEqual(
   pluginEntry.source,
   {
     source: "local",
-    path: "./plugins/antigravity-awesome-skills",
+    path: "./plugins/agentic-awesome-skills",
   },
   "Codex plugin entry should resolve to the repo-local plugin directory",
 );
@@ -74,11 +74,11 @@ assert.strictEqual(
   "Codex plugin entry must include a category",
 );
 
-const pluginRoot = path.join(projectRoot, "plugins", "antigravity-awesome-skills");
+const pluginRoot = path.join(projectRoot, "plugins", "agentic-awesome-skills");
 const pluginManifestPath = path.join(pluginRoot, ".codex-plugin", "plugin.json");
 const pluginManifest = JSON.parse(fs.readFileSync(pluginManifestPath, "utf8"));
 
-assert.strictEqual(pluginManifest.name, "antigravity-awesome-skills");
+assert.strictEqual(pluginManifest.name, "agentic-awesome-skills");
 assert.strictEqual(pluginManifest.version, packageJson.version);
 assert.strictEqual(pluginManifest.skills, "./skills/");
 
@@ -101,8 +101,8 @@ for (const skill of compatibility) {
 }
 
 for (const bundle of editorialBundles) {
-  const bundlePluginName = `agyb-${bundle.id}`;
-  const bundlePluginPath = `antigravity-bundle-${bundle.id}`;
+  const bundlePluginName = `aasb-${bundle.id}`;
+  const bundlePluginPath = `agentic-bundle-${bundle.id}`;
   const bundleEntry = marketplace.plugins.find((plugin) => plugin.name === bundlePluginName);
   const codexSupported = bundle.skills.every(
     (skill) => compatibilityById.get(skill.id)?.targets?.codex === "supported",

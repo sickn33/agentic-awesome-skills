@@ -54,7 +54,7 @@ class AuditConsistencyTests(unittest.TestCase):
         (root / "package.json").write_text(
             json.dumps(
                 {
-                    "name": "antigravity-awesome-skills",
+                    "name": "agentic-awesome-skills",
                     "version": "8.4.0",
                     "description": f"{count_label} agentic skills for Claude Code, Gemini CLI, Cursor, Antigravity & more. Installer CLI.",
                 }
@@ -68,11 +68,11 @@ class AuditConsistencyTests(unittest.TestCase):
         (root / "apps" / "web-app" / "public" / "skills.json").write_text(manifest, encoding="utf-8")
         (root / "README.md").write_text(
             f"""<!-- registry-sync: version=8.4.0; skills={total_skills}; stars=26132; updated_at=2026-03-21T00:00:00+00:00 -->
-# 🌌 Antigravity Awesome Skills: {count_label} Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More
+# 🌌 Agentic Awesome Skills: {count_label} Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More
 
 > **Installable GitHub library of {count_label} agentic skills for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.**
 
-[![GitHub stars](https://img.shields.io/badge/⭐%2026%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/antigravity-awesome-skills/stargazers)
+[![GitHub stars](https://img.shields.io/badge/⭐%2026%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 
 **Current release: V8.4.0.** Trusted by 26k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
 
@@ -83,7 +83,7 @@ class AuditConsistencyTests(unittest.TestCase):
             encoding="utf-8",
         )
         (root / "docs" / "users" / "getting-started.md").write_text(
-            "# Getting Started with Antigravity Awesome Skills (V8.4.0)\n",
+            "# Getting Started with Agentic Awesome Skills (V8.4.0)\n",
             encoding="utf-8",
         )
         (root / "docs" / "users" / "claude-code-skills.md").write_text(

@@ -35,27 +35,27 @@ const conceptCards = [
 const integrationGuides = [
   {
     name: 'Claude Code',
-    href: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/claude-code-skills.md',
+    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/claude-code-skills.md',
     body: 'Install paths, starter prompts, plugin marketplace flow, and first skills to try.',
   },
   {
     name: 'Cursor',
-    href: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/cursor-skills.md',
+    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/cursor-skills.md',
     body: 'A practical guide for chat-first UI, frontend, and full-stack workflows in Cursor.',
   },
   {
     name: 'Codex CLI',
-    href: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/codex-cli-skills.md',
-    body: 'How to use Antigravity Awesome Skills with Codex CLI for planning, implementation, testing, and review.',
+    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/codex-cli-skills.md',
+    body: 'How to use Agentic Awesome Skills with Codex CLI for planning, implementation, testing, and review.',
   },
   {
     name: 'Gemini CLI',
-    href: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/gemini-cli-skills.md',
+    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/gemini-cli-skills.md',
     body: 'A broad starting point for engineering, agent systems, integrations, and applied AI workflows.',
   },
   {
     name: 'Antigravity',
-    href: 'https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool',
+    href: 'https://github.com/sickn33/agentic-awesome-skills#choose-your-tool',
     body: 'Installer targets for Antigravity IDE and Antigravity CLI, with reduced activation paths when the full library is too broad.',
   },
 ] as const;
@@ -74,10 +74,10 @@ export function Home(): React.ReactElement {
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState<SyncMessage | null>(null);
   const [commandCopied, setCommandCopied] = useState(false);
-  const installCommand = 'npx antigravity-awesome-skills';
-  const repositoryLink = 'https://github.com/sickn33/antigravity-awesome-skills';
-  const docsLink = 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/usage.md';
-  const installLink = 'https://www.npmjs.com/package/antigravity-awesome-skills';
+  const installCommand = 'npx agentic-awesome-skills';
+  const repositoryLink = 'https://github.com/sickn33/agentic-awesome-skills';
+  const docsLink = 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/usage.md';
+  const installLink = 'https://www.npmjs.com/package/agentic-awesome-skills';
   const faqItems = getHomeFaqItems(skills.length);
   const catalogCountLabel = skills.length > 0 ? skills.length.toLocaleString('en-US') : 'installable';
 
@@ -179,9 +179,13 @@ export function Home(): React.ReactElement {
             Build agent workflows with production-grade skill playbooks
           </h1>
           <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            Antigravity Awesome Skills is the searchable catalog for the official GitHub repository of installable
+            Agentic Awesome Skills is the searchable catalog for an independent GitHub repository of installable
             AI agent skills, Antigravity CLI playbooks, specialized plugins, bundles, and workflows. Search fast,
             shortlist by category, and launch your first tested workflow from one focused workspace.
+          </p>
+          <p className="mt-3 max-w-4xl text-xs leading-relaxed text-slate-500 sm:text-sm dark:text-slate-400">
+            Independent community project. Not affiliated with, sponsored by, endorsed by, or authorized by Google.
+            Google, Antigravity, Gemini, and related product names are used only to describe compatibility.
           </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-stretch">
@@ -399,7 +403,7 @@ export function Home(): React.ReactElement {
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
             <a
-              href="https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/skills-vs-mcp-tools.md"
+              href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/skills-vs-mcp-tools.md"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -407,7 +411,7 @@ export function Home(): React.ReactElement {
               Read skills vs MCP/tools
             </a>
             <a
-              href="https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md"
+              href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -415,7 +419,7 @@ export function Home(): React.ReactElement {
               Browse bundles
             </a>
             <a
-              href="https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md"
+              href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -494,7 +498,7 @@ export function Home(): React.ReactElement {
             ))}
           </div>
           <a
-            href="https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/faq.md"
+            href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/faq.md"
             target="_blank"
             rel="noreferrer"
             className="mt-5 inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"

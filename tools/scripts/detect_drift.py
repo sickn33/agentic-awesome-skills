@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Drift Detector — Antigravity Awesome Skills
+Drift Detector — Agentic Awesome Skills
 Detects when skill content changes significantly compared to a stored baseline.
 
 Drift is computed via a normalized SHA-256 content hash. The baseline is stored

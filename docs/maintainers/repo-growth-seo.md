@@ -24,7 +24,7 @@ Preferred description:
 
 Preferred homepage:
 
-> `https://github.com/sickn33/antigravity-awesome-skills`
+> `https://github.com/sickn33/agentic-awesome-skills`
 
 Preferred social preview:
 
@@ -79,7 +79,7 @@ Suggested release template:
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
+- Install: `npx agentic-awesome-skills`
 - Choose your tool: `README.md#choose-your-tool`
 - Specialized plugins: `README.md#recommended-specialized-plugins`
 - Bundles: `docs/users/bundles.md`

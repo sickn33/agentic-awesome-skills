@@ -1,0 +1,33 @@
+{
+  "name": "aasb-marketing-growth",
+  "version": "13.13.0",
+  "description": "Install the \"Marketing & Growth\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "marketing-growth",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Marketing & Growth",
+    "shortDescription": "Product & Business · 6 curated skills",
+    "longDescription": "For driving user acquisition and retention. Covers Content Creator, SEO Audit, and 4 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Product & Business",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

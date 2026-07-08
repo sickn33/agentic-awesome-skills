@@ -4,7 +4,7 @@ If you are looking for the **best Claude Code skills on GitHub**, there is no si
 
 ## Best overall installable library
 
-### 1. [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills)
+### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
 Best for teams and individual developers who want one large installable library with onboarding docs, bundles, workflows, and support for more than just Claude Code.
 
@@ -52,11 +52,11 @@ Choose this if you want:
 
 ## How to choose quickly
 
-- Choose **Antigravity Awesome Skills** if you want the most practical install-and-use path.
+- Choose **Agentic Awesome Skills** if you want the most practical install-and-use path.
 - Choose **VoltAgent Awesome Agent Skills** if you want the strongest curated shortlist.
 - Choose **anthropics/skills** if official vendor reference matters most.
 - Choose **karanb192/awesome-claude-skills** if you want a smaller community-first Claude library.
 
 ## Recommended next step
 
-If you want to get productive quickly, install [Antigravity Awesome Skills](https://github.com/sickn33/antigravity-awesome-skills) and start with [`claude-code-skills.md`](claude-code-skills.md) plus [`bundles.md`](bundles.md).
+If you want to get productive quickly, install [Agentic Awesome Skills](https://github.com/sickn33/agentic-awesome-skills) and start with [`claude-code-skills.md`](claude-code-skills.md) plus [`bundles.md`](bundles.md).

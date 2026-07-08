@@ -3,9 +3,9 @@ import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
 
 export const DEFAULT_TOP_SKILL_COUNT = 40;
 export const DEFAULT_SOCIAL_IMAGE = 'social-card.svg';
-const SITE_NAME = 'Antigravity Awesome Skills';
-const REPOSITORY_URL = 'https://github.com/sickn33/antigravity-awesome-skills';
-const HOSTED_CATALOG_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
+const SITE_NAME = 'Agentic Awesome Skills';
+const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
+const HOSTED_CATALOG_URL = 'https://sickn33.github.io/agentic-awesome-skills/';
 const TOPIC_ROUTE_PREFIX = '/topics';
 const HOME_CATALOG_COUNT_FALLBACK = 1935;
 
@@ -36,19 +36,19 @@ export interface SeoLandingPage {
 }
 const FAQ_ITEMS = [
   {
-    question: 'What is Antigravity Awesome Skills?',
+    question: 'What is Agentic Awesome Skills?',
     answer: (countLabel: string) =>
-      `Antigravity Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
+      `Agentic Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
   },
   {
-    question: 'How do I install Antigravity Awesome Skills?',
+    question: 'How do I install Agentic Awesome Skills?',
     answer:
-      'Install the library with npx antigravity-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+      'Install the library with npx agentic-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
   },
   {
-    question: 'Is Antigravity Awesome Skills a GitHub repository?',
+    question: 'Is Agentic Awesome Skills a GitHub repository?',
     answer:
-      'Yes. The GitHub repository at https://github.com/sickn33/antigravity-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
+      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
   },
   {
     question: 'What are AAS specialized plugins?',
@@ -138,7 +138,7 @@ function buildOrganizationSchema(): Record<string, unknown> {
     url: REPOSITORY_URL,
     sameAs: [
       'https://x.com/AASkills_',
-      'https://www.npmjs.com/package/antigravity-awesome-skills',
+      'https://www.npmjs.com/package/agentic-awesome-skills',
       HOSTED_CATALOG_URL,
     ],
     brand: {
@@ -178,7 +178,7 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     sameAs: [
       canonicalUrl,
       HOSTED_CATALOG_URL,
-      'https://www.npmjs.com/package/antigravity-awesome-skills',
+      'https://www.npmjs.com/package/agentic-awesome-skills',
     ],
     mainEntityOfPage: canonicalUrl,
     codeRepository: REPOSITORY_URL,
@@ -374,8 +374,8 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
   const visibleCountLabel = visibleCount > 0 ? getCatalogCountLabel(visibleCount) : '';
   const title = visibleCount > 0
-    ? `Antigravity Awesome Skills GitHub | ${visibleCountLabel} AI coding skills`
-    : 'Antigravity Awesome Skills GitHub | AI coding skills';
+    ? `Agentic Awesome Skills GitHub | ${visibleCountLabel} AI coding skills`
+    : 'Agentic Awesome Skills GitHub | AI coding skills';
   const description = visibleCount > 0
     ? `Explore the GitHub library of ${visibleCountLabel} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.`
     : 'Explore the GitHub library of installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.';
@@ -391,7 +391,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
       {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
-        name: 'Antigravity Awesome Skills',
+        name: 'Agentic Awesome Skills',
         description,
         url: canonicalUrl,
         isPartOf: buildWebSiteSchema(canonicalUrl),
@@ -399,7 +399,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
         about: buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
         mainEntity: {
           '@type': 'ItemList',
-          name: 'Antigravity Awesome Skills catalog',
+          name: 'Agentic Awesome Skills catalog',
         },
       },
       buildOrganizationSchema(),
@@ -505,7 +505,7 @@ export function buildTopicLandingMeta(page: SeoLandingPage): SeoMeta {
 export function buildTopicLandingFallbackMeta(slug: string | undefined): SeoMeta {
   const safeSlug = encodeURIComponent((slug || 'topic').trim() || 'topic');
   const title = `Topic guide loading | ${SITE_NAME}`;
-  const description = 'This Antigravity Awesome Skills topic guide is loading from the hosted catalog.';
+  const description = 'This Agentic Awesome Skills topic guide is loading from the hosted catalog.';
 
   return {
     title,
@@ -525,13 +525,13 @@ export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath =
   const safeSource = skill.source || 'community contributors';
   const added = skill.date_added ? `Added ${skill.date_added}. ` : '';
   const trust = isPriority ? ` Prioritized in our catalog for quality and reuse. ` : ' ';
-  const title = `${safeName} | Antigravity Awesome Skills`;
+  const title = `${safeName} | Agentic Awesome Skills`;
   const description = `${added}Use the @${safeName} skill for ${safeDescription} (${safeCategory}, ${safeSource}).${trust}Install and run quickly with your CLI workflow.`;
   return {
     title,
     description: description.trim(),
     canonicalPath,
-    ogTitle: `@${safeName} | Antigravity Awesome Skills`,
+    ogTitle: `@${safeName} | Agentic Awesome Skills`,
     ogDescription: description,
     ogImage: DEFAULT_SOCIAL_IMAGE,
     twitterCard: 'summary',
@@ -552,14 +552,14 @@ export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath =
         },
         provider: {
           '@type': 'Organization',
-          name: 'Antigravity Awesome Skills',
+          name: 'Agentic Awesome Skills',
         },
         keywords: [safeCategory, safeSource],
         inLanguage: 'en',
         operatingSystem: 'Cross-platform',
         isPartOf: {
           '@type': 'CollectionPage',
-          name: 'Antigravity Awesome Skills',
+          name: 'Agentic Awesome Skills',
           url: getCatalogBaseUrl(canonicalUrl),
         },
       },
@@ -583,10 +583,10 @@ export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath =
 export function buildSkillFallbackMeta(skillId: string): SeoMeta {
   const safeId = skillId || 'skill';
   return {
-    title: `${safeId} | Antigravity Awesome Skills`,
-    description: 'Installable AI skill details are loading. Browse the catalog and launch the right skill with the antigravity-awesome-skills CLI.',
+    title: `${safeId} | Agentic Awesome Skills`,
+    description: 'Installable AI skill details are loading. Browse the catalog and launch the right skill with the agentic-awesome-skills CLI.',
     canonicalPath: `/skill/${encodeURIComponent(safeId)}`,
-    ogTitle: `@${safeId} | Antigravity Awesome Skills`,
+    ogTitle: `@${safeId} | Agentic Awesome Skills`,
     ogDescription: 'Installable AI skill details are loading. Browse the catalog and launch the right skill quickly.',
     ogImage: DEFAULT_SOCIAL_IMAGE,
     twitterCard: 'summary',
@@ -600,7 +600,7 @@ export function buildSkillFallbackMeta(skillId: string): SeoMeta {
         url: canonicalUrl,
         provider: {
           '@type': 'Organization',
-          name: 'Antigravity Awesome Skills',
+          name: 'Agentic Awesome Skills',
         },
         inLanguage: 'en',
       },

@@ -1,6 +1,6 @@
 # Frequently Asked Questions (FAQ)
 
-**Got questions?** You're not alone! Here are answers to the most common questions about Antigravity Awesome Skills.
+**Got questions?** You're not alone! Here are answers to the most common questions about Agentic Awesome Skills.
 
 ---
 
@@ -122,19 +122,19 @@ _Always check the Risk label and review the code._
 
 It depends on how you install:
 
-- **Using the installer CLI (`npx antigravity-awesome-skills`)**:
+- **Using the installer CLI (`npx agentic-awesome-skills`)**:
   The default install target is `~/.agents/skills/` for Antigravity's global library.
 - **Using a tool-specific flag**:
   Use `--claude`, `--cursor`, `--gemini`, `--codex`, `--kiro`, or `--antigravity` to target the matching tool path automatically.
 - **Using a manual clone or custom workspace path**:
   `.agent/skills/` is still a good universal workspace convention for Antigravity/custom setups.
 
-If you get a 404 from npm, use: `npx github:sickn33/antigravity-awesome-skills`
+If you get a 404 from npm, use: `npx github:sickn33/agentic-awesome-skills`
 
 **Using git clone:**
 
 ```bash
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
 
 The installer CLI is the recommended path for most users because it performs a lighter shallow clone of the current library. Manual `git clone` is still the right option when you want the full repository history or plan to contribute from the same checkout.
@@ -149,8 +149,8 @@ The installer CLI is the recommended path for most users because it performs a l
 **Claude Code plugin marketplace alternative:**
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 This repository now includes `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` so Claude Code can install the same skill tree through the plugin marketplace.
@@ -160,7 +160,7 @@ This repository now includes `.claude-plugin/marketplace.json` and `.claude-plug
 This repository also includes repo-local plugin metadata for Codex:
 
 - `.agents/plugins/marketplace.json`
-- `plugins/antigravity-awesome-skills/.codex-plugin/plugin.json`
+- `plugins/agentic-awesome-skills/.codex-plugin/plugin.json`
 
 That path exposes the new plugin-safe Codex root plugin plus generated bundle plugins. For the full explanation, read [plugins.md](plugins.md).
 
@@ -203,10 +203,10 @@ So it is normal for the **full library** to be larger than the **plugin-safe** p
 **Yes.** Use the same standard install flow as other platforms:
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 ```
 
-If you have an older clone created around the removed symlink workaround, reinstall into a fresh directory or rerun `npx antigravity-awesome-skills`.
+If you have an older clone created around the removed symlink workaround, reinstall into a fresh directory or rerun `npx agentic-awesome-skills`.
 
 ### I hit a truncation or context crash loop on Windows. How do I recover?
 
@@ -222,7 +222,7 @@ It includes:
 
 - the manual cleanup steps for broken Local Storage / Session Storage / IndexedDB state
 - the default Antigravity Windows paths to back up first
-- an optional batch script adapted from [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274)
+- an optional batch script adapted from [issue #274](https://github.com/sickn33/agentic-awesome-skills/issues/274)
 
 ### I hit context overload on Linux or macOS. What should I do?
 
@@ -237,13 +237,13 @@ That guide shows how to run `scripts/activate-skills.sh` from a cloned copy of t
 Usually no. For OpenCode and other hosts that read from `.agents/skills`, start with a reduced install instead of copying the full library:
 
 ```bash
-npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
+npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none
 ```
 
 You can narrow further with `--tags` or exclude values with a trailing `-`:
 
 ```bash
-npx antigravity-awesome-skills --path .agents/skills --tags debugging,typescript-
+npx agentic-awesome-skills --path .agents/skills --tags debugging,typescript-
 ```
 
 The filter rules are:
@@ -266,7 +266,7 @@ Practical mitigation:
 1. Start with a reduced install in `.agents/skills`:
 
 ```bash
-npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none
+npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none
 ```
 
 2. Avoid loading large autonomy/conductor-style skills until the base flow is stable.
@@ -361,7 +361,7 @@ Examples:
 
 ### A skill gives incorrect or outdated advice
 
-Please [Open an issue](https://github.com/sickn33/antigravity-awesome-skills/issues)!
+Please [Open an issue](https://github.com/sickn33/agentic-awesome-skills/issues)!
 Include:
 
 - Which skill
@@ -446,4 +446,4 @@ Maintainers regenerate and canonicalize those files on `main` after merge. If yo
 - Try `@test-driven-development` for better code quality
 - Explore `@skill-creator` to make your own skills
 
-**Still confused?** [Open a discussion](https://github.com/sickn33/antigravity-awesome-skills/discussions) and we'll help you out! 🙌
+**Still confused?** [Open a discussion](https://github.com/sickn33/agentic-awesome-skills/discussions) and we'll help you out! 🙌

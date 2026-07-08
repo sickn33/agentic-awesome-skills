@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-secure-app-builder",
+  "version": "13.13.0",
+  "description": "Install the \"AAS Secure App Builder\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-secure-app-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Secure App Builder",
+    "shortDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in.",
+    "longDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in. Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams. Recommended for: Application developers, Product engineering teams, Security-conscious backend and frontend builders. Not for: Offensive pentest engagements, Infrastructure-only reviews. Covers API Security Best Practices, Auth Implementation Patterns, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to review this PR for auth, access control, data exposure, injection, and secrets risks.",
+      "Use this plugin to design a secure API feature with validation, authorization, and auditability.",
+      "Use this plugin to harden this payment, authentication, or user-data flow before release."
+    ]
+  }
+}

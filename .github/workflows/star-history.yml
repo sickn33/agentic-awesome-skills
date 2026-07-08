@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           mkdir -p assets
           curl -fsSL \
-            "https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left" \
+            "https://api.star-history.com/svg?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left" \
             -o /tmp/star-history.svg
           rsvg-convert /tmp/star-history.svg -o assets/star-history.png
 

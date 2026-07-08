@@ -70,7 +70,7 @@ Use **both** when:
 
 ## How this repo fits in
 
-Antigravity Awesome Skills is primarily a **skill library**:
+Agentic Awesome Skills is primarily a **skill library**:
 
 - installable `SKILL.md` playbooks
 - bundles for role-based starting points

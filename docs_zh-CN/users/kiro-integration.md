@@ -2,7 +2,7 @@
 
 ## 概述
 
-本指南说明如何将 Antigravity Awesome Skills 与 **Kiro CLI** 一起使用，Kiro CLI 是 AWS 的代理式 AI 驱动编码助手。
+本指南说明如何将 Agentic Awesome Skills 与 **Kiro CLI** 一起使用，Kiro CLI 是 AWS 的代理式 AI 驱动编码助手。
 
 ## 什么是 Kiro？
 
@@ -29,7 +29,7 @@ Kiro 的代理能力通过以下技能得到增强：
 
 ```bash
 # 安装到 Kiro 的默认技能目录
-npx antigravity-awesome-skills --kiro
+npx agentic-awesome-skills --kiro
 ```
 
 这将把技能安装到 `~/.kiro/skills/`
@@ -38,7 +38,7 @@ npx antigravity-awesome-skills --kiro
 
 ```bash
 # 直接克隆到 Kiro 的技能目录
-git clone https://github.com/sickn33/antigravity-awesome-skills.git ~/.kiro/skills
+git clone https://github.com/sickn33/agentic-awesome-skills.git ~/.kiro/skills
 ```
 
 ### 验证
@@ -216,7 +216,7 @@ ls -la ~/.kiro/skills/
 
 # 如需要则重新安装
 rm -rf ~/.kiro/skills
-npx antigravity-awesome-skills --kiro
+npx agentic-awesome-skills --kiro
 ```
 
 ### 技能未找到
@@ -299,6 +299,6 @@ chmod -R 755 ~/.kiro/skills/
 
 ## 支持
 
-- **问题**：[GitHub Issues](https://github.com/sickn33/antigravity-awesome-skills/issues)
-- **讨论**：[GitHub Discussions](https://github.com/sickn33/antigravity-awesome-skills/discussions)
+- **问题**：[GitHub Issues](https://github.com/sickn33/agentic-awesome-skills/issues)
+- **讨论**：[GitHub Discussions](https://github.com/sickn33/agentic-awesome-skills/discussions)
 - **社区**：[社区指南](../contributors/community-guidelines.md)

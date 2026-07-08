@@ -113,7 +113,7 @@ describe('SkillDetail', () => {
         expect(document.title).toContain('react-patterns');
         expect(document.querySelector('meta[name="twitter:title"]')).toHaveAttribute(
           'content',
-          '@react-patterns | Antigravity Awesome Skills',
+          '@react-patterns | Agentic Awesome Skills',
         );
         expect(global.fetch).toHaveBeenCalled();
       }, { timeout: 3000 });
@@ -302,7 +302,7 @@ describe('SkillDetail', () => {
         vi.useRealTimers();
       }
 
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx antigravity-awesome-skills');
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx agentic-awesome-skills');
     });
   });
 

@@ -1,6 +1,6 @@
 # 常见问题解答 (FAQ)
 
-**有问题？**你并不孤单！这里是关于 Antigravity Awesome Skills 最常见问题的答案。
+**有问题？**你并不孤单！这里是关于 Agentic Awesome Skills 最常见问题的答案。
 
 ---
 
@@ -106,19 +106,19 @@ _始终检查风险标签并审查代码。_
 
 这取决于你如何安装：
 
-- **使用安装程序 CLI (`npx antigravity-awesome-skills`)**：
+- **使用安装程序 CLI (`npx agentic-awesome-skills`)**：
   默认安装目标是 Antigravity 全局库的 `~/.agents/skills/`。
 - **使用特定于工具的标志**：
   使用 `--claude`、`--cursor`、`--gemini`、`--codex`、`--kiro` 或 `--antigravity` 自动定位匹配的工具路径。
 - **使用手动克隆或自定义工作区路径**：
   `.agent/skills/` 对于 Antigravity/自定义设置仍然是一个很好的通用工作区约定。
 
-如果你从 npm 收到 404，请使用：`npx github:sickn33/antigravity-awesome-skills`
+如果你从 npm 收到 404，请使用：`npx github:sickn33/agentic-awesome-skills`
 
 **使用 git clone：**
 
 ```bash
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
 
 **特定于工具的路径：**
@@ -131,8 +131,8 @@ git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skill
 **Claude Code 插件市场替代方案：**
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 此仓库现在包括 `.claude-plugin/marketplace.json` 和 `.claude-plugin/plugin.json`，因此 Claude Code 可以通过插件市场安装相同的技能树。
@@ -142,10 +142,10 @@ git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skill
 **可以。**使用与其他平台相同的标准安装流程：
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 ```
 
-如果你在已删除的符号链接解决方法周围创建了较旧的克隆，请重新安装到新目录或重新运行 `npx antigravity-awesome-skills`。
+如果你在已删除的符号链接解决方法周围创建了较旧的克隆，请重新安装到新目录或重新运行 `npx agentic-awesome-skills`。
 
 ### 我在 Windows 上遇到截断或上下文崩溃循环。如何恢复？
 
@@ -161,7 +161,7 @@ npx antigravity-awesome-skills
 
 - 针对损坏的本地存储/会话存储/IndexedDB 状态的手动清理步骤
 - 首先要备份的默认 Antigravity Windows 路径
-- 根据 [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274) 改编的可选批处理脚本
+- 根据 [issue #274](https://github.com/sickn33/agentic-awesome-skills/issues/274) 改编的可选批处理脚本
 
 ### 我在 Linux 或 macOS 上遇到上下文过载。我该怎么办？
 
@@ -258,7 +258,7 @@ git pull origin main
 
 ### 技能给出了不正确或过时的建议
 
-请[打开问题](https://github.com/sickn33/antigravity-awesome-skills/issues)！包括：
+请[打开问题](https://github.com/sickn33/agentic-awesome-skills/issues)！包括：
 
 - 哪个技能
 - 出了什么问题
@@ -342,4 +342,4 @@ npm run security:docs
 - 尝试 `@test-driven-development` 以获得更好的代码质量
 - 探索 `@skill-creator` 制作你自己的技能
 
-**仍然困惑？**[打开讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions)，我们会帮助你！🙌
+**仍然困惑？**[打开讨论](https://github.com/sickn33/agentic-awesome-skills/discussions)，我们会帮助你！🙌

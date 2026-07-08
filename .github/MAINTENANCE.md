@@ -2,7 +2,7 @@
 
 > **"If it's not documented, it's broken."**
 
-This guide details the exact procedures for maintaining `antigravity-awesome-skills`.
+This guide details the exact procedures for maintaining `agentic-awesome-skills`.
 It covers the **Quality Bar**, **Documentation Consistency**, and **Release Workflows**.
 
 **Maintainer shortcuts:** [Merge a PR](#b-when-you-merge-a-pr-step-by-step) · [Reopen & merge a closed PR](#if-a-pr-was-closed-after-local-integration-reopen-and-merge) · [Post-merge credits sync](#c-post-merge-credits-sync-mandatory-after-every-pr-merge) · [Close issues](#when-to-close-an-issue) · [Create a release](#4-release-workflow)
@@ -66,7 +66,7 @@ If you change the published npm installer surface:
 - `tools/lib/**/*.js` used by the installer
 - `package.json` `bin` entry or packaged files
 
-…then every imported package needed by `npx antigravity-awesome-skills` must live in `dependencies`, **not** `devDependencies`.
+…then every imported package needed by `npx agentic-awesome-skills` must live in `dependencies`, **not** `devDependencies`.
 
 - `npm pack --dry-run` is **not enough** to prove this.
 - A local repo test can pass while `npx` still fails in a clean environment.
@@ -214,7 +214,7 @@ If a PR was integrated via local squash and then **closed** (so it shows "Closed
     `git commit -m "chore: merge main to resolve conflicts" --no-edit`
 5.  **Push to the contributor's fork.** Add their fork as a remote if needed (replace `USER` and `BRANCH` with the PR head owner and branch from the PR page):
     ```bash
-    git remote add <user>-fork https://github.com/<USER>/antigravity-awesome-skills.git
+    git remote add <user>-fork https://github.com/<USER>/agentic-awesome-skills.git
     git push <user>-fork pr-<PR_NUMBER>-tmp:<BRANCH>
     ```
     This works if the contributor enabled **"Allow edits from maintainers"** (or you have push access). If push is denied, ask the contributor to merge `main` into their branch and push; then you use "Squash and merge" on GitHub.
@@ -224,7 +224,7 @@ If a PR was integrated via local squash and then **closed** (so it shows "Closed
 7.  **Switch back to `main`:**  
     `git checkout main`
 
-We used this flow for PRs [#220](https://github.com/sickn33/antigravity-awesome-skills/pull/220), [#224](https://github.com/sickn33/antigravity-awesome-skills/pull/224), and [#225](https://github.com/sickn33/antigravity-awesome-skills/pull/225) after they had been integrated locally and closed.
+We used this flow for PRs [#220](https://github.com/sickn33/agentic-awesome-skills/pull/220), [#224](https://github.com/sickn33/agentic-awesome-skills/pull/224), and [#225](https://github.com/sickn33/agentic-awesome-skills/pull/225) after they had been integrated locally and closed.
 
 **Right after merging:**
 
@@ -328,7 +328,7 @@ Locations to check:
 
 ### E. Badges & Links
 
-- **Antigravity Badge**: Must point to `https://github.com/sickn33/antigravity-awesome-skills`, NOT `anthropics/antigravity`.
+- **Antigravity Badge**: Must point to `https://github.com/sickn33/agentic-awesome-skills`, NOT `anthropics/antigravity`.
 - **License**: Ensure the link points to `LICENSE` file.
 
 ### F. Workflows Consistency (NEW in V5)
@@ -413,7 +413,7 @@ Preflight verification → Changelog → `npm run release:prepare -- X.Y.Z` → 
 
     _Or create the release manually via GitHub UI > Releases > Draft a new release, then publish._
 
-5.  **Publish to npm** (so `npx antigravity-awesome-skills` works):
+5.  **Publish to npm** (so `npx agentic-awesome-skills` works):
     - **Option A (manual):** From repo root, with npm logged in and 2FA/token set up:
       ```bash
       npm publish
@@ -457,11 +457,11 @@ Use this structure for the published GitHub Release object:
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 [Brief paragraph explaining what changed and who the release helps.]
 
@@ -508,17 +508,17 @@ Manual upload path on GitHub:
 Canonical onboarding discussion:
 
 - Title: `Start here: best skills by tool`
-- Current live discussion: `https://github.com/sickn33/antigravity-awesome-skills/discussions/361`
+- Current live discussion: `https://github.com/sickn33/agentic-awesome-skills/discussions/361`
 
 When refreshing or recreating the pinned onboarding discussion, keep this structure:
 
 ~~~markdown
-If you are new to **Antigravity Awesome Skills**, start here instead of browsing all skills at random.
+If you are new to **Agentic Awesome Skills**, start here instead of browsing all skills at random.
 
 ## Install in 1 minute
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 ```
 
 ## Best starting pages by tool

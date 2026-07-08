@@ -69,7 +69,7 @@ export function SkillDetail(): React.ReactElement {
   const [customContext, setCustomContext] = useState('');
   const [commandCopied, setCommandCopied] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
-  const installCommand = 'npx antigravity-awesome-skills';
+  const installCommand = 'npx agentic-awesome-skills';
   const skill = useMemo(() => skills.find(s => s.id === id), [skills, id]);
 
   const topPrioritySkills = useMemo(() => selectTopSkills(skills), [skills]);
@@ -353,7 +353,7 @@ export function SkillDetail(): React.ReactElement {
                 Place @{skill.name} in the larger AAS catalog
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                These entry points connect this skill to installable Antigravity skills, the GitHub repository, and focused plugin packs.
+                These entry points connect this skill to installable agentic skills, the GitHub repository, and focused plugin packs.
               </p>
             </div>
             <Link

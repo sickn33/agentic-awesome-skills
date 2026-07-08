@@ -23,14 +23,14 @@ SAFE_SKILL_ID_RE = re.compile(
     r"^(?!.*(?:^|/)\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
 )
 SAFE_BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$")
-REPO_URL = "https://github.com/sickn33/antigravity-awesome-skills"
+REPO_URL = "https://github.com/sickn33/agentic-awesome-skills"
 AUTHOR = {
     "name": "sickn33 and contributors",
     "url": REPO_URL,
 }
-ROOT_CLAUDE_PLUGIN_NAME = "antigravity-awesome-skills"
-ROOT_CODEX_PLUGIN_NAME = "antigravity-awesome-skills"
-ROOT_CLAUDE_PLUGIN_DIRNAME = "antigravity-awesome-skills-claude"
+ROOT_CLAUDE_PLUGIN_NAME = "agentic-awesome-skills"
+ROOT_CODEX_PLUGIN_NAME = "agentic-awesome-skills"
+ROOT_CLAUDE_PLUGIN_DIRNAME = "agentic-awesome-skills-claude"
 EDITORIAL_BUNDLES_PATH = Path("data") / "editorial-bundles.json"
 EDITORIAL_TEMPLATE_PATH = Path("tools") / "templates" / "editorial-bundles.md.tmpl"
 CLAUDE_MARKETPLACE_PATH = Path(".claude-plugin") / "marketplace.json"
@@ -144,11 +144,11 @@ def _clean_group_label(group: str) -> str:
 
 
 def _bundle_plugin_name(bundle_id: str) -> str:
-    return f"antigravity-bundle-{bundle_id}"
+    return f"agentic-bundle-{bundle_id}"
 
 
 def _bundle_codex_plugin_name(bundle_id: str) -> str:
-    return f"agyb-{bundle_id}"
+    return f"aasb-{bundle_id}"
 
 
 def _humanize_skill_label(skill_id: str) -> str:
@@ -190,7 +190,7 @@ def _bundle_codex_long_description(bundle: dict[str, Any]) -> str:
     remaining = len(bundle["skills"]) - len(highlights)
 
     if not highlights:
-        coverage = f'Includes {len(bundle["skills"])} curated skills from Antigravity Awesome Skills.'
+        coverage = f'Includes {len(bundle["skills"])} curated skills from Agentic Awesome Skills.'
     elif remaining > 0:
         coverage = f"Covers {', '.join(highlights)}, and {remaining} more skills."
     elif len(highlights) == 1:
@@ -393,7 +393,7 @@ def _root_claude_plugin_manifest(metadata: dict[str, Any], supported_skill_count
         "name": ROOT_CLAUDE_PLUGIN_NAME,
         "version": metadata["version"],
         "description": (
-            f"Plugin-safe Claude Code distribution of Antigravity Awesome Skills with "
+            f"Plugin-safe Claude Code distribution of Agentic Awesome Skills with "
             f"{supported_label} supported skills."
         ),
         "author": AUTHOR,
@@ -415,7 +415,7 @@ def _root_codex_plugin_manifest(metadata: dict[str, Any], supported_skill_count:
     return {
         "name": ROOT_CODEX_PLUGIN_NAME,
         "version": metadata["version"],
-        "description": "Plugin-safe Codex plugin for the Antigravity Awesome Skills library.",
+        "description": "Plugin-safe Codex plugin for the Agentic Awesome Skills library.",
         "author": AUTHOR,
         "homepage": REPO_URL,
         "repository": REPO_URL,
@@ -429,12 +429,12 @@ def _root_codex_plugin_manifest(metadata: dict[str, Any], supported_skill_count:
         ],
         "skills": "./skills/",
         "interface": {
-            "displayName": "Antigravity Awesome Skills",
+            "displayName": "Agentic Awesome Skills",
             "shortDescription": (
                 f"{supported_label} plugin-safe skills for coding, security, product, and ops workflows."
             ),
             "longDescription": (
-                "Install a plugin-safe Codex distribution of Antigravity Awesome Skills. "
+                "Install a plugin-safe Codex distribution of Agentic Awesome Skills. "
                 "Skills that still need hardening or target-specific setup remain available in the repo "
                 "but are excluded from this plugin."
             ),
@@ -457,7 +457,7 @@ def _bundle_claude_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, A
         "name": _bundle_plugin_name(bundle["id"]),
         "version": metadata["version"],
         "description": (
-            f'Editorial "{bundle["name"]}" bundle for Claude Code from Antigravity Awesome Skills.'
+            f'Editorial "{bundle["name"]}" bundle for Claude Code from Agentic Awesome Skills.'
         ),
         "author": AUTHOR,
         "homepage": REPO_URL,
@@ -468,7 +468,7 @@ def _bundle_claude_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, A
             "skills",
             "bundle",
             bundle["id"],
-            "antigravity-awesome-skills",
+            "agentic-awesome-skills",
         ],
     }
 
@@ -479,9 +479,9 @@ def _bundle_codex_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, An
     skill_count = len(bundle["skills"])
     is_productized = bool(str(bundle.get("positioning", "")).strip() or _string_list(bundle.get("defaultPrompts")))
     description = (
-        f'Install the "{bundle["name"]}" workflow plugin from Antigravity Awesome Skills.'
+        f'Install the "{bundle["name"]}" workflow plugin from Agentic Awesome Skills.'
         if is_productized
-        else f'Install the "{bundle["name"]}" editorial skill bundle from Antigravity Awesome Skills.'
+        else f'Install the "{bundle["name"]}" editorial skill bundle from Agentic Awesome Skills.'
     )
     interface = {
         "displayName": bundle["name"],
@@ -550,7 +550,7 @@ def _render_claude_marketplace(
             "name": ROOT_CLAUDE_PLUGIN_NAME,
             "version": metadata["version"],
             "description": (
-                "Expose the plugin-safe Claude Code subset of Antigravity Awesome Skills "
+                "Expose the plugin-safe Claude Code subset of Agentic Awesome Skills "
                 "through a single marketplace entry."
             ),
             "author": AUTHOR,
@@ -577,7 +577,7 @@ def _render_claude_marketplace(
         "owner": AUTHOR,
         "metadata": {
             "description": (
-                "Claude Code marketplace entries for the plugin-safe Antigravity Awesome Skills "
+                "Claude Code marketplace entries for the plugin-safe Agentic Awesome Skills "
                 "library and its compatible editorial bundles."
             ),
             "version": metadata["version"],
@@ -626,7 +626,7 @@ def _render_codex_marketplace(
     return {
         "name": ROOT_CODEX_PLUGIN_NAME,
         "interface": {
-            "displayName": "Antigravity Awesome Skills",
+            "displayName": "Agentic Awesome Skills",
         },
         "plugins": plugins,
     }
@@ -789,7 +789,19 @@ def sync_editorial_bundle_plugins(
     for bundle in bundles:
         _sync_bundle_plugin_directory(root, metadata, bundle, bundle_support[bundle["id"]])
 
+    stale_plugin_roots = [
+        plugins_root / "antigravity-awesome-skills",
+        plugins_root / "antigravity-awesome-skills-claude",
+    ]
+    for stale_root in stale_plugin_roots:
+        if stale_root.is_dir():
+            _remove_tree(stale_root)
+
     for candidate in plugins_root.glob("antigravity-bundle-*"):
+        if candidate.is_dir():
+            _remove_tree(candidate)
+
+    for candidate in plugins_root.glob("agentic-bundle-*"):
         if candidate.is_dir() and candidate.name not in expected_plugin_names:
             _remove_tree(candidate)
 

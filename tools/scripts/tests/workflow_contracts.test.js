@@ -53,14 +53,14 @@ assert.deepStrictEqual(
 assert.deepStrictEqual(
   getDirectDerivedChanges(
     [
-      "plugins/antigravity-awesome-skills/skills/docx-official/ooxml/scripts/unpack.py",
+      "plugins/agentic-awesome-skills/skills/docx-official/ooxml/scripts/unpack.py",
       ".agents/plugins/marketplace.json",
       "skills/example/SKILL.md",
     ],
     contract,
   ),
   [
-    "plugins/antigravity-awesome-skills/skills/docx-official/ooxml/scripts/unpack.py",
+    "plugins/agentic-awesome-skills/skills/docx-official/ooxml/scripts/unpack.py",
     ".agents/plugins/marketplace.json",
   ],
 );

@@ -24,7 +24,7 @@
 
 首选主页:
 
-> `https://github.com/sickn33/antigravity-awesome-skills`
+> `https://github.com/sickn33/agentic-awesome-skills`
 
 首选社交预览:
 
@@ -79,7 +79,7 @@
 
 从这里开始:
 
-- 安装: `npx antigravity-awesome-skills`
+- 安装: `npx agentic-awesome-skills`
 - 选择您的工具: `README.md#choose-your-tool`
 - 按工具分类的最佳技能: `README.md#best-skills-by-tool`
 - 捆绑包: `docs/users/bundles.md`

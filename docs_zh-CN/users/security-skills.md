@@ -2,7 +2,7 @@
 
 发现的安全技能总数：128
 
-本报告列出了在 `antigravity-awesome-skills` 仓库中发现的所有安全相关技能，包括它们的描述、用例和示例提示。
+本报告列出了在 `agentic-awesome-skills` 仓库中发现的所有安全相关技能，包括它们的描述、用例和示例提示。
 
 ## accessibility-compliance-accessibility-audit (`accessibility-compliance-accessibility-audit`)
 

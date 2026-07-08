@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sickn33.github.io/antigravity-awesome-skills/schemas/skill-score.v1.schema.json",
+  "$id": "https://sickn33.github.io/agentic-awesome-skills/schemas/skill-score.v1.schema.json",
   "title": "Antigravity Skill Score v1",
   "description": "Quality score record for a single Antigravity skill. Scores are informational only and never block skill usage.",
   "type": "object",

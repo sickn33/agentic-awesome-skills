@@ -10,7 +10,7 @@
 - [`users/codex-cli-skills.md`](users/codex-cli-skills.md)
 - [`users/gemini-cli-skills.md`](users/gemini-cli-skills.md)
 - [`users/ai-agent-skills.md`](users/ai-agent-skills.md)
-- [`users/antigravity-awesome-skills-vs-awesome-claude-skills.md`](users/antigravity-awesome-skills-vs-awesome-claude-skills.md)
+- [`users/agentic-awesome-skills-vs-awesome-claude-skills.md`](users/agentic-awesome-skills-vs-awesome-claude-skills.md)
 - [`users/best-claude-code-skills-github.md`](users/best-claude-code-skills-github.md)
 - [`users/best-cursor-skills-github.md`](users/best-cursor-skills-github.md)
 - [`users/bundles.md`](users/bundles.md)

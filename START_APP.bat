@@ -1,9 +1,9 @@
 @echo off
 setlocal
-TITLE Antigravity Skills App
+TITLE Agentic Skills App
 
 echo ===================================================
-echo      Antigravity Awesome Skills - Web App
+echo      Agentic Awesome Skills - Web App
 echo ===================================================
 
 :: Check for Node.js

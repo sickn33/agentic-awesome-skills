@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sickn33.github.io/antigravity-awesome-skills/schemas/skills-index.v1.schema.json",
-  "title": "Antigravity Awesome Skills Index v1",
-  "description": "Array-compatible public discovery manifest for antigravity-awesome-skills.",
+  "$id": "https://sickn33.github.io/agentic-awesome-skills/schemas/skills-index.v1.schema.json",
+  "title": "Agentic Awesome Skills Index v1",
+  "description": "Array-compatible public discovery manifest for agentic-awesome-skills.",
   "type": "array",
   "items": {
     "type": "object",

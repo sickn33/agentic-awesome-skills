@@ -1,4 +1,4 @@
-# 🌌 Antigravity Awesome Skills: 1,684+ Kỹ năng (Skills) cho Claude Code, Gemini CLI, Cursor, Copilot và nhiều hơn nữa
+# 🌌 Agentic Awesome Skills: 1,684+ Kỹ năng (Skills) cho Claude Code, Gemini CLI, Cursor, Copilot và nhiều hơn nữa
 
 > **Thư viện GitHub có thể cài đặt gồm hơn 1,684 kỹ năng agentic cho Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity và các trợ lý lập trình AI khác.**
 
@@ -9,9 +9,9 @@
 [![Cursor](https://img.shields.io/badge/Cursor-AI%20IDE-orange)](https://cursor.sh)
 [![Copilot](https://img.shields.io/badge/GitHub%20Copilot-VSCode-lightblue)](https://github.com/features/copilot)
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray)](https://github.com/opencode-ai/opencode)
-[![Antigravity](https://img.shields.io/badge/Antigravity-DeepMind-red)](https://github.com/sickn33/antigravity-awesome-skills)
+[![Antigravity](https://img.shields.io/badge/Antigravity-DeepMind-red)](https://github.com/sickn33/agentic-awesome-skills)
 
-**Antigravity Awesome Skills** là một thư viện kỹ năng có thể cài đặt với **1,684+ kỹ năng `SKILL.md`** được thiết kế để hoạt động mượt mà trên các trợ lý lập trình AI lớn:
+**Agentic Awesome Skills** là một thư viện kỹ năng có thể cài đặt với **1,684+ kỹ năng `SKILL.md`** được thiết kế để hoạt động mượt mà trên các trợ lý lập trình AI lớn:
 
 - 🟣 **Claude Code** (Anthropic CLI)
 - 🔵 **Gemini CLI** (Google DeepMind)
@@ -26,7 +26,7 @@
 
 ### 1. 🐣 Bối cảnh: Đây là gì?
 
-**Antigravity Awesome Skills** (Phiên bản 13.2.0) là một thư viện kỹ năng lớn cho AI coding assistants.
+**Agentic Awesome Skills** (Phiên bản 13.2.0) là một thư viện kỹ năng lớn cho AI coding assistants.
 
 Các trợ lý AI (như Claude Code, Cursor, hoặc Gemini) rất thông minh, nhưng chúng thiếu các **công cụ chuyên biệt**. Chúng không biết "Quy trình Triển khai" của công ty bạn hoặc cú pháp cụ thể cho "AWS CloudFormation".  
 **Skills** là các tệp markdown nhỏ dạy cho chúng cách thực hiện những tác vụ cụ thể này một cách chính xác trong mọi lần thực thi.
@@ -68,15 +68,15 @@ Chúng tôi đã chuyển danh sách đầy đủ các kỹ năng sang một dan
 Để sử dụng các kỹ năng này với **Claude Code**, **Gemini CLI**, **Codex CLI**, **Cursor**, **Antigravity**, **Kiro**, **OpenCode** hoặc **AdaL**, hãy dùng installer CLI:
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 
 # Ví dụ theo công cụ:
-npx antigravity-awesome-skills --claude
-npx antigravity-awesome-skills --gemini
-npx antigravity-awesome-skills --codex
-npx antigravity-awesome-skills --cursor
-npx antigravity-awesome-skills --kiro
-npx antigravity-awesome-skills --agy
+npx agentic-awesome-skills --claude
+npx agentic-awesome-skills --gemini
+npx agentic-awesome-skills --codex
+npx agentic-awesome-skills --cursor
+npx agentic-awesome-skills --kiro
+npx agentic-awesome-skills --agy
 ```
 
 ---
@@ -186,4 +186,4 @@ Chúng tôi chính thức cảm ơn những người đóng góp sau đây đã 
 
 ## Lịch sử Star
 
-[![Star History Chart](https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left)](https://www.star-history.com/#sickn33/antigravity-awesome-skills&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left)](https://www.star-history.com/#sickn33/agentic-awesome-skills&type=date&legend=top-left)

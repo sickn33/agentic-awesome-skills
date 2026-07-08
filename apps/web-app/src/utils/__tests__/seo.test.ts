@@ -31,7 +31,7 @@ describe('SEO helpers', () => {
   it('builds homepage metadata with the canonical catalog message', () => {
     const meta = buildHomeMeta(10);
 
-    expect(meta.title).toContain('Antigravity Awesome Skills GitHub');
+    expect(meta.title).toContain('Agentic Awesome Skills GitHub');
     expect(meta.title).toContain('10+ AI coding skills');
     expect(meta.description).toContain('GitHub library of 10+ installable agentic skills');
     expect(meta.canonicalPath).toBe('/');

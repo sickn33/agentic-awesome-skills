@@ -2,7 +2,7 @@
 
 If you are researching **AI agent skills** on GitHub, the biggest decision is usually not "which single skill is best?" but "do I want a broad installable library or a smaller curated collection?"
 
-Antigravity Awesome Skills is built for the first path: broad coverage, multiple supported tools, installation help, onboarding docs, bundles, workflows, and a catalog that supports both beginner and advanced users.
+Agentic Awesome Skills is built for the first path: broad coverage, multiple supported tools, installation help, onboarding docs, bundles, workflows, and a catalog that supports both beginner and advanced users.
 
 ## What to look for in an AI agent skills library
 
@@ -12,7 +12,7 @@ Antigravity Awesome Skills is built for the first path: broad coverage, multiple
 - **Onboarding quality**: are there docs, bundles, workflows, and examples, or only raw files?
 - **Trust model**: does the repo identify official sources, security posture, and community review expectations?
 
-## When Antigravity Awesome Skills is a good fit
+## When Agentic Awesome Skills is a good fit
 
 - You want one library that spans planning, coding, debugging, testing, security, infra, product, and marketing.
 - You care about installation paths and practical onboarding, not only catalog size.
@@ -34,12 +34,12 @@ Antigravity Awesome Skills is built for the first path: broad coverage, multiple
 
 ## Compare broad vs curated libraries
 
-- [`antigravity-awesome-skills-vs-awesome-claude-skills.md`](antigravity-awesome-skills-vs-awesome-claude-skills.md)
+- [`agentic-awesome-skills-vs-awesome-claude-skills.md`](agentic-awesome-skills-vs-awesome-claude-skills.md)
 - [`best-claude-code-skills-github.md`](best-claude-code-skills-github.md)
 - [`best-cursor-skills-github.md`](best-cursor-skills-github.md)
 
 ## Quick recommendation
 
-- Choose **Antigravity Awesome Skills** if you want a large, installable, multi-tool library with onboarding help.
+- Choose **Agentic Awesome Skills** if you want a large, installable, multi-tool library with onboarding help.
 - Choose a smaller curated repo if you want fewer choices and more editorial filtering.
 - If you are unsure, install this repo first, start with [`bundles.md`](bundles.md), and then compare alternatives once you know your preferred workflow.

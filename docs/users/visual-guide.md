@@ -28,7 +28,7 @@
 ## Repository Structure (Visual)
 
 ```
-antigravity-awesome-skills/
+agentic-awesome-skills/
 │
 ├── 📄 README.md                         ← Overview and quick start
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
@@ -183,7 +183,7 @@ antigravity-awesome-skills/
 ┌─────────────────────────────────────────┐
 │ Terminal                                │
 ├─────────────────────────────────────────┤
-│ $ npx antigravity-awesome-skills        │
+│ $ npx agentic-awesome-skills        │
 │                                         │
 │ ✓ Installing to                         │
 │   ~/.agents/skills/                     │
@@ -434,7 +434,7 @@ START HERE
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  📥 INSTALL                                                 │
-│  npx antigravity-awesome-skills                             │
+│  npx agentic-awesome-skills                             │
 │                                                             │
 │  🎯 USE                                                     │
 │  @skill-name [your request]                                 │

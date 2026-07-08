@@ -1,0 +1,33 @@
+{
+  "name": "aasb-security-engineer",
+  "version": "13.13.0",
+  "description": "Install the \"Security Engineer\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "security-engineer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Security Engineer",
+    "shortDescription": "Security & Compliance · 7 curated skills",
+    "longDescription": "For pentesting, auditing, and hardening. Covers Ethical Hacking Methodology, Burp Suite Testing, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Security & Compliance",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

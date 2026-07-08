@@ -19,4 +19,4 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://sickn33.github.io/antigravity-awesome-skills/sitemap.xml
+Sitemap: https://sickn33.github.io/agentic-awesome-skills/sitemap.xml

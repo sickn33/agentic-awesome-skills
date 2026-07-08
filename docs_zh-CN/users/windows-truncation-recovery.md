@@ -72,7 +72,7 @@
 
 ## 可选的 Windows 批处理助手
 
-以下脚本改编自 [@DiggaX](https://github.com/DiggaX) 在 [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274) 中分享的社区恢复工作流。在运行之前请先查看它。
+以下脚本改编自 [@DiggaX](https://github.com/DiggaX) 在 [issue #274](https://github.com/sickn33/agentic-awesome-skills/issues/274) 中分享的社区恢复工作流。在运行之前请先查看它。
 
 ```bat
 @echo off

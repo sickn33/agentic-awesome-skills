@@ -323,7 +323,7 @@ function assertJsonLdTypes(htmlText, requiredTypes) {
 
 function assertRepositoryJsonLdSignals(htmlText) {
   const entries = extractJsonLdEntries(htmlText);
-  const repoUrl = 'https://github.com/sickn33/antigravity-awesome-skills';
+  const repoUrl = 'https://github.com/sickn33/agentic-awesome-skills';
   const sourceCode = entries.find((entry) => entry?.['@type'] === 'SoftwareSourceCode');
   const organization = entries.find((entry) => entry?.['@type'] === 'Organization');
   const collectionPage = entries.find((entry) => entry?.['@type'] === 'CollectionPage');
@@ -419,7 +419,7 @@ export function assertSocialCard(svgText, { expectedSkillCountLabel = '1,678+' }
     text.includes(expectedSkillCountLabel) || text.includes(countWords),
     `Social card must expose the current ${expectedSkillCountLabel} skill count.`,
   );
-  assert(text.includes('Antigravity Awesome Skills'), 'Social card must identify Antigravity Awesome Skills.');
+  assert(text.includes('Agentic Awesome Skills'), 'Social card must identify Agentic Awesome Skills.');
   assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, 'Social card');
 }
 
@@ -524,12 +524,12 @@ export function assertRobots(robotsText) {
 export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expectedReleaseLabel = '' } = {}) {
   const text = String(llmsText ?? '');
   const requiredSnippets = [
-    '# Antigravity Awesome Skills',
+    '# Agentic Awesome Skills',
     expectedSkillCountLabel,
     'specialized plugins',
     'Claude Code',
     'Codex CLI',
-    'https://github.com/sickn33/antigravity-awesome-skills',
+    'https://github.com/sickn33/agentic-awesome-skills',
     'Canonical source of truth',
   ];
 

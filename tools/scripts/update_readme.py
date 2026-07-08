@@ -9,7 +9,7 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 
-GITHUB_REPO = "sickn33/antigravity-awesome-skills"
+GITHUB_REPO = "sickn33/agentic-awesome-skills"
 SYNC_COMMENT_RE = re.compile(r"<!-- registry-sync: .*? -->")
 SYNC_COMMENT_FIELDS_RE = re.compile(
     r"<!-- registry-sync: version=(?P<version>[^;]+); skills=(?P<skills>\d+); "
@@ -84,7 +84,7 @@ def fetch_star_count(repo: str) -> int | None:
         url,
         headers={
             "Accept": "application/vnd.github+json",
-            "User-Agent": "antigravity-awesome-skills-readme-sync",
+            "User-Agent": "agentic-awesome-skills-readme-sync",
         },
     )
     try:
@@ -186,9 +186,9 @@ def apply_metadata(content: str, metadata: dict) -> str:
     )
 
     content = re.sub(
-        r"^# 🌌 Antigravity Awesome Skills: .*?$",
+        r"^# 🌌 Agentic Awesome Skills: .*?$",
         (
-            f"# 🌌 Antigravity Awesome Skills: {total_skills_label} "
+            f"# 🌌 Agentic Awesome Skills: {total_skills_label} "
             "Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More"
         ),
         content,
@@ -223,9 +223,9 @@ def apply_metadata(content: str, metadata: dict) -> str:
         count=1,
     )
     content = re.sub(
-        r"^\*\*Antigravity Awesome Skills\*\* is a curated, battle-tested library of \*\*.*?\*\* designed",
+        r"^\*\*Agentic Awesome Skills\*\* is a curated, battle-tested library of \*\*.*?\*\* designed",
         (
-            f"**Antigravity Awesome Skills** is a curated, battle-tested library of "
+            f"**Agentic Awesome Skills** is a curated, battle-tested library of "
             f"**{total_skills_label} high-performance agentic skills** designed"
         ),
         content,
@@ -251,9 +251,9 @@ def apply_metadata(content: str, metadata: dict) -> str:
         count=1,
     )
     content = re.sub(
-        r"\*\*Antigravity Awesome Skills\*\* \(Release [\d.]+\) is a massive upgrade to your AI's capabilities, now featuring \*\*.*?\*\* skills",
+        r"\*\*Agentic Awesome Skills\*\* \(Release [\d.]+\) is a massive upgrade to your AI's capabilities, now featuring \*\*.*?\*\* skills",
         (
-            f"**Antigravity Awesome Skills** (Release {version}) is a massive upgrade "
+            f"**Agentic Awesome Skills** (Release {version}) is a massive upgrade "
             f"to your AI's capabilities, now featuring **{total_skills_label} skills**"
         ),
         content,
