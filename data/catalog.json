@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-08T05:44:06.000Z",
-  "total": 1935,
+  "total": 1936,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3727,6 +3727,34 @@
         "always"
       ],
       "path": "skills/asana-automation/SKILL.md"
+    },
+    {
+      "id": "ask-copilot",
+      "name": "ask-copilot",
+      "description": "Use GitHub Copilot CLI in non-interactive mode to ask questions, review code, or generate snippets without manual interaction.",
+      "category": "general",
+      "tags": [
+        "copilot",
+        "github",
+        "cli",
+        "review",
+        "prompt"
+      ],
+      "triggers": [
+        "copilot",
+        "github",
+        "cli",
+        "review",
+        "prompt",
+        "ask",
+        "non",
+        "interactive",
+        "mode",
+        "questions",
+        "code",
+        "generate"
+      ],
+      "path": "skills/ask-copilot/SKILL.md"
     },
     {
       "id": "ask-matt",

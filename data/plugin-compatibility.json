@@ -2868,6 +2868,25 @@
       "runtime_files": []
     },
     {
+      "id": "ask-copilot",
+      "path": "skills/ask-copilot",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ask-matt",
       "path": "skills/ask-matt",
       "targets": {
@@ -37178,10 +37197,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1935,
+    "total_skills": 1936,
     "supported": {
-      "codex": 1863,
-      "claude": 1884
+      "codex": 1864,
+      "claude": 1885
     },
     "blocked": {
       "codex": 72,

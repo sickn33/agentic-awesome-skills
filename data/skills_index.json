@@ -3211,6 +3211,28 @@
     }
   },
   {
+    "id": "ask-copilot",
+    "path": "skills/ask-copilot",
+    "category": "development",
+    "name": "ask-copilot",
+    "description": "Use GitHub Copilot CLI in non-interactive mode to ask questions, review code, or generate snippets without manual interaction.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-07-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "ask-matt",
     "path": "skills/ask-matt",
     "category": "productivity",

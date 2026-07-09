@@ -1,7 +1,7 @@
 {
   "name": "agentic-awesome-skills",
   "version": "13.13.0",
-  "description": "1,935+ agentic skills for Claude Code, Gemini CLI, Cursor, Antigravity & more. Installer CLI.",
+  "description": "1,936+ agentic skills for Claude Code, Gemini CLI, Cursor, Antigravity & more. Installer CLI.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
