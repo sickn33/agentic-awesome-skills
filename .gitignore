@@ -35,6 +35,13 @@ similar_skills_*.json
 remaining_*.json
 html_*.json
 
+# Local remediation planning artefacts (keep durable notes under .codex/)
+/LOCAL_SECURITY_SCAN_GOAL.md
+/LOCAL_SECURITY_SCAN_WORKLOG.md
+/SNYK_REMEDIATION_GOAL.md
+/SNYK_REMEDIATION_WORKLOG.md
+/TRADEMARK_REMEDIATION_GOAL.md
+
 # Temporary analysis scripts (tools/scripts/)
 tools/scripts/*voltagent*.py
 tools/scripts/*html*.py
