@@ -42106,7 +42106,7 @@
     "path": "skills/x-twitter-scraper",
     "category": "data",
     "name": "x-twitter-scraper",
-    "description": "X/Twitter automation skill for tweet search, follower export, posting, DMs, webhooks, MCP, SDKs, Hermes Tweet, and TweetClaw.",
+    "description": "Use Xquik for X data workflows: tweet search, user lookup, follower export, media downloads, monitors, webhooks, REST API, MCP, SDK setup, and approval-gated account actions.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-28",

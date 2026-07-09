@@ -232,7 +232,7 @@ Total skills: 1935
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 
-## data-ai (351)
+## data-ai (352)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -583,6 +583,7 @@ Total skills: 1935
 | `wellally-tech` | Integrate multiple digital health data sources, connect to [WellAlly.tech](https://www.wellally.tech/) knowledge base, providing data import and knowledge re... | wellally, tech | wellally, tech, integrate, multiple, digital, health, data, sources, connect, https, www, knowledge |
 | `wiki-builder` | Create and maintain reusable research wikis with source provenance, configurable structure, and local markdown outputs. | dair-academy, ai, workflow | dair-academy, ai, workflow, wiki, builder, maintain, reusable, research, wikis, source, provenance, configurable |
 | `wordpress-woocommerce-development` | WooCommerce store development workflow covering store setup, payment integration, shipping configuration, customization, and WordPress 7.0 features: AI conne... | wordpress, woocommerce | wordpress, woocommerce, development, store, covering, setup, payment, integration, shipping, configuration, customization, features |
+| `x-twitter-scraper` | Use Xquik for X data workflows: tweet search, user lookup, follower export, media downloads, monitors, webhooks, REST API, MCP, SDK setup, and approval-gated... | twitter, x, social-media, x-api, tweet-search, follower-export, automation, mcp, sdk, webhooks | twitter, x, social-media, x-api, tweet-search, follower-export, automation, mcp, sdk, webhooks, scraper, xquik |
 | `xvary-stock-research` | Thesis-driven equity analysis from public SEC EDGAR and market data; /analyze, /score, /compare workflows with bundled Python tools (Claude Code, Cursor, Cod... | xvary, stock, research | xvary, stock, research, thesis, driven, equity, analysis, public, sec, edgar, market, data |
 | `yann-lecun` | Agente que simula Yann LeCun — inventor das Convolutional Neural Networks, Chief AI Scientist da Meta, Prêmio Turing 2018. | persona, cnn, meta, ai-safety-critic, open-source | persona, cnn, meta, ai-safety-critic, open-source, yann, lecun, agente, que, simula, inventor, das |
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
@@ -1860,7 +1861,7 @@ Total skills: 1935
 | `wjttc-builder` | PLAN and GENERATE WJTTC (Championship-Grade) test suites for any project. Analyzes the codebase, classifies components across the WJTTC five tiers (Brake · E... | wjttc, builder | wjttc, builder, plan, generate, championship, grade, test, suites, any, analyzes, codebase, classifies |
 | `wjttc-tester` | F1-inspired test EXECUTOR + reporter. Runs a test plan, finds and reproduces bugs, audits suite signal integrity, then files a WJTTC report (Brake/Engine/Aer... | wjttc, tester | wjttc, tester, f1, inspired, test, executor, reporter, runs, plan, finds, reproduces, bugs |
 
-## workflow (124)
+## workflow (123)
 
 | Skill | Description | Tags | Triggers |
 | --- | --- | --- | --- |
@@ -1983,7 +1984,6 @@ Total skills: 1935
 | `webflow-automation` | Automate Webflow CMS collections, site publishing, page management, asset uploads, and ecommerce orders via Rube MCP (Composio). Always search tools first fo... | webflow | webflow, automation, automate, cms, collections, site, publishing, page, asset, uploads, ecommerce, orders |
 | `wrike-automation` | Automate Wrike project management via Rube MCP (Composio): create tasks/folders, manage projects, assign work, and track progress. Always search tools first ... | wrike | wrike, automation, automate, via, rube, mcp, composio, tasks, folders, assign, work, track |
 | `writing-great-skills` | Reference for writing and editing skills well — the vocabulary and principles that make a skill predictable. | skill-authoring, workflow, coding-agents | skill-authoring, workflow, coding-agents, writing, great, skills, reference, editing, well, vocabulary, principles, skill |
-| `x-twitter-scraper` | X/Twitter automation skill for tweet search, follower export, posting, DMs, webhooks, MCP, SDKs, Hermes Tweet, and TweetClaw. | twitter, x-api, tweet-search, twitter-api, twitter-scraper, follower-export, automation, mcp, sdk, webhooks, hermes-agent, hermes-tweet, openclaw, tweetclaw | twitter, x-api, tweet-search, twitter-api, twitter-scraper, follower-export, automation, mcp, sdk, webhooks, hermes-agent, hermes-tweet |
 | `yao-meta-skill` | Create, refactor, evaluate, and package agent skills from workflows, prompts, transcripts, docs, or notes. Use for skill creation, reusable workflow packagin... | skill-authoring, agent-skills, evaluation, packaging | skill-authoring, agent-skills, evaluation, packaging, yao, meta, skill, refactor, evaluate, package, agent, skills |
 | `zendesk-automation` | Automate Zendesk tasks via Rube MCP (Composio): tickets, users, organizations, replies. Always search tools first for current schemas. | zendesk | zendesk, automation, automate, tasks, via, rube, mcp, composio, tickets, users, organizations, replies |
 | `zoho-crm-automation` | Automate Zoho CRM tasks via Rube MCP (Composio): create/update records, search contacts, manage leads, and convert leads. Always search tools first for curre... | zoho, crm | zoho, crm, automation, automate, tasks, via, rube, mcp, composio, update, records, search |

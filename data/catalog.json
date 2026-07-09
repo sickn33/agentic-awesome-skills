@@ -47526,37 +47526,33 @@
     {
       "id": "x-twitter-scraper",
       "name": "x-twitter-scraper",
-      "description": "X/Twitter automation skill for tweet search, follower export, posting, DMs, webhooks, MCP, SDKs, Hermes Tweet, and TweetClaw.",
-      "category": "workflow",
+      "description": "Use Xquik for X data workflows: tweet search, user lookup, follower export, media downloads, monitors, webhooks, REST API, MCP, SDK setup, and approval-gated account actions.",
+      "category": "data-ai",
       "tags": [
         "twitter",
+        "x",
+        "social-media",
         "x-api",
         "tweet-search",
-        "twitter-api",
-        "twitter-scraper",
         "follower-export",
         "automation",
         "mcp",
         "sdk",
-        "webhooks",
-        "hermes-agent",
-        "hermes-tweet",
-        "openclaw",
-        "tweetclaw"
+        "webhooks"
       ],
       "triggers": [
         "twitter",
+        "x",
+        "social-media",
         "x-api",
         "tweet-search",
-        "twitter-api",
-        "twitter-scraper",
         "follower-export",
         "automation",
         "mcp",
         "sdk",
         "webhooks",
-        "hermes-agent",
-        "hermes-tweet"
+        "scraper",
+        "xquik"
       ],
       "path": "skills/x-twitter-scraper/SKILL.md"
     },
