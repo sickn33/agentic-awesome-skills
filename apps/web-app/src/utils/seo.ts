@@ -2,7 +2,7 @@ import type { SeoJsonLdValue, SeoMeta, TwitterCard, Skill } from '../types';
 import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
 
 export const DEFAULT_TOP_SKILL_COUNT = 40;
-export const DEFAULT_SOCIAL_IMAGE = 'social-card.svg';
+export const DEFAULT_SOCIAL_IMAGE = 'social-card.png';
 const SITE_NAME = 'Agentic Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
 const HOSTED_CATALOG_URL = 'https://sickn33.github.io/agentic-awesome-skills/';

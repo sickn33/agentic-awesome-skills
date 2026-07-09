@@ -11,7 +11,7 @@ const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 const SEO_LANDING_PAGES_PATH = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
 
 const HOME_CATALOG_COUNT_FALLBACK = 1935;
-const PRERENDER_SOCIAL_IMAGE = 'social-card.svg';
+const PRERENDER_SOCIAL_IMAGE = 'social-card.png';
 const SITE_NAME = 'Agentic Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
 const HOSTED_CATALOG_URL = 'https://sickn33.github.io/agentic-awesome-skills/';

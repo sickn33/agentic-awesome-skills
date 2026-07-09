@@ -1,5 +1,5 @@
 <!-- registry-sync: version=13.13.0; skills=1935; stars=42574; updated_at=2026-07-08T05:44:06+00:00 -->
-[![Agentic Awesome Skills social preview](apps/web-app/public/social-card.svg)](https://github.com/sickn33/agentic-awesome-skills)
+[![Agentic Awesome Skills social preview](apps/web-app/public/social-card.png)](https://github.com/sickn33/agentic-awesome-skills)
 
 # 🌌 Agentic Awesome Skills: 1,935+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More
 

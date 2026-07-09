@@ -118,8 +118,8 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <meta property="og:image" content="https://example.com/social-card.svg" />
-          <meta name="twitter:image" content="https://example.com/social-card.svg" />
+          <meta property="og:image" content="https://example.com/social-card.png" />
+          <meta name="twitter:image" content="https://example.com/social-card.png" />
           <meta name="twitter:image:alt" content="Catalog social preview" />
         </head>
       </html>
@@ -207,6 +207,16 @@ describe('seo assets verification helpers', () => {
     `;
 
     expect(() => assertSocialCard(svg)).not.toThrow();
+  });
+
+  it('accepts a 1200x630 PNG social card', () => {
+    const png = Buffer.alloc(24);
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(png, 0);
+    png.write('IHDR', 12, 'ascii');
+    png.writeUInt32BE(1200, 16);
+    png.writeUInt32BE(630, 20);
+
+    expect(() => assertSocialCard(png)).not.toThrow();
   });
 
   it('rejects stale social card count labels', () => {
@@ -324,7 +334,7 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <meta property="og:image" content="https://example.com/social-card.svg" />
+          <meta property="og:image" content="https://example.com/social-card.png" />
           <meta name="twitter:image:alt" content="Catalog social preview" />
         </head>
       </html>

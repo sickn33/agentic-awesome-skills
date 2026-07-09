@@ -54,7 +54,7 @@ function parseCliArgs(argv) {
     manifestPath: 'dist/site.webmanifest',
     indexPath: 'dist/index.html',
     sourceIndexPath: 'index.html',
-    socialImagePath: 'dist/social-card.svg',
+    socialImagePath: 'dist/social-card.png',
     distDir: 'dist',
     minSkillUrls: String(defaultMinSkillUrls),
     requireHostedUrl: false,
@@ -71,7 +71,7 @@ function parseCliArgs(argv) {
         args.llmsPath = path.join(artifactsDir, 'llms.txt');
         args.manifestPath = path.join(artifactsDir, 'site.webmanifest');
         args.indexPath = path.join(artifactsDir, 'index.html');
-        args.socialImagePath = path.join(artifactsDir, 'social-card.svg');
+        args.socialImagePath = path.join(artifactsDir, 'social-card.png');
         args.distDir = artifactsDir;
         i += 1;
       }
@@ -412,8 +412,24 @@ export function assertStaticIndexShell(htmlText, { expectedSkillCountLabel = '1,
   }
 }
 
-export function assertSocialCard(svgText, { expectedSkillCountLabel = '1,678+' } = {}) {
-  const text = String(svgText ?? '');
+function readPngDimensions(buffer) {
+  const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  assert(Buffer.isBuffer(buffer) && buffer.subarray(0, 8).equals(signature), 'Social card PNG must have a valid PNG signature.');
+  assert(buffer.subarray(12, 16).toString('ascii') === 'IHDR', 'Social card PNG must expose an IHDR chunk.');
+  return {
+    width: buffer.readUInt32BE(16),
+    height: buffer.readUInt32BE(20),
+  };
+}
+
+export function assertSocialCard(cardData, { expectedSkillCountLabel = '1,678+' } = {}) {
+  if (Buffer.isBuffer(cardData) && cardData.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
+    const { width, height } = readPngDimensions(cardData);
+    assert(width === 1200 && height === 630, `Social card PNG must be 1200x630, got ${width}x${height}.`);
+    return;
+  }
+
+  const text = String(cardData ?? '');
   const countWords = expectedSkillCountLabel.replace(/\+$/, ' plus');
   assert(
     text.includes(expectedSkillCountLabel) || text.includes(countWords),
@@ -565,7 +581,7 @@ export function runVerification({
   manifestPath,
   indexPath = 'dist/index.html',
   sourceIndexPath = 'index.html',
-  socialImagePath = 'dist/social-card.svg',
+  socialImagePath = 'dist/social-card.png',
   distDir = 'dist',
   minSkillUrls,
   requireHostedUrl = false,
@@ -590,7 +606,7 @@ export function runVerification({
   assertIndexSocialMeta(indexHtml);
   assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel, requireHostedUrl });
   assertStaticIndexShell(readFile(sourceIndexPath), { expectedSkillCountLabel, requireHostedUrl });
-  assertSocialCard(readFile(socialImagePath), { expectedSkillCountLabel });
+  assertSocialCard(fs.readFileSync(socialImagePath), { expectedSkillCountLabel });
   assertRobots(readFile(robotsPath));
   assertLlms(readFile(llmsPath), { expectedSkillCountLabel, expectedReleaseLabel });
   assertManifest(readFile(manifestPath));
