@@ -134,6 +134,11 @@ Next-wave plugins cover marketing/SEO/growth, automation, observability/incident
 - [Violin](https://github.com/Strategic-Automation/violin) - AI-native pentest framework and Hermes agent profile/plugin for autonomous, human-in-the-loop offensive security (IDOR/SSRF/XSS triage, multi-stage agentic testing). (Hermes agent profile for autonomous pentesting)
 
 
+## 🛡️ Offensive Security & Red Team Skills
+
+- [Violin](https://github.com/Strategic-Automation/violin) - AI-native pentest framework and Hermes agent profile/plugin for autonomous, human-in-the-loop offensive security (IDOR/SSRF/XSS triage, multi-stage agentic testing). (Hermes agent profile for autonomous pentesting)
+
+
 Use the same repository, but install or invoke it in the way your host expects.
 
 | Tool           | Install                                                                  | First Use                                              |
