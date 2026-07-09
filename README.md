@@ -34,7 +34,7 @@ The canonical project page is the GitHub repository at <https://github.com/sickn
 
 ## Why This Repo
 
-- **Installable, not just inspirational**: use `npx agentic-awesome-skills` to put skills where your tool expects them.
+- **Installable, not just inspirational**: use `npx github:sickn33/agentic-awesome-skills` to put skills where your tool expects them.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
 - **Broad coverage with real utility**: 1,936+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Focused by default**: specialized plugins help you start with the web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows you actually need.
@@ -71,10 +71,10 @@ Most users should start by choosing the smallest useful surface:
 
 ```bash
 # Default: ~/.agents/skills (Antigravity 2.0 global). Use --path for other locations.
-npx agentic-awesome-skills
+npx github:sickn33/agentic-awesome-skills
 
 # Antigravity CLI slash commands (agy): ~/.gemini/antigravity-cli/skills/<skill>/SKILL.md
-npx agentic-awesome-skills --agy
+npx github:sickn33/agentic-awesome-skills --agy
 ```
 
 The npm installer uses a shallow, release-pinned clone by default so first-run installs stay lighter than a full repository history checkout while matching the published npm package version. Use `--tag main` only when you intentionally want the current repository tip.
@@ -133,19 +133,19 @@ Use the same repository, but install or invoke it in the way your host expects.
 
 | Tool           | Install                                                                  | First Use                                              |
 | -------------- | ------------------------------------------------------------------------ | ------------------------------------------------------ |
-| Claude Code    | `npx agentic-awesome-skills --claude` or Claude plugin marketplace | `>> /brainstorming help me plan a feature`           |
-| Cursor         | `npx agentic-awesome-skills --cursor`                              | `@brainstorming help me plan a feature`              |
-| Gemini CLI     | `npx agentic-awesome-skills --gemini`                              | `Use brainstorming to plan a feature`                |
-| Codex CLI      | `npx agentic-awesome-skills --codex`                               | `Use brainstorming to plan a feature`                |
-| Autohand Code  | `npx agentic-awesome-skills --path ~/.autohand/skills` or `--path .autohand/skills` | `Use brainstorming to plan a feature`                |
-| Antigravity IDE | `npx agentic-awesome-skills --antigravity`                        | `Use @brainstorming to plan a feature`               |
-| Antigravity CLI (`agy`) | `npx agentic-awesome-skills --agy`                        | `/brainstorming help me plan a feature`              |
-| Kiro CLI       | `npx agentic-awesome-skills --kiro`                                | `Use brainstorming to plan a feature`                |
-| Kiro IDE       | `npx agentic-awesome-skills --path ~/.kiro/skills`                 | `Use @brainstorming to plan a feature`               |
+| Claude Code    | `npx github:sickn33/agentic-awesome-skills --claude` or Claude plugin marketplace | `>> /brainstorming help me plan a feature`           |
+| Cursor         | `npx github:sickn33/agentic-awesome-skills --cursor`                              | `@brainstorming help me plan a feature`              |
+| Gemini CLI     | `npx github:sickn33/agentic-awesome-skills --gemini`                              | `Use brainstorming to plan a feature`                |
+| Codex CLI      | `npx github:sickn33/agentic-awesome-skills --codex`                               | `Use brainstorming to plan a feature`                |
+| Autohand Code  | `npx github:sickn33/agentic-awesome-skills --path ~/.autohand/skills` or `--path .autohand/skills` | `Use brainstorming to plan a feature`                |
+| Antigravity IDE | `npx github:sickn33/agentic-awesome-skills --antigravity`                        | `Use @brainstorming to plan a feature`               |
+| Antigravity CLI (`agy`) | `npx github:sickn33/agentic-awesome-skills --agy`                        | `/brainstorming help me plan a feature`              |
+| Kiro CLI       | `npx github:sickn33/agentic-awesome-skills --kiro`                                | `Use brainstorming to plan a feature`                |
+| Kiro IDE       | `npx github:sickn33/agentic-awesome-skills --path ~/.kiro/skills`                 | `Use @brainstorming to plan a feature`               |
 | GitHub Copilot | _No installer — paste skills or rules manually_                       | `Ask Copilot to use brainstorming to plan a feature` |
-| OpenCode       | `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none` | `opencode run @brainstorming help me plan a feature` |
-| AdaL CLI       | `npx agentic-awesome-skills --path .adal/skills`                   | `Use brainstorming to plan a feature`                |
-| Custom path    | `npx agentic-awesome-skills --path ./my-skills`                    | Depends on your tool                                   |
+| OpenCode       | `npx github:sickn33/agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none` | `opencode run @brainstorming help me plan a feature` |
+| AdaL CLI       | `npx github:sickn33/agentic-awesome-skills --path .adal/skills`                   | `Use brainstorming to plan a feature`                |
+| Custom path    | `npx github:sickn33/agentic-awesome-skills --path ./my-skills`                    | Depends on your tool                                   |
 
 Use the table above for install targets. Use specialized plugins when you are choosing what to install for a domain, then use the host guides below only for path details, prompt examples, and setup caveats.
 
@@ -163,13 +163,13 @@ Use the table above for install targets. Use specialized plugins when you are ch
 
 ### How do I install it?
 
-Run `npx agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the installer to place skills in the directory your assistant already watches.
+Run `npx github:sickn33/agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the installer to place skills in the directory your assistant already watches.
 
 For Autohand Code, use the installer with a custom path:
 
 ```bash
-npx agentic-awesome-skills --path ~/.autohand/skills
-npx agentic-awesome-skills --path .autohand/skills
+npx github:sickn33/agentic-awesome-skills --path ~/.autohand/skills
+npx github:sickn33/agentic-awesome-skills --path .autohand/skills
 ```
 
 ### What are AAS specialized plugins?
@@ -263,7 +263,7 @@ Keep the root README short; use the dedicated docs for recovery and platform-spe
 - If you integrate agentic-awesome-skills into a host, read the discovery contract first: [Stable Skills Manifest v1](docs/users/discovery-manifest.md).
 - For Windows truncation or context crash loops, use [docs/users/windows-truncation-recovery.md](docs/users/windows-truncation-recovery.md).
 - For Linux/macOS overload or selective activation, use [docs/users/agent-overload-recovery.md](docs/users/agent-overload-recovery.md).
-- For OpenCode or other `.agents/skills` installs, prefer a reduced install such as `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`.
+- For OpenCode or other `.agents/skills` installs, prefer a reduced install such as `npx github:sickn33/agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`.
 - For plugin install details, host compatibility, and marketplace-safe distribution, use [docs/users/plugins.md](docs/users/plugins.md).
 - For contributor expectations and guardrails, use [CONTRIBUTING.md](CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), and [`SECURITY.md`](SECURITY.md).
 

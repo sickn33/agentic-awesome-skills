@@ -24,7 +24,7 @@ const FAQ_ITEMS = [
   {
     question: 'How do I install Agentic Awesome Skills?',
     answer:
-      'Install the library with npx agentic-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+      'Install the library with npx github:sickn33/agentic-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
   },
   {
     question: 'Is Agentic Awesome Skills a GitHub repository?',

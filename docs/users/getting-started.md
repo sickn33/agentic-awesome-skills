@@ -29,13 +29,13 @@ If you prefer a marketplace-style install for **Claude Code** or **Codex**, use 
 **Option A — npx (easiest):**
 
 ```bash
-npx agentic-awesome-skills
+npx github:sickn33/agentic-awesome-skills
 ```
 
-This clones to `~/.agents/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, `--kiro`, or `--agy` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx agentic-awesome-skills --help` for details.
+This clones to `~/.agents/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, `--kiro`, or `--agy` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx github:sickn33/agentic-awesome-skills --help` for details.
 The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
 
-If you see a 404 error, use: `npx github:sickn33/agentic-awesome-skills`
+If npm returns a package 404, keep using the GitHub form: `npx github:sickn33/agentic-awesome-skills`
 
 **Option B — git clone:**
 
@@ -156,10 +156,10 @@ A: Follow the recovery steps in [windows-truncation-recovery.md](windows-truncat
 A: Use the activation flow in [agent-overload-recovery.md](agent-overload-recovery.md). It shows how to run `scripts/activate-skills.sh` from a cloned repo so you can keep the full library archived and activate only the bundles or skills you need in the live Antigravity directory.
 
 **Q: What if `agy` does not show installed skills when I type `/`?**
-A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Run `npx agentic-awesome-skills --agy`, restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
+A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Run `npx github:sickn33/agentic-awesome-skills --agy`, restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
 
 **Q: What if OpenCode or another `.agents/skills` host becomes unstable with a full install?**
-A: Start with a reduced install instead of copying the whole library. For example: `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`.
+A: Start with a reduced install instead of copying the whole library. For example: `npx github:sickn33/agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`.
 
 **Q: Is this free?**
 A: Yes. Original code and tooling are MIT-licensed, and original documentation/non-code written content is CC BY 4.0. See [../../LICENSE](../../LICENSE) and [../../LICENSE-CONTENT](../../LICENSE-CONTENT).
