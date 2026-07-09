@@ -11,21 +11,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [14.0.0] - 2026-07-09 - "Agentic Awesome Skills Rename and Catalog Continuity"
 
-> Project identity, package metadata, public URLs, source provenance, and reference completeness aligned after the rename from Antigravity Awesome Skills to Agentic Awesome Skills.
+> Project identity, package metadata, public URLs, source provenance, social preview assets, and reference completeness aligned after the rename from Antigravity Awesome Skills to Agentic Awesome Skills.
 
 Start here:
 
 - Install: `npx agentic-awesome-skills --help`
 - Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
-- Browse skills: [README.md#browse-1935-skills](README.md#browse-1935-skills)
+- Browse skills: [README.md#browse-1936-skills](README.md#browse-1936-skills)
 - Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
 
 This is a major release because the public project identity changed from **Antigravity Awesome Skills** to **Agentic Awesome Skills**. The rename reflects the catalog's broader role across Claude Code, Codex, Cursor, Gemini CLI, Antigravity, and other agentic coding environments while preserving Antigravity compatibility.
+
+## Added
+
+- Added **ask-copilot**, a critical-risk Copilot CLI consultation skill with explicit user-consent requirements for sending local context to GitHub Copilot and separate approval gates before any tool execution or workspace mutation (PR #792).
 
 ## Changed
 
 - Promoted the renamed **Agentic Awesome Skills** identity as the canonical package, repository, hosted catalog, changelog, and public metadata surface.
 - Refreshed **x-twitter-scraper** with current Xquik source metadata, MIT license provenance, SDK setup guidance, and official-source README placement (PR #794).
+- Replaced the public social preview card with a PNG asset and updated web SEO verification to validate the 1200x630 PNG dimensions.
 
 ## Fixed
 
@@ -33,12 +38,14 @@ This is a major release because the public project identity changed from **Antig
 
 ## Validation
 
+- Hardened and merged PR #792 after `Skills Registry CI`, `Skill Review`, `Dependency Review`, `CodeQL`, Socket, and Snyk checks passed.
 - Verified and merged PR #794 after `Skills Registry CI`, `Skill Review`, `Dependency Review`, `CodeQL`, Socket, and Snyk checks passed.
 - Reproduced issue #793 locally by confirming `pytest-skill` referenced `reference/playbook.md` while the distributed skill folders lacked the file, then restored it from the LambdaTest upstream source.
-- Left PR #792 open because its required fork workflows were still `action_required` and the submitted skill needs maintainer hardening before merge.
+- Closed issue #793 after restoring the missing pytest reference file on `main`.
 
 ## Credits
 
+- **[@cshara1](https://github.com/cshara1)** for PR #792 (`ask-copilot`).
 - **[@kriptoburak](https://github.com/kriptoburak)** and **[Xquik-dev/x-twitter-scraper](https://github.com/Xquik-dev/x-twitter-scraper)** for PR #794 (`x-twitter-scraper` source refresh).
 - **[@grabear](https://github.com/grabear)** for reporting the missing pytest reference in issue #793.
 - **[LambdaTest/agent-skills](https://github.com/LambdaTest/agent-skills)** for the upstream `pytest-skill` playbook restored in this release.
