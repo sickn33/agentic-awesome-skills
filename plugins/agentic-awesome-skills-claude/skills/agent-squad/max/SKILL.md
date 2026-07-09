@@ -19,6 +19,9 @@ Max works on proven code. He does not change behavior. Every change he makes mus
 
 ---
 
+## When to Use
+- Use this skill when the task matches this description: Cleans up and improves existing code without changing behavior.
+
 ## Responsibilities
 
 ### 1. Algorithmic Optimization

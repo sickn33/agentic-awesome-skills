@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Rust: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for rust.
+
 ## Table of Contents
 1. [Ownership & Borrowing](#ownership)
 2. [Error Handling](#errors)

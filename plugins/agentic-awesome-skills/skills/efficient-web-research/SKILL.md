@@ -1,5 +1,6 @@
 ---
 name: efficient-web-research
+source: community
 risk: safe
 description: >
   Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.
@@ -11,6 +12,9 @@ A protocol for accessing web content in the most token-efficient, accurate, and 
 using the right tool at the right depth, and stopping as soon as the question is answerable.
 
 ---
+
+## When to Use
+- Use this skill when the task matches this description: Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.
 
 ## Core Principle
 

@@ -1,7 +1,7 @@
-<!-- registry-sync: version=13.2.0; skills=1684; stars=41640; updated_at=2026-06-25T06:37:39+00:00 -->
-# 🌌 Agentic Awesome Skills: 1,684+ 代理技能，适用于 Claude Code、Gemini CLI、Cursor、Copilot 及更多工具
+<!-- registry-sync: version=14.0.0; skills=1936; stars=41640; updated_at=2026-06-25T06:37:39+00:00 -->
+# 🌌 Agentic Awesome Skills: 1,936+ 代理技能，适用于 Claude Code、Gemini CLI、Cursor、Copilot 及更多工具
 
-> **可安装的 GitHub 技能库，包含 1,684+ 个代理技能，适用于 Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity 和其他 AI 编码助手。**
+> **可安装的 GitHub 技能库，包含 1,936+ 个代理技能，适用于 Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity 和其他 AI 编码助手。**
 
 Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用的 `SKILL.md` 剧本。与其收集随机提示词，你可以获得一个可搜索、可安装的技能库，涵盖规划、编码、调试、测试、安全审查、基础设施工作、产品工作流和成长任务，支持主流 AI 编码助手。
 
@@ -20,13 +20,13 @@ Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
-**当前版本：V13.2.0。** 值得 42k+ GitHub 星标信赖，该仓库结合了官方和社区的技能集合，提供捆绑包、工作流、安装路径和文档，帮助你从首次安装快速过渡到日常使用。
+**当前版本：V14.0.0。** 值得 42k+ GitHub 星标信赖，该仓库结合了官方和社区的技能集合，提供捆绑包、工作流、安装路径和文档，帮助你从首次安装快速过渡到日常使用。
 
 ## 为什么开发者为这个仓库加星
 
 - **可安装，而不仅是启发式**：使用 `npx agentic-awesome-skills` 将技能放置在你的工具期望的位置。
 - **为主要代理工作流构建**：Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity、Kiro、OpenCode、Copilot 等。
-- **广泛的覆盖范围和实用价值**：1,684+ 个技能，涵盖开发、测试、安全、基础设施、产品和营销。
+- **广泛的覆盖范围和实用价值**：1,936+ 个技能，涵盖开发、测试、安全、基础设施、产品和营销。
 - **更快的入门**：捆绑包和工作流减少了从"发现这个仓库"到"使用第一个技能"的时间。
 - **无论你需要广度还是精选都有用**：浏览完整目录、从顶级捆绑包开始，或在安装前比较替代方案。
 
@@ -46,7 +46,7 @@ Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用
 - [🧭 Antigravity 工作流](#antigravity-工作流)
 - [⚖️ 替代方案与比较](#替代方案与比较)
 - [📦 功能与类别](#功能与类别)
-- [📚 浏览 1,684+ 技能](#浏览-1684-技能)
+- [📚 浏览 1,936+ 技能](#浏览-1936-技能)
 - [🤝 贡献](#贡献)
 - [💬 社区](#社区)
 - [☕ 支持项目](#支持项目)
@@ -63,7 +63,7 @@ Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用
 
 ### 1. 🐣 背景：这是什么？
 
-**Agentic Awesome Skills**（版本 13.2.0）是一个大型可安装技能库，适用于 AI 编码助手。它包括入门文档、捆绑包、工作流、生成的目录和 CLI 安装器，让你无需手动拼接数十个仓库就能从发现过渡到实际使用。
+**Agentic Awesome Skills**（版本 14.0.0）是一个大型可安装技能库，适用于 AI 编码助手。它包括入门文档、捆绑包、工作流、生成的目录和 CLI 安装器，让你无需手动拼接数十个仓库就能从发现过渡到实际使用。
 
 AI 代理很聪明，但仍需要**特定于任务的操作指令**。技能是专注的 markdown 剧本，教代理如何重复执行工作流并提供更好的上下文，无论是部署、API 设计、测试、产品策略、SEO 还是文档。
 
@@ -240,7 +240,7 @@ Codex 插件通过仓库本地插件入口指向相同的精选 `skills/` 树，
 
 ## 按工具查看最佳技能
 
-如果你想要比"浏览所有 1,684+ 技能"更快的答案，请从工具特定指南开始：
+如果你想要比"浏览所有 1,936+ 技能"更快的答案，请从工具特定指南开始：
 
 - **[Claude Code 技能](users/claude-code-skills.md)**：安装路径、入门技能、提示词示例和插件市场流程。
 - **[Cursor 技能](users/cursor-skills.md)**：`.cursor/skills/` 的最佳入门技能、UI 重型工作和配对编程流程。
@@ -405,7 +405,7 @@ Use @security-auditor to review this API endpoint for auth and validation risks.
 
 计数随着新技能的添加而变化。有关当前完整注册表，请参阅 [CATALOG.md](../CATALOG.md)。
 
-## 浏览 1,684+ 技能
+## 浏览 1,936+ 技能
 
 - 在 [`../apps/web-app`](../apps/web-app) 中打开交互式浏览器。
 - 在 [`../CATALOG.md`](../CATALOG.md) 中阅读完整目录。

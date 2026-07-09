@@ -6,6 +6,7 @@ const Home = lazy(() => import('./pages/Home'));
 const SkillDetail = lazy(() => import('./pages/SkillDetail'));
 const Plugins = lazy(() => import('./pages/Plugins'));
 const TopicLanding = lazy(() => import('./pages/TopicLanding'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App(): React.ReactElement {
   const logoSrc = `${import.meta.env.BASE_URL}agentic-skills-logo.png`;
@@ -60,6 +61,7 @@ function App(): React.ReactElement {
                 <Route path="/plugins" element={<Plugins />} />
                 <Route path="/topics/:slug" element={<TopicLanding />} />
                 <Route path="/skill/:id" element={<SkillDetail />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
           </div>

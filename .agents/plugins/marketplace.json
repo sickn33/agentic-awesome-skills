@@ -629,6 +629,18 @@
       "category": "Maintainer & OSS"
     },
     {
+      "name": "aasb-skill-author",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-skill-author"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Maintainer & OSS"
+    },
+    {
       "name": "aasb-aas-accessibility-inclusive-ux",
       "source": {
         "source": "local",

@@ -309,7 +309,7 @@ metadata:
 # Istio - Check certificate expiry
 istioctl proxy-config secret deploy/my-app -o json | \
   jq '.dynamicActiveSecrets[0].secret.tlsCertificate.certificateChain.inlineBytes' | \
-  tr -d '"' | base64 -d | openssl x509 -text -noout
+  tr -d '"' | base64 -d | openssl x509 -text -noout # security-allowlist: local certificate inspection
 
 # Force certificate rotation
 kubectl rollout restart deployment/my-app

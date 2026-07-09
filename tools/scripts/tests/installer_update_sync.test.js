@@ -38,6 +38,11 @@ try {
 
   createFakeRepo(repoV1, ["skill-a", "skill-b"]);
   createFakeRepo(repoV2, ["skill-a"]);
+  fs.writeFileSync(
+    path.join(repoV1, "skills", "skill-a", "removed-script.sh"),
+    "#!/usr/bin/env bash\necho legacy\n",
+    "utf8",
+  );
   writeSkill(
     repoV1,
     path.join("nested", "skill-c"),
@@ -63,6 +68,11 @@ try {
     repoV2,
     { name: "Test", path: targetDir },
     installer.buildInstallSelectors({ categoryArg: "backend" }),
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(targetDir, "skill-a", "removed-script.sh")),
+    false,
+    "updates must remove files that disappeared from a still-managed skill",
   );
   assert.strictEqual(
     fs.existsSync(path.join(targetDir, "skill-a")),

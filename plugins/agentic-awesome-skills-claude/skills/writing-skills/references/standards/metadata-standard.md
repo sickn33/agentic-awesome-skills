@@ -47,7 +47,7 @@ metadata:
 ^[a-z0-9]+(-[a-z0-9]+)*$
 ```
 
-**Valid**: `my-skill`, `git-release`, `tdd`  
+**Valid**: `my-skill`, `git-release`, `tdd`
 **Invalid**: `My-Skill`, `my_skill`, `-my-skill`, `my--skill`
 
 ## Common Metadata Keys

@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Java: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for java.
+
 ## Table of Contents
 1. [Streams & Collections](#streams)
 2. [Optional](#optional)

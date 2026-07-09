@@ -77,7 +77,7 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
     ),
     SecurityPattern(
         code="SEC007",
-        regex=r"\beval\s*\(",
+        regex=r"(?<!\$)\beval\s*\(",
         severity="warning",
         description="Dynamic eval() detected",
         rationale="eval() can execute arbitrary code; acceptable only in controlled contexts.",
@@ -122,7 +122,12 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
 # Lines containing this marker are excluded from scanning (project convention).
 # Prefix match covers both bare (<!-- security-allowlist -->) and colon forms
 # (<!-- security-allowlist: reason -->) documented in skill-template.md.
-_ALLOWLIST_MARKERS = ("# security-allowlist", "<!-- security-allowlist")
+_ALLOWLIST_MARKERS = (
+    "# security-allowlist",
+    "// security-allowlist",
+    "<!-- security-allowlist",
+    "-- security-allowlist",
+)
 TEXT_EXTENSIONS = {".cjs", ".js", ".json", ".md", ".mjs", ".py", ".sh", ".ts", ".txt", ".yaml", ".yml"}
 SUPPORT_FILE_PATTERN_CODES = {"SEC002", "SEC003", "SEC004", "SEC005", "SEC008"}
 

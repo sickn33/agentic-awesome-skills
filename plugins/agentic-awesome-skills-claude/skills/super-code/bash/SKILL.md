@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Bash / Shell: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for bash.
+
 ## Table of Contents
 1. [Quoting & Word Splitting](#quoting)
 2. [Conditionals & Tests](#conditionals)

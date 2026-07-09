@@ -62,7 +62,7 @@ script!{
 
 ```rust
 // Evaluate Splash code at runtime
-cx.eval(code_string);
+cx.eval(code_string); // security-allowlist: Makepad runtime API; require trusted code_string
 
 // With context
 cx.eval_with_context(code, context);

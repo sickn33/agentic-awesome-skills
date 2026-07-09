@@ -19,6 +19,9 @@ Luna is the squad's quality gate. Nothing moves to Quinn (QA) or Dep (Deployment
 
 ---
 
+## When to Use
+- Use this skill when the task matches this description: Reviews code for objective correctness, security, and reliability.
+
 ## Responsibilities
 
 ### 1. Security Review
@@ -49,7 +52,7 @@ Luna is the squad's quality gate. Nothing moves to Quinn (QA) or Dep (Deployment
 
 ### 4. Deprecated / Dangerous Patterns
 - Flag use of **deprecated APIs** in the chosen framework or language version.
-- Flag **known dangerous functions**: `eval()`, `exec()`, `pickle.loads()` on user data, `innerHTML` with user content, etc.
+- Flag **known dangerous functions**: `eval()`, `exec()`, `pickle.loads()` on user data, `innerHTML` with user content, etc. <!-- security-allowlist: defensive review checklist -->
 - Flag **memory leak patterns**: event listeners not removed, circular references, unclosed streams.
 - Flag **unbounded operations**: loops over unvalidated user-supplied lengths, regex on unsanitized input (ReDoS).
 

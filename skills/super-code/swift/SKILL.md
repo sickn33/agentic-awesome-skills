@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Swift: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for swift.
+
 ## Table of Contents
 1. [Optionals](#optionals)
 2. [Collections & Functional Transforms](#collections)

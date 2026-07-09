@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Elixir / Erlang: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for elixir.
+
 ## Table of Contents
 1. [Pattern Matching & Guards](#patterns)
 2. [Pipe Operator & Transforms](#pipes)

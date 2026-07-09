@@ -319,7 +319,7 @@ export function setPageMeta(meta: SeoMeta): void {
     }
   }
 
-  ensureMetaTag('robots', 'index, follow', 'name');
+  ensureMetaTag('robots', meta.robots || 'index, follow', 'name');
 }
 
 export function parseDateString(dateValue: string | undefined): number {

@@ -113,6 +113,10 @@ function isTokenAuthorized(req) {
     return crypto.timingSafeEqual(expected, provided);
 }
 
+function isLocalSyncEnabled() {
+    return process.env.ENABLE_LOCAL_SKILLS_SYNC === 'true';
+}
+
 function isPathInside(parentPath, childPath) {
     const relative = path.relative(parentPath, childPath);
     return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
@@ -445,6 +449,15 @@ function checkRemoteSha() {
 async function syncWithGit() {
     ensureUpstream();
 
+    if (git('status --porcelain').trim()) {
+        throw new Error('Local repository has uncommitted changes; commit or stash them before syncing.');
+    }
+
+    const branch = git('branch --show-current').trim();
+    if (branch !== 'main' && branch !== 'master') {
+        throw new Error(`Local sync only supports main/master, not ${branch || 'a detached HEAD'}.`);
+    }
+
     const headBefore = git('rev-parse HEAD');
 
     console.log('[Sync] Fetching from upstream (git)...');
@@ -456,6 +469,9 @@ async function syncWithGit() {
         return { upToDate: true };
     }
 
+    const rollbackRef = `refs/aas-sync-backup/${Date.now()}`;
+    git(`update-ref ${rollbackRef} ${headBefore}`);
+
     console.log('[Sync] Merging updates...');
     try {
         git(`merge ${UPSTREAM_NAME}/main --ff-only`);
@@ -465,7 +481,7 @@ async function syncWithGit() {
         );
     }
 
-    return { upToDate: false };
+    return { upToDate: false, rollbackRef };
 }
 
 /**
@@ -602,6 +618,15 @@ export default function refreshSkillsPlugin() {
                     return;
                 }
 
+                if (!isLocalSyncEnabled()) {
+                    res.statusCode = 403;
+                    res.end(JSON.stringify({
+                        success: false,
+                        error: 'Local sync is disabled. Set ENABLE_LOCAL_SKILLS_SYNC=true before starting Vite.',
+                    }));
+                    return;
+                }
+
                 if (!req.headers?.host || !req.headers?.origin) {
                     res.statusCode = 400;
                     res.end(JSON.stringify({ success: false, error: 'Missing request host or origin headers' }));
@@ -633,8 +658,7 @@ export default function refreshSkillsPlugin() {
                         console.log('[Sync] Using git (fast path)...');
                         result = await syncWithGit();
                     } else {
-                        console.log('[Sync] Git not available, using archive download (slower)...');
-                        result = await syncWithArchive();
+                        throw new Error('Local sync requires git so it can create a rollback reference.');
                     }
 
                     if (result.upToDate) {
@@ -652,7 +676,7 @@ export default function refreshSkillsPlugin() {
                     }
 
                     console.log(`[Sync] ✅ Successfully synced ${count} skills!`);
-                    res.end(JSON.stringify({ success: true, upToDate: false, count }));
+                    res.end(JSON.stringify({ success: true, upToDate: false, count, rollbackRef: result.rollbackRef }));
 
                 } catch (err) {
                     console.error('[Sync] ❌ Failed:', err.message);

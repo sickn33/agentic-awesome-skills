@@ -204,7 +204,7 @@ Verificar explicitamente cada item. O checklist adapta-se ao tipo de sistema:
 - [ ] HTTPS em toda comunicacao externa
 
 #### Python-Especifico
-- [ ] Nenhum uso de eval(), exec() com input externo
+- [ ] Nenhum uso de eval(), exec() com input externo <!-- security-allowlist: defensive audit checklist -->
 - [ ] Nenhum uso de pickle com dados nao confiaveis
 - [ ] subprocess com shell=False
 - [ ] requests com verify=True e timeouts
@@ -383,7 +383,7 @@ O 007 sempre responde nesta estrutura:
 Alem de responder a comandos explicitos, o 007 monitora automaticamente:
 
 **Quando ativar sem ser chamado:**
-- Novo codigo contendo `eval()`, `exec()`, `subprocess`, `os.system()`
+- Novo codigo contendo `eval()`, `exec()`, `subprocess`, `os.system()` <!-- security-allowlist: defensive audit trigger -->
 - Arquivo `.env` ou segredo sendo commitado/modificado
 - Nova dependencia adicionada ao projeto
 - Skill nova sendo criada ou modificada

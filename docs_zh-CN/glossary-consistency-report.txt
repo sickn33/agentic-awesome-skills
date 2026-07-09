@@ -16,229 +16,32 @@ Created:
   2026-03-27
 
 Last Updated:
-  2026-03-27
+  2026-07-09
 
 ----------------------------------------
 
 GLOSSARY STATISTICS
 ===================
 
-Total Terms: 168
+Total Terms: 199
+Actual Terms: 199
 
 Top 10 Terms (alphabetical):
 
-  SEO: N/A
-  adversarial: N/A
-  agents: N/A
-  aggregate: N/A
-  allowlist: N/A
-  artifact: N/A
-  attack tree: N/A
-  attribution: N/A
-  audit: N/A
-  authorized: N/A
+  SEO: SEO
+  adversarial: 对抗性
+  agents: 代理
+  aggregate: 聚合
+  allowlist: 允许列表
+  artifact: 工件
+  attack tree: 攻击树
+  attribution: 署名
+  audit: 审计
+  authorized: 授权
 
 Field Validation:
 
-  Missing translation: skills
-  Missing translation: repository
-  Missing translation: installation
-  Missing translation: bundles
-  Missing translation: workflows
-  Missing translation: agents
-  Missing translation: cli
-  Missing translation: contributor
-  Missing translation: maintainer
-  Missing translation: documentation
-  Missing translation: github
-  Missing translation: claude
-  Missing translation: cursor
-  Missing translation: gemini
-  Missing translation: codex
-  Missing translation: mcp
-  Missing translation: npm
-  Missing translation: plugin
-  Missing translation: marketplace
-  Missing translation: directory
-  Missing translation: terminal
-  Missing translation: features
-  Missing translation: categories
-  Missing translation: integration
-  Missing translation: configuration
-  Missing translation: development
-  Missing translation: security
-  Missing translation: testing
-  Missing translation: deployment
-  Missing translation: guide
-  Missing translation: tutorial
-  Missing translation: example
-  Missing translation: community
-  Missing translation: feedback
-  Missing translation: release
-  Missing translation: version
-  Missing translation: playbook
-  Missing translation: persona
-  Missing translation: wizard
-  Missing translation: starter pack
-  Missing translation: clone
-  Missing translation: endpoint
-  Missing translation: audit
-  Missing translation: lint
-  Missing translation: validate
-  Missing translation: workspace
-  Missing translation: global
-  Missing translation: native
-  Missing translation: manual
-  Missing translation: official
-  Missing translation: vendor
-  Missing translation: risk
-  Missing translation: authorized
-  Missing translation: spec
-  Missing translation: prompt
-  Missing translation: context
-  Missing translation: invoke
-  Missing translation: syntax
-  Missing translation: frontmatter
-  Missing translation: toolbox
-  Missing translation: installer
-  Missing translation: flag
-  Missing translation: narrow
-  Missing translation: single-domain
-  Missing translation: onboarding
-  Missing translation: pr
-  Missing translation: chat
-  Missing translation: coverage
-  Missing translation: broad
-  Missing translation: workflow-oriented
-  Missing translation: task framing
-  Missing translation: orchestration
-  Missing translation: retrieval
-  Missing translation: embedding
-  Missing translation: vector database
-  Missing translation: observability
-  Missing translation: tracing
-  Missing translation: mvp
-  Missing translation: saas
-  Missing translation: kpi
-  Missing translation: domain
-  Missing translation: bounded context
-  Missing translation: ubiquitous language
-  Missing translation: aggregate
-  Missing translation: invariant
-  Missing translation: cqrs
-  Missing translation: event sourcing
-  Missing translation: projection
-  Missing translation: saga
-  Missing translation: threat modeling
-  Missing translation: attack tree
-  Missing translation: penetration testing
-  Missing translation: fuzzing
-  Missing translation: idor
-  Missing translation: e2e
-  Missing translation: truncation
-  Missing translation: trajectory
-  Missing translation: truncation crash loop
-  Missing translation: restart loop
-  Missing translation: database
-  Missing translation: backup
-  Missing translation: crash
-  Missing translation: session
-  Missing translation: cleanup
-  Missing translation: recovery
-  Missing translation: repair
-  Missing translation: kiro
-  Missing translation: symlink
-  Missing translation: tier
-  Missing translation: expertise
-  Missing translation: pattern
-  Missing translation: vulnerability
-  Missing translation: remediation
-  Missing translation: compliance
-  Missing translation: hardening
-  Missing translation: exploit
-  Missing translation: payload
-  Missing translation: reconnaissance
-  Missing translation: injection
-  Missing translation: bypass
-  Missing translation: credential
-  Missing translation: privilege escalation
-  Missing translation: lateral movement
-  Missing translation: enumeration
-  Missing translation: exploitation
-  Missing translation: post-exploitation
-  Missing translation: shell
-  Missing translation: root
-  Missing translation: container
-  Missing translation: microservices
-  Missing translation: serverless
-  Missing translation: infrastructure
-  Missing translation: quality bar
-  Missing translation: validation
-  Missing translation: badge
-  Missing translation: trigger
-  Missing translation: kebab-case
-  Missing translation: value prop
-  Missing translation: risk level
-  Missing translation: command pipeline
-  Missing translation: allowlist
-  Missing translation: positioning
-  Missing translation: framing
-  Missing translation: discovery
-  Missing translation: compatibility
-  Missing translation: preview
-  Missing translation: SEO
-  Missing translation: codename
-  Missing translation: use case
-  Missing translation: search intent
-  Missing translation: cannibalization
-  Missing translation: artifact
-  Missing translation: refactor
-  Missing translation: rollback
-  Missing translation: merge
-  Missing translation: squash
-  Missing translation: contribution graph
-  Missing translation: attribution
-  Missing translation: conflict
-  Missing translation: derived
-  Missing translation: ownership
-  Missing translation: canonical
-  Missing translation: safety branch
-  Missing translation: history-rewriting
-  Missing translation: commit
-  Missing translation: operational
-  Missing translation: gate
-  Missing translation: legacy
-  Missing translation: date tracking
-  Missing translation: versioning
-  Missing translation: changelog
-  Missing translation: normalization
-  Missing translation: dangling
-  Missing translation: harvest
-  Missing translation: keyword library
-  Missing translation: auto-categorization
-  Missing translation: uncategorized
-  Missing translation: distribution
-  Missing translation: triage
-  Missing translation: findings
-  Missing translation: baseline
-  Missing translation: ground truth
-  Missing translation: bucket
-  Missing translation: exploitable
-  Missing translation: obsolete
-  Missing translation: reproducible
-  Missing translation: duplicate
-  Missing translation: delimiter
-  Missing translation: sanitization
-  Missing translation: dereference
-  Missing translation: exfiltration
-  Missing translation: bytecode
-  Missing translation: pyc
-  Missing translation: suppress
-  Missing translation: adversarial
-  Missing translation: manifest
-  Missing translation: bootstrap
-  Missing translation: lazy loading
-  Missing translation: overflow
+  All terms have translations.
 
 ----------------------------------------
 

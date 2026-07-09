@@ -7,8 +7,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-GLOSSARY_FILE="$PROJECT_ROOT/docs_zh-CN/.glossary.json"
-OUTPUT_FILE="$PROJECT_ROOT/docs_zh-CN/glossary-consistency-report.txt"
+GLOSSARY_FILE="${GLOSSARY_FILE:-$PROJECT_ROOT/docs_zh-CN/.glossary.json}"
+OUTPUT_FILE="${GLOSSARY_OUTPUT_FILE:-$PROJECT_ROOT/docs_zh-CN/glossary-consistency-report.txt}"
 
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
@@ -71,14 +71,22 @@ fi
 
 # Extract term count
 TERM_COUNT=$(jq -r '.metadata.total_terms // 0' "$GLOSSARY_FILE")
+ACTUAL_TERM_COUNT=$(jq -r '.terms | if type == "object" then length else -1 end' "$GLOSSARY_FILE")
+VALIDATION_FAILED=0
 
 {
     echo "GLOSSARY STATISTICS"
     echo "==================="
     echo ""
     echo "Total Terms: $TERM_COUNT"
+    echo "Actual Terms: $ACTUAL_TERM_COUNT"
     echo ""
 } >> "$OUTPUT_FILE"
+
+if [[ "$ACTUAL_TERM_COUNT" -lt 0 || "$TERM_COUNT" -ne "$ACTUAL_TERM_COUNT" ]]; then
+    echo "ERROR: metadata.total_terms does not match the terms object." >> "$OUTPUT_FILE"
+    VALIDATION_FAILED=1
+fi
 
 if [[ "$TERM_COUNT" -eq 0 ]]; then
     echo "Glossary is empty. No terms to analyze." >> "$OUTPUT_FILE"
@@ -87,7 +95,7 @@ else
     {
         echo "Top 10 Terms (alphabetical):"
         echo ""
-        jq -r '.terms | to_entries | sort_by(.key) | .[0:10][] | "  \(.key): \(.value.zh // (if .value.translations then .value.translations[0] else "N/A" end))"' "$GLOSSARY_FILE" 2>/dev/null || echo "  Unable to extract terms"
+        jq -r '.terms | to_entries | sort_by(.key) | .[0:10][] | "  \(.key): \(.value.translation // "N/A")"' "$GLOSSARY_FILE" 2>/dev/null || echo "  Unable to extract terms"
         echo ""
     } >> "$OUTPUT_FILE"
 
@@ -96,10 +104,11 @@ else
         echo "Field Validation:"
         echo ""
         MISSING_TRANSLATIONS_FILE="$(mktemp)"
-        jq -r '.terms | to_entries[] | select(.value.zh == null and (.value.translations | not) ) | "  Missing translation: \(.key)"' "$GLOSSARY_FILE" > "$MISSING_TRANSLATIONS_FILE"
+        jq -r '.terms | to_entries[] | select((.value | type) != "object" or (.value.translation | type) != "string" or (.value.translation | gsub("\\s"; "") | length) == 0) | "  Missing translation: \(.key)"' "$GLOSSARY_FILE" > "$MISSING_TRANSLATIONS_FILE"
 
         if [[ -s "$MISSING_TRANSLATIONS_FILE" ]]; then
             cat "$MISSING_TRANSLATIONS_FILE" >> "$OUTPUT_FILE"
+            VALIDATION_FAILED=1
         else
             echo "  All terms have translations." >> "$OUTPUT_FILE"
         fi
@@ -134,7 +143,11 @@ fi
     echo ""
     echo "VALIDATION COMPLETE"
     echo ""
-    echo "Glossary file is valid and ready for use."
+    if [[ "$VALIDATION_FAILED" -eq 0 ]]; then
+        echo "Glossary file is valid and ready for use."
+    else
+        echo "Glossary file is invalid; see errors above."
+    fi
 } >> "$OUTPUT_FILE"
 
 echo "Glossary validation complete. Report saved to:"
@@ -142,4 +155,9 @@ echo "  docs_zh-CN/glossary-consistency-report.txt"
 echo ""
 echo "Summary:"
 echo "  Total Terms: $TERM_COUNT"
-echo "  Status: Valid ✓"
+if [[ "$VALIDATION_FAILED" -eq 0 ]]; then
+    echo "  Status: Valid ✓"
+else
+    echo "  Status: Invalid ✗"
+    exit 1
+fi

@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # C++: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for cpp.
+
 ## Table of Contents
 1. [Memory & Ownership](#memory)
 2. [Modern Types & Containers](#types)

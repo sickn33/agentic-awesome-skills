@@ -161,7 +161,7 @@ fi
 
 if [[ ! -s "$SKILLS_LIST_FILE" ]]; then
   if [[ "${#EXTRA_ARGS[@]}" -eq 0 ]]; then
-    printf '%s\n' brainstorming systematic-debugging test-driven-development >"$SKILLS_LIST_FILE"
+    printf '%s\n' concise-planning git-pushing kaizen lint-and-validate systematic-debugging >"$SKILLS_LIST_FILE"
   else
     : >"$SKILLS_LIST_FILE"
     for arg in "${EXTRA_ARGS[@]}"; do

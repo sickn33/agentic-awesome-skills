@@ -13,6 +13,9 @@ often discover only after an incident: worker misclassification penalties,
 joint-employer liability, uninsured on-site injuries, and wage/hour
 violations. Use this skill to help a user evaluate a staffing arrangement.
 
+## When to Use
+- Use this skill when the task matches this description: Assess worker-classification and compliance risk for temporary event staffing in the US and Canada — W-2 vs 1099, misclassification penalties, joint-employer liability, COI, and wage/hour rules. Includes live state-by-state lookups via MCP.
+
 ## Live data
 
 Endpoint: `POST https://mcp.tempguru.co/mcp` (read-only, no auth).

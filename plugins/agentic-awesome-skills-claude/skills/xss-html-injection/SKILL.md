@@ -193,7 +193,7 @@ document.writeln()
 element.innerHTML
 element.outerHTML
 element.insertAdjacentHTML()
-eval()
+eval() <!-- security-allowlist: XSS sink inventory -->
 setTimeout()
 setInterval()
 Function()
@@ -317,7 +317,7 @@ Fake login form or misleading content here
 
 ```javascript
 // String concatenation
-<script>eval('al'+'ert(1)')</script>
+<script>eval('al'+'ert(1)')</script> <!-- security-allowlist: controlled XSS obfuscation example -->
 
 // Template literals
 <script>alert`1`</script>
@@ -326,7 +326,7 @@ Fake login form or misleading content here
 <script>[].constructor.constructor('alert(1)')()</script>
 
 // Base64 encoding
-<script>eval(atob('YWxlcnQoMSk='))</script>
+<script>eval(atob('YWxlcnQoMSk='))</script> <!-- security-allowlist: controlled XSS obfuscation example -->
 
 // Without parentheses
 <script>alert`1`</script>

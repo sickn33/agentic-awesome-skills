@@ -168,4 +168,16 @@ describe('SEO helpers', () => {
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/skill/react-patterns/');
   });
 
+  it('honors a noindex route directive', () => {
+    document.head.innerHTML = '';
+    setPageMeta({
+      title: 'Not found',
+      description: 'Missing page',
+      canonicalPath: '/missing',
+      robots: 'noindex, follow',
+    });
+
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
+  });
+
 });

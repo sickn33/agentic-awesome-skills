@@ -57,7 +57,7 @@ Use these heuristics to accelerate detection:
 
 | Pattern | Likely Issue | Quick Check |
 |---------|-------------|-------------|
-| `eval()`, `exec()`, `os.system()` | Security critical | Search for these strings |
+| `eval()`, `exec()`, `os.system()` | Security critical | Search for these strings | <!-- security-allowlist: defensive audit table -->
 | `except:` or `except Exception:` | Silent failures | Grep for bare excepts |
 | `password`, `secret`, `key`, `token` in code | Hardcoded credentials | Search + check if literal string |
 | `if DEBUG`, `debug=True` | Insecure defaults | Check config blocks |

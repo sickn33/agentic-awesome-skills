@@ -1050,6 +1050,26 @@
       "source": "./plugins/agentic-bundle-oss-maintainer"
     },
     {
+      "name": "agentic-bundle-skill-author",
+      "version": "14.0.0",
+      "description": "Install the \"Skill Author\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "skill-author",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-skill-author"
+    },
+    {
       "name": "agentic-bundle-aas-accessibility-inclusive-ux",
       "version": "14.0.0",
       "description": "Install the \"AAS Accessibility & Inclusive UX\" editorial skill bundle for Claude Code.",

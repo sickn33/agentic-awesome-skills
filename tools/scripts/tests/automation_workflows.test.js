@@ -135,7 +135,7 @@ assert.match(
 );
 assert.match(
   ciWorkflow,
-  /source-validation:[\s\S]*?- uses: actions\/checkout@v\d+[\s\S]*?with:[\s\S]*?fetch-depth: 0/,
+  /source-validation:[\s\S]*?- uses: actions\/checkout@[a-f0-9]{40}[\s\S]*?with:[\s\S]*?fetch-depth: 0/,
   "source-validation should use an unshallowed checkout so base-branch diffs have a merge base",
 );
 assert.match(

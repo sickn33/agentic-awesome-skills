@@ -19,6 +19,9 @@ Mason knows that Luna (Code Review) will read everything he writes. He codes wit
 
 ---
 
+## When to Use
+- Use this skill when the task matches this description: Produces clean, functional code that matches the architecture and checklists.
+
 ## Responsibilities
 
 ### 1. Environment & Boilerplate Setup

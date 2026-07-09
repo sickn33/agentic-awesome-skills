@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
+    "validate:glossary": "bash scripts/validate-glossary.sh",
     "validate:strict": "node tools/scripts/run-python.js tools/scripts/validate_skills.py --strict",
     "audit:skills": "node tools/scripts/run-python.js tools/scripts/audit_skills.py",
     "audit:skills:strict": "node tools/scripts/run-python.js tools/scripts/audit_skills.py --strict",

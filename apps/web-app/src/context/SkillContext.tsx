@@ -66,34 +66,23 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
                 throw lastError || new Error('Unable to load skills.json from any known source');
             }
 
-            // Incremental loading: set first 50 skills immediately if not a silent refresh
-            if (!silent && data.length > 50) {
-                setSkills(data.slice(0, 50));
-                setLoading(false); // Clear loading state as soon as we have initial content
-            } else {
-                setSkills(data);
-            }
+            setSkills(data);
+            if (!silent) setLoading(false);
 
-            // Fetch stars from Supabase if available
+            // Star counts are optional metadata. They must never delay the
+            // authoritative local catalog or make valid routes look missing.
             if (supabase) {
-                const { data: starData, error } = await supabase
+                void supabase
                     .from('skill_stars')
-                    .select('skill_id, star_count');
-
-                if (!error && starData) {
-                    const starMap: StarMap = {};
-                    starData.forEach((item: { skill_id: string; star_count: number }) => {
-                        starMap[item.skill_id] = item.star_count;
+                    .select('skill_id, star_count')
+                    .then(({ data: starData, error }) => {
+                        if (error || !starData) return;
+                        const starMap: StarMap = {};
+                        starData.forEach((item: { skill_id: string; star_count: number }) => {
+                            starMap[item.skill_id] = item.star_count;
+                        });
+                        setStars(starMap);
                     });
-                    setStars(starMap);
-                }
-            }
-
-            // Finally set the full set of skills if we did incremental load
-            if (!silent && data.length > 50) {
-                setSkills(data);
-            } else if (silent) {
-                setSkills(data);
             }
 
         } catch (err) {

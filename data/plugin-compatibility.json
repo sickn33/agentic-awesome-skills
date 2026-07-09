@@ -30627,24 +30627,18 @@
       "id": "skill-creator",
       "path": "skills/skill-creator",
       "targets": {
-        "codex": "blocked",
-        "claude": "blocked"
+        "codex": "supported",
+        "claude": "supported"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
-        "claude": [
-          "target_specific_home_path"
-        ]
+        "codex": [],
+        "claude": []
       },
       "runtime_files": []
     },
@@ -37199,12 +37193,12 @@
   "summary": {
     "total_skills": 1936,
     "supported": {
-      "codex": 1864,
-      "claude": 1885
+      "codex": 1865,
+      "claude": 1886
     },
     "blocked": {
-      "codex": 72,
-      "claude": 51
+      "codex": 71,
+      "claude": 50
     },
     "manual_setup": 17
   }

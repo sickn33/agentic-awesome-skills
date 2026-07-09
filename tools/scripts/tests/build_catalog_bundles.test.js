@@ -14,17 +14,30 @@ const bundles = bundleData.bundles || {};
 const catalog = JSON.parse(
   fs.readFileSync(path.join(repoRoot, "data", "catalog.json"), "utf8"),
 );
+const canonicalIndex = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, "skills_index.json"), "utf8"),
+);
 const skillsById = new Map(catalog.skills.map((skill) => [skill.id, skill]));
 
 assert.strictEqual(
   skillsById.get("before-you-build").category,
-  "business",
-  "explicit product frontmatter should keep product-risk skills out of security",
+  "product",
+  "catalog categories must match the canonical skills index",
 );
 assert.ok(
   !bundles["security-core"].skills.includes("before-you-build"),
   "explicit product frontmatter should keep product-risk skills out of the security bundle",
 );
+
+for (const canonicalSkill of canonicalIndex) {
+  const catalogSkill = catalog.skills.find(
+    (skill) => skill.path === `${canonicalSkill.path}/SKILL.md`,
+  );
+  assert.ok(catalogSkill, `catalog must contain ${canonicalSkill.path}`);
+  assert.strictEqual(catalogSkill.category, canonicalSkill.category);
+  assert.strictEqual(catalogSkill.risk, canonicalSkill.risk);
+  assert.strictEqual(catalogSkill.source, canonicalSkill.source);
+}
 
 for (const bundleId of [
   "core-dev",

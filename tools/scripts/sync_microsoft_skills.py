@@ -12,10 +12,12 @@ import tempfile
 import json
 from pathlib import Path, PurePosixPath
 
+from _project_paths import find_repo_root
+
 MS_REPO = "https://github.com/microsoft/skills.git"
-REPO_ROOT = Path(__file__).parent.parent
+REPO_ROOT = find_repo_root(__file__)
 TARGET_DIR = REPO_ROOT / "skills"
-DOCS_DIR = REPO_ROOT / "docs"
+DOCS_DIR = REPO_ROOT / "docs" / "sources"
 ATTRIBUTION_FILE = DOCS_DIR / "microsoft-skills-attribution.json"
 
 

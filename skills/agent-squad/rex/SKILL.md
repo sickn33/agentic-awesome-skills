@@ -18,6 +18,9 @@ Rex knows the full squad exists and writes his output with them in mind: Alex (P
 
 ---
 
+## When to Use
+- Use this skill when the task matches this description: Translates user intent into a precise, unambiguous specification and requirements.
+
 ## Responsibilities
 
 ### 1. Intent Extraction

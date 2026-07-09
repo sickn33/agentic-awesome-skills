@@ -1,11 +1,15 @@
 ---
 name: tech-matrix
 description: Reference document for monopoly tech-matrix.
+source: community
 risk: safe
 reports-to: monopoly
 ---
 
 # MONOPOLY — Technology Decision Matrix
+
+## When to Use
+- Use this skill when the task matches this description: Reference document for monopoly tech-matrix.
 
 ## Table of Contents
 1. Database Selection

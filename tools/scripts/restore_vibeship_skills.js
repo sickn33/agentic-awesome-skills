@@ -4,20 +4,33 @@ const cp = require("child_process");
 const YAML = require("yaml");
 
 const ROOT = process.cwd();
+const SKILLS_ROOT = path.resolve(ROOT, "skills");
 const UPSTREAM_SHA = "70b2e1062fc6a38fce854226c27097a87732cb5f";
 const SOURCE_LABEL = "vibeship-spawner-skills (Apache 2.0)";
-const LIST_PATH = "/tmp/vibeship_files.txt";
-const FILES = fs.existsSync(LIST_PATH)
-  ? fs.readFileSync(LIST_PATH, "utf8").trim().split("\n").filter(Boolean)
-  : [];
-const TREE = JSON.parse(
-  runCommand(
-    `gh api 'repos/vibeforge1111/vibeship-spawner-skills/git/trees/${UPSTREAM_SHA}?recursive=1'`,
-  ),
-);
-const SKILL_PATHS = TREE.tree
-  .filter((entry) => /(^|\/)skill\.yaml$/.test(entry.path))
-  .map((entry) => entry.path);
+const LIST_PATH = process.env.VIBESHIP_FILES_LIST || "";
+
+function loadSkillPaths() {
+  const tree = JSON.parse(
+    runCommand(
+      `gh api 'repos/vibeforge1111/vibeship-spawner-skills/git/trees/${UPSTREAM_SHA}?recursive=1'`,
+    ),
+  );
+  return tree.tree
+    .filter((entry) => /(^|\/)skill\.yaml$/.test(entry.path))
+    .map((entry) => entry.path);
+}
+
+function validateSkillFilePath(candidate) {
+  if (typeof candidate !== "string" || !candidate) return null;
+  const normalized = path.posix.normalize(candidate);
+  const match = normalized === candidate && /^skills\/([A-Za-z0-9][A-Za-z0-9._-]*)\/SKILL\.md$/.exec(normalized);
+  if (!match) return null;
+
+  const absolutePath = path.resolve(ROOT, ...normalized.split("/"));
+  const relativePath = path.relative(SKILLS_ROOT, absolutePath);
+  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) return null;
+  return { relativePath: normalized, absolutePath, skillId: match[1] };
+}
 
 function runCommand(cmd) {
   return cp.execSync(cmd, {
@@ -474,7 +487,7 @@ function forceUpstreamDescription(absPath, description) {
 
 function loadUpstreamPathBySkillId() {
   const map = new Map();
-  for (const upstreamPath of SKILL_PATHS) {
+  for (const upstreamPath of loadSkillPaths()) {
     const skillId = path.posix.basename(path.posix.dirname(upstreamPath));
     if (!map.has(skillId)) map.set(skillId, []);
     map.get(skillId).push(upstreamPath);
@@ -483,16 +496,23 @@ function loadUpstreamPathBySkillId() {
 }
 
 function main() {
-  if (!fs.existsSync(LIST_PATH)) {
-    throw new Error(`Missing skill list: ${LIST_PATH}`);
+  if (!LIST_PATH || !fs.existsSync(LIST_PATH)) {
+    throw new Error("Set VIBESHIP_FILES_LIST to an explicit list of skills/<id>/SKILL.md files.");
   }
+
+  const files = fs.readFileSync(LIST_PATH, "utf8").trim().split("\n").filter(Boolean);
 
   const skillPathMap = loadUpstreamPathBySkillId();
   const touched = [];
   const skipped = [];
 
-  for (const rel of FILES) {
-    const skillId = rel.split("/")[1];
+  for (const candidate of files) {
+    const validated = validateSkillFilePath(candidate);
+    if (!validated) {
+      skipped.push({ rel: candidate, matches: [] });
+      continue;
+    }
+    const { relativePath: rel, absolutePath: abs, skillId } = validated;
     const matches = skillPathMap.get(skillId) || [];
     if (matches.length !== 1) {
       skipped.push({ rel, matches });
@@ -510,7 +530,6 @@ function main() {
     const validations = parseOptionalYaml(`${baseDir}/validations.yaml`);
     const collaboration = parseOptionalYaml(`${baseDir}/collaboration.yaml`);
 
-    const abs = path.join(ROOT, rel);
     const existing = parseFrontmatter(fs.readFileSync(abs, "utf8"));
     const frontmatter = { ...existing.data };
     frontmatter.name = frontmatter.name || skill.id || skillId;
@@ -541,3 +560,5 @@ function main() {
 if (require.main === module) {
   main();
 }
+
+module.exports = { validateSkillFilePath };

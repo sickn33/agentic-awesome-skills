@@ -1,4 +1,4 @@
-# Agentic Awesome Skills 入门指南 (V13.2.0)
+# Agentic Awesome Skills 入门指南 (V14.0.0)
 
 **新手入门？本指南将在 5 分钟内帮助您增强 AI 代理的能力。**
 

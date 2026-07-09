@@ -963,7 +963,7 @@ has expired" }`.
 
 ```bash
 # 1. Decode the JWT to check expiration (without verification)
-echo "<your-token>" | cut -d'.' -f2 | base64 -d 2>/dev/null | jq '.exp'
+echo "<your-token>" | cut -d'.' -f2 | base64 -d 2>/dev/null | jq '.exp' # security-allowlist: local JWT inspection, no code execution
 
 # 2. Compare with current time
 date +%s

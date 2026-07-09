@@ -50,5 +50,6 @@ export interface SeoMeta {
   ogDescription?: string;
   ogImage?: string;
   twitterCard?: TwitterCard;
+  robots?: 'index, follow' | 'noindex, follow';
   jsonLd?: SeoJsonLdValue | SeoJsonLdValue[];
 }

@@ -372,7 +372,7 @@ const BUNDLE_RULES = {
   },
   "security-core": {
     description: "Security, privacy, and compliance essentials.",
-    excludeCategories: new Set(["business"]),
+    excludeCategories: new Set(["business", "product"]),
     keywords: [
       "security",
       "sast",
@@ -718,15 +718,17 @@ function renderCatalogMarkdown(catalog) {
     );
     lines.push(`## ${category} (${grouped.length})`);
     lines.push("");
-    lines.push("| Skill | Description | Tags | Triggers |");
-    lines.push("| --- | --- | --- | --- |");
+    lines.push("| Skill | Description | Risk | Source | Tags | Triggers |");
+    lines.push("| --- | --- | --- | --- | --- | --- |");
 
     for (const skill of grouped) {
       const description = escapeMarkdownTableCell(truncate(skill.description, 160));
       const tags = escapeMarkdownTableCell(skill.tags.join(", "));
       const triggers = escapeMarkdownTableCell(skill.triggers.join(", "));
+      const risk = escapeMarkdownTableCell(skill.risk || "unknown");
+      const source = escapeMarkdownTableCell(skill.source_repo || skill.source || "unknown");
       lines.push(
-        `| \`${skill.id}\` | ${description} | ${tags} | ${triggers} |`,
+        `| \`${skill.id}\` | ${description} | ${risk} | ${source} | ${tags} | ${triggers} |`,
       );
     }
 
@@ -734,6 +736,15 @@ function renderCatalogMarkdown(catalog) {
   }
 
   return lines.join("\n");
+}
+
+function readCanonicalIndex() {
+  const indexPath = path.join(ROOT, "skills_index.json");
+  const parsed = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+  if (!Array.isArray(parsed)) {
+    throw new Error("skills_index.json must be an array.");
+  }
+  return new Map(parsed.map((skill) => [skill.path, skill]));
 }
 
 function readCatalogGeneratedAt() {
@@ -758,18 +769,27 @@ function readCatalogGeneratedAt() {
 function buildCatalog() {
   const skillRelPaths = listSkillIdsRecursive(SKILLS_DIR);
   const skills = skillRelPaths.map((relPath) => readSkill(SKILLS_DIR, relPath));
+  const canonicalIndex = readCanonicalIndex();
   const catalogSkills = [];
 
   for (const skill of skills) {
     const tags = deriveTags(skill);
-    const category = detectCategory(skill, tags);
+    const canonical = canonicalIndex.get(`skills/${skillRelPaths[catalogSkills.length]}`);
+    const category = canonical?.category || detectCategory(skill, tags);
     const triggers = buildTriggers(skill, tags);
 
     catalogSkills.push({
       id: skill.id,
+      canonical_id: canonical?.id || skill.id,
       name: skill.name,
       description: skill.description,
       category,
+      risk: canonical?.risk || skill.risk || "unknown",
+      source: canonical?.source || skill.source || "unknown",
+      source_type: canonical?.source_type || skill.sourceType || undefined,
+      source_repo: canonical?.source_repo || skill.sourceRepo || undefined,
+      license: canonical?.license || skill.license || undefined,
+      license_source: canonical?.license_source || skill.licenseSource || undefined,
       tags,
       triggers,
       // Normalize separators for deterministic cross-platform output.

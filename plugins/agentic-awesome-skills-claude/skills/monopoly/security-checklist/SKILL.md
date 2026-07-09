@@ -1,11 +1,15 @@
 ---
 name: security-checklist
 description: Reference document for monopoly security-checklist.
+source: community
 risk: safe
 reports-to: monopoly
 ---
 
 # MONOPOLY — Security Hardening Checklist
+
+## When to Use
+- Use this skill when the task matches this description: Reference document for monopoly security-checklist.
 
 ## Network Security
 - [ ] All services inside private VPC; only LB/API GW exposed publicly

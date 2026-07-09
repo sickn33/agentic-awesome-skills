@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Python: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for python.
+
 ## Table of Contents
 1. [Comprehensions & Generators](#comprehensions)
 2. [Unpacking & Destructuring](#unpacking)

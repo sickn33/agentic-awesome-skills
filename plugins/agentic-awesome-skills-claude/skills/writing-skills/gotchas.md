@@ -15,7 +15,7 @@ Tribal knowledge to avoid common mistakes.
 ```yaml
 # ❌ BAD: Mixed list and map
 metadata:
-  references: 
+  references:
   triggers: a, b, c
   - item1
   - item2

@@ -136,6 +136,18 @@ class BaselineIOTests(unittest.TestCase):
         result = detect_drift.load_baseline(Path("/nonexistent/baseline.json"))
         self.assertEqual(result, {})
 
+    def test_main_fails_when_baseline_is_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "skills").mkdir()
+            (root / "package.json").write_text('{"version": "1.0.0"}', encoding="utf-8")
+            original_find_repo_root = detect_drift.find_repo_root
+            detect_drift.find_repo_root = lambda _path: root
+            try:
+                self.assertEqual(detect_drift.main([]), 2)
+            finally:
+                detect_drift.find_repo_root = original_find_repo_root
+
     def test_save_and_load_roundtrip(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "data" / "baseline.json"

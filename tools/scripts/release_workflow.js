@@ -49,12 +49,12 @@ function ensureOnMain(projectRoot) {
 }
 
 function ensureCleanWorkingTree(projectRoot, message) {
-  const status = runCommand("git", ["status", "--porcelain", "--untracked-files=no"], projectRoot, {
+  const status = runCommand("git", ["status", "--porcelain"], projectRoot, {
     capture: true,
   });
 
   if (status) {
-    throw new Error(message || "Working tree has tracked changes. Commit or stash them first.");
+    throw new Error(message || "Working tree has changes. Commit, stash, or remove them first.");
   }
 }
 

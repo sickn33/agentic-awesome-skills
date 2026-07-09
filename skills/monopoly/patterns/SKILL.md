@@ -1,11 +1,15 @@
 ---
 name: patterns
 description: Reference document for monopoly patterns.
+source: community
 risk: safe
 reports-to: monopoly
 ---
 
 # MONOPOLY — Design Patterns Deep Dive
+
+## When to Use
+- Use this skill when the task matches this description: Reference document for monopoly patterns.
 
 ## Table of Contents
 1. CQRS

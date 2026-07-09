@@ -1,11 +1,15 @@
 ---
 name: scale-benchmarks
 description: Reference document for monopoly scale-benchmarks.
+source: community
 risk: safe
 reports-to: monopoly
 ---
 
 # MONOPOLY — Scale Benchmarks & Estimation Formulas
+
+## When to Use
+- Use this skill when the task matches this description: Reference document for monopoly scale-benchmarks.
 
 ## Quick Estimation Formulas
 

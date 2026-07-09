@@ -772,7 +772,12 @@ function main() {
     );
   }
 
-  for (const skillRoute of topSkillPaths) {
+  const allSkillPaths = skills
+    .filter((skill) => skill && skill.id)
+    .map((skill) => `/skill/${encodeURIComponent(skill.id)}`)
+    .sort();
+
+  for (const skillRoute of allSkillPaths) {
     const decodedId = decodeURIComponent(skillRoute.replace(/^\/skill\//, ''));
     const skill = skillMap.get(decodedId);
     if (!skill) {

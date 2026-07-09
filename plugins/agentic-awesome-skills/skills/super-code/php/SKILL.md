@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # PHP: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for php.
+
 ## Table of Contents
 1. [Arrays & Collections](#arrays)
 2. [Type Safety](#types)

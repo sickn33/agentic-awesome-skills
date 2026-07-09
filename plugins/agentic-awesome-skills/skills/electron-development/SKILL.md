@@ -295,7 +295,7 @@ const unsubscribe = window.electronAPI.on('update:available', (version) => {
 
 ── CONTENT ──
 [ ] Content Security Policy (CSP) headers set on all windows
-[ ] No use of eval(), new Function(), or innerHTML with untrusted data
+[ ] No use of eval(), new Function(), or innerHTML with untrusted data <!-- security-allowlist: defensive Electron checklist -->
 [ ] Remote content (if any) loaded in separate BrowserView with restricted permissions
 [ ] protocol.registerSchemesAsPrivileged() uses minimal permissions
 

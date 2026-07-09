@@ -34,7 +34,7 @@ agentic-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← 贡献者工作流程
 ├── 📄 CATALOG.md                       ← 完整生成的目录
 │
-├── 📁 skills/                          ← 1,684+ 技能在这里
+├── 📁 skills/                          ← 1,936+ 技能在这里
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← 技能定义
@@ -47,7 +47,7 @@ agentic-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← 也支持嵌套技能
 │   │
-│   └── ... (1,200+ 总计)
+│   └── ... (1,936+ 总计)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← 交互式浏览器
@@ -100,7 +100,7 @@ agentic-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,684+ 技能             │
+                    │  1,936+ 技能             │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -202,7 +202,7 @@ agentic-awesome-skills/
 │       ├── 📁 brainstorming/             │
 │       ├── 📁 stripe-integration/        │
 │       ├── 📁 react-best-practices/      │
-│       └── ... (1,200+ 总计)             │
+│       └── ... (1,936+ 总计)             │
 └─────────────────────────────────────────┘
 ```
 

@@ -21,6 +21,7 @@ import sys
 PROJECT_ROOT = Path.cwd()
 OUTPUT_FILE = PROJECT_ROOT / "docs_zh-CN" / "link-validation-report.txt"
 SCAN_ROOTS = [Path("README.md"), Path("docs"), Path("docs_zh-CN")]
+EXCLUDED_PATH_PARTS = {("docs", "maintainers", "backups")}
 LINK_RE = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 
 
@@ -30,7 +31,14 @@ def iter_markdown_files() -> list[Path]:
         if root.is_file():
             files.append(root)
         elif root.is_dir():
-            files.extend(sorted(root.rglob("*.md")))
+            for candidate in sorted(root.rglob("*.md")):
+                if any(
+                    tuple(candidate.parts[index : index + len(parts)]) == parts
+                    for parts in EXCLUDED_PATH_PARTS
+                    for index in range(len(candidate.parts) - len(parts) + 1)
+                ):
+                    continue
+                files.append(candidate)
     return sorted(files)
 
 
@@ -109,6 +117,7 @@ def main() -> int:
         "- README.md",
         "- docs",
         "- docs_zh-CN",
+        "- excludes docs/maintainers/backups historical snapshots",
         "",
         "Internal links:",
         f"- Checked: {checked}",

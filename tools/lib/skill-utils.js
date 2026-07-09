@@ -158,6 +158,11 @@ function readSkill(skillDir, skillId) {
   tags = tags.filter(Boolean);
   const category = typeof data.category === 'string' ? data.category.trim() : '';
   const risk = typeof data.risk === 'string' ? data.risk.trim() : '';
+  const source = typeof data.source === 'string' ? data.source.trim() : '';
+  const sourceType = typeof data.source_type === 'string' ? data.source_type.trim() : '';
+  const sourceRepo = typeof data.source_repo === 'string' ? data.source_repo.trim() : '';
+  const license = typeof data.license === 'string' ? data.license.trim() : '';
+  const licenseSource = typeof data.license_source === 'string' ? data.license_source.trim() : '';
 
   return {
     id: skillId,
@@ -165,6 +170,11 @@ function readSkill(skillDir, skillId) {
     description,
     category,
     risk,
+    source,
+    sourceType,
+    sourceRepo,
+    license,
+    licenseSource,
     tags,
     path: skillPath,
     content,

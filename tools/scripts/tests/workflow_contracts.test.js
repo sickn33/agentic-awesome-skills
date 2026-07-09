@@ -1,4 +1,6 @@
 const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
 
 const {
   classifyChangedFiles,
@@ -26,6 +28,43 @@ const contract = {
   mixedFiles: ["README.md"],
   releaseManagedFiles: ["CHANGELOG.md", "package.json", "package-lock.json", "README.md"],
 };
+
+const publishWorkflow = fs.readFileSync(
+  path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "publish-npm.yml"),
+  "utf8",
+);
+assert.match(publishWorkflow, /name: Verify release identity/);
+assert.match(publishWorkflow, /GITHUB_REF_TYPE" = "tag/);
+assert.match(publishWorkflow, /expected_tag="v\$\(node -p/);
+
+const pagesWorkflow = fs.readFileSync(
+  path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "pages.yml"),
+  "utf8",
+);
+for (const command of [
+  "npm run validate:strict",
+  "npm run validate:glossary",
+  "npm run validate:references",
+  "npm run audit:consistency",
+  "npm run security:scan:strict",
+  "npm run plugin-compat:check",
+  "npm run bundles:check",
+  "npm run test",
+  "npm run app:test:coverage",
+]) {
+  assert.match(pagesWorkflow, new RegExp(command.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")));
+}
+assert.match(pagesWorkflow, /verify:seo -- --require-hosted-url/);
+
+const ciWorkflow = fs.readFileSync(
+  path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "ci.yml"),
+  "utf8",
+);
+assert.doesNotMatch(
+  ciWorkflow,
+  /ENABLE_NETWORK_TESTS:\s*["']1["']/,
+  "PR and push CI must not depend on mutable upstream network clones",
+);
 
 const skillOnly = classifyChangedFiles(["skills/example/SKILL.md"], contract);
 assert.deepStrictEqual(skillOnly.categories, ["skill"]);

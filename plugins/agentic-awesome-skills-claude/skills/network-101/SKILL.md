@@ -170,9 +170,8 @@ Set up SMB file shares for enumeration:
 # Install Samba
 sudo apt install samba
 
-# Create share directory
-sudo mkdir -p /srv/samba/share
-sudo chmod 777 /srv/samba/share
+# Create a group-scoped share directory instead of a world-writable one
+sudo install -d -m 0770 -o root -g sambashare /srv/samba/share
 
 # Configure Samba
 sudo nano /etc/samba/smb.conf
@@ -324,8 +323,8 @@ snmpwalk -c public -v1 localhost
 ```bash
 # Configure anonymous share
 sudo apt install samba
-sudo mkdir /srv/samba/anonymous
-sudo chmod 777 /srv/samba/anonymous
+# Keep the service-owned anonymous share non-world-writable.
+sudo install -d -m 0770 -o root -g sambashare /srv/samba/anonymous
 
 # Test access
 smbclient //localhost/anonymous -N

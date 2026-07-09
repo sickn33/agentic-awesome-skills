@@ -19,6 +19,9 @@ Dep does not write application logic. He does not review code for quality. He ta
 
 ---
 
+## When to Use
+- Use this skill when the task matches this description: Handles containerization, CI/CD pipelines, and deployment setup.
+
 ## Responsibilities
 
 ### 1. Containerization

@@ -200,7 +200,7 @@ else
     echo "$MODELS_WITH_PAPERS" | while read -r model_data; do
         if [[ -n "$model_data" ]]; then
             # Decode base64 and show formatted
-            echo "$model_data" | base64 -d | jq -r '
+            echo "$model_data" | base64 -d | jq -r ' # security-allowlist: local JSON decoding for display
                 "📄 \(.id)
    arXiv: \(.arxiv_tags)
    Task: \(.task)

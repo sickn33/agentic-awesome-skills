@@ -1,6 +1,6 @@
 # Thư mục Kỹ năng (Skills Directory)
 
-**Chào mừng đến với thư mục Kỹ năng!** Đây là nơi tập hợp tất cả 1,684+ kỹ năng AI chuyên biệt.
+**Chào mừng đến với thư mục Kỹ năng!** Đây là nơi tập hợp tất cả 1,936+ kỹ năng AI chuyên biệt.
 
 ## 🤔 Kỹ năng là gì?
 
@@ -63,7 +63,7 @@ ls skills/ | grep "từ khóa"
 ```
 
 ### Cách 3: Kiểm tra README chính
-Xem [README chính](README.vi.md) và [CATALOG.md](../../CATALOG.md) để biết danh sách đầy đủ tất cả 1,684+ kỹ năng được tổ chức theo danh mục.
+Xem [README chính](README.vi.md) và [CATALOG.md](../../CATALOG.md) để biết danh sách đầy đủ tất cả 1,936+ kỹ năng được tổ chức theo danh mục.
 
 ---
 

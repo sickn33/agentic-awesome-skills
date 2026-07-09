@@ -1,0 +1,33 @@
+{
+  "name": "aasb-skill-author",
+  "version": "14.0.0",
+  "description": "Install the \"Skill Author\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "skill-author",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Skill Author",
+    "shortDescription": "Maintainer & OSS · 6 curated skills",
+    "longDescription": "For creating and maintaining high-quality SKILL.md assets. Covers Skill Creator, Skill Developer, and 4 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Maintainer & OSS",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

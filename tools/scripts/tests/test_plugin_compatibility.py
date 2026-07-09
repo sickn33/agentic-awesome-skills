@@ -155,6 +155,29 @@ class PluginCompatibilityTests(unittest.TestCase):
             self.assertIn("explicit_target_restriction", entry["blocked_reasons"]["codex"])
             self.assertIn("explicit_target_restriction", entry["blocked_reasons"]["claude"])
 
+    def test_explicit_supported_target_overrides_alternative_home_path(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skills_dir = pathlib.Path(temp_dir) / "skills"
+            self._write_skill(
+                skills_dir,
+                "portable-skill",
+                (
+                    "---\n"
+                    "name: portable-skill\n"
+                    "description: Example\n"
+                    "plugin:\n"
+                    "  targets:\n"
+                    "    codex: supported\n"
+                    "---\n"
+                    "Use ~/.claude for Claude or ~/.codex for Codex.\n"
+                ),
+            )
+
+            report = plugin_compatibility.build_report(skills_dir)
+            entry = report["skills"][0]
+            self.assertEqual(entry["targets"]["codex"], "supported")
+            self.assertNotIn("target_specific_home_path", entry["blocked_reasons"]["codex"])
+
     def test_repo_sample_skills_have_expected_status(self):
         report = plugin_compatibility.build_report(REPO_ROOT / "skills")
         entries = plugin_compatibility.compatibility_by_skill_id(report)

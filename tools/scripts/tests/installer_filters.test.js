@@ -170,4 +170,36 @@ withTempDir((root) => {
     false,
     "accidental skills/ prefixed entries should not create target/skills/*",
   );
+
+  writeSkill(
+    repoRoot,
+    "parent-skill",
+    'name: parent-skill\ncategory: development\nrisk: unknown\ntags: [parent]',
+  );
+  writeSkill(
+    repoRoot,
+    path.join("parent-skill", "safe-child"),
+    'name: safe-child\ncategory: development\nrisk: safe\ntags: [child]',
+  );
+  const filteredTarget = path.join(root, "filtered-target");
+  const unknownEntries = installer.getInstallEntries(
+    repoRoot,
+    installer.buildInstallSelectors({ riskArg: "unknown" }),
+  );
+  assert.deepStrictEqual(
+    unknownEntries,
+    ["parent-skill", "skills/x402-express-wrapper", "docs"],
+    "the selected parent must not implicitly select its differently classified child",
+  );
+  installer.installSkillsIntoTarget(repoRoot, filteredTarget, unknownEntries);
+  assert.strictEqual(
+    fs.existsSync(path.join(filteredTarget, "parent-skill", "SKILL.md")),
+    true,
+    "the selected parent skill should be installed",
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(filteredTarget, "parent-skill", "safe-child", "SKILL.md")),
+    false,
+    "a nested skill that does not match filters must not leak into the installation",
+  );
 });

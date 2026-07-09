@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Kotlin + Compose: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for kotlin.
+
 ## Table of Contents
 1. [Collections & Data Transformation](#collections)
 2. [Null Safety](#null-safety)

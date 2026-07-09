@@ -7,6 +7,9 @@ date_added: "2026-06-16"
 ---
 # Scala: Idiomatic Efficiency Reference
 
+## When to Use
+- Use this skill when the task matches this description: Language-specific super-code guidelines for scala.
+
 ## Table of Contents
 1. [Collections & Functional Transforms](#collections)
 2. [Pattern Matching](#patterns)

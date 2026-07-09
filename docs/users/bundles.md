@@ -837,7 +837,7 @@ _For shipping clean changes in public repositories._
 
 _For creating and maintaining high-quality SKILL.md assets._
 
-**Plugin status:** Codex pending hardening · Claude pending hardening
+**Plugin status:** Codex plugin-safe · Claude plugin-safe
 
 - [`skill-creator`](../../skills/skill-creator/): Design effective new skills.
 - [`skill-developer`](../../skills/skill-developer/): Implement triggers, hooks, and skill lifecycle.

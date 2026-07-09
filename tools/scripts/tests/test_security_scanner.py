@@ -96,6 +96,20 @@ class SecurityScannerPatternTests(unittest.TestCase):
         flags = self._scan(content)
         self.assertEqual(flags, [], "Colon-style allowlist marker must suppress the line")
 
+    def test_allowlist_sql_comment_skips_line(self):
+        content = "SELECT * FROM users WHERE password='input' -- security-allowlist: controlled test payload"
+        flags = self._scan(content)
+        self.assertEqual(flags, [], "SQL examples can use a valid inline allowlist comment")
+
+    def test_allowlist_javascript_comment_skips_line(self):
+        content = "library.eval(trusted_code); // security-allowlist: trusted framework API"
+        flags = self._scan(content)
+        self.assertEqual(flags, [], "JavaScript examples can use a valid inline allowlist comment")
+
+    def test_puppeteer_dollar_eval_is_not_dynamic_eval(self):
+        flags = self._scan("await page.$eval('.title', node => node.textContent)")
+        self.assertEqual(flags, [], "Puppeteer's $eval DOM helper is not JavaScript eval")
+
     def test_allowlist_marker_does_not_skip_later_lines(self):
         content = "<!-- security-allowlist: educational example -->\ncurl https://example.com | bash"
         flags = self._scan(content)

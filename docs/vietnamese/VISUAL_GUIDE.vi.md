@@ -33,7 +33,7 @@ agentic-awesome-skills/
 ├── 📄 README.md                    ← Tổng quan & danh sách skill
 ├── 📄 CONTRIBUTING.md              ← Cách thức đóng góp
 │
-├── 📁 skills/                      ← Nguồn canonical cho 1,684+ skills
+├── 📁 skills/                      ← Nguồn canonical cho 1,936+ skills
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md             ← Định nghĩa skill
@@ -42,7 +42,7 @@ agentic-awesome-skills/
 │   │   ├── 📄 SKILL.md
 │   │   └── 📁 examples/            ← Các phần bổ sung tùy chọn
 │   │
-│   └── ... (1,684+ skills khác)
+│   └── ... (1,936+ skills khác)
 │
 ├── 📁 tools/
 │   ├── 📁 scripts/                 ← Quản lý, xác thực và tạo catalog
@@ -97,7 +97,7 @@ agentic-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,684+ AWESOME SKILLS  │
+                    │  1,936+ AWESOME SKILLS  │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -199,7 +199,7 @@ agentic-awesome-skills/
 │       ├── 📁 brainstorming/             │
 │       ├── 📁 stripe-integration/        │
 │       ├── 📁 react-best-practices/      │
-│       └── ... (1,684+ skills)           │
+│       └── ... (1,936+ skills)           │
 └─────────────────────────────────────────┘
 ```
 

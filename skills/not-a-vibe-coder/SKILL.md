@@ -1,6 +1,7 @@
 ---
 name: not-a-vibe-coder
 description: Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.
+source: community
 risk: critical
 ---
 
@@ -10,6 +11,9 @@ A skill that turns any project idea — no matter how vague — into 8 living pl
 documents that act as the project's persistent memory across a long context window.
 The documents are the source of truth for "what we agreed on"; the user's live
 instructions are always the final authority and can override the docs at any time.
+
+## When to Use
+- Use this skill when the task matches this description: Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.
 
 ## Core Principles (never violate these)
 

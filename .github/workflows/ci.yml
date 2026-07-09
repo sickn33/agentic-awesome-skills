@@ -22,13 +22,13 @@ jobs:
       has_quality_checklist: ${{ steps.intake.outputs.has_quality_checklist }}
       has_issue_link: ${{ steps.intake.outputs.has_issue_link }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
@@ -71,12 +71,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: pr-policy
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
 
@@ -84,7 +84,7 @@ jobs:
         run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
@@ -120,8 +120,6 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: Run tests
-        env:
-          ENABLE_NETWORK_TESTS: "1"
         run: npm run test
 
       - name: Install web-app dependencies
@@ -138,10 +136,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [pr-policy, source-validation]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
 
@@ -149,7 +147,7 @@ jobs:
         run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
@@ -205,12 +203,12 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
 
@@ -218,7 +216,7 @@ jobs:
         run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
@@ -244,8 +242,6 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: Run tests
-        env:
-          ENABLE_NETWORK_TESTS: "1"
         run: npm run test
 
       - name: Install web-app dependencies

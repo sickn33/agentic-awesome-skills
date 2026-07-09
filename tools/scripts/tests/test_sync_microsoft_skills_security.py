@@ -14,6 +14,15 @@ import sync_microsoft_skills as sms
 
 
 class SyncMicrosoftSkillsSecurityTests(unittest.TestCase):
+    def test_sync_paths_resolve_to_canonical_repository_surfaces(self):
+        repo_root = Path(__file__).resolve().parents[3]
+        self.assertEqual(sms.REPO_ROOT, repo_root)
+        self.assertEqual(sms.TARGET_DIR, repo_root / "skills")
+        self.assertEqual(
+            sms.ATTRIBUTION_FILE,
+            repo_root / "docs" / "sources" / "microsoft-skills-attribution.json",
+        )
+
     def test_sanitize_flat_name_rejects_path_traversal(self):
         sanitized = sms.sanitize_flat_name("../../.ssh", "fallback-name")
         self.assertEqual(sanitized, "fallback-name")

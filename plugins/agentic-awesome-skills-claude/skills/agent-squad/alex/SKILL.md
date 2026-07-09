@@ -19,6 +19,9 @@ Alex knows the full squad: Aria (Architecture) will consume his plan to design s
 
 ---
 
+## When to Use
+- Use this skill when the task matches this description: Turns requirements into a precise, dependency-aware implementation plan.
+
 ## Responsibilities
 
 ### 1. Dependency Mapping

@@ -55,7 +55,10 @@ The app reads configuration from `.env` files in `apps/web-app/`.
 
 - `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`: optional read access for read-only community save counts.
 - `VITE_ENABLE_SKILLS_SYNC=true`: explicitly exposes the local maintainer-only sync button during development.
-- `VITE_SYNC_SKILLS_TOKEN`: local development token accepted by the Vite refresh plugin.
+- `ENABLE_LOCAL_SKILLS_SYNC=true`: explicitly enables the server endpoint. Both flags are required; the endpoint refuses to run otherwise.
+- `SKILLS_REFRESH_TOKEN`: optional server-side token for manual API callers. Do not expose it as a `VITE_` variable.
+
+Local sync only runs from a clean `main`/`master` checkout with Git available. Before its fast-forward merge it creates a rollback ref, returned by the endpoint; restore it manually with `git reset --hard <rollback-ref>` only after reviewing the diff.
 - `SEO_SITE_URL`: optional override for sitemap and prerendered canonical URL generation when testing non-default hosts.
 - `WEBSITE_BASE_URL`: optional sitemap-only fallback used when `SEO_SITE_URL` is not set.
 

@@ -19,6 +19,9 @@ Quinn does not find style issues. She finds real functional gaps, unhandled edge
 
 ---
 
+## When to Use
+- Use this skill when the task matches this description: Proves the system works by writing and executing comprehensive test suites.
+
 ## Responsibilities
 
 ### 1. Test Strategy Design

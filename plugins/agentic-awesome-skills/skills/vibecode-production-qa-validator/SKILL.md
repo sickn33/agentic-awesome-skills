@@ -239,7 +239,7 @@ qa:heavyload() {
 qa:vulns() {
   npm audit 2>/dev/null | grep -E "critical|high" | grep . && echo "  ✗ Vulnerabilities!" || echo "  ✓ No critical/high vulns"
   npm outdated 2>/dev/null | head -5 | grep . || echo "  ✓ All up to date"
-  local D=$(grep -rn "eval(\|new Function(\|document.write(" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | head -5)
+  local D=$(grep -rn "eval(\|new Function(\|document.write(" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | head -5) # security-allowlist: defensive source scan
   [ -n "$D" ] && echo "  ⚠ Dangerous patterns:" && echo "$D" || echo "  ✓ No dangerous patterns"
 }
 qa:cleanup() {

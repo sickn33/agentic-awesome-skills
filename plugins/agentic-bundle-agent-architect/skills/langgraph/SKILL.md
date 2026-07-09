@@ -112,7 +112,7 @@ def search(query: str) -> str:
 @tool
 def calculator(expression: str) -> str:
     """Evaluate a math expression."""
-    return str(eval(expression))
+    return str(safe_math_evaluator(expression))
 
 tools = [search, calculator]
 

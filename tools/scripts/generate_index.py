@@ -930,6 +930,10 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
             description = coerce_metadata_text(metadata.get("description"))
             risk = coerce_metadata_text(metadata.get("risk"))
             source = coerce_metadata_text(metadata.get("source"))
+            source_type = coerce_metadata_text(metadata.get("source_type"))
+            source_repo = coerce_metadata_text(metadata.get("source_repo"))
+            license_value = coerce_metadata_text(metadata.get("license"))
+            license_source = coerce_metadata_text(metadata.get("license_source"))
             date_added = coerce_metadata_text(metadata.get("date_added"))
             category = coerce_metadata_text(metadata.get("category"))
 
@@ -941,6 +945,14 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
                 skill_info["risk"] = risk
             if source is not None:
                 skill_info["source"] = source
+            if source_type is not None:
+                skill_info["source_type"] = source_type
+            if source_repo is not None:
+                skill_info["source_repo"] = source_repo
+            if license_value is not None:
+                skill_info["license"] = license_value
+            if license_source is not None:
+                skill_info["license_source"] = license_source
             if date_added is not None:
                 skill_info["date_added"] = date_added
             

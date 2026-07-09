@@ -4,7 +4,7 @@ const os = require("os");
 const path = require("path");
 
 async function main() {
-  const { copyFolderSync, copyIndexFiles } = require("../../scripts/setup_web.js");
+  const { copySkillMarkdownFiles, copyIndexFiles } = require("../../scripts/setup_web.js");
 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "setup-web-sync-"));
   try {
@@ -31,15 +31,21 @@ async function main() {
     fs.mkdirSync(path.join(skillsSource, "visible-skill"), { recursive: true });
     fs.mkdirSync(path.join(skillsSource, ".disabled", "hidden-skill"), { recursive: true });
     fs.writeFileSync(path.join(skillsSource, "visible-skill", "SKILL.md"), "# Visible\n", "utf8");
+    fs.writeFileSync(path.join(skillsSource, "visible-skill", "viewer.html"), "<script>alert(1)</script>", "utf8");
     fs.writeFileSync(path.join(skillsSource, ".disabled", "hidden-skill", "SKILL.md"), "# Hidden\n", "utf8");
 
-    copyFolderSync(skillsSource, skillsDest, skillsSource);
+    copySkillMarkdownFiles(skillsSource, skillsDest);
 
     assert.ok(fs.existsSync(path.join(skillsDest, "visible-skill", "SKILL.md")));
     assert.strictEqual(
       fs.existsSync(path.join(skillsDest, ".disabled")),
       false,
       "web asset setup must not publish dot-prefixed skills directories",
+    );
+    assert.strictEqual(
+      fs.existsSync(path.join(skillsDest, "visible-skill", "viewer.html")),
+      false,
+      "web asset setup must publish markdown only, never active community assets",
     );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });

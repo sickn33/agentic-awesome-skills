@@ -132,6 +132,7 @@ def update_skill_file(
     *,
     add_missing: bool = False,
     add_limitations_only: bool = False,
+    add_when_only: bool = False,
 ) -> tuple[bool, list[str]]:
     if not is_safe_regular_file(skill_path):
         return False, []
@@ -150,7 +151,7 @@ def update_skill_file(
         if updated != content:
             changes.append("normalized_when_heading")
 
-        add_when = add_missing
+        add_when = add_missing or add_when_only
         add_examples = add_missing
         add_limitations = add_missing or add_limitations_only
 
@@ -188,10 +189,16 @@ def main() -> int:
         action="store_true",
         help="Only synthesize missing 'Limitations' sections.",
     )
+    parser.add_argument("--add-when-only", action="store_true", help="Only synthesize missing 'When to Use' sections.")
+    parser.add_argument("--only", action="append", default=[], help="Restrict changes to a repository-relative SKILL.md path (repeatable).")
     args = parser.parse_args()
+
+    if args.add_missing and args.add_when_only:
+        parser.error("--add-missing and --add-when-only cannot be combined")
 
     repo_root = find_repo_root(__file__)
     skills_dir = repo_root / "skills"
+    only_paths = {Path(item).as_posix() for item in args.only}
 
     modified = 0
     for root, dirs, files in os.walk(skills_dir):
@@ -200,6 +207,9 @@ def main() -> int:
             continue
 
         skill_path = Path(root) / "SKILL.md"
+        relative_path = skill_path.relative_to(repo_root).as_posix()
+        if only_paths and relative_path not in only_paths:
+            continue
         if not is_safe_regular_file(skill_path):
             print(f"SKIP {skill_path.relative_to(repo_root)} [symlinked_or_unreadable]")
             continue
@@ -209,7 +219,7 @@ def main() -> int:
             continue
 
         simulated = normalize_when_heading_variants(content)
-        needs_when = args.add_missing and not has_when_to_use_section(simulated)
+        needs_when = (args.add_missing or args.add_when_only) and not has_when_to_use_section(simulated)
         needs_examples = args.add_missing and not has_examples(simulated)
         needs_limitations = (args.add_missing or args.add_limitations_only) and not has_limitations(simulated)
         if not needs_when and not needs_examples and not needs_limitations and simulated == content:
@@ -233,6 +243,7 @@ def main() -> int:
             skill_path,
             add_missing=args.add_missing,
             add_limitations_only=args.add_limitations_only,
+            add_when_only=args.add_when_only,
         )
         if changed:
             modified += 1

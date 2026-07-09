@@ -152,7 +152,7 @@ export function Home(): React.ReactElement {
         if (data.upToDate) {
           setSyncMsg({ type: 'info', text: 'Skills are already up to date.' });
         } else {
-          setSyncMsg({ type: 'success', text: `Synced ${data.count} skills.` });
+          setSyncMsg({ type: 'success', text: `Synced ${data.count} skills. Rollback ref: ${data.rollbackRef}` });
           await refreshSkills();
         }
       } else {

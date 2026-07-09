@@ -33,14 +33,15 @@ function resolveDir(p) {
   return path.resolve(root, ...sanitizedSegments);
 }
 
-function parseArgs() {
-  const a = process.argv.slice(2);
+function parseArgs(argv = process.argv.slice(2)) {
+  const a = argv;
   let pathArg = null;
   let versionArg = null;
   let tagArg = null;
   let riskArg = null;
   let categoryArg = null;
   let tagsArg = null;
+  let versionInfo = false;
   let cursor = false,
     claude = false,
     gemini = false,
@@ -51,28 +52,22 @@ function parseArgs() {
 
   for (let i = 0; i < a.length; i++) {
     if (a[i] === "--help" || a[i] === "-h") return { help: true };
-    if (a[i] === "--path" && a[i + 1]) {
-      pathArg = a[++i];
+    if (a[i] === "--version") {
+      versionInfo = true;
       continue;
     }
-    if (a[i] === "--version" && a[i + 1]) {
-      versionArg = a[++i];
-      continue;
-    }
-    if (a[i] === "--tag" && a[i + 1]) {
-      tagArg = a[++i];
-      continue;
-    }
-    if (a[i] === "--risk" && a[i + 1]) {
-      riskArg = a[++i];
-      continue;
-    }
-    if (a[i] === "--category" && a[i + 1]) {
-      categoryArg = a[++i];
-      continue;
-    }
-    if (a[i] === "--tags" && a[i + 1]) {
-      tagsArg = a[++i];
+    if (["--path", "--release", "--tag", "--risk", "--category", "--tags"].includes(a[i])) {
+      const value = a[i + 1];
+      if (!value || value.startsWith("--")) {
+        throw new Error(`Option ${a[i]} requires a value.`);
+      }
+      if (a[i] === "--path") pathArg = value;
+      if (a[i] === "--release") versionArg = value;
+      if (a[i] === "--tag") tagArg = value;
+      if (a[i] === "--risk") riskArg = value;
+      if (a[i] === "--category") categoryArg = value;
+      if (a[i] === "--tags") tagsArg = value;
+      i += 1;
       continue;
     }
     if (a[i] === "--cursor") {
@@ -104,6 +99,7 @@ function parseArgs() {
       continue;
     }
     if (a[i] === "install") continue;
+    throw new Error(`Unknown option or command: ${a[i]}`);
   }
 
   return {
@@ -113,6 +109,7 @@ function parseArgs() {
     riskArg,
     categoryArg,
     tagsArg,
+    versionInfo,
     cursor,
     claude,
     gemini,
@@ -182,7 +179,8 @@ Options:
   --risk <csv>     Install only skills matching these risk labels
   --category <csv> Install only skills matching these categories
   --tags <csv>     Install only skills matching these tags
-  --version <ver>  Clone tag v<ver> (e.g. 4.6.0 -> v4.6.0)
+  --version        Print the installer version
+  --release <ver>  Clone tag v<ver> (e.g. 4.6.0 -> v4.6.0)
   --tag <tag>      Clone this tag or branch (e.g. v4.6.0, main)
 
 Examples:
@@ -193,7 +191,7 @@ Examples:
   npx agentic-awesome-skills --agy
   npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none
   npx agentic-awesome-skills --path .agents/skills --tags debugging,typescript-legacy-
-  npx agentic-awesome-skills --version 4.6.0
+  npx agentic-awesome-skills --release 4.6.0
   npx agentic-awesome-skills --path ./my-skills
   npx agentic-awesome-skills --claude --codex    Install to multiple targets
 `);
@@ -312,7 +310,14 @@ function assertSafeDestinationPath(dest, destRoot) {
   }
 }
 
-function copyRecursiveSync(src, dest, rootDir = src, skipGit = true, destRoot = dest) {
+function copyRecursiveSync(
+  src,
+  dest,
+  rootDir = src,
+  skipGit = true,
+  destRoot = dest,
+  selectedSkillEntries = null,
+) {
   const stats = fs.lstatSync(src);
   const resolvedSource = stats.isSymbolicLink()
     ? resolveSafeRealPath(rootDir, src)
@@ -324,6 +329,17 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true, destRoot = 
   }
 
   const resolvedStats = fs.statSync(resolvedSource);
+  const relativeSource = path.relative(rootDir, resolvedSource);
+  if (
+    selectedSkillEntries &&
+    relativeSource &&
+    relativeSource !== "." &&
+    resolvedStats.isDirectory() &&
+    fs.existsSync(path.join(resolvedSource, "SKILL.md")) &&
+    !selectedSkillEntries.has(path.normalize(relativeSource))
+  ) {
+    return;
+  }
   if (fs.existsSync(dest) && fs.lstatSync(dest).isSymbolicLink()) {
     throw new Error(`Skipping unsafe destination symlink: ${dest}`);
   }
@@ -344,6 +360,7 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true, destRoot = 
           rootDir,
           skipGit,
           destRoot,
+          selectedSkillEntries,
         );
       }
     } finally {
@@ -351,6 +368,56 @@ function copyRecursiveSync(src, dest, rootDir = src, skipGit = true, destRoot = 
     }
   } else {
     fs.cpSync(resolvedSource, dest);
+  }
+}
+
+function replaceManagedEntry(
+  src,
+  dest,
+  rootDir,
+  skipGit,
+  targetRoot,
+  selectedSkillEntries = null,
+) {
+  if (!fs.existsSync(targetRoot)) {
+    fs.mkdirSync(targetRoot, { recursive: true });
+  }
+  assertSafeDestinationPath(dest, targetRoot);
+  const stageRoot = fs.mkdtempSync(path.join(targetRoot, ".antigravity-stage-"));
+  const stagedEntry = path.join(stageRoot, "entry");
+  const backupEntry = path.join(stageRoot, "previous");
+  let movedPreviousEntry = false;
+
+  try {
+    copyRecursiveSync(
+      src,
+      stagedEntry,
+      rootDir,
+      skipGit,
+      stageRoot,
+      selectedSkillEntries,
+    );
+    if (!fs.existsSync(stagedEntry)) {
+      throw new Error(`Unable to stage managed install entry: ${src}`);
+    }
+
+    if (fs.existsSync(dest)) {
+      assertSafeDestinationPath(dest, targetRoot);
+      fs.renameSync(dest, backupEntry);
+      movedPreviousEntry = true;
+    }
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.renameSync(stagedEntry, dest);
+    if (movedPreviousEntry) {
+      fs.rmSync(backupEntry, { recursive: true, force: true });
+    }
+  } catch (error) {
+    if (movedPreviousEntry && fs.existsSync(backupEntry) && !fs.existsSync(dest)) {
+      fs.renameSync(backupEntry, dest);
+    }
+    throw error;
+  } finally {
+    fs.rmSync(stageRoot, { recursive: true, force: true });
   }
 }
 
@@ -381,18 +448,22 @@ function getInstallEntries(tempDir, selectors = buildInstallSelectors({})) {
 
 function installSkillsIntoTarget(tempDir, target, installEntries) {
   const repoSkills = path.join(tempDir, "skills");
+  const selectedSkillEntries = new Set(
+    installEntries
+      .filter((entry) => entry !== "docs")
+      .map(normalizeSourceEntry),
+  );
   installEntries.forEach((name) => {
     const destName = normalizeInstallEntry(name);
     if (destName === "docs") {
       const repoDocs = path.join(tempDir, "docs");
       const docsDest = path.join(target, "docs");
-      if (!fs.existsSync(docsDest)) fs.mkdirSync(docsDest, { recursive: true });
-      copyRecursiveSync(repoDocs, docsDest, repoDocs, true, target);
+      replaceManagedEntry(repoDocs, docsDest, repoDocs, true, target);
       return;
     }
     const src = path.join(repoSkills, normalizeSourceEntry(name));
     const dest = path.join(target, destName);
-    copyRecursiveSync(src, dest, repoSkills, true, target);
+    replaceManagedEntry(src, dest, repoSkills, true, target, selectedSkillEntries);
   });
 }
 
@@ -630,8 +701,8 @@ function installForTarget(tempDir, target, selectors = buildInstallSelectors({})
   const installEntries = getInstallEntries(tempDir, selectors);
   const managedEntries = getManagedEntries(installEntries, target);
   const previousEntries = readInstallManifest(target.path);
-  pruneRemovedEntries(target.path, previousEntries, managedEntries);
   installSkillsIntoTarget(tempDir, target.path, installEntries);
+  pruneRemovedEntries(target.path, previousEntries, managedEntries);
   writeInstallManifest(target.path, managedEntries);
   console.log(`  ✓ Installed to ${target.path}`);
 }
@@ -679,7 +750,14 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
 }
 
 function main() {
-  const opts = parseArgs();
+  let opts;
+  try {
+    opts = parseArgs();
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exitCode = 1;
+    return;
+  }
   const selectors = buildInstallSelectors(opts);
   const ref = resolveInstallRef(opts);
 
@@ -688,8 +766,13 @@ function main() {
     return;
   }
 
+  if (opts.versionInfo) {
+    console.log(packageMetadata.version);
+    return;
+  }
+
   const targets = getTargets(opts);
-  if (!targets.length || !HOME) {
+  if (!targets.length || (!HOME && !opts.pathArg)) {
     console.error(
       "Could not resolve home directory. Use --path <absolute-path>.",
     );
@@ -735,6 +818,7 @@ if (require.main === module) {
 
 module.exports = {
   copyRecursiveSync,
+  replaceManagedEntry,
   getPostInstallMessages,
   buildCloneArgs,
   buildInstallSelectors,
@@ -748,6 +832,7 @@ module.exports = {
   matchesInstallSelectors,
   normalizeInstallEntry,
   parseSelectorArg,
+  parseArgs,
   pruneRemovedEntries,
   readInstallManifest,
   resolveInstallRef,
