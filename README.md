@@ -131,13 +131,7 @@ Next-wave plugins cover marketing/SEO/growth, automation, observability/incident
 
 ## 🛡️ Offensive Security & Red Team Skills
 
-- [Violin](https://github.com/Strategic-Automation/violin) - AI-native pentest framework and Hermes agent profile/plugin for autonomous, human-in-the-loop offensive security (IDOR/SSRF/XSS triage, multi-stage agentic testing). (Hermes agent profile for autonomous pentesting)
-
-
 ## 🛡️ Offensive Security & Red Team Skills
-
-- [Violin](https://github.com/Strategic-Automation/violin) - AI-native pentest framework and Hermes agent profile/plugin for autonomous, human-in-the-loop offensive security (IDOR/SSRF/XSS triage, multi-stage agentic testing). (Hermes agent profile for autonomous pentesting)
-
 
 Use the same repository, but install or invoke it in the way your host expects.
 
@@ -156,6 +150,10 @@ Use the same repository, but install or invoke it in the way your host expects.
 | OpenCode       | `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none` | `opencode run @brainstorming help me plan a feature` |
 | AdaL CLI       | `npx agentic-awesome-skills --path .adal/skills`                   | `Use brainstorming to plan a feature`                |
 | Custom path    | `npx agentic-awesome-skills --path ./my-skills`                    | Depends on your tool                                   |
+
+## 🛡️ Offensive Security & Red Team Skills
+
+- [Violin](https://github.com/Strategic-Automation/violin) - AI-native pentest framework and Hermes agent profile/plugin for autonomous, human-in-the-loop offensive security (IDOR/SSRF/XSS triage, multi-stage agentic testing). (Hermes agent profile for autonomous pentesting)
 
 Use the table above for install targets. Use specialized plugins when you are choosing what to install for a domain, then use the host guides below only for path details, prompt examples, and setup caveats.
 
@@ -197,7 +195,6 @@ Plugins are installable packaging surfaces, bundles are curated skill recommenda
 ### Where do I browse plugins, bundles, workflows, and the full catalog?
 
 Start with [Specialized Plugins](#recommended-specialized-plugins) when you want an installable domain pack. Use [Bundles](docs/users/bundles.md) for role-based recommendations, [Workflows](docs/users/workflows.md) for ordered execution playbooks, [CATALOG.md](CATALOG.md) for the full registry, and the hosted [GitHub Pages catalog](https://sickn33.github.io/agentic-awesome-skills/) for searchable browsing.
-
 
 ## Bundles & Workflows
 
