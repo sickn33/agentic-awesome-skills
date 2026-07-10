@@ -89,8 +89,12 @@ EVIDENCE: <2-4 hard facts with sources/numbers>
 NEXT: <if survived: the ONE cheapest test that could still kill it>
 ```
 
-Then append a one-line row to the user's `REJECTION.md`. The kill-list is the
-compounding asset — every autopsy makes the next one faster.
+Then record the result — gated on consent: if `REJECTION.md` exists, or the user
+approved creating it in Step 1, append a one-line row (dead) or note the survivor
+with the date and pending test. If the user declined the kill-list, do NOT create
+or write the file — print the proposed row as text so they can save it wherever
+they prefer. The kill-list is the compounding asset — every autopsy makes the
+next one faster, but only with the user's consent.
 
 ## Examples
 
