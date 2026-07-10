@@ -2,7 +2,7 @@
 name: grok-build
 description: "Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every diff, and owns the result."
 category: agent-orchestration
-risk: unknown
+risk: critical
 source: https://github.com/sanjay3290/ai-skills/tree/main/skills/grok-build
 source_repo: sanjay3290/ai-skills
 source_type: community
@@ -26,6 +26,14 @@ The coding assistant is the orchestrator: it plans, writes self-contained task s
 dispatches them to Grok Build headlessly, reviews every diff, and owns the final result.
 Grok is the fast, cheap executor. Full CLI details and verified behaviors: `references/cli.md`.
 
+## Safety Gate
+
+Before every dispatch, show the user the exact task specification that will be sent to xAI,
+the target worktree, and the permission mode. Obtain explicit approval to disclose that text
+and to let Grok edit the scoped worktree. Never include secrets, proprietary source, customer
+data, or credentials in a task specification. Do not run `grok update`, `--always-approve`,
+or a destructive recovery command without separate, explicit approval.
+
 ## When to delegate vs keep with the orchestrator
 
 | Delegate to Grok | Keep with the orchestrator |
@@ -40,8 +48,8 @@ When in doubt, keep it with the orchestrator.
 
 ## Session preflight (once, before the first dispatch)
 
-1. `grok update --check --json` — if `updateAvailable` is true, run `grok update` and
-   confirm with `grok --version`.
+1. `grok update --check --json` — if `updateAvailable` is true, tell the user. Run
+   `grok update` only after explicit approval, then confirm with `grok --version`.
 2. `grok models` — if it errors or reports logged out, STOP and ask the user to run
    `grok login`.
 
@@ -82,17 +90,17 @@ When in doubt, keep it with the orchestrator.
 
    Parse the JSON output and save `sessionId`. (`--always-approve` is required for
    headless runs — `--permission-mode acceptEdits` silently cancels edits with no
-   interactive approver. See `references/cli.md`.) For a high-stakes task, add `--check`
+   interactive approver. Use it only after the user explicitly approves Grok editing this
+   exact scoped worktree. See `references/cli.md`.) For a high-stakes task, add `--check`
    so Grok self-verifies before you review; skip it otherwise (it ~doubles latency).
 4. **Review gate — non-negotiable.**
    - Read the diff yourself (`git diff -- <files from the spec>` to skip artifact noise):
      does it do the task, only the task, and match repo conventions?
    - Run the acceptance commands from the spec.
    - **Pass** → commit with a clear message following the repo's convention → next task.
-   - **Fail** → fix-up: `grok --resume <sessionId> -p "<specific feedback>"
-     --always-approve --output-format json`. **Max 2 fix-up rounds.** Still failing →
-     revert Grok's changes (`git checkout -- .`; `git clean -fd` for new files), do the
-     task yourself, and tell the user Grok couldn't complete it.
+   - **Fail** → ask the user before a fix-up or any reset. Never run `git checkout -- .` or
+     `git clean -fd` automatically; preserve the diff for review and use a non-destructive
+     recovery plan unless the user explicitly authorizes otherwise.
 
 ## Task spec template
 
@@ -140,8 +148,19 @@ sequential.
 | `stopReason: "Cancelled"`, empty text, no diff | Missing `--always-approve` — retry with it |
 | CLI error / timeout | Retry once; then do the task yourself and note the fallback |
 | Auth expired | Stop; ask the user to run `grok login` |
-| 2 fix-up rounds exhausted | Revert Grok's diff; the orchestrator finishes the task |
+| 2 fix-up rounds exhausted | Preserve the diff, ask the user for a recovery decision, then finish the task manually if authorized |
 | Dirty tree at dispatch | Refuse; commit/stash first |
+
+## Limitations
+
+- Grok receives the approved task specification; it is a third-party service and should not
+  receive secrets, proprietary material, personal data, or customer data.
+- `--always-approve` allows edits without an interactive approval prompt. It must be limited to
+  a clean, explicitly approved worktree and never substitutes for the orchestrator's review.
+- Model output can be incorrect, insecure, incomplete, or out of scope. Review the diff and
+  run the acceptance checks before accepting any change.
+- This skill does not authorize installations, updates, commits, pushes, deployments, or
+  destructive cleanup.
 
 ## Models
 

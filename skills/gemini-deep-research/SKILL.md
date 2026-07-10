@@ -2,7 +2,7 @@
 name: gemini-deep-research
 description: "Run autonomous multi-step research with Google's Gemini Deep Research Agent: kick off a query, poll progress, and collect a cited report for market analysis or literature reviews."
 category: research
-risk: safe
+risk: critical
 source: https://github.com/sanjay3290/ai-skills/tree/main/skills/deep-research
 source_repo: sanjay3290/ai-skills
 source_type: community
@@ -38,6 +38,13 @@ Run autonomous research tasks that plan, search, read, and synthesize informatio
    export GEMINI_API_KEY=your-api-key-here
    ```
    Or create a `.env` file in the skill directory.
+
+## Safety Gate
+
+Before starting a research job, show the user the exact query, the fact that it will be sent
+to Google's Gemini service, the expected cost range, and the output destination. Start a job
+only after explicit approval. Do not include private workspace material, credentials, personal
+data, or confidential customer information in a query.
 
 ## Usage
 
@@ -117,3 +124,13 @@ python3 scripts/research.py --list
 - **0**: Success
 - **1**: Error (API error, config issue, timeout)
 - **130**: Cancelled by user (Ctrl+C)
+
+## Limitations
+
+- Each research job is a paid, third-party API request; costs and availability can change, and
+  the listed estimate is not a spending authorization.
+- Reports may contain incomplete, stale, or incorrect citations. Verify consequential claims
+  against primary sources.
+- This skill cannot guarantee that a prompt is safe to disclose; redact proprietary or personal
+  material before requesting user approval.
+- An API key must remain local and must never be committed, printed, or sent in a query.

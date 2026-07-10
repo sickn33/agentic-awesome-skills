@@ -140,3 +140,13 @@ If unclear, run `--list` and ask user which database.
 2. Match user intent to database description
 3. Run `--tables` or `--schema` to explore structure
 4. Execute query with appropriate LIMIT
+
+## Limitations
+
+- Read-only protections reduce accidental writes but cannot override database-server policy,
+  triggers, extensions, or an over-privileged account. Use a database role with read-only
+  permissions as the primary control.
+- Query results can contain personal, confidential, or regulated data. Confirm the intended
+  database and avoid exporting or sharing results without explicit authorization.
+- The script is not a replacement for backups, auditing, access reviews, or production change
+  controls.

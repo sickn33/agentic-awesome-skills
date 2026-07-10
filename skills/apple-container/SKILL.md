@@ -2,7 +2,7 @@
 name: apple-container
 description: "Build, run, and manage OCI/Linux containers as lightweight per-container VMs on Apple-silicon macOS using Apple's open-source container CLI, no Docker daemon required."
 category: devops
-risk: unknown
+risk: critical
 source: https://github.com/sanjay3290/ai-skills/tree/main/skills/apple-container
 source_repo: sanjay3290/ai-skills
 source_type: community
@@ -31,6 +31,14 @@ deliberately Docker-like (`container run`, `container build`, and image ops unde
 `container image push`/`pull`), but it is a distinct tool: do not assume Docker command paths,
 flags, defaults, or daemon behavior carry over (e.g. there is no `container images`/`push`/`pull`
 top-level command — image verbs live under `container image`).
+
+## Safety Gate
+
+Container installation, service startup, image pulls, builds, runs, registry login, pushes,
+and resource cleanup change local or remote state. Explain the exact command, image registry,
+mounts, ports, privileges, and data-persistence impact, then obtain explicit user approval
+before executing it. Do not provide registry credentials, mount sensitive paths, or expose
+ports without the user's explicit instruction.
 
 ## Requirements
 
@@ -144,3 +152,14 @@ Read the reference file that matches the task; do not guess flags or behavior.
 - **Use fully-qualified image references** when precision matters (e.g.
   `docker.io/library/alpine` rather than bare `alpine`) to avoid ambiguity about the source
   registry.
+
+## Limitations
+
+- Apple Container requires Apple silicon and has materially different support and networking
+  behavior across macOS releases; verify the installed CLI version before relying on a flag.
+- OCI images and registry content are third-party inputs. Inspect and trust the image source
+  before pulling or running it.
+- This skill does not make container workloads safe by default: mounts, published ports,
+  privileged settings, registry credentials, and cleanup can expose or destroy data.
+- Stop before uninstalling, pruning, deleting containers, volumes, or images, and require
+  explicit approval for each destructive action.
