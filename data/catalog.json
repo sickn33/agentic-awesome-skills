@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-09T06:03:23.000Z",
-  "total": 1937,
+  "total": 1942,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3958,6 +3958,40 @@
         "javascript"
       ],
       "path": "skills/appium-skill/SKILL.md"
+    },
+    {
+      "id": "apple-container",
+      "canonical_id": "apple-container",
+      "name": "apple-container",
+      "description": "Build, run, and manage OCI/Linux containers as lightweight per-container VMs on Apple-silicon macOS using Apple's open-source container CLI, no Docker daemon required.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/apple-container",
+      "source_type": "community",
+      "source_repo": "sanjay3290/ai-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE",
+      "tags": [
+        "macos",
+        "containers",
+        "oci",
+        "apple-silicon"
+      ],
+      "triggers": [
+        "macos",
+        "containers",
+        "oci",
+        "apple-silicon",
+        "apple",
+        "container",
+        "run",
+        "linux",
+        "lightweight",
+        "per",
+        "vms",
+        "silicon"
+      ],
+      "path": "skills/apple-container/SKILL.md"
     },
     {
       "id": "apple-notes-search",
@@ -24487,6 +24521,40 @@
       "path": "skills/gemini-api-integration/SKILL.md"
     },
     {
+      "id": "gemini-deep-research",
+      "canonical_id": "gemini-deep-research",
+      "name": "gemini-deep-research",
+      "description": "Run autonomous multi-step research with Google's Gemini Deep Research Agent: kick off a query, poll progress, and collect a cited report for market analysis or literature reviews.",
+      "category": "research",
+      "risk": "critical",
+      "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/deep-research",
+      "source_type": "community",
+      "source_repo": "sanjay3290/ai-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE",
+      "tags": [
+        "research",
+        "gemini",
+        "google",
+        "reports"
+      ],
+      "triggers": [
+        "research",
+        "gemini",
+        "google",
+        "reports",
+        "deep",
+        "run",
+        "autonomous",
+        "multi",
+        "step",
+        "agent",
+        "kick",
+        "off"
+      ],
+      "path": "skills/gemini-deep-research/SKILL.md"
+    },
+    {
       "id": "gemini-interactions-api",
       "canonical_id": "gemini-interactions-api",
       "name": "gemini-interactions-api",
@@ -26032,6 +26100,40 @@
         "test"
       ],
       "path": "skills/grilling/SKILL.md"
+    },
+    {
+      "id": "grok-build",
+      "canonical_id": "grok-build",
+      "name": "grok-build",
+      "description": "Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every diff, and owns the result.",
+      "category": "agent-orchestration",
+      "risk": "critical",
+      "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/grok-build",
+      "source_type": "community",
+      "source_repo": "sanjay3290/ai-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE",
+      "tags": [
+        "grok",
+        "delegation",
+        "code-generation",
+        "xai"
+      ],
+      "triggers": [
+        "grok",
+        "delegation",
+        "code-generation",
+        "xai",
+        "delegate",
+        "well",
+        "specified",
+        "tasks",
+        "cli",
+        "running",
+        "headlessly",
+        "while"
+      ],
+      "path": "skills/grok-build/SKILL.md"
     },
     {
       "id": "growth-engine",
@@ -38914,6 +39016,40 @@
       "path": "skills/postgres-best-practices/SKILL.md"
     },
     {
+      "id": "postgres-readonly-queries",
+      "canonical_id": "postgres-readonly-queries",
+      "name": "postgres-readonly-queries",
+      "description": "Execute safe read-only SQL queries against PostgreSQL databases with multi-connection support and defense-in-depth write protection.",
+      "category": "data",
+      "risk": "safe",
+      "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/postgres",
+      "source_type": "community",
+      "source_repo": "sanjay3290/ai-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE",
+      "tags": [
+        "postgres",
+        "sql",
+        "database",
+        "read-only"
+      ],
+      "triggers": [
+        "postgres",
+        "sql",
+        "database",
+        "read-only",
+        "readonly",
+        "queries",
+        "execute",
+        "safe",
+        "read",
+        "against",
+        "postgresql",
+        "databases"
+      ],
+      "path": "skills/postgres-readonly-queries/SKILL.md"
+    },
+    {
       "id": "postgresql",
       "canonical_id": "postgresql",
       "name": "postgresql",
@@ -49547,6 +49683,40 @@
         "ai"
       ],
       "path": "skills/telegram-bot-builder/SKILL.md"
+    },
+    {
+      "id": "telegram-bot-messaging",
+      "canonical_id": "telegram-bot-messaging",
+      "name": "telegram-bot-messaging",
+      "description": "Send Telegram messages, files, and alerts via bot API; ask questions with inline buttons and wait for the answer. Supports multiple bots, named chat targets, and CI/cron/hook notifications.",
+      "category": "productivity",
+      "risk": "critical",
+      "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/telegram",
+      "source_type": "community",
+      "source_repo": "sanjay3290/ai-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE",
+      "tags": [
+        "telegram",
+        "notifications",
+        "bots",
+        "approvals"
+      ],
+      "triggers": [
+        "telegram",
+        "notifications",
+        "bots",
+        "approvals",
+        "bot",
+        "messaging",
+        "send",
+        "messages",
+        "files",
+        "alerts",
+        "via",
+        "api"
+      ],
+      "path": "skills/telegram-bot-messaging/SKILL.md"
     },
     {
       "id": "telegram-mini-app",

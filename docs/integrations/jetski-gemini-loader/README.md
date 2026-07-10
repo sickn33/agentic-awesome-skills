@@ -21,7 +21,7 @@ This example shows one way to integrate **agentic-awesome-skills** with a Jetski
 - How to enforce a **maximum number of skills per turn** via `maxSkillsPerTurn`.
 - How to choose whether to **truncate or error** when too many skills are requested via `overflowBehavior`.
 
-This pattern avoids context overflow when you have 1,937+ skills installed.
+This pattern avoids context overflow when you have 1,942+ skills installed.
 
 Manifest contract references:
 

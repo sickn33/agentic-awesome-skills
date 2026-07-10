@@ -3039,6 +3039,32 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "apple-container",
+    "path": "skills/apple-container",
+    "category": "devops",
+    "name": "apple-container",
+    "description": "Build, run, and manage OCI/Linux containers as lightweight per-container VMs on Apple-silicon macOS using Apple's open-source container CLI, no Docker daemon required.",
+    "risk": "critical",
+    "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/apple-container",
+    "date_added": "2026-07-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sanjay3290/ai-skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
+  },
+  {
     "id": "apple-notes-search",
     "path": "skills/apple-notes-search",
     "category": "uncategorized",
@@ -18899,6 +18925,34 @@
     }
   },
   {
+    "id": "gemini-deep-research",
+    "path": "skills/gemini-deep-research",
+    "category": "research",
+    "name": "gemini-deep-research",
+    "description": "Run autonomous multi-step research with Google's Gemini Deep Research Agent: kick off a query, poll progress, and collect a cited report for market analysis or literature reviews.",
+    "risk": "critical",
+    "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/deep-research",
+    "date_added": "2026-07-09",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "undeclared_runtime_dependency"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "sanjay3290/ai-skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
+  },
+  {
     "id": "gemini-interactions-api",
     "path": "skills/gemini-interactions-api",
     "category": "uncategorized",
@@ -20216,6 +20270,32 @@
     "source_repo": "mattpocock/skills",
     "license": "MIT",
     "license_source": "https://github.com/mattpocock/skills/blob/main/LICENSE"
+  },
+  {
+    "id": "grok-build",
+    "path": "skills/grok-build",
+    "category": "agent-orchestration",
+    "name": "grok-build",
+    "description": "Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every diff, and owns the result.",
+    "risk": "critical",
+    "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/grok-build",
+    "date_added": "2026-07-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sanjay3290/ai-skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
   },
   {
     "id": "growth-engine",
@@ -30729,6 +30809,34 @@
     }
   },
   {
+    "id": "postgres-readonly-queries",
+    "path": "skills/postgres-readonly-queries",
+    "category": "data",
+    "name": "postgres-readonly-queries",
+    "description": "Execute safe read-only SQL queries against PostgreSQL databases with multi-connection support and defense-in-depth write protection.",
+    "risk": "safe",
+    "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/postgres",
+    "date_added": "2026-07-09",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "undeclared_runtime_dependency"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "sanjay3290/ai-skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
+  },
+  {
     "id": "postgresql",
     "path": "skills/postgresql",
     "category": "database",
@@ -39208,6 +39316,34 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "telegram-bot-messaging",
+    "path": "skills/telegram-bot-messaging",
+    "category": "productivity",
+    "name": "telegram-bot-messaging",
+    "description": "Send Telegram messages, files, and alerts via bot API; ask questions with inline buttons and wait for the answer. Supports multiple bots, named chat targets, and CI/cron/hook notifications.",
+    "risk": "critical",
+    "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/telegram",
+    "date_added": "2026-07-09",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "sanjay3290/ai-skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
   },
   {
     "id": "telegram-mini-app",

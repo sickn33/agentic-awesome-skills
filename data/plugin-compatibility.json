@@ -2650,6 +2650,25 @@
       "runtime_files": []
     },
     {
+      "id": "apple-container",
+      "path": "skills/apple-container",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "apple-notes-search",
       "path": "skills/apple-notes-search",
       "targets": {
@@ -16325,6 +16344,33 @@
       "runtime_files": []
     },
     {
+      "id": "gemini-deep-research",
+      "path": "skills/gemini-deep-research",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "undeclared_runtime_dependency"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "undeclared_runtime_dependency"
+        ],
+        "claude": [
+          "undeclared_runtime_dependency"
+        ]
+      },
+      "runtime_files": [
+        "requirements.txt"
+      ]
+    },
+    {
       "id": "gemini-interactions-api",
       "path": "skills/gemini-interactions-api",
       "targets": {
@@ -17340,6 +17386,25 @@
     {
       "id": "grilling",
       "path": "skills/grilling",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "grok-build",
+      "path": "skills/grok-build",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -25908,6 +25973,33 @@
       "runtime_files": []
     },
     {
+      "id": "postgres-readonly-queries",
+      "path": "skills/postgres-readonly-queries",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "undeclared_runtime_dependency"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "undeclared_runtime_dependency"
+        ],
+        "claude": [
+          "undeclared_runtime_dependency"
+        ]
+      },
+      "runtime_files": [
+        "requirements.txt"
+      ]
+    },
+    {
       "id": "postgresql",
       "path": "skills/postgresql",
       "targets": {
@@ -33077,6 +33169,29 @@
       "runtime_files": []
     },
     {
+      "id": "telegram-bot-messaging",
+      "path": "skills/telegram-bot-messaging",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "telegram-mini-app",
       "path": "skills/telegram-mini-app",
       "targets": {
@@ -37210,14 +37325,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1937,
+    "total_skills": 1942,
     "supported": {
-      "codex": 1866,
-      "claude": 1887
+      "codex": 1868,
+      "claude": 1890
     },
     "blocked": {
-      "codex": 71,
-      "claude": 50
+      "codex": 74,
+      "claude": 52
     },
     "manual_setup": 17
   }
