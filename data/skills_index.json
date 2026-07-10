@@ -3676,6 +3676,30 @@
     }
   },
   {
+    "id": "auto-research",
+    "path": "skills/auto-research",
+    "category": "automation",
+    "name": "auto-research",
+    "description": "Research uncertain questions with an explicit, user-approved web search or ChatGPT consultation, then present options and wait for implementation approval.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-07-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT"
+  },
+  {
     "id": "automated-triage",
     "path": "skills/automated-triage",
     "category": "uncategorized",

@@ -3158,6 +3158,25 @@
       "runtime_files": []
     },
     {
+      "id": "auto-research",
+      "path": "skills/auto-research",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "automated-triage",
       "path": "skills/automated-triage",
       "targets": {
@@ -37191,10 +37210,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1936,
+    "total_skills": 1937,
     "supported": {
-      "codex": 1865,
-      "claude": 1886
+      "codex": 1866,
+      "claude": 1887
     },
     "blocked": {
       "codex": 71,

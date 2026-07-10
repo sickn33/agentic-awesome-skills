@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-09T06:03:23.000Z
 
-Total skills: 1936
+Total skills: 1937
 
 ## agent-behavior (4)
 
@@ -302,7 +302,7 @@ Total skills: 1936
 | `site-architecture` | Plan or restructure website hierarchy, navigation, URL patterns, breadcrumbs, and internal linking. Use when mapping pages, sections, and site structure, but... | unknown | https://github.com/coreyhaines31/marketingskills | site, architecture | site, architecture, plan, restructure, website, hierarchy, navigation, url, breadcrumbs, internal, linking, mapping |
 | `software-architecture` | Guide for quality focused software architecture. This skill should be used when users want to write code, design architecture, analyze code, in any case that... | unknown | community | software, architecture | software, architecture, quality, skill, should, used, users, want, write, code, analyze, any |
 
-## automation (49)
+## automation (50)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -319,6 +319,7 @@ Total skills: 1936
 | `apify-market-research` | Analyze market conditions, geographic opportunities, pricing, consumer behavior, and product validation across Google Maps, Facebook, Instagram, Booking.com,... | unknown | community | apify, market, research | apify, market, research, analyze, conditions, geographic, opportunities, pricing, consumer, behavior, product, validation |
 | `apify-trend-analysis` | Discover and track emerging trends across Google Trends, Instagram, Facebook, YouTube, and TikTok to inform content strategy. | unknown | community | apify, trend | apify, trend, analysis, discover, track, emerging, trends, google, instagram, facebook, youtube, tiktok |
 | `apify-ultimate-scraper` | AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task. | unknown | community | apify, ultimate, scraper | apify, ultimate, scraper, ai, driven, data, extraction, 55, actors, all, major, platforms |
+| `auto-research` | Research uncertain questions with an explicit, user-approved web search or ChatGPT consultation, then present options and wait for implementation approval. | critical | self | research, chatgpt, playwright, browser-automation, decision-support, chinese | research, chatgpt, playwright, browser-automation, decision-support, chinese, auto, uncertain, questions, explicit, user, approved |
 | `cicd-automation-workflow-automate` | You are a workflow automation expert specializing in creating efficient CI/CD pipelines, GitHub Actions workflows, and automated development processes. Desig... | unknown | community | cicd, automate | cicd, automate, automation, specializing, creating, efficient, ci, cd, pipelines, github, actions, automated |
 | `circleci-automation` | Automate CircleCI tasks via Rube MCP (Composio): trigger pipelines, monitor workflows/jobs, retrieve artifacts and test metadata. Always search tools first f... | critical | community | circleci | circleci, automation, automate, tasks, via, rube, mcp, composio, trigger, pipelines, monitor, jobs |
 | `clickup-automation` | Automate ClickUp project management including tasks, spaces, folders, lists, comments, and team operations via Rube MCP (Composio). Always search tools first... | critical | community | clickup | clickup, automation, automate, including, tasks, spaces, folders, lists, comments, team, operations, via |

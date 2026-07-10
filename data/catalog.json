@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-09T06:03:23.000Z",
-  "total": 1936,
+  "total": 1937,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -4700,6 +4700,40 @@
         "standard"
       ],
       "path": "skills/auth-implementation-patterns/SKILL.md"
+    },
+    {
+      "id": "auto-research",
+      "canonical_id": "auto-research",
+      "name": "auto-research",
+      "description": "Research uncertain questions with an explicit, user-approved web search or ChatGPT consultation, then present options and wait for implementation approval.",
+      "category": "automation",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "research",
+        "chatgpt",
+        "playwright",
+        "browser-automation",
+        "decision-support",
+        "chinese"
+      ],
+      "triggers": [
+        "research",
+        "chatgpt",
+        "playwright",
+        "browser-automation",
+        "decision-support",
+        "chinese",
+        "auto",
+        "uncertain",
+        "questions",
+        "explicit",
+        "user",
+        "approved"
+      ],
+      "path": "skills/auto-research/SKILL.md"
     },
     {
       "id": "automated-triage",
