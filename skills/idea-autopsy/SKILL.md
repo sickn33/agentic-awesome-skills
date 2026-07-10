@@ -2,7 +2,7 @@
 name: idea-autopsy
 description: "Autopsy a business idea before you build it: kill-list check, five hard filters, a free-AI one-prompt test, live ad-market verification, and a verdict with a named kill-pattern."
 category: product
-risk: safe
+risk: critical
 source: community
 source_repo: hafiz-actyte/idea-autopsy
 source_type: community
@@ -38,8 +38,22 @@ or SURVIVED with the one cheapest test that could still kill it.
 
 If the project contains a `REJECTION.md` (the user's personal kill-list), read it
 first and match the idea by niche OR by kill-pattern. A match = verdict DEAD, cite
-the row, stop. If no kill-list exists, create one from the template — this autopsy
-writes its first row.
+the row, stop. If no kill-list exists, ask the user for permission to create one
+with exactly this schema — this autopsy writes its first row:
+
+```markdown
+# REJECTION.md — my kill-list
+
+## Killed ideas
+
+| # | Idea/Niche | Killed (date) | Hard reason (one line) | Pattern |
+|---|-----------|---------------|------------------------|---------|
+
+## Survivors under test
+
+| Idea | Passed filters (date) | Pending test | Deadline |
+|------|----------------------|--------------|----------|
+```
 
 ### Step 2: The five filters
 
@@ -121,5 +135,6 @@ Agent: Step 4 confirms ~1,100 active advertisers — and that's the trap. The AI
 
 ## Security & Safety Notes
 
-- This skill performs no shell commands, network mutations, or credential handling; it produces analysis and writes only to the project's own `REJECTION.md`.
+- This skill performs no shell commands, network calls, or credential handling.
+- It modifies project state in exactly one place: creating or appending rows to the project's own `REJECTION.md` (hence `risk: critical`). It never edits other files; ask permission before creating the file on first run.
 - Web checks (ad libraries) are performed by the USER in their own browser; the skill only provides the checklist.
