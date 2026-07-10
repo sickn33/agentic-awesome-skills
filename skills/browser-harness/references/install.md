@@ -37,7 +37,9 @@ This makes new Codex or Claude Code sessions in other folders load the runtime b
 ## Keeping the harness current
 
 - On each run, `browser-harness` prints `[browser-harness] update available: X -> Y` (once per day) when a newer GitHub release exists.
-- When you see that banner, run `browser-harness --update -y` yourself — don't ask the user. It pulls the new code (`git pull --ff-only` for editable clones, `uv tool upgrade browser-harness` for PyPI installs) and stops the running daemon so the next call picks up the new code. With `-y` it won't prompt.
+- When you see that banner, report the available version and ask the user whether to update.
+  Do not run `browser-harness --update -y`, `git pull`, or `uv tool upgrade` automatically:
+  each changes locally installed code and may stop the running daemon.
 - `--update` refuses to run on an editable clone with uncommitted changes. If that happens, tell the user and let them resolve the dirty worktree.
 
 ## Maintenance commands

@@ -49,9 +49,12 @@ If this skill adapts material from an external GitHub repository, it declares:
 Download the installer, inspect it, then run it — do not pipe it straight into a shell.
 
 ```bash
-curl -fsSL https://pilotprotocol.network/install.sh -o /tmp/pilot-install.sh
-less /tmp/pilot-install.sh   # review before executing
-sh /tmp/pilot-install.sh
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+installer="$tmpdir/pilot-install.sh"
+curl --fail --show-error --location https://pilotprotocol.network/install.sh -o "$installer"
+less "$installer"   # review the complete installer before executing
+sh "$installer"
 ```
 
 ### Step 2: Start the node and confirm it registered

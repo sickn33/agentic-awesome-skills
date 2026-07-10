@@ -26456,6 +26456,25 @@
       "runtime_files": []
     },
     {
+      "id": "product-decision-agent",
+      "path": "skills/product-decision-agent",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "product-design",
       "path": "skills/product-design",
       "targets": {
@@ -37325,10 +37344,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1942,
+    "total_skills": 1943,
     "supported": {
-      "codex": 1868,
-      "claude": 1890
+      "codex": 1869,
+      "claude": 1891
     },
     "blocked": {
       "codex": 74,

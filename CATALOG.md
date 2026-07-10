@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-09T06:03:23.000Z
 
-Total skills: 1942
+Total skills: 1943
 
 ## agent-behavior (4)
 
@@ -1657,11 +1657,12 @@ Total skills: 1942
 | `nanobanana-ppt-skills` | AI-powered PPT generation with document analysis and styled images | safe | https://github.com/op7418/NanoBanana-PPT-Skills | nanobanana, ppt, skills | nanobanana, ppt, skills, ai, powered, generation, document, analysis, styled, images |
 | `pptx-official` | A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resourc... | unknown | community | pptx, official | pptx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 
-## product (1)
+## product (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `before-you-build` | Review product risk before coding by checking demand, alternatives, channels, switching costs, and failure signals. | safe | bin1874/before-you-build-skill | product-validation, planning, ai-coding, risk-review | product-validation, planning, ai-coding, risk-review, before, review, product, risk, coding, checking, demand, alternatives |
+| `product-decision-agent` | 中文产品决策 Agent。用于需求优先级、Roadmap、增长、留存、运营、数据异常、A/B Test、项目延期和跨团队协作；先判断事实、阶段、核心阻塞与主导机制，再给出下一步、停止清单和切换条件。默认中文，不引用原文或讲历史。 | safe | atdy/maoxuan-product-agent | product-management, decision-making, growth, operations, chinese | product-management, decision-making, growth, operations, chinese, product, decision, agent, roadmap, test |
 
 ## product-management (1)
 

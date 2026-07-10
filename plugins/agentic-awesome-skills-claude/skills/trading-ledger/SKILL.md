@@ -28,9 +28,15 @@ A journaling skill in the tradition of the *Market Wizards* interviews: a writte
 
 ## How It Works
 
-### Step 1: Find the database (zero-config)
+### Step 1: Confirm the database (first use per session)
 
-On the first write of a session, use Notion `search` to find the **database** (type `database`, not a page) whose title contains **"trading-ledger"**. Read its `data_source_id` (`collection://...` UUID) and use it as the parent for `create-pages` / `query` for the session. More than one match → ask which.
+Use Notion `search` to find candidate **databases** (type `database`, not pages) whose title
+contains **"trading-ledger"**. Before any `query` or `create-pages` call, show the user the
+candidate title and `data_source_id` (`collection://...` UUID) and ask them to confirm the exact
+database for this session. A single title match is not sufficient confirmation. If the connector
+returns owner or schema metadata, show it as an additional identity check. Use only the
+user-confirmed ID for the remainder of the session; do not re-run fuzzy selection after a
+confirmation.
 
 The companion Notion template (free, linked in the source repo) ships this schema — select values are a controlled enum, copy them exactly:
 
@@ -101,7 +107,9 @@ Agent: 3 closed since last review:
 
 ## Security & Safety Notes
 
-- **Mutation scope**: writes and updates rows only in the single user-granted Notion database via the official Notion connector (MCP) — no shell commands, no network fetches, no market-data lookups, no credentials.
+- **Mutation scope**: writes and updates rows only in the exact Notion database ID confirmed by
+  the user for the current session via the official Notion connector (MCP) — no shell commands,
+  no network fetches, no market-data lookups, no credentials.
 - **This skill must never produce trading signals, price data, or buy/sell recommendations.** It records and mirrors the user's own decisions; the review asks questions, it does not advise. Nothing it writes is financial advice, and it should say so if asked for a recommendation.
 - On claude.ai, Notion's write tools default to *needs approval* — the first write pops an approval prompt; expected, not a hang.
 

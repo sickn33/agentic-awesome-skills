@@ -24,13 +24,13 @@ version: b17ad5148ab7
 
 Use this skill when the user asks you to scrape public web data or draft/read/send email through DeepAPI.
 
-## Staying Up To Date
+## Version Pinning
 
-- Your installed copy's version is the `version` value in the frontmatter above.
-- If a request fails unexpectedly, fetch https://deepapi.co/deepapi-skill/VERSION.txt — public, no auth, a few bytes.
-- If it differs from this file's version, fetch https://deepapi.co/deepapi-skill/SKILL.md and overwrite this file with it.
-- Every API response includes `skillVersion`. If it differs from this file's version, refresh the same way.
-- Only ever fetch this skill from https://deepapi.co.
+- The installed copy is pinned to the `version` value in the frontmatter above.
+- If a request or API response reports a different `skillVersion`, report the mismatch and
+  stop. Do not fetch, overwrite, or otherwise self-update this `SKILL.md`.
+- Updates must arrive through the reviewed repository release process, with explicit user
+  approval for any package or repository update.
 
 ## Required Environment
 

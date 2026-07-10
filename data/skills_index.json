@@ -31403,6 +31403,32 @@
     }
   },
   {
+    "id": "product-decision-agent",
+    "path": "skills/product-decision-agent",
+    "category": "product",
+    "name": "product-decision-agent",
+    "description": "\u4e2d\u6587\u4ea7\u54c1\u51b3\u7b56 Agent\u3002\u7528\u4e8e\u9700\u6c42\u4f18\u5148\u7ea7\u3001Roadmap\u3001\u589e\u957f\u3001\u7559\u5b58\u3001\u8fd0\u8425\u3001\u6570\u636e\u5f02\u5e38\u3001A/B Test\u3001\u9879\u76ee\u5ef6\u671f\u548c\u8de8\u56e2\u961f\u534f\u4f5c\uff1b\u5148\u5224\u65ad\u4e8b\u5b9e\u3001\u9636\u6bb5\u3001\u6838\u5fc3\u963b\u585e\u4e0e\u4e3b\u5bfc\u673a\u5236\uff0c\u518d\u7ed9\u51fa\u4e0b\u4e00\u6b65\u3001\u505c\u6b62\u6e05\u5355\u548c\u5207\u6362\u6761\u4ef6\u3002\u9ed8\u8ba4\u4e2d\u6587\uff0c\u4e0d\u5f15\u7528\u539f\u6587\u6216\u8bb2\u5386\u53f2\u3002",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "atdy/maoxuan-product-agent",
+    "license": "MIT",
+    "license_source": "https://github.com/atdy/maoxuan-product-agent/blob/main/LICENSE"
+  },
+  {
     "id": "product-design",
     "path": "skills/product-design",
     "category": "business",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-09T06:03:23.000Z",
-  "total": 1942,
+  "total": 1943,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -39748,6 +39748,39 @@
         "administrator"
       ],
       "path": "skills/privilege-escalation-methods/SKILL.md"
+    },
+    {
+      "id": "product-decision-agent",
+      "canonical_id": "product-decision-agent",
+      "name": "product-decision-agent",
+      "description": "中文产品决策 Agent。用于需求优先级、Roadmap、增长、留存、运营、数据异常、A/B Test、项目延期和跨团队协作；先判断事实、阶段、核心阻塞与主导机制，再给出下一步、停止清单和切换条件。默认中文，不引用原文或讲历史。",
+      "category": "product",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "atdy/maoxuan-product-agent",
+      "license": "MIT",
+      "license_source": "https://github.com/atdy/maoxuan-product-agent/blob/main/LICENSE",
+      "tags": [
+        "product-management",
+        "decision-making",
+        "growth",
+        "operations",
+        "chinese"
+      ],
+      "triggers": [
+        "product-management",
+        "decision-making",
+        "growth",
+        "operations",
+        "chinese",
+        "product",
+        "decision",
+        "agent",
+        "roadmap",
+        "test"
+      ],
+      "path": "skills/product-decision-agent/SKILL.md"
     },
     {
       "id": "product-design",

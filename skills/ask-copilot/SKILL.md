@@ -37,9 +37,9 @@ Ask for separate approval before allowing Copilot to run tools, execute shell co
 
 ### Step 2: Execute with Minimal Permitted Flags
 
-To prevent TUI lockups, execute the `copilot` command with headless flags. Do not use blanket bypasses such as `--yolo` or `--allow-all-tools` for routine Q&A or review.
+To prevent TUI lockups, execute the `copilot` command with headless flags. Do not use blanket bypasses such as `--yolo`, `--allow-all-tools`, or `--allow-all-paths` for routine Q&A or review.
 
-- **For Read-Only / General Q&A**: Avoid `--yolo` and use `--allow-all-paths` instead. This allows Copilot CLI to directly access and read local files referenced in your prompt.
+- **For Read-Only / General Q&A**: Send only the user-approved, redacted text in the prompt. Do not grant Copilot broad local-path access; it is not needed when the prompt already contains the approved context.
 - **For Trusted Mutation Tasks**: Prefer a scoped permission flag if the CLI supports one. Use blanket mutation bypasses only after the user explicitly authorizes Copilot to execute tools and mutate the workspace for the specific task.
 
 ### Step 3: Use Session Management (Optional)
@@ -55,12 +55,21 @@ Does not require repository path access or mutation permissions.
 copilot -p "Explain how to implement a debounce function in TypeScript" -s
 ```
 
-### Example 2: Code Review (Direct File Reference)
+### Example 2: Code Review (Approved File Excerpt)
 
-Always confirm with the user before executing. If consented, pass the file path directly in the prompt. Copilot CLI will read it using its path access permissions:
+Always confirm the exact file and excerpt with the user before executing. Keep the path in a
+quoted variable; build the prompt from a static instruction plus the approved excerpt. Shell
+does not re-evaluate command-substitution output, so metacharacters inside the reviewed file
+remain prompt text rather than shell syntax:
 ```bash
-copilot -p "Review the file path/to/file.ts for potential memory leaks" -s --allow-all-paths
+review_file="path/to/file.ts"
+test -f "$review_file" || { echo "File not found: $review_file" >&2; exit 1; }
+copilot -p "$(printf '%s\n\n' 'Review this approved excerpt for potential memory leaks:'; sed -n '1,220p' -- "$review_file")" -s
 ```
+
+Never construct a shell command by interpolating user-controlled prompt text, paths, issue
+content, or filenames into shell source. Use fixed command structure, quoted variables, and
+approved file content only.
 
 ### Example 3: Named Session Management
 
@@ -72,11 +81,12 @@ copilot -p "Summarize the prior advice in this session." -s --resume "my-session
 ## Best Practices
 
 - ✅ **Do:** Ask for user consent before uploading any project files to third-party endpoints.
-- ✅ **Do:** Pass file paths directly in the prompt text and let Copilot read them, instead of expanding them via shell `cat`.
-- ✅ **Do:** Use minimal permission flags like `--allow-all-paths` for read-only queries instead of `--yolo`.
+- ✅ **Do:** Send only the approved, redacted excerpt; keep Copilot out of the broader workspace.
+- ✅ **Do:** Keep untrusted values in quoted variables or command input, never in shell source.
 - ✅ **Do:** Use `-s` (silent) to suppress metadata and statistics, leaving only clean output.
 - ❌ **Don't:** Automatically trigger this skill for background second opinions without the user's explicit ask.
 - ❌ **Don't:** Send files, logs, environment details, or private repository context to Copilot without explicit approval.
+- ❌ **Don't:** use `--allow-all-paths` for a review, or interpolate untrusted text inside `copilot -p "..."`.
 - ❌ **Don't:** Run `copilot` without permission-bypass flags in background tasks, as it will hang waiting for interactive input.
 
 ## Limitations
@@ -90,6 +100,7 @@ copilot -p "Summarize the prior advice in this session." -s --resume "my-session
 - The `--yolo` flag bypasses all permission prompts and allows Copilot CLI to run arbitrary shell commands and mutate workspace files. It must be treated as a high-risk option and never used by default.
 - Always check that the code/files being sent do not contain sensitive credentials, API keys, or private environment variables.
 - Prefer redacted snippets over whole files when only a small context sample is needed.
+- `--allow-all-paths` grants Copilot broader local visibility than a narrow review requires; it is not a read-only least-privilege flag.
 
 ## Common Pitfalls
 
