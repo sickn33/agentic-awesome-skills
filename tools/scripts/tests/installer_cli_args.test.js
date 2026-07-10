@@ -1,6 +1,7 @@
 const assert = require('assert');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const packageVersion = require('../../../package.json').version;
 
 const installerPath = path.resolve(__dirname, '..', '..', 'bin', 'install.js');
 const installer = require(installerPath);
@@ -16,7 +17,7 @@ assert.strictEqual(release.versionInfo, false);
 
 const version = spawnSync(process.execPath, [installerPath, '--version'], { encoding: 'utf8' });
 assert.strictEqual(version.status, 0, version.stderr);
-assert.match(version.stdout, /^14\.0\.0\s*$/);
+assert.strictEqual(version.stdout.trim(), packageVersion);
 assert.doesNotMatch(version.stdout, /Cloning repository/i);
 
 const invalid = spawnSync(process.execPath, [installerPath, '--unknown'], { encoding: 'utf8' });
