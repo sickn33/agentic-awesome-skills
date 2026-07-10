@@ -1587,7 +1587,7 @@ Total skills: 1936
 | `expo-ui` | Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android rendered from React in an Expo or React Native app. Covers univ... | unknown | expo/skills | expo, ui | expo, ui, native, package, real, swiftui, ios, jetpack, compose, android, rendered, react |
 | `expo-ui-jetpack-compose` | expo-ui-jetpack-compose | unknown | community | expo, ui, jetpack, compose | expo, ui, jetpack, compose |
 | `expo-ui-swift-ui` | expo-ui-swift-ui | unknown | community | expo, ui, swift | expo, ui, swift |
-| `flutter-expert` | Master Flutter development with Dart 3, advanced widgets, and multi-platform deployment. | unknown | community | flutter | flutter, development, dart, widgets, multi, platform, deployment |
+| `flutter-expert` | Master Flutter development with Dart 3, advanced widgets, and multi-platform deployment. | safe | community | flutter, dart, mobile, cross-platform, riverpod | flutter, dart, mobile, cross-platform, riverpod, development, widgets, multi, platform, deployment |
 | `ios-debugger-agent` | Debug the current iOS project on a booted simulator with XcodeBuildMCP. | safe | Dimillian/Skills (MIT) | ios, debugger, agent | ios, debugger, agent, debug, current, booted, simulator, xcodebuildmcp |
 | `ios-developer` | Develop native iOS applications with Swift/SwiftUI. Masters iOS 18, SwiftUI, UIKit integration, Core Data, networking, and App Store optimization. | unknown | community | ios | ios, developer, develop, native, applications, swift, swiftui, masters, 18, uikit, integration, core |
 | `mobile-design` | (Mobile-First · Touch-First · Platform-Respectful) | unknown | community | mobile | mobile, first, touch, platform, respectful |

@@ -22589,15 +22589,23 @@
       "name": "flutter-expert",
       "description": "Master Flutter development with Dart 3, advanced widgets, and multi-platform deployment.",
       "category": "mobile",
-      "risk": "unknown",
+      "risk": "safe",
       "source": "community",
+      "source_type": "community",
       "tags": [
-        "flutter"
+        "flutter",
+        "dart",
+        "mobile",
+        "cross-platform",
+        "riverpod"
       ],
       "triggers": [
         "flutter",
-        "development",
         "dart",
+        "mobile",
+        "cross-platform",
+        "riverpod",
+        "development",
         "widgets",
         "multi",
         "platform",
