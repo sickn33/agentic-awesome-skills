@@ -1,0 +1,7 @@
+interface:
+  display_name: "毛选产品决策 Agent"
+  short_description: "从《矛盾论》《实践论》蒸馏的中文产品判断与行动助手"
+  default_prompt: "使用 $product-decision-agent 帮我诊断这个产品问题，判断真正卡点，并给出下一步最值得执行的方案。"
+
+policy:
+  allow_implicit_invocation: true
