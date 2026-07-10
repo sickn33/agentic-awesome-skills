@@ -1,8 +1,8 @@
 ---
 name: auto-research
-description: Automatically research via ChatGPT browser or web search when uncertain — ? to ask GPT, ?? to search web, present options and wait for user approval
+description: Research uncertain questions with an explicit, user-approved web search or ChatGPT consultation, then present options and wait for implementation approval.
 category: automation
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-07-09"
@@ -16,52 +16,63 @@ license: MIT
 
 ## Overview
 
-When implementing tasks, Claude Code encounters uncertainties — design choices, algorithm details, API usage, best practices. This skill teaches Claude to automatically research first (via ChatGPT/Playwright or web search), present findings, and wait for user approval before writing code.
+When implementing tasks, Claude Code can encounter uncertainties — design choices, algorithm details, API usage, or best practices. This skill provides an explicit-consent research path, presents findings, and waits for user approval before writing code.
 
-The skill also provides trigger words: `?` sends the full conversation context to ChatGPT for feedback on Claude's last output, and `??` triggers web search research.
+The skill supports web research and an optional ChatGPT consultation. It never sends
+conversation context, files, browser state, or credentials to a third party without the
+user's explicit approval of the exact, redacted text.
 
 ## When to Use This Skill
 
 - User asks a question where multiple valid approaches exist
 - Claude is uncertain about algorithm details or API usage
 - Design/architecture choices need comparison
-- User types `?` (ask GPT for feedback on current discussion)
-- User types `??` (trigger web search research)
+- The user explicitly asks to search the web or consult ChatGPT and approves the proposed query
 
 ## How It Works
 
-**Step 1: Research** — Use Playwright MCP (`@playwright/mcp@latest --extension --browser msedge`) to open ChatGPT via browser extension (no need to close browser, auto-carries login cookies). Or use WebSearch/WebFetch for web research.
+**Step 1: Propose the research boundary** — State the source to use, the exact query or
+redacted prompt, whether any local/workspace text would leave the machine, and the likely
+cost. Wait for the user to approve that exact boundary.
 
-**Step 2: Present** — Distill findings into concise options with sources, presented to the user.
+**Step 2: Research** — After approval, use web search or a browser session the user has
+explicitly selected and authorized. Use a pinned, user-configured browser automation
+connector; do not install packages automatically, use `@latest`, or access browser cookies,
+other tabs, saved passwords, or sessions.
 
-**Step 3: Await Approval** — Do NOT write code until the user says "go ahead" or picks an option.
+**Step 3: Present** — Distill findings into concise options with sources, presented to the user.
 
-**Step 4: Implement** — Once approved, execute with confidence.
+**Step 4: Await Approval** — Do NOT write code until the user says "go ahead" or picks an option.
 
-### `?` Trigger — GPT Feedback
+**Step 5: Implement** — Once approved, execute with confidence.
 
-When user types `?` alone, compose a ChatGPT prompt from:
-1. User's last meaningful question/instruction
-2. Claude's last output (summary + key conclusions)
-3. Append: "请评估上述方案/输出的正确性、完整性和可改进之处"
+### Explicit ChatGPT Consultation
 
-Then open ChatGPT, fill the prompt instantly via `page.locator('#prompt-textarea').fill(text)`, click send using `[data-testid="send-button"]`, capture response, and present to user.
+Do not treat `?`, `??`, or another shorthand as consent. First propose a minimal prompt,
+for example: `请评估这个已脱敏的方案的正确性、完整性和可改进之处：<text>`.
+Explicitly identify every piece of text that would be sent. Only after the user confirms
+the exact prompt may you open the selected ChatGPT session, submit that prompt, and present
+the response. Do not include conversation history by default.
 
-### Playwright Configuration
+Redact secrets, personal data, proprietary code, customer data, and internal URLs before
+proposing the prompt. If safe redaction is not possible, do not submit it.
 
-MCP server config: `npx @playwright/mcp@latest --extension --browser msedge`
-Browser extension: https://chromewebstore.google.com/detail/playwright-extension/mmlmfjhmonkocbjadbfplnigmagldckm
+### Browser Automation Boundary
 
-Performance optimization: use `page.fill()` instead of `keyboard.type()` (15s → 0.1s), reuse tab between calls.
+If browser automation is necessary, the user must separately authorize the selected browser
+profile and connector version. Restrict the session to the consultation tab. Do not inspect,
+reuse, export, or rely on cookies from other tabs or profiles.
 
 ## Examples
 
 ### Example 1: Design Question with GPT
 ```
 User: PyTorch 中自定义 ADMM 优化器怎么设计？
-Claude: (analyzes, forms question) → Suggests asking GPT, input ? to confirm
-User: ?
-Claude: [Opens ChatGPT, asks about ADMM optimizer, captures response]
+Claude: 我可以搜索公开资料，或将以下已脱敏问题发给 ChatGPT：
+        “如何设计 PyTorch 自定义 ADMM 优化器？请比较可行模式。”
+        不会发送工作区文件或对话历史。是否允许？
+User: 允许发送这段文字
+Claude: [Opens only the authorized consultation tab, submits the approved prompt]
 Claude: GPT suggests approach A with these pros/cons. Proceed?
 User: 行
 Claude: [Implements code]
@@ -79,33 +90,32 @@ Claude: [Implements]
 ## Best Practices
 - ✅ Always present findings to user before writing code
 - ✅ Use `page.fill()` for instant text injection instead of `keyboard.type()`
-- ✅ Reuse the ChatGPT tab across multiple `?` calls
+- ✅ Ask for fresh approval before every external consultation
 - ✅ Include sources in findings
 - ❌ Don't skip research and write code speculatively
-- ❌ Don't ask for permission on trivial single-line fixes
-- ❌ Don't close the user's browser (extension mode doesn't require it)
+- ❌ Don't send context, files, or browser data because of a shorthand trigger
+- ❌ Don't alter the user's browser profile or session state
 
 ## Limitations
-- Requires Playwright Extension installed in Edge/Chrome
-- ChatGPT login session must be active in the browser
+- Requires a user-configured, pinned browser automation connector if browser consultation is used
+- ChatGPT consultation is optional; use ordinary web search when it meets the need
 - GPT response time varies (10-30s typically)
 - Web search quality depends on available sources
 - Does not replace expert domain knowledge — always let user make the final call
 
 ## Security & Safety Notes
-- Playwright MCP connects via browser extension — user must approve the connection once
-- The extension has access to browser tabs and cookies — standard browser extension permissions apply
-- Never submit sensitive credentials or tokens in ChatGPT prompts
-- `page.fill()` is safer than raw `document.execCommand()` as it uses Playwright's built-in fill mechanism
+- Obtain explicit consent for each third-party submission, including the exact redacted text
+- Never access, export, or depend on cookies, saved passwords, or unrelated browser tabs
+- Never submit sensitive credentials, tokens, proprietary code, personal data, or internal URLs
+- Do not install or execute browser tooling from an unpinned package version
 
 ## Common Pitfalls
 
 | Problem | Solution |
 |---------|----------|
-| ChatGPT shows login page | Check browser is logged in; extension mode carries cookies |
-| `keyboard.type()` is too slow | Use `page.fill()` for instant injection |
-| Page context closes between calls | Keep page reference alive, reuse tab |
-| Browser context doesn't have cookies | Use extension mode (`--extension`), not CDP |
+| ChatGPT shows login page | Let the user log in themselves; do not handle cookies or credentials |
+| The prompt contains sensitive context | Redact it or use local reasoning instead |
+| Browser automation is unavailable | Use web search or stop and ask the user for a different approved method |
 
 ## Related Skills
 - @systematic-debugging — use when debugging Playwright interactions with ChatGPT
