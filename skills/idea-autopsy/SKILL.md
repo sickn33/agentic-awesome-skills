@@ -37,8 +37,11 @@ or SURVIVED with the one cheapest test that could still kill it.
 ### Step 1: Kill-list check
 
 If the project contains a `REJECTION.md` (the user's personal kill-list), read it
-first and match the idea by niche OR by kill-pattern. A match = verdict DEAD, cite
-the row, stop. If no kill-list exists, ask the user for permission to create one
+first. A NICHE match (same niche as a killed row) = verdict DEAD, cite the row,
+stop. A KILL-PATTERN match alone (new niche, previously-seen pattern) is a strong
+prior, NOT a verdict: name the matching pattern, then run the specific check for
+that pattern (the relevant filter or test below) to confirm it actually applies
+before declaring death. If no kill-list exists, ask the user for permission to create one
 with exactly this schema — this autopsy writes its first row:
 
 ```markdown
