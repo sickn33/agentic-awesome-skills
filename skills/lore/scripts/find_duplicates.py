@@ -5,6 +5,9 @@ Usage:
     python find_duplicates.py                       # default threshold 0.7
     python find_duplicates.py --threshold=0.85
     python find_duplicates.py --json
+    python find_duplicates.py --candidate "<text>"
+    python find_duplicates.py --candidate-file path/to/candidate.txt
+    echo '<text>' | python find_duplicates.py --candidate-stdin
 
 Detection strategies:
     1. Identical hash suffix (4 chars after the date) — these are exact
@@ -18,6 +21,12 @@ Output is sorted by similarity (descending). Run from the project root.
 
 This script is the mechanical part of `sync` step 5 (de-duplication).
 The agent still decides what to do with each pair.
+
+When a candidate is supplied (via --candidate, --candidate-file, or
+--candidate-stdin), the candidate is also included in the comparison
+set so sync step 5 can detect "this proposed entry duplicates an
+existing one" before appending. Without a candidate, only
+already-appended entries are compared.
 """
 import json
 import re
@@ -40,6 +49,61 @@ def get_entries():
     return json.loads(r.stdout)
 
 
+def read_candidate(args):
+    """Return the candidate text or None.
+
+    Sources, in priority order:
+      1. --candidate "<text>"
+      2. --candidate-file <path>
+      3. --candidate-stdin (reads entire stdin)
+    """
+    inline = None
+    file_path = None
+    use_stdin = False
+    for a in args:
+        if a.startswith("--candidate="):
+            inline = a.split("=", 1)[1]
+        elif a.startswith("--candidate-file="):
+            file_path = a.split("=", 1)[1]
+        elif a == "--candidate-stdin":
+            use_stdin = True
+        elif a in ("--candidate", "--candidate-file"):
+            die(2, f"{a} requires a value (use = form or pass as next arg)")
+    if inline is not None:
+        return inline
+    if file_path is not None:
+        try:
+            return Path(file_path).read_text(encoding="utf-8")
+        except OSError as exc:
+            die(2, f"failed to read candidate file {file_path}: {exc}")
+    if use_stdin:
+        if sys.stdin.isatty():
+            die(2, "--candidate-stdin given but stdin is a TTY")
+        return sys.stdin.read()
+    return None
+
+
+def die(code, message):
+    print(f"error: {message}", file=sys.stderr)
+    sys.exit(code)
+
+
+def synthetic_candidate_entry(text):
+    """Build a candidate entry dict shaped like list_entries.py output.
+
+    The synthetic entry has layer "CANDIDATE" so it compares only against
+    existing entries on the same layer when the agent supplies --layer.
+    """
+    return {
+        "id": "CANDIDATE-unsaved",
+        "layer": "CANDIDATE",
+        "scope": "_candidate",
+        "file": "<candidate>",
+        "text": text.strip(),
+        "tags": {},
+    }
+
+
 def tokenize(text: str):
     return set(re.findall(r"\w+", text.lower()))
 
@@ -55,29 +119,57 @@ def hash_suffix(eid: str):
 
 
 def main():
+    args = sys.argv[1:]
     threshold = 0.7
-    json_output = "--json" in sys.argv[1:]
+    json_output = "--json" in args
+    layer_filter = None
 
-    for arg in sys.argv[1:]:
+    for arg in args:
         if arg.startswith("--threshold="):
             threshold = float(arg.split("=", 1)[1])
+        elif arg.startswith("--layer="):
+            layer_filter = arg.split("=", 1)[1]
+
+    candidate_text = read_candidate(args)
 
     entries = get_entries()
+    if layer_filter is not None:
+        entries = [e for e in entries if e.get("layer") == layer_filter]
+
+    candidates = []
+    if candidate_text:
+        candidates.append(synthetic_candidate_entry(candidate_text))
+
     pairs = []
 
+    # existing-vs-existing pairs (unchanged behavior)
     for i, a in enumerate(entries):
         for b in entries[i + 1:]:
-            # Only compare entries in the same layer (ARCH vs DEC, etc.)
             if a["layer"] != b["layer"]:
                 continue
-            # Identical hash
             if hash_suffix(a["id"]) == hash_suffix(b["id"]):
                 pairs.append((a, b, 1.0, "identical hash"))
                 continue
-            # Text similarity
             sim = jaccard(tokenize(a["text"]), tokenize(b["text"]))
             if sim >= threshold:
                 pairs.append((a, b, sim, f"similar text (≥{threshold})"))
+
+    # candidate-vs-existing pairs
+    if candidates:
+        # Filter comparison set by the candidate's layer if not already
+        # narrowed; otherwise the candidate compares against every layer.
+        compare_set = entries
+        cand_layer = candidates[0]["layer"]
+        for a in compare_set:
+            if a["layer"] != cand_layer:
+                continue
+            sim = jaccard(
+                tokenize(candidates[0]["text"]),
+                tokenize(a["text"]),
+            )
+            if sim >= threshold:
+                pairs.append((candidates[0], a, sim,
+                              f"candidate similar to existing (≥{threshold})"))
 
     pairs.sort(key=lambda x: -x[2])
 
@@ -95,7 +187,10 @@ def main():
         return
 
     if not pairs:
-        print("No potential duplicates found.")
+        if candidate_text:
+            print("No potential duplicates found for the candidate.")
+        else:
+            print("No potential duplicates found.")
         return
 
     for a, b, sim, reason in pairs:
