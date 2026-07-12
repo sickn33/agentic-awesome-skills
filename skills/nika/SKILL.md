@@ -248,6 +248,16 @@ live.
 - Workflow `outputs:` are not resolved on a budget stop — per-task values
   live in the trace (`nika trace outputs`).
 
+## Limitations
+
+- Static checks reduce risk but cannot prove that remote content, shell steps,
+  provider behavior, or generated outputs are safe or correct.
+- Cost caps are not reliable for uncataloged paid models and a parallel wave
+  can overshoot before new work is stopped; require explicit user approval for
+  paid runs and report the actual ledger result.
+- Trace verification proves integrity of the recorded chain, not correctness
+  of the workflow or truth of its outputs.
+
 ## Verification
 
 Smoke test (offline, zero keys):
