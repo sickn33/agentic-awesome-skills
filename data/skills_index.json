@@ -21827,6 +21827,32 @@
     }
   },
   {
+    "id": "idea-autopsy",
+    "path": "skills/idea-autopsy",
+    "category": "product",
+    "name": "idea-autopsy",
+    "description": "Autopsy a business idea before you build it: kill-list check, five hard filters, a free-AI one-prompt test, live ad-market verification, and a verdict with a named kill-pattern.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "hafiz-actyte/idea-autopsy",
+    "license": "MIT",
+    "license_source": "https://github.com/hafiz-actyte/idea-autopsy/blob/main/LICENSE"
+  },
+  {
     "id": "idea-darwin",
     "path": "skills/idea-darwin",
     "category": "uncategorized",
