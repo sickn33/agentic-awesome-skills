@@ -11,6 +11,12 @@ describe('Plugins', () => {
     expect(screen.getByText('AAS Web App Builder')).toBeInTheDocument();
     expect(screen.getByText('AAS Security Engineer')).toBeInTheDocument();
     expect(screen.getByText('AAS Marketing, SEO & Growth')).toBeInTheDocument();
+    expect(screen.getByText(/distributions of the full skill library/i)).toBeInTheDocument();
+    expect(screen.queryByText(/1,550\+/i)).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Install one skill with GitHub CLI/i })).toHaveAttribute(
+      'href',
+      expect.stringContaining('docs/users/getting-started.md'),
+    );
     expect(screen.getByText(/Plugins, bundles, and workflows serve different decisions/i)).toBeInTheDocument();
     expect(document.title).toContain('AAS Specialized Plugins');
     expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
