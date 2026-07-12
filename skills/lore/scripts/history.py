@@ -471,6 +471,7 @@ def main():
 
     if parsed["form"] == "scope":
         layer_files = _resolve_scope_to_md_files(project_root, parsed["value"])
+        scope_payloads = []  # only used when json_mode is True
         for layer_name, md_path in layer_files:
             # For scope form we treat each .md file as a "code file" stand-in:
             # we git log the md file's project-relative path to find commits
@@ -489,7 +490,10 @@ def main():
                     "since": "1970-01-01",
                     "since_source": "scope_form",
                 }
-                print(render_json(meta, commits))
+                scope_payloads.append({
+                    "layer": layer_name,
+                    "payload": _json.loads(render_json(meta, commits)),
+                })
             else:
                 print(f"## Scope: {parsed['value']} / {layer_name}")
                 print("")
@@ -505,6 +509,17 @@ def main():
                     if c.get("refs"):
                         print(f"  Refs: {', '.join(c['refs'])}")
                     print("")
+        if json_mode:
+            print(_json.dumps(
+                {
+                    "form": "scope",
+                    "scope": parsed["value"],
+                    "layers": [item["layer"] for item in scope_payloads],
+                    "results": scope_payloads,
+                },
+                indent=2,
+                ensure_ascii=False,
+            ))
         return
 
 
