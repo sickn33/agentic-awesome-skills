@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-09T06:03:23.000Z",
-  "total": 1944,
+  "total": 1945,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -35859,6 +35859,33 @@
         "features"
       ],
       "path": "skills/nft-standards/SKILL.md"
+    },
+    {
+      "id": "nika",
+      "canonical_id": "nika",
+      "name": "nika",
+      "description": "Runs repeatable AI work as checked, budgeted workflow files.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "https://github.com/supernovae-st/nika-agents/tree/main/skills/nika",
+      "source_type": "community",
+      "source_repo": "supernovae-st/nika-agents",
+      "license": "MIT",
+      "license_source": "https://github.com/supernovae-st/nika-agents/blob/main/LICENSE",
+      "tags": [
+        "nika"
+      ],
+      "triggers": [
+        "nika",
+        "runs",
+        "repeatable",
+        "ai",
+        "work",
+        "checked",
+        "budgeted",
+        "files"
+      ],
+      "path": "skills/nika/SKILL.md"
     },
     {
       "id": "nodejs-backend-patterns",

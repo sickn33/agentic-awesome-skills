@@ -23859,6 +23859,25 @@
       "runtime_files": []
     },
     {
+      "id": "nika",
+      "path": "skills/nika",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "nodejs-backend-patterns",
       "path": "skills/nodejs-backend-patterns",
       "targets": {
@@ -37363,10 +37382,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1944,
+    "total_skills": 1945,
     "supported": {
-      "codex": 1870,
-      "claude": 1892
+      "codex": 1871,
+      "claude": 1893
     },
     "blocked": {
       "codex": 74,

@@ -28247,6 +28247,32 @@
     }
   },
   {
+    "id": "nika",
+    "path": "skills/nika",
+    "category": "uncategorized",
+    "name": "nika",
+    "description": "Runs repeatable AI work as checked, budgeted workflow files.",
+    "risk": "critical",
+    "source": "https://github.com/supernovae-st/nika-agents/tree/main/skills/nika",
+    "date_added": null,
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "supernovae-st/nika-agents",
+    "license": "MIT",
+    "license_source": "https://github.com/supernovae-st/nika-agents/blob/main/LICENSE"
+  },
+  {
     "id": "nodejs-backend-patterns",
     "path": "skills/nodejs-backend-patterns",
     "category": "backend",

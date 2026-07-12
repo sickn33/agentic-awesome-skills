@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-09T06:03:23.000Z
 
-Total skills: 1944
+Total skills: 1945
 
 ## agent-behavior (4)
 
@@ -1982,7 +1982,7 @@ Total skills: 1944
 | --- | --- | --- | --- | --- | --- |
 | `android-cli` | Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line t... | critical | self | android, cli, adb, mobile, build, emulator | android, cli, adb, mobile, build, emulator, orchestrates, development, tasks, including, creation, deployment |
 
-## uncategorized (277)
+## uncategorized (278)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2146,6 +2146,7 @@ Total skills: 1944
 | `newman-cicd-integration` | Generate ready-to-use CI/CD pipeline configurations that install and run Newman for automated API testing. Use this skill whenever the user wants to run Newm... | unknown | LambdaTest/agent-skills | newman, cicd, integration | newman, cicd, integration, generate, ci, cd, pipeline, configurations, install, run, automated, api |
 | `nextjs-supabase-auth` | Expert integration of Supabase Auth with Next.js App Router | none | vibeship-spawner-skills (Apache 2.0) | nextjs, supabase, auth | nextjs, supabase, auth, integration, next, js, app, router |
 | `nft-standards` | Master ERC-721 and ERC-1155 NFT standards, metadata best practices, and advanced NFT features. | unknown | community | nft, standards | nft, standards, erc, 721, 1155, metadata, features |
+| `nika` | Runs repeatable AI work as checked, budgeted workflow files. | critical | supernovae-st/nika-agents | nika | nika, runs, repeatable, ai, work, checked, budgeted, files |
 | `not-a-vibe-coder` | Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases. | critical | community | not, a, vibe, coder | not, a, vibe, coder, turns, vague, prompts, structured, planning, files, brand, new |
 | `objection-preemptor` | One sentence - what this skill does and when to invoke it | safe | community | objection, preemptor | objection, preemptor, one, sentence, what, skill, does, invoke |
 | `obsidian-bases` | Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of... | unknown | https://github.com/kepano/obsidian-skills | obsidian, bases | obsidian, bases, edit, base, files, views, filters, formulas, summaries, working, creating, database |
