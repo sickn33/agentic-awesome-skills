@@ -102,6 +102,17 @@ try {
     expectedRoutes: 2,
   }), /duplicate/);
 
+  const doubleEncodedSitemap = path.join(fixtureRoot, 'double-encoded.xml');
+  fs.writeFileSync(doubleEncodedSitemap, sitemap([current, `${current}skill/&amp;lt;escape/`]), 'utf8');
+  assert.throws(() => generateBridge({
+    repoRoot: fixtureRoot,
+    sitemapPath: doubleEncodedSitemap,
+    outputDirectory: path.join(fixtureRoot, '.codex', 'double-encoded'),
+    currentBase: current,
+    legacyBase: legacy,
+    expectedRoutes: 2,
+  }), /unsafe path segment/, 'XML entities must be decoded exactly once');
+
   const trackedOutput = path.join(fixtureRoot, 'apps', 'web-app', 'public', 'bridge');
   assert.throws(() => generateBridge({
     repoRoot: fixtureRoot,

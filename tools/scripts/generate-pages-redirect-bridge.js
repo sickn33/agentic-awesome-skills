@@ -30,12 +30,14 @@ function xmlEscape(value) {
 }
 
 function xmlUnescape(value) {
-  return value
-    .replaceAll('&amp;', '&')
-    .replaceAll('&lt;', '<')
-    .replaceAll('&gt;', '>')
-    .replaceAll('&quot;', '"')
-    .replaceAll('&apos;', "'");
+  const entities = {
+    amp: '&',
+    lt: '<',
+    gt: '>',
+    quot: '"',
+    apos: "'",
+  };
+  return value.replace(/&(amp|lt|gt|quot|apos);/g, (_, entity) => entities[entity]);
 }
 
 function canonicalBase(value, label) {
