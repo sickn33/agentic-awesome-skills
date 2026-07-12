@@ -18629,6 +18629,25 @@
       "runtime_files": []
     },
     {
+      "id": "idea-autopsy",
+      "path": "skills/idea-autopsy",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "idea-darwin",
       "path": "skills/idea-darwin",
       "targets": {
@@ -37344,10 +37363,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1943,
+    "total_skills": 1944,
     "supported": {
-      "codex": 1869,
-      "claude": 1891
+      "codex": 1870,
+      "claude": 1892
     },
     "blocked": {
       "codex": 74,

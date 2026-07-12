@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-09T06:03:23.000Z",
-  "total": 1943,
+  "total": 1944,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -27978,6 +27978,41 @@
         "ux"
       ],
       "path": "skills/iconsax-library/SKILL.md"
+    },
+    {
+      "id": "idea-autopsy",
+      "canonical_id": "idea-autopsy",
+      "name": "idea-autopsy",
+      "description": "Autopsy a business idea before you build it: kill-list check, five hard filters, a free-AI one-prompt test, live ad-market verification, and a verdict with a named kill-pattern.",
+      "category": "product",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "hafiz-actyte/idea-autopsy",
+      "license": "MIT",
+      "license_source": "https://github.com/hafiz-actyte/idea-autopsy/blob/main/LICENSE",
+      "tags": [
+        "business-ideas",
+        "idea-validation",
+        "market-research",
+        "startup",
+        "founders"
+      ],
+      "triggers": [
+        "business-ideas",
+        "idea-validation",
+        "market-research",
+        "startup",
+        "founders",
+        "idea",
+        "autopsy",
+        "business",
+        "before",
+        "kill",
+        "list",
+        "check"
+      ],
+      "path": "skills/idea-autopsy/SKILL.md"
     },
     {
       "id": "idea-darwin",
