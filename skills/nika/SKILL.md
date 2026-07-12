@@ -1,9 +1,14 @@
 ---
 name: nika
 description: "Runs repeatable AI work as checked, budgeted workflow files."
+risk: critical
+source: https://github.com/supernovae-st/nika-agents/tree/main/skills/nika
+source_repo: supernovae-st/nika-agents
+source_type: community
 version: 1.1.0
 author: Thibaut Melen (@ThibautMelen) · SuperNovae Studio (github.com/supernovae-st)
 license: MIT
+license_source: https://github.com/supernovae-st/nika-agents/blob/main/LICENSE
 platforms: [linux, macos]
 prerequisites:
   commands: [nika]
@@ -253,4 +258,3 @@ terminal(command="nika examples run 01-hello --model mock/echo")
 
 Success criteria: run completes exit 0 with a final run card · `nika check`
 exits 0 before any real run · `nika trace verify` exits 0 after the run.
-
