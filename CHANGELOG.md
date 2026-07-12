@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.2.0] - 2026-07-12 - "Workflow Reliability and UI Research"
+
+> Three reviewed community skills for idea validation, deterministic AI workflows, and source-grounded UI research, with maintainer hardening and synchronized distributions.
+
+## Added
+
+- Added **idea-autopsy**, a consent-gated business-idea validation workflow with explicit mutation boundaries for `REJECTION.md` (PR #805).
+- Added **nika**, a critical-risk workflow runner guide with provenance, paid-run safeguards, cost-limit caveats, trace verification, and explicit limitations (PR #806).
+- Added **uizze-ui-research**, an official-source workflow for turning UIZZE references into implementation constraints without copying product identity or assets (PR #807).
+
+## Changed
+
+- Added the required community and official-source README credits for Nika and UIZZE.
+- Regenerated canonical indexes, catalogs, web assets, bundle data, contributor surfaces, and Codex/Claude plugin mirrors for the 1,946-skill catalog.
+
+## Validation
+
+- Required fresh `pr-policy`, `source-validation`, `artifact-preview`, and `review` checks before each squash merge.
+- Ran repository validation, warning-budget enforcement, README source-credit checks, documentation security checks, the full test suite, and canonical consistency synchronization.
+
+## Credits
+
+- **[@hafiz-actyte](https://github.com/hafiz-actyte)** for PR #805 (`idea-autopsy`).
+- **[@ThibautMelen](https://github.com/ThibautMelen)** and **[supernovae-st/nika-agents](https://github.com/supernovae-st/nika-agents)** for PR #806 (`nika`).
+- **[@samuelbushi](https://github.com/samuelbushi)** and **[aislon/uizze-mcp](https://github.com/aislon/uizze-mcp)** for PR #807 (`uizze-ui-research`).
+
 ## [14.1.0] - 2026-07-10 - "Maintainer Batch and Security Boundary Hardening"
 
 > Four reviewed community contributions plus targeted hardening for third-party consultation, update, install, connector-routing, and workspace-instruction boundaries.
