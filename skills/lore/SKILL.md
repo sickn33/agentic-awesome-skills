@@ -350,14 +350,14 @@ This separation keeps `audit` honest: it observes, it does not edit. ALERT noise
 
 ### `compress` — Build the top-level summary
 
-Long-term compression. Generates `SUMMARY.md` without modifying any underlying entry file.
+Long-term compression. Generates `SUMMARY.md` and, when `auto_mirror: true` (or the user accepts the per-target prompt), regenerates platform mirrors. Underlying ARCHITECTURE / DECISIONS / CONVENTIONS files are untouched.
 
 1. Run `python scripts/list_entries.py --json` to enumerate every entry. Use the JSON output as the input for the selection step.
 2. Optionally run `python scripts/find_stale.py --json` to identify entries that shouldn't anchor the summary (recently-stale or long-unverified).
 3. For each (scope, layer) pair, pick 3–5 most important entries using the selection rule in `references/summary-template.md`.
-4. Write `SUMMARY.md` per the template in `references/summary-template.md`.
-5. **Stop.** `SUMMARY.md` is the only file written. Underlying ARCHITECTURE / DECISIONS / CONVENTIONS files are untouched.
-6. Regenerate platform mirrors (this is one of the three mirror update triggers — see "Mirror update triggers" in the `sync` section). If `auto_mirror: true` in config, write automatically. Otherwise ask per target. Content-based dedup: if the new Lore section equals the current one, skip the write. My notes section is always preserved.
+4. Write `SUMMARY.md` per the template in `references/summary-template.md`. (This is the only file written on the canonical `.lore/` side.)
+5. If `auto_mirror: true` in config, regenerate platform mirrors (this is one of the three mirror update triggers — see "Mirror update triggers" in the `sync` section). If `auto_mirror: false`, ask per target and only write the mirrors the user accepts. Content-based dedup: if the new Lore section equals the current one, skip the write. The My notes section is always preserved.
+6. **Stop.** Once mirror regeneration has either written or been declined per target, `compress` is done.
 
 **Compress is idempotent.** Running it twice produces the same `SUMMARY.md` content (modulo the date stamp). Re-running after new `sync`s picks up new entries automatically.
 

@@ -137,7 +137,8 @@ The `[file#ID]` reference lets the agent `cat` the file for full text.
 2. Skips recently-stale entries
 3. For each `(scope, layer)` pair, picks 3–5 most important entries
 4. Writes `SUMMARY.md` per template
-5. If `auto_mirror: true` in config, also regenerates platform mirrors
+5. If `auto_mirror: true` in config, regenerates platform mirrors; otherwise asks per target and only writes the ones you accept. (This is the second mirror update trigger — `sync` deliberately does not regenerate mirrors.)
+6. Stops after mirror regeneration has either written or been declined per target.
 
 **Real scenarios**:
 - "Refresh the summary" → `lore compress`

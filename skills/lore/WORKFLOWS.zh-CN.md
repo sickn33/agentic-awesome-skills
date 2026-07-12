@@ -137,7 +137,8 @@ lore 有七个工作流。本文用平实语言解释每个什么时候用。Age
 2. 跳过 recently-stale 的 entry
 3. 每个 `(scope, layer)` 对，按规则挑 3–5 条最重要的
 4. 按模板写 `SUMMARY.md`
-5. 如果 config 里 `auto_mirror: true`，顺便重生成平台 mirror
+5. 如果 config 里 `auto_mirror: true`，重生成平台 mirror；否则每个 mirror 目标单独问，只写你确认的（这是第二个 mirror 触发点——`sync` 故意不更新 mirror）
+6. mirror 处理完（写或拒绝）后停止
 
 **真实场景**：
 - 「刷新一下 summary」 → `lore compress`
