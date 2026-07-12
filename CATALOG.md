@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-09T06:03:23.000Z
 
-Total skills: 1945
+Total skills: 1946
 
 ## agent-behavior (4)
 
@@ -906,7 +906,7 @@ Total skills: 1945
 | `drizzle-migration-conflict` | Diagnose, repair, and prevent Drizzle Kit migration conflicts involving generated SQL, snapshots, journals, merge queues, and team workflows. | critical | chaunsin/agent-skills | drizzle, migrations, database, ci, merge-conflicts | drizzle, migrations, database, ci, merge-conflicts, migration, conflict, diagnose, repair, prevent, kit, conflicts |
 | `weaviate` | Search, query, inspect, create, and import data into Weaviate vector database collections using official scripts and references. | critical | weaviate/agent-skills | weaviate, vector-database, semantic-search, hybrid-search, data-import | weaviate, vector-database, semantic-search, hybrid-search, data-import, search, query, inspect, import, data, vector, database |
 
-## design (17)
+## design (18)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -922,6 +922,7 @@ Total skills: 1945
 | `stitch-ui-design` | Expert guidance for crafting effective prompts in Google Stitch, the AI-powered UI design tool by Google Labs. This skill helps create precise, actionable pr... | safe | self | stitch, ui | stitch, ui, guidance, crafting, effective, prompts, google, ai, powered, labs, skill, helps |
 | `theme-factory` | This skill provides a curated collection of professional font and color themes themes, each with carefully selected color palettes and font pairings. Once a ... | unknown | community | theme, factory | theme, factory, skill, provides, curated, collection, professional, font, color, themes, each, carefully |
 | `ui-visual-validator` | Rigorous visual validation expert specializing in UI testing, design system compliance, and accessibility verification. | unknown | community | ui, visual, validator | ui, visual, validator, rigorous, validation, specializing, testing, compliance, accessibility, verification |
+| `uizze-ui-research` | Use when building or reviewing web and iOS product UI and you need real UI references, structured design contracts, or implementation validation through UIZZ... | safe | aislon/uizze-mcp | ui-design, ui-research, mcp, design-contracts, agent-workflows | ui-design, ui-research, mcp, design-contracts, agent-workflows, uizze, ui, research, building, reviewing, web, ios |
 | `uxui-principles` | Evaluate interfaces against 168 research-backed UX/UI principles, detect antipatterns, and inject UX context into AI coding sessions. | safe | community | ux, ui, design, evaluation, principles, antipatterns, accessibility | ux, ui, design, evaluation, principles, antipatterns, accessibility, uxui, evaluate, interfaces, against, 168 |
 | `vizcom` | AI-powered product design tool for transforming sketches into full-fidelity 3D renders. | safe | community | vizcom | vizcom, ai, powered, product, transforming, sketches, full, fidelity, 3d, renders |
 | `wcag-audit-patterns` | Comprehensive guide to auditing web content against WCAG 2.2 guidelines with actionable remediation strategies. | safe | community | wcag, audit | wcag, audit, auditing, web, content, against, guidelines, actionable, remediation |

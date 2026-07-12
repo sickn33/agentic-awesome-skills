@@ -41361,6 +41361,30 @@
     }
   },
   {
+    "id": "uizze-ui-research",
+    "path": "skills/uizze-ui-research",
+    "category": "design",
+    "name": "uizze-ui-research",
+    "description": "Use when building or reviewing web and iOS product UI and you need real UI references, structured design contracts, or implementation validation through UIZZE MCP.",
+    "risk": "safe",
+    "source": "https://github.com/aislon/uizze-mcp/tree/main/skills/uizze-ui-research",
+    "date_added": "2026-07-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "aislon/uizze-mcp"
+  },
+  {
     "id": "uncle-bob-craft",
     "path": "skills/uncle-bob-craft",
     "category": "code-quality",

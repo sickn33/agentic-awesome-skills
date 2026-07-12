@@ -34737,6 +34737,25 @@
       "runtime_files": []
     },
     {
+      "id": "uizze-ui-research",
+      "path": "skills/uizze-ui-research",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "uncle-bob-craft",
       "path": "skills/uncle-bob-craft",
       "targets": {
@@ -37382,10 +37401,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1945,
+    "total_skills": 1946,
     "supported": {
-      "codex": 1871,
-      "claude": 1893
+      "codex": 1872,
+      "claude": 1894
     },
     "blocked": {
       "codex": 74,

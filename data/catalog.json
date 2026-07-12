@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-09T06:03:23.000Z",
-  "total": 1945,
+  "total": 1946,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -52052,6 +52052,39 @@
         "verification"
       ],
       "path": "skills/ui-visual-validator/SKILL.md"
+    },
+    {
+      "id": "uizze-ui-research",
+      "canonical_id": "uizze-ui-research",
+      "name": "uizze-ui-research",
+      "description": "Use when building or reviewing web and iOS product UI and you need real UI references, structured design contracts, or implementation validation through UIZZE MCP.",
+      "category": "design",
+      "risk": "safe",
+      "source": "https://github.com/aislon/uizze-mcp/tree/main/skills/uizze-ui-research",
+      "source_type": "official",
+      "source_repo": "aislon/uizze-mcp",
+      "tags": [
+        "ui-design",
+        "ui-research",
+        "mcp",
+        "design-contracts",
+        "agent-workflows"
+      ],
+      "triggers": [
+        "ui-design",
+        "ui-research",
+        "mcp",
+        "design-contracts",
+        "agent-workflows",
+        "uizze",
+        "ui",
+        "research",
+        "building",
+        "reviewing",
+        "web",
+        "ios"
+      ],
+      "path": "skills/uizze-ui-research/SKILL.md"
     },
     {
       "id": "uncle-bob-craft",
