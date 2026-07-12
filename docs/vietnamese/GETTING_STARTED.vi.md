@@ -78,7 +78,14 @@ Sau khi cài đặt, bạn chỉ cần trò chuyện với AI một cách tự n
 | **Cursor**       | ✅ Hỗ trợ gốc   | `.cursor/skills/` |
 | **OpenCode**     | ✅ Hỗ trợ đầy đủ | `.agents/skills/` |
 | **AdaL CLI**     | ✅ Hỗ trợ đầy đủ | `.adal/skills/` |
-| **Copilot**      | ⚠️ Chỉ văn bản  | Copy-paste thủ công |
+| **Copilot**      | 🧪 Hỗ trợ preview qua `gh skill` | Dùng GitHub CLI với đường dẫn skill chính xác |
+
+> **GitHub Copilot (preview):** `gh skill` hiện vẫn ở trạng thái preview. Vì repository lớn này có cả bản canonical và bản mirror trong plugin, hãy dùng đường dẫn chính xác để tránh nhầm lẫn; chỉ dùng `--all` khi bạn thực sự muốn cài mọi bản được phát hiện:
+>
+> ```bash
+> gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md
+> gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent github-copilot --scope user --pin v14.2.0
+> ```
 
 ---
 

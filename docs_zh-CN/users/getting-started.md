@@ -107,7 +107,14 @@ git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 | **Cursor**      | ✅ 原生支持       | `.cursor/skills/`                                                     |
 | **OpenCode**    | ✅ 完全支持 | `.agents/skills/`（建议用 `--risk`、`--category` 或 `--tags` 做缩小安装） |
 | **AdaL CLI**    | ✅ 完全支持 | `.adal/skills/`                                                       |
-| **Copilot**     | ⚠️ 仅文本    | 手动复制粘贴                                                     |
+| **Copilot**     | 🧪 `gh skill` 预览支持 | 使用 GitHub CLI 的 `gh skill`，并指定精确技能路径 |
+
+> **GitHub Copilot（预览）**：`gh skill` 目前处于 preview 阶段。由于本仓库规模较大且同时包含 canonical 与 plugin 镜像，请使用精确路径，避免歧义；除非你确实要安装所有发现的副本，否则不要使用 `--all`：
+>
+> ```bash
+> gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md
+> gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent github-copilot --scope user --pin v14.2.0
+> ```
 
 ---
 
