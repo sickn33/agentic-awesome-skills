@@ -2,7 +2,7 @@
 name: woo-guard
 description: "Review WooCommerce code for HPOS safety, CRUD access, checkout validation, and money handling."
 risk: safe
-source: "https://github.com/amElnagdy/guard-skills"
+source_repo: "https://github.com/amElnagdy/guard-skills"
 ---
 
 ## When to Use
