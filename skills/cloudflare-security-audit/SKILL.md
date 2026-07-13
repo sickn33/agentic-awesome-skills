@@ -8,6 +8,7 @@ metadata:
   category: security
   author: cloudflare
   version: 1.0.0
+  source: https://github.com/cloudflare/security-audit-skill
 ---
 
 # Cloudflare Security Audit Skill
