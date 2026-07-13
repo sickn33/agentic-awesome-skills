@@ -557,6 +557,8 @@ Key source families include:
 ### Additional Sources
 
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
+- **[cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)**: Source for the `cloudflare-security-audit` skill - systematic 6-phase security audit pipeline covering reconnaissance, vulnerability hunting, attack-class analysis, and structured reporting (MIT).
+- **[amElnagdy/guard-skills](https://github.com/amElnagdy/guard-skills)**: Source for the `clean-code-guard`, `test-guard`, `docs-guard`, `wp-guard`, and `woo-guard` skills - code review guards for clean code, testing, documentation, WordPress, and WooCommerce quality (MIT).
 
 </details>
 
