@@ -1,6 +1,13 @@
 ---
 name: docs-guard
-description: "Review generated documentation for accuracy, drift, and hallucinated claims."---
+description: "Review generated documentation for accuracy, drift, and hallucinated claims."
+risk: safe
+source: "https://github.com/amElnagdy/guard-skills"
+---
+
+## When to Use
+
+Use when reviewing generated or updated documentation to catch hallucinated claims, code-doc drift, missing context, and inaccurate API references.
 
 # Docs Guard
 
