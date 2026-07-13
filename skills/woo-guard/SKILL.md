@@ -1,14 +1,13 @@
 ---
 name: woo-guard
 description: Enforces WooCommerce development best practices — HPOS compatibility, CRUD patterns, checkout security, and performance.
-metadata:
+risk: safe
+source: https://github.com/amElnagdy/guard-skills
   woocommerce:
-    risk: critical
   category: web-development
   author: amElnagdy
   version: 1.0.0
-  source: https://github.com/amElnagdy/guard-skills
----
+------
 
 # Woo Guard
 
