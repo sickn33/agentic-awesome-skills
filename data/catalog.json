@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-12T05:22:55.000Z",
-  "total": 1947,
+  "total": 1948,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -32071,6 +32071,44 @@
         "repeatable"
       ],
       "path": "skills/loopy/SKILL.md"
+    },
+    {
+      "id": "lore",
+      "canonical_id": "lore",
+      "name": "lore",
+      "description": "Markdown project memory for AI agents. Use for decisions, architecture, conventions, monorepo scopes, `.lore/`, or `lore` commands; not native `/init`/`/compact` or generic init/compress/audit/query.",
+      "category": "development",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "TheaDust/lore",
+      "license": "MIT",
+      "license_source": "https://github.com/TheaDust/lore/blob/main/LICENSE",
+      "tags": [
+        "memory",
+        "knowledge-base",
+        "project-context",
+        "monorepo",
+        "markdown",
+        "conventions",
+        "adr",
+        "agent-skills"
+      ],
+      "triggers": [
+        "memory",
+        "knowledge-base",
+        "project-context",
+        "monorepo",
+        "markdown",
+        "conventions",
+        "adr",
+        "agent-skills",
+        "lore",
+        "ai",
+        "agents",
+        "decisions"
+      ],
+      "path": "skills/lore/SKILL.md"
     },
     {
       "id": "loss-aversion-designer",

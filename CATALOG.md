@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-12T05:22:55.000Z
 
-Total skills: 1947
+Total skills: 1948
 
 ## agent-behavior (4)
 
@@ -990,7 +990,7 @@ Total skills: 1947
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (171)
+## development (172)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1103,6 +1103,7 @@ Total skills: 1947
 | `legacy-modernizer` | Refactor legacy codebases, migrate outdated frameworks, and implement gradual modernization. Handles technical debt, dependency updates, and backward compati... | safe | community | legacy, modernizer | legacy, modernizer, refactor, codebases, migrate, outdated, frameworks, gradual, modernization, technical, debt, dependency |
 | `linux-shell-scripting` | Provide production-ready shell script templates for common Linux system administration tasks including backups, monitoring, user management, log analysis, an... | unknown | community | linux, shell, scripting | linux, shell, scripting, provide, script, common, administration, tasks, including, backups, monitoring, user |
 | `logic-lens` | AI-powered Claude Code skill that performs deep code review using formal logic and reasoning frameworks to detect bugs, anti-patterns, and security risks bey... | safe | hyhmrright/logic-lens | code-review, logic-analysis, debugging, security-review, claude-code | code-review, logic-analysis, debugging, security-review, claude-code, logic, lens, ai, powered, claude, code, skill |
+| `lore` | Markdown project memory for AI agents. Use for decisions, architecture, conventions, monorepo scopes, `.lore/`, or `lore` commands; not native `/init`/`/comp... | safe | TheaDust/lore | memory, knowledge-base, project-context, monorepo, markdown, conventions, adr, agent-skills | memory, knowledge-base, project-context, monorepo, markdown, conventions, adr, agent-skills, lore, ai, agents, decisions |
 | `makepad-animation` | CRITICAL: Use for Makepad animation system. Triggers on: makepad animation, makepad animator, makepad hover, makepad state, makepad transition, "from: { all:... | safe | community | makepad, animation | makepad, animation, critical, triggers, animator, hover, state, transition, all, forward, pressed |
 | `makepad-basics` | CRITICAL: Use for Makepad getting started and app structure. Triggers on: makepad, makepad getting started, makepad tutorial, live_design!, app_main!, makepa... | unknown | https://github.com/makepad/makepad | makepad, basics | makepad, basics, critical, getting, started, app, structure, triggers, tutorial, live, main, setup |
 | `makepad-deployment` | CRITICAL: Use for Makepad packaging and deployment. Triggers on: deploy, package, APK, IPA, 打包, 部署, cargo-packager, cargo-makepad, WASM, Android, iOS, distri... | critical | community | makepad, deployment | makepad, deployment, critical, packaging, triggers, deploy, package, apk, ipa, cargo, packager, wasm |

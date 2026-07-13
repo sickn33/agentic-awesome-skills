@@ -21311,6 +21311,25 @@
       "runtime_files": []
     },
     {
+      "id": "lore",
+      "path": "skills/lore",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "loss-aversion-designer",
       "path": "skills/loss-aversion-designer",
       "targets": {
@@ -37420,10 +37439,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1947,
+    "total_skills": 1948,
     "supported": {
-      "codex": 1873,
-      "claude": 1895
+      "codex": 1874,
+      "claude": 1896
     },
     "blocked": {
       "codex": 74,

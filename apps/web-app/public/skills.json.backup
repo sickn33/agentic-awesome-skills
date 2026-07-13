@@ -25065,6 +25065,32 @@
     "license_source": "https://github.com/Forward-Future/loop-library/blob/main/LICENSE"
   },
   {
+    "id": "lore",
+    "path": "skills/lore",
+    "category": "development",
+    "name": "lore",
+    "description": "Markdown project memory for AI agents. Use for decisions, architecture, conventions, monorepo scopes, `.lore/`, or `lore` commands; not native `/init`/`/compact` or generic init/compress/audit/query.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "TheaDust/lore",
+    "license": "MIT",
+    "license_source": "https://github.com/TheaDust/lore/blob/main/LICENSE"
+  },
+  {
     "id": "loss-aversion-designer",
     "path": "skills/loss-aversion-designer",
     "category": "uncategorized",
