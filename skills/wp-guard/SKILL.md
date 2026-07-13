@@ -1,14 +1,13 @@
 ---
 name: wp-guard
 description: Enforces WordPress development best practices — security, performance, i18n, and coding standards.
-metadata:
+risk: safe
+source: https://github.com/amElnagdy/guard-skills
   wordpress:
-    risk: critical
   category: web-development
   author: amElnagdy
   version: 1.0.0
-  source: https://github.com/amElnagdy/guard-skills
----
+------
 
 # WP Guard
 
