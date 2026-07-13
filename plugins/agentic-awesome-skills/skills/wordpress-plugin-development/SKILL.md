@@ -41,6 +41,26 @@ Specialized workflow for creating WordPress plugins with proper architecture, ho
    - Register blocks without JavaScript
    - Auto-generated Inspector controls
 
+6. **Block Bindings API (PHP callbacks)**
+   - Connect block attributes to dynamic PHP data sources
+   - Register bindings via `register_block_bindings_source()`
+   - Works with core blocks (paragraph, heading, image, button)
+   - No JavaScript required for custom data sources
+
+7. **Script Module I18n**
+   - `wp_set_script_module_translations()` for script modules
+   - Works with `@wordpress/i18n` in block editor
+   - Import map compatible
+
+8. **`WP_REST_Icons_Controller`**
+   - REST API endpoint for icon management: `/wp/v2/icons`
+   - Register custom icon sets via `wp_register_icon_set()`
+   - Supports SVG icons with built-in validation
+
+9. **`rest_block_hooks_post_types` Filter**
+   - Control which post types auto-insert hooked blocks
+   - Filter available since WP 7.0
+
 ## When to Use This Workflow
 
 Use this workflow when:
@@ -74,9 +94,12 @@ Plugin URI: https://example.com/my-plugin
 Description: A WordPress 7.0 compatible plugin with AI and RTC support
 Version: 1.0.0
 Requires at least: 6.0
-Requires PHP: 7.4
+Requires PHP: 8.4
 Author: Developer Name
 License: GPL2+
+
+// WP 7.0 AI Connector: declare plugin.file for connector registration
+// plugin.file: my-plugin.php
 */
 ```
 
@@ -226,6 +249,8 @@ Use @database-design to design plugin database schema
 - Abilities API integration
 - AI Connector endpoints
 - Enhanced validation
+- `WP_REST_Icons_Controller` — `/wp/v2/icons` for custom icon sets
+- `rest_block_hooks_post_types` filter for controlling hooked block behavior
 
 #### Copy-Paste Prompts
 ```
@@ -261,6 +286,29 @@ Use @wordpress-penetration-testing to audit plugin security
 #### Skills to Invoke
 - `api-design-principles` - AI integration
 - `backend-dev-guidelines` - Block development
+
+#### WP 7.0 Feature Detection & Connector Setup
+```php
+// Check if AI is available with wp_supports_ai()
+if (function_exists('wp_supports_ai') && wp_supports_ai()) {
+    // AI features are available — register connectors, abilities, etc.
+}
+
+// Register a custom AI connector (wp_connectors_init)
+add_action('wp_connectors_init', function($connectors_manager) {
+    $connectors_manager->register('my-connector', [
+        'name' => 'My Custom AI',
+        'description' => __('Custom AI provider integration', 'my-plugin'),
+        'icon' => 'dashicons-admin-generic',
+        'fields' => [
+            'api_key' => ['type' => 'password', 'label' => 'API Key'],
+            'model'   => ['type' => 'select', 'label' => 'Model', 'options' => ['gpt-4', 'gpt-3.5']],
+        ],
+    ]);
+});
+
+// Note: plugin.file must be declared in plugin header for connector registration
+```
 
 #### AI Connector Implementation
 ```php
@@ -406,6 +454,34 @@ if (function_exists('register_block_type')) {
 }
 ```
 
+#### Block Bindings API (PHP Data Sources)
+```php
+// Register a dynamic data source for block bindings (WP 7.0)
+add_action('init', function() {
+    if (!function_exists('register_block_bindings_source')) {
+        return;
+    }
+    
+    register_block_bindings_source('my-plugin/custom-meta', [
+        'label'              => __('Custom Meta Field', 'my-plugin'),
+        'uses_context'       => ['postId'],
+        'get_value_callback' => function($source_args, $block_context, $attributes) {
+            $post_id = $block_context['postId'] ?? 0;
+            if (!$post_id) return '';
+            
+            $field = $source_args['key'] ?? '';
+            if (!$field) return '';
+            
+            return get_post_meta($post_id, $field, true);
+        },
+    ]);
+});
+
+// Usage in block editor: anchor's bindings attribute connects
+// a block attribute to a registered source.
+// Example: <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"my-plugin/custom-meta","args":{"key":"_subtitle"}}}}} -->
+```
+
 #### Disable Collaboration (if needed)
 ```javascript
 // Disable RTC for specific post types
@@ -430,6 +506,20 @@ addFilter(
 3. Write integration tests
 4. Test with WordPress test suite
 5. Configure CI
+
+#### Script Module Translations (WP 7.0)
+```php
+// In PHP: load translations for a script module
+add_action('enqueue_block_editor_assets', function() {
+    // Register script modules
+    wp_register_script_module('my-plugin/editor', plugin_dir_url(__FILE__) . 'build/editor.js');
+    
+    // Load translations — replaces deprecated wp_set_script_translations() for modules
+    if (function_exists('wp_set_script_module_translations')) {
+        wp_set_script_module_translations('my-plugin/editor', 'my-plugin');
+    }
+});
+```
 
 #### WordPress 7.0 Testing Priorities
 - Test RTC compatibility
@@ -469,12 +559,16 @@ plugin-name/
 
 ## WordPress 7.0 Compatibility Checklist
 
-- [ ] PHP 7.4+ requirement documented
+- [ ] PHP 8.4+ requirement documented (`Requires PHP: 8.4`)
+- [ ] `plugin.file` declared in plugin header if using AI Connector
 - [ ] Post meta registered with `show_in_rest => true` for RTC
 - [ ] Meta boxes migrated to block-based UIs
-- [ ] AI Connector integration tested
+- [ ] AI Connector integration tested (check `wp_supports_ai()`)
 - [ ] Abilities API registered (if applicable)
+- [ ] Block Bindings API tested for dynamic data sources
+- [ ] Script module translations working (`wp_set_script_module_translations`)
 - [ ] DataViews integration tested (if applicable)
+- [ ] Rest API icons controller tested (if applicable)
 - [ ] Interactivity API uses `watch()` not `effect`
 - [ ] Tested with iframed editor
 - [ ] Collaboration fallback works (post locking)

@@ -20,11 +20,14 @@ Specialized workflow for building WooCommerce stores including setup, payment ga
    - AI-powered customer service responses
    - Product summary generation
    - Marketing copy assistance
+   - **`plugin.file`** required in plugin header for custom AI connector registration
+   - Use `wp_supports_ai()` to check AI availability before using connectors
 
 2. **DataViews for Orders**
    - Modern order management interfaces
    - Enhanced filtering and sorting
    - Activity layout for order history
+   - DataForm Details layout for order editing panels
 
 3. **Real-Time Collaboration**
    - Collaborative order editing
@@ -39,6 +42,16 @@ Specialized workflow for building WooCommerce stores including setup, payment ga
    - AI-powered order processing
    - Automated inventory management
    - Smart shipping recommendations
+
+6. **Block Bindings API**
+   - Connect product data (price, stock, meta) to block attributes
+   - PHP-only — no JavaScript required for custom data sources
+   - Works with core blocks in product editor templates
+
+7. **Connectors Registry (`wp_connectors_init`)**
+   - Register custom WooCommerce-specific AI providers
+   - Hook: `wp_connectors_init`
+   - Connectors appear in Settings > Connectors admin screen
 
 ## When to Use This Workflow
 
@@ -75,6 +88,25 @@ define('WP_COLLABORATION_MAX_USERS', 10);
 // AI features are enabled by installing a provider plugin
 // Install OpenAI, Anthropic, or Gemini connector from WordPress.org
 // Then configure via Settings > Connectors in admin panel
+
+// Check if AI is available at runtime:
+if (function_exists('wp_supports_ai') && wp_supports_ai()) {
+    // AI is ready — register connectors, abilities, etc.
+}
+
+// Register custom WooCommerce-specific AI connector:
+add_action('wp_connectors_init', function($manager) {
+    $manager->register('woocommerce-product-advisor', [
+        'name' => 'Product Advisor AI',
+        'description' => __('AI-powered product recommendations', 'woocommerce'),
+        'icon' => 'dashicons-products',
+        'fields' => [
+            'api_key' => ['type' => 'password', 'label' => __('API Key', 'woocommerce')],
+        ],
+    ]);
+});
+
+// Note: plugin.file must be declared in plugin header for connector registration
 ```
 
 #### Copy-Paste Prompts
@@ -270,6 +302,48 @@ Use @wordpress-penetration-testing to configure shipping
 3. Style checkout flow
 4. Create custom templates
 5. Add custom fields
+
+#### Block Bindings for WooCommerce Data
+```php
+// Register product data as block binding sources (WP 7.0)
+add_action('init', function() {
+    if (!function_exists('register_block_bindings_source')) {
+        return;
+    }
+    
+    // Source: product sale badge text
+    register_block_bindings_source('woocommerce/sale-badge', [
+        'label'              => __('Sale Badge Text', 'woocommerce'),
+        'uses_context'       => ['postId'],
+        'get_value_callback' => function($source_args, $block_context) {
+            $post_id = $block_context['postId'] ?? 0;
+            if (!$post_id) return '';
+            $product = wc_get_product($post_id);
+            if (!$product) return '';
+            return $product->is_on_sale() ? __('Sale!', 'woocommerce') : '';
+        },
+    ]);
+    
+    // Source: product stock status
+    register_block_bindings_source('woocommerce/stock-status', [
+        'label'              => __('Stock Status Label', 'woocommerce'),
+        'uses_context'       => ['postId'],
+        'get_value_callback' => function($source_args, $block_context) {
+            $post_id = $block_context['postId'] ?? 0;
+            if (!$post_id) return '';
+            $product = wc_get_product($post_id);
+            if (!$product) return '';
+            return $product->get_stock_status() === 'instock' 
+                ? __('In Stock', 'woocommerce') 
+                : __('Out of Stock', 'woocommerce');
+        },
+    ]);
+});
+
+// In product editor template: bind paragraph content to source
+// "metadata":{"bindings":{"content":{"source":"woocommerce/sale-badge"}}}
+// Bind image src to product thumbnail — no PHP needed.
+```
 
 #### WordPress 7.0 Template Customization
 ```php
@@ -616,8 +690,10 @@ Use @playwright-skill to test WooCommerce checkout flow
 - [ ] Shipping calculating
 - [ ] Emails sending
 - [ ] Mobile responsive
-- [ ] AI features tested (WP 7.0)
-- [ ] DataViews working (WP 7.0)
+- [ ] AI features tested (`wp_supports_ai()`, connectors) (WP 7.0)
+- [ ] DataViews/DataForm working for order management (WP 7.0)
+- [ ] Block Bindings API sources registered and tested
+- [ ] `plugin.file` declared if using custom AI connectors
 
 ## Related Workflow Bundles
 

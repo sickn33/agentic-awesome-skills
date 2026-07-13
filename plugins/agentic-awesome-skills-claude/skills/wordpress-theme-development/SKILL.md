@@ -39,7 +39,12 @@ Specialized workflow for creating custom WordPress themes from scratch, includin
    - Block-defined feature selectors honored
    - Enhanced custom CSS
 
-6. **Iframed Editor**
+6. **Block Bindings API**
+   - Connect block attributes to PHP data sources in theme templates
+   - Works in FSE templates via `metadata.bindings`
+   - No JS required — register sources in theme functions.php
+
+7. **Iframed Editor**
    - Block API v3+ enables iframed post editor
    - Full enforcement in 7.1, opt-in in 7.0
 
@@ -78,7 +83,7 @@ Author URI: https://example.com
 Description: A WordPress 7.0 compatible theme with modern design
 Version: 1.0.0
 Requires at least: 6.0
-Requires PHP: 7.4
+Requires PHP: 8.4
 License: GNU General Public License v2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: my-custom-theme
@@ -327,22 +332,35 @@ Use @frontend-developer to create custom Gutenberg blocks
 4. Implement theme customizer
 5. Add accessibility features
 
-#### WordPress 7.0 Admin Refresh Considerations
+#### WordPress 7.0 Admin Refresh & View Transitions
 ```css
+/* View Transitions API — WP 7.0 uses CSS view-transition-name for page transitions */
+/* Theme can customize which elements participate */
+.wp-admin {
+    view-transition-name: none;       /* Default: no admin chrome transitions */
+}
+
+body {
+    view-transition-name: page;       /* Page content transitions */
+}
+
+/* Theme-specific: opt sub-elements into the transition */
+.admin-header {
+    view-transition-name: admin-header;
+}
+
+.admin-sidebar {
+    view-transition-name: admin-sidebar;
+}
+
+/* Avoid: don't name too many elements — can cause visual noise */
+/* Cross-document view transitions require same-origin navigations */
+
 /* Support new admin color scheme */
 @media (prefers-color-scheme: dark) {
     :root {
         --admin-color: modern;
     }
-}
-
-/* View transitions */
-.wp-admin {
-    view-transition-name: none;
-}
-
-body {
-    view-transition-name: page;
 }
 ```
 
@@ -390,6 +408,41 @@ add_action('breadcrumb_items', function($trail, $crumbs) {
         }
     }
 }, 10, 2);
+```
+
+#### Block Bindings API (Theme Data Sources)
+```php
+// Register a theme-specific block binding source (WP 7.0)
+add_action('init', function() {
+    if (!function_exists('register_block_bindings_source')) {
+        return;
+    }
+    
+    // Source: current post's featured image URL
+    register_block_bindings_source('my-theme/featured-image-url', [
+        'label'              => __('Featured Image URL', 'my-theme'),
+        'uses_context'       => ['postId'],
+        'get_value_callback' => function($source_args, $block_context) {
+            $post_id = $block_context['postId'] ?? 0;
+            if (!$post_id) return '';
+            return get_the_post_thumbnail_url($post_id, 'full') ?: '';
+        },
+    ]);
+    
+    // Source: theme setting value
+    register_block_bindings_source('my-theme/setting', [
+        'label'              => __('Theme Setting', 'my-theme'),
+        'get_value_callback' => function($source_args) {
+            $key = $source_args['key'] ?? '';
+            if (!$key) return '';
+            return get_theme_mod($key, '');
+        },
+    ]);
+});
+
+// In block editor: attach bindings via UI or JSON
+// The bindings attribute on a block connects attributes to sources.
+// Example: bindings on image block's "url" attribute → my-theme/featured-image-url
 ```
 
 #### Icon Block Support
@@ -473,13 +526,14 @@ theme-name/
 
 ## WordPress 7.0 Theme Checklist
 
-- [ ] PHP 7.4+ requirement documented
+- [ ] PHP 8.4+ requirement documented
 - [ ] theme.json v3 schema used
 - [ ] Block patterns tested
 - [ ] ContentOnly editing supported
 - [ ] Navigation overlays implemented
+- [ ] Block Bindings API tested for dynamic data sources
 - [ ] Breadcrumb filters added for CPT
-- [ ] View transitions working
+- [ ] View transitions working (`view-transition-name` set correctly)
 - [ ] Admin refresh compatible
 - [ ] CPT meta shows_in_rest
 - [ ] Iframe editor tested
