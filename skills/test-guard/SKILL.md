@@ -1,14 +1,13 @@
 ---
 name: test-guard
 description: Enforces testing best practices — test design, mocking boundaries, coverage, and test quality.
-metadata:
+risk: safe
+source: https://github.com/amElnagdy/guard-skills
   testing:
-    risk: critical
   category: testing
   author: amElnagdy
   version: 1.0.0
-  source: https://github.com/amElnagdy/guard-skills
----
+------
 
 # Test Guard
 
