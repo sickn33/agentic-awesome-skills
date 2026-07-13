@@ -543,6 +543,8 @@ Key source families include:
 - **[sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills)**: Source for the `linkedin-post-writer` skill - LinkedIn post drafting from 16 tested hook formulas mapped to engagement goals, with 2026 formatting rules and an AI-tell scrub pass, from a 10-skill LinkedIn bundle for Claude Code and Codex (MIT).
 - **[Sharrmavishal/operating-kit](https://github.com/Sharrmavishal/operating-kit)**: Source for the `pre-ship-gate` skill - a pre-deploy gate that walks the silent failure modes (migrations, feature flags, stale build cache, release pointer, staged rollout, missing env) and verifies the live revision instead of trusting deploy output (MIT).
 - **[Ducksss/codex-profiles](https://github.com/Ducksss/codex-profiles)**: Source for the `codex-profiles` skill - Codex CLI/Desktop profile isolation around separate `CODEX_HOME` directories, diagnostics, and account-context boundaries without copying auth tokens (MIT).
+- **[cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)**: Source for the `cloudflare-security-audit` skill - systematic 6-phase security audit pipeline covering reconnaissance, vulnerability hunting, attack-class analysis, and structured reporting (MIT).
+- **[amElnagdy/guard-skills](https://github.com/amElnagdy/guard-skills)**: Source for the `clean-code-guard`, `test-guard`, `docs-guard`, `wp-guard`, and `woo-guard` skills - code review guards for clean code, testing, documentation, WordPress, and WooCommerce quality (MIT).
 
 </details>
 
@@ -557,8 +559,6 @@ Key source families include:
 ### Additional Sources
 
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
-- **[cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)**: Source for the `cloudflare-security-audit` skill - systematic 6-phase security audit pipeline covering reconnaissance, vulnerability hunting, attack-class analysis, and structured reporting (MIT).
-- **[amElnagdy/guard-skills](https://github.com/amElnagdy/guard-skills)**: Source for the `clean-code-guard`, `test-guard`, `docs-guard`, `wp-guard`, and `woo-guard` skills - code review guards for clean code, testing, documentation, WordPress, and WooCommerce quality (MIT).
 
 </details>
 
