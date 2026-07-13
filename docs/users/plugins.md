@@ -90,7 +90,6 @@ Specialized plugins are smaller, role-based or workflow-based distributions gene
 - `AAS Security Engineer`
 - `AAS Data Analytics`
 - `AAS Documents & Presentations`
-- `AAS OSS Maintainer`
 - `AAS Agent & MCP Builder`
 
 Use a specialized plugin when you want:

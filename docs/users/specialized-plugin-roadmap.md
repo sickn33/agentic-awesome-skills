@@ -41,7 +41,6 @@ These should become the primary marketplace surface.
 | AAS Documents & Presentations | Create, edit, convert, and automate DOCX/XLSX/PPTX/PDF/Google files. | Concrete productivity plugin with obvious user value and room for app integrations. |
 | AAS Data Analytics | Track, query, visualize, dashboard, and experiment. | Data workflows need a repeatable toolchain, not one isolated skill. |
 | AAS Agent & MCP Builder | Build agentic apps, MCP tools, RAG, and eval loops. | Maps directly to plugin-based agent workflows because it can grow into MCP config. |
-| AAS OSS Maintainer | Manage PRs, reviews, releases, changelogs, and repo guidance. | Very useful for this repository's own maintainer workflow. |
 | AAS QA & Test Automation | Write, debug, stabilize, and scale tests. | Testing is a workflow chain: TDD, browser automation, failure diagnosis, and regression prevention. |
 | AAS DevOps & Cloud | Ship infrastructure, deployment, and operational workflows. | Strong fit for scripts, deployment gates, incident practice, and cloud patterns. |
 | AAS Accessibility & Inclusive UX | Audit, test, and fix accessible product experiences. | Accessibility is a standalone product-quality workflow across audit, automated scans, screen readers, fixes, and QA. |

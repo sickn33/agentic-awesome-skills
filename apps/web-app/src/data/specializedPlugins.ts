@@ -67,14 +67,6 @@ export const specializedPlugins: SpecializedPlugin[] = [
     skills: ['ai-agents-architect', 'agent-evaluation', 'mcp-builder', 'mcp-tool-developer', 'llm-app-patterns', 'rag-engineer', 'langgraph', 'langfuse', 'context-window-management'],
   },
   {
-    id: 'aas-oss-maintainer',
-    name: 'AAS OSS Maintainer',
-    priority: 'tier-1',
-    audience: 'Open-source maintainers managing PRs, releases, reviews, and contributor handoffs.',
-    why: 'Packages repeatable repo work around review, release, changelog, GitHub workflows, and contributor handoffs.',
-    skills: ['agents-md', 'commit', 'create-pr', 'requesting-code-review', 'receiving-code-review', 'changelog-automation', 'git-advanced-workflows', 'github-actions-advanced', 'address-github-comments', 'lint-and-validate'],
-  },
-  {
     id: 'aas-qa-test-automation',
     name: 'AAS QA & Test Automation',
     priority: 'tier-1',

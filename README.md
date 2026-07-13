@@ -125,7 +125,6 @@ All specialized plugins are generated as Claude Code and Codex plugin bundles. F
 | AAS Documents & Presentations | 9 | Office files, document conversion, decks, and slide workflows. |
 | AAS Data Analytics | 10 | Product analytics, SQL, dashboards, and experiments. |
 | AAS Agent & MCP Builder | 10 | Agentic apps, MCP tools, RAG systems, and evaluation loops. |
-| AAS OSS Maintainer | 10 | PRs, releases, reviews, and contributor handoffs. |
 | AAS QA & Test Automation | 10 | Test suites, browser automation, and QA stabilization. |
 | AAS DevOps & Cloud | 10 | Infrastructure, deployments, and operational workflows. |
 | AAS Accessibility & Inclusive UX | 8 | WCAG audits, automated scans, screen-reader checks, and accessible QA. |

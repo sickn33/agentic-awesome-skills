@@ -91,13 +91,13 @@ class EditorialBundlesTests(unittest.TestCase):
         sample_skill_dir = essentials_plugin / "concise-planning"
         self.assertTrue((sample_skill_dir / "SKILL.md").is_file())
 
-    def test_generated_plugin_count_matches_manifest(self):
-        generated_plugins = sorted(
+    def test_generated_plugins_cover_manifest_during_source_only_prs(self):
+        generated_plugins = {
             path.name
             for path in (REPO_ROOT / "plugins").iterdir()
             if path.is_dir() and path.name.startswith("agentic-bundle-")
-        )
-        expected_plugins = sorted(
+        }
+        expected_plugins = {
             f'agentic-bundle-{bundle["id"]}'
             for bundle in self.manifest_bundles
             if any(
@@ -107,8 +107,22 @@ class EditorialBundlesTests(unittest.TestCase):
                 )
                 for target in ("codex", "claude")
             )
+        }
+        self.assertFalse(
+            expected_plugins - generated_plugins,
+            f"generated bundle plugins are missing: {sorted(expected_plugins - generated_plugins)}",
         )
-        self.assertEqual(generated_plugins, expected_plugins)
+
+    def test_plugin_sync_prunes_stale_bundle_directories(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = pathlib.Path(temp_dir)
+            stale_plugin = root / "plugins" / "agentic-bundle-retired"
+            stale_plugin.mkdir(parents=True)
+            (stale_plugin / "marker.txt").write_text("stale", encoding="utf-8")
+
+            editorial_bundles.sync_editorial_bundle_plugins(root, {}, [], {})
+
+            self.assertFalse(stale_plugin.exists())
 
     def test_codex_bundle_plugin_names_keep_qualified_skill_names_valid(self):
         max_name_length = 64

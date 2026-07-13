@@ -147,25 +147,6 @@
       ]
     },
     {
-      "id": "aas-oss-maintainer",
-      "name": "AAS OSS Maintainer",
-      "priority": "tier-1",
-      "audience": "Open-source maintainers managing PRs, releases, reviews, and contributor handoffs.",
-      "why": "This is one of the strongest maintainer-focused plugin opportunities: it packages repeatable repo work around review, release, changelog, and GitHub workflows.",
-      "skills": [
-        "agents-md",
-        "commit",
-        "create-pr",
-        "requesting-code-review",
-        "receiving-code-review",
-        "changelog-automation",
-        "git-advanced-workflows",
-        "github-actions-advanced",
-        "address-github-comments",
-        "lint-and-validate"
-      ]
-    },
-    {
       "id": "aas-qa-test-automation",
       "name": "AAS QA & Test Automation",
       "priority": "tier-1",
