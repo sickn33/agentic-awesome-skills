@@ -4,7 +4,7 @@ description: >
   IF the user asks to query [the company]'s data warehouse for any
   [list of business domains] question — THEN invoke this skill. DO NOT invoke
   for [adjacent engineering tasks] or questions with no data-warehouse component.
-risk: Unknown
+risk: unknown
 source: community
 date_added: "2026-07-12"
 ---
