@@ -1,10 +1,24 @@
 ---
 name: docs-guard
 description: "Review generated documentation for accuracy, drift, and hallucinated claims."
+category: code-quality
 risk: safe
+source: community
 source_repo: amElnagdy/guard-skills
-source: "https://github.com/amElnagdy/guard-skills"
+source_type: community
+date_added: "2026-07-13"
+author: amElnagdy
+tags: [documentation, code-review, quality, technical-writing]
+tools: [claude, cursor, gemini]
+license: "MIT"
+license_source: "https://github.com/amElnagdy/guard-skills/blob/master/LICENSE"
 ---
+
+## Limitations
+
+- Cannot verify claims that require running code or accessing live systems.
+- Does not replace environment-specific validation, testing, or expert review.
+- May flag intentional simplifications as inaccuracies.
 
 ## When to Use
 
