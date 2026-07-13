@@ -1,6 +1,13 @@
 ---
 name: test-guard
-description: "Review generated test code against universal testing rules before it ships."---
+description: "Review generated test code against universal testing rules before it ships."
+risk: safe
+source: "https://github.com/amElnagdy/guard-skills"
+---
+
+## When to Use
+
+Use when reviewing generated test code to catch common testing anti-patterns, flaky tests, missing edge cases, and framework-specific mistakes before merging.
 
 # Test Guard
 
