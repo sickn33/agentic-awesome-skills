@@ -2,7 +2,7 @@
 name: wp-guard
 description: "Review WordPress code for escaping, sanitization, nonces, prepared queries, i18n, and performance."
 risk: safe
-source: "https://github.com/amElnagdy/guard-skills"
+source_repo: "https://github.com/amElnagdy/guard-skills"
 ---
 
 ## When to Use
