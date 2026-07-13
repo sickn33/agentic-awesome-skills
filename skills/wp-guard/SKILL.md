@@ -1,10 +1,24 @@
 ---
 name: wp-guard
-description: "Review WordPress code for escaping, sanitization, nonces, prepared queries, i18n, and performance."
+description: "Review WordPress code for escaping, sanitization, nonces, i18n, and performance."
+category: development
 risk: safe
+source: community
 source_repo: amElnagdy/guard-skills
-source: "https://github.com/amElnagdy/guard-skills"
+source_type: community
+date_added: "2026-07-13"
+author: amElnagdy
+tags: [wordpress, security, code-review, php]
+tools: [claude, cursor, gemini]
+license: "MIT"
+license_source: "https://github.com/amElnagdy/guard-skills/blob/master/LICENSE"
 ---
+
+## Limitations
+
+- Focused on WordPress-specific patterns; does not cover general PHP security.
+- Does not replace environment-specific validation, testing, or expert review.
+- Cannot detect vulnerabilities that require runtime WordPress context.
 
 ## When to Use
 
