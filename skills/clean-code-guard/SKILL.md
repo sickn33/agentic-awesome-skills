@@ -1,10 +1,24 @@
 ---
 name: clean-code-guard
-description: "Review generated code for Clean Code, SOLID, DRY/KISS/YAGNI, and LLM-specific failure modes."
+description: "Review generated code for Clean Code, SOLID, DRY/KISS/YAGNI, and LLM failure modes."
+category: code-quality
 risk: safe
+source: community
 source_repo: amElnagdy/guard-skills
-source: "https://github.com/amElnagdy/guard-skills"
+source_type: community
+date_added: "2026-07-13"
+author: amElnagdy
+tags: [code-review, clean-code, solid, quality]
+tools: [claude, cursor, gemini]
+license: "MIT"
+license_source: "https://github.com/amElnagdy/guard-skills/blob/master/LICENSE"
 ---
+
+## Limitations
+
+- Focused on code style and principles, not runtime behavior or performance.
+- Does not replace environment-specific validation, testing, or expert review.
+- May flag acceptable trade-offs as violations in domain-specific contexts.
 
 ## When to Use
 
