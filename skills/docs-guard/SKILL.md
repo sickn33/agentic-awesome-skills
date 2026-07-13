@@ -2,7 +2,7 @@
 name: docs-guard
 description: "Review generated documentation for accuracy, drift, and hallucinated claims."
 risk: safe
-source: "https://github.com/amElnagdy/guard-skills"
+source_repo: "https://github.com/amElnagdy/guard-skills"
 ---
 
 ## When to Use
