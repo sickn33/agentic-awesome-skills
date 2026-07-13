@@ -1,6 +1,13 @@
 ---
 name: woo-guard
-description: "Review WooCommerce code for HPOS safety, CRUD access, checkout validation, and money handling."---
+description: "Review WooCommerce code for HPOS safety, CRUD access, checkout validation, and money handling."
+risk: safe
+source: "https://github.com/amElnagdy/guard-skills"
+---
+
+## When to Use
+
+Use when reviewing WooCommerce extension code for HPOS compatibility, CRUD data access patterns, checkout validation, and money-handling safety.
 
 # Woo Guard
 
