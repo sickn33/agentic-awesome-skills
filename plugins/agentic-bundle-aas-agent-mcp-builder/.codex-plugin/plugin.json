@@ -1,6 +1,6 @@
 {
   "name": "aasb-aas-agent-mcp-builder",
-  "version": "14.3.0",
+  "version": "14.3.1",
   "description": "Install the \"AAS Agent & MCP Builder\" workflow plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
