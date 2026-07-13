@@ -15,6 +15,11 @@ const publishWorkflow = readText(".github/workflows/publish-npm.yml");
 const releaseWorkflowScript = readText("tools/scripts/release_workflow.js");
 const hygieneWorkflowPath = path.join(repoRoot, ".github", "workflows", "repo-hygiene.yml");
 
+const prepareReleaseBlock = releaseWorkflowScript.slice(
+  releaseWorkflowScript.indexOf("function prepareRelease"),
+  releaseWorkflowScript.indexOf("function publishRelease"),
+);
+
 assert.ok(
   packageJson.scripts["sync:release-state"],
   "package.json should expose a deterministic release-state sync command",
@@ -276,6 +281,11 @@ assert.match(
   releaseWorkflowScript,
   /runCommand\("npm", \["run", "app:install"\], projectRoot\);[\s\S]*runCommand\("npm", \["run", "app:build"\], projectRoot\);/,
   "release workflow should install web-app dependencies before building the app",
+);
+assert.ok(
+  prepareReleaseBlock.indexOf('["run", "sync:metadata", "--", "--refresh-volatile"]') <
+    prepareReleaseBlock.indexOf("runReleaseSuite(projectRoot)"),
+  "release preparation should refresh volatile metadata before generating canonical release artifacts",
 );
 assert.match(
   publishWorkflow,

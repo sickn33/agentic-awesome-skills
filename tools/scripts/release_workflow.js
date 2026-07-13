@@ -174,12 +174,15 @@ function prepareRelease(projectRoot, version) {
     console.log(`[release] package.json already set to ${version}; keeping current version.`);
   }
 
-  runReleaseSuite(projectRoot);
   runCommand(
     "npm",
     ["run", "sync:metadata", "--", "--refresh-volatile"],
     projectRoot,
   );
+  // Volatile metadata is an input to catalog timestamps. Refresh it before the
+  // canonical release sync so the tagged tree is exactly what publish CI will
+  // regenerate and verify.
+  runReleaseSuite(projectRoot);
 
   const refreshedReleaseNotes = ensureChangelogSection(projectRoot, version);
   const notesPath = writeReleaseNotes(projectRoot, version, refreshedReleaseNotes);
