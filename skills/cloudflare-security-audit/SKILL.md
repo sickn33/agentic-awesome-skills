@@ -2,7 +2,7 @@
 name: cloudflare-security-audit
 description: "Security audit of a codebase for exploitable vulnerabilities with real impact."
 risk: safe
-source: "https://github.com/cloudflare/security-audit-skill"
+source_repo: "https://github.com/cloudflare/security-audit-skill"
 ---
 
 ## When to Use
@@ -112,3 +112,10 @@ These are the mistakes that make security audits useless:
 8. **Constructing exploits from incorrect parser/runtime assumptions.** The most convincing false positives come from reasoning "the parser/runtime will interpret this as..." without verifying. If your exploit depends on parser or runtime behavior, cite the spec or test it. Don't assume.
 9. **Skipping business logic and creative attacks.** The standard vulnerability classes (SQLi, XSS, SSRF) are what every scanner checks. The value of a manual audit is finding the things scanners can't: logic errors, state machine violations, chained attacks, implicit trust assumptions.
 10. **Giving up too easily.** "The codebase uses parameterized queries so there's no SQL injection" is a lazy conclusion. Check EVERY use of sql.raw(). Check dynamic identifiers. Check search/FTS. Check if there's a code path that bypasses the query builder. Push.
+
+## Limitations
+
+- Cannot execute or run code; analysis is static and heuristic-based.
+- Does not replace dynamic testing tools (DAST, fuzzing, pen-testing).
+- May miss vulnerabilities that require runtime context or environment-specific configuration.
+
