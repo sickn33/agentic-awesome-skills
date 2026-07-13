@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security Audit Report",
+  "description": "Schema for Cloudflare Security Audit findings",
+  "type": "object",
+  "required": ["metadata", "summary", "findings"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["timestamp", "target", "auditor", "phases_completed"],
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "target": { "type": "string" },
+        "auditor": { "type": "string" },
+        "duration_seconds": { "type": "number" },
+        "phases_completed": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total_findings", "by_severity"],
+      "properties": {
+        "total_findings": { "type": "integer" },
+        "by_severity": {
+          "type": "object",
+          "properties": {
+            "critical": { "type": "integer" },
+            "high": { "type": "integer" },
+            "medium": { "type": "integer" },
+            "low": { "type": "integer" },
+            "info": { "type": "integer" }
+          }
+        },
+        "risk_score": { "type": "number" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "attack_class", "title", "severity", "file", "line", "code_snippet", "description", "evidence", "remediation"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^FINDING-\\d{3,}$" },
+          "attack_class": { "type": "string", "pattern": "^A\\d{1,2}$" },
+          "title": { "type": "string" },
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer" },
+          "code_snippet": { "type": "string" },
+          "description": { "type": "string" },
+          "evidence": {
+            "type": "object",
+            "required": ["type", "details"],
+            "properties": {
+              "type": { "type": "string", "enum": ["code", "config", "dependency", "manual"] },
+              "details": { "type": "string" }
+            }
+          },
+          "owasp_top_10": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "cwe": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "remediation": { "type": "string" },
+          "references": {
+            "type": "array",
+            "items": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    }
+  }
+}
