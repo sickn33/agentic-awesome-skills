@@ -568,6 +568,7 @@ export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expec
     'Claude Code',
     'Codex CLI',
     'https://github.com/sickn33/agentic-awesome-skills',
+    'https://sickn33.github.io/agentic-awesome-skills/workbench',
     'Canonical source of truth',
   ];
 

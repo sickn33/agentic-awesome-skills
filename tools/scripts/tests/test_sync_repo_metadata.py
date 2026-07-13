@@ -59,6 +59,20 @@ class SyncRepoMetadataTests(unittest.TestCase):
             (root / "docs" / "users").mkdir(parents=True)
             (root / "docs" / "maintainers").mkdir(parents=True)
             (root / "docs" / "integrations" / "jetski-gemini-loader").mkdir(parents=True)
+            (root / "apps" / "web-app" / "public").mkdir(parents=True)
+
+            (root / "apps" / "web-app" / "index.html").write_text(
+                '<meta name="description" content="Explore 1,273+ installable agentic skills">\n'
+                '<title>Agentic Awesome Skills GitHub | 1,273+ AI coding skills</title>\n',
+                encoding="utf-8",
+            )
+            (root / "apps" / "web-app" / "public" / "llms.txt").write_text(
+                "> Installable GitHub library of 1,273+ agentic SKILL.md playbooks.\n"
+                "- Current release: V8.3.0.\n"
+                "- Skill count: 1,273+.\n"
+                "Agentic Awesome Skills is an installable library of 1,273+ reusable SKILL.md playbooks.\n",
+                encoding="utf-8",
+            )
 
             (root / "docs" / "users" / "getting-started.md").write_text(
                 "# Getting Started with Agentic Awesome Skills (V8.3.0)\n",
@@ -107,7 +121,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
             updated_files = sync_repo_metadata.sync_curated_docs(str(root), metadata, dry_run=False)
 
-            self.assertGreaterEqual(updated_files, 10)
+            self.assertGreaterEqual(updated_files, 12)
             readme = (root / "README.md").read_text(encoding="utf-8")
             self.assertIn("1,304+ agentic skills", readme)
             self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
@@ -117,6 +131,13 @@ class SyncRepoMetadataTests(unittest.TestCase):
             self.assertIn("1,304+ files", (root / "docs" / "users" / "gemini-cli-skills.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ specialized areas", (root / "docs" / "users" / "kiro-integration.md").read_text(encoding="utf-8"))
             self.assertIn("Total Bundles: 2", (root / "docs" / "users" / "bundles.md").read_text(encoding="utf-8"))
+            web_index = (root / "apps" / "web-app" / "index.html").read_text(encoding="utf-8")
+            self.assertIn("1,304+ installable agentic skills", web_index)
+            self.assertIn("1,304+ AI coding skills", web_index)
+            llms_text = (root / "apps" / "web-app" / "public" / "llms.txt").read_text(encoding="utf-8")
+            self.assertIn("Current release: V8.4.0.", llms_text)
+            self.assertIn("Skill count: 1,304+.", llms_text)
+            self.assertIn("1,304+ reusable SKILL.md playbooks", llms_text)
             jetski_cortex = (root / "docs" / "integrations" / "jetski-cortex.md").read_text(encoding="utf-8")
             self.assertIn("1,304+ skill", jetski_cortex)
             self.assertNotIn("1,1", jetski_cortex)

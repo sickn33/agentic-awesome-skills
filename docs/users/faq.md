@@ -254,6 +254,8 @@ npx agentic-awesome-skills@14.3.0 --path .agents/skills --release 14.3.0 --skill
 
 Remove `--dry-run` only after reviewing the plan.
 
+If you prefer to assemble and review the set visually, use the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench). It filters recorded risk, provenance, host compatibility, and setup evidence before generating the same release-pinned commands.
+
 The filter rules are:
 
 - comma-separated values are ORed within one flag

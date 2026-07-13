@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import canonicalCatalog from '../../../../../skills_index.json';
+import packageMetadata from '../../../../../package.json';
 import { createMockSkill } from '../../factories/skill';
 import {
   buildInstallerCommand,
@@ -122,10 +123,10 @@ describe('skill workbench domain', () => {
     expect(buildInstallerCommand({
       skillIds: ['zeta', 'alpha'],
       host: 'codex',
-      version: '14.2.0',
+      version: packageMetadata.version,
       dryRun: true,
     })).toBe(
-      'npx agentic-awesome-skills@14.2.0 --codex --release 14.2.0 --skills alpha,zeta --dry-run',
+      `npx agentic-awesome-skills@${packageMetadata.version} --codex --release ${packageMetadata.version} --skills alpha,zeta --dry-run`,
     );
   });
 
@@ -133,7 +134,7 @@ describe('skill workbench domain', () => {
     expect(() => buildInstallerCommand({
       skillIds: ['safe-skill', 'bad;command'],
       host: 'claude',
-      version: '14.2.0',
+      version: packageMetadata.version,
       dryRun: false,
     })).toThrow(/Invalid skill IDs/i);
   });
@@ -142,7 +143,7 @@ describe('skill workbench domain', () => {
     expect(buildInstallerCommand({
       skillIds: ['android_ui_verification'],
       host: 'codex',
-      version: '14.2.0',
+      version: packageMetadata.version,
       dryRun: true,
     })).toContain('--skills android_ui_verification --dry-run');
   });
@@ -156,7 +157,7 @@ describe('skill workbench domain', () => {
     expect(() => buildInstallerCommand({
       skillIds: ids,
       host: 'codex',
-      version: '14.2.0',
+      version: packageMetadata.version,
       dryRun: true,
     })).not.toThrow();
   });
