@@ -32574,6 +32574,32 @@
     }
   },
   {
+    "id": "quit-sponsor",
+    "path": "skills/quit-sponsor",
+    "category": "personal-development",
+    "name": "quit-sponsor",
+    "description": "Helps an AI agent provide non-judgmental, evidence-informed quit-smoking support with user-consented tracking, craving check-ins, and escalation to human or clinical help. Not medical care.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "metrox-eth/quit-sponsor",
+    "license": "MIT",
+    "license_source": "https://github.com/metrox-eth/quit-sponsor/blob/main/LICENSE"
+  },
+  {
     "id": "radix-ui-design-system",
     "path": "skills/radix-ui-design-system",
     "category": "web-development",

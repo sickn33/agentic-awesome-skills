@@ -27391,6 +27391,25 @@
       "runtime_files": []
     },
     {
+      "id": "quit-sponsor",
+      "path": "skills/quit-sponsor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "radix-ui-design-system",
       "path": "skills/radix-ui-design-system",
       "targets": {
@@ -37401,10 +37420,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1946,
+    "total_skills": 1947,
     "supported": {
-      "codex": 1872,
-      "claude": 1894
+      "codex": 1873,
+      "claude": 1895
     },
     "blocked": {
       "codex": 74,

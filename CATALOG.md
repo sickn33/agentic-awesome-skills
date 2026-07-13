@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-12T05:22:55.000Z
 
-Total skills: 1946
+Total skills: 1947
 
 ## agent-behavior (4)
 
@@ -1630,10 +1630,11 @@ Total skills: 1946
 | --- | --- | --- | --- | --- | --- |
 | `polis-protocol` | Coordinate multi-vendor AI agents as a self-improving team — a learning router assigns work by track record and citizens can amend the protocol's own rules. | critical | yehudalevy-collab/polis-protocol | multi-agent, coordination, routing, orchestration, governance, vendor-agnostic | multi-agent, coordination, routing, orchestration, governance, vendor-agnostic, polis, protocol, coordinate, multi, vendor, ai |
 
-## personal-development (1)
+## personal-development (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `quit-sponsor` | Helps an AI agent provide non-judgmental, evidence-informed quit-smoking support with user-consented tracking, craving check-ins, and escalation to human or ... | safe | metrox-eth/quit-sponsor | quit-smoking, smoking-cessation, health, habits, addiction-recovery, wellbeing, coaching | quit-smoking, smoking-cessation, health, habits, addiction-recovery, wellbeing, coaching, quit, sponsor, helps, ai, agent |
 | `satori` | Clinically informed wisdom companion blending psychology and philosophy into a structured thinking partner | safe | MetcalfSolutions/Satori | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation, satori, clinically, informed, companion |
 
 ## planning (7)

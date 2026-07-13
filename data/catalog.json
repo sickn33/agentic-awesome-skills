@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-12T05:22:55.000Z",
-  "total": 1946,
+  "total": 1947,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -41165,6 +41165,43 @@
         "metrics"
       ],
       "path": "skills/quant-analyst/SKILL.md"
+    },
+    {
+      "id": "quit-sponsor",
+      "canonical_id": "quit-sponsor",
+      "name": "quit-sponsor",
+      "description": "Helps an AI agent provide non-judgmental, evidence-informed quit-smoking support with user-consented tracking, craving check-ins, and escalation to human or clinical help. Not medical care.",
+      "category": "personal-development",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "metrox-eth/quit-sponsor",
+      "license": "MIT",
+      "license_source": "https://github.com/metrox-eth/quit-sponsor/blob/main/LICENSE",
+      "tags": [
+        "quit-smoking",
+        "smoking-cessation",
+        "health",
+        "habits",
+        "addiction-recovery",
+        "wellbeing",
+        "coaching"
+      ],
+      "triggers": [
+        "quit-smoking",
+        "smoking-cessation",
+        "health",
+        "habits",
+        "addiction-recovery",
+        "wellbeing",
+        "coaching",
+        "quit",
+        "sponsor",
+        "helps",
+        "ai",
+        "agent"
+      ],
+      "path": "skills/quit-sponsor/SKILL.md"
     },
     {
       "id": "radix-ui-design-system",

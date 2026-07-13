@@ -34,7 +34,7 @@ agentic-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 1,946+ skills live here
+├── 📁 skills/                          ← 1,947+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -47,7 +47,7 @@ agentic-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (1,946+ total)
+│   └── ... (1,947+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -100,7 +100,7 @@ agentic-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,946+ SKILLS          │
+                    │  1,947+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -201,7 +201,7 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (1,946+ total)                │
+│   └── ... (1,947+ total)                │
 └─────────────────────────────────────────┘
 ```
 
