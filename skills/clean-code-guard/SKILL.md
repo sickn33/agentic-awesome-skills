@@ -1,14 +1,13 @@
 ---
 name: clean-code-guard
 description: Enforces clean code standards — SOLID, DRY/KISS/YAGNI, naming, formatting, and AI-specific failure modes.
-metadata:
+risk: safe
+source: https://github.com/amElnagdy/guard-skills
   code-quality:
-    risk: critical
   category: code-quality
   author: amElnagdy
   version: 1.0.0
-  source: https://github.com/amElnagdy/guard-skills
----
+------
 
 # Clean Code Guard
 
