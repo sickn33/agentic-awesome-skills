@@ -1,4 +1,4 @@
-# Getting Started with Agentic Awesome Skills (V14.2.0)
+# Getting Started with Agentic Awesome Skills (V14.3.0)
 
 **New here? This guide will help you supercharge your AI Agent in 5 minutes.**
 
