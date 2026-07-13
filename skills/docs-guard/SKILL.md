@@ -1,14 +1,13 @@
 ---
 name: docs-guard
 description: Enforces documentation standards — README, API docs, inline comments, and documentation quality.
-metadata:
+risk: safe
+source: https://github.com/amElnagdy/guard-skills
   documentation:
-    risk: safe
   category: quality
   author: amElnagdy
   version: 1.0.0
-  source: https://github.com/amElnagdy/guard-skills
----
+------
 
 # Docs Guard
 
