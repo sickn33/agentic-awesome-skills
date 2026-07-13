@@ -540,6 +540,88 @@ function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
   };
 }
 
+function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
+  const title = 'Skill Workbench | Agentic Awesome Skills';
+  const description = 'Filter canonical skill evidence, compose an exact host-aware set, and preview a version-pinned install without filesystem writes.';
+  const catalogBaseUrl = canonicalUrl.replace(/\/workbench\/?$/, '');
+  const catalogRootUrl = `${catalogBaseUrl}/`;
+  const sourceCodeEntity = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: SITE_NAME,
+    description: 'Canonical repository of installable agent skills and machine-readable registry evidence.',
+    url: REPOSITORY_URL,
+    sameAs: [canonicalUrl, catalogRootUrl, 'https://www.npmjs.com/package/agentic-awesome-skills'],
+    mainEntityOfPage: canonicalUrl,
+    codeRepository: REPOSITORY_URL,
+    applicationCategory: 'DeveloperApplication',
+    isAccessibleForFree: true,
+    license: `${REPOSITORY_URL}/blob/main/LICENSE`,
+  };
+
+  return {
+    title,
+    description,
+    canonicalUrl,
+    ogTitle: title,
+    ogDescription: description,
+    ogImage: imageUrl,
+    twitterCard: 'summary_large_image',
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Agentic Awesome Skills Workbench',
+        headline: 'Build a precise, inspectable skill set',
+        description,
+        url: canonicalUrl,
+        mainEntityOfPage: canonicalUrl,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: SITE_NAME,
+          url: catalogBaseUrl,
+          sameAs: REPOSITORY_URL,
+        },
+        about: sourceCodeEntity,
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: SITE_NAME, item: catalogRootUrl },
+          { '@type': 'ListItem', position: 2, name: 'Skill Workbench', item: canonicalUrl },
+        ],
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${REPOSITORY_URL}#organization`,
+        name: SITE_NAME,
+        url: REPOSITORY_URL,
+        sameAs: [
+          'https://x.com/AASkills_',
+          'https://www.npmjs.com/package/agentic-awesome-skills',
+          catalogRootUrl,
+        ],
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        url: catalogBaseUrl,
+        sameAs: REPOSITORY_URL,
+        inLanguage: 'en',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: `${catalogBaseUrl}/?q={search_term_string}`,
+          'query-input': 'required name=search_term_string',
+        },
+      },
+      sourceCodeEntity,
+    ],
+  };
+}
+
 function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
   const catalogBaseUrl = canonicalUrl.replace(/\/topics\/[^/]+\/?$/, '');
   const keywords = Array.isArray(page.keywords) ? page.keywords.join(', ') : '';
@@ -751,6 +833,13 @@ function main() {
     canonicalUrl: pluginsCanonical,
   });
   writePrerenderedRoute('/plugins', template, pluginsMeta);
+
+  const workbenchCanonical = routeToUrl('/workbench', siteBaseUrl);
+  const workbenchMeta = buildWorkbenchMeta({
+    imageUrl: socialImage,
+    canonicalUrl: workbenchCanonical,
+  });
+  writePrerenderedRoute('/workbench', template, workbenchMeta);
 
   for (const page of landingPages) {
     if (!page?.slug) {

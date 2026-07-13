@@ -1,4 +1,19 @@
 export type RiskLevel = 'none' | 'safe' | 'critical' | 'offensive' | 'unknown';
+export type PluginCompatibility = 'supported' | 'blocked';
+export type SkillSetupType = 'none' | 'manual';
+
+export interface SkillPluginMetadata {
+  targets: {
+    codex: PluginCompatibility;
+    claude: PluginCompatibility;
+  };
+  setup: {
+    type: SkillSetupType;
+    summary: string;
+    docs: string | null;
+  };
+  reasons: string[];
+}
 
 /**
  * Skill data type from skills.json
@@ -10,8 +25,14 @@ export interface Skill {
   category: string;
   risk?: RiskLevel;
   source?: string;
+  source_type?: 'official' | 'community' | 'self';
+  source_repo?: string;
+  license?: string;
+  license_source?: string;
+  tags?: string[];
   date_added?: string;
   path: string;
+  plugin?: SkillPluginMetadata;
 }
 
 /**

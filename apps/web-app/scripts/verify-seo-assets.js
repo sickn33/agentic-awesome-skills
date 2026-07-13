@@ -233,10 +233,15 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
 
   const isRoot = ({ parsed: parsedUrl }) => rootPathVariants.has(parsedUrl.pathname);
   const extraRoutes = parsed.filter(({ parsed: parsedUrl }) => !isRoot({ parsed: parsedUrl }));
-  const allowedExtraPathVariants = new Set([
+  const pluginPathVariants = new Set([
     `${normalizedRoot}/plugins`,
     `${normalizedRoot}/plugins/`,
   ]);
+  const workbenchPathVariants = new Set([
+    `${normalizedRoot}/workbench`,
+    `${normalizedRoot}/workbench/`,
+  ]);
+  const allowedExtraPathVariants = new Set([...pluginPathVariants, ...workbenchPathVariants]);
   const topicPathVariants = new Set(
     getSeoLandingPaths().flatMap((topicPath) => [
       `${normalizedRoot}${topicPath}`,
@@ -273,7 +278,10 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
     skillUrls: skillRoutes.map(({ raw }) => raw),
     topicUrls: topicRoutes.map(({ raw }) => raw),
     pluginUrls: extraRoutes
-      .filter(({ parsed: parsedUrl }) => allowedExtraPathVariants.has(parsedUrl.pathname))
+      .filter(({ parsed: parsedUrl }) => pluginPathVariants.has(parsedUrl.pathname))
+      .map(({ raw }) => raw),
+    workbenchUrls: extraRoutes
+      .filter(({ parsed: parsedUrl }) => workbenchPathVariants.has(parsedUrl.pathname))
       .map(({ raw }) => raw),
   };
 }
@@ -510,6 +518,20 @@ export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', norm
   }
 }
 
+export function assertPrerenderedWorkbenchRoutes(workbenchUrls, distDir = 'dist', normalizedRootPath = '') {
+  for (const workbenchUrl of workbenchUrls) {
+    const parsed = new URL(workbenchUrl);
+    const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
+    assert(
+      fs.existsSync(filePath),
+      `Missing prerendered page for workbench route: ${parsed.pathname}. Expected ${filePath}.`,
+    );
+    const html = readFile(filePath, distDir);
+    assert(extractTitle(html).includes('Skill Workbench'), 'Workbench prerender must expose its exact product title.');
+    assert(extractMetaContent(html, 'name', 'description')?.includes('exact host-aware set'), 'Workbench prerender must describe exact composition.');
+  }
+}
+
 export function assertPrerenderedTopicRoutes(topicUrls, distDir = 'dist', normalizedRootPath = '') {
   for (const topicUrl of topicUrls) {
     const parsed = new URL(topicUrl);
@@ -602,6 +624,7 @@ export function runVerification({
   const expectedSkillCountLabel = readSkillCountLabel(distDir);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
+  assertPrerenderedWorkbenchRoutes(sitemapReport.workbenchUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedTopicRoutes(sitemapReport.topicUrls, distDir, sitemapReport.normalizedRootPath);
   assertIndexSocialMeta(indexHtml);
   assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel, requireHostedUrl });

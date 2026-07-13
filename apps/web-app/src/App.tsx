@@ -4,6 +4,7 @@ import { Icon } from './components/ui/Icon';
 
 const Home = lazy(() => import('./pages/Home'));
 const SkillDetail = lazy(() => import('./pages/SkillDetail'));
+const Workbench = lazy(() => import('./pages/Workbench'));
 const Plugins = lazy(() => import('./pages/Plugins'));
 const TopicLanding = lazy(() => import('./pages/TopicLanding'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -28,6 +29,12 @@ function App(): React.ReactElement {
             </Link>
 
             <nav className="flex items-center gap-2">
+              <Link
+                to="/workbench"
+                className="rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+              >
+                Workbench
+              </Link>
               <Link
                 to="/plugins"
                 className="hidden rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] sm:inline-flex"
@@ -59,6 +66,7 @@ function App(): React.ReactElement {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/plugins" element={<Plugins />} />
+                <Route path="/workbench" element={<Workbench />} />
                 <Route path="/topics/:slug" element={<TopicLanding />} />
                 <Route path="/skill/:id" element={<SkillDetail />} />
                 <Route path="*" element={<NotFound />} />

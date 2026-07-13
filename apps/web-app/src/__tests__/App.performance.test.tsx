@@ -9,6 +9,7 @@ describe('App route loading', () => {
 
     expect(source).toMatch(/lazy\(\(\) => import\('\.\/pages\/Home'\)\)/);
     expect(source).toMatch(/lazy\(\(\) => import\('\.\/pages\/SkillDetail'\)\)/);
+    expect(source).toMatch(/lazy\(\(\) => import\('\.\/pages\/Workbench'\)\)/);
     expect(source).toMatch(/<Suspense/);
   });
 });
