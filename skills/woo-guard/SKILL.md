@@ -1,10 +1,24 @@
 ---
 name: woo-guard
-description: "Review WooCommerce code for HPOS safety, CRUD access, checkout validation, and money handling."
+description: "Review WooCommerce code for HPOS safety, CRUD access, and money handling."
+category: development
 risk: safe
+source: community
 source_repo: amElnagdy/guard-skills
-source: "https://github.com/amElnagdy/guard-skills"
+source_type: community
+date_added: "2026-07-13"
+author: amElnagdy
+tags: [woocommerce, wordpress, ecommerce, code-review]
+tools: [claude, cursor, gemini]
+license: "MIT"
+license_source: "https://github.com/amElnagdy/guard-skills/blob/master/LICENSE"
 ---
+
+## Limitations
+
+- Focused on WooCommerce-specific patterns; does not cover general WordPress.
+- Does not replace environment-specific validation, testing, or expert review.
+- Cannot detect issues that require a running WooCommerce environment.
 
 ## When to Use
 
