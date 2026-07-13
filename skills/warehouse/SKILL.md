@@ -10,7 +10,7 @@ date_added: "2026-07-12"
 ---
 
 
-# [Warehouse] Skill Instructions
+# Warehouse Skill Instructions
 
 ## Description
 The single source of truth for safe and effective [warehouse] querying.
@@ -141,3 +141,5 @@ semantic-layer path is shown not to cover the ask.
 - [Two similarly-named tables report the same metric at different grains — which to use]
 - [Which of two plausible sources is canonical for the headline metric]
 - [… a dozen more hard-won one-liners …]
+
+**Credit**: [@claude-blog](https://claude.com/blog/)
