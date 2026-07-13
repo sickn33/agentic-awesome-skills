@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.3.1] - 2026-07-13 - "Expert Workbench and Community Surface Cleanup"
+
+> A public expert workbench for exact, inspectable skill sets, with the rejected maintainer-only product removed from the current installable distribution.
+
+## Added
+
+- Added the hosted **Expert Skill Workbench** for searching recorded catalog fields and filtering category, risk, provenance, host compatibility, and setup burden across all 1,948 canonical skills (PR #815).
+- Added exact skill selection, raw evidence warnings, shareable selection/host URLs, and package-and-release-pinned preview/install commands that fail closed for missing or explicitly incompatible IDs.
+- Added a canonical-data contract proving every Workbench skill ID resolves exactly once through the real installer.
+
+## Changed
+
+- Made the static web skill count, release version, Workbench route, sitemap entry, prerender route, and `llms.txt` discovery surface part of the canonical metadata/build contract.
+- Kept the general-purpose review, Git, changelog, and validation skills independently available in the full catalog instead of packaging them as a maintainer product.
+
+## Removed
+
+- Retired **AAS OSS Maintainer** from the editorial manifest, specialized-plugin candidates, hosted plugin catalog, README, plugin guides, Claude/Codex marketplaces, and generated plugin distribution (PR #816).
+
+## Fixed
+
+- Made bundle-retirement tests compatible with source-only pull requests while retaining an isolated regression test that proves canonical sync deletes stale generated plugin directories.
+
+## Validation
+
+- Passed source-only PR policy, Dependency Review, Snyk, Socket, all CodeQL analyzers, repository validation, reference checks, documentation security, the full root test suite, and bundle synchronization tests.
+- Passed 115 web-app tests and coverage gates, TypeScript, ESLint, production build, prerender, SEO verification, sitemap validation, Pages deployment, and live Workbench interaction checks.
+
 ## [14.3.0] - 2026-07-13 - "Exact Selection, Safe Preview, and Community Memory"
 
 > Version-pinned exact skill sets for active users and teams, plus two reviewed community skills with maintainer safety and correctness hardening.
