@@ -236,6 +236,14 @@ If Antigravity starts hitting context limits with too many active skills, the ac
 
 If you use OpenCode or another `.agents/skills` host, prefer a reduced install up front instead of copying the full library into a context-sensitive runtime. The installer now supports `--risk`, `--category`, and `--tags` so you can keep the installed set narrow.
 
+For a reproducible exact set, pin the package and catalog release and preview the full per-target plan before writing:
+
+```bash
+npx agentic-awesome-skills@14.3.0 --codex --release 14.3.0 --skills frontend-design,game-development/2d-games --dry-run
+```
+
+Remove `--dry-run` only after reviewing the install, update, and removal plan. Unknown or ambiguous skill identifiers fail closed, and metadata filters combine with `--skills` using AND.
+
 ## Browse 1,948+ Skills
 
 Use the root repo as a landing page, then jump into the deeper surface that matches your intent.

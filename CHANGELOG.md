@@ -9,6 +9,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.3.0] - 2026-07-13 - "Exact Selection, Safe Preview, and Community Memory"
+
+> Version-pinned exact skill sets for active users and teams, plus two reviewed community skills with maintainer safety and correctness hardening.
+
+## Added
+
+- Added `--skills <csv>` for exact canonical skill names, IDs, and nested paths, with unknown or ambiguous selectors rejected before target writes.
+- Added `--dry-run` to show the pinned ref, exact selected skills, per-target installs or updates, stale managed removals, repository-clone migration, and ignored unsafe manifest entries without mutating targets.
+- Added **lore**, a project-local Markdown memory workflow with five stdlib Python helpers, explicit mirror boundaries, and project-input trust controls (PR #810).
+- Added **quit-sponsor**, an opt-in smoking-cessation support workflow aligned to current CDC, WHO, and NICE guidance with local-data and emergency-escalation boundaries (PR #809).
+
+## Changed
+
+- Preserved recorded top-level and nested metadata tags in the canonical generated skill index for downstream expert discovery.
+- Preflight every selected target before the first multi-target mutation and treat `--skills` as explicit desired state for installer-managed entries.
+- Corrected the documented `Wolfe-Jam/faf-skills` inventory from 17 skills to the seven currently published upstream (PR #811).
+
+## Fixed
+
+- Ignore unsafe managed paths from a local installer manifest instead of resolving or pruning outside the install root.
+- Fixed `lore` candidate duplicate detection, clean helper failures, audit mutation wording, and higher-priority instruction boundaries before merge.
+- Removed categorical cessation guidance from `quit-sponsor`; quit dates, abrupt cessation, gradual reduction, and medications now remain individualized and clinically bounded.
+
+## Validation
+
+- Added exact-selection, ambiguity, filter-intersection, stale-removal preview, unsafe-manifest, no-write, and multi-target atomicity coverage.
+- Required fresh policy, source-validation, artifact-preview, and skill-review checks for PRs #809–#811, then regenerated canonical catalog and plugin surfaces.
+- Ran strict repository validation, documentation security checks, the full root and web-app test suites, TypeScript, ESLint, production build, prerender, sitemap, and SEO verification.
+
+## Credits
+
+- **[@metrox-eth](https://github.com/metrox-eth)** for `quit-sponsor` (PR #809).
+- **[@TheaDust](https://github.com/TheaDust)** for `lore` (PR #810).
+- **[@Wolfe-Jam](https://github.com/Wolfe-Jam)** for correcting the `faf-skills` source inventory (PR #811).
+
 ## [14.2.0] - 2026-07-12 - "Workflow Reliability and UI Research"
 
 > Three reviewed community skills for idea validation, deterministic AI workflows, and source-grounded UI research, with maintainer hardening and synchronized distributions.
