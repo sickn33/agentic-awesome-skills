@@ -67,9 +67,7 @@ export function SkillDetail(): React.ReactElement {
   const [copiedFull, setCopiedFull] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [customContext, setCustomContext] = useState('');
-  const [commandCopied, setCommandCopied] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
-  const installCommand = 'npx agentic-awesome-skills';
   const skill = useMemo(() => skills.find(s => s.id === id), [skills, id]);
 
   const topPrioritySkills = useMemo(() => selectTopSkills(skills), [skills]);
@@ -174,12 +172,6 @@ export function SkillDetail(): React.ReactElement {
     navigator.clipboard.writeText(finalPrompt);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const copyInstallCommand = async () => {
-    await navigator.clipboard.writeText(installCommand);
-    setCommandCopied(true);
-    window.setTimeout(() => setCommandCopied(false), 2000);
   };
 
   const copyFullToClipboard = () => {
@@ -305,23 +297,23 @@ export function SkillDetail(): React.ReactElement {
         </div>
 
         <div className="mt-6 rounded-2xl border border-slate-200/80 bg-white/95 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
-          <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900">
+          <div className="mb-4 border border-slate-300 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Use it now
+              Exact install input
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              Start quickly: install the package, open your workspace, and run this skill prompt directly.
+              Add only this canonical skill to the Workbench, inspect its recorded evidence, then generate a release-pinned dry run.
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <code className="inline-block rounded-md border border-slate-800 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-50">
-                {installCommand}
+              <code className="inline-block border border-slate-800 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-50">
+                {skill.id}
               </code>
-              <button
-                onClick={copyInstallCommand}
-                className="inline-flex items-center text-sm font-medium text-teal-700 transition-colors hover:text-teal-600 dark:text-teal-300 dark:hover:text-teal-200"
+              <Link
+                to={`/workbench?selected=${encodeURIComponent(skill.id)}&host=codex`}
+                className="inline-flex items-center border border-teal-700 px-3 py-2 text-sm font-semibold text-teal-800 transition-colors hover:bg-teal-50 dark:border-teal-400 dark:text-teal-200 dark:hover:bg-teal-950/40"
               >
-                {commandCopied ? 'Copied' : 'Copy command'}
-              </button>
+                Compose exact install
+              </Link>
             </div>
           </div>
 

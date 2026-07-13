@@ -23,6 +23,7 @@ describe('sitemap generation script helpers', () => {
     const xml = buildSitemap(catalog, 1, 'https://example.com');
 
     expect(xml).toContain('https://example.com/</loc>');
+    expect(xml).toContain('https://example.com/workbench/</loc>');
     expect(xml).toContain('https://example.com/topics/antigravity-cli-skills/</loc>');
     expect(xml).toContain('https://example.com/skill/gamma/</loc>');
     expect(xml).not.toContain('/skill/delta');
@@ -37,7 +38,7 @@ describe('sitemap generation script helpers', () => {
     expect(xml).toContain('/safe%26id/</loc>');
   });
 
-  it('returns homepage and topic routes when top skill limit is zero', () => {
+  it('returns homepage, workbench, and topic routes when top skill limit is zero', () => {
     const catalog = [
       { id: 'gamma', stars: 2 },
       { id: 'delta', stars: 1 },
@@ -46,6 +47,7 @@ describe('sitemap generation script helpers', () => {
     const xml = buildSitemap(catalog, 0, 'https://example.com');
 
     expect(xml).toContain('https://example.com/</loc>');
+    expect(xml).toContain('https://example.com/workbench/</loc>');
     expect(xml).toContain('https://example.com/topics/github-ai-skills-repository/</loc>');
     expect(xml).not.toContain('https://example.com/skill');
   });

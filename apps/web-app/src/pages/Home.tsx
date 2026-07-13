@@ -73,8 +73,6 @@ export function Home(): React.ReactElement {
   const [sortBy, setSortBy] = useState('default');
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState<SyncMessage | null>(null);
-  const [commandCopied, setCommandCopied] = useState(false);
-  const installCommand = 'npx agentic-awesome-skills';
   const repositoryLink = 'https://github.com/sickn33/agentic-awesome-skills';
   const docsLink = 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/usage.md';
   const installLink = 'https://www.npmjs.com/package/agentic-awesome-skills';
@@ -82,12 +80,6 @@ export function Home(): React.ReactElement {
   const catalogCountLabel = skills.length > 0 ? skills.length.toLocaleString('en-US') : 'installable';
 
   usePageMeta(buildHomeMeta(skills.length));
-
-  const copyInstallCommand = async () => {
-    await navigator.clipboard.writeText(installCommand);
-    setCommandCopied(true);
-    window.setTimeout(() => setCommandCopied(false), 2000);
-  };
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -197,12 +189,12 @@ export function Home(): React.ReactElement {
             >
               Open the GitHub repository
             </a>
-            <button
-              onClick={copyInstallCommand}
+            <Link
+              to="/workbench"
               className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
             >
-              {commandCopied ? 'Copied install command' : 'Copy install command'}
-            </button>
+              Compose an exact install
+            </Link>
             <a
               href={installLink}
               target="_blank"
@@ -234,10 +226,10 @@ export function Home(): React.ReactElement {
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <span className="font-medium">Recommended command</span>
-            <code className="rounded-md border border-slate-200 bg-slate-100 px-2 py-1 font-mono text-[11px] text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
-              {installCommand}
-            </code>
+            <span className="font-medium">Large catalog safety</span>
+            <Link to="/workbench" className="font-semibold text-slate-800 underline underline-offset-4 hover:text-teal-700 dark:text-slate-200 dark:hover:text-teal-300">
+              Inspect evidence, select exact IDs, and preview before writing.
+            </Link>
           </div>
         </section>
 

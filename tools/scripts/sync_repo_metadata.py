@@ -191,6 +191,30 @@ def sync_getting_started(content: str, metadata: dict) -> str:
     return content
 
 
+def sync_web_index_shell(content: str, metadata: dict) -> str:
+    skill_label = metadata["total_skills_label"]
+    return sync_regex_text(
+        content,
+        [
+            (r"\d[\d,]*\+ installable agentic skills", f"{skill_label} installable agentic skills"),
+            (r"\d[\d,]*\+ AI coding skills", f"{skill_label} AI coding skills"),
+        ],
+    )
+
+
+def sync_llms_text(content: str, metadata: dict) -> str:
+    skill_label = metadata["total_skills_label"]
+    return sync_regex_text(
+        content,
+        [
+            (r"Current release: V[\d.]+\.", f"Current release: V{metadata['version']}."),
+            (r"\d[\d,]*\+ agentic SKILL\.md playbooks", f"{skill_label} agentic SKILL.md playbooks"),
+            (r"Skill count: \d[\d,]*\+\.", f"Skill count: {skill_label}."),
+            (r"\d[\d,]*\+ reusable SKILL\.md playbooks", f"{skill_label} reusable SKILL.md playbooks"),
+        ],
+    )
+
+
 def sync_bundles_doc(content: str, metadata: dict, base_dir: str | Path | None = None) -> str:
     root = Path(base_dir) if base_dir is not None else Path(find_repo_root(__file__))
     manifest_path = root / "data" / "editorial-bundles.json"
@@ -316,6 +340,8 @@ def sync_curated_docs(base_dir: str, metadata: dict, dry_run: bool) -> int:
     updated_files = 0
     updated_files += int(update_text_file(root / "README.md", sync_readme_copy, metadata, dry_run))
     updated_files += int(update_text_file(root / "docs" / "users" / "getting-started.md", sync_getting_started, metadata, dry_run))
+    updated_files += int(update_text_file(root / "apps" / "web-app" / "index.html", sync_web_index_shell, metadata, dry_run))
+    updated_files += int(update_text_file(root / "apps" / "web-app" / "public" / "llms.txt", sync_llms_text, metadata, dry_run))
     updated_files += int(
         update_text_file(
             root / "docs" / "users" / "bundles.md",

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { SkillDetail } from '../SkillDetail';
 import { renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
@@ -268,7 +268,7 @@ describe('SkillDetail', () => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Use @click-test');
     });
 
-    it('should copy install command when copy command CTA is clicked', async () => {
+    it('should send the exact skill to the Workbench', async () => {
       const mockSkill = createMockSkill({ id: 'click-install', name: 'click-install' });
 
       (useSkills as Mock).mockReturnValue({
@@ -289,20 +289,13 @@ describe('SkillDetail', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /Copy command/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Compose exact install/i })).toBeInTheDocument();
       });
 
-      vi.useFakeTimers();
-      try {
-        await act(async () => {
-          fireEvent.click(screen.getByRole('button', { name: /Copy command/i }));
-          await vi.runAllTimersAsync();
-        });
-      } finally {
-        vi.useRealTimers();
-      }
-
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx agentic-awesome-skills');
+      expect(screen.getByRole('link', { name: /Compose exact install/i })).toHaveAttribute(
+        'href',
+        '/workbench?selected=click-install&host=codex',
+      );
     });
   });
 

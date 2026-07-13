@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { Home } from '../Home';
 import { renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
@@ -88,8 +88,7 @@ describe('Home', () => {
         expect(document.title).toContain('Agentic Awesome Skills');
       });
 
-      expect(screen.getByRole('button', { name: /Copy install command/i })).toBeInTheDocument();
-      expect(screen.getAllByText(/npx agentic-awesome-skills/i).length).toBeGreaterThan(0);
+      expect(screen.getByRole('link', { name: /Compose an exact install/i })).toHaveAttribute('href', '/workbench');
       expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(
         'content',
@@ -97,7 +96,7 @@ describe('Home', () => {
       );
     });
 
-    it('should copy install command from hero CTA', async () => {
+    it('routes the primary catalog action to exact composition', async () => {
       (useSkills as Mock).mockReturnValue({
         skills: [],
         stars: {},
@@ -108,20 +107,10 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /Copy install command/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Compose an exact install/i })).toBeInTheDocument();
       });
 
-      vi.useFakeTimers();
-      try {
-        await act(async () => {
-          fireEvent.click(screen.getByRole('button', { name: /Copy install command/i }));
-          await vi.runAllTimersAsync();
-        });
-      } finally {
-        vi.useRealTimers();
-      }
-
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx agentic-awesome-skills');
+      expect(screen.getByText(/Inspect evidence, select exact IDs/i)).toBeInTheDocument();
     });
   });
 

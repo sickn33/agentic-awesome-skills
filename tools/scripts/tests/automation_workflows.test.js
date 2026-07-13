@@ -95,6 +95,8 @@ assert.match(
 for (const filePath of [
   "README.md",
   "package.json",
+  "apps/web-app/index.html",
+  "apps/web-app/public/llms.txt",
   "docs/users/getting-started.md",
   "docs/users/bundles.md",
   "docs/users/claude-code-skills.md",

@@ -138,7 +138,13 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
   const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
     baseUrl,
-    paths: ['/', toIndexableRoutePath('/plugins'), ...landingPaths, ...topSkillPaths.map(toIndexableRoutePath)],
+    paths: [
+      '/',
+      toIndexableRoutePath('/workbench'),
+      toIndexableRoutePath('/plugins'),
+      ...landingPaths,
+      ...topSkillPaths.map(toIndexableRoutePath),
+    ],
   });
 }
 
