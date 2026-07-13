@@ -60,15 +60,24 @@ def read_candidate(args):
     inline = None
     file_path = None
     use_stdin = False
-    for a in args:
+    i = 0
+    while i < len(args):
+        a = args[i]
         if a.startswith("--candidate="):
             inline = a.split("=", 1)[1]
         elif a.startswith("--candidate-file="):
             file_path = a.split("=", 1)[1]
+        elif a in ("--candidate", "--candidate-file"):
+            if i + 1 >= len(args) or args[i + 1].startswith("--"):
+                die(2, f"{a} requires a value")
+            i += 1
+            if a == "--candidate":
+                inline = args[i]
+            else:
+                file_path = args[i]
         elif a == "--candidate-stdin":
             use_stdin = True
-        elif a in ("--candidate", "--candidate-file"):
-            die(2, f"{a} requires a value (use = form or pass as next arg)")
+        i += 1
     if inline is not None:
         return inline
     if file_path is not None:
@@ -156,13 +165,11 @@ def main():
 
     # candidate-vs-existing pairs
     if candidates:
-        # Filter comparison set by the candidate's layer if not already
-        # narrowed; otherwise the candidate compares against every layer.
+        # --layer narrows entries above; without it, compare the proposed
+        # entry with every layer because the candidate has not been assigned
+        # a canonical layer yet.
         compare_set = entries
-        cand_layer = candidates[0]["layer"]
         for a in compare_set:
-            if a["layer"] != cand_layer:
-                continue
             sim = jaccard(
                 tokenize(candidates[0]["text"]),
                 tokenize(a["text"]),

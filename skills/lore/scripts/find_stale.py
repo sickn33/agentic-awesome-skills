@@ -35,7 +35,15 @@ def get_entries():
         capture_output=True,
         text=True,
     )
-    return json.loads(r.stdout)
+    if r.returncode != 0:
+        print(r.stderr.strip(), file=sys.stderr)
+        sys.exit(1)
+    try:
+        return json.loads(r.stdout)
+    except json.JSONDecodeError as exc:
+        print(f"error: list_entries.py returned invalid JSON: {exc}",
+              file=sys.stderr)
+        sys.exit(1)
 
 
 def parse_date(s: str):
