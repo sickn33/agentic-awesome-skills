@@ -1,15 +1,14 @@
 ---
 name: cloudflare-security-audit
 description: Systematic end-to-end security audit for any codebase. Orchestrates reconnaissance, feature-mapped attack discovery, and structured JSON reporting.
+risk: safe
+source: https://github.com/cloudflare/security-audit-skill
 license: MIT
-metadata:
   security:
-    risk: critical
   category: security
   author: cloudflare
   version: 1.0.0
-  source: https://github.com/cloudflare/security-audit-skill
----
+------
 
 # Cloudflare Security Audit Skill
 
