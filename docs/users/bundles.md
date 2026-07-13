@@ -481,23 +481,6 @@ _Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.
 - [`context-window-management`](../../skills/context-window-management/): Manage long context effectively.
 - [`prompt-engineering`](../../skills/prompt-engineering/): Design effective prompts and LLM interaction patterns.
 
-### 🧰 The "AAS OSS Maintainer" Plugin
-
-_Open-source maintainers managing PRs, releases, reviews, and contributor handoffs._
-
-**Plugin status:** Codex plugin-safe · Claude plugin-safe
-
-- [`agents-md`](../../skills/agents-md/): Create concise durable agent instructions.
-- [`commit`](../../skills/commit/): Write high-quality conventional commits.
-- [`create-pr`](../../skills/create-pr/): Create review-ready pull requests.
-- [`requesting-code-review`](../../skills/requesting-code-review/): Ask for targeted code reviews.
-- [`receiving-code-review`](../../skills/receiving-code-review/): Apply review feedback rigorously.
-- [`changelog-automation`](../../skills/changelog-automation/): Keep changelogs and release notes consistent.
-- [`git-advanced-workflows`](../../skills/git-advanced-workflows/): Handle advanced Git recovery and history workflows.
-- [`github-actions-advanced`](../../skills/github-actions-advanced/): Build and debug advanced GitHub Actions.
-- [`address-github-comments`](../../skills/address-github-comments/): Address GitHub review comments systematically.
-- [`lint-and-validate`](../../skills/lint-and-validate/): Run validation and quality checks.
-
 ### 🧪 The "AAS QA & Test Automation" Plugin
 
 _Engineers and QA teams writing, debugging, and stabilizing test suites._
@@ -1061,4 +1044,4 @@ Found a skill that should be in a bundle? Or want to create a new bundle? [Open 
 
 ---
 
-_Last updated: June 2026 | Total Skills: 1,948+ | Total Bundles: 59_
+_Last updated: June 2026 | Total Skills: 1,948+ | Total Bundles: 58_
