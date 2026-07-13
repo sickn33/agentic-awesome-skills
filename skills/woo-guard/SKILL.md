@@ -7,6 +7,7 @@ metadata:
   category: web-development
   author: amElnagdy
   version: 1.0.0
+  source: https://github.com/amElnagdy/guard-skills
 ---
 
 # Woo Guard
