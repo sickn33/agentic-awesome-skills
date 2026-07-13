@@ -11,6 +11,7 @@ function readText(relativePath) {
 const packageJson = JSON.parse(readText("package.json"));
 const generatedFiles = JSON.parse(readText("tools/config/generated-files.json"));
 const ciWorkflow = readText(".github/workflows/ci.yml");
+const canonicalMergeScript = readText("tools/scripts/merge_canonical_sync_pr.cjs");
 const publishWorkflow = readText(".github/workflows/publish-npm.yml");
 const releaseWorkflowScript = readText("tools/scripts/release_workflow.js");
 const hygieneWorkflowPath = path.join(repoRoot, ".github", "workflows", "repo-hygiene.yml");
@@ -200,10 +201,15 @@ assert.match(
   /branch: automation\/canonical-repo-state/,
   "main CI should maintain one fixed canonical-sync branch",
 );
-assert.match(
+assert.doesNotMatch(
   ciWorkflow,
   /gh workflow run ci\.yml --ref "\$PR_BRANCH" -f canonical_sync_pr=true/,
-  "main CI should explicitly dispatch required checks for GITHUB_TOKEN-created PRs",
+  "canonical checks must remain associated with the pull request",
+);
+assert.match(
+  canonicalMergeScript,
+  /actions\/runs\/\$\{run\.id\}\/rerun/,
+  "main CI should restart the PR-associated workflow suppressed for a GITHUB_TOKEN-created PR",
 );
 assert.match(
   ciWorkflow,
@@ -265,10 +271,10 @@ assert.match(
   /uses: peter-evans\/create-pull-request@[a-f0-9]{40}/,
   "repo hygiene should publish canonical drift through a pinned pull-request action",
 );
-assert.match(
+assert.doesNotMatch(
   hygieneWorkflow,
   /gh workflow run ci\.yml --ref "\$PR_BRANCH" -f canonical_sync_pr=true/,
-  "repo hygiene should explicitly dispatch required checks for GITHUB_TOKEN-created PRs",
+  "repo hygiene should use the exact PR-associated workflow instead of a redundant dispatch",
 );
 assert.doesNotMatch(
   hygieneWorkflow,

@@ -5,6 +5,7 @@ const { spawnSync } = require("child_process");
 const REQUIRED_CHECKS = ["pr-policy", "pr-evidence", "source-validation", "artifact-preview"];
 const GITHUB_ACTIONS_APP_ID = 15368;
 const BOT_BRANCH = "automation/canonical-repo-state";
+const CI_WORKFLOW_PATH = ".github/workflows/ci.yml";
 
 function parseArgs(argv) {
   const options = { pollSeconds: 10, maxAttempts: 180 };
@@ -39,10 +40,14 @@ function runGh(args, options = {}) {
   return result.stdout.trim();
 }
 
-function latestRequiredChecks(checkRuns) {
+function latestRequiredChecks(checkRuns, expectedCheckSuiteId) {
   const result = new Map();
   for (const run of checkRuns || []) {
-    if (Number(run?.app?.id) !== GITHUB_ACTIONS_APP_ID || !REQUIRED_CHECKS.includes(String(run?.name || ""))) {
+    if (
+      Number(run?.app?.id) !== GITHUB_ACTIONS_APP_ID ||
+      Number(run?.check_suite?.id) !== Number(expectedCheckSuiteId) ||
+      !REQUIRED_CHECKS.includes(String(run?.name || ""))
+    ) {
       continue;
     }
     const prior = result.get(run.name);
@@ -55,8 +60,8 @@ function latestRequiredChecks(checkRuns) {
   return result;
 }
 
-function summarizeChecks(checkRuns) {
-  const latest = latestRequiredChecks(checkRuns);
+function summarizeChecks(checkRuns, expectedCheckSuiteId) {
+  const latest = latestRequiredChecks(checkRuns, expectedCheckSuiteId);
   return REQUIRED_CHECKS.map((name) => {
     const run = latest.get(name);
     if (!run) return { name, state: "pending", conclusion: "missing" };
@@ -89,11 +94,40 @@ function validateProtectedMain(branch) {
   return true;
 }
 
+function selectCanonicalPullRequestRun(runs, options, expectedBaseSha) {
+  const matches = (runs || []).filter((run) => (
+    run?.path === CI_WORKFLOW_PATH &&
+    run?.event === "pull_request" &&
+    run?.head_branch === BOT_BRANCH &&
+    run?.head_sha === options.head &&
+    run?.head_repository?.full_name === options.repo &&
+    run?.actor?.login === "github-actions[bot]" &&
+    Number.isInteger(Number(run?.check_suite_id)) &&
+    Number(run.check_suite_id) > 0 &&
+    Array.isArray(run?.pull_requests) &&
+    run.pull_requests.length === 1 &&
+    Number(run.pull_requests[0]?.number) === Number(options.pr) &&
+    run.pull_requests[0]?.base?.ref === "main" &&
+    run.pull_requests[0]?.base?.sha === expectedBaseSha &&
+    run.pull_requests[0]?.head?.ref === BOT_BRANCH &&
+    run.pull_requests[0]?.head?.sha === options.head &&
+    Number(run.pull_requests[0]?.base?.repo?.id) === Number(run.head_repository?.id) &&
+    Number(run.pull_requests[0]?.head?.repo?.id) === Number(run.head_repository?.id)
+  ));
+  if (matches.length > 1) {
+    throw new Error("Multiple canonical-sync pull-request CI runs matched the exact trusted identity.");
+  }
+  return matches[0] || null;
+}
+
 function wait(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-async function waitForChecks(options, dependencies = {}) {
+async function waitForChecks(options, expectedCheckSuiteId, dependencies = {}) {
+  if (!Number.isInteger(Number(expectedCheckSuiteId)) || Number(expectedCheckSuiteId) <= 0) {
+    throw new Error("Canonical-sync PR CI did not expose a valid check-suite ID.");
+  }
   const load = dependencies.loadCheckRuns || (() => {
     const payload = JSON.parse(runGh([
       "api",
@@ -104,7 +138,7 @@ async function waitForChecks(options, dependencies = {}) {
   const pause = dependencies.wait || wait;
 
   for (let attempt = 1; attempt <= options.maxAttempts; attempt += 1) {
-    const summaries = summarizeChecks(load());
+    const summaries = summarizeChecks(load(), expectedCheckSuiteId);
     process.stdout.write(`[canonical-sync] ${summaries.map((item) => `${item.name}:${item.conclusion}`).join(" ")}\n`);
     const failed = summaries.filter((item) => item.state === "failed");
     if (failed.length) throw new Error(`Canonical-sync required checks failed: ${failed.map((item) => item.name).join(", ")}`);
@@ -112,6 +146,42 @@ async function waitForChecks(options, dependencies = {}) {
     await pause(options.pollSeconds * 1000);
   }
   throw new Error("Timed out waiting for canonical-sync required checks.");
+}
+
+async function ensurePullRequestChecksStarted(options, expectedBaseSha, dependencies = {}) {
+  const load = dependencies.loadWorkflowRuns || (() => {
+    const payload = JSON.parse(runGh([
+      "api",
+      `repos/${options.repo}/actions/runs?head_sha=${options.head}&per_page=100`,
+    ]) || "{}");
+    return payload.workflow_runs || [];
+  });
+  const rerun = dependencies.rerunWorkflow || ((run) => runGh([
+    "api",
+    `repos/${options.repo}/actions/runs/${run.id}/rerun`,
+    "-X",
+    "POST",
+  ]));
+  const pause = dependencies.wait || wait;
+
+  for (let attempt = 1; attempt <= options.maxAttempts; attempt += 1) {
+    const run = selectCanonicalPullRequestRun(load(), options, expectedBaseSha);
+    if (!run) {
+      await pause(options.pollSeconds * 1000);
+      continue;
+    }
+    const status = String(run.status || "").toLowerCase();
+    const conclusion = String(run.conclusion || "").toLowerCase();
+    if (status === "completed" && conclusion === "action_required") {
+      rerun(run);
+      process.stdout.write(`[canonical-sync] restarted PR-associated CI run ${run.id}.\n`);
+      return run;
+    }
+    if (["queued", "in_progress", "waiting", "requested", "pending"].includes(status)) return run;
+    if (status === "completed" && conclusion === "success") return run;
+    throw new Error(`Canonical-sync PR CI cannot start from ${status || "unknown"}/${conclusion || "none"}.`);
+  }
+  throw new Error("Timed out waiting for the canonical-sync pull-request CI run.");
 }
 
 async function main() {
@@ -122,7 +192,8 @@ async function main() {
   if (!/^[0-9a-f]{40}$/u.test(initialBaseSha)) throw new Error("Protected main did not expose a full base SHA.");
   const initialPr = JSON.parse(runGh(["api", `repos/${options.repo}/pulls/${options.pr}`]));
   validatePullRequest(initialPr, options, initialBaseSha);
-  await waitForChecks(options);
+  const pullRequestRun = await ensurePullRequestChecksStarted(options, initialBaseSha);
+  await waitForChecks(options, pullRequestRun.check_suite_id);
   const pr = JSON.parse(runGh(["api", `repos/${options.repo}/pulls/${options.pr}`]));
   const finalBranch = JSON.parse(runGh(["api", `repos/${options.repo}/branches/main`]));
   validateProtectedMain(finalBranch);
@@ -163,8 +234,10 @@ if (require.main === module) {
 }
 
 module.exports = {
+  ensurePullRequestChecksStarted,
   latestRequiredChecks,
   parseArgs,
+  selectCanonicalPullRequestRun,
   summarizeChecks,
   validateProtectedMain,
   validatePullRequest,

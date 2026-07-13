@@ -103,13 +103,6 @@ jobs:
             - [x] Reproducibility is verified byte-for-byte by required CI.
             - [x] No source or workflow changes are included.
 
-      - name: Dispatch required checks for canonical-sync PR
-        if: steps.canonical_pr.outputs.pull-request-number != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_BRANCH: ${{ steps.canonical_pr.outputs.pull-request-branch }}
-        run: gh workflow run ci.yml --ref "$PR_BRANCH" -f canonical_sync_pr=true
-
       - name: Merge canonical-sync PR after exact required checks
         if: steps.canonical_pr.outputs.pull-request-number != ''
         env:
