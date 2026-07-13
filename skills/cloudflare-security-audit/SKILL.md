@@ -1,6 +1,13 @@
 ---
 name: cloudflare-security-audit
-description: "Security audit of a codebase for exploitable vulnerabilities with real impact."---
+description: "Security audit of a codebase for exploitable vulnerabilities with real impact."
+risk: safe
+source: "https://github.com/cloudflare/security-audit-skill"
+---
+
+## When to Use
+
+Use when performing a thorough security audit of a codebase, hunting for exploitable vulnerabilities with real-world impact across web, API, binary, and AI/LLM attack surfaces.
 
 # Security Audit
 
