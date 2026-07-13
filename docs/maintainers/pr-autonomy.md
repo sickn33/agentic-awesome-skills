@@ -71,7 +71,7 @@ Deletions, copies, ambiguous moves, and all canonical skill-content changes rema
 
 Generated artifacts and contributor credits no longer write directly to `main`. Push and scheduled maintenance workflows regenerate the repository state without persisted checkout credentials, reject any unmanaged drift, and maintain one bot PR from `automation/canonical-repo-state`.
 
-Because GitHub suppresses ordinary workflow recursion for PRs created with `GITHUB_TOKEN`, the trusted writer explicitly dispatches the four required checks on the bot branch. That dispatch is accepted only on the exact branch, only for files declared by the generated-files contract, and only when rerunning `sync:repo-state` produces the exact full Git tree. A trusted waiter binds the open PR to its immutable head, verifies all four exact GitHub Actions checks, proves effective `main` protection, performs an immediate squash merge, and explicitly dispatches main CI, Pages, and CodeQL. It has no bypass around `main` protection.
+Because GitHub suppresses ordinary workflow recursion for PRs created with `GITHUB_TOKEN`, the trusted writer explicitly dispatches the four required checks on the bot branch. That dispatch is accepted only on the exact branch, only for files declared by the generated-files contract, and only when rerunning `sync:repo-state` produces the exact full Git tree. A trusted waiter binds the open PR to its immutable head, verifies all four exact GitHub Actions checks, confirms that `main` remains protected and unchanged, performs an immediate exact-head squash merge, and explicitly dispatches main CI, Pages, and CodeQL. The detailed protection policy is configured and audited with maintainer credentials; the workflow token has no bypass around it.
 
 ## Later Phases
 
