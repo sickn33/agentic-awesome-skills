@@ -353,18 +353,6 @@
       "category": "Specialized Product Plugins"
     },
     {
-      "name": "aasb-aas-oss-maintainer",
-      "source": {
-        "source": "local",
-        "path": "./plugins/agentic-bundle-aas-oss-maintainer"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Specialized Product Plugins"
-    },
-    {
       "name": "aasb-aas-qa-test-automation",
       "source": {
         "source": "local",

@@ -590,26 +590,6 @@
       "source": "./plugins/agentic-bundle-aas-agent-mcp-builder"
     },
     {
-      "name": "agentic-bundle-aas-oss-maintainer",
-      "version": "14.3.0",
-      "description": "Install the \"AAS OSS Maintainer\" editorial skill bundle for Claude Code.",
-      "author": {
-        "name": "sickn33 and contributors",
-        "url": "https://github.com/sickn33/agentic-awesome-skills"
-      },
-      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
-      "repository": "https://github.com/sickn33/agentic-awesome-skills",
-      "license": "MIT",
-      "keywords": [
-        "claude-code",
-        "skills",
-        "bundle",
-        "aas-oss-maintainer",
-        "marketplace"
-      ],
-      "source": "./plugins/agentic-bundle-aas-oss-maintainer"
-    },
-    {
       "name": "agentic-bundle-aas-qa-test-automation",
       "version": "14.3.0",
       "description": "Install the \"AAS QA & Test Automation\" editorial skill bundle for Claude Code.",
