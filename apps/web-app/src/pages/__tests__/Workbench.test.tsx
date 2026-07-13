@@ -179,7 +179,9 @@ describe('Workbench', () => {
     await waitFor(() => {
       expect(screen.queryByText(/explicitly blocked for this host/i)).not.toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Copy pinned install command/i })).toBeEnabled();
-      expect(screen.getAllByText(new RegExp(`--claude --release ${packageMetadata.version.replace(/\./g, '\\.')}`))).toHaveLength(2);
+      expect(
+        screen.getAllByText(`--claude --release ${packageMetadata.version}`, { exact: false }),
+      ).toHaveLength(2);
     });
   });
 
