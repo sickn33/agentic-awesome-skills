@@ -2,7 +2,7 @@
 name: clean-code-guard
 description: "Review generated code for Clean Code, SOLID, DRY/KISS/YAGNI, and LLM-specific failure modes."
 risk: safe
-source: "https://github.com/amElnagdy/guard-skills"
+source_repo: "https://github.com/amElnagdy/guard-skills"
 ---
 
 ## When to Use
