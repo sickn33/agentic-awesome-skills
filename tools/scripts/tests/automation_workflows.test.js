@@ -120,6 +120,11 @@ assert.match(
   /- name: Run repo-state sync[\s\S]*?run: npm run sync:repo-state/,
   "main CI should use the unified repo-state sync command",
 );
+assert.ok(
+  ciWorkflow.indexOf("- name: Install PR policy dependencies") <
+    ciWorkflow.indexOf("- name: Intake PR change"),
+  "PR policy dependencies must be installed before preflight executes",
+);
 assert.match(
   ciWorkflow,
   /GH_TOKEN: \$\{\{ github\.token \}\}/,

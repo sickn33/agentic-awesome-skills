@@ -38,6 +38,10 @@ jobs:
         with:
           node-version: "lts/*"
 
+      - name: Install PR policy dependencies
+        if: github.event_name == 'pull_request'
+        run: npm ci --ignore-scripts
+
       - name: Fetch base branch
         run: git fetch origin "${{ github.base_ref || 'main' }}"
 
@@ -101,6 +105,7 @@ jobs:
           test "$expected_tree" = "$actual_tree"
 
       - name: Install npm dependencies
+        if: inputs.canonical_sync_pr == true
         run: npm ci --ignore-scripts
 
       - name: Enforce PR source-only contract
