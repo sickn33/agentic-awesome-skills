@@ -22,7 +22,7 @@ Before committing, always check the current branch:
 git branch --show-current
 ```
 
-**If you're on `main` or `master`, you MUST create a feature branch first** — unless the user explicitly asked to commit to main. Do not ask the user whether to create a branch; just proceed with branch creation. The `create-branch` skill will still propose a branch name for the user to confirm.
+**If you're on `main` or `master`, you MUST create a feature branch first** — unless the user explicitly asked to commit to main and the server permits direct pushes. A user request does not bypass protected-branch rules; when the remote rejects direct updates, use the repository's required pull-request path. Do not ask the user whether to create a branch; just proceed with branch creation. The `create-branch` skill will still propose a branch name for the user to confirm.
 
 Use the `create-branch` skill to create the branch. After `create-branch` completes, verify the current branch has changed before proceeding:
 
@@ -168,5 +168,6 @@ Reason: Caused performance regression in production.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
+- Direct-to-main instructions remain subordinate to server-side branch protection and required checks.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
