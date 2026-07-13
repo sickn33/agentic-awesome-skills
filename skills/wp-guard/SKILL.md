@@ -1,8 +1,6 @@
 ---
 name: wp-guard
-description: "Review generated or changed WordPress code — plugins, themes, and blocks — before it ships. Best used reactively after an agent writes, edits, or reviews code touching WordPress APIs: add_action/add_filter, shortcodes, meta boxes, AJAX handlers, REST routes, WP_Query or $wpdb, widgets, or WP-CLI commands. Use on 'review this plugin', 'is this safe to ship', 'make this translatable', 'speed up this query', or after tasks like 'write a plugin' or 'add an endpoint/shortcode/meta box'. Enforces escaping and sanitization, nonces plus capability checks, prepared database queries, core-API-first development, translation-ready strings, and query/caching discipline. DO NOT USE for WooCommerce-specific order, product, or checkout logic (use woo-guard), non-WordPress PHP, generic code quality review (use clean-code-guard), test code review (use test-guard), server or hosting configuration, or conceptual WordPress questions."
-risk: safe
-source: https://github.com/amElnagdy/guard-skills---
+description: "Review WordPress code for escaping, sanitization, nonces, prepared queries, i18n, and performance."---
 
 # WP Guard
 
