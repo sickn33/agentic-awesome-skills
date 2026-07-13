@@ -2,7 +2,8 @@
 name: cloudflare-security-audit
 description: "Security audit of a codebase for exploitable vulnerabilities with real impact."
 risk: safe
-source_repo: "https://github.com/cloudflare/security-audit-skill"
+source_repo: cloudflare/security-audit-skill
+source: "https://github.com/cloudflare/security-audit-skill"
 ---
 
 ## When to Use
