@@ -1,9 +1,17 @@
 ---
 name: cloudflare-security-audit
 description: "Security audit of a codebase for exploitable vulnerabilities with real impact."
+category: security
 risk: safe
+source: community
 source_repo: cloudflare/security-audit-skill
-source: "https://github.com/cloudflare/security-audit-skill"
+source_type: community
+date_added: "2026-07-13"
+author: cloudflare
+tags: [security, audit, vulnerability, penetration-testing]
+tools: [claude, cursor, gemini]
+license: "MIT"
+license_source: "https://github.com/cloudflare/security-audit-skill/blob/main/LICENSE"
 ---
 
 ## When to Use
