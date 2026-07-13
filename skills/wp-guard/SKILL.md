@@ -1,6 +1,13 @@
 ---
 name: wp-guard
-description: "Review WordPress code for escaping, sanitization, nonces, prepared queries, i18n, and performance."---
+description: "Review WordPress code for escaping, sanitization, nonces, prepared queries, i18n, and performance."
+risk: safe
+source: "https://github.com/amElnagdy/guard-skills"
+---
+
+## When to Use
+
+Use when reviewing WordPress plugin or theme code for security (escaping, sanitization, nonces, prepared queries), i18n compliance, and performance issues.
 
 # WP Guard
 
