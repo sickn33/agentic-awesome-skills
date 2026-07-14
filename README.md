@@ -561,6 +561,7 @@ Key source families include:
 - **[sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills)**: Source for the `linkedin-post-writer` skill - LinkedIn post drafting from 16 tested hook formulas mapped to engagement goals, with 2026 formatting rules and an AI-tell scrub pass, from a 10-skill LinkedIn bundle for Claude Code and Codex (MIT).
 - **[Sharrmavishal/operating-kit](https://github.com/Sharrmavishal/operating-kit)**: Source for the `pre-ship-gate` skill - a pre-deploy gate that walks the silent failure modes (migrations, feature flags, stale build cache, release pointer, staged rollout, missing env) and verifies the live revision instead of trusting deploy output (MIT).
 - **[Ducksss/codex-profiles](https://github.com/Ducksss/codex-profiles)**: Source for the `codex-profiles` skill - Codex CLI/Desktop profile isolation around separate `CODEX_HOME` directories, diagnostics, and account-context boundaries without copying auth tokens (MIT).
+- **[kimtth/agent-pptify-kit](https://github.com/kimtth/agent-pptify-kit)**: Source for the `pptx-deck-creation` skill - editable, production-ready PowerPoint deck creation with narrative planning, explicit layouts, asset guidance, and quality checks (MIT).
 
 </details>
 
