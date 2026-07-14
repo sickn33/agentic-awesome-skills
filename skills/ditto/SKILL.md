@@ -39,14 +39,16 @@ requires an explicit user request.
 
 ### 1. Resolve the pinned runtime
 
-Let `SKILL_DIR` be the directory containing this file. Confirm Python 3 exists,
-then explain that the bootstrap writes a versioned runtime under `~/.ditto` and
-downloads only `ditto.py` and `MINING_PROMPT.md` from the immutable v0.3.6 tag.
+Let `SKILL_DIR` be the directory containing this file. Discover a Python 3
+executable and retain its exact executable path as `PYTHON3`. Prefer `python3`;
+use `python` only after verifying that it reports Python 3. Then explain that
+the bootstrap writes a versioned runtime under `~/.ditto` and downloads only
+`ditto.py` and `MINING_PROMPT.md` from the immutable v0.3.6 tag.
 
 Run the bootstrap only after the user has asked to set up or run Ditto:
 
 ```bash
-python "$SKILL_DIR/scripts/bootstrap.py"
+"$PYTHON3" "$SKILL_DIR/scripts/bootstrap.py"
 ```
 
 Read the JSON output and retain the exact `ditto_py` and `mining_prompt` paths.
@@ -61,7 +63,7 @@ Mine only real user-authored sessions. Never synthesize a profile from
 Run the full-history quality-default preflight:
 
 ```bash
-python "$DITTO_PY" plugin preflight
+"$PYTHON3" "$DITTO_PY" plugin preflight
 ```
 
 Show the user the valid session count, post-dedupe source tokens, selected source
@@ -79,7 +81,7 @@ Never present preview as the default or as equivalent to the full-history result
 Retain the displayed `approval_hash`, then prepare with the exact approved mode:
 
 ```bash
-python "$DITTO_PY" plugin prepare --approved-plan-hash HASH
+"$PYTHON3" "$DITTO_PY" plugin prepare --approved-plan-hash HASH
 ```
 
 If the hash changes, show the new plan and obtain approval again. Retain the
