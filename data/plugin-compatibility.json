@@ -26361,6 +26361,25 @@
       "runtime_files": []
     },
     {
+      "id": "pptx-deck-creation",
+      "path": "skills/pptx-deck-creation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pptx-official",
       "path": "skills/pptx-official",
       "targets": {
@@ -37610,10 +37629,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1957,
+    "total_skills": 1958,
     "supported": {
-      "codex": 1883,
-      "claude": 1905
+      "codex": 1884,
+      "claude": 1906
     },
     "blocked": {
       "codex": 74,

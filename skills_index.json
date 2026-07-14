@@ -32929,6 +32929,39 @@
     }
   },
   {
+    "id": "pptx-deck-creation",
+    "path": "skills/pptx-deck-creation",
+    "category": "office-productivity",
+    "name": "pptx-deck-creation",
+    "description": "Create editable, production-ready PPTX decks with narrative planning, explicit layout specs, asset guidance, and quality checks.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "kimtth/agent-pptify-kit",
+    "license": "MIT",
+    "license_source": "https://github.com/kimtth/agent-pptify-kit/blob/main/LICENSE",
+    "tags": [
+      "powerpoint",
+      "pptx",
+      "presentation",
+      "slide-design",
+      "document-generation"
+    ]
+  },
+  {
     "id": "pptx-official",
     "path": "skills/pptx-official",
     "category": "presentation-processing",

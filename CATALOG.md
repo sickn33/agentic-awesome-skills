@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-13T08:55:06.000Z
 
-Total skills: 1957
+Total skills: 1958
 
 ## agent-behavior (4)
 
@@ -1617,6 +1617,12 @@ Total skills: 1957
 | `monopoly/scale-benchmarks` | Reference document for monopoly scale-benchmarks. | safe | community | monopoly/scale, benchmarks | monopoly/scale, benchmarks, scale, reference, document, monopoly |
 | `monopoly/security-checklist` | Reference document for monopoly security-checklist. | safe | community | monopoly/security, checklist | monopoly/security, checklist, security, reference, document, monopoly |
 | `monopoly/tech-matrix` | Reference document for monopoly tech-matrix. | safe | community | monopoly/tech, matrix | monopoly/tech, matrix, tech, reference, document, monopoly |
+
+## office-productivity (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `pptx-deck-creation` | Create editable, production-ready PPTX decks with narrative planning, explicit layout specs, asset guidance, and quality checks. | critical | kimtth/agent-pptify-kit | powerpoint, pptx, presentation, slide-design, document-generation | powerpoint, pptx, presentation, slide-design, document-generation, deck, creation, editable, decks, narrative, planning, explicit |
 
 ## operations (4)
 

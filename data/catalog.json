@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-13T08:55:06.000Z",
-  "total": 1957,
+  "total": 1958,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -39628,6 +39628,41 @@
         "handling"
       ],
       "path": "skills/powershell-windows/SKILL.md"
+    },
+    {
+      "id": "pptx-deck-creation",
+      "canonical_id": "pptx-deck-creation",
+      "name": "pptx-deck-creation",
+      "description": "Create editable, production-ready PPTX decks with narrative planning, explicit layout specs, asset guidance, and quality checks.",
+      "category": "office-productivity",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "kimtth/agent-pptify-kit",
+      "license": "MIT",
+      "license_source": "https://github.com/kimtth/agent-pptify-kit/blob/main/LICENSE",
+      "tags": [
+        "powerpoint",
+        "pptx",
+        "presentation",
+        "slide-design",
+        "document-generation"
+      ],
+      "triggers": [
+        "powerpoint",
+        "pptx",
+        "presentation",
+        "slide-design",
+        "document-generation",
+        "deck",
+        "creation",
+        "editable",
+        "decks",
+        "narrative",
+        "planning",
+        "explicit"
+      ],
+      "path": "skills/pptx-deck-creation/SKILL.md"
     },
     {
       "id": "pptx-official",
