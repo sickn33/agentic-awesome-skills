@@ -18,6 +18,10 @@ Shared rules:
 - Record provenance (`source`, `license`, `provider`, `model`) for audits.
 - On failure, write a failure manifest; never substitute a placeholder and call it generated.
 - Never request secrets in chat or a prompt dialog. For cloud auth use `.env` or `az login`.
+- Before a billable generation call or any request that sends user-provided or
+  source material to a third party, disclose the provider/model, the material
+  that will leave the machine, likely cost, and output path. Obtain explicit
+  confirmation unless the user already authorized that exact operation.
 
 ---
 
@@ -58,7 +62,7 @@ def icon_search(query, limit=8, prefix=None, color=None, out_dir="assets/icons")
 
 ## 2. Web Image Search
 
-Prefer the VS Code fetch tools (`fetch_webpage`) or an MCP image-search tool you have available.
+Prefer the browsing or image-search capability available in the current client.
 When you already have a direct image URL (from search results or the user), download it locally:
 
 ```python
@@ -97,6 +101,10 @@ an SVG and treat the result as editable.
 Generate through a user-managed provider (OpenAI or Azure OpenAI). Read credentials from environment;
 never accept secrets via chat.
 
+Before running the snippet, obtain the external-call confirmation described in
+the shared rules. If `output_path` already exists, choose a new path or obtain
+separate overwrite confirmation; do not silently replace it.
+
 ```python
 import base64, json, os
 from pathlib import Path
@@ -104,6 +112,9 @@ from openai import OpenAI, AzureOpenAI  # provided by the user's environment
 
 def text_to_infographic(prompt, output_path, provider="openai",
                         model_or_deployment="gpt-image-1", size="1024x1024"):
+    output = Path(output_path)
+    if output.exists():
+        raise FileExistsError(f"Refusing to overwrite existing output: {output}")
     manifest = {"provider": provider, "model_or_deployment": model_or_deployment,
                 "output_path": output_path}
     try:
@@ -116,8 +127,8 @@ def text_to_infographic(prompt, output_path, provider="openai",
         else:
             client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
         result = client.images.generate(model=model_or_deployment, prompt=prompt, size=size)
-        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-        Path(output_path).write_bytes(base64.b64decode(result.data[0].b64_json))
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(base64.b64decode(result.data[0].b64_json))
         manifest["status"] = "ok"
     except Exception as exc:  # report, never fake-generate
         manifest.update(status="error", error=str(exc))
@@ -125,7 +136,8 @@ def text_to_infographic(prompt, output_path, provider="openai",
     return manifest
 ```
 
-- Collect missing values via `vscode_askQuestions`: provider, prompt, model/deployment, size, output path.
+- Ask the user for any missing non-secret values: provider, prompt,
+  model/deployment, size, and output path.
 - Use `.env` or `az login` for auth; never ask for keys/tokens in chat or the dialog.
 - Use generated art as a supporting visual. Recreate essential text, labels,
   metrics, and steps with native PowerPoint objects. Add a vector asset only

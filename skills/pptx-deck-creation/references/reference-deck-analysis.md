@@ -85,5 +85,7 @@ Suggested catalog shape:
 This reference covers PPTX prompt context, extraction, folder batch analysis,
 style-master inspection, and the derived reference-template catalog only.
 
-- Use `pptx-deck-context` for narrative/source preparation and design profile selection.
-- Use `pptx-visual-assets` for acquiring and placing icons, images, SVGs, and infographics.
+- Use the parent `pptx-deck-creation` workflow for narrative/source preparation,
+  together with [design profiles](design-profiles.md) for profile selection.
+- Use [visual asset guidelines](visual-asset-adapters.md) for acquiring and
+  placing icons, images, SVGs, and infographics.

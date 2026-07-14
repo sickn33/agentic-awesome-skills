@@ -205,6 +205,12 @@ non-secret information before generating an infographic. If no configured
 provider is available, omit the asset and continue with editable native slide
 objects.
 
+Before any external generation call, disclose the provider and model, what
+prompt or source material will leave the machine, the likely cost, and the
+output path. Obtain explicit confirmation unless the user already authorized
+that exact operation. Never overwrite an existing output without separate
+confirmation.
+
 ## Examples
 
 ### Example 1: Executive recommendation deck
