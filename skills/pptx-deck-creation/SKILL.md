@@ -2,7 +2,7 @@
 name: pptx-deck-creation
 description: "Create editable, production-ready PPTX decks with narrative planning, explicit layout specs, asset guidance, and quality checks."
 category: office-productivity
-risk: safe
+risk: critical
 source: community
 source_repo: kimtth/agent-pptify-kit
 source_type: community
