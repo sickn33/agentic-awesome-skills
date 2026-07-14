@@ -103,8 +103,8 @@ assert.doesNotMatch(
 assert.match(ciWorkflow, /^permissions:\n  contents: read$/m);
 assert.match(
   ciWorkflow,
-  /source-validation:[\s\S]*?- name: Refresh ephemeral skill index for source tests\n\s+run: npm run index\n[\s\S]*?- name: Run tests\n\s+run: npm run test/,
-  "source-only skill PRs must refresh the uncommitted index before tests read it",
+  /source-validation:[\s\S]*?- name: Refresh ephemeral derived sources for tests\n\s+run: npm run plugin-compat:sync && npm run bundles:sync && npm run index\n[\s\S]*?- name: Run tests\n\s+run: npm run test/,
+  "source-only skill PRs must refresh uncommitted mirrors and indexes before tests read them",
 );
 assert.match(ciWorkflow, /name: pr-evidence-/);
 assert.doesNotMatch(ciWorkflow, /pull_request_target:/);

@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made skill review fail closed when same-repository credentials are missing, while preserving the explicit manual-review path for forks.
 - Hardened Lore mirror targets against traversal and symlink escapes, Telegram approvals against unauthorized group senders and token leakage through process arguments, and Auto Research against implicit external-query disclosure.
 - Restored legacy Git ref-format detection, updated the redirect bridge to the current 49-route sitemap, and made Go In Depth reject non-string query inputs cleanly.
-- Regenerated the ephemeral skill index before source-only PR tests so new-skill contributions can satisfy the Workbench catalog contract without committing generated artifacts.
+- Regenerated ephemeral plugin mirrors and the skill index before source-only PR tests so contributions can satisfy distribution and Workbench contracts without committing generated artifacts.
 
 ## Validation
 
