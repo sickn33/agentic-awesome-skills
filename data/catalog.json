@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-13T08:55:06.000Z",
-  "total": 1948,
+  "total": 1949,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -22147,6 +22147,41 @@
         "cfr"
       ],
       "path": "skills/fda-medtech-compliance-auditor/SKILL.md"
+    },
+    {
+      "id": "feature-tracking",
+      "canonical_id": "feature-tracking",
+      "name": "feature-tracking",
+      "description": "Maintain durable feature-level memory across AI coding sessions with lightweight Markdown tracks for status, source-of-truth docs, decisions, risks, and changes.",
+      "category": "project-management",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "JunsW/feature-track",
+      "license": "MIT",
+      "license_source": "https://github.com/JunsW/feature-track/blob/main/LICENSE",
+      "tags": [
+        "feature-tracking",
+        "project-memory",
+        "documentation",
+        "ai-agents",
+        "session-handoff"
+      ],
+      "triggers": [
+        "feature-tracking",
+        "project-memory",
+        "documentation",
+        "ai-agents",
+        "session-handoff",
+        "feature",
+        "tracking",
+        "maintain",
+        "durable",
+        "level",
+        "memory",
+        "ai"
+      ],
+      "path": "skills/feature-tracking/SKILL.md"
     },
     {
       "id": "ffuf-claude-skill",

@@ -14799,6 +14799,25 @@
       "runtime_files": []
     },
     {
+      "id": "feature-tracking",
+      "path": "skills/feature-tracking",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ffuf-claude-skill",
       "path": "skills/ffuf-claude-skill",
       "targets": {
@@ -37439,10 +37458,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1948,
+    "total_skills": 1949,
     "supported": {
-      "codex": 1874,
-      "claude": 1896
+      "codex": 1875,
+      "claude": 1897
     },
     "blocked": {
       "codex": 74,

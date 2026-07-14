@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-13T08:55:06.000Z
 
-Total skills: 1948
+Total skills: 1949
 
 ## agent-behavior (4)
 
@@ -1710,13 +1710,14 @@ Total skills: 1948
 | `trading-ledger` | A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database;... | critical | cruisekkk/trading-ledger | trading-journal, notion, journaling, market-wizards, decision-making | trading-journal, notion, journaling, market-wizards, decision-making, trading, ledger, journal, captures, decision, just, fill |
 | `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | critical | work0r-ai/agent-kit | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
 
-## project-management (20)
+## project-management (21)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `asana-automation` | Automate Asana tasks via Rube MCP (Composio): tasks, projects, sections, teams, workspaces. Always search tools first for current schemas. | unknown | community | asana | asana, automation, automate, tasks, via, rube, mcp, composio, sections, teams, workspaces, always |
 | `basecamp-automation` | Automate Basecamp project management, to-dos, messages, people, and to-do list organization via Rube MCP (Composio). Always search tools first for current sc... | critical | community | basecamp | basecamp, automation, automate, dos, messages, people, do, list, organization, via, rube, mcp |
 | `confluence-automation` | Automate Confluence page creation, content search, space management, labels, and hierarchy navigation via Rube MCP (Composio). Always search tools first for ... | critical | community | confluence | confluence, automation, automate, page, creation, content, search, space, labels, hierarchy, navigation, via |
+| `feature-tracking` | Maintain durable feature-level memory across AI coding sessions with lightweight Markdown tracks for status, source-of-truth docs, decisions, risks, and chan... | critical | JunsW/feature-track | feature-tracking, project-memory, documentation, ai-agents, session-handoff | feature-tracking, project-memory, documentation, ai-agents, session-handoff, feature, tracking, maintain, durable, level, memory, ai |
 | `freshservice-automation` | Automate Freshservice ITSM tasks via Rube MCP (Composio): create/update tickets, bulk operations, service requests, and outbound emails. Always search tools ... | critical | community | freshservice | freshservice, automation, automate, itsm, tasks, via, rube, mcp, composio, update, tickets, bulk |
 | `github-issue-creator` | Turn error logs, screenshots, voice notes, and rough bug reports into crisp, developer-ready GitHub issues with repro steps, impact, and evidence. | unknown | community | github, issue, creator | github, issue, creator, turn, error, logs, screenshots, voice, notes, rough, bug, reports |
 | `jira-automation` | Automate Jira tasks via Rube MCP (Composio): issues, projects, sprints, boards, comments, users. Always search tools first for current schemas. | critical | community | jira | jira, automation, automate, tasks, via, rube, mcp, composio, issues, sprints, boards, comments |

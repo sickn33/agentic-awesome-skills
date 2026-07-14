@@ -17888,6 +17888,39 @@
     }
   },
   {
+    "id": "feature-tracking",
+    "path": "skills/feature-tracking",
+    "category": "project-management",
+    "name": "feature-tracking",
+    "description": "Maintain durable feature-level memory across AI coding sessions with lightweight Markdown tracks for status, source-of-truth docs, decisions, risks, and changes.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "JunsW/feature-track",
+    "license": "MIT",
+    "license_source": "https://github.com/JunsW/feature-track/blob/main/LICENSE",
+    "tags": [
+      "feature-tracking",
+      "project-memory",
+      "documentation",
+      "ai-agents",
+      "session-handoff"
+    ]
+  },
+  {
     "id": "ffuf-claude-skill",
     "path": "skills/ffuf-claude-skill",
     "category": "security",
