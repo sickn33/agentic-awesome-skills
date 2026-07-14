@@ -136,11 +136,15 @@ TELEGRAM_BOT_TOKEN=123:ABC...     # default bot token
 TELEGRAM_CHAT_ID=987654321        # default chat/target
 BOT_ALERTS_TOKEN=456:DEF...       # named bot: --bot alerts (add via: setup --bot alerts)
 TARGET_FAMILY=-100987...          # named target: --to family (any chat/group/channel id)
+TELEGRAM_APPROVER_IDS=123456789   # default group approver user IDs (comma-separated)
+APPROVERS_FAMILY=123456789,987654321 # approvers for --to family (overrides default)
 ```
 
 - `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` — default bot token and default send target.
 - `BOT_<NAME>_TOKEN` — a named bot's token, selected with `--bot <name>` (uppercased key, e.g. `--bot alerts` → `BOT_ALERTS_TOKEN`).
 - `TARGET_<NAME>=<chat_id>` — a named send target, selected with `--to <name>` (uppercased key, e.g. `--to family` → `TARGET_FAMILY`). A numeric `--to` value is used directly as a chat ID without a lookup.
+- `TELEGRAM_APPROVER_IDS` — Telegram user IDs allowed to answer `ask` in a group target.
+- `APPROVERS_<NAME>` — target-specific group approvers (for example, `APPROVERS_FAMILY`); overrides the global allowlist for that named target.
 - `TELEGRAM_CONFIG_DIR` — overrides the config directory (default `~/.config/telegram`).
 
 ## Claude Code hooks (settings.json)
@@ -169,8 +173,11 @@ fi
 ## Security Notes
 
 - The bot token grants full control of the bot — anyone with it can send/receive as your bot. Treat it like a password.
+- Token-bearing API URLs are passed to curl through stdin, not exposed in curl process arguments.
 - `~/.config/telegram/config` is created with mode 600 (owner read/write only).
-- Replies and answers to `ask` are only honored from configured chat IDs — messages from strangers who find a public bot are ignored.
+- Private-chat answers are accepted only when the sender user ID equals the chat ID. Group
+  targets require an explicit `TELEGRAM_APPROVER_IDS` or target-specific `APPROVERS_<NAME>`
+  allowlist, and `ask` accepts button taps and text only from those user IDs.
 - By default, bots in group chats only see messages that mention them or are replies to them. To read all group messages, either make the bot an admin or disable privacy mode for it via @BotFather (`/setprivacy`).
 
 ## License

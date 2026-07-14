@@ -23,6 +23,7 @@ import {
 
 const FIXTURE_ROOT_URL = 'https://owner.github.io/repo/';
 const FIXTURE_SOCIAL_IMAGE_URL = 'https://owner.github.io/repo/social-card.png';
+const PACKAGE_URL = 'https://www.npmjs.com/package/agentic-awesome-skills';
 
 function buildRouteIdentityHtml({
   routeUrl,
@@ -369,7 +370,7 @@ describe('seo assets verification helpers', () => {
 
     const missingPackage = currentIdentityJsonLd(routeUrl).map((entry) => {
       if (!['Organization', 'SoftwareSourceCode'].includes(entry['@type'])) return entry;
-      return { ...entry, sameAs: (entry.sameAs || []).filter((value) => !value.includes('npmjs.com')) };
+      return { ...entry, sameAs: (entry.sameAs || []).filter((value) => value !== PACKAGE_URL) };
     });
     writeRouteIdentityFixture(distDir, routeUrl, buildRouteIdentityHtml({ routeUrl, jsonLd: missingPackage }));
     expect(() => assertPrerenderedRouteIdentities([routeUrl], distDir, '/repo', FIXTURE_ROOT_URL)).toThrow(

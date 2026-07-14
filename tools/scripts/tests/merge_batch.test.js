@@ -159,6 +159,21 @@ function evidenceSnapshot(overrides = {}) {
     ["missing"],
     "a skipped manual-review job must not pass",
   );
+  const missingCredentials = makeCheckRun(
+    "Skill Review / missing-review-credentials",
+    "completed",
+    "failure",
+    "2026-04-01T10:04:00Z",
+    14,
+  );
+  assert.deepStrictEqual(
+    mergeBatch.summarizeRequiredCheckRuns(
+      [skippedReview, skippedManual, missingCredentials],
+      [withAttestation],
+    ).map((entry) => entry.state),
+    ["failed"],
+    "missing internal review credentials must fail promptly",
+  );
 }
 
 {

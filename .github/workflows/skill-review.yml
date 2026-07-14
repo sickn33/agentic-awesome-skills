@@ -3,6 +3,9 @@ on:
   pull_request:
     paths: ['**/SKILL.md']
 
+permissions:
+  contents: read
+
 jobs:
   review-state:
     runs-on: ubuntu-latest
@@ -50,7 +53,7 @@ jobs:
 
   manual-review-required:
     needs: review-state
-    if: ${{ needs.review-state.outputs.configured != 'true' }}
+    if: ${{ needs.review-state.outputs.configured != 'true' && github.event.pull_request.head.repo.full_name != github.repository }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -58,18 +61,23 @@ jobs:
       - name: Record exact head requiring maintainer review
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
-          BASE_REPOSITORY: ${{ github.repository }}
         run: |
-          if [ "$HEAD_REPOSITORY" = "$BASE_REPOSITORY" ]; then
-            reason="semantic review credentials are not configured for this repository"
-          else
-            reason="repository secrets are unavailable to this fork pull request"
-          fi
-          echo "::warning title=Manual skill review required::${reason}. A maintainer must attest to the exact head SHA before merge: ${HEAD_SHA}."
+          echo "::warning title=Manual skill review required::Semantic review is unavailable for this fork. A maintainer must attest to the exact head SHA before merge: ${HEAD_SHA}."
           {
             echo "## Manual skill review required"
             echo
             echo "- Head SHA: \`${HEAD_SHA}\`"
-            echo "- Reason: ${reason}."
+            echo "- Reason: repository secrets are unavailable to this fork pull request."
           } >> "$GITHUB_STEP_SUMMARY"
+
+  missing-review-credentials:
+    needs: review-state
+    if: ${{ needs.review-state.outputs.configured != 'true' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Require Tessl token for repository branches
+        run: |
+          echo "::error title=Missing Tessl token::Configure TESSL_TOKEN, or keep the legacy TESSL_API_TOKEN secret until the migration is complete."
+          exit 1

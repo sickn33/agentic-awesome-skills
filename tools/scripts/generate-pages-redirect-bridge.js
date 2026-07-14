@@ -9,7 +9,7 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DEFAULT_SITEMAP = path.join(REPO_ROOT, 'apps', 'web-app', 'public', 'sitemap.xml');
 const DEFAULT_CURRENT_BASE = 'https://sickn33.github.io/agentic-awesome-skills/';
 const DEFAULT_LEGACY_BASE = 'https://sickn33.github.io/antigravity-awesome-skills/';
-const DEFAULT_EXPECTED_ROUTES = 46;
+const DEFAULT_EXPECTED_ROUTES = 49;
 const SAFE_SEGMENT = /^[A-Za-z0-9._~-]+$/;
 
 function sha256(value) {

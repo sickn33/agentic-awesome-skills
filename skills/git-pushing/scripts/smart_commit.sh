@@ -38,7 +38,11 @@ BRANCH=$(git symbolic-ref --quiet --short HEAD) || {
   exit 1
 }
 
-REF_FORMAT=$(git rev-parse --show-ref-format 2>/dev/null || printf '%s\n' files)
+REF_FORMAT=$(git rev-parse --show-ref-format 2>/dev/null || true)
+if [[ -z "$REF_FORMAT" || "$REF_FORMAT" == "--show-ref-format" ]]; then
+  REF_FORMAT=$(git config --get extensions.refStorage || true)
+  REF_FORMAT=${REF_FORMAT:-files}
+fi
 if [[ "$REF_FORMAT" != files ]]; then
   echo "Refusing to run with ref backend '$REF_FORMAT'; safe branch locking currently requires the files backend." >&2
   exit 1

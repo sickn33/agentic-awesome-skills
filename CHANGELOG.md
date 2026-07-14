@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Fixed
+
+- Closed the two open Security and Quality findings by declaring least-privilege workflow permissions and making the SEO package-identity regression test exact.
+- Made skill review fail closed when same-repository credentials are missing, while preserving the explicit manual-review path for forks.
+- Hardened Lore mirror targets against traversal and symlink escapes, Telegram approvals against unauthorized group senders and token leakage through process arguments, and Auto Research against implicit external-query disclosure.
+- Restored legacy Git ref-format detection, updated the redirect bridge to the current 49-route sitemap, and made Go In Depth reject non-string query inputs cleanly.
+- Regenerated the ephemeral skill index before source-only PR tests so new-skill contributions can satisfy the Workbench catalog contract without committing generated artifacts.
+
+## Validation
+
+- Added regression coverage for workflow fail-closed behavior, mirror containment guidance, Telegram authorization and token transport, legacy Git, production redirect counts, and non-string research queries.
+
 ## [14.3.1] - 2026-07-13 - "Expert Workbench and Community Surface Cleanup"
 
 > A public expert workbench for exact, inspectable skill sets, with the rejected maintainer-only product removed from the current installable distribution.

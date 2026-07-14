@@ -172,7 +172,7 @@ The skill ships six commands, each with a copy-pasteable prompt and the expected
 
 Runs once per project (or to start over).
 
-0. **Resolve targets and takeover check.** Targets are determined by the resolution algorithm — see `references/platform-mirrors.md`. Default behavior: scan repo root for existing platform files; if none found, ask the user via multi-select which agents they use. Explicit `mirror_targets` in `.lore/.config.json` overrides auto-detect (Replace semantics). For each resolved target:
+0. **Resolve targets and takeover check.** Targets are determined by the resolution algorithm — see `references/platform-mirrors.md`. Default behavior: scan repo root for existing platform files; if none found, ask the user via multi-select which agents they use. Explicit `mirror_targets` in `.lore/.config.json` overrides auto-detect (Replace semantics), but never bypasses validation. Validate the complete list against the platform allowlist and canonical project-root containment rules before reading or writing any target; reject absolute paths, `..`, unsupported paths, and symlink escapes atomically. For each validated target:
    - If the file does not exist → no action; it will be created later in step 7.
    - If the file exists AND contains a `## Lore` section → it's already a lore mirror; note it and continue (its My notes will be processed as seed in step 5).
    - If the file exists AND does NOT contain a `## Lore` section → it's likely from the agent's native `/init` or hand-written. Show the user:
@@ -271,11 +271,15 @@ If a project needs old behavior (mirror updates on every `sync`), set `sync_upda
 
 Force-regenerate all configured platform mirrors from the current state of `.lore/*`.
 
-1. Read current `.lore/SUMMARY.md` and the scope-tagged index.
-2. For each configured mirror target (per `references/platform-mirrors.md`), read the existing file and detect the section boundary.
-3. For each target, compare the new Lore section content against the existing one. **Skip writing if content is identical** (content-based dedup; avoids empty `git diff`).
-4. If different, replace the Lore section; preserve the My notes section verbatim.
-5. **Stop.** Report: "Mirror updated: `<file>`" or "No changes needed: `<file>`" per target.
+1. Resolve and validate the complete target list per `references/platform-mirrors.md`. If any
+   target is invalid or escapes the canonical project root through a symlink, abort before any
+   target read or write.
+2. Read current `.lore/SUMMARY.md` and the scope-tagged index.
+3. For each validated mirror target, recheck containment immediately before access, then read
+   the existing file and detect the section boundary.
+4. For each target, compare the new Lore section content against the existing one. **Skip writing if content is identical** (content-based dedup; avoids empty `git diff`).
+5. If different, recheck containment, replace the Lore section, and preserve the My notes section verbatim.
+6. **Stop.** Report: "Mirror updated: `<file>`" or "No changes needed: `<file>`" per target.
 
 This command exists because most users want `sync` to be fast and unobtrusive, but occasionally need the agent-facing files to reflect recent knowledge. `mirror` is that explicit "publish to agent view" step.
 

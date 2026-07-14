@@ -36,6 +36,7 @@ const SKILL_REVIEW_REQUIRED = [
   "Skill Review & Optimize / review",
 ];
 const MANUAL_REVIEW_REQUIRED = ["manual-review-required", "Skill Review / manual-review-required"];
+const MISSING_REVIEW_CREDENTIALS = ["missing-review-credentials", "Skill Review / missing-review-credentials"];
 const DISALLOWED_COAUTHOR_TRAILER_PATTERNS = [
   /<noreply@anthropic\.com>/i,
   /:\s*claude\b/i,
@@ -772,6 +773,7 @@ function getRequiredCheckAliases(prDetails, options = {}) {
       aliases: SKILL_REVIEW_REQUIRED,
       appId: GITHUB_ACTIONS_APP_ID,
       acceptedConclusions: ["success"],
+      blockingAliases: MISSING_REVIEW_CREDENTIALS,
       alternatives: options.allowManualReview
         ? [{
             aliases: MANUAL_REVIEW_REQUIRED,

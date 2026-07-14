@@ -240,6 +240,42 @@ try {
   git(repo, "restore", "intended.txt");
   git(repo, "switch", "main");
 
+  const legacyRepo = path.join(tempRoot, "legacy-ref-format-repo");
+  const legacyRemote = path.join(tempRoot, "legacy-ref-format-remote.git");
+  const shimDir = path.join(tempRoot, "legacy-git-shim");
+  fs.mkdirSync(legacyRepo);
+  fs.mkdirSync(shimDir);
+  run("git", ["init", "--bare", legacyRemote], tempRoot);
+  run("git", ["init", "-b", "main"], legacyRepo);
+  git(legacyRepo, "config", "user.name", "Test User");
+  git(legacyRepo, "config", "user.email", "test@example.com");
+  git(legacyRepo, "remote", "add", "origin", legacyRemote);
+  fs.writeFileSync(path.join(legacyRepo, "file.txt"), "base\n");
+  git(legacyRepo, "add", "file.txt");
+  git(legacyRepo, "commit", "-m", "chore: seed legacy Git repository");
+  git(legacyRepo, "push", "-u", "origin", "main");
+  fs.writeFileSync(
+    path.join(shimDir, "git"),
+    `#!/bin/sh
+if [ "$1" = "rev-parse" ] && [ "$2" = "--show-ref-format" ]; then
+  printf '%s\\n' --show-ref-format
+  exit 0
+fi
+exec "$REAL_GIT" "$@"
+`,
+    { mode: 0o755 },
+  );
+  fs.writeFileSync(path.join(legacyRepo, "file.txt"), "legacy Git change\n");
+  run(
+    "bash",
+    [helper, "fix: support legacy ref format detection", "--", "file.txt"],
+    legacyRepo,
+    0,
+    { PATH: `${shimDir}${path.delimiter}${process.env.PATH}`, REAL_GIT: run("which", ["git"], tempRoot).stdout.trim() },
+  );
+  assert.strictEqual(git(legacyRepo, "show", "-s", "--format=%s", "HEAD"), "fix: support legacy ref format detection");
+  assert.strictEqual(git(legacyRepo, "rev-parse", "HEAD"), git(legacyRemote, "rev-parse", "refs/heads/main"));
+
   const reftableRepo = path.join(tempRoot, "reftable-repo");
   run("git", ["init", "--ref-format=reftable", "-b", "main", reftableRepo], tempRoot);
   git(reftableRepo, "config", "user.name", "Test User");

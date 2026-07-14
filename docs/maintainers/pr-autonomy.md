@@ -44,7 +44,8 @@ Every new or relocated skill and every canonical skill-content change requires m
 The Skill Review workflow separates three outcomes:
 
 - `review`: a semantic review actually ran using trusted base scripts;
-- `manual-review-required`: semantic-review credentials were unavailable, either because the PR is from a fork or because the repository has no provider token configured, so a maintainer must review and attest to the exact head SHA.
+- `manual-review-required`: repository secrets were unavailable to a fork, so a maintainer must review and attest to the exact head SHA;
+- `missing-review-credentials`: an internal branch expected semantic-review credentials but none were configured, so the check fails closed.
 
 A successful `manual-review-required` check means only that the requirement was recorded. It is not a successful semantic review.
 

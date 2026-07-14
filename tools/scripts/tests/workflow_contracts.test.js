@@ -101,6 +101,11 @@ assert.doesNotMatch(
   "PR and push CI must not depend on mutable upstream network clones",
 );
 assert.match(ciWorkflow, /^permissions:\n  contents: read$/m);
+assert.match(
+  ciWorkflow,
+  /source-validation:[\s\S]*?- name: Refresh ephemeral skill index for source tests\n\s+run: npm run index\n[\s\S]*?- name: Run tests\n\s+run: npm run test/,
+  "source-only skill PRs must refresh the uncommitted index before tests read it",
+);
 assert.match(ciWorkflow, /name: pr-evidence-/);
 assert.doesNotMatch(ciWorkflow, /pull_request_target:/);
 assert.doesNotMatch(ciWorkflow, /actions\/download-artifact/);
@@ -119,10 +124,18 @@ const skillReviewWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "skill-review.yml"),
   "utf8",
 );
+assert.match(skillReviewWorkflow, /^permissions:\n  contents: read$/m);
 assert.match(skillReviewWorkflow, /^  review:$/m);
 assert.match(skillReviewWorkflow, /^  manual-review-required:$/m);
-assert.doesNotMatch(skillReviewWorkflow, /^  missing-review-credentials:$/m);
-assert.match(skillReviewWorkflow, /if: \$\{\{ needs\.review-state\.outputs\.configured != 'true' \}\}/);
+assert.match(skillReviewWorkflow, /^  missing-review-credentials:$/m);
+assert.match(
+  skillReviewWorkflow,
+  /if: \$\{\{ needs\.review-state\.outputs\.configured != 'true' && github\.event\.pull_request\.head\.repo\.full_name != github\.repository \}\}/,
+);
+assert.match(
+  skillReviewWorkflow,
+  /if: \$\{\{ needs\.review-state\.outputs\.configured != 'true' && github\.event\.pull_request\.head\.repo\.full_name == github\.repository \}\}/,
+);
 assert.match(skillReviewWorkflow, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
 assert.ok(
   skillReviewWorkflow.indexOf("- name: Checkout pull request content") <

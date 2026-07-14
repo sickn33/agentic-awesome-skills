@@ -185,6 +185,16 @@ try {
   assert.strictEqual(missingOutput.status, 1);
   assert.match(missingOutput.stderr, /--output is required/);
 
+  const productionOutputRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'pages-redirect-production-'));
+  try {
+    const productionManifest = generateBridge({
+      outputDirectory: path.join(productionOutputRoot, 'bridge'),
+    });
+    assert.strictEqual(productionManifest.route_count, 49);
+  } finally {
+    fs.rmSync(productionOutputRoot, { recursive: true, force: true });
+  }
+
   console.log('generate_pages_redirect_bridge tests passed');
 } finally {
   fs.rmSync(fixtureRoot, { recursive: true, force: true });
