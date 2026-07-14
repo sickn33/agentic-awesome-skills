@@ -25,7 +25,7 @@ license_source: "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
 Send updates, alerts, and files to Telegram; read replies; run ask-and-wait
 approval flows. Pure bash + curl + jq — no install beyond a bot token.
 
-First run: `scripts/telegram.sh setup` (guided BotFather walkthrough).
+First run: `bash scripts/telegram.sh setup` (guided BotFather walkthrough).
 
 ## Safety Gate
 
@@ -37,13 +37,13 @@ do not echo it, commit it, or place it in shell history.
 ## Commands
 
 ```bash
-scripts/telegram.sh send "Deploy finished ✅"                    # basic alert
-scripts/telegram.sh send "low priority" --silent                # no notification sound
-scripts/telegram.sh send "*bold* alert" --format md             # MarkdownV2 (falls back to plain)
-scripts/telegram.sh send "hi" --to alerts --bot work            # named target + named bot
-scripts/telegram.sh file report.pdf "Q3 report"                 # document (photos auto-detected)
-scripts/telegram.sh read                                        # new incoming messages since last read
-ANSWER=$(scripts/telegram.sh ask "Deploy to prod?" --options "Yes,No" --timeout 300)
+bash scripts/telegram.sh send "Deploy finished ✅"                    # basic alert
+bash scripts/telegram.sh send "low priority" --silent                # no notification sound
+bash scripts/telegram.sh send "*bold* alert" --format md             # MarkdownV2 (falls back to plain)
+bash scripts/telegram.sh send "hi" --to alerts --bot work            # named target + named bot
+bash scripts/telegram.sh file report.pdf "Q3 report"                 # document (photos auto-detected)
+bash scripts/telegram.sh read                                        # new incoming messages since last read
+ANSWER=$(bash scripts/telegram.sh ask "Deploy to prod?" --options "Yes,No" --timeout 300)
 # exit 0 = answered (stdout = answer), 2 = timeout
 ```
 
@@ -73,9 +73,9 @@ Ping your phone when Claude needs input, and when it finishes:
 {
   "hooks": {
     "Notification": [{"hooks": [{"type": "command",
-      "command": "~/.claude/skills/telegram/scripts/telegram.sh send \"🔔 Claude needs input in $(basename \\\"$PWD\\\")\""}]}],
+      "command": "bash ~/.claude/skills/telegram/scripts/telegram.sh send \"🔔 Claude needs input in $(basename \\\"$PWD\\\")\""}]}],
     "Stop": [{"hooks": [{"type": "command",
-      "command": "~/.claude/skills/telegram/scripts/telegram.sh send \"✅ Claude finished in $(basename \\\"$PWD\\\")\" --silent"}]}]
+      "command": "bash ~/.claude/skills/telegram/scripts/telegram.sh send \"✅ Claude finished in $(basename \\\"$PWD\\\")\" --silent"}]}]
   }
 }
 ```
@@ -83,7 +83,7 @@ Ping your phone when Claude needs input, and when it finishes:
 Approval gate in any script/automation:
 
 ```bash
-if [ "$(scripts/telegram.sh ask 'Deploy to prod?' --options 'Yes,No')" = "Yes" ]; then
+if [ "$(bash scripts/telegram.sh ask 'Deploy to prod?' --options 'Yes,No')" = "Yes" ]; then
   ./deploy.sh
 fi
 ```
