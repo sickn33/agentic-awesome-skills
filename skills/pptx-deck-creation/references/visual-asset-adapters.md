@@ -113,8 +113,10 @@ from openai import OpenAI, AzureOpenAI  # provided by the user's environment
 def text_to_infographic(prompt, output_path, provider="openai",
                         model_or_deployment="gpt-image-1", size="1024x1024"):
     output = Path(output_path)
-    if output.exists():
-        raise FileExistsError(f"Refusing to overwrite existing output: {output}")
+    manifest_path = output.with_suffix(".manifest.json")
+    existing = [path for path in (output, manifest_path) if path.exists()]
+    if existing:
+        raise FileExistsError(f"Refusing to overwrite existing paths: {existing}")
     manifest = {"provider": provider, "model_or_deployment": model_or_deployment,
                 "output_path": output_path}
     try:
@@ -132,7 +134,7 @@ def text_to_infographic(prompt, output_path, provider="openai",
         manifest["status"] = "ok"
     except Exception as exc:  # report, never fake-generate
         manifest.update(status="error", error=str(exc))
-    Path(output_path).with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=2))
+    manifest_path.write_text(json.dumps(manifest, indent=2))
     return manifest
 ```
 
