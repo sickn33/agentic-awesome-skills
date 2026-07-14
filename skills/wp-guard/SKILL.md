@@ -1,7 +1,7 @@
 ---
 name: "wp-guard"
-description: "Review generated or changed WordPress code — plugins, themes, and blocks — before it ships. Best used reactively after an agent writes, edits, or reviews code touching WordPress APIs: add..."
-risk: "safe"
+description: "Review generated or changed WordPress plugins, themes, and blocks for security, internationalization, performance, and API correctness."
+risk: "offensive"
 source: "community"
 source_repo: "amElnagdy/guard-skills"
 source_type: "community"
@@ -13,6 +13,9 @@ tools: []
 
 
 # WP Guard
+
+> [!WARNING]
+> **Authorized Use Only.** Review only WordPress code and environments the user owns or is explicitly authorized to assess. Keep checks non-destructive and inside the approved scope.
 
 You are reviewing generated or changed WordPress code before it ships. Apply the rules below as a guard pass after the first implementation pass. Be a sharp reviewer, not a pedantic one: flag what creates vulnerabilities, breaks translations, or melts servers — ignore cosmetic preferences WPCS tooling already handles.
 

@@ -1,5 +1,5 @@
 {
-  "$comment": "Single source of truth for findings.json structure (see SKILL.md Phase 5). validate-findings.cjs reads this file directly and interprets it — there is no second copy of these rules to keep in sync.",
+  "$comment": "Single source of truth for findings.json structure (see SKILL.md Phase 5). Validate findings directly against this schema so there is no second copy of these rules to keep in sync.",
   "output_schema": {
     "oneOf": [
       {

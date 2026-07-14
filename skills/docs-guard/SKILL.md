@@ -1,7 +1,7 @@
 ---
 name: "docs-guard"
-description: "Review generated or changed documentation before it ships — READMEs, API references, docstrings, PHPDoc/JSDoc, changelogs, tutorials, and doc sites. Best used reactively after an agent wr..."
-risk: "safe"
+description: "Review generated or changed documentation before it ships, including READMEs, API references, docstrings, changelogs, tutorials, and documentation sites."
+risk: "critical"
 source: "community"
 source_repo: "amElnagdy/guard-skills"
 source_type: "community"

@@ -1,7 +1,7 @@
 ---
 name: "test-guard"
-description: "Review generated or changed test code against universal testing rules before it ships. Best used reactively after an agent writes, edits, generates, or refactors tests, before presenting,..."
-risk: "safe"
+description: "Review generated or changed test code against universal testing rules before it ships or is presented for approval."
+risk: "critical"
 source: "community"
 source_repo: "amElnagdy/guard-skills"
 source_type: "community"

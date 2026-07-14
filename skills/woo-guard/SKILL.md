@@ -1,7 +1,7 @@
 ---
 name: "woo-guard"
-description: "Review generated or changed WooCommerce code — extensions, payment and shipping integrations, checkout customizations, and order/product logic — before it ships. Best used reactively afte..."
-risk: "safe"
+description: "Review generated or changed WooCommerce extensions, payment and shipping integrations, checkout customizations, and order or product logic."
+risk: "critical"
 source: "community"
 source_repo: "amElnagdy/guard-skills"
 source_type: "community"

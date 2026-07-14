@@ -52,7 +52,7 @@ Keep it short. If the report is longer than the codebase deserves, you're paddin
 
 ### Phase 5: Structured output and schema check
 
-For every finding that survived Phase 3 validation, produce a structured JSON object conforming to the schema defined in `report-schema.json` (in the same directory as this skill file — read it via the Read tool before writing output). Write the result to `<output-dir>/findings.json`.
+For every finding that survived Phase 3 validation, produce a structured JSON object conforming to the schema defined in `../resources/report-schema.json` (read it via the Read tool before writing output). Write the result to `<output-dir>/findings.json`.
 
 The schema supports two verdict types via `oneOf`:
 - **`confirmed`** — a validated vulnerability with full trace, execution, and remediation
@@ -60,9 +60,9 @@ The schema supports two verdict types via `oneOf`:
 
 **Before writing `findings.json`:**
 
-1. Read `report-schema.json` from this skill's directory. Follow it exactly — `additionalProperties: false` is enforced, so extra fields will make the output invalid.
+1. Read `../resources/report-schema.json`. Follow it exactly — `additionalProperties: false` is enforced, so extra fields will make the output invalid.
 2. For each finding, populate every required field. If you cannot fill `trace` with real file paths and line numbers verified against the source, the finding is not sufficiently verified — go back and verify it or reject it. Mind the required fields that aren't self-evident: `intended_behavior` (what the code is *supposed* to do, so the defect is legible), `confidence` (`low`/`medium`/`high`, with a reason), and the `severity` object (`likelihood`/`impact`/`overall_severity`). All `severity` scores use the schema's **lowercase** enum — `informational`/`low`/`medium`/`high`/`critical`; the UPPERCASE tiers in SKILL.md and REPORT.md are prose labels, not valid JSON values.
-3. Run `node <skill-dir>/validate-findings.cjs <output-dir>/findings.json` to validate. It checks required fields, enum values, structural constraints, and `additionalProperties`. This is a structural check only — it confirms the JSON conforms to the schema, not that the findings are correct. Factual verification is Phase 6's job. Fix any failures before proceeding.
+3. Validate `<output-dir>/findings.json` against `../resources/report-schema.json` with a trusted JSON Schema validator already available in the user's environment. Do not install or execute a new validator without approval. This is a structural check only — it confirms the JSON conforms to the schema, not that the findings are correct. Factual verification is Phase 6's job. Fix any failures before proceeding.
 
 ### Phase 6: Independent verification
 

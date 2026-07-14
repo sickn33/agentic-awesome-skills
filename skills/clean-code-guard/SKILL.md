@@ -1,7 +1,7 @@
 ---
 name: "clean-code-guard"
-description: "Review generated or changed production code before it ships, using Clean Code, SOLID, DRY, KISS, YAGNI, and LLM-specific failure-mode checks in any programming language. Best used reactiv..."
-risk: "safe"
+description: "Review generated or changed production code with Clean Code, SOLID, DRY, KISS, YAGNI, and LLM-specific failure-mode checks."
+risk: "critical"
 source: "community"
 source_repo: "amElnagdy/guard-skills"
 source_type: "community"
