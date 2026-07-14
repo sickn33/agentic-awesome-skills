@@ -78,10 +78,17 @@ Never present preview as the default or as equivalent to the full-history result
 
 ### 3. Prepare the approved run
 
-Retain the displayed `approval_hash`, then prepare with the exact approved mode:
+Retain the displayed `approval_hash`, then prepare with the exact approved mode.
+For the full-history plan, run:
 
 ```bash
 "$PYTHON3" "$DITTO_PY" plugin prepare --approved-plan-hash HASH
+```
+
+For an approved quick-preview plan, preserve preview mode explicitly:
+
+```bash
+"$PYTHON3" "$DITTO_PY" plugin prepare --preview --approved-plan-hash HASH
 ```
 
 If the hash changes, show the new plan and obtain approval again. Retain the
