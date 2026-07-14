@@ -1,0 +1,210 @@
+{
+  "$comment": "Single source of truth for findings.json structure (see SKILL.md Phase 5). Validate findings directly against this schema so there is no second copy of these rules to keep in sync.",
+  "output_schema": {
+    "oneOf": [
+      {
+        "type": "object",
+        "description": "Confirmed vulnerability — provide the complete, independently verified report.",
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "const": "confirmed"
+          },
+          "title": {
+            "type": "string",
+            "description": "A concise, standard title for the vulnerability."
+          },
+          "description": {
+            "type": "string",
+            "description": "Comprehensive explanation of the vulnerability. Include any reproduction details (proof-of-concept input, configuration, observed output or crash) here."
+          },
+          "root_cause": {
+            "type": "string",
+            "description": "One sentence using the template: '[function_or_component] in [file] does not [missing action], allowing [consequence]'. MUST include the function/component name and file name where the defect exists."
+          },
+          "intended_behavior": {
+            "type": "string",
+            "description": "What was the developer trying to build? Explain the intended, non-vulnerable business logic."
+          },
+          "trace": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": ["entrypoint", "propagation", "sink"]
+                },
+                "file": {
+                  "type": "string",
+                  "description": "Exact file path relative to repository root."
+                },
+                "line": {
+                  "type": "integer"
+                },
+                "scope": {
+                  "type": "string",
+                  "description": "Bare function or method name. No parentheses, no arguments."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Factual description of the state change or data movement."
+                }
+              },
+              "required": ["kind", "file", "line", "scope", "description"],
+              "additionalProperties": false
+            },
+            "description": "Sequential code trace from entrypoint to sink, verified against actual source code. The first step must be kind 'entrypoint', the last must be kind 'sink', and any intermediate steps must be kind 'propagation' (enforced by the validator)."
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": ["authentication_level", "authorization_role", "user_interaction", "system_configuration", "network_routing", "environmental_dependency", "data_state", "timing_dependency", "third_party_dependency"]
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": ["kind", "description"],
+              "additionalProperties": false
+            },
+            "description": "Factual prerequisites for exploitation. Empty array if exploitable by default."
+          },
+          "execution": {
+            "type": "object",
+            "properties": {
+              "attacker_perspective": {
+                "type": "string",
+                "description": "Who is the attacker and their starting point."
+              },
+              "payloads": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Specific malicious inputs, HTTP requests, or scripts."
+              },
+              "instructions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Linear array of all attacker actions from setup through exploitation."
+              },
+              "expected_result": {
+                "type": "string",
+                "description": "Observable outcome confirming successful exploitation."
+              }
+            },
+            "required": ["attacker_perspective", "payloads", "instructions", "expected_result"],
+            "additionalProperties": false
+          },
+          "remediation": {
+            "type": "object",
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "description": "High-level explanation of the fix."
+              },
+              "code_changes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "file_name": {
+                      "type": "string"
+                    },
+                    "fixed_code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["file_name", "fixed_code"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": ["strategy"],
+            "additionalProperties": false
+          },
+          "severity": {
+            "type": "object",
+            "properties": {
+              "likelihood": {
+                "type": "object",
+                "properties": {
+                  "score": {
+                    "type": "string",
+                    "enum": ["informational", "low", "medium", "high", "critical"]
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": ["score", "reason"],
+                "additionalProperties": false
+              },
+              "impact": {
+                "type": "object",
+                "properties": {
+                  "score": {
+                    "type": "string",
+                    "enum": ["informational", "low", "medium", "high", "critical"]
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": ["score", "reason"],
+                "additionalProperties": false
+              },
+              "overall_severity": {
+                "type": "string",
+                "enum": ["informational", "low", "medium", "high", "critical"]
+              }
+            },
+            "required": ["likelihood", "impact", "overall_severity"],
+            "additionalProperties": false
+          },
+          "confidence": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "string",
+                "enum": ["low", "medium", "high"]
+              },
+              "reason": {
+                "type": "string",
+                "description": "Why you scored the confidence this way. Mention any missing files, complex routing, or ambiguous data flows."
+              }
+            },
+            "required": ["score", "reason"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["verdict", "title", "description", "root_cause", "intended_behavior", "trace", "conditions", "execution", "remediation", "severity", "confidence"],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "description": "Rejected finding — the described behavior is factually incorrect or the code path does not exist.",
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "const": "rejected"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Explain which specific claims in the finding are factually wrong (e.g., code path doesn't exist, mitigation prevents the described flow, trace is incorrect)."
+          }
+        },
+        "required": ["verdict", "reason"],
+        "additionalProperties": false
+      }
+    ]
+  }
+}
