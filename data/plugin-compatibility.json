@@ -8060,6 +8060,25 @@
       "runtime_files": []
     },
     {
+      "id": "clean-code-guard",
+      "path": "skills/clean-code-guard",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "clerk-auth",
       "path": "skills/clerk-auth",
       "targets": {
@@ -8176,6 +8195,25 @@
     {
       "id": "cloud-penetration-testing",
       "path": "skills/cloud-penetration-testing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "cloudflare-security-audit",
+      "path": "skills/cloudflare-security-audit",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -13075,6 +13113,25 @@
     {
       "id": "docs-as-marketing",
       "path": "skills/docs-as-marketing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "docs-guard",
+      "path": "skills/docs-guard",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -33572,6 +33629,25 @@
       "runtime_files": []
     },
     {
+      "id": "test-guard",
+      "path": "skills/test-guard",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "testing-patterns",
       "path": "skills/testing-patterns",
       "targets": {
@@ -36653,6 +36729,25 @@
       "runtime_files": []
     },
     {
+      "id": "woo-guard",
+      "path": "skills/woo-guard",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "wordpress",
       "path": "skills/wordpress",
       "targets": {
@@ -36826,6 +36921,25 @@
     {
       "id": "workorai",
       "path": "skills/workorai",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "wp-guard",
+      "path": "skills/wp-guard",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -37477,10 +37591,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1950,
+    "total_skills": 1956,
     "supported": {
-      "codex": 1876,
-      "claude": 1898
+      "codex": 1882,
+      "claude": 1904
     },
     "blocked": {
       "codex": 74,

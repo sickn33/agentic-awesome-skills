@@ -10141,6 +10141,30 @@
     }
   },
   {
+    "id": "clean-code-guard",
+    "path": "skills/clean-code-guard",
+    "category": "uncategorized",
+    "name": "clean-code-guard",
+    "description": "Review generated or changed production code with Clean Code, SOLID, DRY, KISS, YAGNI, and LLM-specific failure-mode checks.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "amElnagdy/guard-skills"
+  },
+  {
     "id": "clerk-auth",
     "path": "skills/clerk-auth",
     "category": "uncategorized",
@@ -10293,6 +10317,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "cloudflare-security-audit",
+    "path": "skills/cloudflare-security-audit",
+    "category": "uncategorized",
+    "name": "cloudflare-security-audit",
+    "description": "Audit authorized codebases for exploitable vulnerabilities using scoped reconnaissance, adversarial review, validation, and structured reporting.",
+    "risk": "offensive",
+    "source": "community",
+    "date_added": "2026-07-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "cloudflare/security-audit-skill"
   },
   {
     "id": "cloudflare-workers-expert",
@@ -15651,6 +15699,30 @@
     "source_repo": "jonathimer/devmarketing-skills",
     "license": "MIT",
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "docs-guard",
+    "path": "skills/docs-guard",
+    "category": "uncategorized",
+    "name": "docs-guard",
+    "description": "Review generated or changed documentation before it ships, including READMEs, API references, docstrings, changelogs, tutorials, and documentation sites.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "amElnagdy/guard-skills"
   },
   {
     "id": "documentation",
@@ -42012,6 +42084,30 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "test-guard",
+    "path": "skills/test-guard",
+    "category": "testing",
+    "name": "test-guard",
+    "description": "Review generated or changed test code against universal testing rules before it ships or is presented for approval.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "amElnagdy/guard-skills"
+  },
+  {
     "id": "testing-patterns",
     "path": "skills/testing-patterns",
     "category": "testing",
@@ -46270,6 +46366,30 @@
     "license_source": "https://github.com/Wolfe-Jam/faf-skills/blob/main/LICENSE"
   },
   {
+    "id": "woo-guard",
+    "path": "skills/woo-guard",
+    "category": "uncategorized",
+    "name": "woo-guard",
+    "description": "Review generated or changed WooCommerce extensions, payment and shipping integrations, checkout customizations, and order or product logic.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "amElnagdy/guard-skills"
+  },
+  {
     "id": "wordpress",
     "path": "skills/wordpress",
     "category": "workflow-bundle",
@@ -46507,6 +46627,30 @@
       "talent-marketplace",
       "mcp"
     ]
+  },
+  {
+    "id": "wp-guard",
+    "path": "skills/wp-guard",
+    "category": "uncategorized",
+    "name": "wp-guard",
+    "description": "Review generated or changed WordPress plugins, themes, and blocks for security, internationalization, performance, and API correctness.",
+    "risk": "offensive",
+    "source": "community",
+    "date_added": "2026-07-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "amElnagdy/guard-skills"
   },
   {
     "id": "wp-site-health-auditor",

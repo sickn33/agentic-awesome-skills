@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-13T08:55:06.000Z
 
-Total skills: 1950
+Total skills: 1956
 
 ## agent-behavior (4)
 
@@ -1944,7 +1944,7 @@ Total skills: 1950
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | unknown | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | unknown | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (26)
+## testing (27)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1972,6 +1972,7 @@ Total skills: 1950
 | `temporal-python-testing` | Comprehensive testing approaches for Temporal workflows using pytest, progressive disclosure resources for specific testing scenarios. | unknown | community | temporal, python | temporal, python, testing, approaches, pytest, progressive, disclosure, resources, specific, scenarios |
 | `test-driven-development` | Use when implementing any feature or bugfix, before writing implementation code | unknown | community | driven | driven, test, development, implementing, any, feature, bugfix, before, writing, code |
 | `test-framework-migration-skill` | Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress. Use when the user asks to migrate, convert, or port tests... | unknown | LambdaTest/agent-skills | framework, migration, skill | framework, migration, skill, test, migrates, converts, automation, scripts, between, selenium, playwright, puppeteer |
+| `test-guard` | Review generated or changed test code against universal testing rules before it ships or is presented for approval. | critical | amElnagdy/guard-skills | guard | guard, test, review, generated, changed, code, against, universal, testing, rules, before, ships |
 | `testing-patterns` | Jest testing patterns, factory functions, mocking strategies, and TDD workflow. Use when writing unit tests, creating test factories, or following TDD red-gr... | unknown | community |  | testing, jest, factory, functions, mocking, tdd, writing, unit, tests, creating, test, factories |
 | `unit-testing-test-generate` | Generate comprehensive, maintainable unit tests across languages with strong coverage and edge case focus. | unknown | community | unit, generate | unit, generate, testing, test, maintainable, tests, languages, strong, coverage, edge, case |
 
@@ -1987,7 +1988,7 @@ Total skills: 1950
 | --- | --- | --- | --- | --- | --- |
 | `android-cli` | Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line t... | critical | self | android, cli, adb, mobile, build, emulator | android, cli, adb, mobile, build, emulator, orchestrates, development, tasks, including, creation, deployment |
 
-## uncategorized (278)
+## uncategorized (283)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2028,8 +2029,10 @@ Total skills: 1950
 | `churn-prevention` | Reduce voluntary and involuntary churn with cancel flows, save offers, dunning, win-back tactics, and retention strategy. Use when users are cancelling, fail... | unknown | https://github.com/coreyhaines31/marketingskills | churn, prevention | churn, prevention, reduce, voluntary, involuntary, cancel, flows, save, offers, dunning, win, back |
 | `ci-cd-and-automation` | Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test ... | unknown | addyosmani/agent-skills | ci, cd, and | ci, cd, and, automation, automates, pipeline, setup, setting, up, modifying, deployment, pipelines |
 | `claimable-postgres` | Provision instant temporary Postgres databases via Claimable Postgres by Neon (neon.new) with no login, signup, or credit card. Supports REST API, CLI, and S... | unknown | neondatabase/agent-skills | claimable, postgres | claimable, postgres, provision, instant, temporary, databases, via, neon, new, no, login, signup |
+| `clean-code-guard` | Review generated or changed production code with Clean Code, SOLID, DRY, KISS, YAGNI, and LLM-specific failure-mode checks. | critical | amElnagdy/guard-skills | clean, code, guard | clean, code, guard, review, generated, changed, solid, dry, kiss, yagni, llm, specific |
 | `clerk-auth` | Expert patterns for Clerk auth implementation, middleware, organizations, webhooks, and user sync | safe | vibeship-spawner-skills (Apache 2.0) | clerk, auth | clerk, auth, middleware, organizations, webhooks, user, sync |
 | `close-automation` | Automate Close CRM tasks via Rube MCP (Composio): create leads, manage calls/SMS, handle tasks, and track notes. Always search tools first for current schemas. | critical | community | close | close, automation, automate, crm, tasks, via, rube, mcp, composio, leads, calls, sms |
+| `cloudflare-security-audit` | Audit authorized codebases for exploitable vulnerabilities using scoped reconnaissance, adversarial review, validation, and structured reporting. | offensive | cloudflare/security-audit-skill | cloudflare, security, audit | cloudflare, security, audit, authorized, codebases, exploitable, vulnerabilities, scoped, reconnaissance, adversarial, review, validation |
 | `co-marketing` | When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities. Use when the user says 'co-marketing,' 'par... | unknown | coreyhaines31/marketingskills | co, marketing | co, marketing, user, wants, find, partners, plan, joint, campaigns, brainstorm, partnership, opportunities |
 | `coda-automation` | Automate Coda tasks via Rube MCP (Composio): manage docs, pages, tables, rows, formulas, permissions, and publishing. Always search tools first for current s... | critical | community | coda | coda, automation, automate, tasks, via, rube, mcp, composio, docs, pages, tables, rows |
 | `cold-email` | Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, sub... | unknown | https://github.com/coreyhaines31/marketingskills | cold, email | cold, email, write, b2b, emails, follow, up, sequences, earn, replies, creating, outbound |
@@ -2058,6 +2061,7 @@ Total skills: 1950
 | `developer-sandbox` | Design and build interactive playgrounds that let developers experience your product without commitment. This skill covers playground architecture, pre-popul... | unknown | jonathimer/devmarketing-skills | sandbox | sandbox, developer, interactive, playgrounds, let, developers, experience, product, without, commitment, skill, covers |
 | `doc2math` | Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty. | safe | community | doc2math | doc2math, convert, narrative, technical, documents, grounded, mathematical, problem, specifications, variables, constraints, objectives |
 | `docs-as-marketing` | Transform documentation into a powerful marketing channel that attracts, converts, and retains developers. This skill covers creating documentation that rank... | unknown | jonathimer/devmarketing-skills | docs, as, marketing | docs, as, marketing, transform, documentation, powerful, channel, attracts, converts, retains, developers, skill |
+| `docs-guard` | Review generated or changed documentation before it ships, including READMEs, API references, docstrings, changelogs, tutorials, and documentation sites. | critical | amElnagdy/guard-skills | docs, guard | docs, guard, review, generated, changed, documentation, before, ships, including, readmes, api, references |
 | `doubt-driven-development` | Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unf... | unknown | addyosmani/agent-skills | doubt, driven | doubt, driven, development, subjects, every, non, trivial, decision, fresh, context, adversarial, review |
 | `earllm-build` | Build, maintain, and extend the EarLLM One Android project — a Kotlin/Compose app that connects Bluetooth earbuds to an LLM via voice pipeline. | safe | community | android, kotlin, bluetooth, llm, voice | android, kotlin, bluetooth, llm, voice, earllm, maintain, extend, one, compose, app, connects |
 | `eas-update-insights` | Check the health of published EAS Updates: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per c... | unknown | expo/skills | eas, update, insights | eas, update, insights, check, health, published, updates, crash, rates, install, launch, counts |
@@ -2266,6 +2270,8 @@ Total skills: 1950
 | `windows-shell-reliability` | Reliable command execution on Windows: paths, encoding, and common binary pitfalls. | safe | community | windows, shell, reliability | windows, shell, reliability, reliable, command, execution, paths, encoding, common, binary, pitfalls |
 | `wjttc-builder` | PLAN and GENERATE WJTTC (Championship-Grade) test suites for any project. Analyzes the codebase, classifies components across the WJTTC five tiers (Brake · E... | unknown | Wolfe-Jam/faf-skills | wjttc, builder | wjttc, builder, plan, generate, championship, grade, test, suites, any, analyzes, codebase, classifies |
 | `wjttc-tester` | F1-inspired test EXECUTOR + reporter. Runs a test plan, finds and reproduces bugs, audits suite signal integrity, then files a WJTTC report (Brake/Engine/Aer... | unknown | Wolfe-Jam/faf-skills | wjttc, tester | wjttc, tester, f1, inspired, test, executor, reporter, runs, plan, finds, reproduces, bugs |
+| `woo-guard` | Review generated or changed WooCommerce extensions, payment and shipping integrations, checkout customizations, and order or product logic. | critical | amElnagdy/guard-skills | woo, guard | woo, guard, review, generated, changed, woocommerce, extensions, payment, shipping, integrations, checkout, customizations |
+| `wp-guard` | Review generated or changed WordPress plugins, themes, and blocks for security, internationalization, performance, and API correctness. | offensive | amElnagdy/guard-skills | wp, guard | wp, guard, review, generated, changed, wordpress, plugins, themes, blocks, security, internationalization, performance |
 | `xvary-stock-research` | Thesis-driven equity analysis from public SEC EDGAR and market data; /analyze, /score, /compare workflows with bundled Python tools (Claude Code, Cursor, Cod... | safe | community | xvary, stock, research | xvary, stock, research, thesis, driven, equity, analysis, public, sec, edgar, market, data |
 | `yes-md` | 6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest. | safe | community | yes, md | yes, md, layer, ai, governance, safety, gates, evidence, debugging, anti, slack, detection |
 | `yield-intelligence` | Passive income portfolio analysis — activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yi... | safe | community | yield, intelligence | yield, intelligence, passive, income, portfolio, analysis, activate, user, asks, about, dividend, yields |

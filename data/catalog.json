@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-13T08:55:06.000Z",
-  "total": 1950,
+  "total": 1956,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -12099,6 +12099,37 @@
       "path": "skills/clean-code/SKILL.md"
     },
     {
+      "id": "clean-code-guard",
+      "canonical_id": "clean-code-guard",
+      "name": "clean-code-guard",
+      "description": "Review generated or changed production code with Clean Code, SOLID, DRY, KISS, YAGNI, and LLM-specific failure-mode checks.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "amElnagdy/guard-skills",
+      "tags": [
+        "clean",
+        "code",
+        "guard"
+      ],
+      "triggers": [
+        "clean",
+        "code",
+        "guard",
+        "review",
+        "generated",
+        "changed",
+        "solid",
+        "dry",
+        "kiss",
+        "yagni",
+        "llm",
+        "specific"
+      ],
+      "path": "skills/clean-code-guard/SKILL.md"
+    },
+    {
       "id": "clerk-auth",
       "canonical_id": "clerk-auth",
       "name": "clerk-auth",
@@ -12286,6 +12317,37 @@
         "aws"
       ],
       "path": "skills/cloud-penetration-testing/SKILL.md"
+    },
+    {
+      "id": "cloudflare-security-audit",
+      "canonical_id": "cloudflare-security-audit",
+      "name": "cloudflare-security-audit",
+      "description": "Audit authorized codebases for exploitable vulnerabilities using scoped reconnaissance, adversarial review, validation, and structured reporting.",
+      "category": "uncategorized",
+      "risk": "offensive",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "cloudflare/security-audit-skill",
+      "tags": [
+        "cloudflare",
+        "security",
+        "audit"
+      ],
+      "triggers": [
+        "cloudflare",
+        "security",
+        "audit",
+        "authorized",
+        "codebases",
+        "exploitable",
+        "vulnerabilities",
+        "scoped",
+        "reconnaissance",
+        "adversarial",
+        "review",
+        "validation"
+      ],
+      "path": "skills/cloudflare-security-audit/SKILL.md"
     },
     {
       "id": "cloudflare-workers-expert",
@@ -19629,6 +19691,36 @@
         "skill"
       ],
       "path": "skills/docs-as-marketing/SKILL.md"
+    },
+    {
+      "id": "docs-guard",
+      "canonical_id": "docs-guard",
+      "name": "docs-guard",
+      "description": "Review generated or changed documentation before it ships, including READMEs, API references, docstrings, changelogs, tutorials, and documentation sites.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "amElnagdy/guard-skills",
+      "tags": [
+        "docs",
+        "guard"
+      ],
+      "triggers": [
+        "docs",
+        "guard",
+        "review",
+        "generated",
+        "changed",
+        "documentation",
+        "before",
+        "ships",
+        "including",
+        "readmes",
+        "api",
+        "references"
+      ],
+      "path": "skills/docs-guard/SKILL.md"
     },
     {
       "id": "documentation",
@@ -50305,6 +50397,35 @@
       "path": "skills/test-framework-migration-skill/SKILL.md"
     },
     {
+      "id": "test-guard",
+      "canonical_id": "test-guard",
+      "name": "test-guard",
+      "description": "Review generated or changed test code against universal testing rules before it ships or is presented for approval.",
+      "category": "testing",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "amElnagdy/guard-skills",
+      "tags": [
+        "guard"
+      ],
+      "triggers": [
+        "guard",
+        "test",
+        "review",
+        "generated",
+        "changed",
+        "code",
+        "against",
+        "universal",
+        "testing",
+        "rules",
+        "before",
+        "ships"
+      ],
+      "path": "skills/test-guard/SKILL.md"
+    },
+    {
       "id": "testing-patterns",
       "canonical_id": "testing-patterns",
       "name": "testing-patterns",
@@ -55021,6 +55142,36 @@
       "path": "skills/wjttc-tester/SKILL.md"
     },
     {
+      "id": "woo-guard",
+      "canonical_id": "woo-guard",
+      "name": "woo-guard",
+      "description": "Review generated or changed WooCommerce extensions, payment and shipping integrations, checkout customizations, and order or product logic.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "amElnagdy/guard-skills",
+      "tags": [
+        "woo",
+        "guard"
+      ],
+      "triggers": [
+        "woo",
+        "guard",
+        "review",
+        "generated",
+        "changed",
+        "woocommerce",
+        "extensions",
+        "payment",
+        "shipping",
+        "integrations",
+        "checkout",
+        "customizations"
+      ],
+      "path": "skills/woo-guard/SKILL.md"
+    },
+    {
       "id": "wordpress",
       "canonical_id": "wordpress",
       "name": "wordpress",
@@ -55295,6 +55446,36 @@
         "jobs"
       ],
       "path": "skills/workorai/SKILL.md"
+    },
+    {
+      "id": "wp-guard",
+      "canonical_id": "wp-guard",
+      "name": "wp-guard",
+      "description": "Review generated or changed WordPress plugins, themes, and blocks for security, internationalization, performance, and API correctness.",
+      "category": "uncategorized",
+      "risk": "offensive",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "amElnagdy/guard-skills",
+      "tags": [
+        "wp",
+        "guard"
+      ],
+      "triggers": [
+        "wp",
+        "guard",
+        "review",
+        "generated",
+        "changed",
+        "wordpress",
+        "plugins",
+        "themes",
+        "blocks",
+        "security",
+        "internationalization",
+        "performance"
+      ],
+      "path": "skills/wp-guard/SKILL.md"
     },
     {
       "id": "wp-site-health-auditor",
