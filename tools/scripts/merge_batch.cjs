@@ -959,12 +959,10 @@ function formatCheckSummary(summaries) {
 function listActionRequiredRuns(projectRoot, repoSlug, headSha) {
   const payload = runGhApiJson(projectRoot, [
     `repos/${repoSlug}/actions/runs?head_sha=${headSha}&status=action_required&per_page=100`,
-  ], {
-    paginate: true,
-    slurp: true,
-  });
+  ]);
 
-  const runs = flattenGhSlurpPayload(payload).filter((run) => Number.isInteger(Number(run?.id)));
+  const runs = (Array.isArray(payload?.workflow_runs) ? payload.workflow_runs : [])
+    .filter((run) => Number.isInteger(Number(run?.id)));
   const seen = new Set();
   return runs.filter((run) => {
     const id = Number(run.id);
