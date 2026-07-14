@@ -2,7 +2,7 @@
 name: ontoly-software-graph
 description: "Use Ontoly's deterministic Software Graph, MCP server, and agent skills for architecture review, request tracing, impact analysis, and dependency analysis."
 category: development
-risk: safe
+risk: critical
 source: community
 source_repo: 0xsarwagya/ontoly
 source_type: community
@@ -139,7 +139,7 @@ Workflow:
 - Run Ontoly only on repositories the user is authorized to analyze.
 - Do not send graph files, source code, environment variables, diagnostics, or repository metadata to external services unless the user explicitly requests it.
 - Treat environment-variable nodes, configuration nodes, and diagnostics as potentially sensitive.
-- Graph generation is local analysis but may write local artifacts such as graph output, diagnostics, indexes, or cache files.
+- Graph generation is local analysis but can create files such as graph output, diagnostics, indexes, or caches inside the repository.
 - Do not execute project build scripts, package installation, or network commands unless they are documented by the repository or approved by the user.
 
 ## Common Pitfalls
