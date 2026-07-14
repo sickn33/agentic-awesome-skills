@@ -117,6 +117,7 @@ def text_to_infographic(prompt, output_path, provider="openai",
     existing = [path for path in (output, manifest_path) if path.exists()]
     if existing:
         raise FileExistsError(f"Refusing to overwrite existing paths: {existing}")
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest = {"provider": provider, "model_or_deployment": model_or_deployment,
                 "output_path": output_path}
     try:
