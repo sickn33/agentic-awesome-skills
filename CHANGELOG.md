@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.4.0] - 2026-07-14 - "Protected Automation and Production Skills"
+
+> Ten reviewed community skills for durable project memory, software-graph analysis, Cloudflare and codebase guardrails, data warehousing, and presentation production, backed by protected exact-commit maintainer automation.
+
+## Added
+
+- Added **feature-tracking** for durable feature decisions, implementation state, and project memory across sessions (PR #819).
+- Added **ontoly-software-graph** for querying and reasoning over Ontoly software knowledge graphs (PR #827).
+- Added **cloudflare-security-audit** plus the **clean-code**, **documentation**, **testing**, **WooCommerce**, and **WordPress** guard skills (PR #822).
+- Added **warehouse** for production-oriented data warehouse architecture and implementation workflows (PR #818).
+- Added **pptx-deck-creation** for structured PowerPoint research, authoring, rendering, and visual QA (PR #830).
+
+## Changed
+
+- Protected canonical repository writers with exact pull-request and commit binding, trusted regression gates, fail-closed approval handling, and a single guarded canonical-sync path.
+- Restored the explicit fork-approval flow while preventing workflow runs from being reused across unrelated pull requests or head commits.
+- Improved curated plugin bundle composition, tracked ignored Claude mirror files correctly, and combined npm package-rename traffic without double counting.
+- Made hosted catalog SEO identities reproducible across canonical URLs, social metadata, sitemaps, and prerendered output.
+
 ## Fixed
 
 - Closed the two open Security and Quality findings by declaring least-privilege workflow permissions and making the SEO package-identity regression test exact.
@@ -20,6 +39,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Validation
 
 - Added regression coverage for workflow fail-closed behavior, mirror containment guidance, Telegram authorization and token transport, legacy Git, production redirect counts, and non-string research queries.
+- Passed the canonical 1,958-skill validation and reference checks, full root test suite, documentation security gate, web-app coverage and production build, npm high-severity audit, package dry run, CodeQL, and protected exact-head PR checks.
+
+## Credits
+
+- **[@JunsW](https://github.com/JunsW)** for `feature-tracking` (PR #819).
+- **[@0xsarwagya](https://github.com/0xsarwagya)** for `ontoly-software-graph` (PR #827).
+- **[@FrancoStino](https://github.com/FrancoStino)** for the Cloudflare security audit and guard skills (PR #822).
+- **[@Rudra-G-23](https://github.com/Rudra-G-23)** for `warehouse` (PR #818).
+- **[@kimtth](https://github.com/kimtth)** for `pptx-deck-creation` (PR #830).
 
 ## [14.3.1] - 2026-07-13 - "Expert Workbench and Community Surface Cleanup"
 
