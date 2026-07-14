@@ -1,4 +1,4 @@
-<!-- registry-sync: version=14.3.1; skills=1958; stars=43042; updated_at=2026-07-13T08:55:06+00:00 -->
+<!-- registry-sync: version=14.4.0; skills=1958; stars=43124; updated_at=2026-07-14T07:01:47+00:00 -->
 [![Agentic Awesome Skills social preview](apps/web-app/public/social-card.png)](https://github.com/sickn33/agentic-awesome-skills)
 
 # 🌌 Agentic Awesome Skills: 1,958+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More
@@ -30,7 +30,7 @@ The canonical project page is the GitHub repository at <https://github.com/sickn
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
-**Current release: V14.3.1.** Trusted by 43k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
+**Current release: V14.4.0.** Trusted by 43k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
 
 ## Why This Repo
 
@@ -171,7 +171,7 @@ Use the table above for install targets. Use specialized plugins when you are ch
 
 ### What is Agentic Awesome Skills?
 
-**Agentic Awesome Skills** (Release 14.3.1) is a large, installable skill library for AI coding assistants. It packages 1,958+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Autohand Code, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
+**Agentic Awesome Skills** (Release 14.4.0) is a large, installable skill library for AI coding assistants. It packages 1,958+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, generated catalogs, and a CLI installer so Claude Code, Codex CLI, Autohand Code, Cursor, Gemini CLI, Antigravity, and similar tools can reuse proven operating instructions instead of one-off prompts.
 
 ### How do I install it?
 
