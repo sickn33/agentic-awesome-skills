@@ -297,6 +297,30 @@ function runFixture(overrides = {}) {
       label,
     );
   }
+  for (const [label, run, identity = emptyMetadataIdentity] of [
+    ["missing pull request metadata", runFixture({ pull_requests: undefined })],
+    ["non-array pull request metadata", runFixture({ pull_requests: {} })],
+    ["nonempty malformed pull request metadata", runFixture({ pull_requests: [{}] })],
+    ["missing run branch", runFixture({ pull_requests: [], head_branch: undefined })],
+    ["missing run fork", runFixture({ pull_requests: [], head_repository: undefined })],
+    ["missing run base repository", runFixture({ pull_requests: [], repository: undefined })],
+    ["missing captured branch", runFixture({ pull_requests: [] }), { ...emptyMetadataIdentity, headRefName: undefined }],
+    ["missing captured fork", runFixture({ pull_requests: [] }), { ...emptyMetadataIdentity, headRepository: undefined }],
+    ["missing captured base repository", runFixture({ pull_requests: [] }), { ...emptyMetadataIdentity, baseRepository: undefined }],
+  ]) {
+    assert.throws(
+      () => mergeBatch.validateActionRequiredRuns(
+        [run],
+        [workflowFixture()],
+        450,
+        HEAD_SHA,
+        undefined,
+        identity,
+      ),
+      /exact fork identity does not match/,
+      label,
+    );
+  }
 
   for (const [label, run, workflows, pattern] of [
     ["unrelated PR", runFixture({ pull_requests: [{ number: 451 }] }), [workflowFixture()], /does not contain #450/],

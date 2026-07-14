@@ -1030,8 +1030,17 @@ function validateActionRequiredRuns(
       reasons.push("head SHA does not match the captured pull request head");
     }
     if (!prNumbers.includes(prNumber)) {
-      const canBindEmptyMetadata = prNumbers.length === 0
-        && prIdentity
+      const identityValues = [
+        run?.head_branch,
+        run?.head_repository?.full_name,
+        run?.repository?.full_name,
+        prIdentity?.headRefName,
+        prIdentity?.headRepository,
+        prIdentity?.baseRepository,
+      ];
+      const canBindEmptyMetadata = Array.isArray(run?.pull_requests)
+        && run.pull_requests.length === 0
+        && identityValues.every((value) => typeof value === "string" && value.length > 0)
         && run?.head_branch === prIdentity.headRefName
         && run?.head_repository?.full_name === prIdentity.headRepository
         && run?.repository?.full_name === prIdentity.baseRepository;
