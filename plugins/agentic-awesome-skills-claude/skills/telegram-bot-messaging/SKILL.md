@@ -25,7 +25,7 @@ license_source: "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
 Send updates, alerts, and files to Telegram; read replies; run ask-and-wait
 approval flows. Pure bash + curl + jq — no install beyond a bot token.
 
-First run: `scripts/telegram.sh setup` (guided BotFather walkthrough).
+First run: `bash scripts/telegram.sh setup` (guided BotFather walkthrough).
 
 ## Safety Gate
 
@@ -37,13 +37,13 @@ do not echo it, commit it, or place it in shell history.
 ## Commands
 
 ```bash
-scripts/telegram.sh send "Deploy finished ✅"                    # basic alert
-scripts/telegram.sh send "low priority" --silent                # no notification sound
-scripts/telegram.sh send "*bold* alert" --format md             # MarkdownV2 (falls back to plain)
-scripts/telegram.sh send "hi" --to alerts --bot work            # named target + named bot
-scripts/telegram.sh file report.pdf "Q3 report"                 # document (photos auto-detected)
-scripts/telegram.sh read                                        # new incoming messages since last read
-ANSWER=$(scripts/telegram.sh ask "Deploy to prod?" --options "Yes,No" --timeout 300)
+bash scripts/telegram.sh send "Deploy finished ✅"                    # basic alert
+bash scripts/telegram.sh send "low priority" --silent                # no notification sound
+bash scripts/telegram.sh send "*bold* alert" --format md             # MarkdownV2 (falls back to plain)
+bash scripts/telegram.sh send "hi" --to alerts --bot work            # named target + named bot
+bash scripts/telegram.sh file report.pdf "Q3 report"                 # document (photos auto-detected)
+bash scripts/telegram.sh read                                        # new incoming messages since last read
+ANSWER=$(bash scripts/telegram.sh ask "Deploy to prod?" --options "Yes,No" --timeout 300)
 # exit 0 = answered (stdout = answer), 2 = timeout
 ```
 
@@ -56,9 +56,14 @@ TELEGRAM_BOT_TOKEN=123:ABC...     # default bot
 TELEGRAM_CHAT_ID=987654321        # default target
 BOT_ALERTS_TOKEN=456:DEF...       # --bot alerts   (add via: setup --bot alerts)
 TARGET_FAMILY=-100987...          # --to family    (any chat/group/channel id)
+TELEGRAM_APPROVER_IDS=123456789   # default group approver user IDs (comma-separated)
+APPROVERS_FAMILY=123456789,987654321 # approvers for --to family (overrides default)
 ```
 
-Replies and answers are only accepted from configured chat IDs.
+Replies and answers are only accepted from configured chat IDs. Private chats preserve the
+direct-chat behavior (the sender user ID must equal the chat ID). Because a group chat ID is
+shared by every member, `ask` fails closed for groups unless `TELEGRAM_APPROVER_IDS` or the
+target-specific `APPROVERS_<NAME>` explicitly lists the Telegram user IDs allowed to answer.
 
 ## Claude Code hooks (settings.json)
 
@@ -68,9 +73,9 @@ Ping your phone when Claude needs input, and when it finishes:
 {
   "hooks": {
     "Notification": [{"hooks": [{"type": "command",
-      "command": "~/.claude/skills/telegram/scripts/telegram.sh send \"🔔 Claude needs input in $(basename \\\"$PWD\\\")\""}]}],
+      "command": "bash ~/.claude/skills/telegram/scripts/telegram.sh send \"🔔 Claude needs input in $(basename \\\"$PWD\\\")\""}]}],
     "Stop": [{"hooks": [{"type": "command",
-      "command": "~/.claude/skills/telegram/scripts/telegram.sh send \"✅ Claude finished in $(basename \\\"$PWD\\\")\" --silent"}]}]
+      "command": "bash ~/.claude/skills/telegram/scripts/telegram.sh send \"✅ Claude finished in $(basename \\\"$PWD\\\")\" --silent"}]}]
   }
 }
 ```
@@ -78,7 +83,7 @@ Ping your phone when Claude needs input, and when it finishes:
 Approval gate in any script/automation:
 
 ```bash
-if [ "$(scripts/telegram.sh ask 'Deploy to prod?' --options 'Yes,No')" = "Yes" ]; then
+if [ "$(bash scripts/telegram.sh ask 'Deploy to prod?' --options 'Yes,No')" = "Yes" ]; then
   ./deploy.sh
 fi
 ```
@@ -90,6 +95,7 @@ fi
 - This skill cannot verify that a chat ID belongs to the intended recipient; confirm the target
   before every new destination or automation.
 - Bot tokens grant control of the bot. Store them only in a protected local secret store or
-  mode-600 configuration file, and rotate a token if exposure is suspected.
+  mode-600 configuration file. The script supplies token-bearing API URLs to curl through
+  stdin rather than process arguments; rotate a token if exposure is suspected.
 - Do not use the examples to create unattended notifications or approval flows without the
   user's explicit, current authorization.
