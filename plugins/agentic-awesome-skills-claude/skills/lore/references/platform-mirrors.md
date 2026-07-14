@@ -26,50 +26,22 @@ When the skill needs to know which platform files to generate (during `init`, `m
 ```
 resolve_mirror_targets(config, repo_root):
 
-    # 1. If config has mirror_targets set, auto-detect is skipped, but validation is not
+    # 1. If config has mirror_targets set, use it verbatim (auto-detect skipped)
     if "mirror_targets" in config:
-        return validate_mirror_targets(config["mirror_targets"], repo_root)
+        return list(config["mirror_targets"])
 
     # 2. Scan repo root for existing platform files (see Scan candidates)
     detected = scan_existing_platform_files(repo_root)
     if detected:
-        return validate_mirror_targets(detected, repo_root)
+        return detected
 
     # 3. Nothing detected → ask user via multi-select, persist to config, return
     selected = ask_user_multi_select(AGENT_CHOICES)
     write_mirror_targets_to_config(selected)
-    return validate_mirror_targets(selected, repo_root)
+    return selected
 ```
 
 This is the core resolution used by all three commands. `init` extends it with classification and per-file takeover steps — see "Init-time behavior (full procedure)" below.
-
-### Mandatory target validation
-
-Validation is fail-closed and atomic. Validate the complete target list **before reading,
-creating, classifying, archiving, or writing any target**. If one entry fails, report it and
-abort the mirror operation without touching any target.
-
-For each target:
-
-1. Require a non-empty string containing no NUL byte. Reject absolute paths on every
-   platform (POSIX `/...`, Windows drive paths such as `C:\\...`, and UNC paths).
-2. Parse path components without interpreting the value as a shell pattern. Reject any `..`
-   component; normalize `.` and repeated separators only after that rejection.
-3. Require the normalized relative path to match this allowlist exactly:
-   `CLAUDE.md`, `.claude/CLAUDE.md`, `.cursorrules`, `.clinerules`, `AGENTS.md`,
-   `CONVENTIONS.md`, `.windsurfrules`, `.github/copilot-instructions.md`, or
-   `.continue/rules/lore.md`; or match `.cursor/rules/<name>.mdc`, where `<name>` is one
-   non-empty filename segment (no nested directory).
-4. Resolve `repo_root` to its canonical path. Walk every existing component of the target
-   with symlinks resolved and require it to remain inside that canonical root. For a missing
-   target, resolve its nearest existing parent the same way. Reject a target whose file or
-   parent symlink escapes the root. Perform this check again immediately before every read or
-   write to reduce check/use races.
-
-Examples: accept `CLAUDE.md`, `.github/copilot-instructions.md`, and
-`.cursor/rules/lore.mdc`. Reject `/tmp/CLAUDE.md`, `../CLAUDE.md`,
-`.cursor/rules/nested/lore.mdc`, `notes.md`, and an allowlisted-looking path whose existing
-parent or file is a symlink outside the project.
 
 ### Scan candidates
 
@@ -162,15 +134,12 @@ If a project needs the old behavior (mirror updates on every `sync`), set `sync_
 
 This is the actual write step for platform mirrors.
 
-1. Validate the complete configured target list using "Mandatory target validation" above.
-   Abort without reading or writing any target if validation fails.
-2. Read the current state of `.lore/SUMMARY.md` and the scope-tagged index.
-3. For each validated mirror target, recheck canonical containment immediately before access,
-   then read the existing file and detect the section boundary.
-4. Compute the new Lore section content.
-5. **Content-based dedup**: if the new Lore section content is byte-identical to the existing one, skip writing. Report "No changes needed: `<file>`".
-6. If different, replace the Lore section (full rewrite, no merge with previous content). Preserve the My notes section verbatim.
-7. Recheck canonical containment, then write the file back. Report "Mirror updated: `<file>`".
+1. Read the current state of `.lore/SUMMARY.md` and the scope-tagged index.
+2. For each configured mirror target, read the existing file and detect the section boundary.
+3. Compute the new Lore section content.
+4. **Content-based dedup**: if the new Lore section content is byte-identical to the existing one, skip writing. Report "No changes needed: `<file>`".
+5. If different, replace the Lore section (full rewrite, no merge with previous content). Preserve the My notes section verbatim.
+6. Write the file back. Report "Mirror updated: `<file>`".
 
 The content-based dedup step (4) is the key reason `mirror` can be run frequently without polluting `git log` — most invocations will be no-ops once the mirror is in sync.
 

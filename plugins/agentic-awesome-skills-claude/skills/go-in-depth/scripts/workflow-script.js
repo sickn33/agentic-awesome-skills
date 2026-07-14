@@ -89,10 +89,7 @@ const REPORT_SCHEMA = {
 
 // ─── Phase 0: Scope — decompose question into search angles ───
 phase("Scope")
-const RAW_QUESTION = typeof args === "string"
-  ? args
-  : (typeof args === "object" && args !== null && !Array.isArray(args) ? args.query : "")
-const QUESTION = typeof RAW_QUESTION === "string" ? RAW_QUESTION.trim() : ""
+const QUESTION = (typeof args === "string" ? args.trim() : args?.query?.trim()) || ""
 if (!QUESTION) {
   return { error: "No research question provided. Pass it as args: Workflow({name: 'go-in-depth', args: '<question>'})." }
 }

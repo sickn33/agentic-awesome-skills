@@ -81,10 +81,6 @@ Claude: [Implements code]
 ### Example 2: Web Search
 ```
 User: ?? ADMM convergence criteria best practices
-Claude: I can search public sources for the exact redacted query
-        “ADMM convergence criteria best practices”. No workspace files or conversation
-        history will be sent. May I send that text to WebSearch and fetch the results?
-User: Yes, send that query
 Claude: [WebSearch + WebFetch → finds Boyd et al. paper, extracts criteria]
 Claude: Boyd recommends ||r|| < ε·max(||Ax||, ||Bz||, ||c||). Use this?
 User: Yes

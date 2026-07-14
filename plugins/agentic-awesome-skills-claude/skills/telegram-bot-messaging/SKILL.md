@@ -56,14 +56,9 @@ TELEGRAM_BOT_TOKEN=123:ABC...     # default bot
 TELEGRAM_CHAT_ID=987654321        # default target
 BOT_ALERTS_TOKEN=456:DEF...       # --bot alerts   (add via: setup --bot alerts)
 TARGET_FAMILY=-100987...          # --to family    (any chat/group/channel id)
-TELEGRAM_APPROVER_IDS=123456789   # default group approver user IDs (comma-separated)
-APPROVERS_FAMILY=123456789,987654321 # approvers for --to family (overrides default)
 ```
 
-Replies and answers are only accepted from configured chat IDs. Private chats preserve the
-direct-chat behavior (the sender user ID must equal the chat ID). Because a group chat ID is
-shared by every member, `ask` fails closed for groups unless `TELEGRAM_APPROVER_IDS` or the
-target-specific `APPROVERS_<NAME>` explicitly lists the Telegram user IDs allowed to answer.
+Replies and answers are only accepted from configured chat IDs.
 
 ## Claude Code hooks (settings.json)
 
@@ -95,7 +90,6 @@ fi
 - This skill cannot verify that a chat ID belongs to the intended recipient; confirm the target
   before every new destination or automation.
 - Bot tokens grant control of the bot. Store them only in a protected local secret store or
-  mode-600 configuration file. The script supplies token-bearing API URLs to curl through
-  stdin rather than process arguments; rotate a token if exposure is suspected.
+  mode-600 configuration file, and rotate a token if exposure is suspected.
 - Do not use the examples to create unattended notifications or approval flows without the
   user's explicit, current authorization.

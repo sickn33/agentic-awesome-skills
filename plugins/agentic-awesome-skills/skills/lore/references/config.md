@@ -70,17 +70,11 @@ Controls how much confirmation `sync` requires for individual change types.
 
 Default: auto-detected at runtime (see "If absent" below).
 
-Array of file paths (relative to project root) that should be kept in sync with `.lore/*`.
-Every entry must pass the fail-closed allowlist and containment validation in
-`references/platform-mirrors.md` before any target is read or written. Absolute paths,
-`..` components, unsupported paths, and paths that escape the project root through symlinks
-are errors, not warnings; abort the mirror operation without touching any target.
+Array of file paths (relative to project root) that should be kept in sync with `.lore/*`. Path must match one of the platform entries in `references/platform-mirrors.md`. Unsupported paths trigger a warning at config-load time.
 
 If absent: mirror targets are auto-detected at runtime by scanning the project root for existing platform files. If no platform files exist, the user is asked via a multi-select question during `init`, the first `mirror` call, or `compress` (when `auto_mirror: true`). See `references/platform-mirrors.md` for the resolution algorithm.
 
-If present: validate the complete array, then use the validated targets. Empty array `[]` is
-valid and disables mirror generation. Never partially process an array containing an invalid
-target.
+If present: used verbatim. Empty array `[]` is valid and disables mirror generation.
 
 When auto-detection is in effect, `lore init` populates this field with the user's selections so subsequent runs are silent.
 
