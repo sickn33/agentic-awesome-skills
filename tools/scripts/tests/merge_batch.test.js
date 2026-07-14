@@ -248,6 +248,9 @@ function runFixture(overrides = {}) {
     path: ".github/workflows/ci.yml",
     event: "pull_request",
     head_sha: HEAD_SHA,
+    head_branch: "feature/example",
+    head_repository: { full_name: "contributor/repo" },
+    repository: { full_name: "owner/repo" },
     pull_requests: [{ number: 450 }],
     ...overrides,
   };
@@ -261,6 +264,39 @@ function runFixture(overrides = {}) {
     HEAD_SHA,
   );
   assert.strictEqual(valid.length, 1);
+
+  const emptyMetadataIdentity = {
+    headRefName: "feature/example",
+    headRepository: "contributor/repo",
+    baseRepository: "owner/repo",
+  };
+  const emptyMetadata = mergeBatch.validateActionRequiredRuns(
+    [runFixture({ pull_requests: [] })],
+    [workflowFixture()],
+    450,
+    HEAD_SHA,
+    undefined,
+    emptyMetadataIdentity,
+  );
+  assert.strictEqual(emptyMetadata.length, 1);
+  for (const [label, identity] of [
+    ["wrong branch", { ...emptyMetadataIdentity, headRefName: "feature/other" }],
+    ["wrong fork", { ...emptyMetadataIdentity, headRepository: "attacker/repo" }],
+    ["wrong base repository", { ...emptyMetadataIdentity, baseRepository: "attacker/base" }],
+  ]) {
+    assert.throws(
+      () => mergeBatch.validateActionRequiredRuns(
+        [runFixture({ pull_requests: [] })],
+        [workflowFixture()],
+        450,
+        HEAD_SHA,
+        undefined,
+        identity,
+      ),
+      /exact fork identity does not match/,
+      label,
+    );
+  }
 
   for (const [label, run, workflows, pattern] of [
     ["unrelated PR", runFixture({ pull_requests: [{ number: 451 }] }), [workflowFixture()], /does not contain #450/],
