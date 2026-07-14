@@ -31014,6 +31014,40 @@
     }
   },
   {
+    "id": "ontoly-software-graph",
+    "path": "skills/ontoly-software-graph",
+    "category": "development",
+    "name": "ontoly-software-graph",
+    "description": "Use Ontoly's deterministic Software Graph, MCP server, and agent skills for architecture review, request tracing, impact analysis, and dependency analysis.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "0xsarwagya/ontoly",
+    "license": "MIT",
+    "license_source": "https://github.com/0xsarwagya/ontoly/blob/main/LICENSE",
+    "tags": [
+      "software-graph",
+      "codebase-analysis",
+      "mcp",
+      "typescript",
+      "architecture",
+      "impact-analysis"
+    ]
+  },
+  {
     "id": "open-dynamic-workflows",
     "path": "skills/open-dynamic-workflows",
     "category": "ai-agents",

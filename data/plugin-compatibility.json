@@ -24920,6 +24920,25 @@
       "runtime_files": []
     },
     {
+      "id": "ontoly-software-graph",
+      "path": "skills/ontoly-software-graph",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "open-dynamic-workflows",
       "path": "skills/open-dynamic-workflows",
       "targets": {
@@ -37458,10 +37477,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1949,
+    "total_skills": 1950,
     "supported": {
-      "codex": 1875,
-      "claude": 1897
+      "codex": 1876,
+      "claude": 1898
     },
     "blocked": {
       "codex": 74,
