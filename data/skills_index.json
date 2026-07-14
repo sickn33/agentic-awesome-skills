@@ -45469,6 +45469,35 @@
     }
   },
   {
+    "id": "warehouse",
+    "path": "skills/warehouse",
+    "category": "data",
+    "name": "warehouse",
+    "description": "Plan and review read-only data warehouse analysis with explicit scope, privacy, provenance, and validation checks.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-07-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "analytics",
+      "data-warehouse",
+      "sql",
+      "data-quality"
+    ]
+  },
+  {
     "id": "warren-buffett",
     "path": "skills/warren-buffett",
     "category": "uncategorized",

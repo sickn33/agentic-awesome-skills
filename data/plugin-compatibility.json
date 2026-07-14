@@ -36083,6 +36083,25 @@
       "runtime_files": []
     },
     {
+      "id": "warehouse",
+      "path": "skills/warehouse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "warren-buffett",
       "path": "skills/warren-buffett",
       "targets": {
@@ -37591,10 +37610,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1956,
+    "total_skills": 1957,
     "supported": {
-      "codex": 1882,
-      "claude": 1904
+      "codex": 1883,
+      "claude": 1905
     },
     "blocked": {
       "codex": 74,

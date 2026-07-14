@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-13T08:55:06.000Z
 
-Total skills: 1956
+Total skills: 1957
 
 ## agent-behavior (4)
 
@@ -802,7 +802,7 @@ Total skills: 1956
 | --- | --- | --- | --- | --- | --- |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | safe | vipin-si/article-illustrations | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
 
-## data (22)
+## data (23)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -826,6 +826,7 @@ Total skills: 1956
 | `spark-optimization` | Optimize Apache Spark jobs with partitioning, caching, shuffle optimization, and memory tuning. Use when improving Spark performance, debugging slow jobs, or... | unknown | community | spark, optimization | spark, optimization, optimize, apache, jobs, partitioning, caching, shuffle, memory, tuning, improving, performance |
 | `sql-pro` | Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query techniques. Expert in performance tuning, data modeling, and hybrid... | unknown | community | sql | sql, pro, cloud, native, databases, oltp, olap, optimization, query, techniques, performance, tuning |
 | `sql-sentinel` | Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan f... | critical | takeaseatventure/sql-sentinel | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops, sentinel, cost |
+| `warehouse` | Plan and review read-only data warehouse analysis with explicit scope, privacy, provenance, and validation checks. | critical | self | analytics, data-warehouse, sql, data-quality | analytics, data-warehouse, sql, data-quality, warehouse, plan, review, read, data, analysis, explicit, scope |
 | `web-scraper` | Web scraping inteligente multi-estrategia. Extrai dados estruturados de paginas web (tabelas, listas, precos). Paginacao, monitoramento e export CSV/JSON. | safe | community | scraping, data-extraction, automation, csv | scraping, data-extraction, automation, csv, web, scraper, inteligente, multi, estrategia, extrai, dados, estruturados |
 | `x-twitter-scraper` | Use Xquik for X data workflows: tweet search, user lookup, follower export, media downloads, monitors, webhooks, REST API, MCP, SDK setup, and approval-gated... | critical | Xquik-dev/x-twitter-scraper | twitter, x, social-media, x-api, tweet-search, follower-export, automation, mcp, sdk, webhooks | twitter, x, social-media, x-api, tweet-search, follower-export, automation, mcp, sdk, webhooks, scraper, xquik |
 

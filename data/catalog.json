@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-13T08:55:06.000Z",
-  "total": 1956,
+  "total": 1957,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -54158,6 +54158,37 @@
         "mapping"
       ],
       "path": "skills/vulnerability-scanner/SKILL.md"
+    },
+    {
+      "id": "warehouse",
+      "canonical_id": "warehouse",
+      "name": "warehouse",
+      "description": "Plan and review read-only data warehouse analysis with explicit scope, privacy, provenance, and validation checks.",
+      "category": "data",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "analytics",
+        "data-warehouse",
+        "sql",
+        "data-quality"
+      ],
+      "triggers": [
+        "analytics",
+        "data-warehouse",
+        "sql",
+        "data-quality",
+        "warehouse",
+        "plan",
+        "review",
+        "read",
+        "data",
+        "analysis",
+        "explicit",
+        "scope"
+      ],
+      "path": "skills/warehouse/SKILL.md"
     },
     {
       "id": "warren-buffett",
