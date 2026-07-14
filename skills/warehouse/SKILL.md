@@ -2,7 +2,7 @@
 name: warehouse
 description: "Plan and review read-only data warehouse analysis with explicit scope, privacy, provenance, and validation checks."
 category: data
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-07-12"
