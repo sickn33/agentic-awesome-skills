@@ -18,6 +18,28 @@ function looksLikeHtmlDocument(text: string): boolean {
   return trimmed.startsWith('<!doctype html') || trimmed.startsWith('<html');
 }
 
+const inFlightMarkdownRequests = new Map<string, Promise<string>>();
+
+function fetchMarkdownOnce(url: string, scope: string): Promise<string> {
+  const requestKey = `${scope}:${url}`;
+  const existing = inFlightMarkdownRequests.get(requestKey);
+  if (existing) return existing;
+
+  const request = fetch(url).then(async (response) => {
+    if (!response.ok) throw new Error(`Request failed (${response.status}) for ${url}`);
+    const text = await response.text();
+    if (looksLikeHtmlDocument(text)) throw new Error(`HTML fallback returned instead of markdown for ${url}`);
+    return text;
+  });
+
+  inFlightMarkdownRequests.set(requestKey, request);
+  void request.then(
+    () => inFlightMarkdownRequests.delete(requestKey),
+    () => inFlightMarkdownRequests.delete(requestKey),
+  );
+  return request;
+}
+
 /** Split YAML frontmatter (--- ... ---) and markdown body */
 function splitFrontmatter(md: string): { frontmatter: string; body: string } {
   const match = md.match(/^(---[\s\S]*?---)\s*\n?/);
@@ -51,6 +73,14 @@ function parseFrontmatterRows(frontmatter: string): Array<{ key: string; value: 
       return key ? { key, value } : null;
     })
     .filter((row): row is { key: string; value: string } => row !== null);
+}
+
+function slugifyHeading(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[`*_~[\]()]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 interface RouteParams {
@@ -99,6 +129,14 @@ export function SkillDetail(): React.ReactElement {
   const communityCount = useMemo(() => (id ? stars[id] || 0 : 0), [stars, id]);
   const { frontmatter, body: markdownBody } = useMemo(() => splitFrontmatter(content), [content]);
   const frontmatterRows = useMemo(() => parseFrontmatterRows(frontmatter), [frontmatter]);
+  const headingLinks = useMemo(() => markdownBody
+    .split('\n')
+    .flatMap((line) => {
+      const match = line.match(/^##\s+(.+)$/);
+      if (!match) return [];
+      const label = match[1].replace(/[`*_~]/g, '').trim();
+      return label ? [{ label, id: slugifyHeading(label) }] : [];
+    }), [markdownBody]);
   const relatedTopicPages = useMemo(
     () => skill ? getRelatedSeoLandingPagesForSkill(skill) : [],
     [skill],
@@ -114,31 +152,26 @@ export function SkillDetail(): React.ReactElement {
         const cleanPath = skill.path.startsWith('skills/')
           ? skill.path.replace('skills/', '')
           : skill.path;
+        const canonicalSkillPath = cleanPath.replace(/\/SKILL\.md$/i, '');
+        const canonicalUrl = new URL(
+          `${import.meta.env.BASE_URL}skills/${canonicalSkillPath}/SKILL.md`,
+          window.location.origin,
+        ).href;
 
-        const candidateUrls = getSkillMarkdownCandidateUrls({
+        const candidateUrls = Array.from(new Set([canonicalUrl, ...getSkillMarkdownCandidateUrls({
           baseUrl: import.meta.env.BASE_URL,
           origin: window.location.origin,
           pathname: window.location.pathname,
           documentBaseUrl: window.document.baseURI,
           skillPath: `skills/${cleanPath}`,
-        });
+        })]));
 
         let markdown: string | null = null;
         let lastError: Error | null = null;
 
         for (const url of candidateUrls) {
           try {
-            const mdRes = await fetch(url);
-            if (!mdRes.ok) {
-              throw new Error(`Request failed (${mdRes.status}) for ${url}`);
-            }
-
-            const text = await mdRes.text();
-            if (looksLikeHtmlDocument(text)) {
-              throw new Error(`HTML fallback returned instead of markdown for ${url}`);
-            }
-
-            markdown = text;
+            markdown = await fetchMarkdownOnce(url, skill.id);
             break;
           } catch (err) {
             lastError = err instanceof Error ? err : new Error(String(err));
@@ -233,8 +266,8 @@ export function SkillDetail(): React.ReactElement {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="relative mb-8 overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-teal-50 p-6 shadow-sm dark:border-slate-800 dark:from-slate-950 dark:via-slate-950 dark:to-teal-950/20 sm:p-8">
+    <div className="skill-detail">
+      <div className="skill-detail__hero">
         <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-teal-300/20 blur-3xl dark:bg-teal-500/20" />
         <div className="pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-slate-300/20 blur-3xl dark:bg-slate-600/20" />
 
@@ -246,7 +279,7 @@ export function SkillDetail(): React.ReactElement {
           Back to Catalog
         </Link>
 
-        <div className="relative flex flex-col justify-between gap-5 rounded-2xl border border-slate-200/80 bg-white/95 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/80 md:flex-row md:items-center">
+        <div className="skill-detail__summary">
           <div className="flex-1">
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-teal-700 dark:bg-teal-900/50 dark:text-teal-300">
@@ -296,7 +329,7 @@ export function SkillDetail(): React.ReactElement {
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-slate-200/80 bg-white/95 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
+        <div className="skill-detail__install-and-context">
           <div className="mb-4 border border-slate-300 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               Exact install input
@@ -335,7 +368,7 @@ export function SkillDetail(): React.ReactElement {
       </div>
 
       {relatedTopicPages.length > 0 && (
-        <section className="mb-8 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+        <section className="skill-detail__related">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
             Related topic guides
           </p>
@@ -377,8 +410,8 @@ export function SkillDetail(): React.ReactElement {
         </section>
       )}
 
-      <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="p-6 sm:p-8">
+      <div className="skill-detail__reading">
+        <article className="skill-detail__article">
           {frontmatterRows.length > 0 && (
             <div className="mb-6">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
@@ -420,12 +453,33 @@ export function SkillDetail(): React.ReactElement {
               <Markdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
+                components={{
+                  h2: ({ children }) => {
+                    const label = String(children);
+                    return <h2 id={slugifyHeading(label)}>{children}</h2>;
+                  },
+                }}
               >
                 {markdownBody}
               </Markdown>
             </Suspense>
           </div>
-        </div>
+        </article>
+        <aside className="skill-detail__toc" aria-label="On this page">
+          <h2>On this page</h2>
+          {headingLinks.length > 0 ? (
+            <nav>
+              {headingLinks.map((heading) => <a key={heading.id} href={`#${heading.id}`}>{heading.label}</a>)}
+            </nav>
+          ) : <p>Skill documentation</p>}
+          <dl>
+            <div><dt>Canonical ID</dt><dd>{skill.id}</dd></div>
+            <div><dt>Category</dt><dd>{skill.category}</dd></div>
+            <div><dt>Risk</dt><dd>{skill.risk || 'unknown'}</dd></div>
+            {skill.source && <div><dt>Source</dt><dd>{skill.source}</dd></div>}
+            {skill.date_added && <div><dt>Added</dt><dd>{skill.date_added}</dd></div>}
+          </dl>
+        </aside>
       </div>
     </div>
   );

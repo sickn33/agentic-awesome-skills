@@ -12,7 +12,7 @@ export default function NotFound(): React.ReactElement {
   });
 
   return (
-    <section className="mx-auto flex min-h-[40vh] max-w-xl flex-col items-start justify-center gap-4 p-8">
+    <section className="not-found-page">
       <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">404</p>
       <h1 className="text-3xl font-bold text-[var(--text-primary)]">Page not found</h1>
       <p className="text-[var(--text-secondary)]">The requested catalog page does not exist or has moved.</p>

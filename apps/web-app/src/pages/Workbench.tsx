@@ -91,7 +91,7 @@ function WorkbenchCard({
 
   return (
     <article
-      className={`relative flex h-full flex-col border bg-white p-4 transition-colors dark:bg-slate-950 ${selected
+      className={`workbench-card relative flex h-full flex-col border bg-white p-4 transition-colors dark:bg-slate-950 ${selected
         ? 'border-teal-500 shadow-[inset_4px_0_0_0_rgb(13_148_136)] dark:border-teal-500'
         : 'border-slate-200 hover:border-slate-400 dark:border-slate-800 dark:hover:border-slate-600'
         }`}
@@ -284,8 +284,8 @@ export function Workbench(): React.ReactElement {
   };
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] bg-slate-100/70 p-4 sm:p-6 dark:bg-slate-950">
-      <header className="relative overflow-hidden border border-slate-300 bg-slate-950 px-5 py-6 text-slate-100 shadow-[0_24px_60px_-38px_rgba(15,23,42,0.9)] sm:px-7 dark:border-slate-700">
+    <div className="workbench-page">
+      <header className="workbench-header">
         <div className="absolute inset-y-0 left-0 w-1.5 bg-teal-400" />
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <div>
@@ -314,8 +314,8 @@ export function Workbench(): React.ReactElement {
         </div>
       </header>
 
-      <div className="mt-5 grid items-start gap-5 xl:grid-cols-[17rem_minmax(0,1fr)_23rem]">
-        <aside className="order-1 border border-slate-300 bg-white p-4 xl:sticky xl:top-20 dark:border-slate-800 dark:bg-slate-900" aria-label="Workbench filters">
+      <div className="workbench-grid">
+        <aside className="workbench-filters" aria-label="Workbench filters">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-800 dark:text-slate-200">Query</h2>
             <button type="button" onClick={resetFilters} className="text-xs font-semibold text-slate-500 underline underline-offset-4 hover:text-slate-900 dark:hover:text-slate-100">
@@ -397,7 +397,7 @@ export function Workbench(): React.ReactElement {
           </div>
         </aside>
 
-        <aside className="order-2 border border-slate-300 bg-slate-950 text-slate-100 xl:order-3 xl:sticky xl:top-20" aria-label="Selected skill ledger">
+        <aside id="selection-panel" className="workbench-selection" aria-label="Selected skill ledger">
           <div className="border-b border-slate-700 px-4 py-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-teal-300">Selection ledger</p>
             <div className="mt-2 flex items-end justify-between gap-3">
@@ -484,7 +484,7 @@ export function Workbench(): React.ReactElement {
           </div>
         </aside>
 
-        <main className="order-3 min-w-0 xl:order-2" aria-label="Workbench results">
+        <main className="workbench-results" aria-label="Workbench results">
           <div className="mb-3 flex items-center justify-between gap-4 border-b border-slate-300 pb-3 dark:border-slate-800">
             <p aria-live="polite" className="font-mono text-xs text-slate-600 dark:text-slate-400">
               {filteredSkills.length.toLocaleString('en-US')} matching canonical skills
@@ -515,7 +515,7 @@ export function Workbench(): React.ReactElement {
             <VirtuosoGrid
               useWindowScroll
               totalCount={filteredSkills.length}
-              listClassName="grid gap-3 md:grid-cols-2 2xl:grid-cols-3"
+              listClassName="workbench-result-list"
               itemContent={(index) => {
                 const skill = filteredSkills[index];
                 return <WorkbenchCard key={skill.id} skill={skill} selected={selectedSet.has(skill.id)} host={host} onToggle={toggleSkill} />;
@@ -524,6 +524,12 @@ export function Workbench(): React.ReactElement {
           )}
         </main>
       </div>
+      {selectedSkills.length > 0 && (
+        <a className="workbench-mobile-selection" href="#selection-panel">
+          <span>{selectedSkills.length} selected</span>
+          <strong>Review install <Icon name="arrowRight" size={16} /></strong>
+        </a>
+      )}
     </div>
   );
 }

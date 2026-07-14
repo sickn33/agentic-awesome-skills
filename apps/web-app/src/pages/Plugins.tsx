@@ -1,181 +1,105 @@
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { specializedPlugins } from '../data/specializedPlugins';
+import { Icon } from '../components/ui/Icon';
+import { specializedPlugins, type SpecializedPlugin } from '../data/specializedPlugins';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildPluginsMeta } from '../utils/seo';
 
 const repoBaseUrl = 'https://github.com/sickn33/agentic-awesome-skills';
-
-function pluginFolderUrl(pluginId: string): string {
-  return `${repoBaseUrl}/tree/main/plugins/agentic-bundle-${pluginId}`;
-}
-
-function pluginDocUrl(): string {
-  return `${repoBaseUrl}/blob/main/docs/users/plugins.md`;
-}
-
-function bundleDocUrl(): string {
-  return `${repoBaseUrl}/blob/main/docs/users/bundles.md`;
-}
-
-function gettingStartedDocUrl(): string {
-  return `${repoBaseUrl}/blob/main/docs/users/getting-started.md`;
-}
+const pluginFolderUrl = (pluginId: string) => `${repoBaseUrl}/tree/main/plugins/agentic-bundle-${pluginId}`;
+const pluginDocUrl = () => `${repoBaseUrl}/blob/main/docs/users/plugins.md`;
+const bundleDocUrl = () => `${repoBaseUrl}/blob/main/docs/users/bundles.md`;
+const gettingStartedDocUrl = () => `${repoBaseUrl}/blob/main/docs/users/getting-started.md`;
 
 export function Plugins(): React.ReactElement {
+  const [query, setQuery] = useState('');
   usePageMeta(buildPluginsMeta(specializedPlugins.length));
 
-  const tierOne = specializedPlugins.filter((plugin) => plugin.priority === 'tier-1');
-  const tierTwo = specializedPlugins.filter((plugin) => plugin.priority === 'tier-2');
+  const filtered = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return specializedPlugins;
+    return specializedPlugins.filter((plugin) => [plugin.name, plugin.audience, plugin.why, ...plugin.skills]
+      .some((value) => value.toLowerCase().includes(normalized)));
+  }, [query]);
+
+  const tierOne = filtered.filter((plugin) => plugin.priority === 'tier-1');
+  const tierTwo = filtered.filter((plugin) => plugin.priority === 'tier-2');
 
   return (
-    <div className="relative min-h-[calc(100vh-8rem)]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_20%_12%,rgba(15,23,42,0.12),transparent_48%),radial-gradient(circle_at_84%_8%,rgba(99,102,241,0.16),transparent_54%)] dark:bg-[radial-gradient(circle_at_20%_12%,rgba(148,163,184,0.15),transparent_45%),radial-gradient(circle_at_84%_8%,rgba(129,140,248,0.2),transparent_52%)]" />
+    <div className="plugins-page">
+      <header className="plugins-hero">
+        <h1>Choose the focused AAS plugin for the job.</h1>
+        <p>AAS specialized plugins are domain-specific distributions of the full skill library — smaller scope, clearer activation, faster starts.</p>
+        <div>
+          <a href={pluginDocUrl()} target="_blank" rel="noreferrer">Read plugin install guide <Icon name="arrowRight" size={16} /></a>
+          <Link to="/">Browse full skill catalog <Icon name="arrowRight" size={16} /></Link>
+          <a href={gettingStartedDocUrl()} target="_blank" rel="noreferrer">Install one skill with GitHub CLI</a>
+        </div>
+      </header>
 
-      <div className="space-y-8 p-5 sm:p-7">
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_55px_-32px_rgba(15,23,42,0.55)] sm:p-8 dark:border-slate-800/80 dark:bg-slate-900">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-            Specialized Plugins
-          </p>
-          <h1 className="max-w-[24ch] text-3xl font-bold tracking-tight text-slate-900 [text-wrap:balance] sm:text-[3.25rem] sm:leading-[0.97] dark:text-slate-100">
-            Choose the focused AAS plugin for your AI coding workflow
-          </h1>
-          <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            AAS specialized plugins are focused, domain-specific distributions of the full skill library.
-            Start here when you know the job: web apps, security, data analytics, documents, DevOps, QA,
-            OSS maintenance, mobile apps, automation, or agent and MCP systems.
-          </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a
-              href={pluginDocUrl()}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
-            >
-              Read plugin install guide
-            </a>
-            <Link
-              to="/"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              Browse full skill catalog
-            </Link>
-            <a
-              href={gettingStartedDocUrl()}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              Install one skill with GitHub CLI
-            </a>
-          </div>
-        </section>
+      <section className="plugin-decisions" aria-labelledby="plugin-decisions-title">
+        <h2 id="plugin-decisions-title">Plugins, bundles, and workflows serve different decisions</h2>
+        <div>
+          <article><Icon name="book" size={22} /><div><h3>Plugin</h3><p>What should I install or activate for this domain?</p></div></article>
+          <article><Icon name="fileCode" size={22} /><div><h3>Bundle</h3><p>Which skills naturally belong together for a role?</p></div></article>
+          <article><Icon name="sort" size={22} /><div><h3>Workflow</h3><p>What order should the assistant follow to get a result?</p></div></article>
+        </div>
+      </section>
 
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-7 dark:border-slate-800 dark:bg-slate-900">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Quick Answer
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Plugins, bundles, and workflows serve different decisions
-          </h2>
-          <div className="mt-5 grid gap-4 md:grid-cols-3">
-            <article className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">Plugin</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                What should I install or activate for this domain?
-              </p>
-            </article>
-            <article className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">Bundle</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                Which skills naturally belong together for a role?
-              </p>
-            </article>
-            <article className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">Workflow</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                What order should the assistant follow to get a result?
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <PluginSection title="Tier 1 Plugins" plugins={tierOne} />
-        <PluginSection title="Tier 2 Plugins" plugins={tierTwo} />
-      </div>
+      <section className="plugin-catalog" aria-labelledby="plugin-catalog-title">
+        <header>
+          <div><h2 id="plugin-catalog-title">Focused distributions</h2><p>{filtered.length} plugins</p></div>
+          <label>
+            <Icon name="search" size={18} />
+            <span className="sr-only">Filter plugins</span>
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter plugins" aria-label="Filter plugins" />
+          </label>
+        </header>
+        <PluginSection title="Tier 1 plugins" plugins={tierOne} />
+        <PluginSection title="Tier 2 plugins" plugins={tierTwo} />
+        {filtered.length === 0 && <p className="plugin-empty">No plugins match “{query}”.</p>}
+      </section>
     </div>
   );
 }
 
-function PluginSection({
-  title,
-  plugins,
-}: {
-  title: string;
-  plugins: typeof specializedPlugins;
-}): React.ReactElement {
+function PluginSection({ title, plugins }: { title: string; plugins: SpecializedPlugin[] }): React.ReactElement | null {
+  if (plugins.length === 0) return null;
   return (
-    <section className="space-y-4">
-      <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-          AAS plugin catalog
-        </p>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{title}</h2>
-      </div>
-      <div className="grid gap-4 xl:grid-cols-2">
-        {plugins.map((plugin) => (
-          <article
-            key={plugin.id}
-            id={plugin.id}
-            className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900"
-          >
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{plugin.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{plugin.audience}</p>
-              </div>
-              <span className="w-fit rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                {plugin.priority}
-              </span>
-            </div>
-            <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{plugin.why}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {plugin.skills.slice(0, 6).map((skillId) => (
-                <Link
-                  key={skillId}
-                  to={`/skill/${encodeURIComponent(skillId)}`}
-                  className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300 dark:hover:border-slate-500"
-                >
-                  @{skillId}
-                </Link>
-              ))}
-              {plugin.skills.length > 6 && (
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
-                  +{plugin.skills.length - 6} more
-                </span>
-              )}
-            </div>
-            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-              <a
-                href={pluginFolderUrl(plugin.id)}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
-                View plugin folder
-              </a>
-              <a
-                href={bundleDocUrl()}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
-                Read bundle notes
-              </a>
-            </div>
-          </article>
-        ))}
+    <section className="plugin-tier">
+      <h2>{title}</h2>
+      <div className="plugin-table" role="table" aria-label={title}>
+        <div className="plugin-table__head" role="row">
+          <span role="columnheader">Plugin</span>
+          <span role="columnheader">Audience</span>
+          <span role="columnheader">Why this plugin</span>
+          <span role="columnheader">Included skills</span>
+          <span role="columnheader">Actions</span>
+        </div>
+        {plugins.map((plugin) => <PluginRow key={plugin.id} plugin={plugin} />)}
       </div>
     </section>
+  );
+}
+
+function PluginRow({ plugin }: { plugin: SpecializedPlugin }): React.ReactElement {
+  return (
+    <article className="plugin-row" id={plugin.id} role="row">
+      <div role="cell" className="plugin-row__name">
+        <span aria-hidden="true"><Icon name="fileCode" size={20} /></span>
+        <div><h3>{plugin.name}</h3><code>{plugin.id}</code></div>
+      </div>
+      <p role="cell">{plugin.audience}</p>
+      <p role="cell">{plugin.why}</p>
+      <div role="cell" className="plugin-row__skills">
+        {plugin.skills.slice(0, 4).map((skillId) => <Link key={skillId} to={`/skill/${encodeURIComponent(skillId)}`}>@{skillId}</Link>)}
+        {plugin.skills.length > 4 && <span>+{plugin.skills.length - 4} more</span>}
+      </div>
+      <div role="cell" className="plugin-row__actions">
+        <a href={pluginFolderUrl(plugin.id)} target="_blank" rel="noreferrer">View plugin</a>
+        <a href={bundleDocUrl()} target="_blank" rel="noreferrer">Bundle notes</a>
+      </div>
+    </article>
   );
 }
 

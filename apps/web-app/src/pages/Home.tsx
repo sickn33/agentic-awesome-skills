@@ -1,69 +1,38 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { VirtuosoGrid } from 'react-virtuoso';
-import { useSkills } from '../context/SkillContext';
 import { SkillCard } from '../components/SkillCard';
 import { Icon } from '../components/ui/Icon';
-import type { SyncMessage, CategoryStats } from '../types';
-import { usePageMeta } from '../hooks/usePageMeta';
-import { buildHomeMeta, getHomeFaqItems } from '../utils/seo';
-import { Link } from 'react-router-dom';
+import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
+import { usePageMeta } from '../hooks/usePageMeta';
+import type { CategoryStats, SyncMessage } from '../types';
+import { buildHomeMeta, getHomeFaqItems } from '../utils/seo';
 
 const conceptCards = [
-  {
-    title: 'Specialized plugins',
-    body: 'Focused installable distributions for domains like web apps, security, documents, data, DevOps, QA, OSS, mobile, automation, and agent/MCP work.',
-  },
-  {
-    title: 'Skills',
-    body: 'Reusable SKILL.md playbooks that teach an AI assistant how to execute a workflow with better structure and context.',
-  },
-  {
-    title: 'MCP tools',
-    body: 'External capabilities and system integrations the assistant can call. Tools provide actions; skills tell the assistant how to use them well.',
-  },
-  {
-    title: 'Bundles',
-    body: 'Curated starting sets of recommended skills for a role, domain, or team that wants a smaller shortlist first.',
-  },
-  {
-    title: 'Workflows',
-    body: 'Ordered execution playbooks that show how to combine multiple skills step by step for a concrete outcome.',
-  },
+  { title: 'Specialized plugins', body: 'Focused distributions for a domain or job.' },
+  { title: 'Skills', body: 'Reusable SKILL.md playbooks for repeatable execution.' },
+  { title: 'MCP tools', body: 'External capabilities the assistant can call.' },
+  { title: 'Bundles', body: 'Curated starting sets for a role or team.' },
+  { title: 'Workflows', body: 'Ordered playbooks for a concrete outcome.' },
 ] as const;
 
 const integrationGuides = [
-  {
-    name: 'Claude Code',
-    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/claude-code-skills.md',
-    body: 'Install paths, starter prompts, plugin marketplace flow, and first skills to try.',
-  },
-  {
-    name: 'Cursor',
-    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/cursor-skills.md',
-    body: 'A practical guide for chat-first UI, frontend, and full-stack workflows in Cursor.',
-  },
-  {
-    name: 'Codex CLI',
-    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/codex-cli-skills.md',
-    body: 'How to use Agentic Awesome Skills with Codex CLI for planning, implementation, testing, and review.',
-  },
-  {
-    name: 'Gemini CLI',
-    href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/gemini-cli-skills.md',
-    body: 'A broad starting point for engineering, agent systems, integrations, and applied AI workflows.',
-  },
-  {
-    name: 'Antigravity',
-    href: 'https://github.com/sickn33/agentic-awesome-skills#choose-your-tool',
-    body: 'Installer targets for Antigravity IDE and Antigravity CLI, with reduced activation paths when the full library is too broad.',
-  },
+  { name: 'Claude Code', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/claude-code-skills.md' },
+  { name: 'Cursor', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/cursor-skills.md' },
+  { name: 'Codex CLI', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/codex-cli-skills.md' },
+  { name: 'Gemini CLI', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/gemini-cli-skills.md' },
+  { name: 'Antigravity', href: 'https://github.com/sickn33/agentic-awesome-skills#choose-your-tool' },
 ] as const;
 
 const syncFeatureEnabled = (
-  (import.meta as ImportMeta & { env: Record<string, string | undefined> }).env.VITE_ENABLE_SKILLS_SYNC
-  === 'true'
+  (import.meta as ImportMeta & { env: Record<string, string | undefined> }).env.VITE_ENABLE_SKILLS_SYNC === 'true'
 );
+
+function labelCategory(category: string): string {
+  if (category === 'all') return 'All categories';
+  return category.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
 
 export function Home(): React.ReactElement {
   const { skills, stars, loading, error, refreshSkills } = useSkills();
@@ -73,80 +42,55 @@ export function Home(): React.ReactElement {
   const [sortBy, setSortBy] = useState('default');
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState<SyncMessage | null>(null);
-  const repositoryLink = 'https://github.com/sickn33/agentic-awesome-skills';
-  const docsLink = 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/usage.md';
-  const installLink = 'https://www.npmjs.com/package/agentic-awesome-skills';
-  const faqItems = getHomeFaqItems(skills.length);
-  const catalogCountLabel = skills.length > 0 ? skills.length.toLocaleString('en-US') : 'installable';
 
   usePageMeta(buildHomeMeta(skills.length));
 
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 300);
+  const faqItems = getHomeFaqItems(skills.length);
+  const catalogCountLabel = skills.length > 0 ? skills.length.toLocaleString('en-US') : '1,900+';
 
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setDebouncedSearch(search), 300);
+    return () => window.clearTimeout(timeoutId);
   }, [search]);
 
   const filteredSkills = useMemo(() => {
     let result = [...skills];
-
     if (debouncedSearch) {
-      const lowerSearch = debouncedSearch.toLowerCase();
-      result = result.filter(skill =>
-        skill.name.toLowerCase().includes(lowerSearch) ||
-        skill.description.toLowerCase().includes(lowerSearch)
-      );
+      const query = debouncedSearch.toLowerCase();
+      result = result.filter((skill) => (
+        skill.name.toLowerCase().includes(query)
+        || skill.description.toLowerCase().includes(query)
+        || skill.tags?.some((tag) => tag.toLowerCase().includes(query))
+      ));
     }
-
-    if (categoryFilter !== 'all') {
-      result = result.filter(skill => skill.category === categoryFilter);
-    }
-
-    // Apply sorting
-    if (sortBy === 'stars') {
-      result = [...result].sort((a, b) => (stars[b.id] || 0) - (stars[a.id] || 0));
-    } else if (sortBy === 'newest') {
-      result = [...result].sort((a, b) => (b.date_added || '').localeCompare(a.date_added || ''));
-    } else if (sortBy === 'az') {
-      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    }
-
+    if (categoryFilter !== 'all') result = result.filter((skill) => skill.category === categoryFilter);
+    if (sortBy === 'stars') result.sort((a, b) => (stars[b.id] || 0) - (stars[a.id] || 0));
+    if (sortBy === 'newest') result.sort((a, b) => (b.date_added || '').localeCompare(a.date_added || ''));
+    if (sortBy === 'az') result.sort((a, b) => a.name.localeCompare(b.name));
     return result;
-  }, [debouncedSearch, categoryFilter, sortBy, skills, stars]);
+  }, [categoryFilter, debouncedSearch, skills, sortBy, stars]);
 
-  // Sort categories by count (most skills first), with 'uncategorized' at the end
   const { categories, categoryStats } = useMemo(() => {
     const stats: CategoryStats = {};
-    skills.forEach(skill => {
-      stats[skill.category] = (stats[skill.category] || 0) + 1;
-    });
-
-    const cats = ['all', ...Object.keys(stats)
-      .filter(cat => cat !== 'uncategorized')
-      .sort((a, b) => stats[b] - stats[a]),
-      ...(stats['uncategorized'] ? ['uncategorized'] : [])
-    ];
-
-    return { categories: cats, categoryStats: stats };
+    skills.forEach((skill) => { stats[skill.category] = (stats[skill.category] || 0) + 1; });
+    const ordered = Object.keys(stats)
+      .filter((category) => category !== 'uncategorized')
+      .sort((a, b) => stats[b] - stats[a]);
+    if (stats.uncategorized) ordered.push('uncategorized');
+    return { categories: ['all', ...ordered], categoryStats: stats };
   }, [skills]);
 
   const handleSync = async () => {
     setSyncing(true);
     setSyncMsg(null);
     try {
-      const res = await fetch('/api/refresh-skills', { method: 'POST' });
-      const data = await res.json();
+      const response = await fetch('/api/refresh-skills', { method: 'POST' });
+      const data = await response.json();
       if (data.success) {
-        if (data.upToDate) {
-          setSyncMsg({ type: 'info', text: 'Skills are already up to date.' });
-        } else {
-          setSyncMsg({ type: 'success', text: `Synced ${data.count} skills. Rollback ref: ${data.rollbackRef}` });
-          await refreshSkills();
-        }
+        setSyncMsg(data.upToDate
+          ? { type: 'info', text: 'Skills are already up to date.' }
+          : { type: 'success', text: `Synced ${data.count} skills.` });
+        if (!data.upToDate) await refreshSkills();
       } else {
         setSyncMsg({ type: 'error', text: String(data.error) });
       }
@@ -154,349 +98,167 @@ export function Home(): React.ReactElement {
       setSyncMsg({ type: 'error', text: 'Network error' });
     } finally {
       setSyncing(false);
-      setTimeout(() => setSyncMsg(null), 5000);
+      window.setTimeout(() => setSyncMsg(null), 5000);
     }
   };
 
   return (
-    <div className="relative flex min-h-[calc(100vh-8rem)] flex-col">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_20%_12%,rgba(15,23,42,0.12),transparent_48%),radial-gradient(circle_at_84%_8%,rgba(99,102,241,0.16),transparent_54%)] dark:bg-[radial-gradient(circle_at_20%_12%,rgba(148,163,184,0.15),transparent_45%),radial-gradient(circle_at_84%_8%,rgba(129,140,248,0.2),transparent_52%)]" />
-
-      <div className="mb-9 space-y-8">
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_55px_-32px_rgba(15,23,42,0.55)] sm:p-8 dark:border-slate-800/80 dark:bg-slate-900">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-            Skills Library
-          </p>
-          <h1 className="max-w-[20ch] text-2xl font-bold tracking-tight text-slate-900 [text-wrap:balance] sm:text-[3.25rem] sm:leading-[0.97] dark:text-slate-100">
-            Build agent workflows with production-grade skill playbooks
-          </h1>
-          <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            Agentic Awesome Skills is the searchable catalog for an independent GitHub repository of installable
-            AI agent skills, Antigravity CLI playbooks, specialized plugins, bundles, and workflows. Search fast,
-            shortlist by category, and launch your first tested workflow from one focused workspace.
-          </p>
-          <p className="mt-3 max-w-4xl text-xs leading-relaxed text-slate-500 sm:text-sm dark:text-slate-400">
-            Independent community project. Not affiliated with, sponsored by, endorsed by, or authorized by Google.
-            Google, Antigravity, Gemini, and related product names are used only to describe compatibility.
-          </p>
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-stretch">
-            <a
-              href={repositoryLink}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              Open the GitHub repository
-            </a>
-            <Link
-              to="/workbench"
-              className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
-            >
-              Compose an exact install
-            </Link>
-            <a
-              href={installLink}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              Install with npm
-            </a>
-            <a
-              href={docsLink}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              Read getting started docs
-            </a>
-            <Link
-              to="/plugins"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              Compare specialized plugins
-            </Link>
-            <Link
-              to="/topics/github-ai-skills-repository"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-400/80 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_20px_-16px_rgba(15,23,42,0.7)] transition-colors hover:border-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
-            >
-              GitHub skills guide
-            </Link>
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <span className="font-medium">Large catalog safety</span>
-            <Link to="/workbench" className="font-semibold text-slate-800 underline underline-offset-4 hover:text-teal-700 dark:text-slate-200 dark:hover:text-teal-300">
-              Inspect evidence, select exact IDs, and preview before writing.
-            </Link>
-          </div>
-        </section>
-
-        <div className="relative overflow-hidden rounded-2xl border border-slate-300/70 bg-[color-mix(in_oklab,var(--surface-elevated)_92%,white_8%)] p-4 shadow-[0_14px_30px_-24px_rgba(15,23,42,0.8)] md:p-5 dark:border-slate-700/80 dark:bg-[var(--surface-elevated)]">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-[var(--accent-solid)]/65" />
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="mb-1 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Explore Skills</h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Discover {catalogCountLabel} agentic capabilities for your AI assistant.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              {syncMsg && (
-                <span className={`rounded-full px-3 py-1.5 text-sm font-medium ${syncMsg.type === 'success'
-                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
-                  : syncMsg.type === 'info'
-                    ? 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300'
-                    : 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300'
-                  }`}>
-                  {syncMsg.text}
-                </span>
-              )}
-              {syncFeatureEnabled ? (
-                <button
-                  onClick={handleSync}
-                  disabled={syncing}
-                  className="flex items-center space-x-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:cursor-wait disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
-                >
-                  <Icon name="refresh" size={16} className={syncing ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} />
-                  <span>{syncing ? 'Syncing...' : 'Sync Skills'}</span>
-                </button>
-              ) : (
-                <span className="rounded-full border border-slate-200 bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                  Public catalog mode
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {!syncFeatureEnabled && (
-          <p className="-mt-4 text-sm text-slate-500 dark:text-slate-400">
-            Catalog sync is a maintainer-only workflow in local builds, so the public Pages site always shows the last published catalog.
-          </p>
-        )}
-
-        <div className="sticky top-0 z-40 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-3">
-            <div className="relative flex-1">
-              <Icon name="search" size={16} className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-              <input
-                type="text"
-                placeholder="Search skills (e.g., react, security, python)..."
-                aria-label="Search skills"
-                className="w-full rounded-lg border border-slate-300 bg-white px-9 py-2.5 text-sm outline-none transition-colors focus:border-slate-500 focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:focus:border-slate-500 dark:focus:ring-slate-800"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-              <Icon name="filter" size={16} className="h-4 w-4 shrink-0 text-slate-500" />
-              <select
-                aria-label="Filter by category"
-                className="h-10 min-w-[165px] rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none transition-colors focus:border-slate-500 focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:focus:border-slate-500 dark:focus:ring-slate-800"
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-              >
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>
-                    {cat === 'all'
-                      ? 'All Categories'
-                      : `${cat.charAt(0).toUpperCase() + cat.slice(1)} (${categoryStats[cat] || 0})`
-                    }
-                  </option>
-                ))}
-              </select>
-
-              <Icon name="sort" size={16} className="ml-1 h-4 w-4 shrink-0 text-slate-500" />
-              <select
-                aria-label="Sort skills"
-                className="h-10 min-w-[145px] rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none transition-colors focus:border-slate-500 focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:focus:border-slate-500 dark:focus:ring-slate-800"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="default">Default</option>
-                <option value="stars">Community saves</option>
-                <option value="newest">Newest</option>
-                <option value="az">A to Z</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="-mx-4 min-h-[60vh] flex-1 sm:min-h-[68vh] lg:min-h-[72vh]">
-        {loading ? (
-          <div data-testid="loader" className="grid gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="h-56 animate-pulse rounded-xl border border-slate-200 bg-gradient-to-br from-slate-100 to-slate-50 p-6 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950" />
-            ))}
-          </div>
-        ) : error && skills.length === 0 ? (
-          <div className="px-4 py-14 text-center sm:px-6 lg:px-8">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-300">
-              <Icon name="alertCircle" size={24} className="h-6 w-6" />
-            </div>
-            <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Unable to load skills</h3>
-            <p className="mt-2 text-slate-500 dark:text-slate-400">{error}</p>
+    <div className="catalog-layout">
+      <aside className="catalog-rail" aria-label="Skill categories">
+        <p className="catalog-rail__label">Browse</p>
+        <nav>
+          {categories.map((category) => (
             <button
-              onClick={() => void refreshSkills()}
-              className="mt-5 inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              key={category}
+              type="button"
+              className={categoryFilter === category ? 'is-active' : ''}
+              aria-pressed={categoryFilter === category}
+              onClick={() => setCategoryFilter(category)}
             >
-              Retry loading catalog
+              <span>{labelCategory(category)}</span>
+              <span>{category === 'all' ? skills.length : categoryStats[category] || 0}</span>
             </button>
+          ))}
+        </nav>
+        <Link to="/workbench" className="catalog-rail__workbench">
+          <Icon name="fileCode" size={17} />
+          Saved & exact installs
+        </Link>
+      </aside>
+
+      <div className="catalog-content">
+        <section className="catalog-hero">
+          <h1>Find the right skill.<br />Ship the better agent.</h1>
+          <p>Search {catalogCountLabel} installable skills, plugins, and workflows — curated for real agent work.</p>
+
+          <label className="catalog-search">
+            <span className="sr-only">Search skills</span>
+            <Icon name="search" size={23} />
+            <input
+              type="search"
+              aria-label="Search skills"
+              placeholder="Search skills, tools, or workflows"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <kbd>⌘K</kbd>
+          </label>
+
+          <div className="catalog-mobile-categories" aria-label="Quick category filters">
+            {categories.slice(0, 6).map((category) => (
+              <button
+                key={category}
+                type="button"
+                className={categoryFilter === category ? 'is-active' : ''}
+                onClick={() => setCategoryFilter(category)}
+              >
+                {labelCategory(category)}
+              </button>
+            ))}
           </div>
-        ) : filteredSkills.length === 0 ? (
-          <div className="px-4 py-14 text-center sm:px-6 lg:px-8">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
-              <Icon name="alertCircle" size={24} className="h-6 w-6" />
+
+          <div className="catalog-toolbar">
+            <div>
+              <label>
+                <span className="sr-only">Filter by category</span>
+                <select aria-label="Filter by category" value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {labelCategory(category)}{category === 'all' ? '' : ` (${categoryStats[category] || 0})`}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span className="sr-only">Sort skills</span>
+                <select aria-label="Sort skills" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                  <option value="default">Recommended</option>
+                  <option value="stars">Community saves</option>
+                  <option value="newest">Newest</option>
+                  <option value="az">A to Z</option>
+                </select>
+              </label>
             </div>
-            <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-slate-100">No skills found</h3>
-            <p className="mt-2 text-slate-500 dark:text-slate-400">Try adjusting your search or category filters.</p>
+            <Link to="/workbench">Compose an exact install <Icon name="arrowRight" size={16} /></Link>
           </div>
-        ) : (
-          <VirtuosoGrid
-            useWindowScroll
-            totalCount={filteredSkills.length}
-            listClassName="grid gap-6 px-4 pb-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4"
-            itemContent={(index) => {
-              const skill = filteredSkills[index];
-              return <SkillCard key={skill.id} skill={skill} starCount={stars[skill.id] || 0} />;
-            }}
-          />
-        )}
-      </div>
+        </section>
 
-      <div className="mt-12 space-y-10">
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-7 dark:border-slate-800 dark:bg-slate-900">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Concepts
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Understand the system before scaling your setup
-          </h2>
-          <p className="mt-3 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            The catalog is easier to navigate when you separate reusable playbooks from external tool integrations.
-            Skills explain execution quality, MCP tools expose systems, bundles reduce decision overhead, and workflows
-            map the operating sequence.
-          </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <section className="catalog-results" aria-labelledby="catalog-results-title">
+          <header>
+            <div>
+              <h2 id="catalog-results-title">{filteredSkills.length.toLocaleString('en-US')} skills</h2>
+              <p>Inspect evidence, select exact IDs, and preview before writing.</p>
+            </div>
+            {syncFeatureEnabled ? (
+              <button type="button" onClick={() => void handleSync()} disabled={syncing}>
+                <Icon name="refresh" size={16} className={syncing ? 'animate-spin' : ''} />
+                {syncing ? 'Syncing…' : 'Sync skills'}
+              </button>
+            ) : <span className="catalog-mode">Public catalog mode</span>}
+          </header>
+
+          {!syncFeatureEnabled && (
+            <p className="catalog-note">Catalog sync is a maintainer-only workflow; this public view shows the last published catalog.</p>
+          )}
+          {syncMsg && <p className={`catalog-message catalog-message--${syncMsg.type}`}>{syncMsg.text}</p>}
+
+          {loading ? (
+            <div data-testid="loader" className="catalog-loading" aria-label="Loading skills">
+              {[...Array(5)].map((_, index) => <div key={index} />)}
+            </div>
+          ) : error && skills.length === 0 ? (
+            <div className="catalog-empty">
+              <Icon name="alertCircle" size={28} />
+              <h3>Unable to load skills</h3>
+              <p>{error}</p>
+              <button type="button" onClick={() => void refreshSkills()}>Retry loading catalog</button>
+            </div>
+          ) : filteredSkills.length === 0 ? (
+            <div className="catalog-empty">
+              <Icon name="search" size={28} />
+              <h3>No skills found</h3>
+              <p>Try a broader search or another category.</p>
+              <button type="button" onClick={() => { setSearch(''); setCategoryFilter('all'); }}>Clear filters</button>
+            </div>
+          ) : (
+            <VirtuosoGrid
+              useWindowScroll
+              totalCount={filteredSkills.length}
+              listClassName="catalog-result-list"
+              itemContent={(index) => {
+                const skill = filteredSkills[index];
+                return <SkillCard key={skill.id} skill={skill} starCount={stars[skill.id] || 0} />;
+              }}
+            />
+          )}
+        </section>
+
+        <section className="catalog-support" aria-label="Catalog guides">
+          <div className="catalog-support__intro">
+            <h2>Understand the system behind the catalog</h2>
+            <p>Skills, tools, bundles, plugins, and workflows solve different parts of the same job.</p>
+          </div>
+          <div className="catalog-support__concepts">
             {conceptCards.map((card) => (
-              <article
-                key={card.title}
-                className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950"
-              >
-                <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">{card.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{card.body}</p>
-              </article>
+              <article key={card.title}><h3>{card.title}</h3><p>{card.body}</p></article>
             ))}
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <a
-              href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/skills-vs-mcp-tools.md"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-            >
-              Read skills vs MCP/tools
-            </a>
-            <a
-              href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-            >
-              Browse bundles
-            </a>
-            <a
-              href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-            >
-              Explore workflows
-            </a>
+          <div className="catalog-support__columns">
+            <div>
+              <h2>Runtime guides</h2>
+              <nav>{integrationGuides.map((guide) => <a key={guide.name} href={guide.href} target="_blank" rel="noreferrer">{guide.name}<Icon name="arrowRight" size={14} /></a>)}</nav>
+            </div>
+            <div>
+              <h2>Search topics</h2>
+              <nav>{seoLandingPages.map((page) => <Link key={page.slug} to={`/topics/${page.slug}`}>{page.h1}<Icon name="arrowRight" size={14} /></Link>)}</nav>
+            </div>
           </div>
-        </section>
-
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-7 dark:border-slate-800 dark:bg-slate-900">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Integration Guides
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Start from the guide that matches your assistant runtime
-          </h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {integrationGuides.map((guide) => (
-              <a
-                key={guide.name}
-                href={guide.href}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 transition-colors hover:border-slate-400 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950 dark:hover:border-slate-600"
-              >
-                <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">{guide.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{guide.body}</p>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-7 dark:border-slate-800 dark:bg-slate-900">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Search Topics
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Direct entry points for high-intent searches
-          </h2>
-          <p className="mt-3 max-w-4xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            These guides map common discovery queries to the right catalog surface, GitHub source, and plugin or installer path.
-          </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {seoLandingPages.map((page) => (
-              <Link
-                key={page.slug}
-                to={`/topics/${page.slug}`}
-                className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 transition-colors hover:border-slate-400 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950 dark:hover:border-slate-600"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                  {page.eyebrow}
-                </p>
-                <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">{page.h1}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{page.summary}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-7 dark:border-slate-800 dark:bg-slate-900">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            Quick FAQ
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Answers to the first questions most users ask
-          </h2>
-          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <div className="catalog-faq">
+            <h2>Quick FAQ</h2>
             {faqItems.map((item) => (
-              <article
-                key={item.question}
-                className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950"
-              >
-                <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">{item.question}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{item.answer}</p>
-              </article>
+              <details key={item.question}><summary>{item.question}</summary><p>{item.answer}</p></details>
             ))}
           </div>
-          <a
-            href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/faq.md"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-5 inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-          >
-            Read the full FAQ
-          </a>
         </section>
       </div>
     </div>
