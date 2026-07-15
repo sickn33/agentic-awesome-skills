@@ -2,7 +2,7 @@
 name: ditto
 description: "Use when a user asks to mine or update a private, evidence-backed work profile from local Claude Code, Codex, Copilot CLI, or OpenCode sessions."
 category: agent-behavior
-risk: safe
+risk: critical
 source: community
 source_repo: ohad6k/ditto
 source_type: community
