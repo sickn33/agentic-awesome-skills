@@ -9,6 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.5.0] - 2026-07-15 - "Private Context, Optimization, and Local Operations"
+
+> Four reviewed community skills for private session-derived profiles, bounded parameter optimization, credential-isolated SSH operations, and low-context Anytype automation, with maintainer hardening and synchronized distributions.
+
+## Added
+
+- Added **ditto** for extracting private, session-derived context into a local profile without introducing fork-supplied executable runtime files (PR #842).
+- Added **optim-agent** for bounded parameter optimization and evidence-driven tuning workflows (PR #844).
+- Added **sshepherd** for credential-isolated SSH operations with explicit remote-operation boundaries (PR #846).
+- Added **anywrite** for low-context Anytype workspace automation and safe local writes (PR #847).
+
+## Changed
+
+- Classified session mining, remote infrastructure operations, and mutable local workspace automation at `critical` risk.
+- Made Ditto require an existing trusted runtime instead of accepting executable bootstrap code supplied by a fork.
+- Synchronized the canonical catalog, plugin mirrors, contributor/source credits, web assets, and public discovery surfaces for 1,962+ skills.
+
+## Fixed
+
+- Added missing source credits for `sshepherd` and `anywrite` and resolved overlapping README credit changes without dropping either source.
+
+## Validation
+
+- Passed exact-head policy, evidence, source-validation, artifact-preview, and skill-review gates for PRs #842, #844, #846, and #847.
+- Passed consistency and maintainer audits, the root and web-app suites, CodeQL, and Pages deployment; verified all four skills on the live catalog.
+
+## Credits
+
+- **[@ohad6k](https://github.com/ohad6k)** for `ditto` (PR #842).
+- **[@Optim-Agent](https://github.com/Optim-Agent)** for `optim-agent` (PR #844).
+- **[@Antheurus](https://github.com/Antheurus)** for `sshepherd` and `anywrite` (PRs #846 and #847).
+
 ## [14.4.0] - 2026-07-14 - "Protected Automation and Production Skills"
 
 > Ten reviewed community skills for durable project memory, software-graph analysis, Cloudflare and codebase guardrails, data warehousing, and presentation production, backed by protected exact-commit maintainer automation.
