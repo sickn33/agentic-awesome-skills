@@ -23,37 +23,30 @@ turns repeated, supported patterns into private work, design, and writing
 profiles. It keeps dated session receipts, rejects authored rules and memory as
 source evidence, and requires approval before model-backed mining begins.
 
-This standalone skill is the cross-agent bootstrap for Ditto v0.3.6. Native
-namespaced routing is available through the upstream Ditto plugin.
+This standalone skill routes a compatible, already-installed Ditto runtime.
+Native namespaced routing is available through the upstream Ditto plugin.
 
 ## When to Use This Skill
 
 - Use when the user explicitly asks to set up, run, update, re-mine, or deepen Ditto.
 - Use when the user wants an agent profile derived from real coding-session history rather than a questionnaire or rules file.
-- Use when native `ditto:mine` is unavailable and a cross-agent bootstrap is needed.
+- Use when native `ditto:mine` is unavailable and the user already has a compatible Ditto runtime installed.
 
 Do not trigger this skill merely because personalization might be useful. Mining
 requires an explicit user request.
 
 ## How It Works
 
-### 1. Resolve the pinned runtime
+### 1. Resolve an installed runtime
 
-Let `SKILL_DIR` be the directory containing this file. Discover a Python 3
-executable and retain its exact executable path as `PYTHON3`. Prefer `python3`;
-use `python` only after verifying that it reports Python 3. Then explain that
-the bootstrap writes a versioned runtime under `~/.ditto` and downloads only
-`ditto.py` and `MINING_PROMPT.md` from the immutable v0.3.6 tag.
+Ask the user for the path to an existing, trusted Ditto runtime, or use the
+native upstream plugin when it is already installed. Retain the exact Python 3
+executable path as `PYTHON3`, the runtime path as `DITTO_PY`, and its matching
+`MINING_PROMPT.md` path. Confirm the installed version and source before use.
 
-Run the bootstrap only after the user has asked to set up or run Ditto:
-
-```bash
-"$PYTHON3" "$SKILL_DIR/scripts/bootstrap.py"
-```
-
-Read the JSON output and retain the exact `ditto_py` and `mining_prompt` paths.
-The bootstrap verifies both files against the SHA-256 values in `runtime.json`.
-Never replace the pinned tag with a mutable branch.
+Do not download or install executable code as part of this skill. If Ditto is
+not installed, stop and direct the user to the upstream installation guidance;
+installation is a separate, explicit decision.
 
 ### 2. Show the read-only mining plan
 
@@ -154,7 +147,7 @@ for approval of the displayed preview plan.
 
 ## Security & Safety Notes
 
-- The bootstrap accepts only an immutable release tag and verifies both downloaded files by SHA-256.
+- This skill does not download executable code; it requires an existing trusted Ditto installation.
 - Extraction, redaction, caches, and generated profiles stay local. Selected redacted text is processed by the model provider the user chooses.
 - Redaction is best-effort. Tell the user to inspect private output before sharing it.
 - Never upload session logs or full profiles to a third party without explicit user approval.
