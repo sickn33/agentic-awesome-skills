@@ -15520,6 +15520,38 @@
     }
   },
   {
+    "id": "ditto",
+    "path": "skills/ditto",
+    "category": "agent-behavior",
+    "name": "ditto",
+    "description": "Use when a user asks to mine or update a private, evidence-backed work profile from local Claude Code, Codex, Copilot CLI, or OpenCode sessions.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "ohad6k/ditto",
+    "license": "MIT",
+    "license_source": "https://github.com/ohad6k/ditto/blob/v0.3.6/LICENSE",
+    "tags": [
+      "personalization",
+      "context-engineering",
+      "session-mining",
+      "agent-memory"
+    ]
+  },
+  {
     "id": "django-access-review",
     "path": "skills/django-access-review",
     "category": "backend",

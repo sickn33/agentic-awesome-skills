@@ -2,14 +2,15 @@
 
 Generated at: 2026-07-14T07:01:47.000Z
 
-Total skills: 1958
+Total skills: 1959
 
-## agent-behavior (4)
+## agent-behavior (5)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `codex-fable5` | Apply Fable-inspired discipline to Codex work: inspect first, track goals and findings, ground conclusions in evidence, verify before completion, and adapt C... | critical | baskduf/FableCodex | codex, fable-style, agent-workflow, verification, prompt-adaptation | codex, fable-style, agent-workflow, verification, prompt-adaptation, fable5, apply, fable, inspired, discipline, work, inspect |
 | `dispatch` | Delegate tasks to OpenAI Codex CLI and Google Antigravity CLI from Claude Code with topic-aware sessions | critical | sparklingneuronics/sparkling-skills | delegation, codex, antigravity, gemini, multi-model, second-opinion, agent-workflow | delegation, codex, antigravity, gemini, multi-model, second-opinion, agent-workflow, dispatch, delegate, tasks, openai, cli |
+| `ditto` | Use when a user asks to mine or update a private, evidence-backed work profile from local Claude Code, Codex, Copilot CLI, or OpenCode sessions. | critical | ohad6k/ditto | personalization, context-engineering, session-mining, agent-memory | personalization, context-engineering, session-mining, agent-memory, ditto, user, asks, mine, update, private, evidence, backed |
 | `fable-safe-prompt` | Rewrite allowed prompts to reduce false-positive safety triggers without bypassing policy or changing intent. | safe | davidondrej/skills | prompting, safety, guardrails | prompting, safety, guardrails, fable, safe, prompt, rewrite, allowed, prompts, reduce, false, positive |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | safe | community | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
