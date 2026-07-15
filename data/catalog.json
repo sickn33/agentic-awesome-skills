@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-14T07:01:47.000Z",
-  "total": 1958,
+  "total": 1959,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -19474,6 +19474,40 @@
         "microservices"
       ],
       "path": "skills/distributed-tracing/SKILL.md"
+    },
+    {
+      "id": "ditto",
+      "canonical_id": "ditto",
+      "name": "ditto",
+      "description": "Use when a user asks to mine or update a private, evidence-backed work profile from local Claude Code, Codex, Copilot CLI, or OpenCode sessions.",
+      "category": "agent-behavior",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "ohad6k/ditto",
+      "license": "MIT",
+      "license_source": "https://github.com/ohad6k/ditto/blob/v0.3.6/LICENSE",
+      "tags": [
+        "personalization",
+        "context-engineering",
+        "session-mining",
+        "agent-memory"
+      ],
+      "triggers": [
+        "personalization",
+        "context-engineering",
+        "session-mining",
+        "agent-memory",
+        "ditto",
+        "user",
+        "asks",
+        "mine",
+        "update",
+        "private",
+        "evidence",
+        "backed"
+      ],
+      "path": "skills/ditto/SKILL.md"
     },
     {
       "id": "django-access-review",
