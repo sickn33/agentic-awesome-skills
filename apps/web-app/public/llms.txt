@@ -4,7 +4,7 @@
 
 ## Key Facts
 
-- Current release: V14.4.0.
+- Current release: V14.5.0.
 - Skill count: 1,962+.
 - Primary install command: `npx agentic-awesome-skills`.
 - Supported hosts include Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, and GitHub Copilot.
