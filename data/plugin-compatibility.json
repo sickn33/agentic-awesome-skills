@@ -12978,6 +12978,25 @@
       "runtime_files": []
     },
     {
+      "id": "ditto",
+      "path": "skills/ditto",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "django-access-review",
       "path": "skills/django-access-review",
       "targets": {
@@ -37629,10 +37648,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1958,
+    "total_skills": 1959,
     "supported": {
-      "codex": 1884,
-      "claude": 1906
+      "codex": 1885,
+      "claude": 1907
     },
     "blocked": {
       "codex": 74,
