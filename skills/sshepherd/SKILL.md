@@ -2,7 +2,7 @@
 name: sshepherd
 description: "Zero-knowledge SSH ops CLI — server health checks, docker/systemd control, log tailing, Postgres introspection, and declarative deploys, without ever exposing credentials to the agent."
 category: devops
-risk: safe
+risk: critical
 source: community
 source_repo: Antheurus/sshepherd
 source_type: community
