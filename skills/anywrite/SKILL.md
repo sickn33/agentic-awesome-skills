@@ -2,7 +2,7 @@
 name: anywrite
 description: "Compiled CLI covering all 52 endpoints of the Anytype local API — objects, properties, tags, search, chat, files — one binary, no MCP server needed."
 category: productivity
-risk: safe
+risk: critical
 source: community
 source_repo: Antheurus/anywrite
 source_type: community
