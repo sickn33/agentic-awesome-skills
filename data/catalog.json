@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-14T07:01:47.000Z",
-  "total": 1959,
+  "total": 1962,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2933,6 +2933,43 @@
         "ai"
       ],
       "path": "skills/antigravity-workflows/SKILL.md"
+    },
+    {
+      "id": "anywrite",
+      "canonical_id": "anywrite",
+      "name": "anywrite",
+      "description": "Compiled CLI covering all 52 endpoints of the Anytype local API — objects, properties, tags, search, chat, files — one binary, no MCP server needed.",
+      "category": "productivity",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Antheurus/anywrite",
+      "license": "MIT",
+      "license_source": "https://github.com/Antheurus/anywrite/blob/main/LICENSE",
+      "tags": [
+        "anytype",
+        "cli",
+        "pkm",
+        "notes",
+        "api-integration",
+        "productivity",
+        "knowledge-management"
+      ],
+      "triggers": [
+        "anytype",
+        "cli",
+        "pkm",
+        "notes",
+        "api-integration",
+        "productivity",
+        "knowledge-management",
+        "anywrite",
+        "compiled",
+        "covering",
+        "all",
+        "52"
+      ],
+      "path": "skills/anywrite/SKILL.md"
     },
     {
       "id": "aomi-transact",
@@ -37759,6 +37796,40 @@
       "path": "skills/openclaw-github-repo-commander/SKILL.md"
     },
     {
+      "id": "optim-agent",
+      "canonical_id": "optim-agent",
+      "name": "optim-agent",
+      "description": "Guide agent-driven parameter optimization for configurable systems with measurable objectives. Use for HPO, inference tuning, simulations, or RL/control experiments.",
+      "category": "data",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Optim-Agent/optim-agent",
+      "license": "MIT",
+      "license_source": "https://github.com/Optim-Agent/optim-agent/blob/main/LICENSE",
+      "tags": [
+        "optimization",
+        "hyperparameter-optimization",
+        "experiments",
+        "tuning"
+      ],
+      "triggers": [
+        "optimization",
+        "hyperparameter-optimization",
+        "experiments",
+        "tuning",
+        "optim",
+        "agent",
+        "driven",
+        "parameter",
+        "configurable",
+        "measurable",
+        "objectives",
+        "hpo"
+      ],
+      "path": "skills/optim-agent/SKILL.md"
+    },
+    {
       "id": "options-flow-analyzer",
       "canonical_id": "options-flow-analyzer",
       "name": "options-flow-analyzer",
@@ -48036,6 +48107,43 @@
         "exploitation"
       ],
       "path": "skills/ssh-penetration-testing/SKILL.md"
+    },
+    {
+      "id": "sshepherd",
+      "canonical_id": "sshepherd",
+      "name": "sshepherd",
+      "description": "Zero-knowledge SSH ops CLI — server health checks, docker/systemd control, log tailing, Postgres introspection, and declarative deploys, without ever exposing credentials to the agent.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Antheurus/sshepherd",
+      "license": "MIT",
+      "license_source": "https://github.com/Antheurus/sshepherd/blob/main/LICENSE",
+      "tags": [
+        "ssh",
+        "devops",
+        "cli",
+        "server-ops",
+        "postgres",
+        "deploy",
+        "zero-knowledge"
+      ],
+      "triggers": [
+        "ssh",
+        "devops",
+        "cli",
+        "server-ops",
+        "postgres",
+        "deploy",
+        "zero-knowledge",
+        "sshepherd",
+        "zero",
+        "knowledge",
+        "ops",
+        "server"
+      ],
+      "path": "skills/sshepherd/SKILL.md"
     },
     {
       "id": "stability-ai",

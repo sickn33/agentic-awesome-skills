@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-14T07:01:47.000Z
 
-Total skills: 1959
+Total skills: 1962
 
 ## agent-behavior (5)
 
@@ -803,7 +803,7 @@ Total skills: 1959
 | --- | --- | --- | --- | --- | --- |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | safe | vipin-si/article-illustrations | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
 
-## data (23)
+## data (24)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -820,6 +820,7 @@ Total skills: 1959
 | `monte-carlo-prevent` | Surfaces Monte Carlo data observability context (table health, alerts, lineage, blast radius) before SQL/dbt edits. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, dbt, schema, monte-carlo, lineage | data-observability, dbt, schema, monte-carlo, lineage, monte, carlo, prevent, surfaces, data, observability, context |
 | `monte-carlo-push-ingestion` | Expert guide for pushing metadata, lineage, and query logs to Monte Carlo from any data warehouse. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, ingestion, monte-carlo, pycarlo, metadata | data-observability, ingestion, monte-carlo, pycarlo, metadata, monte, carlo, push, pushing, lineage, query, logs |
 | `monte-carlo-validation-notebook` | Generates SQL validation notebooks for dbt PR changes with before/after comparison queries. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, validation, dbt, monte-carlo, sql-notebook | data-observability, validation, dbt, monte-carlo, sql-notebook, monte, carlo, notebook, generates, sql, notebooks, pr |
+| `optim-agent` | Guide agent-driven parameter optimization for configurable systems with measurable objectives. Use for HPO, inference tuning, simulations, or RL/control expe... | safe | Optim-Agent/optim-agent | optimization, hyperparameter-optimization, experiments, tuning | optimization, hyperparameter-optimization, experiments, tuning, optim, agent, driven, parameter, configurable, measurable, objectives, hpo |
 | `postgres-readonly-queries` | Execute safe read-only SQL queries against PostgreSQL databases with multi-connection support and defense-in-depth write protection. | safe | sanjay3290/ai-skills | postgres, sql, database, read-only | postgres, sql, database, read-only, readonly, queries, execute, safe, read, against, postgresql, databases |
 | `posthog-automation` | Automate PostHog tasks via Rube MCP (Composio): events, feature flags, projects, user profiles, annotations. Always search tools first for current schemas. | critical | community | posthog | posthog, automation, automate, tasks, via, rube, mcp, composio, events, feature, flags, user |
 | `segment-automation` | Automate Segment tasks via Rube MCP (Composio): track events, identify users, manage groups, page views, aliases, batch operations. Always search tools first... | critical | community | segment | segment, automation, automate, tasks, via, rube, mcp, composio, track, events, identify, users |
@@ -1181,7 +1182,7 @@ Total skills: 1959
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | unknown | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | safe | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (35)
+## devops (36)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1215,6 +1216,7 @@ Total skills: 1959
 | `observability-monitoring-slo-implement` | You are an SLO (Service Level Objective) expert specializing in implementing reliability standards and error budget-based engineering practices. Design compr... | unknown | community | observability, monitoring, slo, implement | observability, monitoring, slo, implement, level, objective, specializing, implementing, reliability, standards, error, budget |
 | `service-mesh-observability` | Complete guide to observability patterns for Istio, Linkerd, and service mesh deployments. | critical | community | service, mesh, observability | service, mesh, observability, complete, istio, linkerd, deployments |
 | `shipping-and-launch` | Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning... | unknown | addyosmani/agent-skills | shipping, and, launch | shipping, and, launch, prepares, launches, preparing, deploy, pre, checklist, setting, up, monitoring |
+| `sshepherd` | Zero-knowledge SSH ops CLI — server health checks, docker/systemd control, log tailing, Postgres introspection, and declarative deploys, without ever exposin... | critical | Antheurus/sshepherd | ssh, devops, cli, server-ops, postgres, deploy, zero-knowledge | ssh, devops, cli, server-ops, postgres, deploy, zero-knowledge, sshepherd, zero, knowledge, ops, server |
 | `terraform-aws-modules` | Terraform module creation for AWS — reusable modules, state management, and HCL best practices. Use when building or reviewing Terraform AWS infrastructure. | unknown | community | terraform, aws, modules | terraform, aws, modules, module, creation, reusable, state, hcl, building, reviewing, infrastructure |
 | `terraform-module-library` | Production-ready Terraform module patterns for AWS, Azure, and GCP infrastructure. | unknown | community | terraform, module, library | terraform, module, library, aws, azure, gcp, infrastructure |
 | `terraform-skill` | Terraform infrastructure as code best practices | safe | https://github.com/antonbabenko/terraform-skill | terraform, skill | terraform, skill, infrastructure, code |
@@ -1683,10 +1685,11 @@ Total skills: 1959
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (31)
+## productivity (32)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `anywrite` | Compiled CLI covering all 52 endpoints of the Anytype local API — objects, properties, tags, search, chat, files — one binary, no MCP server needed. | critical | Antheurus/anywrite | anytype, cli, pkm, notes, api-integration, productivity, knowledge-management | anytype, cli, pkm, notes, api-integration, productivity, knowledge-management, anywrite, compiled, covering, all, 52 |
 | `ask-matt` | Ask which skill or flow fits your situation. A router over the user-invoked skills in this repo. | safe | mattpocock/skills | productivity, workflow, coding-agents | productivity, workflow, coding-agents, ask, matt, which, skill, flow, fits, situation, router, user |
 | `box-automation` | Automate Box operations including file upload/download, content search, folder management, collaboration, metadata queries, and sign requests through Composi... | critical | community | box | box, automation, automate, operations, including, file, upload, download, content, search, folder, collaboration |
 | `brain-to-docs` | Interview the user to turn project vision and decisions into README and ADR documentation. | critical | davidondrej/skills | documentation, adr, planning | documentation, adr, planning, brain, docs, interview, user, turn, vision, decisions, readme |

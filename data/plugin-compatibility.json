@@ -1981,6 +1981,25 @@
       "runtime_files": []
     },
     {
+      "id": "anywrite",
+      "path": "skills/anywrite",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "aomi-transact",
       "path": "skills/aomi-transact",
       "targets": {
@@ -25110,6 +25129,25 @@
       "runtime_files": []
     },
     {
+      "id": "optim-agent",
+      "path": "skills/optim-agent",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "options-flow-analyzer",
       "path": "skills/options-flow-analyzer",
       "targets": {
@@ -31953,6 +31991,25 @@
       "runtime_files": []
     },
     {
+      "id": "sshepherd",
+      "path": "skills/sshepherd",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "stability-ai",
       "path": "skills/stability-ai",
       "targets": {
@@ -37648,10 +37705,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1959,
+    "total_skills": 1962,
     "supported": {
-      "codex": 1885,
-      "claude": 1907
+      "codex": 1888,
+      "claude": 1910
     },
     "blocked": {
       "codex": 74,

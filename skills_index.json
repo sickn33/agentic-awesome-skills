@@ -2413,6 +2413,41 @@
     }
   },
   {
+    "id": "anywrite",
+    "path": "skills/anywrite",
+    "category": "productivity",
+    "name": "anywrite",
+    "description": "Compiled CLI covering all 52 endpoints of the Anytype local API \u2014 objects, properties, tags, search, chat, files \u2014 one binary, no MCP server needed.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Antheurus/anywrite",
+    "license": "MIT",
+    "license_source": "https://github.com/Antheurus/anywrite/blob/main/LICENSE",
+    "tags": [
+      "anytype",
+      "cli",
+      "pkm",
+      "notes",
+      "api-integration",
+      "productivity",
+      "knowledge-management"
+    ]
+  },
+  {
     "id": "aomi-transact",
     "path": "skills/aomi-transact",
     "category": "ai-ml",
@@ -31293,6 +31328,38 @@
     ]
   },
   {
+    "id": "optim-agent",
+    "path": "skills/optim-agent",
+    "category": "data",
+    "name": "optim-agent",
+    "description": "Guide agent-driven parameter optimization for configurable systems with measurable objectives. Use for HPO, inference tuning, simulations, or RL/control experiments.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-07-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Optim-Agent/optim-agent",
+    "license": "MIT",
+    "license_source": "https://github.com/Optim-Agent/optim-agent/blob/main/LICENSE",
+    "tags": [
+      "optimization",
+      "hyperparameter-optimization",
+      "experiments",
+      "tuning"
+    ]
+  },
+  {
     "id": "options-flow-analyzer",
     "path": "skills/options-flow-analyzer",
     "category": "finance",
@@ -40269,6 +40336,41 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "sshepherd",
+    "path": "skills/sshepherd",
+    "category": "devops",
+    "name": "sshepherd",
+    "description": "Zero-knowledge SSH ops CLI \u2014 server health checks, docker/systemd control, log tailing, Postgres introspection, and declarative deploys, without ever exposing credentials to the agent.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Antheurus/sshepherd",
+    "license": "MIT",
+    "license_source": "https://github.com/Antheurus/sshepherd/blob/main/LICENSE",
+    "tags": [
+      "ssh",
+      "devops",
+      "cli",
+      "server-ops",
+      "postgres",
+      "deploy",
+      "zero-knowledge"
+    ]
   },
   {
     "id": "stability-ai",
