@@ -55,14 +55,14 @@ assert.deepStrictEqual(
     label: 'pr-123-skills-alpha',
     reviewPlugin: 'aas-reviewer',
     threshold: '85',
-    workspace: 'agentic-awesome-skills',
+    workspace: 'sickn33',
   }),
   [
     'review',
     'run',
     'skills/alpha',
     '--workspace',
-    'agentic-awesome-skills',
+    'sickn33',
     '--json',
     '--threshold',
     '85',
@@ -70,6 +70,20 @@ assert.deepStrictEqual(
     'aas-reviewer',
     '--label',
     'pr-123-skills-alpha',
+  ],
+);
+
+assert.deepStrictEqual(
+  buildReviewArgs('skills/alpha'),
+  [
+    'review',
+    'run',
+    'skills/alpha',
+    '--workspace',
+    'sickn33',
+    '--json',
+    '--threshold',
+    '80',
   ],
 );
 
