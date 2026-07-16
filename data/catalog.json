@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-15T17:16:56.000Z",
-  "total": 1964,
+  "total": 1965,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -539,6 +539,41 @@
         "subscriptions"
       ],
       "path": "skills/activecampaign-automation/SKILL.md"
+    },
+    {
+      "id": "ad-campaign-analyzer",
+      "canonical_id": "ad-campaign-analyzer",
+      "name": "ad-campaign-analyzer",
+      "description": "Analyze cross-channel campaign data, quantify uncertainty, and propose evidence-labeled budget tests without overstating causality.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "gooseworks-ai/goose-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/gooseworks-ai/goose-skills/blob/main/LICENSE",
+      "tags": [
+        "ads",
+        "analytics",
+        "budget-optimization",
+        "roas",
+        "marketing"
+      ],
+      "triggers": [
+        "ads",
+        "analytics",
+        "budget-optimization",
+        "roas",
+        "marketing",
+        "ad",
+        "campaign",
+        "analyzer",
+        "analyze",
+        "cross",
+        "channel",
+        "data"
+      ],
+      "path": "skills/ad-campaign-analyzer/SKILL.md"
     },
     {
       "id": "ad-creative",

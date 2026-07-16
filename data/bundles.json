@@ -686,6 +686,7 @@
     "data-core": {
       "description": "Data engineering and analytics foundations.",
       "skills": [
+        "ad-campaign-analyzer",
         "adhx",
         "agent-squad/aria",
         "airflow-dag-patterns",

@@ -499,6 +499,39 @@
     }
   },
   {
+    "id": "ad-campaign-analyzer",
+    "path": "skills/ad-campaign-analyzer",
+    "category": "marketing",
+    "name": "ad-campaign-analyzer",
+    "description": "Analyze cross-channel campaign data, quantify uncertainty, and propose evidence-labeled budget tests without overstating causality.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "gooseworks-ai/goose-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/gooseworks-ai/goose-skills/blob/main/LICENSE",
+    "tags": [
+      "ads",
+      "analytics",
+      "budget-optimization",
+      "roas",
+      "marketing"
+    ]
+  },
+  {
     "id": "ad-creative",
     "path": "skills/ad-creative",
     "category": "uncategorized",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-15T17:16:56.000Z
 
-Total skills: 1964
+Total skills: 1965
 
 ## agent-behavior (5)
 
@@ -1448,12 +1448,13 @@ Total skills: 1964
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (53)
+## marketing (54)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `ab-test-setup` | Structured guide for setting up A/B tests with mandatory gates for hypothesis, metrics, and execution readiness. | unknown | community | ab, setup | ab, setup, test, structured, setting, up, tests, mandatory, gates, hypothesis, metrics, execution |
 | `activecampaign-automation` | Automate ActiveCampaign tasks via Rube MCP (Composio): manage contacts, tags, list subscriptions, automation enrollment, and tasks. Always search tools first... | critical | community | activecampaign | activecampaign, automation, automate, tasks, via, rube, mcp, composio, contacts, tags, list, subscriptions |
+| `ad-campaign-analyzer` | Analyze cross-channel campaign data, quantify uncertainty, and propose evidence-labeled budget tests without overstating causality. | critical | gooseworks-ai/goose-skills | ads, analytics, budget-optimization, roas, marketing | ads, analytics, budget-optimization, roas, marketing, ad, campaign, analyzer, analyze, cross, channel, data |
 | `app-store-optimization` | Complete App Store Optimization (ASO) toolkit for researching, optimizing, and tracking mobile app performance on Apple App Store and Google Play Store | unknown | community | app, store, optimization | app, store, optimization, complete, aso, toolkit, researching, optimizing, tracking, mobile, performance, apple |
 | `brand-guidelines` | Write copy following Sentry brand guidelines. Use when writing UI text, error messages, empty states, onboarding flows, 404 pages, documentation, marketing c... | unknown | community | brand, guidelines | brand, guidelines, write, copy, following, sentry, writing, ui, text, error, messages, empty |
 | `brand-guidelines-anthropic` | To access Anthropic's official brand identity and style resources, use this skill. | unknown | community | brand, guidelines, anthropic | brand, guidelines, anthropic, access, official, identity, style, resources, skill |

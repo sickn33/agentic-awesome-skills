@@ -345,6 +345,25 @@
       "runtime_files": []
     },
     {
+      "id": "ad-campaign-analyzer",
+      "path": "skills/ad-campaign-analyzer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ad-creative",
       "path": "skills/ad-creative",
       "targets": {
@@ -37743,10 +37762,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1964,
+    "total_skills": 1965,
     "supported": {
-      "codex": 1890,
-      "claude": 1912
+      "codex": 1891,
+      "claude": 1913
     },
     "blocked": {
       "codex": 74,
