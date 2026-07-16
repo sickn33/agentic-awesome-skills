@@ -22,11 +22,13 @@ Automatically activate when the user:
 
 Before staging, inspect `git status --short --branch`, confirm the intended files, and fetch the upstream branch when a concurrent push is plausible. Do not absorb unrelated dirty files.
 
+Read repository policy before choosing the destination branch. If `main` or `master` is protected, or the repository defines a maintainer command such as `merge:batch`, create or use a topic branch and finish through the required pull-request checks. A user request to “push to main” describes the desired final state; it does not authorize bypassing server-side protection. Never keep retrying a direct push after a protected-branch rejection.
+
 The helper requires an empty live index and a conventional commit message before it stages anything. It locks the live index, builds and validates the commit in an isolated temporary index, rejects `--` without paths, and atomically updates the branch only if its parent is unchanged.
 
 The helper honors `branch.<name>.pushRemote`, `remote.pushDefault`, and the branch's configured upstream, in that order. For a new branch without those settings, it requires `origin` and establishes `origin/<branch>`. It rejects detached HEAD and invalid remote configurations before staging.
 
-Do not use this skill for a versioned repository release, tag publication, or a repository with an explicit `release:prepare` / `release:publish` workflow. Use that repository's release flow instead; it owns version changes, generated files, tags, and publish verification.
+Do not use this skill for a maintainer merge batch, canonical synchronization, versioned repository release, tag publication, or a repository with an explicit `merge:batch`, `release:prepare`, or `release:publish` workflow. Use that repository's maintainer/release flow instead; it owns pull-request evidence, protected-branch checks, generated files, tags, and publication verification.
 
 ## Workflow
 
