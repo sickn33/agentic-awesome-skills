@@ -53,6 +53,8 @@ const APPROVAL_WORKFLOW_PATHS = new Set([
   ".github/workflows/dependency-review.yml",
   ".github/workflows/skill-review.yml",
 ]);
+const CI_WORKFLOW_PATH = ".github/workflows/ci.yml";
+const SKILL_REVIEW_WORKFLOW_PATH = ".github/workflows/skill-review.yml";
 
 function parseArgs(argv) {
   const args = {
@@ -809,8 +811,10 @@ function selectLatestCheckRuns(checkRuns) {
       continue;
     }
 
-    const currentKey = run.completed_at || run.started_at || run.created_at || "";
-    const previousKey = previous.completed_at || previous.started_at || previous.created_at || "";
+    // Completion time is not creation order: an older failed run may finish
+    // after a newly-created pending run for the same head SHA.
+    const currentKey = run.created_at || run.started_at || run.completed_at || "";
+    const previousKey = previous.created_at || previous.started_at || previous.completed_at || "";
 
     if (currentKey > previousKey || (currentKey === previousKey && Number(run.id || 0) > Number(previous.id || 0))) {
       byName.set(name, run);
@@ -974,6 +978,36 @@ function listActionRequiredRuns(projectRoot, repoSlug, headSha) {
   });
 }
 
+function listPullRequestWorkflowRuns(projectRoot, repoSlug, headSha) {
+  const payload = runGhApiJson(projectRoot, [
+    `repos/${repoSlug}/actions/runs?head_sha=${headSha}&event=pull_request&per_page=100`,
+  ]);
+
+  const runs = Array.isArray(payload?.workflow_runs) ? payload.workflow_runs : [];
+  const seen = new Set();
+  return runs.filter((run) => {
+    const id = Number(run?.id);
+    if (!Number.isInteger(id) || seen.has(id)) {
+      return false;
+    }
+    seen.add(id);
+    return true;
+  });
+}
+
+function requiredWorkflowPaths(hasSkillChanges) {
+  return new Set([
+    CI_WORKFLOW_PATH,
+    ...(hasSkillChanges ? [SKILL_REVIEW_WORKFLOW_PATH] : []),
+  ]);
+}
+
+function selectFreshRequiredWorkflowRuns(runs, baselineRunIds, hasSkillChanges) {
+  const baseline = new Set([...baselineRunIds].map(Number));
+  const requiredPaths = requiredWorkflowPaths(hasSkillChanges);
+  return runs.filter((run) => !baseline.has(Number(run?.id)) && requiredPaths.has(run?.path));
+}
+
 function listWorkflowDefinitions(projectRoot, repoSlug) {
   const payload = runGhApiJson(projectRoot, [
     `repos/${repoSlug}/actions/workflows?per_page=100`,
@@ -1124,7 +1158,9 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   }
 
   const workflows = getWorkflows(projectRoot, repoSlug);
-  const runs = getRuns(projectRoot, repoSlug, headOid);
+  const excludedRunIds = new Set((options.excludedRunIds || []).map(Number));
+  const runs = getRuns(projectRoot, repoSlug, headOid)
+    .filter((run) => !excludedRunIds.has(Number(run?.id)));
   const validatedRuns = validateActionRequiredRuns(
     runs,
     workflows,
@@ -1207,6 +1243,109 @@ async function waitForRequiredChecks(
   throw new Error(`Timed out waiting for required checks on ${headSha}.`);
 }
 
+async function waitForFreshRequiredChecks(
+  projectRoot,
+  repoSlug,
+  prDetails,
+  requiredAliases,
+  pollSeconds,
+  options = {},
+) {
+  const dependencies = options.dependencies || {};
+  const getRuns = dependencies.listPullRequestWorkflowRuns || listPullRequestWorkflowRuns;
+  const getActionRequired = dependencies.listActionRequiredRuns || listActionRequiredRuns;
+  const getWorkflows = dependencies.listWorkflowDefinitions || listWorkflowDefinitions;
+  const getChecks = dependencies.listCheckRuns || listCheckRuns;
+  const getCurrentDetails = dependencies.loadPullRequestDetails || loadPullRequestDetails;
+  const approveRun = dependencies.approveWorkflowRun || approveWorkflowRun;
+  const sleep = dependencies.sleep || ((milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)));
+  const maxAttempts = options.maxAttempts || 180;
+  const baselineRunIds = new Set((options.baselineRunIds || []).map(Number));
+  const approvedRunIds = new Set((options.approvedRunIds || []).map(Number));
+  const tuple = options.tuple || pullRequestTuple(prDetails);
+  const prNumber = Number(prDetails.number);
+  const headSha = tuple.headOid;
+  const hasSkillChanges = Boolean(options.hasSkillChanges);
+  const neededPaths = requiredWorkflowPaths(hasSkillChanges);
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const workflows = getWorkflows(projectRoot, repoSlug);
+    const freshRuns = selectFreshRequiredWorkflowRuns(
+      getRuns(projectRoot, repoSlug, headSha),
+      baselineRunIds,
+      hasSkillChanges,
+    );
+    const validatedRuns = validateActionRequiredRuns(
+      freshRuns,
+      workflows,
+      prNumber,
+      headSha,
+      APPROVAL_WORKFLOW_PATHS,
+      {
+        headRefName: prDetails.headRefName,
+        headRepository: prDetails.headRepository?.nameWithOwner,
+        baseRepository: repoSlug,
+      },
+    );
+    const actionRequiredIds = new Set(
+      getActionRequired(projectRoot, repoSlug, headSha).map((run) => Number(run.id)),
+    );
+    const approvable = validatedRuns.filter((run) => (
+      actionRequiredIds.has(Number(run.id)) && !approvedRunIds.has(Number(run.id))
+    ));
+    if (approvable.length) {
+      assertUnchangedTuple(
+        getCurrentDetails(projectRoot, repoSlug, prNumber),
+        tuple,
+        "before fresh workflow approvals",
+        prNumber,
+      );
+      for (const run of approvable) {
+        approveRun(projectRoot, repoSlug, run);
+        approvedRunIds.add(Number(run.id));
+      }
+      assertUnchangedTuple(
+        getCurrentDetails(projectRoot, repoSlug, prNumber),
+        tuple,
+        "after fresh workflow approvals",
+        prNumber,
+      );
+      console.log(`[merge-batch] PR #${prNumber}: approved ${approvable.length} fresh fork run(s).`);
+    }
+
+    const pathsSeen = new Set(validatedRuns.map((run) => run.path));
+    const missingWorkflowPaths = [...neededPaths].filter((workflowPath) => !pathsSeen.has(workflowPath));
+    const suiteIds = new Set(
+      validatedRuns
+        .map((run) => Number(run?.check_suite_id))
+        .filter((id) => Number.isInteger(id) && id > 0),
+    );
+    const freshChecks = getChecks(projectRoot, repoSlug, headSha)
+      .filter((run) => suiteIds.has(Number(run?.check_suite?.id)));
+    const summaries = summarizeRequiredCheckRuns(freshChecks, requiredAliases);
+    const pending = summaries.filter((summary) => summary.state === "pending" || summary.state === "missing");
+    const failed = summaries.filter((summary) => summary.state === "failed");
+
+    console.log(
+      `[merge-batch] Fresh checks for ${headSha}: ${formatCheckSummary(summaries)}` +
+      (missingWorkflowPaths.length ? `; waiting for ${missingWorkflowPaths.join(", ")}` : ""),
+    );
+
+    if (!missingWorkflowPaths.length && failed.length) {
+      throw new Error(
+        `Fresh required checks failed for ${headSha}: ` +
+        failed.map((item) => `${item.label} (${item.conclusion || "failed"})`).join(", "),
+      );
+    }
+    if (!missingWorkflowPaths.length && !pending.length) {
+      return summaries;
+    }
+    await sleep(pollSeconds * 1000);
+  }
+
+  throw new Error(`Timed out waiting for fresh required checks on ${headSha}.`);
+}
+
 function patchPrBody(projectRoot, repoSlug, prNumber, body) {
   const payload = JSON.stringify({ body });
   runCommand(
@@ -1275,7 +1414,10 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
   }
 
   let bodyRefreshed = false;
+  let baselineRunIds = [];
   if (needsBodyRefresh(prDetails)) {
+    baselineRunIds = listPullRequestWorkflowRuns(projectRoot, repoSlug, prDetails.headRefOid)
+      .map((run) => Number(run.id));
     const normalizedBody = normalizePrBody(prDetails.body, template);
     if (!options.dryRun) {
       patchPrBody(projectRoot, repoSlug, prNumber, normalizedBody);
@@ -1290,6 +1432,7 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
     dryRun: options.dryRun,
     evaluatorOid: options.evaluatorOid,
     reviewedHeads: options.reviewedHeads,
+    excludedRunIds: baselineRunIds,
     dependencies: options.approvalDependencies,
   });
   const headSha = prDetails.headRefOid;
@@ -1309,7 +1452,23 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
       new Set(options.reviewedHeads || []).has(headSha),
   });
   if (!options.dryRun) {
-    await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds);
+    if (bodyRefreshed) {
+      await waitForFreshRequiredChecks(
+        projectRoot,
+        repoSlug,
+        prDetails,
+        requiredCheckAliases,
+        options.pollSeconds,
+        {
+          baselineRunIds,
+          approvedRunIds: approvedRuns.map((run) => run.id),
+          tuple: approval.tuple,
+          hasSkillChanges: prDetails.hasSkillChanges,
+        },
+      );
+    } else {
+      await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds);
+    }
   }
 
   if (options.dryRun) {
@@ -1423,6 +1582,7 @@ module.exports = {
   gitPullMain,
   isRetryableMergeError,
   listActionRequiredRuns,
+  listPullRequestWorkflowRuns,
   listCheckRuns,
   listWorkflowDefinitions,
   loadEffectiveMainProtection,
@@ -1444,6 +1604,7 @@ module.exports = {
   runCommand,
   runCommandBuffer,
   runBatch,
+  selectFreshRequiredWorkflowRuns,
   selectLatestCheckRuns,
   stripDisallowedCoauthorTrailers,
   summarizeRequiredCheckRuns,
@@ -1451,5 +1612,6 @@ module.exports = {
   validateChangedSkillEvidence,
   validateEffectiveMainProtection,
   waitForRequiredChecks,
+  waitForFreshRequiredChecks,
   resolveBlobSizes,
 };

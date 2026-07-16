@@ -52,11 +52,12 @@ it means the repository could not auto-sync generated artifacts cleanly and main
 - You must create/update `walkthrough.md` or `CHANGELOG.md` to document what changed.
 - If you made something new, **link it** in the artifacts.
 
-### 4. 🚫 NO BRANCHES
+### 4. 🛡️ PROTECTED MAIN
 
-- **ALWAYS use the `main` branch.**
-- NEVER create feature branches (e.g., `feat/new-skill`).
-- We commit directly to `main` to keep history linear and simple.
+- **Never commit or push directly to `main`.** Branch protection applies to maintainers and administrators.
+- Make maintainer repairs on the contributor branch when allowed, or on a `codex/*`, `fix/*`, or release branch and open a pull request.
+- Merge accepted source PRs with `npm run merge:batch`; generated state follows through the protected `automation/canonical-repo-state` PR.
+- A request phrased as “push to main” names the final target state, not permission to bypass the protected PR lane.
 
 ### 5. 📦 RUNTIME DEPENDENCIES MUST BE RUNTIME DEPENDENCIES
 
@@ -194,8 +195,8 @@ Use this playbook:
     gh pr close <PR_NUMBER> --comment "Maintainer workflow refresh: closing and reopening to retrigger pull_request checks against the updated PR body."
     gh pr reopen <PR_NUMBER>
     ```
-5.  **Let `merge:batch` validate and approve newly created fork runs** after reopen. Do not approve them directly by run ID; the command binds every approval to the current PR, exact head SHA, allowlisted workflow, and locally recomputed diff.
-6.  **Wait for the new checks only.** You may see older failed `pr-policy` runs in the rollup alongside newer green runs. Merge only after the fresh run set for the current PR state is fully green: `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`, and a truthful skill-review outcome when `SKILL.md` changed. `review` means semantic review actually ran or reused a successful result for the identical skill-content fingerprint. `manual-review-required` means it did not run because secrets or Tessl credits were unavailable and requires the exact-SHA maintainer attestation above. Never rerun Tessl merely because the PR head or base moved when the changed skill content is identical. `source-validation` enforces the frozen warning budget and README source-credit coverage for changed skills, so missing `## When to Use` sections, missing README repo credits, or other new warning drift must be fixed before merge.
+5.  **Let `merge:batch` wait for and approve newly created fork runs** after reopen. GitHub Actions materializes those runs asynchronously, so an empty first lookup is not evidence that approval is unnecessary. Do not approve them directly by run ID; the command binds every approval to the current PR, exact head SHA, allowlisted workflow, locally recomputed diff, and the workflow/check-suite generation created after the reopen.
+6.  **Wait for the new checks only.** You may see older failed `pr-policy` runs in the rollup alongside newer green runs. Freshness is determined by workflow-run and check-suite IDs captured after the reopen, not by head SHA or completion time alone. Merge only after that fresh run set is fully green: `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`, and a truthful skill-review outcome when `SKILL.md` changed. `review` means Tessl semantic review actually ran or reused a successful result for the identical skill-content fingerprint. `manual-review-required` means Tessl did not run because repository secrets or Tessl credits were unavailable and requires the exact-SHA maintainer attestation above. Never describe `manual-review-required` as a Tessl review, and never rerun Tessl merely because the PR head or base moved when the changed skill content is identical. `source-validation` enforces the frozen warning budget and README source-credit coverage for changed skills, so missing `## When to Use` sections, missing README repo credits, or other new warning drift must be fixed before merge.
 7.  **If `gh pr merge` says `Base branch was modified`**, refresh the PR state and retry. This is normal when you are merging a batch and `main` moved between attempts.
 
 **If a PR was closed after local integration (reopen and merge):**
@@ -274,9 +275,10 @@ Do this **immediately after each PR merge**. Do not defer it to release prep.
     - If the PR reveals that a credited repo is dead, renamed, archived, or overstated, fix the README entry in the same follow-up pass instead of leaving stale metadata behind.
     - Release notes are not a substitute for README attribution. If a repo appears in the merged work or planned release notes and belongs in credits, add it to the README at merge time.
 
-4.  **Commit and push README credit updates right away**:
-    - If `npm run sync:contributors` or the credit audit changed `README.md`, commit and push that follow-up immediately on `main`.
-    - Do not leave contributor or community-credit drift sitting locally until the next release.
+4.  **Publish README credit updates through the protected sync lane**:
+    - After the source batch, let the trusted canonical-sync workflow open or update `automation/canonical-repo-state` and merge that PR after its required checks.
+    - If an unmanaged credit repair is still required, make it on a topic branch and merge it by pull request; never push the follow-up directly to `main`.
+    - Do not leave contributor or community-credit drift until the next release.
 
 5.  **Then continue with normal maintenance**:
     - Verify Table of Contents if you touched headings.

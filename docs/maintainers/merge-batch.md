@@ -31,12 +31,12 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 `merge:batch` will:
 
 - refresh the PR body when the Quality Bar checklist is missing
-- close and reopen the PR if stale metadata needs a fresh `pull_request` event
+- record the existing workflow-run generation, then close and reopen the PR if stale metadata needs a fresh `pull_request` event
 - fetch the exact base/head objects and classify the complete raw Git diff
 - recompute changed-skill evidence with evaluator code materialized from the trusted `main` commit
 - reject incomplete evidence coverage, deterministic quality/security/provenance regressions, and base/head drift
-- approve fork runs waiting on `action_required` only when every path, mode, object, size, and workflow identity is allowlisted
-- wait for the fresh required checks on the current head SHA
+- poll for asynchronously-created fork runs and approve only post-reopen runs waiting on `action_required` when every path, mode, object, size, and workflow identity is allowlisted
+- wait only for check suites belonging to the post-reopen workflow generation; older runs on the same head SHA cannot satisfy or fail the gate
 - call GitHub's immediate squash-merge endpoint and continue only when it reports `merged: true`
 - pull the protected `main`; its trusted workflow opens a canonical-sync bot PR for generated artifacts and contributor credits when needed
 
@@ -44,7 +44,7 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 
 - PR body normalization against the repository template
 - stale PR metadata refresh
-- required-check polling for the current PR head
+- generation-bound required-check polling for the current PR head
 - handoff of post-merge contributor and artifact drift to the canonical-sync PR lane
 
 ## What It Does Not Automate

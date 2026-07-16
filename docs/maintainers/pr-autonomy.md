@@ -51,7 +51,7 @@ A successful `manual-review-required` check means only that the requirement was 
 
 ## Maintainer Recalculation
 
-`merge:batch` must bind workflow approval and human attestation to one full head SHA. Before approving a waiting fork run, it independently:
+`merge:batch` must bind workflow approval and human attestation to one full head SHA. When it refreshes a PR body by closing and reopening the PR, it also records the pre-refresh workflow-run IDs and accepts checks only from post-refresh check suites. A shared head SHA is not sufficient evidence of freshness because multiple `pull_request` events can exist for the same commit. Before approving a waiting fork run, it independently:
 
 1. captures base and head object IDs;
 2. fetches those objects without checking out pull-request code;
