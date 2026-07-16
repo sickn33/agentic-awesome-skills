@@ -1,0 +1,17 @@
+This doesn't seem to be a Django repository. The task asks to solve a GitHub issue from django/django repository. Let me check if this is a separate task that just needs a patch generated based on the issue description.
+
+Based on the issue description and the hints provided, I need to generate a patch for the Django codebase. The fix is clearly described in the hints - the issue is in `django/db/models/sql/compiler.py` around line 727, where `name` should be replaced with `pieces[-1]` in the comparison.
+
+Let me generate the patch based on the information provided:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -727,7 +727,7 @@ class SQLCompiler:
+             # If we get to this point and the field is a relation to another model,
+             # append the default ordering for that model unless it is the pk
+             # shortcut or the attribute name of the field that is specified.
+-            if field.is_relation and opts.ordering and getattr(field, 'attname', None) != name and name != 'pk':
++            if field.is_relation and opts.ordering and getattr(field, 'attname', None) != pieces[-1] and name != 'pk':
+                 # Firstly, avoid infinite loops.
+                 already_seen = already_seen or set()
+                 join_tuple = tuple(getattr(self.query.alias_map[j], 'join_cols', None) for j in joins)

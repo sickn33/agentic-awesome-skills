@@ -1,0 +1,27 @@
+# pytest-dev__pytest-8365
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+The pytest repository doesn't appear to be checked out in this workspace. Based on the architect's analysis and the issue description, I'll generate the patch for the standard pytest `tmpdir.py` file structure. The fix involves sanitizing the username returned by `get_user()` to replace illegal directory characters.
+
+```
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -1,4 +1,5 @@
+ """Support for providing temporary directories to test functions."""
++import re
+ import os
+ import tempfile
+ from pathlib import Path
+@@ -78,7 +79,9 @@ class TempPathFactory:
+             basetemp = config.cache.get("cache/basetemp", None)
+             if basetemp is not None:
+                 basetemp = Path(basetemp)
+-            rootdir = Path(tempfile.gettempdir()) / f"pytest-of-{get_user() or 'unknown'}"
++            # Sanitize username to remove characters illegal in directory names
++            user = re.sub(r"[\\/:*?\"<>|]", "_", get_user() or "unknown")
++            rootdir = Path(tempfile.gettempdir()) / f"pytest-of-{user}"
+             if basetemp is not None:
+                 if basetemp.exists():
+                     return basetemp
+```

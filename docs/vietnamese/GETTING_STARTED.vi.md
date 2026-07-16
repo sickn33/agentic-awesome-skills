@@ -1,4 +1,4 @@
-# Hướng dẫn Bắt đầu với Antigravity Awesome Skills (V4)
+# Hướng dẫn Bắt đầu với Agentic Awesome Skills (V14.0.0)
 
 **Bạn mới đến đây? Hướng dẫn này sẽ giúp bạn tăng cường sức mạnh cho trợ lý trợ lý AI của mình chỉ trong 5 phút.**
 
@@ -6,7 +6,7 @@
 
 ## 🤔 "Skills" (Kỹ năng) là gì?
 
-Các trợ lý AI (như **Claude Code**, **Gemini**, **Cursor**) rất thông minh, nhưng chúng thiếu kiến thức cụ thể về các công cụ và quy trình làm việc của bạn.  
+Các trợ lý AI (như **Claude Code**, **Codex CLI**, **Gemini CLI**, **Cursor**, **Antigravity**, **Kiro** và **OpenCode**) rất thông minh, nhưng chúng thiếu kiến thức cụ thể về các công cụ và quy trình làm việc của bạn.
 **Skills** là các hướng dẫn sử dụng chuyên biệt (dưới dạng file markdown) dạy cho AI của bạn cách thực hiện các tác vụ cụ thể một cách hoàn hảo trong mọi lần thực hiện.
 
 **Một phép so sánh:** AI của bạn là một thực tập sinh xuất sắc. **Skills** là các SOP (Quy trình vận hành tiêu chuẩn) biến họ thành một Kỹ sư cao cấp.
@@ -15,17 +15,18 @@ Các trợ lý AI (như **Claude Code**, **Gemini**, **Cursor**) rất thông mi
 
 ## ⚡️ Khởi động nhanh: Các "Gói khởi đầu" (Starter Packs)
 
-Đừng lo lắng về con số hơn 560 kỹ năng. Bạn không cần dùng tất cả chúng cùng một lúc.  
+Đừng lo lắng về con số hơn 1,936 kỹ năng. Bạn không cần dùng tất cả chúng cùng một lúc.
 Chúng tôi đã tuyển chọn các **Gói khởi đầu** để bạn có thể bắt đầu sử dụng ngay lập tức.
 
 ### 1. Cài đặt Repository
 
-Sao chép các kỹ năng vào thư mục agent của bạn:
+Khuyến nghị dùng installer CLI. Mặc định, lệnh này cài vào `~/.agents/skills` cho Antigravity global:
 
 ```bash
-# Cài đặt phổ thông (hoạt động với hầu hết các agent)
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+npx agentic-awesome-skills
 ```
+
+Bạn cũng có thể dùng cờ theo công cụ, ví dụ `--claude`, `--gemini`, `--codex`, `--cursor`, `--kiro`, `--antigravity`, `--agy`, hoặc `--path <dir>` để chọn thư mục đích.
 
 ### 2. Chọn vai trò của bạn
 
@@ -68,29 +69,43 @@ Sau khi cài đặt, bạn chỉ cần trò chuyện với AI một cách tự n
 
 | Công cụ          | Trạng thái      | Đường dẫn         |
 | :--------------- | :-------------- | :---------------- |
-| **Claude Code**  | ✅ Hỗ trợ đầy đủ | `.claude/skills/` |
+| **Claude Code**  | ✅ Hỗ trợ đầy đủ | `.claude/skills/` hoặc Claude plugin marketplace |
 | **Gemini CLI**   | ✅ Hỗ trợ đầy đủ | `.gemini/skills/` |
-| **Antigravity**  | ✅ Hỗ trợ gốc   | `.agent/skills/`  |
+| **Codex CLI**    | ✅ Hỗ trợ đầy đủ | `.codex/skills/` |
+| **Kiro CLI / IDE** | ✅ Hỗ trợ đầy đủ | `~/.kiro/skills/` hoặc `.kiro/skills/` |
+| **Antigravity**  | ✅ Hỗ trợ gốc   | `~/.agents/skills/` hoặc `.agent/skills/` |
+| **Antigravity CLI (`agy`)** | ✅ Hỗ trợ đầy đủ | `~/.gemini/antigravity-cli/skills/` |
 | **Cursor**       | ✅ Hỗ trợ gốc   | `.cursor/skills/` |
-| **Copilot**      | ⚠️ Chỉ văn bản  | Copy-paste thủ công |
+| **OpenCode**     | ✅ Hỗ trợ đầy đủ | `.agents/skills/` |
+| **AdaL CLI**     | ✅ Hỗ trợ đầy đủ | `.adal/skills/` |
+| **Copilot**      | 🧪 Hỗ trợ preview qua `gh skill` | Dùng GitHub CLI với đường dẫn skill chính xác |
+
+> **GitHub Copilot (preview):** `gh skill` hiện vẫn ở trạng thái preview. Vì repository lớn này có cả bản canonical và bản mirror trong plugin, hãy dùng đường dẫn chính xác để tránh nhầm lẫn; chỉ dùng `--all` khi bạn thực sự muốn cài mọi bản được phát hiện:
+>
+> ```bash
+> gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md
+> gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent github-copilot --scope user --pin v14.2.0
+> ```
 
 ---
 
-## 🛡️ Sự tin cậy & An toàn (Mới trong bản V4)
+## 🛡️ Sự tin cậy & An toàn
 
-Chúng tôi phân loại các kỹ năng để bạn biết mình đang chạy những gì:
+Chúng tôi phân loại các kỹ năng để bạn biết mình đang chạy những gì. Các giá trị này khớp trực tiếp với trường `risk:` trong frontmatter của mỗi `SKILL.md`:
 
-- 🟣 **Official (Chính thức)**: Được duy trì bởi Anthropic/Google/Nhà cung cấp (Độ tin cậy cao).
-- 🔵 **Safe (An toàn)**: Các kỹ năng cộng đồng không gây hại (Chỉ đọc/Lập kế hoạch).
-- 🔴 **Risk (Rủi ro)**: Các kỹ năng sửa đổi hệ thống hoặc thực hiện kiểm thử bảo mật (Sử dụng khi được cấp phép).
+- ⚪ **`unknown`**: Nội dung cũ hoặc chưa được phân loại, vẫn cần maintainer phân loại.
+- 🟢 **`none`**: Hướng dẫn thuần văn bản hoặc lập luận.
+- 🔵 **`safe`**: Hướng dẫn chỉ đọc hoặc vận hành rủi ro thấp.
+- 🟠 **`critical`**: Hướng dẫn thay đổi trạng thái hoặc có thể ảnh hưởng đến triển khai.
+- 🔴 **`offensive`**: Hướng dẫn pentesting/red-team với cảnh báo Authorized Use Only rõ ràng.
 
-_Kiểm tra [Danh mục Skill (Skill Catalog)](../CATALOG.vi.md) để xem danh sách đầy đủ._
+_Kiểm tra [Danh mục Skill (Skill Catalog)](../../CATALOG.md) để xem danh sách đầy đủ._
 
 ---
 
 ## ❓ FAQ
 
-**H: Tôi có cần cài đặt tất cả 560 kỹ năng không?**  
+**H: Tôi có cần cài đặt tất cả 1,936+ kỹ năng không?**
 Đ: Bạn tải toàn bộ repo về, nhưng AI của bạn chỉ _đọc_ những kỹ năng bạn yêu cầu (hoặc những kỹ năng có liên quan). Nó rất nhẹ!
 
 **H: Tôi có thể tự tạo kỹ năng cho riêng mình không?**  
@@ -105,4 +120,4 @@ _Kiểm tra [Danh mục Skill (Skill Catalog)](../CATALOG.vi.md) để xem danh 
 
 1. [Duyệt qua các Gói kỹ năng (Bundles)](BUNDLES.vi.md)
 2. [Xem các Ví dụ thực tế (Examples)](EXAMPLES.vi.md)
-3. [Đóng góp một Skill mới](../CONTRIBUTING.vi.md)
+3. [Đóng góp một Skill mới](../../CONTRIBUTING.md)

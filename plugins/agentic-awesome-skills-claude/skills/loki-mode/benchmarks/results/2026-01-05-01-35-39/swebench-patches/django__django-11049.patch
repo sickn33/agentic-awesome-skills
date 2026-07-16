@@ -1,0 +1,10 @@
+Now I have the information I need. The correct patch is:
+
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@ -492,7 +492,7 @@ class DurationField(Field):
+ 
+     default_error_messages = {
+-        'invalid': _('Enter a valid duration. The format is: [DD] [HH:[MM:]]ss[.uuuuuu].'),
++        'invalid': _('Enter a valid duration. The format is: [DD] [[HH:]MM:]ss[.uuuuuu].'),
+     }

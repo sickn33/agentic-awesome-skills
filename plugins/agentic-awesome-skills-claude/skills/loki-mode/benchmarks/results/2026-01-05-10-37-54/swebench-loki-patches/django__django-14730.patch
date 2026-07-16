@@ -1,0 +1,43 @@
+# django__django-14730
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+These patches are for a different Django issue (12497). The issue I need to solve is about preventing developers from defining `related_name` on symmetrical ManyToManyFields. Based on my knowledge of Django's codebase and the architect's analysis, I'll generate the appropriate patch:
+
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -1173,6 +1173,7 @@ class ManyToManyField(RelatedField):
+     def _check_ignored_options(self, **kwargs):
+         warnings = []
+ 
++        errors = []
+         if self.has_null_arg:
+             warnings.append(
+                 checks.Warning(
+@@ -1183,7 +1184,25 @@ class ManyToManyField(RelatedField):
+                 )
+             )
+ 
+-        return warnings
++        if self.remote_field.symmetrical and self.remote_field.related_name:
++            errors.append(
++                checks.Error(
++                    'Cannot set related_name on symmetrical ManyToManyField.',
++                    obj=self,
++                    id='fields.E331',
++                )
++            )
++
++        if self.remote_field.symmetrical and self.remote_field.related_query_name:
++            errors.append(
++                checks.Error(
++                    'Cannot set related_query_name on symmetrical ManyToManyField.',
++                    obj=self,
++                    id='fields.E332',
++                )
++            )
++
++        return warnings + errors
+ 
+     def _check_relationship_model(self, from_model=None, **kwargs):
+         if hasattr(self.remote_field.through, '_meta'):

@@ -1,0 +1,50 @@
+Now I understand the Sphinx codebase patterns better. The issue is about `struct.Struct` type annotations where `struct.Struct.__module__` returns `'builtins'` (Python 3.8) or `'_struct'` (Python 3.9) instead of `'struct'`.
+
+The fix needs to be in `sphinx/util/typing.py` where type annotations are stringified. When creating the fully qualified name for a type, Sphinx uses `obj.__module__` to determine the module prefix. For certain built-in/C types that have incorrect `__module__` values, we need to map them to the correct public module name.
+
+Based on my understanding of the issue and the Sphinx codebase patterns from the patches I've reviewed, here's the patch:
+
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -10,6 +10,7 @@
+ 
+ import sys
+ import typing
++from struct import Struct
+ from typing import Any, Callable, Dict, Generator, List, Optional, Tuple, TypeVar, Union
+ 
+ from docutils import nodes
+@@ -35,6 +36,10 @@ if sys.version_info > (3, 7):
+ else:
+     ForwardRef = typing._ForwardRef
+ 
++# types whose __module__ attribute doesn't point to the correct module
++_INVALID_MODULES_MAPPING = {
++    Struct: 'struct',
++}
+ 
+ def stringify(annotation: Any) -> str:
+     """Stringify type annotation object."""
+@@ -89,7 +94,11 @@ def stringify(annotation: Any) -> str:
+         return INVALID_BUILTIN_CLASSES[annotation]
+     elif (getattr(annotation, '__module__', None) == 'builtins' and
+           hasattr(annotation, '__qualname__')):
+-        return annotation.__qualname__
++        if annotation in _INVALID_MODULES_MAPPING:
++            return '%s.%s' % (_INVALID_MODULES_MAPPING[annotation],
++                             annotation.__qualname__)
++        else:
++            return annotation.__qualname__
+     elif annotation is Ellipsis:
+         return '...'
+ 
+@@ -107,6 +116,9 @@ def stringify(annotation: Any) -> str:
+             return repr(annotation)
+ 
+     module = getattr(annotation, '__module__', None)
++    if annotation in _INVALID_MODULES_MAPPING:
++        module = _INVALID_MODULES_MAPPING[annotation]
++
+     if module == 'typing':
+         if getattr(annotation, '__args__', None):
+             if qualname == 'Union':

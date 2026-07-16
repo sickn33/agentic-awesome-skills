@@ -1,0 +1,116 @@
+# sympy__sympy-17630
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+The sympy repository is not available locally. Based on the issue description and the architect's analysis, I can generate the patch for the upstream SymPy repository. The bug is well-documented: when `ZeroMatrix * ZeroMatrix` or similar operations occur in `_blockmul`, the result is a scalar `Zero` instead of `ZeroMatrix`, causing subsequent operations to fail.
+
+```
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -1,5 +1,6 @@
+ from __future__ import print_function, division
+ 
++from sympy import S
+ from sympy.assumptions.ask import ask, Q
+ from sympy.core import Basic, Add
+ from sympy.strategies import typed, exhaust, condition, do_one, unpack
+@@ -88,6 +89,23 @@ class BlockMatrix(MatrixExpr):
+     def colblocksizes(self):
+         return [self.blocks[0, i].cols for i in range(self.blockshape[1])]
+ 
++    def _ensure_zero_matrix(self, block, rows, cols):
++        """Convert scalar Zero to ZeroMatrix with proper dimensions."""
++        from sympy.matrices.expressions.matexpr import ZeroMatrix
++        if block == S.Zero:
++            return ZeroMatrix(rows, cols)
++        return block
++
++    def _get_block_sizes(self, blocks, rowblocksizes, colblocksizes):
++        """Get row and column sizes for each block position."""
++        result = []
++        for i in range(len(rowblocksizes)):
++            row = []
++            for j in range(len(colblocksizes)):
++                row.append((rowblocksizes[i], colblocksizes[j]))
++            result.append(row)
++        return result
++
+     def _blockmul(self, other):
+         if (isinstance(other, BlockMatrix) and
+                 self.colblocksizes == other.rowblocksizes):
+@@ -95,8 +113,14 @@ class BlockMatrix(MatrixExpr):
+                         for i in range(self.blockshape[0])
+                         for j in range(other.blockshape[1])]
+ 
+-            return BlockMatrix(Matrix(self.blockshape[0], other.blockshape[1], block_mul))
+-        return self * other
++            result = BlockMatrix(Matrix(self.blockshape[0], other.blockshape[1], block_mul))
++            # Convert any scalar Zero entries back to ZeroMatrix with proper dimensions
++            rowsizes = self.rowblocksizes
++            colsizes = other.colblocksizes
++            new_blocks = [[self._ensure_zero_matrix(result.blocks[i, j], rowsizes[i], colsizes[j])
++                          for j in range(result.blockshape[1])]
++                          for i in range(result.blockshape[0])]
++            return BlockMatrix(Matrix(new_blocks))
++        return self * other
+ 
+     def _blockadd(self, other):
+         if (isinstance(other, BlockMatrix)
+```
+
+Wait, I need to reconsider this approach. The issue is that when we compute `MatMul(A, ZeroMatrix)` or `MatMul(ZeroMatrix, ZeroMatrix)`, it gets simplified to scalar `Zero` rather than `ZeroMatrix`. The fix should handle this in the `_blockmul` method where the matrix multiplication results are computed.
+
+Let me provide a cleaner patch:
+
+```
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -163,6 +163,8 @@ def bc_matmul(expr):
+ def bc_block_plus_ident(expr):
+     pass
+ 
++from sympy.matrices.expressions.matexpr import ZeroMatrix
++
+ def _block_mul(A, B):
+     """Multiply two block matrices.
+     Assumes that both matrices have conforming block structures.
+@@ -176,6 +178,10 @@ def _block_mul(A, B):
+             block = Add(*[A.blocks[i, k] * B.blocks[k, j]
+                         for k in range(A.blockshape[1])])
+             blocks[i*n + j] = block
++            # Convert scalar Zero back to ZeroMatrix with proper dimensions
++            from sympy import S
++            if blocks[i*n + j] == S.Zero:
++                blocks[i*n + j] = ZeroMatrix(A.rowblocksizes[i], B.colblocksizes[j])
+     return BlockMatrix(Matrix(m, n, blocks))
+```
+
+Actually, let me reconsider. Looking at the traceback more carefully, the issue is in the `_blockmul` method itself. The patch should be applied there. Let me provide a complete, clean patch:
+
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -89,13 +89,20 @@ class BlockMatrix(MatrixExpr):
+         return [self.blocks[0, i].cols for i in range(self.blockshape[1])]
+ 
+     def _blockmul(self, other):
++        from sympy.matrices.expressions.matexpr import ZeroMatrix
++        from sympy import S
+         if (isinstance(other, BlockMatrix) and
+                 self.colblocksizes == other.rowblocksizes):
+-            block_mul = lambda i, j: Add(*[self.blocks[i, k]*other.blocks[k, j]
+-                        for k in range(self.blockshape[1])])
+-
+-            return BlockMatrix(Matrix(self.blockshape[0], other.blockshape[1], block_mul))
+-        return self * other
++            def block_mul(i, j):
++                result = Add(*[self.blocks[i, k]*other.blocks[k, j]
++                              for k in range(self.blockshape[1])])
++                # Convert scalar Zero to ZeroMatrix with proper dimensions
++                if result == S.Zero:
++                    return ZeroMatrix(self.rowblocksizes[i], other.colblocksizes[j])
++                return result
++            return BlockMatrix(Matrix(self.blockshape[0], other.blockshape[1], block_mul))
++        return self * other
+ 
+     def _blockadd(self, other):
+         if (isinstance(other, BlockMatrix)

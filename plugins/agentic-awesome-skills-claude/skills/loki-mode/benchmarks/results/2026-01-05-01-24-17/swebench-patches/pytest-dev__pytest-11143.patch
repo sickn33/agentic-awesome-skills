@@ -1,0 +1,25 @@
+Based on the error traceback in the issue, I can see the problem. The issue is at line 760 in `_pytest/assertion/rewrite.py`:
+
+```python
+return "PYTEST_DONT_REWRITE" in docstring
+```
+
+The problem is that when the first expression in a Python file is a number (like `0`), it's being mistakenly treated as a docstring. When you try to use `in` operator on an integer, Python raises `TypeError: argument of type 'int' is not iterable`.
+
+The fix needs to check if the docstring is actually a string before checking if it contains `"PYTEST_DONT_REWRITE"`.
+
+Looking at the traceback:
+- Line 695: `if self.is_rewrite_disabled(doc):`
+- Line 760: `return "PYTEST_DONT_REWRITE" in docstring`
+
+The `is_rewrite_disabled` method receives a `doc` parameter that could be an integer when the first expression is a number literal. The fix is to check if it's a string type first.
+
+--- a/src/_pytest/assertion/rewrite.py
++++ b/src/_pytest/assertion/rewrite.py
+@@ -757,4 +757,6 @@ class AssertionRewriter(ast.NodeVisitor):
+ 
+     @staticmethod
+     def is_rewrite_disabled(docstring: str) -> bool:
++        if not isinstance(docstring, str):
++            return False
+         return "PYTEST_DONT_REWRITE" in docstring

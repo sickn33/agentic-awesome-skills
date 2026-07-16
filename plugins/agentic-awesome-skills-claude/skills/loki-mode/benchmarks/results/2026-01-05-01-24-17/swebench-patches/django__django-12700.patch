@@ -1,0 +1,27 @@
+This repository doesn't contain the Django codebase. Let me understand the issue better and provide a patch based on my knowledge of Django's code structure. The issue is about the `cleanse_setting` method in `django/views/debug.py` which needs to recursively cleanse settings in lists and tuples, not just dictionaries.
+
+Based on the Django issue description, I need to create a patch that:
+1. Handles lists and tuples in addition to dictionaries when cleansing settings
+2. Recursively cleanses sensitive values within nested data structures
+
+Here's the patch:
+
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -83,11 +83,18 @@ class SafeExceptionReporterFilter:
+         """
+         try:
+             if self.hidden_settings.search(key):
+                 cleansed = self.cleansed_substitute
+             elif isinstance(value, dict):
+                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}
++            elif isinstance(value, list):
++                cleansed = [self.cleanse_setting('', v) for v in value]
++            elif isinstance(value, tuple):
++                cleansed = tuple([self.cleanse_setting('', v) for v in value])
+             else:
+                 cleansed = value
+         except TypeError:
+             # If the key isn't regex-able, just return as-is.
+             cleansed = value
+         return cleansed

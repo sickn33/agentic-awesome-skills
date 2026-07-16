@@ -1,0 +1,44 @@
+# pytest-dev__pytest-5495
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and typical pytest code structure, I'll generate the patch. The issue is in the `_compare_eq_sequence` function where messages like "Right contains more items, first extra item: 52" are shown for byte strings. The fix is to skip these confusing integer-based messages for bytes/bytearray types.
+
+```
+--- a/src/_pytest/assertion/util.py
++++ b/src/_pytest/assertion/util.py
+@@ -253,17 +253,21 @@ def _compare_eq_sequence(
+     explanation: List[str] = []
+     len_left = len(left)
+     len_right = len(right)
+-    for i in range(min(len_left, len_right)):
+-        if left[i] != right[i]:
+-            explanation += [f"At index {i} diff: {left[i]!r} != {right[i]!r}"]
+-            break
+-    if len_left > len_right:
+-        explanation += [
+-            f"Left contains {len_left - len_right} more items, first extra item: {left[len_right]!r}"
+-        ]
+-    elif len_left < len_right:
+-        explanation += [
+-            f"Right contains {len_right - len_left} more items, first extra item: {right[len_left]!r}"
+-        ]
++    # Skip index-based comparison for bytes/bytearray since iterating yields
++    # confusing integer ordinals rather than characters
++    if not isinstance(left, (bytes, bytearray)):
++        for i in range(min(len_left, len_right)):
++            if left[i] != right[i]:
++                explanation += [f"At index {i} diff: {left[i]!r} != {right[i]!r}"]
++                break
++        if len_left > len_right:
++            explanation += [
++                f"Left contains {len_left - len_right} more items, first extra item: {left[len_right]!r}"
++            ]
++        elif len_left < len_right:
++            explanation += [
++                f"Right contains {len_right - len_left} more items, first extra item: {right[len_left]!r}"
++            ]
+     diff = _diff_text(pformat(left).splitlines(), pformat(right).splitlines(), verbose)
+     explanation.extend(x.strip() for x in diff)
+     return explanation
+```

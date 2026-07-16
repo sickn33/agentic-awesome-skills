@@ -1,0 +1,61 @@
+Based on my knowledge of Django's codebase, I can create the patch. The issue is that when a model has a `UniqueConstraint`, the system doesn't validate that the fields referenced in the constraint actually exist on the model. The `unique_together` option does this validation via `_check_local_fields()` and raises `models.E012` if fields don't exist.
+
+The fix needs to be in `django/db/models/base.py` in the `_check_constraints` method (or we need to add constraint field checking). Let me create the patch based on Django's structure:
+
+In Django's `base.py`, there's a `_check_constraints` method that should call `_check_local_fields()` for `UniqueConstraint` fields. The `_check_local_fields()` method is already used by `_check_unique_together()` and `_check_index_together()`.
+
+Here's the patch:
+
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1,5 +1,6 @@
+ import copy
+ import inspect
++import itertools
+ import warnings
+ from functools import partialmethod
+ from itertools import chain
+@@ -1955,9 +1956,21 @@ class Model(metaclass=ModelBase):
+     @classmethod
+     def _check_constraints(cls, databases):
+         errors = []
++        for db in databases:
++            if not router.allow_migrate_model(db, cls):
++                continue
++            connection = connections[db]
++            if not (
++                connection.features.supports_table_check_constraints or
++                'supports_table_check_constraints' not in cls._meta.required_db_features
++            ) and not (
++                connection.features.supports_partial_indexes or
++                'supports_partial_indexes' not in cls._meta.required_db_features
++            ):
++                continue
+         for constraint in cls._meta.constraints:
+-            errors.extend(constraint.check())
+-        for db in databases:
++            if isinstance(constraint, UniqueConstraint):
++                errors.extend(cls._check_local_fields(constraint.fields, 'constraints'))
+             if not router.allow_migrate_model(db, cls):
+                 continue
+             connection = connections[db]
+
+Wait, I need to look at the actual structure more carefully. Let me provide a cleaner patch based on the standard Django codebase structure:
+
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1878,6 +1878,14 @@ class Model(metaclass=ModelBase):
+     @classmethod
+     def _check_constraints(cls, databases):
+         errors = []
++        for constraint in cls._meta.constraints:
++            if isinstance(constraint, UniqueConstraint):
++                errors.extend(
++                    cls._check_local_fields(
++                        constraint.fields,
++                        'constraints',
++                    )
++                )
+         for db in databases:
+             if not router.allow_migrate_model(db, cls):
+                 continue

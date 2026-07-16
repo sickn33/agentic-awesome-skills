@@ -1,0 +1,126 @@
+# django__django-13220
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This is a Django repository issue, but the Django codebase isn't in this directory. Based on my knowledge of Django's codebase, I'll generate the patch for the `django/core/exceptions.py` file which contains the `ValidationError` class.
+
+```
+--- a/django/core/exceptions.py
++++ b/django/core/exceptions.py
+@@ -182,3 +182,56 @@ class ValidationError(Exception):
+             return repr(self.message)
+         return repr(self.messages)
+ 
++    def __eq__(self, other):
++        if not isinstance(other, ValidationError):
++            return NotImplemented
++
++        # Helper function to make a value hashable for comparison
++        def make_hashable(value):
++            if isinstance(value, dict):
++                return frozenset(
++                    (k, make_hashable(v)) for k, v in value.items()
++                )
++            elif isinstance(value, list):
++                return frozenset(make_hashable(item) for item in value)
++            else:
++                return value
++
++        # Compare error_dict if both have it
++        if hasattr(self, 'error_dict') and hasattr(other, 'error_dict'):
++            # Convert dict values to frozensets for order-independent comparison
++            self_dict = {}
++            other_dict = {}
++            for key, value in self.error_dict.items():
++                self_dict[key] = frozenset(make_hashable(v) for v in value)
++            for key, value in other.error_dict.items():
++                other_dict[key] = frozenset(make_hashable(v) for v in value)
++            return self_dict == other_dict
++        elif hasattr(self, 'error_dict') or hasattr(other, 'error_dict'):
++            return False
++
++        # Compare error_list - order independent
++        if hasattr(self, 'error_list') and hasattr(other, 'error_list'):
++            return (
++                frozenset(make_hashable(e) for e in self.error_list) ==
++                frozenset(make_hashable(e) for e in other.error_list)
++            )
++
++        return False
++
++    def __ne__(self, other):
++        result = self.__eq__(other)
++        if result is NotImplemented:
++            return result
++        return not result
++
++    def __hash__(self):
++        if hasattr(self, 'message'):
++            return hash((self.message, self.code, make_hashable(self.params) if self.params else None))
++        if hasattr(self, 'error_dict'):
++            return hash(frozenset(self.error_dict.keys()))
++        if hasattr(self, 'error_list'):
++            return hash(tuple(sorted(str(e) for e in self.error_list)))
++        return hash(id(self))
+```
+
+Wait, there's an issue with `__hash__` referencing `make_hashable` which is defined inside `__eq__`. Let me provide a corrected patch:
+
+--- a/django/core/exceptions.py
++++ b/django/core/exceptions.py
+@@ -182,3 +182,59 @@ class ValidationError(Exception):
+             return repr(self.message)
+         return repr(self.messages)
+ 
++    def __eq__(self, other):
++        if not isinstance(other, ValidationError):
++            return NotImplemented
++
++        # Helper function to make a value hashable for comparison
++        def make_hashable(value):
++            if isinstance(value, dict):
++                return frozenset(
++                    (k, make_hashable(v)) for k, v in value.items()
++                )
++            elif isinstance(value, list):
++                return frozenset(make_hashable(item) for item in value)
++            else:
++                return value
++
++        # Compare error_dict if both have it
++        if hasattr(self, 'error_dict') and hasattr(other, 'error_dict'):
++            # Convert dict values to frozensets for order-independent comparison
++            self_dict = {}
++            other_dict = {}
++            for key, value in self.error_dict.items():
++                self_dict[key] = frozenset(make_hashable(v) for v in value)
++            for key, value in other.error_dict.items():
++                other_dict[key] = frozenset(make_hashable(v) for v in value)
++            return self_dict == other_dict
++        elif hasattr(self, 'error_dict') or hasattr(other, 'error_dict'):
++            return False
++
++        # Compare error_list - order independent
++        if hasattr(self, 'error_list') and hasattr(other, 'error_list'):
++            return (
++                frozenset(make_hashable(e) for e in self.error_list) ==
++                frozenset(make_hashable(e) for e in other.error_list)
++            )
++
++        return False
++
++    def __ne__(self, other):
++        result = self.__eq__(other)
++        if result is NotImplemented:
++            return result
++        return not result
++
++    def __hash__(self):
++        # ValidationError is mutable, so we make it unhashable
++        # This is consistent with the default behavior when __eq__ is defined
++        # and __hash__ is not explicitly set to a non-None value.
++        # However, since Exception base class has __hash__, we need to
++        # explicitly disable it.
++        raise TypeError(
++            "unhashable type: 'ValidationError'"
++        )

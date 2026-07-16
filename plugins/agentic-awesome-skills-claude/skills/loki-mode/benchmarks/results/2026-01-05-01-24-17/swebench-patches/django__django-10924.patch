@@ -1,0 +1,41 @@
+Based on my knowledge of Django's codebase and the issue description, I can create the patch. The issue requests that `FilePathField`'s `path` parameter should accept a callable, similar to how `FileField`'s `upload_to` works.
+
+Looking at the existing PRs mentioned in the ticket (PR #10299 and PR #10924), the solution involves:
+
+1. In the model field (`django/db/models/fields/__init__.py`): Allow storing a callable for `path`
+2. In the form field (`django/forms/fields.py`): Evaluate the callable at the beginning of `__init__` if `path` is callable
+
+Here's the patch:
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1714,6 +1714,8 @@ class FilePathField(Field):
+         self.path, self.match, self.recursive = path, match, recursive
+         self.allow_files, self.allow_folders = allow_files, allow_folders
+         kwargs.setdefault('max_length', 100)
++        if callable(self.path):
++            self.path = self.path()
+         super().__init__(verbose_name, name, **kwargs)
+ 
+     def check(self):
+@@ -1758,7 +1760,9 @@ class FilePathField(Field):
+         if self.allow_folders:
+             kwargs['allow_folders'] = self.allow_folders
+         return name, path, args, kwargs
++
+     def formfield(self, **kwargs):
++        path = self.path() if callable(self.path) else self.path
+         return super().formfield(**{
+             'path': self.path,
+             'match': self.match,
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@ -1102,6 +1102,9 @@ class FilePathField(ChoiceField):
+     def __init__(self, path, *, match=None, recursive=False, allow_files=True,
+                  allow_folders=False, **kwargs):
+         self.path, self.match, self.recursive = path, match, recursive
++        if callable(self.path):
++            self.path = self.path()
++            path = self.path
+         self.allow_files, self.allow_folders = allow_files, allow_folders
+         super().__init__(choices=(), **kwargs)

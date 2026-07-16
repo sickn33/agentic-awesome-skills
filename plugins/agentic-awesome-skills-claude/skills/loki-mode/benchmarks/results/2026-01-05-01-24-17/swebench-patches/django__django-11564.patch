@@ -1,0 +1,285 @@
+Based on my knowledge of Django's codebase and the issue description, I'll create a patch that adds SCRIPT_NAME support to STATIC_URL and MEDIA_URL. The key changes need to be made in:
+
+1. `django/core/files/storage.py` - FileSystemStorage to use get_script_prefix()
+2. `django/contrib/staticfiles/storage.py` - StaticFilesStorage to properly handle SCRIPT_NAME
+3. `django/templatetags/static.py` - The static template tag
+
+Let me create the patch based on my understanding of Django's architecture:
+
+```
+--- a/django/conf/__init__.py
++++ b/django/conf/__init__.py
+@@ -81,6 +81,20 @@ class LazySettings(LazyObject):
+             warnings.warn(EMPTY_SETTINGS_WARNING)
+         self._wrapped = Settings(settings_module)
+ 
++    @property
++    def _MEDIA_URL(self):
++        return self.__getattr__('MEDIA_URL')
++
++    @_MEDIA_URL.setter
++    def _MEDIA_URL(self, value):
++        pass
++
++    @property
++    def _STATIC_URL(self):
++        return self.__getattr__('STATIC_URL')
++
++    @_STATIC_URL.setter
++    def _STATIC_URL(self, value):
++        pass
++
+     def __repr__(self):
+         # Hardcode the class name as otherwise it yields 'Settings'.
+         if self._wrapped is empty:
+--- a/django/contrib/staticfiles/storage.py
++++ b/django/contrib/staticfiles/storage.py
+@@ -17,7 +17,7 @@ from django.utils.functional import LazyObject
+ 
+ class StaticFilesStorage(FileSystemStorage):
+     """
+-    Standard file system storage for static files.
++    Standard file system storage for static files with SCRIPT_NAME support.
+ 
+     The defaults for ``location`` and ``base_url`` are
+     ``STATIC_ROOT`` and ``STATIC_URL``.
+@@ -27,6 +27,17 @@ class StaticFilesStorage(FileSystemStorage):
+             location = settings.STATIC_ROOT
+         if base_url is None:
+             base_url = settings.STATIC_URL
++        if base_url and not self._is_absolute_url(base_url):
++            from django.urls import get_script_prefix
++            base_url = '%s%s' % (get_script_prefix(), base_url.lstrip('/'))
+         super().__init__(location, base_url, *args, **kwargs)
+         # FileSystemStorage fallbacks to MEDIA_ROOT when location
+         # is empty string.
++        if not location:
++            self.location = settings.STATIC_ROOT
++
++    def _is_absolute_url(self, url):
++        """
++        Check if a URL is absolute (includes a scheme).
++        """
++        return url.startswith('http://') or url.startswith('https://') or url.startswith('//')
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -258,6 +258,14 @@ class FileSystemStorage(Storage):
+             base_url = settings.MEDIA_URL
+         self._base_url = base_url
+         self._location = location
++        if base_url and not self._is_absolute_url(base_url):
++            from django.urls import get_script_prefix
++            self._base_url = '%s%s' % (get_script_prefix(), base_url.lstrip('/'))
+ 
+     @cached_property
+     def base_location(self):
+@@ -280,6 +288,13 @@ class FileSystemStorage(Storage):
+             self._base_url = setting_changed.value
+         return self._base_url
+ 
++    def _is_absolute_url(self, url):
++        """
++        Check if a URL is absolute (includes a scheme or is protocol-relative).
++        """
++        return url.startswith('http://') or url.startswith('https://') or url.startswith('//')
++
+     def _clear_cached_properties(self, setting, **kwargs):
+         """Reset setting based property values."""
+         if setting == 'MEDIA_ROOT':
+--- a/django/templatetags/static.py
++++ b/django/templatetags/static.py
+@@ -67,6 +67,18 @@ class StaticNode(template.Node):
+ 
+ 
+ def static(path):
++    """
++    Return the absolute URL to a static file, respecting SCRIPT_NAME.
++    """
++    from django.conf import settings
++    from django.urls import get_script_prefix
++    
++    url = getattr(settings, 'STATIC_URL', '')
++    if url and not (url.startswith('http://') or url.startswith('https://') or url.startswith('//')):
++        prefix = get_script_prefix()
++        if prefix and not url.startswith(prefix):
++            url = '%s%s' % (prefix.rstrip('/'), url)
++    return urljoin(url, quote(path))
+-    return urljoin(getattr(settings, 'STATIC_URL', ''), quote(path))
+```
+
+Wait, I need to reconsider the approach. Looking at the issue and the hints more carefully, the proper approach would be to:
+
+1. Modify the storage classes to respect SCRIPT_NAME when generating URLs
+2. The static template tag and static() function should use the storage to get URLs
+
+Let me create a more accurate patch:
+
+--- a/django/conf/__init__.py
++++ b/django/conf/__init__.py
+@@ -15,6 +15,7 @@ import warnings
+ from pathlib import Path
+ 
+ from django.conf import global_settings
++from django.core.exceptions import ImproperlyConfigured
+ from django.utils.deprecation import RemovedInDjango40Warning
+ from django.utils.functional import LazyObject, empty
+ 
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -278,9 +278,23 @@ class FileSystemStorage(Storage):
+ 
+     @cached_property
+     def base_url(self):
+-        if self._base_url is not None and not self._base_url.endswith('/'):
++        return self._value_or_setting(self._base_url, settings.MEDIA_URL)
++
++    def _value_or_setting(self, value, setting):
++        if value is None:
++            value = setting
++        if value is not None and not value.endswith('/'):
+             self._base_url = setting_changed.value
+-        return self._base_url
++        return self._add_script_prefix(value)
++
++    def _add_script_prefix(self, url):
++        if url and not (url.startswith('http://') or url.startswith('https://') or url.startswith('//')):
++            from django.urls import get_script_prefix
++            prefix = get_script_prefix()
++            if prefix != '/' and not url.startswith(prefix):
++                url = prefix.rstrip('/') + url
++        return url
+ 
+     def _clear_cached_properties(self, setting, **kwargs):
+         """Reset setting based property values."""
+--- a/django/contrib/staticfiles/storage.py
++++ b/django/contrib/staticfiles/storage.py
+@@ -29,6 +29,17 @@ class StaticFilesStorage(FileSystemStorage):
+         if not location:
+             self.location = settings.STATIC_ROOT
+ 
++    @cached_property
++    def base_url(self):
++        return self._value_or_setting(self._base_url, settings.STATIC_URL)
++
+ 
+ class HashedFilesMixin:
+     default_template = """url("%(url)s")"""
+--- a/django/templatetags/static.py
++++ b/django/templatetags/static.py
+@@ -67,6 +67,16 @@ class StaticNode(template.Node):
+ 
+ 
+ def static(path):
+-    return urljoin(getattr(settings, 'STATIC_URL', ''), quote(path))
++    """
++    Return the URL of a static file, respecting SCRIPT_NAME.
++    """
++    url = getattr(settings, 'STATIC_URL', '')
++    if url and not (url.startswith('http://') or url.startswith('https://') or url.startswith('//')):
++        from django.urls import get_script_prefix
++        prefix = get_script_prefix()
++        if prefix != '/' and not url.startswith(prefix):
++            url = prefix.rstrip('/') + url
++    return urljoin(url, quote(path))
+ 
+ 
+ @register.tag('static')
+
+Actually, let me look at this more carefully. The issue mentions using `get_script_prefix()` like `reverse()` does. Let me create a cleaner patch that properly addresses the issue:
+
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -277,10 +277,25 @@ class FileSystemStorage(Storage):
+         return os.path.join(self.location, name)
+ 
+     @cached_property
+     def base_url(self):
+         if self._base_url is not None and not self._base_url.endswith('/'):
+             self._base_url += '/'
+-        return self._base_url
++        return self._value_or_setting(self._base_url, settings.MEDIA_URL)
++
++    def _value_or_setting(self, value, setting):
++        if value is None:
++            value = setting
++        return self._add_script_prefix(value)
++
++    def _add_script_prefix(self, url):
++        """Prepend the script prefix to relative URLs."""
++        if url and not (url.startswith('http://') or url.startswith('https://') or url.startswith('//')):
++            from django.urls import get_script_prefix
++            prefix = get_script_prefix()
++            if prefix != '/' and not url.startswith(prefix):
++                url = prefix.rstrip('/') + url
++        return url
+ 
+     def _clear_cached_properties(self, setting, **kwargs):
+         """Reset setting based property values."""
+
+Let me now provide the complete unified diff patch:
+
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -277,10 +277,22 @@ class FileSystemStorage(Storage):
+         return os.path.join(self.location, name)
+ 
+     @cached_property
+     def base_url(self):
+         if self._base_url is not None and not self._base_url.endswith('/'):
+             self._base_url += '/'
+-        return self._base_url
++        return self._add_script_prefix(self._base_url)
++
++    def _add_script_prefix(self, url):
++        """
++        Prepend the script prefix to relative URLs.
++        
++        If SCRIPT_NAME is set and the URL is relative (doesn't include scheme),
++        prepend the script prefix to ensure correct URL generation when Django
++        is deployed at a subpath.
++        """
++        if url and url.startswith('/') and not url.startswith('//'):
++            from django.urls import get_script_prefix
++            prefix = get_script_prefix()
++            if prefix != '/':
++                url = prefix.rstrip('/') + url
++        return url
+ 
+     def _clear_cached_properties(self, setting, **kwargs):
+         """Reset setting based property values."""
+--- a/django/contrib/staticfiles/storage.py
++++ b/django/contrib/staticfiles/storage.py
+@@ -29,6 +29,14 @@ class StaticFilesStorage(FileSystemStorage):
+         if not location:
+             self.location = settings.STATIC_ROOT
+ 
++    @cached_property
++    def base_url(self):
++        if self._base_url is not None and not self._base_url.endswith('/'):
++            self._base_url += '/'
++        return self._add_script_prefix(self._base_url)
++
+ 
+ class HashedFilesMixin:
+     default_template = """url("%(url)s")"""
+--- a/django/templatetags/static.py
++++ b/django/templatetags/static.py
+@@ -67,6 +67,18 @@ class StaticNode(template.Node):
+ 
+ 
+ def static(path):
+-    return urljoin(getattr(settings, 'STATIC_URL', ''), quote(path))
++    """
++    Return a URL to a static file, respecting SCRIPT_NAME.
++    """
++    url = getattr(settings, 'STATIC_URL', '')
++    # Only prepend script prefix for relative URLs (starting with / but not //)
++    if url and url.startswith('/') and not url.startswith('//'):
++        from django.urls import get_script_prefix
++        prefix = get_script_prefix()
++        if prefix != '/':
++            url = prefix.rstrip('/') + url
++    return urljoin(url, quote(path))
+ 
+ 
+ @register.tag('static')

@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub"
+  short_description: "Use gh for GitHub workflows"
+  default_prompt: "Use $github to inspect this repository's pull requests, issues, runs, or API data."

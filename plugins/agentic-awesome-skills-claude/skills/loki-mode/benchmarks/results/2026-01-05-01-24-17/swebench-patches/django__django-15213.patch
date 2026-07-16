@@ -1,0 +1,70 @@
+The Django source code is not in this repository. Based on the GitHub issue description and my knowledge of Django's codebase, I can analyze this issue and provide a fix.
+
+The issue is that when `~Q(pk__in=[])` is used in an `ExpressionWrapper`, the SQL compilation produces an empty value (just `AS "foo"` instead of `1 AS "foo"`).
+
+Let me analyze the issue:
+
+1. `Q(pk__in=[])` resolves to `False` (always false - no pk can be in empty list), which gets compiled as `0`
+2. `~Q(pk__in=[])` should resolve to `True` (always true - negation of always false), which should compile as `1`
+
+The problem is in how Django handles the `NothingNode` and its negation. When `pk__in=[]` is used, Django creates a `NothingNode` (representing an always-false condition). When negated, it should produce an "always true" condition, but instead it produces nothing.
+
+Looking at Django's SQL compiler and where clause handling, the issue is in the `WhereNode.as_sql()` method in `django/db/models/sql/where.py`. When a `NothingNode` is negated, it returns an empty string instead of returning the appropriate "always true" value.
+
+Here's the patch to fix this issue:
+
+--- a/django/db/models/sql/where.py
++++ b/django/db/models/sql/where.py
+@@ -80,8 +80,11 @@ class WhereNode(tree.Node):
+             try:
+                 sql, params = compiler.compile(child)
+             except EmptyResultSet:
+-                empty_needed -= 1
++                if self.negated:
++                    empty_needed -= 1
++                else:
++                    empty_needed -= 1
+             except FullResultSet:
+-                if self.connector == AND:
++                if self.connector == AND and not self.negated:
+                     continue
+-                else:
++                elif self.connector == OR and not self.negated:
+                     return "", []
++                elif self.connector == AND and self.negated:
++                    return "", []
++                else:
++                    continue
+             else:
+                 if sql:
+                     result.append(sql)
+
+Wait, let me reconsider this more carefully by understanding the actual Django code structure better. The issue is specifically about how the `resolve_expression` method handles `NothingNode` in Q objects.
+
+Based on the Django codebase structure and the error description, the fix should be in `django/db/models/sql/where.py`. When a `WhereNode` with a `NothingNode` child is negated and compiled, it needs to return the appropriate SQL for "always true" (like `1=1` or just `1`).
+
+--- a/django/db/models/sql/where.py
++++ b/django/db/models/sql/where.py
+@@ -80,7 +80,10 @@ class WhereNode(tree.Node):
+             try:
+                 sql, params = compiler.compile(child)
+             except EmptyResultSet:
+-                empty_needed -= 1
++                if self.negated and self.connector == AND:
++                    return compiler.compile(NegatedExpression(NothingNode()))
++                else:
++                    empty_needed -= 1
+
+Actually, let me provide a more accurate patch based on Django's actual implementation. The issue is that when the `WhereNode.as_sql` method catches `EmptyResultSet` for a negated node, it should return "1" (always true) instead of empty string.
+
+--- a/django/db/models/sql/where.py
++++ b/django/db/models/sql/where.py
+@@ -80,6 +80,8 @@ class WhereNode(tree.Node):
+             try:
+                 sql, params = compiler.compile(child)
+             except EmptyResultSet:
++                if self.negated:
++                    raise FullResultSet
+                 empty_needed -= 1
+             except FullResultSet:
+                 if self.connector == AND:

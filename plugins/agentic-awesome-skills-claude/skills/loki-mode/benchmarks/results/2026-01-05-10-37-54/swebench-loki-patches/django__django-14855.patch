@@ -1,0 +1,23 @@
+# django__django-14855
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I can generate the patch. The issue is clear: in `get_admin_url()` method, the `reverse()` call is missing the `current_app` parameter which causes URLs to be generated for the default admin site instead of the custom admin site.
+
+```
+--- a/django/contrib/admin/helpers.py
++++ b/django/contrib/admin/helpers.py
+@@ -209,7 +209,11 @@ class AdminReadonlyField:
+                     remote_obj = getattr(self.obj, name)
+                     if remote_obj is not None:
+                         url_name = f'admin:{model._meta.app_label}_{model._meta.model_name}_change'
+-                        url = reverse(url_name, args=[quote(remote_obj.pk)])
++                        url = reverse(
++                            url_name,
++                            args=[quote(remote_obj.pk)],
++                            current_app=self.model_admin.admin_site.name,
++                        )
+                         return format_html('<a href="{}">{}</a>', url, remote_obj)
+         except NoReverseMatch:
+             pass
+```

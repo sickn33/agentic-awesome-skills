@@ -1,0 +1,138 @@
+Based on the issue description, I need to create a patch for Django's Q object implementation. The issue is that applying the `|` operator to a Q object fails when the Q object contains non-pickleable types like `dict_keys`. The regression was introduced in commit `bb0b6e526340e638522e093765e534df4e4393d2`.
+
+Looking at the issue, the problem is that Django's Q object uses `copy.deepcopy()` when combining Q objects with `|` or `&` operators, and `dict_keys` objects cannot be pickled (which is required for deepcopy by default).
+
+The solution is to implement `__deepcopy__` method on the Q class (or its parent class `Node`) to handle this properly by using a deconstruct/reconstruct approach instead of relying on pickle.
+
+Based on my knowledge of Django's codebase structure and the typical location of Q objects, the fix needs to be in `django/db/models/query_utils.py` for the Q class. The issue is that the `|` operator (which calls `__or__`) uses `copy.deepcopy()` which tries to pickle objects.
+
+Here's the patch:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -40,7 +40,17 @@ class Q(tree.Node):
+     def __init__(self, *args, _connector=None, _negated=False, **kwargs):
+         super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)
+ 
++    def __deepcopy__(self, memo):
++        obj = type(self)()
++        obj.connector = self.connector
++        obj.negated = self.negated
++        obj.children = copy.deepcopy(self.children, memo)
++        return obj
++
+     def _combine(self, other, conn):
++        if not(isinstance(other, Q)):
++            raise TypeError(other)
+         if not self:
+             return other.copy()
+         if not other:
+
+Wait, this isn't quite right. Let me reconsider. The issue is that `deepcopy` fails on dict_keys. The fix should be in the `deconstruct` method or we need to convert non-pickleable iterables to lists.
+
+Actually, looking at this more carefully, the real fix should be to convert the children values to lists when they are iterators/views that can't be pickled. This should happen in the `__deepcopy__` method or in the `_combine` method.
+
+Here's the correct patch:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -1,3 +1,4 @@
++import copy
+ import functools
+ from collections import namedtuple
+ 
+@@ -46,6 +47,13 @@ class Q(tree.Node):
+             raise TypeError(other)
+         return self._combine(other, self.OR)
+ 
++    def __deepcopy__(self, memo):
++        obj = type(self)()
++        obj.connector = self.connector
++        obj.negated = self.negated
++        obj.children = copy.deepcopy(self.children, memo)
++        return obj
++
+     def _combine(self, other, conn):
+         if not(isinstance(other, Q)):
+             raise TypeError(other)
+
+Hmm, but that won't solve the issue since the deepcopy of children will still fail. The real issue is that the children contain tuples like `('x__in', dict_keys([]))` and deepcopy can't handle `dict_keys`.
+
+The proper solution is to resolve the children to pickleable types. Let me think about this again...
+
+The solution should resolve non-pickleable iterables to lists during the deepcopy. Here's the correct patch:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -46,6 +47,20 @@ class Q(tree.Node):
+             raise TypeError(other)
+         return self._combine(other, self.OR)
+ 
++    def _resolve_children(self):
++        """
++        Resolve children that may contain non-pickleable iterables
++        (e.g., dict_keys) by converting them to lists.
++        """
++        resolved_children = []
++        for child in self.children:
++            if isinstance(child, tuple) and len(child) == 2:
++                key, value = child
++                if hasattr(value, '__iter__') and not isinstance(value, (str, bytes, list, tuple, set, frozenset, dict)):
++                    value = list(value)
++                resolved_children.append((key, value))
++            else:
++                resolved_children.append(child)
++        return resolved_children
++
+     def _combine(self, other, conn):
+         if not(isinstance(other, Q)):
+             raise TypeError(other)
+
+Actually, looking at this from the perspective of the actual Django codebase and the referenced commit, the simpler approach is to implement `__deepcopy__` that deconstructs and reconstructs the Q object. Let me provide the correct fix:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -40,6 +40,13 @@ class Q(tree.Node):
+     def __init__(self, *args, _connector=None, _negated=False, **kwargs):
+         super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)
+ 
++    def __deepcopy__(self, memo):
++        obj = type(self)()
++        obj.connector = self.connector
++        obj.negated = self.negated
++        obj.children = [(k, list(v) if hasattr(v, '__iter__') and not isinstance(v, (str, bytes, list, tuple, dict, set, frozenset)) else v) if isinstance(child, tuple) and len(child) == 2 and (k := child[0]) is not None and (v := child[1]) is not None or True else child for child in copy.deepcopy([(k, list(v) if hasattr(v, '__iter__') and not isinstance(v, (str, bytes, list, tuple, dict, set, frozenset)) else v) if isinstance(c, tuple) and len(c) == 2 and (k := c[0], v := c[1]) else c for c in self.children], memo)]
++        return obj
+
+That's too complex. Let me provide a cleaner solution:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -1,3 +1,4 @@
++import copy
+ import functools
+ from collections import namedtuple
+ 
+@@ -40,6 +41,24 @@ class Q(tree.Node):
+     def __init__(self, *args, _connector=None, _negated=False, **kwargs):
+         super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)
+ 
++    def __deepcopy__(self, memo):
++        obj = type(self)()
++        obj.connector = self.connector
++        obj.negated = self.negated
++        obj.children = copy.deepcopy(self._resolve_children(), memo)
++        return obj
++
++    def _resolve_children(self):
++        resolved = []
++        for child in self.children:
++            if isinstance(child, tuple) and len(child) == 2:
++                key, value = child
++                if hasattr(value, '__iter__') and not isinstance(value, (str, bytes, list, tuple, set, frozenset, dict, type(None))):
++                    child = (key, list(value))
++            resolved.append(child)
++        return resolved
++
+     def _combine(self, other, conn):
+         if not(isinstance(other, Q)):
+             raise TypeError(other)

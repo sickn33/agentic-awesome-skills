@@ -1,0 +1,15 @@
+# django__django-14997
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -1153,7 +1153,7 @@ class Col(Expression):
+         return self.alias, self.target
+ 
+     def rename_table_references(self, old_table, new_table):
+-        if self.alias == old_table:
++        if self.alias is not None and self.alias == old_table:
+             self.alias = new_table
+ 
+     def get_group_by_cols(self):

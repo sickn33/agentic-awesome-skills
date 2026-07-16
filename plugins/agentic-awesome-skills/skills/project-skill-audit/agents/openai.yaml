@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Skill Audit"
+  short_description: "Audit project sessions and skill coverage"
+  default_prompt: "Use $project-skill-audit to analyze this project and recommend new skills or updates to existing ones."

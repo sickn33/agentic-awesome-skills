@@ -1,0 +1,54 @@
+# pylint-dev__pylint-7993
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of the pylint codebase at version 2.12.2, I'll generate the patch. The issue is in the `_msg_template_args` validation code that uses a regex pattern to find template arguments but doesn't account for escaped braces.
+
+The relevant code around line 206 in `pylint/reporters/text.py` uses `re.findall(r"\{(\w+)\}", ...)` to extract arguments from the template, but this incorrectly matches content after `{{` as an argument.
+
+Here's the patch:
+
+```
+--- a/pylint/reporters/text.py
++++ b/pylint/reporters/text.py
+@@ -175,7 +175,11 @@ class TextReporter(BaseReporter):
+         """Set the output line template."""
+         if template is None:
+             template = self.line_format
+-        self._template = template
++        # Remove escaped braces before parsing to avoid false positives
++        # in argument extraction, but keep original template for formatting
++        self._template = template
++        # Template for argument parsing (escaped braces replaced)
++        template_for_parsing = template.replace("{{", "").replace("}}", "")
+ 
+         # Check for unknown arguments
+         arguments = re.findall(r"\{(.+?)(googletag.cmd.push(function() { googletag.display('div-gpt-ad-medrec'); });:.*)?\}", template)
+@@ -202,7 +206,8 @@ class TextReporter(BaseReporter):
+             | Message.fields
+             | self.on_close.__code__.co_varnames
+         )
+-        arguments = re.findall(r"\{(.+?)(:.*)?\}", template)
++        # Use the template with escaped braces removed to avoid false matches
++        arguments = re.findall(r"\{(.+?)(:.*)?\}", template_for_parsing)
+         for argument in arguments:
+             if argument[0] not in template_keys:
+                 warnings.warn(
+
+```
+
+Wait, I need to look at the actual structure more carefully. Let me reconsider based on the issue description showing line 206 is where the warning is raised. The fix should be simpler - just modify the regex extraction to handle escaped braces.
+
+--- a/pylint/reporters/text.py
++++ b/pylint/reporters/text.py
+@@ -203,7 +203,9 @@ class TextReporter(BaseReporter):
+             | Message.fields
+             | self.on_close.__code__.co_varnames
+         )
+-        arguments = re.findall(r"\{(.+?)(:.*)?\}", template)
++        # Remove escaped braces from template before extracting arguments
++        # to avoid matching literal braces as template arguments
++        arguments = re.findall(r"\{(.+?)(:.*)?\}", template.replace("{{", "").replace("}}", ""))
+         for argument in arguments:
+             if argument[0] not in template_keys:
+                 warnings.warn(

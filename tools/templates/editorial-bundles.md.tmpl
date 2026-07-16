@@ -1,0 +1,130 @@
+# Antigravity Skill Bundles
+
+> **Curated collections of skills organized by role and expertise level.** Don't know where to start? Pick a bundle below to get a curated set of skills for your role.
+
+> These packs are curated starter recommendations for humans. Generated bundle ids in `data/bundles.json` are broader catalog/workflow groupings and do not need to map 1:1 to the editorial packs below.
+
+> **Important:** bundles are installable plugin subsets and activation presets, not invokable mega-skills such as `@web-wizard` or `/essentials-bundle`. Use the individual skills listed in the pack, install the bundle as a dedicated marketplace plugin, or use the activation scripts if you want only that bundle's skills active in your live Antigravity directory.
+
+> **Plugin compatibility:** root plugins and bundle plugins only publish plugin-safe skills. If a bundle shows `pending hardening`, the skills still exist in the repository, but that bundle is not yet published for that target. `Requires manual setup` means the bundle is installable, but one or more included skills need an explicit setup step before first use.
+
+## Quick Start
+
+1. **Install the repository or bundle plugin:**
+
+   ```bash
+   npx agentic-awesome-skills
+   # or clone manually
+   git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
+   ```
+
+2. **Choose your bundle** from the list below based on your role or interests.
+
+3. **Use bundle plugins or individual skills** in your AI assistant:
+   - Claude Code: install the matching marketplace bundle plugin, or invoke `>> /skill-name help me...`
+   - Codex CLI / Codex app: install the matching bundle plugin where plugin marketplaces are available, or invoke `Use skill-name...`
+   - Cursor: `@skill-name` in chat
+   - Gemini CLI: `Use skill-name...`
+
+If you want a bundle to behave like a focused active subset instead of a full install, use:
+
+- macOS/Linux: `./scripts/activate-skills.sh --clear Essentials`
+- macOS/Linux: `./scripts/activate-skills.sh --clear "Web Wizard"`
+- Windows: `.\scripts\activate-skills.bat --clear Essentials`
+
+---
+
+{{bundle_sections}}
+
+## 📚 How to Use Bundles
+
+### 1) Pick by immediate goal
+
+- Need to ship a feature now: `Essentials` + one domain pack (`Web Wizard`, `Python Pro`, `DevOps & Cloud`).
+- Need reliability and hardening: add `QA & Testing` + `Security Developer`.
+- Need product growth: add `Startup Founder` or `Marketing & Growth`.
+
+### 2) Start with 3-5 skills, not 20
+
+Pick the minimum set for your current milestone. Expand only when you hit a real gap.
+
+### 3) Invoke skills consistently
+
+- **Claude Code**: install a bundle plugin or use `>> /skill-name help me...`
+- **Codex CLI**: install a bundle plugin where marketplaces are available, or use `Use skill-name...`
+- **Cursor**: `@skill-name` in chat
+- **Gemini CLI**: `Use skill-name...`
+
+### 4) Build your personal shortlist
+
+Keep a small list of high-frequency skills and reuse it across tasks to reduce context switching.
+
+## 🧩 Recommended Bundle Combos
+
+### Ship a SaaS MVP (2 weeks)
+
+`Essentials` + `Full-Stack Developer` + `QA & Testing` + `Startup Founder`
+
+### Harden an existing production app
+
+`Essentials` + `Security Developer` + `DevOps & Cloud` + `Observability & Monitoring`
+
+### Build an AI product
+
+`Essentials` + `Agent Architect` + `LLM Application Developer` + `Data Engineering`
+
+### Grow traffic and conversions
+
+`Web Wizard` + `Marketing & Growth` + `Data & Analytics`
+
+### Launch and maintain open source
+
+`Essentials` + `OSS Maintainer` + `Architecture & Design`
+
+---
+
+## Learning Paths
+
+### Beginner → Intermediate → Advanced
+
+**Web Development:**
+
+1. Start: `Essentials` → `Web Wizard`
+2. Grow: `Full-Stack Developer` → `Architecture & Design`
+3. Master: `Observability & Monitoring` → `Security Developer`
+
+**AI/ML:**
+
+1. Start: `Essentials` → `Agent Architect`
+2. Grow: `LLM Application Developer` → `Data Engineering`
+3. Master: Advanced RAG and agent orchestration
+
+**Security:**
+
+1. Start: `Essentials` → `Security Developer`
+2. Grow: `Security Engineer` → Advanced pentesting
+3. Master: Red team tactics and threat modeling
+
+**Open Source Maintenance:**
+
+1. Start: `Essentials` → `OSS Maintainer`
+2. Grow: `Architecture & Design` → `QA & Testing`
+3. Master: `Skill Author` + release automation workflows
+
+---
+
+## Contributing
+
+Found a skill that should be in a bundle? Or want to create a new bundle? [Open an issue](https://github.com/sickn33/agentic-awesome-skills/issues) or submit a PR!
+
+---
+
+## Related Documentation
+
+- [Getting Started Guide](getting-started.md)
+- [Full Skill Catalog](../../CATALOG.md)
+- [Contributing Guide](../../CONTRIBUTING.md)
+
+---
+
+_Last updated: June 2026 | Total Skills: {{total_skills_label}} | Total Bundles: {{bundle_count}}_

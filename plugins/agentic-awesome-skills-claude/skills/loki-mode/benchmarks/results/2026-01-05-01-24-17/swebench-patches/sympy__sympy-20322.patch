@@ -1,0 +1,24 @@
+Based on the issue description and the suggested fix from the GitHub discussion, I have enough information to create the patch. The solution is to modify the `fraction` function in `sympy/simplify/radsimp.py` to recurse into nested Mul expressions.
+
+The fix adds a helper function `mul_args` that recursively yields arguments from nested Mul expressions, which allows `fraction` to correctly handle unevaluated nested Mul expressions like `Mul(-1, Mul(1, Pow(2, -1, evaluate=False), evaluate=False), evaluate=False)`.
+
+Here's the patch:
+
+--- a/sympy/simplify/radsimp.py
++++ b/sympy/simplify/radsimp.py
+@@ -1071,7 +1071,14 @@ def fraction(expr, exact=False):
+ 
+     numer, denom = [], []
+ 
+-    for term in Mul.make_args(expr):
++    def mul_args(e):
++        for term in Mul.make_args(e):
++            if term.is_Mul:
++                yield from mul_args(term)
++            else:
++                yield term
++
++    for term in mul_args(expr):
+         if term.is_commutative and (term.is_Pow or isinstance(term, exp)):
+             b, ex = term.as_base_exp()
+             if ex.is_negative:

@@ -1,0 +1,23 @@
+Based on my knowledge of Django's codebase, I can provide the patch for this issue. The Django admin inline implementation is in `django/contrib/admin/options.py`. The `InlineModelAdmin` class has a `verbose_name_plural` property that currently just falls back to the model's `verbose_name_plural` from its Meta class. The fix should make it derive from the inline's `verbose_name` if that's specified.
+
+Here's the patch:
+
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1,4 +1,5 @@
+ import copy
++import re
+ from functools import partial, update_wrapper
+ from django.conf import settings
+ from django.contrib import messages
+@@ -2035,7 +2036,10 @@ class InlineModelAdmin(BaseModelAdmin):
+     @property
+     def verbose_name_plural(self):
+         if self._verbose_name_plural is None:
+-            return self.model._meta.verbose_name_plural
++            if self._verbose_name is None:
++                return self.model._meta.verbose_name_plural
++            else:
++                return format_lazy('{}s', self._verbose_name)
+         else:
+             return self._verbose_name_plural

@@ -1,0 +1,38 @@
+Now I have the context. The `else` block is on lines 741-742. Let me create the correct patch:
+
+--- a/sympy/utilities/lambdify.py
++++ b/sympy/utilities/lambdify.py
+@@ -739,7 +739,14 @@
+             argstrs.append(self._argrepr(dummy))
+             expr = self._subexpr(expr, {arg: dummy})
+         else:
+-            argstrs.append(str(arg))
++            argrep = str(arg)
++
++            if dummify or not self._is_safe_ident(argrep):
++                dummy = Dummy()
++                argstrs.append(self._argrepr(dummy))
++                expr = self._subexpr(expr, {arg: dummy})
++            else:
++                argstrs.append(argrep)
+ 
+         return argstrs, expr
+
+--- a/sympy/utilities/lambdify.py
++++ b/sympy/utilities/lambdify.py
+@@ -738,8 +738,15 @@ class _EvaluatorPrinter(object):
+             dummy = Dummy()
+             argstrs.append(self._argrepr(dummy))
+             expr = self._subexpr(expr, {arg: dummy})
+         else:
+-            argstrs.append(str(arg))
++            argrep = str(arg)
++
++            if dummify or not self._is_safe_ident(argrep):
++                dummy = Dummy()
++                argstrs.append(self._argrepr(dummy))
++                expr = self._subexpr(expr, {arg: dummy})
++            else:
++                argstrs.append(argrep)
+ 
+         return argstrs, expr

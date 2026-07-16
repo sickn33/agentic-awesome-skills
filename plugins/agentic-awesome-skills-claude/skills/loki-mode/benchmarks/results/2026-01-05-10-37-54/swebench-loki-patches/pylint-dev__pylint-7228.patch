@@ -1,0 +1,80 @@
+# pylint-dev__pylint-7228
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This appears to be a repository that doesn't contain the pylint source code directly. This is a task to generate a patch for the pylint-dev/pylint repository. Let me search for where the relevant code would be in the pylint project and generate an appropriate patch based on the traceback and analysis provided.
+
+Based on the issue traceback and architect's analysis, the problem is in `pylint/config/argument.py` where `re.compile` is used as a type converter for regex arguments. When an invalid regex like `\p{Han}` is passed, it crashes with an ugly traceback instead of a user-friendly error.
+
+Here's the patch:
+
+```
+--- a/pylint/config/argument.py
++++ b/pylint/config/argument.py
+@@ -14,6 +14,7 @@
+ import pathlib
+ import re
+ from collections.abc import Callable
++from functools import wraps
+ from typing import Any, Pattern, Sequence, Tuple, Union
+ 
+ from pylint import utils
+@@ -100,6 +101,23 @@ def _regex_transformer(value: str) -> Pattern[str]:
+     return re.compile(value)
+ 
+ 
++def _regex_transformer(value: str) -> Pattern[str]:
++    """Return `re.compile(value)`."""
++    try:
++        return re.compile(value)
++    except re.error as e:
++        raise argparse.ArgumentTypeError(
++            f"Invalid regex pattern '{value}': {e}"
++        ) from e
++
++
++def _regexp_csv_transfomer(value: str) -> Sequence[Pattern[str]]:
++    """Transforms a comma separated list of regular expressions."""
++    return [_regex_transformer(pattern) for pattern in _csv_transformer(value)]
++
++
+ def _regexp_csv_transfomer(value: str) -> Sequence[Pattern[str]]:
+     """Transforms a comma separated list of regular expressions."""
+-    return [re.compile(pattern) for pattern in _csv_transformer(value)]
++    try:
++        return [re.compile(pattern) for pattern in _csv_transformer(value)]
++    except re.error as e:
++        raise argparse.ArgumentTypeError(
++            f"Invalid regex pattern in '{value}': {e}"
++        ) from e
+```
+
+Wait, let me create a cleaner patch that properly replaces the existing functions:
+
+--- a/pylint/config/argument.py
++++ b/pylint/config/argument.py
+@@ -97,13 +97,21 @@ def _py_version_transformer(value: str) -> tuple[int, ...]:
+ 
+ def _regex_transformer(value: str) -> Pattern[str]:
+     """Return `re.compile(value)`."""
+-    return re.compile(value)
++    try:
++        return re.compile(value)
++    except re.error as e:
++        raise argparse.ArgumentTypeError(
++            f"Invalid regex pattern '{value}': {e}"
++        ) from e
+ 
+ 
+ def _regexp_csv_transfomer(value: str) -> Sequence[Pattern[str]]:
+     """Transforms a comma separated list of regular expressions."""
+-    return [re.compile(pattern) for pattern in _csv_transformer(value)]
++    try:
++        return [re.compile(pattern) for pattern in _csv_transformer(value)]
++    except re.error as e:
++        raise argparse.ArgumentTypeError(
++            f"Invalid regex pattern in '{value}': {e}"
++        ) from e
+ 
+ 
+ def _regexp_paths_csv_transfomer(value: str) -> Sequence[Pattern[str]]:

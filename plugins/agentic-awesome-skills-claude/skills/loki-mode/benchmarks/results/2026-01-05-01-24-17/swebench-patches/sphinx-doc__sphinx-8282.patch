@@ -1,0 +1,95 @@
+Based on my understanding of the issue and Sphinx's autodoc extension, let me analyze this problem. The issue is that `autodoc_typehints = 'none'` doesn't affect overloaded callables - the type hints still appear in the documentation even when they should be hidden.
+
+Looking at Sphinx's autodoc extension structure:
+1. The `autodoc_typehints` setting is processed in `sphinx/ext/autodoc/__init__.py` 
+2. Overloaded functions are handled specially because each overload has its own signature with type hints
+3. The issue is that when generating documentation for overloaded functions, the type hints in the `@overload` decorated signatures are not being filtered out based on the `autodoc_typehints` setting
+
+The fix needs to be in the `FunctionDocumenter` and `MethodDocumenter` classes where overloaded function signatures are formatted. When `autodoc_typehints` is set to `'none'`, the overloaded signatures should have their type hints removed.
+
+Here's the patch that fixes this issue:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1295,6 +1295,15 @@ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+                 sig = sigs[-1]
+             for overload in self.analyzer.overloads.get('.'.join(googl.objpath)):
+                 overloaded.append(overload.signature)
++                if self.config.autodoc_typehints in ('none', 'description'):
++                    parameters = [
++                        param.replace(annotation=Parameter.empty)
++                        for param in overload.signature.parameters.values()
++                    ]
++                    overload_sig = overload.signature.replace(
++                        parameters=parameters,
++                        return_annotation=Parameter.empty
++                    )
+ 
+         return sig, overloaded
+
+Actually, let me reconsider. I need to look at the actual Sphinx codebase structure more carefully. The issue mentions Sphinx version 3.1.0dev, so I need to understand the codebase at that time.
+
+The key insight is:
+1. For regular functions, `autodoc_typehints = 'none'` works by stripping type annotations from the signature
+2. For overloaded functions, each overload signature is collected and displayed separately
+3. The bug is that the `autodoc_typehints` setting is not being applied to the overloaded signatures
+
+Let me create the correct patch based on typical Sphinx autodoc structure:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1297,7 +1297,16 @@ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+         if overloaded:
+             __globals__ = safe_getattr(self.object, '__globals__', {})
+             for overload in self.analyzer.overloads.get(qualname):
+-                overloaded.append(_stringify_signature(overload, **kwargs))
++                if self.config.autodoc_typehints != 'none':
++                    overloaded.append(_stringify_signature(overload, **kwargs))
++                else:
++                    parameters = [
++                        param.replace(annotation=Parameter.empty)
++                        for param in overload.parameters.values()
++                    ]
++                    overload_sig = overload.replace(parameters=parameters,
++                                                   return_annotation=Parameter.empty)
++                    overloaded.append(_stringify_signature(overload_sig, **kwargs))
+ 
+         return sig, overloaded
+
+Let me provide the proper unified diff patch based on typical Sphinx autodoc code structure where overloaded signatures need to respect the `autodoc_typehints` setting:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1269,7 +1269,16 @@ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+ 
+             for overload in self.analyzer.overloads.get(qualname):
+-                overloaded.append(stringify_signature(overload, **kwargs))
++                if self.config.autodoc_typehints != 'none':
++                    overloaded.append(stringify_signature(overload, **kwargs))
++                else:
++                    parameters = [
++                        param.replace(annotation=Parameter.empty)
++                        for param in overload.parameters.values()
++                    ]
++                    overload_sig = overload.replace(parameters=parameters,
++                                                   return_annotation=Parameter.empty)
++                    overloaded.append(stringify_signature(overload_sig, **kwargs))
+ 
+         return sig
+
+@@ -1561,7 +1570,16 @@ class MethodDocumenter(DocstringSignatureMixin, ClassLevelDocumenter):
+ 
+             for overload in self.analyzer.overloads.get(qualname):
+-                overloaded.append(stringify_signature(overload, **kwargs))
++                if self.config.autodoc_typehints != 'none':
++                    overloaded.append(stringify_signature(overload, **kwargs))
++                else:
++                    parameters = [
++                        param.replace(annotation=Parameter.empty)
++                        for param in overload.parameters.values()
++                    ]
++                    overload_sig = overload.replace(parameters=parameters,
++                                                   return_annotation=Parameter.empty)
++                    overloaded.append(stringify_signature(overload_sig, **kwargs))
+ 
+         return sig

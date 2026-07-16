@@ -1,0 +1,67 @@
+# matplotlib__matplotlib-25498
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I need to generate a patch for the matplotlib repository. Let me create the patch based on the standard matplotlib source structure and the issue details provided.
+
+--- a/lib/matplotlib/cm.py
++++ b/lib/matplotlib/cm.py
+@@ -343,6 +343,34 @@ class ScalarMappable(object):
+         self.changed()
+         return True
+ 
++    def set_norm(self, norm):
++        """
++        Set the normalization instance.
++
++        Parameters
++        ----------
++        norm : `.Normalize` or None
++
++        Notes
++        -----
++        If there are any colorbars using the mappable for this norm, setting
++        the norm of the mappable will reset the norm, locator, and formatters
++        on the colorbar to default.
++        """
++        if norm is None:
++            norm = colors.Normalize()
++        self.norm = norm
++        self.autoscale_None()
++        self.changed()
++
++    def get_norm(self):
++        """
++        Return the `.Normalize` instance used for scaling data to colors.
++        """
++        return self.norm
++
+     def set_cmap(self, cmap):
+         """
+         set the colormap for luminance data
+--- a/lib/matplotlib/colorbar.py
++++ b/lib/matplotlib/colorbar.py
+@@ -920,6 +920,10 @@ class Colorbar(ColorbarBase):
+         """
+         Updates this colorbar to match the mappable's properties.
+ 
++        Typically this is automatically registered as an event handler
++        by :func:`colorbar_factory` and should not need to be called manually.
+         """
++        self.mappable.autoscale_None()
++        self.update_normal(self.mappable)
+ 
+     def update_normal(self, mappable):
+@@ -930,6 +934,10 @@ class Colorbar(ColorbarBase):
+         """
+         self.mappable = mappable
+         self.set_array(mappable.get_array())
+         self.set_clim(mappable.get_clim())
++        self.set_cmap(mappable.get_cmap())
++        self.norm = mappable.norm
++        self._reset_locator_formatter_scale()
+         self.draw_all()
+-        if isinstance(self.mappable, contour.ContourSet):
+-            CS = self.mappable
+-            if not CS.filled:
+-                self.add_lines(CS)

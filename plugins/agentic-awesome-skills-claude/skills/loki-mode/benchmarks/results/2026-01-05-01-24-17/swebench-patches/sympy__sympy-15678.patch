@@ -1,0 +1,92 @@
+Based on my knowledge of sympy's `idiff` function and the error messages, I can construct the necessary patch. The `idiff` function is in `sympy/geometry/util.py` and needs to:
+
+1. Handle `Eq` objects by converting them to `eq.lhs - eq.rhs`
+2. Handle function forms like `f(x)` by recognizing them as dependent variables
+
+Here's the patch:
+
+--- a/sympy/geometry/util.py
++++ b/sympy/geometry/util.py
+@@ -1,5 +1,5 @@
+ """Utility functions for geometrical entities.
+ 
+ Contains
+ ========
+ intersection
+@@ -523,6 +523,7 @@
+ from sympy import Function, Symbol
+ from sympy.core.compatibility import is_sequence
+ from sympy.core.function import AppliedUndef
++from sympy.core.relational import Eq
+ 
+ def idiff(eq, y, x, n=1):
+     """Return ``dy/dx`` assuming that ``eq == 0``.
+@@ -559,6 +560,9 @@
+     (x + 1)*exp(x - y)/(y + 1)
+ 
+     """
++    if isinstance(eq, Eq):
++        eq = eq.lhs - eq.rhs
++
+     if is_sequence(y):
+         dep = set(y)
+         y = y[0]
+@@ -567,7 +571,12 @@
+     f = dict([(s, Function(
+         s.name)(x)) for s in eq.free_symbols if s != x and s in dep])
+     if not f:
+-        raise ValueError("expecting x-dependent symbol(s) but got: %s" % y)
++        if isinstance(y, Symbol):
++            raise ValueError("expecting x-dependent symbol(s) but got: %s" % y)
++        f = {y: y}
++        # y is an AppliedUndef like f(x), use it directly
++        dydx = y.diff(x)
++        eq = eq.subs(f)
+     dydx = Function(y.name)(x).diff(x)
+     eq = eq.subs(f)
+     derivs = {}
+
+Let me reconsider. Looking at the code flow more carefully:
+
+--- a/sympy/geometry/util.py
++++ b/sympy/geometry/util.py
+@@ -523,6 +523,8 @@
+ from sympy import Function, Symbol
+ from sympy.core.compatibility import is_sequence
+ from sympy.core.function import AppliedUndef
++from sympy.core.relational import Eq
++from sympy.core.symbol import Dummy
+ 
+ def idiff(eq, y, x, n=1):
+     """Return ``dy/dx`` assuming that ``eq == 0``.
+@@ -559,18 +561,27 @@
+     (x + 1)*exp(x - y)/(y + 1)
+ 
+     """
++    if isinstance(eq, Eq):
++        eq = eq.lhs - eq.rhs
++
+     if is_sequence(y):
+         dep = set(y)
+         y = y[0]
+     elif isinstance(y, Symbol):
+         dep = {y}
++    elif isinstance(y, Function):
++        pass
+     else:
+-        raise ValueError("expecting x-dependent symbol(s) but got: %s" % y)
++        raise ValueError("expecting a dependent symbol or function but got: %s" % y)
++
+     f = dict([(s, Function(
+         s.name)(x)) for s in eq.free_symbols if s != x and s in dep])
+-    if not f:
+-        raise ValueError("expecting x-dependent symbol(s) but got: %s" % y)
+-    dydx = Function(y.name)(x).diff(x)
++    if isinstance(y, Symbol):
++        dydx = Function(y.name)(x).diff(x)
++    else:
++        dydx = Dummy('dydx')
++        f = {y: y}
+     eq = eq.subs(f)
+     derivs = {}
+     for i in range(n):

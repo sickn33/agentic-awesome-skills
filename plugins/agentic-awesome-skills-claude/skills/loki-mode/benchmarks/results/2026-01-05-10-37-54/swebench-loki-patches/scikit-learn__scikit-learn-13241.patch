@@ -1,0 +1,26 @@
+# scikit-learn__scikit-learn-13241
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sklearn/decomposition/kernel_pca.py
++++ b/sklearn/decomposition/kernel_pca.py
+@@ -11,6 +11,7 @@ from scipy.linalg import eigh
+ 
+ from ..utils import check_random_state
+ from ..utils.validation import check_is_fitted, check_array
++from ..utils.extmath import svd_flip
+ from ..exceptions import NotFittedError
+ from ..base import BaseEstimator, TransformerMixin, _UnstableOn32BitMixin
+ from ..preprocessing import KernelCenterer
+@@ -183,6 +184,11 @@ class KernelPCA(BaseEstimator, TransformerMixin, _UnstableOn32BitMixin):
+             self.alphas_ = self.alphas_[:, indices]
+             self.lambdas_ = self.lambdas_[indices]
+ 
++        # flip eigenvectors' sign to enforce deterministic output
++        self.alphas_, _ = svd_flip(self.alphas_,
++                                   np.zeros_like(self.alphas_).T)
++
++
+         # remove eigenvectors with a zero eigenvalue
+         if self.remove_zero_eig or self.n_components is None:
+             self.alphas_ = self.alphas_[:, self.lambdas_ > 0]

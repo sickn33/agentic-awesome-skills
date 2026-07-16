@@ -1,0 +1,27 @@
+# matplotlib__matplotlib-25442
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the bug report and architect's analysis, I have sufficient information to generate the patch. The traceback shows:
+
+1. Line 1560: `_check_still_parented()` calls `self.disconnect()` when the artist's figure is `None`
+2. Line 1568: `disconnect()` tries to access `self.canvas.mpl_disconnect(cid)`
+3. Line 1517: `canvas` property is `lambda self: self.ref_artist.figure.canvas`
+
+When `ref_artist.figure` is `None`, accessing `.canvas` fails. The fix should guard against this in the `disconnect()` method.
+
+--- a/lib/matplotlib/offsetbox.py
++++ b/lib/matplotlib/offsetbox.py
+@@ -1563,6 +1563,8 @@ class DraggableBase:
+             self.cids.clear()
+ 
+     def disconnect(self):
+-        """Disconnect the callbacks."""
+-        for cid in self.cids:
+-            self.canvas.mpl_disconnect(cid)
+-        self.cids.clear()
++        """Disconnect the callbacks."""
++        if self.ref_artist.figure is not None:
++            for cid in self.cids:
++                self.canvas.mpl_disconnect(cid)
++        self.cids.clear()

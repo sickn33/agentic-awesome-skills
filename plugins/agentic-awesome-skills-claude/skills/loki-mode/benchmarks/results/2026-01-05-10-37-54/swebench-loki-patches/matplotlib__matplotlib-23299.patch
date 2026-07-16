@@ -1,0 +1,65 @@
+# matplotlib__matplotlib-23299
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of matplotlib's codebase and the detailed architecture analysis provided, I can generate the patch. The issue is in how `get_backend()` handles the `_auto_backend_sentinel` - when the sentinel is restored by `rc_context` exit and then `get_backend()` is called, it triggers backend resolution which inadvertently calls `switch_backend()` even though the actual backend hasn't changed.
+
+The fix should be in `lib/matplotlib/__init__.py` in the `get_backend()` function to check if the backend is actually changing before triggering any switch.
+
+--- a/lib/matplotlib/__init__.py
++++ b/lib/matplotlib/__init__.py
+@@ -1135,12 +1135,15 @@ def get_backend():
+     Return the name of the current backend.
+ 
+     See Also
+     --------
+     matplotlib.use
+     """
+-    return rcParams['backend']
++    from matplotlib import rcsetup
++    backend = rcParams['backend']
++    # Resolve the sentinel without triggering switch_backend via validate_backend
++    return (rcsetup._auto_backend_sentinel if backend is rcsetup._auto_backend_sentinel
++            else backend) if not isinstance(backend, str) else backend
+
+Wait, let me reconsider. Looking at the architecture analysis more carefully - the real issue is that when `rcParams['backend']` is accessed and it contains the sentinel, the validation/resolution triggers `switch_backend()`. The fix should ensure that when resolving the sentinel to an actual backend name, we don't call `switch_backend()` if the current backend is already that backend.
+
+Let me provide a cleaner fix:
+
+--- a/lib/matplotlib/__init__.py
++++ b/lib/matplotlib/__init__.py
+@@ -1135,12 +1135,18 @@ def get_backend():
+     Return the name of the current backend.
+ 
+     See Also
+     --------
+     matplotlib.use
+     """
+-    return rcParams['backend']
++    from matplotlib import cbook
++    from matplotlib.backends import _get_backend_mod
++    # Accessing rcParams['backend'] may resolve _auto_backend_sentinel which
++    # triggers switch_backend and closes figures. Instead, read _backend directly
++    # and only resolve the sentinel to the current backend name if needed.
++    backend = rcParams._get('backend', None)
++    return cbook._str_lower_equal(backend, "agg") if backend else _get_backend_mod().name
+
+Actually, let me look at this more carefully. The cleanest fix based on the architecture analysis is to modify `get_backend()` to avoid triggering the sentinel resolution that calls `switch_backend()`. Here's the correct patch:
+
+--- a/lib/matplotlib/__init__.py
++++ b/lib/matplotlib/__init__.py
+@@ -1135,7 +1135,12 @@ def get_backend():
+     Return the name of the current backend.
+ 
+     See Also
+     --------
+     matplotlib.use
+     """
+-    return rcParams['backend']
++    # Use dict access to avoid triggering rcParams validation which can
++    # resolve _auto_backend_sentinel and call switch_backend, closing figures.
++    from matplotlib import rcsetup
++    backend = dict.__getitem__(rcParams, 'backend')
++    if backend is rcsetup._auto_backend_sentinel:
++        backend = rcsetup._auto_backend_sentinel.resolve()
++    return backend

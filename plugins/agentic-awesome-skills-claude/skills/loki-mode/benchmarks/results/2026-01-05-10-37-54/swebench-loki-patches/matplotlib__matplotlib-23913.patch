@@ -1,0 +1,95 @@
+# matplotlib__matplotlib-23913
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the matplotlib codebase structure and the architect's analysis, I'll generate the patch for adding the `draggable` keyword to Legend creation:
+
+```
+--- a/lib/matplotlib/legend.py
++++ b/lib/matplotlib/legend.py
+@@ -301,6 +301,10 @@ class Legend(Artist):
+     borderpad : float, default: :rc:`legend.borderpad`
+         The fractional whitespace inside the legend border, in font-size units.
+ 
++    draggable : bool, default: False
++        Whether the legend can be dragged with the mouse.
++        Use `.set_draggable` to toggle draggability after creation.
++
+     ncols : int, default: 1
+         The number of columns that the legend has.
+ 
+@@ -389,6 +393,7 @@ class Legend(Artist):
+         borderpad=None,          # whitespace inside the legend border
+         labelspacing=None,       # vertical space between the legend entries
+         handlelength=None,       # length of the legend handles
++        draggable=False,         # whether the legend can be dragged
+         handleheight=None,       # height of the legend handles
+         handletextpad=None,      # pad between the legend handle and text
+         borderaxespad=None,      # pad between the axes and legend border
+@@ -564,6 +569,9 @@ class Legend(Artist):
+         self._draggable = None
+         self.set_title(title, prop=title_fontproperties)
+ 
++        if draggable:
++            self.set_draggable(True)
++
+     def _set_artist_props(self, a):
+         """
+         Set the boilerplate props for artists added to axes.
+--- a/lib/matplotlib/axes/_axes.py
++++ b/lib/matplotlib/axes/_axes.py
+@@ -313,6 +313,7 @@ class Axes(_AxesBase):
+         %(legend_kw_doc)s
+ 
+         See Also
+         --------
+         .Figure.legend
+ 
+         Notes
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -1046,6 +1046,7 @@ class FigureBase(Artist):
+         %(legend_kw_doc)s
+ 
+         See Also
+         --------
+         .Axes.legend
+ 
+         Notes
+```
+
+Wait, I should provide a more complete and accurate patch. Let me generate the proper unified diff:
+
+```
+--- a/lib/matplotlib/legend.py
++++ b/lib/matplotlib/legend.py
+@@ -301,6 +301,10 @@ class Legend(Artist):
+     borderpad : float, default: :rc:`legend.borderpad`
+         The fractional whitespace inside the legend border, in font-size units.
+ 
++    draggable : bool, default: False
++        Whether the legend can be dragged with the mouse.
++        Use `.set_draggable` to toggle draggability after creation.
++
+     ncols : int, default: 1
+         The number of columns that the legend has.
+ 
+@@ -389,6 +393,7 @@ class Legend(Artist):
+         borderpad=None,          # whitespace inside the legend border
+         labelspacing=None,       # vertical space between the legend entries
+         handlelength=None,       # length of the legend handles
++        draggable=False,         # whether the legend can be dragged
+         handleheight=None,       # height of the legend handles
+         handletextpad=None,      # pad between the legend handle and text
+         borderaxespad=None,      # pad between the axes and legend border
+@@ -564,6 +569,9 @@ class Legend(Artist):
+         self._draggable = None
+         self.set_title(title, prop=title_fontproperties)
+ 
++        if draggable:
++            self.set_draggable(True)
++
+     def _set_artist_props(self, a):
+         """
+         Set the boilerplate props for artists added to axes.
+```

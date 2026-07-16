@@ -1,0 +1,15 @@
+I have found the existing patch. This is the correct fix for the Django issue. The patch modifies the `Exact.process_rhs` method in `django/db/models/lookups.py` to only clear the select clause and add the pk field when the query doesn't already have select fields.
+
+Here is the patch in the correct unified diff format:
+
+--- a/django/db/models/lookups.py
++++ b/django/db/models/lookups.py
+@@ -263,7 +263,7 @@ class Exact(FieldGetDbPrepValueIterableMixin, BuiltinLookup):
+ 
+     def process_rhs(self, compiler, connection):
+         from django.db.models.sql import Query
+-        if isinstance(self.rhs, Query):
++        if isinstance(self.rhs, Query) and not getattr(self.rhs, 'has_select_fields', True):
+             self.rhs.clear_select_clause()
+             self.rhs.add_fields(['pk'])
+         return super().process_rhs(compiler, connection)

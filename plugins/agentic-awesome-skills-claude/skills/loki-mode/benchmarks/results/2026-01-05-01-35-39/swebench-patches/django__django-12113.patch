@@ -1,0 +1,27 @@
+Based on my knowledge of this Django issue, I can provide the patch. The problem is that when using `TEST["NAME"]` for SQLite databases, the `test_db_signature()` method in the SQLite creation backend doesn't properly consider the `TEST["NAME"]` setting. This causes multiple test databases to use the same signature, leading to database locking issues.
+
+The fix involves modifying the `test_db_signature()` method in `django/db/backends/sqlite3/creation.py` to properly include the `TEST["NAME"]` in the signature calculation.
+
+Here's the patch:
+
+--- a/django/db/backends/sqlite3/creation.py
++++ b/django/db/backends/sqlite3/creation.py
+@@ -51,7 +51,12 @@ class DatabaseCreation(BaseDatabaseCreation):
+             self._create_test_db(verbosity, autoclobber, keepdb)
+ 
+     def test_db_signature(self):
+-        """
+-        Return a tuple that uniquely identifies a test database.
+-        """
+-        return (self.connection.settings_dict['NAME'],)
++        """
++        Return a tuple that uniquely identifies a test database.
++
++        This takes into account the special test settings in
++        DATABASES['default']['TEST'].
++        """
++        test_database_name = self._get_test_db_name()
++        sig = [self.connection.settings_dict['NAME']]
++        if test_database_name:
++            sig = [test_database_name]
++        return tuple(sig)

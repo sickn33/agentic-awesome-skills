@@ -1,0 +1,21 @@
+# django__django-11422
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -113,6 +113,14 @@ def iter_modules_and_files(modules, extra_files):
+     sys_file_paths = []
+     for module in modules:
+         # During debugging (with PyDev) the 'ichrome:' modules are added.
++        # Handle __main__ module specially - its __spec__ is None but it
++        # has a valid __file__ attribute that we need to track.
++        if getattr(module, '__name__', None) == '__main__':
++            main_file = getattr(module, '__file__', None)
++            if main_file is not None:
++                sys_file_paths.append(main_file)
++            continue
++
+         if module.__spec__ is None or module.__spec__.origin is None:
+             continue
+         spec_origin = module.__spec__.origin

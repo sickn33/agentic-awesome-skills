@@ -1,0 +1,37 @@
+# sympy__sympy-12419
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the existing patches, I can see the issue. The simpler approach (second patch) just returns `KroneckerDelta(i, j)` directly, which will handle both symbolic and numeric cases correctly because `KroneckerDelta` itself evaluates to 1 or 0 for concrete equal/unequal indices.
+
+However, the first approach is more explicit about handling concrete cases for efficiency. The architect's analysis suggests checking `Eq(i, j)` for literal True/False cases.
+
+Let me generate the proper patch based on the architect's recommendation:
+
+--- a/sympy/matrices/expressions/matexpr.py
++++ b/sympy/matrices/expressions/matexpr.py
+@@ -1,6 +1,7 @@
+ from __future__ import print_function, division
+ 
+ from functools import wraps
++from sympy.functions.special.tensor_functions import KroneckerDelta
+ 
+ from sympy.core import S, Symbol, Tuple, Integer, Basic, Expr
+ from sympy.core.decorators import call_highest_priority
+@@ -278,10 +279,11 @@ class Identity(MatrixExpr):
+         return self.rows
+ 
+     def _entry(self, i, j):
+-        if i == j:
+-            return S.One
+-        else:
+-            return S.Zero
++        eq = Eq(i, j)
++        if eq is S.true:
++            return S.One
++        elif eq is S.false:
++            return S.Zero
++        return KroneckerDelta(i, j)
+ 
+     def _eval_transpose(self):
+         return self

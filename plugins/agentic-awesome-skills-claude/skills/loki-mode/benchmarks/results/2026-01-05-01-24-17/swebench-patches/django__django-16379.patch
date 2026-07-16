@@ -1,0 +1,32 @@
+This is a different repository. The task is asking me to generate a patch for the Django repository's `FileBasedCache.has_key` method. I need to understand the issue and create the appropriate patch based on the problem description.
+
+Based on the issue description, the problem is in `django/core/cache/backends/filebased.py`. The `has_key` method has a race condition:
+
+```python
+def has_key(self, key, version=None):
+    fname = self._key_to_file(key, version)
+    if os.path.exists(fname):
+        with open(fname, "rb") as f:
+            return not self._is_expired(f)
+    return False
+```
+
+Between `os.path.exists(fname)` and `open(fname, "rb")`, the file can be deleted by another thread, causing a `FileNotFoundError`.
+
+The fix is to handle the `FileNotFoundError` exception instead of checking if the file exists first. Here's the patch:
+
+--- a/django/core/cache/backends/filebased.py
++++ b/django/core/cache/backends/filebased.py
+@@ -91,7 +91,10 @@ class FileBasedCache(BaseCache):
+ 
+     def has_key(self, key, version=None):
+         fname = self._key_to_file(key, version)
+-        if os.path.exists(fname):
+-            with open(fname, "rb") as f:
+-                return not self._is_expired(f)
+-        return False
++        try:
++            with open(fname, "rb") as f:
++                return not self._is_expired(f)
++        except FileNotFoundError:
++            return False

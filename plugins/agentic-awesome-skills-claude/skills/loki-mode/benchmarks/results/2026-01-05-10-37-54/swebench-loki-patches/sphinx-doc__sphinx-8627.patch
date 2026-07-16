@@ -1,0 +1,62 @@
+# sphinx-doc__sphinx-8627
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Sphinx 3.2.1 and the issue described, I'll generate a patch for the `sphinx/util/typing.py` file which handles type annotation stringification. The issue is that `struct.Struct.__module__` returns incorrect values (`'builtins'` in Python 3.8 or `'_struct'` in Python 3.9+) instead of `'struct'`.
+
+```
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -10,6 +10,7 @@
+ 
+ import sys
+ import typing
++from struct import Struct
+ from typing import Any, Callable, Dict, Generator, List, Optional, Tuple, TypeVar, Union
+ 
+ from docutils import nodes
+@@ -22,6 +23,16 @@ if False:
+     # For type annotation
+     from typing import Type  # NOQA
+ 
++# Classes whose __module__ attribute doesn't match their canonical import path.
++# This mapping corrects them for proper documentation cross-referencing.
++_STDLIB_MODULE_MAPPING: Dict[type, str] = {
++    Struct: 'struct',
++}
++
++def _get_module_name(obj: Any) -> str:
++    """Get the correct module name for an object, handling misreported __module__ attributes."""
++    return _STDLIB_MODULE_MAPPING.get(obj, getattr(obj, '__module__', None))
++
+ 
+ def stringify(annotation: Any) -> str:
+     """Stringify type annotation object."""
+@@ -88,7 +99,12 @@ def stringify(annotation: Any) -> str:
+         return INVALID_BUILTIN_CLASSES[annotation]
+     elif (getattr(annotation, '__module__', None) == 'builtins' and
+           hasattr(annotation, '__qualname__')):
+-        return annotation.__qualname__
++        # Check if this class has a corrected module name
++        module = _get_module_name(annotation)
++        if module and module != 'builtins':
++            return '%s.%s' % (module, annotation.__qualname__)
++        else:
++            return annotation.__qualname__
+     elif annotation is Ellipsis:
+         return '...'
+ 
+@@ -105,5 +121,10 @@ def stringify(annotation: Any) -> str:
+         return repr(annotation)
+ 
+     if annotation.__module__ == 'typing':
+         return annotation.__qualname__
+     else:
+-        return '%s.%s' % (annotation.__module__, annotation.__qualname__)
++        # Use corrected module name if available
++        module = _get_module_name(annotation)
++        if module:
++            return '%s.%s' % (module, annotation.__qualname__)
++        else:
++            return '%s.%s' % (annotation.__module__, annotation.__qualname__)
+```

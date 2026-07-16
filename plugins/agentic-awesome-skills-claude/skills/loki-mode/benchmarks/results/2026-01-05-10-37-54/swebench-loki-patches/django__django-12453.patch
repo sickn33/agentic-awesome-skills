@@ -1,0 +1,32 @@
+# django__django-12453
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I need to generate a patch for the Django repository. The issue describes the exact location and fix needed. Let me generate the patch based on the information provided:
+
+```
+--- a/django/db/backends/base/creation.py
++++ b/django/db/backends/base/creation.py
+@@ -1,8 +1,9 @@
+ import os
+ import sys
+ from io import StringIO
++
+ from django.apps import apps
+ from django.conf import settings
+ from django.core import serializers
+-from django.db import router
++from django.db import router, transaction
+ 
+@@ -122,6 +123,7 @@ class BaseDatabaseCreation:
+         the serialize_db_to_string method.
+         """
+         data = StringIO(data)
+-        for obj in serializers.deserialize("json", data, using=self.connection.alias):
+-            obj.save()
++        with transaction.atomic(using=self.connection.alias):
++            for obj in serializers.deserialize("json", data, using=self.connection.alias):
++                obj.save()
+ 
+     def _get_database_display_str(self, verbosity, database_name):
+```

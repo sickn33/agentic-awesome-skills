@@ -1,0 +1,55 @@
+# matplotlib__matplotlib-23987
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I need to generate a patch for the matplotlib repository. The bug is in `lib/matplotlib/figure.py` around line 2428-2431. The issue is that `subplots_adjust` warns about incompatible layout engines even when `constrained_layout=False`.
+
+Looking at the matplotlib codebase (based on version 3.6.0 mentioned in the issue), the fix should modify the condition that checks for layout engine compatibility. The problem is that when `constrained_layout=False` is passed, a `PlaceHolderLayoutEngine` is set, and the code incorrectly treats this as an incompatible layout engine.
+
+Here's the patch:
+
+```
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -2425,7 +2425,7 @@ class Figure(FigureBase):
+         """
+         if (self.get_layout_engine() is not None and
+                 not self.get_layout_engine().adjust_compatible):
+-            _api.warn_external(
++            self.get_layout_engine().adjust_compatible or _api.warn_external(
+                 "This figure was using a layout engine that is "
+                 "incompatible with subplots_adjust and/or tight_layout; "
+                 "not calling subplots_adjust.")
+```
+
+Wait, that's not quite right. Let me reconsider. The issue is that the `PlaceHolderLayoutEngine` (which is set when `constrained_layout=False`) has `adjust_compatible=False` but shouldn't trigger the warning. The fix should check if the layout engine is actually doing constrained layout, not just if it exists.
+
+Here's the correct patch:
+
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -2423,7 +2423,8 @@ class Figure(FigureBase):
+         See Also
+         --------
+         .Figure.set_constrained_layout_pads
+         """
+-        if (self.get_layout_engine() is not None and
++        if (self.get_layout_engine() is not None and
++                not isinstance(self.get_layout_engine(), PlaceHolderLayoutEngine) and
+                 not self.get_layout_engine().adjust_compatible):
+             _api.warn_external(
+                 "This figure was using a layout engine that is "
+
+Actually, I should look at this more carefully. The `PlaceHolderLayoutEngine` should have `adjust_compatible=True` since it's just a placeholder that doesn't do any actual layout work. Let me provide the proper fix:
+
+--- a/lib/matplotlib/layout_engine.py
++++ b/lib/matplotlib/layout_engine.py
+@@ -175,7 +175,7 @@ class PlaceHolderLayoutEngine(LayoutEngine):
+     constrained_layout pads.
+     """
+ 
+-    adjust_compatible = False
++    adjust_compatible = True
+ 
+     def __init__(self, adjust_compatible=None, colorbar_gridspec=None, **kwargs):
+         if adjust_compatible is None:

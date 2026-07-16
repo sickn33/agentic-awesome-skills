@@ -1,0 +1,55 @@
+# sympy__sympy-13895
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of SymPy's codebase and the architect's analysis, I can generate the patch. The issue is in the `Pow` class's `__new__` method in `sympy/core/power.py` where negative bases with rational exponents are handled inconsistently. The problematic code extracts perfect powers from negative integer bases but handles the sign incorrectly when the exponent numerator is even.
+
+```
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -289,6 +289,10 @@ class Pow(Expr):
+                             return Pow(Pow(b, e, evaluate=False), S.NegativeOne)
+                         else:
+                             return S.NegativeOne**e*Pow(-b, e)
++                    elif e.is_Rational and e.p > e.q:
++                        # For negative base with rational exponent > 1, don't try
++                        # to extract perfect powers as it can change the branch
++                        pass
+                     elif e.is_Rational:
+                         neg_rat_exp = (-b).is_Rational
+                         if neg_rat_exp is not None:
+@@ -305,6 +309,13 @@ class Pow(Expr):
+                                     ratbase = -ratbase  # for below
+                                     ok = True
+                                 if ok:
++                                    # Check if this would produce inconsistent results
++                                    # For negative bases, avoid extracting perfect powers
++                                    # when it could change the complex branch
++                                    if b.is_negative and e.q != 1:
++                                        # Only apply this optimization for integer exponents
++                                        # to avoid branch cut issues
++                                        pass
+                                     return res*Pow(ratbase, e)
+                     if e.is_positive:
+                         return S.NegativeOne**e*Pow(-b, e)
+```
+
+Wait, let me reconsider. The issue is more specific - it's about the perfect power extraction changing the branch. Let me provide a more targeted fix:
+
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -289,6 +289,14 @@ class Pow(Expr):
+                             return Pow(Pow(b, e, evaluate=False), S.NegativeOne)
+                         else:
+                             return S.NegativeOne**e*Pow(-b, e)
++                    elif e.is_Rational and e.q != 1:
++                        # For negative integer base with non-integer rational exponent,
++                        # don't try to extract perfect powers as it can produce
++                        # inequivalent expressions due to different complex branches.
++                        # e.g. (-4)**(4/5) should not become 2*2**(3/5) since that
++                        # differs from (-1)**(4/5) * 4**(4/5)
++                        if b.is_negative and b.is_Integer:
++                            return None
+                     elif e.is_Rational:
+                         neg_rat_exp = (-b).is_Rational
+                         if neg_rat_exp is not None:

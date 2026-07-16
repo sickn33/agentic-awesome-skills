@@ -1,0 +1,21 @@
+# pallets__flask-4045
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This appears to be a question about generating a patch for the Flask repository (pallets/flask), but I'm in a different repository. Based on the architect's analysis, I need to generate a patch for the Flask Blueprint class. Let me create the patch based on standard Flask source structure and the provided information.
+
+```
+--- a/src/flask/blueprints.py
++++ b/src/flask/blueprints.py
+@@ -185,6 +185,11 @@ class Blueprint(Scaffold):
+         cli_group: t.Optional[str] = _sentinel,  # type: ignore
+     ):
+         super().__init__(import_name, static_folder, static_url_path, template_folder, root_path)
++
++        if "." in name:
++            raise ValueError("'name' may not contain a dot '.' character.")
++
+         self.name = name
+         self.url_prefix = url_prefix
+         self.subdomain = subdomain
+```

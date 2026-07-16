@@ -1,0 +1,22 @@
+# sympy__sympy-12454
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description, I can generate the patch directly from the information provided. The bug is in `sympy/matrices/matrices.py` where `is_upper` (and likely `is_lower`) don't properly bound-check against matrix dimensions.
+
+```
+--- a/sympy/matrices/matrices.py
++++ b/sympy/matrices/matrices.py
+@@ -1109,9 +1109,9 @@ class MatrixProperties(MatrixRequired):
+     @property
+     def is_upper(self):
+         """Check if matrix is an upper triangular matrix. True can be returned
+         even if the matrix is not square."""
+         return all(self[i, j].is_zero
+                    for i in range(1, self.rows)
+-                   for j in range(i))
++                   for j in range(min(i, self.cols)))
+ 
+     @property
+     def is_lower(self):
+```

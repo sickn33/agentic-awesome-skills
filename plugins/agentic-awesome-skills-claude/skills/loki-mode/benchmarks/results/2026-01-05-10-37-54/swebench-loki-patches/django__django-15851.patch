@@ -1,0 +1,40 @@
+# django__django-15851
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/backends/postgresql/client.py
++++ b/django/db/backends/postgresql/client.py
+@@ -17,7 +17,6 @@ class DatabaseClient(BaseDatabaseClient):
+         dbname = settings_dict.get("NAME") or settings_dict.get("OPTIONS", {}).get("database")
+         user = settings_dict.get("USER")
+         passwd = settings_dict.get("PASSWORD")
+-        service = settings_dict.get("OPTIONS", {}).get("service")
+         sslmode = settings_dict.get("OPTIONS", {}).get("sslmode")
+         sslrootcert = settings_dict.get("OPTIONS", {}).get("sslrootcert")
+         sslcert = settings_dict.get("OPTIONS", {}).get("sslcert")
+@@ -25,10 +24,6 @@ class DatabaseClient(BaseDatabaseClient):
+ 
+         args = [cls.executable_name]
+ 
+-        if service:
+-            args += ["-d", service]
+-        elif dbname:
+-            args += ["-d", dbname]
+         if user:
+             args += ["-U", user]
+         if host:
+@@ -50,6 +45,13 @@ class DatabaseClient(BaseDatabaseClient):
+             env["PGSSLCERT"] = str(sslcert)
+         if sslkey:
+             env["PGSSLKEY"] = str(sslkey)
++
++        args.extend(parameters)
++
++        service = settings_dict.get("OPTIONS", {}).get("service")
++        if service:
++            args += ["-d", service]
++        elif dbname:
++            args += ["-d", dbname]
+ 
+-        args.extend(parameters)
+         return args, (env or None)

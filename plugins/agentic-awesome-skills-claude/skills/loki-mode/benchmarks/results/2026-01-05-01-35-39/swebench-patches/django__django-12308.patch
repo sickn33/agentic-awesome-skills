@@ -1,0 +1,24 @@
+Now I have two versions of the patch. The issue description says to use `prepare_value` method to handle the `InvalidJSONInput` case properly. Let me verify my understanding by checking the Django JSONField's prepare_value method behavior:
+
+The problem statement clearly indicates:
+1. JSONField values are displayed as Python dict repr (`{'foo': 'bar'}`) instead of valid JSON (`{"foo": "bar"}`)
+2. The fix should be in `django.contrib.admin.utils.display_for_field`
+3. It should call `prepare_value` of the JSONField (not calling `json.dumps` directly to handle the `InvalidJSONInput` case)
+
+Based on my analysis, the first patch using `field.prepare_value(value)` is the correct approach because:
+1. It follows the suggestion in the issue to use `prepare_value`
+2. It handles the `InvalidJSONInput` case (where invalid JSON strings should be passed through unchanged)
+3. It's cleaner and delegates JSON formatting to the field itself
+
+However, I notice that the `json` import in the first patch isn't actually needed since we're using `field.prepare_value(value)`. Let me provide the correct patch:
+
+--- a/django/contrib/admin/utils.py
++++ b/django/contrib/admin/utils.py
+@@ -394,6 +394,8 @@ def display_for_field(value, field, empty_value_display):
+         return formats.number_format(value)
+     elif isinstance(field, models.FileField) and value:
+         return format_html('<a href="{}">{}</a>', value.url, value)
++    elif isinstance(field, models.JSONField):
++        return field.prepare_value(value)
+     else:
+         return display_for_value(value, empty_value_display)

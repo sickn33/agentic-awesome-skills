@@ -1,0 +1,36 @@
+# scikit-learn__scikit-learn-14983
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I can generate the patch. The issue is that `_RepeatedSplits` base class lacks a `__repr__` method. Looking at scikit-learn's codebase patterns, the fix requires adding a `__repr__` method to `_RepeatedSplits` that properly displays the parameters.
+
+--- a/sklearn/model_selection/_split.py
++++ b/sklearn/model_selection/_split.py
+@@ -1027,6 +1027,15 @@ class _RepeatedSplits(metaclass=ABCMeta):
+         self.n_repeats = n_repeats
+         self.random_state = random_state
+         self.cvargs = cvargs
++
++    def __repr__(self):
++        return _build_repr(self)
++
++    def get_n_splits(self, X=None, y=None, groups=None):
++        """Returns the number of splitting iterations in the cross-validator
++
++        Parameters
++        ----------
+
+Wait, I need to provide just the minimal fix. Let me create a cleaner patch:
+
+--- a/sklearn/model_selection/_split.py
++++ b/sklearn/model_selection/_split.py
+@@ -1027,6 +1027,9 @@ class _RepeatedSplits(metaclass=ABCMeta):
+         self.n_repeats = n_repeats
+         self.random_state = random_state
+         self.cvargs = cvargs
++
++    def __repr__(self):
++        return _build_repr(self)
+ 
+     def split(self, X, y=None, groups=None):
+         """Generates indices to split data into training and test set.

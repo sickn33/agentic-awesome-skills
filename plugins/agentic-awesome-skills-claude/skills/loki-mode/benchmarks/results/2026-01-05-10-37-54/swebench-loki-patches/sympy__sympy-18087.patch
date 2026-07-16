@@ -1,0 +1,55 @@
+# sympy__sympy-18087
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, this is a SymPy repository issue. Since the SymPy codebase is not present in the current working directory, I'll generate the patch based on the provided analysis of the bug in the `Factors` class.
+
+```
+--- a/sympy/core/exprtools.py
++++ b/sympy/core/exprtools.py
+@@ -449,10 +449,16 @@ class Factors(dict):
+                         b, e = b.as_base_exp()
+                         if e is not S.One:
+                             e = Mul(e, p)
+-                            p = S.One
+-                        b, e = Pow(b, e).as_base_exp()  # in case it is unevaluated
++                            # Only collapse exponents when mathematically valid:
++                            # (b^e)^p = b^(e*p) is valid when e is integer,
++                            # or b is positive, or p is integer
++                            if e.is_integer or b.is_positive or p.is_integer:
++                                p = S.One
++                                b, e = Pow(b, e).as_base_exp()
++                            else:
++                                # Keep as (b^e)^p form
++                                b = Pow(b, e/p)
++                                e = p
+                     else:
+                         b, e = b.as_base_exp()
+-
+                 if b is S.One:
+```
+
+Wait, let me reconsider. The patch needs to be more precise based on the actual code structure. Let me provide a cleaner patch:
+
+--- a/sympy/core/exprtools.py
++++ b/sympy/core/exprtools.py
+@@ -449,9 +449,17 @@ class Factors(dict):
+                     if p is not S.One:
+                         b, e = b.as_base_exp()
+                         if e is not S.One:
+-                            e = Mul(e, p)
+-                            p = S.One
+-                        b, e = Pow(b, e).as_base_exp()  # in case it is unevaluated
++                            # Only collapse (b^e)^p to b^(e*p) when mathematically valid:
++                            # This requires e to be an integer, b to be positive, or p to be an integer
++                            if e.is_integer or b.is_positive or p.is_integer:
++                                e = Mul(e, p)
++                                p = S.One
++                                b, e = Pow(b, e).as_base_exp()  # in case it is unevaluated
++                            else:
++                                # Keep the original form - don't simplify sqrt(x**2) to x
++                                b = Pow(b, e)
++                                e = p
++                                p = S.One
+                     else:
+                         b, e = b.as_base_exp()

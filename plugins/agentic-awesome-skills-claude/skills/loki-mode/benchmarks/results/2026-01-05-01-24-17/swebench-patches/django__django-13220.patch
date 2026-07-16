@@ -1,0 +1,57 @@
+Based on my knowledge of Django's ValidationError class and the issue requirements, I need to create a patch that adds `__eq__` and `__hash__` methods. Let me look at the existing patch file more carefully to understand the structure and create a proper patch.
+
+Looking at the patch file I already read, it contains the description but not a clean unified diff. Let me create the proper patch based on my knowledge of Django's ValidationError class structure in `django/core/exceptions.py`.
+
+The ValidationError class in Django stores errors in either `error_dict` (for dict-based errors) or `error_list` (for list-based errors). Each error in the list has `message`, `code`, and `params` attributes. The patch needs to:
+
+1. Add `__eq__` method that compares ValidationErrors considering all attributes
+2. Make comparison order-independent
+3. Add `__hash__` method (required when overriding `__eq__`)
+
+--- a/django/core/exceptions.py
++++ b/django/core/exceptions.py
+@@ -182,3 +182,44 @@ class ValidationError(Exception):
+             return repr(self.message)
+         return repr(self.messages)
+ 
++    def __eq__(self, other):
++        if not isinstance(other, ValidationError):
++            return NotImplemented
++
++        # Check if both have error_dict
++        if hasattr(self, 'error_dict') and hasattr(other, 'error_dict'):
++            if set(self.error_dict.keys()) != set(other.error_dict.keys()):
++                return False
++            for key in self.error_dict:
++                if not self._compare_error_lists(
++                    self.error_dict[key], other.error_dict[key]
++                ):
++                    return False
++            return True
++        elif hasattr(self, 'error_dict') or hasattr(other, 'error_dict'):
++            return False
++
++        # Both have error_list
++        return self._compare_error_lists(self.error_list, other.error_list)
++
++    def _compare_error_lists(self, list1, list2):
++        """Compare two lists of ValidationErrors, order-independent."""
++        if len(list1) != len(list2):
++            return False
++
++        # Convert each error to a comparable tuple (message, code, params)
++        def make_hashable(params):
++            if isinstance(params, dict):
++                return tuple(sorted(params.items()))
++            return params
++
++        set1 = set(
++            (error.message, error.code, make_hashable(error.params)) for error in list1
++        )
++        set2 = set(
++            (error.message, error.code, make_hashable(error.params)) for error in list2
++        )
++        return set1 == set2
++
++    def __hash__(self):
++        return super().__hash__()

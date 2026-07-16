@@ -1,0 +1,30 @@
+Based on the GitHub issue, I can see this is about the `uniq` function in `sympy/utilities/iterables.py`. The issue mentions lines 2109-2124. Let me create a patch based on the problem description.
+
+The issue is that when iterating over `uniq(f)` and modifying the list `f` simultaneously, the output is silently wrong. The fix should check if the size of a mutable sequence changes during iteration and raise a `RuntimeError` similar to what Python does with dictionaries/sets.
+
+Based on the issue description and standard Python patterns for `uniq` functions, here's the patch:
+
+--- a/sympy/utilities/iterables.py
++++ b/sympy/utilities/iterables.py
+@@ -2106,6 +2106,7 @@ def uniq(seq, result=None):
+     >>> list(googol)
+     []
+     """
++    initial_len = None
+     try:
+         seen = set()
+         result = result or []
+@@ -2113,6 +2114,12 @@ def uniq(seq, result=None):
+             if item not in seen:
+                 seen.add(item)
+                 result.append(item)
++                if initial_len is None:
++                    try:
++                        initial_len = len(seq)
++                    except TypeError:
++                        pass
++                if initial_len is not None and len(seq) != initial_len:
++                    raise RuntimeError("dictionary changed size during iteration")
+                 yield item
+     except TypeError:
+         if item not in result:

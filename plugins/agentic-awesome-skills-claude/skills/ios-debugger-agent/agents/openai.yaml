@@ -1,0 +1,4 @@
+interface:
+  display_name: "iOS Debugger Agent"
+  short_description: "Debug iOS apps on Simulator"
+  default_prompt: "Use $ios-debugger-agent to build, launch, and inspect the current iOS app on the booted simulator."

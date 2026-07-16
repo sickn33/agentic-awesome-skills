@@ -1,0 +1,56 @@
+name: Explain Skill Optimization Apply
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  explain:
+    if: >-
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/apply-optimize')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            const prNumber = context.payload.issue?.number;
+            const association = context.payload.comment?.author_association ?? 'NONE';
+
+            if (!prNumber) {
+              core.setFailed('No pull request number found in issue_comment payload.');
+              return;
+            }
+
+            if (!trusted.has(association)) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body:
+                  '⚠️ `/apply-optimize` can only be queued by repository maintainers ' +
+                  '(OWNER, MEMBER, or COLLABORATOR).',
+              });
+              return;
+            }
+
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'eyes',
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body:
+                '⚠️ `/apply-optimize` is paused while this repository migrates from ' +
+                'deprecated Tessl Skill Review comments to Tessl Review runs. ' +
+                'Please use the `skill-review` check output for now; maintainers can ' +
+                're-enable auto-fix once the `tessl review fix` output contract is wired safely.',
+            });

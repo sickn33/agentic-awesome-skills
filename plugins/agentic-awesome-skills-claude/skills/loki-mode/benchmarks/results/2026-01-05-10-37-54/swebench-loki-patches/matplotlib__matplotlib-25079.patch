@@ -1,0 +1,38 @@
+# matplotlib__matplotlib-25079
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the matplotlib codebase and the issue description, I need to generate a patch for the bug where setting `norm` with an existing colorbar fails in 3.6.3. The issue is in the `ScalarMappable.norm` setter in `lib/matplotlib/cm.py`.
+
+Looking at the traceback and the bug description:
+1. When `plot.norm = LogNorm(vmin, vmax)` is set, the colorbar's internal mappable needs to be properly updated
+2. The old norm callback connection needs to be disconnected and a new one connected
+3. The `autoscale_None` needs to be called to ensure vmin/vmax are properly set on the new norm
+
+Here is the patch:
+
+--- a/lib/matplotlib/cm.py
++++ b/lib/matplotlib/cm.py
+@@ -525,10 +525,20 @@ class ScalarMappable:
+ 
+     @norm.setter
+     def norm(self, norm):
++        _api.check_isinstance((colors.Normalize, None), norm=norm)
++        if self._norm is not None:
++            self._norm.callbacks.disconnect(self._id_norm)
++            del self._id_norm
+         if norm is None:
+             norm = colors.Normalize()
+-        self._norm = norm
+         self.norm.callbacks.connect('changed', self.changed)
++        self._norm = norm
++        self._id_norm = self._norm.callbacks.connect('changed', self.changed)
++        if self._A is not None:
++            self.norm.autoscale_None(self._A)
+         self.changed()
+ 
++    def set_norm(self, norm):
++        """Set the normalization instance."""
++        self.norm = norm
++
+     def autoscale(self):

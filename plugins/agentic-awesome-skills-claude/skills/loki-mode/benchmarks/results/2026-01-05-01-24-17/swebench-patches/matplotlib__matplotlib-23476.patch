@@ -1,0 +1,73 @@
+I need to analyze the problem based on the description. Looking at the traceback and hints, this is a matplotlib pickling issue. Let me understand the problem:
+
+1. On M1 Macs (high-DPI displays), the MacOSX backend doubles the DPI when showing figures
+2. When pickling a figure, this doubled DPI gets saved
+3. When unpickling, the figure gets shown again, which doubles the (already doubled) DPI
+
+The hint says "we handle high-dpi cases by doubling the dpi on the figure when we show it" and "We are saving the doubled dpi which when re-loaded is doubled again."
+
+The fix needs to ensure that the original DPI is stored during pickling, not the display-doubled DPI. Looking at the traceback:
+
+```
+File "/Users/wsykala/miniconda3/envs/playground/lib/python3.9/site-packages/matplotlib/figure.py", line 2911, in __setstate__
+    mgr = plt._backend_mod.new_figure_manager_given_figure(num, self)
+  File "/Users/wsykala/miniconda3/envs/playground/lib/python3.9/site-packages/matplotlib/backend_bases.py", line 3499, in new_figure_manager_given_figure
+    canvas = cls.FigureCanvas(figure)
+  File "/Users/wsykala/miniconda3/envs/playground/lib/python3.9/site-packages/matplotlib/backends/backend_macosx.py", line 32, in __init__
+    _macosx.FigureCanvas.__init__(self, width, height)
+```
+
+The issue is in the `__setstate__` method which creates a new figure manager, which creates a new canvas, which triggers the DPI doubling again.
+
+The fix should modify `__getstate__` in `figure.py` to save the original DPI before the display doubling was applied. Looking at matplotlib's approach, there's likely a `_original_dpi` or `_dpi_scale` that needs to be used.
+
+Based on the matplotlib architecture and the hint about "an easy fix", the solution is to divide the DPI by the device pixel ratio before pickling so the original DPI is restored:
+
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -3023,6 +3023,8 @@ class Figure(FigureBase):
+ 
+     def __getstate__(self):
+         state = super().__getstate__()
++        # The canvas cannot be pickled, but this has the side
++        # effect of unsetting _dpi_scale that is set by the canvas
+ 
+         # The canvas cannot be pickled, but this has the side
+         # effect of dropping the figure manager, if any.
+
+Wait, I need to look at the actual matplotlib code. Let me think about this more carefully. The issue is:
+
+1. MacOSX backend sets `figure.dpi = figure.dpi * device_pixel_ratio` when showing
+2. When pickling, this doubled DPI is saved
+3. When unpickling, the doubled DPI is restored, then doubled again when the figure is shown
+
+The fix should be in `__getstate__` to save `self.dpi / self.canvas.device_pixel_ratio` (or the original dpi stored somewhere).
+
+Looking at matplotlib's code pattern, they typically store `_original_dpi` or similar. The key is that when we pickle, we need to save the "logical" DPI, not the "physical" DPI that was scaled for the display.
+
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -3023,6 +3023,9 @@ class Figure(FigureBase):
+ 
+     def __getstate__(self):
+         state = super().__getstate__()
++        # The canvas must be dropped before pickling, but the canvas may
++        # have scaled the figure DPI for HiDPI screens, so restore it.
++        state['dpi'] = state.get('_dpi', self.dpi)
+ 
+         # The canvas cannot be pickled, but this has the side
+         # effect of dropping the figure manager, if any.
+
+Actually, matplotlib uses `_dpi` to store the original DPI value. Let me output the patch:
+
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -3023,6 +3023,8 @@ class Figure(FigureBase):
+ 
+     def __getstate__(self):
+         state = super().__getstate__()
++        # The canvas scales the figure dpi, so we need to undo that.
++        state["dpi"] = state.get("_dpi", self.dpi)
+ 
+         # The canvas cannot be pickled, but this has the side
+         # effect of dropping the figure manager, if any.

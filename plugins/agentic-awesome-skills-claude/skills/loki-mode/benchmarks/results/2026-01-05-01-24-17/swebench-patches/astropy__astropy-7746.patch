@@ -1,0 +1,31 @@
+Based on the error traceback provided in the issue, I can understand the code structure. Let me analyze the problem:
+
+1. The error occurs when passing empty lists `[], []` to `wcs.wcs_pix2world([], [], 0)`
+2. The error `InconsistentAxisTypesError` occurs in the underlying wcslib C code at `wcsp2s()`
+3. The issue is that empty arrays are being passed to the underlying C library without being checked first
+
+Looking at the traceback:
+- `wcs_pix2world` calls `_array_converter`
+- `_array_converter` calls `_return_list_of_arrays`
+- `_return_list_of_arrays` calls the lambda `func(xy, origin)` which is `self.wcs.p2s(xy, o)['world']`
+- The C library fails because it receives empty coordinates
+
+The fix should check for empty arrays early in `_array_converter` and return empty arrays immediately without calling the underlying C library.
+
+Based on the traceback line numbers and the typical structure of astropy's WCS code, the fix should be in the `_array_converter` method to handle empty input arrays by returning empty output arrays before calling the underlying transformation function.
+
+Here's the patch:
+
+--- a/astropy/wcs/wcs.py
++++ b/astropy/wcs/wcs.py
+@@ -1222,6 +1222,12 @@ class WCS(WCSBase):
+             if ra_dec_order and sky == 'input':
+                 xy = self._denormalize_sky(xy)
++            # If the input is empty, return empty output immediately
++            # without calling the underlying C library which can't handle empty arrays
++            if len(xy) == 0:
++                return xy
++
+             output = func(xy, origin)
+             if ra_dec_order and sky == 'output':
+                 output = self._normalize_sky(output)

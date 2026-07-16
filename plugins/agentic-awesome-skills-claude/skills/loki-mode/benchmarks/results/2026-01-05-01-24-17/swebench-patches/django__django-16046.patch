@@ -1,0 +1,16 @@
+Based on the issue description, I understand the problem. The Django `numberformat.py` file has code that checks if `str_number[0] == "-"` to detect negative numbers, but when the number field is null/empty, this causes an `IndexError: string index out of range` because you can't index into an empty string.
+
+The fix is to check if `str_number` is non-empty before checking its first character. Here's the patch:
+
+--- a/django/utils/numberformat.py
++++ b/django/utils/numberformat.py
+@@ -18,6 +18,9 @@ def format(number, decimal_sep, decimal_pos=None, grouping=0, thousand_sep='',
+     # sign
+     sign = ''
+     str_number = str(number)
++    if not str_number:
++        return ''
++
+     if str_number[0] == '-':
+         sign = '-'
+         str_number = str_number[1:]

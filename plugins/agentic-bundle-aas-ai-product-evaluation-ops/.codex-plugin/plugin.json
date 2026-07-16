@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-ai-product-evaluation-ops",
+  "version": "14.5.0",
+  "description": "Install the \"AAS AI Product & Evaluation Ops\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-ai-product-evaluation-ops",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS AI Product & Evaluation Ops",
+    "shortDescription": "Define, evaluate, instrument, and improve AI product features with metrics, tracing, experiments, and model evals.",
+    "longDescription": "Define, evaluate, instrument, and improve AI product features with metrics, tracing, experiments, and model evals. Covers the product side of AI work: wrapper strategy, evals, tracing, product metrics, experiments, model evaluation, and context constraints. Recommended for: AI PMs, Founders building AI features, LLM product teams. Not for: Low-level MCP server implementation only, Office document automation. Covers AI Wrapper Product, Agent Evaluation, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to write an AI feature evaluation plan with metrics, traces, user feedback, and experiment design.",
+      "Use this plugin to review this AI feature for product risk, context limits, eval coverage, and KPI gaps.",
+      "Use this plugin to design a dashboard and feedback loop for improving this LLM workflow."
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+# django__django-11905
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/lookups.py
++++ b/django/db/models/lookups.py
+@@ -1,3 +1,4 @@
++import warnings
+ from datetime import datetime, timezone
+ 
+ from django.core.exceptions import EmptyResultSet
+@@ -5,6 +6,7 @@
+ from django.db.models.sql.query import Query
+ from django.db.models.sql.where import NothingNode, SubqueryConstraint, WhereNode
+ from django.utils import formats
++from django.utils.deprecation import RemovedInDjango40Warning
+ from django.utils.functional import cached_property
+ 
+ 
+@@ -463,6 +465,13 @@ class IsNull(BuiltinLookup):
+     prepare_rhs = False
+ 
+     def as_sql(self, compiler, connection):
++        if not isinstance(self.rhs, bool):
++            warnings.warn(
++                'The QuerySet value for an isnull lookup must be True or '
++                'False.',
++                RemovedInDjango40Warning,
++            )
+         sql, params = compiler.compile(self.lhs)
+         if self.rhs:
+             return "%s IS NULL" % sql, params

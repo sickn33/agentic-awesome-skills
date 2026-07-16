@@ -1,0 +1,42 @@
+Based on the issue description and hints, I can understand the bug and create the fix. The issue is:
+
+1. When `RangeSlider` is initialized with `valinit` where both values are equal (e.g., `[0.0, 0.0]`), the polygon created by `axhspan`/`axvspan` has only 4 vertices instead of 5.
+
+2. The `set_val` method tries to access `xy[4]` to close the polygon, but when the polygon was created with equal values, it only has 4 vertices.
+
+The fix should be to create the polygon manually with the expected number of vertices, rather than relying on `axhspan`/`axvspan` which produces different array sizes depending on whether the span is zero-width or not.
+
+Looking at the code referenced in the issue (line 722 uses `axhspan` or `axvspan`), the fix should ensure the polygon always has 5 vertices (closed polygon).
+
+Here's the patch:
+
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -719,7 +719,12 @@ class RangeSlider(SliderBase):
+         self.track = Rectangle(
+             [0, .25], 1, .5,
+             transform=ax.transAxes, facecolor=track_color)
+-        self.poly = ax.axhspan(valinit[0], valinit[1], .25, .75)
++        poly = Polygon(
++            np.array([[valinit[0], .25], [valinit[0], .75],
++                      [valinit[1], .75], [valinit[1], .25],
++                      [valinit[0], .25]]),
++            closed=True)
++        self.poly = ax.add_patch(poly)
+         self.poly.set_transform(ax.get_xaxis_transform(which='grid'))
+ 
+         handleXY_1 = [valinit[0], .5]
+@@ -731,7 +736,12 @@ class RangeSlider(SliderBase):
+         self.track = Rectangle(
+             [.25, 0], .5, 1,
+             transform=ax.transAxes, facecolor=track_color)
+-        self.poly = ax.axvspan(valinit[0], valinit[1], .25, .75)
++        poly = Polygon(
++            np.array([[.25, valinit[0]], [.25, valinit[1]],
++                      [.75, valinit[1]], [.75, valinit[0]],
++                      [.25, valinit[0]]]),
++            closed=True)
++        self.poly = ax.add_patch(poly)
+         self.poly.set_transform(ax.get_yaxis_transform(which='grid'))
+ 
+         handleXY_1 = [.5, valinit[0]]

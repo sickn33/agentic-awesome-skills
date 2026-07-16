@@ -1,0 +1,36 @@
+This is a different repository (loki-mode), not the sympy repository. The issue is about SymPy's `solve_poly_system` function. Based on the problem statement and hints, I need to generate a patch for the SymPy repository.
+
+Looking at the issue:
+1. `solve_poly_system((x - 1,), x, y)` correctly raises `NotImplementedError` 
+2. `solve_poly_system((y - 1,), x, y)` incorrectly returns `[(1,)]` instead of raising an error
+
+The discussion in the hints indicates the fix should be: `if len(basis) < len(gens)` - this ensures that when the number of polynomials in the Groebner basis is less than the number of variables, the system has infinite solutions and should raise `NotImplementedError`.
+
+Based on the diff provided in the problem statement and the discussion in the hints, here's the correct patch:
+
+--- a/sympy/solvers/polysys.py
++++ b/sympy/solvers/polysys.py
+@@ -238,6 +238,10 @@ def _solve_reduced_system(system, gens, entry=False):
+ 
+         basis = groebner(system, gens, polys=True)
+ 
++        if len(basis) < len(gens):
++            raise NotImplementedError(filldedent('''
++                only zero-dimensional systems supported
++                (finite number of solutions)'''))
+         univariate = list(filter(_is_univariate, basis))
+ 
+         if len(univariate) == 1:
+--- a/sympy/solvers/tests/test_polysys.py
++++ b/sympy/solvers/tests/test_polysys.py
+@@ -48,6 +48,10 @@ def test_solve_poly_system():
+     raises(NotImplementedError, lambda: solve_poly_system(
+         [z, -2*x*y**2 + x + y**2*z, y**2*(-z - 4) + 2]))
+     raises(PolynomialError, lambda: solve_poly_system([1/x], x))
++    raises(NotImplementedError, lambda: solve_poly_system(
++        Poly(x - 1, x, y), (x, y)))
++    raises(NotImplementedError, lambda: solve_poly_system(
++        Poly(y - 1, x, y), (x, y)))
+ 
+ 
+ def test_solve_biquadratic():

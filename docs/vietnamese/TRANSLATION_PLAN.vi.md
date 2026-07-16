@@ -1,8 +1,8 @@
 # 🗺️ Kế hoạch Dịch thuật (Translation Master Plan)
 
-Tài liệu này dùng để theo dõi tiến độ dịch thuật toàn bộ repository `antigravity-awesome-skills` sang tiếng Việt.
+Tài liệu này dùng để theo dõi tiến độ dịch thuật toàn bộ repository `agentic-awesome-skills` sang tiếng Việt.
 
-**Mục tiêu:** Dịch toàn bộ 560+ kỹ năng và tài liệu hướng dẫn.
+**Mục tiêu:** Dịch toàn bộ 1,684+ kỹ năng và tài liệu hướng dẫn.
 **Quy tắc:**
 1. Giữ nguyên cấu trúc thư mục gốc.
 2. File dịch được lưu tại `docs/vietnamese/skills/<category>/<skill-name>.vi.md`.

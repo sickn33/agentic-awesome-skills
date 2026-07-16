@@ -1,0 +1,25 @@
+Based on the issue description, I have enough information to create the patch. The issue describes:
+
+1. The problem: `_eval_expand_tensorproduct()` fails when the creation of a TensorProduct object returns commutative (scalar) factors up front, returning `Mul(c_factors, TensorProduct(..))` instead of just `TensorProduct`.
+
+2. The fix: Split off commutative (scalar) factors from the `tp` returned, then check if the non-commutative part contains a TensorProduct that needs recursive expansion.
+
+Here's the patch:
+
+--- a/sympy/physics/quantum/tensorproduct.py
++++ b/sympy/physics/quantum/tensorproduct.py
+@@ -246,9 +246,12 @@ class TensorProduct(Expr):
+         for i in range(len(args)):
+             if isinstance(args[i], Add):
+                 for aa in args[i].args:
+                     tp = TensorProduct(*args[:i] + (aa,) + args[i + 1:])
+-                    if isinstance(tp, TensorProduct):
+-                        tp = tp._eval_expand_tensorproduct()
+-                    add_args.append(tp)
++                    c_part, nc_part = tp.args_cnc()
++                    if len(nc_part)==1 and isinstance(nc_part[0], TensorProduct):
++                        nc_part = (nc_part[0]._eval_expand_tensorproduct(), )
++                    add_args.append(Mul(*c_part)*Mul(*nc_part))
+                 break
+         if add_args:
+             return Add(*add_args)

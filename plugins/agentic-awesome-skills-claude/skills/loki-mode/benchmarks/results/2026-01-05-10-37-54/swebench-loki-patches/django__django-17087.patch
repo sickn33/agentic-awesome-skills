@@ -1,0 +1,19 @@
+# django__django-17087
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -168,7 +168,7 @@ class FunctionTypeSerializer(BaseSerializer):
+             )
+         if getattr(self.value, "__self__", None) and isinstance(
+             self.value.__self__, type
+         ):
+-            klass = self.value.__self__
+-            module = klass.__module__
+-            return "%s.%s.%s" % (module, klass.__name__, self.value.__name__), {
++            klass = self.value.__self__
++            module = klass.__module__
++            return "%s.%s.%s" % (module, klass.__qualname__, self.value.__name__), {
+                 "import %s" % module
+             }

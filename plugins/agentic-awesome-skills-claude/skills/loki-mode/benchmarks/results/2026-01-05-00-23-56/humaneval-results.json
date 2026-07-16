@@ -1,0 +1,15 @@
+{
+  "benchmark": "HumanEval",
+  "version": "1.0",
+  "timestamp": "2026-01-05T00:24:04.904083",
+  "total_problems": 164,
+  "status": "INFRASTRUCTURE_READY",
+  "note": "Benchmark infrastructure created. Run with --execute to run actual tests.",
+  "sample_problems": [
+    "HumanEval/0",
+    "HumanEval/1",
+    "HumanEval/2",
+    "HumanEval/3",
+    "HumanEval/4"
+  ]
+}

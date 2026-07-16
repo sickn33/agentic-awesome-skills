@@ -1,0 +1,39 @@
+# django__django-15695
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I can generate the patch. The issue is in the `database_backwards()` method of `RenameIndex` - when `old_name` is not provided (unnamed index from `unique_together`), the backward operation should restore the auto-generated name rather than being a noop.
+
+```
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -967,12 +967,28 @@ class RenameIndex(IndexOperation):
+ 
+     def database_backwards(self, app_label, schema_editor, from_state, to_state):
+         if self.old_fields:
+-            # Backward operation with unnamed index is a no-op.
+-            return
++            model = to_state.apps.get_model(app_label, self.model_name)
++            if not self.allow_migrate_model(schema_editor.connection.alias, model):
++                return
++
++            to_model_state = to_state.models[app_label, self.model_name_lower]
++            old_index = to_model_state.get_index_by_name(self.new_name)
++            # Restore the old auto-generated name.
++            old_index.name = schema_editor._create_index_name(
++                model._meta.db_table,
++                self.old_fields,
++            )
++            from_model_state = from_state.models[app_label, self.model_name_lower]
++            new_index = from_model_state.get_index_by_name(self.new_name)
++            schema_editor.rename_index(model, new_index, old_index)
++            # Swap back.
++            old_index.name = self.new_name
++            return
+ 
+         self.new_name, self.old_name = self.old_name, self.new_name
+         self.database_forwards(app_label, schema_editor, from_state, to_state)
+         self.new_name, self.old_name = self.old_name, self.new_name
+ 
+     def describe(self):
+```

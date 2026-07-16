@@ -1,0 +1,15 @@
+# pylint-dev__pylint-5859
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/pylint/checkers/misc.py
++++ b/pylint/checkers/misc.py
+@@ -94,7 +94,7 @@ class EncodingChecker(BaseChecker):
+ 
+     def open(self):
+         super().open()
+-        notes = "|".join(self.config.notes)
++        notes = "|".join(map(re.escape, self.config.notes))
+         if self.config.notes_rgx:
+             regex_string = rf"#\s*({notes}|{self.config.notes_rgx})\b"
+         else:

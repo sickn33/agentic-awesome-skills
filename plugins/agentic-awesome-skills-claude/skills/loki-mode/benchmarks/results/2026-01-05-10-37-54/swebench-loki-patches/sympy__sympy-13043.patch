@@ -1,0 +1,25 @@
+# sympy__sympy-13043
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+The sympy repository doesn't appear to be in the current working directory. Based on the architect's analysis, I can generate the patch from the known structure of the SymPy codebase. Let me create the patch based on the analysis provided:
+
+```
+--- a/sympy/integrals/intpoly.py
++++ b/sympy/integrals/intpoly.py
+@@ -1,6 +1,7 @@
+ """
+ Module to implement integration over polytopes
+ """
++from sympy.core.compatibility import default_sort_key
+ from sympy.core import S, Symbol, Expr, diff
+ from sympy.geometry import Segment2D, Polygon, Point
+ from sympy.abc import x, y
+@@ -538,7 +539,7 @@ def decompose(expr, separate=False):
+         poly_dict[monom] = coeff
+ 
+     if separate:
+-        return list(poly_dict.values())
++        return sorted(poly_dict.values(), key=default_sort_key)
+     return poly_dict
+ ```

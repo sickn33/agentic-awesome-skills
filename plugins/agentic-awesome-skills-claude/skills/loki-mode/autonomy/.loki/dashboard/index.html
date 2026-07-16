@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loki Mode Dashboard</title>
+    <style>
+        :root {
+            --bg-cream: #FDF6E3;
+            --bg-dark: #1a1a2e;
+            --coral: #FF6B6B;
+            --coral-light: #FF8E8E;
+            --teal: #4ECDC4;
+            --purple: #A78BFA;
+            --yellow: #FCD34D;
+            --green: #10B981;
+            --red: #EF4444;
+            --text-dark: #2D3748;
+            --text-light: #718096;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--coral), var(--coral-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.active { background: var(--green); }
+        .status-dot.warning { background: var(--yellow); }
+        .status-dot.error { background: var(--red); }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .agent-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .agent-id {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .agent-type {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .model-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .model-badge.sonnet {
+            background: #E0E7FF;
+            color: #4338CA;
+        }
+
+        .model-badge.haiku {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .model-badge.opus {
+            background: #FDE68A;
+            color: #92400E;
+        }
+
+        .agent-work {
+            font-size: 13px;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .agent-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .status-active {
+            color: var(--green);
+        }
+
+        .status-completed {
+            color: var(--purple);
+        }
+
+        /* Task Queue Section */
+        .queue-columns {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .queue-column {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            min-height: 300px;
+        }
+
+        .queue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .queue-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .queue-count {
+            background: var(--bg-cream);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .queue-column.pending .queue-header { border-color: var(--yellow); }
+        .queue-column.in-progress .queue-header { border-color: var(--teal); }
+        .queue-column.completed .queue-header { border-color: var(--green); }
+        .queue-column.failed .queue-header { border-color: var(--red); }
+
+        .task-card {
+            background: var(--bg-cream);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .task-id {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .task-type {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--card-bg);
+            border-radius: 4px;
+            font-size: 10px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .task-desc {
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 12px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .queue-columns {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .queue-columns {
+                grid-template-columns: 1fr;
+            }
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">L</div>
+            <span class="logo-text">Loki Mode Dashboard</span>
+        </div>
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-dot active"></div>
+                <span>Phase: DEVELOPMENT</span>
+            </div>
+            <div class="status-item">
+                <span>v2.18.0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="agents-section">
+        <h2 class="section-title">Active Agents</h2>
+        <div class="agents-grid" id="agents-grid">
+            <!-- Agent cards populated by JS -->
+        </div>
+    </div>
+
+    <div class="section" id="queue-section">
+        <h2 class="section-title">Task Queue</h2>
+        <div class="queue-columns" id="queue-columns">
+            <div class="queue-column pending">
+                <div class="queue-header">
+                    <span class="queue-title">Pending</span>
+                    <span class="queue-count" id="pending-count">0</span>
+                </div>
+                <div id="pending-tasks"></div>
+            </div>
+            <div class="queue-column in-progress">
+                <div class="queue-header">
+                    <span class="queue-title">In Progress</span>
+                    <span class="queue-count" id="in-progress-count">0</span>
+                </div>
+                <div id="in-progress-tasks"></div>
+            </div>
+            <div class="queue-column completed">
+                <div class="queue-header">
+                    <span class="queue-title">Completed</span>
+                    <span class="queue-count" id="completed-count">0</span>
+                </div>
+                <div id="completed-tasks"></div>
+            </div>
+            <div class="queue-column failed">
+                <div class="queue-header">
+                    <span class="queue-title">Failed</span>
+                    <span class="queue-count" id="failed-count">0</span>
+                </div>
+                <div id="failed-tasks"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="last-updated" id="last-updated">
+        Last updated: --
+    </div>
+
+    <script>
+        // Demo data for screenshots
+        const demoAgents = [
+            {
+                id: 'eng-001-backend-api',
+                type: 'Engineering Backend',
+                model: 'sonnet',
+                work: 'Implementing POST /api/todos endpoint with validation and SQLite storage',
+                runtime: '12m 34s',
+                tasks: 5,
+                status: 'active'
+            },
+            {
+                id: 'eng-002-frontend-ui',
+                type: 'Engineering Frontend',
+                model: 'sonnet',
+                work: 'Building React components for todo list with Tailwind styling',
+                runtime: '8m 21s',
+                tasks: 3,
+                status: 'active'
+            },
+            {
+                id: 'qa-001-testing',
+                type: 'QA Testing',
+                model: 'haiku',
+                work: 'Writing unit tests for authentication module',
+                runtime: '5m 45s',
+                tasks: 8,
+                status: 'active'
+            },
+            {
+                id: 'review-security-001',
+                type: 'Security Review',
+                model: 'opus',
+                work: 'Analyzing auth flow for OWASP vulnerabilities',
+                runtime: '3m 12s',
+                tasks: 2,
+                status: 'active'
+            },
+            {
+                id: 'ops-devops-001',
+                type: 'Operations DevOps',
+                model: 'sonnet',
+                work: 'Configuring GitHub Actions CI/CD pipeline',
+                runtime: '15m 08s',
+                tasks: 4,
+                status: 'active'
+            },
+            {
+                id: 'biz-marketing-001',
+                type: 'Business Marketing',
+                model: 'haiku',
+                work: 'Creating landing page copy and SEO meta tags',
+                runtime: '6m 33s',
+                tasks: 2,
+                status: 'completed'
+            }
+        ];
+
+        const demoTasks = {
+            pending: [
+                { id: 'task-015', type: 'eng-database', desc: 'Create migration for user preferences table' },
+                { id: 'task-016', type: 'eng-frontend', desc: 'Implement dark mode toggle component' },
+                { id: 'task-017', type: 'qa-testing', desc: 'Write E2E tests for checkout flow' }
+            ],
+            inProgress: [
+                { id: 'task-012', type: 'eng-backend', desc: 'Implement JWT refresh token rotation' },
+                { id: 'task-013', type: 'eng-frontend', desc: 'Add form validation to signup page' }
+            ],
+            completed: [
+                { id: 'task-001', type: 'eng-backend', desc: 'Setup Express server with TypeScript' },
+                { id: 'task-002', type: 'eng-database', desc: 'Create initial SQLite schema' },
+                { id: 'task-003', type: 'eng-frontend', desc: 'Initialize React with Vite' },
+                { id: 'task-004', type: 'ops-devops', desc: 'Configure ESLint and Prettier' },
+                { id: 'task-005', type: 'eng-backend', desc: 'Implement user registration endpoint' }
+            ],
+            failed: []
+        };
+
+        function renderAgents() {
+            const grid = document.getElementById('agents-grid');
+            grid.innerHTML = demoAgents.map(agent => `
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div>
+                            <div class="agent-id">${agent.id}</div>
+                            <div class="agent-type">${agent.type}</div>
+                        </div>
+                        <span class="model-badge ${agent.model}">${agent.model}</span>
+                    </div>
+                    <div class="agent-work">${agent.work}</div>
+                    <div class="agent-stats">
+                        <span class="stat">Runtime: ${agent.runtime}</span>
+                        <span class="stat">Tasks: ${agent.tasks}</span>
+                    </div>
+                    <div class="agent-status ${agent.status === 'active' ? 'status-active' : 'status-completed'}">
+                        <div class="status-dot ${agent.status === 'active' ? 'active' : ''}"></div>
+                        ${agent.status === 'active' ? 'Active' : 'Completed'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTasks() {
+            const renderTaskList = (tasks, containerId) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = tasks.map(task => `
+                    <div class="task-card">
+                        <div class="task-id">${task.id}</div>
+                        <span class="task-type">${task.type}</span>
+                        <div class="task-desc">${task.desc}</div>
+                    </div>
+                `).join('');
+            };
+
+            renderTaskList(demoTasks.pending, 'pending-tasks');
+            renderTaskList(demoTasks.inProgress, 'in-progress-tasks');
+            renderTaskList(demoTasks.completed.slice(0, 5), 'completed-tasks');
+            renderTaskList(demoTasks.failed, 'failed-tasks');
+
+            document.getElementById('pending-count').textContent = demoTasks.pending.length;
+            document.getElementById('in-progress-count').textContent = demoTasks.inProgress.length;
+            document.getElementById('completed-count').textContent = demoTasks.completed.length;
+            document.getElementById('failed-count').textContent = demoTasks.failed.length;
+        }
+
+        function updateTimestamp() {
+            const now = new Date().toLocaleString();
+            document.getElementById('last-updated').textContent = `Last updated: ${now}`;
+        }
+
+        // Initial render
+        renderAgents();
+        renderTasks();
+        updateTimestamp();
+
+        // Auto-refresh every 3 seconds (in production, would fetch real data)
+        setInterval(updateTimestamp, 3000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+Based on the issue description and the hints provided, I can generate the patch. The issue clearly states:
+
+1. The bug is in `xarray/core/variable.py` in the `as_compatible_data` function
+2. Around lines 202-203 and 219, it doesn't handle `DataArray` objects
+3. It falls back to `DataArray.values` which triggers eager computation
+4. The fix is to add a check for `DataArray` (and `Variable`) objects and return `data.data`
+
+The hint says:
+> I think that's a bug and it should be fine to use:
+> ```python
+>     if isinstance(data, (DataArray, Variable)):
+>         return data.data
+> ```
+
+Looking at the GitHub issue links mentioned:
+- Line 202-203: The location where DataArray is not considered
+- Line 219: Where it falls back to `.values`
+
+The fix should add a check early in the function to handle DataArray objects before they fall through to the code that calls `.values`.
+
+--- a/xarray/core/variable.py
++++ b/xarray/core/variable.py
+@@ -1,5 +1,6 @@
+ import functools
+ import itertools
++from typing import TYPE_CHECKING
+ from collections import defaultdict
+ from datetime import timedelta
+ from distutils.version import LooseVersion
+@@ -199,6 +200,9 @@ def as_compatible_data(data, fastpath=False):
+     if isinstance(data, Variable):
+         return data.data
+ 
++    if isinstance(data, DataArray):
++        return data.data
++
+     if isinstance(data, np.ndarray):
+         if data.dtype.kind == "O":
+             data = _possibly_convert_objects(data)

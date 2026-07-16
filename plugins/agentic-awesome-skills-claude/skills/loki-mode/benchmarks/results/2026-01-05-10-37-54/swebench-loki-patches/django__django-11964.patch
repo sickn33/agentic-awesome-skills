@@ -1,0 +1,62 @@
+# django__django-11964
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -17,6 +17,7 @@ from django.db import connection, connections, router
+ from django.db.models.constants import LOOKUP_SEP
+ from django.db.models.query_utils import DeferredAttribute, RegisterLookupMixin
+ from django.utils import timezone
++from django.utils.choices import normalize_choices
+ from django.utils.datastructures import DictWrapper
+ from django.utils.dateparse import (
+     parse_date,
+@@ -763,6 +764,14 @@ class Field(RegisterLookupMixin):
+     def __set__(self, instance, value):
+         instance.__dict__[self.attname] = self._check_and_set(value)
+ 
++    def _get_primitive_value(self, value):
++        """Extract the primitive value from enum types."""
++        if value is not None and hasattr(value, 'value'):
++            # Check if this is an enum type by looking for value attribute
++            # that's characteristic of Python enums
++            if hasattr(value, '__class__') and hasattr(value.__class__, '__mro__'):
++                import enum
++                if isinstance(value, enum.Enum):
++                    return value.value
++        return value
++
+ 
+ class BooleanField(Field):
+     empty_strings_allowed = False
+@@ -1004,6 +1013,12 @@ class CharField(Field):
+             return str(value)
+         return value
+ 
++    def __set__(self, instance, value):
++        # Convert enum values to their primitive string value
++        if value is not None and hasattr(value, 'value'):
++            import enum
++            if isinstance(value, enum.Enum):
++                value = value.value
++        instance.__dict__[self.attname] = self._check_and_set(value)
++
+     def get_prep_value(self, value):
+         value = super().get_prep_value(value)
+         return self.to_python(value)
+@@ -1791,6 +1806,13 @@ class IntegerField(Field):
+             )
+         return int(value)
+ 
++    def __set__(self, instance, value):
++        # Convert enum values to their primitive int value
++        if value is not None and hasattr(value, 'value'):
++            import enum
++            if isinstance(value, enum.Enum):
++                value = value.value
++        instance.__dict__[self.attname] = self._check_and_set(value)
++
+     def get_prep_value(self, value):
+         value = super().get_prep_value(value)
+         return self.to_python(value)

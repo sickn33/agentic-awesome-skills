@@ -1,0 +1,4 @@
+interface:
+  display_name: "Use DOM"
+  short_description: "Use Expo DOM components to run web React code in native webviews and unchanged on web"
+  default_prompt: "Use $use-dom to migrate web components into Expo via 'use dom', configure DOM props, expose native actions safely, use web-only libraries, and keep DOM components separate from native routes."

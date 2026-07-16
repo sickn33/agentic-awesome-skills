@@ -1,0 +1,45 @@
+title: "[General] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use General for repo-wide feedback, meta discussion, introductions, or anything that does not fit Q&A, Ideas, or Show and tell.
+  - type: dropdown
+    id: topic-area
+    attributes:
+      label: Topic area
+      description: Choose the closest fit so maintainers can triage faster.
+      options:
+        - Repo feedback
+        - Documentation
+        - Bundles and workflows
+        - Web app
+        - Community and collaboration
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: discussion
+    attributes:
+      label: What would you like to discuss?
+      description: Share context, background, and what kind of feedback or conversation you want.
+      placeholder: Tell us what prompted this discussion and what outcome would be helpful.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Relevant links or examples
+      description: Link docs, issues, skills, PRs, screenshots, or outside references if they help.
+      placeholder: |
+        - Related skill:
+        - Related doc:
+        - Related PR or issue:
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: Before posting
+      options:
+        - label: I checked whether this would fit better in Q&A, Ideas, or Show and tell.
+          required: true

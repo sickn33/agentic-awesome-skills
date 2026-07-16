@@ -1,0 +1,76 @@
+I can see this patch file contains explanatory text before the actual patch content. The actual unified diff starts at line 15. Based on the issue requirements and the content I found, here is the complete patch:
+
+--- a/django/conf/global_settings.py
++++ b/django/conf/global_settings.py
+@@ -304,7 +304,7 @@ SECRET_KEY = ''
+ # The numeric mode to set newly-uploaded files to. The value should be a mode
+ # you'd pass directly to os.chmod; see https://docs.python.org/library/os.html#files-and-directories.
+-FILE_UPLOAD_PERMISSIONS = None
++FILE_UPLOAD_PERMISSIONS = 0o644
+ 
+ # The numeric mode to apply to directories created in the process of uploading files.
+ FILE_UPLOAD_DIRECTORY_PERMISSIONS = None
+--- a/docs/ref/settings.txt
++++ b/docs/ref/settings.txt
+@@ -1786,15 +1786,18 @@ See also :setting:`DATA_UPLOAD_MAX_MEMORY_SIZE`.
+ FILE_UPLOAD_PERMISSIONS
+ -----------------------
+ 
+-Default: ``None``
++Default: ``0o644``
+ 
+ The numeric mode (i.e. ``0o644``) to set newly uploaded files to. For
+ more information about what these modes mean, see the documentation for
+ :func:`os.chmod`.
+ 
+-If this isn't given or is ``None``, you'll get operating-system dependent
+-behavior. On most platforms, temporary files will have a mode of ``0o600``,
+-and files saved from memory will be saved using the system's standard umask.
++If ``None``, you'll get operating-system dependent behavior. On most
++platforms, temporary files will have a mode of ``0o600``, and files saved
++from memory will be saved using the system's standard umask.
++
++.. versionchanged:: 3.0
++    The default was changed from ``None`` to ``0o644``.
+ 
+ .. warning::
+ 
+--- a/docs/howto/deployment/checklist.txt
++++ b/docs/howto/deployment/checklist.txt
+@@ -99,11 +99,6 @@ that your source code is not accidentally exposed on the web server.
+ Alternatively, configure your web server to serve files with extensions other
+ than ``.css`` and ``.js`` as plain text.
+ 
+-:setting:`FILE_UPLOAD_PERMISSIONS`
+-    Consider setting this to prevent inconsistent permissions for uploaded
+-    files. For more information, see :ref:`topics-file-upload-permissions`.
+-
+ .. _https:
+ 
+ HTTPS
+--- a/docs/releases/3.0.txt
++++ b/docs/releases/3.0.txt
+@@ -1,6 +1,24 @@
+ ============================================
+ Django 3.0 release notes - UNDER DEVELOPMENT
+ ============================================
++
++Backwards incompatible changes in 3.0
++=====================================
++
++:setting:`FILE_UPLOAD_PERMISSIONS` default change
++-------------------------------------------------
++
++In older versions, the :setting:`FILE_UPLOAD_PERMISSIONS` setting defaults to
++``None``. With the default :setting:`FILE_UPLOAD_HANDLERS`, this results in
++uploaded files having different permissions depending on their size. If a file
++is smaller than :setting:`FILE_UPLOAD_MAX_MEMORY_SIZE`, it will be streamed
++from memory and be saved with the system's standard umask. If it is larger,
++it will be uploaded to a temporary file and then renamed, resulting in a mode
++of ``0o600``.
++
++To avoid this inconsistency, :setting:`FILE_UPLOAD_PERMISSIONS` now defaults
++to ``0o644``. If you need the previous behavior, explicitly set
++:setting:`FILE_UPLOAD_PERMISSIONS` to ``None``.
+ 
+ .. _whats-new-3.0:

@@ -1,0 +1,140 @@
+# django__django-11564
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the Django codebase and the issue description, I'll generate the patch. The fix involves modifying the `url()` methods in the storage classes to prepend the script prefix for relative URLs.
+
+```
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -8,6 +8,7 @@ from django.conf import settings
+ from django.core.exceptions import SuspiciousFileOperation
+ from django.core.files import File, locks
+ from django.core.signals import setting_changed
++from django.urls import get_script_prefix
+ from django.utils import timezone
+ from django.utils._os import safe_join
+ from django.utils.crypto import get_random_string
+@@ -116,7 +117,12 @@ class FileSystemStorage(Storage):
+             url = filepath_to_uri(name)
+         if url is not None:
+             url = url.lstrip('/')
+-        return urljoin(self.base_url, url)
++        url = urljoin(self.base_url, url)
++        # Add SCRIPT_NAME prefix to relative URLs
++        script_prefix = get_script_prefix()
++        if url.startswith('/') and not url.startswith(script_prefix):
++            url = script_prefix.rstrip('/') + url
++        return url
+ 
+     def _datetime_from_timestamp(self, ts):
+         """
+--- a/django/contrib/staticfiles/storage.py
++++ b/django/contrib/staticfiles/storage.py
+@@ -13,6 +13,7 @@ from django.contrib.staticfiles.utils import check_settings, matches_patterns
+ from django.core.cache import caches
+ from django.core.exceptions import ImproperlyConfigured
+ from django.core.files.storage import FileSystemStorage
++from django.urls import get_script_prefix
+ from django.utils.crypto import md5
+ from django.utils.functional import cached_property, lazy
+ 
+@@ -40,6 +41,14 @@ class StaticFilesStorage(FileSystemStorage):
+         super().__init__(location, base_url, *args, **kwargs)
+         # FileSystemStorage fallbacks to MEDIA_ROOT when location
+         # is empty, so we restore the empty value.
++
++    def url(self, name):
++        url = super().url(name)
++        # Add SCRIPT_NAME prefix to relative URLs
++        script_prefix = get_script_prefix()
++        if url.startswith('/') and not url.startswith(script_prefix):
++            url = script_prefix.rstrip('/') + url
++        return url
+         if not location:
+             self.base_location = None
+             self.location = None
+--- a/django/templatetags/static.py
++++ b/django/templatetags/static.py
+@@ -1,6 +1,7 @@
+ from django import template
+ from django.apps import apps
+ from django.utils.encoding import iri_to_uri
++from django.urls import get_script_prefix
+ 
+ register = template.Library()
+ 
+@@ -66,6 +67,7 @@ class StaticNode(template.Node):
+ 
+     def url(self, context):
+         path = self.path.resolve(context)
++        url = self.handle_simple(path)
+         return self.handle_simple(path)
+ 
+     def render(self, context):
+```
+
+Wait, I need to reconsider this patch. Let me provide a cleaner implementation:
+
+```
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -8,6 +8,7 @@ from django.conf import settings
+ from django.core.exceptions import SuspiciousFileOperation
+ from django.core.files import File, locks
+ from django.core.signals import setting_changed
++from django.urls import get_script_prefix
+ from django.utils import timezone
+ from django.utils._os import safe_join
+ from django.utils.crypto import get_random_string
+@@ -116,7 +117,14 @@ class FileSystemStorage(Storage):
+             url = filepath_to_uri(name)
+         if url is not None:
+             url = url.lstrip('/')
+-        return urljoin(self.base_url, url)
++        url = urljoin(self.base_url, url)
++        # Add SCRIPT_NAME prefix to relative URLs (those starting with /)
++        # but not absolute URLs (those with a scheme like http://)
++        if url.startswith('/') and not url.startswith('//'):
++            script_prefix = get_script_prefix()
++            if script_prefix != '/' and not url.startswith(script_prefix):
++                url = script_prefix.rstrip('/') + url
++        return url
+ 
+     def _datetime_from_timestamp(self, ts):
+         """
+--- a/django/contrib/staticfiles/storage.py
++++ b/django/contrib/staticfiles/storage.py
+@@ -13,6 +13,7 @@ from django.contrib.staticfiles.utils import check_settings, matches_patterns
+ from django.core.cache import caches
+ from django.core.exceptions import ImproperlyConfigured
+ from django.core.files.storage import FileSystemStorage
++from django.urls import get_script_prefix
+ from django.utils.crypto import md5
+ from django.utils.functional import cached_property, lazy
+ 
+--- a/django/templatetags/static.py
++++ b/django/templatetags/static.py
+@@ -1,6 +1,7 @@
+ from django import template
+ from django.apps import apps
+ from django.utils.encoding import iri_to_uri
++from django.urls import get_script_prefix
+ 
+ register = template.Library()
+ 
+@@ -68,7 +69,13 @@ class StaticNode(template.Node):
+     def url(self, context):
+         path = self.path.resolve(context)
+-        return self.handle_simple(path)
++        url = self.handle_simple(path)
++        # Add SCRIPT_NAME prefix to relative URLs
++        if url.startswith('/') and not url.startswith('//'):
++            script_prefix = get_script_prefix()
++            if script_prefix != '/' and not url.startswith(script_prefix):
++                url = script_prefix.rstrip('/') + url
++        return url
+ 
+     def render(self, context):
+         url = self.url(context)
+```

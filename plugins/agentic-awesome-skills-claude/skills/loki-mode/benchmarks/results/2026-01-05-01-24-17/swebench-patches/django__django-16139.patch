@@ -1,0 +1,19 @@
+This appears to be a task asking me to generate a patch for Django's codebase based on the issue description. The issue is in the `UserChangeForm` class where the password reset link is constructed using a relative path `../password/` which breaks when the admin is accessed via a `to_field` parameter.
+
+Based on the issue description, the fix is straightforward:
+- Current code: `password.help_text = password.help_text.format("../password/")`
+- Fixed code: `password.help_text = password.help_text.format(f"../../{self.instance.pk}/password/")`
+
+The file in question is `django/contrib/auth/forms.py` based on standard Django structure.
+
+--- a/django/contrib/auth/forms.py
++++ b/django/contrib/auth/forms.py
+@@ -163,7 +163,7 @@ class UserChangeForm(forms.ModelForm):
+         super().__init__(*args, **kwargs)
+         password = self.fields.get("password")
+         if password:
+-            password.help_text = password.help_text.format("../password/")
++            password.help_text = password.help_text.format(f"../../{self.instance.pk}/password/")
+         user_permissions = self.fields.get("user_permissions")
+         if user_permissions:
+             user_permissions.queryset = user_permissions.queryset.select_related(

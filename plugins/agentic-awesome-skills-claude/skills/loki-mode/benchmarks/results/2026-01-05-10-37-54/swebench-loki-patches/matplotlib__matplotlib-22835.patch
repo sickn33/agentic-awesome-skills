@@ -1,0 +1,27 @@
+# matplotlib__matplotlib-22835
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the issue description, I can generate the patch. The issue is clear: `format_cursor_data` calls `self.norm.inverse()` which raises `ValueError` for `BoundaryNorm`. The fix is to wrap this in a try-except block.
+
+```
+--- a/lib/matplotlib/artist.py
++++ b/lib/matplotlib/artist.py
+@@ -1279,9 +1279,14 @@ class Artist:
+                 # Midpoints of neighboring color intervals.
+                 _, g_sig_digits = cbook._g_sig_digits_of_float(
+                     xd - self.norm.vmin, self.norm.vmax - self.norm.vmin)
+-                neighbors = self.norm.inverse(
+-                    (int(self.norm(data) * n) + np.array([0, 1])) / n)
+-                g_sig_digits = max(g_sig_digits, cbook._g_sig_digits(*neighbors))
++                try:
++                    neighbors = self.norm.inverse(
++                        (int(self.norm(data) * n) + np.array([0, 1])) / n)
++                    g_sig_digits = max(g_sig_digits, cbook._g_sig_digits(*neighbors))
++                except ValueError:
++                    # Norm.inverse is not always defined, e.g., for BoundaryNorm.
++                    # In that case, we fall back to the default of 3 digits.
++                    pass
+                 return "[{:-#.{}g}]".format(data, g_sig_digits)
+         return "[{}]".format(cursor_data)
+```

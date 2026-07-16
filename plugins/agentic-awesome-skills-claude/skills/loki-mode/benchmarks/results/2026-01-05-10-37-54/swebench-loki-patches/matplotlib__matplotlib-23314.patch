@@ -1,0 +1,15 @@
+# matplotlib__matplotlib-23314
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/lib/mpl_toolkits/mplot3d/axes3d.py
++++ b/lib/mpl_toolkits/mplot3d/axes3d.py
+@@ -41,6 +41,8 @@ class Axes3D(Axes):
+     """
+ 
+     def draw(self, renderer):
++        if not self.get_visible():
++            return
+         self._unstale_viewLim()
+ 
+         # draw the background patch

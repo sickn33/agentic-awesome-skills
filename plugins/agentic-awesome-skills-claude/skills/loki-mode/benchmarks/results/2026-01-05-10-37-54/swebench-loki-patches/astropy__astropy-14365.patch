@@ -1,0 +1,44 @@
+# astropy__astropy-14365
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I need to generate a patch that makes the QDP command parsing case-insensitive. The issue is that regex patterns matching commands like `READ SERR`, `READ TERR`, `SKIP`, `NO NO NO` are case-sensitive but QDP itself is case-insensitive.
+
+```
+--- a/astropy/io/ascii/qdp.py
++++ b/astropy/io/ascii/qdp.py
+@@ -68,7 +68,7 @@ def _line_type(line, delimiter=None):
+     _decimal_re = r"[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?"
+     _command_re = r"READ [TS]ERR(\s+[0-9]+)+"
+ 
+-    sep = delimiter
++    sep = delimiter
+     if delimiter is None:
+         sep = r"\s+"
+     _new_re = rf"NO({sep}NO)+"
+@@ -76,10 +76,10 @@ def _line_type(line, delimiter=None):
+     _data_re = rf"({_decimal_re}|NO|[-+]?nan)({sep}({_decimal_re}|NO|[-+]?nan))*)"
+     _type_re = rf"^\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\s*(\!(?P<comment>.*))?\s*$"
+ 
+-    _line_type_re = re.compile(_type_re)
++    _line_type_re = re.compile(_type_re, re.IGNORECASE)
+     line = line.strip()
+     if not line:
+         return ("comment", "")
+-    match = _line_type_re.match(line)
++    match = _line_type_re.match(line)
+ 
+     if match is None:
+```
+
+Let me provide a cleaner patch based on the standard pattern for this type of fix:
+
+```
+--- a/astropy/io/ascii/qdp.py
++++ b/astropy/io/ascii/qdp.py
+@@ -63,7 +63,7 @@ def _line_type(line, delimiter=None):
+     _type_re = rf"^\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\s*(\!(?P<comment>.*))?\s*$"
+-    _line_type_re = re.compile(_type_re)
++    _line_type_re = re.compile(_type_re, re.IGNORECASE)
+     line = line.strip()
+```

@@ -1,0 +1,42 @@
+# sympy__sympy-23191
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the SymPy codebase and the bug described, I can generate the patch. The issue is in the `_print_BasisDependent` method in `sympy/printing/pretty/pretty.py`. When printing vector expressions with multiline scalar coefficients, the unit vectors are being placed at the baseline instead of being vertically centered.
+
+```
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -2365,7 +2365,10 @@ def _print_BasisDependent(self, expr):
+                 pform = self._print(v)
+             else:
+                 pform = self._print(v)
+-                pform = prettyForm(*pform.right(' ', self._print(k)))
++                k_pform = self._print(k)
++                # Center the unit vector vertically with the scalar coefficient
++                k_pform = prettyForm(*k_pform.parens(left='', right=''))
++                pform = prettyForm(*pform.right(' ', k_pform))
+             pforms.append(pform)
+ 
+         pform = prettyForm.__add__(*pforms)
+```
+
+Wait, let me reconsider. The actual fix needs to properly handle the vertical alignment. Looking at the issue more carefully, the problem is that when we have a multiline scalar expression multiplied by a unit vector, the unit vector gets placed at the wrong vertical position. The fix should adjust the baseline of the unit vector to match the center of the scalar expression.
+
+```
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -2365,7 +2365,11 @@ def _print_BasisDependent(self, expr):
+                 pform = self._print(v)
+             else:
+                 pform = self._print(v)
+-                pform = prettyForm(*pform.right(' ', self._print(k)))
++                k_pform = self._print(k)
++                # Adjust baseline to vertically center unit vector with scalar
++                height = pform.height()
++                k_pform.baseline = pform.baseline
++                pform = prettyForm(*pform.right(' ', k_pform))
+             pforms.append(pform)
+ 
+         pform = prettyForm.__add__(*pforms)
+```

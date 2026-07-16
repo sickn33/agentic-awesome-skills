@@ -1,0 +1,28 @@
+# astropy__astropy-7746
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I have enough context to generate the patch. The issue is in the `_array_converter` method in `astropy/wcs/wcs.py`. The fix needs to detect empty input arrays early and return empty arrays of the appropriate shape without calling the underlying WCSLIB function.
+
+Looking at the traceback from the issue:
+- Line 1223-1225: The `_return_list_of_arrays` function calls `func(xy, origin)` which fails for empty arrays
+- Line 1267-1269: Returns from `_return_list_of_arrays(axes, origin)`
+
+The fix should add a check for empty arrays in the `_return_list_of_arrays` inner function before calling `func`.
+
+--- a/astropy/wcs/wcs.py
++++ b/astropy/wcs/wcs.py
+@@ -1220,6 +1220,13 @@ class WCS(WCSBase):
+         def _return_list_of_arrays(axes, origin):
+             try:
+                 axes = np.broadcast_arrays(*axes)
++            except ValueError:
++                pass
++            
++            # Handle empty input arrays - return empty arrays without calling WCSLIB
++            if len(axes) > 0 and len(axes[0]) == 0:
++                return [np.array([], dtype=np.float64) for _ in axes]
++            try:
+                 xy = np.asarray(np.vstack(axes).T)
+             except ValueError:
+                 raise ValueError(

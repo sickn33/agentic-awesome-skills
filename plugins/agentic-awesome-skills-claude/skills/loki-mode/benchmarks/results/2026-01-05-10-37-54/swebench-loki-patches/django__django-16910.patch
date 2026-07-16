@@ -1,0 +1,39 @@
+# django__django-16910
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of Django internals, I can generate the patch for this issue. The problem is in how `_get_defer_select_mask()` handles reverse OneToOne relations in `django/db/models/sql/query.py`.
+
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -763,7 +763,7 @@ class Query(BaseExpression):
+                     field_mask, defer = self._get_defer_select_mask(
+                         opts, mask[field.name], select_mask.get(field) or {}
+                     )
+-                    if field_mask:
++                    if field_mask is not None:
+                         select_mask.setdefault(field, {}).update(field_mask)
+                 else:
+                     # Reverse one-to-one relations are not walked since they
+@@ -771,11 +771,17 @@ class Query(BaseExpression):
+                     # related instance. However, deferring an existing reverse
+                     # relation is not supported.
+                     try:
+-                        field_name = opts.model._meta.get_field(
+-                            field.name
+-                        ).remote_field.get_cache_name()
+-                        if field_name not in mask:
+-                            continue
++                        related_model = field.related_model
++                        related_field_name = field.remote_field.get_cache_name()
++                        if related_field_name in mask:
++                            # Reverse OneToOne with specific fields requested
++                            field_mask, defer = self._get_defer_select_mask(
++                                related_model._meta, mask[related_field_name], select_mask.get(field) or {}
++                            )
++                            if field_mask is not None:
++                                select_mask.setdefault(field, {}).update(field_mask)
++                            continue
+                     except FieldDoesNotExist:
+                         pass
+                     select_mask.setdefault(field, {}).update(

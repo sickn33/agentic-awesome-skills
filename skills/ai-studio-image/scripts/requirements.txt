@@ -1,0 +1,4 @@
+# Requer Python 3.10+
+google-genai>=1.0.0
+Pillow>=10.0.0
+python-dotenv>=1.0.0

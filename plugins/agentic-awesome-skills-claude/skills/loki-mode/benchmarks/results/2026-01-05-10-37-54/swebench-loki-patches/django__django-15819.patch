@@ -1,0 +1,101 @@
+# django__django-15819
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Django's inspectdb command and the issue description, I can generate the patch. The inspectdb.py file generates Django models from existing database tables. The fix needs to track which related models have been used for ForeignKey/OneToOneField fields within each model and add `related_name` when there are duplicates.
+
+Here's the patch:
+
+```
+--- a/django/core/management/commands/inspectdb.py
++++ b/django/core/management/commands/inspectdb.py
+@@ -58,6 +58,8 @@ class Command(BaseCommand):
+             yield ''
+             yield ''
+             yield 'class %s(models.Model):' % table2model(table_name)
++            # Track used relations to detect duplicates needing related_name
++            used_relations = {}
+             known_models.append(table2model(table_name))
+             used_column_names = []  # Holds column names used in the table so far
+             column_to_field_name = {}  # Maps column names to names of model fields
+@@ -119,9 +121,18 @@ class Command(BaseCommand):
+                     if rel_to in known_models:
+                         field_type = '%s(%s' % (rel_type, rel_to)
+                     else:
+-                        field_type = "%s('%s'" % (rel_type, rel_to)
++                        field_type = '%s(%r' % (rel_type, rel_to)
++
++                    # Track relations to same model and add related_name if needed
++                    if rel_to in used_relations:
++                        extra_params['related_name'] = '%s_%s_set' % (
++                            table_name.lower(), att_name
++                        )
++                        # Also add related_name to the first occurrence if not done
++                        if used_relations[rel_to] is not None:
++                            first_field, first_line_idx = used_relations[rel_to]
++                            used_relations[rel_to] = None  # Mark as handled
++                    else:
++                        used_relations[rel_to] = (att_name, len(used_column_names))
+                 else:
+                     # Calling `get_field_type` to get the field type string and any
+                     # additional parameters and notes.
+```
+
+Wait, I need to reconsider this approach. The issue is that inspectdb generates field definitions line by line, so we can't easily go back and modify a previous field. Let me create a simpler, more practical patch:
+
+```
+--- a/django/core/management/commands/inspectdb.py
++++ b/django/core/management/commands/inspectdb.py
+@@ -58,6 +58,8 @@ class Command(BaseCommand):
+             yield ''
+             yield ''
+             yield 'class %s(models.Model):' % table2model(table_name)
++            # Track used relations to detect duplicates needing related_name
++            used_relations = {}
+             known_models.append(table2model(table_name))
+             used_column_names = []  # Holds column names used in the table so far
+             column_to_field_name = {}  # Maps column names to names of model fields
+@@ -121,6 +123,15 @@ class Command(BaseCommand):
+                         field_type = '%s(%s' % (rel_type, rel_to)
+                     else:
+                         field_type = "%s('%s'" % (rel_type, rel_to)
++
++                    # Add related_name to avoid clashes when multiple FKs
++                    # reference the same model
++                    if rel_to in used_relations:
++                        extra_params['related_name'] = '%s' % att_name
++                    else:
++                        used_relations[rel_to] = att_name
++                    if used_relations.get(rel_to) and used_relations[rel_to] != att_name:
++                        extra_params['related_name'] = '%s' % att_name
+                 else:
+                     # Calling `get_field_type` to get the field type string and any
+                     # additional parameters and notes.
+```
+
+Actually, a cleaner approach is to always add related_name when there are multiple FK fields to the same model. Let me provide the correct patch:
+
+--- a/django/core/management/commands/inspectdb.py
++++ b/django/core/management/commands/inspectdb.py
+@@ -58,6 +58,8 @@ class Command(BaseCommand):
+             yield ''
+             yield ''
+             yield 'class %s(models.Model):' % table2model(table_name)
++            # Track relations to detect when multiple FKs reference same model
++            used_relations = {}
+             known_models.append(table2model(table_name))
+             used_column_names = []  # Holds column names used in the table so far
+             column_to_field_name = {}  # Maps column names to names of model fields
+@@ -121,6 +123,12 @@ class Command(BaseCommand):
+                         field_type = '%s(%s' % (rel_type, rel_to)
+                     else:
+                         field_type = "%s('%s'" % (rel_type, rel_to)
++
++                    # Add related_name to avoid reverse accessor clashes when
++                    # multiple ForeignKey fields reference the same model
++                    if rel_to in used_relations:
++                        extra_params['related_name'] = att_name
++                    used_relations[rel_to] = att_name
+                 else:
+                     # Calling `get_field_type` to get the field type string and any
+                     # additional parameters and notes.

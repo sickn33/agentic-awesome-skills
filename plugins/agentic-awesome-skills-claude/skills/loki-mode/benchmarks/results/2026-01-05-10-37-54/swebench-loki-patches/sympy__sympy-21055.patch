@@ -1,0 +1,47 @@
+# sympy__sympy-21055
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/assumptions/refine.py
++++ b/sympy/assumptions/refine.py
+@@ -300,6 +300,35 @@ def refine_matrixelement(expr, assumptions):
+     return expr
+ 
+ 
++def refine_arg(expr, assumptions):
++    """
++    Handler for the arg function.
++
++    Examples
++    ========
++
++    >>> from sympy import Q, arg, refine
++    >>> from sympy.abc import a
++    >>> refine(arg(a), Q.positive(a))
++    0
++    >>> refine(arg(a), Q.negative(a))
++    pi
++    """
++    from sympy.functions.elementary.complexes import arg
++    from sympy.core import S
++    arg_val = expr.args[0]
++    if ask(Q.positive(arg_val), assumptions):
++        return S.Zero
++    if ask(Q.negative(arg_val), assumptions):
++        return S.Pi
++    if ask(Q.zero(arg_val), assumptions):
++        return S.NaN
++    return expr
++
++
+ handlers_dict = {
+     'Abs': refine_abs,
+     'Pow': refine_Pow,
+@@ -308,5 +337,6 @@ handlers_dict = {
+     'StrictGreaterThan': refine_Relational,
+     'StrictLessThan': refine_Relational,
+     'im': refine_im,
+-    'MatrixElement': refine_matrixelement
++    'MatrixElement': refine_matrixelement,
++    'arg': refine_arg
+ }

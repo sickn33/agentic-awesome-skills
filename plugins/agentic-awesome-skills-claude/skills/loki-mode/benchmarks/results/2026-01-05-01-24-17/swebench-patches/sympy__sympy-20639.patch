@@ -1,0 +1,66 @@
+Based on my analysis of the issue and the hints provided, I can construct the patch. The problem is:
+
+1. When `pi**(1/E)` is rendered, the code tries to display it as a radical
+2. `1/E` is `exp(-1)` which has args `(-1,)` - totally different from `1/pi` which has args `(pi, -1)`
+3. The code at line 1814 uses `str()` to convert the root index, which doesn't properly handle symbolic expressions
+4. The fix should check if the exponent is truly a simple Rational number before using radical notation
+
+Based on the hints, the issue is that:
+1. The code checks if something can be rendered as a radical by looking at the exponent
+2. For `1/E`, it incorrectly extracts `-1` as the root index
+3. Additionally, using `str()` for the root index doesn't pretty-print symbols properly
+
+The fix should:
+1. Only use radical notation when the exponent is a Rational number (like `1/2`, `1/3`, etc.)
+2. For symbolic exponents like `1/E`, fall back to regular power notation
+
+Here's the patch based on my analysis of the sympy codebase structure and the issue description:
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -1809,7 +1809,7 @@ class PrettyPrinter(Printer):
+             return prettyForm(**sexp)
+ 
+     def _print_Pow(self, power):
+-        from sympy.simplify.simplify import fraction
++        from sympy.simplify.simplify import fraction
+         b, e = power.as_base_exp()
+         if power.is_commutative:
+             if e is S.NegativeOne:
+@@ -1818,10 +1818,12 @@ class PrettyPrinter(Printer):
+                 n, d = fraction(e)
+                 if n is S.One and d.is_Atom and not e.is_Integer:
+                     return self._print_nth_root(b, e)
+-                if e.is_Rational and e < 0:
+-                    return prettyForm("1")/self._print(Pow(b, -e, evaluate=False))
++                if n is S.NegativeOne and d.is_Atom and not e.is_Integer:
++                    return prettyForm("1")/self._print_nth_root(b, -e)
++                if e.is_Rational and e < 0:
++                    return prettyForm("1")/self._print(Pow(b, -e, evaluate=False))
+ 
+-        if b.is_Relational:
++        if b.is_Relational:
+             return prettyForm(*self._print(b).parens()).__pow__(self._print(e))
+ 
+         return self._print(b)**self._print(e)
+
+Wait, I need to look more carefully at the actual code structure. Let me look at what `_print_nth_root` does and understand the exact issue. Based on the hints:
+
+1. `1/E` is `exp(-1)` which has args `(-1,)`
+2. `1/pi` has args `(pi, -1)` 
+
+The issue is that the code tries to use the denominator of the fraction as the root index, but for `1/E`, when `fraction(1/E)` is called, it doesn't return `(1, E)` as expected for radical notation. Instead, `exp(-1)` is not a proper fraction in the `p/q` sense.
+
+The fix should ensure that the denominator `d` returned by `fraction(e)` is actually suitable for use as a radical index - specifically, it should be an integer or a simple symbolic atom that makes sense as a root, not a complex expression like `exp(-1)`.
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -1815,7 +1815,7 @@ class PrettyPrinter(Printer):
+             if e is S.NegativeOne:
+                 return prettyForm("1")/self._print(b)
+             n, d = fraction(e)
+-            if n is S.One and d.is_Atom and not e.is_Integer:
++            if n is S.One and d.is_Atom and not e.is_Integer and e.is_Rational:
+                 return self._print_nth_root(b, e)
+             if e.is_Rational and e < 0:
+                 return prettyForm("1")/self._print(Pow(b, -e, evaluate=False))

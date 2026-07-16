@@ -1,0 +1,15 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+This file clarifies the license for original non-code repository content.
+
+- Original code and tooling remain licensed under the MIT License in `LICENSE`.
+- Original documentation and other non-code written content are licensed under
+  the Creative Commons Attribution 4.0 International license unless a more
+  specific upstream notice says otherwise.
+- Third-party attributions, upstream licenses, and exceptions are tracked in
+  `docs/sources/sources.md`.
+
+Canonical license URL:
+https://creativecommons.org/licenses/by/4.0/
+
+Review the full license text at the canonical URL before reuse.

@@ -1,0 +1,50 @@
+# sphinx-doc__sphinx-7686
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I need to generate a patch for sphinx/ext/autosummary/generate.py. The issue is that the `members` variable in module templates includes imported members even when `autosummary_imported_members=False`. I'll create the patch based on the standard Sphinx codebase structure and the described bug.
+
+```
+--- a/sphinx/ext/autosummary/generate.py
++++ b/sphinx/ext/autosummary/generate.py
+@@ -243,6 +243,15 @@ def generate_autosummary_content(name: str, obj: Any, parent: Any,
+     ns: Dict[str, Any] = {}
+     ns['members'] = dir(obj)
+     ns['functions'], ns['all_functions'] = \
++    
++    if not imported_members:
++        # Filter out imported members from the members list
++        ns['members'] = [m for m in ns['members']
++                         if get_module_for_member(obj, m, name) == name]
++    else:
++        ns['members'] = dir(obj)
++
++    ns['functions'], ns['all_functions'] = \
+         _get_members(doc, app, obj, {'function'}, imported=imported_members)
+     ns['classes'], ns['all_classes'] = \
+         _get_members(doc, app, obj, {'class'}, imported=imported_members)
+```
+
+Let me reconsider the patch based on looking at typical Sphinx autosummary code structure. The fix needs to filter the `members` list similar to how other member categories are filtered.
+
+--- a/sphinx/ext/autosummary/generate.py
++++ b/sphinx/ext/autosummary/generate.py
+@@ -243,7 +243,16 @@ def generate_autosummary_content(name: str, obj: Any, parent: Any,
+                                  ) -> str:
+     doc = get_documenter(app, obj, parent)
+ 
+     ns: Dict[str, Any] = {}
+-    ns['members'] = dir(obj)
++    
++    def is_skipped_member(member_name: str) -> bool:
++        """Check if member should be skipped (i.e., it's imported)."""
++        try:
++            member = safe_getattr(obj, member_name)
++            return getattr(member, '__module__', None) != name
++        except AttributeError:
++            return False
++
++    ns['members'] = [m for m in dir(obj) if imported_members or not is_skipped_member(m)]
+     ns['functions'], ns['all_functions'] = \
+         _get_members(doc, app, obj, {'function'}, imported=imported_members)
+     ns['classes'], ns['all_classes'] = \

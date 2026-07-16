@@ -1,0 +1,186 @@
+{
+  "description": "Exemplo de menu interativo completo com botões e submenu em lista",
+  "main_menu_buttons": {
+    "description": "Menu principal com 3 botões (máximo permitido)",
+    "payload": {
+      "messaging_product": "whatsapp",
+      "to": "5511999999999",
+      "type": "interactive",
+      "interactive": {
+        "type": "button",
+        "header": {
+          "type": "text",
+          "text": "Bem-vindo à Empresa Example! 👋"
+        },
+        "body": {
+          "text": "Olá! Sou o assistente virtual da Empresa Example. Como posso ajudar você hoje?"
+        },
+        "footer": {
+          "text": "Atendimento Seg-Sex 8h-18h"
+        },
+        "action": {
+          "buttons": [
+            {
+              "type": "reply",
+              "reply": {
+                "id": "menu_suporte",
+                "title": "Suporte"
+              }
+            },
+            {
+              "type": "reply",
+              "reply": {
+                "id": "menu_vendas",
+                "title": "Vendas"
+              }
+            },
+            {
+              "type": "reply",
+              "reply": {
+                "id": "menu_info",
+                "title": "Informações"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "submenu_suporte_list": {
+    "description": "Submenu de suporte com lista de opções detalhadas",
+    "payload": {
+      "messaging_product": "whatsapp",
+      "to": "5511999999999",
+      "type": "interactive",
+      "interactive": {
+        "type": "list",
+        "header": {
+          "type": "text",
+          "text": "Suporte Técnico"
+        },
+        "body": {
+          "text": "Selecione o tipo de suporte que precisa:"
+        },
+        "footer": {
+          "text": "Tempo médio de resposta: 5 min"
+        },
+        "action": {
+          "button": "Ver opções",
+          "sections": [
+            {
+              "title": "Problemas com Produto",
+              "rows": [
+                {
+                  "id": "suporte_defeito",
+                  "title": "Produto com Defeito",
+                  "description": "Reportar defeito ou mau funcionamento"
+                },
+                {
+                  "id": "suporte_troca",
+                  "title": "Troca ou Devolução",
+                  "description": "Solicitar troca ou devolução"
+                },
+                {
+                  "id": "suporte_garantia",
+                  "title": "Garantia",
+                  "description": "Informações sobre garantia"
+                }
+              ]
+            },
+            {
+              "title": "Problemas com Pedido",
+              "rows": [
+                {
+                  "id": "suporte_entrega",
+                  "title": "Entrega Atrasada",
+                  "description": "Pedido não chegou no prazo"
+                },
+                {
+                  "id": "suporte_rastreio",
+                  "title": "Rastrear Pedido",
+                  "description": "Verificar status do envio"
+                },
+                {
+                  "id": "suporte_cancelar",
+                  "title": "Cancelar Pedido",
+                  "description": "Solicitar cancelamento"
+                }
+              ]
+            },
+            {
+              "title": "Outros",
+              "rows": [
+                {
+                  "id": "suporte_humano",
+                  "title": "Falar com Atendente",
+                  "description": "Transferir para atendimento humano"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "submenu_vendas_list": {
+    "description": "Submenu de vendas com categorias de produtos",
+    "payload": {
+      "messaging_product": "whatsapp",
+      "to": "5511999999999",
+      "type": "interactive",
+      "interactive": {
+        "type": "list",
+        "header": {
+          "type": "text",
+          "text": "Nossos Produtos"
+        },
+        "body": {
+          "text": "Confira nossas categorias de produtos e encontre o que precisa:"
+        },
+        "footer": {
+          "text": "Frete grátis acima de R$ 200"
+        },
+        "action": {
+          "button": "Ver catálogo",
+          "sections": [
+            {
+              "title": "Eletrônicos",
+              "rows": [
+                {
+                  "id": "cat_smartphones",
+                  "title": "Smartphones",
+                  "description": "A partir de R$ 899"
+                },
+                {
+                  "id": "cat_notebooks",
+                  "title": "Notebooks",
+                  "description": "A partir de R$ 2.499"
+                },
+                {
+                  "id": "cat_acessorios",
+                  "title": "Acessórios",
+                  "description": "Capas, cabos, fones e mais"
+                }
+              ]
+            },
+            {
+              "title": "Promoções",
+              "rows": [
+                {
+                  "id": "cat_ofertas",
+                  "title": "Ofertas da Semana",
+                  "description": "Até 50% de desconto"
+                },
+                {
+                  "id": "cat_lancamentos",
+                  "title": "Lançamentos",
+                  "description": "Novidades acabaram de chegar"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

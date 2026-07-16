@@ -1,0 +1,273 @@
+{
+  "generatedAt": "2026-02-10T00:00:00.000Z",
+  "version": 1,
+  "workflows": [
+    {
+      "id": "ship-saas-mvp",
+      "name": "Ship a SaaS MVP",
+      "description": "End-to-end workflow to scope, build, test, and ship a SaaS MVP quickly.",
+      "category": "web",
+      "relatedBundles": [
+        "core-dev",
+        "ops-core"
+      ],
+      "steps": [
+        {
+          "title": "Plan the scope",
+          "goal": "Convert the idea into a clear implementation plan and milestones.",
+          "recommendedSkills": [
+            "brainstorming",
+            "concise-planning",
+            "writing-plans"
+          ],
+          "notes": "Define problem, user persona, MVP boundaries, and acceptance criteria before coding."
+        },
+        {
+          "title": "Build backend and API",
+          "goal": "Implement the core data model, API contracts, and auth baseline.",
+          "recommendedSkills": [
+            "backend-dev-guidelines",
+            "api-patterns",
+            "database-design",
+            "auth-implementation-patterns"
+          ],
+          "notes": "Prefer small vertical slices; keep API contracts explicit and testable."
+        },
+        {
+          "title": "Build frontend",
+          "goal": "Deliver the primary user flows with production-grade UX patterns.",
+          "recommendedSkills": [
+            "frontend-developer",
+            "react-patterns",
+            "frontend-design"
+          ],
+          "notes": "Prioritize onboarding, empty states, and one complete happy-path flow."
+        },
+        {
+          "title": "Test and validate",
+          "goal": "Catch regressions and ensure key flows work before release.",
+          "recommendedSkills": [
+            "test-driven-development",
+            "systematic-debugging",
+            "browser-automation",
+            "go-playwright"
+          ],
+          "notes": "Use go-playwright when the product stack or QA tooling is Go-based."
+        },
+        {
+          "title": "Ship safely",
+          "goal": "Release with basic observability and rollback readiness.",
+          "recommendedSkills": [
+            "deployment-procedures",
+            "observability-engineer",
+            "postmortem-writing"
+          ],
+          "notes": "Define release checklist, minimum telemetry, and rollback triggers."
+        }
+      ]
+    },
+    {
+      "id": "security-audit-web-app",
+      "name": "Security Audit for a Web App",
+      "description": "Structured workflow for baseline AppSec review and risk triage.",
+      "category": "security",
+      "relatedBundles": [
+        "security-core",
+        "ops-core"
+      ],
+      "steps": [
+        {
+          "title": "Define scope and threat model",
+          "goal": "Identify critical assets, trust boundaries, and threat scenarios.",
+          "recommendedSkills": [
+            "ethical-hacking-methodology",
+            "threat-modeling-expert",
+            "attack-tree-construction"
+          ],
+          "notes": "Document in-scope targets, assumptions, and out-of-scope constraints."
+        },
+        {
+          "title": "Review authentication and authorization",
+          "goal": "Find broken auth patterns and access-control weaknesses.",
+          "recommendedSkills": [
+            "broken-authentication",
+            "auth-implementation-patterns",
+            "idor-testing"
+          ],
+          "notes": "Prioritize account takeover and privilege escalation paths."
+        },
+        {
+          "title": "Assess API and input security",
+          "goal": "Detect high-impact API and injection risks.",
+          "recommendedSkills": [
+            "api-security-best-practices",
+            "api-fuzzing-bug-bounty",
+            "top-web-vulnerabilities"
+          ],
+          "notes": "Map findings to severity and exploitability, not only CVSS."
+        },
+        {
+          "title": "Harden and verify",
+          "goal": "Translate findings into concrete remediations and retest.",
+          "recommendedSkills": [
+            "security-auditor",
+            "sast-configuration",
+            "verification-before-completion"
+          ],
+          "notes": "Track remediation owners and target dates; verify each fix with evidence."
+        }
+      ]
+    },
+    {
+      "id": "build-ai-agent-system",
+      "name": "Build an AI Agent System",
+      "description": "Workflow to design, implement, and evaluate a production-ready AI agent.",
+      "category": "ai-agents",
+      "relatedBundles": [
+        "core-dev",
+        "data-core"
+      ],
+      "steps": [
+        {
+          "title": "Define use case and reliability targets",
+          "goal": "Choose a narrow use case and measurable quality goals.",
+          "recommendedSkills": [
+            "ai-agents-architect",
+            "agent-evaluation",
+            "product-manager-toolkit"
+          ],
+          "notes": "Set latency, quality, and failure-rate thresholds before implementation."
+        },
+        {
+          "title": "Design architecture and retrieval",
+          "goal": "Design tools, memory, and retrieval strategy for the agent.",
+          "recommendedSkills": [
+            "llm-app-patterns",
+            "rag-implementation",
+            "vector-database-engineer",
+            "embedding-strategies"
+          ],
+          "notes": "Keep retrieval quality measurable and version prompt/tool contracts."
+        },
+        {
+          "title": "Implement orchestration",
+          "goal": "Implement the orchestration loop and production safeguards.",
+          "recommendedSkills": [
+            "langgraph",
+            "mcp-builder",
+            "workflow-automation"
+          ],
+          "notes": "Start with constrained tool permissions and explicit fallback behavior."
+        },
+        {
+          "title": "Evaluate and iterate",
+          "goal": "Run benchmark scenarios and improve weak areas systematically.",
+          "recommendedSkills": [
+            "agent-evaluation",
+            "langfuse",
+            "kaizen"
+          ],
+          "notes": "Use test datasets and failure buckets to guide each iteration cycle."
+        }
+      ]
+    },
+    {
+      "id": "qa-browser-automation",
+      "name": "QA and Browser Automation",
+      "description": "Workflow for robust E2E and browser-driven validation across stacks.",
+      "category": "testing",
+      "relatedBundles": [
+        "core-dev",
+        "ops-core"
+      ],
+      "steps": [
+        {
+          "title": "Prepare test strategy",
+          "goal": "Define critical user journeys, environments, and test data.",
+          "recommendedSkills": [
+            "e2e-testing-patterns",
+            "test-driven-development",
+            "code-review-checklist"
+          ],
+          "notes": "Focus on business-critical flows and keep setup deterministic."
+        },
+        {
+          "title": "Implement browser tests",
+          "goal": "Automate key flows with resilient locators and stable waits.",
+          "recommendedSkills": [
+            "browser-automation",
+            "go-playwright"
+          ],
+          "notes": "Use go-playwright for Go-native automation projects and Playwright for JS/TS stacks."
+        },
+        {
+          "title": "Triage failures and harden",
+          "goal": "Stabilize flaky tests and establish repeatable CI execution.",
+          "recommendedSkills": [
+            "systematic-debugging",
+            "test-fixing",
+            "verification-before-completion"
+          ],
+          "notes": "Classify failures by root cause: selector drift, timing, environment, data."
+        }
+      ]
+    },
+    {
+      "id": "design-ddd-core-domain",
+      "name": "Design a DDD Core Domain",
+      "description": "Workflow to model complex domains and implement tactical and evented patterns with explicit boundaries.",
+      "category": "architecture",
+      "relatedBundles": [
+        "core-dev",
+        "ops-core"
+      ],
+      "steps": [
+        {
+          "title": "Assess DDD fit and scope",
+          "goal": "Decide if full DDD is justified and define the modeling scope.",
+          "recommendedSkills": [
+            "domain-driven-design",
+            "architecture-decision-records"
+          ],
+          "notes": "Document why DDD is needed, where to keep it lightweight, and what success looks like."
+        },
+        {
+          "title": "Create strategic model",
+          "goal": "Define subdomains, bounded contexts, and ubiquitous language.",
+          "recommendedSkills": [
+            "ddd-strategic-design"
+          ],
+          "notes": "Classify subdomains and assign ownership before making implementation decisions."
+        },
+        {
+          "title": "Map context relationships",
+          "goal": "Define context integration patterns, ownership, and translation boundaries.",
+          "recommendedSkills": [
+            "ddd-context-mapping"
+          ],
+          "notes": "Prefer explicit contracts and anti-corruption layers where domain models diverge."
+        },
+        {
+          "title": "Implement tactical model",
+          "goal": "Encode invariants with aggregates, value objects, repositories, and domain events.",
+          "recommendedSkills": [
+            "ddd-tactical-patterns",
+            "test-driven-development"
+          ],
+          "notes": "Start from invariants and transaction boundaries, not from tables or endpoints."
+        },
+        {
+          "title": "Adopt evented patterns selectively",
+          "goal": "Apply CQRS, event store, projections, and sagas only where required.",
+          "recommendedSkills": [
+            "cqrs-implementation",
+            "event-store-design",
+            "projection-patterns",
+            "saga-orchestration"
+          ],
+          "notes": "Use evented patterns where consistency and scale tradeoffs are explicit and accepted."
+        }
+      ]
+    }
+  ]
+}

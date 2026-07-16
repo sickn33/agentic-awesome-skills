@@ -1,0 +1,62 @@
+# matplotlib__matplotlib-25311
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/lib/matplotlib/offsetbox.py
++++ b/lib/matplotlib/offsetbox.py
+@@ -1440,6 +1440,28 @@ class DraggableBase:
+         self._use_blit = use_blit and self.canvas.supports_blit
+         self.cids = [
+             self.canvas.mpl_connect('pick_event', self.on_pick),
++            self.canvas.mpl_connect('button_release_event', self.on_release),
++        ]
++
++    def __getstate__(self):
++        state = self.__dict__.copy()
++        # Remove unpicklable canvas reference and event connection IDs
++        state.pop('canvas', None)
++        state.pop('cids', None)
++        state['_restore_draggable'] = True
++        return state
++
++    def __setstate__(self, state):
++        restore_draggable = state.pop('_restore_draggable', False)
++        self.__dict__.update(state)
++        # Canvas and cids will be restored when set_draggable is called again
++        self.canvas = None
++        self.cids = []
++        if restore_draggable:
++            # Mark that draggable needs to be reconnected
++            # This will be handled by the ref artist's figure when shown
++            self._needs_reconnect = True
++        else:
+             self.canvas.mpl_connect('button_release_event', self.on_release),
+         ]
+ 
+--- a/lib/matplotlib/legend.py
++++ b/lib/matplotlib/legend.py
+@@ -600,6 +600,25 @@ class Legend(Artist):
+         self._draggable = None
+         self.set_draggable(state=draggable)
+ 
++    def __getstate__(self):
++        state = self.__dict__.copy()
++        # Store whether legend was draggable so it can be restored
++        if self._draggable is not None:
++            state['_draggable_state'] = {
++                'use_blit': self._draggable._use_blit,
++                'update': self._draggable._update,
++            }
++        state['_draggable'] = None
++        return state
++
++    def __setstate__(self, state):
++        draggable_state = state.pop('_draggable_state', None)
++        self.__dict__.update(state)
++        if draggable_state is not None:
++            self.set_draggable(True, use_blit=draggable_state['use_blit'],
++                               update=draggable_state['update'])
++
+     def _set_artist_props(self, a):
+         """
+         Set the boilerplate props for artists added to Axes.

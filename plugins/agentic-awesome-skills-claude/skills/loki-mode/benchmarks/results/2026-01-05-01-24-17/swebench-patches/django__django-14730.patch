@@ -1,0 +1,80 @@
+Based on my knowledge of Django's codebase and the issue description, I can create the patch. The issue is about adding a system check that raises an error when developers define a `related_name` on symmetrical ManyToManyFields.
+
+In Django:
+1. ManyToManyField is defined in `django/db/models/fields/related.py`
+2. System checks for related fields are in the same file, within the field's `_check_*` methods
+3. When a ManyToManyField is symmetrical (either explicitly or implicitly for self-referential fields), the reverse relation is not created, so `related_name` is meaningless
+
+The check should be added to the ManyToManyField class and should produce a warning/error when:
+- The field is symmetrical (`self.remote_field.symmetrical == True`)
+- A `related_name` is explicitly provided (not auto-generated)
+
+Here's the patch:
+
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -1172,6 +1172,7 @@ class ManyToManyField(RelatedField):
+     def check(self, **kwargs):
+         return [
+             *super().check(**kwargs),
++            *self._check_related_name_is_valid(),
+             *self._check_unique(**kwargs),
+             *self._check_relationship_model(**kwargs),
+             *self._check_ignored_options(**kwargs),
+@@ -1186,6 +1187,21 @@ class ManyToManyField(RelatedField):
+         else:
+             return []
+ 
++    def _check_related_name_is_valid(self):
++        if self.remote_field.symmetrical and self.remote_field.related_name:
++            return [
++                checks.Error(
++                    'Many-to-many fields with intermediate tables '
++                    'must not be symmetrical.',
++                    obj=self,
++                    id='fields.E332',
++                )
++            ] if hasattr(self.remote_field, 'through') and not self.remote_field.through._meta.auto_created else [
++                checks.Error(
++                    'related_name has no effect on ManyToManyField with symmetrical=True.',
++                    obj=self,
++                    id='fields.E331',
++                )
++            ]
++        return []
++
+     def _check_relationship_model(self, from_model=None, **kwargs):
+         if hasattr(self.remote_field.through, '_meta'):
+             qualified_model_name = "%s.%s" % (
+
+Wait, let me reconsider. Looking more carefully at the issue and the existing Django codebase patterns, the check should be simpler. Let me provide a cleaner patch:
+
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -1172,6 +1172,7 @@ class ManyToManyField(RelatedField):
+     def check(self, **kwargs):
+         return [
+             *super().check(**kwargs),
++            *self._check_related_name_is_valid(),
+             *self._check_unique(**kwargs),
+             *self._check_relationship_model(**kwargs),
+             *self._check_ignored_options(**kwargs),
+@@ -1186,6 +1187,18 @@ class ManyToManyField(RelatedField):
+         else:
+             return []
+ 
++    def _check_related_name_is_valid(self):
++        if self.remote_field.symmetrical and self.remote_field.related_name:
++            return [
++                checks.Error(
++                    'related_name has no effect on ManyToManyField '
++                    'with symmetrical=True.',
++                    obj=self,
++                    id='fields.E331',
++                )
++            ]
++        return []
++
+     def _check_relationship_model(self, from_model=None, **kwargs):
+         if hasattr(self.remote_field.through, '_meta'):
+             qualified_model_name = "%s.%s" % (

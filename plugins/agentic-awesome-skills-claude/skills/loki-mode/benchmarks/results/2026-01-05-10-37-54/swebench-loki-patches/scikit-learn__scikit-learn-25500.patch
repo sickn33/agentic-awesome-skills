@@ -1,0 +1,79 @@
+# scikit-learn__scikit-learn-25500
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sklearn/isotonic.py
++++ b/sklearn/isotonic.py
+@@ -360,20 +360,35 @@ class IsotonicRegression(RegressorMixin, TransformerMixin, BaseEstimator):
+         self.X_thresholds_ = X[keep_inds]
+         self.y_thresholds_ = y[keep_inds]
+         self.increasing_ = increasing
+         return self
+ 
+-    def transform(self, T):
+-        """Transform new data by linear interpolation.
++    def _transform(self, T):
++        """Core transformation logic.
++
++        This private method contains the core transformation logic without
++        the pandas output wrapper. It is used by both `transform()` and
++        `predict()` to ensure `predict()` always returns a numpy array.
+ 
+         Parameters
+         ----------
+         T : array-like of shape (n_samples,) or (n_samples, 1)
+             Data to transform.
+ 
++        Returns
++        -------
++        y_pred : ndarray of shape (n_samples,)
++            The transformed data.
++
+         .. versionadded:: 0.24
+            Also accepts 2d array with 1 feature.
++        """
++        T = validate_data(self, T, ensure_2d=False, dtype=np.float64, reset=False)
++        return np.interp(T, self.X_thresholds_, self.y_thresholds_)
++
++    @_fit_context(prefer_skip_nested_validation=True)
++    def transform(self, T):
++        """Transform new data by linear interpolation.
++
++        Parameters
++        ----------
++        T : array-like of shape (n_samples,) or (n_samples, 1)
++            Data to transform.
+ 
+         Returns
+         -------
+         y_pred : ndarray of shape (n_samples,)
+             The transformed data.
+@@ -384,13 +399,11 @@ class IsotonicRegression(RegressorMixin, TransformerMixin, BaseEstimator):
+              2.7 2.7 2.7 2.7 2.7 2.7 2.7 2.7 2.7 2.7 4.5 4.5 4.5 4.5 4.5 4.5 4.5
+              4.5 4.5 4.5]
+ 
+         Note that the returned value is clipped to the range [0.0, 1.0].
+         """
+-        T = validate_data(self, T, ensure_2d=False, dtype=np.float64, reset=False)
+-        return np.interp(T, self.X_thresholds_, self.y_thresholds_)
++        return self._transform(T)
+ 
+-    @_fit_context(prefer_skip_nested_validation=True)
+     def predict(self, T):
+         """Predict new data by linear interpolation.
+ 
+         Parameters
+         ----------
+@@ -406,11 +419,11 @@ class IsotonicRegression(RegressorMixin, TransformerMixin, BaseEstimator):
+ 
+             >>> iso_reg = IsotonicRegression().fit(x, y)
+             >>> iso_reg.predict(x)
+             array([1.5, 1.5, 3. , 3. , 5. , 5. ])
+         """
+-        return self.transform(T)
++        return self._transform(T)
+ 
+     def __getstate__(self):
+         """Pickle-protocol - return state of the estimator."""
+         state = super().__getstate__()
+         # remove interpolation method

@@ -1,0 +1,19 @@
+{
+  "name": "agentic-bundle-aas-product-design-studio",
+  "version": "14.5.0",
+  "description": "Editorial \"AAS Product Design Studio\" bundle for Claude Code from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "bundle",
+    "aas-product-design-studio",
+    "agentic-awesome-skills"
+  ]
+}

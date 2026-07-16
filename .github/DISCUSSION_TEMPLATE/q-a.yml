@@ -1,0 +1,57 @@
+title: "[Q&A] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use Q&A for setup help, troubleshooting, choosing skills, or understanding how the repo is meant to be used.
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: What kind of help do you need?
+      options:
+        - Installation or setup
+        - Choosing the right skills
+        - Troubleshooting a skill
+        - Repo structure or contribution flow
+        - Integrations or tooling
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: Describe the problem clearly and say what you expected instead.
+      placeholder: What are you trying to do, what happened, and what outcome are you aiming for?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and context
+      description: Share the tool, OS, relevant paths, versions, and any repo areas involved.
+      placeholder: |
+        - Tool:
+        - OS:
+        - Version:
+        - Relevant skill or doc:
+    validations:
+      required: false
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you already tried?
+      description: Include commands, docs, or troubleshooting steps you already checked.
+      placeholder: |
+        - Docs consulted:
+        - Commands run:
+        - Errors seen:
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Before posting
+      options:
+        - label: I checked the README, FAQ, and relevant docs first.
+          required: true

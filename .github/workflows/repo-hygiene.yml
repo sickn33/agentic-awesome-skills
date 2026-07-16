@@ -1,0 +1,116 @@
+name: Repo Hygiene
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1"
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-repo-state:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: canonical-main-sync
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.10"
+
+      - name: Install Python dependencies
+        run: pip install -r tools/requirements.txt
+
+      - name: Set up Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
+
+      - name: Run repo-state sync
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npm run sync:repo-state
+
+      - name: Validate canonical artifact boundary
+        run: |
+          set -euo pipefail
+
+          mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
+          if [ "${#managed_files[@]}" -eq 0 ]; then
+            echo "No managed files resolved from generated_files contract."
+            exit 1
+          fi
+
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "No repo-state drift detected."
+            exit 0
+          fi
+
+          git add -- "${managed_files[@]}" || true
+
+          if git diff --cached --quiet; then
+            echo "Repo hygiene produced unmanaged drift only."
+            git status --short
+            exit 1
+          fi
+
+          if [ -n "$(git diff --name-only)" ] || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+            echo "Repo hygiene produced unmanaged drift alongside canonical changes."
+            git status --short
+            exit 1
+          fi
+
+      - name: Reject stale canonical-sync publication
+        run: |
+          git fetch origin main
+          test "$GITHUB_SHA" = "$(git rev-parse origin/main)"
+
+      - name: Create or update canonical-sync PR
+        id: canonical_pr
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          token: ${{ github.token }}
+          branch: automation/canonical-repo-state
+          base: main
+          delete-branch: true
+          commit-message: "chore: synchronize canonical repository state"
+          title: "chore: synchronize canonical repository state"
+          body: |
+            Automated canonical artifacts regenerated from `main` by the trusted repository workflow.
+
+            <!-- canonical-sync-bot -->
+
+            ## Quality Bar Checklist
+
+            - [x] Contains only files declared by the generated-files contract.
+            - [x] Reproducibility is verified byte-for-byte by required CI.
+            - [x] No source or workflow changes are included.
+
+      - name: Merge canonical-sync PR after exact required checks
+        if: steps.canonical_pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.canonical_pr.outputs.pull-request-number }}
+          PR_HEAD: ${{ steps.canonical_pr.outputs.pull-request-head-sha }}
+        run: |
+          node tools/scripts/merge_canonical_sync_pr.cjs \
+            --repo "$GITHUB_REPOSITORY" \
+            --pr "$PR_NUMBER" \
+            --head "$PR_HEAD"

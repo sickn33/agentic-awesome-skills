@@ -1,0 +1,18 @@
+# django__django-11049
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@ -491,7 +491,7 @@ class DurationField(Field):
+     default_error_messages = {
+         'invalid': _('Enter a valid duration.'),
+         'overflow': _('The number of days must be between {min_days} and {max_days}.')
+     }
+ 
+     def prepare_value(self, value):
+@@ -492,7 +492,7 @@ class DurationField(Field):
+     default_error_messages = {
+         'invalid': _('Enter a valid duration.'),
+         'overflow': _('The number of days must be between {min_days} and {max_days}.')
+     }

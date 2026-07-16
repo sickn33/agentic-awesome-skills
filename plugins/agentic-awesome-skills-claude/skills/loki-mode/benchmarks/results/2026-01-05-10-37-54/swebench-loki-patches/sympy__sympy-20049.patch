@@ -1,0 +1,37 @@
+# sympy__sympy-20049
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This is a skill repository, not the sympy repository. I need to generate a patch based on my understanding of the sympy codebase from the issue description. Let me create the patch for the `sympy/physics/vector/point.py` file based on the issue and architect's analysis.
+
+```
+--- a/sympy/physics/vector/point.py
++++ b/sympy/physics/vector/point.py
+@@ -449,9 +449,19 @@ class Point(object):
+         >>> p1.vel(N)
+         10*N.x
+ 
++        If the velocity has not been defined, it will attempt to calculate
++        it by taking the time derivative of the position vector if position
++        has been set with respect to another point that has a known velocity
++        in the frame.
++
+         """
+ 
+         _check_frame(frame)
+-        if not (frame in self._vel_dict):
+-            raise ValueError('Velocity of point ' + self.name + ' has not been'
+-                             ' defined in ReferenceFrame ' + frame.name)
+-        return self._vel_dict[frame]
++        if frame in self._vel_dict:
++            return self._vel_dict[frame]
++        # Try to calculate velocity from position information
++        for otherpoint, pos in self._pos_dict.items():
++            try:
++                othervel = otherpoint.vel(frame)
++                return othervel + pos.dt(frame)
++            except ValueError:
++                pass
++        raise ValueError('Velocity of point ' + self.name + ' has not been'
++                         ' defined in ReferenceFrame ' + frame.name)
+```

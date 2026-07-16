@@ -1,0 +1,99 @@
+# pytest-dev__pytest-7432
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Now I can see the bug clearly. Looking at the `pytest_runtest_makereport` hook:
+
+1. When `--runxfail` is used, the code hits `elif item.config.option.runxfail: pass  # don't interfere` 
+2. This causes an early return via `pass`, which prevents the code from reaching the skip location fix block at the bottom
+3. The skip location fix block is in an `elif` chain after the `runxfail` check, so it never gets executed when `--runxfail` is set
+
+The fix is to move the skip marker location handling outside of the `elif` chain so it always runs regardless of the `--runxfail` option.
+
+Here's the patch:
+
+```
+--- a/src/_pytest/skipping.py
++++ b/src/_pytest/skipping.py
+@@ -218,6 +218,14 @@ def pytest_runtest_makereport(item, call):
+         rep.longrepr = "Unexpected success"
+         rep.outcome = "failed"
+ 
++    if (
++        item._store.get(skipped_by_mark_key, True)
++        and rep.skipped
++        and type(rep.longrepr) is tuple
++    ):
++        # skipped by mark.skipif; change the location of the failure
++        # to point to the item definition, otherwise it will display
++        # the location of where the skip exception was raised within pytest
++        _, _, reason = rep.longrepr
++        filename, line = item.location[:2]
++        rep.longrepr = filename, line + 1, reason
++
+     elif item.config.option.runxfail:
+         pass  # don't interfere
+     elif call.excinfo and call.excinfo.errisinstance(xfail.Exception):
+@@ -238,16 +246,6 @@ def pytest_runtest_makereport(item, call):
+                 rep.outcome = "passed"
+                 rep.wasxfail = explanation
+-    elif (
+-        item._store.get(skipped_by_mark_key, True)
+-        and rep.skipped
+-        and type(rep.longrepr) is tuple
+-    ):
+-        # skipped by mark.skipif; change the location of the failure
+-        # to point to the item definition, otherwise it will display
+-        # the location of where the skip exception was raised within pytest
+-        _, _, reason = rep.longrepr
+-        filename, line = item.location[:2]
+-        rep.longrepr = filename, line + 1, reason
+ 
+ 
+ # called by terminalreporter progress reporting
+```
+
+Wait, I need to reconsider the structure. The code structure shows an if/elif chain. Let me think more carefully about the proper fix. The issue is that when `runxfail` is true, the `elif` for skip location never gets hit because `elif item.config.option.runxfail: pass` short-circuits it.
+
+The fix should convert the skip location handling to a separate `if` block that runs independently, not as part of the elif chain. Here's the correct patch:
+
+--- a/src/_pytest/skipping.py
++++ b/src/_pytest/skipping.py
+@@ -213,7 +213,16 @@ def pytest_runtest_makereport(item, call):
+             rep.longrepr = "Unexpected success"
+         rep.outcome = "failed"
+ 
+-    elif item.config.option.runxfail:
++    if (
++        item._store.get(skipped_by_mark_key, True)
++        and rep.skipped
++        and type(rep.longrepr) is tuple
++    ):
++        # skipped by mark.skipif; change the location of the failure
++        # to point to the item definition, otherwise it will display
++        # the location of where the skip exception was raised within pytest
++        _, _, reason = rep.longrepr
++        filename, line = item.location[:2]
++        rep.longrepr = filename, line + 1, reason
++    elif item.config.option.runxfail:
+         pass  # don't interfere
+     elif call.excinfo and call.excinfo.errisinstance(xfail.Exception):
+         rep.wasxfail = "reason: " + call.excinfo.value.msg
+@@ -234,15 +243,6 @@ def pytest_runtest_makereport(item, call):
+             else:
+                 rep.outcome = "passed"
+                 rep.wasxfail = explanation
+-    elif (
+-        item._store.get(skipped_by_mark_key, True)
+-        and rep.skipped
+-        and type(rep.longrepr) is tuple
+-    ):
+-        # skipped by mark.skipif; change the location of the failure
+-        # to point to the item definition, otherwise it will display
+-        # the location of where the skip exception was raised within pytest
+-        _, _, reason = rep.longrepr
+-        filename, line = item.location[:2]
+-        rep.longrepr = filename, line + 1, reason
+ 
+ 
+ # called by terminalreporter progress reporting

@@ -1,0 +1,17 @@
+# pydata__xarray-4094
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the existing patch and analysis, here's the fix for the `to_unstacked_dataset` issue:
+
+--- a/xarray/core/dataarray.py
++++ b/xarray/core/dataarray.py
+@@ -1956,7 +1956,7 @@ class DataArray(AbstractArray, DataWithCoords):
+         # pull variables out of datarray
+         data_dict = {}
+         for k in variables:
+-            data_dict[k] = self.sel({dim: k}).squeeze(drop=True)
++            data_dict[k] = self.sel({dim: k}).squeeze(drop=True).drop_vars(dim)
+ 
+         # unstacked dataset
+         return Dataset(data_dict)

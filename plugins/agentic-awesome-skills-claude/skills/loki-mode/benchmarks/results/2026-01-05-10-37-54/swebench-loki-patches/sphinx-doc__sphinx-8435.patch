@@ -1,0 +1,56 @@
+# sphinx-doc__sphinx-8435
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+I see this is reference material from a prior result. Based on the architect's analysis and the example patch, I can generate the proper fix. The key issue is that `DataDocumenter` and `AttributeDocumenter` use `getattr(self.parent, '__annotations__', {})` directly instead of calling `get_type_hints()` with the `autodoc_type_aliases` config. Let me generate the correct patch:
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1693,6 +1693,14 @@ class DataDocumenter(ModuleLevelDocumenter):
+     def add_directive_header(self, sig: str) -> None:
+         super().add_directive_header(sig)
+         sourcename = self.get_sourcename()
++        
++        # obtain type annotation for this data
++        try:
++            annotations = get_type_hints(self.parent, None,
++                                         self.config.autodoc_type_aliases)
++        except Exception:
++            annotations = {}
++
+         if self.options.annotation is SUPPRESS:
+             pass
+         elif self.options.annotation:
+@@ -1700,7 +1708,6 @@ class DataDocumenter(ModuleLevelDocumenter):
+                            sourcename)
+         else:
+             # obtain annotation for this data
+-            annotations = getattr(self.parent, '__annotations__', {})
+             if self.objpath[-1] in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)
+@@ -1855,6 +1862,14 @@ class AttributeDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):
+     def add_directive_header(self, sig: str) -> None:
+         super().add_directive_header(sig)
+         sourcename = self.get_sourcename()
++
++        # obtain type annotation for this attribute
++        try:
++            annotations = get_type_hints(self.parent, None,
++                                         self.config.autodoc_type_aliases)
++        except Exception:
++            annotations = {}
++
+         if self.options.annotation is SUPPRESS:
+             pass
+         elif self.options.annotation:
+@@ -1862,7 +1877,6 @@ class AttributeDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):
+                            sourcename)
+         else:
+             # obtain type annotation for this attribute
+-            annotations = getattr(self.parent, '__annotations__', {})
+             if self.objpath[-1] in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)
+```

@@ -1,0 +1,31 @@
+Based on the issue description and my understanding of Django's architecture, the problem is clear:
+
+1. When you create a model instance with an enum value like `MyChoice.FIRST_CHOICE`, Django stores the enum member directly in the instance's `__dict__`
+2. When retrieved from the database, the raw string/int value is returned
+3. This causes inconsistency where `str(my_object.my_str_value)` returns `'MyChoice.FIRST_CHOICE'` for created objects but `'first'` for retrieved objects
+
+The fix needs to ensure that when a value is assigned to a field, if it's an enum member, the actual value is extracted. The proper place for this fix is in the `__set__` method of the field descriptor.
+
+Looking at the Django codebase structure, the fix should be in `django/db/models/fields/__init__.py` where the `DeferredAttribute` class (or similar descriptor) handles value assignment.
+
+Here's the patch:
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -16,6 +16,7 @@ from django.core import checks, exceptions, validators
+ from django.db import connection, connections, router
+ from django.db.models.constants import LOOKUP_SEP
+ from django.db.models.query_utils import DeferredAttribute, RegisterLookupMixin
++from django.db.models.enums import Choices
+ from django.utils import timezone
+ from django.utils.datastructures import DictWrapper
+ from django.utils.dateparse import (
+@@ -163,6 +164,8 @@ class Field(RegisterLookupMixin):
+ 
+     def __set__(self, instance, value):
+         instance.__dict__[self.attname] = value
++        if isinstance(value, Choices):
++            instance.__dict__[self.attname] = value.value
+ 
+     def __reduce__(self):
+         """

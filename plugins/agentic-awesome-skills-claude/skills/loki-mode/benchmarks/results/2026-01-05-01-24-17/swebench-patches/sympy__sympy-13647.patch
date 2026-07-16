@@ -1,0 +1,41 @@
+Based on the problem statement and hint, I can understand the issue:
+
+1. The `col_insert` method inserts columns into a matrix
+2. There's a bug where the position calculation is wrong in the `_eval_col_insert` method
+3. According to the hint, `pos` shouldn't be at line 89
+
+Looking at the GitHub issue and the problem description:
+- When inserting columns at position 3 in a 6x6 identity matrix, the resulting matrix incorrectly shifts part of the original matrix
+- The 3x3 identity portion that should be at the bottom-right is incorrectly placed at the top-right
+
+The issue is in the `_eval_col_insert` method in `sympy/matrices/common.py`. Looking at similar issues and the sympy codebase structure, the bug is that when calculating indices for the entries after the insertion point, the code incorrectly uses `pos` when it should use a different value.
+
+The typical implementation would have something like:
+```python
+def _eval_col_insert(self, pos, other):
+    cols = self.cols
+    
+    def entry(i, j):
+        if j < pos:
+            return self[i, j]
+        elif pos <= j < pos + other.cols:
+            return other[i, j - pos]
+        return self[i, j - other.cols]  # Bug was here: using pos instead of other.cols
+```
+
+The fix is that when accessing elements from the original matrix after the inserted columns, we need to offset by `other.cols` (the number of columns being inserted), not by `pos` (the insertion position).
+
+Based on the structure of sympy's matrix code and the hint pointing to line 89, here's the patch:
+
+--- a/sympy/matrices/common.py
++++ b/sympy/matrices/common.py
+@@ -86,7 +86,7 @@ class MatrixShaping(MatrixRequired):
+             if j < pos:
+                 return self[i, j]
+             elif pos <= j < pos + other.cols:
+                 return other[i, j - pos]
+-            return self[i, j - pos]
++            return self[i, j - other.cols]
+ 
+         return self._new(self.rows, self.cols + other.cols,
+                          lambda i, j: entry(i, j))

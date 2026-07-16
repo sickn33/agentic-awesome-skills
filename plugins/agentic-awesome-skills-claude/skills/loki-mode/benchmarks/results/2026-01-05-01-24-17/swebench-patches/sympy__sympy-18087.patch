@@ -1,0 +1,81 @@
+Based on the problem statement and hints, I have enough information to create the fix. The issue is in `sympy/simplify/fu.py` in the `trig_split` function. The problem is that when `Factors._as_expr()` is called on something like `Factors({sin(x)**2: S.Half})`, it incorrectly returns `sin(x)` instead of `sqrt(sin(x)**2)`.
+
+Looking at the hints:
+1. The issue is in `TR10i` which calls `trig_split` in `fu.py`
+2. Line 1901 in `fu.py` applies `._as_expr()` to `Factors({sin(x)**2: S.Half})` which returns `sin(x)` incorrectly
+3. The root cause is in `exprtools.py` lines 449-458 where exponents are unconditionally multiplied
+
+The fix should be in `sympy/simplify/fu.py` in the `trig_split` function. Rather than trying to fix the deeper `Factors` class (which could have unintended consequences), the safer fix is to check in `trig_split` whether the argument being processed contains a non-integer power that shouldn't be simplified.
+
+Looking at the issue more carefully, the problem is that `TR10i` is being applied to expressions that contain `sqrt(sin(x)**2)`, and `trig_split` incorrectly treats `sqrt(sin(x)**2)` as if it were `sin(x)`.
+
+The fix should prevent `trig_split` from incorrectly simplifying expressions containing powers that can't be safely combined. Specifically, when we have `sqrt(sin(x)**2)`, this should not be treated as `sin(x)` unless we know `sin(x)` is non-negative.
+
+--- a/sympy/simplify/fu.py
++++ b/sympy/simplify/fu.py
+@@ -1898,7 +1898,14 @@ def trig_split(eq, two=False):
+             continue
+         if not (a.is_number and (p == S.One or p.is_number)):
+             continue
+-        ai = a*c._as_expr()
++        co = c.as_expr()
++        # If the reconstructed expression differs from the original
++        # (e.g., sqrt(sin(x)**2) was simplified to sin(x)), skip this
++        # term to avoid incorrect simplification for non-real arguments
++        if co != m.args[0] if len(m.args) == 1 else Mul(*m.args):
++            continue
++        ai = a*co
+         args.append((ai, ei, c.get(s, S.One), c.get(c1, S.One)))
+         n -= 1
+     if n:
+
+Wait, let me reconsider. Looking at the hints again, the issue is specifically that `Factors({sin(x)**2: S.Half}).as_expr()` returns `sin(x)` instead of `sqrt(sin(x)**2)`. The problem is that `_as_expr()` is used in `trig_split` to reconstruct the expression.
+
+The safer fix is to check if the expression contains a `sqrt` (or fractional power) of a squared trig function, and if so, don't process it as a simple trig term.
+
+Let me provide a targeted fix in `trig_split`:
+
+--- a/sympy/simplify/fu.py
++++ b/sympy/simplify/fu.py
+@@ -1898,6 +1898,15 @@ def trig_split(eq, two=False):
+             continue
+         if not (a.is_number and (p == S.One or p.is_number)):
+             continue
++        # Check if the Factors representation loses information
++        # e.g., sqrt(sin(x)**2) becomes Factors({sin(x)**2: 1/2})
++        # and .as_expr() would give sin(x) which is wrong for complex x
++        for b, e in c.factors.items():
++            if not e.is_integer:
++                if b.is_Pow and not b.exp.is_integer:
++                    break
++        else:
++            continue  # inner loop completed without break, so continue outer
+         ai = a*c._as_expr()
+         args.append((ai, ei, c.get(s, S.One), c.get(c1, S.One)))
+         n -= 1
+
+Actually that logic is inverted. Let me think more carefully.
+
+The issue is:
+1. `m` is the original term, e.g., `sqrt(sin(x)**2)`
+2. `c = Factors(m)` creates internal representation `{sin(x)**2: 1/2}`
+3. `c._as_expr()` or `c.as_expr()` returns `sin(x)` (incorrect!)
+
+The fix should detect when the `Factors` representation would lose information about the original expression. The simplest check is to compare the reconstructed expression with the original.
+
+--- a/sympy/simplify/fu.py
++++ b/sympy/simplify/fu.py
+@@ -1898,7 +1898,11 @@ def trig_split(eq, two=False):
+             continue
+         if not (a.is_number and (p == S.One or p.is_number)):
+             continue
+-        ai = a*c._as_expr()
++        co = c.as_expr()
++        # don't change expression if factors simplified it
++        # (e.g., sqrt(sin(x)**2) -> sin(x) for non-real x is incorrect)
++        if co != m:
++            continue
++        ai = a*co
+         args.append((ai, ei, c.get(s, S.One), c.get(c1, S.One)))
+         n -= 1
+     if n:

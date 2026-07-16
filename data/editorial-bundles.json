@@ -1,0 +1,2766 @@
+{
+  "bundles": [
+    {
+      "id": "essentials",
+      "name": "Essentials",
+      "group": "Essentials & Core",
+      "emoji": "🚀",
+      "tagline": "The \"Essentials\" Starter Pack",
+      "audience": "For everyone. Install these first.",
+      "description": "For everyone. Install these first.",
+      "skills": [
+        {
+          "id": "concise-planning",
+          "summary": "Always start with a plan."
+        },
+        {
+          "id": "test-driven-development",
+          "summary": "Build features and fixes through a red-green-refactor loop."
+        },
+        {
+          "id": "lint-and-validate",
+          "summary": "Keep your code clean automatically."
+        },
+        {
+          "id": "systematic-debugging",
+          "summary": "Debug from evidence instead of guesses."
+        },
+        {
+          "id": "git-pushing",
+          "summary": "Save your work safely."
+        }
+      ]
+    },
+    {
+      "id": "security-engineer",
+      "name": "Security Engineer",
+      "group": "Security & Compliance",
+      "emoji": "🛡️",
+      "tagline": "The \"Security Engineer\" Pack",
+      "audience": "For pentesting, auditing, and hardening.",
+      "description": "For pentesting, auditing, and hardening.",
+      "skills": [
+        {
+          "id": "ethical-hacking-methodology",
+          "summary": "Plan authorized security assessments with clear boundaries."
+        },
+        {
+          "id": "threat-modeling-expert",
+          "summary": "Model threats with STRIDE, PASTA, and attack trees."
+        },
+        {
+          "id": "top-web-vulnerabilities",
+          "summary": "OWASP-aligned vulnerability taxonomy."
+        },
+        {
+          "id": "burp-suite-testing",
+          "summary": "Web vulnerability scanning."
+        },
+        {
+          "id": "cloud-penetration-testing",
+          "summary": "AWS/Azure/GCP security."
+        },
+        {
+          "id": "linux-privilege-escalation",
+          "summary": "Advanced Linux security assessment."
+        },
+        {
+          "id": "vulnerability-scanner",
+          "summary": "Advanced vulnerability analysis."
+        },
+        {
+          "id": "security-auditor",
+          "summary": "Comprehensive security audits."
+        }
+      ]
+    },
+    {
+      "id": "security-developer",
+      "name": "Security Developer",
+      "group": "Security & Compliance",
+      "emoji": "🔐",
+      "tagline": "The \"Security Developer\" Pack",
+      "audience": "For building secure applications.",
+      "description": "For building secure applications.",
+      "skills": [
+        {
+          "id": "api-security-best-practices",
+          "summary": "Secure API design patterns."
+        },
+        {
+          "id": "auth-implementation-patterns",
+          "summary": "JWT, OAuth2, session management."
+        },
+        {
+          "id": "backend-security-coder",
+          "summary": "Secure backend coding practices."
+        },
+        {
+          "id": "frontend-security-coder",
+          "summary": "XSS prevention and client-side security."
+        },
+        {
+          "id": "dependency-management-deps-audit",
+          "summary": "Audit dependency vulnerabilities, licenses, and supply-chain risk."
+        },
+        {
+          "id": "cc-skill-security-review",
+          "summary": "Security checklist for features."
+        },
+        {
+          "id": "pci-compliance",
+          "summary": "Payment card security standards."
+        }
+      ]
+    },
+    {
+      "id": "web-wizard",
+      "name": "Web Wizard",
+      "group": "🌐 Web Development",
+      "emoji": "🌐",
+      "tagline": "The \"Web Wizard\" Pack",
+      "audience": "For building modern, high-performance web apps.",
+      "description": "For building modern, high-performance web apps.",
+      "skills": [
+        {
+          "id": "frontend-design",
+          "summary": "UI guidelines and aesthetics."
+        },
+        {
+          "id": "tailwind-patterns",
+          "summary": "Tailwind CSS v4 styling patterns."
+        },
+        {
+          "id": "react-patterns",
+          "summary": "Modern React patterns and principles."
+        },
+        {
+          "id": "react-best-practices",
+          "summary": "React & Next.js performance optimization."
+        },
+        {
+          "id": "nextjs-best-practices",
+          "summary": "Next.js App Router patterns."
+        },
+        {
+          "id": "form-cro",
+          "summary": "Optimize your forms for conversion."
+        },
+        {
+          "id": "accessibility-compliance-accessibility-audit",
+          "summary": "Audit WCAG issues and plan concrete remediation."
+        },
+        {
+          "id": "seo-audit",
+          "summary": "Get found on Google."
+        }
+      ]
+    },
+    {
+      "id": "web-designer",
+      "name": "Web Designer",
+      "group": "🌐 Web Development",
+      "emoji": "🖌️",
+      "tagline": "The \"Web Designer\" Pack",
+      "audience": "For pixel-perfect experiences.",
+      "description": "For pixel-perfect experiences.",
+      "skills": [
+        {
+          "id": "ui-ux-pro-max",
+          "summary": "Premium design systems and tokens."
+        },
+        {
+          "id": "frontend-design",
+          "summary": "The base layer of aesthetics."
+        },
+        {
+          "id": "mobile-design",
+          "summary": "Mobile-first design principles."
+        },
+        {
+          "id": "accessibility-compliance-accessibility-audit",
+          "summary": "Audit WCAG issues and plan concrete remediation."
+        },
+        {
+          "id": "canvas-design",
+          "summary": "Static visuals and posters."
+        },
+        {
+          "id": "3d-web-experience",
+          "summary": "Build immersive Three.js and React Three Fiber experiences."
+        },
+        {
+          "id": "scroll-experience",
+          "summary": "Immersive scroll-driven experiences."
+        }
+      ]
+    },
+    {
+      "id": "full-stack-developer",
+      "name": "Full-Stack Developer",
+      "group": "🌐 Web Development",
+      "emoji": "⚡",
+      "tagline": "The \"Full-Stack Developer\" Pack",
+      "audience": "For end-to-end web application development.",
+      "description": "For end-to-end web application development.",
+      "skills": [
+        {
+          "id": "senior-fullstack",
+          "summary": "Complete fullstack development guide."
+        },
+        {
+          "id": "frontend-developer",
+          "summary": "React 19+ and Next.js 15+ expertise."
+        },
+        {
+          "id": "backend-dev-guidelines",
+          "summary": "Node.js/Express/TypeScript patterns."
+        },
+        {
+          "id": "api-patterns",
+          "summary": "REST vs GraphQL vs tRPC selection."
+        },
+        {
+          "id": "database-design",
+          "summary": "Schema design and ORM selection."
+        },
+        {
+          "id": "auth-implementation-patterns",
+          "summary": "Design secure sessions, JWT, OAuth2, and authorization."
+        },
+        {
+          "id": "stripe-integration",
+          "summary": "Payments and subscriptions."
+        },
+        {
+          "id": "e2e-testing-patterns",
+          "summary": "Verify critical user journeys with reliable E2E tests."
+        }
+      ]
+    },
+    {
+      "id": "agent-architect",
+      "name": "Agent Architect",
+      "group": "🤖 AI & Agents",
+      "emoji": "🤖",
+      "tagline": "The \"Agent Architect\" Pack",
+      "audience": "For building AI systems and autonomous agents.",
+      "description": "For building AI systems and autonomous agents.",
+      "skills": [
+        {
+          "id": "prompt-engineering",
+          "summary": "Design reliable instructions and prompt workflows."
+        },
+        {
+          "id": "ai-agents-architect",
+          "summary": "Design autonomous AI agents."
+        },
+        {
+          "id": "mcp-builder",
+          "summary": "Create your own MCP tools."
+        },
+        {
+          "id": "langgraph",
+          "summary": "Build stateful agent workflows."
+        },
+        {
+          "id": "rag-engineer",
+          "summary": "Build RAG systems with vector search."
+        },
+        {
+          "id": "agent-memory-systems",
+          "summary": "Design durable short- and long-term memory for agents."
+        },
+        {
+          "id": "agent-evaluation",
+          "summary": "Test and benchmark your agents."
+        }
+      ]
+    },
+    {
+      "id": "llm-application-developer",
+      "name": "LLM Application Developer",
+      "group": "🤖 AI & Agents",
+      "emoji": "🧠",
+      "tagline": "The \"LLM Application Developer\" Pack",
+      "audience": "For building production LLM applications.",
+      "description": "For building production LLM applications.",
+      "skills": [
+        {
+          "id": "llm-app-patterns",
+          "summary": "Production-ready LLM patterns."
+        },
+        {
+          "id": "rag-implementation",
+          "summary": "Retrieval-Augmented Generation."
+        },
+        {
+          "id": "prompt-caching",
+          "summary": "Cache strategies for LLM prompts."
+        },
+        {
+          "id": "context-window-management",
+          "summary": "Manage LLM context efficiently."
+        },
+        {
+          "id": "langfuse",
+          "summary": "LLM observability and tracing."
+        },
+        {
+          "id": "llm-evaluation",
+          "summary": "Measure LLM quality with automated and human evaluation."
+        }
+      ]
+    },
+    {
+      "id": "indie-game-dev",
+      "name": "Indie Game Dev",
+      "group": "🎮 Game Development",
+      "emoji": "🎮",
+      "tagline": "The \"Indie Game Dev\" Pack",
+      "audience": "For building games with AI assistants.",
+      "description": "For building games with AI assistants.",
+      "skills": [
+        {
+          "id": "game-development/game-design",
+          "summary": "Mechanics and loops."
+        },
+        {
+          "id": "game-development/2d-games",
+          "summary": "Sprites and physics."
+        },
+        {
+          "id": "game-development/3d-games",
+          "summary": "Models and shaders."
+        },
+        {
+          "id": "unity-developer",
+          "summary": "Unity 6 LTS development."
+        },
+        {
+          "id": "godot-gdscript-patterns",
+          "summary": "Godot 4 GDScript patterns."
+        },
+        {
+          "id": "game-development/game-audio",
+          "summary": "Design sound effects, music systems, and adaptive game audio."
+        },
+        {
+          "id": "algorithmic-art",
+          "summary": "Generate assets with code."
+        }
+      ]
+    },
+    {
+      "id": "python-pro",
+      "name": "Python Pro",
+      "group": "🐍 Backend & Languages",
+      "emoji": "🐍",
+      "tagline": "The \"Python Pro\" Pack",
+      "audience": "For backend heavyweights and data scientists.",
+      "description": "For backend heavyweights and data scientists.",
+      "skills": [
+        {
+          "id": "python-pro",
+          "summary": "Master Python 3.12+ with modern features."
+        },
+        {
+          "id": "python-patterns",
+          "summary": "Idiomatic Python code."
+        },
+        {
+          "id": "fastapi-pro",
+          "summary": "High-performance async APIs."
+        },
+        {
+          "id": "fastapi-templates",
+          "summary": "Production-ready FastAPI projects."
+        },
+        {
+          "id": "django-pro",
+          "summary": "The battery-included framework."
+        },
+        {
+          "id": "python-testing-patterns",
+          "summary": "Comprehensive testing with pytest."
+        },
+        {
+          "id": "async-python-patterns",
+          "summary": "Python asyncio mastery."
+        }
+      ]
+    },
+    {
+      "id": "typescript-javascript",
+      "name": "TypeScript & JavaScript",
+      "group": "🐍 Backend & Languages",
+      "emoji": "🟦",
+      "tagline": "The \"TypeScript & JavaScript\" Pack",
+      "audience": "For modern web development.",
+      "description": "For modern web development.",
+      "skills": [
+        {
+          "id": "typescript-expert",
+          "summary": "TypeScript mastery and advanced types."
+        },
+        {
+          "id": "javascript-pro",
+          "summary": "Modern JavaScript with ES6+."
+        },
+        {
+          "id": "react-best-practices",
+          "summary": "React performance optimization."
+        },
+        {
+          "id": "nodejs-best-practices",
+          "summary": "Node.js development principles."
+        },
+        {
+          "id": "nextjs-app-router-patterns",
+          "summary": "Next.js 14+ App Router."
+        }
+      ]
+    },
+    {
+      "id": "systems-programming",
+      "name": "Systems Programming",
+      "group": "🐍 Backend & Languages",
+      "emoji": "🦀",
+      "tagline": "The \"Systems Programming\" Pack",
+      "audience": "For low-level and performance-critical code.",
+      "description": "For low-level and performance-critical code.",
+      "skills": [
+        {
+          "id": "rust-pro",
+          "summary": "Rust 1.75+ with async patterns."
+        },
+        {
+          "id": "go-concurrency-patterns",
+          "summary": "Go concurrency mastery."
+        },
+        {
+          "id": "golang-pro",
+          "summary": "Go development expertise."
+        },
+        {
+          "id": "memory-safety-patterns",
+          "summary": "Memory-safe programming."
+        },
+        {
+          "id": "cpp-pro",
+          "summary": "Modern C++ development."
+        }
+      ]
+    },
+    {
+      "id": "startup-founder",
+      "name": "Startup Founder",
+      "group": "🦄 Product & Business",
+      "emoji": "🦄",
+      "tagline": "The \"Startup Founder\" Pack",
+      "audience": "For building products, not just code.",
+      "description": "For building products, not just code.",
+      "skills": [
+        {
+          "id": "product-manager-toolkit",
+          "summary": "RICE prioritization, PRD templates."
+        },
+        {
+          "id": "competitive-landscape",
+          "summary": "Competitor analysis."
+        },
+        {
+          "id": "pricing-strategy",
+          "summary": "Design pricing, packaging, and value metrics."
+        },
+        {
+          "id": "competitor-alternatives",
+          "summary": "Create comparison pages."
+        },
+        {
+          "id": "launch-strategy",
+          "summary": "Product launch planning."
+        },
+        {
+          "id": "copywriting",
+          "summary": "Marketing copy that converts."
+        },
+        {
+          "id": "stripe-integration",
+          "summary": "Get paid from day one."
+        }
+      ]
+    },
+    {
+      "id": "business-analyst",
+      "name": "Business Analyst",
+      "group": "🦄 Product & Business",
+      "emoji": "📊",
+      "tagline": "The \"Business Analyst\" Pack",
+      "audience": "For data-driven decision making.",
+      "description": "For data-driven decision making.",
+      "skills": [
+        {
+          "id": "business-analyst",
+          "summary": "AI-powered analytics and KPIs."
+        },
+        {
+          "id": "startup-metrics-framework",
+          "summary": "SaaS metrics and unit economics."
+        },
+        {
+          "id": "startup-financial-modeling",
+          "summary": "3-5 year financial projections."
+        },
+        {
+          "id": "market-sizing-analysis",
+          "summary": "TAM/SAM/SOM calculations."
+        },
+        {
+          "id": "kpi-dashboard-design",
+          "summary": "Effective KPI dashboards."
+        }
+      ]
+    },
+    {
+      "id": "marketing-growth",
+      "name": "Marketing & Growth",
+      "group": "🦄 Product & Business",
+      "emoji": "📈",
+      "tagline": "The \"Marketing & Growth\" Pack",
+      "audience": "For driving user acquisition and retention.",
+      "description": "For driving user acquisition and retention.",
+      "skills": [
+        {
+          "id": "content-strategy",
+          "summary": "Plan content pillars, topic clusters, and an editorial roadmap."
+        },
+        {
+          "id": "content-creator",
+          "summary": "SEO-optimized marketing content."
+        },
+        {
+          "id": "seo-audit",
+          "summary": "Technical SEO health checks."
+        },
+        {
+          "id": "programmatic-seo",
+          "summary": "Create pages at scale."
+        },
+        {
+          "id": "analytics-tracking",
+          "summary": "Set up GA4/PostHog correctly."
+        },
+        {
+          "id": "ab-test-setup",
+          "summary": "Validated learning experiments."
+        },
+        {
+          "id": "email-sequence",
+          "summary": "Automated email campaigns."
+        }
+      ]
+    },
+    {
+      "id": "devops-cloud",
+      "name": "DevOps & Cloud",
+      "group": "DevOps & Infrastructure",
+      "emoji": "🌧️",
+      "tagline": "The \"DevOps & Cloud\" Pack",
+      "audience": "For infrastructure and scaling.",
+      "description": "For infrastructure and scaling.",
+      "skills": [
+        {
+          "id": "environment-setup-guide",
+          "summary": "Standardize development environments for teams."
+        },
+        {
+          "id": "bash-linux",
+          "summary": "Automate operational work safely from the shell."
+        },
+        {
+          "id": "docker-expert",
+          "summary": "Master containers and multi-stage builds."
+        },
+        {
+          "id": "terraform-specialist",
+          "summary": "Infrastructure as Code mastery."
+        },
+        {
+          "id": "kubernetes-architect",
+          "summary": "K8s architecture and GitOps."
+        },
+        {
+          "id": "aws-serverless",
+          "summary": "Serverless on AWS (Lambda, DynamoDB)."
+        },
+        {
+          "id": "ci-cd-and-automation",
+          "summary": "Build CI/CD pipelines with automated quality gates."
+        },
+        {
+          "id": "deployment-procedures",
+          "summary": "Apply safe rollout and rollback strategies."
+        }
+      ]
+    },
+    {
+      "id": "observability-monitoring",
+      "name": "Observability & Monitoring",
+      "group": "DevOps & Infrastructure",
+      "emoji": "📊",
+      "tagline": "The \"Observability & Monitoring\" Pack",
+      "audience": "For production reliability.",
+      "description": "For production reliability.",
+      "skills": [
+        {
+          "id": "observability-engineer",
+          "summary": "Comprehensive monitoring systems."
+        },
+        {
+          "id": "distributed-tracing",
+          "summary": "Track requests across microservices."
+        },
+        {
+          "id": "slo-implementation",
+          "summary": "Service Level Objectives."
+        },
+        {
+          "id": "incident-responder",
+          "summary": "Rapid incident response."
+        },
+        {
+          "id": "postmortem-writing",
+          "summary": "Blameless postmortems."
+        },
+        {
+          "id": "performance-engineer",
+          "summary": "Application performance optimization."
+        }
+      ]
+    },
+    {
+      "id": "data-analytics",
+      "name": "Data & Analytics",
+      "group": "📊 Data & Analytics",
+      "emoji": "📊",
+      "tagline": "The \"Data & Analytics\" Pack",
+      "audience": "For making sense of the numbers.",
+      "description": "For making sense of the numbers.",
+      "skills": [
+        {
+          "id": "analytics-tracking",
+          "summary": "Set up GA4/PostHog correctly."
+        },
+        {
+          "id": "data-quality-frameworks",
+          "summary": "Validate data with contracts, dbt tests, and quality monitoring."
+        },
+        {
+          "id": "sql-pro",
+          "summary": "Modern SQL with cloud-native databases."
+        },
+        {
+          "id": "postgres-best-practices",
+          "summary": "Postgres optimization."
+        },
+        {
+          "id": "ab-test-setup",
+          "summary": "Validated learning."
+        },
+        {
+          "id": "database-architect",
+          "summary": "Database design from scratch."
+        },
+        {
+          "id": "data-storytelling",
+          "summary": "Turn analysis into clear narratives and decisions."
+        }
+      ]
+    },
+    {
+      "id": "data-engineering",
+      "name": "Data Engineering",
+      "group": "📊 Data & Analytics",
+      "emoji": "🔄",
+      "tagline": "The \"Data Engineering\" Pack",
+      "audience": "For building data pipelines.",
+      "description": "For building data pipelines.",
+      "skills": [
+        {
+          "id": "data-engineer",
+          "summary": "Data pipeline architecture."
+        },
+        {
+          "id": "airflow-dag-patterns",
+          "summary": "Apache Airflow DAGs."
+        },
+        {
+          "id": "dbt-transformation-patterns",
+          "summary": "Analytics engineering."
+        },
+        {
+          "id": "data-quality-frameworks",
+          "summary": "Validate pipelines with contracts, dbt tests, and quality monitoring."
+        },
+        {
+          "id": "vector-database-engineer",
+          "summary": "Vector databases for RAG."
+        }
+      ]
+    },
+    {
+      "id": "creative-director",
+      "name": "Creative Director",
+      "group": "🎨 Creative & Content",
+      "emoji": "🎨",
+      "tagline": "The \"Creative Director\" Pack",
+      "audience": "For visuals, content, and branding.",
+      "description": "For visuals, content, and branding.",
+      "skills": [
+        {
+          "id": "canvas-design",
+          "summary": "Generate posters and diagrams."
+        },
+        {
+          "id": "frontend-design",
+          "summary": "UI aesthetics."
+        },
+        {
+          "id": "content-creator",
+          "summary": "SEO-optimized blog posts."
+        },
+        {
+          "id": "copy-editing",
+          "summary": "Polish your prose."
+        },
+        {
+          "id": "algorithmic-art",
+          "summary": "Code-generated masterpieces."
+        },
+        {
+          "id": "interactive-portfolio",
+          "summary": "Portfolios that land jobs."
+        }
+      ]
+    },
+    {
+      "id": "qa-testing",
+      "name": "QA & Testing",
+      "group": "🐞 Quality Assurance",
+      "emoji": "🐞",
+      "tagline": "The \"QA & Testing\" Pack",
+      "audience": "For breaking things before users do.",
+      "description": "For breaking things before users do.",
+      "skills": [
+        {
+          "id": "test-driven-development",
+          "summary": "Red, Green, Refactor."
+        },
+        {
+          "id": "e2e-testing-patterns",
+          "summary": "Reliable E2E test suites."
+        },
+        {
+          "id": "browser-automation",
+          "summary": "End-to-end testing with Playwright."
+        },
+        {
+          "id": "test-fixing",
+          "summary": "Fix failing tests systematically."
+        },
+        {
+          "id": "systematic-debugging",
+          "summary": "Diagnose failures from evidence instead of guesses."
+        },
+        {
+          "id": "code-review-checklist",
+          "summary": "Catch bugs in PRs."
+        },
+        {
+          "id": "ci-cd-and-automation",
+          "summary": "Run automated test gates consistently in CI/CD."
+        }
+      ]
+    },
+    {
+      "id": "aas-web-app-builder",
+      "name": "AAS Web App Builder",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🌐",
+      "tagline": "The \"AAS Web App Builder\" Plugin",
+      "audience": "Frontend and full-stack developers shipping modern web apps.",
+      "description": "High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO.",
+      "skills": [
+        {
+          "id": "frontend-developer",
+          "summary": "Build production React and Next.js interfaces."
+        },
+        {
+          "id": "frontend-design",
+          "summary": "Apply strong UI layout and visual design patterns."
+        },
+        {
+          "id": "react-best-practices",
+          "summary": "Optimize React performance and maintainability."
+        },
+        {
+          "id": "nextjs-app-router-patterns",
+          "summary": "Use Next.js App Router patterns safely."
+        },
+        {
+          "id": "nextjs-best-practices",
+          "summary": "Ship high-quality Next.js applications."
+        },
+        {
+          "id": "tailwind-patterns",
+          "summary": "Style efficiently with Tailwind CSS patterns."
+        },
+        {
+          "id": "shadcn",
+          "summary": "Build polished interfaces with shadcn/ui."
+        },
+        {
+          "id": "form-cro",
+          "summary": "Improve form conversion and usability."
+        },
+        {
+          "id": "seo-audit",
+          "summary": "Audit technical SEO and discoverability."
+        },
+        {
+          "id": "ui-a11y",
+          "summary": "Audit WCAG, contrast, focus, labels, motion, and semantic HTML."
+        }
+      ],
+      "why": "High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO.",
+      "positioning": "Build modern React/Next.js apps from UI planning to implementation, accessibility, forms, SEO, and QA.",
+      "recommendedFor": [
+        "Frontend teams",
+        "Full-stack builders",
+        "Startup product engineers"
+      ],
+      "notFor": [
+        "Native mobile-only apps",
+        "Backend-only API services"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to audit this Next.js app and produce a prioritized implementation plan.",
+        "Use this plugin to build a responsive landing page with forms, SEO, and accessibility checks.",
+        "Use this plugin to review this React component for performance, UX, accessibility, and maintainability."
+      ]
+    },
+    {
+      "id": "aas-product-design-studio",
+      "name": "AAS Product Design Studio",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🎨",
+      "tagline": "The \"AAS Product Design Studio\" Plugin",
+      "audience": "Builders who want richer UI, brand, portfolio, and visual product work.",
+      "description": "Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation.",
+      "skills": [
+        {
+          "id": "ui-ux-pro-max",
+          "summary": "Use advanced UI/UX reasoning and design systems."
+        },
+        {
+          "id": "high-end-visual-design",
+          "summary": "Raise visual polish for premium interfaces."
+        },
+        {
+          "id": "frontend-design",
+          "summary": "Apply strong UI layout and visual design patterns."
+        },
+        {
+          "id": "mobile-design",
+          "summary": "Design mobile-first interaction patterns."
+        },
+        {
+          "id": "3d-web-experience",
+          "summary": "Create immersive Three.js web experiences."
+        },
+        {
+          "id": "canvas-design",
+          "summary": "Generate visual assets, posters, and diagrams."
+        },
+        {
+          "id": "scroll-experience",
+          "summary": "Design scroll-driven web experiences."
+        },
+        {
+          "id": "interactive-portfolio",
+          "summary": "Create compelling interactive portfolios."
+        },
+        {
+          "id": "ui-a11y",
+          "summary": "Audit WCAG, contrast, focus, labels, motion, and semantic HTML."
+        },
+        {
+          "id": "ui-review",
+          "summary": "Review UI quality, usability, and product fit."
+        }
+      ],
+      "why": "Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation.",
+      "positioning": "Shape product UI through design critique, visual direction, accessibility, responsive UX, motion, and asset generation.",
+      "recommendedFor": [
+        "Product designers",
+        "Frontend teams",
+        "Founders polishing a product surface"
+      ],
+      "notFor": [
+        "Backend-only services",
+        "Security audits"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to critique this UI and propose a stronger visual direction.",
+        "Use this plugin to design a responsive accessible product screen and handoff notes for implementation.",
+        "Use this plugin to improve the visual polish, motion, and accessibility of this interface."
+      ]
+    },
+    {
+      "id": "aas-security-engineer",
+      "name": "AAS Security Engineer",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🛡️",
+      "tagline": "The \"AAS Security Engineer\" Plugin",
+      "audience": "Authorized security testing, audit, and hardening teams.",
+      "description": "Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows.",
+      "skills": [
+        {
+          "id": "ethical-hacking-methodology",
+          "summary": "Follow an authorized pentest methodology."
+        },
+        {
+          "id": "burp-suite-testing",
+          "summary": "Test web apps with Burp Suite workflows."
+        },
+        {
+          "id": "top-web-vulnerabilities",
+          "summary": "Cover OWASP-aligned vulnerability classes."
+        },
+        {
+          "id": "api-security-testing",
+          "summary": "Test REST and GraphQL API security."
+        },
+        {
+          "id": "linux-privilege-escalation",
+          "summary": "Assess Linux privilege escalation paths."
+        },
+        {
+          "id": "cloud-penetration-testing",
+          "summary": "Assess AWS, Azure, and GCP environments."
+        },
+        {
+          "id": "security-auditor",
+          "summary": "Run comprehensive security audits."
+        },
+        {
+          "id": "vulnerability-scanner",
+          "summary": "Analyze and validate vulnerability findings."
+        },
+        {
+          "id": "sast-configuration",
+          "summary": "Configure static application security testing."
+        },
+        {
+          "id": "web-security-testing",
+          "summary": "Test web application security defensively."
+        }
+      ],
+      "why": "Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows.",
+      "positioning": "Run authorized security testing, audit, vulnerability validation, web testing, and hardening workflows.",
+      "recommendedFor": [
+        "Authorized security teams",
+        "Maintainers validating reported findings",
+        "Cloud and app security reviewers"
+      ],
+      "notFor": [
+        "Unauthorized testing",
+        "Pure feature implementation"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to plan an authorized security assessment for this app and define the evidence to collect.",
+        "Use this plugin to validate this vulnerability report and separate confirmed risk from false positives.",
+        "Use this plugin to review this system for web, API, cloud, and SAST coverage gaps."
+      ]
+    },
+    {
+      "id": "aas-secure-app-builder",
+      "name": "AAS Secure App Builder",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🔐",
+      "tagline": "The \"AAS Secure App Builder\" Plugin",
+      "audience": "Application developers who want security embedded while building features.",
+      "description": "Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams.",
+      "skills": [
+        {
+          "id": "api-security-best-practices",
+          "summary": "Design secure APIs from the start."
+        },
+        {
+          "id": "auth-implementation-patterns",
+          "summary": "Implement auth, sessions, JWT, and OAuth2 safely."
+        },
+        {
+          "id": "backend-security-coder",
+          "summary": "Apply secure backend coding practices."
+        },
+        {
+          "id": "frontend-security-coder",
+          "summary": "Prevent XSS and client-side security bugs."
+        },
+        {
+          "id": "cc-skill-security-review",
+          "summary": "Review features with a security checklist."
+        },
+        {
+          "id": "pci-compliance",
+          "summary": "Handle payment security and PCI expectations."
+        },
+        {
+          "id": "sast-configuration",
+          "summary": "Configure static application security testing."
+        },
+        {
+          "id": "security-and-hardening",
+          "summary": "Harden applications against untrusted input, auth, data, and integration risks."
+        },
+        {
+          "id": "secrets-management",
+          "summary": "Manage application and CI/CD secrets with least privilege and rotation."
+        },
+        {
+          "id": "django-access-review",
+          "summary": "Review Django access control and authorization behavior."
+        }
+      ],
+      "why": "Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams.",
+      "positioning": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in.",
+      "recommendedFor": [
+        "Application developers",
+        "Product engineering teams",
+        "Security-conscious backend and frontend builders"
+      ],
+      "notFor": [
+        "Offensive pentest engagements",
+        "Infrastructure-only reviews"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to review this PR for auth, access control, data exposure, injection, and secrets risks.",
+        "Use this plugin to design a secure API feature with validation, authorization, and auditability.",
+        "Use this plugin to harden this payment, authentication, or user-data flow before release."
+      ]
+    },
+    {
+      "id": "aas-documents-presentations",
+      "name": "AAS Documents & Presentations",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "📄",
+      "tagline": "The \"AAS Documents & Presentations\" Plugin",
+      "audience": "Users creating, editing, converting, and automating office documents.",
+      "description": "Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations.",
+      "skills": [
+        {
+          "id": "office-productivity",
+          "summary": "Coordinate document, spreadsheet, and slide workflows."
+        },
+        {
+          "id": "docx-official",
+          "summary": "Create, edit, and inspect Word-compatible documents."
+        },
+        {
+          "id": "xlsx-official",
+          "summary": "Create and analyze formula-backed spreadsheets."
+        },
+        {
+          "id": "pptx-official",
+          "summary": "Create and edit PowerPoint-compatible presentations."
+        },
+        {
+          "id": "pdf-official",
+          "summary": "Extract, generate, and manipulate PDFs."
+        },
+        {
+          "id": "pdf-conversion-router",
+          "summary": "Choose high-fidelity PDF conversion routes."
+        },
+        {
+          "id": "google-docs-automation",
+          "summary": "Automate Google Docs creation and updates."
+        },
+        {
+          "id": "google-sheets-automation",
+          "summary": "Automate Google Sheets reads and writes."
+        },
+        {
+          "id": "google-slides-automation",
+          "summary": "Automate Google Slides updates."
+        }
+      ],
+      "why": "Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations.",
+      "positioning": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables.",
+      "recommendedFor": [
+        "Operators producing reports",
+        "Analysts packaging findings",
+        "Teams automating office documents"
+      ],
+      "notFor": [
+        "General web app development",
+        "Long-running data pipelines"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to create a report pack with a DOCX summary, XLSX data table, and PPTX deck.",
+        "Use this plugin to inspect this spreadsheet for formula and formatting issues.",
+        "Use this plugin to convert this PDF content into an editable presentation outline."
+      ]
+    },
+    {
+      "id": "aas-data-analytics",
+      "name": "AAS Data Analytics",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "📊",
+      "tagline": "The \"AAS Data Analytics\" Plugin",
+      "audience": "Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments.",
+      "description": "Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.",
+      "skills": [
+        {
+          "id": "analytics-tracking",
+          "summary": "Set up reliable product analytics."
+        },
+        {
+          "id": "analytics-product",
+          "summary": "Model product analytics and product metrics."
+        },
+        {
+          "id": "sql-pro",
+          "summary": "Query and model data with modern SQL."
+        },
+        {
+          "id": "postgres-best-practices",
+          "summary": "Optimize Postgres schemas and queries."
+        },
+        {
+          "id": "database-architect",
+          "summary": "Design robust database structures."
+        },
+        {
+          "id": "dbt-transformation-patterns",
+          "summary": "Build dbt transformation pipelines."
+        },
+        {
+          "id": "claude-d3js-skill",
+          "summary": "Create custom D3 visualizations."
+        },
+        {
+          "id": "kpi-dashboard-design",
+          "summary": "Design dashboards for decision-making."
+        },
+        {
+          "id": "ab-test-setup",
+          "summary": "Plan and validate experiments."
+        },
+        {
+          "id": "business-analyst",
+          "summary": "Analyze business context, requirements, and tradeoffs."
+        }
+      ],
+      "why": "Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.",
+      "positioning": "Plan tracking, model product data, write SQL, build dashboards, and turn experiments into decisions.",
+      "recommendedFor": [
+        "Product analysts",
+        "Data-informed product teams",
+        "Founders measuring funnels"
+      ],
+      "notFor": [
+        "Document generation-only work",
+        "Production incident response"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to build a measurement plan for this SaaS funnel, define events, and design the dashboard.",
+        "Use this plugin to review this SQL model and propose safer metrics and joins.",
+        "Use this plugin to design an A/B test and the KPI dashboard needed to read it."
+      ]
+    },
+    {
+      "id": "aas-agent-mcp-builder",
+      "name": "AAS Agent & MCP Builder",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🤖",
+      "tagline": "The \"AAS Agent & MCP Builder\" Plugin",
+      "audience": "Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.",
+      "description": "Maps directly to plugin-based agent workflows because it can grow from skills into MCP server configuration and app/tool integrations.",
+      "skills": [
+        {
+          "id": "ai-agents-architect",
+          "summary": "Design autonomous AI agent systems."
+        },
+        {
+          "id": "agent-evaluation",
+          "summary": "Evaluate agent reliability and performance."
+        },
+        {
+          "id": "mcp-builder",
+          "summary": "Create MCP interfaces for agents."
+        },
+        {
+          "id": "mcp-tool-developer",
+          "summary": "Build MCP servers and tools."
+        },
+        {
+          "id": "llm-app-patterns",
+          "summary": "Use production LLM application patterns."
+        },
+        {
+          "id": "rag-engineer",
+          "summary": "Build retrieval-augmented generation systems."
+        },
+        {
+          "id": "langgraph",
+          "summary": "Implement stateful agent workflows."
+        },
+        {
+          "id": "langfuse",
+          "summary": "Trace, evaluate, and monitor LLM apps."
+        },
+        {
+          "id": "context-window-management",
+          "summary": "Manage long context effectively."
+        },
+        {
+          "id": "prompt-engineering",
+          "summary": "Design effective prompts and LLM interaction patterns."
+        }
+      ],
+      "why": "Maps directly to plugin-based agent workflows because it can grow from skills into MCP server configuration and app/tool integrations.",
+      "positioning": "Build agentic apps, MCP tools, RAG systems, eval loops, tracing, prompts, and context-aware workflows.",
+      "recommendedFor": [
+        "Agent engineers",
+        "MCP tool builders",
+        "LLM app teams"
+      ],
+      "notFor": [
+        "Marketing-only content work",
+        "Manual office document tasks"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to design an MCP server for this workflow, including tools, schemas, and test cases.",
+        "Use this plugin to create an eval plan for this agent and define reliability metrics.",
+        "Use this plugin to review this RAG or LangGraph architecture for tool, memory, prompt, and observability gaps."
+      ]
+    },
+    {
+      "id": "aas-qa-test-automation",
+      "name": "AAS QA & Test Automation",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🧪",
+      "tagline": "The \"AAS QA & Test Automation\" Plugin",
+      "audience": "Engineers and QA teams writing, debugging, and stabilizing test suites.",
+      "description": "Testing is a natural plugin because users need a workflow, not a single skill: plan tests, automate browsers, debug failures, and fix regressions.",
+      "skills": [
+        {
+          "id": "test-driven-development",
+          "summary": "Use red-green-refactor development loops."
+        },
+        {
+          "id": "systematic-debugging",
+          "summary": "Trace failures to root cause."
+        },
+        {
+          "id": "browser-automation",
+          "summary": "Automate browsers for testing and scraping."
+        },
+        {
+          "id": "e2e-testing-patterns",
+          "summary": "Build reliable end-to-end suites."
+        },
+        {
+          "id": "playwright-skill",
+          "summary": "Use Playwright for browser test automation."
+        },
+        {
+          "id": "webapp-testing",
+          "summary": "Test local web applications with Playwright."
+        },
+        {
+          "id": "k6-load-testing",
+          "summary": "Run load and scalability tests."
+        },
+        {
+          "id": "test-fixing",
+          "summary": "Fix failing tests systematically."
+        },
+        {
+          "id": "code-review-checklist",
+          "summary": "Catch common bugs in reviews."
+        },
+        {
+          "id": "screen-reader-testing",
+          "summary": "Test interfaces with screen-reader expectations."
+        }
+      ],
+      "why": "Testing is a natural plugin because users need a workflow, not a single skill: plan tests, automate browsers, debug failures, and fix regressions.",
+      "positioning": "Plan test strategy, automate browser checks, debug failures, stabilize suites, and verify accessibility regressions.",
+      "recommendedFor": [
+        "QA engineers",
+        "Frontend and full-stack teams",
+        "Maintainers fixing flaky CI"
+      ],
+      "notFor": [
+        "Pure visual design work",
+        "Manual document production"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to create a test strategy covering unit, integration, E2E, load, and accessibility risks.",
+        "Use this plugin to stabilize this flaky Playwright suite and explain the root cause.",
+        "Use this plugin to add regression coverage for this bug with the smallest useful test."
+      ]
+    },
+    {
+      "id": "aas-devops-cloud",
+      "name": "AAS DevOps & Cloud",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "☁️",
+      "tagline": "The \"AAS DevOps & Cloud\" Plugin",
+      "audience": "Teams shipping infrastructure, deployments, and operational workflows.",
+      "description": "Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows.",
+      "skills": [
+        {
+          "id": "docker-expert",
+          "summary": "Build and operate containers cleanly."
+        },
+        {
+          "id": "aws-serverless",
+          "summary": "Ship serverless workloads on AWS."
+        },
+        {
+          "id": "kubernetes-architect",
+          "summary": "Design Kubernetes and GitOps systems."
+        },
+        {
+          "id": "terraform-specialist",
+          "summary": "Manage infrastructure as code."
+        },
+        {
+          "id": "github-actions-templates",
+          "summary": "Use production GitHub Actions patterns."
+        },
+        {
+          "id": "environment-setup-guide",
+          "summary": "Standardize team environments."
+        },
+        {
+          "id": "deployment-procedures",
+          "summary": "Roll out changes safely."
+        },
+        {
+          "id": "bash-linux",
+          "summary": "Use Linux shell workflows effectively."
+        },
+        {
+          "id": "incident-responder",
+          "summary": "Respond to incidents with clear procedure."
+        },
+        {
+          "id": "devops-troubleshooter",
+          "summary": "Diagnose infrastructure and deployment issues."
+        }
+      ],
+      "why": "Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows.",
+      "positioning": "Ship infrastructure, deployments, CI, environments, rollback plans, troubleshooting, and incident-ready operations.",
+      "recommendedFor": [
+        "Platform teams",
+        "Startup engineers owning deployment",
+        "Cloud and DevOps maintainers"
+      ],
+      "notFor": [
+        "Frontend-only UI polish",
+        "Product analytics-only work"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to review this deployment for risk, rollback, environment, and CI gaps.",
+        "Use this plugin to design a small-team cloud deployment plan with Terraform, CI, and runbook steps.",
+        "Use this plugin to troubleshoot this failed deployment and prepare an incident response checklist."
+      ]
+    },
+    {
+      "id": "aas-marketing-seo-growth",
+      "name": "AAS Marketing, SEO & Growth",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "📈",
+      "tagline": "The \"AAS Marketing, SEO & Growth\" Plugin",
+      "audience": "Founders and growth teams creating content, SEO systems, experiments, and email campaigns.",
+      "description": "A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work.",
+      "skills": [
+        {
+          "id": "content-creator",
+          "summary": "Create SEO-aware marketing content."
+        },
+        {
+          "id": "seo-audit",
+          "summary": "Audit technical SEO and discoverability."
+        },
+        {
+          "id": "seo-fundamentals",
+          "summary": "Apply durable SEO principles."
+        },
+        {
+          "id": "seo-content-planner",
+          "summary": "Plan SEO content clusters and calendars."
+        },
+        {
+          "id": "programmatic-seo",
+          "summary": "Create scalable SEO page systems."
+        },
+        {
+          "id": "analytics-tracking",
+          "summary": "Set up reliable product analytics."
+        },
+        {
+          "id": "ab-test-setup",
+          "summary": "Plan and validate experiments."
+        },
+        {
+          "id": "email-sequence",
+          "summary": "Write automated email campaigns."
+        },
+        {
+          "id": "copywriting",
+          "summary": "Write conversion-focused copy."
+        },
+        {
+          "id": "schema-markup",
+          "summary": "Add structured data for search visibility."
+        }
+      ],
+      "why": "A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work.",
+      "positioning": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows.",
+      "recommendedFor": [
+        "Founders",
+        "Growth teams",
+        "Content and SEO operators"
+      ],
+      "notFor": [
+        "Backend API design",
+        "Security assessment"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to audit this site for SEO, content, analytics, and conversion opportunities.",
+        "Use this plugin to create a growth experiment backlog with measurement and email follow-up.",
+        "Use this plugin to plan a programmatic SEO cluster and the tracking needed to evaluate it."
+      ]
+    },
+    {
+      "id": "aas-automation-builder",
+      "name": "AAS Automation Builder",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "⚙️",
+      "tagline": "The \"AAS Automation Builder\" Plugin",
+      "audience": "Teams designing reliable automations across tools, data stores, and communication platforms.",
+      "description": "Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows.",
+      "skills": [
+        {
+          "id": "workflow-automation",
+          "summary": "Design durable automation workflows."
+        },
+        {
+          "id": "mcp-builder",
+          "summary": "Create MCP interfaces for agents."
+        },
+        {
+          "id": "make-automation",
+          "summary": "Build Make/Integromat automations."
+        },
+        {
+          "id": "zapier-make-patterns",
+          "summary": "Design Zapier and Make automation patterns."
+        },
+        {
+          "id": "airtable-automation",
+          "summary": "Automate Airtable data and views."
+        },
+        {
+          "id": "notion-automation",
+          "summary": "Automate Notion pages and databases."
+        },
+        {
+          "id": "slack-automation",
+          "summary": "Automate Slack workflows."
+        },
+        {
+          "id": "googlesheets-automation",
+          "summary": "Automate Google Sheets operations."
+        },
+        {
+          "id": "github-automation",
+          "summary": "Automate GitHub issues and repository work."
+        },
+        {
+          "id": "n8n-workflow-patterns",
+          "summary": "Choose proven architectures for webhook, sync, scheduled, and AI-agent workflows."
+        }
+      ],
+      "why": "Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows.",
+      "positioning": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n.",
+      "recommendedFor": [
+        "Ops teams",
+        "Automation builders",
+        "Teams connecting SaaS workflows"
+      ],
+      "notFor": [
+        "One-off copywriting tasks",
+        "Deep infrastructure provisioning"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to map this manual workflow into a reliable automation with failure handling.",
+        "Use this plugin to design an MCP-backed automation and the tool schemas it needs.",
+        "Use this plugin to review this automation for idempotency, permissions, expressions, and observability gaps."
+      ]
+    },
+    {
+      "id": "aas-observability-ir",
+      "name": "AAS Observability IR",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "📡",
+      "tagline": "The \"AAS Observability IR\" Plugin",
+      "audience": "Engineering teams monitoring systems, debugging production issues, and writing postmortems.",
+      "description": "Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts.",
+      "skills": [
+        {
+          "id": "observability-engineer",
+          "summary": "Design monitoring and observability systems."
+        },
+        {
+          "id": "observability-and-instrumentation",
+          "summary": "Instrument production code with useful logs, metrics, traces, and alerts."
+        },
+        {
+          "id": "distributed-tracing",
+          "summary": "Trace requests across services."
+        },
+        {
+          "id": "slo-implementation",
+          "summary": "Define and operate service level objectives."
+        },
+        {
+          "id": "grafana-dashboards",
+          "summary": "Create useful Grafana dashboards."
+        },
+        {
+          "id": "performance-engineer",
+          "summary": "Diagnose and improve application performance."
+        },
+        {
+          "id": "incident-responder",
+          "summary": "Respond to incidents with clear procedure."
+        },
+        {
+          "id": "devops-troubleshooter",
+          "summary": "Diagnose infrastructure and deployment issues."
+        },
+        {
+          "id": "postmortem-writing",
+          "summary": "Write clear blameless postmortems."
+        },
+        {
+          "id": "langfuse",
+          "summary": "Trace, evaluate, and monitor LLM apps."
+        }
+      ],
+      "why": "Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts.",
+      "positioning": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows.",
+      "recommendedFor": [
+        "SRE teams",
+        "Backend teams owning production",
+        "Incident responders"
+      ],
+      "notFor": [
+        "Marketing campaign planning",
+        "Static document conversion"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to review this service for logging, tracing, SLO, monitoring, and dashboard gaps.",
+        "Use this plugin to build an incident response plan and rollback checklist for this system.",
+        "Use this plugin to draft a blameless postmortem from this timeline and identify action items."
+      ]
+    },
+    {
+      "id": "aas-python-api-builder",
+      "name": "AAS Python API Builder",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "🐍",
+      "tagline": "The \"AAS Python API Builder\" Plugin",
+      "audience": "Python developers building APIs, services, and tests.",
+      "description": "A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together.",
+      "skills": [
+        {
+          "id": "python-pro",
+          "summary": "Write modern, idiomatic Python."
+        },
+        {
+          "id": "python-patterns",
+          "summary": "Apply Python architecture and design patterns."
+        },
+        {
+          "id": "fastapi-pro",
+          "summary": "Build high-performance FastAPI services."
+        },
+        {
+          "id": "fastapi-templates",
+          "summary": "Start production-ready FastAPI projects."
+        },
+        {
+          "id": "django-pro",
+          "summary": "Build robust Django applications."
+        },
+        {
+          "id": "python-testing-patterns",
+          "summary": "Test Python code with pytest patterns."
+        },
+        {
+          "id": "async-python-patterns",
+          "summary": "Use asyncio and async Python safely."
+        },
+        {
+          "id": "api-design-principles",
+          "summary": "Design clear and maintainable APIs."
+        },
+        {
+          "id": "pydantic-models-py",
+          "summary": "Design Pydantic models for Python APIs."
+        },
+        {
+          "id": "openapi-spec-generation",
+          "summary": "Generate and maintain OpenAPI specifications."
+        }
+      ],
+      "why": "A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together.",
+      "positioning": "Build Python APIs and services with FastAPI, Django, Pydantic, OpenAPI, async patterns, tests, and API design.",
+      "recommendedFor": [
+        "Python backend teams",
+        "FastAPI and Django builders",
+        "API maintainers"
+      ],
+      "notFor": [
+        "Language-agnostic API governance",
+        "Frontend-only implementation"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to design a FastAPI service with routes, Pydantic models, validation, async boundaries, and tests.",
+        "Use this plugin to review this Django API for structure, performance, OpenAPI coverage, and test coverage.",
+        "Use this plugin to refactor this Python service toward clearer API and async patterns."
+      ]
+    },
+    {
+      "id": "aas-mobile-app-builder",
+      "name": "AAS Mobile App Builder",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "📱",
+      "tagline": "The \"AAS Mobile App Builder\" Plugin",
+      "audience": "Mobile teams shipping Expo, React Native, Flutter, and iOS apps.",
+      "description": "Mobile development has a full lifecycle in the catalog: architecture, Expo routes, distribution, CI, native platforms, and store optimization.",
+      "skills": [
+        {
+          "id": "mobile-developer",
+          "summary": "Build cross-platform mobile applications."
+        },
+        {
+          "id": "react-native-architecture",
+          "summary": "Structure production React Native apps."
+        },
+        {
+          "id": "expo-api-routes",
+          "summary": "Build Expo Router API routes."
+        },
+        {
+          "id": "expo-dev-client",
+          "summary": "Create Expo development clients."
+        },
+        {
+          "id": "expo-cicd-workflows",
+          "summary": "Automate Expo builds and releases."
+        },
+        {
+          "id": "expo-deployment",
+          "summary": "Deploy and release Expo applications."
+        },
+        {
+          "id": "flutter-expert",
+          "summary": "Build Flutter multi-platform apps."
+        },
+        {
+          "id": "ios-developer",
+          "summary": "Develop iOS apps with Swift."
+        },
+        {
+          "id": "app-store-optimization",
+          "summary": "Improve App Store and Play Store visibility."
+        },
+        {
+          "id": "multi-platform-apps-multi-platform",
+          "summary": "Plan and build multi-platform app experiences."
+        }
+      ],
+      "why": "Mobile development has a full lifecycle in the catalog: architecture, Expo routes, distribution, CI, native platforms, and store optimization.",
+      "positioning": "Build and ship Expo, React Native, Flutter, iOS, and multi-platform apps with CI, deployment, and store readiness.",
+      "recommendedFor": [
+        "Mobile teams",
+        "Expo and React Native builders",
+        "Cross-platform app maintainers"
+      ],
+      "notFor": [
+        "Desktop-only apps",
+        "Backend-only API services"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to review this Expo app architecture, CI, deployment, and store-readiness risks.",
+        "Use this plugin to plan a React Native feature from routing and state to test and release.",
+        "Use this plugin to compare Flutter, React Native, native iOS, and multi-platform tradeoffs for this app."
+      ]
+    },
+    {
+      "id": "mobile-developer",
+      "name": "Mobile Developer",
+      "group": "🔧 Specialized Packs",
+      "emoji": "📱",
+      "tagline": "The \"Mobile Developer\" Pack",
+      "audience": "For iOS, Android, and cross-platform apps.",
+      "description": "For iOS, Android, and cross-platform apps.",
+      "skills": [
+        {
+          "id": "mobile-developer",
+          "summary": "Cross-platform mobile development."
+        },
+        {
+          "id": "react-native-architecture",
+          "summary": "React Native with Expo."
+        },
+        {
+          "id": "flutter-expert",
+          "summary": "Flutter multi-platform apps."
+        },
+        {
+          "id": "ios-developer",
+          "summary": "iOS development with Swift."
+        },
+        {
+          "id": "app-store-optimization",
+          "summary": "ASO for App Store and Play Store."
+        }
+      ]
+    },
+    {
+      "id": "integration-apis",
+      "name": "Integration & APIs",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🔗",
+      "tagline": "The \"Integration & APIs\" Pack",
+      "audience": "For connecting services and building integrations.",
+      "description": "For connecting services and building integrations.",
+      "skills": [
+        {
+          "id": "api-integration",
+          "summary": "Design service contracts, webhooks, and integration pipelines."
+        },
+        {
+          "id": "stripe-integration",
+          "summary": "Payments and subscriptions."
+        },
+        {
+          "id": "twilio-communications",
+          "summary": "SMS, voice, WhatsApp."
+        },
+        {
+          "id": "hubspot-integration",
+          "summary": "CRM integration."
+        },
+        {
+          "id": "plaid-fintech",
+          "summary": "Bank account linking and ACH."
+        },
+        {
+          "id": "algolia-search",
+          "summary": "Search implementation."
+        }
+      ]
+    },
+    {
+      "id": "architecture-design",
+      "name": "Architecture & Design",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🎯",
+      "tagline": "The \"Architecture & Design\" Pack",
+      "audience": "For system design and technical decisions.",
+      "description": "For system design and technical decisions.",
+      "skills": [
+        {
+          "id": "senior-architect",
+          "summary": "Comprehensive software architecture."
+        },
+        {
+          "id": "architecture-patterns",
+          "summary": "Clean Architecture, DDD, Hexagonal."
+        },
+        {
+          "id": "microservices-patterns",
+          "summary": "Microservices architecture."
+        },
+        {
+          "id": "event-sourcing-architect",
+          "summary": "Event sourcing and CQRS."
+        },
+        {
+          "id": "architecture-decision-records",
+          "summary": "Document technical decisions."
+        }
+      ]
+    },
+    {
+      "id": "ddd-evented-architecture",
+      "name": "DDD & Evented Architecture",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🧱",
+      "tagline": "The \"DDD & Evented Architecture\" Pack",
+      "audience": "For teams modeling complex domains and evolving toward evented systems.",
+      "description": "For teams modeling complex domains and evolving toward evented systems.",
+      "skills": [
+        {
+          "id": "domain-driven-design",
+          "summary": "Route DDD work from strategic modeling to implementation patterns."
+        },
+        {
+          "id": "ddd-strategic-design",
+          "summary": "Subdomains, bounded contexts, and ubiquitous language."
+        },
+        {
+          "id": "ddd-context-mapping",
+          "summary": "Cross-context integration and anti-corruption boundaries."
+        },
+        {
+          "id": "ddd-tactical-patterns",
+          "summary": "Aggregates, value objects, repositories, and domain events."
+        },
+        {
+          "id": "cqrs-implementation",
+          "summary": "Read/write model separation."
+        },
+        {
+          "id": "event-store-design",
+          "summary": "Event persistence and replay architecture."
+        },
+        {
+          "id": "saga-orchestration",
+          "summary": "Cross-context long-running transaction coordination."
+        },
+        {
+          "id": "projection-patterns",
+          "summary": "Materialized read models from event streams."
+        }
+      ]
+    },
+    {
+      "id": "automation-builder",
+      "name": "Automation Builder",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🤖",
+      "tagline": "The \"Automation Builder\" Pack",
+      "audience": "For connecting tools and building repeatable automated workflows.",
+      "description": "For connecting tools and building repeatable automated workflows.",
+      "skills": [
+        {
+          "id": "workflow-automation",
+          "summary": "Design durable automation flows for AI and business systems."
+        },
+        {
+          "id": "mcp-builder",
+          "summary": "Create tool interfaces agents can use reliably."
+        },
+        {
+          "id": "browser-automation",
+          "summary": "Automate workflows when a service has no suitable API."
+        },
+        {
+          "id": "make-automation",
+          "summary": "Build automations in Make/Integromat."
+        },
+        {
+          "id": "airtable-automation",
+          "summary": "Automate Airtable records, bases, and views."
+        },
+        {
+          "id": "notion-automation",
+          "summary": "Automate Notion pages, databases, and blocks."
+        },
+        {
+          "id": "slack-automation",
+          "summary": "Automate Slack messaging and channel workflows."
+        },
+        {
+          "id": "googlesheets-automation",
+          "summary": "Automate spreadsheet updates and data operations."
+        }
+      ]
+    },
+    {
+      "id": "revops-crm-automation",
+      "name": "RevOps & CRM Automation",
+      "group": "🔧 Specialized Packs",
+      "emoji": "💼",
+      "tagline": "The \"RevOps & CRM Automation\" Pack",
+      "audience": "For revenue operations, support handoffs, and CRM-heavy automation.",
+      "description": "For revenue operations, support handoffs, and CRM-heavy automation.",
+      "skills": [
+        {
+          "id": "hubspot-automation",
+          "summary": "Automate contacts, companies, deals, and tickets."
+        },
+        {
+          "id": "sendgrid-automation",
+          "summary": "Automate email sends, contacts, and templates."
+        },
+        {
+          "id": "zendesk-automation",
+          "summary": "Automate support tickets and reply workflows."
+        },
+        {
+          "id": "google-calendar-automation",
+          "summary": "Schedule events and manage availability."
+        },
+        {
+          "id": "outlook-calendar-automation",
+          "summary": "Automate Outlook meetings and invitations."
+        },
+        {
+          "id": "stripe-automation",
+          "summary": "Automate billing, invoices, and subscriptions."
+        },
+        {
+          "id": "shopify-automation",
+          "summary": "Automate products, orders, customers, and inventory."
+        }
+      ]
+    },
+    {
+      "id": "commerce-payments",
+      "name": "Commerce & Payments",
+      "group": "🔧 Specialized Packs",
+      "emoji": "💳",
+      "tagline": "The \"Commerce & Payments\" Pack",
+      "audience": "For monetization, payments, and commerce workflows.",
+      "description": "For monetization, payments, and commerce workflows.",
+      "skills": [
+        {
+          "id": "stripe-integration",
+          "summary": "Build robust checkout, subscription, and webhook flows."
+        },
+        {
+          "id": "paypal-integration",
+          "summary": "Integrate PayPal payments and related flows."
+        },
+        {
+          "id": "plaid-fintech",
+          "summary": "Link bank accounts and handle ACH-related use cases."
+        },
+        {
+          "id": "hubspot-integration",
+          "summary": "Connect CRM data into product and revenue workflows."
+        },
+        {
+          "id": "algolia-search",
+          "summary": "Add search and discovery to commerce experiences."
+        },
+        {
+          "id": "monetization",
+          "summary": "Design pricing and monetization systems deliberately."
+        }
+      ]
+    },
+    {
+      "id": "odoo-erp",
+      "name": "Odoo ERP",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🏢",
+      "tagline": "The \"Odoo ERP\" Pack",
+      "audience": "For teams building or operating around Odoo-based business systems.",
+      "description": "For teams building or operating around Odoo-based business systems.",
+      "skills": [
+        {
+          "id": "odoo-module-developer",
+          "summary": "Create custom Odoo modules cleanly."
+        },
+        {
+          "id": "odoo-orm-expert",
+          "summary": "Work effectively with Odoo ORM patterns and performance."
+        },
+        {
+          "id": "odoo-sales-crm-expert",
+          "summary": "Optimize sales pipelines, leads, and forecasting."
+        },
+        {
+          "id": "odoo-ecommerce-configurator",
+          "summary": "Configure storefront, catalog, and order flows."
+        },
+        {
+          "id": "odoo-performance-tuner",
+          "summary": "Diagnose and improve slow Odoo instances."
+        },
+        {
+          "id": "odoo-security-rules",
+          "summary": "Apply secure access controls and rule design."
+        },
+        {
+          "id": "odoo-docker-deployment",
+          "summary": "Deploy and run Odoo in Docker-based environments."
+        }
+      ]
+    },
+    {
+      "id": "azure-ai-cloud",
+      "name": "Azure AI & Cloud",
+      "group": "🔧 Specialized Packs",
+      "emoji": "☁️",
+      "tagline": "The \"Azure AI & Cloud\" Pack",
+      "audience": "For building on Azure across cloud, AI, and platform services.",
+      "description": "For building on Azure across cloud, AI, and platform services.",
+      "skills": [
+        {
+          "id": "azd-deployment",
+          "summary": "Ship Azure apps with Azure Developer CLI workflows."
+        },
+        {
+          "id": "azure-functions",
+          "summary": "Build serverless workloads with Azure Functions."
+        },
+        {
+          "id": "azure-ai-openai-dotnet",
+          "summary": "Use Azure OpenAI from .NET applications."
+        },
+        {
+          "id": "azure-search-documents-py",
+          "summary": "Build search, hybrid search, and indexing in Python."
+        },
+        {
+          "id": "azure-identity-py",
+          "summary": "Handle Azure authentication flows in Python services."
+        },
+        {
+          "id": "azure-monitor-opentelemetry-ts",
+          "summary": "Add telemetry and tracing from TypeScript apps."
+        }
+      ]
+    },
+    {
+      "id": "expo-react-native",
+      "name": "Expo & React Native",
+      "group": "🔧 Specialized Packs",
+      "emoji": "📲",
+      "tagline": "The \"Expo & React Native\" Pack",
+      "audience": "For shipping mobile apps with Expo and React Native.",
+      "description": "For shipping mobile apps with Expo and React Native.",
+      "skills": [
+        {
+          "id": "react-native-architecture",
+          "summary": "Structure production React Native apps well."
+        },
+        {
+          "id": "expo-api-routes",
+          "summary": "Build API routes in Expo Router and EAS Hosting."
+        },
+        {
+          "id": "expo-dev-client",
+          "summary": "Build and distribute Expo development clients."
+        },
+        {
+          "id": "expo-tailwind-setup",
+          "summary": "Set up Tailwind and NativeWind in Expo apps."
+        },
+        {
+          "id": "expo-cicd-workflows",
+          "summary": "Automate builds and releases with EAS workflows."
+        },
+        {
+          "id": "expo-deployment",
+          "summary": "Deploy Expo apps and manage release flow."
+        },
+        {
+          "id": "app-store-optimization",
+          "summary": "Improve App Store and Play Store discoverability."
+        }
+      ]
+    },
+    {
+      "id": "apple-platform-design",
+      "name": "Apple Platform Design",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🍎",
+      "tagline": "The \"Apple Platform Design\" Pack",
+      "audience": "For teams designing native-feeling Apple platform experiences.",
+      "description": "For teams designing native-feeling Apple platform experiences.",
+      "skills": [
+        {
+          "id": "hig-foundations",
+          "summary": "Learn the core Apple Human Interface Guidelines."
+        },
+        {
+          "id": "hig-patterns",
+          "summary": "Apply Apple interaction and UX patterns correctly."
+        },
+        {
+          "id": "hig-components-layout",
+          "summary": "Use Apple layout and navigation components well."
+        },
+        {
+          "id": "hig-inputs",
+          "summary": "Design for gestures, keyboards, Pencil, focus, and controllers."
+        },
+        {
+          "id": "hig-components-system",
+          "summary": "Work with widgets, live activities, and system surfaces."
+        },
+        {
+          "id": "hig-platforms",
+          "summary": "Adapt experiences across Apple device families."
+        }
+      ]
+    },
+    {
+      "id": "makepad-builder",
+      "name": "Makepad Builder",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🧩",
+      "tagline": "The \"Makepad Builder\" Pack",
+      "audience": "For building UI-heavy apps with the Makepad ecosystem.",
+      "description": "For building UI-heavy apps with the Makepad ecosystem.",
+      "skills": [
+        {
+          "id": "makepad-basics",
+          "summary": "Start with Makepad fundamentals and mental model."
+        },
+        {
+          "id": "makepad-layout",
+          "summary": "Handle sizing, flow, alignment, and layout composition."
+        },
+        {
+          "id": "makepad-widgets",
+          "summary": "Build interfaces from Makepad widgets."
+        },
+        {
+          "id": "makepad-event-action",
+          "summary": "Wire interaction and event handling correctly."
+        },
+        {
+          "id": "makepad-shaders",
+          "summary": "Create GPU-driven visual effects and custom drawing."
+        },
+        {
+          "id": "makepad-deployment",
+          "summary": "Package and ship Makepad projects."
+        }
+      ]
+    },
+    {
+      "id": "seo-specialist",
+      "name": "SEO Specialist",
+      "group": "🔧 Specialized Packs",
+      "emoji": "🔎",
+      "tagline": "The \"SEO Specialist\" Pack",
+      "audience": "For technical SEO, content structure, and search growth.",
+      "description": "For technical SEO, content structure, and search growth.",
+      "skills": [
+        {
+          "id": "seo-fundamentals",
+          "summary": "Build from sound SEO principles and search constraints."
+        },
+        {
+          "id": "seo-content-planner",
+          "summary": "Plan clusters, calendars, and content gaps."
+        },
+        {
+          "id": "seo-content-writer",
+          "summary": "Produce search-aware content drafts with intent alignment."
+        },
+        {
+          "id": "seo-structure-architect",
+          "summary": "Improve hierarchy, internal links, and structure."
+        },
+        {
+          "id": "seo-cannibalization-detector",
+          "summary": "Find overlapping pages competing for the same intent."
+        },
+        {
+          "id": "seo-content-auditor",
+          "summary": "Audit existing content quality and optimization gaps."
+        },
+        {
+          "id": "schema-markup",
+          "summary": "Add structured data to support richer search results."
+        }
+      ]
+    },
+    {
+      "id": "documents-presentations",
+      "name": "Documents & Presentations",
+      "group": "🔧 Specialized Packs",
+      "emoji": "📄",
+      "tagline": "The \"Documents & Presentations\" Pack",
+      "audience": "For document-heavy workflows, spreadsheets, PDFs, and presentations.",
+      "description": "For document-heavy workflows, spreadsheets, PDFs, and presentations.",
+      "skills": [
+        {
+          "id": "office-productivity",
+          "summary": "Coordinate document, spreadsheet, and presentation workflows."
+        },
+        {
+          "id": "docx-official",
+          "summary": "Create and edit Word-compatible documents."
+        },
+        {
+          "id": "pptx-official",
+          "summary": "Create and edit PowerPoint-compatible presentations."
+        },
+        {
+          "id": "xlsx-official",
+          "summary": "Create and analyze spreadsheet files with formulas and formatting."
+        },
+        {
+          "id": "pdf-official",
+          "summary": "Extract, generate, and manipulate PDFs programmatically."
+        },
+        {
+          "id": "google-docs-automation",
+          "summary": "Automate document creation and updates in Google Docs."
+        },
+        {
+          "id": "google-slides-automation",
+          "summary": "Automate presentation updates in Google Slides."
+        },
+        {
+          "id": "google-sheets-automation",
+          "summary": "Automate reads and writes in Google Sheets."
+        }
+      ]
+    },
+    {
+      "id": "oss-maintainer",
+      "name": "OSS Maintainer",
+      "group": "🧰 Maintainer & OSS",
+      "emoji": "🛠️",
+      "tagline": "The \"OSS Maintainer\" Pack",
+      "audience": "For shipping clean changes in public repositories.",
+      "description": "For shipping clean changes in public repositories.",
+      "skills": [
+        {
+          "id": "commit",
+          "summary": "High-quality conventional commits."
+        },
+        {
+          "id": "create-pr",
+          "summary": "PR creation with review-ready context."
+        },
+        {
+          "id": "requesting-code-review",
+          "summary": "Ask for targeted, high-signal reviews."
+        },
+        {
+          "id": "receiving-code-review",
+          "summary": "Apply feedback with technical rigor."
+        },
+        {
+          "id": "changelog-automation",
+          "summary": "Keep release notes and changelogs consistent."
+        },
+        {
+          "id": "git-advanced-workflows",
+          "summary": "Rebase, cherry-pick, bisect, recovery."
+        },
+        {
+          "id": "documentation-templates",
+          "summary": "Standardize docs and handoffs."
+        },
+        {
+          "id": "finishing-a-development-branch",
+          "summary": "Close a branch with verified integration, merge, and cleanup options."
+        }
+      ]
+    },
+    {
+      "id": "skill-author",
+      "name": "Skill Author",
+      "group": "🧰 Maintainer & OSS",
+      "emoji": "🧱",
+      "tagline": "The \"Skill Author\" Pack",
+      "audience": "For creating and maintaining high-quality SKILL.md assets.",
+      "description": "For creating and maintaining high-quality SKILL.md assets.",
+      "skills": [
+        {
+          "id": "skill-creator",
+          "summary": "Design effective new skills."
+        },
+        {
+          "id": "effective-agent-skills",
+          "summary": "Design portable triggers, progressive disclosure, and safe skill workflows."
+        },
+        {
+          "id": "writing-skills",
+          "summary": "Improve clarity and structure of skill instructions."
+        },
+        {
+          "id": "documentation-generation-doc-generate",
+          "summary": "Generate maintainable technical docs."
+        },
+        {
+          "id": "lint-and-validate",
+          "summary": "Validate quality after edits."
+        },
+        {
+          "id": "verification-before-completion",
+          "summary": "Confirm changes before claiming done."
+        }
+      ]
+    },
+    {
+      "id": "aas-accessibility-inclusive-ux",
+      "name": "AAS Accessibility & Inclusive UX",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "♿",
+      "tagline": "The \"AAS Accessibility & Inclusive UX\" Plugin",
+      "audience": "Design, frontend, QA, and product teams improving accessible user experiences.",
+      "description": "Accessibility is a standalone product quality workflow spanning audit, automated scanning, screen-reader checks, high contrast, fixes, and regression testing.",
+      "skills": [
+        {
+          "id": "accesslint-audit",
+          "summary": "Audit accessibility issues with AccessLint workflows."
+        },
+        {
+          "id": "accesslint-scan",
+          "summary": "Scan interfaces for accessibility regressions."
+        },
+        {
+          "id": "screen-reader-testing",
+          "summary": "Test interfaces with screen-reader expectations."
+        },
+        {
+          "id": "accesslint-diff",
+          "summary": "Review accessibility changes and regressions in diffs."
+        },
+        {
+          "id": "fixing-accessibility",
+          "summary": "Fix accessibility issues in product UI."
+        },
+        {
+          "id": "ui-a11y",
+          "summary": "Audit WCAG, contrast, focus, labels, motion, and semantic HTML."
+        },
+        {
+          "id": "webapp-testing",
+          "summary": "Use webapp-testing in this workflow."
+        },
+        {
+          "id": "playwright-skill",
+          "summary": "Use playwright-skill in this workflow."
+        }
+      ],
+      "why": "Accessibility is a standalone product quality workflow spanning audit, automated scanning, screen-reader checks, high contrast, fixes, and regression testing.",
+      "positioning": "Audit, test, and fix accessible product experiences across WCAG, automated scans, screen readers, contrast, and browser QA.",
+      "recommendedFor": [
+        "Frontend teams",
+        "Product designers",
+        "QA teams"
+      ],
+      "notFor": [
+        "Backend-only services",
+        "General marketing content"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to audit this page for WCAG issues, prioritize fixes, and propose safe code changes.",
+        "Use this plugin to create an accessibility regression plan with automated scans, screen-reader checks, and Playwright coverage.",
+        "Use this plugin to review this UI for contrast, keyboard, focus, labels, motion, and semantic HTML."
+      ]
+    },
+    {
+      "id": "aas-api-platform-builder",
+      "name": "AAS API Platform Builder",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🔌",
+      "tagline": "The \"AAS API Platform Builder\" Plugin",
+      "audience": "Backend and platform teams designing APIs, contracts, auth, security, load tests, and observability.",
+      "description": "Complements Python API Builder with a language-agnostic API platform workflow from design and OpenAPI contracts to auth, security, documentation, load testing, and observability.",
+      "skills": [
+        {
+          "id": "api-design-principles",
+          "summary": "Design clear and maintainable APIs."
+        },
+        {
+          "id": "api-patterns",
+          "summary": "Choose REST, GraphQL, tRPC, and API patterns."
+        },
+        {
+          "id": "openapi-spec-generation",
+          "summary": "Generate and maintain OpenAPI specifications."
+        },
+        {
+          "id": "api-documentation",
+          "summary": "Document APIs for users and maintainers."
+        },
+        {
+          "id": "api-endpoint-builder",
+          "summary": "Build API endpoints with sound boundaries."
+        },
+        {
+          "id": "auth-implementation-patterns",
+          "summary": "Implement auth, sessions, JWT, and OAuth2 safely."
+        },
+        {
+          "id": "api-security-best-practices",
+          "summary": "Apply secure API design practices."
+        },
+        {
+          "id": "backend-architect",
+          "summary": "Architect backend services and platform boundaries."
+        },
+        {
+          "id": "k6-load-testing",
+          "summary": "Run API and service load tests."
+        },
+        {
+          "id": "observability-engineer",
+          "summary": "Design monitoring and observability systems."
+        }
+      ],
+      "why": "Complements Python API Builder with a language-agnostic API platform workflow from design and OpenAPI contracts to auth, security, documentation, load testing, and observability.",
+      "positioning": "Design language-agnostic API platforms with contracts, docs, endpoints, auth, security, load testing, and observability.",
+      "recommendedFor": [
+        "Backend teams",
+        "Platform teams",
+        "Full-stack teams designing shared APIs"
+      ],
+      "notFor": [
+        "Python-only implementation guidance",
+        "Frontend UI polish"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to design an API platform with OpenAPI contracts, auth, docs, and observability.",
+        "Use this plugin to review this API for versioning, endpoint design, security, and load-test gaps.",
+        "Use this plugin to turn these product requirements into API endpoints and a contract-first implementation plan."
+      ]
+    },
+    {
+      "id": "aas-saas-launch-revenue",
+      "name": "AAS SaaS Launch & Revenue",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "💸",
+      "tagline": "The \"AAS SaaS Launch & Revenue\" Plugin",
+      "audience": "Founders and product teams launching, pricing, monetizing, measuring, and improving SaaS products.",
+      "description": "Turns scattered startup, pricing, payments, analytics, lifecycle, referral, and SEO skills into one launch-to-revenue workflow.",
+      "skills": [
+        {
+          "id": "saas-mvp-launcher",
+          "summary": "Launch SaaS MVPs with practical product flow."
+        },
+        {
+          "id": "micro-saas-launcher",
+          "summary": "Plan and ship micro-SaaS products."
+        },
+        {
+          "id": "pricing-strategy",
+          "summary": "Design pricing and packaging strategy."
+        },
+        {
+          "id": "monetization",
+          "summary": "Design monetization systems deliberately."
+        },
+        {
+          "id": "stripe-integration",
+          "summary": "Integrate Stripe payments and subscriptions."
+        },
+        {
+          "id": "analytics-product",
+          "summary": "Model product analytics and product metrics."
+        },
+        {
+          "id": "launch-strategy",
+          "summary": "Plan product launches and go-to-market steps."
+        },
+        {
+          "id": "referral-program",
+          "summary": "Design referral and growth loops."
+        },
+        {
+          "id": "email-sequence",
+          "summary": "Write automated lifecycle email campaigns."
+        },
+        {
+          "id": "seo-audit",
+          "summary": "Audit technical SEO and discoverability."
+        }
+      ],
+      "why": "Turns scattered startup, pricing, payments, analytics, lifecycle, referral, and SEO skills into one launch-to-revenue workflow.",
+      "positioning": "Launch, price, monetize, measure, and grow SaaS products from MVP to revenue loops.",
+      "recommendedFor": [
+        "Founders",
+        "Product teams",
+        "Growth-minded builders"
+      ],
+      "notFor": [
+        "Enterprise infrastructure-only projects",
+        "Pure document generation"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to plan a SaaS launch from MVP scope through pricing, payments, analytics, email, and SEO.",
+        "Use this plugin to review this pricing page and activation funnel for revenue opportunities.",
+        "Use this plugin to build a launch checklist with referral, email, analytics, and Stripe readiness."
+      ]
+    },
+    {
+      "id": "aas-ai-product-evaluation-ops",
+      "name": "AAS AI Product & Evaluation Ops",
+      "group": "⭐ Specialized Product Plugins",
+      "emoji": "🧠",
+      "tagline": "The \"AAS AI Product & Evaluation Ops\" Plugin",
+      "audience": "PMs, founders, and AI product teams defining, measuring, and improving AI features.",
+      "description": "Covers the product side of AI work: wrapper strategy, evals, tracing, product metrics, experiments, model evaluation, and context constraints.",
+      "skills": [
+        {
+          "id": "ai-wrapper-product",
+          "summary": "Shape AI wrapper products with clearer value."
+        },
+        {
+          "id": "agent-evaluation",
+          "summary": "Evaluate agent reliability and performance."
+        },
+        {
+          "id": "langfuse",
+          "summary": "Trace, evaluate, and monitor LLM apps."
+        },
+        {
+          "id": "llm-app-patterns",
+          "summary": "Use production LLM application patterns."
+        },
+        {
+          "id": "context-window-management",
+          "summary": "Manage long context effectively."
+        },
+        {
+          "id": "kpi-dashboard-design",
+          "summary": "Design dashboards for decision-making."
+        },
+        {
+          "id": "analytics-product",
+          "summary": "Model product analytics and product metrics."
+        },
+        {
+          "id": "product-manager",
+          "summary": "Apply product management judgment and planning."
+        },
+        {
+          "id": "ab-test-setup",
+          "summary": "Plan and validate experiments."
+        },
+        {
+          "id": "hugging-face-evaluation",
+          "summary": "Evaluate AI models and datasets with Hugging Face workflows."
+        }
+      ],
+      "why": "Covers the product side of AI work: wrapper strategy, evals, tracing, product metrics, experiments, model evaluation, and context constraints.",
+      "positioning": "Define, evaluate, instrument, and improve AI product features with metrics, tracing, experiments, and model evals.",
+      "recommendedFor": [
+        "AI PMs",
+        "Founders building AI features",
+        "LLM product teams"
+      ],
+      "notFor": [
+        "Low-level MCP server implementation only",
+        "Office document automation"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to write an AI feature evaluation plan with metrics, traces, user feedback, and experiment design.",
+        "Use this plugin to review this AI feature for product risk, context limits, eval coverage, and KPI gaps.",
+        "Use this plugin to design a dashboard and feedback loop for improving this LLM workflow."
+      ]
+    },
+    {
+      "id": "aas-data-engineering-platform",
+      "name": "AAS Data Engineering Platform",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "🛠️",
+      "tagline": "The \"AAS Data Engineering Platform\" Plugin",
+      "audience": "Data and AI platform teams building pipelines, warehouses, transforms, embeddings, and RAG-ready data foundations.",
+      "description": "Connects data pipelines, dbt, Postgres, vector databases, embeddings, RAG, SQL, and transformation practice into a modern data platform plugin.",
+      "skills": [
+        {
+          "id": "data-engineer",
+          "summary": "Design and operate data pipelines."
+        },
+        {
+          "id": "airflow-dag-patterns",
+          "summary": "Build maintainable Airflow DAGs."
+        },
+        {
+          "id": "dbt-transformation-patterns",
+          "summary": "Build dbt transformation pipelines."
+        },
+        {
+          "id": "postgres-best-practices",
+          "summary": "Optimize Postgres schemas and queries."
+        },
+        {
+          "id": "database-architect",
+          "summary": "Design robust database structures."
+        },
+        {
+          "id": "vector-database-engineer",
+          "summary": "Design vector database systems."
+        },
+        {
+          "id": "embedding-strategies",
+          "summary": "Choose and operate embedding strategies."
+        },
+        {
+          "id": "rag-engineer",
+          "summary": "Build retrieval-augmented generation systems."
+        },
+        {
+          "id": "sql-pro",
+          "summary": "Query and model data with modern SQL."
+        },
+        {
+          "id": "data-quality-frameworks",
+          "summary": "Implement data contracts, validation, dbt tests, and quality monitoring."
+        }
+      ],
+      "why": "Connects data pipelines, dbt, Postgres, vector databases, embeddings, RAG, SQL, and transformation practice into a modern data platform plugin.",
+      "positioning": "Build data platforms with pipelines, dbt, Postgres, vector databases, embeddings, RAG data, SQL, and transforms.",
+      "recommendedFor": [
+        "Data engineers",
+        "Analytics engineers",
+        "AI platform teams"
+      ],
+      "notFor": [
+        "Marketing campaign planning",
+        "Frontend UI-only work"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to design a data platform from ingestion through dbt models, Postgres, and dashboard-ready marts.",
+        "Use this plugin to review this pipeline for reliability, transform quality, SQL modeling, and RAG readiness.",
+        "Use this plugin to plan an embeddings and vector database layer for this product dataset."
+      ]
+    },
+    {
+      "id": "aas-privacy-compliance-engineering",
+      "name": "AAS Privacy & Compliance Engineering",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "🧾",
+      "tagline": "The \"AAS Privacy & Compliance Engineering\" Plugin",
+      "audience": "Teams building privacy-aware and compliance-sensitive SaaS, AI, finance, and cloud systems.",
+      "description": "Uses privacy, GDPR, PCI, compliance checks, control evidence, and security review skills to create a practical engineering compliance workflow.",
+      "skills": [
+        {
+          "id": "privacy-by-design",
+          "summary": "Apply privacy-by-design principles."
+        },
+        {
+          "id": "gdpr-data-handling",
+          "summary": "Handle GDPR-sensitive data safely."
+        },
+        {
+          "id": "pci-compliance",
+          "summary": "Handle payment security and PCI expectations."
+        },
+        {
+          "id": "fsi-compliance-checker",
+          "summary": "Check financial-services compliance requirements."
+        },
+        {
+          "id": "security-audit",
+          "summary": "Audit security posture and controls."
+        },
+        {
+          "id": "cc-skill-security-review",
+          "summary": "Review features with a security checklist."
+        }
+      ],
+      "why": "Uses privacy, GDPR, PCI, compliance checks, control evidence, and security review skills to create a practical engineering compliance workflow.",
+      "positioning": "Engineer privacy and compliance controls with GDPR, PCI, control checks, evidence gaps, and security review.",
+      "recommendedFor": [
+        "SaaS teams",
+        "AI app teams",
+        "Compliance-sensitive engineering teams"
+      ],
+      "notFor": [
+        "Legal advice as a substitute for counsel",
+        "Offensive security testing"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to review this feature for privacy-by-design, GDPR handling, PCI exposure, and security controls.",
+        "Use this plugin to map compliance-sensitive data flows and identify engineering changes before launch.",
+        "Use this plugin to check whether this implementation satisfies the expected privacy and compliance controls."
+      ]
+    },
+    {
+      "id": "aas-localization-international-growth",
+      "name": "AAS Localization & International Growth",
+      "group": "🧩 Specialized Product Plugins - Next Wave",
+      "emoji": "🌍",
+      "tagline": "The \"AAS Localization & International Growth\" Plugin",
+      "audience": "Growth, content, and product teams expanding sites and products across languages and markets.",
+      "description": "Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills into an international growth workflow.",
+      "skills": [
+        {
+          "id": "i18n-localization",
+          "summary": "Internationalize and localize product interfaces."
+        },
+        {
+          "id": "seo-hreflang",
+          "summary": "Implement hreflang and international SEO signals."
+        },
+        {
+          "id": "seo-fundamentals",
+          "summary": "Apply durable SEO principles."
+        },
+        {
+          "id": "seo-content-planner",
+          "summary": "Plan SEO content clusters and calendars."
+        },
+        {
+          "id": "seo-content-writer",
+          "summary": "Write search-aware content drafts."
+        },
+        {
+          "id": "schema-markup",
+          "summary": "Add structured data for search visibility."
+        },
+        {
+          "id": "content-creator",
+          "summary": "Create SEO-aware marketing content."
+        },
+        {
+          "id": "copywriting",
+          "summary": "Write conversion-focused copy."
+        },
+        {
+          "id": "analytics-tracking",
+          "summary": "Set up reliable product analytics."
+        },
+        {
+          "id": "apify-market-research",
+          "summary": "Research markets and competitors with Apify workflows."
+        }
+      ],
+      "why": "Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills into an international growth workflow.",
+      "positioning": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research.",
+      "recommendedFor": [
+        "Growth teams",
+        "International SEO teams",
+        "Product teams localizing UI"
+      ],
+      "notFor": [
+        "Legal localization certification",
+        "Backend-only API services"
+      ],
+      "defaultPrompts": [
+        "Use this plugin to plan international SEO and localization for this product, including hreflang and content priorities.",
+        "Use this plugin to audit this site for i18n, localized content, schema, analytics, and market research gaps.",
+        "Use this plugin to create a market-localized content plan with copy, SEO, and measurement."
+      ]
+    }
+  ]
+}

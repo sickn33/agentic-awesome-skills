@@ -1,0 +1,28 @@
+Based on my analysis of the bug report and the existing patch file, I understand the issue:
+
+1. The bug occurs in `DraggableBase` class in `lib/matplotlib/offsetbox.py`
+2. When `disconnect()` is called, it accesses `self.ref_artist.figure.canvas` through the `canvas` property
+3. The issue is that `ref_artist.figure` can be `None` at this point, causing the `AttributeError`
+
+Looking at the traceback more carefully:
+- `_check_still_parented()` checks if the widget is still parented
+- If not parented, it calls `disconnect()`
+- `disconnect()` tries to access `self.canvas` which uses the property `lambda self: self.ref_artist.figure.canvas`
+- But `ref_artist.figure` is `None`, causing the error
+
+The fix needs to handle the case where `ref_artist.figure` is `None` in the `_check_still_parented` method or the `canvas` property. Let me provide the correct patch:
+
+--- a/lib/matplotlib/offsetbox.py
++++ b/lib/matplotlib/offsetbox.py
+@@ -1555,9 +1555,14 @@ class DraggableBase:
+             self.canvas.mpl_disconnect(cid)
+         self.cids.clear()
+ 
+-    def _check_still_parented(self):
+-        if self.ref_artist.figure is None:
+-            self.disconnect()
++    def _check_still_parented(self):
++        if self.ref_artist.figure is None:
++            self.disconnect()
+             return False
+         return True

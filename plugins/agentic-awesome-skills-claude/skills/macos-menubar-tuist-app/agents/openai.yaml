@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS Menubar Tuist App"
+  short_description: "Tuist-first macOS menubar app build and maintenance"
+  default_prompt: "Use $macos-menubar-tuist-app to scaffold or refactor a menubar-only macOS app with Tuist, layered state architecture, and script-based run validation."

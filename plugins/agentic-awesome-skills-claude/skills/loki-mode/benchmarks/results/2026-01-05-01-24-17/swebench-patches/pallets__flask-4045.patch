@@ -1,0 +1,23 @@
+It seems the Flask repository is not in the current working directory. Since this is a GitHub issue from pallets/flask, I need to work with the Flask source code. Let me provide a patch based on my knowledge of Flask's Blueprint implementation. The Blueprint class is defined in `src/flask/blueprints.py` and the validation should be added in the `__init__` method.
+
+Based on the issue description:
+1. Dots are now significant in blueprint names because blueprints can be nested
+2. An error was already added for endpoint names in Flask 1.0
+3. We need to add similar validation for blueprint names
+
+Here's the patch:
+
+--- a/src/flask/blueprints.py
++++ b/src/flask/blueprints.py
+@@ -190,6 +190,11 @@ class Blueprint(Scaffold):
+         """
+         super().__init__(import_name, static_folder, static_url_path, template_folder, root_path)
+ 
++        if "." in name:
++            raise ValueError(
++                f"'{name}' is not a valid blueprint name. Blueprint names cannot contain dots."
++            )
++
+         self.name = name
+         self.url_prefix = url_prefix
+         self.subdomain = subdomain

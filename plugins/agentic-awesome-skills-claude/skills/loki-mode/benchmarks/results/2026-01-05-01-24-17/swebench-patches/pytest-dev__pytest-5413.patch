@@ -1,0 +1,35 @@
+It appears the pytest repository isn't cloned here. Based on the issue, I need to examine the ExceptionInfo class in `src/_pytest/_code/code.py`. Let me look at the GitHub reference in the issue:
+
+The issue mentions line 537-542 in `src/_pytest/_code/code.py` where `__str__` is defined. Based on the discussion:
+
+1. The current `__str__` method shows something like `<console>:3: LookupError: A` instead of the full exception message
+2. The consensus is to delete the `__str__` method entirely so that `__repr__` takes over
+
+Let me provide the patch based on the issue description. The current implementation shows:
+
+```python
+def __str__(self) -> str:
+    if self._excinfo is None:
+        return repr(self)
+    entry = self.traceback[-1]
+    loc = ReprFileLocation(entry.path, entry.lineno + 1, self.exconly())
+    return str(loc)
+```
+
+The fix is to simply delete this `__str__` method.
+
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -534,11 +534,6 @@ class ExceptionInfo(Generic[E]):
+             raise TypeError("cannot set __traceback__ to {!r}".format(x))
+         self._excinfo = (self._excinfo[0], self._excinfo[1], x)
+ 
+-    def __str__(self) -> str:
+-        if self._excinfo is None:
+-            return repr(self)
+-        entry = self.traceback[-1]
+-        loc = ReprFileLocation(entry.path, entry.lineno + 1, self.exconly())
+-        return str(loc)
+-
+     @property
+     def value(self) -> E:

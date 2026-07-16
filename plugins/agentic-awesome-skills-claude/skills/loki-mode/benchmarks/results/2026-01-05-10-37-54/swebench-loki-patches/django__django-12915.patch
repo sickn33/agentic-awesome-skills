@@ -1,0 +1,18 @@
+# django__django-12915
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/contrib/staticfiles/handlers.py
++++ b/django/contrib/staticfiles/handlers.py
+@@ -43,6 +43,11 @@ class StaticFilesHandlerMixin:
+             return self.serve(request)
+         return super().get_response(request)
+ 
++    async def get_response_async(self, request):
++        if self._should_handle(request.path):
++            return self.serve(request)
++        return await super().get_response_async(request)
++
+ 
+ class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):
+     """

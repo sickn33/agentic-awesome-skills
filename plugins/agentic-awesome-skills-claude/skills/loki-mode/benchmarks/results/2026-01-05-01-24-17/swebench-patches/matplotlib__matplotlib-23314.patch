@@ -1,0 +1,16 @@
+Based on my research of the matplotlib codebase and the bug description, I can provide the fix. The issue is in the `Axes3D.draw()` method in `lib/mpl_toolkits/mplot3d/axes3d.py` which does not check the visibility flag before drawing.
+
+Looking at matplotlib's codebase, the `Axes3D.draw()` method needs to check `self.get_visible()` early and return without drawing if the axes is not visible.
+
+Here's the patch:
+
+--- a/lib/mpl_toolkits/mplot3d/axes3d.py
++++ b/lib/mpl_toolkits/mplot3d/axes3d.py
+@@ -41,6 +41,8 @@ class Axes3D(Axes):
+     @artist.allow_rasterization
+     def draw(self, renderer):
+         # draw the background patch
++        if not self.get_visible():
++            return
+         self.patch.draw(renderer)
+         self._frameon = False

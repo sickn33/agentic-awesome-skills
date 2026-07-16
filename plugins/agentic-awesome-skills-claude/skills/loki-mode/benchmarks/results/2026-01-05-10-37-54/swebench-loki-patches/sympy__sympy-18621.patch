@@ -1,0 +1,21 @@
+# sympy__sympy-18621
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I have enough information to generate the patch. The fix is to add `evaluate=False` to the `ImmutableDenseMatrix` constructor in the `blocks` property of the `BlockDiagMatrix` class at approximately line 304.
+
+```
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -301,7 +301,7 @@ class BlockDiagMatrix(BlockMatrix):
+     @property
+     def blocks(self):
+         from sympy.matrices.immutable import ImmutableDenseMatrix
+-        mats = self.args
++        mats = self.args
+         data = [[mats[i] if i == j else ZeroMatrix(mats[i].rows, mats[j].cols)
+                 for j in range(len(mats))]
+                 for i in range(len(mats))]
+-        return ImmutableDenseMatrix(data)
++        return ImmutableDenseMatrix(data, evaluate=False)
+```

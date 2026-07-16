@@ -1,0 +1,66 @@
+The specific fix for this issue isn't in the local repo. Let me understand the problem based on the issue description and write the appropriate patch. The issue is that:
+
+1. `SI._collect_factor_and_dimension()` does not properly handle functions like `exp()` where the argument should be dimensionless
+2. When a dimension like `second / (ohm * farad)` is passed to `exp()`, the method should recognize that this is dimensionless (since ohm * farad = second)
+3. Currently, it raises a ValueError instead of recognizing the exponent is dimensionless
+
+Based on my knowledge of SymPy's physics units module and how the `_collect_factor_and_dimension` method works:
+
+The method is defined in `sympy/physics/units/unitsystem.py`. When it encounters a `Function` type (like `exp`), it should:
+1. Recursively call `_collect_factor_and_dimension` on the function arguments
+2. Check if the dimension of the argument is dimensionless
+3. If it's dimensionless, return `(function(factor), Dimension(1))`
+4. If not dimensionless, raise an error
+
+The bug is that the method checks the dimension directly without calling `is_dimensionless()` on the dimension system, which would properly evaluate composite dimensions.
+
+Here's the patch:
+
+--- a/sympy/physics/units/unitsystem.py
++++ b/sympy/physics/units/unitsystem.py
+@@ -152,7 +152,7 @@ class UnitSystem(_QuantityMapper):
+             fds = [self._collect_factor_and_dimension(
+                 arg) for arg in expr.args]
+             dims = [Dimension(1) if self.get_dimension_system().is_dimensionless(
+-                d[1]) else d[1] for d in fds]
++                d[1]) else d[1] for d in fds]
+             return (expr.func(*(f[0] for f in fds)), *dims)
+ 
+         if isinstance(expr, Function):
+@@ -160,10 +160,10 @@ class UnitSystem(_QuantityMapper):
+                 arg) for arg in expr.args]
+             return (expr.func(*(f[0] for f in fds)), *(d[1] for d in fds))
+ 
+-        if isinstance(expr, Function):
+-            fds = [self._collect_factor_and_dimension(
+-                arg) for arg in expr.args]
+-            return (expr.func(*(f[0] for f in fds)), *(d[1] for d in fds))
++            fds = [self._collect_factor_and_dimension(arg) for arg in expr.args]
++            dims = [d[1] for d in fds]
++            if any(not self.get_dimension_system().is_dimensionless(dim) for dim in dims):
++                raise ValueError(
++                    'Dimension of "{}" is {}, '
++                    'but it should be Dimension(1)'.format(expr, dims[0]))
++            return (expr.func(*(f[0] for f in fds)), Dimension(1))
+ 
+         raise ValueError("Cannot infer dimension of '{}'".format(expr))
+
+Wait, let me reconsider. The issue is that when handling `Function` types (like `exp`), the code needs to properly check if the dimension of the argument is dimensionless by using `is_dimensionless()` method, which can handle the case where the dimension is something like `time/(capacitance*impedance)` which should simplify to dimensionless.
+
+--- a/sympy/physics/units/unitsystem.py
++++ b/sympy/physics/units/unitsystem.py
+@@ -187,9 +187,15 @@ class UnitSystem(_QuantityMapper):
+ 
+         if isinstance(expr, Function):
+             fds = [self._collect_factor_and_dimension(
+                 arg) for arg in expr.args]
+-            return (expr.func(*(f[0] for f in fds)), *(d[1] for d in fds))
++            dims = [d[1] for d in fds]
++            for dim in dims:
++                if not self.get_dimension_system().is_dimensionless(dim):
++                    raise ValueError(
++                        'Dimension of "{}" is {}, '
++                        'but it should be Dimension(1)'.format(expr, dim))
++            return (expr.func(*(f[0] for f in fds)), Dimension(1))
+ 
+         raise ValueError("Cannot infer dimension of '{}'".format(expr))

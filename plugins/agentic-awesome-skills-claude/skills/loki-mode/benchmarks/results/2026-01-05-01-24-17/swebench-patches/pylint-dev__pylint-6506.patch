@@ -1,0 +1,25 @@
+Based on the bug report and my understanding of the pylint codebase, here's the fix. The issue is that `_UnrecognizedOptionError` is raised but not caught, causing a traceback to be printed. The solution is to catch this exception in `run.py` and exit gracefully:
+
+--- a/pylint/lint/run.py
++++ b/pylint/lint/run.py
+@@ -20,6 +20,7 @@ from pylint.config.config_initialization import _config_initialization
+ from pylint.config.exceptions import (
+     ArgumentPreprocessingError,
++    _UnrecognizedOptionError,
+ )
+ from pylint.constants import full_version
+ 
+@@ -132,9 +133,13 @@ class Run:
+             verbose_mode=self._is_verbose_mode(args),
+         )
+ 
+-        args = _config_initialization(
+-            linter, args, reporter, config_file=self._rcfile, verbose_mode=self.verbose
+-        )
++        try:
++            args = _config_initialization(
++                linter, args, reporter, config_file=self._rcfile, verbose_mode=self.verbose
++            )
++        except _UnrecognizedOptionError as exc:
++            print(f"pylint: error: unrecognized arguments: {', '.join(exc.options)}", file=sys.stderr)
++            sys.exit(32)

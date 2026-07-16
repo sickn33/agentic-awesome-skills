@@ -1,0 +1,31 @@
+Based on my analysis of this Django issue, I understand the problem. The issue is in the SQLite backend's `test_db_signature()` method. When using `TEST["NAME"]` configuration for SQLite databases, the signature doesn't include the test database name, causing different test databases to be treated as the same database (since they share the same signature), which leads to connection sharing and the "database is locked" error.
+
+Looking at the Django codebase from the issue description and hints:
+
+1. The issue occurs when `TEST["NAME"]` is specified for SQLite databases
+2. The `test_db_signature()` method in `django/db/backends/sqlite3/creation.py` needs to be fixed to include the test database name in the signature
+3. The fix involves modifying `test_db_signature()` to return the actual test database name when `TEST["NAME"]` is configured
+
+Based on the referenced PR #11678 and the issue description, here's the fix:
+
+--- a/django/db/backends/sqlite3/creation.py
++++ b/django/db/backends/sqlite3/creation.py
+@@ -51,7 +51,9 @@ class DatabaseCreation(BaseDatabaseCreation):
+         return test_database_name
+ 
+     def test_db_signature(self):
+-        """
+-        Return a tuple that uniquely identifies a test database.
+-        """
+-        return (self.connection.settings_dict['NAME'],)
++        """
++        Return a tuple that uniquely identifies a test database.
++
++        This takes into account the special test database name if one is
++        explicitly defined.
++        """
++        test_database_name = self._get_test_db_name()
++        sig = [self.connection.settings_dict['NAME']]
++        if test_database_name:
++            sig = [test_database_name]
++        return tuple(sig)

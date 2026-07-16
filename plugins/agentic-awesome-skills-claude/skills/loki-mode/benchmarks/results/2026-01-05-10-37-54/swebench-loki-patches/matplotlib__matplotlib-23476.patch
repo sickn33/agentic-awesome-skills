@@ -1,0 +1,19 @@
+# matplotlib__matplotlib-23476
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I need to generate a patch for the matplotlib figure.py file. The fix is to modify `__getstate__` to store the original unscaled DPI (from `_dpi`) instead of the potentially scaled `dpi` value.
+
+Here is the patch:
+
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -3023,6 +3023,8 @@ class Figure(FigureBase):
+ 
+     def __getstate__(self):
+         state = super().__getstate__()
++        # Store the original DPI before it was scaled by the backend
++        state['dpi'] = self._dpi
+         # The canvas cannot currently be pickled, but this has the benefit
+         # of meaning that a figure can be detached from one canvas, and
+         # re-attached to another.

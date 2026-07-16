@@ -1,0 +1,19 @@
+# sympy__sympy-13480
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I can generate the patch. The issue is a simple typo where `cotm` should be `cothm` on line 590 of the `hyperbolic.py` file in the `coth` class `eval` method.
+
+```
+--- a/sympy/functions/elementary/hyperbolic.py
++++ b/sympy/functions/elementary/hyperbolic.py
+@@ -587,7 +587,7 @@ class coth(HyperbolicFunction):
+             if m:
+                 cothm = coth(m)
+                 if cothm is S.ComplexInfinity:
+-                    if cotm is S.ComplexInfinity:
++                    if cothm is S.ComplexInfinity:
+                         return coth(x)
+                     return coth(x)
+                 else:
+```

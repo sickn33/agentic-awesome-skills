@@ -1,0 +1,17 @@
+# django__django-12497
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -1248,8 +1248,8 @@ class ManyToManyField(RelatedField):
+                             self.remote_field.through._meta.object_name,
+                         ),
+                         hint=(
+-                            'If you want to create a recursive relationship, '
+-                            'use ForeignKey("%s", symmetrical=False, through="%s").'
++                            'If you want to create a recursive relationship, '
++                            'use ManyToManyField("%s", through="%s").'
+                         ) % (
+                             RECURSIVE_RELATIONSHIP_CONSTANT,
+                             self.remote_field.through._meta.object_name,

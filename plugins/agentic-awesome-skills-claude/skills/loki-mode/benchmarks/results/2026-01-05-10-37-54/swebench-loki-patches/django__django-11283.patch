@@ -1,0 +1,29 @@
+# django__django-11283
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I need to generate a patch for Django's `auth.0011_update_proxy_permissions` migration. Let me create the patch based on my knowledge of this Django migration file and the described fix strategy.
+
+```
+--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py
++++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py
+@@ -21,6 +21,13 @@ def update_proxy_model_permissions(apps, schema_editor, reverse=False):
+             proxy_content_type = ContentType.objects.get_for_model(Model, for_concrete_model=False)
+         except ContentType.DoesNotExist:
+             continue
++        # Find codenames that already exist for the target content_type to avoid
++        # IntegrityError when a model was recreated as a proxy model.
++        existing_codenames = set(Permission.objects.filter(
++            content_type=new_content_type,
++        ).values_list('codename', flat=True))
+         old_content_type = cyclic.get(proxy_content_type.pk) or proxy_content_type
+-        Permission.objects.filter(
++        permissions_to_update = Permission.objects.filter(
+             permissions_query,
+             content_type=old_content_type,
+-        ).update(content_type=new_content_type)
++        )
++        if existing_codenames:
++            permissions_to_update = permissions_to_update.exclude(codename__in=existing_codenames)
++        permissions_to_update.update(content_type=new_content_type)
+```

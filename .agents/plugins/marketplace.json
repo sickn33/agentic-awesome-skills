@@ -1,0 +1,716 @@
+{
+  "name": "agentic-awesome-skills",
+  "interface": {
+    "displayName": "Agentic Awesome Skills"
+  },
+  "plugins": [
+    {
+      "name": "agentic-awesome-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-awesome-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "aasb-essentials",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-essentials"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Essentials & Core"
+    },
+    {
+      "name": "aasb-security-engineer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-security-engineer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Security & Compliance"
+    },
+    {
+      "name": "aasb-security-developer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-security-developer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Security & Compliance"
+    },
+    {
+      "name": "aasb-web-wizard",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-web-wizard"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Web Development"
+    },
+    {
+      "name": "aasb-web-designer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-web-designer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Web Development"
+    },
+    {
+      "name": "aasb-full-stack-developer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-full-stack-developer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Web Development"
+    },
+    {
+      "name": "aasb-agent-architect",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-agent-architect"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "AI & Agents"
+    },
+    {
+      "name": "aasb-llm-application-developer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-llm-application-developer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "AI & Agents"
+    },
+    {
+      "name": "aasb-indie-game-dev",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-indie-game-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Game Development"
+    },
+    {
+      "name": "aasb-python-pro",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-python-pro"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Backend & Languages"
+    },
+    {
+      "name": "aasb-typescript-javascript",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-typescript-javascript"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Backend & Languages"
+    },
+    {
+      "name": "aasb-systems-programming",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-systems-programming"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Backend & Languages"
+    },
+    {
+      "name": "aasb-startup-founder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-startup-founder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Product & Business"
+    },
+    {
+      "name": "aasb-business-analyst",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-business-analyst"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Product & Business"
+    },
+    {
+      "name": "aasb-marketing-growth",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-marketing-growth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Product & Business"
+    },
+    {
+      "name": "aasb-devops-cloud",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-devops-cloud"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "DevOps & Infrastructure"
+    },
+    {
+      "name": "aasb-observability-monitoring",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-observability-monitoring"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "DevOps & Infrastructure"
+    },
+    {
+      "name": "aasb-data-analytics",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-data-analytics"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Data & Analytics"
+    },
+    {
+      "name": "aasb-data-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-data-engineering"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Data & Analytics"
+    },
+    {
+      "name": "aasb-creative-director",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-creative-director"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Creative & Content"
+    },
+    {
+      "name": "aasb-qa-testing",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-qa-testing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Quality Assurance"
+    },
+    {
+      "name": "aasb-aas-web-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-web-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-product-design-studio",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-product-design-studio"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-security-engineer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-security-engineer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-secure-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-secure-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-documents-presentations",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-documents-presentations"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-data-analytics",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-data-analytics"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-agent-mcp-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-agent-mcp-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-qa-test-automation",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-qa-test-automation"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-devops-cloud",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-devops-cloud"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-marketing-seo-growth",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-marketing-seo-growth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-aas-automation-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-automation-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-aas-observability-ir",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-observability-ir"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-aas-python-api-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-python-api-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-aas-mobile-app-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-mobile-app-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-mobile-developer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-mobile-developer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-integration-apis",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-integration-apis"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-architecture-design",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-architecture-design"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-ddd-evented-architecture",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-ddd-evented-architecture"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-automation-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-automation-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-revops-crm-automation",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-revops-crm-automation"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-commerce-payments",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-commerce-payments"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-odoo-erp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-odoo-erp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-azure-ai-cloud",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-azure-ai-cloud"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-expo-react-native",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-expo-react-native"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-apple-platform-design",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-apple-platform-design"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-makepad-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-makepad-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-seo-specialist",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-seo-specialist"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-documents-presentations",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-documents-presentations"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Packs"
+    },
+    {
+      "name": "aasb-oss-maintainer",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-oss-maintainer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Maintainer & OSS"
+    },
+    {
+      "name": "aasb-skill-author",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-skill-author"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Maintainer & OSS"
+    },
+    {
+      "name": "aasb-aas-accessibility-inclusive-ux",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-accessibility-inclusive-ux"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-api-platform-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-api-platform-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-saas-launch-revenue",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-saas-launch-revenue"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-ai-product-evaluation-ops",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-ai-product-evaluation-ops"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins"
+    },
+    {
+      "name": "aasb-aas-data-engineering-platform",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-data-engineering-platform"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-aas-privacy-compliance-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-privacy-compliance-engineering"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-aas-localization-international-growth",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-bundle-aas-localization-international-growth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Specialized Product Plugins - Next Wave"
+    }
+  ]
+}

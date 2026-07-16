@@ -1,0 +1,23 @@
+Based on my knowledge of the issue and sympy's codebase, I can create the patch. The Point class has a `__mul__` method that handles `point * scalar`, but is missing `__rmul__` to handle `scalar * point`. 
+
+Looking at the error message in the issue, when `2.0 * point2` is evaluated:
+1. Python first tries `float.__mul__(2.0, point2)` which returns `NotImplemented`
+2. Then Python tries `Point.__rmul__(point2, 2.0)` but `__rmul__` doesn't exist
+3. This results in the Mul object `2.0*Point2D(1, 1)` 
+4. When this is added to point1, Point.__add__ fails because it can't convert the Mul object
+
+The fix is to add `__rmul__` to the Point class that simply calls `__mul__`:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -265,6 +265,9 @@ class Point(GeometryEntity):
+ 
+         return Point(coords, evaluate=False)
+ 
++    def __rmul__(self, factor):
++        """Multiply a factor by point's coordinates."""
++        return self.__mul__(factor)
++
+     def __neg__(self):
+         """Negate the point."""
+         coords = [-x for x in self.args]

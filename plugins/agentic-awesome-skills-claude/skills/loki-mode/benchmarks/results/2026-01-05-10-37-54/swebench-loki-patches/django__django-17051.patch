@@ -1,0 +1,15 @@
+# django__django-17051
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1837,7 +1837,7 @@ class QuerySet(AltersData):
+                 on_conflict=on_conflict,
+                 update_fields=update_fields,
+                 unique_fields=unique_fields,
+-                returning_fields=returning_fields if bulk_return and on_conflict is None else None,
++                returning_fields=returning_fields if bulk_return and on_conflict in (None, OnConflict.UPDATE) else None,
+             )
+             for obj_with_pk, results in zip(objs_with_pk, returned_columns):
+                 for result, field in zip(results, opts.db_returning_fields):

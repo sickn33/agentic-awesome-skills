@@ -1,0 +1,49 @@
+Based on my knowledge, I can provide the fix for this issue. The problem is in the `sphinx/domains/std.py` file where the option directive validates option syntax. The change introduced in PR #7770 added a strict regex validation that requires options to start with `-`, `--`, `/`, or `+`. However, this breaks valid use cases like `[enable=]PATTERN` from the QEMU documentation.
+
+The fix should make the validation a warning instead of raising an exception, allowing documentation to still build while informing users about non-standard option syntax.
+
+Here's the patch:
+
+--- a/sphinx/domains/std.py
++++ b/sphinx/domains/std.py
+@@ -18,7 +18,7 @@ from docutils.parsers.rst import directives
+ from docutils.statemachine import StringList
+ 
+ from sphinx import addnodes
+-from sphinx.addnodes import desc_signature, pending_xref
++from sphinx.addnodes import desc_signature, pending_xref, desc_name
+ from sphinx.deprecation import RemovedInSphinx40Warning, RemovedInSphinx50Warning
+ from sphinx.directives import ObjectDescription
+ from sphinx.domains import Domain, Index, IndexEntry, ObjType
+@@ -87,8 +87,10 @@ def split_option_string(option: str) -> List[str]:
+ 
+ 
+ def option_desc_re_fmt(envconfig: str) -> str:
+-    # option_desc_re describes a long option with optional argument
++    # option_desc_re describes an option with optional argument
+     envconfig = envconfig.replace(' ', '')
++    if not envconfig:
++        envconfig = '-'
+     return r'(?P<prefix>[' + envconfig + r'])(?P<option>[^=<>\s]+)(?P<args>.*)'
+ 
+ 
+@@ -151,9 +153,11 @@ class Cmdoption(ObjectDescription):
+             m = option_desc_re.match(potential_option)
+             if m:
+                 optname, args = m.group('option', 'args')
++                if count:
++                    signode += addnodes.desc_addname(', ', ', ')
++                signode += addnodes.desc_name(optname, optname)
++                signode += addnodes.desc_addname(args, args)
+             else:
+-                raise ValueError('Malformed option description %r, should '
+-                                 'look like "opt", "-opt args", "--opt args", '
+-                                 '"/opt args" or "+opt args"' % potential_option)
+-            if count:
+-                signode += addnodes.desc_addname(', ', ', ')
+-            signode += addnodes.desc_name(optname, optname)
+-            signode += addnodes.desc_addname(args, args)
++                logger.warning(__('Malformed option description %r, should look like '
++                                  '"opt", "-opt args", "--opt args", "/opt args" or '
++                                  '"+opt args"'), potential_option, location=signode)
++                signode += addnodes.desc_name(potential_option, potential_option)

@@ -1,0 +1,23 @@
+# pytest-dev__pytest-8906
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description, the error message text that needs to be changed is:
+
+> "Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}."
+
+This message is typically in the pytest collection/runner code rather than outcomes.py itself. Let me provide the patch based on the standard pytest codebase structure:
+
+```
+--- a/src/_pytest/python.py
++++ b/src/_pytest/python.py
+@@ -562,7 +562,7 @@ class Module(nodes.File, PyCollector):
+                     "Using pytest.skip outside of a test is not allowed. "
+                     "To decorate a test function, use the @pytest.mark.skip "
+                     "or @pytest.mark.skipif decorators instead, and to skip a "
+-                    "module use `pytestmark = pytest.mark.{skip,skipif}`."
++                    "module use `pytest.skip(allow_module_level=True)`."
+                 ) from e
+             self._inject_setup_module_fixture()
+             self._inject_setup_function_fixture()
+```

@@ -1,0 +1,45 @@
+# sphinx-doc__sphinx-8282
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+I can see that this is a SWE-bench task for the Sphinx project. Since I don't have access to the actual Sphinx repository, I need to generate a patch based on my knowledge of Sphinx's autodoc extension structure. Let me create a proper patch for this issue:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1269,6 +1269,7 @@
+ from inspect import Parameter, Signature
++from sphinx.util.inspect import stringify_signature
+ 
+ 
+ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+@@ -1296,7 +1297,16 @@ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+ 
+         if self.analyzer and '.'.join(self.objpath) in self.analyzer.overloads:
+             for overload in self.analyzer.overloads.get('.'.join(self.objpath)):
+-                overloaded.append(stringify_signature(overload))
++                if self.config.autodoc_typehints in ('none', 'description'):
++                    parameters = [
++                        param.replace(annotation=Parameter.empty)
++                        for param in overload.parameters.values()
++                    ]
++                    overload = overload.replace(parameters=parameters,
++                                               return_annotation=Parameter.empty)
++                overloaded.append(stringify_signature(overload))
+ 
+         return sig
+ 
+@@ -1574,7 +1584,16 @@ class MethodDocumenter(DocstringSignatureMixin, ClassLevelDocumenter):
+ 
+         if self.analyzer and '.'.join(self.objpath) in self.analyzer.overloads:
+             for overload in self.analyzer.overloads.get('.'.join(self.objpath)):
+-                overloaded.append(stringify_signature(overload))
++                if self.config.autodoc_typehints in ('none', 'description'):
++                    parameters = [
++                        param.replace(annotation=Parameter.empty)
++                        for param in overload.parameters.values()
++                    ]
++                    overload = overload.replace(parameters=parameters,
++                                               return_annotation=Parameter.empty)
++                overloaded.append(stringify_signature(overload))
+ 
+         return sig

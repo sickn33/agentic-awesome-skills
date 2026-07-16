@@ -1,0 +1,17 @@
+Based on the GitHub issue, I need to create a patch for the matplotlib repository. The issue is that `Axis.set_ticks` doesn't validate kwargs when labels are not passed. Let me provide the patch based on my knowledge of the matplotlib codebase:
+
+--- a/lib/matplotlib/axis.py
++++ b/lib/matplotlib/axis.py
+@@ -2024,6 +2024,12 @@ class Axis(martist.Artist):
+             labels = None
+         else:
+             labels = [t.get_text() for t in self.get_ticklabels()]
++        if kwargs:
++            if labels is None:
++                raise ValueError(
++                    "kwargs can only be passed if labels are also passed. "
++                    "Use tick_params() to change tick label properties.")
++            mtext.Text(0, 0, **kwargs)  # Validate kwargs.
+ 
+         result = self._set_tick_locations(ticks, minor=minor)
+         if labels is not None:

@@ -1,0 +1,382 @@
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "type": "eng-infra",
+      "priority": 10,
+      "dependencies": [],
+      "payload": {
+        "action": "create-structure",
+        "description": "Create project directory structure",
+        "target": "/tmp/loki-mode-test-todo-app"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-002",
+      "type": "eng-backend",
+      "priority": 9,
+      "dependencies": ["task-001"],
+      "payload": {
+        "action": "init-backend",
+        "description": "Initialize backend with package.json, tsconfig.json, dependencies",
+        "target": "/tmp/loki-mode-test-todo-app/backend"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-003",
+      "type": "eng-frontend",
+      "priority": 9,
+      "dependencies": ["task-001"],
+      "payload": {
+        "action": "init-frontend",
+        "description": "Initialize frontend with Vite + React + TypeScript",
+        "target": "/tmp/loki-mode-test-todo-app/frontend"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 600,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-004",
+      "type": "eng-backend",
+      "priority": 8,
+      "dependencies": ["task-002"],
+      "payload": {
+        "action": "setup-database",
+        "description": "Set up SQLite database connection and schema",
+        "target": "/tmp/loki-mode-test-todo-app/backend/src/db"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-005",
+      "type": "eng-backend",
+      "priority": 7,
+      "dependencies": ["task-004"],
+      "payload": {
+        "action": "implement-api-get",
+        "description": "Implement GET /api/todos endpoint",
+        "target": "/tmp/loki-mode-test-todo-app/backend/src/routes/todos.ts"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-006",
+      "type": "eng-backend",
+      "priority": 7,
+      "dependencies": ["task-004"],
+      "payload": {
+        "action": "implement-api-post",
+        "description": "Implement POST /api/todos endpoint with validation",
+        "target": "/tmp/loki-mode-test-todo-app/backend/src/routes/todos.ts"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-007",
+      "type": "eng-backend",
+      "priority": 7,
+      "dependencies": ["task-004"],
+      "payload": {
+        "action": "implement-api-patch",
+        "description": "Implement PATCH /api/todos/:id endpoint",
+        "target": "/tmp/loki-mode-test-todo-app/backend/src/routes/todos.ts"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-008",
+      "type": "eng-backend",
+      "priority": 7,
+      "dependencies": ["task-004"],
+      "payload": {
+        "action": "implement-api-delete",
+        "description": "Implement DELETE /api/todos/:id endpoint",
+        "target": "/tmp/loki-mode-test-todo-app/backend/src/routes/todos.ts"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-009",
+      "type": "eng-frontend",
+      "priority": 6,
+      "dependencies": ["task-003", "task-005", "task-006", "task-007", "task-008"],
+      "payload": {
+        "action": "create-api-client",
+        "description": "Create API client functions",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/api/todos.ts"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-010",
+      "type": "eng-frontend",
+      "priority": 5,
+      "dependencies": ["task-009"],
+      "payload": {
+        "action": "create-hook",
+        "description": "Implement useTodos custom hook",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/hooks/useTodos.ts"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-011",
+      "type": "eng-frontend",
+      "priority": 4,
+      "dependencies": ["task-010"],
+      "payload": {
+        "action": "build-component",
+        "description": "Build TodoForm component",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/components/TodoForm.tsx"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-012",
+      "type": "eng-frontend",
+      "priority": 4,
+      "dependencies": ["task-010"],
+      "payload": {
+        "action": "build-component",
+        "description": "Build TodoItem component",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/components/TodoItem.tsx"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-013",
+      "type": "eng-frontend",
+      "priority": 3,
+      "dependencies": ["task-011", "task-012"],
+      "payload": {
+        "action": "build-component",
+        "description": "Build TodoList component",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/components/TodoList.tsx"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-014",
+      "type": "eng-frontend",
+      "priority": 3,
+      "dependencies": ["task-013"],
+      "payload": {
+        "action": "build-component",
+        "description": "Build EmptyState component",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/components/EmptyState.tsx"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-015",
+      "type": "eng-frontend",
+      "priority": 3,
+      "dependencies": ["task-012"],
+      "payload": {
+        "action": "build-component",
+        "description": "Build ConfirmDialog component",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/components/ConfirmDialog.tsx"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-016",
+      "type": "eng-frontend",
+      "priority": 2,
+      "dependencies": ["task-011", "task-012", "task-013", "task-014", "task-015"],
+      "payload": {
+        "action": "assemble-app",
+        "description": "Assemble App.tsx with all components",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/App.tsx"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-017",
+      "type": "eng-frontend",
+      "priority": 2,
+      "dependencies": ["task-016"],
+      "payload": {
+        "action": "add-styling",
+        "description": "Add CSS styling (clean, minimal design)",
+        "target": "/tmp/loki-mode-test-todo-app/frontend/src/App.css"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 300,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    },
+    {
+      "id": "task-018",
+      "type": "eng-qa",
+      "priority": 1,
+      "dependencies": ["task-016", "task-017"],
+      "payload": {
+        "action": "e2e-test",
+        "description": "Manual end-to-end testing of all features",
+        "target": "/tmp/loki-mode-test-todo-app"
+      },
+      "createdAt": "2026-01-02T23:41:38Z",
+      "claimedBy": null,
+      "claimedAt": null,
+      "timeout": 900,
+      "retries": 0,
+      "maxRetries": 3,
+      "backoffSeconds": 60,
+      "lastError": null,
+      "completedAt": null,
+      "result": null
+    }
+  ]
+}

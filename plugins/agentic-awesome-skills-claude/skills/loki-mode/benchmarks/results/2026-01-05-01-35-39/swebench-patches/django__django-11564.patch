@@ -1,0 +1,62 @@
+Based on my understanding of Django's codebase and the issue description, I'll create a proper patch. The key requirements are:
+
+1. The `{% url %}` template tag respects SCRIPT_NAME via `get_script_prefix()`, but `{% static %}` does not
+2. `reverse()` respects SCRIPT_NAME but `static()` does not  
+3. The fix should be applied to FileSystemStorage.url() and the settings access for STATIC_URL/MEDIA_URL
+
+Let me create the patch based on the issue description and Django's architecture:
+
+--- a/django/conf/__init__.py
++++ b/django/conf/__init__.py
+@@ -87,6 +87,26 @@ class LazySettings(LazyObject):
+                 'settings_module': self._wrapped.SETTINGS_MODULE,
+             }
+ 
++    def _add_script_prefix(self, value):
++        """
++        Add SCRIPT_NAME prefix to relative URLs.
++        """
++        if value and value.startswith('/') and not value.startswith('//'):
++            from django.urls import get_script_prefix
++            prefix = get_script_prefix()
++            if prefix and prefix != '/':
++                value = prefix.rstrip('/') + value
++        return value
++
++    @property
++    def STATIC_URL(self):
++        self._setup()
++        return self._add_script_prefix(self._wrapped.STATIC_URL)
++
++    @property
++    def MEDIA_URL(self):
++        self._setup()
++        return self._add_script_prefix(self._wrapped.MEDIA_URL)
++
+     def __getattr__(self, name):
+         """Return the value of a setting and cache it in self.__dict__."""
+         if (_wrapped := self._wrapped) is empty:
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -307,10 +307,17 @@ class FileSystemStorage(Storage):
+     def _value(self, value):
+         if callable(value):
+             return value()
+         return value
+ 
++    def _add_script_prefix(self, url):
++        if url and url.startswith('/') and not url.startswith('//'):
++            from django.urls import get_script_prefix
++            prefix = get_script_prefix()
++            if prefix and prefix != '/':
++                url = prefix.rstrip('/') + url
++        return url
++
+     @cached_property
+     def base_url(self):
+         if self._base_url is not None and not self._base_url.endswith('/'):
+             self._base_url += '/'
+-        return self._value(self._base_url)
++        return self._add_script_prefix(self._value(self._base_url))
+
+     def _clear_cached_properties(self, setting, **kwargs):

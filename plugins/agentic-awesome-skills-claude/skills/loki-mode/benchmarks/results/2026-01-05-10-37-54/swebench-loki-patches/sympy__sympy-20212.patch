@@ -1,0 +1,15 @@
+# sympy__sympy-20212
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -264,6 +264,8 @@ def __new__(cls, b, e, evaluate=None):
+                     return S.One
+                 if e is S.Infinity:
+                     return S.Zero
++                if e is S.NegativeInfinity:
++                    return S.ComplexInfinity
+             elif e.is_negative:
+                 return S.ComplexInfinity
+             elif e.is_positive:

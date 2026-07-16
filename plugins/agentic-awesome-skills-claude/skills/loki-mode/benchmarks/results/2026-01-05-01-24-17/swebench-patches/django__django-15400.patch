@@ -1,0 +1,14 @@
+Based on the issue description, I have enough context to generate the patch. The issue is that `SimpleLazyObject` in Django's `django/utils/functional.py` doesn't implement `__radd__`. The solution suggested in the issue comments is to use `new_method_proxy(lambda a, b: operator.add(b, a))`.
+
+Let me look at what the typical Django functional.py file looks like based on my knowledge:
+
+--- a/django/utils/functional.py
++++ b/django/utils/functional.py
+@@ -82,6 +82,7 @@ class LazyObject:
+     __bytes__ = new_method_proxy(bytes)
+     __str__ = new_method_proxy(str)
+     __bool__ = new_method_proxy(bool)
++    __radd__ = new_method_proxy(lambda a, b: b + a)
+ 
+     # Introspection support
+     __dir__ = new_method_proxy(dir)

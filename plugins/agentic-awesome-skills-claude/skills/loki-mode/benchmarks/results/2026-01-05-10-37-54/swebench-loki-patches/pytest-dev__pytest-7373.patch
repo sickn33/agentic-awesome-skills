@@ -1,0 +1,48 @@
+# pytest-dev__pytest-7373
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/src/_pytest/mark/evaluate.py
++++ b/src/_pytest/mark/evaluate.py
+@@ -10,7 +10,6 @@ from ..outcomes import fail
+ from ..outcomes import TEST_OUTCOME
+ from .structures import Mark
+ from _pytest.config import Config
+-from _pytest.store import StoreKey
+ 
+ 
+ if TYPE_CHECKING:
+@@ -18,19 +17,6 @@ if TYPE_CHECKING:
+     from _pytest.nodes import Item
+ 
+ 
+-evalcache_key = StoreKey[Dict[str, Any]]()
+-
+-
+-def cached_eval(config: Config, expr: str, d: Dict[str, object]) -> Any:
+-    default = {}  # type: Dict[str, object]
+-    evalcache = config._store.setdefault(evalcache_key, default)
+-    try:
+-        return evalcache[expr]
+-    except KeyError:
+-        import _pytest._code
+-
+-        exprcode = _pytest._code.compile(expr, mode="eval")
+-        evalcache[expr] = x = eval(exprcode, d)
+-        return x
+-
+-
+ class MarkEvaluator:
+     def __init__(self, item: "Item", name: str) -> None:
+         self.item = item
+@@ -98,7 +84,9 @@ class MarkEvaluator:
+                     self.expr = expr
+                     if isinstance(expr, str):
+                         d = self._getglobals()
+-                        result = cached_eval(self.item.config, expr, d)
++                        import _pytest._code
++
++                        result = eval(_pytest._code.compile(expr, mode="eval"), d)
+                     else:
+                         if "reason" not in mark.kwargs:
+                             # XXX better be checked at collection time

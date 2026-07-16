@@ -1,0 +1,33 @@
+{
+  "name": "aasb-essentials",
+  "version": "14.5.0",
+  "description": "Install the \"Essentials\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "essentials",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Essentials",
+    "shortDescription": "Essentials & Core · 5 curated skills",
+    "longDescription": "For everyone. Install these first. Covers Concise Planning, Test Driven Development, and 3 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Essentials & Core",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

@@ -1,0 +1,55 @@
+title: "[Announcement] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this category for maintainer updates that the community should not miss.
+  - type: dropdown
+    id: announcement-type
+    attributes:
+      label: Announcement type
+      description: Pick the kind of update you are sharing.
+      options:
+        - Release
+        - Breaking change
+        - Maintenance update
+        - Community update
+        - Call for feedback
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Start with a short, skimmable explanation of the update.
+      placeholder: What changed, who it affects, and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Add rollout notes, migration steps, notable highlights, or caveats.
+      placeholder: Include release notes, timelines, affected folders, or upgrade guidance.
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Links and references
+      description: Link the related PR, release notes, docs, or commits.
+      placeholder: |
+        - PR:
+        - Release:
+        - Docs:
+        - Commit:
+    validations:
+      required: false
+  - type: textarea
+    id: call-to-action
+    attributes:
+      label: What should the community do next?
+      description: Tell readers whether they should test something, migrate, give feedback, or just stay informed.
+      placeholder: "Example: Please try the new installer flow and report regressions in Q&A."
+    validations:
+      required: false

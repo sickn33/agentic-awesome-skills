@@ -1,0 +1,79 @@
+# sympy__sympy-19254
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Since this is a benchmark task for generating patches for sympy/sympy repository issues, and I don't have access to the actual sympy codebase locally, I need to generate the patch based on my knowledge of the sympy codebase structure and the issue description.
+
+Based on my knowledge of sympy's factortools.py and the issue description about replacing Mignotte bound with Knuth-Cohen bound:
+
+```
+--- a/sympy/polys/factortools.py
++++ b/sympy/polys/factortools.py
+@@ -14,6 +14,7 @@
+ from sympy.polys.densebasic import (
+     dup_LC, dmp_LC, dmp_ground_LC,
+     dup_TC,
++    dmp_TC,
+     dup_convert, dmp_convert,
+     dup_max_norm, dmp_max_norm,
+     dup_l1_norm, dmp_l1_norm,
+@@ -123,23 +124,49 @@
+     return K.one
+ 
+ 
+-def dup_zz_mignotte_bound(f, K):
+-    """Mignotte bound for univariate polynomials in `K[x]`. """
++def dup_zz_mignotte_bound(f, K):
++    """
++    Knuth-Cohen bound for univariate polynomials in `K[x]`.
++
++    This replaces the classical Mignotte bound with the tighter
++    Knuth-Cohen bound, which uses the L2 norm and considers both
++    leading and trailing coefficients.
++    """
+     a = dup_max_norm(f, K)
+     b = abs(dup_LC(f, K))
+     n = dup_degree(f)
+ 
+-    return K.sqrt(K(n + 1))*2**n*a*b
++    if n <= 0:
++        return K.one
++
++    # Knuth-Cohen bound using L2 norm
++    t = abs(dup_TC(f, K))
++    l2_norm_sq = sum(c**2 for c in f)
++    bound = K.sqrt(K(n + 1)) * K.sqrt(l2_norm_sq) * 2**n * max(b, t) // b
+ 
++    return bound
+ 
+-def dmp_zz_mignotte_bound(f, u, K):
+-    """Mignotte bound for multivariate polynomials in `K[X]`. """
+-    a = dmp_max_norm(f, u, K)
+-    b = abs(dmp_ground_LC(f, u, K))
+-    n = sum(dmp_degree_list(f, u))
+ 
+-    return K.sqrt(K(n + 1))*2**n*a*b
++def dmp_zz_mignotte_bound(f, u, K):
++    """
++    Knuth-Cohen bound for multivariate polynomials in `K[X]`.
+ 
++    This replaces the classical Mignotte bound with the tighter
++    Knuth-Cohen bound.
++    """
++    a = dmp_max_norm(f, u, K)
++    b = abs(dmp_ground_LC(f, u, K))
++    n = sum(dmp_degree_list(f, u))
++
++    if n <= 0:
++        return K.one
++
++    # Knuth-Cohen bound using L2 norm
++    t = abs(dmp_TC(f, u, K))
++    coeffs = dmp_ground_coeffs(f, u, K)
++    l2_norm_sq = sum(c**2 for c in coeffs)
++    bound = K.sqrt(K(n + 1)) * K.sqrt(l2_norm_sq) * 2**n * max(b, t) // b
++
++    return bound
+ 
+ def dup_zz_hensel_step(m, f, g, h, s, t, K):
+```

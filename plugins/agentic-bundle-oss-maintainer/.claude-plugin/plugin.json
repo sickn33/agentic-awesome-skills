@@ -1,0 +1,19 @@
+{
+  "name": "agentic-bundle-oss-maintainer",
+  "version": "14.5.0",
+  "description": "Editorial \"OSS Maintainer\" bundle for Claude Code from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "bundle",
+    "oss-maintainer",
+    "agentic-awesome-skills"
+  ]
+}

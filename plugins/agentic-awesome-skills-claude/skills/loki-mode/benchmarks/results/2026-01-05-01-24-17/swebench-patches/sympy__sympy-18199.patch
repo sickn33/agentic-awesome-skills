@@ -1,0 +1,23 @@
+Based on the GitHub issue about `nthroot_mod` function in sympy, I understand the problem:
+
+When solving `x**n = a mod p`, if `a % p == 0`, then `x = 0 mod p` is a valid root. The current implementation doesn't check for this case. The example given is `nthroot_mod(17*17, 5, 17)` which should return `0` as a root since `17*17 % 17 == 0` and `0**5 % 17 == 0`.
+
+Based on my knowledge of the sympy codebase and the `nthroot_mod` function in `sympy/ntheory/residue_ntheory.py`, here's the patch to fix this issue:
+
+--- a/sympy/ntheory/residue_ntheory.py
++++ b/sympy/ntheory/residue_ntheory.py
+@@ -746,6 +746,14 @@ def nthroot_mod(a, n, p, all_roots=False):
+     from sympy.core.numbers import igcdex
+     a, n, p = as_int(a), as_int(n), as_int(p)
+     a = a % p
++
++    # Handle the case when a % p == 0
++    if a == 0:
++        if all_roots:
++            return [0]
++        else:
++            return 0
++
+     if n == 2:
+         return sqrt_mod(a, p, all_roots)
+     # see Hackman "Elementary Number Theory" (2009), page 76

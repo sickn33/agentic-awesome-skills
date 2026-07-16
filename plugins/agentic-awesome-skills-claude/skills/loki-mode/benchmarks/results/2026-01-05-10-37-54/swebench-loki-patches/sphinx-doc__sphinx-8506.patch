@@ -1,0 +1,33 @@
+# sphinx-doc__sphinx-8506
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sphinx/domains/std.py
++++ b/sphinx/domains/std.py
+@@ -152,7 +152,10 @@ class Cmdoption(ObjectDescription):
+         m = option_desc_re.match(potential_option)
+         if not m:
+-            raise ValueError
++            logger.warning(__('Malformed option description %r, should look like '
++                              '"opt", "-opt args", "--opt args", "/opt args" or "+opt args"'),
++                           potential_option, location=signode)
++            return potential_option, ''
+         optname, args = m.groups()
+         return optname, args
+ 
+@@ -166,14 +169,7 @@ class Cmdoption(ObjectDescription):
+             potential_option = potential_option.strip()
+             if not potential_option:
+                 continue
+-            try:
+-                optname, args = self._parse_option(potential_option, signode)
+-            except ValueError:
+-                logger.warning(__('Malformed option description %r, should look like '
+-                                  '"opt", "-opt args", "--opt args", "/opt args" or "+opt args"'),
+-                               potential_option, location=signode)
+-                continue
+-
++            optname, args = self._parse_option(potential_option, signode)
+             if count:
+                 signode += addnodes.desc_addname(', ', ', ')
+             signode += addnodes.desc_name(optname, optname)

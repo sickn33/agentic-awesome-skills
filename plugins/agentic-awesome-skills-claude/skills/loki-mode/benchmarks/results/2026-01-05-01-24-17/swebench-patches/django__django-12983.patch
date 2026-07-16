@@ -1,0 +1,21 @@
+Based on the issue description, I need to create a patch for Django's `slugify` function. The issue states that:
+- Current behavior: `text.slugify("___This is a test ---")` outputs `___this-is-a-test-`
+- Desired behavior: `text.slugify("___This is a test ---")` outputs `this-is-a-test`
+
+The fix needs to strip leading/trailing dashes and underscores from the final result. Based on my knowledge of Django's codebase, here's the patch:
+
+--- a/django/utils/text.py
++++ b/django/utils/text.py
+@@ -393,6 +393,7 @@ def slugify(value, allow_unicode=False):
+     Convert to ASCII if 'allow_unicode' is False. Convert spaces or repeated
+     dashes to single dashes. Remove characters that aren't alphanumerics,
+     underscores, or hyphens. Convert to lowercase. Also strip leading and
+-    trailing whitespace.
++    trailing whitespace, dashes, and underscores.
+     """
+     value = str(value)
+@@ -400,4 +401,5 @@ def slugify(value, allow_unicode=False):
+         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+     value = re.sub(r'[^\w\s-]', '', value.lower())
+-    return re.sub(r'[-\s]+', '-', value).strip()
++    return re.sub(r'[-\s]+', '-', value).strip('-_')

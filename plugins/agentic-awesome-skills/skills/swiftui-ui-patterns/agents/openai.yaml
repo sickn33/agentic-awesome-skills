@@ -1,0 +1,4 @@
+interface:
+  display_name: "SwiftUI UI Patterns"
+  short_description: "Apply practical SwiftUI UI patterns"
+  default_prompt: "Use $swiftui-ui-patterns to design or refactor this SwiftUI UI with strong default patterns."

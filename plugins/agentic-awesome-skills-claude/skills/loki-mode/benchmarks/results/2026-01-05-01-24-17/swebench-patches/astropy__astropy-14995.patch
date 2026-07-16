@@ -1,0 +1,15 @@
+Based on my analysis of the issue, I now have enough information to provide the correct patch. The bug is in `astropy/nddata/mixins/ndarithmetic.py` where the condition `elif operand is None:` should be `elif operand.mask is None:`.
+
+However, I need to also handle the case where `operand is None` (the operand itself doesn't exist). Looking at the first condition `if self.mask is None and operand is not None:`, it checks both `self.mask is None` AND `operand is not None`. The second condition should check when the operand's mask is None OR when the operand itself is None.
+
+--- a/astropy/nddata/mixins/ndarithmetic.py
++++ b/astropy/nddata/mixins/ndarithmetic.py
+@@ -518,7 +518,7 @@ class NDArithmeticMixin:
+         # If only one mask is present we need not bother about any type checks
+         if self.mask is None and operand is not None:
+             return deepcopy(operand.mask)
+-        elif operand is None:
++        elif operand is None or operand.mask is None:
+             return deepcopy(self.mask)
+         else:
+             # Now lets calculate the resulting mask (operation enforces copy)

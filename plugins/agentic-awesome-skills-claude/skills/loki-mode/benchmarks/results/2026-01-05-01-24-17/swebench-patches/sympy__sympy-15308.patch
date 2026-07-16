@@ -1,0 +1,21 @@
+Based on my understanding of the sympy codebase structure and the issue described, I need to create a patch that:
+
+1. Adds a `_print_Trace` method to the LaTeX printer that properly formats Trace expressions
+2. Uses `\operatorname{tr}` as suggested in the hints (puts proper spacing)
+3. Properly prints the inner expression using the LaTeX printer
+
+Here's the patch:
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1510,6 +1510,10 @@ class LatexPrinter(Printer):
+     def _print_MatrixBase(self, expr):
+         lines = []
+ 
++    def _print_Trace(self, expr):
++        mat = expr.arg
++        return r"\operatorname{tr}\left(%s \right)" % self._print(mat)
++
+     def _print_MatrixElement(self, expr):
+         return self.parenthesize(expr.parent, PRECEDENCE["Atom"], strict=True) \
+             + '_{%s, %s}' % (expr.i, expr.j)

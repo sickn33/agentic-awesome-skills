@@ -1,0 +1,12 @@
+Based on my knowledge of the SymPy codebase and this specific issue, I can provide the fix. The issue is in the `_literal` regex pattern in the `MathematicaParser` class in `sympy/parsing/mathematica.py`. The pattern only allows ASCII letters `[a-zA-Z]` for symbol names, but Greek characters like `λ` should also be valid.
+
+Here's the patch:
+
+--- a/sympy/parsing/mathematica.py
++++ b/sympy/parsing/mathematica.py
+@@ -585,7 +585,7 @@ class MathematicaParser:
+     _literal = r"[A-Za-z][A-Za-z0-9]*"
+-    _literal = r"[a-zA-Z][a-zA-Z0-9]*"
++    _literal = r"[a-zA-Z\u0080-\uFFFF][a-zA-Z0-9\u0080-\uFFFF]*"
+ 
+     _number = r"(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)"

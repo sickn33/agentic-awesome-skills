@@ -1,0 +1,17 @@
+# sphinx-doc__sphinx-8721
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sphinx/ext/viewcode.py
++++ b/sphinx/ext/viewcode.py
+@@ -182,6 +182,11 @@ def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], No
+     env = app.builder.env
+     if not hasattr(env, '_viewcode_modules'):
+         return
++    if app.builder.name.startswith("epub") and not app.config.viewcode_enable_epub:
++        return
++    if app.builder.name == "singlehtml":
++        return
++
+     highlighter = app.builder.highlighter  # type: ignore
+     urito = app.builder.get_relative_uri

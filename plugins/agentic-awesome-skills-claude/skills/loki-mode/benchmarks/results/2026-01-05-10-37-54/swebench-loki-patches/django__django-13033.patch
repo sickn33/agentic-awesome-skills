@@ -1,0 +1,15 @@
+# django__django-13033
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I can generate the patch. The issue is in `django/db/models/sql/compiler.py` around line 727 where the comparison `getattr(field, 'attname', None) != name` should use `pieces[-1]` instead of `name` to correctly identify when ordering by an FK's `_id` attribute.
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -724,7 +724,7 @@
+                     # If the field is a foreign key, ordering by the foreign
+                     # key's `_id` attribute (attname) should not add the
+                     # related model's ordering.
+-                    if getattr(field, 'attname', None) != name:
++                    if getattr(field, 'attname', None) != pieces[-1]:
+                         order = self.query.standard_ordering and field.rel.get_related_field().model._meta.ordering and field.rel.get_related_field().model._meta.ordering[0] or ordering

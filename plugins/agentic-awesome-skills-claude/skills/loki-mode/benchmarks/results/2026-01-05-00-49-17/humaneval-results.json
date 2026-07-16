@@ -1,0 +1,1000 @@
+{
+  "benchmark": "HumanEval",
+  "version": "1.0",
+  "timestamp": "2026-01-05T00:49:17.745476",
+  "model": "opus",
+  "timeout_per_problem": 300,
+  "total_problems": 164,
+  "status": "COMPLETED",
+  "problems": [
+    {
+      "task_id": "HumanEval/0",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/0.py"
+    },
+    {
+      "task_id": "HumanEval/1",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/1.py"
+    },
+    {
+      "task_id": "HumanEval/2",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/2.py"
+    },
+    {
+      "task_id": "HumanEval/3",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/3.py"
+    },
+    {
+      "task_id": "HumanEval/4",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/4.py"
+    },
+    {
+      "task_id": "HumanEval/5",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/5.py"
+    },
+    {
+      "task_id": "HumanEval/6",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/6.py"
+    },
+    {
+      "task_id": "HumanEval/7",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/7.py"
+    },
+    {
+      "task_id": "HumanEval/8",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/8.py"
+    },
+    {
+      "task_id": "HumanEval/9",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/9.py"
+    },
+    {
+      "task_id": "HumanEval/10",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/10.py"
+    },
+    {
+      "task_id": "HumanEval/11",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/11.py"
+    },
+    {
+      "task_id": "HumanEval/12",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/12.py"
+    },
+    {
+      "task_id": "HumanEval/13",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/13.py"
+    },
+    {
+      "task_id": "HumanEval/14",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/14.py"
+    },
+    {
+      "task_id": "HumanEval/15",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/15.py"
+    },
+    {
+      "task_id": "HumanEval/16",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/16.py"
+    },
+    {
+      "task_id": "HumanEval/17",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/17.py"
+    },
+    {
+      "task_id": "HumanEval/18",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/18.py"
+    },
+    {
+      "task_id": "HumanEval/19",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/19.py"
+    },
+    {
+      "task_id": "HumanEval/20",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/20.py"
+    },
+    {
+      "task_id": "HumanEval/21",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/21.py"
+    },
+    {
+      "task_id": "HumanEval/22",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/22.py"
+    },
+    {
+      "task_id": "HumanEval/23",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/23.py"
+    },
+    {
+      "task_id": "HumanEval/24",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/24.py"
+    },
+    {
+      "task_id": "HumanEval/25",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/25.py"
+    },
+    {
+      "task_id": "HumanEval/26",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/26.py"
+    },
+    {
+      "task_id": "HumanEval/27",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/27.py"
+    },
+    {
+      "task_id": "HumanEval/28",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/28.py"
+    },
+    {
+      "task_id": "HumanEval/29",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/29.py"
+    },
+    {
+      "task_id": "HumanEval/30",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/30.py"
+    },
+    {
+      "task_id": "HumanEval/31",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/31.py"
+    },
+    {
+      "task_id": "HumanEval/32",
+      "passed": false,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/32.py"
+    },
+    {
+      "task_id": "HumanEval/33",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/33.py"
+    },
+    {
+      "task_id": "HumanEval/34",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/34.py"
+    },
+    {
+      "task_id": "HumanEval/35",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/35.py"
+    },
+    {
+      "task_id": "HumanEval/36",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/36.py"
+    },
+    {
+      "task_id": "HumanEval/37",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/37.py"
+    },
+    {
+      "task_id": "HumanEval/38",
+      "passed": false,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/38.py"
+    },
+    {
+      "task_id": "HumanEval/39",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/39.py"
+    },
+    {
+      "task_id": "HumanEval/40",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/40.py"
+    },
+    {
+      "task_id": "HumanEval/41",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/41.py"
+    },
+    {
+      "task_id": "HumanEval/42",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/42.py"
+    },
+    {
+      "task_id": "HumanEval/43",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/43.py"
+    },
+    {
+      "task_id": "HumanEval/44",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/44.py"
+    },
+    {
+      "task_id": "HumanEval/45",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/45.py"
+    },
+    {
+      "task_id": "HumanEval/46",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/46.py"
+    },
+    {
+      "task_id": "HumanEval/47",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/47.py"
+    },
+    {
+      "task_id": "HumanEval/48",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/48.py"
+    },
+    {
+      "task_id": "HumanEval/49",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/49.py"
+    },
+    {
+      "task_id": "HumanEval/50",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/50.py"
+    },
+    {
+      "task_id": "HumanEval/51",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/51.py"
+    },
+    {
+      "task_id": "HumanEval/52",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/52.py"
+    },
+    {
+      "task_id": "HumanEval/53",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/53.py"
+    },
+    {
+      "task_id": "HumanEval/54",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/54.py"
+    },
+    {
+      "task_id": "HumanEval/55",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/55.py"
+    },
+    {
+      "task_id": "HumanEval/56",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/56.py"
+    },
+    {
+      "task_id": "HumanEval/57",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/57.py"
+    },
+    {
+      "task_id": "HumanEval/58",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/58.py"
+    },
+    {
+      "task_id": "HumanEval/59",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/59.py"
+    },
+    {
+      "task_id": "HumanEval/60",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/60.py"
+    },
+    {
+      "task_id": "HumanEval/61",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/61.py"
+    },
+    {
+      "task_id": "HumanEval/62",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/62.py"
+    },
+    {
+      "task_id": "HumanEval/63",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/63.py"
+    },
+    {
+      "task_id": "HumanEval/64",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/64.py"
+    },
+    {
+      "task_id": "HumanEval/65",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/65.py"
+    },
+    {
+      "task_id": "HumanEval/66",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/66.py"
+    },
+    {
+      "task_id": "HumanEval/67",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/67.py"
+    },
+    {
+      "task_id": "HumanEval/68",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/68.py"
+    },
+    {
+      "task_id": "HumanEval/69",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/69.py"
+    },
+    {
+      "task_id": "HumanEval/70",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/70.py"
+    },
+    {
+      "task_id": "HumanEval/71",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/71.py"
+    },
+    {
+      "task_id": "HumanEval/72",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/72.py"
+    },
+    {
+      "task_id": "HumanEval/73",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/73.py"
+    },
+    {
+      "task_id": "HumanEval/74",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/74.py"
+    },
+    {
+      "task_id": "HumanEval/75",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/75.py"
+    },
+    {
+      "task_id": "HumanEval/76",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/76.py"
+    },
+    {
+      "task_id": "HumanEval/77",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/77.py"
+    },
+    {
+      "task_id": "HumanEval/78",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/78.py"
+    },
+    {
+      "task_id": "HumanEval/79",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/79.py"
+    },
+    {
+      "task_id": "HumanEval/80",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/80.py"
+    },
+    {
+      "task_id": "HumanEval/81",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/81.py"
+    },
+    {
+      "task_id": "HumanEval/82",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/82.py"
+    },
+    {
+      "task_id": "HumanEval/83",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/83.py"
+    },
+    {
+      "task_id": "HumanEval/84",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/84.py"
+    },
+    {
+      "task_id": "HumanEval/85",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/85.py"
+    },
+    {
+      "task_id": "HumanEval/86",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/86.py"
+    },
+    {
+      "task_id": "HumanEval/87",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/87.py"
+    },
+    {
+      "task_id": "HumanEval/88",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/88.py"
+    },
+    {
+      "task_id": "HumanEval/89",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/89.py"
+    },
+    {
+      "task_id": "HumanEval/90",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/90.py"
+    },
+    {
+      "task_id": "HumanEval/91",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/91.py"
+    },
+    {
+      "task_id": "HumanEval/92",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/92.py"
+    },
+    {
+      "task_id": "HumanEval/93",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/93.py"
+    },
+    {
+      "task_id": "HumanEval/94",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/94.py"
+    },
+    {
+      "task_id": "HumanEval/95",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/95.py"
+    },
+    {
+      "task_id": "HumanEval/96",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/96.py"
+    },
+    {
+      "task_id": "HumanEval/97",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/97.py"
+    },
+    {
+      "task_id": "HumanEval/98",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/98.py"
+    },
+    {
+      "task_id": "HumanEval/99",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/99.py"
+    },
+    {
+      "task_id": "HumanEval/100",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/100.py"
+    },
+    {
+      "task_id": "HumanEval/101",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/101.py"
+    },
+    {
+      "task_id": "HumanEval/102",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/102.py"
+    },
+    {
+      "task_id": "HumanEval/103",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/103.py"
+    },
+    {
+      "task_id": "HumanEval/104",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/104.py"
+    },
+    {
+      "task_id": "HumanEval/105",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/105.py"
+    },
+    {
+      "task_id": "HumanEval/106",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/106.py"
+    },
+    {
+      "task_id": "HumanEval/107",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/107.py"
+    },
+    {
+      "task_id": "HumanEval/108",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/108.py"
+    },
+    {
+      "task_id": "HumanEval/109",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/109.py"
+    },
+    {
+      "task_id": "HumanEval/110",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/110.py"
+    },
+    {
+      "task_id": "HumanEval/111",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/111.py"
+    },
+    {
+      "task_id": "HumanEval/112",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/112.py"
+    },
+    {
+      "task_id": "HumanEval/113",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/113.py"
+    },
+    {
+      "task_id": "HumanEval/114",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/114.py"
+    },
+    {
+      "task_id": "HumanEval/115",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/115.py"
+    },
+    {
+      "task_id": "HumanEval/116",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/116.py"
+    },
+    {
+      "task_id": "HumanEval/117",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/117.py"
+    },
+    {
+      "task_id": "HumanEval/118",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/118.py"
+    },
+    {
+      "task_id": "HumanEval/119",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/119.py"
+    },
+    {
+      "task_id": "HumanEval/120",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/120.py"
+    },
+    {
+      "task_id": "HumanEval/121",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/121.py"
+    },
+    {
+      "task_id": "HumanEval/122",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/122.py"
+    },
+    {
+      "task_id": "HumanEval/123",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/123.py"
+    },
+    {
+      "task_id": "HumanEval/124",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/124.py"
+    },
+    {
+      "task_id": "HumanEval/125",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/125.py"
+    },
+    {
+      "task_id": "HumanEval/126",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/126.py"
+    },
+    {
+      "task_id": "HumanEval/127",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/127.py"
+    },
+    {
+      "task_id": "HumanEval/128",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/128.py"
+    },
+    {
+      "task_id": "HumanEval/129",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/129.py"
+    },
+    {
+      "task_id": "HumanEval/130",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/130.py"
+    },
+    {
+      "task_id": "HumanEval/131",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/131.py"
+    },
+    {
+      "task_id": "HumanEval/132",
+      "passed": false,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/132.py"
+    },
+    {
+      "task_id": "HumanEval/133",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/133.py"
+    },
+    {
+      "task_id": "HumanEval/134",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/134.py"
+    },
+    {
+      "task_id": "HumanEval/135",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/135.py"
+    },
+    {
+      "task_id": "HumanEval/136",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/136.py"
+    },
+    {
+      "task_id": "HumanEval/137",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/137.py"
+    },
+    {
+      "task_id": "HumanEval/138",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/138.py"
+    },
+    {
+      "task_id": "HumanEval/139",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/139.py"
+    },
+    {
+      "task_id": "HumanEval/140",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/140.py"
+    },
+    {
+      "task_id": "HumanEval/141",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/141.py"
+    },
+    {
+      "task_id": "HumanEval/142",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/142.py"
+    },
+    {
+      "task_id": "HumanEval/143",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/143.py"
+    },
+    {
+      "task_id": "HumanEval/144",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/144.py"
+    },
+    {
+      "task_id": "HumanEval/145",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/145.py"
+    },
+    {
+      "task_id": "HumanEval/146",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/146.py"
+    },
+    {
+      "task_id": "HumanEval/147",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/147.py"
+    },
+    {
+      "task_id": "HumanEval/148",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/148.py"
+    },
+    {
+      "task_id": "HumanEval/149",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/149.py"
+    },
+    {
+      "task_id": "HumanEval/150",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/150.py"
+    },
+    {
+      "task_id": "HumanEval/151",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/151.py"
+    },
+    {
+      "task_id": "HumanEval/152",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/152.py"
+    },
+    {
+      "task_id": "HumanEval/153",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/153.py"
+    },
+    {
+      "task_id": "HumanEval/154",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/154.py"
+    },
+    {
+      "task_id": "HumanEval/155",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/155.py"
+    },
+    {
+      "task_id": "HumanEval/156",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/156.py"
+    },
+    {
+      "task_id": "HumanEval/157",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/157.py"
+    },
+    {
+      "task_id": "HumanEval/158",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/158.py"
+    },
+    {
+      "task_id": "HumanEval/159",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/159.py"
+    },
+    {
+      "task_id": "HumanEval/160",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/160.py"
+    },
+    {
+      "task_id": "HumanEval/161",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/161.py"
+    },
+    {
+      "task_id": "HumanEval/162",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/162.py"
+    },
+    {
+      "task_id": "HumanEval/163",
+      "passed": true,
+      "error": null,
+      "solution_file": "/Users/lokesh/git/loki-mode/benchmarks/results/2026-01-05-00-49-17/humaneval-solutions/163.py"
+    }
+  ],
+  "passed": 161,
+  "failed": 3,
+  "errors": 0,
+  "pass_rate": 98.17,
+  "elapsed_seconds": 1263.46
+}

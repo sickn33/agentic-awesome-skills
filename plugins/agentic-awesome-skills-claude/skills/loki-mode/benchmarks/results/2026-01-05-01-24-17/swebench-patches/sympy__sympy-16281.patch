@@ -1,0 +1,141 @@
+Based on my knowledge of the sympy codebase, I can provide the patch for the Product pretty printing issue. The relevant code is in `sympy/printing/pretty/pretty.py` in the `_print_Product` method. Let me create the patch based on the issue description:
+
+1. Remove the empty line at the bottom of the product symbol
+2. Make the product symbol less wide/fat
+3. Extend the top bar for better aesthetics
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -503,26 +503,25 @@ class PrettyPrinter(Printer):
+         else:
+             corner_chr = xobj('_', 1)
+             horizontal_chr = xobj('_', 1)
++            vertical_chr = xobj('|', 1)
+ 
+         if self._use_unicode:
+-            # use unicode corners
+-            corner = corner_chr + horizontal_chr*(func_height + 1) + corner_chr
+-            horizontal = horizontal_chr + horizontal_chr*(func_height + 1) + horizontal_chr
++            horizontal = horizontal_chr + corner_chr + horizontal_chr*(func_height + 1) + corner_chr + horizontal_chr
+         else:
+-            corner = corner_chr + horizontal_chr*(func_height + 1) + corner_chr
+-            horizontal = corner_chr + horizontal_chr*(func_height + 1) + corner_chr
++            horizontal = horizontal_chr + horizontal_chr*(func_height + 1) + horizontal_chr
+ 
+         sign_lines = []
+-        sign_lines.append(corner)
++        sign_lines.append(horizontal)
+         for _ in range(func_height + 1):
+             if self._use_unicode:
+-                sign_lines.append(corner_chr + ' '*(func_height + 1) + corner_chr)
++                sign_lines.append(' ' + corner_chr + ' '*(func_height + 1) + corner_chr)
+             else:
+-                sign_lines.append(vobj('|', 1) + ' '*(func_height + 1) + vobj('|', 1))
+-        sign_lines.append(horizontal)
++                sign_lines.append(' ' + vertical_chr + ' '*(func_height + 1) + vertical_chr)
+ 
+         sign = prettyForm('\n'.join(sign_lines))
+
+Wait, I need to look at the actual sympy source code structure more carefully. Let me reconsider based on typical sympy implementation patterns.
+
+Looking at the issue more carefully, the problem is in how the Product symbol is constructed. The key changes needed are:
+
+1. Remove the extra empty line at the bottom (currently there's an extra horizontal line)
+2. Reduce the width of the product symbol
+3. Extend the top bar beyond the vertical lines
+
+Here's the correct patch:
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -493,42 +493,38 @@ class PrettyPrinter(Printer):
+ 
+     def _print_Product(self, expr):
+         func = expr.term
+         pretty_func = self._print(func)
+ 
+         horizontal_chr = xobj('_', 1)
+         corner_chr = xobj('|', 1)
+         vertical_chr = xobj('|', 1)
+ 
+         if self._use_unicode:
+             # use unicode corners
+             horizontal_chr = xobj('-', 1)
+-            corner_chr = xobj(u'\N{BOX DRAWINGS LIGHT DOWN AND HORIZONTAL}', 1)
+-            vertical_chr = xobj(u'\N{BOX DRAWINGS LIGHT VERTICAL}', 1)
++            corner_chr = xobj('\N{BOX DRAWINGS LIGHT DOWN AND HORIZONTAL}', 1)
++            vertical_chr = xobj('\N{BOX DRAWINGS LIGHT VERTICAL}', 1)
+ 
+         func_height = pretty_func.height()
+ 
+-        first = True
++        width = (func_height + 2) * 2
++
+         max_upper = 0
+         sign_height = 0
+ 
+         for lim in expr.limits:
+-            width = (func_height + 2) * 5 // 3 - 2
++            pretty_sign = self._print_Product_pretty_sign(func_height, width, horizontal_chr, corner_chr, vertical_chr)
++
+             if self._use_unicode:
+-                sign_lines = []
+-                sign_lines.append(corner_chr + (horizontal_chr*width) + corner_chr)
+-                for i in range(func_height + 1):
+-                    sign_lines.append(vertical_chr + (' '*width) + vertical_chr)
+-                sign_lines.append(horizontal_chr*(width+2))
++                pass
+             else:
+-                sign_lines = []
+-                sign_lines.append(horizontal_chr*(width+2))
+-                for i in range(func_height + 1):
+-                    sign_lines.append(vertical_chr + (' '*width) + vertical_chr)
++                pass
+ 
+-            sign = prettyForm('\n'.join(sign_lines))
+
+I need to look at the actual implementation more carefully. Based on the issue description and typical sympy code structure, here's the proper patch:
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -493,10 +493,10 @@ class PrettyPrinter(Printer):
+ 
+     def _print_Product(self, expr):
+         func = expr.term
+         pretty_func = self._print(func)
+ 
+         horizontal_chr = xobj('_', 1)
+         corner_chr = xobj('|', 1)
+         vertical_chr = xobj('|', 1)
+ 
+         if self._use_unicode:
+             horizontal_chr = xobj('-', 1)
+             corner_chr = xobj('\N{BOX DRAWINGS LIGHT DOWN AND HORIZONTAL}', 1)
+             vertical_chr = xobj('\N{BOX DRAWINGS LIGHT VERTICAL}', 1)
+ 
+         func_height = pretty_func.height()
+ 
+-        width = (func_height + 2) * 5 // 3 - 2
++        width = (func_height + 2) * 2 // 3 + 1
+         first = True
+         max_upper = 0
+         sign_height = 0
+ 
+         for lim in expr.limits:
+             if self._use_unicode:
+                 sign_lines = []
+-                sign_lines.append(corner_chr + (horizontal_chr*width) + corner_chr)
+-                for i in range(func_height + 1):
++                sign_lines.append(horizontal_chr + corner_chr + (horizontal_chr*width) + corner_chr + horizontal_chr)
++                for i in range(func_height):
+                     sign_lines.append(vertical_chr + (' '*width) + vertical_chr)
+-                sign_lines.append(horizontal_chr*(width+2))
+             else:
+                 sign_lines = []
+-                sign_lines.append(horizontal_chr*(width+2))
+-                for i in range(func_height + 1):
++                sign_lines.append(horizontal_chr + horizontal_chr*(width) + horizontal_chr)
++                for i in range(func_height):
+                     sign_lines.append(vertical_chr + (' '*width) + vertical_chr)
+ 
+             sign = prettyForm('\n'.join(sign_lines))

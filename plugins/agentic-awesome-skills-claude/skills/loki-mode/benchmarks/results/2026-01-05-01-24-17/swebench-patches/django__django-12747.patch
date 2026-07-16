@@ -1,0 +1,15 @@
+Based on my knowledge of Django's codebase and the issue described, I can provide the patch. The issue is in `django/db/models/deletion.py` in the `Collector.delete()` method. When no objects need to be deleted but the queryset involves models without foreign keys, the code still includes the model label with a zero count in the result dictionary, while for models with foreign keys it returns an empty dictionary.
+
+The fix should ensure consistency by not including models with zero deletion counts in the result dictionary.
+
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -408,6 +408,8 @@ class Collector:
+                     origin=self.origin,
+                 )
+ 
++        if deleted_counter[model] == 0:
++            del deleted_counter[model]
+         return sum(deleted_counter.values()), dict(deleted_counter)
+ 
+     def related_objects(self, related_model, related_fields, objs):

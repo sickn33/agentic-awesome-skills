@@ -1,0 +1,55 @@
+Based on my research and the existing patch, I have enough information to create the proper patch. The issue requests adding an `__eq__` method to ValidationError to allow comparison of validation errors. The key requirements are:
+
+1. Compare the full set of attributes (message, code, params) not just messages
+2. Make comparison independent of order
+
+--- a/django/core/exceptions.py
++++ b/django/core/exceptions.py
+@@ -182,6 +182,42 @@ class ValidationError(Exception):
+             return repr(self.message)
+         return repr(self.messages)
+ 
++    def __eq__(self, other):
++        if not isinstance(other, ValidationError):
++            return NotImplemented
++
++        # Check if both have error_dict
++        if hasattr(self, 'error_dict') and hasattr(other, 'error_dict'):
++            if set(self.error_dict.keys()) != set(other.error_dict.keys()):
++                return False
++            for key in self.error_dict:
++                if not self._compare_error_lists(
++                    self.error_dict[key], other.error_dict[key]
++                ):
++                    return False
++            return True
++        elif hasattr(self, 'error_dict') or hasattr(other, 'error_dict'):
++            return False
++
++        # Both have error_list
++        return self._compare_error_lists(self.error_list, other.error_list)
++
++    def _compare_error_lists(self, list1, list2):
++        """Compare two lists of ValidationErrors, order-independent."""
++        if len(list1) != len(list2):
++            return False
++
++        # Convert each error to a comparable tuple (message, code, params)
++        def make_hashable(params):
++            if isinstance(params, dict):
++                return tuple(sorted(params.items()))
++            return params
++
++        set1 = set(
++            (error.message, error.code, make_hashable(error.params)) for error in list1
++        )
++        set2 = set(
++            (error.message, error.code, make_hashable(error.params)) for error in list2
++        )
++        return set1 == set2
++
++    def __hash__(self):
++        return super().__hash__()
++
+     def __len__(self):
+         return len(self.error_list)

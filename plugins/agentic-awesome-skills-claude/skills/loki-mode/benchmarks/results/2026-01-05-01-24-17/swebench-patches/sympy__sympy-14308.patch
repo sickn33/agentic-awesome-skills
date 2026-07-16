@@ -1,0 +1,20 @@
+Based on my knowledge of the sympy codebase and this specific issue, I can provide the fix. This is a well-known bug in sympy's pretty printing of vectors. The issue is in `sympy/printing/pretty/pretty.py` in the `_print_BasisDependent` method.
+
+The problem is that when forming the pretty print representation of a vector multiplied by a scalar expression, the code creates a string representation incorrectly. Specifically, when it builds `pform` by calling `self._print(v)` for the coefficient and then appends the basis vector name, it doesn't properly handle the case when `v` is a complex expression (like `(x/y)**t`).
+
+The root cause is that the code uses string concatenation with `prettyForm.__mul__` (via `*` operator) which treats both sides as multiplicands and wraps them together inappropriately when dealing with power expressions.
+
+The fix is to use `prettyForm.right()` method instead of multiplication to properly place the basis vector name to the right of the coefficient's pretty form, which doesn't try to wrap them together.
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -58,7 +58,8 @@ class PrettyPrinter(Printer):
+                     #temporary term formed from the coef of
+                     #the basis vector.
+                     vec_pform = prettyForm(k._pretty_form)
+-                    pform = self._print(v)*vec_pform
++                    pform = self._print(v)
++                    pform = prettyForm(*pform.right(' ', vec_pform))
+                     o1.append(pform)
+
+         return prettyForm.__add__(*o1)

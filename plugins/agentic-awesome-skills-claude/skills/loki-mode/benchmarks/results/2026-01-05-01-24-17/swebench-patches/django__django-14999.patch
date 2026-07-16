@@ -1,0 +1,26 @@
+Based on my knowledge of Django's codebase and this specific issue, I'll provide the patch. The issue is in `django/db/migrations/operations/models.py` in the `RenameModel` class. The `database_forwards` and `database_backwards` methods need to check if the model has a custom `db_table` set, and if so, skip the database operations since the table name isn't actually changing.
+
+Here's the patch:
+
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -320,6 +320,9 @@ class RenameModel(ModelOperation):
+         new_model = to_state.apps.get_model(app_label, self.new_name)
+         if self.allow_migrate_model(schema_editor.connection.alias, new_model):
+             old_model = from_state.apps.get_model(app_label, self.old_name)
++            # Move the main table
++            if old_model._meta.db_table == new_model._meta.db_table:
++                return
+             # Move the main table
+             schema_editor.alter_db_table(
+                 new_model,
+@@ -360,6 +363,9 @@ class RenameModel(ModelOperation):
+         new_model = from_state.apps.get_model(app_label, self.old_name)
+         if self.allow_migrate_model(schema_editor.connection.alias, new_model):
+             old_model = to_state.apps.get_model(app_label, self.new_name)
++            # Move the main table
++            if old_model._meta.db_table == new_model._meta.db_table:
++                return
+             # Move the main table
+             schema_editor.alter_db_table(
+                 new_model,

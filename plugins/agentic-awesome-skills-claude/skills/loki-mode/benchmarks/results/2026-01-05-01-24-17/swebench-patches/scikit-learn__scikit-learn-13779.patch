@@ -1,0 +1,16 @@
+Based on the issue description, I need to provide a patch for scikit-learn's VotingClassifier/VotingRegressor. The bug is that when `sample_weight` is passed and an estimator is set to `None`, the fit method fails because it doesn't check for `None` estimators before checking sample_weight support.
+
+From my knowledge of scikit-learn's codebase, the issue is in `sklearn/ensemble/_voting.py`. The `fit` method checks if estimators support `sample_weight` but doesn't filter out `None` estimators first.
+
+Here's the patch:
+
+--- a/sklearn/ensemble/_voting.py
++++ b/sklearn/ensemble/_voting.py
+@@ -78,7 +78,7 @@ class _BaseVoting(TransformerMixin, _BaseHeterogeneousEnsemble):
+ 
+         if sample_weight is not None:
+             for name, step in self.estimators:
+-                if not has_fit_parameter(step, 'sample_weight'):
++                if step is not None and not has_fit_parameter(step, 'sample_weight'):
+                     raise ValueError('Underlying estimator \'%s\' does not'
+                                      ' support sample weights.' % name)

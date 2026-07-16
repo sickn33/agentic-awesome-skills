@@ -1,0 +1,23 @@
+# django__django-16873
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Django's codebase and the architect's analysis, I can generate the patch for the `join` filter in `django/template/defaultfilters.py`. The issue is that `conditional_escape(arg)` is called unconditionally, when it should only be called when `autoescape=True`.
+
+Here is the patch:
+
+--- a/django/template/defaultfilters.py
++++ b/django/template/defaultfilters.py
+@@ -586,8 +586,9 @@ def join(value, arg, autoescape=True):
+     """Join a list with a string, like Python's ``str.join(list)``."""
+     try:
+         if autoescape:
+-            value = [conditional_escape(v) for v in value]
+-        data = conditional_escape(arg).join(value)
++            data = conditional_escape(arg).join(
++                [conditional_escape(v) for v in value]
++            )
++        else:
++            data = arg.join(value)
+     except TypeError:  # Fail silently if arg isn't iterable.
+         return value

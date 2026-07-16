@@ -1,0 +1,34 @@
+This is a Django issue but the current directory is not the Django repository. The task is asking me to generate a patch for the Django project. Let me create the patch based on the issue description and the hints provided. The fix is in `django/contrib/auth/management/__init__.py`.
+
+Based on the issue description and hints, the problem is:
+1. When `migrate` command is run with a `--database` parameter, the permission creation doesn't respect this parameter
+2. When creating `Permission` objects, the `_state.db` is not set, causing `get_content_type()` to look in the default database instead of the specified one
+3. The fix is to set `_state.db = using` on each `Permission` object before setting the `content_type`
+
+Here's the patch based on the hint provided by Mariusz Felisiak:
+
+--- a/django/contrib/auth/management/__init__.py
++++ b/django/contrib/auth/management/__init__.py
+@@ -94,10 +94,14 @@ def create_permissions(
+         )
+         .values_list("content_type", "codename")
+     )
+-
+-    perms = [
+-        Permission(codename=codename, name=name, content_type=ct)
+-        for ct, (codename, name) in searched_perms
+-        if (ct.pk, codename) not in all_perms
+-    ]
++    perms = []
++    for ct, (codename, name) in searched_perms:
++        if (ct.pk, codename) not in all_perms:
++            permission = Permission(
++                codename=codename,
++                name=name,
++                content_type=ct,
++            )
++            permission._state.db = using
++            perms.append(permission)
+     Permission.objects.using(using).bulk_create(perms)
+     if verbosity >= 2:
+         for perm in perms:

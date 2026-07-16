@@ -1,0 +1,29 @@
+Based on the GitHub issue description and traceback, I can analyze the problem directly. The issue is in `sklearn/utils/_set_output.py` in the `_wrap_in_pandas_container` function. Let me analyze the traceback:
+
+1. The error occurs in `_wrap_in_pandas_container` at line 59: `data_to_wrap.index = index`
+2. The problem is when a transformer returns a DataFrame with a different number of rows (aggregated data), the code tries to assign the original input's index to the output DataFrame
+3. This fails because the number of elements don't match (4 elements in output vs 96 in original input)
+
+Looking at the traceback and the hint in the issue:
+- The code at lines 55-62 in `_set_output.py` checks if `data_to_wrap` is already a DataFrame
+- If it is, and `index is not None`, it overwrites the DataFrame's index with the original input's index
+- This breaks when the transformer aggregates data (changes row count)
+
+The fix should be to NOT overwrite the index when the DataFrame already has an index that doesn't match the length of the new index. According to the hints:
+
+> In principle, we can have a less restrictive requirement and only set the index if it is not defined.
+
+The solution is to check if the lengths match before attempting to set the index, OR simply not set the index when the data is already a DataFrame (since it already has its own index from the transformer).
+
+Here is the patch:
+
+--- a/sklearn/utils/_set_output.py
++++ b/sklearn/utils/_set_output.py
+@@ -55,7 +55,7 @@ def _wrap_in_pandas_container(
+     if isinstance(data_to_wrap, pd.DataFrame):
+         if columns is not None:
+             data_to_wrap.columns = columns
+-        if index is not None:
++        if index is not None and len(index) == len(data_to_wrap):
+             data_to_wrap.index = index
+         return data_to_wrap

@@ -1,0 +1,22 @@
+# django__django-11815
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I need to generate a patch for Django's `django/db/migrations/serializer.py` file. The issue is in the `EnumSerializer.serialize()` method. Let me generate the patch based on the standard Django codebase structure:
+
+```
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -119,9 +119,8 @@ class EnumSerializer(BaseSerializer):
+     def serialize(self):
+         enum_class = self.value.__class__
+         module = enum_class.__module__
+-        v_string, v_imports = serializer_factory(self.value.value).serialize()
+-        imports = {'import %s' % module, *v_imports}
+-        return "%s.%s(%s)" % (module, enum_class.__name__, v_string), imports
++        imports = {'import %s' % module}
++        return "%s.%s[%r]" % (module, enum_class.__name__, self.value.name), imports
+ 
+ 
+ class FloatSerializer(BaseSimpleSerializer):
+```

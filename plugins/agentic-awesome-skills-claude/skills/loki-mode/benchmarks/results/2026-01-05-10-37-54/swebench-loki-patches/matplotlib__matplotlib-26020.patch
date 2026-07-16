@@ -1,0 +1,42 @@
+# matplotlib__matplotlib-26020
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I can generate the patch. The issue is in `lib/mpl_toolkits/axes_grid1/axes_grid.py` where the `_tick_only` function assumes `ax.axis` is subscriptable (dict-like) but for non-default axes classes like `GeoAxes`, it's a method.
+
+--- a/lib/mpl_toolkits/axes_grid1/axes_grid.py
++++ b/lib/mpl_toolkits/axes_grid1/axes_grid.py
+@@ -1,5 +1,6 @@
+ from numbers import Number
+ import functools
++from types import MethodType
+ 
+ import numpy as np
+ 
+@@ -9,6 +10,7 @@ from matplotlib.gridspec import SubplotSpec
+ from .axes_divider import Size, SubplotDivider, Divider
+ from .mpl_axes import Axes
++from .mpl_axes import SimpleAxisArtist
+ 
+ 
+ def _tick_only(ax, bottom_on, left_on):
+@@ -18,6 +20,16 @@ def _tick_only(ax, bottom_on, left_on):
+     bottom_off = not bottom_on
+     left_off = not left_on
++    if isinstance(ax.axis, MethodType):
++        # If ax.axis is a method (standard Axes behavior), we need to
++        # wrap the axis artists to provide the toggle interface
++        bottom = SimpleAxisArtist(ax.xaxis, 1, ax.spines["bottom"])
++        top = SimpleAxisArtist(ax.xaxis, 2, ax.spines["top"])
++        left = SimpleAxisArtist(ax.yaxis, 1, ax.spines["left"])
++        right = SimpleAxisArtist(ax.yaxis, 2, ax.spines["right"])
++    else:
++        bottom, top, left, right = (
++            ax.axis["bottom"], ax.axis["top"], ax.axis["left"], ax.axis["right"])
+-    ax.axis["bottom"].toggle(ticklabels=bottom_off, label=bottom_off)
+-    ax.axis["left"].toggle(ticklabels=left_off, label=left_off)
++    bottom.toggle(ticklabels=bottom_off, label=bottom_off)
++    left.toggle(ticklabels=left_off, label=left_off)
+ 
+ 
+ class CbarAxesBase:

@@ -1,0 +1,17 @@
+Based on the issue description, I need to create a patch for the Django codebase. The issue is in `django/db/models/sql/query.py` in the `resolve_lookup_value` method. Let me create the patch based on the problem description:
+
+The issue is that when reconstituting a named tuple, Django passes an iterator to the constructor instead of unpacking it with `*`. Named tuples require positional arguments, not an iterator.
+
+```
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1077,7 +1077,7 @@ class Query(BaseExpression):
+                     self.resolve_lookup_value(sub_value, can_reuse, allow_joins),
+                 )
+             )
+-            return type(value)(resolved_values)
++            return type(value)(*resolved_values)
+         return value
+ 
+     def solve_lookup_type(self, lookup):
+```

@@ -1,0 +1,29 @@
+# psf__requests-1963
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -96,6 +96,7 @@ class SessionRedirectMixin(object):
+         i = 0
+         hist = []  # keep track of history
+ 
++        prepared_request = req.copy()
+         while resp.is_redirect:
+             # Check the length of the history
+             max_redirects = self.max_redirects if allow_redirects else 0
+@@ -103,7 +104,6 @@ class SessionRedirectMixin(object):
+                 raise TooManyRedirects('Exceeded %s redirects.' % self.max_redirects, response=resp)
+ 
+             # Release the connection back into the pool.
+-            prepared_request = req.copy()
+             resp.content  # Consume socket so it can be released
+             resp.raw.release_conn()
+ 
+@@ -173,6 +173,7 @@ class SessionRedirectMixin(object):
+                 allow_redirects=False,
+                 **adapter_kwargs
+             )
++            prepared_request = resp.request.copy()
+ 
+             extract_cookies_to_jar(self.cookies, prepared_request, resp.raw)

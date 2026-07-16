@@ -1,0 +1,16 @@
+# django__django-15213
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/sql/where.py
++++ b/django/db/models/sql/where.py
+@@ -81,6 +81,9 @@ class WhereNode(tree.Node):
+             try:
+                 sql, params = compiler.compile(child)
+             except EmptyResultSet:
++                if self.negated:
++                    raise FullResultSet
++                empty_needed -= 1
+                 empty_needed -= 1
+             except FullResultSet:
+                 if self.connector == AND:

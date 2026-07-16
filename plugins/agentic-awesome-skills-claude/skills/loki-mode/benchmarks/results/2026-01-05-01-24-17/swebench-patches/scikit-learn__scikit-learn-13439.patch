@@ -1,0 +1,34 @@
+Based on the GitHub issue description, I need to provide a patch for the scikit-learn Pipeline class to implement `__len__`. Let me create a patch based on the standard scikit-learn codebase structure. The Pipeline class is in `sklearn/pipeline.py` and I need to add a `__len__` method that returns the number of steps in the pipeline.
+
+Looking at the issue:
+- Pipeline supports indexing with `pipe[:len(pipe)]`
+- But `len(pipe)` raises an error because `__len__` is not implemented
+- The fix is to add a `__len__` method that returns the number of steps
+
+Based on the scikit-learn Pipeline implementation, the steps are stored in `self.steps` which is a list of (name, estimator) tuples. The `__len__` method should return the length of this list.
+
+--- a/sklearn/pipeline.py
++++ b/sklearn/pipeline.py
+@@ -155,6 +155,10 @@ class Pipeline(_BaseComposition):
+     def __getitem__(self, ind):
+         """Returns a sub-pipeline or a single esimtator in the pipeline
+ 
++        Indexing with an integer will return an estimator; using a slice
++        returns another Pipeline instance copying a slice of the estimators
++        list.
++        """
+         if isinstance(ind, slice):
+             if ind.step not in (1, None):
+                 raise ValueError('Pipeline slicing only supports a step of 1')
+@@ -162,6 +166,10 @@ class Pipeline(_BaseComposition):
+         try:
+             return self.steps[ind][1]
+         except TypeError:
+             return self.named_steps[ind]
+ 
++    def __len__(self):
++        """Returns the length of the Pipeline"""
++        return len(self.steps)
++
+     @property
+     def _estimator_type(self):

@@ -1,0 +1,18 @@
+Based on my analysis of the issue and the hints provided, I can see that the fix requires adding validation to the `IsNull` class's `as_sql` method in `django/db/models/lookups.py` to raise a `ValueError` when a non-boolean value is passed to the `__isnull` lookup.
+
+Here is the patch:
+
+--- a/django/db/models/lookups.py
++++ b/django/db/models/lookups.py
+@@ -461,6 +461,11 @@ class IsNull(BuiltinLookup):
+     prepare_rhs = False
+ 
+     def as_sql(self, compiler, connection):
++        if not isinstance(self.rhs, bool):
++            raise ValueError(
++                'The QuerySet value for an isnull lookup must be True or '
++                'False.'
++            )
+         sql, params = compiler.compile(self.lhs)
+         if self.rhs:
+             return "%s IS NULL" % sql, params

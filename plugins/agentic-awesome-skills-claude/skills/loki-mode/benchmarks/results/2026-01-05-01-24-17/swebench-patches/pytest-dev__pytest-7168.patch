@@ -1,0 +1,28 @@
+This is not the pytest repository. I need to work on the pytest-dev/pytest repository. Since this is a GitHub issue about pytest, I need to understand the issue from the traceback and create a patch for the `saferepr.py` file.
+
+Let me analyze the issue from the problem statement:
+
+1. The issue is in `_pytest/_io/saferepr.py`
+2. The problem occurs when `obj.__class__.__name__` is accessed, but the object has a broken `__getattribute__` method
+3. The fix should change `obj.__class__.__name__` to `type(obj).__name__` to avoid calling the object's `__getattribute__`
+
+Based on the traceback, I can see the relevant code that needs to be fixed is in `_format_repr_exception` at line 23:
+```python
+exc_info, obj.__class__.__name__, id(obj)
+```
+
+This should be changed to:
+```python
+exc_info, type(obj).__name__, id(obj)
+```
+
+Here's the patch:
+
+--- a/src/_pytest/_io/saferepr.py
++++ b/src/_pytest/_io/saferepr.py
+@@ -20,7 +20,7 @@ def _format_repr_exception(exc: BaseException, obj: Any) -> str:
+         exc_info = "unknown"
+     return "<[{} raised in repr()] {} object at 0x{:x}>".format(
+-        exc_info, obj.__class__.__name__, id(obj)
++        exc_info, type(obj).__name__, id(obj)
+     )

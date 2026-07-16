@@ -1,0 +1,17 @@
+Based on the issue description and my knowledge of Django's codebase, I need to generate a patch for Django's `PasswordResetTokenGenerator._make_hash_value()` method in `django/contrib/auth/tokens.py`. The fix is to include the user's email address in the hash value so that changing the email invalidates any outstanding password reset tokens.
+
+Here's the patch:
+
+--- a/django/contrib/auth/tokens.py
++++ b/django/contrib/auth/tokens.py
+@@ -78,7 +78,9 @@ class PasswordResetTokenGenerator:
+         # Truncate microseconds so that tokens are consistent even if the
+         # database doesn't support microseconds.
+         login_timestamp = '' if user.last_login is None else user.last_login.replace(microsecond=0, tzinfo=None)
+-        return str(user.pk) + user.password + str(login_timestamp) + str(timestamp)
++        email_field = user.get_email_field_name()
++        email = getattr(user, email_field, '') or ''
++        return str(user.pk) + user.password + str(login_timestamp) + str(timestamp) + email
+ 
+     def _num_seconds(self, dt):
+         return int((dt - datetime(2001, 1, 1)).total_seconds())

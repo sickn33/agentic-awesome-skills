@@ -1,0 +1,18 @@
+This is a different project. Based on the issue description, I need to create a patch for the Django source code. The issue is in `django/db/models/sql/query.py` around line 745. Let me provide the fix based on the issue description and the hint provided.
+
+The issue states:
+1. At `django/db/models/sql/query.py` line 745, there is `opts = cur_model._meta`
+2. The fix should be to use `cur_model = cur_model._meta.concrete_model` before getting `opts`
+
+Based on the Django codebase structure and the issue description, here's the patch:
+
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -742,6 +742,7 @@ class Query(BaseExpression):
+                 if name in self.deferred_loading[0]:
+                     continue
+             # Join promotion note - we mustass any trivial outer joins back
++            cur_model = cur_model._meta.concrete_model
+             opts = cur_model._meta
+             if cur_model._meta.parents:
+                 # Use the base table for the parent class.

@@ -1,0 +1,20 @@
+# sympy__sympy-16792
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the SymPy codebase and the issue description, I can generate the correct patch. The fix needs to be in the `Routine` class in `codegen.py` where arguments are processed. When a `MatrixSymbol` is passed as an argument but doesn't appear in the expression, we need to ensure its dimensions are preserved.
+
+--- a/sympy/utilities/codegen.py
++++ b/sympy/utilities/codegen.py
+@@ -692,6 +692,10 @@ class Routine(object):
+                 dims = [self._get_dimensions(arg) for arg in arg.indices]
+                 new_args.append(InputArgument(arg.base, dimensions=dims))
+             elif isinstance(arg, (IndexedBase, MatrixSymbol)):
++                dims = None
++                if isinstance(arg, MatrixSymbol):
++                    dims = [arg.shape[0], arg.shape[1]]
++                new_args.append(InputArgument(arg, dimensions=dims))
+-                new_args.append(InputArgument(arg))
+             elif isinstance(arg, Symbol):
+                 new_args.append(InputArgument(arg))
+             elif isinstance(arg, Function):

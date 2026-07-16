@@ -2,28 +2,107 @@
 """Unpack and format XML contents of Office files (.docx, .pptx, .xlsx)"""
 
 import random
+import shutil
+import stat
 import sys
-import defusedxml.minidom
 import zipfile
 from pathlib import Path
 
-# Get command line arguments
-assert len(sys.argv) == 3, "Usage: python unpack.py <office_file> <output_dir>"
-input_file, output_dir = sys.argv[1], sys.argv[2]
 
-# Extract and format
-output_path = Path(output_dir)
-output_path.mkdir(parents=True, exist_ok=True)
-zipfile.ZipFile(input_file).extractall(output_path)
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
-# Pretty print all XML files
-xml_files = list(output_path.rglob("*.xml")) + list(output_path.rglob("*.rels"))
-for xml_file in xml_files:
-    content = xml_file.read_text(encoding="utf-8")
-    dom = defusedxml.minidom.parseString(content)
-    xml_file.write_bytes(dom.toprettyxml(indent="  ", encoding="ascii"))
+MAX_ARCHIVE_MEMBERS = 5000
+MAX_MEMBER_SIZE = 100 * 1024 * 1024
+MAX_TOTAL_UNCOMPRESSED = 512 * 1024 * 1024
+MAX_COMPRESSION_RATIO = 1000
 
-# For .docx files, suggest an RSID for tracked changes
-if input_file.endswith(".docx"):
-    suggested_rsid = "".join(random.choices("0123456789ABCDEF", k=8))
-    print(f"Suggested RSID for edit session: {suggested_rsid}")
+
+def _is_zip_symlink(member: zipfile.ZipInfo) -> bool:
+    return stat.S_ISLNK(member.external_attr >> 16)
+
+
+def _is_safe_destination(output_root: Path, member_name: str) -> bool:
+    destination = output_root / member_name
+    return destination.resolve().is_relative_to(output_root.resolve())
+
+
+def _extract_member(archive: zipfile.ZipFile, member: zipfile.ZipInfo, output_root: Path):
+    destination = output_root / member.filename
+    if member.is_dir():
+        destination.mkdir(parents=True, exist_ok=True)
+        return
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with archive.open(member, "r") as source, safe_user_path(destination).open("wb") as target:
+        shutil.copyfileobj(source, target)
+
+
+def _validate_archive_members(archive: zipfile.ZipFile, output_root: Path):
+    members = archive.infolist()
+    if len(members) > MAX_ARCHIVE_MEMBERS:
+        raise ValueError("Archive contains too many entries")
+
+    total_size = 0
+    for member in members:
+        if _is_zip_symlink(member):
+            raise ValueError(f"Unsafe archive entry: {member.filename}")
+        if not _is_safe_destination(output_root, member.filename):
+            raise ValueError(f"Unsafe archive entry: {member.filename}")
+        if member.file_size > MAX_MEMBER_SIZE:
+            raise ValueError(f"Archive entry too large: {member.filename}")
+        total_size += member.file_size
+        if total_size > MAX_TOTAL_UNCOMPRESSED:
+            raise ValueError("Archive uncompressed size is too large")
+        if member.compress_size and member.file_size / member.compress_size > MAX_COMPRESSION_RATIO:
+            raise ValueError(f"Archive entry compression ratio too high: {member.filename}")
+
+    return members
+
+
+def extract_archive_safely(input_file: str | Path, output_dir: str | Path):
+    output_path = safe_user_path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    output_root = output_path.resolve()
+
+    with zipfile.ZipFile(input_file) as archive:
+        for member in _validate_archive_members(archive, output_root):
+            _extract_member(archive, member, output_path)
+
+
+def pretty_print_xml(output_path: Path):
+    import defusedxml.minidom
+
+    xml_files = list(output_path.rglob("*.xml")) + list(output_path.rglob("*.rels"))
+    for xml_file in xml_files:
+        content = xml_file.read_text(encoding="utf-8")
+        dom = defusedxml.minidom.parseString(content)
+        xml_file.write_bytes(dom.toprettyxml(indent="  ", encoding="ascii"))
+
+
+def main(argv: list[str] | None = None):
+    argv = argv or sys.argv[1:]
+    if len(argv) != 2:
+        raise SystemExit("Usage: python unpack.py <office_file> <output_dir>")
+
+    input_file, output_dir = argv
+    output_path = safe_user_path(output_dir)
+    extract_archive_safely(input_file, output_path)
+    pretty_print_xml(output_path)
+
+    if input_file.endswith(".docx"):
+        suggested_rsid = "".join(random.choices("0123456789ABCDEF", k=8))
+        print(f"Suggested RSID for edit session: {suggested_rsid}")
+
+
+if __name__ == "__main__":
+    main()

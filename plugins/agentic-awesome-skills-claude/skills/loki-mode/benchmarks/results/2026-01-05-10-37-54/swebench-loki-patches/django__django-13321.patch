@@ -1,0 +1,29 @@
+# django__django-13321
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the traceback, I can generate the patch. The issue is in `django/contrib/sessions/backends/base.py` where the `_legacy_decode()` method doesn't handle `binascii.Error` when calling `base64.b64decode()`.
+
+```
+--- a/django/contrib/sessions/backends/base.py
++++ b/django/contrib/sessions/backends/base.py
+@@ -1,3 +1,4 @@
++import binascii
+ import base64
+ import hashlib
+ import logging
+@@ -123,7 +124,12 @@ class SessionBase:
+             return self._legacy_decode(session_data)
+ 
+     def _legacy_decode(self, session_data):
+-        encoded_data = base64.b64decode(session_data.encode('ascii'))
++        try:
++            encoded_data = base64.b64decode(session_data.encode('ascii'))
++        except binascii.Error:
++            # Invalid base64 data
++            logger.warning('Session data corrupted')
++            return {}
+         # could produce ValueError if there is no ':'
+         hash, serialized = encoded_data.split(b':', 1)
+         expected_hash = self._hash(serialized)
+```

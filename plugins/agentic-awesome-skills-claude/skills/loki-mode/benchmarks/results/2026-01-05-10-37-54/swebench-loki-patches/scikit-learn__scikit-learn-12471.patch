@@ -1,0 +1,22 @@
+# scikit-learn__scikit-learn-12471
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of scikit-learn's codebase and the issue description, I can generate the patch. The bug is in the `_transform` method where unknown values are replaced with `categories_[i][0]`, but the array's dtype may not accommodate the longer string.
+
+```
+--- a/sklearn/preprocessing/_encoders.py
++++ b/sklearn/preprocessing/_encoders.py
+@@ -110,6 +110,11 @@ class _BaseEncoder(BaseEstimator, TransformerMixin):
+                 Xi = X[:, i]
+             else:
+                 Xi = X[:, i].copy()
++                # If Xi's dtype is a string type with limited length,
++                # we need to ensure it can hold the replacement value
++                if Xi.dtype.kind in ('U', 'S'):
++                    if Xi.dtype.itemsize < cats.dtype.itemsize:
++                        Xi = Xi.astype(cats.dtype)
+ 
+                 mask = _encode_check_unknown(Xi, cats, return_mask=True)
+                 Xi[mask] = cats[0]
+```

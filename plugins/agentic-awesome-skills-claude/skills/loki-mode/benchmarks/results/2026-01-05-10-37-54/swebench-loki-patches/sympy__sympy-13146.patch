@@ -1,0 +1,54 @@
+# sympy__sympy-13146
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my analysis of the issue and the architect's guidance, I need to generate a patch for the SymPy repository. The issue is that Float objects with identical `_mpf_` tuples (representing the same mathematical value) are not being recognized as equal, preventing proper term combination in Add operations.
+
+The fix should ensure that Float objects with identical `_mpf_` representations hash and compare equally. Here's the patch:
+
+```
+--- a/sympy/core/numbers.py
++++ b/sympy/core/numbers.py
+@@ -915,6 +915,12 @@ def __eq__(self, other):
+             return False
+         if isinstance(other, Float):
+             return self._mpf_ == other._mpf_
++        # Compare with Python float - needed for proper term combination
++        # when Floats were created through different paths but have same value
++        if isinstance(other, float):
++            o = Float(other)
++            return self._mpf_ == o._mpf_
++        # Compare with Rational for cases like Float(2.5) == Rational(5,2)
+         if isinstance(other, Number):
+             # numbers should compare at the same precision;
+             # all _comparably_ equal numbers will have the same
+@@ -953,7 +959,7 @@ def __ne__(self, other):
+         return not self == other
+ 
+     def __hash__(self):
+-        return super(Float, self).__hash__()
++        return hash(self._mpf_)
+ 
+     def epsilon_eq(self, other, epsilon="1e-15"):
+         return abs(self - other) < Float(epsilon)
+```
+
+Wait, let me reconsider. The real issue according to the architect is that Floats with identical `_mpf_` values are failing equality comparison when they shouldn't be. Looking more carefully at the problem:
+
+When `expr1 - expr2` is computed:
+- `expr1 = 0.5*x**2.5` has exponent Float(2.5)
+- `expr2 = 0.5*x**(5/2)` after evalf has exponent Float(2.5)
+
+The `_mpf_` tuples should be identical. The issue is likely in the hash function - if two Float objects have the same `_mpf_` but different hashes, they won't be combined as like terms.
+
+--- a/sympy/core/numbers.py
++++ b/sympy/core/numbers.py
+@@ -953,7 +953,7 @@ def __ne__(self, other):
+         return not self == other
+ 
+     def __hash__(self):
+-        return super(Float, self).__hash__()
++        return hash(self._mpf_)
+ 
+     def epsilon_eq(self, other, epsilon="1e-15"):
+         return abs(self - other) < Float(epsilon)

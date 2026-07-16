@@ -1,0 +1,119 @@
+Based on the issue description and the hints provided, I can understand the problem and provide a fix. The issue states:
+
+1. The bug is in `sphinx/util/rst.py` around lines 81-91
+2. The `rst_prolog` is prepended directly to the RST content
+3. When a document starts with a heading that contains an inline role like `:mod:`, the prolog gets inserted between the role text and the heading underline
+4. The hint suggests fixing this by adding an empty line after the RST prolog internally
+
+Looking at the problem:
+- RST content: `:mod:\`mypackage2\`\n=================\n`
+- With prolog: `<prolog content>:mod:\`mypackage2\`\n=================\n`
+
+The issue is that the prolog insertion logic finds the first line (which contains `:mod:`), and inserts the prolog. But if the first line is part of a heading (followed by `===` or `---`), this breaks the heading structure because the prolog gets inserted between them.
+
+The fix needs to detect when the first lines form a heading and insert the prolog before the entire heading, followed by an empty line to separate it properly.
+
+Here's the patch:
+
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -78,11 +78,18 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+     if prolog:
+         pos = 0
+         for line in content:
+-            if docinfo_re.match(line):
++            if docinfo_re.match(line):
+                 pos += 1
+             else:
+                 break
+ 
+-        if pos > 0:
+-            # insert a blank line after docinfo
+-            content.insert(pos, '', '<generated>', 0)
+-            pos += 1
++        # check if the first non-docinfo line is a heading (followed by a line of =, -, etc.)
++        if pos < len(content) - 1:
++            # check if the next line is a heading underline
++            next_line = content[pos + 1] if pos + 1 < len(content) else ''
++            if next_line and len(next_line) > 0 and next_line[0] in '=-~^"\'`+#*':
++                if all(c == next_line[0] for c in next_line.rstrip()):
++                    # this is a heading, skip past the underline
++                    pos += 2
+ 
++        if pos > 0:
++            # insert a blank line after docinfo/heading
++            content.insert(pos, '', '<generated>', 0)
++            pos += 1
++
+         for lineno, line in enumerate(prolog.splitlines()):
+             content.insert(pos + lineno, line, '<rst_prolog>', lineno)
++
++        content.insert(pos + lineno + 1, '', '<generated>', 0)
+
+Wait, I need to reconsider. Looking more carefully at the problem:
+
+The issue is that when `rst_prolog` is prepended, it gets inserted AFTER the first line (the title text with `:mod:`), which breaks the heading because now the underline `====` is separated from the title by the prolog content.
+
+The simpler fix suggested in the hint is to just add an empty line after the prolog. This ensures the prolog is properly separated from the document content.
+
+Let me provide the correct patch:
+
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -80,7 +80,14 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+         for line in content:
+             if docinfo_re.match(line):
+                 pos += 1
+             else:
+                 break
+ 
++        # check if the first content line is a heading
++        if pos < len(content) - 1:
++            first_line = content[pos]
++            second_line = content[pos + 1] if pos + 1 < len(content) else ''
++            if (second_line and
++                    len(second_line) > 0 and
++                    second_line[0] in '=-~^"\'`+#*' and
++                    all(c == second_line[0] for c in second_line.strip())):
++                # Skip past the heading
++                pos += 2
++
+         if pos > 0:
+             # insert a blank line after docinfo
+             content.insert(pos, '', '<generated>', 0)
+             pos += 1
+ 
+         for lineno, line in enumerate(prolog.splitlines()):
+             content.insert(pos + lineno, line, '<rst_prolog>', lineno)
++
++        content.insert(pos + lineno + 1, '', '<generated>', 0)
+
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -78,6 +78,7 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+     if prolog:
+         pos = 0
+         for line in content:
+             if docinfo_re.match(line):
+                 pos += 1
+             else:
+                 break
+ 
++        # Check if the first content line is part of a heading (text + underline)
++        if pos < len(content) - 1:
++            second_line = content[pos + 1] if pos + 1 < len(content) else ''
++            if (second_line and
++                    second_line[0] in '=-~^"\'`+#*' and
++                    all(c == second_line[0] for c in second_line.strip())):
++                # The first line is a title followed by underline - skip past the heading
++                pos += 2
++
+         if pos > 0:
+             # insert a blank line after docinfo
+             content.insert(pos, '', '<generated>', 0)
+             pos += 1
+ 
+         for lineno, line in enumerate(prolog.splitlines()):
+             content.insert(pos + lineno, line, '<rst_prolog>', lineno)
++
++        content.insert(pos + lineno + 1, '', '<generated>', 0)

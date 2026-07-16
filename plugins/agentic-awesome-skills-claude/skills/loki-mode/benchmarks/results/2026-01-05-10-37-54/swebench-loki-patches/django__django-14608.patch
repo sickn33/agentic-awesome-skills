@@ -1,0 +1,34 @@
+# django__django-14608
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/forms/formsets.py
++++ b/django/forms/formsets.py
+@@ -333,7 +333,7 @@ class BaseFormSet(RenderableFormMixin):
+         if self._non_form_errors is None:
+             self.full_clean()
+         return self._non_form_errors
+ 
+     def _should_delete_form(self, form):
+         """Return whether or not the form was marked for deletion."""
+@@ -380,7 +380,7 @@ class BaseFormSet(RenderableFormMixin):
+                     self._non_form_errors.append(e)
+                 except ValidationError as e:
+                     self._non_form_errors = self.error_class(
+-                        e.error_list
++                        e.error_list, error_class='nonform'
+                     )
+ 
+         for i, form in enumerate(self.forms):
+@@ -410,7 +410,7 @@ class BaseFormSet(RenderableFormMixin):
+         # Give self.clean() a chance to do cross-form validation.
+         self._clean_forms_errors = []
+         try:
+-            self._non_form_errors = self.error_class()
++            self._non_form_errors = self.error_class(error_class='nonform')
+             self.clean()
+         except ValidationError as e:
+             self._non_form_errors = self.error_class(
+-                e.error_list
++                e.error_list, error_class='nonform'
+             )

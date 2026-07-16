@@ -1,0 +1,89 @@
+# pytest-dev__pytest-9359
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the pytest codebase and the issue description, I can generate the appropriate patch. The issue is in the `getstatementrange_ast()` function in `src/_pytest/_code/source.py`. In Python 3.8+, AST nodes have `end_lineno` attributes, but the function was using the start of the next statement to determine the end of the current statement. For decorated functions, the decorator's `@` symbol has a different line number than the function definition itself, causing the extra lines to be included.
+
+Here is the patch:
+
+```
+--- a/src/_pytest/_code/source.py
++++ b/src/_pytest/_code/source.py
+@@ -152,7 +152,12 @@ def getstatementrange_ast(
+     for node in ast.walk(astnode):
+         if isinstance(node, ast.stmt):
+             values.append(node.lineno - 1)
+-    values.sort()
++            # In Python 3.8+, use end_lineno to determine statement end
++            # This fixes an issue where decorated functions after an assert
++            # would incorrectly extend the statement range to include the decorator
++            if hasattr(node, "end_lineno") and node.end_lineno is not None:
++                values.append(node.end_lineno)
++    values = sorted(set(values))
+     insert_index = bisect_right(values, lineno)
+     start = values[insert_index - 1]
+     if insert_index >= len(values):
+```
+
+Wait, I need to reconsider the actual fix. The issue is that when displaying the assertion error, pytest is including lines after the assert statement up to the next statement. In Python 3.9+, the `end_lineno` of a statement is available and should be used to determine where the statement ends, rather than looking at where the next statement begins.
+
+Let me provide the correct patch based on the analysis:
+
+```
+--- a/src/_pytest/_code/source.py
++++ b/src/_pytest/_code/source.py
+@@ -149,20 +149,24 @@ def getstatementrange_ast(
+         raise SyntaxError("source is not valid Python")
+ 
+     start, end = get_statement_startend2(lineno, astnode)
++
++    # If the end was determined by looking at the next statement's start,
++    # adjust it to only include lines that are actually part of this statement.
++    # This prevents including decorators of the next function in the output.
++    if end is not None:
++        # Check if there are blank lines or decorators between the statement
++        # end and the next statement that shouldn't be included
++        for i in range(start, end):
++            line = source.lines[i].strip()
++            if line.startswith("@") and i > start:
++                # Don't include decorators that come after the statement
++                end = i
++                break
++
+     text = source.lines[start:end]
+     if not text:
+         raise ValueError("source is empty")
+-    while text[-1].strip().startswith("@"):
+-        end -= 1
+-        text = source.lines[start:end]
+-        if not text:
+-            raise ValueError("source is empty")
+     return start, end
+```
+
+Actually, I need to look at the actual logic more carefully. Based on the issue, the problem is in the statement range calculation. Let me provide a simpler, more targeted fix:
+
+--- a/src/_pytest/_code/source.py
++++ b/src/_pytest/_code/source.py
+@@ -149,6 +149,20 @@ def getstatementrange_ast(
+         raise SyntaxError("source is not valid Python")
+ 
+     start, end = get_statement_startend2(lineno, astnode)
++
++    # In Python 3.8+, we can use end_lineno to get a more accurate statement end.
++    # This fixes issue where decorators of the next function would be incorrectly
++    # included in the statement range (e.g., when an assert is followed by a
++    # decorated function).
++    if end is not None:
++        # Trim trailing lines that start with @ (decorators) since they belong
++        # to the next statement, not this one
++        while end > start + 1:
++            line = source.lines[end - 1].strip()
++            if line.startswith("@"):
++                end -= 1
++            else:
++                break
++
+     text = source.lines[start:end]
+     if not text:
+         raise ValueError("source is empty")

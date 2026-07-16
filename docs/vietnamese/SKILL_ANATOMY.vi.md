@@ -46,6 +46,10 @@ Frontmatter nằm ở ngay đầu file, được bao bọc bởi cặp `---`:
 ---
 name: my-skill-name
 description: "Mô tả ngắn gọn về chức năng của skill này"
+category: development
+risk: safe
+source: community
+date_added: 2026-06-25
 ---
 ```
 
@@ -65,6 +69,26 @@ description: "Mô tả ngắn gọn về chức năng của skill này"
 - **Độ dài:** Nên dưới 150 ký tự.
 - **Ví dụ:** `"Các mẫu tích hợp thanh toán Stripe bao gồm checkout, đăng ký gói (subscriptions) và webhooks"`
 
+#### `category`
+
+- **Định nghĩa:** Danh mục chính của skill.
+- **Ví dụ:** `development`, `security`, `testing`, `infrastructure`.
+
+#### `risk`
+
+- **Định nghĩa:** Mức rủi ro của hướng dẫn trong skill.
+- **Giá trị:** `none`, `safe`, `critical`, `offensive`, hoặc `unknown`.
+
+#### `source`
+
+- **Định nghĩa:** Nguồn gốc của skill.
+- **Ví dụ:** `community`, `self`, hoặc URL nguồn.
+
+#### `date_added`
+
+- **Định nghĩa:** Ngày skill được thêm vào registry.
+- **Định dạng:** `YYYY-MM-DD`.
+
 ### Các trường Tùy chọn
 
 Một số skill bao gồm thêm siêu dữ liệu bổ sung:
@@ -73,8 +97,12 @@ Một số skill bao gồm thêm siêu dữ liệu bổ sung:
 ---
 name: my-skill-name
 description: "Mô tả ngắn"
-risk: "safe" # safe | risk | official
-source: "community"
+category: development
+risk: safe
+source: community
+source_repo: "https://github.com/example/example-skills"
+source_type: "github"
+date_added: 2026-06-25
 tags: ["react", "typescript"]
 ---
 ```
@@ -304,19 +332,19 @@ references/
 
 ### Skill Tối giản (Minimum Viable Skill)
 
-- **Frontmatter:** name + description
+- **Frontmatter:** `name`, `description`, `category`, `risk`, `source`, `date_added`; thêm `source_repo` và `source_type` khi skill bắt nguồn từ GitHub bên ngoài
 - **Nội dung:** 100-200 từ
 - **Các mục:** Tổng quan + Hướng dẫn
 
 ### Skill Tiêu chuẩn (Standard Skill)
 
-- **Frontmatter:** name + description
+- **Frontmatter:** `name`, `description`, `category`, `risk`, `source`, `date_added`; thêm `source_repo` và `source_type` khi skill bắt nguồn từ GitHub bên ngoài
 - **Nội dung:** 300-800 từ
 - **Các mục:** Tổng quan + Khi nào sử dụng + Hướng dẫn + Ví dụ
 
 ### Skill Toàn diện (Comprehensive Skill)
 
-- **Frontmatter:** name + description + các trường tùy chọn
+- **Frontmatter:** các trường chuẩn ở trên, cộng `source_repo`/`source_type` khi skill bắt nguồn từ GitHub bên ngoài và các trường tùy chọn khi hữu ích
 - **Nội dung:** 800-2000 từ
 - **Các mục:** Đầy đủ tất cả các mục đề xuất
 - **Bổ sung:** Scripts, ví dụ, templates

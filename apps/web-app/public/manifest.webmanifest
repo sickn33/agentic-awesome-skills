@@ -1,0 +1,17 @@
+{
+  "name": "Agentic Awesome Skills",
+  "short_name": "Agentic Skills",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "description": "A discoverable catalog of installable AI skills for agents and assistants.",
+  "icons": [
+    {
+      "src": "vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

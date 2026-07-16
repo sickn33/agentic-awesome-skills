@@ -1,0 +1,164 @@
+# Plugins for Claude Code and Codex
+
+Release `9.0.0` adds first-class plugin distributions for both **Claude Code** and **Codex**.
+
+This page is the canonical explanation of what those plugins are, how they differ from a full library install, and why the repository now ships both a **root plugin** and multiple **specialized plugins**.
+
+## What a plugin is in this repo
+
+In Agentic Awesome Skills, a plugin is a packaged, installable distribution of skills plus the metadata a host tool needs to expose that distribution through its plugin or marketplace flow.
+
+Plugins are useful when you want:
+
+- a marketplace-style install instead of copying files into `.claude/skills/` or `.codex/skills/`
+- a narrower install surface for a team or role
+- a safer default distribution for plugin ecosystems
+- a stable workflow package that can eventually include skills, app integrations, MCP configuration, hooks, and assets
+
+Plugins are **not** different content formats. They still ship `SKILL.md` playbooks. The difference is the packaging, install surface, and filtering.
+
+## Full library install vs plugin install
+
+You now have two valid ways to use this repository with Claude Code or Codex.
+
+### Full library install
+
+Use the installer or clone the repository directly when you want the broadest possible coverage:
+
+```bash
+npx agentic-awesome-skills --claude
+npx agentic-awesome-skills --codex
+```
+
+Or clone manually into your preferred skills directory.
+
+Choose the full library when you want:
+
+- the largest available catalog
+- repo-only skills that are still being hardened for plugin distribution
+- direct filesystem control over the installed tree
+
+### Plugin install
+
+Use the plugin marketplace or repo-local plugin metadata when you want a curated, installable distribution:
+
+- **Claude Code** uses `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`
+- **Codex** uses `.agents/plugins/marketplace.json` and `plugins/agentic-awesome-skills/.codex-plugin/plugin.json`
+
+Choose the plugin route when you want:
+
+- marketplace-friendly installation
+- a cleaner starter surface
+- plugin-safe filtering by default
+- domain-specific installs such as `AAS Web App Builder`, `AAS Security Engineer`, or `AAS Data Analytics`
+
+## What `plugin-safe` means
+
+Not every skill in the repository is immediately suitable for plugin publication.
+
+`plugin-safe` means the published plugin excludes skills that still need hardening, portability cleanup, or explicit setup metadata. In practice, plugin-safe filtering avoids shipping skills that rely on:
+
+- host-specific local paths
+- undeclared manual setup
+- assumptions that are acceptable in the full repository but too brittle for marketplace distribution
+
+This is why the **full library** can be larger than the **plugin-safe** subset. That difference is expected and intentional.
+
+The important rule is:
+
+- the repository remains the source of truth for the complete library
+- plugins publish the hardened subset that is ready for marketplace-style installation
+
+## Root Plugin Vs Specialized Plugins
+
+The repository now ships two plugin shapes.
+
+### Root plugin
+
+The root plugin is the broad installable distribution for each host:
+
+- **Claude Code root plugin**: install the plugin-safe Antigravity library through the Claude marketplace entry
+- **Codex root plugin**: expose the plugin-safe Antigravity library through the Codex plugin surface
+
+Use the root plugin when you want the widest plugin-safe install without picking a specialty bundle. Treat it as an advanced breadth-first option, not the best default for most users.
+
+### Specialized plugins
+
+Specialized plugins are smaller, role-based or workflow-based distributions generated from the same repository. They are the recommended default when a user can name the job they want Claude Code, Codex, or another supported skills host to help with. Examples include:
+
+- `AAS Web App Builder`
+- `AAS Security Engineer`
+- `AAS Data Analytics`
+- `AAS Documents & Presentations`
+- `AAS Agent & MCP Builder`
+
+Use a specialized plugin when you want:
+
+- a lighter starting point
+- a team-specific plugin install
+- a curated subset instead of the broad root plugin
+- a plugin with a clear promise, such as building web apps, auditing security, maintaining OSS repos, automating documents, or creating growth content
+
+## Claude Code plugin surface
+
+Claude Code uses the repository's root `.claude-plugin` metadata.
+
+Relevant files:
+
+- `.claude-plugin/marketplace.json`
+- `.claude-plugin/plugin.json`
+
+Typical install flow:
+
+```text
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
+```
+
+Claude Code bundle plugins are also published through the same marketplace metadata, so you can install a focused bundle instead of the root plugin if you prefer.
+
+## Codex plugin surface
+
+Codex uses repo-local plugin metadata that points at the local plugin folders generated by this repository.
+
+Relevant files:
+
+- `.agents/plugins/marketplace.json`
+- `plugins/agentic-awesome-skills/.codex-plugin/plugin.json`
+
+The Codex root plugin exposes the same plugin-safe library idea as Claude Code, but through Codex's plugin metadata conventions.
+
+Bundle-specific Codex plugins are generated alongside the root plugin so you can install a narrower pack when plugin marketplaces are available in your Codex environment.
+
+## Which path should you choose?
+
+Choose the **full library** if:
+
+- you want the biggest catalog
+- you are comfortable installing directly into skills directories
+- you want repo-only skills that are not yet published as plugins
+
+Choose the **root plugin** if:
+
+- you want the broad installable plugin-safe distribution
+- you prefer marketplace-style installation
+- you are an advanced user who wants a broad plugin-safe catalog
+
+Choose a **specialized plugin** if:
+
+- you want a smaller role-based install
+- you are onboarding a team around one domain
+- you want plugin convenience without the breadth of the root plugin
+- you want the plugin itself to communicate a clear job, audience, and workflow
+
+The hosted [specialized plugin landing page](https://sickn33.github.io/agentic-awesome-skills/plugins) is the quickest way to compare the current AAS plugin packs.
+
+## Related guides
+
+- [Getting Started](getting-started.md)
+- [FAQ](faq.md)
+- [Claude Code skills](claude-code-skills.md)
+- [Codex CLI skills](codex-cli-skills.md)
+- [Bundles](bundles.md)
+- [Specialized Plugin Roadmap](specialized-plugin-roadmap.md)
+- [Usage](usage.md)

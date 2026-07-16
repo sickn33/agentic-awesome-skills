@@ -1,0 +1,22 @@
+Based on my knowledge of sympy and the GitHub issue about `__matmul__`, I can provide the patch. In sympy, the `__matmul__` and `__rmatmul__` methods are defined in `sympy/matrices/common.py` in the `MatrixArithmetic` class. Currently they just delegate to `__mul__` and `__rmul__` respectively. The fix needs to check that the other operand is also a matrix and raise a ValueError if it's not (to match NumPy's behavior).
+
+--- a/sympy/matrices/common.py
++++ b/sympy/matrices/common.py
+@@ -1973,10 +1973,22 @@ class MatrixArithmetic(MatrixRequired):
+             return self._eval_scalar_rmul(other)
+ 
+     @call_highest_priority('__rmatmul__')
+     def __matmul__(self, other):
++        other = _matrixify(other)
++        if not getattr(other, 'is_Matrix', False):
++            return NotImplemented
+         return self.__mul__(other)
+ 
+     @call_highest_priority('__matmul__')
+     def __rmatmul__(self, other):
++        other = _matrixify(other)
++        if not getattr(other, 'is_Matrix', False):
++            return NotImplemented
+         return self.__rmul__(other)
+ 
+     @call_highest_priority('__mul__')

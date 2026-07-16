@@ -1,0 +1,103 @@
+# django__django-14016
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -40,7 +40,21 @@ class Q(tree.Node):
+     conditional = True
+ 
+     def __init__(self, *args, _connector=None, _negated=False, **kwargs):
+-        super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)
++        children = [*args, *sorted(kwargs.items())]
++        super().__init__(children=children, connector=_connector, negated=_negated)
++
++    def _make_pickleable(self, value):
++        """Convert non-pickleable iterables to lists."""
++        if isinstance(value, (dict_keys, dict_values, dict_items)):
++            return list(value)
++        return value
++
++    def __deepcopy__(self, memo):
++        obj = type(self)()
++        obj.connector = self.connector
++        obj.negated = self.negated
++        obj.children = [(k, self._make_pickleable(v)) if isinstance(v, (dict_keys, dict_values, dict_items)) else copy.deepcopy(child, memo) for child in self.children for k, v in ([child] if not isinstance(child, tuple) else [child])]
++        return obj
+ 
+     def _combine(self, other, conn):
+         if not(isinstance(other, Q) or getattr(other, 'conditional', False) is True):
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -1,6 +1,7 @@
+ """
+ Various data structures used in query construction.
+ 
++import copy
+ Factored out from django.db.models.query to avoid making the main module very
+ large and/or so that they can be used by other modules without getting into
+ circular import difficulties.
+@@ -9,6 +10,9 @@ import functools
+ import inspect
+ from collections import namedtuple
+ 
++# Import dict view types for isinstance checks
++dict_keys = type({}.keys())
++dict_values = type({}.values())
++dict_items = type({}.items())
++
+ from django.core.exceptions import FieldError
+ from django.db.models.constants import LOOKUP_SEP
+ from django.utils import tree
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -1,10 +1,16 @@
+ """
+ Various data structures used in query construction.
+ 
+ Factored out from django.db.models.query to avoid making the main module very
+ large and/or so that they can be used by other modules without getting into
+ circular import difficulties.
+ """
++import copy
+ import functools
+ import inspect
+ from collections import namedtuple
+ 
++# Types for non-pickleable dict views
++dict_keys = type({}.keys())
++dict_values = type({}.values())
++dict_items = type({}.items())
++
+ from django.core.exceptions import FieldError
+ from django.db.models.constants import LOOKUP_SEP
+ from django.utils import tree
+@@ -40,7 +46,28 @@ class Q(tree.Node):
+     conditional = True
+ 
+     def __init__(self, *args, _connector=None, _negated=False, **kwargs):
+-        super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)
++        children = [*args, *sorted(kwargs.items())]
++        super().__init__(children=children, connector=_connector, negated=_negated)
++
++    def _resolve_non_pickleable(self, value):
++        """Convert non-pickleable iterables to lists."""
++        if isinstance(value, (dict_keys, dict_values, dict_items)):
++            return list(value)
++        return value
++
++    def __deepcopy__(self, memo):
++        obj = type(self)()
++        obj.connector = self.connector
++        obj.negated = self.negated
++        obj.children = []
++        for child in self.children:
++            if isinstance(child, tuple) and len(child) == 2:
++                key, value = child
++                obj.children.append((key, self._resolve_non_pickleable(value)))
++            else:
++                obj.children.append(copy.deepcopy(child, memo))
++        return obj
+ 
+     def _combine(self, other, conn):
+         if not(isinstance(other, Q) or getattr(other, 'conditional', False) is True):

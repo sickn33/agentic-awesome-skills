@@ -1,0 +1,16 @@
+# Personal diary data
+diary/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db

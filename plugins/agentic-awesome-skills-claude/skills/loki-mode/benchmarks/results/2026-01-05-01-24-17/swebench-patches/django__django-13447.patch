@@ -1,0 +1,40 @@
+Based on my knowledge of Django's admin codebase (specifically Django 3.x/4.x era when this issue was likely filed), I'll generate the patch. The `_build_app_dict` method in `django/contrib/admin/sites.py` builds a dictionary for apps and their models for the admin index and app_index views. The issue requests:
+
+1. Adding the `model` class to the model info dictionary in `app_list`
+2. Making `_build_app_dict` public by renaming it to `build_app_dict`
+
+Here's the patch:
+
+--- a/django/contrib/admin/sites.py
++++ b/django/contrib/admin/sites.py
+@@ -433,6 +433,7 @@ class AdminSite:
+                     'admin_url': admin_url,
+                     'add_url': add_url,
+                     'view_only': view_only,
++                    'model': model,
+                 })
+ 
+         if app_dict:
+@@ -486,7 +487,7 @@ class AdminSite:
+ 
+         return app_dict
+ 
+-    def _build_app_dict(self, request, label=None):
++    def build_app_dict(self, request, label=None):
+         """
+         Build the app dictionary. The optional `label` parameter filters models
+         of a specific app.
+@@ -514,13 +515,13 @@ class AdminSite:
+ 
+         return app_dict
+ 
+     def get_app_list(self, request, app_label=None):
+         """
+         Return a sorted list of all the installed apps that have been
+         registered in this site.
+         """
+-        app_dict = self._build_app_dict(request, app_label)
++        app_dict = self.build_app_dict(request, app_label)
+ 
+         # Sort the apps alphabetically.
+         app_list = sorted(app_dict.values(), key=lambda x: x['name'].lower())

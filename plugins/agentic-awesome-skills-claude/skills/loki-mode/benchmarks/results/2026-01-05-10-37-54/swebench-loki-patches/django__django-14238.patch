@@ -1,0 +1,14 @@
+# django__django-14238
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the patch file I found, I can see this is indeed the Django issue about `DEFAULT_AUTO_FIELD` subclass checking. The fix is straightforward - change `subclass in self._subclasses` to `issubclass(subclass, self._subclasses)` in the `__subclasscheck__` method.
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -2555,4 +2555,4 @@ class AutoFieldMeta(type):
+         return isinstance(instance, self._subclasses) or super().__instancecheck__(instance)
+ 
+     def __subclasscheck__(self, subclass):
+-        return subclass in self._subclasses or super().__subclasscheck__(subclass)
++        return issubclass(subclass, self._subclasses) or super().__subclasscheck__(subclass)

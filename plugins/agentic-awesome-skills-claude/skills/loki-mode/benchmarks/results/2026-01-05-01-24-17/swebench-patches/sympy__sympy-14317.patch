@@ -1,0 +1,42 @@
+Based on my deep knowledge of the sympy codebase, I can provide the fix for this issue. The problem is in `sympy/printing/latex.py` in the `_print_Poly` method. 
+
+The current implementation uses `poly.terms()` which returns terms in a dictionary-based order that doesn't match the canonical monomial ordering. The fix is to use `poly.as_expr()` to get the properly ordered expression, which will match the behavior of the str and pretty printers.
+
+Looking at the sympy source code, the `_print_Poly` method needs to be modified to use `poly.as_expr()` for the polynomial expression part, just like the str printer does.
+
+Here is the patch:
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1868,25 +1868,7 @@ class LatexPrinter(Printer):
+ 
+     def _print_Poly(self, poly):
+         cls = poly.__class__.__name__
+-        terms = []
+-        for monom, coeff in poly.terms():
+-            s_monom = ''
+-            for i, exp in enumerate(monom):
+-                if exp > 0:
+-                    if exp == 1:
+-                        s_monom += self._print(poly.gens[i])
+-                    else:
+-                        s_monom += self._print(pow(poly.gens[i], exp))
+-            if coeff.is_number:
+-                if s_monom:
+-                    if coeff == 1:
+-                        terms.append(s_monom)
+-                    elif coeff == -1:
+-                        terms.append('-' + s_monom)
+-                    else:
+-                        terms.append(self._print(coeff) + ' ' + s_monom)
+-                else:
+-                    terms.append(self._print(coeff))
+-            else:
+-                if s_monom:
+-                    terms.append(self._print(coeff) + ' ' + s_monom)
+-                else:
+-                    terms.append(self._print(coeff))
+-        expr = ' + '.join(terms)
++        expr = self._print(poly.as_expr())
+         gens = list(map(self._print, poly.gens))
+         domain = "domain=%s" % self._print(poly.get_domain())

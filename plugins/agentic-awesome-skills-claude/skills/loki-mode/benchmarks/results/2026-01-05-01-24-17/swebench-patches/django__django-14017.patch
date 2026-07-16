@@ -1,0 +1,88 @@
+This is not a Django repository. This issue is from the django/django repository, but I'm in a different directory. Let me understand the issue from the problem statement and create the patch based on my knowledge of Django's codebase.
+
+Based on the issue description:
+1. `Exists(...) & Q(...)` works
+2. `Q(...) & Exists(...)` raises TypeError
+3. The issue is in `Q._combine` which raises TypeError when `other` is not a Q instance
+4. The fix suggested is adding `__rand__` (and `__ror__`) to make the operations commutative
+
+The issue is that when we do `Q() & Exists(...)`, Python calls `Q.__and__(Exists(...))` which internally calls `Q._combine()`. This method checks if `other` is an instance of `Q` and raises TypeError if not.
+
+However, when `Exists(...) & Q()` is called, Python first tries `Exists.__and__(Q())`. Since `Exists` inherits from `Combinable`, its `_combine` method doesn't have the same strict type checking, so it works.
+
+The fix should modify `Q._combine` to handle `Combinable` objects (like `Exists`) properly. Looking at the hint about a PR and the test cases, the fix should allow combining Q objects with Combinable expressions.
+
+Here's the patch for Django's query_utils.py:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -40,6 +40,10 @@ class Q(tree.Node):
+     conditional = True
+ 
+     def __init__(self, *args, _connector=None, _negated=False, **kwargs):
++        # Import here to avoid circular imports.
++        from django.db.models.lookups import Lookup
++        from django.db.models.expressions import BaseExpression
++        self._resolve_types = (Lookup, BaseExpression)
+         super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)
+ 
+     def _combine(self, other, conn):
+@@ -69,6 +73,9 @@ class Q(tree.Node):
+     def __and__(self, other):
+         return self._combine(other, self.AND)
+ 
++    def __rand__(self, other):
++        return self._combine(other, self.AND)
++
+     def __invert__(self):
+         obj = type(self)()
+         obj.add(self, self.AND)
+
+Wait, I need to reconsider. The issue is that `Q._combine` raises TypeError when other is not a Q instance. But looking more carefully:
+
+When `Q() & Exists()` is called:
+1. Python calls `Q.__and__(Exists())`
+2. This calls `Q._combine(Exists(), AND)`
+3. `_combine` checks `isinstance(other, Q)` which is False for Exists
+4. TypeError is raised
+
+When `Exists() & Q()` is called:
+1. Python calls `Exists.__and__(Q())`
+2. Since Exists inherits from Combinable, it uses `Combinable._combine`
+3. That method doesn't have the strict isinstance check, so it works
+
+The fix should modify `Q._combine` to also accept `Combinable` expressions. Let me create the correct patch:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -68,10 +68,16 @@ class Q(tree.Node):
+ 
+     def _combine(self, other, conn):
+-        if not isinstance(other, Q):
++        if not(isinstance(other, Q) or getattr(other, 'conditional', False)):
+             raise TypeError(other)
+ 
+         # If the other Q() is empty, ignore it and just use `self`.
+         if not other:
++            _, args, kwargs = self.deconstruct()
++            return type(self)(*args, **kwargs)
++
++        # Or if this Q is empty, ignore it and just use `other`.
++        if not self:
++            if hasattr(other, 'resolve_expression'):
++                return other
+             _, args, kwargs = self.deconstruct()
+             return type(self)(*args, **kwargs)
+
+Actually, looking at the issue more carefully, I realize the simplest fix is to check for `Combinable` objects that have `conditional=True` (which includes Exists). Let me provide a cleaner patch:
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -68,7 +68,7 @@ class Q(tree.Node):
+ 
+     def _combine(self, other, conn):
+-        if not isinstance(other, Q):
++        if not isinstance(other, Q) and not getattr(other, 'conditional', False):
+             raise TypeError(other)
+ 
+         # If the other Q() is empty, ignore it and just use `self`.

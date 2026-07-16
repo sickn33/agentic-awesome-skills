@@ -1,0 +1,24 @@
+This is a sympy repository issue, but I'm in a different project directory. Since this is asking for a patch for a GitHub issue, I need to understand the code from the traceback and provide the fix. Let me analyze the issue and provide the patch directly based on the traceback information.
+
+The issue is in `sympy/tensor/array/ndim_array.py` at line 120, in the `_scan_iterable_shape` method. The problem is:
+
+```python
+elems, shapes = zip(*[f(i) for i in pointer])
+```
+
+When `pointer` is an empty list `[]`, `zip(*[])` returns an empty iterator, and trying to unpack it into two variables fails with `ValueError: not enough values to unpack (expected 2, got 0)`.
+
+The fix should handle the case when the iterable is empty by returning an empty list and an empty shape tuple `(0,)`.
+
+--- a/sympy/tensor/array/ndim_array.py
++++ b/sympy/tensor/array/ndim_array.py
+@@ -117,6 +117,8 @@ class NDimArray(Printable):
+ 
+         def f(pointer):
+             if not isinstance(pointer, Iterable):
+                 return [pointer], ()
++            if len(pointer) == 0:
++                return [], (0,)
+             result = [f(i) for i in pointer]
+             elems, shapes = zip(*result)
+             if len(set(shapes)) != 1:

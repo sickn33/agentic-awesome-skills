@@ -1,0 +1,18 @@
+# sympy__sympy-24213
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the error message in the issue, I can generate the patch. The issue is clear: in the `Add` handling block, there's a direct comparison `if dim != addend_dim:` that should be replaced with a call to `equivalent_dims` to check physical equivalence.
+
+--- a/sympy/physics/units/unitsystem.py
++++ b/sympy/physics/units/unitsystem.py
+@@ -174,7 +174,7 @@ class UnitSystem(_QuantityMapper):
+                 addend_factor, addend_dim = \
+                     self._collect_factor_and_dimension(addend)
+                 if dim != addend_dim:
+-                    raise ValueError(
++                    if not self.get_dimension_system().equivalent_dims(dim, addend_dim):
++                        raise ValueError(
+                         'Dimension of "{}" is {}, '
+                         'but it should be {}'.format(
+                             addend, addend_dim, dim))

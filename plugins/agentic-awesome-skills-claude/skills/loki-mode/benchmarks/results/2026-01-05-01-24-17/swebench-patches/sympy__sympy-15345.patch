@@ -1,0 +1,27 @@
+Based on my knowledge of SymPy's codebase and the issue described, I need to analyze the problem:
+
+1. The issue is that `mathematica_code(Max(x,2))` outputs `'Max(2, x)'` instead of `'Max[x,2]'`
+2. The problem is that `Max` is using parentheses `()` instead of square brackets `[]` which is required by Mathematica
+
+In SymPy's mathematica.py, there's typically:
+- A `known_functions` dict that maps SymPy function names to Mathematica function names
+- A `_print_Function` method that handles function printing
+
+The issue is likely that `Max` and `Min` are not recognized as known functions, and they're falling through to a generic handler that uses parentheses instead of square brackets.
+
+Looking at SymPy's code structure for the `Max` function - it's part of `sympy.functions.elementary.miscellaneous` and its class name is `Max`. The MCodePrinter needs to properly handle this.
+
+The fix should add `Max` and `Min` to the known_functions mapping in mathematica.py so that they output proper Mathematica syntax with square brackets.
+
+Let me generate the patch:
+
+--- a/sympy/printing/mathematica.py
++++ b/sympy/printing/mathematica.py
+@@ -31,6 +31,8 @@ known_functions = {
+     "atanh": [(lambda x: True, "ArcTanh")],
+     "acoth": [(lambda x: True, "ArcCoth")],
+     "asech": [(lambda x: True, "ArcSech")],
+     "acsch": [(lambda x: True, "ArcCsch")],
++    "Max": [(lambda *x: True, "Max")],
++    "Min": [(lambda *x: True, "Min")],
+ }

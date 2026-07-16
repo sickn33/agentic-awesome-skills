@@ -1,0 +1,21 @@
+This is not the Django repository. The task is to generate a patch for the Django sitemaps issue. Based on the problem statement and the hint, I need to generate the patch. Let me create the fix based on the information provided:
+
+The issue is in `django/contrib/sitemaps/__init__.py` at the `get_latest_lastmod` method. When a sitemap has no items but has a callable `lastmod`, it raises a `ValueError` because `max()` is called on an empty sequence.
+
+The hint suggests using the default argument of `max()`. Here's the patch:
+
+--- a/django/contrib/sitemaps/__init__.py
++++ b/django/contrib/sitemaps/__init__.py
+@@ -167,7 +167,7 @@ class Sitemap:
+         if not hasattr(self, "lastmod"):
+             return None
+         if callable(self.lastmod):
+-            try:
+-                return max([self.lastmod(item) for item in self.items()])
+-            except TypeError:
++            try:
++                return max([self.lastmod(item) for item in self.items()], default=None)
++            except TypeError:
+                 return None
+         else:
+             return self.lastmod

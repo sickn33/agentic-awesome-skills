@@ -1,0 +1,159 @@
+{
+  "description": "Example Telegram webhook payloads for testing",
+  "examples": {
+    "text_message": {
+      "update_id": 123456789,
+      "message": {
+        "message_id": 1,
+        "from": {
+          "id": 987654321,
+          "is_bot": false,
+          "first_name": "John",
+          "last_name": "Doe",
+          "username": "johndoe",
+          "language_code": "pt-br"
+        },
+        "chat": {
+          "id": 987654321,
+          "first_name": "John",
+          "last_name": "Doe",
+          "username": "johndoe",
+          "type": "private"
+        },
+        "date": 1709000000,
+        "text": "Hello bot!"
+      }
+    },
+    "command_message": {
+      "update_id": 123456790,
+      "message": {
+        "message_id": 2,
+        "from": {
+          "id": 987654321,
+          "is_bot": false,
+          "first_name": "John",
+          "username": "johndoe"
+        },
+        "chat": {
+          "id": 987654321,
+          "type": "private"
+        },
+        "date": 1709000001,
+        "text": "/start",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 6,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    "callback_query": {
+      "update_id": 123456791,
+      "callback_query": {
+        "id": "callback123",
+        "from": {
+          "id": 987654321,
+          "is_bot": false,
+          "first_name": "John",
+          "username": "johndoe"
+        },
+        "message": {
+          "message_id": 3,
+          "chat": {
+            "id": 987654321,
+            "type": "private"
+          },
+          "date": 1709000002,
+          "text": "Choose option:"
+        },
+        "chat_instance": "instance123",
+        "data": "opt_a"
+      }
+    },
+    "group_message": {
+      "update_id": 123456792,
+      "message": {
+        "message_id": 100,
+        "from": {
+          "id": 987654321,
+          "is_bot": false,
+          "first_name": "John"
+        },
+        "chat": {
+          "id": -1001234567890,
+          "title": "My Group",
+          "type": "supergroup"
+        },
+        "date": 1709000003,
+        "text": "Hello group!"
+      }
+    },
+    "photo_message": {
+      "update_id": 123456793,
+      "message": {
+        "message_id": 101,
+        "from": {
+          "id": 987654321,
+          "is_bot": false,
+          "first_name": "John"
+        },
+        "chat": {
+          "id": 987654321,
+          "type": "private"
+        },
+        "date": 1709000004,
+        "photo": [
+          {
+            "file_id": "AgACAgIAA..._small",
+            "file_unique_id": "AQADAgATq...",
+            "file_size": 5000,
+            "width": 90,
+            "height": 90
+          },
+          {
+            "file_id": "AgACAgIAA..._medium",
+            "file_unique_id": "AQADAgATr...",
+            "file_size": 25000,
+            "width": 320,
+            "height": 320
+          },
+          {
+            "file_id": "AgACAgIAA..._large",
+            "file_unique_id": "AQADAgATs...",
+            "file_size": 80000,
+            "width": 800,
+            "height": 800
+          }
+        ],
+        "caption": "Check this photo!"
+      }
+    },
+    "new_chat_member": {
+      "update_id": 123456794,
+      "message": {
+        "message_id": 102,
+        "from": {
+          "id": 987654321,
+          "is_bot": false,
+          "first_name": "John"
+        },
+        "chat": {
+          "id": -1001234567890,
+          "title": "My Group",
+          "type": "supergroup"
+        },
+        "date": 1709000005,
+        "new_chat_members": [
+          {
+            "id": 111222333,
+            "is_bot": false,
+            "first_name": "New",
+            "last_name": "Member"
+          }
+        ]
+      }
+    }
+  }
+}

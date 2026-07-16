@@ -1,0 +1,61 @@
+title: "[Show and Tell] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share custom skills, bundles, workflows, integrations, demos, screenshots, or wins built with this repository.
+  - type: dropdown
+    id: showcase-type
+    attributes:
+      label: What are you sharing?
+      options:
+        - Custom skill
+        - Bundle or workflow
+        - Integration
+        - Demo or screenshot
+        - Case study or win
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: project-name
+    attributes:
+      label: Name or short title
+      description: Give your project, experiment, or example a concise name.
+      placeholder: "Example: CI Triage Bundle for Large Monorepos"
+    validations:
+      required: true
+  - type: textarea
+    id: shared-item
+    attributes:
+      label: What did you build or discover?
+      description: Describe the outcome and what makes it useful or interesting.
+      placeholder: Tell the community what it does and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: how-it-works
+    attributes:
+      label: How it works
+      description: Share the setup, prompts, files, or workflow behind it.
+      placeholder: Include enough detail that others can learn from or reproduce it.
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Links, screenshots, or references
+      description: Link a repo, gist, docs, image, or video if you have one.
+      placeholder: |
+        - Repo:
+        - Gist:
+        - Screenshot:
+        - Video:
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: Before posting
+      options:
+        - label: I removed secrets, credentials, and private data from anything I shared.
+          required: true

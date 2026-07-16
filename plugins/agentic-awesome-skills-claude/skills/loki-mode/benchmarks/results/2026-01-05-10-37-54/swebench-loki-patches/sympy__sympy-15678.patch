@@ -1,0 +1,87 @@
+# sympy__sympy-15678
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description, traceback, and architect's analysis, I can generate the patch. The traceback indicates the function is around lines 574-582 in `sympy/geometry/util.py`. Here is the patch:
+
+```
+--- a/sympy/geometry/util.py
++++ b/sympy/geometry/util.py
+@@ -520,6 +520,8 @@ def idiff(eq, y, x, n=1):
+     ========
+ 
+     """
++    from sympy.core.relational import Eq as EqClass
++
+     if is_sequence(y):
+         dep = set(y)
+         y = y[0]
+@@ -527,6 +529,9 @@ def idiff(eq, y, x, n=1):
+         dep = {y}
+         y = y
+ 
++    if isinstance(eq, EqClass):
++        eq = eq.lhs - eq.rhs
++
+     f = dict([(s, Function(
+         s.name)(x)) for s in eq.free_symbols if s != x and s in dep])
+     dydx = Function('dydx')(x)
+@@ -568,9 +573,16 @@ def idiff(eq, y, x, n=1):
+     if is_sequence(y):
+         dep = set(y)
+         y = y[0]
++    elif isinstance(y, Symbol):
++        dep = {y}
+     else:
+-        dep = {y}
+-    if not y.has(x):
++        # y might be a function like f(x)
++        yf = Function(y.func.__name__)(x) if hasattr(y, 'func') else y
++        dep = {y}
++        f = {y: yf}
++
++    # Check x-dependency - for symbols check .has(), for functions check free_symbols
++    if isinstance(y, Symbol) and not y.has(x):
+         raise ValueError("expecting x-dependent symbol(s) but got: %s" % y)
+ 
+     f = dict([(s, Function(
+```
+
+Let me provide a cleaner, more accurate patch based on the traceback line numbers and the described issues:
+
+--- a/sympy/geometry/util.py
++++ b/sympy/geometry/util.py
+@@ -530,6 +530,7 @@ def idiff(eq, y, x, n=1):
+     sympy.core.function.diff: explicitly differentiates wrt symbols
+ 
+     """
++    from sympy.core.relational import Eq
+     if is_sequence(y):
+         dep = set(y)
+         y = y[0]
+@@ -537,12 +538,20 @@ def idiff(eq, y, x, n=1):
+         dep = {y}
+         y = y
+ 
+-    if not y.has(x):
+-        raise ValueError("expecting x-dependent symbol(s) but got: %s" % y)
++    # Convert Eq to expression lhs - rhs
++    if isinstance(eq, Eq):
++        eq = eq.lhs - eq.rhs
+ 
+-    f = dict([(s, Function(
+-        s.name)(x)) for s in eq.free_symbols if s != x and s in dep])
+-    dydx = Function('dydx')(x)
++    if isinstance(y, Symbol):
++        if not y.has(x):
++            raise ValueError("expecting x-dependent symbol(s) but got: %s" % y)
++        f = dict([(s, Function(s.name)(x)) for s in eq.free_symbols
++                  if s != x and s in dep])
++    else:
++        # y is a function like f(x)
++        f = {y: y}
++
++    dydx = Function('dydx')(x)
+     eq = eq.subs(f)
+     derivs = {}
+     for i in range(n):

@@ -1,0 +1,37 @@
+# sympy__sympy-19487
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I need to generate a patch for the `sympy/sympy` repository. Since this is a patch generation task for an external repository, I'll generate the patch based on the analysis provided, which indicates the fix should be in `sympy/functions/elementary/complexes.py`.
+
+Let me generate the patch based on the typical structure of sympy's `sign` class:
+
+```
+--- a/sympy/functions/elementary/complexes.py
++++ b/sympy/functions/elementary/complexes.py
+@@ -1,6 +1,7 @@
+ from __future__ import print_function, division
+ 
+ from sympy.core import S, Add, Mul, sympify, Symbol, Dummy, Basic
++from sympy.core.relational import Eq
+ from sympy.core.expr import Expr
+ from sympy.core.exprtools import factor_terms
+ from sympy.core.function import (Function, Derivative, ArgumentIndexError,
+@@ -8,6 +9,7 @@
+ from sympy.core.logic import fuzzy_not, fuzzy_or
+ from sympy.core.numbers import pi, I, oo
+ from sympy.core.symbol import Symbol
++from sympy.functions.elementary.piecewise import Piecewise
+ from sympy.functions.elementary.exponential import exp, exp_polar, log
+ from sympy.functions.elementary.integers import ceiling
+ from sympy.functions.elementary.miscellaneous import sqrt
+@@ -391,6 +393,9 @@ def _eval_rewrite_as_Piecewise(self, arg, **kwargs):
+             return Piecewise((1, arg > 0), (-1, arg < 0), (0, True))
+         return Piecewise((self.args[0] / Abs(self.args[0]), Ne(self.args[0], 0)), (0, True))
+ 
++    def _eval_rewrite_as_Abs(self, arg, **kwargs):
++        return Piecewise((0, Eq(arg, 0)), (arg / Abs(arg), True))
++
+     def _eval_simplify(self, **kwargs):
+         return self.func(self.args[0].factor())  # XXX include doit?
+```

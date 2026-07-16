@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swift Concurrency Expert"
+  short_description: "Review and fix Swift concurrency"
+  default_prompt: "Use $swift-concurrency-expert to review this Swift code for concurrency issues and fix the relevant diagnostics."

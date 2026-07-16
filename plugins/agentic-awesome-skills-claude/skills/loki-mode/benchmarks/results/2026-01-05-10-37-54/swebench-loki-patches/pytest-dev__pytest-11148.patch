@@ -1,0 +1,27 @@
+# pytest-dev__pytest-11148
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of the pytest codebase structure for version 7.2, I'll generate the patch for the `import_path()` function in `src/_pytest/pathlib.py`. The fix involves checking `sys.modules` for an existing module with the same `__file__` attribute before creating a new module instance.
+
+```
+--- a/src/_pytest/pathlib.py
++++ b/src/_pytest/pathlib.py
+@@ -522,6 +522,17 @@ def import_path(
+     if mode is ImportMode.importlib:
+         module_name = module_name_from_path(path, root)
+ 
++        # Check if a module with the same file path already exists in sys.modules.
++        # If so, return it to avoid creating duplicate module instances.
++        for mod_name, mod in sys.modules.items():
++            if mod is None:
++                continue
++            mod_file = getattr(mod, "__file__", None)
++            if mod_file is not None:
++                if Path(mod_file).resolve() == path.resolve():
++                    return mod
++
+         for meta_importer in sys.meta_path:
+             spec = meta_importer.find_spec(module_name, [str(path.parent)])
+             if spec is not None:
+```

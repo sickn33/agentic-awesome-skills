@@ -1,0 +1,26 @@
+This appears to be a task to generate a patch for the Django repository, but the Django repository is not present in the current working directory. Based on the problem statement and hints, I need to generate a patch for the `django/db/models/sql/compiler.py` file.
+
+The issue is that when using `order_by("record__root_id")` on a self-referencing foreign key, Django incorrectly:
+1. Adds an unnecessary extra JOIN
+2. Uses the default ordering from the related model's Meta class (DESC) instead of the explicit ordering
+
+The fix, as suggested in the hints, is to change `name` to `pieces[-1]` in the condition check on line 727. This is because:
+- `name` is the full path like `record__root_id`
+- `pieces[-1]` is just the last part `root_id`
+- `field.attname` is `root_id`
+
+The comparison should be against `pieces[-1]` (the actual field name being accessed) rather than `name` (the full path).
+
+Here's the patch:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -724,7 +724,7 @@ class SQLCompiler:
+             # If we get to this point and the field is a relation to another model,
+             # append the default ordering for that model unless it is the pk
+             # shortcut or the attribute name of the field that is specified.
+-            if field.is_relation and opts.ordering and getattr(field, 'attname', None) != name and name != 'pk':
++            if field.is_relation and opts.ordering and getattr(field, 'attname', None) != pieces[-1] and name != 'pk':
+                 # Firstly, avoid infinite loops.
+                 already_seen = already_seen or set()
+                 join_tuple = tuple(getattr(self.query.alias_map[j], 'join_cols', None) for j in joins)

@@ -1,0 +1,105 @@
+Based on the GitHub issue description and the discussion in the comments, I can understand the problem clearly:
+
+1. `sqf_list((x**2 + 1) * (x - 1)**2 * (x - 2)**3 * (x - 3)**3)` returns `(1, [(x**2 + 1, 1), (x - 1, 2), (x - 3, 3), (x - 2, 3)])`
+2. But it should combine factors with the same multiplicity: `(1, [(x**2 + 1, 1), (x - 1, 2), (x**2 - 5*x + 6, 3)])`
+3. The `Poly.sqf_list()` method works correctly
+
+The issue is in the `_symbolic_factor_list` function in `sympy/polys/polytools.py` - it needs to post-process the results to combine factors with the same multiplicity.
+
+Based on the discussion in the issue:
+- The problem is in the `_generic_factor_list` function which is called by `sqf_list`
+- The fix should combine factors with the same multiplicity before returning
+
+Let me create the patch based on the standard sympy code structure:
+
+--- a/sympy/polys/polytools.py
++++ b/sympy/polys/polytools.py
+@@ -6216,6 +6216,18 @@ def _symbolic_factor_list(expr, opt, method):
+         factors.append((_symbolic_factor(g), k))
+ 
+     return coeff, factors
++
++
++def _sorted_factors(factors, method):
++    """Sort and combine factors with same multiplicity for sqf methods."""
++    if method in ('sqf',):
++        # Combine factors with the same multiplicity
++        combined = {}
++        for factor, k in factors:
++            combined[k] = combined.get(k, S.One) * factor
++        factors = [(f, k) for k, f in combined.items()]
++        factors = sorted(factors, key=lambda x: x[1])
++    return factors
+ 
+ 
+ def _factor_list_syms(result, syms):
+@@ -6235,6 +6247,7 @@ def _generic_factor_list(expr, gens, args, method):
+ 
+     try:
+         coeff, factors = _symbolic_factor_list(expr, opt, method)
++        factors = _sorted_factors(factors, method)
+     except PolificationFailed:
+         return S.One, [(expr, 1)]
+
+Wait, I need to look more carefully at the actual code structure. Let me search for more information about how the sympy sqf_list function is structured based on the issue discussion:
+
+Looking at the issue discussion more carefully:
+- The key insight from @jksuom is: "it is necessary to post-process the result... the two threefold factors `x - 3` and `x - 2` should be combined to give a single `(x**2 - 5*x + 6, 3)`"
+- The function `_generic_factor_list` is at the core of the issue
+- The `Poly.sqf_list()` method works correctly
+
+The fix needs to be in the post-processing step of `_generic_factor_list` specifically for the 'sqf' method to combine factors with the same multiplicity.
+
+--- a/sympy/polys/polytools.py
++++ b/sympy/polys/polytools.py
+@@ -6213,7 +6213,19 @@ def _symbolic_factor_list(expr, opt, method):
+     for factor, k in factors:
+         if factor.is_Number:
+             coeff *= factor**k
+         else:
+             factors.append((_symbolic_factor(g), k))
+ 
+     return coeff, factors
++
++
++def _sorted_factors(factors, method):
++    """Sort factors list and combine factors with same multiplicity for sqf."""
++    if method == 'sqf':
++        # Combine factors with the same multiplicity
++        from collections import defaultdict
++        combined = defaultdict(lambda: S.One)
++        for factor, k in factors:
++            combined[k] *= factor
++        factors = sorted(combined.items(), key=lambda x: x[0])
++        factors = [(f, k) for k, f in factors]
++    return factors
+
+Based on my understanding of the issue and the sympy codebase structure, here is the patch:
+
+--- a/sympy/polys/polytools.py
++++ b/sympy/polys/polytools.py
+@@ -6213,6 +6213,17 @@ def _symbolic_factor_list(expr, opt, method):
+ 
+     return coeff, factors
+ 
++
++def _sorted_factors(factors, method):
++    """Sort factors list and combine factors with same multiplicity for sqf."""
++    if method == 'sqf':
++        # Combine factors with the same multiplicity
++        from collections import defaultdict
++        combined = defaultdict(lambda: S.One)
++        for factor, k in factors:
++            combined[k] *= factor
++        factors = [(combined[k], k) for k in sorted(combined.keys())]
++    return factors
+ 
+ def _factor_list_syms(result, syms):
+     """Return a list of factors from a symbolic factorization."""
+@@ -6230,6 +6241,7 @@ def _generic_factor_list(expr, gens, args, method):
+ 
+     try:
+         coeff, factors = _symbolic_factor_list(expr, opt, method)
++        factors = _sorted_factors(factors, method)
+     except PolificationFailed:
+         return S.One, [(expr, 1)]

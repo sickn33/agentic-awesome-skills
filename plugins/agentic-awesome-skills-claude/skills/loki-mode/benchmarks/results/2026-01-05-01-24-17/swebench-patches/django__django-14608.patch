@@ -1,0 +1,32 @@
+Based on my knowledge of Django's codebase and the issue description, I can create the patch. The issue is asking to:
+
+1. Add `error_class='nonform'` when creating the ErrorList in the `non_form_errors()` method in `django/forms/formsets.py`
+
+This mirrors how Forms handle non-field errors with `error_class='nonfield'` in the `non_field_errors()` method.
+
+Looking at Django's code structure:
+- In `forms.py`, `non_field_errors()` returns `self.errors.get(NON_FIELD_ERRORS, self.error_class(error_class='nonfield'))`
+- In `formsets.py`, `non_form_errors()` should similarly pass `error_class='nonform'`
+
+The change needs to be made in `django/forms/formsets.py` in the `non_form_errors()` method.
+
+Based on Django's source code structure, here's the patch:
+
+--- a/django/forms/formsets.py
++++ b/django/forms/formsets.py
+@@ -333,7 +333,7 @@ class BaseFormSet:
+         if self._non_form_errors is None:
+             self.full_clean()
+         return self._non_form_errors
+ 
+     @property
+     def errors(self):
+@@ -380,7 +380,7 @@ class BaseFormSet:
+             # Give self.clean() a chance to do cross-form validation.
+             self.clean()
+         except ValidationError as e:
+-            self._non_form_errors = self.error_class(e.error_list)
++            self._non_form_errors = self.error_class(e.error_list, error_class='nonform')
+ 
+     def clean(self):
+         """

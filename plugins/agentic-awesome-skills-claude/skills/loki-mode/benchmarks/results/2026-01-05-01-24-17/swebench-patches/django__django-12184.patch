@@ -1,0 +1,28 @@
+This file contains analysis/notes, not an actual patch. Based on the analysis in this file and the original issue, I understand the problem. Let me now analyze the root cause properly and generate the correct patch.
+
+The issue is:
+1. URL pattern: `(?P<format>(html|json|xml))?` has a named group with an unnamed nested group
+2. `match.groups()` returns values for ALL capturing groups (both named and unnamed)
+3. The old behavior: when kwargs exist (named groups), args should be empty
+4. The bug: somehow 3 positional arguments are being passed to the view
+
+Looking at the analysis, the key insight is that when there are NO named groups, only the args from non-nested unnamed groups should be passed. The fix needs to filter `match.groups()` to exclude groups whose indices correspond to named groups (which are in `regex.groupindex.values()`).
+
+Here's the correct patch for Django's `django/urls/resolvers.py`:
+
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -152,7 +152,12 @@ class RegexPattern(CheckURLMixin):
+         if match:
+             # If there are any named groups, use those as kwargs, ignoring
+             # non-named groups. Otherwise, pass all non-named arguments as
+             # positional arguments.
+             kwargs = match.groupdict()
+-            args = () if kwargs else match.groups()
++            args = () if kwargs else tuple(
++                value
++                for index, value in enumerate(match.groups(), 1)
++                if index not in self.regex.groupindex.values()
++            )
+             return path[match.end():], args, kwargs
+         return None

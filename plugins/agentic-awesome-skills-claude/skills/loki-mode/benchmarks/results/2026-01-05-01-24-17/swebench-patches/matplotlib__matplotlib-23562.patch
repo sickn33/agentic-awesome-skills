@@ -1,0 +1,33 @@
+Based on my knowledge of matplotlib's codebase and the issue description, I can create the patch. The issue is that `Poly3DCollection.get_facecolors()` and `get_edgecolors()` methods try to access `_facecolors2d` and `_edgecolors2d` attributes that are only set during the drawing process in `do_3d_projection()`.
+
+The fix is to modify these getter methods to handle the case where these attributes don't exist yet by either:
+1. Calling `do_3d_projection()` to force computation, or
+2. Falling back to the parent class implementation
+
+Based on the hints in the issue (especially the comment about `fig.draw_without_rendering()` being the workaround), the proper fix is to make `get_facecolors()` and `get_edgecolors()` work even before drawing by initializing the attributes or computing them on-demand.
+
+--- a/lib/mpl_toolkits/mplot3d/art3d.py
++++ b/lib/mpl_toolkits/mplot3d/art3d.py
+@@ -867,10 +867,18 @@ class Poly3DCollection(PolyCollection):
+         self.stale = True
+ 
+     def get_facecolor(self):
++        # Return 2d facecolors if available, otherwise return the
++        # 3d facecolors (which are the same as what the parent class
++        # would return). This allows get_facecolor() to work before
++        # the collection has been drawn.
++        if not hasattr(self, '_facecolors2d'):
++            return self._facecolors3d
+         return self._facecolors2d
+ 
+-    get_facecolors = get_facecolor
+-
+     def get_edgecolor(self):
++        # Return 2d edgecolors if available, otherwise return the
++        # 3d edgecolors. This allows get_edgecolor() to work before
++        # the collection has been drawn.
++        if not hasattr(self, '_edgecolors2d'):
++            return self._edgecolors3d
+         return self._edgecolors2d
+-
+-    get_edgecolors = get_edgecolor

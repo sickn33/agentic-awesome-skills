@@ -1,0 +1,72 @@
+Based on my knowledge of the sympy codebase, I can provide the patch for replacing the Mignotte bound with the Knuth-Cohen bound. The Knuth-Cohen bound is a tighter bound that improves the efficiency of polynomial factorization.
+
+Here's the patch:
+
+--- a/sympy/polys/factortools.py
++++ b/sympy/polys/factortools.py
+@@ -14,7 +14,7 @@ from sympy.polys.densebasic import (
+     dmp_degree_in,
+     dmp_to_dict,
+     dmp_from_dict,
+-    dmp_ground_LC, dmp_ground_TC,
++    dmp_ground_LC, dmp_ground_TC, dmp_max_norm,
+     dmp_ground_nth,
+     dmp_one, dmp_ground,
+     dmp_zeros)
+@@ -119,33 +119,38 @@ def dmp_trial_division(f, factors, u, K):
+ 
+ 
+ def dup_zz_mignotte_bound(f, K):
+-    """Mignotte bound for univariate polynomials in `K[x]`. """
+-    a = dup_max_norm(f, K)
+-    b = abs(dup_LC(f, K))
++    """
++    The Knuth-Cohen upper bound for the coefficients of a factor of a
++    polynomial in `K[x]`.
++
++    This is used in polynomial factorization as a bound for the
++    coefficients of factors.
++
++    References
++    ==========
++
++    .. [1] Algorithm 15.4, p.423 of [Geddes1992]
++
++    """
+     n = dup_degree(f)
+-    return K.sqrt(K(n + 1))*2**n*a*b
++    return K.sqrt(K(2)**(2*n) * sum(c**2 for c in f))
+ 
+ 
+ def dmp_zz_mignotte_bound(f, u, K):
+-    """Mignotte bound for multivariate polynomials in `K[X]`. """
+-    a = dmp_max_norm(f, u, K)
+-    b = abs(dmp_ground_LC(f, u, K))
+-    n = sum(dmp_degree_list(f, u))
+-    return K.sqrt(K(n + 1))*2**n*a*b
++    """
++    The Knuth-Cohen upper bound for the coefficients of a factor of a
++    polynomial in `K[X]`.
+ 
++    This is used in polynomial factorization as a bound for the
++    coefficients of factors.
+ 
+-def dup_zz_hensel_step(m, f, g, h, s, t, K):
+-    """
+-    One step in Hensel lifting in `Z[x]`.
++    References
++    ==========
+ 
+-    Given positive integer `m` and `Z[x]` polynomials `f`, `g`, `h`, `s`
+-    and `t` such that::
++    .. [1] Algorithm 15.4, p.423 of [Geddes1992]
+ 
+-        f = g*h (mod m)
+-        s*g + t*h = 1 (mod m)
+-
+-        lc(f) is not a zero divisor (mod m)
+-        lc(h) = 1
++    """
++    a = dmp_max_norm(f, u, K)
++    n = sum(dmp_degree_list(f, u))
++    return K.sqrt(K(2)**(2*n) * (n + 1)) * a

@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-observability-ir",
+  "version": "14.5.0",
+  "description": "Install the \"AAS Observability IR\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-observability-ir",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Observability IR",
+    "shortDescription": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows.",
+    "longDescription": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows. Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts. Recommended for: SRE teams, Backend teams owning production, Incident responders. Not for: Marketing campaign planning, Static document conversion. Covers Observability Engineer, Observability And Instrumentation, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to review this service for logging, tracing, SLO, monitoring, and dashboard gaps.",
+      "Use this plugin to build an incident response plan and rollback checklist for this system.",
+      "Use this plugin to draft a blameless postmortem from this timeline and identify action items."
+    ]
+  }
+}

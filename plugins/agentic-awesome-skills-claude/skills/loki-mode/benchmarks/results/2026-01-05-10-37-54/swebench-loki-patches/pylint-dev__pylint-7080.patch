@@ -1,0 +1,31 @@
+# pylint-dev__pylint-7080
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my understanding of pylint's codebase structure, I can generate the patch. The issue is that when using `--recursive=y`, paths like `./src/gen/about.py` are being checked against regex patterns like `^src/gen/.*$`, and the leading `./` prevents the match. The fix is to normalize the path using `os.path.normpath()` before matching.
+
+Here is the patch:
+
+```
+--- a/pylint/lint/pylinter.py
++++ b/pylint/lint/pylinter.py
+@@ -597,6 +597,7 @@ class PyLinter(
+         for root, _, files in os.walk(start_path, followlinks=follow_imports):
++            root = os.path.normpath(root)
+             if should_ignore_path(root, self.config.ignore_paths, self.config.ignore_patterns):
+                 continue
+             for file in files:
+```
+
+Wait, I need to provide a more complete patch with proper context. Let me construct the correct unified diff format based on the typical pylint codebase structure around line 600:
+
+--- a/pylint/lint/pylinter.py
++++ b/pylint/lint/pylinter.py
+@@ -600,6 +600,7 @@ class PyLinter(
+                 skip_subtrees: list[str] = []
+ 
+                 for root, dirs, files in os.walk(start_path, followlinks=follow_imports):
++                    root = os.path.normpath(root)
+                     if _is_in_ignore_list_re(
+                         os.path.basename(root), self.config.ignore_patterns
+                     ) or _is_in_ignore_list_re(root, self.config.ignore_paths):

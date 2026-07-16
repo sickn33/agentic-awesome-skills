@@ -1,0 +1,74 @@
+{
+  "description": "Examples of inline keyboard layouts for Telegram bots",
+  "examples": [
+    {
+      "name": "Simple menu",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {"text": "Option A", "callback_data": "opt_a"},
+            {"text": "Option B", "callback_data": "opt_b"}
+          ],
+          [
+            {"text": "Cancel", "callback_data": "cancel"}
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Pagination",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {"text": "Item 1", "callback_data": "item_1"},
+            {"text": "Item 2", "callback_data": "item_2"},
+            {"text": "Item 3", "callback_data": "item_3"}
+          ],
+          [
+            {"text": "< Prev", "callback_data": "page_prev"},
+            {"text": "1/5", "callback_data": "page_info"},
+            {"text": "Next >", "callback_data": "page_next"}
+          ]
+        ]
+      }
+    },
+    {
+      "name": "URL buttons",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {"text": "Visit Website", "url": "https://example.com"},
+            {"text": "Documentation", "url": "https://core.telegram.org/bots/api"}
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Mixed (callback + url)",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {"text": "Buy Premium", "callback_data": "buy_premium"}
+          ],
+          [
+            {"text": "Learn More", "url": "https://example.com/premium"}
+          ],
+          [
+            {"text": "Share", "switch_inline_query": "Check out this bot!"}
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Confirmation dialog",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {"text": "Yes, confirm", "callback_data": "confirm_yes"},
+            {"text": "No, cancel", "callback_data": "confirm_no"}
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+# psf__requests-2148
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This is a modern version of requests that may have already addressed the issue. Let me look at an older version from around the issue time (requests 2.3.0 era). The issue is about socket.error not being caught during content streaming. Looking at the current code, I can see the `generate()` function inside `iter_content()` (lines 816-837) catches ProtocolError, DecodeError, ReadTimeoutError, and SSLError, but not socket.error/OSError.
+
+Based on the architect's analysis and the code I've read, here's the patch:
+
+```
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -7,6 +7,7 @@ This module contains the primary objects that power Requests.
+ """
+ 
+ import datetime
++import socket
+ 
+ # Import encoding now, to avoid implicit import later.
+ # Implicit import within threads may cause LookupError when standard library is in a ZIP,
+@@ -826,6 +827,8 @@ class Response:
+                     raise ConnectionError(e)
+                 except SSLError as e:
+                     raise RequestsSSLError(e)
++            except (OSError, socket.error) as e:
++                raise ConnectionError(e)
+             else:
+                 # Standard file-like object.
+                 while True:
+```
+
+Wait, looking more carefully at the code structure, the exception handling is inside the `if hasattr(self.raw, "stream")` block. The `except` clauses are at the same indentation level as the `try` inside that `if` block. Let me re-read that section more carefully:
+
+Looking at lines 816-837:
+- Line 818: `if hasattr(self.raw, "stream"):`
+- Line 819: `try:`
+- Line 820: `yield from self.raw.stream(...)`
+- Line 821-828: `except` clauses for ProtocolError, DecodeError, ReadTimeoutError, SSLError
+- Line 829: `else:` - this is the else branch of the `if`, not a try/except/else
+
+So socket.error can occur in both branches:
+1. Inside `self.raw.stream()` call (line 820)
+2. Inside `self.raw.read()` call (line 832)
+
+The fix needs to catch socket.error in both places. Let me generate the proper patch:
+
+```
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -7,6 +7,7 @@ This module contains the primary objects that power Requests.
+ """
+ 
+ import datetime
++import socket
+ 
+ # Import encoding now, to avoid implicit import later.
+ # Implicit import within threads may cause LookupError when standard library is in a ZIP,
+@@ -826,11 +827,17 @@ class Response:
+                     raise ConnectionError(e)
+                 except SSLError as e:
+                     raise RequestsSSLError(e)
++                except (OSError, socket.error) as e:
++                    raise ConnectionError(e)
+             else:
+                 # Standard file-like object.
+                 while True:
+-                    chunk = self.raw.read(chunk_size)
+-                    if not chunk:
+-                        break
+-                    yield chunk
++                    try:
++                        chunk = self.raw.read(chunk_size)
++                        if not chunk:
++                            break
++                        yield chunk
++                    except (OSError, socket.error) as e:
++                        raise ConnectionError(e)
+ 
+             self._content_consumed = True
+```

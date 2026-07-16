@@ -1,0 +1,36 @@
+Based on the issue details, I have all the information needed to create the patch. The issue provides:
+
+1. The exact location: `sympy/core/mod.py` in the `eval` method
+2. The suggested fix from @jksuom in the issue
+3. The traceback showing the exact line where `gcd` is called (line 169)
+
+Let me create the patch based on the information provided in the issue:
+
+--- a/sympy/core/mod.py
++++ b/sympy/core/mod.py
+@@ -40,6 +40,7 @@ def eval(cls, p, q):
+         from sympy.core.mul import Mul
+         from sympy.core.singleton import S
+         from sympy.core.exprtools import gcd_terms
++        from sympy.polys.polyerrors import PolynomialError
+         from sympy.polys.polytools import gcd
+ 
+         def doit(p, q):
+@@ -166,10 +167,13 @@ def eval(cls, p, q):
+         # XXX other possibilities?
+ 
+         # extract gcd; any further simplification should be done by the user
+-        G = gcd(p, q)
+-        if G != 1:
+-            p, q = [
+-                gcd_terms(i/G, clear=False, fraction=False) for i in (p, q)]
++        try:
++            G = gcd(p, q)
++            if G != 1:
++                p, q = [gcd_terms(i/G, clear=False, fraction=False)
++                        for i in (p, q)]
++        except PolynomialError:
++            G = S.One
+         pwas, qwas = p, q
+ 
+         # simplify terms

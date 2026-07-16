@@ -1,6 +1,6 @@
 # 🏆 Tiêu chuẩn Chất lượng & Xác thực
 
-Để biến **Antigravity Awesome Skills** từ một tập hợp các script thành một nền tảng đáng tin cậy, mỗi skill (kỹ năng) phải đáp ứng một tiêu chuẩn cụ thể về chất lượng và an toàn.
+Để biến **Agentic Awesome Skills** từ một tập hợp các script thành một nền tảng đáng tin cậy, mỗi skill (kỹ năng) phải đáp ứng một tiêu chuẩn cụ thể về chất lượng và an toàn.
 
 ## Huy hiệu "Đã xác thực" (Validated) ✅
 
@@ -12,8 +12,11 @@ Phần frontmatter trong `SKILL.md` phải là mã YAML hợp lệ và chứa:
 
 - `name`: Định dạng Kebab-case, khớp với tên thư mục.
 - `description`: Dưới 200 ký tự, nêu rõ giá trị mang lại.
-- `risk`: Thuộc một trong các loại `[none, safe, critical, offensive]`.
-- `source`: URL dẫn đến nguồn gốc (hoặc "self" nếu là nội dung gốc).
+- `category`: Danh mục chính của skill.
+- `risk`: Thuộc một trong các loại `[none, safe, critical, offensive, unknown]`. Chỉ dùng `unknown` cho nội dung cũ hoặc chưa được phân loại; skill mới nên dùng mức cụ thể.
+- `source`: Nguồn gốc của skill.
+- `date_added`: Ngày thêm skill theo định dạng `YYYY-MM-DD`.
+- `source_repo` và `source_type`: Bắt buộc khi skill bắt nguồn từ repository GitHub bên ngoài.
 
 ### 2. Điều kiện kích hoạt rõ ràng ("Khi nào nên dùng")
 
@@ -26,6 +29,7 @@ Skill BẮT BUỘC phải có một phần nêu rõ thời điểm nên kích ho
 
 Mỗi skill phải khai báo mức độ rủi ro của nó:
 
+- ⚪ **unknown**: Nội dung cũ hoặc chưa được phân loại. Tránh dùng cho skill mới trừ khi thật sự cần maintainer phân loại.
 - 🟢 **none**: Chỉ là văn bản/tư duy thuần túy (ví dụ: Brainstorming).
 - 🔵 **safe**: Đọc file, chạy các lệnh an toàn (ví dụ: Linter).
 - 🟠 **critical**: Sửa đổi trạng thái, xóa file, push lên môi trường production (ví dụ: Git Push).
@@ -57,8 +61,9 @@ Chúng tôi cũng phân loại skill dựa trên người duy trì chúng:
 
 ## Cách Xác thực Skill của bạn
 
-Chạy script xác thực trước khi gửi Pull Request (PR):
+Chạy validator trước khi gửi Pull Request (PR):
 
 ```bash
-python3 scripts/validate_skills.py --strict
+npm run validate
+npm run validate:strict
 ```

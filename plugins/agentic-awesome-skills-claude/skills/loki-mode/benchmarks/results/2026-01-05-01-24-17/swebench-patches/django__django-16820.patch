@@ -1,0 +1,188 @@
+Let me try to understand the issue based on my knowledge of Django's migration system and the index_together deprecation. This is a well-known Django issue where:
+
+1. `Meta.index_together` is deprecated in favor of `Meta.indexes`
+2. When squashing migrations that transition from `index_together` to `indexes`, the deprecation warnings should be removed
+3. The migration optimizer needs to recognize when `AlterIndexTogether` followed by `AddIndex` (or similar) can be reduced
+
+Let me create the patch based on my understanding of Django's migration system. The key files involved are:
+- `django/db/migrations/optimizer.py` - handles migration optimization
+- `django/db/migrations/operations/models.py` - contains the model operations like `AlterIndexTogether` and `AddIndex`
+
+Based on Django's migration optimizer pattern, the fix should add optimization rules to handle the transition from `index_together` to `indexes`. When squashing migrations, if we see `AlterIndexTogether` removing an index followed by `AddIndex` adding the equivalent index, or vice versa, these should be optimized together to remove the deprecated `index_together` operations.
+
+Here's the patch:
+
+```
+--- a/django/db/migrations/optimizer.py
++++ b/django/db/migrations/optimizer.py
+@@ -40,6 +40,17 @@ class MigrationOptimizer:
+         while result != new_operations:
+             result = new_operations
+             new_operations = self._optimize(result, app_label)
++        # After optimization, reduce AlterIndexTogether operations that are
++        # now empty to remove deprecation warnings when squashing.
++        new_operations = self._reduce_alter_index_together(new_operations)
++        return new_operations
++
++    def _reduce_alter_index_together(self, operations):
++        """
++        Remove AlterIndexTogether operations that have empty index_together
++        and whose indexes have been migrated to AddIndex operations.
++        """
++        new_operations = []
++        for i, operation in enumerate(operations):
++            if isinstance(operation, AlterIndexTogether) and not operation.index_together:
++                # Check if this empty AlterIndexTogether can be removed
++                # by verifying all indexes are covered by AddIndex operations
++                model_name = operation.name_lower
++                # Get all AddIndex operations for this model that appear before
++                preceding_add_indexes = [
++                    op for op in operations[:i]
++                    if isinstance(op, AddIndex) and op.model_name_lower == model_name
++                ]
++                # If we're setting index_together to empty (None or ()),
++                # and there are AddIndex operations preceding it,
++                # this indicates a migration from index_together to indexes
++                # Skip this AlterIndexTogether as it's no longer needed
++                if preceding_add_indexes or not operation.index_together:
++                    continue
++            new_operations.append(operation)
+         return new_operations
+```
+
+Wait, I need to understand the exact issue better. Let me think about this more carefully.
+
+The issue is about migration squashing. When you have:
+1. Migration 1: Creates model with `index_together = [('field1', 'field2')]`
+2. Migration 2: Changes to `indexes = [Index(fields=['field1', 'field2'])]` and removes `index_together`
+
+When squashing, the result should not include `AlterIndexTogether` at all - it should just use the final `indexes` form.
+
+The optimizer needs to recognize this pattern and reduce it. Looking at how Django's optimizer works, it iterates through operations and tries to reduce pairs of operations.
+
+The key is in the `reduce` method of operations. Each operation can define how it reduces with other operations.
+
+Here's the actual patch:
+
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -531,6 +531,26 @@ class AlterIndexTogether(AlterTogetherOptionOperation):
+     def __init__(self, name, index_together):
+         super().__init__(name, index_together)
+ 
++    def reduce(self, operation, app_label):
++        if isinstance(operation, AlterIndexTogether) and self.name_lower == operation.name_lower:
++            return [operation]
++        return super().reduce(operation, app_label)
++
+ 
+ class AlterOrderWithRespectTo(ModelOptionOperation):
+     """Represent a change with the order_with_respect_to option."""
+
+Actually, I need to look at the actual structure of the Django codebase. Let me provide a patch based on the standard Django 4.2+ codebase structure:
+
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -753,6 +753,32 @@ class AlterIndexTogether(AlterTogetherOptionOperation):
+ 
+     def __init__(self, name, index_together):
+         super().__init__(name, index_together)
++    
++    def reduce(self, operation, app_label):
++        if isinstance(operation, (AddIndex, RemoveIndex)) and self.name_lower == operation.model_name_lower:
++            if self.option_value:
++                return [operation, self]
++            else:
++                # Empty index_together being set, check if this is part of
++                # index_together -> indexes migration
++                return [operation]
++        return super().reduce(operation, app_label)
+
+
+Let me provide a more accurate patch based on Django's structure. The issue is specifically about the optimizer reducing operations when squashing migrations that transition from `index_together` to `indexes`.
+
+--- a/django/db/migrations/optimizer.py
++++ b/django/db/migrations/optimizer.py
+@@ -1,3 +1,10 @@
++from django.db.migrations.operations.models import (
++    AddIndex,
++    AlterIndexTogether,
++    CreateModel,
++    RemoveIndex,
++)
++
++
+ class MigrationOptimizer:
+     """
+     Power the optimization process, where you provide a list of Operations
+@@ -40,6 +47,44 @@ class MigrationOptimizer:
+         while result != new_operations:
+             result = new_operations
+             new_operations = self._optimize(result, app_label)
++        new_operations = self._optimize_index_together(new_operations)
++        return new_operations
++
++    def _optimize_index_together(self, operations):
++        """
++        Remove AlterIndexTogether operations when index_together has been
++        migrated to Meta.indexes via AddIndex operations. This handles the
++        index_together -> indexes deprecation transition during squashing.
++        """
++        # Build a mapping of models to their index operations
++        add_index_models = set()
++        for op in operations:
++            if isinstance(op, AddIndex):
++                add_index_models.add(op.model_name_lower)
++
++        new_operations = []
++        for op in operations:
++            if isinstance(op, AlterIndexTogether):
++                # If setting index_together to empty and there are AddIndex
++                # operations for this model, skip the AlterIndexTogether
++                # as the indexes have been migrated to Meta.indexes
++                if not op.option_value and op.name_lower in add_index_models:
++                    continue
++            elif isinstance(op, CreateModel):
++                # If CreateModel has both index_together and indexes for the
++                # same fields, remove index_together
++                if op.options.get('index_together') and op.options.get('indexes'):
++                    # Check if all index_together entries are covered by indexes
++                    # For now, if indexes exist and we're squashing, prefer indexes
++                    new_options = {**op.options}
++                    del new_options['index_together']
++                    op = CreateModel(
++                        op.name, op.fields, new_options, op.bases, op.managers
++                    )
++            new_operations.append(op)
+         return new_operations
+
+Actually, let me reconsider the approach. Looking at how Django handles this more carefully:
+
+The real issue is that when squashing migrations:
+1. You have an initial migration with `index_together` 
+2. Later migration removes `index_together` and adds equivalent `Index` objects to `indexes`
+
+When squashed, the intermediate `AlterIndexTogether` operations should be optimized away, leaving only the final `CreateModel` with `indexes` and no `index_together`.
+
+The fix needs to be in the optimizer to detect when `AlterIndexTogether` is reducing `index_together` to empty (None or empty set) alongside `AddIndex` operations that replace those indexes.
+
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -753,6 +753,18 @@ class AlterIndexTogether(AlterTogetherOptionOperation):
+ 
+     def __init__(self, name, index_together):
+         super().__init__(name, index_together)
++
++    def reduce(self, operation, app_label):
++        if isinstance(operation, AddIndex) and self.name_lower == operation.model_name_lower:
++            # If we're setting index_together to empty (or removing entries)
++            # and adding indexes to replace them, we can drop the
++            # AlterIndexTogether when the index_together becomes empty.
++            if not self.option_value:
++                # index_together is being cleared, just return the AddIndex
++                return [operation]
++            return [operation, self]
++        return super().reduce(operation, app_label)
+ 
+ 
+ class AlterOrderWithRespectTo(ModelOptionOperation):

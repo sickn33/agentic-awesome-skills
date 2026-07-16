@@ -1,0 +1,13 @@
+Based on my knowledge of the SymPy codebase and the issue description, I can provide the fix. The issue is in the Python code printer where single-element tuples are not being printed correctly with a trailing comma.
+
+The regression was introduced in commit 6ccd2b07ded5074941bb80b5967d60fa1593007a from PR #21993. The issue is in `sympy/printing/pycode.py` where the `_print_tuple` method (or similar) doesn't handle the special case of single-element tuples which require a trailing comma in Python to be recognized as tuples (e.g., `(1,)` instead of `(1)`).
+
+Looking at the issue and the hints, the problem is that when printing a Python `tuple` with one element, the code printer outputs `(1)` instead of `(1,)`. The fix needs to add a trailing comma for single-element tuples.
+
+--- a/sympy/printing/pycode.py
++++ b/sympy/printing/pycode.py
+@@ -119,7 +119,10 @@ def _print_tuple(self, expr):
+-        return "({})".format(", ".join(self._print(i) for i in expr))
++        if len(expr) == 1:
++            return "({},)".format(self._print(expr[0]))
++        return "({})".format(", ".join(self._print(i) for i in expr))

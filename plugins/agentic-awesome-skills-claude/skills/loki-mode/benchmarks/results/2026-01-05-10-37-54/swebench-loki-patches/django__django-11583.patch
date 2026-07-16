@@ -1,0 +1,24 @@
+# django__django-11583
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the stacktrace from the issue, I can generate the patch. The issue is at line ~132 in `django/utils/autoreload.py` where `path.resolve().absolute()` is called and needs exception handling for `ValueError`.
+
+```
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -129,7 +129,12 @@ def iter_modules_and_files(modules, extra_files):
+             # The module could have been removed, don't fail loudly if this
+             # is the case.
+             continue
+-        results.add(path.resolve().absolute())
++        try:
++            results.add(path.resolve().absolute())
++        except ValueError as e:
++            # The path contained a null byte (ValueError: embedded null byte)
++            # Skip this path and continue with the rest.
++            continue
+     for filename in extra_files:
+         results.add(Path(filename))
+     return frozenset(results)
+```

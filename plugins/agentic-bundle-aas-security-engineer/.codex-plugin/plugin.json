@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-security-engineer",
+  "version": "14.5.0",
+  "description": "Install the \"AAS Security Engineer\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-security-engineer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Security Engineer",
+    "shortDescription": "Run authorized security testing, audit, vulnerability validation, web testing, and hardening workflows.",
+    "longDescription": "Run authorized security testing, audit, vulnerability validation, web testing, and hardening workflows. Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows. Recommended for: Authorized security teams, Maintainers validating reported findings, Cloud and app security reviewers. Not for: Unauthorized testing, Pure feature implementation. Covers Ethical Hacking Methodology, Burp Suite Testing, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to plan an authorized security assessment for this app and define the evidence to collect.",
+      "Use this plugin to validate this vulnerability report and separate confirmed risk from false positives.",
+      "Use this plugin to review this system for web, API, cloud, and SAST coverage gaps."
+    ]
+  }
+}

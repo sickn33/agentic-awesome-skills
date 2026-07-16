@@ -1,0 +1,19 @@
+# sympy__sympy-22714
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the error traceback, I can generate the patch. The issue is in the imaginary coordinate check at line ~153 of `sympy/geometry/point.py`. The condition `im(a).is_zero is False` incorrectly rejects coordinates when `im()` returns an unevaluated expression (where `is_zero` returns `None`, not `False`).
+
+The fix should use `im(a).is_nonzero` instead, which returns `True` only when the imaginary part is definitely nonzero, and `None` when it cannot be determined (which should not trigger rejection).
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -150,7 +150,7 @@ class Point(GeometryEntity):
+                 coords = coords[0] if is_sequence(coords[0]) else coords
+             coords = Tuple(*coords)
+ 
+-        if any(a.is_number and im(a).is_zero is False for a in coords):
++        if any(a.is_number and im(a).is_nonzero for a in coords):
+             raise ValueError('Imaginary coordinates are not permitted.')
+ 
+         if not all(isinstance(a, Expr) for a in coords):

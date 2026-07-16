@@ -1,0 +1,82 @@
+Based on the issue description and traceback, I can understand the problem well enough to create the patch. The issue is:
+
+1. `StaticFilesHandlerMixin` has a `get_response` method that serves static files
+2. When using `ASGIStaticFilesHandler`, it needs a `get_response_async` method because ASGI handler calls `get_response_async`
+3. The mixin is missing this async method
+
+Looking at the traceback:
+- `django/contrib/staticfiles/handlers.py:86` - ASGIStaticFilesHandler.__call__
+- `django/core/handlers/asgi.py:161` - ASGIHandler.__call__ calls `get_response_async`
+- `django/core/handlers/base.py:148` - BaseHandler.get_response_async calls `_middleware_chain`
+
+The fix needs to add a `get_response_async` method to `StaticFilesHandlerMixin` that mirrors the logic of `get_response` but is async.
+
+Based on Django's typical structure for static files handlers, here's the patch:
+
+--- a/django/contrib/staticfiles/handlers.py
++++ b/django/contrib/staticfiles/handlers.py
+@@ -1,3 +1,4 @@
++from urllib.parse import urlparse
+ from urllib.request import url2pathname
+ 
+ from django.conf import settings
+@@ -43,6 +44,19 @@ class StaticFilesHandlerMixin:
+             return response
+         return super().get_response(request)
+ 
++    async def get_response_async(self, request):
++        try:
++            return await sync_to_async(self.serve, thread_sensitive=False)(request)
++        except Http404 as e:
++            return response_for_exception(request, e)
++
++    async def get_response_async(self, request):
++        if self._should_handle(request.path):
++            try:
++                return await sync_to_async(self.serve, thread_sensitive=False)(request)
++            except Http404 as e:
++                return response_for_exception(request, e)
++        return await super().get_response_async(request)
++
+ 
+ class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):
+     """
+
+Wait, I need to check the exact structure. Let me think about this more carefully based on the traceback and typical Django patterns.
+
+Looking at the traceback again:
+```
+File ".../src/django/django/contrib/staticfiles/handlers.py", line 86, in __call__
+    return await super().__call__(scope, receive, send)
+File ".../src/django/django/core/handlers/asgi.py", line 161, in __call__
+    response = await self.get_response_async(request)
+```
+
+The `ASGIStaticFilesHandler` calls `super().__call__` which goes to `ASGIHandler.__call__`, which calls `self.get_response_async(request)`. The `StaticFilesHandlerMixin` only provides `get_response` but not `get_response_async`.
+
+The fix should add `get_response_async` to `StaticFilesHandlerMixin` that mirrors the sync `get_response` method logic.
+
+--- a/django/contrib/staticfiles/handlers.py
++++ b/django/contrib/staticfiles/handlers.py
+@@ -1,4 +1,5 @@
+ from urllib.request import url2pathname
+ 
++from asgiref.sync import sync_to_async
+ from django.conf import settings
+ from django.contrib.staticfiles import utils
+ from django.contrib.staticfiles.views import serve
+@@ -43,6 +44,13 @@ class StaticFilesHandlerMixin:
+             return response
+         return super().get_response(request)
+ 
++    async def get_response_async(self, request):
++        if self._should_handle(request.path):
++            try:
++                return await sync_to_async(self.serve, thread_sensitive=False)(request)
++            except Http404 as e:
++                return response_for_exception(request, e)
++        return await super().get_response_async(request)
++
+ 
+ class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):
+     """

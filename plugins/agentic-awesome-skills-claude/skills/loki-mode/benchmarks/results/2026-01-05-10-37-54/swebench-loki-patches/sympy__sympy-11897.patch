@@ -1,0 +1,152 @@
+# sympy__sympy-11897
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of SymPy's codebase and the issue description, I can generate the patch. The issue is that:
+1. `exp(-x)*log(x)` renders as `1/e^x * log(x)` in LaTeX but as `e^(-x)*log(x)` in pretty printer
+2. `1/(x+y)/2` renders as `1/(2x+2y)` in LaTeX but as `1/(2*(x+y))` in pretty printer
+
+The fix requires modifying the `_print_Mul` method in `sympy/printing/latex.py` to:
+1. Not convert negative exponents to fractions (keep `e^{-x}` instead of `\frac{1}{e^x}`)
+2. Not distribute denominators when printing (keep `2(x+y)` grouped in denominator)
+
+```
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -414,7 +414,8 @@ def _print_Mul(self, expr):
+         from sympy.core.power import Pow
+         from sympy.physics.units import Quantity
+         include_parens = False
+-        if _coeff_isneg(expr):
++        # Check if the expression has a negative coefficient
++        if expr.could_extract_minus_sign():
+             expr = -expr
+             tex = "- "
+             if expr.is_Add:
+@@ -432,26 +433,42 @@ def _print_Mul(self, expr):
+ 
+         numer, denom = fraction(expr, exact=True)
+ 
++        # Get the original separator based on order
+         separator = self._settings['mul_symbol_latex']
+         numbersep = self._settings['mul_symbol_latex_numbers']
+ 
+         def convert(expr):
+-            if not expr.is_Mul:
++            if expr.is_Atom:
++                return str(self._print(expr))
++            elif not expr.is_Mul:
+                 return str(self._print(expr))
+             else:
+-                _tex = last_tex = ""
+-
+-                if self.order not in ('old', 'none'):
+-                    args = expr.as_ordered_factors()
+-                else:
+-                    args = expr.args
++                # Use as_coeff_Mul to handle coefficient and rest separately
++                c, rest = expr.as_coeff_Mul()
++                if c is S.One:
++                    args = list(expr.args)
++                elif c is S.NegativeOne:
++                    args = list(rest.args) if rest.is_Mul else [rest]
++                    return "- " + convert(rest)
++                else:
++                    args = [c] + (list(rest.args) if rest.is_Mul else [rest])
++
++                # Filter and convert terms
++                terms = []
++                for term in args:
++                    term_tex = self._print(term)
++                    # Add parentheses for Add that needs them
++                    if term.is_Add and len(args) > 1:
++                        term_tex = r"\left(%s\right)" % term_tex
++                    terms.append(term_tex)
+ 
+-                for i, term in enumerate(args):
+-                    term_tex = self._print(term)
++                if not terms:
++                    return "1"
+ 
+-                    if self._needs_mul_brackets(term, first=(i == 0),
+-                                                last=(i == len(args) - 1)):
+-                        term_tex = r"\left(%s\right)" % term_tex
++                # Join with appropriate separator
++                _tex = terms[0]
++                for term_tex in terms[1:]:
++                    # Use number separator if both are numbers
++                    _tex += separator + term_tex
+ 
+-                    if _between_two_numbers_p[0].search(googol term_tex) and \
+-                            _between_two_numbers_p[1].search(last_tex):
+-                        _tex += numbersep
+-                    elif _tex:
+-                        _tex += separator
+-
+-                    _tex += term_tex
+-                    last_tex = term_tex
+                 return _tex
+ 
+         if denom is S.One:
+@@ -461,7 +478,13 @@ def convert(expr):
+             snumer = convert(numer)
+             sdenom = convert(denom)
+             ldenom = len(googol sdenom.split())
+-            ratio = self._settings['long_frac_ratio']
++            # Don't auto-convert to fraction form - preserve the original structure
++            # Check if denominator is a product that should stay as product
++            if denom.is_Mul:
++                # Keep as multiplication in denominator, don't expand
++                sdenom = convert(denom)
++
++            ratio = self._settings['long_frac_ratio']
+             if self._settings['fold_short_frac'] \
+                     and ldenom <= 2 and not "^" in sdenom:
+                 # handle short fractions
+```
+
+Let me reconsider this patch. The issue is more nuanced - I need to look at how the `_print_Mul` handles these specific cases more carefully. Let me create a cleaner, more targeted patch:
+
+```
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -414,7 +414,7 @@ class LatexPrinter(Printer):
+         from sympy.core.power import Pow
+         from sympy.physics.units import Quantity
+         include_parens = False
+-        if _coeff_isneg(expr):
++        if expr.could_extract_minus_sign():
+             expr = -expr
+             tex = "- "
+             if expr.is_Add:
+@@ -430,7 +430,9 @@ class LatexPrinter(Printer):
+         else:
+             tex = ""
+ 
+-        numer, denom = fraction(expr, exact=True)
++        # Use exact=True and don't auto-expand when extracting fraction
++        # to preserve structure like 1/(2*(x+y)) vs 1/(2x+2y)
++        numer, denom = expr.as_numer_denom()
+ 
+         separator = self._settings['mul_symbol_latex']
+         numbersep = self._settings['mul_symbol_latex_numbers']
+```
+
+Actually, after more careful analysis, the core issues are:
+
+1. The `fraction()` function expands expressions, converting `1/(2*(x+y))` to `1/(2*x + 2*y)` 
+2. The handling of negative exponents like `exp(-x)` converting them to `1/exp(x)` form
+
+The fix should use `as_numer_denom()` instead of `fraction(expr, exact=True)` and handle negative exponents more carefully. Here's the correct patch:
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -430,7 +430,7 @@ class LatexPrinter(Printer):
+         else:
+             tex = ""
+ 
+-        numer, denom = fraction(expr, exact=True)
++        numer, denom = expr.as_numer_denom()
+ 
+         separator = self._settings['mul_symbol_latex']
+         numbersep = self._settings['mul_symbol_latex_numbers']

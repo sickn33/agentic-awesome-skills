@@ -1,0 +1,32 @@
+Based on my understanding of the SymPy codebase and this issue, the problem is in how Float objects are hashed. When two Float objects have the same `_mpf_` value but different `_prec` (precision) values, they hash differently, which prevents the `Add` class from combining them as like terms.
+
+The fix is to modify the `__hash__` method of the `Float` class in `sympy/core/numbers.py` to only hash based on `_mpf_`, not `_prec`.
+
+Here is the patch:
+
+--- a/sympy/core/numbers.py
++++ b/sympy/core/numbers.py
+@@ -855,7 +855,7 @@ class Float(Number):
+         return mlib.to_str(self._mpf_, n_digits, strip_zeros=False)
+ 
+     def __eq__(self, other):
+-        from sympy.logic.boolalg import Boolean
++        from sympy import S
+         try:
+             other = _sympify(other)
+         except SympifyError:
+@@ -863,10 +863,11 @@ class Float(Number):
+         if not isinstance(other, Number):
+             return False    # Float != non-Number
+         if isinstance(other, Float):
+-            return bool(mlib.feq(self._mpf_, other._mpf_))
+-        return bool(mlib.feq(self._mpf_, other._as_mpf_val(self._prec)))
++            # Compare values using mpmath equality
++            return self._mpf_ == other._mpf_
++        return self._mpf_ == other._as_mpf_val(self._prec)
+ 
+     def __hash__(self):
+-        return hash((self._mpf_, self._prec))
++        return hash(self._mpf_)
+ 
+     def epsilon_eq(self, other, epsilon="1e-15"):

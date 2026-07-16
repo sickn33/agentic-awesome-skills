@@ -1,0 +1,27 @@
+# django__django-16816
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my analysis of the issue and the architect's guidance, I can generate the patch for this Django admin check E108 bug. The fix needs to be applied to `django/contrib/admin/checks.py` to catch reverse relation fields in `list_display`.
+
+```
+--- a/django/contrib/admin/checks.py
++++ b/django/contrib/admin/checks.py
+@@ -7,6 +7,7 @@
+ from django.core import checks
+ from django.core.exceptions import FieldDoesNotExist
+ from django.db import models
++from django.db.models.fields.reverse_related import ForeignObjectRel
+ from django.forms.models import BaseModelForm, BaseModelFormSet, _get_foreign_key
+ from django.template import engines
+ from django.template.backends.django import DjangoTemplates
+@@ -897,6 +898,8 @@
+     def _check_list_display_item(self, obj, item, label):
+         try:
+             field = obj.model._meta.get_field(item)
++            if isinstance(field, ForeignObjectRel):
++                raise FieldDoesNotExist
+         except FieldDoesNotExist:
+             try:
+                 getattr(obj.model, item)
+```

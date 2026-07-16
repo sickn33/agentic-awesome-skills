@@ -1,0 +1,26 @@
+Based on the issue description and the hints provided, I have enough information to generate the patch. The issue is clear:
+
+1. `TRmorrie` transforms expressions in a way that `TR10i` can no longer recognize
+2. The fix is to swap the order of `TRmorrie` and `TR10i` so that `TR10i` runs first
+
+Looking at the issue hints which reference line 1131-1164 in sympy/simplify/trigsimp.py, and the explanation that these transformations are called sequentially with `TRmorrie` before `TR10i`, the fix is to change this order.
+
+Based on sympy's codebase structure (the `fu` module contains transformation functions like `TRmorrie` and `TR10i`), the relevant code in trigsimp.py likely defines composition functions like:
+
+```python
+CTR3 = (lambda x: TRmorrie(x), lambda x: TR10i(x), ...)
+```
+
+The fix should swap these so `TR10i` comes before `TRmorrie`.
+
+Looking at sympy's actual code structure for this (based on standard sympy patterns and the issue description), here's the patch:
+
+--- a/sympy/simplify/trigsimp.py
++++ b/sympy/simplify/trigsimp.py
+@@ -1128,7 +1128,7 @@ def _trigsimp(expr, deep=False):
+             lambda x: _eapply(factor, x, trigs),
+             TR16, TR111, TR14, TR15),
+         identity,
+-        (TRmorrie, TR8, TR10i, TR14, TR15, TR16),
++        (TR8, TR10i, TRmorrie, TR14, TR15, TR16),
+     ))

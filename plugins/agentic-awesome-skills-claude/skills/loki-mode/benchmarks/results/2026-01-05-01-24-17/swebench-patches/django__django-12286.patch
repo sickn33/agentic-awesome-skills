@@ -1,0 +1,29 @@
+This is a Django repository issue but the current directory doesn't contain Django code. I need to understand the issue based on the problem description and create the appropriate patch.
+
+Based on the issue:
+1. The error `translation.E004` is raised when `LANGUAGE_CODE` is set to a sublanguage (like "de-at") that isn't in `LANGUAGES`, even though the base language ("de") is available
+2. According to Django documentation, sublanguages should fall back to base languages
+3. This was introduced as a regression in commit `4400d8296d268f5a8523cd02ddc33b12219b2535`
+
+The fix should modify the translation check to also allow sublanguages when their base language is available. Let me create the patch based on Django's translation checks module structure:
+
+Based on my knowledge of Django's codebase, the translation system checks are in `django/core/checks/translation.py`. The `E004` check validates that `LANGUAGE_CODE` is in `LANGUAGES`. The fix needs to also check if the base language (e.g., "de" from "de-at") is available when the exact sublanguage isn't.
+
+Here's the patch:
+
+--- a/django/core/checks/translation.py
++++ b/django/core/checks/translation.py
+@@ -55,7 +55,12 @@ def check_language_settings_consistent(app_configs, **kwargs):
+     """Error if language settings are not consistent with each other."""
+     available_tags = {i for i, _ in settings.LANGUAGES} | {'en-us'}
+     messages = []
+-    if settings.LANGUAGE_CODE not in available_tags:
++    # Check if LANGUAGE_CODE is in available tags, or if its base language is
++    # available (e.g., 'de' for 'de-at'). This matches Django's language
++    # fallback behavior documented in the translation docs.
++    language_code = settings.LANGUAGE_CODE
++    base_language = language_code.split('-')[0]
++    if language_code not in available_tags and base_language not in available_tags:
+         messages.append(Error(
+             'You have provided a value for the LANGUAGE_CODE setting that is not in '
+             'the LANGUAGES setting.',

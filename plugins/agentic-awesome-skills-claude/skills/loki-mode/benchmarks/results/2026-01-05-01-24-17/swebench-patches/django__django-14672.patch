@@ -1,0 +1,59 @@
+Based on the issue description, I need to create a patch for Django's `ManyToManyRel` class. The issue states that `through_fields` can be a list, and when hashing the identity property, it fails because lists are unhashable. The solution is to add `make_hashable` call on `self.through_fields`.
+
+Let me understand the Django codebase structure by looking at the issue. The error trace mentions:
+- `/django/db/models/fields/reverse_related.py` - where `ManyToManyRel` and `__hash__` are defined
+
+From the issue, I know:
+1. The `identity` property is used for hashing `ForeignObjectRel` objects
+2. `make_hashable` is already called for `limit_choices_to` 
+3. `through_fields` can be a list and needs `make_hashable` too
+
+The fix should be in the `identity` property of `ManyToManyRel` class. Based on standard Django codebase structure and the issue description, here's the patch:
+
+--- a/django/db/models/fields/reverse_related.py
++++ b/django/db/models/fields/reverse_related.py
+@@ -310,6 +310,6 @@ class ManyToManyRel(ForeignObjectRel):
+             self.through,
+             self.through_fields,
+             self.db_constraint,
+-        )
++        ) + (make_hashable(self.through_fields),)
+ 
+     def get_related_field(self):
+
+Wait, that doesn't look right. Let me reconsider. Looking at the issue more carefully, the identity property returns a tuple that includes `self.through_fields` which can be a list. The fix is to wrap `self.through_fields` with `make_hashable()`.
+
+Based on typical Django structure, the `identity` property in `ManyToManyRel` would look something like:
+
+```python
+@cached_property
+def identity(self):
+    return super().identity + (
+        self.through,
+        self.through_fields,
+        self.db_constraint,
+    )
+```
+
+And it should be:
+
+```python
+@cached_property
+def identity(self):
+    return super().identity + (
+        self.through,
+        make_hashable(self.through_fields),
+        self.db_constraint,
+    )
+```
+
+--- a/django/db/models/fields/reverse_related.py
++++ b/django/db/models/fields/reverse_related.py
+@@ -310,7 +310,7 @@ class ManyToManyRel(ForeignObjectRel):
+     def identity(self):
+         return super().identity + (
+             self.through,
+-            self.through_fields,
++            make_hashable(self.through_fields),
+             self.db_constraint,
+         )

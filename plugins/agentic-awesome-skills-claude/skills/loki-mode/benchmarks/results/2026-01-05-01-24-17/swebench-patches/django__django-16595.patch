@@ -1,0 +1,14 @@
+Based on my knowledge of Django's codebase and the issue description, I can provide the patch. The issue is in `django/db/migrations/operations/fields.py` where the `AlterField.reduce` method doesn't handle the case when the operation it's being compared with is also an `AlterField` on the same field.
+
+--- a/django/db/migrations/operations/fields.py
++++ b/django/db/migrations/operations/fields.py
+@@ -233,6 +233,11 @@ class AlterField(FieldOperation):
+             operation.model_name_lower == self.model_name_lower
+             and operation.name_lower == self.name_lower
+         ):
++            return [operation]
++        if isinstance(operation, AlterField) and self.is_same_field_operation(
++            operation
++        ):
+             return [operation]
+         return super().reduce(operation, app_label)

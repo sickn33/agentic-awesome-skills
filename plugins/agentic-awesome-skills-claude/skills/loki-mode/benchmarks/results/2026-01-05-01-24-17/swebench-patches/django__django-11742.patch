@@ -1,0 +1,32 @@
+Based on my knowledge of Django's codebase structure, I'll create the patch. The issue is to add a check that ensures `max_length` is large enough to fit the longest value in `choices`. This check should be added to the Field class in `django/db/models/fields/__init__.py`.
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -308,6 +308,25 @@ class Field(RegisterLookupMixin):
+                     )
+         return []
+ 
++    def _check_max_length_fits_choices(self):
++        """
++        Check that max_length is large enough to fit the longest choice value.
++        """
++        if self.max_length is not None and self.choices is not None:
++            choice_max_length = 0
++            for choice in self.flatchoices:
++                value = choice[0]
++                if isinstance(value, str):
++                    choice_max_length = max(choice_max_length, len(value))
++            if choice_max_length > self.max_length:
++                return [
++                    checks.Error(
++                        "'max_length' is too small to fit the longest value "
++                        "in 'choices' (%d characters)." % choice_max_length,
++                        obj=self,
++                        id='fields.E009',
++                    ),
++                ]
++        return []
++
+     def _check_choices(self):
+         if not self.choices:
+             return []

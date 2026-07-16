@@ -1,0 +1,19 @@
+Now I understand the issue completely. The fix should modify `stream_decode_response_unicode` in `utils.py` to fall back to `r.apparent_encoding` when `r.encoding` is `None`, similar to how the `text` property does it.
+
+Here's the patch:
+
+--- a/requests/utils.py
++++ b/requests/utils.py
+@@ -554,9 +554,7 @@ def stream_decode_response_unicode(iterator, r):
+     """Stream decodes an iterator."""
+ 
+-    if r.encoding is None:
+-        yield from iterator
+-        return
++    encoding = r.encoding if r.encoding else r.apparent_encoding
+ 
+-    decoder = codecs.getincrementaldecoder(r.encoding)(errors="replace")
++    decoder = codecs.getincrementaldecoder(encoding)(errors="replace")
+     for chunk in iterator:
+         rv = decoder.decode(chunk)
+         if rv:

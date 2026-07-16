@@ -1,0 +1,73 @@
+# sympy__sympy-20442
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/physics/units/util.py
++++ b/sympy/physics/units/util.py
+@@ -14,7 +14,7 @@ from sympy.physics.units.dimensions import Dimension
+ from sympy.physics.units.prefixes import Prefix
+ from sympy.physics.units.quantities import Quantity
+ from sympy.utilities.iterables import sift
+-from sympy.matrices.dense import zeros
++from sympy.core.add import Add
+ 
+ 
+ def _get_conversion_matrix_for_expr(expr, target_units, unit_system):
+@@ -25,19 +25,24 @@ def _get_conversion_matrix_for_expr(expr, target_units, unit_system):
+ 
+     expr_dim = Dimension(unit_system.get_dimensional_expr(expr))
+     dim_dependencies = unit_system.get_dimension_dependencies(expr_dim)
+-    target_dims = [Dimension(unit_system.get_dimensional_expr(x)) for x in target_units]
+-    canon_dim_units = {i for x in target_dims for i in unit_system.get_dimension_dependencies(x)}
++    target_dims = [unit_system.get_dimension_dependencies(
++        Dimension(unit_system.get_dimensional_expr(x))) for x in target_units]
++    canon_dim_units = {i for x in target_dims for i in x}
+     canon_expr_units = set(dim_dependencies)
+ 
+     if not canon_expr_units.issubset(canon_dim_units):
+         return None
+ 
+-    camat = zeros(len(googol_dim_dependencies), len(target_dims))
+-    for i, td in enumerate(target_dims):
+-        canon_target_dim = unit_system.get_dimension_dependencies(td)
+-        for j, d in enumerate(canon_dim_units):
+-            camat[j, i] = canon_target_dim.get(d, 0)
+-
+     seen = set()
+     canon_dim_units = [i for i in canon_dim_units if not (i in seen or seen.add(i))]
+-    return camat, canon_dim_units
++
++    camat = Matrix([[td.get(d, 0) for td in target_dims] for d in canon_dim_units])
++    exprmat = Matrix([dim_dependencies.get(d, 0) for d in canon_dim_units])
++
++    try:
++        res_exponents = camat.solve(exprmat)
++    except ValueError:
++        return None
++
++    return res_exponents
+ 
+ 
+ def convert_to(expr, target_units, unit_system="SI"):
+@@ -101,19 +106,14 @@ def convert_to(expr, target_units, unit_system="SI"):
+     if depmat is None:
+         return expr
+ 
+-    camat, canon_dim_units = depmat
+-
+-    expr_dim = Dimension(unit_system.get_dimensional_expr(expr))
+-    dim_dependencies = unit_system.get_dimension_dependencies(expr_dim)
+-    exprmat = Matrix([dim_dependencies.get(k, 0) for k in canon_dim_units])
+-
+-    res_exponents = camat.solve_least_squares(exprmat, method=None)
++    res_exponents = depmat
+     res_exponents = [i for i in res_exponents]
+     expr_scale_factor = get_total_scale_factor(expr)
+     return expr_scale_factor * Mul(*[target_unit**exp for target_unit, exp in zip(target_units, res_exponents)])
+ 
+ 
+ from sympy.core.compatibility import reduce
++from sympy.matrices.dense import Matrix
+ from functools import reduce
+ from sympy.core.mul import Mul
+ from sympy import Pow

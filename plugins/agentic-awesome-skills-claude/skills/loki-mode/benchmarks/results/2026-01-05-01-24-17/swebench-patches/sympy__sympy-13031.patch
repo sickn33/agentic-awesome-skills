@@ -1,0 +1,33 @@
+Based on the issue description and hints, I can construct the fix. The problem is clear:
+
+1. `SparseMatrix` implements `col_join` directly instead of `_eval_col_join`
+2. `hstack` calls `col_join` which in `SparseMatrix` doesn't properly handle zero-row matrices
+3. The fix that worked for dense `Matrix` needs to be applied to `SparseMatrix` - implement `_eval_col_join` and `_eval_row_join` methods
+
+Looking at how the fix worked for dense matrices and the hints provided, the fix should add `_eval_col_join` and `_eval_row_join` methods to `SparseMatrix` that properly preserve dimensions when dealing with zero-row or zero-column matrices.
+
+--- a/sympy/matrices/sparse.py
++++ b/sympy/matrices/sparse.py
+@@ -985,6 +985,22 @@ def col_join(self, other):
+                     self.cols, {}))
+         return self._new(self.rows + A.rows, self.cols, new_smat)
+ 
++    def _eval_col_join(self, other):
++        A = self
++        B = other
++        if not A.cols == B.cols:
++            raise ShapeError()
++        A_rows = A.rows
++        new_smat = dict(A._smat)
++        new_smat.update({(i + A_rows, j): v for (i, j), v in B._smat.items()})
++        return self._new(A.rows + B.rows, A.cols, new_smat)
++
++    def _eval_row_join(self, other):
++        new_smat = dict(self._smat)
++        A_cols = self.cols
++        new_smat.update({(i, j + A_cols): v for (i, j), v in other._smat.items()})
++        return self._new(self.rows, self.cols + other.cols, new_smat)
++
+     def col_op(self, j, f):
+         """In-place operation on col j using two-arg functor whose args are
+         interpreted as (self[i, j], i) for i in range(self.rows).

@@ -1,0 +1,47 @@
+Based on my knowledge of this specific Django issue, I can provide the fix. The issue is that in Django's `deletion.py`, when a model instance with no dependencies is deleted using the "fast delete" path, the primary key is not set to None afterward. Looking at the code structure:
+
+1. Around line 276-281, there's a fast delete path that returns early
+2. Around lines 320-326, the normal deletion path sets the PK to None for instances
+
+The fix needs to add the PK-clearing logic to the fast delete path as well. Here's the patch:
+
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -277,6 +277,10 @@ class Collector:
+             # fast deletes
+             for qs in self.fast_deletes:
+                 count = qs._raw_delete(using=self.using)
++                if not count:
++                    continue
++                if qs.model._meta.auto_created and qs.query.filter_is_sticky:
++                    continue
+                 deleted_counter[qs.model._meta.label] += count
+ 
+             # update fields
+@@ -302,6 +306,8 @@ class Collector:
+                     sender=model, instance=obj, using=self.using
+                 )
+ 
++        # Set the primary key of the instance to None.
++        if hasattr(self, 'instances'):
++            for model, instances in self.instances.items():
++                pk_field = model._meta.pk
++                for instance in instances:
++                    setattr(instance, pk_field.attname, None)
+         return sum(deleted_counter.values()), dict(deleted_counter)
+
+Wait, let me reconsider. Based on the issue description more carefully:
+
+- Line 276-281 is where the fast delete returns early for a single instance
+- The fix should set the PK to None for the instance that was fast-deleted
+
+Looking at the `delete()` method structure, when `can_fast_delete` is True for a single instance, the code does a fast delete and returns early without setting the PK to None. The fix should be simpler - just set the instance's PK to None before returning.
+
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -278,6 +278,7 @@ class Collector:
+         if self.can_fast_delete(instance):
+             with transaction.mark_for_rollback_on_error():
+                 count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)
++            setattr(instance, model._meta.pk.attname, None)
+             return count, {model._meta.label: count}

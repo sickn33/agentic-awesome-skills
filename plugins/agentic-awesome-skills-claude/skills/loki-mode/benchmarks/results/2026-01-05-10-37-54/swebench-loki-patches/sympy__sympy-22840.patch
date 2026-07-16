@@ -1,0 +1,19 @@
+# sympy__sympy-22840
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Now I have all the information I need. The fix is to add `isinstance(expr, MatrixSymbol)` to the check in `_find_opts` at line 501, similar to how it's done in `_find_repeated` at line 620-622.
+
+Here's my patch:
+
+--- a/sympy/simplify/cse_main.py
++++ b/sympy/simplify/cse_main.py
+@@ -498,7 +498,7 @@ def opt_cse(exprs, order='canonical'):
+         if not isinstance(expr, (Basic, Unevaluated)):
+             return
+ 
+-        if expr.is_Atom or expr.is_Order:
++        if expr.is_Atom or expr.is_Order or isinstance(expr, MatrixSymbol):
+             return
+ 
+         if iterable(expr):

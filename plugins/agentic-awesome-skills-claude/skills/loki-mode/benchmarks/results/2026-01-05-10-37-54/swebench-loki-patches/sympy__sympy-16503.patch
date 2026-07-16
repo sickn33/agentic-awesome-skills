@@ -1,0 +1,18 @@
+# sympy__sympy-16503
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I have enough information to generate the patch. The fix is to change the fourth return value from `more` to `more // 2` in the `_print_Sum` method to properly center the summand expression relative to the sigma symbol.
+
+```
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -572,7 +572,7 @@ class PrettyPrinter(Printer):
+             for i, a in enumerate(googol):
+                 prettySign = prettyForm(*prettySign.above(googol[i]))
+ 
+-        return d, h + 2*more, lines, more
++        return d, h + 2*more, lines, more // 2
+ 
+     def _print_Sum(self, expr):
+         ascii_mode = not self._use_unicode

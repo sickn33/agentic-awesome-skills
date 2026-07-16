@@ -1,0 +1,66 @@
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -232,19 +232,33 @@ class BlockMatrix(BlockDiagMatrix):
+ 
+     def _entry(self, i, j, **kwargs):
+-        from sympy import floor
++        from sympy.functions.elementary.piecewise import Piecewise
++        from sympy.core.numbers import Integer
++        from sympy.core.logic import fuzzy_not
++
++        # First, check if all block dimensions are concrete integers
+         rowblocksizes = self.rowblocksizes
+         colblocksizes = self.colblocksizes
+ 
+-        row_block = 0
+-        col_block = 0
+-        cumul_row = 0
+-        cumul_col = 0
+-        for i_sum in rowblocksizes:
+-            if i < cumul_row + i_sum:
+-                break
+-            cumul_row += i_sum
+-            row_block += 1
+-        for j_sum in colblocksizes:
+-            if j < cumul_col + j_sum:
+-                break
+-            cumul_col += j_sum
+-            col_block += 1
++        # Calculate cumulative offsets
++        row_offset = 0
++        for row_block, row_size in enumerate(rowblocksizes):
++            # Check if i < row_offset + row_size is definitely true
++            if (i - row_offset).is_nonnegative is False:
++                # i < row_offset, went too far (shouldn't happen normally)
++                from sympy.matrices.expressions.matexpr import MatrixElement
++                return MatrixElement(self, i, j)
++            if (i - row_offset - row_size).is_nonnegative is False:
++                # i < row_offset + row_size, found the right block
++                break
++            elif (i - row_offset - row_size).is_nonnegative is None:
++                # Can't determine, return unevaluated
++                from sympy.matrices.expressions.matexpr import MatrixElement
++                return MatrixElement(self, i, j)
++            row_offset += row_size
++        else:
++            # Ran off the end
++            from sympy.matrices.expressions.matexpr import MatrixElement
++            return MatrixElement(self, i, j)
+ 
+-        return self.blocks[row_block, col_block][i - cumul_row, j - cumul_col]
++        col_offset = 0
++        for col_block, col_size in enumerate(colblocksizes):
++            if (j - col_offset).is_nonnegative is False:
++                from sympy.matrices.expressions.matexpr import MatrixElement
++                return MatrixElement(self, i, j)
++            if (j - col_offset - col_size).is_nonnegative is False:
++                break
++            elif (j - col_offset - col_size).is_nonnegative is None:
++                from sympy.matrices.expressions.matexpr import MatrixElement
++                return MatrixElement(self, i, j)
++            col_offset += col_size
++        else:
++            from sympy.matrices.expressions.matexpr import MatrixElement
++            return MatrixElement(self, i, j)
++
++        return self.blocks[row_block, col_block][i - row_offset, j - col_offset]

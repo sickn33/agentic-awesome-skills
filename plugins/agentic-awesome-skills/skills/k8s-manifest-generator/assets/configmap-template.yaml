@@ -1,0 +1,296 @@
+# Kubernetes ConfigMap Templates
+
+---
+# Template 1: Simple Key-Value Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <app-name>-config
+  namespace: <namespace>
+  labels:
+    app.kubernetes.io/name: <app-name>
+    app.kubernetes.io/instance: <instance-name>
+data:
+  # Simple key-value pairs
+  APP_ENV: "production"
+  LOG_LEVEL: "info"
+  DATABASE_HOST: "db.example.com"
+  DATABASE_PORT: "5432"
+  CACHE_TTL: "3600"
+  MAX_CONNECTIONS: "100"
+
+---
+# Template 2: Configuration File
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <app-name>-config-file
+  namespace: <namespace>
+  labels:
+    app.kubernetes.io/name: <app-name>
+data:
+  # Application configuration file
+  application.yaml: |
+    server:
+      port: 8080
+      host: 0.0.0.0
+
+    logging:
+      level: INFO
+      format: json
+
+    database:
+      host: db.example.com
+      port: 5432
+      pool_size: 20
+      timeout: 30
+
+    cache:
+      enabled: true
+      ttl: 3600
+      max_entries: 10000
+
+    features:
+      new_ui: true
+      beta_features: false
+
+---
+# Template 3: Multiple Configuration Files
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <app-name>-multi-config
+  namespace: <namespace>
+  labels:
+    app.kubernetes.io/name: <app-name>
+data:
+  # Nginx configuration
+  nginx.conf: |
+    user nginx;
+    worker_processes auto;
+    error_log /var/log/nginx/error.log warn;
+    pid /var/run/nginx.pid;
+
+    events {
+      worker_connections 1024;
+    }
+
+    http {
+      include /etc/nginx/mime.types;
+      default_type application/octet-stream;
+
+      log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+      access_log /var/log/nginx/access.log main;
+      sendfile on;
+      keepalive_timeout 65;
+
+      include /etc/nginx/conf.d/*.conf;
+    }
+
+  # Default site configuration
+  default.conf: |
+    server {
+      listen 80;
+      server_name _;
+
+      location / {
+        proxy_pass http://backend:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+      }
+
+      location /health {
+        access_log off;
+        return 200 "healthy\n";
+      }
+    }
+
+---
+# Template 4: JSON Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <app-name>-json-config
+  namespace: <namespace>
+  labels:
+    app.kubernetes.io/name: <app-name>
+data:
+  config.json: |
+    {
+      "server": {
+        "port": 8080,
+        "host": "0.0.0.0",
+        "timeout": 30
+      },
+      "database": {
+        "host": "postgres.example.com",
+        "port": 5432,
+        "database": "myapp",
+        "pool": {
+          "min": 2,
+          "max": 20
+        }
+      },
+      "redis": {
+        "host": "redis.example.com",
+        "port": 6379,
+        "db": 0
+      },
+      "features": {
+        "auth": true,
+        "metrics": true,
+        "tracing": true
+      }
+    }
+
+---
+# Template 5: Environment-Specific Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <app-name>-prod-config
+  namespace: production
+  labels:
+    app.kubernetes.io/name: <app-name>
+    environment: production
+data:
+  APP_ENV: "production"
+  LOG_LEVEL: "warn"
+  DEBUG: "false"
+  RATE_LIMIT: "1000"
+  CACHE_TTL: "3600"
+  DATABASE_POOL_SIZE: "50"
+  FEATURE_FLAG_NEW_UI: "true"
+  FEATURE_FLAG_BETA: "false"
+
+---
+# Template 6: Script Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <app-name>-scripts
+  namespace: <namespace>
+  labels:
+    app.kubernetes.io/name: <app-name>
+data:
+  # Initialization script
+  init.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "Running initialization..."
+
+    # Wait for database
+    until nc -z $DATABASE_HOST $DATABASE_PORT; do
+      echo "Waiting for database..."
+      sleep 2
+    done
+
+    echo "Database is ready!"
+
+    # Run migrations
+    if [ "$RUN_MIGRATIONS" = "true" ]; then
+      echo "Running database migrations..."
+      ./migrate up
+    fi
+
+    echo "Initialization complete!"
+
+  # Health check script
+  healthcheck.sh: |
+    #!/bin/bash
+
+    # Check application health endpoint
+    response=$(curl -sf http://localhost:8080/health)
+
+    if [ $? -eq 0 ]; then
+      echo "Health check passed"
+      exit 0
+    else
+      echo "Health check failed"
+      exit 1
+    fi
+
+---
+# Template 7: Prometheus Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: prometheus
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'production'
+        region: 'us-west-2'
+
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+
+    rule_files:
+    - /etc/prometheus/rules/*.yml
+
+    scrape_configs:
+    - job_name: 'kubernetes-pods'
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        target_label: __address__
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+
+---
+# Usage Examples:
+#
+# 1. Mount as environment variables:
+#   envFrom:
+#   - configMapRef:
+#       name: <app-name>-config
+#
+# 2. Mount as files:
+#   volumeMounts:
+#   - name: config
+#     mountPath: /etc/app
+#   volumes:
+#   - name: config
+#     configMap:
+#       name: <app-name>-config-file
+#
+# 3. Mount specific keys as files:
+#   volumes:
+#   - name: nginx-config
+#     configMap:
+#       name: <app-name>-multi-config
+#       items:
+#       - key: nginx.conf
+#         path: nginx.conf
+#
+# 4. Use individual environment variables:
+#   env:
+#   - name: LOG_LEVEL
+#     valueFrom:
+#       configMapKeyRef:
+#         name: <app-name>-config
+#         key: LOG_LEVEL

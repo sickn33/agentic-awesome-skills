@@ -1,0 +1,61 @@
+Based on my knowledge of pytest and the issue description, I can analyze this problem:
+
+The issue is that in pytest 6.0.0rc0, dynamically adding an `xfail` marker using `request.node.add_marker(mark)` no longer ignores the test failure as it did in pytest 5.x.
+
+The hint mentions commit c9737ae914891027da5f0bd39494dd51a3b3f19f caused this regression. This commit was related to evaluating xfail markers at call time for the strict xfail feature.
+
+The issue is in how pytest evaluates the xfail marker. In the refactored code, the xfail evaluation was moved to happen earlier (at setup time or cached), so markers added dynamically during test execution are not properly detected.
+
+The fix needs to ensure that when checking for xfail status after a test failure, pytest re-evaluates the markers on the item to pick up any dynamically added xfail markers.
+
+Looking at the typical pytest structure for xfail handling in `src/_pytest/skipping.py`, the issue is that the xfail marker check was moved to happen once at setup time and cached, but dynamic markers added during test execution are not re-checked.
+
+The fix should re-evaluate xfail markers when processing the test result to detect dynamically added xfail markers.
+
+Here's the patch:
+
+--- a/src/_pytest/skipping.py
++++ b/src/_pytest/skipping.py
+@@ -104,8 +104,9 @@ def pytest_runtest_setup(item: Item) -> None:
+ 
+     item._store[xfailed_key] = xfailed
+ 
++
+ @hookimpl(hookwrapper=True)
+-def pytest_runtest_call(item: Item) -> Generator[None, None, None]:
++def pytest_runtest_makereport(item: Item, call: "CallInfo[None]") -> Generator[None, None, None]:
+     xfailed = item._store.get(xfailed_key, None)
+     if xfailed is None:
+         item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)
+
+Wait, let me reconsider. The actual fix is likely simpler - the xfail evaluation needs to happen again when processing the call result, not just at setup time. The cached value from setup time doesn't include dynamically added markers.
+
+--- a/src/_pytest/skipping.py
++++ b/src/_pytest/skipping.py
+@@ -247,6 +247,10 @@ def pytest_runtest_makereport(item: Item, call: CallInfo[None]):
+         rep.wasxfail = "reason: " + call.excinfo.value.msg
+         rep.outcome = "skipped"
+     elif item._store.get(xfailed_key, None):
++        xfailed = item._store.get(xfailed_key, None)
++        if xfailed is None:
++            xfailed = evaluate_xfail_marks(item)
++            item._store[xfailed_key] = xfailed
+         xfailed = item._store[xfailed_key]
+         if not item.config.option.runxfail:
+             if xfailed.wasxfail or xfailed.run:
+
+Actually, looking more carefully at the code flow, the issue is that `evaluate_xfail_marks` is only called once during setup, and the result is cached in `item._store[xfailed_key]`. When a marker is added dynamically during the test, this cached value doesn't reflect it.
+
+The fix should re-evaluate xfail marks in `pytest_runtest_makereport` when processing the "call" phase result, to pick up any dynamically added xfail markers.
+
+--- a/src/_pytest/skipping.py
++++ b/src/_pytest/skipping.py
+@@ -258,6 +258,8 @@ def pytest_runtest_makereport(item: Item, call: CallInfo[None]):
+             rep.outcome = "skipped"
+             rep.wasxfail = xfailed.reason
+     elif call.when == "call":
++        if item._store.get(xfailed_key, None) is None:
++            item._store[xfailed_key] = evaluate_xfail_marks(item)
+         xfailed = item._store.get(xfailed_key, None)
+         if xfailed and not xfailed.run:
+             rep.wasxfail = xfailed.reason

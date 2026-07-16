@@ -1,0 +1,14 @@
+Based on my knowledge of Django and this issue, the problem is in `django/views/static.py`. The `was_modified_since` function should handle an empty string for the `If-Modified-Since` header by returning `True` (resource was modified), but after commit `d6aff369ad3`, it raises an exception instead.
+
+The fix is to add a check for empty string at the beginning of the `was_modified_since` function. Here is the patch:
+
+--- a/django/views/static.py
++++ b/django/views/static.py
+@@ -75,6 +75,8 @@ def was_modified_since(header=None, mtime=0, size=0):
+     """
+     try:
++        if header is None or len(header) == 0:
++            raise ValueError
+         matches = re.match(r"^([^;]+)(; length=([0-9]+))?$", header,
+                            re.IGNORECASE)
+         header_mtime = parse_http_date(matches[1])

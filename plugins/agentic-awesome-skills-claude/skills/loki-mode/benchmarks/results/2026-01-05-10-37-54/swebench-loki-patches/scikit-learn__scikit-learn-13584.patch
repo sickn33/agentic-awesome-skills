@@ -1,0 +1,38 @@
+# scikit-learn__scikit-learn-13584
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I need to generate a patch for the scikit-learn repository. The bug is in `sklearn/utils/_pprint.py` in the `_changed_params` function. Let me generate the patch based on my knowledge of the scikit-learn codebase:
+
+```
+--- a/sklearn/utils/_pprint.py
++++ b/sklearn/utils/_pprint.py
+@@ -91,6 +91,17 @@ def _get_parameter_names_to_show(estimator, print_changed_only):
+     return sorted(params.keys())
+ 
+ 
++def _safe_eq(a, b):
++    """Safely check equality between two values, handling numpy arrays."""
++    try:
++        result = a == b
++        # Handle numpy arrays and other objects that return non-boolean results
++        if hasattr(result, '__iter__') and not isinstance(result, str):
++            return False
++        return bool(result)
++    except (ValueError, TypeError):
++        return False
++
++
+ def _changed_params(estimator):
+     """Return dict (name: value) of parameters that were given to estimator
+     with non-default values."""
+@@ -100,7 +111,7 @@ def _changed_params(estimator):
+     init_params = signature(estimator.__init__).parameters
+     init_params = {name: param.default for name, param in init_params.items()}
+     for k, v in params.items():
+-        if (v != init_params[k] and
++        if (not _safe_eq(v, init_params[k]) and
+                 not (is_scalar_nan(init_params[k]) and is_scalar_nan(v))):
+             filtered_params[k] = v
+     return filtered_params
+```

@@ -1,0 +1,170 @@
+name: Skill Review
+on:
+  pull_request:
+    paths: ['**/SKILL.md']
+
+permissions:
+  contents: read
+
+jobs:
+  review-state:
+    runs-on: ubuntu-latest
+    outputs:
+      configured: ${{ steps.state.outputs.configured }}
+    env:
+      TESSL_TOKEN_CONFIGURED: ${{ (secrets.TESSL_TOKEN != '' || secrets.TESSL_API_TOKEN != '') && 'true' || 'false' }}
+    steps:
+      - name: Resolve semantic review availability
+        id: state
+        run: echo "configured=${TESSL_TOKEN_CONFIGURED}" >> "$GITHUB_OUTPUT"
+
+  review-attempt:
+    needs: review-state
+    if: ${{ needs.review-state.outputs.configured == 'true' }}
+    runs-on: ubuntu-latest
+    outputs:
+      outcome: ${{ steps.outcome.outputs.outcome }}
+    env:
+      TESSL_REVIEW_THRESHOLD: '80'
+      TESSL_REVIEW_CACHE_VERSION: '1'
+      # Tessl workspaces are account-scoped; keep the repository variable as
+      # an override so a future workspace migration does not require code changes.
+      TESSL_WORKSPACE: ${{ vars.TESSL_WORKSPACE || 'antigravity-awesome-skills' }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout pull request content
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Checkout trusted base scripts
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted-base
+          persist-credentials: false
+      - name: Fingerprint changed skill content
+        id: plan
+        run: node trusted-base/tools/scripts/review_changed_skills.cjs --plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      - name: Restore successful Tessl review
+        id: review-cache
+        if: ${{ steps.plan.outputs.has-skills == 'true' }}
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .tmp/tessl-review-cache
+          key: tessl-review-v1-${{ steps.plan.outputs.fingerprint }}
+      - name: Set up Tessl
+        if: ${{ steps.plan.outputs.has-skills == 'true' && steps.review-cache.outputs.cache-hit != 'true' }}
+        uses: tesslio/setup-tessl@25ec223fc0da33b41b8044ff5ab2b85235f4f91e
+        with:
+          token: ${{ secrets.TESSL_TOKEN || secrets.TESSL_API_TOKEN }}
+      - name: Review changed skills
+        id: tessl-review
+        if: ${{ steps.plan.outputs.has-skills == 'true' && steps.review-cache.outputs.cache-hit != 'true' }}
+        run: |
+          set +e
+          node trusted-base/tools/scripts/review_changed_skills.cjs
+          status=$?
+          set -e
+
+          if [ "$status" -eq 0 ]; then
+            echo "result=reviewed" >> "$GITHUB_OUTPUT"
+          elif [ "$status" -eq 75 ]; then
+            echo "result=quota" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Tessl quota unavailable::A maintainer must review and attest to this exact head SHA before merge."
+          else
+            exit "$status"
+          fi
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+      - name: Mark successful review for reuse
+        if: ${{ steps.tessl-review.outputs.result == 'reviewed' }}
+        run: |
+          mkdir -p .tmp/tessl-review-cache
+          echo "${{ steps.plan.outputs.fingerprint }}" > .tmp/tessl-review-cache/fingerprint
+      - name: Save successful Tessl review
+        if: ${{ steps.tessl-review.outputs.result == 'reviewed' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .tmp/tessl-review-cache
+          key: tessl-review-v1-${{ steps.plan.outputs.fingerprint }}
+      - name: Resolve review outcome
+        id: outcome
+        env:
+          CACHE_HIT: ${{ steps.review-cache.outputs.cache-hit }}
+          HAS_SKILLS: ${{ steps.plan.outputs.has-skills }}
+          TESSL_RESULT: ${{ steps.tessl-review.outputs.result }}
+        run: |
+          if [ "$HAS_SKILLS" != "true" ] || [ "$CACHE_HIT" = "true" ] || [ "$TESSL_RESULT" = "reviewed" ]; then
+            echo "outcome=reviewed" >> "$GITHUB_OUTPUT"
+          elif [ "$TESSL_RESULT" = "quota" ]; then
+            echo "outcome=quota" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error title=Unresolved review state::The Tessl review did not produce a trustworthy outcome."
+            exit 1
+          fi
+
+  review:
+    needs: [review-state, review-attempt]
+    if: ${{ always() && needs.review-attempt.result == 'success' && needs.review-attempt.outputs.outcome == 'reviewed' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Confirm semantic review
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          echo "Semantic review passed for changed skill content at ${HEAD_SHA}."
+          {
+            echo "## Skill review passed"
+            echo
+            echo "The changed skill content passed Tessl review or reused an identical previously successful review."
+            echo
+            echo "- Head SHA: \`${HEAD_SHA}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  manual-review-required:
+    needs: [review-state, review-attempt]
+    if: ${{ always() && ((needs.review-state.outputs.configured != 'true' && github.event.pull_request.head.repo.full_name != github.repository) || needs.review-attempt.outputs.outcome == 'quota') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Record exact head requiring maintainer review
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REVIEW_OUTCOME: ${{ needs.review-attempt.outputs.outcome }}
+        run: |
+          if [ "$REVIEW_OUTCOME" = "quota" ]; then
+            reason="the Tessl credit quota is unavailable"
+          else
+            reason="repository secrets are unavailable to this fork pull request"
+          fi
+          echo "::warning title=Manual skill review required::Semantic review is unavailable because ${reason}. A maintainer must attest to the exact head SHA before merge: ${HEAD_SHA}."
+          {
+            echo "## Manual skill review required"
+            echo
+            echo "- Head SHA: \`${HEAD_SHA}\`"
+            echo "- Reason: ${reason}."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  missing-review-credentials:
+    needs: [review-state, review-attempt]
+    if: ${{ always() && needs.review-state.outputs.configured != 'true' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Require Tessl token for repository branches
+        run: |
+          echo "::error title=Missing Tessl token::Configure TESSL_TOKEN, or keep the legacy TESSL_API_TOKEN secret until the migration is complete."
+          exit 1

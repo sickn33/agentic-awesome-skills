@@ -1,0 +1,38 @@
+# sympy__sympy-17022
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+I need to generate a patch based on my knowledge of SymPy's structure without accessing the actual files. Based on the architect's analysis and my knowledge of SymPy's codebase, here's the patch:
+
+--- a/sympy/printing/pycode.py
++++ b/sympy/printing/pycode.py
+@@ -530,6 +530,14 @@ class NumPyPrinter(PythonCodePrinter):
+             return '{}({})'.format(self._module_format('numpy.average'),
+                                    self._print(expr.args[0]))
+ 
++    def _print_Identity(self, expr):
++        shape = expr.shape[0]
++        if shape.is_Integer:
++            return '{}({})'.format(self._module_format('numpy.eye'),
++                                   self._print(shape))
++        raise NotImplementedError("Symbolic dimensions in Identity cannot be "
++                                  "converted to numpy. Use a concrete integer "
++                                  "dimension instead.")
+ 
+     def _print_factorial(self, expr):
+         return '{}({})'.format(self._module_format('numpy.math.factorial'),
+@@ -570,6 +578,14 @@ class NumPyPrinter(PythonCodePrinter):
+     def _print_Determinant(self, expr):
+         return '{}({})'.format(self._module_format('numpy.linalg.det'),
+                                self._print(expr.args[0]))
++
++    def _print_ZeroMatrix(self, expr):
++        rows, cols = expr.shape
++        if rows.is_Integer and cols.is_Integer:
++            return '{}(({}, {}))'.format(self._module_format('numpy.zeros'),
++                                         self._print(rows), self._print(cols))
++        raise NotImplementedError("Symbolic dimensions in ZeroMatrix cannot be "
++                                  "converted to numpy.")
+ 
+ 
+ for k in NumPyPrinter._kf:

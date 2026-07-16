@@ -1,0 +1,35 @@
+Based on the GitHub issue from django/django repository, I need to create a patch for the `AutocompleteJsonView` class. Let me create the patch based on the issue description. The issue is requesting to refactor the `get()` method to extract the result serialization into a separate `serialize_result()` method.
+
+Looking at the issue description, I can see exactly what needs to be changed:
+
+1. The current code has the result dictionary construction inline in `get()`
+2. The fix is to extract it to a `serialize_result()` method
+
+Here's the patch:
+
+--- a/django/contrib/admin/views/autocomplete.py
++++ b/django/contrib/admin/views/autocomplete.py
+@@ -26,12 +26,20 @@ class AutocompleteJsonView(BaseListView):
+             raise PermissionDenied
+         self.object_list = self.get_queryset()
+         context = self.get_context_data()
+         return JsonResponse({
+             'results': [
+-                {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}
+-                for obj in context['object_list']
++                self.serialize_result(obj, to_field_name)
++                for obj in context['object_list']
+             ],
+             'pagination': {'more': context['page_obj'].has_next()},
+         })
+ 
++    def serialize_result(self, obj, to_field_name):
++        """
++        Convert the provided model object to a dictionary that is added to the
++        results list.
++        """
++        return {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}
++
+     def get_paginator(self, *args, **kwargs):
+         """Use the ModelAdmin's paginator."""
+         return self.model_admin.get_paginator(self.request, *args, **kwargs)

@@ -1,0 +1,39 @@
+Based on my analysis of the existing patches and the issue, I need to create a clean patch. The key insight is:
+
+1. `StaticFilesHandlerMixin` has a `get_response` method for sync handling
+2. `ASGIStaticFilesHandler` needs a `get_response_async` method 
+3. The async version should mirror the sync version's logic
+
+Looking at the sync `get_response` logic from the patch analysis, it:
+1. Checks if `_should_handle(request.path)` 
+2. If yes, tries to serve the file
+3. On Http404, returns error response
+4. Otherwise calls `super().get_response(request)`
+
+The async version needs to do the same but use `sync_to_async` for the `serve` call and call `super().get_response_async(request)`.
+
+Here's the clean unified diff patch:
+
+--- a/django/contrib/staticfiles/handlers.py
++++ b/django/contrib/staticfiles/handlers.py
+@@ -1,5 +1,6 @@
+ from urllib.parse import urlparse
+ from urllib.request import url2pathname
++from asgiref.sync import sync_to_async
+ 
+ from django.conf import settings
+ from django.contrib.staticfiles import utils
+@@ -43,6 +44,13 @@ class StaticFilesHandlerMixin:
+             return response
+         return super().get_response(request)
+ 
++    async def get_response_async(self, request):
++        if self._should_handle(request.path):
++            try:
++                return await sync_to_async(self.serve, thread_sensitive=False)(request)
++            except Http404 as e:
++                return await sync_to_async(response_for_exception, thread_sensitive=False)(request, e)
++        return await super().get_response_async(request)
+ 
+ class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):
+     """

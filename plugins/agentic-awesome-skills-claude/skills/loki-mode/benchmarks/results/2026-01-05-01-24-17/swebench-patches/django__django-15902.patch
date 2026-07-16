@@ -1,0 +1,15 @@
+This appears to be a task about creating a patch for the Django repository. Based on the issue description and hint provided, I need to create a patch that adds `template_name = "django/forms/div.html"` to the `ManagementForm` class in `django/forms/formsets.py` to avoid the deprecation warning.
+
+Based on the issue description and the hint provided, here's the patch:
+
+--- a/django/forms/formsets.py
++++ b/django/forms/formsets.py
+@@ -31,6 +31,8 @@ class ManagementForm(Form):
+     new forms via JavaScript, you should increment the count field of this form
+     as well.
+     """
++
++    template_name = "django/forms/div.html"  # RemovedInDjango50Warning.
+ 
+     TOTAL_FORMS = IntegerField(widget=HiddenInput)
+     INITIAL_FORMS = IntegerField(widget=HiddenInput)

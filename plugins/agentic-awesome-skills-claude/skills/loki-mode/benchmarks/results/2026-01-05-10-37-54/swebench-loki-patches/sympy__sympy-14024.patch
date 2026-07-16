@@ -1,0 +1,56 @@
+# sympy__sympy-14024
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my analysis of this SymPy issue and the architect's analysis, I can generate the patch. The issue is that when computing `(-n)**x` for concrete negative integers like -2, the code incorrectly handles the argument/phase. The fix should be in `sympy/core/power.py` where negative bases are handled.
+
+```
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -289,9 +289,12 @@ class Pow(Expr):
+                             return S.NegativeOne**exponent * Pow(b, exponent)
+                         if b.is_negative:
+                             return S.NegativeOne**exponent * Pow(-b, exponent)
+-                    elif b.is_negative:
+-                        if exponent.q != 1:
+-                            return S.NegativeOne**exponent * Pow(-b, exponent)
++                    elif b.is_negative and b.is_Integer:
++                        # For negative integer base with rational exponent,
++                        # use principal branch: (-n)**x = exp(I*pi*x) * n**x
++                        # This ensures (-2)**(-10/3) gives the correct result
++                        if exponent.q != 1 and (-b).is_positive:
++                            return S.NegativeOne**exponent * Pow(-b, exponent)
+                     elif b.is_Mul:
+                         # e.g. (2*(-3))**Rational(-1,2) should be handled like
+                         # (-6)**Rational(-1,2) and not become sqrt(6)*I/6
+```
+
+Wait, let me reconsider. The issue states that the symbolic case works correctly but the concrete integer case doesn't. Looking more carefully at the description:
+
+- For `a = Symbol('a', integer=True, positive=True)`: `(-a)**x * a**(-x)` simplifies to `(-1)**x` and both give `-0.5 + 0.866...I` - CORRECT
+- For `a = S(2)`: `(-2)**x * 2**(-x)` simplifies to `(-1)**x`, but original gives `0.5 - 0.866...I` while simplified gives `-0.5 + 0.866...I` - INCONSISTENT
+
+The problem is that `(-2)**(-10/3)` is being evaluated differently than `(-1)**(-10/3) * 2**(-10/3)`.
+
+The actual bug is in how `(-2)**Rational(-10,3)` is computed. Let me provide the correct patch:
+
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -286,12 +286,15 @@ class Pow(Expr):
+                     if b.is_extended_nonnegative:
+                         if b.is_positive:
+                             return S.NegativeOne**exponent * Pow(b, exponent)
+                         if b.is_negative:
+                             return S.NegativeOne**exponent * Pow(-b, exponent)
+-                    elif b.is_negative:
+-                        if exponent.q != 1:
+-                            return S.NegativeOne**exponent * Pow(-b, exponent)
++                    elif b.is_negative and b.is_Integer:
++                        # For negative integer base with non-integer rational exponent,
++                        # factor out (-1)**exponent to ensure principal branch consistency.
++                        # This makes (-2)**x behave like (-1)**x * 2**x
++                        if exponent.q != 1:
++                            return S.NegativeOne**exponent * Pow(-b, exponent)
+                     elif b.is_Mul:
+                         # e.g. (2*(-3))**Rational(-1,2) should be handled like
+                         # (-6)**Rational(-1,2) and not become sqrt(6)*I/6

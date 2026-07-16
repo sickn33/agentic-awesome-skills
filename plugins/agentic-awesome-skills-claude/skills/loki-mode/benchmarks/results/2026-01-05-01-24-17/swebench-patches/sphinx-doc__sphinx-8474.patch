@@ -1,0 +1,73 @@
+Based on the issue description and hints, I have enough information to understand the problem and create a fix. The issue is:
+
+1. In Sphinx v3.3, commit `66dda1fc50249e9da62e79380251d8795b8e36df` changed the behavior so that tables without captions are no longer assigned numbers in `env.toc_fignumbers`
+2. This causes "WARNING: no number is assigned for table" warnings when using `numref` to reference tables without captions
+3. The problem is in the figure numbering logic that skips nodes without captions
+
+From the discussion, the fix involves the `assign_figure_numbers` function which iterates through document nodes and assigns figure numbers. The problematic change added a check that skips nodes without captions when assigning numbers.
+
+Looking at the issue hints, the key insight is:
+- The `id` of the table isn't properly making it into `env.toc_fignumbers` 
+- Instead of using the user-defined `:name: mylabel`, it uses `id3` (auto-generated)
+- This is because the code that assigns figure numbers is using the wrong node ID
+
+The fix should ensure that:
+1. Tables (and other enumerable nodes) get their numbers assigned using the correct node ID (the user-defined name/label)
+2. Even nodes without captions should be able to get numbers assigned
+
+Based on the Sphinx codebase structure, the relevant file is `sphinx/environment/collectors/toctree.py` which contains the `TocTreeCollector` class and `assign_figure_numbers` function.
+
+Let me create the patch based on my understanding of the issue:
+
+--- a/sphinx/environment/collectors/toctree.py
++++ b/sphinx/environment/collectors/toctree.py
+@@ -213,7 +213,7 @@ class TocTreeCollector(EnvironmentCollector):
+                 if isinstance(subnode, nodes.caption):
+                     sectname = clean_astext(subnode)
+                     break
+-            else:
++            if not sectname:
+                 continue
+ 
+             fignumber = figtype_names.setdefault(docname, {})
+
+Wait, let me reconsider. The issue description mentions that the problem is with how the node ID is being registered. Looking at the hints more carefully:
+
+> I digged into this a little bit more and it seems like the `id` of the table isn't properly making it into `env.toc_fignumbers`. If I set `:name: mylabel`, regardless the I see something like this in `env.toc_fignumbers`
+> `'pagename': {'table': {'id3': (1,)},`
+
+This suggests the issue is that when a table has no caption, the code looks for the ID in the wrong place or skips the table entirely.
+
+The actual fix based on the discussion should allow tables without captions to still be numbered. The key change is that the code should not skip nodes without captions entirely (using `else: continue` on the for loop), but should still process them and assign numbers.
+
+Here's my understanding of the problematic code pattern:
+
+```python
+for subnode in node:
+    if isinstance(subnode, nodes.caption):
+        sectname = clean_astext(subnode)
+        break
+else:
+    continue  # This skips tables without captions entirely!
+```
+
+The fix should be to not skip the entire node when there's no caption, but instead just handle the case where there's no caption text:
+
+```python
+for subnode in node:
+    if isinstance(subnode, nodes.caption):
+        sectname = clean_astext(subnode)
+        break
+# Remove the else: continue, so tables without captions still get numbered
+```
+
+--- a/sphinx/environment/collectors/toctree.py
++++ b/sphinx/environment/collectors/toctree.py
+@@ -213,8 +213,6 @@ class TocTreeCollector(EnvironmentCollector):
+                 if isinstance(subnode, nodes.caption):
+                     sectname = clean_astext(subnode)
+                     break
+-            else:
+-                continue
+ 
+             fignumber = figtype_names.setdefault(docname, {})

@@ -1,0 +1,24 @@
+Based on my knowledge of the pytest codebase and the issue description, I can provide the patch. The issue is in the `_pytest/assertion/util.py` file where the sequence comparison generates the "Right contains more items, first extra item: X" message. For byte strings, this shows the integer value (ASCII ordinal) rather than something more meaningful.
+
+The fix should skip the "contains more items" messaging for bytes objects, as suggested in the hint. Here's the patch:
+
+--- a/src/_pytest/assertion/util.py
++++ b/src/_pytest/assertion/util.py
+@@ -258,11 +258,13 @@ def _compare_eq_sequence(
+     explanation: List[str] = []
+     len_left = len(left)
+     len_right = len(right)
+     for i in range(min(len_left, len_right)):
+         if left[i] != right[i]:
+             explanation += [
+                 f"At index {i} diff: {left[i]!r} != {right[i]!r}"
+             ]
+             break
+     len_diff = len_right - len_left
+-    if len_diff > 0:
++    if len_diff > 0 and not isinstance(left, bytes):
+         explanation.append(f"Right contains {len_diff} more item{'s' if len_diff > 1 else ''}, first extra item: {right[len_left]!r}")
+-    elif len_diff < 0:
++    elif len_diff < 0 and not isinstance(right, bytes):
+         explanation.append(f"Left contains {-len_diff} more item{'s' if len_diff < -1 else ''}, first extra item: {left[len_right]!r}")
+     return explanation

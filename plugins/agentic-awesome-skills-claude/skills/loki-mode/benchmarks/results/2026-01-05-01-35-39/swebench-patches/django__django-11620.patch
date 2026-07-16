@@ -1,0 +1,19 @@
+Based on the issue description and hints, I can construct the fix. The issue states:
+
+1. In `django/views/debug.py`, the `technical_404_response` function performs URL resolving at line ~482
+2. It only catches `Resolver404` but should catch `Http404` 
+3. When `Http404` is raised in a path converter's `to_python` method, the URL resolving in `technical_404_response` raises it again, causing a 500 error instead of showing the technical 404 page
+
+The fix is to catch `Http404` instead of `Resolver404` in the `technical_404_response` function. Here's the patch:
+
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -475,7 +475,7 @@ def technical_404_response(request, exception):
+     try:
+         tried = resolver.resolve_error_handler(404)[1]
+         resolver.resolve('/')
+-    except Resolver404 as e:
++    except Http404 as e:
+         tried = e.args[0].get('tried', []) if e.args else []
+     except Http404:
+         tried = []

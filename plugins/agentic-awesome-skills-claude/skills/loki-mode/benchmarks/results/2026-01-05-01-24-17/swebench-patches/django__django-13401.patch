@@ -1,0 +1,30 @@
+Based on my knowledge of Django's source code and the issue description, I can create the patch. The Field class is in `django/db/models/fields/__init__.py` and the comparison methods use `creation_counter`. The fix needs to incorporate `self.model` into the comparison.
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -516,17 +516,21 @@ class Field(RegisterLookupMixin):
+     def __eq__(self, other):
+         # Needed for @total_ordering
+         if isinstance(other, Field):
+-            return self.creation_counter == other.creation_counter
++            return (
++                self.creation_counter == other.creation_counter and
++                self.model == other.model
++            )
+         return NotImplemented
+ 
+     def __lt__(self, other):
+         # This is needed because bisect does not take a comparison function.
+         if isinstance(other, Field):
+-            return self.creation_counter < other.creation_counter
++            if self.creation_counter == other.creation_counter:
++                return (self.model._meta.app_label, self.model._meta.model_name) < (other.model._meta.app_label, other.model._meta.model_name)
++            return self.creation_counter < other.creation_counter
+         return NotImplemented
+ 
+     def __hash__(self):
+-        return hash(self.creation_counter)
++        return hash((self.creation_counter, self.model))
+ 
+     def __deepcopy__(self, memodict):
+         # We don't have to deepcopy very much here, since most things are not

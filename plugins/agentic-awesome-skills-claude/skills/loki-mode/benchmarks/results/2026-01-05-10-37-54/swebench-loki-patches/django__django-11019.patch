@@ -1,0 +1,158 @@
+# django__django-11019
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I can generate the patch. The issue is in Django's `django/forms/widgets.py` file where the `merge()` method performs sequential pairwise merging which creates false ordering constraints.
+
+```
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -58,29 +58,43 @@ class Media:
+             return self._css
+         return self._css_lists[0]
+ 
++    def _merge(self, *lists):
++        """
++        Merge lists while preserving order and dependencies.
++        
++        Each list defines ordering constraints: each item depends on its
++        predecessor. We build a dependency graph and traverse it to produce
++        the final order.
++        """
++        dependency_graph = {}
++        all_items = []
++        
++        for lst in lists:
++            for i, item in enumerate(lst):
++                if item not in dependency_graph:
++                    dependency_graph[item] = set()
++                    all_items.append(item)
++                if i > 0:
++                    dependency_graph[item].add(lst[i - 1])
++        
++        result = []
++        while all_items:
++            # Find items with no unmet dependencies
++            for item in all_items:
++                if dependency_graph[item] <= set(result):
++                    result.append(item)
++                    all_items.remove(item)
++                    break
++            else:
++                # Circular dependency - warn and add remaining items
++                warnings.warn(
++                    'Detected circular dependency in Media files: ' +
++                    ', '.join(all_items),
++                    MediaOrderConflictWarning,
++                )
++                result.extend(all_items)
++                break
++        return result
++
+     @property
+     def _js(self):
+         if self._js_lists:
+-            return self.merge(*self._js_lists)
++            return self._merge(*self._js_lists)
+         return []
+ 
+-    @staticmethod
+-    def merge(*lists):
+-        """
+-        Merge lists while trying to keep the relative order of the elements.
+-        Warn if the lists have the same elements in a different relative order.
+-
+-        For static assets it can be important to have them included in the DOM
+-        in a certain order. In JavaScript you may not be able to reference a
+-        global or in CSS you might want to override a style.
+-        """
+-        dependency_graph = defaultdict(set)
+-        all_items = OrderedSet()
+-        for list_ in filter(None, lists):
+-            head = list_[0]
+-            # The first items depend on nothing but have to be part of the
+-            # dependency graph to be included in the result.
+-            dependency_graph.setdefault(head, set())
+-            for item in list_:
+-                all_items.add(item)
+-                # No self dependencies
+-                if head != item:
+-                    dependency_graph[item].add(head)
+-                head = item
+-        try:
+-            return stable_topological_sort(all_items, dependency_graph)
+-        except CyclicDependencyError:
+-            warnings.warn(
+-                'Detected duplicate Media files in an opposite order:\n'
+-                + '\n'.join(all_items),
+-                MediaOrderConflictWarning,
+-            )
+-            return list(all_items)
+-
+     def __add__(self, other):
+         combined = Media()
+         combined._css_lists = self._css_lists + other._css_lists
+```
+
+Wait, I need to look at the actual Django code more carefully. Let me reconsider based on the issue and provide a proper patch:
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -58,40 +58,50 @@ class Media:
+             return self._css
+         return self._css_lists[0]
+ 
+-    @property
+-    def _js(self):
+-        if self._js_lists:
+-            return self.merge(*self._js_lists)
+-        return []
+-
+     @staticmethod
+     def merge(*lists):
+         """
+         Merge lists while trying to keep the relative order of the elements.
+         Warn if the lists have the same elements in a different relative order.
+ 
+         For static assets it can be important to have them included in the DOM
+         in a certain order. In JavaScript you may not be able to reference a
+         global or in CSS you might want to override a style.
+         """
+         dependency_graph = defaultdict(set)
+         all_items = OrderedSet()
+         for list_ in filter(None, lists):
+-            head = list_[0]
+-            # The first items depend on nothing but have to be part of the
+-            # dependency graph to be included in the result.
+-            dependency_graph.setdefault(head, set())
+-            for item in list_:
++            for i, item in enumerate(list_):
+                 all_items.add(item)
+-                # No self dependencies
+-                if head != item:
+-                    dependency_graph[item].add(head)
+-                head = item
++                # Each item depends only on its immediate predecessor in the
++                # same list, not on all previous items. This avoids creating
++                # false dependencies when merging intermediate results.
++                if i > 0:
++                    dependency_graph[item].add(list_[i - 1])
+         try:
+             return stable_topological_sort(all_items, dependency_graph)
+         except CyclicDependencyError:
+             warnings.warn(
+                 'Detected duplicate Media files in an opposite order:\n'
+                 + '\n'.join(all_items),
+                 MediaOrderConflictWarning,
+             )
+             return list(all_items)
+ 
++    @property
++    def _js(self):
++        if self._js_lists:
++            return self.merge(*self._js_lists)
++        return []
++
+     def __add__(self, other):
+         combined = Media()
+         combined._css_lists = self._css_lists + other._css_lists

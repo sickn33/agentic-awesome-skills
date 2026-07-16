@@ -1,0 +1,38 @@
+Based on the GitHub issue discussion, I understand the problem and the proposed solution. The issue is about improving the error message when `pytest.skip()` is called outside of a test without `allow_module_level=True`. The maintainers agreed to improve the message to be clearer.
+
+The current error message according to the issue is:
+> Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}.
+
+The agreed-upon improved message from the maintainers:
+> Using pytest.skip outside of a test will skip the entire module, if that's your intention pass `allow_module_level=True`. If you want to skip a specific test or entire class, use the @pytest.mark.skip or @pytest.mark.skipif decorators.
+
+Based on my knowledge of the pytest codebase, the relevant code is in `src/_pytest/outcomes.py`. Here's the patch:
+
+--- a/src/_pytest/outcomes.py
++++ b/src/_pytest/outcomes.py
+@@ -123,11 +123,10 @@ def skip(msg: str = "", *, allow_module_level: bool = False) -> "NoReturn":
+     __tracebackhide__ = True
+     raise Skipped(msg=msg, allow_module_level=allow_module_level)
+ 
+ 
+ skip.Exception = Skipped  # type: ignore[attr-defined]
+ 
+ 
+ def fail(msg: str = "", pytrace: bool = True) -> "NoReturn":
+     """Explicitly fail an executing test with the given message.
+ 
+--- a/src/_pytest/python.py
++++ b/src/_pytest/python.py
+@@ -592,9 +592,10 @@ class Module(nodes.File, PyCollector):
+                 if e.allow_module_level:
+                     raise
+                 raise self.CollectError(
+-                    "Using pytest.skip outside of a test is not allowed. "
+-                    "To decorate a test function, use the @pytest.mark.skip "
+-                    "or @pytest.mark.skipif decorators instead, and to skip a "
+-                    "module use `pytestmark = pytest.mark.{skip,skipif}`."
++                    "Using pytest.skip outside of a test will skip the entire module. "
++                    "If that's your intention, pass `allow_module_level=True`. "
++                    "If you want to skip a specific test or an entire class, "
++                    "use the @pytest.mark.skip or @pytest.mark.skipif decorators."
+                 ) from e

@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-automation-builder",
+  "version": "14.5.0",
+  "description": "Install the \"AAS Automation Builder\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-automation-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Automation Builder",
+    "shortDescription": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n.",
+    "longDescription": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n. Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows. Recommended for: Ops teams, Automation builders, Teams connecting SaaS workflows. Not for: One-off copywriting tasks, Deep infrastructure provisioning. Covers Workflow Automation, MCP Builder, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to map this manual workflow into a reliable automation with failure handling.",
+      "Use this plugin to design an MCP-backed automation and the tool schemas it needs.",
+      "Use this plugin to review this automation for idempotency, permissions, expressions, and observability gaps."
+    ]
+  }
+}

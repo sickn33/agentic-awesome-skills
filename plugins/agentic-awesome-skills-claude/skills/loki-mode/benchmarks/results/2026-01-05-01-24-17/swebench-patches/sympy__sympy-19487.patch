@@ -1,0 +1,23 @@
+Based on my knowledge of the sympy codebase and the issue description, I can provide the patch to add the `_eval_rewrite_as_Abs` method to the `sign` class. The issue asks for `sign(x).rewrite(Abs)` to return a `Piecewise` expression that handles the zero case properly.
+
+Let me create the patch based on the standard sympy code structure:
+
+--- a/sympy/functions/elementary/complexes.py
++++ b/sympy/functions/elementary/complexes.py
+@@ -9,6 +9,7 @@
+ from sympy.core.logic import fuzzy_bool, fuzzy_not
+ from sympy.core.mul import Mul
+ from sympy.core.relational import Eq
++from sympy.functions.elementary.piecewise import Piecewise
+ 
+ ###############################################################################
+ ######################### REAL and IMAGINARY PARTS ############################
+@@ -391,6 +392,12 @@ def _eval_rewrite_as_Heaviside(self, arg, **kwargs):
+             return Heaviside(arg, H0=S(1)/2) * 2 - 1
+         return Heaviside(arg, H0=S.Half) - Heaviside(-arg, H0=S.Half)
+ 
++    def _eval_rewrite_as_Abs(self, arg, **kwargs):
++        return Piecewise((0, Eq(arg, 0)), (arg / Abs(arg), True))
++
+     def _eval_simplify(self, **kwargs):
+         return self.func(factor_terms(self.args[0]))  # XXX include doit?

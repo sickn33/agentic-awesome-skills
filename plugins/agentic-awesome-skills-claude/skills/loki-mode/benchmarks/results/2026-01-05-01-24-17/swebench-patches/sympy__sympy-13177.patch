@@ -1,0 +1,36 @@
+This is not the sympy repository. This issue is about the sympy/sympy repository. Based on the problem statement, I need to create a patch for the Mod function's eval logic. Let me understand the issue:
+
+The problem is in the `Mod` function's eval method where it incorrectly returns 0 for `Mod(x**2, x)` when `x` is not an integer. The current code:
+```python
+if (p == q or p == -q or
+        p.is_Pow and p.exp.is_Integer and p.base == q or
+        p.is_integer and q == 1):
+    return S.Zero
+```
+
+The fix should:
+1. Check `p.is_Pow` first (to avoid AttributeError on `p.base`)
+2. Check that `q.is_integer` (the base must be an integer)
+3. Check that `p.exp.is_positive` (the exponent must be positive)
+
+Based on the hints, the correct fix is:
+```python
+if (p == q or p == -q or
+        p.is_Pow and p.base == q and q.is_integer and p.exp.is_Integer and p.exp.is_positive or
+        p.is_integer and q == 1):
+    return S.Zero
+```
+
+The file would be in `sympy/core/mod.py`. Let me produce the patch:
+
+--- a/sympy/core/mod.py
++++ b/sympy/core/mod.py
+@@ -123,7 +123,8 @@ def doit(p, q):
+             return p
+ 
+         if (p == q or p == -q or
+-                p.is_Pow and p.exp.is_Integer and p.base == q or
++                p.is_Pow and p.base == q and q.is_integer and
++                p.exp.is_Integer and p.exp.is_positive or
+                 p.is_integer and q == 1):
+             return S.Zero

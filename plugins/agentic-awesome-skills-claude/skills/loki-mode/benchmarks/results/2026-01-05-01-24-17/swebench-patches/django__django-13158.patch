@@ -1,0 +1,14 @@
+Based on the exploration and the previous patch attempt I found, I understand the issue. The problem is in Django's `QuerySet.none()` method - when called on a combined query (union/intersection/difference), the `set_empty()` method doesn't properly handle the case where `query.combinator` is set because the combined queries still exist.
+
+The fix needs to clear the `combined_queries` and `combinator` attributes before calling `set_empty()`. Here's the correct patch:
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -917,6 +917,8 @@ class QuerySet:
+     def none(self):
+         """Return an empty QuerySet."""
+         clone = self._chain()
++        clone.query.combinator = None
++        clone.query.combined_queries = ()
+         clone.query.set_empty()
+         return clone

@@ -1,0 +1,35 @@
+This file is not a proper patch - it contains explanation text. I need to understand the actual scikit-learn codebase structure to generate the correct patch. Based on the issue description and hints, let me create the proper patch:
+
+The bug is that when `n_init > 1`:
+1. The `fit` method runs multiple initialization trials
+2. After all trials, it restores the best parameters via `_set_parameters(best_params)`
+3. However, `fit_predict` returns labels from the last E-step call during the iterations, not from the best model
+
+The fix needs to:
+1. Move the computation of labels (via `_e_step` or `predict`) to AFTER `_set_parameters(best_params)` is called
+2. Or simply override `fit_predict` to return `self.fit(X, y).predict(X)`
+
+Based on the issue and hints, here's the correct minimal patch:
+
+--- a/sklearn/mixture/base.py
++++ b/sklearn/mixture/base.py
+@@ -257,11 +257,11 @@ class BaseMixture(DensityMixin, BaseEstimator, metaclass=ABCMeta):
+                     best_params = self._get_parameters()
+                     best_n_iter = n_iter
+ 
+-        # Always do a final e-step to guarantee that the labels returned by
+-        # fit_predict(X) are always consistent with fit(X).predict(X)
+-        # for any value of max_iter and tol (and any curved geometry fitting
+-        # included in the model).
+-        _, log_resp = self._e_step(X)
+-
+         self._set_parameters(best_params)
+         self.n_iter_ = best_n_iter
++        self.lower_bound_ = max_lower_bound
++
++        # Always do a final e-step to guarantee that the labels returned by
++        # fit_predict(X) are always consistent with fit(X).predict(X)
++        # for any value of max_iter and tol (and any random initialization).
++        _, log_resp = self._e_step(X)
+ 
+         return log_resp.argmax(axis=1)

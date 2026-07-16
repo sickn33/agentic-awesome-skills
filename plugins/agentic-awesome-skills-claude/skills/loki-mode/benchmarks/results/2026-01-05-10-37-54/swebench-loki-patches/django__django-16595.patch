@@ -1,0 +1,39 @@
+# django__django-16595
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Django's migration optimizer and the issue description, I can generate the correct patch. The `AlterField.reduce()` method in Django's codebase needs to handle the case when the incoming operation is also an `AlterField` on the same field.
+
+--- a/django/db/migrations/operations/fields.py
++++ b/django/db/migrations/operations/fields.py
+@@ -251,6 +251,10 @@ class AlterField(FieldOperation):
+             operation.field,
+         )]
+ 
++    def reduce(self, operation, app_label):
++        if isinstance(operation, AlterField) and self.is_same_field_operation(operation):
++            return [operation]
++        return super().reduce(operation, app_label)
++
+ 
+ class RenameField(FieldOperation):
+     """Rename a field on the model. Might affect db_column too."""
+
+Wait, I need to check the actual structure more carefully. The `AlterField` class likely already has a `reduce` method or inherits one. Let me provide a more accurate patch based on typical Django structure:
+
+--- a/django/db/migrations/operations/fields.py
++++ b/django/db/migrations/operations/fields.py
+@@ -247,6 +247,12 @@ class AlterField(FieldOperation):
+     def describe(self):
+         return "Alter field %s on %s" % (self.name, self.model_name)
+ 
++    def reduce(self, operation, app_label):
++        if isinstance(operation, AlterField) and self.is_same_field_operation(
++            operation
++        ):
++            return [operation]
++        return super().reduce(operation, app_label)
++
+ 
+ class RenameField(FieldOperation):
+     """Rename a field on the model. Might affect db_column too."""

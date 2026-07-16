@@ -1,0 +1,17 @@
+# django__django-15902
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/forms/formsets.py
++++ b/django/forms/formsets.py
+@@ -26,6 +26,10 @@ class ManagementForm(Form):
+     cleaned_data when the form is valid. See also
+     total_form_count and initial_form_count.
+     """
++    # Use explicit template_name to avoid deprecation warning. The specific
++    # template is irrelevant since ManagementForm only renders hidden inputs.
++    template_name = "django/forms/div.html"
++
+     TOTAL_FORMS = IntegerField(widget=HiddenInput)
+     INITIAL_FORMS = IntegerField(widget=HiddenInput)
+     # MIN_NUM_FORM_COUNT and MAX_NUM_FORM_COUNT are output with the rest of the

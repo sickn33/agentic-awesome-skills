@@ -1,0 +1,17 @@
+# sympy__sympy-13437
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my analysis of the issue and the SymPy codebase patterns, here is the patch:
+
+--- a/sympy/functions/combinatorial/numbers.py
++++ b/sympy/functions/combinatorial/numbers.py
+@@ -436,6 +436,9 @@ class bell(Function):
+     @classmethod
+     def eval(cls, n, k_sym=None, symbols=None):
++        if n is S.Infinity:
++            return S.Infinity
++
+         if n.is_Integer and n.is_nonnegative:
+             if k_sym is None:
+                 return Integer(cls._bell(int(n)))

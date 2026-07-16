@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-mobile-app-builder",
+  "version": "14.5.0",
+  "description": "Install the \"AAS Mobile App Builder\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-mobile-app-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Mobile App Builder",
+    "shortDescription": "Build and ship Expo, React Native, Flutter, iOS, and multi-platform apps with CI, deployment, and store readiness.",
+    "longDescription": "Build and ship Expo, React Native, Flutter, iOS, and multi-platform apps with CI, deployment, and store readiness. Mobile development has a full lifecycle in the catalog: architecture, Expo routes, distribution, CI, native platforms, and store optimization. Recommended for: Mobile teams, Expo and React Native builders, Cross-platform app maintainers. Not for: Desktop-only apps, Backend-only API services. Covers Mobile Developer, React Native Architecture, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to review this Expo app architecture, CI, deployment, and store-readiness risks.",
+      "Use this plugin to plan a React Native feature from routing and state to test and release.",
+      "Use this plugin to compare Flutter, React Native, native iOS, and multi-platform tradeoffs for this app."
+    ]
+  }
+}

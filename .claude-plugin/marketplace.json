@@ -1,0 +1,1193 @@
+{
+  "name": "agentic-awesome-skills",
+  "owner": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "metadata": {
+    "description": "Claude Code marketplace entries for the plugin-safe Agentic Awesome Skills library and its compatible editorial bundles.",
+    "version": "14.5.0"
+  },
+  "plugins": [
+    {
+      "name": "agentic-awesome-skills",
+      "version": "14.5.0",
+      "description": "Expose the plugin-safe Claude Code subset of Agentic Awesome Skills through a single marketplace entry.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "agentic-skills",
+        "plugin",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-awesome-skills-claude"
+    },
+    {
+      "name": "agentic-bundle-essentials",
+      "version": "14.5.0",
+      "description": "Install the \"Essentials\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "essentials",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-essentials"
+    },
+    {
+      "name": "agentic-bundle-security-engineer",
+      "version": "14.5.0",
+      "description": "Install the \"Security Engineer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "security-engineer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-security-engineer"
+    },
+    {
+      "name": "agentic-bundle-security-developer",
+      "version": "14.5.0",
+      "description": "Install the \"Security Developer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "security-developer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-security-developer"
+    },
+    {
+      "name": "agentic-bundle-web-wizard",
+      "version": "14.5.0",
+      "description": "Install the \"Web Wizard\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "web-wizard",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-web-wizard"
+    },
+    {
+      "name": "agentic-bundle-web-designer",
+      "version": "14.5.0",
+      "description": "Install the \"Web Designer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "web-designer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-web-designer"
+    },
+    {
+      "name": "agentic-bundle-full-stack-developer",
+      "version": "14.5.0",
+      "description": "Install the \"Full-Stack Developer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "full-stack-developer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-full-stack-developer"
+    },
+    {
+      "name": "agentic-bundle-agent-architect",
+      "version": "14.5.0",
+      "description": "Install the \"Agent Architect\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "agent-architect",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-agent-architect"
+    },
+    {
+      "name": "agentic-bundle-llm-application-developer",
+      "version": "14.5.0",
+      "description": "Install the \"LLM Application Developer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "llm-application-developer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-llm-application-developer"
+    },
+    {
+      "name": "agentic-bundle-indie-game-dev",
+      "version": "14.5.0",
+      "description": "Install the \"Indie Game Dev\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "indie-game-dev",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-indie-game-dev"
+    },
+    {
+      "name": "agentic-bundle-python-pro",
+      "version": "14.5.0",
+      "description": "Install the \"Python Pro\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "python-pro",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-python-pro"
+    },
+    {
+      "name": "agentic-bundle-typescript-javascript",
+      "version": "14.5.0",
+      "description": "Install the \"TypeScript & JavaScript\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "typescript-javascript",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-typescript-javascript"
+    },
+    {
+      "name": "agentic-bundle-systems-programming",
+      "version": "14.5.0",
+      "description": "Install the \"Systems Programming\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "systems-programming",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-systems-programming"
+    },
+    {
+      "name": "agentic-bundle-startup-founder",
+      "version": "14.5.0",
+      "description": "Install the \"Startup Founder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "startup-founder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-startup-founder"
+    },
+    {
+      "name": "agentic-bundle-business-analyst",
+      "version": "14.5.0",
+      "description": "Install the \"Business Analyst\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "business-analyst",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-business-analyst"
+    },
+    {
+      "name": "agentic-bundle-marketing-growth",
+      "version": "14.5.0",
+      "description": "Install the \"Marketing & Growth\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "marketing-growth",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-marketing-growth"
+    },
+    {
+      "name": "agentic-bundle-devops-cloud",
+      "version": "14.5.0",
+      "description": "Install the \"DevOps & Cloud\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "devops-cloud",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-devops-cloud"
+    },
+    {
+      "name": "agentic-bundle-observability-monitoring",
+      "version": "14.5.0",
+      "description": "Install the \"Observability & Monitoring\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "observability-monitoring",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-observability-monitoring"
+    },
+    {
+      "name": "agentic-bundle-data-analytics",
+      "version": "14.5.0",
+      "description": "Install the \"Data & Analytics\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "data-analytics",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-data-analytics"
+    },
+    {
+      "name": "agentic-bundle-data-engineering",
+      "version": "14.5.0",
+      "description": "Install the \"Data Engineering\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "data-engineering",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-data-engineering"
+    },
+    {
+      "name": "agentic-bundle-creative-director",
+      "version": "14.5.0",
+      "description": "Install the \"Creative Director\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "creative-director",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-creative-director"
+    },
+    {
+      "name": "agentic-bundle-qa-testing",
+      "version": "14.5.0",
+      "description": "Install the \"QA & Testing\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "qa-testing",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-qa-testing"
+    },
+    {
+      "name": "agentic-bundle-aas-web-app-builder",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Web App Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-web-app-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-web-app-builder"
+    },
+    {
+      "name": "agentic-bundle-aas-product-design-studio",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Product Design Studio\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-product-design-studio",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-product-design-studio"
+    },
+    {
+      "name": "agentic-bundle-aas-security-engineer",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Security Engineer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-security-engineer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-security-engineer"
+    },
+    {
+      "name": "agentic-bundle-aas-secure-app-builder",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Secure App Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-secure-app-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-secure-app-builder"
+    },
+    {
+      "name": "agentic-bundle-aas-documents-presentations",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Documents & Presentations\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-documents-presentations",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-documents-presentations"
+    },
+    {
+      "name": "agentic-bundle-aas-data-analytics",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Data Analytics\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-data-analytics",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-data-analytics"
+    },
+    {
+      "name": "agentic-bundle-aas-agent-mcp-builder",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Agent & MCP Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-agent-mcp-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-agent-mcp-builder"
+    },
+    {
+      "name": "agentic-bundle-aas-qa-test-automation",
+      "version": "14.5.0",
+      "description": "Install the \"AAS QA & Test Automation\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-qa-test-automation",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-qa-test-automation"
+    },
+    {
+      "name": "agentic-bundle-aas-devops-cloud",
+      "version": "14.5.0",
+      "description": "Install the \"AAS DevOps & Cloud\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-devops-cloud",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-devops-cloud"
+    },
+    {
+      "name": "agentic-bundle-aas-marketing-seo-growth",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Marketing, SEO & Growth\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-marketing-seo-growth",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-marketing-seo-growth"
+    },
+    {
+      "name": "agentic-bundle-aas-automation-builder",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Automation Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-automation-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-automation-builder"
+    },
+    {
+      "name": "agentic-bundle-aas-observability-ir",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Observability IR\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-observability-ir",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-observability-ir"
+    },
+    {
+      "name": "agentic-bundle-aas-python-api-builder",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Python API Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-python-api-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-python-api-builder"
+    },
+    {
+      "name": "agentic-bundle-aas-mobile-app-builder",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Mobile App Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-mobile-app-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-mobile-app-builder"
+    },
+    {
+      "name": "agentic-bundle-mobile-developer",
+      "version": "14.5.0",
+      "description": "Install the \"Mobile Developer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "mobile-developer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-mobile-developer"
+    },
+    {
+      "name": "agentic-bundle-integration-apis",
+      "version": "14.5.0",
+      "description": "Install the \"Integration & APIs\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "integration-apis",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-integration-apis"
+    },
+    {
+      "name": "agentic-bundle-architecture-design",
+      "version": "14.5.0",
+      "description": "Install the \"Architecture & Design\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "architecture-design",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-architecture-design"
+    },
+    {
+      "name": "agentic-bundle-ddd-evented-architecture",
+      "version": "14.5.0",
+      "description": "Install the \"DDD & Evented Architecture\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "ddd-evented-architecture",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-ddd-evented-architecture"
+    },
+    {
+      "name": "agentic-bundle-automation-builder",
+      "version": "14.5.0",
+      "description": "Install the \"Automation Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "automation-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-automation-builder"
+    },
+    {
+      "name": "agentic-bundle-revops-crm-automation",
+      "version": "14.5.0",
+      "description": "Install the \"RevOps & CRM Automation\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "revops-crm-automation",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-revops-crm-automation"
+    },
+    {
+      "name": "agentic-bundle-commerce-payments",
+      "version": "14.5.0",
+      "description": "Install the \"Commerce & Payments\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "commerce-payments",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-commerce-payments"
+    },
+    {
+      "name": "agentic-bundle-odoo-erp",
+      "version": "14.5.0",
+      "description": "Install the \"Odoo ERP\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "odoo-erp",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-odoo-erp"
+    },
+    {
+      "name": "agentic-bundle-azure-ai-cloud",
+      "version": "14.5.0",
+      "description": "Install the \"Azure AI & Cloud\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "azure-ai-cloud",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-azure-ai-cloud"
+    },
+    {
+      "name": "agentic-bundle-expo-react-native",
+      "version": "14.5.0",
+      "description": "Install the \"Expo & React Native\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "expo-react-native",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-expo-react-native"
+    },
+    {
+      "name": "agentic-bundle-apple-platform-design",
+      "version": "14.5.0",
+      "description": "Install the \"Apple Platform Design\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "apple-platform-design",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-apple-platform-design"
+    },
+    {
+      "name": "agentic-bundle-makepad-builder",
+      "version": "14.5.0",
+      "description": "Install the \"Makepad Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "makepad-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-makepad-builder"
+    },
+    {
+      "name": "agentic-bundle-seo-specialist",
+      "version": "14.5.0",
+      "description": "Install the \"SEO Specialist\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "seo-specialist",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-seo-specialist"
+    },
+    {
+      "name": "agentic-bundle-documents-presentations",
+      "version": "14.5.0",
+      "description": "Install the \"Documents & Presentations\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "documents-presentations",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-documents-presentations"
+    },
+    {
+      "name": "agentic-bundle-oss-maintainer",
+      "version": "14.5.0",
+      "description": "Install the \"OSS Maintainer\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "oss-maintainer",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-oss-maintainer"
+    },
+    {
+      "name": "agentic-bundle-skill-author",
+      "version": "14.5.0",
+      "description": "Install the \"Skill Author\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "skill-author",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-skill-author"
+    },
+    {
+      "name": "agentic-bundle-aas-accessibility-inclusive-ux",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Accessibility & Inclusive UX\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-accessibility-inclusive-ux",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-accessibility-inclusive-ux"
+    },
+    {
+      "name": "agentic-bundle-aas-api-platform-builder",
+      "version": "14.5.0",
+      "description": "Install the \"AAS API Platform Builder\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-api-platform-builder",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-api-platform-builder"
+    },
+    {
+      "name": "agentic-bundle-aas-saas-launch-revenue",
+      "version": "14.5.0",
+      "description": "Install the \"AAS SaaS Launch & Revenue\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-saas-launch-revenue",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-saas-launch-revenue"
+    },
+    {
+      "name": "agentic-bundle-aas-ai-product-evaluation-ops",
+      "version": "14.5.0",
+      "description": "Install the \"AAS AI Product & Evaluation Ops\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-ai-product-evaluation-ops",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-ai-product-evaluation-ops"
+    },
+    {
+      "name": "agentic-bundle-aas-data-engineering-platform",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Data Engineering Platform\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-data-engineering-platform",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-data-engineering-platform"
+    },
+    {
+      "name": "agentic-bundle-aas-privacy-compliance-engineering",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Privacy & Compliance Engineering\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-privacy-compliance-engineering",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-privacy-compliance-engineering"
+    },
+    {
+      "name": "agentic-bundle-aas-localization-international-growth",
+      "version": "14.5.0",
+      "description": "Install the \"AAS Localization & International Growth\" editorial skill bundle for Claude Code.",
+      "author": {
+        "name": "sickn33 and contributors",
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "skills",
+        "bundle",
+        "aas-localization-international-growth",
+        "marketplace"
+      ],
+      "source": "./plugins/agentic-bundle-aas-localization-international-growth"
+    }
+  ]
+}

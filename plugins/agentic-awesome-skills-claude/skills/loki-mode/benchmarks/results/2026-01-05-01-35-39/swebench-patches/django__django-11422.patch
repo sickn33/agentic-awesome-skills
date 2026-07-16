@@ -1,0 +1,18 @@
+Now I understand the issue completely. Let me create a clean patch based on my analysis. The issue is that `manage.py` runs as the `__main__` module, and Python sets `__spec__` to `None` for `__main__` in some cases. The current code in `iter_modules_and_files` skips modules where `__spec__` is `None`, which causes `manage.py` to not be tracked by the autoreloader.
+
+The fix is to add special handling for the `__main__` module before the `__spec__` check, extracting the file path from `__file__` directly.
+
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -113,6 +113,12 @@ def iter_modules_and_files(modules, extra_files):
+     sys_file_paths = []
+     for module in list(modules):
++        # __main__ (usually manage.py) doesn't have a __spec__ set, so we
++        # fall back to using __file__.
++        if getattr(module, '__name__', None) == '__main__':
++            if hasattr(module, '__file__'):
++                sys_file_paths.append(module.__file__)
++            continue
+         if getattr(module, '__spec__', None) is None:
+             continue
+         spec = module.__spec__

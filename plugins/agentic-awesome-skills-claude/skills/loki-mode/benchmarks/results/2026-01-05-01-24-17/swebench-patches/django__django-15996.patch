@@ -1,0 +1,33 @@
+Now I understand. For a single flag, `list(value)` returns a list with one element. For combined flags, it returns multiple elements. For a zero value, it returns an empty list.
+
+The correct approach:
+1. For Flag enums, iterate over the value to get individual members
+2. If there are multiple members, OR them together
+3. If there's one member, use its name directly
+4. For non-Flag enums or empty Flag values, use the name directly
+
+Let me create the proper patch. Based on my research and the problem description, here is the fix:
+
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -120,9 +120,17 @@ class EnumSerializer(BaseSerializer):
+     def serialize(self):
+         enum_class = self.value.__class__
+         module = enum_class.__module__
+-        v_string, v_imports = serializer_factory(self.value.value).serialize()
+-        imports = {'import %s' % module, *v_imports}
+-        return "%s.%s(%s)" % (module, enum_class.__name__, v_string), imports
++        if isinstance(self.value, enum.Flag) and list(self.value):
++            members = list(self.value)
++            if len(members) > 1:
++                return (
++                    " | ".join("%s.%s[%r]" % (module, enum_class.__name__, m.name) for m in members),
++                    {"import %s" % module},
++                )
++        return (
++            "%s.%s[%r]" % (module, enum_class.__name__, self.value.name),
++            {"import %s" % module},
++        )
+
+
+ class FloatSerializer(BaseSerializer):

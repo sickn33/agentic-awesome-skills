@@ -1,0 +1,82 @@
+# Publish agentic-awesome-skills to npm on release.
+# Requires NPM_TOKEN secret (npm → Access Tokens → Granular token with Publish).
+# Before creating a Release: bump package.json "version" (npm forbids republishing the same version).
+# Release tag (e.g. v4.6.1) should match package.json version.
+
+name: Publish to npm
+
+permissions:
+  contents: read
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.10"
+
+      - name: Install Python dependencies
+        run: pip install -r tools/requirements.txt
+
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Verify release identity
+        shell: bash
+        run: |
+          test "$GITHUB_REF_TYPE" = "tag"
+          expected_tag="v$(node -p "require('./package.json').version")"
+          test "$GITHUB_REF_NAME" = "$expected_tag"
+          test "$(git rev-list -n1 HEAD)" = "$(git rev-list -n1 "$GITHUB_REF_NAME")"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
+
+      - name: Validate references
+        run: npm run validate:references
+
+      - name: Sync release state
+        run: npm run sync:release-state
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Install web-app dependencies
+        run: npm run app:install
+
+      - name: Run web app coverage
+        run: npm run app:test:coverage
+
+      - name: Run docs security checks
+        run: npm run security:docs
+
+      - name: Build web app
+        run: npm run app:build
+
+      - name: Verify canonical release state
+        run: git diff --exit-code
+
+      - name: Dry-run npm package
+        run: npm pack --dry-run --json
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

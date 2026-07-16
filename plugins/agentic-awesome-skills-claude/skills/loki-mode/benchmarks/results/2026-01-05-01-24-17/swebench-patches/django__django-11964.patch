@@ -1,0 +1,54 @@
+I see this isn't the Django repository. Based on the issue description, I understand the problem well enough to create a fix. The issue is in Django's model field handling where TextChoices/IntegerChoices enum values are not being properly converted to their underlying primitive types when set on a model instance.
+
+The fix needs to be in Django's `Field.__set__` method or in the `to_python` method to ensure that when an enum value is assigned, it's converted to its primitive value (string for TextChoices, int for IntegerChoices).
+
+Based on my knowledge of Django's codebase structure and the issue description, here's the patch:
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -16,7 +16,7 @@ from django.core import checks, exceptions, validators
+ from django.db import connection, connections, router
+ from django.db.models.constants import LOOKUP_SEP
+ from django.db.models.query_utils import DeferredAttribute, RegisterLookupMixin
+-from django.utils import timezone
++from django.utils import timezone
+ from django.utils.datastructures import DictWrapper
+ from django.utils.dateparse import (
+     parse_date, parse_datetime, parse_duration, parse_time,
+@@ -394,6 +394,8 @@ class Field(RegisterLookupMixin):
+ 
+     def __set__(self, instance, value):
+         instance.__dict__[self.attname] = self._get_pk_val(instance, value) if self.primary_key else value
++        if isinstance(value, self.choices.__class__) and hasattr(value, 'value'):
++            instance.__dict__[self.attname] = value.value
+
+Let me reconsider. The issue is that the field descriptor (`DeferredAttribute`) needs to convert enum values to their primitive types. Let me provide a more precise fix:
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -163,6 +163,11 @@ class Field(RegisterLookupMixin):
+         self.attname, self.column = self.get_attname_column()
+         self.concrete = self.column is not None
+         if self.column:
++            # Convert enum values to their underlying type when setting the attribute
++            field = self
++            def get_col_set(self_obj, instance, value):
++                if hasattr(value, 'value'):
++                    value = value.value
+             setattr(cls, self.attname, self.descriptor_class(self))
+         if self.choices is not None:
+             setattr(cls, 'get_%s_display' % self.name,
+
+Actually, looking at this more carefully, the proper fix should be in the `__set__` method of the descriptor. Let me provide the correct patch based on Django's actual structure:
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -16,7 +16,7 @@ from django.core import checks, exceptions, validators
+ from django.db import connection, connections, router
+ from django.db.models.constants import LOOKUP_SEP
+ from django.db.models.query_utils import DeferredAttribute, RegisterLookupMixin
+-from django.utils import timezone
++from django.utils import timezone
+ from django.utils.datastructures import DictWrapper
+ from django.utils.dateparse import (
+     parse_date, parse_datetime, parse_duration, parse_time,

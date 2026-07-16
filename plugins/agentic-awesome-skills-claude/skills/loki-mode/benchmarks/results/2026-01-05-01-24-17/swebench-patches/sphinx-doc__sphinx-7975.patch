@@ -1,0 +1,89 @@
+Based on my knowledge of Sphinx and the issue described, I can generate the patch. The issue is in `sphinx/environment/adapters/indexentries.py` where the `IndexEntries` class creates index entries grouped by their first letter. The problem is that symbols are being sorted in two different places: some symbols (like @) appear before A-Z in ASCII/Unicode sorting, while others (like £ and ←) appear after Z.
+
+The fix needs to ensure all non-letter characters are grouped together under a single "Symbols" section, regardless of where they sort in Unicode order. The key is in the `create_index` method which groups entries and needs to recognize that all non-letter first characters should be treated as the same "Symbols" category.
+
+Here's the patch:
+
+--- a/sphinx/environment/adapters/indexentries.py
++++ b/sphinx/environment/adapters/indexentries.py
+@@ -110,10 +110,15 @@ class IndexEntries:
+             lckey = unicodedata.normalize('NFD', key[0].lower())
+             if lckey[0:1] in lcletters:
+                 _key = bisect.bisect_right(sortkey, lckey)
++                letter = sortkey[_key - 1] if _key > 0 else sortkey[0]
+             else:
+                 # get from the right of the letter key because unicodedata
+                 # sort the string which starts with special characters first
+-                _key = bisect.bisect_left(sortkey, lckey)
++                _key = 0
++                letter = _('Symbols')
+             
+-            if _key < len(googlesortkey):
+-                key = googlesortkey[_key]
+-            return _key
++            if letter:
++                return (letter, entry)
++            return (_key, entry)
+ 
+
+Let me look at the actual structure of this problem more carefully. The issue is that the index creates separate sections, and symbols end up in two places. I need to understand the exact algorithm better.
+
+Based on typical Sphinx code structure, the fix should be in `sphinx/environment/adapters/indexentries.py`. The function that handles grouping entries by their first letter needs to group ALL non-alphabetic characters under a single "Symbols" heading, placed consistently (typically at the beginning).
+
+--- a/sphinx/environment/adapters/indexentries.py
++++ b/sphinx/environment/adapters/indexentries.py
+@@ -106,9 +106,10 @@ class IndexEntries:
+         def keyfunc0(entry: tuple[str, str]) -> tuple[bool, str]:
+             key = unicodedata.normalize('NFD', entry[0].lower())
+             if key[0:1] in lcletters:
+-                return (False, key)
++                return (True, key)
+             else:
+-                return (True, key)
++                # Group all non-letters together at the beginning
++                return (False, '')
+ 
+         newlist = sorted(new.items(), key=keyfunc0)
+         # fixup entries: transform
+@@ -123,15 +124,19 @@ class IndexEntries:
+ 
+         # group the entries by letter
+         def keyfunc(item: tuple[str, list]) -> str:
+-            # hack: mutate the subitems dicts to a list in the keyfunc
+             k, v = item
++            letter = unicodedata.normalize('NFD', k[0:1].upper())[0:1]
++            if letter not in letters:
++                letter = _('Symbols')
+             v[1] = sorted((si for si in v[1].items() if si[0] != ''),
+                           key=keyfunc3)
+-            letter = unicodedata.normalize('NFD', k[0:1].upper())[0:1]
+-            if letter in letters:
+-                return letter
+-            else:
+-                return _('Symbols')
++            return letter
+         return [(key_, list(group)) for (key_, group) in groupby(newlist, keyfunc)]
+
+Wait, I need to be more careful here. Let me reason through this:
+
+1. The problem: Two "Symbols" sections appear in the index
+2. Cause: Some special characters (like @) sort before letters (A-Z), while others (like £, ←) sort after
+3. When `groupby` is used after sorting, it creates separate groups for symbols before and after the letters
+
+The fix needs to ensure all symbol entries are sorted together (either all at the beginning or all at the end), so `groupby` produces only one "Symbols" group.
+
+--- a/sphinx/environment/adapters/indexentries.py
++++ b/sphinx/environment/adapters/indexentries.py
+@@ -106,9 +106,11 @@ class IndexEntries:
+         def keyfunc0(entry: tuple[str, str]) -> tuple[bool, str]:
+             key = unicodedata.normalize('NFD', entry[0].lower())
+             if key[0:1] in lcletters:
+-                return (False, key)
++                # Sort letters after symbols
++                return (True, key)
+             else:
+-                return (True, key)
++                # Sort all symbols first (together)
++                return (False, key)
+ 
+         newlist = sorted(new.items(), key=keyfunc0)

@@ -1,0 +1,17 @@
+The Django repository is not in the current directory. This appears to be a different repository. Since the user is asking me to solve a Django issue, I need to work with the Django source code. Based on the issue description and the hint provided, I can generate the patch directly since the fix is clearly described.
+
+The issue is in `django/db/models/base.py` in the `_prepare_related_fields_for_save()` method. The problem is that when checking if the foreign key attribute needs to be updated from the related object, the current code only checks for `None`, but for non-numeric primary keys like `CharField`, an empty string `""` should also be treated as an empty/unset value.
+
+The hint suggests using `field.empty_values` instead of just checking for `None`. Let me provide the patch:
+
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -933,7 +933,7 @@ class Model(metaclass=ModelBase):
+                     "%s() prohibited to prevent data loss due to unsaved "
+                     "related object '%s'." % (operation_name, field.name)
+                 )
+-            elif getattr(self, field.attname) is None:
++            elif getattr(self, field.attname) in field.empty_values:
+                 # Use pk from related object if it has been saved after
+                 # an assignment.
+                 setattr(self, field.attname, obj.pk)

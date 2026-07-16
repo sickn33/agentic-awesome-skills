@@ -1,0 +1,28 @@
+Based on my knowledge of SymPy's codebase and the issue description, I can provide the fix. The issue is that `__eq__` in `sympy/core/expr.py` calls `sympify(other)` which attempts to parse string representations. The fix is to use `_sympify(other)` instead, which is the strict version that doesn't try to parse strings.
+
+Looking at the commit mentioned in the hints (73caef3991ca5c4c6a0a2c16cc8853cf212db531), this was a regression introduced in PR #16924. The fix should restore the safer behavior by using `_sympify`.
+
+--- a/sympy/core/expr.py
++++ b/sympy/core/expr.py
+@@ -10,7 +10,7 @@ from .evalf import PrecisionExhausted, EvalfMixin
+ from .decorators import call_highest_priority, sympify_method_args, sympify_return
+ from .cache import cacheit
+ from .compatibility import reduce, as_int, default_sort_key, Iterable
+-from sympy.core.sympify import sympify, _sympify, SympifyError
++from sympy.core.sympify import _sympify, SympifyError
+ from sympy.utilities.misc import func_name
+ from mpmath.libmp import mpf_log, prec_to_dps
+ 
+@@ -121,9 +121,9 @@ class Expr(Basic, EvalfMixin):
+ 
+     @sympify_return([('other', 'Expr')], NotImplemented)
+     def __eq__(self, other):
+-        try:
+-            other = sympify(other)
+-        except SympifyError:
++        try:
++            other = _sympify(other)
++        except SympifyError:
+             return NotImplemented
+         if not isinstance(other, Expr):
+             return NotImplemented

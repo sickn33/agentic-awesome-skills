@@ -1,0 +1,16 @@
+Based on the issue description and my knowledge of sympy's codebase, I can analyze this problem. The issue is in sympy's `codegen.py` file where the code generation logic determines the type of arguments.
+
+The problem occurs because when determining argument types for C code generation, the code checks if arguments appear in the expression to decide their types. When a MatrixSymbol doesn't appear in the expression, it doesn't get properly identified as an array type.
+
+Let me provide the patch based on the issue description and sympy's code structure:
+
+--- a/sympy/utilities/codegen.py
++++ b/sympy/utilities/codegen.py
+@@ -656,6 +656,8 @@ class CCodeGen(CodeGen):
+                     # check if the Matrix argument already exists and get its size
+                     # (in order to match the existing symbol)
+                     mat_dec = "double *{0}".format(arg.name)
++                elif isinstance(arg, MatrixSymbol):
++                    mat_dec = "double *{0}".format(arg.name)
+                 else:
+                     mat_dec = "double {0}".format(arg.name)

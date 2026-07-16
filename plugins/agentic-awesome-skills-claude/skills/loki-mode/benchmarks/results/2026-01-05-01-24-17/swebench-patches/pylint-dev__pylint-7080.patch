@@ -1,0 +1,33 @@
+Based on the issue description and the hints provided, I have enough information to generate the patch. The issue is clear:
+
+1. When running `pylint --recursive=y src/`, the `root` variable is `src/gen`
+2. When running `pylint --recursive=y .`, the `root` variable is `./src/gen`
+3. The regex pattern `^src/gen/.*$` doesn't match `./src/gen` because of the `./` prefix
+4. The fix is to use `os.path.normpath()` on the `root` variable before matching against the patterns
+
+The code is at `pylint/lint/pylinter.py` around lines 600-607. Looking at the hint that shows the exact code location:
+
+```python
+# Around line 600-607 in pylinter.py
+```
+
+The fix needs to normalize the path before checking against ignore_paths patterns.
+
+--- a/pylint/lint/pylinter.py
++++ b/pylint/lint/pylinter.py
+@@ -597,7 +597,8 @@ class PyLinter(
+     def _discover_files(self, files_or_modules: Sequence[str]) -> Iterator[str]:
+         """Discover python modules and packages in sub-directory.
+ 
+         Returns iterator of paths to discovered modules and packages.
+         """
+         for something in files_or_modules:
+             if os.path.isdir(something) and not os.path.isfile(
+                 os.path.join(something, "__init__.py")
+             ):
+                 skip_subtrees: list[str] = []
+                 for root, _, files in os.walk(something, topdown=True):
++                    root = os.path.normpath(root)
+                     if _is_ignored_file(
+                         root,
+                         self.config.ignore,

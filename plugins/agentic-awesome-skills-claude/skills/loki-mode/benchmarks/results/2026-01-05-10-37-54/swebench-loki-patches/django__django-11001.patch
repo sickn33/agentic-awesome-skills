@@ -1,0 +1,20 @@
+# django__django-11001
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I can generate the patch for the Django repository. The fix is to normalize multiline SQL by replacing newlines with spaces before applying the `ordering_parts` regex. Let me provide the patch:
+
+```
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -358,7 +358,8 @@ class SQLCompiler:
+                 resolved = expr.resolve_expression(self.query, allow_joins=True, for_save=False)
+                 sql, params = self.compile(resolved)
+ 
+-            without_ordering = self.ordering_parts.search(sql).group(1)
++            sql_oneline = ' '.join(sql.split())
++            without_ordering = self.ordering_parts.search(sql_oneline).group(1)
+             params_hash = make_hashable(params)
+             if (without_ordering, params_hash) not in seen:
+                 result.append((resolved, (sql, params, is_ref)))
+```

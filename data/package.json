@@ -1,7 +1,0 @@
-{
-  "name": "antigravity-awesome-skills",
-  "version": "4.2.0",
-  "dependencies": {
-    "yaml": "^2.8.2"
-  }
-}

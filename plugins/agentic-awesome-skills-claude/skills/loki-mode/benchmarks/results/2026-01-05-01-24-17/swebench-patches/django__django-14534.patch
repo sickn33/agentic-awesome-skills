@@ -1,0 +1,29 @@
+This codebase doesn't contain Django. Based on the GitHub issue, I need to generate a patch for the Django repository. The issue is clearly described - the `BoundWidget.id_for_label()` method should return `self.data['attrs']['id']` instead of hardcoding the format `'id_%s_%s' % (self.data['name'], self.data['index'])`.
+
+Based on the issue description and the referenced pull requests, I can generate the fix. The file is `django/forms/boundfield.py` and the change is straightforward:
+
+From:
+```python
+def id_for_label(self):
+    return 'id_%s_%s' % (self.data['name'], self.data['index'])
+```
+
+To:
+```python
+def id_for_label(self):
+    return self.data['attrs']['id']
+```
+
+Here's the patch:
+
+--- a/django/forms/boundfield.py
++++ b/django/forms/boundfield.py
+@@ -277,7 +277,7 @@ class BoundWidget:
+ 
+     @property
+     def id_for_label(self):
+-        return 'id_%s_%s' % (self.data['name'], self.data['index'])
++        return self.data['attrs']['id']
+ 
+     @property
+     def choice_label(self):

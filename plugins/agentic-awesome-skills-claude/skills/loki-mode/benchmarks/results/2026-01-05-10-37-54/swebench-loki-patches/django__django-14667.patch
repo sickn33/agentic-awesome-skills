@@ -1,0 +1,29 @@
+# django__django-14667
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+I found an existing patch for this issue. Let me verify this is correct by understanding the logic better and outputting the proper patch:
+
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -2105,12 +2105,15 @@ class Query(BaseExpression):
+         When the existing set is "immediate", this will work out to
+         removing any field names from the existing set.
+         """
++        field_names = set(field_names)
+         existing, defer = self.deferred_loading
+         if defer:
+             # Add to existing deferred names.
+-            self.deferred_loading = existing.union(field_names), True
++            self.deferred_loading = existing.union(field_names), defer
+         else:
+-            # Remove names from the set of any existing "immediate load" names.
+-            self.deferred_loading = existing.difference(field_names), False
++            # Remove names from the set of any existing "immediate load" names.
++            # If nothing remains, switch to defer mode.
++            new_existing = existing.difference(field_names)
++            new_defer = field_names.difference(existing)
++            if new_existing:
++                self.deferred_loading = new_existing, False
++            else:
++                self.deferred_loading = new_defer, True

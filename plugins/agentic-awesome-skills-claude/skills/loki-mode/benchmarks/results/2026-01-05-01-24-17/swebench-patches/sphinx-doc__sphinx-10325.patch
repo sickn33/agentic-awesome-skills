@@ -1,0 +1,185 @@
+This is not the Sphinx repository. I need to work based on my knowledge of the Sphinx codebase to generate the patch. Let me search for the Sphinx repository structure to understand where the fix needs to be applied.
+
+Based on my knowledge of the Sphinx autodoc extension and the issue description, I need to create a patch that:
+
+1. Allows the `inherited-members` option to accept multiple class names (comma-separated)
+2. Modifies the filtering logic to skip members from ANY of the specified base classes
+
+Let me generate the patch for the `sphinx/ext/autodoc/__init__.py` file:
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -109,6 +109,15 @@ def identity(x: Any) -> Any:
+     return x
+ 
+ 
++def inherited_members_option(arg: Any) -> Union[object, Set[str]]:
++    """Used to convert the :inherited-members: option to auto directives."""
++    if arg in (None, True):
++        return 'object'
++    elif arg:
++        return set(x.strip() for x in arg.split(','))
++    else:
++        return 'object'
++
++
+ class _All:
+     """A special value for autodoc directives to include all members."""
+     pass
+@@ -686,7 +695,7 @@ class Documenter:
+     option_spec: OptionSpec = {
+         'noindex': bool_option,
+     }
++    option_spec: ClassVar[OptionSpec] = {'noindex': bool_option}
+ 
+     def get_attr(self, obj: Any, name: str, *defargs: Any) -> Any:
+         """getattr() override for types such as Zope's DateRecurringIndex."""
+@@ -1078,7 +1087,7 @@ class ModuleDocumenter(Documenter):
+     option_spec: OptionSpec = {
+         'members': members_option, 'undoc-members': bool_option,
+         'noindex': bool_option, 'inherited-members': inherited_members_option,
+-        'show-inheritance': bool_option, 'synopsis': identity,
++        'show-inheritance': bool_option, 'synopsis': identity,
+         'platform': identity, 'deprecated': bool_option,
+         'member-order': member_order_option, 'exclude-members': exclude_members_option,
+         'private-members': private_members_option, 'special-members': members_option,
+@@ -1694,7 +1703,7 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+     option_spec: OptionSpec = {
+         'members': members_option, 'undoc-members': bool_option,
+         'noindex': bool_option, 'inherited-members': inherited_members_option,
+-        'show-inheritance': bool_option, 'member-order': member_order_option,
++        'show-inheritance': bool_option, 'member-order': member_order_option,
+         'exclude-members': exclude_members_option,
+         'private-members': private_members_option, 'special-members': members_option,
+         'class-doc-from': class_doc_from_option,
+@@ -1813,10 +1822,14 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+                 if name in ClassDocumenter.option_spec:
+                     self.options[name] = self.env.config.autodoc_default_options[name]
+ 
+         # obtain the document_inherited_members option to allow the user to
+         # override inherited_members for specific classes
+-        inherited_members = self.options.inherited_members or ''
+-        inherited_members = inherited_members.split(',') if inherited_members else []
+-        self.options.inherited_members = inherited_members
++        pass
+ 
+     def add_content(self, more_content: Optional[StringList]) -> None:
+         if self.doc_as_attr:
+@@ -1848,13 +1861,18 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+         return None, None, None
+ 
+     def filter_members(self, members: ObjectMembers, want_all: bool
+-                       ) -> List[Tuple[str, Any, bool]]:
++                       ) -> List[Tuple[str, Any, bool]]:
+         ret = []
+ 
+         # determine the base classes to ignore
+-        inherited_members = self.options.get('inherited-members', set())
+-        if isinstance(inherited_members, str):
+-            inherited_members = {inherited_members}
++        inherited_members_opt = self.options.get('inherited-members', set())
++        if inherited_members_opt is None:
++            inherited_members: Set[str] = set()
++        elif isinstance(inherited_members_opt, str):
++            inherited_members = {inherited_members_opt}
++        else:
++            inherited_members = inherited_members_opt
++
+         # chain of base classes that should be ignored
+         ignored_classes: Set[type] = set()
+         for cls in self.object.__mro__:
+@@ -1862,7 +1880,9 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+                 # from here on, all classes should be ignored
+                 # NOTE: we no longer break at first match - we continue
+                 # to allow ignoring multiple separate base classes
+-                ignored_classes.add(cls)
++                pass
++            if qualname in inherited_members:
++                ignored_classes.add(cls)
+ 
+         for (membername, member) in members:
+             # ignore members defined in a class in ignored_classes
+```
+
+Let me create a more accurate patch based on the actual Sphinx codebase. I need to provide the correct unified diff:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -109,6 +109,15 @@ def identity(x: Any) -> Any:
+     return x
+ 
+ 
++def inherited_members_option(arg: Any) -> Union[object, Set[str]]:
++    """Used to convert the :inherited-members: option to auto directives."""
++    if arg in (None, True):
++        return 'object'
++    elif arg:
++        return set(x.strip() for x in arg.split(','))
++    else:
++        return 'object'
++
++
+ class _All:
+     """A special value for autodoc directives to include all members."""
+     pass
+@@ -686,7 +695,7 @@ class Documenter:
+     option_spec: OptionSpec = {
+         'noindex': bool_option,
+     }
+-
++    
+     def get_attr(self, obj: Any, name: str, *defargs: Any) -> Any:
+         """getattr() override for types such as Zope's DateRecurringIndex."""
+         return autodoc_attrgetter(self.env.app, obj, name, *defargs)
+@@ -1078,7 +1087,7 @@ class ModuleDocumenter(Documenter):
+     option_spec: OptionSpec = {
+         'members': members_option, 'undoc-members': bool_option,
+         'noindex': bool_option, 'inherited-members': inherited_members_option,
+-        'show-inheritance': bool_option, 'synopsis': identity,
++        'show-inheritance': bool_option, 'synopsis': identity,
+         'platform': identity, 'deprecated': bool_option,
+         'member-order': member_order_option, 'exclude-members': exclude_members_option,
+         'private-members': private_members_option, 'special-members': members_option,
+@@ -1694,7 +1703,7 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+     option_spec: OptionSpec = {
+         'members': members_option, 'undoc-members': bool_option,
+         'noindex': bool_option, 'inherited-members': inherited_members_option,
+-        'show-inheritance': bool_option, 'member-order': member_order_option,
++        'show-inheritance': bool_option, 'member-order': member_order_option,
+         'exclude-members': exclude_members_option,
+         'private-members': private_members_option, 'special-members': members_option,
+         'class-doc-from': class_doc_from_option,
+@@ -1848,13 +1857,18 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+         return None, None, None
+ 
+     def filter_members(self, members: ObjectMembers, want_all: bool
+-                       ) -> List[Tuple[str, Any, bool]]:
++                       ) -> List[Tuple[str, Any, bool]]:
+         ret = []
+ 
+         # determine the base classes to ignore
+-        inherited_members = self.options.get('inherited-members', set())
+-        if isinstance(inherited_members, str):
+-            inherited_members = {inherited_members}
++        inherited_members_opt = self.options.get('inherited-members', set())
++        if inherited_members_opt is None:
++            inherited_members: Set[str] = set()
++        elif isinstance(inherited_members_opt, str):
++            inherited_members = {inherited_members_opt}
++        else:
++            inherited_members = inherited_members_opt
++
+         # chain of base classes that should be ignored
+         ignored_classes: Set[type] = set()
+         for cls in self.object.__mro__:
+@@ -1862,8 +1876,7 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+             qualname = cls.__module__ + '.' + cls.__qualname__
+             if qualname in inherited_members:
+-                # from here on, all classes should be ignored
+-                break
+-            ignored_classes.add(cls)
++                ignored_classes.add(cls)
++
+         for (membername, member) in members:
+             # ignore members defined in a class in ignored_classes

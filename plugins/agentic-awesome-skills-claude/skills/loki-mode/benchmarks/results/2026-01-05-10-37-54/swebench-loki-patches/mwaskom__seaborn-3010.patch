@@ -1,0 +1,17 @@
+# mwaskom__seaborn-3010
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/seaborn/_stats/regression.py
++++ b/seaborn/_stats/regression.py
+@@ -23,6 +23,9 @@ class PolyFit(Stat):
+     def _fit_predict(self, data):
+ 
+         x = data["x"]
+         y = data["y"]
++        # Filter out missing values from both x and y
++        valid = x.notna() & y.notna()
++        x, y = x[valid], y[valid]
+ 
+         if len(x) <= self.order:
+             xx = yy = []

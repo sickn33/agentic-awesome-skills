@@ -1,0 +1,42 @@
+apiVersion: v2
+name: <chart-name>
+description: <Chart description>
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+keywords:
+  - <keyword1>
+  - <keyword2>
+
+home: https://github.com/<org>/<repo>
+
+sources:
+  - https://github.com/<org>/<repo>
+
+maintainers:
+  - name: <Maintainer Name>
+    email: <maintainer@example.com>
+    url: https://github.com/<username>
+
+icon: https://example.com/icon.png
+
+kubeVersion: ">=1.24.0"
+
+dependencies:
+  - name: postgresql
+    version: "12.0.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+    tags:
+      - database
+  - name: redis
+    version: "17.0.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled
+    tags:
+      - cache
+
+annotations:
+  category: Application
+  licenses: Apache-2.0

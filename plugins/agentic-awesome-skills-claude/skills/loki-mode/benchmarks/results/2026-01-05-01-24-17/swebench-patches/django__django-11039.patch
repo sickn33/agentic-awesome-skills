@@ -1,0 +1,87 @@
+Based on my knowledge of Django's codebase and the issue description, I can create the patch. The issue is in the `sqlmigrate` management command where `self.output_transaction` should consider both `migration.atomic` AND `connection.features.can_rollback_ddl`.
+
+Let me provide the patch based on the Django codebase structure:
+
+```
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -57,7 +57,7 @@ class Command(BaseCommand):
+         plan = [(executor.loader.graph.nodes[targets[0]], options['backwards'])]
+ 
+         # Show BEGIN/COMMIT around output only for atomic migrations
+-        self.output_transaction = migration.atomic
++        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl
+ 
+         # Collect output
+         with connection.schema_editor(collect_sql=True, atomic=migration.atomic) as schema_editor:
+--- a/tests/migrations/test_commands.py
++++ b/tests/migrations/test_commands.py
+@@ -1,5 +1,6 @@
+ import datetime
+ import os
++from unittest import mock
+ 
+ from django.apps import apps
+ from django.core.management import CommandError, call_command
+@@ -1152,6 +1153,18 @@ class MigrateTests(MigrationTestBase):
+         self.assertNotIn(end_transaction_sql.lower(), output.lower())
+ 
+     @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
++    def test_sqlmigrate_for_non_transactional_databases(self):
++        """
++        sqlmigrate should not wrap output in BEGIN/COMMIT if the database
++        doesn't support transactional DDL.
++        """
++        out = io.StringIO()
++        with mock.patch.object(connection.features, 'can_rollback_ddl', False):
++            call_command("sqlmigrate", "migrations", "0001", stdout=out)
++        output = out.getvalue().lower()
++        self.assertNotIn(connection.ops.start_transaction_sql().lower(), output)
++        self.assertNotIn(connection.ops.end_transaction_sql().lower(), output)
++
++    @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
+     def test_sqlmigrate_backwards(self):
+         """
+         sqlmigrate outputs reverse migrations.
+```
+
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -57,7 +57,7 @@ class Command(BaseCommand):
+         plan = [(executor.loader.graph.nodes[targets[0]], options['backwards'])]
+ 
+         # Show BEGIN/COMMIT around output only for atomic migrations
+-        self.output_transaction = migration.atomic
++        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl
+ 
+         # Collect output
+         with connection.schema_editor(collect_sql=True, atomic=migration.atomic) as schema_editor:
+--- a/tests/migrations/test_commands.py
++++ b/tests/migrations/test_commands.py
+@@ -1,5 +1,6 @@
+ import datetime
+ import os
++from unittest import mock
+ 
+ from django.apps import apps
+ from django.core.management import CommandError, call_command
+@@ -1152,6 +1153,18 @@ class MigrateTests(MigrationTestBase):
+         self.assertNotIn(end_transaction_sql.lower(), output.lower())
+ 
+     @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
++    def test_sqlmigrate_for_non_transactional_databases(self):
++        """
++        sqlmigrate should not wrap output in BEGIN/COMMIT if the database
++        doesn't support transactional DDL.
++        """
++        out = io.StringIO()
++        with mock.patch.object(connection.features, 'can_rollback_ddl', False):
++            call_command("sqlmigrate", "migrations", "0001", stdout=out)
++        output = out.getvalue().lower()
++        self.assertNotIn(connection.ops.start_transaction_sql().lower(), output)
++        self.assertNotIn(connection.ops.end_transaction_sql().lower(), output)
++
++    @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
+     def test_sqlmigrate_backwards(self):
+         """
+         sqlmigrate outputs reverse migrations.

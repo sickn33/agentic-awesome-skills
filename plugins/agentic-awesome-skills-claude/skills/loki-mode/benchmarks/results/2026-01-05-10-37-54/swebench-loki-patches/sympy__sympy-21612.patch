@@ -1,0 +1,46 @@
+# sympy__sympy-21612
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This is the Loki Mode skill repository, not the sympy repository. The task is asking me to generate a patch for the sympy/sympy repository. Based on the architect's analysis, I need to create a patch for `sympy/printing/str.py`. Let me look at a typical sympy repository structure to understand the fix needed.
+
+Based on the architect's analysis:
+- The bug is in `sympy/printing/str.py` around line 336 in the `_print_Mul` method
+- The fix is to change `isinstance(item.base, Mul)` to `isinstance(item.base, (Mul, Pow))`
+
+Let me generate the patch based on typical sympy code structure:
+
+```
+--- a/sympy/printing/str.py
++++ b/sympy/printing/str.py
+@@ -333,7 +333,7 @@ class StrPrinter(Printer):
+                 if item.exp != -1:
+                     b.append(Pow(item.base, -item.exp, evaluate=False))
+                 else:
+-                    if isinstance(item.base, Mul):
++                    if isinstance(item.base, (Mul, Pow)):
+                         b_str.append("(%s)" % item.base)
+                     else:
+                         b_str.append(self._print(item.base))
+--- a/sympy/printing/tests/test_str.py
++++ b/sympy/printing/tests/test_str.py
+@@ -1,5 +1,5 @@
+ from sympy import (Abs, Catalan, cos, Derivative, E, EulerGamma, exp, factorial,
+-    factorial2, Function, GoldenRatio, I, Integer, Integral, Interval,
++    factorial2, Function, GoldenRatio, I, Integer, Integral, Interval, latex,
+     Lambda, Limit, log, Matrix, nan, O, oo, pi, Pow, Rational, S, sin, sqrt,
+     Sum, Symbol, symbols, Wild, WildFunction, zeta, zoo, Dummy, Dict)
+ from sympy.printing import sstr, sstrrepr, StrPrinter
+@@ -259,6 +259,11 @@ def test_Mul():
+     assert str(x/y) == 'x/y'
+     assert str(y/x) == 'y/x'
+     assert str(x/y/z) == 'x/(y*z)'
++    # Test that nested fractions are printed with proper parentheses
++    assert str(x/(1/y)) == 'x/(1/y)'
++    assert str((x/y)/(1/z)) == '(x/y)/(1/z)'
++    # Regression test for LaTeX parsing of nested fractions
++    assert str(((a**3 + b)/c)/(1/(c**2))) == '((a**3 + b)/c)/(1/c**2)'
+ 
+ 
+ def test_Pow():
+```

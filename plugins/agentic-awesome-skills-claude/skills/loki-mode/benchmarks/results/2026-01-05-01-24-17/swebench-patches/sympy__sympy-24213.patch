@@ -1,0 +1,25 @@
+Based on my knowledge of the SymPy physics units module and the issue description, I will construct the correct patch. The key insight is:
+
+1. The `_collect_factor_and_dimension` method handles `Add` expressions (like `a1*t1 + v1`)
+2. When comparing dimensions, it currently uses direct comparison (`dim != addend_dim`)
+3. The fix should use `get_dimension_system().equivalent_dims(dim, addend_dim)` to check if dimensions are equivalent
+
+Looking at the error message in the issue:
+```
+ValueError: Dimension of "v1" is Dimension(velocity), but it should be Dimension(acceleration*time)
+```
+
+This tells me that the comparison in the `Add` handling block is failing because `Dimension(velocity) != Dimension(acceleration*time)` even though they are dimensionally equivalent (both represent `length/time`).
+
+Here's the correct patch:
+
+--- a/sympy/physics/units/unitsystem.py
++++ b/sympy/physics/units/unitsystem.py
+@@ -175,7 +175,8 @@ class UnitSystem(_QuantityMapper):
+                 addend_factor, addend_dim = \
+                     self._collect_factor_and_dimension(addend)
+-                if dim != addend_dim:
++                if not self.get_dimension_system().equivalent_dims(dim, addend_dim):
+                     raise ValueError(
+                         'Dimension of "{}" is {}, '
+                         'but it should be {}'.format(

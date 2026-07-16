@@ -1,0 +1,17 @@
+# django__django-12125
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -268,9 +268,9 @@ class TypeSerializer(BaseSerializer):
+         # Nested class, use __qualname__ which includes the outer class path
+         if hasattr(self.value, "__qualname__"):
+             module = self.value.__module__
+-            if "<locals>" not in self.value.__qualname__:
++            qualname = self.value.__qualname__
++            if "<locals>" not in qualname:
+                 return "%s.%s" % (module, self.value.__qualname__), {"import %s" % module}
+         # Fall back to __name__ for edge cases
+-        module = self.value.__module__
+         return "%s.%s" % (module, self.value.__name__), {"import %s" % module}

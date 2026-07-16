@@ -1,0 +1,22 @@
+Based on my knowledge of Django's codebase, I can create the patch for this issue. The issue is about JSONField values being displayed as Python dict repr (e.g., `{'foo': 'bar'}`) instead of valid JSON (e.g., `{"foo": "bar"}`) when shown as readonly in the admin.
+
+The fix needs to be in `django/contrib/admin/utils.py` in the `display_for_field` function, which should check if the field is a JSONField and use its `prepare_value` method to properly format the output as JSON.
+
+Here's the patch:
+
+--- a/django/contrib/admin/utils.py
++++ b/django/contrib/admin/utils.py
+@@ -1,4 +1,5 @@
+ import datetime
++import json
+ import decimal
+ from collections import defaultdict
+ 
+@@ -394,6 +395,8 @@ def display_for_field(value, field, empty_value_display):
+         return formats.number_format(value)
+     elif isinstance(field, models.FileField) and value:
+         return format_html('<a href="{}">{}</a>', value.url, value)
++    elif isinstance(field, models.JSONField):
++        return json.dumps(value, ensure_ascii=False, cls=field.encoder)
+     else:
+         return display_for_value(value, empty_value_display)

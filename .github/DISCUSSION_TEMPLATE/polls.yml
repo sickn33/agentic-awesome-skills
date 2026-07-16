@@ -1,0 +1,47 @@
+title: "[Poll] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use Polls when you want structured community input on competing options, priorities, or tradeoffs.
+  - type: input
+    id: decision
+    attributes:
+      label: What decision or question are you polling?
+      description: Keep the poll focused on a single choice the community can react to.
+      placeholder: "Example: Which bundle should we prioritize next?"
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Explain why the poll matters and what will be done with the result.
+      placeholder: Tell people what problem is being solved and how maintainers will use the vote.
+    validations:
+      required: true
+  - type: textarea
+    id: options-rationale
+    attributes:
+      label: Option rationale
+      description: Briefly explain the options you are putting in the poll so people can vote well.
+      placeholder: |
+        - Option A:
+        - Option B:
+        - Option C:
+    validations:
+      required: false
+  - type: textarea
+    id: success-criteria
+    attributes:
+      label: What outcome are you hoping to learn?
+      description: Clarify what signal, threshold, or insight would make this poll useful.
+      placeholder: "Example: If one option clearly wins, we will turn it into an actionable issue."
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: Before posting
+      options:
+        - label: I made the poll narrow enough that voters can make an informed choice.
+          required: true

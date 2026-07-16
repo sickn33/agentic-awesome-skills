@@ -1,0 +1,58 @@
+Based on the issue description and the hints provided, I can construct the patch. The issue is in `lib/matplotlib/artist.py` in the `format_cursor_data` method where `self.norm.inverse()` is called, but `BoundaryNorm` raises a `ValueError` because it's not invertible.
+
+The recommended fix from the discussion is to:
+1. Use a try-except block to catch the ValueError when inverse() fails
+2. For BoundaryNorm specifically, use its boundaries to determine the neighbors
+
+Let me create the patch based on the information provided:
+
+```
+--- a/lib/matplotlib/artist.py
++++ b/lib/matplotlib/artist.py
+@@ -1279,9 +1279,15 @@ class Artist:
+         n = self.cmap.N
+         if np.isfinite(normed):
+             # Midpoints of neighboring color intervals.
+-            neighbors = self.norm.inverse(
+-                (int(normed * n) + np.array([0, 1])) / n)
+-            delta = abs(googol - delta)
++            try:
++                neighbors = self.norm.inverse(
++                    (int(normed * n) + np.array([0, 1])) / n)
++            except ValueError:
++                # Norm.inverse() is not always defined, e.g. for BoundaryNorm.
++                # In this case, fall back to the data value itself.
++                neighbors = np.array([data, data])
++            delta = abs(neighbors - data).max()
+             g_sig_digits = cbook._g_sig_digits(data, delta)
+         else:
+             g_sig_digits = 3  # Fallback value.
+```
+
+Wait, I need to look at this more carefully. Looking at the bug report more closely:
+- Line 1282 in artist.py calls `self.norm.inverse()`
+- This crashes with BoundaryNorm
+
+Let me provide a cleaner patch based on the exact line numbers mentioned:
+
+--- a/lib/matplotlib/artist.py
++++ b/lib/matplotlib/artist.py
+@@ -1279,9 +1279,15 @@ class Artist:
+         n = self.cmap.N
+         if np.isfinite(normed):
+             # Midpoints of neighboring color intervals.
+-            neighbors = self.norm.inverse(
+-                (int(normed * n) + np.array([0, 1])) / n)
+-            delta = abs(neighbors - data).max()
++            try:
++                neighbors = self.norm.inverse(
++                    (int(normed * n) + np.array([0, 1])) / n)
++                delta = abs(neighbors - data).max()
++            except ValueError:
++                # Norm.inverse() is not always defined, e.g. for BoundaryNorm.
++                # In this case, fall back to a default number of significant digits.
++                neighbors = None
++                delta = 0
+             g_sig_digits = cbook._g_sig_digits(data, delta)
+         else:
+             g_sig_digits = 3  # Fallback value.

@@ -1,0 +1,15 @@
+# django__django-11133
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/http/response.py
++++ b/django/http/response.py
+@@ -232,6 +232,9 @@ class HttpResponseBase:
+     def make_bytes(self, value):
+         """Turn a value into a bytestring encoded in the output charset."""
++        # Handle memoryview objects by converting to bytes
++        if isinstance(value, memoryview):
++            return bytes(value)
+         # Per PEP 3333, this response body must be bytes. To avoid returning
+         # an instance of a subclass, this function returns `bytes(value)`.
+         # This doesn't make a copy when `value` already contains bytes.

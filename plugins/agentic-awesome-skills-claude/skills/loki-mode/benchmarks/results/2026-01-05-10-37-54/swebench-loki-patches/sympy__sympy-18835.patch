@@ -1,0 +1,39 @@
+# sympy__sympy-18835
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I have enough information to generate the patch. The issue is in the `uniq` function in `sympy/utilities/iterables.py` around lines 2106-2124. The fix needs to track the initial length of sequences and raise `RuntimeError` if the length changes during iteration.
+
+Here's the patch:
+
+--- a/sympy/utilities/iterables.py
++++ b/sympy/utilities/iterables.py
+@@ -2106,6 +2106,15 @@ def uniq(seq, result=None):
+     >>> list(uniq([[1], [2], [1]]))
+     [[1], [2]]
+     """
++    try:
++        n = len(seq)
++    except TypeError:
++        n = None
++
++    def check():
++        if n is not None and len(seq) != n:
++            raise RuntimeError("dictionary changed size during iteration")
++
+     try:
+         seen = set()
+         result = result or []
+@@ -2113,6 +2122,7 @@ def uniq(seq, result=None):
+             if s not in seen:
+                 yield s
+                 seen.add(s)
++            check()
+     except TypeError:
+         if s not in result:
+             yield s
+@@ -2120,3 +2130,4 @@ def uniq(seq, result=None):
+         for s in seq:
+             if s not in result:
+                 yield s
++            check()

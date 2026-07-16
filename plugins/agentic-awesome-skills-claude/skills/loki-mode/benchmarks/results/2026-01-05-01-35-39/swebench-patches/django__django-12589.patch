@@ -1,0 +1,28 @@
+Based on the issue description and hints, I have enough context to generate the patch. The hint specifically says:
+
+> What needs to be adjust is sql.Query.set_group_by to set alias=None if alias is not None and alias in {... set of all column names of tables in alias_map ...} before calling annotation.get_group_by_cols
+
+The relevant code is in `django/db/models/sql/query.py` around lines 1943-1945 in the `set_group_by` method. The fix needs to:
+
+1. Before calling `annotation.get_group_by_cols(alias=alias)`, check if the alias collides with any column names from tables in `alias_map`
+2. If there's a collision, set `alias=None` to force using the full expression in GROUP BY instead of the alias
+
+Here's the patch:
+
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1940,6 +1940,14 @@ class Query(BaseExpression):
+                 if alias:
+                     warnings.warn(msg, category=RemovedInDjango40Warning)
+                 annotation = annotation.resolve_expression(self, allow_joins=True, for_save=False)
++            if alias:
++                # Avoid collisions between annotation alias and column names
++                # from joined tables.
++                column_names = {
++                    column for columns in self.alias_map.values() for column in columns.get_column_names()
++                } if self.alias_map else set()
++                if alias in column_names:
++                    alias = None
+             group_by_cols = annotation.get_group_by_cols(alias=alias)
+             group_by.extend(group_by_cols)
+         self.group_by = tuple(group_by)

@@ -1,0 +1,74 @@
+Based on my knowledge of Django's codebase and the issue description, I can generate the patch. The ResolverMatch class is in `django/urls/resolvers.py`. The issue is that when a `functools.partial` is passed as the view, the `__repr__` shows `functools.partial` which isn't helpful. The solution is to unwrap `functools.partial` objects in `ResolverMatch.__init__()`.
+
+Here's the patch:
+
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -1,6 +1,7 @@
+ """
+ This module converts requested URLs to callback view functions.
+ 
++import functools
+ URLResolver is the main class here. Its resolve() method takes a URL (as
+ a string) and returns a ResolverMatch object which provides access to all
+ attributes of the resolved URL match.
+@@ -28,6 +29,16 @@ class ResolverMatch:
+         self.app_names = [x for x in app_names if x] if app_names else []
+         self.app_name = ':'.join(self.app_names)
+         self.namespaces = [x for x in namespaces if x] if namespaces else []
+         self.namespace = ':'.join(self.namespaces)
++
++        if isinstance(func, functools.partial):
++            self.func = func
++            self._func_path = func.func.__module__ + '.' + func.func.__name__
++            self.args = func.args + args
++            self.kwargs = {**func.keywords, **kwargs}
++        else:
++            self.func = func
++            self._func_path = func.__module__ + '.' + func.__name__
++            self.args = args
++            self.kwargs = kwargs
+
+Wait, I need to look at actual Django code more carefully. Let me provide a more accurate patch based on my knowledge of Django:
+
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -1,6 +1,7 @@
+ """
+ This module converts requested URLs to callback view functions.
+ 
++import functools
+ URLResolver is the main class here. Its resolve() method takes a URL (as
+ a string) and returns a ResolverMatch object which provides access to all
+ attributes of the resolved URL match.
+@@ -28,6 +29,14 @@ class ResolverMatch:
+     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):
+         self.func = func
+         self.args = args
+         self.kwargs = kwargs
++        if isinstance(func, functools.partial):
++            func_path = func.func
++            self.args = func.args + args
++            self.kwargs = {**func.keywords, **kwargs}
++        else:
++            func_path = func
++        if hasattr(func_path, 'view_class'):
++            func_path = func_path.view_class
+         self.url_name = url_name
+         self.route = route
+         self.tried = tried
+@@ -35,11 +44,7 @@ class ResolverMatch:
+         self.app_name = ':'.join(self.app_names)
+         self.namespaces = [x for x in namespaces if x] if namespaces else []
+         self.namespace = ':'.join(self.namespaces)
+-
+-        if hasattr(func, 'view_class'):
+-            func = func.view_class
+-        if not hasattr(func, '__name__'):
++        if not hasattr(func_path, '__name__'):
+             # A class-based view
+-            self._func_path = func.__class__.__module__ + '.' + func.__class__.__name__
++            self._func_path = func_path.__class__.__module__ + '.' + func_path.__class__.__name__
+         else:
+-            self._func_path = func.__module__ + '.' + func.__name__
++            self._func_path = func_path.__module__ + '.' + func_path.__name__

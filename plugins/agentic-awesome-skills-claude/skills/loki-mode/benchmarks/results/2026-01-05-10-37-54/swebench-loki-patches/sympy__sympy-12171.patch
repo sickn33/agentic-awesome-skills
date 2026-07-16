@@ -1,0 +1,20 @@
+# sympy__sympy-12171
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/printing/mathematica.py
++++ b/sympy/printing/mathematica.py
+@@ -104,6 +104,14 @@ class MCodePrinter(CodePrinter):
+     def _print_Function(self, expr):
+         return expr.func.__name__ + "[%s]" % self.stringify(expr.args, ", ")
+ 
++    def _print_Derivative(self, expr):
++        return "D[%s]" % (self.stringify(expr.args, ", "))
++
++    def _print_Float(self, expr):
++        res = str(expr)
++        return res.replace('e', '*^')
++
++
+ def mathematica_code(expr, **settings):
+     r"""Converts an expr to a string of the Wolfram Mathematica code

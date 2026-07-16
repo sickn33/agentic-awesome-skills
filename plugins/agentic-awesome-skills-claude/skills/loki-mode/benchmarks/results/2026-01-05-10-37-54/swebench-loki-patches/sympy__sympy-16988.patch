@@ -1,0 +1,22 @@
+# sympy__sympy-16988
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis for the SymPy repository, I need to generate a patch for the `Intersection.__new__` method in `sympy/sets/sets.py`. The fix involves adding deduplication of arguments early in the method using `list(ordered(set(args), Set._infimum_key))`.
+
+Here is the patch:
+
+```
+--- a/sympy/sets/sets.py
++++ b/sympy/sets/sets.py
+@@ -1258,6 +1258,9 @@ class Intersection(Set):
+         if not args:
+             return S.UniversalSet
+ 
++        # Remove duplicates and order canonically
++        args = list(ordered(set(args), Set._infimum_key))
++
+         # Reduce sets using known rules
+         if evaluate:
+             return Intersection.reduce(args)
+```

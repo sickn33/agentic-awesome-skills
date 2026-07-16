@@ -1,0 +1,36 @@
+Based on the problem statement, I understand the issue clearly. The bug is in the Django Messages framework where `MessageEncoder` checks for truthiness of `extra_tags` instead of checking if it's not `None`. This causes empty strings to be treated as falsy and not serialized, resulting in `None` when deserialized.
+
+Let me create the patch based on the standard Django codebase structure:
+
+```
+--- a/django/contrib/messages/storage/cookie.py
++++ b/django/contrib/messages/storage/cookie.py
+@@ -14,7 +14,7 @@ class MessageEncoder(json.JSONEncoder):
+     def default(self, obj):
+         if isinstance(obj, Message):
+             # Using 0/1 here instead of False/True to produce more compact json
+-            is_safedata = 1 if isinstance(obj.message, SafeData) else 0
+-            message = [self.message_key, is_safedata, obj.level, obj.message]
+-            if obj.extra_tags:
++            is_safedata = 1 if isinstance(obj.message, SafeData) else 0
++            message = [self.message_key, is_safedata, obj.level, obj.message]
++            if obj.extra_tags is not None:
+                 message.append(obj.extra_tags)
+             return message
+         return super().default(obj)
+```
+
+Wait, let me provide a cleaner patch. The issue is that the encoder checks `if obj.extra_tags:` which is falsy for empty string, so it doesn't include it. The fix should check `if obj.extra_tags is not None:` instead.
+
+--- a/django/contrib/messages/storage/cookie.py
++++ b/django/contrib/messages/storage/cookie.py
+@@ -17,7 +17,7 @@ class MessageEncoder(json.JSONEncoder):
+         if isinstance(obj, Message):
+             # Using 0/1 here instead of False/True to produce more compact json
+             is_safedata = 1 if isinstance(obj.message, SafeData) else 0
+             message = [self.message_key, is_safedata, obj.level, obj.message]
+-            if obj.extra_tags:
++            if obj.extra_tags is not None:
+                 message.append(obj.extra_tags)
+             return message
+         return super().default(obj)

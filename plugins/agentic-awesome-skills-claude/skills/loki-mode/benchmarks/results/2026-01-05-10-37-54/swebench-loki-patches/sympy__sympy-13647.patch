@@ -1,0 +1,22 @@
+# sympy__sympy-13647
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the issue description, I can construct the patch. The bug is that when inserting columns, the code uses `pos` (column position) instead of `i` (row index) when accessing elements from the right portion of the original matrix.
+
+The typical implementation of `col_insert` would iterate through rows and columns to build a new matrix. The bug is in the lambda or entry function that constructs the new matrix - when getting elements from the right portion of the original matrix (columns after the insertion point), it incorrectly uses `pos` instead of `i` for the row index.
+
+--- a/sympy/matrices/common.py
++++ b/sympy/matrices/common.py
+@@ -86,7 +86,7 @@ class MatrixShaping(MatrixRequired):
+ 
+         def entry(i, j):
+             if j < pos:
+                 return self[i, j]
+             elif pos <= j < pos + other.cols:
+                 return other[i, j - pos]
+-            return self[pos, j - other.cols]
++            return self[i, j - other.cols]
+ 
+         return self._new(self.rows, self.cols + other.cols,
+                          lambda i, j: entry(i, j))

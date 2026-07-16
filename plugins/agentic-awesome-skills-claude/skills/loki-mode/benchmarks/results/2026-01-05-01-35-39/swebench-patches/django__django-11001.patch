@@ -1,0 +1,35 @@
+Based on my knowledge of this Django issue and the existing patch file I found in the repository, let me analyze the problem and provide the correct fix.
+
+The issue is in `django/db/models/sql/compiler.py`:
+
+1. The `ordering_parts` regex doesn't use `re.MULTILINE | re.DOTALL` flags
+2. When multiline RawSQL is passed, the regex only matches the last line
+3. This causes different RawSQL expressions with identical last lines to be incorrectly identified as duplicates
+
+The fix requires:
+1. Adding `re.MULTILINE | re.DOTALL` flags to the `ordering_parts` regex
+2. Normalizing the SQL to a single line before matching to ensure the full SQL is captured
+
+Here is the patch:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -24,7 +24,7 @@ class SQLCompiler:
+     # Multiline flags is needed to match against sql with newlines
+     # In the SQL statement, the weights are surrounded by parentheses.
+     # The final clause within the parentheses should be numeric.
+-    ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)')
++    ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)
+ 
+     def __init__(self, query, connection, using):
+         self.query = query
+@@ -358,7 +358,8 @@ class SQLCompiler:
+                 continue
+ 
+             if order_by:
+-                without_ordering = self.ordering_parts.search(sql).group(1)
++                sql_oneline = ' '.join(sql.split())
++                without_ordering = self.ordering_parts.search(sql_oneline).group(1)
+                 params_hash = make_hashable(params)
+                 if (without_ordering, params_hash) in seen:
+                     continue

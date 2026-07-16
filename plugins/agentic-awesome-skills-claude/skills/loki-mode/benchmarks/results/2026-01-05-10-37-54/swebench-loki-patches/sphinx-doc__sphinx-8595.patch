@@ -1,0 +1,45 @@
+# sphinx-doc__sphinx-8595
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of the Sphinx autodoc codebase, I can generate the patch. The issue is in `sphinx/ext/autodoc/__init__.py` where the `__all__` check uses a truthy evaluation (`if __all__:`) instead of checking for None explicitly (`if __all__ is not None:`).
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1053,7 +1053,7 @@ class ModuleDocumenter(Documenter):
+     def get_object_members(self, want_all: bool) -> Tuple[bool, ObjectMembers]:
+         """Return `bool, list` of instance members.
+         """
+-        if want_all:
++        if want_all:
+             if self.__all__:
+                 memberlist = self.__all__
+             else:
+@@ -1063,7 +1063,7 @@ class ModuleDocumenter(Documenter):
+             return False, ret
+         else:
+             memberlist = self.options.members or []
+-        return False, [ObjectMember(name, ALL) for name in memberlist]
++        return False, [ObjectMember(name, ALL) for name in memberlist]
+ 
+     def sort_members(self, documenters: List[Tuple["Documenter", bool]],
+                      order: str) -> List[Tuple["Documenter", bool]]:
+```
+
+Let me reconsider. The actual fix needs to change the condition from checking if `__all__` is truthy to checking if it's not None. Here's the correct patch:
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1053,7 +1053,7 @@ class ModuleDocumenter(Documenter):
+     def get_object_members(self, want_all: bool) -> Tuple[bool, ObjectMembers]:
+         """Return `bool, list` of instance members.
+         """
+         if want_all:
+-            if self.__all__:
++            if self.__all__ is not None:
+                 memberlist = self.__all__
+             else:
+                 # for implicit module members, check __module__ to avoid
+```

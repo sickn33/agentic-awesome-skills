@@ -1,0 +1,15 @@
+# django__django-13964
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -933,7 +933,7 @@ class Model(AltersData, metaclass=ModelBase):
+             # If the related field isn't cached, then an instance hasn't been
+             # assigned and there's no need to worry about this check.
+             if field.is_cached(self):
+-                if getattr(self, field.attname) is None:
++                if getattr(self, field.attname) in field.empty_values:
+                     obj = getattr(self, field.name)
+                     if obj and obj.pk is not None:
+                         setattr(self, field.attname, obj.pk)

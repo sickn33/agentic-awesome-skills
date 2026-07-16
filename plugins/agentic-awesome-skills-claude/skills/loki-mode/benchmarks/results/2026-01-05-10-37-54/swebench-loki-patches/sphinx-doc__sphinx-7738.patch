@@ -1,0 +1,22 @@
+# sphinx-doc__sphinx-7738
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Sphinx's Napoleon extension and the bug description, I can generate the correct patch. The issue is in the `_escape_args_and_kwargs` function in `sphinx/ext/napoleon/docstring.py`. This function was added to escape trailing underscores to prevent them from being interpreted as RST hyperlink targets, but this escaping is unnecessary and incorrect for attribute names in docstrings.
+
+Here is the patch:
+
+```
+--- a/sphinx/ext/napoleon/docstring.py
++++ b/sphinx/ext/napoleon/docstring.py
+@@ -348,9 +348,6 @@ class GoogleDocstring:
+ 
+ def _escape_args_and_kwargs(name: str) -> str:
+     """Escape *args and **kwargs to avoid reStructuredText markup issues."""
+-    if name.endswith('_'):
+-        name = name[:-1] + r'\_'
+-
+     if name.startswith('**'):
+         return r'\*\*' + name[2:]
+     elif name.startswith('*'):
+```

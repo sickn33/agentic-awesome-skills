@@ -1,0 +1,21 @@
+# sphinx-doc__sphinx-8474
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I have enough information to generate the patch. The issue is that in Sphinx v3.3, an `else: continue` block was added that skips enumerable nodes without captions, preventing them from getting figure numbers. The fix is to remove this `else: continue` block.
+
+Looking at the typical structure of `assign_figure_numbers`, the problematic code would be in a for loop that iterates over enumerable nodes and checks if they have a caption. The `else: continue` on a for-loop would skip to the next iteration when no caption is found.
+
+```
+--- a/sphinx/environment/collectors/toctree.py
++++ b/sphinx/environment/collectors/toctree.py
+@@ -210,8 +210,6 @@ class TocTreeCollector(EnvironmentCollector):
+                         for node in doctree.traverse(NodeClass):
+                             for id in node['ids']:
+                                 fignumbers[figure_id].setdefault(id, fignum)
+-                    else:
+-                        continue
+ 
+                     counter += 1
+ 
+```

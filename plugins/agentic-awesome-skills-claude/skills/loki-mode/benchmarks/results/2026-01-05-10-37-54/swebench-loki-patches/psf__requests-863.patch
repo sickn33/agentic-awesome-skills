@@ -1,0 +1,20 @@
+# psf__requests-863
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -47,7 +47,12 @@ class Request(object):
+         # Dictionary mapping (case-insensitive) parsing.
+         hooks = hooks or {}
+         for (k, v) in list(hooks.items()):
+-            self.register_hook(event=k, hook=v)
++            if hasattr(v, '__iter__'):
++                # v is a list/tuple of hooks
++                for h in v:
++                    self.register_hook(event=k, hook=h)
++            else:
++                self.register_hook(event=k, hook=v)
+ 
+ 
+     def __repr__(self):

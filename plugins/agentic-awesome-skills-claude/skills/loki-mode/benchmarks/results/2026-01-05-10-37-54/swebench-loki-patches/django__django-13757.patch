@@ -1,0 +1,32 @@
+# django__django-13757
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/fields/json.py
++++ b/django/db/models/fields/json.py
+@@ -366,13 +366,21 @@ class KeyTransformIsNull(lookups.IsNull):
+         return HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)
+ 
+     def as_sqlite(self, compiler, connection):
+-        if not self.rhs:
+-            return HasKey(self.lhs.lhs, self.lhs.key_name).as_sqlite(compiler, connection)
+-        return super().as_sql(compiler, connection)
++        template = 'JSON_TYPE(%s, %%s) IS NULL'
++        if self.rhs:
++            template = 'JSON_TYPE(%s, %%s) IS NULL OR JSON_TYPE(%s, %%s) = %s'
++            lhs, lhs_params, key_transforms = self.lhs.preprocess_lhs(compiler, connection)
++            sql = template % (lhs, lhs, connection.ops.quote_name('null'))
++            return sql, tuple(lhs_params) + tuple(key_transforms) + tuple(lhs_params) + tuple(key_transforms)
++        return HasKey(self.lhs.lhs, self.lhs.key_name).as_sqlite(compiler, connection)
+ 
+     def as_oracle(self, compiler, connection):
+-        if not self.rhs:
+-            return HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)
+-        return super().as_sql(compiler, connection)
++        if self.rhs:
++            sql, params = HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)
++            return 'NOT %s' % sql, params
++        return HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)
+ 
+ 
+ class KeyTransformIn(lookups.In):

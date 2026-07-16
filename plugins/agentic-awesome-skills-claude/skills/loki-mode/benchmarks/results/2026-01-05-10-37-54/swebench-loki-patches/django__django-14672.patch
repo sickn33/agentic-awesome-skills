@@ -1,0 +1,12 @@
+# django__django-14672
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/fields/reverse_related.py
++++ b/django/db/models/fields/reverse_related.py
+@@ -310,6 +310,7 @@ class ManyToManyRel(ForeignObjectRel):
+             self.through,
+             self.through_fields,
++            make_hashable(self.through_fields),
+             self.db_constraint,
+         )

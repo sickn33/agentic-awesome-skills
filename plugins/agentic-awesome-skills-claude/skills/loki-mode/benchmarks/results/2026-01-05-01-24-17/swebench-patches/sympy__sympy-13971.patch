@@ -1,0 +1,19 @@
+Based on my knowledge of the sympy codebase and the issue description, I can provide the fix. The problem is in sympy's LaTeX printing module where sequences are rendered with `\left\[` and `\right\]`. In LaTeX, `\[` and `\]` have special meaning (they start/end display math mode), so escaping them with backslash causes rendering issues in some contexts like Jupyter markdown cells.
+
+The fix is to change `\left\[` to `\left[` and `\right\]` to `\right]` in the sequence LaTeX printer. The square brackets `[` and `]` don't need escaping when used with `\left` and `\right`.
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1702,7 +1702,7 @@ def _print_SeqFormula(self, s):
+         else:
+             printset = tuple(s)
+ 
+-        return (r"\left\["
++        return (r"\left["
+               + r", ".join(self._print(el) for el in printset)
+-              + r"\right\]")
++              + r"\right]")
+ 
+     _print_SeqPer = _print_SeqFormula
+     _print_SeqAdd = _print_SeqFormula
+     _print_SeqMul = _print_SeqFormula

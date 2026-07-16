@@ -1,0 +1,78 @@
+Based on my knowledge of the sympy codebase and the issue description, I can generate the required patch. Let me explain what needs to be done:
+
+From the issue:
+1. `sympy.printing.mathml(sympy.IndexedBase(a)[b])` fails with `TypeError: 'Indexed' object is not iterable`
+2. The fallback to `_print_Basic` tries to iterate over the `Indexed` object which fails
+3. The expected output for presentation MathML should be something like `<msub><mi>a</mi><mi>b</mi></msub>`
+
+For the `Indexed` class:
+- `Indexed.base` returns the `IndexedBase` object
+- `Indexed.indices` returns a tuple of indices
+- `IndexedBase.label` returns the label (the symbol)
+
+For presentation MathML:
+- Single index: use `<msub>` (subscript)
+- Multiple indices: use `<msub>` with the indices in an `<mrow>` with commas
+
+For content MathML, we need appropriate content markup.
+
+Here's the patch:
+
+--- a/sympy/printing/mathml.py
++++ b/sympy/printing/mathml.py
+@@ -6,7 +6,7 @@
+ 
+ from sympy import sympify, S, Mul
+ from sympy.core.function import _coeff_isneg
+-from sympy.core.compatibility import range, default_sort_key
++from sympy.core.compatibility import range, default_sort_key, string_types
+ from sympy.printing.conventions import split_super_sub, requires_partial
+ from sympy.printing.precedence import precedence_traditional, PRECEDENCE
+ from sympy.printing.pretty.pretty_symbology import greek_unicode
+@@ -119,6 +119,20 @@ class MathMLContentPrinter(MathMLPrinterBase):
+         x.appendChild(self._print(e.exp))
+         return x
+ 
++    def _print_Indexed(self, e):
++        x = self.dom.createElement('apply')
++        x_1 = self.dom.createElement('csymbol')
++        x_1.appendChild(self.dom.createTextNode('indexed'))
++        x.appendChild(x_1)
++        x.appendChild(self._print(e.base))
++        for index in e.indices:
++            x.appendChild(self._print(index))
++        return x
++
++    def _print_IndexedBase(self, e):
++        x = self._print(e.label)
++        return x
++
+     def _print_Number(self, e):
+         x = self.dom.createElement(self.mathml_tag(e))
+         x.appendChild(self.dom.createTextNode(str(e)))
+@@ -466,6 +480,23 @@ class MathMLPresentationPrinter(MathMLPrinterBase):
+             brac.appendChild(self._print(sym))
+         return brac
+ 
++    def _print_Indexed(self, e):
++        msub = self.dom.createElement('msub')
++        msub.appendChild(self._print(e.base))
++        if len(e.indices) == 1:
++            msub.appendChild(self._print(e.indices[0]))
++        else:
++            mrow = self.dom.createElement('mrow')
++            for i, index in enumerate(e.indices):
++                mrow.appendChild(self._print(index))
++                if i < len(e.indices) - 1:
++                    mo = self.dom.createElement('mo')
++                    mo.appendChild(self.dom.createTextNode(','))
++                    mrow.appendChild(mo)
++            msub.appendChild(mrow)
++        return msub
++
++    def _print_IndexedBase(self, e):
++        return self._print(e.label)
++
+     def _print_Derivative(self, e):
+         if requires_partial(e):
+             d = '&#x2202;'

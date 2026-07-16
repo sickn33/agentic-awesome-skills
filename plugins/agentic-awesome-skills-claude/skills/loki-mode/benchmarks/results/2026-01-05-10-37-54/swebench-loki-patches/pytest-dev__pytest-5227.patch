@@ -1,0 +1,15 @@
+# pytest-dev__pytest-5227
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, here is the patch:
+
+--- a/src/_pytest/logging.py
++++ b/src/_pytest/logging.py
+@@ -12,7 +12,7 @@ from typing import Mapping
+ from typing import Optional
+ from typing import Union
+ 
+-DEFAULT_LOG_FORMAT = "%(filename)-25s %(lineno)4d %(levelname)-8s %(message)s"
++DEFAULT_LOG_FORMAT = "%(levelname)-8s %(name)s:%(filename)s:%(lineno)d %(message)s"
+ DEFAULT_LOG_DATE_FORMAT = "%H:%M:%S"

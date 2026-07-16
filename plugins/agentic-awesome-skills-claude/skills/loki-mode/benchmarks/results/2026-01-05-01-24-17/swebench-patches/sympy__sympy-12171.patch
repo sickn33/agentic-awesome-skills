@@ -1,0 +1,17 @@
+This task asks me to generate a patch for the sympy repository, but the sympy codebase is not present in the current working directory. Based on the issue description and the suggested fix, I can generate the patch based on the standard structure of sympy's mathematica.py file. Let me provide the patch:
+
+--- a/sympy/printing/mathematica.py
++++ b/sympy/printing/mathematica.py
+@@ -100,6 +100,12 @@ class MCodePrinter(CodePrinter):
+     def _print_Function(self, expr):
+         return expr.func.__name__ + "[%s]" % self.stringify(expr.args, ", ")
+ 
++    def _print_Derivative(self, expr):
++        return "D[%s]" % (self.stringify(expr.args, ", "))
++
++    def _print_Float(self, expr):
++        res = str(expr)
++        return res.replace('e', '*^')
+ 
+ def mathematica_code(expr, **settings):
+     r"""Converts an expr to a string of the Wolfram Mathematica code

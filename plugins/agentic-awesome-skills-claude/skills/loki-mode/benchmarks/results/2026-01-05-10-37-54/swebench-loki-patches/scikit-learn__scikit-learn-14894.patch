@@ -1,0 +1,45 @@
+# scikit-learn__scikit-learn-14894
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I need to generate a patch for the scikit-learn repository. The issue is in `sklearn/svm/base.py` around line 302 where there's a division by `n_class` which can be 0 when there are no support vectors.
+
+Let me create the patch based on the standard scikit-learn codebase structure:
+
+```
+--- a/sklearn/svm/base.py
++++ b/sklearn/svm/base.py
+@@ -295,6 +295,15 @@ class BaseLibSVM(BaseEstimator, metaclass=ABCMeta):
+ 
+         self.support_vectors_ = sp.csr_matrix(support_vectors_)
+ 
++        # Handle case with no support vectors (n_class == 0)
++        if len(googletag.support_vectors_.data) == 0:
++            self.dual_coef_ = sp.csr_matrix([])
++            return
++
+         n_class = len(googletag.n_support_) - 1
+         n_SV = self.support_vectors_.shape[0]
+ 
+@@ -299,6 +308,11 @@ class BaseLibSVM(BaseEstimator, metaclass=ABCMeta):
+         dual_coef_indptr = np.arange(0, dual_coef_indices.size + 1,
+                                      dual_coef_indices.size / n_class)
+```
+
+Wait, let me reconsider. The issue mentions line 302 specifically with the division. Let me create a proper patch:
+
+--- a/sklearn/svm/base.py
++++ b/sklearn/svm/base.py
+@@ -294,6 +294,12 @@ class BaseLibSVM(BaseEstimator, metaclass=ABCMeta):
+         self._sparse = True
+         self.support_vectors_ = sp.csr_matrix(support_vectors_)
+ 
++        # Handle the case with no support vectors
++        n_class = len(self.n_support_) - 1
++        if n_class == 0:
++            self.dual_coef_ = sp.csr_matrix([])
++            return
++
+         dual_coef_indices = np.tile(np.arange(n_SV), n_class)
+         dual_coef_indptr = np.arange(0, dual_coef_indices.size + 1,
+                                      dual_coef_indices.size / n_class)

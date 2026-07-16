@@ -1,0 +1,36 @@
+# sympy__sympy-22005
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/solvers/polysys.py
++++ b/sympy/solvers/polysys.py
+@@ -237,10 +237,14 @@ def _solve_reduced_system(system, gens, entry=False):
+ 
+         basis = groebner(system, gens, polys=True)
+ 
++        if len(basis) < len(gens):
++            raise NotImplementedError(filldedent('''
++                only zero-dimensional systems supported
++                (finite number of solutions)
++                '''))
++
+         univariate = list(filter(_is_univariate, basis))
+ 
+-        if len(univariate) == 1:
++        if len(univariate) == 1 and len(gens) == 1:
+             f = univariate.pop()
+         else:
+             raise NotImplementedError(filldedent('''
+--- a/sympy/solvers/tests/test_polysys.py
++++ b/sympy/solvers/tests/test_polysys.py
+@@ -48,6 +48,10 @@ def test_solve_poly_system():
+     raises(NotImplementedError, lambda: solve_poly_system(
+         [z, -2*x*y**2 + x + y**2*z, y**2*(-z - 4) + 2]))
+     raises(PolynomialError, lambda: solve_poly_system([1/x], x))
++    raises(NotImplementedError, lambda: solve_poly_system(
++        Poly(x - 1, x, y), (x, y)))
++    raises(NotImplementedError, lambda: solve_poly_system(
++        Poly(y - 1, x, y), (x, y)))
+ 
+ 
+ def test_solve_biquadratic():

@@ -1,0 +1,50 @@
+Based on my knowledge of Django's codebase and the issue description, I can create the patch. The `json_script` function in Django's `django/utils/html.py` uses a hardcoded `DjangoJSONEncoder`. The fix requires adding an `encoder` parameter that defaults to `DjangoJSONEncoder`.
+
+Here's the patch:
+
+--- a/django/utils/html.py
++++ b/django/utils/html.py
+@@ -62,12 +62,14 @@ _json_script_escapes = {
+ }
+ 
+ 
+-def json_script(value, element_id=None):
++def json_script(value, element_id=None, encoder=None):
+     """
+     Escape all the HTML/XML special characters with their unicode escapes, so
+     value is safe to be output anywhere except for inside a tag attribute. Wrap
+     the escaped JSON in a script tag.
+     """
++    if encoder is None:
++        encoder = DjangoJSONEncoder
+     from django.core.serializers.json import DjangoJSONEncoder
+-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)
++    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)
+     if element_id:
+         template = '<script id="{}" type="application/json">{}</script>'
+         return format_html(template, element_id, mark_safe(json_str))
+
+Wait, I need to reconsider the order of the import. Let me fix that:
+
+--- a/django/utils/html.py
++++ b/django/utils/html.py
+@@ -62,12 +62,15 @@ _json_script_escapes = {
+ }
+ 
+ 
+-def json_script(value, element_id=None):
++def json_script(value, element_id=None, encoder=None):
+     """
+     Escape all the HTML/XML special characters with their unicode escapes, so
+     value is safe to be output anywhere except for inside a tag attribute. Wrap
+     the escaped JSON in a script tag.
+     """
+     from django.core.serializers.json import DjangoJSONEncoder
+-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)
++
++    if encoder is None:
++        encoder = DjangoJSONEncoder
++    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)
+     if element_id:
+         template = '<script id="{}" type="application/json">{}</script>'
+         return format_html(template, element_id, mark_safe(json_str))

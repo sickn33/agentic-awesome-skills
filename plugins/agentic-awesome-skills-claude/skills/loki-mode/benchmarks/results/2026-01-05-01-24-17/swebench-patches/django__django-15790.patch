@@ -1,0 +1,34 @@
+Based on my knowledge of Django and the issue described, I can provide the fix for this bug. The issue is in Django's template system checks where the `check_for_template_tags_with_the_same_name` function incorrectly reports duplicate template tags when the same library is added to both the auto-discovered templatetags and the TEMPLATES['OPTIONS']['libraries'] setting.
+
+The bug occurs because:
+1. Django auto-discovers templatetags from installed apps
+2. Users can also explicitly add libraries in TEMPLATES['OPTIONS']['libraries']
+3. When the same library is added both ways, it appears twice in the collected libraries list
+4. The check incorrectly reports this as a duplicate
+
+The fix is to use a set to track unique module paths instead of a list, so the same module appearing twice doesn't trigger a false positive.
+
+Here's the patch:
+
+--- a/django/core/checks/templates.py
++++ b/django/core/checks/templates.py
+@@ -50,14 +50,14 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):
+             )
+ 
+     for name, module_name in libraries.items():
+-        if name in libraries_modules:
+-            libraries_modules[name].append(module_name)
+-        else:
+-            libraries_modules[name] = [module_name]
++        libraries_modules.setdefault(name, set()).add(module_name)
+ 
+     for name, module_names in libraries_modules.items():
+         if len(module_names) > 1:
+             errors.append(
+                 Error(
+                     E003.msg.format(
+-                        repr(name), ", ".join(map(repr, module_names))
++                        repr(name), ", ".join(map(repr, sorted(module_names)))
+                     ),
+                     id=E003.id,
+                 )

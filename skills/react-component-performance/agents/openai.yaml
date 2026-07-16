@@ -1,0 +1,4 @@
+interface:
+  display_name: "React Component Performance"
+  short_description: "Profile and fix React render issues"
+  default_prompt: "Use $react-component-performance to analyze and improve this React component's rendering performance."

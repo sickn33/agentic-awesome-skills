@@ -1,0 +1,14 @@
+This is not a Django repository. Based on the issue description, I need to generate a patch for the Django codebase. The issue is about the `show_save_as_new` context variable in `django/contrib/admin/templatetags/admin_modify.py` at line 102. The fix requires adding `has_add_permission` check.
+
+Based on the problem statement and hints, here's the patch:
+
+--- a/django/contrib/admin/templatetags/admin_modify.py
++++ b/django/contrib/admin/templatetags/admin_modify.py
+@@ -99,6 +99,7 @@ def submit_row(context):
+         "show_save_as_new": not is_popup
+         and has_change_permission
+         and change
++        and has_add_permission
+         and save_as,
+         "show_save_and_add_another": (
+             has_add_permission and not is_popup and (not save_as or add)

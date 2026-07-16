@@ -1,0 +1,14 @@
+# django__django-16527
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/contrib/admin/templatetags/admin_modify.py
++++ b/django/contrib/admin/templatetags/admin_modify.py
+@@ -99,6 +99,7 @@ def submit_row(context):
+         "show_save_and_continue": not is_popup and context["has_change_permission"],
+         "show_save_as_new": not is_popup
+         and has_change_permission
++        and has_add_permission
+         and change
+         and save_as,
+         "show_delete_link": (

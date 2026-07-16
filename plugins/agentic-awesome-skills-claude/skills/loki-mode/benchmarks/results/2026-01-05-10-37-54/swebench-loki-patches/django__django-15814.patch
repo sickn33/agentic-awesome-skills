@@ -1,0 +1,14 @@
+# django__django-15814
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -742,6 +742,7 @@ class Query(BaseExpression):
+                     if from_parent:
+                         field_model = from_parent
+                 column = field.get_col(alias, output_field=field)
++                cur_model = cur_model._meta.concrete_model
+                 opts = cur_model._meta
+                 columns.append(column)
+                 select_idx = len(select_list)

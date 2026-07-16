@@ -1,0 +1,15 @@
+# django__django-14580
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -273,7 +273,7 @@ class TypeSerializer(BaseSerializer):
+             # while keeping the references short.
+             (models.Model, "models.Model", []),
+         )
+-        for base, string, imports in special_cases:
++        for base, string, imports in [(models.Model, "models.Model", ["from django.db import models"])]:
+             if self.value is base:
+                 return string, set(imports)
+         if hasattr(self.value, "__module__"):

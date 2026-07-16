@@ -1,0 +1,68 @@
+Based on my knowledge of the sympy codebase and the issue description, I can create the patch. The issue is in the `sympy/combinatorics/permutations.py` file where the `Permutation` class constructor (`__new__` method) validates cycles and raises a `ValueError` when cycles are non-disjoint.
+
+The fix needs to:
+1. Remove the check that raises `ValueError` for non-disjoint cycles
+2. Instead, apply the cycles in left-to-right order to compute the resulting permutation
+
+Here is the patch:
+
+--- a/sympy/combinatorics/permutations.py
++++ b/sympy/combinatorics/permutations.py
+@@ -895,12 +895,8 @@ class Permutation(Atom):
+                 c = Cycle()
+                 for ci in args:
+                     c = c(*ci)
+-                aform = c.list()
++                aform = c.list()
+             else:
+-                # see if there are any duplicates
+-                if has_dups(flatten(args)):
+-                    raise ValueError('there were repeated elements; to resolve '
+-                    'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))
+                 aform = list(args)
+         else:
+             aform = list(args)
+
+Wait, let me reconsider. The issue is that when passing `[[0,1],[0,1]]`, it should apply the cycles left-to-right. Looking more carefully at the sympy code structure, the cycles are being processed differently. Let me provide a more accurate patch:
+
+--- a/sympy/combinatorics/permutations.py
++++ b/sympy/combinatorics/permutations.py
+@@ -895,12 +895,12 @@ class Permutation(Atom):
+                 c = Cycle()
+                 for ci in args:
+                     c = c(*ci)
+                 aform = c.list()
+             else:
+-                # see if there are any duplicates
+-                if has_dups(flatten(args)):
+-                    raise ValueError('there were repeated elements; to resolve '
+-                    'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))
+-                aform = list(args)
++                aform = Permutation._af_new(list(range(size or 0)))
++                for ci in args:
++                    aform = (Permutation(Cycle(*ci))*aform).array_form
++                return Permutation._af_new(aform)
+         else:
+             aform = list(args)
+
+Actually, I need to be more careful here. Let me provide a cleaner patch that handles this properly. The key insight is that when `is_cycle` is False (the else branch), the code currently checks for duplicates and raises an error. Instead, it should apply the cycles left-to-right like the Cycle class does.
+
+--- a/sympy/combinatorics/permutations.py
++++ b/sympy/combinatorics/permutations.py
+@@ -895,12 +895,10 @@ class Permutation(Atom):
+                 c = Cycle()
+                 for ci in args:
+                     c = c(*ci)
+                 aform = c.list()
+             else:
+-                # see if there are any duplicates
+-                if has_dups(flatten(args)):
+-                    raise ValueError('there were repeated elements; to resolve '
+-                    'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))
+-                aform = list(args)
++                c = Cycle()
++                for ci in args:
++                    c = c(*ci)
++                aform = c.list()
+         else:
+             aform = list(args)

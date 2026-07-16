@@ -1,0 +1,391 @@
+# pytest-dev__pytest-7220
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -1,4 +1,5 @@
+ import inspect
++import os
+ import re
+ import sys
+ import traceback
+@@ -551,13 +552,27 @@ class ReprFileLocation(TerminalRepr):
+         self.lineno = lineno
+         self.message = message
+ 
+-    def toterminal(self, tw: TerminalWriter) -> None:
++    def toterminal(self, tw: TerminalWriter, invocation_dir=None) -> None:
+         # filename and samples of underline
+         msg = self.message
+-        i = msg.find("\n")
+-        if i != -1:
+-            msg = msg[:i]
+-        tw.write(self.path, bold=True, red=True)
++        lineno = self.lineno
++        path = self.path
++        
++        # Compute path relative to invocation directory if available
++        if invocation_dir is not None:
++            try:
++                abspath = os.path.abspath(path)
++                relpath = os.path.relpath(abspath, str(invocation_dir))
++                # Use relative path unless it goes too far up
++                if not relpath.startswith(".."):
++                    path = relpath
++                else:
++                    path = abspath
++            except (ValueError, OSError):
++                pass
++        
++        tw.write(path, bold=True, red=True)
+         tw.line(":{}: {}".format(self.lineno, msg))
+ 
+ 
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -558,6 +558,10 @@ class ReprFileLocation(TerminalRepr):
+         lineno = self.lineno
+         path = self.path
+         
++        i = msg.find("\n")
++        if i != -1:
++            msg = msg[:i]
++        
+         # Compute path relative to invocation directory if available
+         if invocation_dir is not None:
+             try:
+--- a/src/_pytest/terminal.py
++++ b/src/_pytest/terminal.py
+@@ -992,7 +992,7 @@ class TerminalReporter:
+         for reprlocation_lines in rep.longrepr.chain:
+             for reprlocation, lines, style in reprlocation_lines:
+                 if reprlocation:
+-                    reprlocation.toterminal(self._tw)
++                    reprlocation.toterminal(self._tw, self.config.invocation_dir)
+             for line in lines:
+                 self._tw.line(line)
+ 
+@@ -1003,6 +1003,9 @@ class TerminalReporter:
+             for line in rep.longrepr.splitlines():
+                 self._tw.line(line)
+         else:
+-            rep.longrepr.toterminal(self._tw)
++            if hasattr(rep.longrepr, 'toterminal'):
++                rep.longrepr.toterminal(self._tw)
++            else:
++                self._tw.line(str(rep.longrepr))
+ 
+     def _folded_skips(self) -> List[Tuple[int, str, Optional[int], str]]:
+--- a/src/_pytest/terminal.py
++++ b/src/_pytest/terminal.py
+@@ -991,16 +991,7 @@ class TerminalReporter:
+         if hasattr(rep.longrepr, "chain"):
+             for reprlocation_lines in rep.longrepr.chain:
+-                for reprlocation, lines, style in reprlocation_lines:
+-                    if reprlocation:
+-                        reprlocation.toterminal(self._tw, self.config.invocation_dir)
+-                for line in lines:
+-                    self._tw.line(line)
+-
+-            for line in rep.longrepr.chain[-1][1]:
+-                self._tw.line(line)
+-        elif isinstance(rep.longrepr, str):
+-            for line in rep.longrepr.splitlines():
+-                self._tw.line(line)
+-        else:
+-            if hasattr(rep.longrepr, 'toterminal'):
+-                rep.longrepr.toterminal(self._tw)
+-            else:
+-                self._tw.line(str(rep.longrepr))
++            rep.longrepr.toterminal(self._tw)
++        elif isinstance(rep.longrepr, str):
++            for line in rep.longrepr.splitlines():
++                self._tw.line(line)
++        else:
++            rep.longrepr.toterminal(self._tw)
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -476,6 +476,7 @@ class ExceptionChainRepr(ExceptionRepr):
+         super().__init__()
+         self.chain = chain
+         # reprcrash and reprtraceback of the outermost (the newest) parsing exception
++        self.invocation_dir = None
+         self.reprtraceback = chain[-1][0]
+         self.reprcrash = chain[-1][1]
+ 
+@@ -485,6 +486,8 @@ class ExceptionChainRepr(ExceptionRepr):
+         return "<{} tbstyle={} {!r}>".format(cls, style, self.chain)
+ 
+     def toterminal(self, tw: TerminalWriter) -> None:
++        invocation_dir = getattr(self, 'invocation_dir', None)
++        
+         for element in self.chain:
+             reprtraceback, reprcrash, descr = element
+             if descr:
+@@ -492,7 +495,7 @@ class ExceptionChainRepr(ExceptionRepr):
+             reprtraceback.toterminal(tw)
+             if reprcrash:
+                 # Add empty line between traceback and file location
+-                reprcrash.toterminal(tw)
++                reprcrash.toterminal(tw, invocation_dir)
+ 
+ 
+ class ReprTraceback(TerminalRepr):
+--- a/src/_pytest/reports.py
++++ b/src/_pytest/reports.py
+@@ -5,6 +5,7 @@ from typing import List
+ from typing import Optional
+ from typing import Tuple
+ from typing import Union
++from pathlib import Path
+ 
+ import py
+ 
+@@ -131,6 +132,17 @@ class BaseReport:
+             writer.line("")
+         self.longrepr.toterminal(writer)
+ 
++    def set_invocation_dir(self, invocation_dir: Path) -> None:
++        """Set the invocation directory for path computation in error messages.
++        
++        This is used to ensure file paths in error messages are always relative
++        to the original invocation directory, not the current working directory.
++        """
++        if hasattr(self.longrepr, 'chain'):
++            self.longrepr.invocation_dir = invocation_dir
++        if hasattr(self.longrepr, 'reprcrash'):
++            self.longrepr.invocation_dir = invocation_dir
++
+     def _get_verbose_word(self, config):
+         _category, _short, verbose = config.hook.pytest_report_teststatus(
+             report=self, config=config
+--- a/src/_pytest/terminal.py
++++ b/src/_pytest/terminal.py
+@@ -994,6 +994,9 @@ class TerminalReporter:
+         for rep in reports:
+             if rep.outcome == "failed":
+                 self._outrep_summary(rep)
++                if hasattr(rep.longrepr, 'invocation_dir'):
++                    rep.longrepr.invocation_dir = self.config.invocation_dir
++                self._outrep_summary(rep)
+--- a/src/_pytest/terminal.py
++++ b/src/_pytest/terminal.py
+@@ -991,9 +991,11 @@ class TerminalReporter:
+     def short_test_summary(self) -> None:
+         if not self.reportchars:
+             return
+-
++        
+         for rep in self._getfailures():
+             msg = self._getfailrepr(rep)
++            if hasattr(rep.longrepr, 'invocation_dir'):
++                rep.longrepr.invocation_dir = self.config.invocation_dir
+             self.write_sep("_", "FAILURES")
+             for rep in self.stats.get("failed", []):
+                 if self.verbosity <= 0:
+@@ -1001,6 +1003,8 @@ class TerminalReporter:
+                 else:
+                     self._outrep_summary(rep)
+ 
++    def _outrep_summary(self, rep: "BaseReport") -> None:
++        """Print the failure / error summary for a report."""
+         if hasattr(rep.longrepr, "chain"):
+             rep.longrepr.toterminal(self._tw)
+         elif isinstance(rep.longrepr, str):
+--- a/src/_pytest/terminal.py
++++ b/src/_pytest/terminal.py
+@@ -982,6 +982,8 @@ class TerminalReporter:
+                 self._tw.line(line)
+ 
+     def _outrep_summary(self, rep: "BaseReport") -> None:
++        if hasattr(rep.longrepr, 'invocation_dir') and rep.longrepr.invocation_dir is None:
++            rep.longrepr.invocation_dir = self.config.invocation_dir
+         rep.toterminal(self._tw)
+ 
+     def summary_failures(self) -> None:
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -551,7 +551,7 @@ class ReprFileLocation(TerminalRepr):
+         self.lineno = lineno
+         self.message = message
+ 
+-    def toterminal(self, tw: TerminalWriter, invocation_dir=None) -> None:
++    def toterminal(self, tw: TerminalWriter) -> None:
+         # filename and samples of underline
+         msg = self.message
+         lineno = self.lineno
+@@ -561,17 +561,7 @@ class ReprFileLocation(TerminalRepr):
+         if i != -1:
+             msg = msg[:i]
+         
+-        # Compute path relative to invocation directory if available
+-        if invocation_dir is not None:
+-            try:
+-                abspath = os.path.abspath(path)
+-                relpath = os.path.relpath(abspath, str(invocation_dir))
+-                # Use relative path unless it goes too far up
+-                if not relpath.startswith(".."):
+-                    path = relpath
+-                else:
+-                    path = abspath
+-            except (ValueError, OSError):
+-                pass
+-        
+         tw.write(path, bold=True, red=True)
+         tw.line(":{}: {}".format(self.lineno, msg))
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -485,7 +485,6 @@ class ExceptionChainRepr(ExceptionRepr):
+         return "<{} tbstyle={} {!r}>".format(cls, style, self.chain)
+ 
+     def toterminal(self, tw: TerminalWriter) -> None:
+-        invocation_dir = getattr(self, 'invocation_dir', None)
+-        
+         for element in self.chain:
+             reprtraceback, reprcrash, descr = element
+             if descr:
+@@ -493,7 +492,7 @@ class ExceptionChainRepr(ExceptionRepr):
+             reprtraceback.toterminal(tw)
+             if reprcrash:
+                 # Add empty line between traceback and file location
+-                reprcrash.toterminal(tw, invocation_dir)
++                reprcrash.toterminal(tw)
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -475,7 +475,6 @@ class ExceptionChainRepr(ExceptionRepr):
+     ) -> None:
+         super().__init__()
+         self.chain = chain
+-        self.invocation_dir = None
+         # reprcrash and reprtraceback of the outermost (the newest) parsing exception
+         self.reprtraceback = chain[-1][0]
+         self.reprcrash = chain[-1][1]
+--- a/src/_pytest/reports.py
++++ b/src/_pytest/reports.py
+@@ -5,7 +5,6 @@ from typing import List
+ from typing import Optional
+ from typing import Tuple
+ from typing import Union
+-from pathlib import Path
+ 
+ import py
+ 
+@@ -132,17 +131,6 @@ class BaseReport:
+             writer.line("")
+         self.longrepr.toterminal(writer)
+ 
+-    def set_invocation_dir(self, invocation_dir: Path) -> None:
+-        """Set the invocation directory for path computation in error messages.
+-        
+-        This is used to ensure file paths in error messages are always relative
+-        to the original invocation directory, not the current working directory.
+-        """
+-        if hasattr(self.longrepr, 'chain'):
+-            self.longrepr.invocation_dir = invocation_dir
+-        if hasattr(self.longrepr, 'reprcrash'):
+-            self.longrepr.invocation_dir = invocation_dir
+-
+     def _get_verbose_word(self, config):
+         _category, _short, verbose = config.hook.pytest_report_teststatus(
+             report=self, config=config
+--- a/src/_pytest/terminal.py
++++ b/src/_pytest/terminal.py
+@@ -982,8 +982,6 @@ class TerminalReporter:
+                 self._tw.line(line)
+ 
+     def _outrep_summary(self, rep: "BaseReport") -> None:
+-        if hasattr(rep.longrepr, 'invocation_dir') and rep.longrepr.invocation_dir is None:
+-            rep.longrepr.invocation_dir = self.config.invocation_dir
+         rep.toterminal(self._tw)
+ 
+     def summary_failures(self) -> None:
+--- a/src/_pytest/nodes.py
++++ b/src/_pytest/nodes.py
+@@ -323,7 +323,15 @@ class Node:
+         excinfo: ExceptionInfo[Union[BaseException, Entry]],
+         style: "Optional[str]" = None,
+     ) -> "Union[str, TerminalRepr]":
+-        return excinfo.getrepr(
++        """Return a representation of the exception info for terminal output.
++        
++        This stores the invocation directory in the representation to ensure
++        file paths are always relative to the original directory, even if a
++        fixture changes the working directory.
++        """
++        invocation_dir = self.config.invocation_dir
++        
++        repr_result = excinfo.getrepr(
+             funcargs=True,
+             abspath=False,
+             showlocals=self.config.option.showlocals,
+@@ -333,6 +341,11 @@ class Node:
+             truncate_locals=True,
+         )
+ 
++        # Store invocation_dir on the representation for later use
++        if hasattr(repr_result, 'reprtraceback'):
++            repr_result.invocation_dir = invocation_dir
++        return repr_result
++
+     # Methods for ordering nodes
+     @property
+     def nodeid(self) -> str:
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -475,6 +475,7 @@ class ExceptionChainRepr(ExceptionRepr):
+     ) -> None:
+         super().__init__()
+         self.chain = chain
++        self.invocation_dir = None
+         # reprcrash and reprtraceback of the outermost (the newest) parsing exception
+         self.reprtraceback = chain[-1][0]
+         self.reprcrash = chain[-1][1]
+@@ -485,11 +486,13 @@ class ExceptionChainRepr(ExceptionRepr):
+         return "<{} tbstyle={} {!r}>".format(cls, style, self.chain)
+ 
+     def toterminal(self, tw: TerminalWriter) -> None:
++        invocation_dir = getattr(self, 'invocation_dir', None)
++        
+         for element in self.chain:
+             reprtraceback, reprcrash, descr = element
+             if descr:
+                 tw.line(descr, yellow=True)
+             reprtraceback.toterminal(tw)
+             if reprcrash:
+-                # Add empty line between traceback and file location
+-                reprcrash.toterminal(tw)
++                reprcrash.toterminal(tw, invocation_dir)
+ 
+ 
+ class ReprTraceback(TerminalRepr):
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -551,7 +551,7 @@ class ReprFileLocation(TerminalRepr):
+         self.lineno = lineno
+         self.message = message
+ 
+-    def toterminal(self, tw: TerminalWriter) -> None:
++    def toterminal(self, tw: TerminalWriter, invocation_dir=None) -> None:
+         # filename and samples of underline
+         msg = self.message
+         lineno = self.lineno
+@@ -561,6 +561,18 @@ class ReprFileLocation(TerminalRepr):
+         if i != -1:
+             msg = msg[:i]
+         
++        # Compute path relative to invocation directory if available
++        if invocation_dir is not None:
++            try:
++                abspath = os.path.abspath(path)
++                relpath = os.path.relpath(abspath, str(invocation_dir))
++                # Use relative path if it doesn't go up too many directories
++                if not relpath.startswith(".."):
++                    path = relpath
++                else:
++                    path = abspath
++            except (ValueError, OSError):
++                pass
++        
+         tw.write(path, bold=True, red=True)
+         tw.line(":{}: {}".format(self.lineno, msg))

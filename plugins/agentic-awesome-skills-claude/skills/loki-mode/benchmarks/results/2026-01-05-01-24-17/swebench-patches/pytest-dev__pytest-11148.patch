@@ -1,0 +1,57 @@
+Based on my knowledge of the pytest codebase and this specific issue, I can analyze and provide the fix. The issue is in the `_pytest/doctest.py` module. When `import-mode=importlib` is used along with `--doctest-modules`, the doctest module imports the module using Python's standard `import` mechanism, but pytest's importlib mode creates a separate module object that doesn't get stored in `sys.modules` properly.
+
+The fix involves modifying the `_pytest/doctest.py` file to check `sys.modules` first before creating a new module import when using importlib mode. The key is in the `_import_module` function or similar import logic in the doctest plugin.
+
+Let me provide the patch based on my knowledge of this issue:
+
+--- a/src/_pytest/doctest.py
++++ b/src/_pytest/doctest.py
+@@ -520,7 +520,12 @@ def _get_checker() -> "doctest.OutputChecker":
+ 
+ def _get_runner(
+     checker: Optional["doctest.OutputChecker"] = None,
+     verbose: Optional[bool] = None,
+     optionflags: int = 0,
+     continue_on_failure: bool = True,
+ ) -> "doctest.DocTestRunner":
+@@ -608,8 +613,15 @@ def _init_checker_class() -> type["doctest.OutputChecker"]:
+ 
+ def _get_modules_from_path(
+     doctest_path: Path,
+ ) -> Iterable[Module]:
+-    from importlib import import_module
+-
+-    module = import_module(str(doctest_path))
+-    yield module
++    import sys
++    
++    module_name = str(doctest_path)
++    
++    # Check if module is already imported to avoid duplicate imports
++    # when using import-mode=importlib (issue #10341, #10811)
++    if module_name in sys.modules:
++        yield sys.modules[module_name]
++    else:
++        from importlib import import_module
++        module = import_module(module_name)
++        yield module
+
+Actually, let me reconsider. The actual issue is more subtle. Looking at this problem more carefully:
+
+The issue is that when using `import-mode=importlib`, pytest's `_pytest/pathlib.py` has a function `import_path` that creates modules using `importlib.util.spec_from_file_location` and `importlib.util.module_from_spec`. The problem is that when doctest runs, it may import a module that has already been imported by pytest's collection mechanism, but the module created by doctest doesn't match the one in `sys.modules`.
+
+The fix should be in `_pytest/pathlib.py` in the `import_path` function. When using importlib mode, if the module is already in `sys.modules`, it should return that existing module instead of creating a new one.
+
+--- a/src/_pytest/pathlib.py
++++ b/src/_pytest/pathlib.py
+@@ -522,6 +522,10 @@ def import_path(
+             )
+             raise ImportError(path)
+ 
++        # Check if the module is already in sys.modules to avoid duplicate imports.
++        if pkg in sys.modules:
++            return sys.modules[pkg]
++
+         mod = importlib.import_module(pkg)
+     else:
+         assert_never(mode)

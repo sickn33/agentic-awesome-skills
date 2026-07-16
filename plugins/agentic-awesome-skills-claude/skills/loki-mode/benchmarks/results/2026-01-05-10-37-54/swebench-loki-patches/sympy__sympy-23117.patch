@@ -1,0 +1,18 @@
+# sympy__sympy-23117
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I can generate the patch directly from the traceback information provided. The issue is in the `_scan_iterable_shape` method around line 120-127 in `sympy/tensor/array/ndim_array.py`.
+
+--- a/sympy/tensor/array/ndim_array.py
++++ b/sympy/tensor/array/ndim_array.py
+@@ -117,6 +117,8 @@ class NDimArray(Printable):
+ 
+     def f(pointer):
+         if not isinstance(pointer, Iterable):
+             return [pointer], ()
++        if len(pointer) == 0:
++            return [], (0,)
+         result = [f(i) for i in pointer]
+         elems, shapes = zip(*result)
+         if len(set(shapes)) != 1:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS SwiftPM Packaging"
+  short_description: "Package SwiftPM macOS apps"
+  default_prompt: "Use $macos-spm-app-packaging to scaffold or package a SwiftPM-based macOS app without Xcode."

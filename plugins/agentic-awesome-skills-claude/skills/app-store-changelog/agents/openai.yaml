@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Changelog"
+  short_description: "Generate App Store release notes"
+  default_prompt: "Use $app-store-changelog to draft App Store release notes from the changes since the last tag."

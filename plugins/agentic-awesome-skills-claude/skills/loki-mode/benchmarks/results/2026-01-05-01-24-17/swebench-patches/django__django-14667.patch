@@ -1,0 +1,33 @@
+Based on my knowledge of Django and the issue description, I can construct the patch. The bug is in how `defer()` handles the case when it's chained after `only()`. The key file is `django/db/models/query.py` and the method `add_deferred_loading` in `django/db/models/sql/query.py`.
+
+Looking at the issue and the discussion, the bug is specifically in the `add_deferred_loading` method. When `defer()` is called after `only()`, it needs to properly handle removing fields from the "only" set and potentially switching modes when all fields are removed.
+
+The fix mentioned in the discussion is that when you call `defer()` after `only()`, and you're deferring fields that were in the `only()` set, you need to:
+1. Remove those fields from the only set
+2. But if there are additional fields being deferred that weren't in the only set, those should become deferred fields
+
+Let me create the patch based on the Django source code structure:
+
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -2105,12 +2105,15 @@ class Query(BaseExpression):
+         When the existing set is "immediate", this will work out to
+         removing any field names from the existing set.
+         """
++        field_names = set(field_names)
+         existing, defer = self.deferred_loading
+         if defer:
+             # Add to existing deferred names.
+-            self.deferred_loading = existing.union(field_names), True
++            self.deferred_loading = existing.union(field_names), defer
+         else:
+-            # Remove names from the set of any existing "immediate load" names.
+-            self.deferred_loading = existing.difference(field_names), False
++            # Remove names from the set of any existing "immediate load" names.
++            # If nothing remains, switch to defer mode.
++            new_existing = existing.difference(field_names)
++            new_defer = field_names.difference(existing)
++            if new_existing:
++                self.deferred_loading = new_existing, False
++            else:
++                self.deferred_loading = new_defer, True

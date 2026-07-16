@@ -1,0 +1,6 @@
+# Context Agent — Zero dependências externas
+# Usa apenas stdlib Python:
+# - json, sqlite3, pathlib, dataclasses
+# - argparse, datetime, re, shutil, sys
+#
+# Nenhum pip install necessário.

@@ -1,0 +1,79 @@
+Based on the issue, I need to generate a patch for Django's model checks. The issue is about the E028 error for duplicate table names, which should be downgraded to a warning when DATABASE_ROUTERS is configured. Let me analyze what the patch needs to do based on the issue description and hints:
+
+1. The check is in Django's `django/core/checks/model_checks.py`
+2. When `DATABASE_ROUTERS` setting is non-empty, the error should become a warning
+3. This allows the warning to be silenced via `SILENCED_SYSTEM_CHECKS`
+
+Based on my knowledge of Django's codebase and the issue description, here's the patch:
+
+--- a/django/core/checks/model_checks.py
++++ b/django/core/checks/model_checks.py
+@@ -4,7 +4,8 @@ from itertools import chain
+ 
+ from django.apps import apps
+ from django.conf import settings
+-from django.core.checks import Error, Tags, register
++from django.core.checks import Error, Tags, Warning, register
++
+ 
+ 
+ @register(Tags.models)
+@@ -35,11 +36,18 @@ def check_all_models(app_configs=None, **kwargs):
+     for db_table, model_labels in db_table_models.items():
+         if len(model_labels) != 1:
+             errors.append(
+-                Error(
+-                    "db_table '%s' is used by multiple models: %s."
+-                    % (db_table, ', '.join(db_table_models[db_table])),
+-                    obj=db_table,
+-                    id='models.E028',
++                make_error(
++                    msg="db_table '%s' is used by multiple models: %s."
++                        % (db_table, ', '.join(db_table_models[db_table])),
++                    obj=db_table, 
++                    id='models.W035' if settings.DATABASE_ROUTERS else 'models.E028',
+                 )
+             )
+     return errors
++
++
++def make_error(msg, obj, id):
++    if settings.DATABASE_ROUTERS:
++        return Warning(msg, obj=obj, id=id)
++    return Error(msg, obj=obj, id=id)
+
+Wait, let me reconsider. Looking at the hints more carefully and the Django code structure, a cleaner approach would be to check for DATABASE_ROUTERS directly where the error is created. Let me provide a cleaner patch:
+
+--- a/django/core/checks/model_checks.py
++++ b/django/core/checks/model_checks.py
+@@ -4,7 +4,7 @@ from itertools import chain
+ 
+ from django.apps import apps
+ from django.conf import settings
+-from django.core.checks import Error, Tags, register
++from django.core.checks import Error, Tags, Warning, register
+ 
+ 
+ @register(Tags.models)
+@@ -35,12 +35,17 @@ def check_all_models(app_configs=None, **kwargs):
+     for db_table, model_labels in db_table_models.items():
+         if len(model_labels) != 1:
++            model_labels_str = ', '.join(db_table_models[db_table])
++            if settings.DATABASE_ROUTERS:
++                error_class = Warning
++                error_id = 'models.W035'
++            else:
++                error_class = Error
++                error_id = 'models.E028'
+             errors.append(
+-                Error(
+-                    "db_table '%s' is used by multiple models: %s."
+-                    % (db_table, ', '.join(db_table_models[db_table])),
++                error_class(
++                    "db_table '%s' is used by multiple models: %s." % (db_table, model_labels_str),
+                     obj=db_table,
+-                    id='models.E028',
++                    id=error_id,
+                 )
+             )
+     return errors

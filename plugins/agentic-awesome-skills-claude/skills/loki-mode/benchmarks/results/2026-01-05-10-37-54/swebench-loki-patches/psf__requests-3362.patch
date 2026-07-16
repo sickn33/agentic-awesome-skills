@@ -1,0 +1,17 @@
+# psf__requests-3362
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -735,7 +735,9 @@ class Response(object):
+             if self._pending_content:
+                 chunk = self._pending_content + chunk
+                 self._pending_content = None
+-            self._content_decoder = codecs.getincrementaldecoder(self.encoding)(errors='replace')
++            # Fall back to apparent_encoding if encoding is None, matching text property behavior
++            encoding = self.encoding or self.apparent_encoding or 'utf-8'
++            self._content_decoder = codecs.getincrementaldecoder(encoding)(errors='replace')
+             self._first_decode_chunk = False
+         
+         # Decode to unicode (this accumulates the chunk in case of incomplete multi-byte chars)

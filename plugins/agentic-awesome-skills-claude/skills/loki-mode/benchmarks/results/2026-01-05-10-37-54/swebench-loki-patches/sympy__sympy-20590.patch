@@ -1,0 +1,16 @@
+# sympy__sympy-20590
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/printing/defaults.py
++++ b/sympy/printing/defaults.py
+@@ -3,6 +3,8 @@ from .pretty import pprint
+ 
+ class DefaultPrinting:
+     """
+     The default implementation of printing for SymPy classes.
+     """
++    __slots__ = ()
++
+     def __str__(self):
+         return sstr(self, order=None)

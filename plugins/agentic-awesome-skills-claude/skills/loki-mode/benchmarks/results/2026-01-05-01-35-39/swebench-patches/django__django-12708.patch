@@ -1,0 +1,22 @@
+Based on my research, I understand the issue. The problem is in `django/db/backends/base/schema.py` in the `_delete_composed_index` method. When both `unique_together` and `index_together` exist on the same fields and you try to delete `index_together`, the `_constraint_names` method finds both constraints (the unique constraint also creates an index in most databases), causing a `ValueError: Found wrong number (2) of constraints`.
+
+The fix is to exclude unique constraints when looking for the index to delete. This can be done by passing `unique=False` when the constraint_kwargs includes `index=True`.
+
+Here's the patch:
+
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -378,7 +378,12 @@ class BaseDatabaseSchemaEditor:
+ 
+     def _delete_composed_index(self, model, fields, constraint_kwargs, sql):
+         columns = [model._meta.get_field(field).column for field in fields]
+-        constraint_names = self._constraint_names(model, columns, **constraint_kwargs)
++        # When deleting an index, explicitly exclude unique constraints
++        # to avoid matching both the index and unique constraint when
++        # both index_together and unique_together exist on the same fields.
++        if constraint_kwargs.get('index'):
++            constraint_kwargs = {**constraint_kwargs, 'unique': False}
++        constraint_names = self._constraint_names(model, columns, **constraint_kwargs)
+         if len(constraint_names) != 1:
+             raise ValueError("Found wrong number (%s) of constraints for %s(%s)" % (
+                 len(constraint_names),

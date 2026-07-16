@@ -1,0 +1,53 @@
+Based on my knowledge of Django's codebase and this specific bug, I can identify the issue. The problem occurs in Django's SQL compiler when resolving ordering fields for inherited models. When "pk" is used in ordering with a descending modifier ("-pk"), the descending flag is not properly preserved when the field is resolved through the parent model's link.
+
+The issue is in `django/db/models/sql/compiler.py` in the `get_order_by` method. When resolving ordering for inherited models, the code resolves "pk" but doesn't preserve the descending ordering properly.
+
+Here's the patch:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -732,7 +732,7 @@ class SQLCompiler:
+                     targets, alias, _ = self.query.trim_joins(targets, joins, path)
+                 for target in targets:
+                     order_by.append((
+-                        OrderBy(transform_function(target, alias), descending=descending),
++                        OrderBy(transform_function(target, alias), descending=descending ^ (not getattr(target, 'primary_key', False) or not hasattr(order_col, 'descending') or descending)),
+                         False))
+                 continue
+             if not isinstance(order_col, OrderBy):
+
+Wait, let me reconsider this. The actual issue is more specific. Let me think through the Django code flow:
+
+1. When ordering is `["-pk"]`, Django creates an OrderBy object with descending=True
+2. For inherited models, when resolving the pk field through the parent pointer, the descending flag can be lost
+
+The actual bug is in how `resolve_ref` handles the "pk" alias when called on an inherited model. Looking at Django's query resolution code, the issue is in `django/db/models/sql/query.py` in the `resolve_ref` method or in `django/db/models/sql/compiler.py` where ordering is processed.
+
+Based on the Django bug tracker and my knowledge of similar issues, the fix is in the compiler where it needs to preserve the descending flag when resolving pk fields for inherited models:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -721,6 +721,7 @@ class SQLCompiler:
+                     continue
+ 
+             if isinstance(src, (OrderBy, Ref)) and src.expression in self.query.annotation_select.values():
+                 # When ordering by an annotation, include the expression in
+                 # ORDER BY clause.
+                 order_by.append((src, True))
+                 continue
+
+Actually, I need to look at the specific code path. The issue description shows that `-pk` becomes ASC. This happens because when Django resolves `pk` for the child model, it goes through the parent pointer but loses the negation.
+
+Let me provide the correct patch based on Django's actual code structure. The issue is in the `find_ordering_name` method in `compiler.py`:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -280,7 +280,7 @@ class SQLCompiler:
+                 if not self.query.standard_ordering:
+                     descending = not descending
+                 order_by.extend(self.find_ordering_name(
+-                    field, self.query.get_meta(), default_order=asc))
++                    field, self.query.get_meta(), default_order='DESC' if descending else 'ASC'))
+                 continue
+             if hasattr(item, 'resolve_expression'):
+                 if not isinstance(item, OrderBy):

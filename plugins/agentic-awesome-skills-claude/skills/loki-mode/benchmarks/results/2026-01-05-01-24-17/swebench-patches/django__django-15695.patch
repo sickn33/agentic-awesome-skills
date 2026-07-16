@@ -1,0 +1,32 @@
+Based on my knowledge of Django and the issue description, I can provide the fix. The issue is in the `RenameIndex` operation in Django's migrations. When `database_backwards` is called for an unnamed index (one created via `unique_together`), it currently does nothing (noop), but it should restore the original auto-generated name. This causes a crash when re-applying the forward operation because the index still has the new name.
+
+The fix involves modifying `database_backwards` to properly rename the index back to its auto-generated name using `SchemaEditor._create_index_name()`.
+
+Here is the patch:
+
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -967,10 +967,18 @@ class RenameIndex(IndexOperation):
+         self.new_name_lower, self.old_name_lower = (
+             self.old_name_lower,
+             self.new_name_lower,
+         )
+-        self.database_forwards(app_label, schema_editor, from_state, to_state)
++
++        # If old_name is not provided, we need to restore the auto-generated name.
++        if self.old_name:
++            self.database_forwards(app_label, schema_editor, from_state, to_state)
++        else:
++            to_model = to_state.apps.get_model(app_label, self.model_name)
++            if self.allow_migrate_model(schema_editor.connection.alias, to_model):
++                from_model = from_state.apps.get_model(app_label, self.model_name)
++                old_index_name = schema_editor._create_index_name(
++                    to_model._meta.db_table,
++                    self._get_model_tuple(from_model, to_model)[0],
++                )
++                schema_editor.rename_index(to_model, self.new_name, old_index_name)
++
+         self.new_name_lower, self.old_name_lower = (
+             self.old_name_lower,
+             self.new_name_lower,
+         )

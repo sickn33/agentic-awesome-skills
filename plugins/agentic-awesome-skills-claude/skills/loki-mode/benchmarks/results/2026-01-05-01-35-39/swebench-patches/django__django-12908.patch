@@ -1,0 +1,19 @@
+I understand this is a Django issue that needs to be fixed. Since I don't have direct access to the Django repository, let me provide the patch based on my knowledge of Django's codebase structure and the issue description.
+
+The issue is that `distinct()` is called on a union queryset but silently does nothing instead of raising an error. According to Django documentation and the related issue #27995, only LIMIT, OFFSET, COUNT(*), ORDER BY, and specifying columns are allowed on combined querysets.
+
+The fix needs to be in `django/db/models/query.py` in the `distinct()` method to check if the queryset has a combinator (union, intersection, difference) and raise a `NotSupportedError`.
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1188,6 +1188,10 @@ class QuerySet:
+         Return a new QuerySet instance that will select only distinct results.
+         """
+         assert not self.query.is_sliced, "Cannot call distinct() after .values() or .values_list()"
++        if self.query.combinator:
++            raise NotSupportedError(
++                'Calling distinct() after %s() is not supported.' % self.query.combinator
++            )
+         obj = self._chain()
+         obj.query.add_distinct_fields(*field_names)
+         return obj

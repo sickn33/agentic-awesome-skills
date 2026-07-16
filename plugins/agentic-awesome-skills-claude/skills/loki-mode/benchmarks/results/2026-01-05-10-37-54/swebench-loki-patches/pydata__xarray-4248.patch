@@ -1,0 +1,134 @@
+# pydata__xarray-4248
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+I don't have access to the xarray repository files in the local environment. However, based on my knowledge of the xarray codebase and the architect's analysis, I can generate the patch for this feature request.
+
+```diff
+--- a/xarray/core/formatting.py
++++ b/xarray/core/formatting.py
+@@ -261,6 +261,29 @@ def format_array_flat(array, max_width: int):
+     return pprint_str
+ 
+ 
++def _get_units_from_var(var) -> str:
++    """Extract units string from a variable.
++    
++    Checks for units in the following order:
++    1. Duck array with units attribute (e.g., pint arrays)
++    2. attrs['units']
++    
++    Returns empty string if no units found.
++    """
++    # Check for duck array with units (e.g., pint)
++    data = var.data
++    if hasattr(data, "units"):
++        units = data.units
++        # Try _repr_short_() for compact representation
++        if hasattr(units, "_repr_short_"):
++            return str(units._repr_short_())
++        return str(units)
++    # Fall back to attrs['units']
++    if "units" in var.attrs:
++        return str(var.attrs["units"])
++    return ""
++
++
+ def summarize_variable(
+     name: Hashable, var, col_width: int, max_width: int = None, is_index: bool = False
+ ):
+@@ -268,6 +291,7 @@ def summarize_variable(
+         max_width = OPTIONS["display_width"]
+ 
+     marker = "*" if is_index else " "
++    units_str = _get_units_from_var(var) if OPTIONS["display_units"] else ""
+     if is_dask_collection(var.data):
+         dims_str = "({})".format(", ".join(map(str, var.dims)))
+     else:
+@@ -279,9 +303,15 @@ def summarize_variable(
+     name_str = pretty_print(f"    {marker}{name} ", col_width)
+     dims_str = pretty_print(dims_str, dims_width)
+ 
+-    front_str = f"{name_str}{dims_str}{var.dtype} "
++    if units_str:
++        units_display = f"[{units_str}] "
++        front_str = f"{name_str}{dims_str}{var.dtype} {units_display}"
++    else:
++        front_str = f"{name_str}{var.dtype} "
+ 
+-    values_width = max_width - len(front_str)
++    # Calculate remaining width for values, accounting for units if present
++    base_width = len(f"{name_str}{dims_str}{var.dtype} ")
++    values_width = max_width - base_width - (len(f"[{units_str}] ") if units_str else 0)
+     values_str = inline_variable_array_repr(var, values_width)
+ 
+     return front_str + values_str
+--- a/xarray/core/formatting_html.py
++++ b/xarray/core/formatting_html.py
+@@ -7,6 +7,7 @@ from html import escape
+ from importlib.resources import read_binary
+ 
+ from .formatting import (
++    _get_units_from_var,
+     inline_variable_array_repr,
+     short_data_repr,
+ )
+@@ -117,7 +118,12 @@ def summarize_variable(name, var, is_index=False, dtype=None, preview=None):
+ 
+     name = escape(str(name))
+     dtype = dtype or escape(str(var.dtype))
+-    cssclass_idx = " class='xr-has-index'" if is_index else ""
++
++    # Get units string
++    units_str = _get_units_from_var(var) if OPTIONS["display_units"] else ""
++    units_display = f" [{escape(units_str)}]" if units_str else ""
++
++    cssclass_idx = " class='xr-has-index'" if is_index else "" 
+ 
+     # "unique" ids required to expand/collapse subsections
+     attrs_id = "attrs-" + str(uuid.uuid4())
+@@ -136,7 +142,7 @@ def summarize_variable(name, var, is_index=False, dtype=None, preview=None):
+     f"<div class='xr-var-dims'>{dims_str}</div>"
+     f"<div class='xr-var-dtype'>{dtype}</div>"
+     f"<div class='xr-var-preview xr-preview'>{preview}</div>"
+-    f"<input id='{attrs_id}' class='xr-var-attrs-in' "
++    f"<div class='xr-var-units'>{units_display}</div>"    f"<input id='{attrs_id}' class='xr-var-attrs-in' "
+     f"type='checkbox' {disabled}>"
+     f"<label for='{attrs_id}' title='Show/Hide attributes'>"
+     f"{attrs_icon}</label>"
+--- a/xarray/core/options.py
++++ b/xarray/core/options.py
+@@ -23,6 +23,7 @@ DISPLAY_MAX_ROWS = "display_max_rows"
+ DISPLAY_STYLE = "display_style"
+ DISPLAY_WIDTH = "display_width"
+ DISPLAY_EXPAND_DATA = "display_expand_data"
++DISPLAY_UNITS = "display_units"
+ FILE_CACHE_MAXSIZE = "file_cache_maxsize"
+ KEEP_ATTRS = "keep_attrs"
+ WARN_FOR_UNCLOSED_FILES = "warn_for_unclosed_files"
+@@ -38,6 +39,7 @@ OPTIONS: T_Options = {
+     DISPLAY_STYLE: "html",
+     DISPLAY_WIDTH: 80,
+     DISPLAY_EXPAND_DATA: True,
++    DISPLAY_UNITS: True,
+     FILE_CACHE_MAXSIZE: 128,
+     KEEP_ATTRS: "default",
+     WARN_FOR_UNCLOSED_FILES: False,
+@@ -53,6 +55,7 @@ _VALIDATORS = {
+     DISPLAY_MAX_ROWS: _positive_integer,
+     DISPLAY_STYLE: functools.partial(_in_set, _DISPLAY_OPTIONS),
+     DISPLAY_WIDTH: _positive_integer,
++    DISPLAY_UNITS: lambda value: isinstance(value, bool),
+     DISPLAY_EXPAND_DATA: lambda value: isinstance(value, bool),
+     FILE_CACHE_MAXSIZE: _positive_integer,
+     KEEP_ATTRS: lambda value: value in [True, False, "default"],
+@@ -103,6 +106,8 @@ class set_options:
+         Default: ``80``.
+     - ``display_expand_data``: whether to expand data arrays in HTML repr.
+         Default: ``True``.
++    - ``display_units``: whether to show units in repr (from attrs['units']
++        or duck arrays like pint). Default: ``True``.
+     - ``file_cache_maxsize``: maximum number of open files to hold in xarray's
+         global least-recently-usage cached. This should be smaller than your
+         system's per-process file descriptor limit, e.g., ``ulimit -n`` on Linux.
+```

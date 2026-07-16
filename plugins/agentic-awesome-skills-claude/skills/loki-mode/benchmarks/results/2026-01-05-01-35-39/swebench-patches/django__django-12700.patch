@@ -1,0 +1,17 @@
+Now I understand the issue. The `cleanse_setting` method in Django's `django/views/debug.py` only handles dictionary types but doesn't handle other iterables like lists and tuples. The fix needs to add support for these types to recursively cleanse sensitive values nested within them.
+
+Based on the issue description and understanding of Django's codebase, here is the patch:
+
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -83,6 +83,10 @@ class SafeExceptionReporterFilter:
+                 cleansed = self.cleansed_substitute
+             elif isinstance(value, dict):
+                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}
++            elif isinstance(value, list):
++                cleansed = [self.cleanse_setting('', v) for v in value]
++            elif isinstance(value, tuple):
++                cleansed = tuple([self.cleanse_setting('', v) for v in value])
+             else:
+                 cleansed = value
+         except TypeError:

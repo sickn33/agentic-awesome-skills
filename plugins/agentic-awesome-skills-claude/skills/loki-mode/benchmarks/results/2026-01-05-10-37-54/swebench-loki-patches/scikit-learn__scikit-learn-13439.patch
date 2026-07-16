@@ -1,0 +1,29 @@
+# scikit-learn__scikit-learn-13439
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sklearn/pipeline.py
++++ b/sklearn/pipeline.py
+@@ -168,6 +168,10 @@ class Pipeline(_BaseComposition):
+     def __getitem__(self, ind):
+         """Returns a sub-pipeline or a single esimtator in the pipeline
+ 
++        Indexing with an integer will return an estimator; using a slice
++        returns another Pipeline instance copying a slice of the estimators
++        list.
++        """
+         if isinstance(ind, slice):
+             if ind.step not in (1, None):
+                 raise ValueError('Pipeline slicing only supports a step of 1')
+@@ -175,8 +179,10 @@ class Pipeline(_BaseComposition):
+         try:
+             name, est = self.steps[ind]
+         except TypeError:
+-            # Not an int, try get step by name
++            # Not an int, try to get step by name
+             return self.named_steps[ind]
+         return est
+ 
++    def __len__(self):
++        """Returns the length of the Pipeline"""
++        return len(self.steps)

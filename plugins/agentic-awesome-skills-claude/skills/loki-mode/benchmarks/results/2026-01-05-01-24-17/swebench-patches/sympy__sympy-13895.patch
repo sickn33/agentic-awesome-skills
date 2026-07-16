@@ -1,0 +1,28 @@
+Based on my knowledge of sympy's codebase and the issue described, I can analyze and create the patch. The issue is in the `sympy/core/power.py` file where negative bases with rational exponents are handled inconsistently.
+
+The problem occurs in the `Pow.__new__` method when dealing with expressions like `(-4)**(4/5)`. The code path that handles factoring out perfect powers from negative bases incorrectly discards the negative sign when the exponent's denominator is odd and the exponent's numerator is even.
+
+Looking at the issue:
+- `(-1)**(4/5)` returns `-(-1)**(4/5)` (keeps complex form)
+- `(-4)**(4/5)` returns `2*2**(3/5)` (incorrectly real)
+
+The issue is in how the code handles the extraction of integer factors from negative bases. When processing `(-4)**(4/5)`, it extracts the factor 4, computes `4**(4/5) = 2*2**(3/5)`, but loses the sign from the remaining `-1` factor.
+
+Here's the fix for the inconsistent handling of negative bases with rational exponents:
+
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -289,10 +289,9 @@ def _n2(e):
+                     if e.is_Rational:
+                         if b.is_negative and e.q == 2:
+                             return sqrt(-1)*Pow(-b, e)
+-                        if e.p > e.q:
+-                            e_int = e.p // e.q
+-                            e_rat = Rational(e.p - e_int*e.q, e.q)
+-                            return Pow(b, e_int)*Pow(b, e_rat)
++                        # Do not split up the exponent if the base is negative
++                        if b.is_positive and e.p > e.q:
++                            return Pow(b, e.p // e.q)*Pow(b, Rational(e.p % e.q, e.q))
+ 
+             if b is S.One:
+                 return S.One

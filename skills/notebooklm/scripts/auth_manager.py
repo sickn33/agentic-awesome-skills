@@ -18,6 +18,7 @@ import re
 import sys
 from pathlib import Path
 from typing import Optional, Dict, Any
+from urllib.parse import urlparse
 
 from patchright.sync_api import sync_playwright, BrowserContext
 
@@ -26,6 +27,19 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from config import BROWSER_STATE_DIR, STATE_FILE, AUTH_INFO_FILE, DATA_DIR
 from browser_utils import BrowserFactory
+
+
+def _get_hostname(url: str) -> str:
+    """Extract a normalized hostname from a URL."""
+    try:
+        return (urlparse(url).hostname or "").lower()
+    except ValueError:
+        return ""
+
+
+def _is_exact_host(url: str, expected_host: str) -> bool:
+    """Return True when the URL hostname exactly matches the expected host."""
+    return _get_hostname(url) == expected_host
 
 
 class AuthManager:
@@ -114,7 +128,7 @@ class AuthManager:
             page.goto("https://notebooklm.google.com", wait_until="domcontentloaded")
 
             # Check if already authenticated
-            if "notebooklm.google.com" in page.url and "accounts.google.com" not in page.url:
+            if _is_exact_host(page.url, "notebooklm.google.com"):
                 print("  ✅ Already authenticated!")
                 self._save_browser_state(context)
                 return True
@@ -260,7 +274,7 @@ class AuthManager:
             page.goto("https://notebooklm.google.com", wait_until="domcontentloaded", timeout=30000)
 
             # Check if we can access NotebookLM
-            if "notebooklm.google.com" in page.url and "accounts.google.com" not in page.url:
+            if _is_exact_host(page.url, "notebooklm.google.com"):
                 print("  ✅ Authentication is valid")
                 return True
             else:

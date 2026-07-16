@@ -1,0 +1,28 @@
+# sympy__sympy-21627
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/functions/elementary/complexes.py
++++ b/sympy/functions/elementary/complexes.py
+@@ -613,10 +613,13 @@ def eval(cls, arg):
+             return arg
+         if arg.is_extended_negative:
+             return -arg
++        if arg.is_extended_real:
++            return
+         # handle what we can
+         from sympy.functions.elementary.exponential import exp, log
+         from sympy.functions.elementary.hyperbolic import cosh, sinh
+         _arg = arg
++        conj = None
+         if arg.is_zero is False:
+             conj = arg.conjugate()
+             if conj == arg or conj == -arg:
+@@ -636,7 +639,7 @@ def eval(cls, arg):
+                         return sqrt(re**2 + im**2)
+                     _arg = arg
+         # have to set _arg to something other than arg
+-        if _arg != conj or _arg != -conj:
++        if conj is not None and _arg not in (conj, -conj):
+             _arg = cls(arg, evaluate=False)
+         return _arg

@@ -1,0 +1,24 @@
+Based on my knowledge of Django's codebase, I can provide the patch for this issue. The MultiWidget class is in `django/forms/widgets.py` and has an `id_for_label` method that currently returns `f'{id_}_0'`. According to the issue and hints, the fix is to make it return an empty string instead.
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -849,4 +849,4 @@ class MultiWidget(Widget):
+ 
+     def id_for_label(self, id_, index='0'):
+         if id_:
+-            id_ = '%s_%s' % (id_, index)
+-        return id_
++            return ''
++        return ''
+
+Let me reconsider this based on the standard Django codebase structure:
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -851,5 +851,5 @@ class MultiWidget(Widget):
+ 
+     def id_for_label(self, id_, index='0'):
+-        if id_:
+-            id_ = '%s_%s' % (id_, index)
+-        return id_
++        return ''

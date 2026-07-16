@@ -1,0 +1,62 @@
+Based on the issue description, I need to create a patch for Django's `ModelChoiceField` class in `django/forms/models.py`. The issue is that `ModelChoiceField` doesn't pass the invalid value to the ValidationError when raising `invalid_choice` error, unlike `ModelMultipleChoiceField` which does include `%(value)s` in its error message.
+
+Let me analyze the issue and create the patch:
+
+1. The `ModelChoiceField.default_error_messages['invalid_choice']` needs to include `%(value)s`
+2. The code that raises the ValidationError needs to pass the `value` parameter
+
+Based on the issue description and the code snippets provided:
+
+```
+--- a/django/forms/models.py
++++ b/django/forms/models.py
+@@ -1188,7 +1188,8 @@ class ModelChoiceField(ChoiceField):
+     # This class is a subclass of ChoiceField for purity, but it doesn't
+     # actually use any of ChoiceField's implementation.
+     default_error_messages = {
+-        'invalid_choice': _('Select a valid choice. That choice is not one of'
+-                            ' the available choices.'),
++        'invalid_choice': _('Select a valid choice. %(value)s is not one of'
++                            ' the available choices.'),
+     }
+ 
+@@ -1251,7 +1252,10 @@ class ModelChoiceField(ChoiceField):
+         try:
+             key = self.to_field_name or 'pk'
+             value = self.queryset.get(**{key: value})
+         except (ValueError, TypeError, self.queryset.model.DoesNotExist):
+-            raise ValidationError(self.error_messages['invalid_choice'], code='invalid_choice')
++            raise ValidationError(
++                self.error_messages['invalid_choice'],
++                code='invalid_choice',
++                params={'value': value},
++            )
+         return value
+```
+
+Wait, I need to look at the actual Django source to provide accurate line numbers. Let me provide the patch based on the standard Django codebase structure:
+
+--- a/django/forms/models.py
++++ b/django/forms/models.py
+@@ -1186,8 +1186,8 @@ class ModelChoiceField(ChoiceField):
+     # This class is a subclass of ChoiceField for purity, but it doesn't
+     # actually use any of ChoiceField's implementation.
+     default_error_messages = {
+-        'invalid_choice': _('Select a valid choice. That choice is not one of'
+-                            ' the available choices.'),
++        'invalid_choice': _('Select a valid choice. %(value)s is not one of'
++                            ' the available choices.'),
+     }
+     iterator = ModelChoiceIterator
+ 
+@@ -1249,7 +1249,11 @@ class ModelChoiceField(ChoiceField):
+             key = self.to_field_name or 'pk'
+             value = self.queryset.get(**{key: value})
+         except (ValueError, TypeError, self.queryset.model.DoesNotExist):
+-            raise ValidationError(self.error_messages['invalid_choice'], code='invalid_choice')
++            raise ValidationError(
++                self.error_messages['invalid_choice'],
++                code='invalid_choice',
++                params={'value': value},
++            )
+         return value

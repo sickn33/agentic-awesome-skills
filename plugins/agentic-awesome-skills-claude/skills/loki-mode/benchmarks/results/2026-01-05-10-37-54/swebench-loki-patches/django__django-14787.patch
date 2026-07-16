@@ -1,0 +1,35 @@
+# django__django-14787
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/utils/decorators.py
++++ b/django/utils/decorators.py
+@@ -1,5 +1,5 @@
+ "Functions that help with dynamically creating decorators for views."
+-
++from functools import WRAPPER_ASSIGNMENTS, partial, update_wrapper, wraps
+ 
+ class classonlymethod(classmethod):
+     def __get__(self, instance, cls=None):
+@@ -23,8 +23,6 @@ def _update_method_wrapper(_wrapper, decorator):
+ 
+ def _multi_decorate(decorators, method):
+     """Decorate `method` with one or more function decorators."""
+-    from functools import wraps
+-
+     # The 'method' may not have all the attributes expected from a function,
+     # e.g. if it is a functools.partial object.
+     #
+@@ -37,7 +35,11 @@ def _multi_decorate(decorators, method):
+     def _wrapper(self, *args, **kwargs):
+         bound_method = method.__get__(self, type(self))
+         return decorators(bound_method)(*args, **kwargs)
+-    return wraps(method)(_wrapper)
++    # Copy over wrapper assignments, filtering out attributes that don't exist
++    # on the wrapped object (e.g. functools.partial doesn't have __name__).
++    assigned = (a for a in WRAPPER_ASSIGNMENTS if hasattr(method, a))
++    update_wrapper(_wrapper, method, assigned=assigned)
++    return _wrapper
+ 
+ 
+ def method_decorator(decorator, name=''):

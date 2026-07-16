@@ -1,0 +1,27 @@
+Based on my knowledge of the SymPy codebase and the issue described, I can provide the fix. The issue is that `ccode(sinc(x))` doesn't work because there's no C standard library function for `sinc`. The solution is to add a `_print_sinc` method in `ccode.py` that rewrites sinc as a Piecewise expression.
+
+Here's the patch:
+
+--- a/sympy/printing/ccode.py
++++ b/sympy/printing/ccode.py
+@@ -24,6 +24,7 @@ from sympy.core.compatibility import string_types, range
+ from sympy.printing.codeprinter import CodePrinter
+ from sympy.printing.precedence import precedence
+ from sympy.sets.fancysets import Range
++from sympy import Piecewise, Ne
+ 
+ # dictionary mapping sympy function to (argument_conditions, C_function).
+ # Used in CCodePrinter._print_Function(self)
+@@ -214,6 +215,12 @@ class CCodePrinter(CodePrinter):
+     def _print_Infinity(self, expr):
+         return 'HUGE_VAL'
+ 
++    def _print_sinc(self, expr):
++        from sympy.functions.elementary.trigonometric import sin
++        from sympy.core.relational import Ne
++        from sympy.functions.elementary.piecewise import Piecewise
++        arg = expr.args[0]
++        return self._print(Piecewise((sin(arg)/arg, Ne(arg, 0)), (1, True)))
+ 
+     def _print_Piecewise(self, expr):
+         if expr.args[-1].cond != True:

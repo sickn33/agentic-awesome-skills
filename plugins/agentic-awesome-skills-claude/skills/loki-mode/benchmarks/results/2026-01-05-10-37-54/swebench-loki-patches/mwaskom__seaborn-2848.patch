@@ -1,0 +1,95 @@
+# mwaskom__seaborn-2848
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the seaborn codebase and the issue description, I can generate the patch. The issue is in PairGrid's map methods where hue is delegated to axes-level functions. When `hue_order` is specified, data with hue values not in `hue_order` should be filtered out.
+
+--- a/seaborn/axisgrid.py
++++ b/seaborn/axisgrid.py
+@@ -1299,6 +1299,12 @@ class PairGrid(Grid):
+         kw_color = kwargs.pop("color", None)
+         hue = self.hue_names[0] if self.hue_names else None
+ 
++        # Filter data to only include hue values in hue_order
++        if self._hue_var is not None and self.hue_names is not None:
++            data = self.data[self.data[self._hue_var].isin(self.hue_names)]
++        else:
++            data = self.data
++
+         for i, y_var in enumerate(self.y_vars):
+             for j, x_var in enumerate(self.x_vars):
+ 
+@@ -1307,7 +1313,7 @@ class PairGrid(Grid):
+ 
+                 hue_grouped = self._get_ax_vars(
+                     ax, func, hue,
+-                    x=x_var, y=y_var, hue_order=self.hue_names, data=self.data,
++                    x=x_var, y=y_var, hue_order=self.hue_names, data=data,
+                     **kwargs
+                 )
+ 
+@@ -1347,6 +1353,12 @@ class PairGrid(Grid):
+         kw_color = kwargs.pop("color", None)
+         hue = self.hue_names[0] if self.hue_names else None
+ 
++        # Filter data to only include hue values in hue_order
++        if self._hue_var is not None and self.hue_names is not None:
++            data = self.data[self.data[self._hue_var].isin(self.hue_names)]
++        else:
++            data = self.data
++
+         indices = zip(*np.tril_indices_from(self.axes, self.diag_offsets[0]))
+ 
+         for i, j in indices:
+@@ -1361,7 +1373,7 @@ class PairGrid(Grid):
+ 
+                 hue_grouped = self._get_ax_vars(
+                     ax, func, hue,
+-                    x=x_var, y=y_var, hue_order=self.hue_names, data=self.data,
++                    x=x_var, y=y_var, hue_order=self.hue_names, data=data,
+                     **kwargs
+                 )
+ 
+@@ -1398,6 +1410,12 @@ class PairGrid(Grid):
+         kw_color = kwargs.pop("color", None)
+         hue = self.hue_names[0] if self.hue_names else None
+ 
++        # Filter data to only include hue values in hue_order
++        if self._hue_var is not None and self.hue_names is not None:
++            data = self.data[self.data[self._hue_var].isin(self.hue_names)]
++        else:
++            data = self.data
++
+         indices = zip(*np.triu_indices_from(self.axes, self.diag_offsets[1]))
+ 
+         for i, j in indices:
+@@ -1412,7 +1430,7 @@ class PairGrid(Grid):
+ 
+                 hue_grouped = self._get_ax_vars(
+                     ax, func, hue,
+-                    x=x_var, y=y_var, hue_order=self.hue_names, data=self.data,
++                    x=x_var, y=y_var, hue_order=self.hue_names, data=data,
+                     **kwargs
+                 )
+ 
+@@ -1446,6 +1464,12 @@ class PairGrid(Grid):
+         kw_color = kwargs.pop("color", None)
+         hue = self.hue_names[0] if self.hue_names else None
+ 
++        # Filter data to only include hue values in hue_order
++        if self._hue_var is not None and self.hue_names is not None:
++            data = self.data[self.data[self._hue_var].isin(self.hue_names)]
++        else:
++            data = self.data
++
+         for i, var in enumerate(self.diag_vars):
+ 
+             ax = self.diag_axes[i]
+@@ -1453,7 +1477,7 @@ class PairGrid(Grid):
+ 
+             hue_grouped = self._get_ax_vars(
+                 ax, func, hue,
+-                x=var, hue_order=self.hue_names, data=self.data,
++                x=var, hue_order=self.hue_names, data=data,
+                 **kwargs
+             )

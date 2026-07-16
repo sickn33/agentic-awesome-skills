@@ -1,0 +1,38 @@
+# django__django-11630
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/core/checks/models/models.py
++++ b/django/core/checks/models/models.py
+@@ -1,5 +1,6 @@
+ import inspect
+ import types
++from django.conf import settings
+ from itertools import chain
+ 
+ from django.apps import apps
+@@ -35,13 +36,22 @@ def check_all_models(app_configs=None, **kwargs):
+         indexes[model_index.name].append(model._meta.label)
+         constraints[model_constraint.name].append(model._meta.label)
+     for db_table, model_labels in db_table_models.items():
+         if len(model_labels) != 1:
++            # If DATABASE_ROUTERS is configured, models may be routed to
++            # different databases where having the same table name is valid.
++            # Downgrade to a warning in this case.
++            if settings.DATABASE_ROUTERS:
++                error_class = Warning
++                error_id = 'models.W028'
++            else:
++                error_class = Error
++                error_id = 'models.E028'
+             errors.append(
+-                Error(
++                error_class(
+                     "db_table '%s' is used by multiple models: %s."
+                     % (db_table, ', '.join(sorted(model_labels))),
+                     obj=db_table,
+-                    id='models.E028',
++                    id=error_id,
+                 )
+             )
+     for index_name, model_labels in indexes.items():

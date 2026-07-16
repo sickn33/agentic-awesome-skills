@@ -1,0 +1,13 @@
+Based on my knowledge of the pylint codebase and the issue description, I can provide the fix. The bug is in `pylint/checkers/misc.py` where the `--notes` option values are being joined into a regex pattern using `|` without properly escaping special regex characters like `?`. The fix is to use `re.escape()` on each note tag before joining them.
+
+--- a/pylint/checkers/misc.py
++++ b/pylint/checkers/misc.py
+@@ -97,7 +97,7 @@ class EncodingChecker(BaseChecker):
+     def open(self):
+         super().open()
+ 
+-        notes = "|".join(self.config.notes)
++        notes = "|".join(map(re.escape, self.config.notes))
+         if self.config.notes_rgx:
+             regex_string = rf"#\s*({notes}|{self.config.notes_rgx})\b"
+         else:

@@ -1,0 +1,44 @@
+# sympy__sympy-12481
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This is for the sympy/sympy repository which isn't in the current working directory. Based on my knowledge of SymPy's codebase and the architect's analysis, I need to generate a patch for `sympy/combinatorics/permutations.py`. Let me provide the patch based on the typical structure of SymPy's Permutation class:
+
+```
+--- a/sympy/combinatorics/permutations.py
++++ b/sympy/combinatorics/permutations.py
+@@ -895,12 +895,20 @@ class Permutation(Atom):
+                 args = list(args[0])
+ 
+             is_cycle = args and is_sequence(args[0])
+             if is_cycle:  # e
+                 args = [[int(i) for i in c] for c in args]
+             else:  # d
+                 args = [int(i) for i in args]
+ 
+             # if there are n elements present, 0, 1, ..., n-1 should be present
+             # unless a cycle notation has been provided. A
+
+
+@@ -910,10 +918,15 @@ class Permutation(Atom):
+                 if any(i < 0 for c in args for i in c):
+                     raise ValueError('negative integers are not allowed in a cycle.')
+-                # see if there are any duplicates
+-                flat = flatten(args)
+-                if len(flat) != len(set(flat)):
+-                    raise ValueError('there were repeated elements; to resolve '
+-                    'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))
++                # flatten the cycles to determine the permutation size
++                flat = [i for c in args for i in c]
++                size = max(flat) + 1 if flat else 0
++                # apply cycles left-to-right to build the permutation array
++                aform = list(range(size))
++                for c in args:
++                    if len(c) > 1:
++                        for i in range(len(c)):
++                            aform[c[i]] = c[(i + 1) % len(c)]
++                args = aform
+
+             else:  # d
+                 if has_dups(args):
+```

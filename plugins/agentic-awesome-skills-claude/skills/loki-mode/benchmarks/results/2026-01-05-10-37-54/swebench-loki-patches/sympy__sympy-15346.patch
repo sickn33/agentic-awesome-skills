@@ -1,0 +1,21 @@
+# sympy__sympy-15346
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of SymPy's trigsimp implementation, I'll generate the patch. The issue is in the `futrig` function in `sympy/simplify/trigsimp.py` where `TRmorrie` is called before `TR10i`. The fix is to swap their order so `TR10i` can first simplify patterns like `sin(a)*sin(b) + cos(a)*cos(b) -> cos(a-b)` before `TRmorrie` transforms individual terms.
+
+--- a/sympy/simplify/trigsimp.py
++++ b/sympy/simplify/trigsimp.py
+@@ -1131,11 +1131,11 @@ def futrig(e, **kwargs):
+             TR14,  # factored powers of identities
+             TR5,   # sin-pow -> cos_pow
+             TR6,   # cos-pow -> sin-pow
+-            TR11, TRmorrie, TR14,  # TR11 then morrie then TR14
++            TR11, TR14,  # TR11 then TR14
+             TR8,   # sin-cos products (including half-angle) -> sum/diff
+             TR9,   # sum of sin/cos with common coefficient -> sin/cos
+             TR10,  # sin-cos sums -> products
+-            TR10i, # half angle products
++            TR10i, TRmorrie,  # TR10i before TRmorrie so sin(a)*sin(b)+cos(a)*cos(b)->cos(a-b) is recognized first
+             TR14,  # factored powers of identities
+             ]

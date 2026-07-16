@@ -1,0 +1,26 @@
+Based on the issue description and hints, I can understand the problem and generate the fix:
+
+The issue is in Django's template autoreload module. When `BASE_DIR` is added to `TEMPLATES[0]['DIRS']`, the entire project becomes a template directory. The `template_changed` signal listener returns `True` for any file change in template directories, which prevents `notify_file_changed` from triggering a reload. This affects Python files as well.
+
+The fix suggested in the hints is to check if the changed file is a Python file inside the `template_changed` signal listener and return `None` in that case, allowing the normal reload mechanism to handle Python files even if they're in a template directory.
+
+Here's the patch:
+
+--- a/django/template/autoreload.py
++++ b/django/template/autoreload.py
+@@ -48,6 +48,8 @@ def reset_loaders():
+ 
+ @receiver(autoreload_started, dispatch_uid="template_loaders_watch_changes")
+ def watch_for_template_changes(sender, **kwargs):
+     for directory in get_template_directories():
+         sender.watch_dir(directory, "**/*")
+ 
+ 
+ @receiver(file_changed, dispatch_uid="template_loaders_file_changed")
+ def template_changed(sender, file_path, **kwargs):
++    if file_path.suffix == ".py":
++        return
+     for template_dir in get_template_directories():
+         if template_dir in file_path.parents:
+             reset_loaders()
+             return True

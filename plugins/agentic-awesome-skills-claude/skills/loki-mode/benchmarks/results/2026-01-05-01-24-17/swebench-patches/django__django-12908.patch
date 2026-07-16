@@ -1,0 +1,15 @@
+Let me provide the patch based on my knowledge of Django's codebase structure. The issue is that `distinct()` on union querysets should raise an error like other unsupported operations.
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1000,6 +1000,10 @@ class QuerySet:
+ 
+     def distinct(self, *field_names):
+         """Return a new QuerySet instance that will select only distinct results."""
++        if self.query.combinator:
++            raise NotSupportedError(
++                'Calling distinct() after %s() is not supported.' % self.query.combinator
++            )
+         assert self.query.can_filter(), \
+             "Cannot create distinct fields once a slice has been taken."
+         obj = self._chain()

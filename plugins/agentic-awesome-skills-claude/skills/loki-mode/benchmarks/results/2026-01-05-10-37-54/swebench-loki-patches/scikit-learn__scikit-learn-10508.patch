@@ -1,0 +1,37 @@
+# scikit-learn__scikit-learn-10508
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the issue description, I need to generate a patch for the scikit-learn repository. The file path is `sklearn/preprocessing/label.py` and the fix needs to be in the `transform` method around line 134.
+
+Let me generate the patch based on the standard scikit-learn code structure and the issue description:
+
+```
+--- a/sklearn/preprocessing/label.py
++++ b/sklearn/preprocessing/label.py
+@@ -128,6 +128,9 @@ class LabelEncoder(BaseEstimator, TransformerMixin):
+         """
+         check_is_fitted(self, 'classes_')
+         y = column_or_1d(y, warn=True)
++        # transform of empty array is empty array
++        if len(y) == 0:
++            return np.array([], dtype=self.classes_.dtype)
+ 
+         classes = np.unique(y)
+         if len(np.intersect1d(classes, self.classes_)) < len(classes):
+```
+
+Wait, the return type should be integer indices, not the same dtype as classes. Let me correct this:
+
+--- a/sklearn/preprocessing/label.py
++++ b/sklearn/preprocessing/label.py
+@@ -128,6 +128,9 @@ class LabelEncoder(BaseEstimator, TransformerMixin):
+         """
+         check_is_fitted(self, 'classes_')
+         y = column_or_1d(y, warn=True)
++        # transform of empty array is empty array
++        if len(y) == 0:
++            return np.array([], dtype=np.intp)
+ 
+         classes = np.unique(y)
+         if len(np.intersect1d(classes, self.classes_)) < len(classes):

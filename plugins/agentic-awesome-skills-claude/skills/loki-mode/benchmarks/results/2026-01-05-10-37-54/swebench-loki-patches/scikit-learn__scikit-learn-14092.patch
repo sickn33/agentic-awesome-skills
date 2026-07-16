@@ -1,0 +1,61 @@
+# scikit-learn__scikit-learn-14092
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I need to generate a patch for scikit-learn's NCA module. Let me create the patch based on the standard scikit-learn codebase structure and the issue details:
+
+```
+--- a/sklearn/neighbors/nca.py
++++ b/sklearn/neighbors/nca.py
+@@ -10,6 +10,7 @@
+ from __future__ import print_function
+ 
+ import numpy as np
++import numbers
+ import sys
+ import time
+ import warnings
+@@ -299,7 +300,7 @@ class NeighborhoodComponentsAnalysis(BaseEstimator, TransformerMixin):
+         # Check the preferred dimensionality of the projected space
+         if self.n_components is not None:
+-            if not isinstance(self.n_components, int):
++            if not isinstance(self.n_components, numbers.Integral) or isinstance(self.n_components, bool):
+                 raise TypeError("n_components must be an integer; got "
+                                 "(type {})".format(type(self.n_components)))
+ 
+@@ -310,7 +311,7 @@ class NeighborhoodComponentsAnalysis(BaseEstimator, TransformerMixin):
+                                 .format(X.shape[1]))
+ 
+         # Check the maximum number of iterations
+-        if not isinstance(self.max_iter, int):
++        if not isinstance(self.max_iter, numbers.Integral) or isinstance(self.max_iter, bool):
+             raise TypeError("max_iter must be an integer; got "
+                             "(type {})".format(type(self.max_iter)))
+ 
+@@ -320,7 +321,7 @@ class NeighborhoodComponentsAnalysis(BaseEstimator, TransformerMixin):
+                                 .format(self.max_iter))
+ 
+         # Check the tolerance
+-        if not isinstance(self.tol, float):
++        if not isinstance(self.tol, numbers.Real) or isinstance(self.tol, bool):
+             raise TypeError("tol must be a float; got (type {})".format(
+                 type(self.tol)))
+ 
+@@ -330,7 +331,7 @@ class NeighborhoodComponentsAnalysis(BaseEstimator, TransformerMixin):
+                                 .format(self.tol))
+ 
+         # Check the number of iterations between callbacks
+-        if not isinstance(self.callback_interval, int):
++        if not isinstance(self.callback_interval, numbers.Integral) or isinstance(self.callback_interval, bool):
+             raise TypeError("callback_interval must be an integer; got "
+                             "(type {})".format(type(self.callback_interval)))
+ 
+@@ -340,7 +341,7 @@ class NeighborhoodComponentsAnalysis(BaseEstimator, TransformerMixin):
+                                 .format(self.callback_interval))
+ 
+         # Check the verbosity level
+-        if not isinstance(self.verbose, int):
++        if not isinstance(self.verbose, numbers.Integral) or isinstance(self.verbose, bool):
+             raise TypeError("verbose must be an integer; got (type {})".format(
+                 type(self.verbose)))
+```

@@ -1,0 +1,32 @@
+# sympy__sympy-14396
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I can generate the patch for the `Domain.preprocess` method in `sympy/polys/polyoptions.py`. The fix adds handling for `RR` and `CC` ground domains in both polynomial ring (`[...]`) and fraction field (`(...)`) patterns.
+
+```
+--- a/sympy/polys/polyoptions.py
++++ b/sympy/polys/polyoptions.py
+@@ -459,6 +459,10 @@ class Domain(with_metaclass(OptionType, Option)):
+                     return sympy.polys.domains.ZZ.poly_ring(*gens)
+                 elif ground in ['Q', 'QQ']:
+                     return sympy.polys.domains.QQ.poly_ring(*gens)
++                elif ground in ['R', 'RR']:
++                    return sympy.polys.domains.RR.poly_ring(*gens)
++                elif ground in ['C', 'CC']:
++                    return sympy.polys.domains.CC.poly_ring(*gens)
+                 else:
+                     raise OptionError('expected a valid domain specification, got %s' % domain)
+ 
+@@ -470,6 +474,10 @@ class Domain(with_metaclass(OptionType, Option)):
+                     return sympy.polys.domains.ZZ.frac_field(*gens)
+                 elif ground in ['Q', 'QQ']:
+                     return sympy.polys.domains.QQ.frac_field(*gens)
++                elif ground in ['R', 'RR']:
++                    return sympy.polys.domains.RR.frac_field(*gens)
++                elif ground in ['C', 'CC']:
++                    return sympy.polys.domains.CC.frac_field(*gens)
+                 else:
+                     raise OptionError('expected a valid domain specification, got %s' % domain)
+ 
+```

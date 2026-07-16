@@ -1,0 +1,36 @@
+Based on my knowledge of Django's codebase and the issue description, I can generate the fix. The issue is in Django's `django/db/models/expressions.py` file where the `Subquery` class is defined.
+
+The problem is:
+1. When `Subquery.as_sql()` is called, it generates SQL from the inner query
+2. The inner query's `subquery` attribute determines whether parentheses are added
+3. When `subquery=True`, the SQL is wrapped in parentheses like `(SELECT ...)`
+4. When `subquery=False` (default), no parentheses are added
+5. The `as_sql` method strips the first and last characters (expecting to remove parentheses), but if `subquery=False`, it removes actual SQL characters instead
+
+The fix should set `query.subquery = True` in the `Subquery.__init__` method, and as the hint suggests, clone the query first to avoid side effects.
+
+Looking at Django's expressions.py, the `Subquery` class has a `__init__` method that accepts a queryset. The fix should clone the query and set `subquery = True` on it.
+
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -1110,6 +1110,7 @@ class Subquery(Expression):
+     def __init__(self, queryset, output_field=None, **extra):
+         self.query = queryset.query
+         self.extra = extra
++        self.query.subquery = True
+         super().__init__(output_field)
+ 
+     def __getstate__(self):
+
+Wait, the hint says to clone the query before altering. Let me provide the correct patch:
+
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -1110,6 +1110,8 @@ class Subquery(Expression):
+     def __init__(self, queryset, output_field=None, **extra):
+-        self.query = queryset.query
++        # Clone the query to avoid mutating the original queryset.
++        self.query = queryset.query.clone()
++        self.query.subquery = True
+         self.extra = extra
+         super().__init__(output_field)

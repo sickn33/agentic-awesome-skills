@@ -1,0 +1,29 @@
+Based on the issue description, I have enough information to create the patch. The issue states:
+
+1. The error occurs at line 673: `for ps_name, xs_names in stream:`
+2. The bug is in `backend_ps.py` 
+3. Adding `if curr_stream:` before line 669 fixes the bug
+4. The issue is that when there's an empty line in the text, `curr_stream` is None, and when it gets appended to `stream`, iterating over `stream` tries to unpack None
+
+Looking at the typical pattern in matplotlib's PostScript backend for text rendering, the issue is that:
+1. Text is processed line by line
+2. For empty lines, no font/character stream is generated (returns None)
+3. The code appends this None to a list
+4. Later, when iterating over the list, it tries to unpack None
+
+The fix is to check if `curr_stream` is not None before appending it to the stream list or before iterating.
+
+Based on the user's suggestion and the error traceback, the fix should be adding a check `if curr_stream:` before line 669. Looking at typical matplotlib code structure, this is likely before the append operation.
+
+Let me construct the patch based on the information provided:
+
+--- a/lib/matplotlib/backends/backend_ps.py
++++ b/lib/matplotlib/backends/backend_ps.py
+@@ -666,6 +666,8 @@
+                     else:
+                         curr_stream.append((xp, name))
+                 prev_chunk = chunk
++            if curr_stream:
+                 stream.append(curr_stream)
+         self.set_color(*gc.get_rgb())
+         for ps_name, xs_names in stream:

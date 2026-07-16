@@ -1,0 +1,12 @@
+Based on my knowledge of the pytest codebase, I can provide the patch. The `--collect-only` option is defined in `src/_pytest/main.py` in the pytest repository. The fix involves adding `--co` as an alias to the existing `--collect-only` option.
+
+--- a/src/_pytest/main.py
++++ b/src/_pytest/main.py
+@@ -109,6 +109,7 @@ def pytest_addoption(parser: Parser) -> None:
+     group.addoption(
+         "--collect-only",
+         "--collectonly",
++        "--co",
+         action="store_true",
+         help="only collect tests, don't execute them.",
+     )

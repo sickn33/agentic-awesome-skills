@@ -1,0 +1,19 @@
+# django__django-16229
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my analysis of the issue and the architect's guidance, I need to create a proper patch for Django's `django/forms/models.py`. The issue is that when a ModelForm field has a callable default (like `default=list`), Django incorrectly sets `show_hidden_initial=True`, which causes the hidden initial value to capture user input and bypass validation on subsequent submissions.
+
+The fix should be applied in the `fields_for_model` function in `django/forms/models.py` to set `show_hidden_initial=False` for fields with callable defaults.
+
+--- a/django/forms/models.py
++++ b/django/forms/models.py
+@@ -91,6 +91,9 @@ def fields_for_model(
+             continue
+         kwargs = {}
++        # Fields with callable defaults should not show hidden initial.
++        if f.has_default() and callable(f.default):
++            kwargs["show_hidden_initial"] = False
+         if widgets and f.name in widgets:
+             kwargs["widget"] = widgets[f.name]
+         if localized_fields == ALL_FIELDS or (

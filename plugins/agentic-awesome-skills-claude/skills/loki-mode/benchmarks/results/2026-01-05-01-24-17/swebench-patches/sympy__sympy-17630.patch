@@ -1,0 +1,90 @@
+Based on the issue description, I can analyze the problem and provide a fix. The issue is clear from the error traceback:
+
+1. When `ZeroMatrix` blocks are multiplied, they become `Zero` (scalar) objects
+2. The `colblocksizes` and `rowblocksizes` properties try to access `.cols` and `.rows` attributes on blocks
+3. `Zero` doesn't have these attributes, causing the `AttributeError`
+
+The fix needs to handle the case where a block might be `Zero` instead of `ZeroMatrix`. Looking at the error and the problem description:
+
+- `colblocksizes` at line 80 does: `return [self.blocks[0, i].cols for i in range(self.blockshape[1])]`
+- `rowblocksizes` likely does something similar for rows
+
+The solution is to convert `Zero` back to `ZeroMatrix` when needed, or handle it in the properties. A cleaner fix is to ensure that when blocks are computed during `_blockmul`, any `Zero` result gets converted to the appropriate `ZeroMatrix`.
+
+Looking at the typical structure of such code, the issue likely occurs in how matrix multiplication results are handled. When `ZeroMatrix * anything` or `anything * ZeroMatrix` is computed, SymPy may return a scalar `Zero` instead of `ZeroMatrix`.
+
+Here's the patch to fix this issue:
+
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -1,6 +1,6 @@
+ from __future__ import print_function, division
+ 
+-from sympy import ask, Q
++from sympy import ask, Q, S
+ from sympy.core import Basic, Add
+ from sympy.core.compatibility import range
+ from sympy.strategies import typed, exhaust, condition, do_one, unpack
+@@ -164,7 +164,10 @@ class BlockMatrix(BlockDiagMatrix):
+                 for k in range(self.blockshape[1])]
+                 for i in range(self.blockshape[0])]
+ 
+-        return BlockMatrix(Matrix(data))
++        return BlockMatrix(Matrix([
++            [ZeroMatrix(self.blocks[i, 0].rows, other.blocks[0, j].cols) if data[i][j] == S.Zero
++             else data[i][j] for j in range(len(data[0]))]
++            for i in range(len(data))]))
+ 
+     def _blockadd(self, other):
+         if (isinstance(other, BlockMatrix)
+
+Wait, I need to reconsider. Let me think about this more carefully based on the error message and typical SymPy patterns. The issue is that after one multiplication, the result blocks contain `Zero` instead of `ZeroMatrix`, and then subsequent operations fail.
+
+The fix should ensure that when `_blockmul` creates the result matrix, any `Zero` values are converted to `ZeroMatrix` with appropriate dimensions.
+
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -160,10 +160,17 @@ class BlockMatrix(BlockDiagMatrix):
+                 and self.colblocksizes == other.rowblocksizes):
+             return BlockMatrix._blockmul(self, other)
+ 
++    def _blockmul(self, other):
++        if (self.colblocksizes == other.rowblocksizes):
++            from sympy import S
++            data = [[sum(self.blocks[i, k]*other.blocks[k, j]
++                        for k in range(self.blockshape[1]))
++                    for j in range(other.blockshape[1])]
++                    for i in range(self.blockshape[0])]
++            # Convert Zero to ZeroMatrix with appropriate dimensions
++            for i in range(self.blockshape[0]):
++                for j in range(other.blockshape[1]):
++                    if data[i][j] == S.Zero:
++                        data[i][j] = ZeroMatrix(self.blocks[i, 0].rows, other.blocks[0, j].cols)
++            return BlockMatrix(Matrix(data))
+
+Let me provide a cleaner, complete patch:
+
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -157,13 +157,19 @@ class BlockMatrix(BlockDiagMatrix):
+     def _blockmul(self, other):
+         if (self.colblocksizes == other.rowblocksizes):
+-            return BlockMatrix(Matrix([
+-                [sum(self.blocks[i, k]*other.blocks[k, j]
+-                        for k in range(self.blockshape[1]))
+-                        for j in range(other.blockshape[1])]
+-                        for i in range(self.blockshape[0])]))
++            from sympy.core.numbers import Zero
++            data = [[sum(self.blocks[i, k]*other.blocks[k, j]
++                        for k in range(self.blockshape[1]))
++                    for j in range(other.blockshape[1])]
++                    for i in range(self.blockshape[0])]
++            # Convert Zero to ZeroMatrix with appropriate dimensions
++            for i in range(self.blockshape[0]):
++                for j in range(other.blockshape[1]):
++                    if isinstance(data[i][j], Zero):
++                        data[i][j] = ZeroMatrix(self.blocks[i, 0].rows, other.blocks[0, j].cols)
++            return BlockMatrix(Matrix(data))
+ 
+     def _blockadd(self, other):
+         if (isinstance(other, BlockMatrix)

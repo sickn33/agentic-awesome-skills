@@ -1,0 +1,20 @@
+# sympy__sympy-13971
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the analysis and existing patch format, here is the correct patch:
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1702,9 +1702,9 @@ def _print_SeqFormula(self, s):
+         else:
+             printset = tuple(s)
+ 
+-        return (r"\left\["
++        return (r"\left["
+               + r", ".join(self._print(el) for el in printset)
+-              + r"\right\]")
++              + r"\right]")
+ 
+     _print_SeqPer = _print_SeqFormula
+     _print_SeqAdd = _print_SeqFormula

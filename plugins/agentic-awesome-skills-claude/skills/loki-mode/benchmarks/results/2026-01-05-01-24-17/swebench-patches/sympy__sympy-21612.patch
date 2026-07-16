@@ -1,0 +1,26 @@
+This appears to be a task asking me to generate a patch for the sympy repository based on the issue description and the fix hints provided. The issue is about LaTeX parsing of fractions yielding wrong expressions due to missing brackets, and the hints provide the exact diff needed.
+
+Based on the issue description and the provided fix in the hints, here is the patch:
+
+--- a/sympy/printing/str.py
++++ b/sympy/printing/str.py
+@@ -333,7 +333,7 @@ def apow(i):
+                     b.append(apow(item))
+                 else:
+                     if (len(item.args[0].args) != 1 and
+-                            isinstance(item.base, Mul)):
++                            isinstance(item.base, (Mul, Pow))):
+                         # To avoid situations like #14160
+                         pow_paren.append(item)
+                     b.append(item.base)
+--- a/sympy/printing/tests/test_str.py
++++ b/sympy/printing/tests/test_str.py
+@@ -252,6 +252,8 @@ def test_Mul():
+     # For issue 14160
+     assert str(Mul(-2, x, Pow(Mul(y,y,evaluate=False), -1, evaluate=False),
+                                                 evaluate=False)) == '-2*x/(y*y)'
++    # issue 21537
++    assert str(Mul(x, Pow(1/y, -1, evaluate=False), evaluate=False)) == 'x/(1/y)'
+ 
+ 
+     class CustomClass1(Expr):

@@ -1,10 +1,26 @@
 node_modules/
+__pycache__/
+.ruff_cache/
+.worktrees/
+.tmp/
+.DS_Store
 
-walkthrough.md
+# npm pack artifacts
+antigravity-awesome-skills-*.tgz
+
 .agent/rules/
+/.claude-plugin/*
+!/.claude-plugin/plugin.json
+!/.claude-plugin/marketplace.json
+.codex/
 .gemini/
-LOCAL_CONFIG.md
+.release-clone-*/
 data/node_modules
+
+# Generated skill registry outputs (maintainer-owned, never committed in PRs)
+data/drift-baseline.json
+data/registry-report.json
+data/scores.json
 
 # Temporary analysis and report files
 *_REPORT.md
@@ -19,8 +35,27 @@ similar_skills_*.json
 remaining_*.json
 html_*.json
 
-# Temporary analysis scripts
-scripts/*voltagent*.py
-scripts/*html*.py
-scripts/*similar*.py
-scripts/*count*.py
+# Local remediation planning artefacts (keep durable notes under .codex/)
+/LOCAL_SECURITY_SCAN_GOAL.md
+/LOCAL_SECURITY_SCAN_WORKLOG.md
+/SNYK_REMEDIATION_GOAL.md
+/SNYK_REMEDIATION_WORKLOG.md
+/TRADEMARK_REMEDIATION_GOAL.md
+
+# Temporary analysis scripts (tools/scripts/)
+tools/scripts/*voltagent*.py
+tools/scripts/*html*.py
+tools/scripts/*similar*.py
+tools/scripts/*count*.py
+
+# Optional baseline for legacy JS validator (scripts/validate-skills.js)
+validation-baseline.json
+
+# Web app generated assets (from npm run app:setup)
+apps/web-app/public/skills/
+apps/web-app/public/skills.json
+
+skills/spline-3d-integration/*.zip
+
+# Temporary plugin staging directories
+plugins/.antigravity-awesome-skills.staging-*/

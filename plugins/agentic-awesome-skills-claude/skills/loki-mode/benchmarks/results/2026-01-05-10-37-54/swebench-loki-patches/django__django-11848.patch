@@ -1,0 +1,24 @@
+# django__django-11848
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I can generate the patch. The issue is well-documented - the current Django code has hardcoded year ranges instead of dynamically calculating based on the current year per RFC 7231.
+
+```
+--- a/django/utils/http.py
++++ b/django/utils/http.py
+@@ -176,10 +176,11 @@ def parse_http_date(date):
+         year = int(m.group('year'))
+         if year < 100:
+-            if year < 70:
+-                year += 2000
+-            else:
+-                year += 1900
++            current_year = datetime.datetime.utcnow().year
++            year += current_year - current_year % 100
++            if year > current_year + 50:
++                year -= 100
+         month = MONTHS.index(m.group('mon').lower()) + 1
+         day = int(m.group('day'))
+         hour = int(m.group('hour'))
+```

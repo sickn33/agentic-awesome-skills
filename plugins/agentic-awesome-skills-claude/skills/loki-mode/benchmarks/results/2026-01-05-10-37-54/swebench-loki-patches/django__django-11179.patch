@@ -1,0 +1,14 @@
+# django__django-11179
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -277,6 +277,7 @@ class Collector:
+                     query = sql.DeleteQuery(model)
+                     query.delete_batch([instance.pk], self.using)
+ 
++                    setattr(instance, model._meta.pk.attname, None)
+                     return count, {model._meta.label: count}
+ 
+         with transaction.atomic(using=self.using, savepoint=False):

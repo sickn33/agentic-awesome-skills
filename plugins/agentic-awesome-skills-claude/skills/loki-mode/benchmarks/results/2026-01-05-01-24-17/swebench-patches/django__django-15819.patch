@@ -1,0 +1,127 @@
+Based on my knowledge of Django's inspectdb command, I can create the patch. The inspectdb command is located in `django/core/management/commands/inspectdb.py`. The issue is that when multiple ForeignKey fields in a model point to the same related model, Django raises E304 error about clashing reverse accessors.
+
+The fix needs to:
+1. Track which related models have been used for foreign key relationships in each table
+2. When a related model is used more than once, add `related_name` to all ForeignKey fields pointing to that model to avoid the reverse accessor clash
+
+Here is the patch for Django's inspectdb command:
+
+--- a/django/core/management/commands/inspectdb.py
++++ b/django/core/management/commands/inspectdb.py
+@@ -123,6 +123,15 @@ class Command(BaseCommand):
+                 if table_name in relations:
+                     raise CommandError("Multiple models have the same name: %s" % att_name)
+ 
++            # Track how many ForeignKey/OneToOneField relations point to each
++            # related table to detect when we need related_name.
++            used_relations = {}
++            for column_name in (
++                x for x in relations if x[0] not in known_models
++            ):
++                ref_db_table = relations[column_name][1]
++                used_relations[ref_db_table] = used_relations.get(ref_db_table, 0) + 1
++
+             for column_name in connection.introspection.get_table_description(
+                 cursor, table_name
+             ):
+@@ -149,6 +158,9 @@ class Command(BaseCommand):
+                         ref_db_table = relations[column_name[0]][1]
+                         if ref_db_table == table_name:
+                             extra_params["to"] = "'self'"
++                        # Add related_name if multiple FKs point to the same table.
++                        if used_relations.get(ref_db_table, 0) > 1:
++                            extra_params["related_name"] = "'%s'" % (att_name + "_set")
+                     else:
+                         extra_params["to"] = (
+                             "'%s'" % relations[column_name[0]][1]
+
+Wait, let me reconsider the Django inspectdb structure more carefully. Based on my knowledge, the code structure is different. Let me provide a more accurate patch:
+
+--- a/django/core/management/commands/inspectdb.py
++++ b/django/core/management/commands/inspectdb.py
+@@ -62,6 +62,16 @@ class Command(BaseCommand):
+             yield "# * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior"
+             yield (
+                 "# * Remove `managed = False` lines if you wish to allow "
+                 "Django to create, modify, and delete the table"
+             )
+             yield (
+                 "# Feel free to rename the models, but don't rename db_table values or "
+                 "field names."
+             )
+             yield "from %s import models" % self.db_module
+             known_models = []
+             tables_to_introspect = options["table"] or connection.introspection.table_names(cursor)
+ 
+             for table_name in tables_to_introspect:
+                 if table_name_filter is not None and callable(table_name_filter):
+                     if not table_name_filter(table_name):
+                         continue
+                 try:
+                     try:
+                         relations = connection.introspection.get_relations(
+                             cursor, table_name
+                         )
+                     except NotImplementedError:
+                         relations = {}
+                     try:
+                         constraints = connection.introspection.get_constraints(
+                             cursor, table_name
+                         )
+                     except NotImplementedError:
+                         constraints = {}
+                     primary_key_columns = (
+                         connection.introspection.get_primary_key_columns(
+                             cursor, table_name
+                         )
+                     )
+                     primary_key_column = (
+                         primary_key_columns[0] if primary_key_columns else None
+                     )
+                     unique_columns = [
+                         c["columns"][0]
+                         for c in constraints.values()
+                         if c["unique"] and len(c["columns"]) == 1
+                     ]
++                    # Count how many ForeignKeys point to each related table
++                    # to determine if we need to add related_name.
++                    used_relations = {}
++                    for rel_column in relations:
++                        ref_table = relations[rel_column][1]
++                        used_relations[ref_table] = used_relations.get(ref_table, 0) + 1
+                     table_description = connection.introspection.get_table_description(
+                         cursor, table_name
+                     )
+
+I realize I need to be more precise about the exact location in the file. Based on the Django codebase structure, let me provide the correct patch:
+
+--- a/django/core/management/commands/inspectdb.py
++++ b/django/core/management/commands/inspectdb.py
+@@ -63,6 +63,11 @@ class Command(BaseCommand):
+                         constraints = {}
+                     primary_key_column = connection.introspection.get_primary_key_column(cursor, table_name)
+                     unique_columns = [
+                         c['columns'][0]
+                         for c in constraints.values()
+                         if c['unique'] and len(c['columns']) == 1
+                     ]
++                    # Count how many times each related table is referenced
++                    # to determine if related_name is needed to avoid clashes.
++                    used_relations = {}
++                    for column_name in relations:
++                        ref_db_table = relations[column_name][1]
++                        used_relations[ref_db_table] = used_relations.get(ref_db_table, 0) + 1
+                     table_description = connection.introspection.get_table_description(cursor, table_name)
+                 except Exception as e:
+                     yield "# Unable to inspect table '%s'" % table_name
+@@ -127,6 +132,10 @@ class Command(BaseCommand):
+                             extra_params['to'] = "'self'"
+                         else:
+                             extra_params['to'] = table2model(ref_db_table)
++                        # If multiple ForeignKeys point to the same table,
++                        # add related_name to avoid reverse accessor clashes.
++                        if used_relations.get(ref_db_table, 0) > 1:
++                            extra_params['related_name'] = "'%s'" % (att_name + '_set')
+                     else:
+                         extra_params['to'] = table2model(ref_db_table)
+                         if ref_db_column != 'id':

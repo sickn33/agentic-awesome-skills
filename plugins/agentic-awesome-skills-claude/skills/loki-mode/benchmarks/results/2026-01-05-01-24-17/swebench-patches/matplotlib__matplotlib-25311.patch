@@ -1,0 +1,29 @@
+Based on my knowledge of the matplotlib codebase (version 3.7.0 as mentioned in the issue), I can provide the fix. The issue is that when a legend is set to be draggable, it creates a `DraggableLegend` object (which inherits from `DraggableOffsetBox` in `offsetbox.py`) that stores a reference to the canvas. This canvas reference cannot be pickled.
+
+The fix should add a `__getstate__` method to the `Legend` class to properly handle the `_draggable` attribute during pickling. Looking at the matplotlib source code structure, the `DraggableLegend` class is defined in `legend.py` and inherits from `DraggableOffsetBox` which is in `offsetbox.py`.
+
+The solution is to add a `__getstate__` method to the `DraggableOffsetBox` class (in `offsetbox.py`) that excludes the unpicklable canvas reference and event connection IDs, and a corresponding `__setstate__` method to restore the draggable state after unpickling.
+
+Here is the patch:
+
+--- a/lib/matplotlib/offsetbox.py
++++ b/lib/matplotlib/offsetbox.py
+@@ -1440,6 +1440,18 @@ class DraggableBase:
+         self._check_still_parented()
+         self.save_offset()
+ 
++    def __getstate__(self):
++        state = self.__dict__.copy()
++        # Remove references to canvas and callback IDs which cannot be pickled
++        state.pop('canvas', None)
++        state.pop('cids', None)
++        state['_use_blit'] = self._use_blit
++        return state
++
++    def __setstate__(self, state):
++        self.__dict__.update(state)
++        self.set_canvas(self.ref_artist.figure.canvas)
++
+ 
+ class DraggableOffsetBox(DraggableBase):
+     def __init__(self, ref_artist, offsetbox, use_blit=False):

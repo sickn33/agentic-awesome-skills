@@ -1,0 +1,27 @@
+# sympy__sympy-21379
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/core/mod.py
++++ b/sympy/core/mod.py
+@@ -7,6 +7,7 @@ from .logic import fuzzy_and, fuzzy_not
+ from .mul import Mul
+ from .singleton import S
+ from .exprtools import factor_terms
++from sympy.polys.polyerrors import PolynomialError
+ 
+ 
+ class Mod(Function):
+@@ -166,7 +167,11 @@ def eval(cls, p, q):
+                 # XXX other possibilities?
+ 
+             # extract gcd; any further simplification should be done by the user
+-            G = gcd(p, q)
++            try:
++                G = gcd(p, q)
++            except PolynomialError:
++                G = S.One
++
+             if G != 1:
+                 p, q = [
+                     gcd_terms(i/G, clear=False, fraction=False) for i in (p, q)]

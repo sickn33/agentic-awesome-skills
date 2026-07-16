@@ -1,0 +1,52 @@
+# matplotlib__matplotlib-24265
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/lib/matplotlib/style/core.py
++++ b/lib/matplotlib/style/core.py
+@@ -43,6 +43,32 @@ def _remove_blacklisted_style_params(d, warn=True):
+     return d
+ 
+ 
++def _apply_style_alias_deprecation(d):
++    """
++    Add aliases for deprecated seaborn style names.
++    
++    Maps old seaborn-* names to new seaborn-v0_8-* names for backwards
++    compatibility when accessing styles directly via plt.style.library.
++    """
++    # List of seaborn style suffixes that were renamed
++    seaborn_styles = [
++        'seaborn', 'seaborn-bright', 'seaborn-colorblind', 'seaborn-dark',
++        'seaborn-darkgrid', 'seaborn-dark-palette', 'seaborn-deep',
++        'seaborn-muted', 'seaborn-notebook', 'seaborn-paper', 'seaborn-pastel',
++        'seaborn-poster', 'seaborn-talk', 'seaborn-ticks', 'seaborn-white',
++        'seaborn-whitegrid'
++    ]
++    
++    for old_name in seaborn_styles:
++        # Map old name (seaborn-*) to new name (seaborn-v0_8-*)
++        new_name = old_name.replace('seaborn', 'seaborn-v0_8', 1)
++        if new_name in d and old_name not in d:
++            d[old_name] = d[new_name]
++    
++    return d
++
++
+ def _read_style_directory(style_dir):
+     """Return dictionary of styles defined in *style_dir*."""
+     styles = dict()
+@@ -61,6 +87,7 @@ def update_user_library(library):
+     for style_dir in map(os.path.expanduser, USER_LIBRARY_PATHS):
+         styles = _read_style_directory(style_dir)
+         update_nested_dict(library, styles)
++    _apply_style_alias_deprecation(library)
+     return library
+ 
+ 
+@@ -178,4 +205,5 @@ def reload_library():
+     """Reload the style library."""
+     library.clear()
+     library.update(update_user_library(_base_library))
++    _apply_style_alias_deprecation(library)
+     return library

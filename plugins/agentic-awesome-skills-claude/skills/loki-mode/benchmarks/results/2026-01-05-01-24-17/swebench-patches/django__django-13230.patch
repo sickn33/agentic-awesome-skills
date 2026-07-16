@@ -1,0 +1,14 @@
+Based on my knowledge of the Django syndication framework, I can create the patch. The issue is about adding a `comments` argument to the `add_item()` call in syndication views, similar to how other item properties like `author_email`, `author_link`, etc. are handled.
+
+Here is the patch:
+
+--- a/django/contrib/syndication/views.py
++++ b/django/contrib/syndication/views.py
+@@ -214,6 +214,7 @@ class Feed:
+                 author_name=author_name,
+                 author_email=author_email,
+                 author_link=author_link,
++                comments=self._get_dynamic_attr('item_comments', item),
+                 categories=self._get_dynamic_attr('item_categories', item),
+                 item_copyright=self._get_dynamic_attr('item_copyright', item),
+                 **self.item_extra_kwargs(item),

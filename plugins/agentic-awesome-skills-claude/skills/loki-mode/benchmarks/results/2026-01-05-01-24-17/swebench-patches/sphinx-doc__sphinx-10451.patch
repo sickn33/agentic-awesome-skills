@@ -1,0 +1,129 @@
+Based on the issue description, I need to analyze the problem and create a patch. The issue is about duplicated *args and **kwargs when using `autodoc_typehints = "description"`. Let me analyze what I know from the issue:
+
+1. When `autodoc_typehints = "description"` is set, type hints are added to the parameter descriptions
+2. For `*args` and `**kwargs`, the parameters are being duplicated - once with the stars (from the docstring) and once without (from the type hints)
+3. The problem is that when matching parameters from type hints to existing docstring params, the code doesn't account for the `*` and `**` prefixes
+
+Looking at the Sphinx source code structure (which I know from my training), the relevant file is `sphinx/ext/autodoc/typehints.py`. The `modify_field_list` function handles merging type hints into the field list.
+
+The bug is in how the code matches parameter names. When looking for existing `:param args:` entries, it doesn't consider that the docstring might have `:param *args:` or `:param **kwargs:`.
+
+Here's the patch:
+
+--- a/sphinx/ext/autodoc/typehints.py
++++ b/sphinx/ext/autodoc/typehints.py
+@@ -61,7 +61,11 @@ def modify_field_list(node: nodes.field_list, annotations: Dict[str, str]) -> No
+     arguments: Dict[str, Dict[str, bool]] = {}
+     fields = cast(Iterable[nodes.field], node)
+     for field in fields:
+-        field_name = field[0].astext()
++        try:
++            field_name = field[0].astext()
++        except (IndexError, TypeError):
++            continue
++
+         parts = re.split(' +', field_name)
+         if parts[0] == 'param':
+             if len(parts) == 2:
+@@ -83,11 +87,17 @@ def modify_field_list(node: nodes.field_list, annotations: Dict[str, str]) -> No
+             arguments[name] = {'type': True}
+ 
+     for name, annotation in annotations.items():
++        if name == 'return':
++            continue
++
+         field = nodes.field()
+         if name == 'return':
+             field += nodes.field_name('', 'rtype')
+             field += nodes.field_body('', nodes.paragraph('', annotation))
+-        elif name in arguments and arguments[name].get('type') is True:
+-            # The type is already specified, skip adding it again
+-            pass
+-        else:
++            node += field
++        elif name not in arguments:
++            # Check if the argument is documented with *args or **kwargs notation
++            if '*' + name in arguments or '**' + name in arguments:
++                # Already documented with * or ** prefix, skip
++                continue
++
+             field += nodes.field_name('', 'type ' + name)
+             field += nodes.field_body('', nodes.paragraph('', annotation))
+             node += field
+
+Wait, let me reconsider the actual issue more carefully. Looking at the problem statement again:
+
+The output shows:
+- `***args**` (with the type info missing from the description-based entry)  
+- `**args** (*int*)` (an extra duplicate without the star)
+
+This means when merging type annotations, the code is:
+1. Not recognizing that `*args` in the docstring corresponds to `args` in the annotations
+2. Adding a duplicate entry for `args` (without the star)
+
+The fix needs to:
+1. When looking for existing params, also check for `*` and `**` prefixed versions
+2. When adding type info, use the correct name (with stars if originally documented that way)
+
+--- a/sphinx/ext/autodoc/typehints.py
++++ b/sphinx/ext/autodoc/typehints.py
+@@ -83,12 +83,16 @@ def modify_field_list(node: nodes.field_list, annotations: Dict[str, str]) -> No
+             arguments[name] = {'type': True}
+ 
+     for name, annotation in annotations.items():
++        if name == 'return':
++            continue
++
+         field = nodes.field()
+         if name == 'return':
+             field += nodes.field_name('', 'rtype')
+             field += nodes.field_body('', nodes.paragraph('', annotation))
+-        elif name in arguments and arguments[name].get('type') is True:
+-            pass
+-        else:
++            node += field
++        elif name not in arguments and '*' + name not in arguments and '**' + name not in arguments:
+             field += nodes.field_name('', 'type ' + name)
+             field += nodes.field_body('', nodes.paragraph('', annotation))
+             node += field
+
+Let me reconsider the issue once more to provide an accurate patch. The key insight from the issue is:
+
+1. The docstring has `:param *args:` and `:param **kwargs:`
+2. The type annotations have `args: int` and `kwargs: int`
+3. When merging, the code doesn't recognize that `*args` in docstring = `args` in annotations
+4. It adds duplicate entries for `args` and `kwargs` (without stars)
+
+The fix needs to handle both directions:
+1. When looking up if a param from annotations exists in the docstring, check with `*` and `**` prefixes
+2. When adding type info for `*args`/`**kwargs`, add it to the existing starred entry rather than creating a new one
+
+--- a/sphinx/ext/autodoc/typehints.py
++++ b/sphinx/ext/autodoc/typehints.py
+@@ -59,14 +59,21 @@ def record_typehints(app: Sphinx, objtype: str, name: str, obj: Any,
+ def modify_field_list(node: nodes.field_list, annotations: Dict[str, str]) -> None:
+     arguments: Dict[str, Dict[str, bool]] = {}
+     fields = cast(Iterable[nodes.field], node)
+     for field in fields:
+         field_name = field[0].astext()
+         parts = re.split(' +', field_name)
+         if parts[0] == 'param':
+             if len(parts) == 2:
+                 # :param xxx:
+-                arguments[parts[1]] = {'node': field}
++                arg = parts[1].lstrip('*')
++                if arg not in arguments:
++                    arguments[arg] = {'node': field}
+             elif len(parts) > 2:
+                 # :param xxx yyy:
+-                arguments[parts[2]] = {'node': field, 'type': True}
++                arg = parts[2].lstrip('*')
++                if arg not in arguments:
++                    arguments[arg] = {'node': field, 'type': True}
+         elif parts[0] == 'type':
+-            arguments[parts[1]] = {'type': True}
++            name = parts[1].lstrip('*')
++            if name in arguments:
++                arguments[name]['type'] = True
++            else:
++                arguments[name] = {'type': True}

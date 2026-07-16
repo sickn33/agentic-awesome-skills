@@ -1,0 +1,20 @@
+# django__django-14017
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/query_utils.py
++++ b/django/db/models/query_utils.py
+@@ -69,8 +69,13 @@ class Q(tree.Node):
+         return path, args, kwargs
+ 
+     def _combine(self, other, conn):
+-        if not isinstance(other, Q):
++        if getattr(other, 'conditional', False) is False:
+             raise TypeError(other)
++        
++        # If other is a Combinable (like Exists) but not a Q, wrap it in a Q
++        if not isinstance(other, Q):
++            other = Q(other)
+ 
+         # If the other Q() is empty, ignore it and just use `self`.
+         if not other:

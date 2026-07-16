@@ -1,0 +1,57 @@
+Glossary Consistency Report
+===========================
+Generated: deterministic
+
+Glossary File: docs_zh-CN/.glossary.json
+
+----------------------------------------
+
+METADATA
+========
+
+Version:
+  1.0.14
+
+Created:
+  2026-03-27
+
+Last Updated:
+  2026-07-09
+
+----------------------------------------
+
+GLOSSARY STATISTICS
+===================
+
+Total Terms: 199
+Actual Terms: 199
+
+Top 10 Terms (alphabetical):
+
+  SEO: SEO
+  adversarial: 对抗性
+  agents: 代理
+  aggregate: 聚合
+  allowlist: 允许列表
+  artifact: 工件
+  attack tree: 攻击树
+  attribution: 署名
+  audit: 审计
+  authorized: 授权
+
+Field Validation:
+
+  All terms have translations.
+
+----------------------------------------
+
+CONSISTENCY CHECKS
+==================
+
+No duplicate term keys found.
+
+----------------------------------------
+
+VALIDATION COMPLETE
+
+Glossary file is valid and ready for use.

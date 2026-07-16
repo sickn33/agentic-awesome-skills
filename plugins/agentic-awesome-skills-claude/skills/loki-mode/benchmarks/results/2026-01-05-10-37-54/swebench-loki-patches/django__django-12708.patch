@@ -1,0 +1,61 @@
+# django__django-12708
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I need to generate a patch for the Django `_delete_composed_index()` method. The bug is that when deleting an `index_together`, the method finds both the unique constraint and the index constraint because they share the same columns. The fix needs to filter by constraint type.
+
+Here's the patch:
+
+```
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -355,7 +355,7 @@ class BaseDatabaseSchemaEditor:
+         self.execute(self._delete_constraint_sql(self.sql_delete_pk, model, pk_names[0]))
+         return True
+ 
+-    def _delete_composed_index(self, model, fields, constraint_kwargs, sql):
++    def _delete_composed_index(self, model, fields, constraint_kwargs, sql, exclude_unique=False):
+         columns = [model._meta.get_field(field).column for field in fields]
+         constraint_names = self._constraint_names(model, columns, **constraint_kwargs)
+         if len(constraint_names) != 1:
+@@ -375,7 +375,14 @@ class BaseDatabaseSchemaEditor:
+     def alter_index_together(self, model, old_index_together, new_index_together):
+         olds = {tuple(fields) for fields in old_index_together}
+         news = {tuple(fields) for fields in new_index_together}
+-        # Deleted indexes
++        # Deleted indexes. When removing an index, exclude unique constraints
++        # from consideration since the same columns might have both
++        # index_together and unique_together defined.
+         for fields in olds.difference(news):
+-            self._delete_composed_index(model, fields, {'index': True}, self.sql_delete_index)
++            self._delete_composed_index(
++                model,
++                fields,
++                {'index': True, 'unique': False},
++                self.sql_delete_index,
++            )
+         # Created indexes
+         for fields in news.difference(olds):
+             self._create_index(model, fields, suffix='_idx')
+```
+
+Wait, let me reconsider. The issue is in `_constraint_names` which needs to filter properly. Let me provide a more targeted fix based on the actual Django codebase structure:
+
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -375,8 +375,12 @@ class BaseDatabaseSchemaEditor:
+     def alter_index_together(self, model, old_index_together, new_index_together):
+         olds = {tuple(fields) for fields in old_index_together}
+         news = {tuple(fields) for fields in new_index_together}
+-        # Deleted indexes
++        # Deleted indexes. When removing an index, exclude unique constraints
++        # from consideration since the same columns might have both
++        # index_together and unique_together defined.
+         for fields in olds.difference(news):
+-            self._delete_composed_index(model, fields, {'index': True}, self.sql_delete_index)
++            self._delete_composed_index(
++                model, fields, {'index': True, 'unique': False}, self.sql_delete_index
++            )
+         # Created indexes
+         for fields in news.difference(olds):
+             self._create_index(model, fields, suffix='_idx')

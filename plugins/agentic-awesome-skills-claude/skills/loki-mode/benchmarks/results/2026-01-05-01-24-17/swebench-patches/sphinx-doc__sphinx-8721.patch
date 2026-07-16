@@ -1,0 +1,25 @@
+I understand - I'm in a restricted environment where I cannot execute bash commands or fetch from the web. However, based on my knowledge of the Sphinx codebase and this specific bug, I can provide the patch.
+
+The issue is in `sphinx/ext/viewcode.py`. When running `make html epub`, the `viewcode_enable_epub=False` setting is checked in the `doctree_read` event handler, but the problem is that the module pages are created during the `collect_pages` event, which doesn't properly check the `viewcode_enable_epub` setting for the current builder.
+
+The bug occurs because:
+1. During `make html epub`, the `doctree_read` event runs for both builders
+2. The `_env._viewcode_modules` dictionary gets populated during the HTML build
+3. When the epub builder runs, the `collect_pages` function still generates pages because the modules data exists from the HTML build
+
+The fix needs to check `viewcode_enable_epub` in the `collect_pages` function as well, not just in `doctree_read`.
+
+Here's the patch:
+
+--- a/sphinx/ext/viewcode.py
++++ b/sphinx/ext/viewcode.py
+@@ -182,6 +182,10 @@ def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], Non
+     env = app.builder.env
+     if not hasattr(env, '_viewcode_modules'):
+         return
++    if app.builder.name.startswith("epub") and not app.config.viewcode_enable_epub:
++        return
++    if app.builder.name == "singlehtml":
++        return
+     highlighter = app.builder.highlighter  # type: ignore
+     urito = app.builder.get_relative_uri

@@ -1,0 +1,49 @@
+# django__django-11742
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Django's codebase structure, I'll generate the patch for the CharField in `django/db/models/fields/__init__.py`:
+
+```
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1087,10 +1087,36 @@ class CharField(Field):
+     def check(self, **kwargs):
+         return [
+             *super().check(**kwargs),
+             *self._check_max_length_attribute(**kwargs),
++            *self._check_max_length_fits_choices(**kwargs),
+         ]
+ 
++    def _check_max_length_fits_choices(self, **kwargs):
++        if self.max_length is None or not self.choices:
++            return []
++
++        def get_choice_values(choices):
++            """Flatten choices, handling grouped choices."""
++            for choice in choices:
++                # Grouped choices: (group_name, [(value, display), ...])
++                if isinstance(choice[1], (list, tuple)):
++                    yield from (c[0] for c in choice[1])
++                else:
++                    yield choice[0]
++
++        longest_choice = max(
++            (len(str(value)) for value in get_choice_values(self.choices)),
++            default=0,
++        )
++        if longest_choice > self.max_length:
++            return [
++                checks.Error(
++                    "'max_length' is too small to fit the longest value "
++                    "in 'choices' (%d characters)." % longest_choice,
++                    obj=self,
++                    id='fields.E009',
++                )
++            ]
++        return []
++
+     def _check_max_length_attribute(self, **kwargs):
+         if self.max_length is None:
+             return [
+```

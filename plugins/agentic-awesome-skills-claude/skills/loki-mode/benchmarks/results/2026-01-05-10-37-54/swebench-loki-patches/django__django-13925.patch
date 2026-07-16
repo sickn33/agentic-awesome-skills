@@ -1,0 +1,20 @@
+# django__django-13925
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of the Django codebase, I can generate the patch for this issue. The `_check_default_pk` method in Django 3.2 checks if `cls._meta.pk.auto_created` is True but doesn't verify whether the primary key belongs to the current model or was inherited from a parent model.
+
+```
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1298,7 +1298,8 @@ class Model(metaclass=ModelBase):
+     @classmethod
+     def _check_default_pk(cls):
+         if (
+-            cls._meta.pk.auto_created and
++            not cls._meta.parents and
++            cls._meta.pk.auto_created and
+             not settings.is_overridden('DEFAULT_AUTO_FIELD') and
+             not cls._meta.app_config._is_default_auto_field_overridden
+         ):
+```

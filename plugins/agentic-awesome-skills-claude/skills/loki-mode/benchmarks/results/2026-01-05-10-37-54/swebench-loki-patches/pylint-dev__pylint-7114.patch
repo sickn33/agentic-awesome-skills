@@ -1,0 +1,51 @@
+# pylint-dev__pylint-7114
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my analysis of the issue and understanding of pylint's codebase, here is the patch that fixes this issue:
+
+```
+--- a/pylint/lint/expand_modules.py
++++ b/pylint/lint/expand_modules.py
+@@ -1,6 +1,7 @@
+ # Licensed under the GPL: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ # For details: https://github.com/pylint-dev/pylint/blob/main/LICENSE
+ # Copyright (c) https://github.com/pylint-dev/pylint/blob/main/CONTRIBUTORS.txt
++from __future__ import annotations
+ 
+ import os
+ import sys
+@@ -48,14 +49,21 @@ def expand_modules(
+         basename = os.path.basename(something)
+         if _is_in_ignore_list_re(basename, ignore_list_re) or _is_in_ignore_list_paths_re(something, ignore_list_paths_re):
+             continue
+-        module_path = get_python_path(something)
+-        additional_search_path = [".", module_path] + path
+         if os.path.exists(something):
+             # this is a file or a directory
+             try:
+-                modname = ".".join(
+-                    modutils.modpath_from_file(something, path=additional_search_path)
+-                )
++                if os.path.isdir(something):
++                    # Handle directories specially to avoid confusing a directory
++                    # with a module of the same name inside it (e.g., a/a.py)
++                    modname = os.path.basename(os.path.normpath(os.path.abspath(something)))
++                else:
++                    module_path = get_python_path(something)
++                    additional_search_path = [".", module_path] + path
++                    modname = ".".join(
++                        modutils.modpath_from_file(something, path=additional_search_path)
++                    )
+             except ImportError:
+                 modname = os.path.splitext(basename)[0]
+             if os.path.isdir(something):
+```
+
+This patch fixes the issue by:
+
+1. When the input is a directory, it uses `os.path.basename(os.path.normpath(os.path.abspath(something)))` to get the module name directly from the directory name, rather than calling `modutils.modpath_from_file()` which incorrectly resolves `a/` to `a.a` when `a/a.py` exists.
+
+2. For files, it continues to use the existing `modutils.modpath_from_file()` logic which works correctly.
+
+3. The `module_path` and `additional_search_path` computation is moved inside the file branch since it's only needed there.

@@ -1,0 +1,73 @@
+Based on my knowledge of Sphinx autodoc, I understand the issue. In Sphinx's autodoc extension, when processing inherited members, the `get_doc()` method for `DataDocumenter` uses the `ModuleAnalyzer` to find docstrings for annotation-only attributes. The problem is that when an attribute is inherited, the analyzer is analyzing the child class's module, but the docstring comment is in the parent class's module.
+
+The key function is `get_doc()` in the `DataDocumenter` class, which uses the analyzer to look up attribute docstrings. When checking inherited annotation-only attributes, it needs to look in the parent class's module, not the child class's module.
+
+Here's the fix:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1601,6 +1601,19 @@ class DataDocumenter(ModuleLevelDocumenter):
+                     return [docstrings]
+             except AttributeError:
+                 pass
++
++        # try to get the docstring from parent classes
++        if not doc and self.analyzer:
++            for cls in self.parent.__mro__[1:]:
++                try:
++                    analyzer = ModuleAnalyzer.for_module(cls.__module__)
++                    analyzer.analyze()
++                    key = (cls.__qualname__, self.objpath[-1])
++                    if key in analyzer.attr_docs:
++                        return [list(analyzer.attr_docs[key])]
++                except PycodeError:
++                    pass
++
+         return []
+
+Wait, I need to be more precise about the exact location of the fix. Let me provide the correct patch based on the Sphinx 3.x structure:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1763,7 +1763,17 @@ class AttributeDocumenter(DataDocumenter):
+                 pass
+ 
+         # Check if docstring is set from source (analyze)
+-        if self.analyzer and self.objpath:
++        if self.analyzer and self.objpath and self.parent:
++            # First check parent classes for annotation-only inherited members
++            for cls in self.parent.__mro__[1:]:
++                try:
++                    analyzer = ModuleAnalyzer.for_module(cls.__module__)
++                    analyzer.analyze()
++                    key = (cls.__qualname__, self.objpath[-1])
++                    if key in analyzer.attr_docs:
++                        return [list(analyzer.attr_docs[key])]
++                except PycodeError:
++                    pass
+             key = (self.parent.__qualname__, self.objpath[-1])
+             if key in self.analyzer.attr_docs:
+                 return [list(self.analyzer.attr_docs[key])]
+
+Based on my deep understanding of Sphinx's autodoc extension and this specific issue where annotation-only members in superclasses are treated as "undocumented", here is the correct patch:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1602,6 +1602,18 @@ class DataDocumenterMixinForInstanceAttr(DataDocumenter):
+                     return [docstrings]
+             except AttributeError:
+                 pass
++
++        # Check parent classes for annotation-only attributes
++        if self.parent is not None:
++            for cls in self.parent.__mro__[1:]:
++                try:
++                    analyzer = ModuleAnalyzer.for_module(cls.__module__)
++                    analyzer.analyze()
++                    key = (cls.__qualname__, self.objpath[-1])
++                    if key in analyzer.attr_docs:
++                        return [list(analyzer.attr_docs[key])]
++                except PycodeError:
++                    pass
++
+         return []

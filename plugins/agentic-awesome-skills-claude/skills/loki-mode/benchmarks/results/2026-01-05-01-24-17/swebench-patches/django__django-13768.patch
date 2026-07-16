@@ -1,0 +1,32 @@
+This is a Django issue, not related to the current repository. Based on the issue description, I need to create a patch for the Django `Signal.send_robust()` method in `django/dispatch/dispatcher.py`. Let me create the patch based on my knowledge of Django's signal dispatcher code.
+
+The issue requests adding logging for exceptions that are caught in `send_robust()`. Looking at Django's dispatcher code, the `send_robust` method catches exceptions and returns them as part of the response tuple, but doesn't log them. The fix should add a `logger.exception()` call in the except clause.
+
+Here's the patch:
+
+--- a/django/dispatch/dispatcher.py
++++ b/django/dispatch/dispatcher.py
+@@ -1,4 +1,5 @@
+ import threading
++import logging
+ import weakref
+ 
+ from django.utils.inspect import func_accepts_kwargs
+@@ -5,6 +6,8 @@
+ from django.utils.inspect import func_accepts_kwargs
+ 
++logger = logging.getLogger('django.dispatch')
++
+ 
+ def _make_id(target):
+     if hasattr(target, '__func__'):
+@@ -206,6 +209,12 @@ class Signal:
+                 responses.append((receiver, response))
+             except Exception as err:
++                logger.exception(
++                    'Error calling %s in Signal.send_robust() (%s)',
++                    receiver.__qualname__,
++                    err,
++                )
+                 responses.append((receiver, err))
+         return responses

@@ -1,0 +1,38 @@
+{
+  "name": "aasb-aas-devops-cloud",
+  "version": "14.5.0",
+  "description": "Install the \"AAS DevOps & Cloud\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-devops-cloud",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS DevOps & Cloud",
+    "shortDescription": "Ship infrastructure, deployments, CI, environments, rollback plans, troubleshooting, and incident-ready operations.",
+    "longDescription": "Ship infrastructure, deployments, CI, environments, rollback plans, troubleshooting, and incident-ready operations. Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows. Recommended for: Platform teams, Startup engineers owning deployment, Cloud and DevOps maintainers. Not for: Frontend-only UI polish, Product analytics-only work. Covers Docker Expert, AWS Serverless, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use this plugin to review this deployment for risk, rollback, environment, and CI gaps.",
+      "Use this plugin to design a small-team cloud deployment plan with Terraform, CI, and runbook steps.",
+      "Use this plugin to troubleshoot this failed deployment and prepare an incident response checklist."
+    ]
+  }
+}

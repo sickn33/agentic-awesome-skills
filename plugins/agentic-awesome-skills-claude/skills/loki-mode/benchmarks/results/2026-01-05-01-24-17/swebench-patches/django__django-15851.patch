@@ -1,0 +1,16 @@
+Based on my knowledge of the Django codebase and the issue description, I can provide the fix. The issue is in `django/db/backends/postgresql/client.py` where the `settings_to_cmd_args_env` method constructs the psql command. The database name should be the last argument, but currently additional parameters are appended after the database name.
+
+Here is the patch:
+
+--- a/django/db/backends/postgresql/client.py
++++ b/django/db/backends/postgresql/client.py
+@@ -17,6 +17,8 @@ class DatabaseClient(BaseDatabaseClient):
+             args += ["-h", host]
+         if port:
+             args += ["-p", str(port)]
++        if parameters:
++            args.extend(parameters)
+         if dbname:
+             args += [dbname]
+-        args.extend(parameters)
+         return args, env

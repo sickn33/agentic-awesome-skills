@@ -1,0 +1,14 @@
+# matplotlib__matplotlib-23964
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/lib/matplotlib/backends/backend_ps.py
++++ b/lib/matplotlib/backends/backend_ps.py
+@@ -666,6 +666,8 @@ class RendererPS(_backend_pdf_ps.RendererPDFPSBase):
+                 self._pswriter.write(f"gsave\n{translate}{rotate}\n")
+             for ps_name, xs_names in stream:
+                 self._pswriter.write(f"{xs_names} {ps_name} show\n")
++        if not curr_stream:
++            return
+         for ps_name, xs_names in curr_stream:
+             self._pswriter.write(f"{xs_names} {ps_name} show\n")

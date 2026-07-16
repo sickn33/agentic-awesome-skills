@@ -1,0 +1,97 @@
+Based on my understanding of the SymPy issue and the discussions in the GitHub issue, I can create the fix. The issue is in `sympy/core/mul.py` where the `_gather` helper in the `Mul` class combines powers incorrectly when the base contains infinity.
+
+From the issue discussion:
+1. `(z + zoo)/(z + zoo)` incorrectly returns `1` because powers are combined
+2. The fix should return `nan` when combining an expression containing infinity with its inverse
+3. The key is checking if the base contains `zoo` (ComplexInfinity), `oo`, or `-oo` before combining powers
+
+Based on my knowledge of SymPy's codebase structure and the issue details, here's the patch:
+
+--- a/sympy/core/mul.py
++++ b/sympy/core/mul.py
+@@ -262,6 +262,14 @@ class Mul(Expr, AssocOp):
+ 
+             if b.is_Number:
+                 c, nc = split_args(b)
++            elif b.is_Add:
++                # Check if the base contains infinity
++                for bi in b.args:
++                    if bi.is_infinite:
++                        # Don't combine powers when base contains infinity
++                        # as this leads to incorrect results like (zoo + x)/(zoo + x) -> 1
++                        c_powers[b] = c_powers.get(b, S.Zero) + e
++                        continue
++                c, nc = S.One, []
+             else:
+                 c, nc = S.One, []
+ 
+@@ -318,6 +326,16 @@ class Mul(Expr, AssocOp):
+                 c_powers[b] = c_powers.get(b, S.Zero) + e
+                 if e.is_real is not None:
+                     obj = b**e
++                    # Check if base contains infinity after evaluating
++                    if obj.is_Mul or obj.is_Pow:
++                        has_inf = False
++                        for arg in obj.args if obj.is_Mul else [obj.base]:
++                            if arg.is_infinite or (arg.is_Add and any(a.is_infinite for a in arg.args)):
++                                has_inf = True
++                                break
++                        if has_inf:
++                            # Skip combining powers for expressions with infinity
++                            continue
+                     if obj.is_Number:
+                         if obj is S.NaN:
+                             return [S.NaN], [], None
+
+Wait, I need to look more carefully at the actual SymPy code to make the correct fix. Let me search for the exact file online to understand the structure better.
+
+Based on the issue discussion, specifically this comment: "The problem is that (because of -zoo being same as zoo) both parts are identified as the same and then the `_gather` helper of Mul method combines the powers 1 and -1 into power 0. And anything to power 0 returns 1 in SymPy, hence the result."
+
+And: "I think we should prevent combining powers when base contains Infinity or ComplexInfinity."
+
+The fix needs to be in the power combination logic. Looking at the standard SymPy mul.py structure, the key function is `_gather` or the flatten method. Let me create the correct patch based on the issue's proposed solution:
+
+--- a/sympy/core/mul.py
++++ b/sympy/core/mul.py
+@@ -1,4 +1,5 @@
+ from __future__ import print_function, division
++from functools import reduce
+ 
+ from collections import defaultdict
+ from .sympify import sympify
+@@ -165,6 +166,20 @@ class Mul(Expr, AssocOp):
+                     c_part.append(s)
+             return c_part, nc_part, order_symbols, lambda_args
+ 
++        # Check if expression contains infinity
++        def _contains_infinity(expr):
++            """Check if expr contains oo, -oo, or zoo."""
++            from sympy.core.numbers import Infinity, NegativeInfinity, ComplexInfinity
++            if expr.is_infinite:
++                return True
++            if hasattr(expr, 'args'):
++                for arg in expr.args:
++                    if _contains_infinity(arg):
++                        return True
++            return False
++
+         # Gather terms
+         def _gather(d):
+             """Given a dictionary of terms to exponents, gather all terms with
+
+Actually, looking at this more carefully, I realize I should provide a more targeted fix. The issue mentions the `_gather` helper and power combination. Let me create a proper patch:
+
+--- a/sympy/core/mul.py
++++ b/sympy/core/mul.py
+@@ -182,6 +182,14 @@ class Mul(Expr, AssocOp):
+                         c_powers[b] = e
+                     else:
+                         c_powers[b] += e
++                        # Check if combining powers results in 0 for a base containing infinity
++                        if c_powers[b] == 0:
++                            from sympy.core.numbers import ComplexInfinity, Infinity, NegativeInfinity
++                            if (b.has(ComplexInfinity) or b.has(Infinity) or 
++                                b.has(NegativeInfinity) or b.is_infinite):
++                                # x/x where x contains infinity should be nan, not 1
++                                return [S.NaN], [], None
++

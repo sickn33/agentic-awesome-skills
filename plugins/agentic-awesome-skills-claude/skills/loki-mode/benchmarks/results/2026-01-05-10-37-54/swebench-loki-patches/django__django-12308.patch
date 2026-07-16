@@ -1,0 +1,31 @@
+# django__django-12308
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/contrib/admin/utils.py
++++ b/django/contrib/admin/utils.py
+@@ -1,4 +1,5 @@
+ import datetime
++import json
+ import decimal
+ from collections import defaultdict
+ 
+@@ -6,6 +7,7 @@ from django.core.exceptions import FieldDoesNotExist
+ from django.db import models, router
+ from django.db.models.constants import LOOKUP_SEP
+ from django.db.models.deletion import Collector
++from django.db.models.fields.json import JSONField
+ from django.forms.utils import pretty_name
+ from django.urls import NoReverseMatch, reverse
+ from django.utils import formats, timezone
+@@ -396,6 +398,11 @@ def display_for_field(value, field, empty_value_display):
+         return formats.number_format(value)
+     elif isinstance(field, models.FileField) and value:
+         return format_html('<a href="{}">{}</a>', value.url, value)
++    elif isinstance(field, JSONField):
++        if value is None:
++            return empty_value_display
++        # Use prepare_value to handle InvalidJSONInput edge case
++        return field.prepare_value(value)
+     else:
+         return display_for_value(value, empty_value_display)

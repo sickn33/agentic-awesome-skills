@@ -1,0 +1,15 @@
+# django__django-13590
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1076,7 +1076,7 @@ class Query(BaseExpression):
+             )
+             type_ = type(value)
+             value = tuple(resolved_values)
+-            if hasattr(value, '_make'):  # namedtuple
++            if hasattr(type_, '_make'):  # namedtuple
+                 return type_._make(value)
+             return type_(value)
+         elif isinstance(value, list):

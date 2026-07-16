@@ -1,0 +1,27 @@
+# sympy__sympy-17655
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -295,6 +295,21 @@ class Point(GeometryEntity):
+             coords = [simplify(x*factor) for x in self.args]
+             return Point(coords, evaluate=False)
+ 
++    def __rmul__(self, factor):
++        """Multiply a factor by point's coordinates.
++
++        This is the reverse multiplication to support factor * Point.
++
++        See Also
++        ========
++
++        __mul__, scale
++
++        """
++        # Scalar multiplication is commutative, so we just delegate to __mul__
++        return self.__mul__(factor)
++
+     def __neg__(self):
+         """Negate the point."""
+         coords = [-x for x in self.args]

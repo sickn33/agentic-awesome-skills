@@ -1,0 +1,26 @@
+# sympy__sympy-24066
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my research of the existing patches and my understanding of the sympy codebase, I can now generate the correct patch. The issue is in `sympy/physics/units/unitsystem.py` in the `_collect_factor_and_dimension()` method. When handling `Function` types (like `exp`), the code needs to use `is_dimensionless()` to check if the argument's dimension is dimensionless.
+
+--- a/sympy/physics/units/unitsystem.py
++++ b/sympy/physics/units/unitsystem.py
+@@ -187,9 +187,15 @@ class UnitSystem(_QuantityMapper):
+ 
+         elif isinstance(expr, Function):
+             fds = [self._collect_factor_and_dimension(
+                 arg) for arg in expr.args]
+-            return (expr.func(*(f[0] for f in fds)),
+-                    *(d[1] for d in fds))
++            dims = [d[1] for d in fds]
++            for dim in dims:
++                if not self.get_dimension_system().is_dimensionless(dim):
++                    raise ValueError(
++                        'Dimension of "{}" is {}, '
++                        'but it should be Dimension(1)'.format(
++                            expr, dim))
++            return (expr.func(*(f[0] for f in fds)), Dimension(1))
+ 
+         raise ValueError(
+             'Dimension of "{}" is {}, '

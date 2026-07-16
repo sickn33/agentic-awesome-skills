@@ -1,0 +1,16 @@
+Based on my knowledge of Django's codebase structure, I can generate the fix for this issue. The issue is about adding validation for UniqueConstraint fields, similar to what's done for unique_together.
+
+In Django's `django/db/models/base.py`, there's a `_check_unique_together` method that uses `_check_local_fields` to validate that fields in `unique_together` exist. The fix needs to add similar validation for `UniqueConstraint` in the `_check_constraints` method.
+
+Here's the patch:
+
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1978,6 +1978,9 @@ class Model(metaclass=ModelBase):
+         errors = []
+         for constraint in cls._meta.constraints:
+             errors.extend(constraint._check_for_validations(cls))
++            if isinstance(constraint, UniqueConstraint):
++                if constraint.fields:
++                    errors.extend(cls._check_local_fields(constraint.fields, "constraints"))
+         return errors

@@ -1,0 +1,40 @@
+Based on my knowledge of xarray and the issue, I can analyze this problem. The `to_unstacked_dataset` method is in `xarray/core/dataarray.py`. The issue occurs because when unstacking single-dimension variables, the code creates data variables that still contain the stacking dimension `'y'` as a coordinate, and when merging them back together, there's a conflict because the `'y'` coordinate has different values for each variable.
+
+Let me provide the fix based on my understanding of xarray's codebase:
+
+The problem is in the `to_unstacked_dataset` method. When reconstructing the dataset, the method needs to drop the stacking dimension from the coordinates of each variable. Looking at the typical xarray v0.15.1 code structure:
+
+```python
+def to_unstacked_dataset(self, dim, level=0):
+    # ...
+    idx = self.indexes[dim]
+    if not isinstance(idx, pd.MultiIndex):
+        raise ValueError(...)
+    
+    variables = idx.get_level_values(level)
+    # ...
+    
+    data_dict = {}
+    for k in variables.unique():
+        data_dict[k] = self.sel({dim: k}).squeeze(drop=True)
+    
+    return Dataset(data_dict)
+```
+
+The issue is that when `squeeze(drop=True)` is called, if all dimensions except the stacking dimension are squeezed out, the result still contains `dim` as a coordinate. The fix requires dropping the stacking dimension coordinate from each variable before creating the dataset.
+
+Looking at the actual fix needed - the `to_unstacked_dataset` method should drop the stacking dimension (`dim`) from the resulting DataArrays before combining them into a Dataset. This can be done by using `drop_vars(dim)` on each DataArray.
+
+Here's the unified diff patch:
+
+--- a/xarray/core/dataarray.py
++++ b/xarray/core/dataarray.py
+@@ -1956,7 +1956,7 @@ class DataArray(AbstractArray, DataWithCoords):
+         # pull variables out of datarray
+         data_dict = {}
+         for k in variables:
+-            data_dict[k] = self.sel({dim: k}).squeeze(drop=True)
++            data_dict[k] = self.sel({dim: k}).squeeze(drop=True).drop_vars(dim)
+ 
+         # unstacked dataset
+         return Dataset(data_dict)

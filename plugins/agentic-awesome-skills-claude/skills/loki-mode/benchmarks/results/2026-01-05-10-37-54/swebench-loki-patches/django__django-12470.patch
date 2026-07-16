@@ -1,0 +1,21 @@
+# django__django-12470
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This appears to be a benchmark repository, not the actual Django repository. Since this is a patch generation task for the django/django repository and I need to generate a patch based on the architect's analysis, I'll create the patch based on my knowledge of Django's codebase and the issue description.
+
+Based on the architect's analysis, the issue is in `django/db/models/sql/compiler.py` in the `find_ordering_name()` method. The problem is that when resolving "pk" to the actual primary key field for inherited models, the descending flag is not preserved.
+
+```
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -718,7 +718,7 @@ class SQLCompiler:
+                 # pk is an alias for the primary key field
+                 field = opts.pk
+                 if field:
+-                    order = OrderBy(field.get_col(default_table), descending=False)
++                    order = OrderBy(field.get_col(default_table), descending=descending)
+                     return [(order, False)]
+         if name.startswith('-'):
+             name = name[1:]
+```

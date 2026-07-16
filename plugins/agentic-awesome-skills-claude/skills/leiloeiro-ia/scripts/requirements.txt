@@ -1,0 +1,1 @@
+# Sem dependencias externas (stdlib only)

@@ -1,0 +1,18 @@
+Based on my knowledge of Django's codebase and the error traceback, I can generate the fix. The issue is in `django/core/validators.py` where the `URLValidator.__call__` method uses `urlsplit()` from `urllib.parse`, which can raise a `ValueError` for malformed URLs like `'////]@N.AN'`. This ValueError needs to be caught and converted to a `ValidationError`.
+
+Here's the patch:
+
+--- a/django/core/validators.py
++++ b/django/core/validators.py
+@@ -127,7 +127,10 @@ class URLValidator(RegexValidator):
+         if not url:
+             raise ValidationError(self.message, code=self.code, params={'value': value})
+         # Then check full URL
+-        url = urlsplit(url)
++        try:
++            url = urlsplit(url)
++        except ValueError:
++            raise ValidationError(self.message, code=self.code, params={'value': value})
+         try:
+             super().__call__(url.geturl())
+         except ValidationError as e:

@@ -1,0 +1,33 @@
+{
+  "name": "aasb-seo-specialist",
+  "version": "14.5.0",
+  "description": "Install the \"SEO Specialist\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "seo-specialist",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SEO Specialist",
+    "shortDescription": "Specialized Packs · 7 curated skills",
+    "longDescription": "For technical SEO, content structure, and search growth. Covers SEO Fundamentals, SEO Content Planner, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Packs",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

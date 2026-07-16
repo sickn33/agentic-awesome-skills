@@ -1,0 +1,71 @@
+# sympy__sympy-13031
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I can generate the patch directly since the fix strategy is clear. The issue is in `sympy/matrices/sparse.py` where `MutableSparseMatrix` implements `col_join`/`row_join` directly instead of the `_eval_col_join`/`_eval_row_join` methods that the base class uses for proper null-matrix handling.
+
+--- a/sympy/matrices/sparse.py
++++ b/sympy/matrices/sparse.py
+@@ -985,34 +985,28 @@ class MutableSparseMatrix(SparseMatrix, MatrixBase):
+             self._smat[key] = sympify(value)
+         return
+ 
+-    def col_join(self, other):
+-        """Returns B augmented beneath A (row-wise joining)::
+-
+-            [A]
+-            [B]
+-        """
+-        A, B = self, other
++    def _eval_col_join(self, other):
++        A, B = self, self._new(other)
+         if not A.cols == B.cols:
+             raise ShapeError()
+         A = A.copy()
+-        if not isinstance(B, SparseMatrix):
+-            k = 0
+-            b = B._mat
+-            for i in range(B.rows):
+-                for j in range(B.cols):
+-                    v = b[k]
+-                    if v:
+-                        A._smat[(i + A.rows, j)] = v
+-                    k += 1
+-        else:
+-            for (i, j), v in B._smat.items():
++        row_offset = A.rows
++        for (i, j), v in B._smat.items():
++            if v:
+                 A._smat[(i + A.rows, j)] = v
+-        A.rows += B.rows
+-        return A
++        return self._new(A.rows + B.rows, A.cols, A._smat)
+ 
+-    def row_join(self, other):
+-        """Returns B augmented beside A (column-wise joining)::
+-
+-            [A B]
+-        """
+-        A, B = self, other
++    def _eval_row_join(self, other):
++        A, B = self, self._new(other)
+         if not A.rows == B.rows:
+             raise ShapeError()
+         A = A.copy()
+-        if not isinstance(B, SparseMatrix):
+-            k = 0
+-            b = B._mat
+-            for i in range(B.rows):
+-                for j in range(B.cols):
+-                    v = b[k]
+-                    if v:
+-                        A._smat[(i, j + A.cols)] = v
+-                    k += 1
+-        else:
+-            for (i, j), v in B._smat.items():
++        for (i, j), v in B._smat.items():
++            if v:
+                 A._smat[(i, j + A.cols)] = v
+-        A.cols += B.cols
+-        return A
++        return self._new(A.rows, A.cols + B.cols, A._smat)

@@ -1,0 +1,33 @@
+Based on the GitHub issue, I need to generate a patch for Flask's `Config.from_file()` method. The issue asks to add a file mode parameter (suggested as `text=True`) to allow opening files in binary mode for `tomllib.load()` compatibility.
+
+Based on my knowledge of Flask's codebase and the issue discussion, here is the patch:
+
+--- a/src/flask/config.py
++++ b/src/flask/config.py
+@@ -234,7 +234,8 @@ class Config(dict):
+         self,
+         filename: str,
+         load: t.Callable[[t.IO[t.Any]], t.Mapping],
+-        silent: bool = False
++        silent: bool = False,
++        text: bool = True,
+     ) -> bool:
+         """Update the values in the config from a file that is loaded
+         using the ``load`` parameter. The loaded data is passed to the
+@@ -250,6 +251,8 @@ class Config(dict):
+             function.
+         :param silent: Ignore the file if it doesn't exist.
++        :param text: Open the file in text mode. If ``False``, the file
++            is opened in binary mode.
+         :return: ``True`` if the file was loaded successfully.
+ 
+         .. versionadded:: 2.0
+         """
+         filename = os.path.join(self.root_path, filename)
+ 
+         try:
+-            with open(filename) as f:
++            with open(filename, "r" if text else "rb") as f:
+                 obj = load(f)
+         except OSError as e:
+             if silent and e.errno in (errno.ENOENT, errno.EISDIR):

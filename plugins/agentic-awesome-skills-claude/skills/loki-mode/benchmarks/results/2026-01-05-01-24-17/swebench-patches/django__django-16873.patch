@@ -1,0 +1,37 @@
+This repository doesn't contain the Django source code. Based on my knowledge of Django's codebase and the issue description, I can provide the fix. The issue is in the `join` filter in `django/template/defaultfilters.py`. 
+
+Looking at the Django source code and the issue:
+1. The `join` filter always escapes the joining string using `conditional_escape(arg)` 
+2. But when `autoescape` is off, the joining string should not be escaped
+
+The current implementation looks something like:
+```python
+@register.filter(is_safe=True, needs_autoescape=True)
+def join(value, arg, autoescape=True):
+    """Join a list with a string, like Python's ``str.join(list)``."""
+    try:
+        if autoescape:
+            value = [conditional_escape(v) for v in value]
+        data = conditional_escape(arg).join(value)
+    except TypeError:  # Fail silently if arg isn't iterable.
+        return value
+    return mark_safe(data)
+```
+
+The bug is that `conditional_escape(arg)` is called unconditionally regardless of the `autoescape` parameter. When `autoescape` is `off`, the joining string should not be escaped.
+
+Here's the fix:
+
+--- a/django/template/defaultfilters.py
++++ b/django/template/defaultfilters.py
+@@ -586,7 +586,10 @@ def join(value, arg, autoescape=True):
+     try:
+         if autoescape:
+             value = [conditional_escape(v) for v in value]
+-        data = conditional_escape(arg).join(value)
++            data = conditional_escape(arg).join(value)
++        else:
++            data = arg.join(value)
+     except TypeError:  # Fail silently if arg isn't iterable.
+         return value
+     return mark_safe(data)

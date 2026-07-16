@@ -1,0 +1,48 @@
+# sympy__sympy-17139
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the traceback, I can generate the patch. The issue is at line 504 in the `_f` function inside `_TR56`. The comparison `rv.exp < 0` fails for complex exponents like `I`.
+
+The fix should change from using `<` comparison (which raises TypeError for complex numbers) to using the `is_negative` property, which safely returns `None` for complex numbers.
+
+--- a/sympy/simplify/fu.py
++++ b/sympy/simplify/fu.py
+@@ -501,7 +501,7 @@ def _TR56(rv, f, g, h, max, pow):
+     def _f(rv):
+         # I'm not sure if this transformation should target all even powers
+         # or only those expressible as powers of 2. Also, should it only
+-        # make the changes in powers that appear in sums -- makingass'am am2am A um.g-level changes
++        # make the changes in powers that appear in sums -- making
+         # doesn't seem to help according to tests.
+         if not (rv.is_Pow and rv.base.func == f):
+             return rv
+@@ -501,10 +501,10 @@ def _TR56(rv, f, g, h, max, pow):
+         if not (rv.is_Pow and rv.base.func == f):
+             return rv
+
+-        if (rv.exp < 0) == True:
++        if rv.exp.is_negative:
+             return rv
+-        if (rv.exp > max) == True:
++        if rv.exp.is_number and rv.exp.is_real and (rv.exp > max) == True:
+             return rv
+         if rv.exp == 2:
+             return h(g(rv.base.args[0])**2)
+
+Let me provide a cleaner patch based on the standard sympy pattern:
+
+--- a/sympy/simplify/fu.py
++++ b/sympy/simplify/fu.py
+@@ -501,9 +501,9 @@ def _TR56(rv, f, g, h, max, pow):
+         if not (rv.is_Pow and rv.base.func == f):
+             return rv
+ 
+-        if (rv.exp < 0) == True:
++        if rv.exp.is_negative:
+             return rv
+-        if (rv.exp > max) == True:
++        if rv.exp.is_real and (rv.exp > max) == True:
+             return rv
+         if rv.exp == 2:
+             return h(g(rv.base.args[0])**2)

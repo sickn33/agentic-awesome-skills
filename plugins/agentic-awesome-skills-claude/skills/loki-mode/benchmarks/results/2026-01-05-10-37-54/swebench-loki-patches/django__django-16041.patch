@@ -1,0 +1,27 @@
+# django__django-16041
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/forms/formsets.py
++++ b/django/forms/formsets.py
+@@ -255,13 +255,17 @@ class BaseFormSet(RenderableFormMixin):
+     @cached_property
+     def empty_form(self):
+         form = self.form(
+-            auto_id=self.auto_id,
+-            prefix=self.add_prefix("__prefix__"),
+-            empty_permitted=True,
+-            use_required_attribute=False,
+-            **self.get_form_kwargs(None),
+-            renderer=self.renderer,
++            **{
++                **self.get_form_kwargs(None),
++                "auto_id": self.auto_id,
++                "prefix": self.add_prefix("__prefix__"),
++                "empty_permitted": True,
++                "use_required_attribute": False,
++                "renderer": self.renderer,
++            },
+         )
+         self.add_fields(form, None)
+         return form

@@ -1,0 +1,83 @@
+Based on my knowledge of the Django codebase and the issue described, I can provide the fix. The issue is in `django/urls/resolvers.py`. 
+
+The problem is in how Django's `ResolverMatch` or the URL resolver handles regex groups. When there's a nested group like `(?P<format>(html|json|xml))?`, the outer named group captures "html" (for example) but the inner group `(html|json|xml)` also captures it as a separate positional argument.
+
+The fix needs to be in the `RoutePattern` or `RegexPattern` class where it extracts matched groups. The commit 76b993a117b61c41584e95149a67d8a1e9f49dd1 likely changed how groups are passed to views.
+
+Looking at the Django URL resolver code, the issue is in `django/urls/resolvers.py` where `match.groups()` includes all groups (both named and unnamed nested groups), but only named groups should be passed as keyword arguments.
+
+The fix should filter out positional arguments that are already included in the keyword arguments. Here's the patch:
+
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -1,6 +1,6 @@
+ """
+ This module converts requested URLs to callback view functions.
+ 
+ URLResolver is the main class here. Its resolve() method takes a URL (as
+ a string) and returns a ResolverMatch object which provides access to all
+ attributes of the resolved URL match.
+@@ -152,7 +152,12 @@ class RegexPattern(CheckURLMixin):
+         match = self.regex.search(path)
+         if match:
+             kwargs = match.groupdict()
+-            args = () if kwargs else match.groups()
++            # If there are any named groups, only use them as kwargs,
++            # filtering out any positional args that would duplicate.
++            # This handles nested groups like (?P<name>(options))?
++            if kwargs:
++                args = ()
++            else:
++                args = match.groups()
+             kwargs = {k: v for k, v in kwargs.items() if v is not None}
+             return path[match.end():], args, kwargs
+         return None
+
+Wait, looking more carefully at the existing code, the logic `args = () if kwargs else match.groups()` should already handle this. Let me reconsider.
+
+The issue is that when you have `(?P<format>(html|json|xml))?`, the regex has TWO groups:
+1. The named group `format`
+2. The inner unnamed group `(html|json|xml)`
+
+When the URL matches, `match.groups()` returns BOTH captured values as a tuple, e.g., `('html', 'html')`.
+
+The current code says: if there are named groups (kwargs), don't pass positional args. But `kwargs` could be `{}` if the optional group didn't match (i.e., the URL was `/module/`), in which case `match.groups()` returns `(None, None)` and both are passed as positional args.
+
+Actually, looking at this more carefully - the fix should ensure that when we have kwargs, we don't also pass the groups as args. But there's another issue: when the optional group doesn't match, kwargs is empty `{}` because the dict comprehension filters out None values.
+
+Let me trace through:
+- URL `/module/html/` matches, `match.groupdict()` = `{'format': 'html'}`, `match.groups()` = `('html', 'html')`
+- With `args = () if kwargs else match.groups()`: kwargs is `{'format': 'html'}`, so args = `()`
+- After filtering: kwargs = `{'format': 'html'}`, args = `()` - This should work fine!
+
+- URL `/module/` matches, `match.groupdict()` = `{'format': None}`, `match.groups()` = `(None, None)`
+- With `args = () if kwargs else match.groups()`: kwargs is `{'format': None}`, so args = `()`
+- After filtering None: kwargs = `{}`, args = `()` - This should also work!
+
+Hmm, let me re-read the issue. The error says "3 were given" meaning request + 2 extra arguments. That means both groups are being passed.
+
+The issue must be that the check `if kwargs` is happening AFTER the groupdict, but the groupdict contains None values, so it's truthy even when the match has None. Wait no, `{'format': None}` is truthy.
+
+Let me look at this differently. The commit 76b993a117b61c41584e95149a67d8a1e9f49dd1 introduced the filtering of None values from kwargs. Before filtering, kwargs would be `{'format': None}` which is truthy. After the change, kwargs becomes `{}` which is falsy, so `args = match.groups()` gets executed, passing `(None, None)` as positional args.
+
+But wait, that's also wrong because we'd get 2 extra args both being None.
+
+The real issue is: the check for whether to use kwargs or args is done BEFORE the None filtering, but the filtering can make kwargs empty. And even when kwargs is non-empty, the nested group still contributes an extra positional group.
+
+The fix should be: only pass positional args that are NOT part of any named group. Since `match.groups()` returns ALL groups including nested ones inside named groups, we need to filter those out.
+
+The correct fix is to check if there are any named groups in the pattern, not whether kwargs currently has values:
+
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -152,7 +152,7 @@ class RegexPattern(CheckURLMixin):
+         match = self.regex.search(path)
+         if match:
+             kwargs = match.groupdict()
+-            args = () if kwargs else match.groups()
++            args = () if self.regex.groupindex else match.groups()
+             kwargs = {k: v for k, v in kwargs.items() if v is not None}
+             return path[match.end():], args, kwargs
+         return None
+
+This checks if the pattern has any named groups at all (`self.regex.groupindex` is a dict mapping group names to group numbers), rather than checking if the current match produced non-empty kwargs.

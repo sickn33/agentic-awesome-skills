@@ -1,0 +1,125 @@
+Based on my knowledge of the SymPy codebase and the issue description, I can provide the patch. The issue is that `Point.vel()` should automatically calculate velocity from position information if velocity hasn't been explicitly defined, similar to how `ReferenceFrame.ang_vel_in()` works.
+
+The key insight from the issue:
+1. When you call `Q.set_pos(P, r)` to set position of Q relative to P as vector `r`
+2. Then `Q.vel(A)` should calculate velocity by taking the time derivative of `r` in frame A (i.e., `r.dt(A)`)
+3. This mirrors how `ang_vel_in()` calculates angular velocity from orientation
+
+Here's the patch that implements this fix:
+
+--- a/sympy/physics/vector/point.py
++++ b/sympy/physics/vector/point.py
+@@ -1,6 +1,7 @@
+ from __future__ import print_function, division
+ from .vector import Vector, _check_vector
+ from .frame import _check_frame
++from warnings import warn
+ 
+ __all__ = ['Point']
+ 
+@@ -515,9 +516,56 @@ class Point(object):
+         Examples
+         ========
+ 
+-        >>> from sympy.physics.vector import Point, ReferenceFrame
++        >>> from sympy.physics.vector import Point, ReferenceFrame, dynamicsymbols
+         >>> N = ReferenceFrame('N')
+         >>> p1 = Point('p1')
+-        >>> p1.set_vel(N, 10 * N.x)
++        >>> p2 = Point('p2')
++        >>> q = dynamicsymbols('q')
++        >>> p1.set_vel(N, 10 * N.x)
++        >>> p2.set_pos(p1, q * N.y)
+         >>> p1.vel(N)
+         10*N.x
++        >>> p2.vel(N)
++        q'*N.y
+ 
+         """
+ 
+         _check_frame(frame)
+-        if not (frame in self._vel_dict):
+-            raise ValueError('Velocity of point ' + self.name + ' has not been'
+-                             ' defined in ReferenceFrame ' + frame.name)
+-        return self._vel_dict[frame]
++        if frame in self._vel_dict:
++            return self._vel_dict[frame]
++        else:
++            # Try to calculate velocity from position information
++            visited = set()
++            queue = [self]
++            while queue:
++                node = queue.pop(0)
++                if node in visited:
++                    continue
++                visited.add(node)
++                # Check if node has velocity defined in frame
++                if frame in node._vel_dict:
++                    # Calculate velocity by going backwards through position tree
++                    path = self._pdict_path(node)
++                    if path is not None:
++                        vel = node._vel_dict[frame]
++                        for i in range(len(path) - 1, 0, -1):
++                            # Get position of path[i-1] from path[i]
++                            pos_vec = path[i-1].pos_from(path[i])
++                            # Velocity contribution from this position vector
++                            vel = vel + pos_vec.dt(frame)
++                        return vel
++                # Add neighbors (points with position defined relative to node)
++                for other_point in node._pos_dict.keys():
++                    if other_point not in visited:
++                        queue.append(other_point)
++            raise ValueError('Velocity of point ' + self.name + ' has not been'
++                             ' defined in ReferenceFrame ' + frame.name)
++
++    def _pdict_path(self, other):
++        """Returns a list of points that connect self to other.
++
++        The list will start with self and end with other.
++        Returns None if no path exists.
++        """
++        # BFS to find path from self to other via _pos_dict
++        from collections import deque
++        queue = deque([(self, [self])])
++        visited = {self}
++        while queue:
++            node, path = queue.popleft()
++            if node == other:
++                return path
++            for neighbor in node._pos_dict.keys():
++                if neighbor not in visited:
++                    visited.add(neighbor)
++                    queue.append((neighbor, path + [neighbor]))
++        return None
+
+Wait, let me reconsider. Looking at the actual SymPy codebase structure more carefully based on the issue and hints, the fix should be simpler and follow the pattern used in `ang_vel_in()`. Let me provide a cleaner patch:
+
+--- a/sympy/physics/vector/point.py
++++ b/sympy/physics/vector/point.py
+@@ -519,8 +519,26 @@ class Point(object):
+         """
+ 
+         _check_frame(frame)
+-        if not (frame in self._vel_dict):
+-            raise ValueError('Velocity of point ' + self.name + ' has not been'
+-                             ' defined in ReferenceFrame ' + frame.name)
+-        return self._vel_dict[frame]
++        if frame in self._vel_dict:
++            return self._vel_dict[frame]
++        else:
++            # Try to calculate velocity from position information
++            # by finding a point with known velocity and using the
++            # time derivative of the position vector
++            visited = []
++            queue = [self]
++            while queue:
++                node = queue.pop(0)
++                if node not in visited:
++                    visited.append(node)
++                    if frame in node._vel_dict:
++                        return node._vel_dict[frame] + self.pos_from(node).dt(frame)
++                    for neighbor in node._pos_dict:
++                        if neighbor not in visited:
++                            queue.append(neighbor)
++            raise ValueError('Velocity of point ' + self.name + ' has not been'
++                             ' defined in ReferenceFrame ' + frame.name)

@@ -1,0 +1,38 @@
+Based on the issue description and hints provided, I can generate the patch. The issue is in Django's `django/db/models/lookups.py` file. The problem is that the `Exact` lookup's `process_rhs` method unconditionally clears the select clause and adds the pk field, which overrides any custom field selection and GROUP BY clause.
+
+The fix should follow what `In.process_rhs` does - only perform the `clear_select_clause()` and `add_fields(['pk'])` when the query doesn't already have select fields.
+
+Looking at the hint: "We probably don't want to perform the clear_select_clause and add_fields(['pk']) when the query is already selecting fields. That's exactly what In.process_rhs does already by only performing these operations if not getattr(self.rhs, 'has_select_fields', True)."
+
+Here's the patch:
+
+--- a/django/db/models/lookups.py
++++ b/django/db/models/lookups.py
+@@ -263,9 +263,10 @@ class Exact(FieldGetDbPrepValueIterableMixin, BuiltinLookup):
+ 
+     def process_rhs(self, compiler, connection):
+         from django.db.models.sql import Query
+-        if isinstance(self.rhs, Query):
+-            self.rhs.clear_select_clause()
+-            self.rhs.add_fields(['pk'])
++        if isinstance(self.rhs, Query) and not getattr(self.rhs, 'has_select_fields', True):
++            if not self.rhs.has_select_fields:
++                self.rhs.clear_select_clause()
++                self.rhs.add_fields(['pk'])
+         return super().process_rhs(compiler, connection)
+ 
+ 
+
+Wait, let me reconsider based on the exact hint. The `In` lookup checks `if not getattr(self.rhs, 'has_select_fields', True)`. Let me provide the correct patch:
+
+--- a/django/db/models/lookups.py
++++ b/django/db/models/lookups.py
+@@ -263,8 +263,9 @@ class Exact(FieldGetDbPrepValueIterableMixin, BuiltinLookup):
+ 
+     def process_rhs(self, compiler, connection):
+         from django.db.models.sql import Query
+-        if isinstance(self.rhs, Query):
++        if isinstance(self.rhs, Query) and not getattr(self.rhs, 'has_select_fields', True):
+             self.rhs.clear_select_clause()
+             self.rhs.add_fields(['pk'])
+         return super().process_rhs(compiler, connection)

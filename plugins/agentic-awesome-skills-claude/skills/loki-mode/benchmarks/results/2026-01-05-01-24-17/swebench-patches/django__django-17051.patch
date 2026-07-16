@@ -1,0 +1,51 @@
+Based on the issue description and hint, I have enough context to create the patch. The issue is clear:
+
+1. In `django/db/models/query.py`, the `bulk_create` method removes `returning_fields` when `on_conflict` is set
+2. The fix is to allow `returning_fields` when `on_conflict == OnConflict.UPDATE`
+3. The hint shows the exact diff needed at line 1840
+
+Let me create the patch based on the information provided in the issue:
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1837,7 +1837,7 @@ class QuerySet(AltersData):
+         inserted_rows = []
+         bulk_return = connection.features.can_return_rows_from_bulk_insert
+         for item in [objs[i : i + batch_size] for i in range(0, len(objs), batch_size)]:
+-            if bulk_return and on_conflict is None:
++            if bulk_return and (on_conflict is None or on_conflict == OnConflict.UPDATE):
+                 inserted_rows.extend(
+                     self._insert(
+                         item,
+@@ -1845,6 +1845,9 @@ class QuerySet(AltersData):
+                         using=self.db,
+                         returning_fields=self.model._meta.db_returning_fields,
+                     )
++                        on_conflict=on_conflict,
++                        update_fields=update_fields,
++                        unique_fields=unique_fields,
+                 )
+             else:
+                 self._insert(
+
+Wait, the hint shows the diff more clearly. Let me re-read the hint and generate the correct patch:
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1837,13 +1837,16 @@ class QuerySet(AltersData):
+         inserted_rows = []
+         bulk_return = connection.features.can_return_rows_from_bulk_insert
+         for item in [objs[i : i + batch_size] for i in range(0, len(objs), batch_size)]:
+-            if bulk_return and on_conflict is None:
++            if bulk_return and (on_conflict is None or on_conflict == OnConflict.UPDATE):
+                 inserted_rows.extend(
+                     self._insert(
+                         item,
+                         fields=fields,
+                         using=self.db,
++                        on_conflict=on_conflict,
++                        update_fields=update_fields,
++                        unique_fields=unique_fields,
+                         returning_fields=self.model._meta.db_returning_fields,
+                     )
+                 )

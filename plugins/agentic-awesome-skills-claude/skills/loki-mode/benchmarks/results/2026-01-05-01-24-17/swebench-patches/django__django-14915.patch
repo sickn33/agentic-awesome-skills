@@ -1,0 +1,19 @@
+Based on the issue description and hints provided, I can generate the patch. The `ModelChoiceIteratorValue` class is in `django/forms/widgets.py` and needs a `__hash__` method added. According to the hints from the maintainer, the fix is:
+
+```python
+def __hash__(self):
+    return hash(self.value)
+```
+
+The class likely has an `__eq__` method (since `__eq__` without `__hash__` makes objects unhashable in Python 3), and we need to add the `__hash__` method to make it hashable again.
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -567,6 +567,9 @@ class ModelChoiceIteratorValue:
+     def __eq__(self, other):
+         if isinstance(other, ModelChoiceIteratorValue):
+             other = other.value
+         return self.value == other
++
++    def __hash__(self):
++        return hash(self.value)

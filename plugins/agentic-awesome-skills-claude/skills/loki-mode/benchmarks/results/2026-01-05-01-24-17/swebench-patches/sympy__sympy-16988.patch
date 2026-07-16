@@ -1,0 +1,16 @@
+Based on my knowledge of the sympy codebase and the issue described, the problem is in the `Intersection` class's `__new__` method in `sympy/sets/sets.py`. The issue is that when duplicate arguments are passed, they're not being properly deduplicated before processing, which leads to incorrect evaluation.
+
+Here's the patch:
+
+--- a/sympy/sets/sets.py
++++ b/sympy/sets/sets.py
+@@ -1260,6 +1260,9 @@ class Intersection(Set):
+         if not args:
+             return UniversalSet
+ 
++        # Remove duplicates
++        args = list(ordered(set(args), Set._infimum_key))
++
+         # Reduce sets using known rules
+         if evaluate:
+             args = list(cls._new_args_filter(args))

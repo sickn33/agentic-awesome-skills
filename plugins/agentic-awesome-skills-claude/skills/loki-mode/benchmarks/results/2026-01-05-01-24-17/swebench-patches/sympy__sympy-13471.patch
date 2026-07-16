@@ -1,0 +1,26 @@
+Based on the error message and the issue description, I can understand the problem. When Python 2 pickles a sympy Float expression, it saves the mantissa as a hex string that includes the `L` suffix for long integers (e.g., `'1L'`). When Python 3 tries to unpickle this, it fails because Python 3's `int()` function doesn't accept the `L` suffix.
+
+The error occurs at line 1045 in `sympy/core/numbers.py`:
+```python
+num[1] = long(num[1], 16)
+```
+
+When `num[1]` is `'1L'` (a Python 2 long literal string), Python 3 can't parse it.
+
+The fix needs to strip the trailing `L` from the hex string before converting it to an integer.
+
+Here's the patch:
+
+--- a/sympy/core/numbers.py
++++ b/sympy/core/numbers.py
+@@ -1042,7 +1042,9 @@ class Float(Number):
+             # it's a hexadecimal (coming from a+pickle)
+             # assume that it is in standard form
+             num = list(num)
+-            num[1] = long(num[1], 16)
++            # handle the leading digit for Python 2 compatibility
++            # strip any 'L' suffix from Python 2 long integer repr
++            num[1] = long(num[1].rstrip('L'), 16)
+             _mpf_ = tuple(num)
+         else:
+             if len(num) == 4:

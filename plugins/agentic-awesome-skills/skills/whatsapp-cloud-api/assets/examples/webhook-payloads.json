@@ -1,0 +1,240 @@
+{
+  "description": "Exemplos de payloads recebidos via webhook do WhatsApp Cloud API.",
+  "payloads": {
+    "text_message": {
+      "description": "Mensagem de texto simples recebida",
+      "payload": {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WABA_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "5511999999999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{
+                "profile": { "name": "João Silva" },
+                "wa_id": "5511888888888"
+              }],
+              "messages": [{
+                "from": "5511888888888",
+                "id": "wamid.HBgNNTUxMTk5MDAwMDAwMBUCABEYEjQ2...",
+                "timestamp": "1709251200",
+                "type": "text",
+                "text": { "body": "Olá, preciso de ajuda com meu pedido" }
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      }
+    },
+    "image_message": {
+      "description": "Mensagem com imagem recebida",
+      "payload": {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WABA_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "5511999999999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{
+                "profile": { "name": "Maria Santos" },
+                "wa_id": "5511777777777"
+              }],
+              "messages": [{
+                "from": "5511777777777",
+                "id": "wamid.HBgNNTUxMTk5MDAwMDAwMBUCABEYEjQ3...",
+                "timestamp": "1709251300",
+                "type": "image",
+                "image": {
+                  "caption": "Foto do produto com defeito",
+                  "mime_type": "image/jpeg",
+                  "sha256": "abc123def456...",
+                  "id": "MEDIA_ID_123"
+                }
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      }
+    },
+    "button_reply": {
+      "description": "Resposta de botao interativo",
+      "payload": {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WABA_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "5511999999999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{
+                "profile": { "name": "Carlos Oliveira" },
+                "wa_id": "5511666666666"
+              }],
+              "messages": [{
+                "from": "5511666666666",
+                "id": "wamid.HBgNNTUxMTk5MDAwMDAwMBUCABEYEjQ4...",
+                "timestamp": "1709251400",
+                "type": "interactive",
+                "interactive": {
+                  "type": "button_reply",
+                  "button_reply": {
+                    "id": "btn_suporte",
+                    "title": "Suporte"
+                  }
+                },
+                "context": {
+                  "from": "5511999999999",
+                  "id": "wamid.original_message_id..."
+                }
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      }
+    },
+    "list_reply": {
+      "description": "Resposta de lista interativa",
+      "payload": {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WABA_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "5511999999999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{
+                "profile": { "name": "Ana Lima" },
+                "wa_id": "5511555555555"
+              }],
+              "messages": [{
+                "from": "5511555555555",
+                "id": "wamid.HBgNNTUxMTk5MDAwMDAwMBUCABEYEjQ5...",
+                "timestamp": "1709251500",
+                "type": "interactive",
+                "interactive": {
+                  "type": "list_reply",
+                  "list_reply": {
+                    "id": "suporte_tecnico",
+                    "title": "Suporte Técnico",
+                    "description": "Problemas com produto ou serviço"
+                  }
+                }
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      }
+    },
+    "status_delivered": {
+      "description": "Status update - mensagem entregue",
+      "payload": {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WABA_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "5511999999999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "statuses": [{
+                "id": "wamid.HBgNNTUxMTk5MDAwMDAwMBUCABEYEjUw...",
+                "status": "delivered",
+                "timestamp": "1709251600",
+                "recipient_id": "5511888888888",
+                "conversation": {
+                  "id": "CONVERSATION_ID",
+                  "origin": { "type": "business_initiated" },
+                  "expiration_timestamp": "1709337600"
+                },
+                "pricing": {
+                  "billable": true,
+                  "pricing_model": "CBP",
+                  "category": "utility"
+                }
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      }
+    },
+    "status_read": {
+      "description": "Status update - mensagem lida (blue checkmarks)",
+      "payload": {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WABA_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "5511999999999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "statuses": [{
+                "id": "wamid.HBgNNTUxMTk5MDAwMDAwMBUCABEYEjUw...",
+                "status": "read",
+                "timestamp": "1709251700",
+                "recipient_id": "5511888888888"
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      }
+    },
+    "status_failed": {
+      "description": "Status update - falha na entrega",
+      "payload": {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WABA_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "5511999999999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "statuses": [{
+                "id": "wamid.HBgNNTUxMTk5MDAwMDAwMBUCABEYEjUx...",
+                "status": "failed",
+                "timestamp": "1709251800",
+                "recipient_id": "5511444444444",
+                "errors": [{
+                  "code": 131026,
+                  "title": "Message Undeliverable",
+                  "message": "The recipient phone number is not a valid WhatsApp phone number.",
+                  "error_data": {
+                    "details": "Recipient phone number not in allowed list."
+                  }
+                }]
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      }
+    }
+  }
+}

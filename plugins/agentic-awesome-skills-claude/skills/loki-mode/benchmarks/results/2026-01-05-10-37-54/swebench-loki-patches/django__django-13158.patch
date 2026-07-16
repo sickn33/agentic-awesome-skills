@@ -1,0 +1,15 @@
+# django__django-13158
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -912,6 +912,8 @@ class QuerySet:
+ 
+     def none(self):
+         """Return an empty QuerySet."""
++        self.query.combinator = None
++        self.query.combined_queries = ()
+         clone = self._chain()
+         clone.query.set_empty()
+         return clone

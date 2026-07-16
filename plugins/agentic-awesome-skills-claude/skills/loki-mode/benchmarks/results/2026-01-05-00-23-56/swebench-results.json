@@ -1,0 +1,10 @@
+{
+  "benchmark": "SWE-bench Lite",
+  "version": "1.0",
+  "timestamp": "2026-01-05T00:24:04.950779",
+  "total_problems": 300,
+  "status": "INFRASTRUCTURE_READY",
+  "note": "Benchmark infrastructure created. Install swebench package for full evaluation.",
+  "install": "pip install swebench",
+  "evaluation": "python -m swebench.harness.run_evaluation --predictions predictions.json"
+}

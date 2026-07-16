@@ -1,0 +1,29 @@
+Based on my knowledge of this Django issue and the hint provided, I can provide the fix. The issue is in Django's migration autodetector.py file. The regression was introduced in commit `dcdd219ee1e062dc6189f382e0298e0adf5d5ddf`, which caused the autodetector to generate an unnecessary `AlterField` operation when a primary key field is renamed, and that `AlterField` operation incorrectly uses the old field name in the `to_field` parameter for ForeignKey references.
+
+The fix is to not generate `AlterField` operations for related fields when the only change is due to a renamed field being referenced. The autodetector should skip generating `AlterField` operations when the fields are otherwise equivalent after accounting for field renames.
+
+Based on the issue description and the hint that this is a regression where "an AlterField operation wasn't generated in such cases before this change (and I don't think we need it)", the fix should prevent the generation of these unnecessary `AlterField` operations.
+
+Here is the patch:
+
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -1078,6 +1078,18 @@ class MigrationAutodetector:
+                 old_field_dec = self.deep_deconstruct(old_field)
+                 new_field_dec = self.deep_deconstruct(new_field)
+                 if old_field_dec != new_field_dec:
++                    # If the only difference is the "to" or "to_field" due to
++                    # a renamed model or field, skip generating AlterField.
++                    if old_field.remote_field and new_field.remote_field:
++                        old_field_copy = old_field.clone()
++                        new_field_copy = new_field.clone()
++                        old_field_copy.remote_field.to = new_field.remote_field.to
++                        if hasattr(old_field_copy.remote_field, 'to_field'):
++                            old_field_copy.remote_field.to_field = new_field.remote_field.to_field
++                        old_field_dec_copy = self.deep_deconstruct(old_field_copy)
++                        new_field_dec_copy = self.deep_deconstruct(new_field_copy)
++                        if old_field_dec_copy == new_field_dec_copy:
++                            continue
+                     both_m2m = old_field.many_to_many and new_field.many_to_many
+                     neither_m2m = not old_field.many_to_many and not new_field.many_to_many
+                     if both_m2m or neither_m2m:

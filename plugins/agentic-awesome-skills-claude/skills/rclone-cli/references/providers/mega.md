@@ -1,0 +1,361 @@
+---
+title: "Mega"
+description: "Rclone docs for Mega"
+versionIntroduced: "v1.41"
+---
+
+> **Official documentation:** [https://rclone.org/mega/](https://rclone.org/mega/)
+# Mega
+
+[Mega](https://mega.nz/) is a cloud storage and file hosting service
+known for its security feature where all files are encrypted locally
+before they are uploaded. This prevents anyone (including employees of
+Mega) from accessing the files without knowledge of the key used for
+encryption.
+
+This is an rclone backend for Mega which supports the file transfer
+features of Mega using the same client side encryption.
+
+**Note** [MEGA S4 Object Storage](/s3#mega), an S3 compatible object
+store, also works with rclone and this is recommended for new projects.
+
+Paths are specified as `remote:path`
+
+Paths may be as deep as required, e.g. `remote:directory/subdirectory`.
+
+
+## Configuration
+
+Here is an example of how to make a remote called `remote`.  First run:
+
+```console
+rclone config
+```
+
+This will guide you through an interactive setup process:
+
+```text
+No remotes found, make a new one?
+n) New remote
+s) Set configuration password
+q) Quit config
+n/s/q> n
+name> remote
+Type of storage to configure.
+Choose a number from below, or type in your own value
+[snip]
+XX / Mega
+   \ "mega"
+[snip]
+Storage> mega
+User name
+user> you@example.com
+Password.
+y) Yes type in my own password
+g) Generate random password
+n) No leave this optional password blank
+y/g/n> y
+Enter the password:
+password:
+Confirm the password:
+password:
+Remote config
+Configuration complete.
+Options:
+- type: mega
+- user: you@example.com
+- pass: *** ENCRYPTED ***
+Keep this "remote" remote?
+y) Yes this is OK
+e) Edit this remote
+d) Delete this remote
+y/e/d> y
+```
+
+**NOTE:** The encryption keys need to have been already generated after a regular
+login via the browser, otherwise attempting to use the credentials in `rclone`
+will fail.
+
+Once configured you can then use `rclone` like this (replace `remote` with the
+name you gave your remote):
+
+List directories in top level of your Mega
+
+```console
+rclone lsd remote:
+```
+
+List all the files in your Mega
+
+```console
+rclone ls remote:
+```
+
+To copy a local directory to an Mega directory called backup
+
+```console
+rclone copy /home/source remote:backup
+```
+
+### Modification times and hashes
+
+Mega does not support modification times or hashes yet.
+
+### Restricted filename characters
+
+| Character | Value | Replacement |
+| --------- |:-----:|:-----------:|
+| NUL       | 0x00  | ␀           |
+| /         | 0x2F  | ／          |
+
+Invalid UTF-8 bytes will also be [replaced](/overview/#invalid-utf8),
+as they can't be used in JSON strings.
+
+### Duplicated files
+
+Mega can have two files with exactly the same name and path (unlike a
+normal file system).
+
+Duplicated files cause problems with the syncing and you will see
+messages in the log about duplicates.
+
+Use `rclone dedupe` to fix duplicated files.
+
+### Failure to log-in
+
+#### Object not found
+
+If you are connecting to your Mega remote for the first time,
+to test access and synchronization, you may receive an error such as
+
+```text
+Failed to create file system for "my-mega-remote:":
+couldn't login: Object (typically, node or user) not found
+```
+
+The diagnostic steps often recommended in the [rclone forum](https://forum.rclone.org/search?q=mega)
+start with the **MEGAcmd** utility. Note that this refers to
+the official C++ command from <https://github.com/meganz/MEGAcmd>
+and not the go language built command from t3rm1n4l/megacmd
+that is no longer maintained.
+
+Follow the instructions for installing MEGAcmd and try accessing
+your remote as they recommend. You can establish whether or not
+you can log in using MEGAcmd, and obtain diagnostic information
+to help you, and search or work with others in the forum.
+
+```text
+MEGA CMD> login me@example.com
+Password:
+Fetching nodes ...
+Loading transfers from local cache
+Login complete as me@example.com
+me@example.com:/$
+```
+
+Note that some have found issues with passwords containing special
+characters. If you can not log on with rclone, but MEGAcmd logs on
+just fine, then consider changing your password temporarily to
+pure alphanumeric characters, in case that helps.
+
+#### Repeated commands blocks access
+
+Mega remotes seem to get blocked (reject logins) under "heavy use".
+We haven't worked out the exact blocking rules but it seems to be
+related to fast paced, successive rclone commands.
+
+For example, executing this command 90 times in a row `rclone link
+remote:file` will cause the remote to become "blocked". This is not an
+abnormal situation, for example if you wish to get the public links of
+a directory with hundred of files...  After more or less a week, the
+remote will remote accept rclone logins normally again.
+
+You can mitigate this issue by mounting the remote it with `rclone
+mount`. This will log-in when mounting and a log-out when unmounting
+only. You can also run `rclone rcd` and then use `rclone rc` to run
+the commands over the API to avoid logging in each time.
+
+Rclone does not currently close mega sessions (you can see them in the
+web interface), however closing the sessions does not solve the issue.
+
+If you space rclone commands by 3 seconds it will avoid blocking the
+remote. We haven't identified the exact blocking rules, so perhaps one
+could execute the command 80 times without waiting and avoid blocking
+by waiting 3 seconds, then continuing...
+
+Note that this has been observed by trial and error and might not be
+set in stone.
+
+Other tools seem not to produce this blocking effect, as they use a
+different working approach (state-based, using sessionIDs instead of
+log-in) which isn't compatible with the current stateless rclone
+approach.
+
+Note that once blocked, the use of other tools (such as megacmd) is
+not a sure workaround: following megacmd login times have been
+observed in succession for blocked remote: 7 minutes, 20 min, 30min, 30
+min, 30min. Web access looks unaffected though.
+
+Investigation is continuing in relation to workarounds based on
+timeouts, pacers, retrials and tpslimits - if you discover something
+relevant, please post on the forum.
+
+So, if rclone was working nicely and suddenly you are unable to log-in
+and you are sure the user and the password are correct, likely you
+have got the remote blocked for a while.
+
+<!-- autogenerated options start - DO NOT EDIT - instead edit fs.RegInfo in backend/mega/mega.go and run make backenddocs to verify --> <!-- markdownlint-disable-line line-length -->
+### Standard options
+
+Here are the Standard options specific to mega (Mega).
+
+#### --mega-user
+
+User name.
+
+Properties:
+
+- Config:      user
+- Env Var:     RCLONE_MEGA_USER
+- Type:        string
+- Required:    true
+
+#### --mega-pass
+
+Password.
+
+**NB** Input to this must be obscured - see [rclone obscure](/commands/rclone_obscure/).
+
+Properties:
+
+- Config:      pass
+- Env Var:     RCLONE_MEGA_PASS
+- Type:        string
+- Required:    true
+
+#### --mega-2fa
+
+The 2FA code of your MEGA account if the account is set up with one
+
+Properties:
+
+- Config:      2fa
+- Env Var:     RCLONE_MEGA_2FA
+- Type:        string
+- Required:    false
+
+### Advanced options
+
+Here are the Advanced options specific to mega (Mega).
+
+#### --mega-session-id
+
+Session (internal use only)
+
+Properties:
+
+- Config:      session_id
+- Env Var:     RCLONE_MEGA_SESSION_ID
+- Type:        string
+- Required:    false
+
+#### --mega-master-key
+
+Master key (internal use only)
+
+Properties:
+
+- Config:      master_key
+- Env Var:     RCLONE_MEGA_MASTER_KEY
+- Type:        string
+- Required:    false
+
+#### --mega-debug
+
+Output more debug from Mega.
+
+If this flag is set (along with -vv) it will print further debugging
+information from the mega backend.
+
+Properties:
+
+- Config:      debug
+- Env Var:     RCLONE_MEGA_DEBUG
+- Type:        bool
+- Default:     false
+
+#### --mega-hard-delete
+
+Delete files permanently rather than putting them into the trash.
+
+Normally the mega backend will put all deletions into the trash rather
+than permanently deleting them.  If you specify this then rclone will
+permanently delete objects instead.
+
+Properties:
+
+- Config:      hard_delete
+- Env Var:     RCLONE_MEGA_HARD_DELETE
+- Type:        bool
+- Default:     false
+
+#### --mega-use-https
+
+Use HTTPS for transfers.
+
+MEGA uses plain text HTTP connections by default.
+Some ISPs throttle HTTP connections, this causes transfers to become very slow.
+Enabling this will force MEGA to use HTTPS for all transfers.
+HTTPS is normally not necessary since all data is already encrypted anyway.
+Enabling it will increase CPU usage and add network overhead.
+
+Properties:
+
+- Config:      use_https
+- Env Var:     RCLONE_MEGA_USE_HTTPS
+- Type:        bool
+- Default:     false
+
+#### --mega-encoding
+
+The encoding for the backend.
+
+See the [encoding section in the overview](/overview/#encoding) for more info.
+
+Properties:
+
+- Config:      encoding
+- Env Var:     RCLONE_MEGA_ENCODING
+- Type:        Encoding
+- Default:     Slash,InvalidUtf8,Dot
+
+#### --mega-description
+
+Description of the remote.
+
+Properties:
+
+- Config:      description
+- Env Var:     RCLONE_MEGA_DESCRIPTION
+- Type:        string
+- Required:    false
+
+<!-- autogenerated options stop -->
+
+### Process `killed`
+
+On accounts with large files or something else, memory usage can significantly
+increase when executing list/sync instructions. When running on cloud providers
+(like AWS with EC2), check if the instance type has sufficient memory/CPU to
+execute the commands. Use the resource monitoring tools to inspect after sending
+the commands. Look [at this issue](https://forum.rclone.org/t/rclone-with-mega-appears-to-work-only-in-some-accounts/40233/4).
+
+## Limitations
+
+This backend uses the [go-mega go library](https://github.com/t3rm1n4l/go-mega)
+which is an opensource
+go library implementing the Mega API. There doesn't appear to be any
+documentation for the mega protocol beyond the [mega C++ SDK](https://github.com/meganz/sdk)
+source code so there are likely quite a few errors still remaining in this library.
+
+Mega allows duplicate files which may confuse rclone.

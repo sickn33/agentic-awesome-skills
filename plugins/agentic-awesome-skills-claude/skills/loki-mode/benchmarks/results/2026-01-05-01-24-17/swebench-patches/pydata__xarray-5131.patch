@@ -1,0 +1,45 @@
+Now I have the relevant code. The issue is clear:
+
+1. In `groupby.py` line 439, the `__repr__` method has a trailing space before `\n`:
+   ```python
+   return "{}, grouped over {!r} \n{!r} groups with labels {}.".format(
+   ```
+   The space after `{!r}` and before `\n` is causing the trailing whitespace.
+
+2. The tests in `test_groupby.py` also have the trailing space to match the current (incorrect) output:
+   - Line 394: `expected += ", grouped over %r " % dim`
+   - Line 408: `expected += ", grouped over 'month' "`
+
+Let me generate the patch to fix this:
+
+--- a/xarray/core/groupby.py
++++ b/xarray/core/groupby.py
+@@ -436,7 +436,7 @@ class GroupBy(SupportsArithmetic):
+         return zip(self._unique_coord.values, self._iter_grouped())
+ 
+     def __repr__(self):
+-        return "{}, grouped over {!r} \n{!r} groups with labels {}.".format(
++        return "{}, grouped over {!r}\n{!r} groups with labels {}.".format(
+             self.__class__.__name__,
+             self._unique_coord.name,
+             self._unique_coord.size,
+--- a/xarray/tests/test_groupby.py
++++ b/xarray/tests/test_groupby.py
+@@ -391,7 +391,7 @@ def test_groupby_repr(obj, dim):
+     actual = repr(obj.groupby(dim))
+     expected = "%sGroupBy" % obj.__class__.__name__
+-    expected += ", grouped over %r " % dim
++    expected += ", grouped over %r" % dim
+     expected += "\n%r groups with labels " % (len(np.unique(obj[dim])))
+     if dim == "x":
+         expected += "1, 2, 3, 4, 5."
+@@ -405,7 +405,7 @@ def test_groupby_repr(obj, dim):
+ @pytest.mark.parametrize("obj", [repr_da, repr_da.to_dataset(name="a")])
+ def test_groupby_repr_datetime(obj):
+     actual = repr(obj.groupby("t.month"))
+     expected = "%sGroupBy" % obj.__class__.__name__
+-    expected += ", grouped over 'month' "
++    expected += ", grouped over 'month'"
+     expected += "\n%r groups with labels " % (len(np.unique(obj.t.dt.month)))
+     expected += "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12."
+     assert actual == expected

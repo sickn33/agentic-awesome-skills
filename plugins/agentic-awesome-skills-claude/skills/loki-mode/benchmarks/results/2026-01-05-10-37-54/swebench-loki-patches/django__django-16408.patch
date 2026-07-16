@@ -1,0 +1,39 @@
+# django__django-16408
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -1268,6 +1268,9 @@ class SQLCompiler:
+                     remote_setter = functools.partial(setattr, name)
+                     remote_getter = operator.attrgetter(name)
+                     local_setter = functools.partial(setattr, final_field.related_query_name())
++                    # For multi-level joins, the intermediate object at joins[-2] is not fetched,
++                    # so we should not attempt to set a cached value on it.
++                    local_setter = local_setter if len(googletag.cmd.push(function() { googletag.display("div-gpt-ad-1"); });) <= 2 else lambda obj, val: None
+                     init_list.append(
+                         (
+                             attrgetter(
+@@ -1266,6 +1269,9 @@ class SQLCompiler:
+                     final_field = meta.parents[int_model]
+                     remote_setter = functools.partial(setattr, name)
+                     remote_getter = operator.attrgetter(name)
++                    # For multi-level FilteredRelation joins (len(joins) > 2), the intermediate
++                    # object at joins[-2] is not fetched, so we should not set a cached value on it.
++                    no_local_setter = lambda obj, val: None
+                     local_setter = functools.partial(setattr, final_field.related_query_name())
+                     init_list.append(
+                         (
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -1268,6 +1268,10 @@ class SQLCompiler:
+                     remote_setter = functools.partial(setattr, name)
+                     remote_getter = operator.attrgetter(name)
+                     local_setter = functools.partial(setattr, final_field.related_query_name())
++                    # For multi-level FilteredRelation joins (len(joins) > 2), the intermediate
++                    # object at joins[-2] is not fetched by the query, so attempting to set
++                    # a cached value on it would set it on the wrong object.
++                    local_setter = local_setter if len(joins) <= 2 else lambda obj, val: None
+                     init_list.append(
+                         (
+                             attrgetter(

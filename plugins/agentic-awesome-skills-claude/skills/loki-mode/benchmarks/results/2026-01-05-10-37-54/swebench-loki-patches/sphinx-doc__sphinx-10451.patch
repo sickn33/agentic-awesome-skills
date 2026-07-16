@@ -1,0 +1,99 @@
+# sphinx-doc__sphinx-10451
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Now I understand the code. The issue is in the `modify_field_list()` function. When processing docstring fields like `:param *args:`, the name includes the stars (`*args`), but when looking up annotations, the keys are just `args` and `kwargs` (without stars). This causes duplicates.
+
+The fix needs to:
+1. Strip leading `*` characters when building the `arguments` dictionary from docstring fields
+2. When checking if a parameter already exists, normalize the name by stripping stars
+
+Here's the patch:
+
+```
+--- a/sphinx/ext/autodoc/typehints.py
++++ b/sphinx/ext/autodoc/typehints.py
+@@ -84,13 +84,15 @@ def modify_field_list(node: nodes.field_list, annotations: Dict[str, str]) -> No
+         if parts[0] == 'param':
+             if len(parts) == 2:
+                 # :param xxx:
+-                arg = arguments.setdefault(parts[1], {})
++                name = parts[1].lstrip('*')
++                arg = arguments.setdefault(name, {})
+                 arg['param'] = True
+             elif len(parts) > 2:
+                 # :param xxx yyy:
+                 name = ' '.join(parts[2:])
++                name = name.lstrip('*')
+                 arg = arguments.setdefault(name, {})
+                 arg['param'] = True
+                 arg['type'] = True
+         elif parts[0] == 'type':
+             name = ' '.join(parts[1:])
++            name = name.lstrip('*')
+             arg = arguments.setdefault(name, {})
+             arg['type'] = True
+         elif parts[0] == 'rtype':
+@@ -136,12 +138,14 @@ def augment_descriptions_with_types(
+         if parts[0] == 'param':
+             if len(parts) == 2:
+                 # :param xxx:
+-                has_description.add(parts[1])
++                has_description.add(parts[1].lstrip('*'))
+             elif len(parts) > 2:
+                 # :param xxx yyy:
+                 name = ' '.join(parts[2:])
++                name = name.lstrip('*')
+                 has_description.add(name)
+                 has_type.add(name)
+         elif parts[0] == 'type':
+             name = ' '.join(parts[1:])
++            name = name.lstrip('*')
+             has_type.add(name)
+         elif parts[0] == 'return':
+             has_description.add('return')
+```
+
+Let me generate a cleaner unified diff:
+
+--- a/sphinx/ext/autodoc/typehints.py
++++ b/sphinx/ext/autodoc/typehints.py
+@@ -84,14 +84,16 @@ def modify_field_list(node: nodes.field_list, annotations: Dict[str, str]) -> No
+         if parts[0] == 'param':
+             if len(parts) == 2:
+                 # :param xxx:
+-                arg = arguments.setdefault(parts[1], {})
++                name = parts[1].lstrip('*')
++                arg = arguments.setdefault(name, {})
+                 arg['param'] = True
+             elif len(parts) > 2:
+                 # :param xxx yyy:
+                 name = ' '.join(parts[2:])
++                name = name.lstrip('*')
+                 arg = arguments.setdefault(name, {})
+                 arg['param'] = True
+                 arg['type'] = True
+         elif parts[0] == 'type':
+             name = ' '.join(parts[1:])
++            name = name.lstrip('*')
+             arg = arguments.setdefault(name, {})
+             arg['type'] = True
+         elif parts[0] == 'rtype':
+@@ -136,14 +138,17 @@ def augment_descriptions_with_types(
+         if parts[0] == 'param':
+             if len(parts) == 2:
+                 # :param xxx:
+-                has_description.add(parts[1])
++                has_description.add(parts[1].lstrip('*'))
+             elif len(parts) > 2:
+                 # :param xxx yyy:
+                 name = ' '.join(parts[2:])
++                name = name.lstrip('*')
+                 has_description.add(name)
+                 has_type.add(name)
+         elif parts[0] == 'type':
+             name = ' '.join(parts[1:])
++            name = name.lstrip('*')
+             has_type.add(name)
+         elif parts[0] == 'return':
+             has_description.add('return')

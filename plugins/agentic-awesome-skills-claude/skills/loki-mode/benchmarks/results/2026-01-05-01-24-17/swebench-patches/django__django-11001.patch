@@ -1,0 +1,80 @@
+Based on my knowledge of the Django codebase and the issue description, I can create the patch. The issue is in `django/db/models/sql/compiler.py`:
+
+1. The `ordering_parts` regex pattern is defined as `re.compile(r'(.*)\s(ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)` 
+2. In the `get_order_by()` method, it uses `self.ordering_parts.search(sql).group(1)` to extract the part of the SQL without the ordering direction
+3. The problem is that with multiline RawSQL, the regex only matches the last line due to how `.*` works with multiline strings
+
+The fix suggested in the issue is to join multiline SQL into a single line before applying the regex. Looking at the issue more carefully:
+
+- The `ordering_parts` regex is: `re.compile(r'(.*)\s(ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)`
+- The problem is that `.*` in regex is greedy but `re.MULTILINE` changes how `^` and `$` work, not how `.` works
+- With `re.DOTALL`, `.` matches newlines, so `.*` should match everything including newlines
+
+Actually, looking at the issue more carefully, the problem is different. The regex `r'(.*)\s(ASC|DESC)(.*)'` with multiline SQL might not work correctly. The issue states that `ordering_parts.search(sql).group(1)` returns only the last line like `'                 else null end'` instead of the full SQL.
+
+This suggests the regex is NOT using `re.DOTALL`, so `.` doesn't match newlines. Let me create the patch based on the actual behavior described:
+
+The fix should modify the regex to use `re.DOTALL` flag so that `.` matches newlines, allowing the full multiline SQL to be captured correctly.
+
+Looking at older Django source code, the pattern is:
+```python
+ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)
+```
+
+But actually based on the issue, it seems the original pattern doesn't have `re.DOTALL`. Let me provide the correct patch:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -24,7 +24,7 @@ from django.utils.hashable import make_hashable
+ 
+ 
+ class SQLCompiler:
+-    ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)
++    ordering_parts = re.compile(r'(.*)\s(?:ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)
+ 
+     def __init__(self, query, connection, using):
+         self.query = query
+@@ -358,7 +358,7 @@ class SQLCompiler:
+                     continue
+ 
+             if sql:
+-                without_ordering = self.ordering_parts.search(sql).group(1)
++                without_ordering = self.ordering_parts.search(' '.join(sql.split())).group(1)
+                 params_hash = make_hashable(params)
+                 if (without_ordering, params_hash) not in seen:
+                     result.append((resolved, (sql, params, is_ref)))
+
+Wait, let me reconsider. The issue clearly states the fix should be:
+```python
+sql_oneline = ' '.join(sql.split('\n'))
+without_ordering = self.ordering_parts.search(sql_oneline).group(1)
+```
+
+But using `sql.split()` (without argument) would split on all whitespace and collapse multiple spaces. Using `sql.split('\n')` is more precise but misses `\r\n` Windows line endings.
+
+A better approach is `' '.join(sql.split())` which normalizes all whitespace.
+
+However, looking at the Django source more carefully based on versions around when this bug was reported (2019), let me provide the correct patch:
+
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -24,7 +24,8 @@ from django.utils.hashable import make_hashable
+ 
+ 
+ class SQLCompiler:
+-    ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)
++    # Multiline RawSQL should be normalized before the regex search.
++    ordering_parts = re.compile(r'(.*)\s(?:ASC|DESC)(.*)', re.MULTILINE | re.DOTALL)
+ 
+     def __init__(self, query, connection, using):
+         self.query = query
+@@ -358,7 +359,8 @@ class SQLCompiler:
+                     continue
+ 
+             if sql:
+-                without_ordering = self.ordering_parts.search(sql).group(1)
++                # Collapse multiline RawSQL to single line for proper duplicate detection.
++                without_ordering = self.ordering_parts.search(' '.join(sql.split())).group(1)
+                 params_hash = make_hashable(params)
+                 if (without_ordering, params_hash) not in seen:
+                     result.append((resolved, (sql, params, is_ref)))

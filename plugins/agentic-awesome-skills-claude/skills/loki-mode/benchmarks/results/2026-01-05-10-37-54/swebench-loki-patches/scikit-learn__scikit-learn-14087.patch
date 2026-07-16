@@ -1,0 +1,17 @@
+# scikit-learn__scikit-learn-14087
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I can generate the patch. The error occurs at line 2193-2194 where `coefs_paths[:, i, best_indices[i], :]` is used but the array has a different shape when `refit=False`. Looking at the traceback and the bug description, the issue is in the coefficient averaging logic.
+
+--- a/sklearn/linear_model/logistic.py
++++ b/sklearn/linear_model/logistic.py
+@@ -2190,7 +2190,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,
+                     w = np.mean([coefs_paths[i, best_indices[i], :]
+                                  for i in range(len(folds))], axis=0)
+                 else:
+-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]
++                    w = np.mean([coefs_paths[i, best_indices[i], :]
+                                  for i in range(len(folds))], axis=0)
+ 
+                 best_indices_C = best_indices % len(self.Cs_)

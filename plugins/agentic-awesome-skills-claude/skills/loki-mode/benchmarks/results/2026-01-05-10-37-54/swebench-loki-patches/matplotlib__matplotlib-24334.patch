@@ -1,0 +1,23 @@
+# matplotlib__matplotlib-24334
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of matplotlib's codebase, I'll generate the patch for the `Axis.set_ticks()` method in `lib/matplotlib/axis.py`:
+
+```
+--- a/lib/matplotlib/axis.py
++++ b/lib/matplotlib/axis.py
+@@ -2024,6 +2024,12 @@ class Axis(martist.Artist):
+             `.Text` properties for the labels. These take effect only if you
+             pass *labels*. In other cases, please use `~.Axes.tick_params`.
+         """
++        if kwargs and labels is None:
++            raise TypeError(
++                "kwargs can only be passed if labels are also set. "
++                "Use tick_params() to change tick label properties without "
++                "setting labels."
++            )
+         result = self._set_tick_locations(ticks, minor=minor)
+         if labels is not None:
+             self.set_ticklabels(labels, minor=minor, **kwargs)
+```

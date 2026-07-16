@@ -1,0 +1,12 @@
+Both patches confirm the same fix. The correct patch clears the `combinator` and `combined_queries` attributes before calling `set_empty()`. Based on my analysis, here is the patch:
+
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -917,6 +917,8 @@ class QuerySet:
+     def none(self):
+         """Return an empty QuerySet."""
+         clone = self._chain()
++        clone.query.combinator = None
++        clone.query.combined_queries = ()
+         clone.query.set_empty()
+         return clone

@@ -1,0 +1,33 @@
+{
+  "name": "aasb-expo-react-native",
+  "version": "14.5.0",
+  "description": "Install the \"Expo & React Native\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "expo-react-native",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Expo & React Native",
+    "shortDescription": "Specialized Packs · 7 curated skills",
+    "longDescription": "For shipping mobile apps with Expo and React Native. Covers React Native Architecture, Expo API Routes, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Packs",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

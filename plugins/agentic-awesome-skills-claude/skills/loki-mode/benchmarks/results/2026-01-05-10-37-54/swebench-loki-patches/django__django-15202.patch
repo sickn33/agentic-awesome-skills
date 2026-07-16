@@ -1,0 +1,22 @@
+# django__django-15202
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I'll generate the patch for the Django URLValidator issue. The fix needs to catch `ValueError` from `urlsplit()` and convert it to a `ValidationError`. Here's the patch:
+
+```
+--- a/django/core/validators.py
++++ b/django/core/validators.py
+@@ -127,7 +127,10 @@ class URLValidator(RegexValidator):
+                 raise
+         else:
+             # Now verify IPv6 in the netloc part
+-            host_match = re.search(r'^\[(.+)\](?::\d{2,5})?$', urlsplit(value).netloc)
++            try:
++                host_match = re.search(r'^\[(.+)\](?::\d{2,5})?$', urlsplit(value).netloc)
++            except ValueError:
++                raise ValidationError(self.message, code=self.code, params={'value': value})
+             if host_match:
+                 potential_ip = host_match[1]
+                 try:
+```

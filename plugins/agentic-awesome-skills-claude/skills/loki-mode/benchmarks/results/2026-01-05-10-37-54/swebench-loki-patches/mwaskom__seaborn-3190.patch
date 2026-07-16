@@ -1,0 +1,73 @@
+# mwaskom__seaborn-3190
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/seaborn/_core/scales.py
++++ b/seaborn/_core/scales.py
+@@ -96,6 +96,9 @@ class Nominal(Scale):
+     def _setup(
+         self, data: Series, prop: Property, axis: Axis | None = None,
+     ) -> Scale:
++        # Convert boolean data to object dtype for consistent categorical handling
++        if data.dtype == bool:
++            data = data.astype(object)
+ 
+         new = copy(self)
+         if self._tick_params is None:
+@@ -320,6 +323,11 @@ class ContinuousBase(Scale):
+ 
+     def _setup(self, data: Series, prop: Property, axis: Axis | None = None) -> Scale:
+ 
++        # Convert boolean data to float for continuous scale operations
++        # This allows subtraction and other numeric operations to work correctly
++        if data.dtype == bool:
++            data = data.astype(float)
++
+         new = copy(self)
+         if self._tick_params is None:
+             new = new.tick()
+--- a/seaborn/_core/properties.py
++++ b/seaborn/_core/properties.py
+@@ -127,6 +127,10 @@ class Property:
+         elif var_type == "datetime":
+             return Temporal()
+         # TODO other variable types
++        elif var_type == "boolean":
++            # Treat boolean data as categorical/nominal rather than continuous
++            # This is more intuitive for color mapping (True/False as two categories)
++            return Nominal()
+         return Continuous()
+ 
+     def _get_categorical_mapping(
+--- a/seaborn/_core/rules.py
++++ b/seaborn/_core/rules.py
+@@ -31,6 +31,8 @@ def variable_type(
+         # The "category" type has a priority over numbers
+         # and is used for strings and unordered categories.
+         return VarType("categorical")
++    elif pd.api.types.is_bool_dtype(vector):
++        return VarType("boolean")
+     elif pd.api.types.is_numeric_dtype(vector):
+         return VarType("numeric")
+     elif pd.api.types.is_datetime64_any_dtype(vector):
+--- a/seaborn/_core/typing.py
++++ b/seaborn/_core/typing.py
+@@ -17,7 +17,7 @@ ColumnName = Union[
+ ]  # TODO pandas.ColumnName?
+ Vector = Union[Series, Index, np.ndarray]
+ VariableSpec = Union[ColumnName, Vector, None]
+-VariableSpecList = Union[list, Index, None]
++VariableSpecList = Union[list, Index, None]
+ DataSource = Union[
+     DataFrame,
+     Mapping[Hashable, Union[Vector, ColumnName]],
+@@ -35,7 +35,8 @@ class Default:
+ class VarType(UserString):
+     """
+     Prevent comparisons elsewhere in the library from using the wrong name.
++    Valid types: categorical, datetime, numeric, boolean
+     """
+-    allowed = "numeric", "datetime", "categorical"
++    allowed = "numeric", "datetime", "categorical", "boolean"
+     def __init__(self, data):
+         assert data in self.allowed, data

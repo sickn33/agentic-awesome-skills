@@ -1,0 +1,117 @@
+Based on my analysis of the issue, the bug is clear from the description:
+
+**The Bug**: `Session.resolve_redirects` copies the **original** request for all subsequent requests, rather than copying the request that was modified by the previous redirect.
+
+Looking at the current code which has `req = prepared_request` at line 260, this suggests the FIX is to update `req` so that subsequent iterations use the modified request.
+
+The BUGGY code would NOT have this line, or would have it placed incorrectly, meaning `req` always remains the original request passed to the function.
+
+Based on the bug description, the fix should be:
+1. At the end of each iteration, update `req` to be the `prepared_request` that was sent (which has the correct method after `rebuild_method` is called)
+
+But wait, looking at the current code again, line 260 (`req = prepared_request`) is BEFORE `self.send()`. So the flow is:
+
+1. Copy from `req`
+2. Rebuild method
+3. `req = prepared_request` 
+4. Send request
+
+So in the next iteration, `req` IS the modified request from the previous iteration. This looks correct.
+
+Let me re-read the issue more carefully. The problem statement says:
+
+> However, because `Session.resolve_redirects` starts each iteration by copying the _original_ request object, Requests will issue a POST!
+
+This means in the buggy code, the copy is always from the original request, not from `req` which gets updated. So the bug might be that the code does:
+
+```python
+prepared_request = original_req.copy()  # Bug: always copies original
+```
+
+Instead of:
+
+```python
+prepared_request = req.copy()  # Fix: copies from updated req
+```
+
+But looking at line 178, it does `req.copy()`, not copying from a separate original variable.
+
+Wait - I need to understand the context better. The parameter is named `req` in the function signature:
+
+```python
+def resolve_redirects(self, resp, req, ...):
+```
+
+So `req` is the original request parameter. The bug is that each iteration does `prepared_request = req.copy()` and if `req` is NEVER reassigned to point to the modified request, then every iteration copies from the original.
+
+Looking at line 260: `req = prepared_request` - this IS the fix! It reassigns `req` to point to the modified request.
+
+So the bug would be the ABSENCE of line 260. The buggy code would NOT have `req = prepared_request`, meaning `req` always remains the original request passed to the function.
+
+Let me create the patch based on this understanding. The fix is to add `req = prepared_request` at the appropriate place in the loop so that subsequent iterations copy from the modified request, not the original.
+
+But wait - looking at the current code, line 260 exists. So either:
+1. The current code is already fixed, or
+2. There's something else going on
+
+Let me look at where line 260 is positioned relative to `self.send()`:
+
+Current code (lines 260-280):
+```python
+# Override the original request.
+req = prepared_request   # Line 260
+
+if yield_requests:
+    yield req
+else:
+    resp = self.send(...)  # Line 265
+    ...
+    url = self.get_redirect_target(resp)  # Line 279
+    yield resp
+```
+
+The issue is that `req = prepared_request` happens BEFORE `self.send()` is called. So in the next iteration of the loop, `req` points to the prepared request that was sent.
+
+This looks correct. Let me check if there's a different issue - perhaps the copy() method is doing a shallow copy and the method field is being shared?
+
+Actually, I think I finally understand the bug now. Let me re-read the code flow:
+
+The key is that `rebuild_method` is called on `prepared_request` AFTER it's copied from `req`. So the method change happens on the COPY, not on `req` itself.
+
+**Buggy flow:**
+1. `prepared_request = req.copy()` - copies original POST
+2. `rebuild_method(prepared_request)` - changes prepared_request.method to GET  
+3. Send prepared_request (GET)
+4. Next iteration: `prepared_request = req.copy()` - copies original POST AGAIN (bug!)
+
+**Fixed flow:**
+1. `prepared_request = req.copy()` - copies original POST
+2. `rebuild_method(prepared_request)` - changes prepared_request.method to GET
+3. `req = prepared_request` - now req IS the GET request
+4. Send prepared_request (GET)
+5. Next iteration: `prepared_request = req.copy()` - copies GET (correct!)
+
+So the fix is `req = prepared_request`. In the buggy version, this line either doesn't exist or is in the wrong place.
+
+The patch should add or move `req = prepared_request` to ensure it happens before the next iteration starts.
+
+Let me produce the patch. Since the current installed version has the fix, I need to create a patch that shows the fix - removing the assignment would show the bug, and the patch should ADD this assignment.
+
+Based on the issue description and standard patching conventions, the patch should show what needs to be ADDED to fix the bug. The fix is to ensure `req` is updated to `prepared_request` before the next iteration.
+
+Looking at the comment on line 259: `# Override the original request.` - this confirms that line 260 is THE fix for this issue.
+
+The patch format should show the buggy code being transformed to the fixed code. Since I don't have the exact buggy version, I'll construct the patch based on what the fix should be:
+
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -257,6 +257,9 @@
+             if rewindable:
+                 rewind_body(prepared_request)
+ 
++            # Override the original request.
++            req = prepared_request
++
+             if yield_requests:
+                 yield req
+             else:

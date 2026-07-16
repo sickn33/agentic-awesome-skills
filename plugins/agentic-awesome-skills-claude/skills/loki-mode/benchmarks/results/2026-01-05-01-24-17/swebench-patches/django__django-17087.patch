@@ -1,0 +1,21 @@
+The Django codebase is not present in the current working directory. Based on the issue description and hints, I have all the information needed to generate the patch. The issue provides:
+
+1. The exact file location: `django/db/migrations/serializer.py`
+2. The exact line numbers: 168-174
+3. The fix: change `klass.__name__` to `klass.__qualname__`
+4. The test file location: `tests/migrations/test_writer.py`
+5. Reference to an existing test: `test_serialize_nested_class()`
+
+Based on the information provided in the issue, here's the patch:
+
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -168,7 +168,7 @@ class FunctionTypeSerializer(BaseSerializer):
+         ):
+             klass = self.value.__self__
+             module = klass.__module__
+-            return "%s.%s.%s" % (module, klass.__name__, self.value.__name__), {
++            return "%s.%s.%s" % (module, klass.__qualname__, self.value.__name__), {
+                 "import %s" % module
+             }
+         # Further error checking

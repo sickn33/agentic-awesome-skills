@@ -1,0 +1,27 @@
+This issue is from the django/django repository, but we're in a different directory. Let me search for the Django source or understand this is about creating a patch for the Django repository.
+
+Based on the issue description, I can see the problem clearly:
+
+1. In `django/core/management/commands/shell.py`, the `exec()` function is called without providing a globals dictionary
+2. When `exec(options['command'])` is called without a globals dict, it uses the current local scope
+3. When a function is defined in the executed code, variables from the outer scope aren't accessible inside the function because they're not in a proper globals dictionary
+
+The fix is to pass an empty dictionary as the second argument to `exec()` so that it creates a proper global namespace.
+
+--- a/django/core/management/commands/shell.py
++++ b/django/core/management/commands/shell.py
+@@ -83,11 +83,11 @@ class Command(BaseCommand):
+     def handle(self, **options):
+         # Execute the command and exit.
+         if options['command']:
+-            exec(options['command'])
++            exec(options['command'], {})
+             return
+         # Execute stdin if it has anything to read and exit.
+         # Not supported on Windows due to select.select() limitations.
+         if sys.platform != 'win32' and not sys.stdin.isatty() and select.select([sys.stdin], [], [], 0)[0]:
+-            exec(sys.stdin.read())
++            exec(sys.stdin.read(), {})
+             return
+ 
+         available_shells = [options['interface']] if options['interface'] else self.shells

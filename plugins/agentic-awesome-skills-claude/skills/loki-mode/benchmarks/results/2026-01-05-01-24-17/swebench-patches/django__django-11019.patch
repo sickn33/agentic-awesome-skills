@@ -1,0 +1,489 @@
+Based on the detailed issue description and the algorithm description provided by the reporter (Matt), I can construct the patch. The key insight from the issue is:
+
+1. The problem: Sequential merging of media lists creates false ordering constraints
+2. The solution: Build a dependency graph from all lists and do topological sort
+
+From the issue comment, the algorithm is:
+1. Iterate over all items in all sub-lists, building a dependency graph and a de-duplicated list
+2. Starting from the first item, backtrack through dependencies
+3. Output items while detecting cycles (throw warning on cycle)
+4. Continue until no items remain
+
+Here's the patch based on the described algorithm:
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -43,6 +43,61 @@ class Media:
+     def __repr__(self):
+         return 'Media(css=%r, js=%r)' % (self._css, self._js)
+ 
++    @staticmethod
++    def merge(*lists):
++        """
++        Merge lists while trying to keep the relative order of the elements.
++        Warn if the lists have the same elements in a different relative order.
++
++        For static assets it can be important to have them included in the DOM
++        in a certain order. In JavaScript you may not be able to reference a
++        global or in CSS you might want to override a style.
++        """
++        dependency_graph = {}
++        all_items = []
++        for list_ in filter(None, lists):
++            head = None
++            for item in list_:
++                if item in dependency_graph:
++                    if head is not None and head not in dependency_graph[item]:
++                        dependency_graph[item].append(head)
++                else:
++                    dependency_graph[item] = [head] if head is not None else []
++                    all_items.append(item)
++                head = item
++
++        result = []
++        while all_items:
++            # Find an item with no unsatisfied dependencies or report a cycle.
++            item = all_items[0]
++            best = item
++            depth = 0
++            cycle = False
++            visited = set()
++            while dependency_graph.get(item):
++                # Try to follow the first unsatisfied dependency.
++                item = dependency_graph[item][0]
++                if item in visited:
++                    # We have a cycle.
++                    cycle = True
++                    break
++                visited.add(item)
++                if item in all_items:
++                    # Use the deepest item found in the current all_items list.
++                    depth += 1
++                    best = item
++            if cycle:
++                warnings.warn(
++                    'Detected duplicate Media files in an opposite order: %s'
++                    % ', '.join(visited),
++                    MediaOrderConflictWarning,
++                )
++            result.append(best)
++            all_items.remove(best)
++            # Remove this item from all dependency lists.
++            for deps in dependency_graph.values():
++                try:
++                    deps.remove(best)
++                except ValueError:
++                    pass
++        return result
++
+     @property
+     def _css(self):
+         css = self._css_lists[0]
+@@ -56,55 +111,12 @@ class Media:
+ 
+     @property
+     def _js(self):
+-        js = self._js_lists[0]
+-        # filter(None, ...) avoids calling merge() with empty lists.
+-        for obj in filter(None, self._js_lists[1:]):
+-            js = self.merge(js, obj)
+-        return js
++        return self.merge(*self._js_lists)
+ 
+     def render(self):
+         return mark_safe('\n'.join(chain.from_iterable(getattr(self, 'render_' + name)() for name in MEDIA_TYPES)))
+ 
+     def render_js(self):
+-        return [
+-            format_html(
+-                '<script type="text/javascript" src="{}"></script>',
+-                self.absolute_path(path)
+-            ) for path in self._js
+-        ]
+-
+-    def render_css(self):
+-        # To keep rendering order consistent, we can't just iterate over items().
+-        # We need to sort the keys, and iterate over the sorted list.
+-        media = sorted(self._css)
+-        return chain.from_iterable([
+-            format_html(
+-                '<link href="{}" type="text/css" media="{}" rel="stylesheet">',
+-                self.absolute_path(path), medium
+-            ) for path in self._css[medium]
+-        ] for medium in media)
+-
+-    def absolute_path(self, path):
+-        """
+-        Given a relative or absolute path to a static asset, return an absolute
+-        path. An absolute path will be returned unchanged while a relative path
+-        will be passed to django.templatetags.static.static().
+-        """
+-        if path.startswith(('http://', 'https://', '/')):
+-            return path
+-        return static(path)
+-
+-    def __getitem__(self, name):
+-        """Return a Media object that only contains media of the given type."""
+-        if name in MEDIA_TYPES:
+-            return Media(**{str(name): getattr(self, '_' + name)})
+-        raise KeyError('Unknown media type "%s"' % name)
+-
+-    @staticmethod
+-    def merge(list_1, list_2):
+-        """
+-        Merge two lists while trying to keep the relative order of the elements.
+-        Warn if the lists have the same elements in a different relative order.
+
+Wait, this is getting complex. Let me think about the proper patch more carefully based on the issue description.
+
+The key changes needed are:
+1. Replace the sequential `merge(list_1, list_2)` approach with a new `merge(*lists)` that handles all lists at once
+2. Use a dependency graph approach for topological sorting
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -61,7 +61,7 @@ class Media:
+     @property
+     def _js(self):
+         js = self._js_lists[0]
+-        # filter(None, ...) avoids calling merge() with empty lists.
++        # filter(None, ...) avoids calling merge with empty lists.
+         for obj in filter(None, self._js_lists[1:]):
+             js = self.merge(js, obj)
+         return js
+@@ -114,28 +114,46 @@ class Media:
+ 
+     @staticmethod
+     def merge(list_1, list_2):
+         """
+         Merge two lists while trying to keep the relative order of the elements.
+         Warn if the lists have the same elements in a different relative order.
+ 
+         For static assets it can be important to have them included in the DOM
+         in a certain order. In JavaScript you may not be able to reference a
+         global or in CSS you might want to override a style.
+         """
+-        # Start with a copy of list_1.
+-        combined_list = list(list_1)
+-        last_insert_index = len(list_1)
+-        for path in list_2:
+-            try:
+-                # Does path already exist in the list?
+-                index = combined_list.index(path)
+-            except ValueError:
+-                # Add path to combined_list since it doesn't exist.
+-                combined_list.insert(last_insert_index, path)
+-            else:
+-                if index > last_insert_index:
+-                    warnings.warn(
+-                        'Detected duplicate Media files in an opposite order:\n'
+-                        '%s\n%s' % (combined_list[last_insert_index], combined_list[index]),
+-                        MediaOrderConflictWarning,
+-                    )
+-                # path already exists in the list. Update last_insert_index so
+-                # that the following elements are inserted in front of this one.
+-                last_insert_index = index
+-        return combined_list
++        dependency_graph = {item: set() for item in list_1 + list_2}
++        all_items = list(dict.fromkeys(list_1 + list_2))
++        
++        # Build dependency graph from both lists
++        for list_ in [list_1, list_2]:
++            for i, item in enumerate(list_):
++                if i > 0:
++                    dependency_graph[item].add(list_[i - 1])
++        
++        result = []
++        while all_items:
++            # Find an item with no unsatisfied dependencies
++            for item in all_items:
++                if not dependency_graph[item] - set(result):
++                    result.append(item)
++                    all_items.remove(item)
++                    break
++            else:
++                # Cycle detected - emit warning and pick the first item
++                item = all_items[0]
++                # Find items involved in conflict
++                deps = dependency_graph[item] - set(result)
++                warnings.warn(
++                    'Detected duplicate Media files in an opposite order: %s'
++                    % ', '.join(deps | {item}),
++                    MediaOrderConflictWarning,
++                )
++                result.append(item)
++                all_items.remove(item)
++        return result
+
+Actually, let me reconsider. The issue is that when we have:
+- ColorPicker: ['color-picker.js']
+- SimpleTextWidget: ['text-editor.js']  
+- FancyTextWidget: ['text-editor.js', 'text-editor-extras.js', 'color-picker.js']
+
+The sequential merge does:
+1. ColorPicker + SimpleTextWidget = ['color-picker.js', 'text-editor.js']
+2. That result + FancyTextWidget = conflict because:
+   - Result says color-picker.js before text-editor.js
+   - FancyTextWidget says text-editor.js before color-picker.js
+
+The fix is to merge ALL lists at once, not sequentially.
+
+Based on the algorithm description in the ticket, here is the correct patch:
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -58,12 +58,7 @@ class Media:
+ 
+     @property
+     def _js(self):
+-        js = self._js_lists[0]
+-        # filter(None, ...) avoids calling merge() with empty lists.
+-        for obj in filter(None, self._js_lists[1:]):
+-            js = self.merge(js, obj)
+-        return js
++        return self.merge(*self._js_lists)
+ 
+     def render(self):
+         return mark_safe('\n'.join(chain.from_iterable(getattr(self, 'render_' + name)() for name in MEDIA_TYPES)))
+@@ -112,31 +107,49 @@ class Media:
+         return self._css_lists == other._css_lists and self._js_lists == other._js_lists
+ 
+     @staticmethod
+-    def merge(list_1, list_2):
++    def merge(*lists):
+         """
+-        Merge two lists while trying to keep the relative order of the elements.
++        Merge lists while trying to keep the relative order of the elements.
+         Warn if the lists have the same elements in a different relative order.
+ 
+         For static assets it can be important to have them included in the DOM
+         in a certain order. In JavaScript you may not be able to reference a
+         global or in CSS you might want to override a style.
+         """
+-        # Start with a copy of list_1.
+-        combined_list = list(list_1)
+-        last_insert_index = len(list_1)
+-        for path in list_2:
+-            try:
+-                # Does path already exist in the list?
+-                index = combined_list.index(path)
+-            except ValueError:
+-                # Add path to combined_list since it doesn't exist.
+-                combined_list.insert(last_insert_index, path)
+-            else:
+-                if index > last_insert_index:
++        dependency_graph = {}
++        all_items = []
++        for list_ in filter(None, lists):
++            for item in list_:
++                if item not in dependency_graph:
++                    dependency_graph[item] = set()
++                    all_items.append(item)
++        # Build dependency graph: for each list, each item depends on the previous item
++        for list_ in filter(None, lists):
++            for i in range(1, len(list_)):
++                dependency_graph[list_[i]].add(list_[i - 1])
++        
++        result = []
++        while all_items:
++            # Find an item whose dependencies are all satisfied
++            for item in all_items:
++                if dependency_graph[item] <= set(result):
++                    result.append(item)
++                    all_items.remove(item)
++                    break
++            else:
++                # No item found with all dependencies satisfied - cycle detected
++                item = all_items[0]
++                unsatisfied = dependency_graph[item] - set(result)
++                # Find something involved in the cycle for the warning message
++                cycle_items = [item]
++                for dep in unsatisfied:
++                    cycle_items.append(dep)
++                    break
+                     warnings.warn(
+-                        'Detected duplicate Media files in an opposite order:\n'
+-                        '%s\n%s' % (combined_list[last_insert_index], combined_list[index]),
++                    'Detected duplicate Media files in an opposite order: %s'
++                    % ', '.join(cycle_items),
+                         MediaOrderConflictWarning,
+                     )
+-                # path already exists in the list. Update last_insert_index so
+-                # that the following elements are inserted in front of this one.
+-                last_insert_index = index
+-        return combined_list
++                result.append(item)
++                all_items.remove(item)
++        return result
+
+Let me think through this more carefully and provide the correct, well-formatted patch:
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -58,12 +58,7 @@ class Media:
+ 
+     @property
+     def _js(self):
+-        js = self._js_lists[0]
+-        # filter(None, ...) avoids calling merge() with empty lists.
+-        for obj in filter(None, self._js_lists[1:]):
+-            js = self.merge(js, obj)
+-        return js
++        return self.merge(*self._js_lists)
+ 
+     def render(self):
+         return mark_safe('\n'.join(chain.from_iterable(getattr(self, 'render_' + name)() for name in MEDIA_TYPES)))
+@@ -112,31 +107,53 @@ class Media:
+         return self._css_lists == other._css_lists and self._js_lists == other._js_lists
+ 
+     @staticmethod
+-    def merge(list_1, list_2):
++    def merge(*lists):
+         """
+-        Merge two lists while trying to keep the relative order of the elements.
++        Merge lists while trying to keep the relative order of the elements.
+         Warn if the lists have the same elements in a different relative order.
+ 
+         For static assets it can be important to have them included in the DOM
+         in a certain order. In JavaScript you may not be able to reference a
+         global or in CSS you might want to override a style.
+         """
+-        # Start with a copy of list_1.
+-        combined_list = list(list_1)
+-        last_insert_index = len(list_1)
+-        for path in list_2:
+-            try:
+-                # Does path already exist in the list?
+-                index = combined_list.index(path)
+-            except ValueError:
+-                # Add path to combined_list since it doesn't exist.
+-                combined_list.insert(last_insert_index, path)
+-            else:
+-                if index > last_insert_index:
++        dependency_graph = {}
++        all_items = []
++        for list_ in filter(None, lists):
++            for item in list_:
++                if item not in dependency_graph:
++                    dependency_graph[item] = set()
++                    all_items.append(item)
++        # Build the dependency graph: each item depends on items before it in the list
++        for list_ in filter(None, lists):
++            for i in range(1, len(list_)):
++                dependency_graph[list_[i]].add(list_[i - 1])
++        
++        result = []
++        while all_items:
++            # Find the first item with all dependencies satisfied
++            for item in all_items:
++                if dependency_graph[item] <= set(result):
++                    result.append(item)
++                    all_items.remove(item)
++                    break
++            else:
++                # No item found; there must be a cycle. Pick the first one and warn.
++                item = all_items[0]
++                unsatisfied = dependency_graph[item] - set(result)
++                # Report the cycle
++                cycle = []
++                for dep in unsatisfied:
++                    cycle.append(dep)
++                cycle.append(item)
+                     warnings.warn(
+-                        'Detected duplicate Media files in an opposite order:\n'
+-                        '%s\n%s' % (combined_list[last_insert_index], combined_list[index]),
++                    'Detected duplicate Media files in an opposite order: %s'
++                    % ', '.join(cycle),
+                         MediaOrderConflictWarning,
+                     )
+-                # path already exists in the list. Update last_insert_index so
+-                # that the following elements are inserted in front of this one.
+-                last_insert_index = index
+-        return combined_list
++                result.append(item)
++                all_items.remove(item)
++        return result
+
+I need to be more careful. Let me construct the final patch correctly:
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -58,12 +58,7 @@ class Media:
+ 
+     @property
+     def _js(self):
+-        js = self._js_lists[0]
+-        # filter(None, ...) avoids calling merge() with empty lists.
+-        for obj in filter(None, self._js_lists[1:]):
+-            js = self.merge(js, obj)
+-        return js
++        return self.merge(*self._js_lists)
+ 
+     def render(self):
+         return mark_safe('\n'.join(chain.from_iterable(getattr(self, 'render_' + name)() for name in MEDIA_TYPES)))
+@@ -112,31 +107,51 @@ class Media:
+         return self._css_lists == other._css_lists and self._js_lists == other._js_lists
+ 
+     @staticmethod
+-    def merge(list_1, list_2):
++    def merge(*lists):
+         """
+-        Merge two lists while trying to keep the relative order of the elements.
++        Merge lists while trying to keep the relative order of the elements.
+         Warn if the lists have the same elements in a different relative order.
+ 
+         For static assets it can be important to have them included in the DOM
+         in a certain order. In JavaScript you may not be able to reference a
+         global or in CSS you might want to override a style.
+         """
+-        # Start with a copy of list_1.
+-        combined_list = list(list_1)
+-        last_insert_index = len(list_1)
+-        for path in list_2:
+-            try:
+-                # Does path already exist in the list?
+-                index = combined_list.index(path)
+-            except ValueError:
+-                # Add path to combined_list since it doesn't exist.
+-                combined_list.insert(last_insert_index, path)
+-            else:
+-                if index > last_insert_index:
++        dependency_graph = {}
++        all_items = []
++        for list_ in filter(None, lists):
++            for item in list_:
++                if item not in dependency_graph:
++                    dependency_graph[item] = set()
++                    all_items.append(item)
++        # Build dependency graph: each item depends on the item before it in a list
++        for list_ in filter(None, lists):
++            for i in range(1, len(list_)):
++                dependency_graph[list_[i]].add(list_[i - 1])
++
++        result = []
++        while all_items:
++            # Find the first item with all dependencies satisfied
++            for item in all_items:
++                if dependency_graph[item] <= set(result):
++                    result.append(item)
++                    all_items.remove(item)
++                    break
++            else:
++                # No item found with all dependencies met - there's a cycle
++                item = all_items[0]
++                unsatisfied = dependency_graph[item] - set(result)
++                cycle_items = list(unsatisfied) + [item]
+                 warnings.warn(
+-                    'Detected duplicate Media files in an opposite order:\n'
+-                    '%s\n%s' % (combined_list[last_insert_index], combined_list[index]),
++                    'Detected duplicate Media files in an opposite order: %s'
++                    % ', '.join(cycle_items),
+                     MediaOrderConflictWarning,
+                 )
+-                # path already exists in the list. Update last_insert_index so
+-                # that the following elements are inserted in front of this one.
+-                last_insert_index = index
+-        return combined_list
++                result.append(item)
++                all_items.remove(item)
++        return result

@@ -1,0 +1,37 @@
+Based on my knowledge of the sympy codebase and the issue description:
+
+1. The `Integral` class correctly implements `kind` by returning the kind of the expression being integrated
+2. The `Derivative` class doesn't implement a `kind` property, so it inherits from `Expr` which returns `UndefinedKind`
+3. The fix should add a `kind` property to the `Derivative` class that returns the kind of the expression being differentiated
+
+In sympy, the `Derivative` class is located in `sympy/core/function.py`. The `Integral` class is in `sympy/integrals/integrals.py` and uses a `kind` property that returns the kind of its first argument (the integrand).
+
+Here's the patch that fixes this issue:
+
+--- a/sympy/core/function.py
++++ b/sympy/core/function.py
+@@ -1,4 +1,5 @@
+ """
++
+ There are three types of functions implemented in SymPy:
+ 
+     1) defined functions (in the sense that they can be evaluated) like
+@@ -46,6 +47,7 @@
+ from .containers import Tuple, Dict
+ from .sorting import default_sort_key
+ from .rules import Transform
++from .kind import NumberKind
+ from sympy.utilities.iterables import has_dups, sift
+ from sympy.utilities.exceptions import sympy_deprecation_warning
+ from sympy.utilities.misc import filldedent
+@@ -1318,6 +1320,10 @@ class Derivative(Expr):
+         return self.args[0]
+ 
+     @property
++    def kind(self):
++        return self.args[0].kind
++
++    @property
+     def _diff_wrt(self):
+         """An expression may be differentiated wrt a symbol if it is in
+         free_symbols.  But we can only declare _diff_wrt for a Derivative

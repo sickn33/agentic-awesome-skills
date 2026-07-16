@@ -1,0 +1,1001 @@
+{
+  "benchmark": "HumanEval-LokiMode",
+  "mode": "multi-agent",
+  "version": "1.0",
+  "timestamp": "2026-01-05T08:46:10.291133",
+  "model": "opus",
+  "max_retries": 3,
+  "total_problems": 164,
+  "problems": [
+    {
+      "task_id": "HumanEval/0",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/1",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/2",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/3",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/4",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/5",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/6",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/7",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/8",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/9",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/10",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/11",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/12",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/13",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/14",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/15",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/16",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/17",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/18",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/19",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/20",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/21",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/22",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/23",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/24",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/25",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/26",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/27",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/28",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/29",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/30",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/31",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/32",
+      "passed": false,
+      "attempts": 3,
+      "error": "Failed after 3 RARV attempts"
+    },
+    {
+      "task_id": "HumanEval/33",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/34",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/35",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/36",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/37",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/38",
+      "passed": true,
+      "attempts": 2,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/39",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/40",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/41",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/42",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/43",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/44",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/45",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/46",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/47",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/48",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/49",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/50",
+      "passed": false,
+      "attempts": 3,
+      "error": "Failed after 3 RARV attempts"
+    },
+    {
+      "task_id": "HumanEval/51",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/52",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/53",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/54",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/55",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/56",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/57",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/58",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/59",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/60",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/61",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/62",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/63",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/64",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/65",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/66",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/67",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/68",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/69",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/70",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/71",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/72",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/73",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/74",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/75",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/76",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/77",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/78",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/79",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/80",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/81",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/82",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/83",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/84",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/85",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/86",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/87",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/88",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/89",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/90",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/91",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/92",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/93",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/94",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/95",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/96",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/97",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/98",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/99",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/100",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/101",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/102",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/103",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/104",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/105",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/106",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/107",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/108",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/109",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/110",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/111",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/112",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/113",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/114",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/115",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/116",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/117",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/118",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/119",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/120",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/121",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/122",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/123",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/124",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/125",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/126",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/127",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/128",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/129",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/130",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/131",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/132",
+      "passed": true,
+      "attempts": 2,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/133",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/134",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/135",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/136",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/137",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/138",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/139",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/140",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/141",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/142",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/143",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/144",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/145",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/146",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/147",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/148",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/149",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/150",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/151",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/152",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/153",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/154",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/155",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/156",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/157",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/158",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/159",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/160",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/161",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/162",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    },
+    {
+      "task_id": "HumanEval/163",
+      "passed": true,
+      "attempts": 1,
+      "error": null
+    }
+  ],
+  "passed": 162,
+  "failed": 0,
+  "errors": 2,
+  "pass_rate": 98.78048780487805,
+  "avg_attempts": 1.0365853658536586,
+  "elapsed_time": 2704.4724848270416
+}

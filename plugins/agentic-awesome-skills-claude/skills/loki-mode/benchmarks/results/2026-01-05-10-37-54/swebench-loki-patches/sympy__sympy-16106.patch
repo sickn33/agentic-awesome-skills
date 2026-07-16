@@ -1,0 +1,66 @@
+# sympy__sympy-16106
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I can generate a patch that adds the missing `_print_Indexed` and `_print_IndexedBase` methods to the MathML printer. The error shows the code structure and the fix is straightforward based on the traceback.
+
+```
+--- a/sympy/printing/mathml.py
++++ b/sympy/printing/mathml.py
+@@ -1,6 +1,7 @@
+ """
+ A MathML printer.
+ """
++from sympy.core.compatibility import default_sort_key
+ 
+ from __future__ import print_function, division
+ 
+@@ -152,6 +153,22 @@ class MathMLPresentationPrinter(MathMLPrinterBase):
+         mrow.appendChild(mo)
+         return mrow
+ 
++    def _print_Indexed(self, e):
++        msub = self.dom.createElement('msub')
++        msub.appendChild(self._print(e.base))
++        if len(e.indices) == 1:
++            msub.appendChild(self._print(e.indices[0]))
++        else:
++            mrow = self.dom.createElement('mrow')
++            for i, idx in enumerate(e.indices):
++                if i > 0:
++                    mo = self.dom.createElement('mo')
++                    mo.appendChild(self.dom.createTextNode(','))
++                    mrow.appendChild(mo)
++                mrow.appendChild(self._print(idx))
++            msub.appendChild(mrow)
++        return msub
++
++    def _print_IndexedBase(self, e):
++        return self._print(e.label)
++
+     def _print_Mul(self, expr):
+ 
+         def multiply(expr, mrow):
+@@ -354,6 +371,22 @@ class MathMLContentPrinter(MathMLPrinterBase):
+             x.appendChild(self._print(arg))
+         return x
+ 
++    def _print_Indexed(self, e):
++        x = self.dom.createElement('apply')
++        x_1 = self.dom.createElement('csymbol')
++        x_1.appendChild(self.dom.createTextNode('subscript'))
++        x.appendChild(x_1)
++        x.appendChild(self._print(e.base))
++        for idx in e.indices:
++            x.appendChild(self._print(idx))
++        return x
++
++    def _print_IndexedBase(self, e):
++        x = self.dom.createElement('ci')
++        x.appendChild(self.dom.createTextNode(self.doprint(e.label)))
++        return x
++
+     def _print_MatrixBase(self, m):
+         x = self.dom.createElement('matrix')
+         for i in range(m.rows):
+```

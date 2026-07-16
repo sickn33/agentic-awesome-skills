@@ -1,0 +1,76 @@
+# django__django-10914
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/conf/global_settings.py
++++ b/django/conf/global_settings.py
+@@ -304,7 +304,7 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+ # FILE_UPLOAD_TEMP_DIR.
+ FILE_UPLOAD_TEMP_DIR = None
+ 
+-# The numeric mode to set newly-uploaded files to. The value should be a mode
+-# you'd pass directly to os.chmod; see https://docs.python.org/library/os.html#files-and-directories.
+-FILE_UPLOAD_PERMISSIONS = None
++# The numeric mode to set newly-uploaded files to. The value should be a mode
++# you'd pass directly to os.chmod; see https://docs.python.org/library/os.html#files-and-directories.
++FILE_UPLOAD_PERMISSIONS = 0o644
+ 
+--- a/docs/ref/settings.txt
++++ b/docs/ref/settings.txt
+@@ -1782,7 +1782,7 @@ FILE_UPLOAD_HANDLERS
+ FILE_UPLOAD_PERMISSIONS
+ -----------------------
+ 
+-Default: ``None``
++Default: ``0o644``
+ 
+ The numeric mode (i.e. ``0o644``) to set newly uploaded files to. For
+ more information about what these modes mean, see the documentation for
+@@ -1790,9 +1790,12 @@ more information about what these modes mean, see the documentation for
+ 
+ If this isn't given or is ``None``, you'll get operating-system
+ dependent behavior. On most platforms, temporary files will have a mode
+-of ``0o600``, and files saved from memory will be saved using the
++of ``0o600``, and files saved from memory will be saved using the
+ system's standard umask.
+ 
++.. versionchanged:: 3.0
++    The default was changed from ``None`` to ``0o644``.
++
+ For security reasons, these permissions aren't applied to the temporary
+ files that are stored in :setting:`FILE_UPLOAD_TEMP_DIR`.
+ 
+--- a/docs/howto/deployment/checklist.txt
++++ b/docs/howto/deployment/checklist.txt
+@@ -95,11 +95,6 @@ Static files are automatically served by the development server. In production,
+ you must define a :setting:`STATIC_ROOT` directory where
+ :djadmin:`collectstatic` will copy them.
+ 
+-See :doc:`/howto/static-files/index` for more information.
+-
+-:setting:`FILE_UPLOAD_PERMISSIONS`
+-----------------------------------
+-
+-Consider setting this to avoid inconsistent file permissions.
++See :doc:`/howto/static-files/index` for more information.
+ 
+ See :ref:`file-upload-permissions` for more information.
+--- a/docs/releases/3.0.txt
++++ b/docs/releases/3.0.txt
+@@ -197,6 +197,17 @@ Miscellaneous
+ * The undocumented ``django.test.runner.DiscoverRunner.test_loader`` attribute
+   is now ``None`` by default.
+ 
++* The default value of the :setting:`FILE_UPLOAD_PERMISSIONS` setting is
++  changed from ``None`` to ``0o644``. Previously, uploaded files had
++  inconsistent permissions depending on their size and which upload handler
++  was used. This new default ensures consistent permissions for all uploaded
++  files.
++
++  If you need the previous behavior of using operating-system-dependent
++  permissions, explicitly set :setting:`FILE_UPLOAD_PERMISSIONS` to ``None``
++  in your settings::
++
++      FILE_UPLOAD_PERMISSIONS = None
+ 
+ .. _deprecated-features-3.0:

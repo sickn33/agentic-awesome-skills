@@ -1,0 +1,20 @@
+# django__django-11999
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -763,10 +763,11 @@ class Field(RegisterLookupMixin):
+         if self.choices is not None:
+             setattr(cls, 'get_%s_display' % self.name,
+                     partialmethod(cls._get_FIELD_display, field=self))
++            if not hasattr(cls, 'get_%s_display' % self.name):
++                setattr(cls, 'get_%s_display' % self.name,
++                        partialmethod(cls._get_FIELD_display, field=self))
+
+     def get_filter_kwargs_for_object(self, obj):
+         """
+         Return a dict that when passed as kwargs to self.model._default_manager.filter()
+         will yield all instances having the same value for this field as obj has.
+         """
+\ No newline at end of file

@@ -1,0 +1,18 @@
+# sympy__sympy-23262
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/printing/pycode.py
++++ b/sympy/printing/pycode.py
+@@ -373,7 +373,10 @@ class PythonCodePrinter(AbstractPythonCodePrinter):
+         return "({},)".format(self._print(expr[0]))
+ 
+     def _print_tuple(self, expr):
+-        return "({})".format(", ".join(map(self._print, expr)))
++        if len(expr) == 1:
++            return "({},)".format(self._print(expr[0]))
++        else:
++            return "({})".format(", ".join(map(self._print, expr)))
+ 
+     def _print_Piecewise(self, expr):
+         result = []

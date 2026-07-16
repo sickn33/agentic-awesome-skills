@@ -1,0 +1,54 @@
+Based on the issue description, error traceback, and hints, I can understand the problem and create a fix. The issue is:
+
+1. In `_print_MatAdd`, the code uses `S(item.args[0]).is_negative` to check if an item is negative
+2. `S()` is `sympify()` which tries to parse string arguments
+3. When a MatrixSymbol has a name with special characters like `*`, sympify fails
+
+The fix should use the same approach as `_print_Add` - checking if the coefficient is negative by looking at the actual SymPy object's properties rather than using sympify.
+
+Looking at the error message and the hints:
+- The problematic line is: `if S(item.args[0]).is_negative:`
+- The issue mentions PR #14248 introduced this code
+- The solution should use the same methods as `_print_Add`
+
+In SymPy's `_print_Add`, the standard way to check for negative terms is to use `_coeff_isneg()` which is a method that checks if an expression has a negative leading coefficient without parsing strings.
+
+Here's the patch:
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -1,4 +1,5 @@
+-from sympy.core import S
++from sympy.core import S
++from sympy.core.add import _coeff_isneg
+ from sympy.core.containers import Tuple
+ from sympy.core.function import _coeff_isneg
+ from sympy.core.mod import Mod
+@@ -825,7 +826,7 @@ class PrettyPrinter(Printer):
+         for i, item in enumerate(expr.args[1:]):
+             if precedence_traditional(item) < PRECEDENCE["Mul"]:
+                 delim = " + "
+-            if S(item.args[0]).is_negative:
++            if _coeff_isneg(item):
+                 delim = " "
+             pforms.append(self._print(item))
+
+Wait, I need to reconsider. The `_coeff_isneg` function is already imported from `sympy.core.function` in pretty.py. Let me verify the exact context of the code.
+
+Based on the error traceback and the hints, the issue is at line 828:
+```python
+if S(item.args[0]).is_negative:
+```
+
+The fix should replace `S(item.args[0]).is_negative` with `_coeff_isneg(item)` which properly checks if the coefficient is negative without using sympify on potentially problematic strings.
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -825,7 +825,7 @@ class PrettyPrinter(Printer):
+         for i, item in enumerate(expr.args[1:]):
+             if precedence_traditional(item) < PRECEDENCE["Mul"]:
+                 delim = " + "
+-            if S(item.args[0]).is_negative:
++            if _coeff_isneg(item):
+                 delim = " "
+             pforms.append(self._print(item))

@@ -1,0 +1,16 @@
+# django__django-13551
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/contrib/auth/tokens.py
++++ b/django/contrib/auth/tokens.py
+@@ -78,9 +78,11 @@ class PasswordResetTokenGenerator:
+         # Truncate microseconds so that tokens are consistent even if the
+         # database doesn't support microseconds.
+         login_timestamp = '' if user.last_login is None else user.last_login.replace(microsecond=0, tzinfo=None)
++        email_field = getattr(user, 'email', '') or ''
+         return str(user.pk) + user.password + str(login_timestamp) + str(timestamp)
++        return str(user.pk) + user.password + str(login_timestamp) + str(timestamp) + email_field
+ 
+     def _num_seconds(self, dt):
+         return int((dt - datetime(2001, 1, 1)).total_seconds())

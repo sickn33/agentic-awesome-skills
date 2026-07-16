@@ -1,0 +1,76 @@
+Based on my knowledge of this matplotlib issue, I understand the problem:
+
+In matplotlib v3.6.0, the seaborn styles were renamed from `seaborn-*` to `seaborn-v0_8-*` (e.g., `seaborn-colorblind` became `seaborn-v0_8-colorblind`). The old names were deprecated but the error message doesn't help users understand this.
+
+The fix should be in the `lib/matplotlib/style/core.py` file to:
+1. Add deprecation warnings when old style names are used
+2. Provide backward compatibility by mapping old names to new names
+
+Here's the patch:
+
+--- a/lib/matplotlib/style/core.py
++++ b/lib/matplotlib/style/core.py
+@@ -43,6 +43,18 @@ BASE_LIBRARY_PATH = os.path.join(mpl.get_data_path(), 'stylelib')
+ # Users may want multiple library paths, so store a list of paths.
+ USER_LIBRARY_PATHS = [os.path.join(mpl.get_configdir(), 'stylelib')]
+ 
++# A list of rcParams that should not be applied from styles
++STYLE_BLACKLIST = {
++    'interactive', 'backend', 'backend.qt4', 'webagg.port', 'webagg.address',
++    'webagg.port_retries', 'webagg.open_in_browser', 'backend_fallback',
++    'toolbar', 'timezone', 'figure.max_open_warning',
++    'figure.raise_window', 'savefig.directory', 'tk.window_focus',
++    'docstring.hardcopy', 'date.epoch'}
++
++# Deprecated style name aliases
++STYLE_ALIASES = {f'seaborn-{s}': f'seaborn-v0_8-{s}' for s in [
++    'bright', 'colorblind', 'dark', 'dark-palette', 'darkgrid', 'deep',
++    'muted', 'notebook', 'paper', 'pastel', 'poster', 'talk', 'ticks', 'white', 'whitegrid']}
+ 
+ def _remove_blacklisted_style_params(d, warn=True):
+     to_remove = set(d) & STYLE_BLACKLIST
+@@ -125,6 +137,13 @@ def use(style):
+             style = style.read()
+         if isinstance(style, str):
+             style = _rc_params_in_file(style, fail_on_error=True)
++        elif style in STYLE_ALIASES:
++            _api.warn_deprecated(
++                '3.6', name=style, alternative=STYLE_ALIASES[style],
++                obj_type='style')
++            style = library[STYLE_ALIASES[style]]
++        elif style in library:
++            style = library[style]
+         return dict(style)
+ 
+     def update_nested_dict(old_dict, new_dict):
+
+Wait, I need to reconsider. Looking at the actual structure of the style handling code, the fix should be different. Let me provide a more accurate patch that handles the deprecated style names properly:
+
+--- a/lib/matplotlib/style/core.py
++++ b/lib/matplotlib/style/core.py
+@@ -43,6 +43,12 @@ BASE_LIBRARY_PATH = os.path.join(mpl.get_data_path(), 'stylelib')
+ # Users may want multiple library paths, so store a list of paths.
+ USER_LIBRARY_PATHS = [os.path.join(mpl.get_configdir(), 'stylelib')]
+ 
++# Mapping of deprecated style names to their replacements
++STYLE_ALIASES = {
++    **{f'seaborn-{s}': f'seaborn-v0_8-{s}'
++       for s in ['bright', 'colorblind', 'dark', 'dark-palette', 'darkgrid',
++                 'deep', 'muted', 'notebook', 'paper', 'pastel', 'poster',
++                 'talk', 'ticks', 'white', 'whitegrid']}}
+ 
+ def _remove_blacklisted_style_params(d, warn=True):
+     to_remove = set(d) & STYLE_BLACKLIST
+@@ -113,6 +119,12 @@ def use(style):
+ 
+     def _apply_style(style_name, in_cfg_file=False):
+         if isinstance(style_name, str):
++            if style_name in STYLE_ALIASES:
++                _api.warn_deprecated(
++                    '3.6', name=style_name, obj_type='style',
++                    alternative=STYLE_ALIASES[style_name])
++                style_name = STYLE_ALIASES[style_name]
++
+             if style_name in library:
+                 style = library[style_name]
+             elif style_name == 'default':

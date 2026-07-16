@@ -1,0 +1,16 @@
+Based on my knowledge of Django's codebase and this specific issue, I can provide the fix. The issue is that `ReadOnlyPasswordHashWidget` renders text (not an input), so the label's `for` attribute points to nothing meaningful. The fix is to override the `id_for_label` method to return `None`, which will prevent the label from having a `for` attribute.
+
+In Django's widget system, when `id_for_label()` returns `None`, the label element won't have a `for` attribute. This is the correct behavior for non-labelable elements.
+
+--- a/django/contrib/auth/forms.py
++++ b/django/contrib/auth/forms.py
+@@ -48,6 +48,9 @@ class ReadOnlyPasswordHashWidget(forms.Widget):
+         })
+         return context
+ 
++    def id_for_label(self, id_, index=None):
++        return None
++
+ 
+ class ReadOnlyPasswordHashField(forms.Field):
+     widget = ReadOnlyPasswordHashWidget

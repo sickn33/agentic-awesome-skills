@@ -1,0 +1,15 @@
+The file doesn't exist in the current working directory. The user is asking me to generate a patch based on the issue description. Based on the hints provided in the issue, I can generate the patch directly.
+
+Let me produce the patch based on the information provided:
+
+--- a/sympy/matrices/expressions/blockmatrix.py
++++ b/sympy/matrices/expressions/blockmatrix.py
+@@ -301,7 +301,7 @@ def blocks(self):
+         data = [[mats[i] if i == j else ZeroMatrix(mats[i].rows, mats[j].cols)
+                         for j in range(len(mats))]
+                         for i in range(len(mats))]
+-        return ImmutableDenseMatrix(data)
++        return ImmutableDenseMatrix(data, evaluate=False)
+ 
+     @property
+     def shape(self):

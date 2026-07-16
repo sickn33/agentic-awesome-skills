@@ -1,0 +1,26 @@
+# 007 Security Skill - Dependencies
+# ==================================
+#
+# The 007 scanners, analyzers, and reporting tools are designed to work
+# entirely with the Python standard library (stdlib). This means:
+#
+#   - No pip install required for basic scanning and auditing
+#   - Works out of the box on any Python 3.10+ installation
+#   - Zero supply-chain risk from third-party dependencies
+#   - Portable across Windows, Linux, and macOS
+#
+# Modules used from stdlib:
+#   - re           (regex-based pattern detection)
+#   - json         (audit logs, reports, config files)
+#   - pathlib      (cross-platform path handling)
+#   - logging      (structured console output)
+#   - datetime     (timestamps for audit trail)
+#   - ast          (Python AST analysis for deeper code inspection)
+#   - os / os.path (filesystem traversal fallback)
+#   - sys          (CLI argument handling)
+#   - hashlib      (file hashing for change detection)
+#   - argparse     (CLI interface for all scripts)
+#   - textwrap     (report formatting)
+#   - collections  (counters, defaultdicts for aggregation)
+#
+# No external dependencies required.

@@ -1,0 +1,31 @@
+# sympy__sympy-18057
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/core/expr.py
++++ b/sympy/core/expr.py
+@@ -121,7 +121,12 @@ class Expr(Basic, EvalfMixin):
+ 
+     @sympify_return([('other', 'Expr')], NotImplemented)
+     def __eq__(self, other):
+-        other = sympify(other)
++        try:
++            other = _sympify(other)
++        except SympifyError:
++            return NotImplemented
++        if not isinstance(other, Basic):
++            return NotImplemented
+         if type(self) != type(other):
+             return False
+         a, b = self._hashable_content(), other._hashable_content()
+--- a/sympy/core/numbers.py
++++ b/sympy/core/numbers.py
+@@ -403,6 +403,8 @@ class Number(AtomicExpr):
+             other = _sympify(other)
+         except SympifyError:
+             return NotImplemented
++        if not isinstance(other, Basic):
++            return NotImplemented
+         if isinstance(other, Number) and self is other:
+             return True
+         if isinstance(other, Integer) and self._as_mpf_val(2) == mpf(other.p):

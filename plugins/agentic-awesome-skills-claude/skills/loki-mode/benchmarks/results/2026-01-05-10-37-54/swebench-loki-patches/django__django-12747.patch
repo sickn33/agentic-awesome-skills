@@ -1,0 +1,15 @@
+# django__django-12747
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -408,6 +408,8 @@ class Collector:
+                         sender=model, origin=self.origin,
+                     )
+ 
++        # Filter out zero counts from deleted_counter for consistency
++        deleted_counter = {key: count for key, count in deleted_counter.items() if count}
+         return sum(deleted_counter.values()), dict(deleted_counter)
+ 
+     def related_objects(self, related_model, related_fields, objs):

@@ -1,0 +1,27 @@
+Based on my knowledge of the SymPy codebase and the issue described, I can provide the fix. The issue is in `sympy/core/power.py` in the `Pow.__new__` method where negative integer bases with rational exponents are simplified.
+
+The problem occurs when simplifying expressions like `(-2)**(-10/3)`. The code incorrectly extracts the sign, computing `(-1)**(-10/3) * 2**(-10/3)` but the issue is that for negative integer bases with non-integer exponents, the simplification `(-a)**x = (-1)**x * a**x` is only valid when `a` is positive and `x` is an integer.
+
+Looking at the specific issue and the hint, the problem is in how SymPy handles the extraction of the negative sign from the base. For `(-2)**(-10/3)`:
+- The principal branch means `(-2)` has argument `pi`
+- Under exponentiation this becomes `-10*pi/3` which is equivalent to `2*pi/3`
+- But the current simplification gives the wrong branch
+
+Here's the patch to fix this issue:
+
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -289,10 +289,9 @@ class Pow(Expr):
+                             return Pow(b.args[0], e * b.args[1])
+                         elif e.is_rational:
+                             if b.p != -1:
+-                                return \
+-                                    Pow(Integer(-1), e) * \
+-                                    Pow(Integer(-b.p), e) * \
+-                                    Pow(Integer(b.q), -e)
++                                # b.p < 0 and b.p != -1 and b is not -1
++                                # do not simplify to avoid wrong branch
++                                pass
+                             elif b.q != 1:
+                                 # (b.p == -1)
+                                 return Pow(S.NegativeOne, e) / Pow(Integer(b.q), e)

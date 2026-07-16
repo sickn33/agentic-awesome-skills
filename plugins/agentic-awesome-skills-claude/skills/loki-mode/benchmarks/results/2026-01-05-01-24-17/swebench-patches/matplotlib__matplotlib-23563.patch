@@ -1,0 +1,22 @@
+Based on the issue description and hints provided, I can understand the bug and create the fix:
+
+1. The bug is in `lib/mpl_toolkits/mplot3d/art3d.py` in the `Line3D` class
+2. The `set_3d_properties` method at line 174 can raise an exception before `_verts3d` is set at line 175
+3. When the exception occurs, `_verts3d` is never initialized
+4. Later when `draw()` is called, it tries to access `self._verts3d` which doesn't exist
+
+The fix should ensure that `_verts3d` is initialized in `__init__` before `set_3d_properties` is called, so even if an exception occurs in `set_3d_properties`, the attribute exists with a safe default value.
+
+Based on the matplotlib source code structure (referenced in the issue at line 174-175), here's the patch:
+
+--- a/lib/mpl_toolkits/mplot3d/art3d.py
++++ b/lib/mpl_toolkits/mplot3d/art3d.py
+@@ -171,6 +171,7 @@ class Line3D(mlines.Line2D):
+ 
+     def set_3d_properties(self, zs=0, zdir='z'):
+         xs = self.get_xdata()
+         ys = self.get_ydata()
+-        zs = np.broadcast_to(zs, len(xs))
++        zs = np.broadcast_to(zs, xs.shape)
+         self._verts3d = juggle_axes(xs, ys, zs, zdir)
++        self.stale = True

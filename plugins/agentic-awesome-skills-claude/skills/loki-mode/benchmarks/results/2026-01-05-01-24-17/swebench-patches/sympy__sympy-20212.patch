@@ -1,0 +1,17 @@
+Based on my knowledge of the sympy codebase, I can create the patch. In sympy 1.5.x, the issue is in `sympy/core/power.py` where the `Pow.__new__` method handles special cases. The code incorrectly returns `S.Zero` for `0**-oo` when it should return `S.ComplexInfinity` (zoo).
+
+Looking at the sympy 1.5 source code structure, the relevant section is in the `Pow.__new__` method where it handles the case when `b is S.Zero`. The current code checks for negative exponents but doesn't properly handle the case of `-oo`.
+
+Here is the patch:
+
+--- a/sympy/core/power.py
++++ b/sympy/core/power.py
+@@ -264,6 +264,8 @@ class Pow(Expr):
+                     return S.ComplexInfinity
+                 if e.is_Rational and e.is_negative:
+                     return S.ComplexInfinity
++                if e is S.NegativeInfinity:
++                    return S.ComplexInfinity
+             if e.is_positive:
+                 return S.Zero
+             if e.is_negative:

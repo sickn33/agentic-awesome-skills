@@ -1,0 +1,17 @@
+# pytest-dev__pytest-6116
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+I can see the existing patch format. Let me verify the correct line numbers by checking the actual pytest source file structure. Based on the architect's analysis and the existing patch, I need to generate a proper patch that adds `--co` as a shortcut for `--collect-only`.
+
+--- a/src/_pytest/main.py
++++ b/src/_pytest/main.py
+@@ -109,6 +109,7 @@ def pytest_addoption(parser: Parser) -> None:
+         dest="collectonly",
+         help="only collect tests, don't execute them.",
+     )
+     group.addoption(
++        "--co",
+         "--collect-only",
+         "--collectonly",
+         action="store_true",

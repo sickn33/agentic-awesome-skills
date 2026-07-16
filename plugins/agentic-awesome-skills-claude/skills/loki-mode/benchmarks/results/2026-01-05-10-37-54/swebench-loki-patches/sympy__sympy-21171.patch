@@ -1,0 +1,27 @@
+# sympy__sympy-21171
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I have enough information to generate the patch. The fix requires:
+
+1. Adding `exp=None` parameter to `_print_SingularityFunction`
+2. When `exp` is provided, wrapping the output with the exponent
+
+Here's the patch:
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1968,7 +1968,7 @@ class LatexPrinter(Printer):
+             return r"\left(%s\right)^{%s}" % (tex, exp)
+         return tex
+ 
+-    def _print_SingularityFunction(self, expr):
++    def _print_SingularityFunction(self, expr, exp=None):
+         shift = self._print(expr.args[0] - expr.args[1])
+         power = self._print(expr.args[2])
+         tex = r"{\left\langle %s \right\rangle}^{%s}" % (shift, power)
++        if exp is not None:
++            tex = r"{\left(%s\right)}^{%s}" % (tex, exp)
+         return tex
+ 
+     def _print_Heaviside(self, expr, exp=None):

@@ -1,0 +1,21 @@
+Based on the GitHub issue description and the attached patch mentioned, I can deduce what the fix needs to be. The issue states:
+
+1. The regex that searches for QDP commands is not case insensitive
+2. Commands like "READ SERR 1 2" work, but "read serr 1 2" fails
+3. The fix involves making the regex case insensitive
+
+From the error message in the issue: `ValueError: Unrecognized QDP line: read serr 1 2`, we can see the parsing fails on lowercase commands.
+
+The standard fix for making regex patterns case-insensitive in Python is to add the `re.IGNORECASE` flag (or `re.I`). Based on the issue description mentioning QDP command patterns for "READ SERR", "READ TERR", etc., and the hint that the fix is "as simple as" adding case insensitivity, here's the patch:
+
+--- a/astropy/io/ascii/qdp.py
++++ b/astropy/io/ascii/qdp.py
+@@ -68,7 +68,7 @@ def _line_type(line, delimiter=None):
+     _new_re = rf"NO({sep}NO)+"
+     _data_re = rf"({_decimal_re}|NO|[-+]?nan)({sep}({_decimal_re}|NO|[-+]?nan))*)"
+     _type_re = rf"^\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\s*(\!(?P<comment>.*))?\s*$"
+-    _line_type_re = re.compile(_type_re)
++    _line_type_re = re.compile(_type_re, re.IGNORECASE)
+     line = line.strip()
+     if not line:
+         return "comment"

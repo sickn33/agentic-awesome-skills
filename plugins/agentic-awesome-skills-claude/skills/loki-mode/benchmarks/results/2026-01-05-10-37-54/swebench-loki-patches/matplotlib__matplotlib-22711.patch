@@ -1,0 +1,38 @@
+# matplotlib__matplotlib-22711
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -718,9 +718,14 @@ class RangeSlider(SliderBase):
+         self.val = valinit
+         if orientation == "vertical":
+             self.poly = ax.axhspan(valinit[0], valinit[1], 0.25, 0.75, **kwargs)
++            self.poly.xy = [[0.25, valinit[0]],
++                            [0.25, valinit[1]],
++                            [0.75, valinit[1]],
++                            [0.75, valinit[0]]]
+         else:
+             self.poly = ax.axvspan(valinit[0], valinit[1], 0.25, 0.75, **kwargs)
+-
++            self.poly.xy = [[valinit[0], 0.25],
++                            [valinit[0], 0.75],
++                            [valinit[1], 0.75],
++                            [valinit[1], 0.25]]
+         handlecolor = mcolors.to_rgba(handle_style.pop('facecolor', color))
+         self._handle_height = handle_height
+         if orientation == "vertical":
+@@ -910,14 +915,12 @@ class RangeSlider(SliderBase):
+             xy[1] = .25, val[1]
+             xy[2] = .75, val[1]
+             xy[3] = .75, val[0]
+-            xy[4] = .25, val[0]
+         else:
+             xy[0] = val[0], .25
+             xy[1] = val[0], .75
+             xy[2] = val[1], .75
+             xy[3] = val[1], .25
+-            xy[4] = val[0], .25
+         self.poly.xy = xy
+         self.valtext.set_text(self._format(val))
+         if self.drawon:

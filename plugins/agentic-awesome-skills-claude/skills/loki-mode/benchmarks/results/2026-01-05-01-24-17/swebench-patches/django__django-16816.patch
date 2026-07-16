@@ -1,0 +1,30 @@
+Based on the issue description and the hints provided, I need to create a patch for Django's admin checks. The issue describes that E108 error doesn't catch reverse relations (like `ManyToOneRel`) in `list_display`. 
+
+From the hints, I can see:
+1. The fix should be in `django/contrib/admin/checks.py`
+2. The fix involves checking if the field is a `ManyToOneRel` and raising `FieldDoesNotExist` in that case
+3. The code path is in the `_check_list_display_item` method around line 897-905
+
+Let me construct the patch based on the hints provided:
+
+```
+--- a/django/contrib/admin/checks.py
++++ b/django/contrib/admin/checks.py
+@@ -9,6 +9,7 @@ from django.core.exceptions import FieldDoesNotExist
+ from django.db import models
+ from django.db.models.constants import LOOKUP_SEP
+ from django.db.models.expressions import Combinable
++from django.db.models.fields.reverse_related import ForeignObjectRel
+ from django.forms.models import BaseModelForm, BaseModelFormSet, _get_foreign_key
+ from django.template import engines
+ from django.template.backends.django import DjangoTemplates
+@@ -897,6 +898,8 @@ class ModelAdminChecks(BaseModelAdminChecks):
+             return []
+         try:
+             field = obj.model._meta.get_field(item)
++            if isinstance(field, ForeignObjectRel):
++                raise FieldDoesNotExist
+         except FieldDoesNotExist:
+             try:
+                 field = getattr(obj.model, item)
+```

@@ -1,0 +1,47 @@
+# pallets__flask-4992
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and standard Flask codebase knowledge, I'll generate the patch. The `from_file` method in Flask's `Config` class typically opens files in text mode. The fix needs to add a `text` parameter (defaulting to `True` for backward compatibility) that controls whether to open the file in text mode (`"r"`) or binary mode (`"rb"`).
+
+Here's the patch:
+
+```
+--- a/src/flask/config.py
++++ b/src/flask/config.py
+@@ -3,6 +3,7 @@ from __future__ import annotations
+ import json
+ import os
+ import typing as t
++from typing import IO
+ 
+ from werkzeug.utils import import_string
+ 
+@@ -230,6 +231,7 @@ class Config(dict):
+         filename: str,
+         load: t.Callable[[t.IO[t.Any]], t.Mapping],
+         silent: bool = False,
++        text: bool = True,
+     ) -> bool:
+         """Update the values in the config from a file that is loaded
+         using the ``load`` parameter. The loaded data is passed to the
+@@ -248,6 +250,8 @@ class Config(dict):
+         :param silent: Ignore the file if it doesn't exist.
+         :type silent: bool
+         :return: ``True`` if the file was loaded successfully.
++        :param text: Open the file in text mode. Defaults to ``True``.
++            Set to ``False`` for binary loaders like ``tomllib.load``.
+ 
+         .. versionadded:: 2.0
+         """
+@@ -258,7 +262,8 @@ class Config(dict):
+                 return False
+             raise
+ 
+-        with open(filename) as f:
++        mode = "r" if text else "rb"
++        with open(filename, mode) as f:
+             obj = load(f)
+ 
+         return self.from_mapping(obj)
+```

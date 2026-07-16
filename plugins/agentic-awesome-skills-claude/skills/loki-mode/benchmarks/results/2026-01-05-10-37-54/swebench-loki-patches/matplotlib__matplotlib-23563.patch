@@ -1,0 +1,14 @@
+# matplotlib__matplotlib-23563
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/lib/mpl_toolkits/mplot3d/art3d.py
++++ b/lib/mpl_toolkits/mplot3d/art3d.py
+@@ -82,6 +82,7 @@ class Line3D(lines.Line2D):
+ 
+     def __init__(self, xs, ys, zs, *args, **kwargs):
+         super().__init__([], [], *args, **kwargs)
++        self._verts3d = None
+         self.set_3d_properties(xs, ys, zs)
+ 
+     def set_3d_properties(self, xs, ys, zs=0, zdir='z'):

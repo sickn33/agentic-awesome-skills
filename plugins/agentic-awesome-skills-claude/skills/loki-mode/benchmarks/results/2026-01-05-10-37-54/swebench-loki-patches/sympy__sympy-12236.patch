@@ -1,0 +1,17 @@
+# sympy__sympy-12236
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of the SymPy codebase structure, I can generate the patch. The issue is in the `get_field()` method of `PolynomialRing` class which returns `ZZ(y)` instead of `QQ(y)` when the base domain is `ZZ`.
+
+--- a/sympy/polys/domains/polynomialring.py
++++ b/sympy/polys/domains/polynomialring.py
+@@ -70,7 +70,7 @@ class PolynomialRing(Ring, CompositeDomain):
+ 
+     def get_field(self):
+         """Returns a field associated with `self`. """
+-        return self.dom.frac_field(*self.symbols)
++        return self.dom.get_field().frac_field(*self.symbols)
+ 
+     def is_negative(self, a):
+         """Returns True if `LC(a)` is negative. """

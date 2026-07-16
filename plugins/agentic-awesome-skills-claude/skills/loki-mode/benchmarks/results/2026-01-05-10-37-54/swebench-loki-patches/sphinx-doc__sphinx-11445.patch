@@ -1,0 +1,67 @@
+# sphinx-doc__sphinx-11445
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, this is a bug in the sphinx-doc/sphinx repository. The task is to generate a patch for `sphinx/util/rst.py`. Since this repository doesn't seem to be cloned locally, I need to generate the patch based on the architect's analysis.
+
+The bug is that when `rst_prolog` is inserted after the first line of a document that starts with a heading (title + underline), it breaks the heading structure. The fix is to add an empty line after the prolog content to ensure proper separation.
+
+Based on the analysis of the `prepend_prolog` function at lines 81-91, here's the patch:
+
+```
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -81,7 +81,15 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+         pos = 0
+     else:
+         pos = lineno + 1
+ 
++    # Check if we're inserting before a heading (title + underline pattern)
++    # If so, we need to skip past the underline as well
++    if pos < len(content):
++        # Check if the next line looks like an underline (all same punctuation chars)
++        next_line = content[pos] if pos < len(content) else ''
++        if next_line and len(next_line) >= 1 and next_line[0] in '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~' and next_line == next_line[0] * len(next_line):
++            pos += 1
++
+     # insert prolog
+     lineno = 0
+     for lineno, line in enumerate(prolog.splitlines()):
+@@ -89,3 +97,6 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+ 
+     content.insert(pos + lineno, '', '<generated>', 0)
++
++    # Add blank line after prolog to separate from document content
++    content.insert(pos + lineno + 1, '', '<generated>', 0)
+```
+
+Wait, let me reconsider. The simpler fix suggested by the architect is to add an empty line after the prolog. Let me look at what the actual code likely looks like and create a simpler, more targeted fix:
+
+```
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -85,6 +85,8 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+     # insert prolog
+     lineno = 0
+     for lineno, line in enumerate(prolog.splitlines()):
+         content.insert(pos + lineno, line, '<rst_prolog>', lineno)
+ 
+     content.insert(pos + lineno, '', '<generated>', 0)
++    # Add blank line after prolog to ensure separation from document content
++    content.insert(pos + lineno + 1, '', '<generated>', 0)
+```
+
+Actually, based on the architect's hint about adding an empty line after the prolog, the simplest fix is:
+
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -85,6 +85,9 @@ def prepend_prolog(content: StringList, prolog: str) -> None:
+     # insert prolog
+     lineno = 0
+     for lineno, line in enumerate(prolog.splitlines()):
+         content.insert(pos + lineno, line, '<rst_prolog>', lineno)
+ 
+     content.insert(pos + lineno, '', '<generated>', 0)
++
++    # Add blank line after prolog to separate it from document content
++    content.insert(pos + lineno + 1, '', '<generated>', 0)

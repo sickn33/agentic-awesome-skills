@@ -1,0 +1,33 @@
+Based on the issue, I need to analyze the SymPy code and generate a patch. The issue occurs in `fu.py` at line 504 where there's a comparison `if (rv.exp < 0) == True:` that fails when the exponent is a complex number like `I`.
+
+Let me look at the traceback more carefully:
+
+1. The issue is in `/sympy/simplify/fu.py` at line 504
+2. The comparison `(rv.exp < 0)` fails when `rv.exp` is `I` (the imaginary unit)
+3. This is because you cannot compare complex numbers with real numbers using `<` or `>`
+
+The fix should check if the exponent is a real number before doing the comparison, or handle the case where the comparison raises a TypeError. Looking at the error and the context:
+
+```python
+if (rv.exp < 0) == True:
+```
+
+The issue is that when `rv.exp` is `I`, the comparison `rv.exp < 0` raises a TypeError because you can't compare complex numbers.
+
+The fix should add a check to ensure the exponent is comparable (i.e., it's real or at least extended real) before attempting the comparison. In SymPy, you can use `rv.exp.is_real` or check `rv.exp.is_extended_real` to determine if the comparison is valid.
+
+Looking at the pattern from the traceback, the `_TR56` function in `fu.py` has a helper function `_f` that does this comparison. The fix should modify this comparison to handle the case where the exponent is not real.
+
+Here's the patch:
+
+--- a/sympy/simplify/fu.py
++++ b/sympy/simplify/fu.py
+@@ -501,7 +501,7 @@ def _TR56(rv, f, g, h, max, pow):
+         if not (rv.is_Pow and rv.base.func == f):
+             return rv
+ 
+-        if (rv.exp < 0) == True:
++        if rv.exp.is_real and (rv.exp < 0) == True:
+             return rv
+         if (rv.exp > max) == True:
+             return rv

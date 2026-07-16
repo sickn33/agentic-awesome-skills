@@ -1,0 +1,25 @@
+# django__django-15388
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of Django's autoreload functionality, I can generate the patch. The `template_changed` function in `django/template/autoreload.py` is a signal listener that handles file changes. When it returns `True`, it indicates the change was handled and prevents normal reload. The fix is to ensure Python files are never treated as template files.
+
+```
+--- a/django/template/autoreload.py
++++ b/django/template/autoreload.py
+@@ -48,6 +48,9 @@ def reset_loaders():
+ 
+ @receiver(autoreload_started, dispatch_uid="template_loaders_watch_changes")
+ def watch_for_template_changes(sender, **kwargs):
+     for directory in get_template_directories():
+         sender.watch_dir(directory, "**/*")
+ 
+ 
+ @receiver(file_changed, dispatch_uid="template_loaders_file_changed")
+ def template_changed(sender, file_path, **kwargs):
++    if file_path.suffix.lower() in {'.py', '.pyc', '.pyo'}:
++        return None
+     for template_dir in get_template_directories():
+         if template_dir in file_path.parents:
+             reset_loaders()
+```

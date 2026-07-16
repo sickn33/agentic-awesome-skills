@@ -1,0 +1,38 @@
+# django__django-11039
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -76,7 +76,7 @@ class Command(BaseCommand):
+         plan = [(executor.loader.graph.nodes[target], options['backwards'])]
+ 
+         # Show begin/end around output for atomic migrations, if the database
+-        # supports transactional DDL.
+-        self.output_transaction = migration.atomic
++        # supports transactional DDL.
++        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl
+ 
+         # Disable constraints while running schema editor, since sqlmigrate
+--- a/tests/migrations/test_commands.py
++++ b/tests/migrations/test_commands.py
+@@ -1408,6 +1408,18 @@ class MigrateTests(MigrationTestBase):
+             self.assertNotIn(connection.ops.start_transaction_sql(), output)
+             self.assertNotIn(connection.ops.end_transaction_sql(), output)
+ 
++    @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
++    def test_sqlmigrate_for_non_transactional_ddl(self):
++        """
++        sqlmigrate does not wrap output in BEGIN/COMMIT if the database
++        doesn't support transactional DDL.
++        """
++        out = io.StringIO()
++        with mock.patch.object(connection.features, 'can_rollback_ddl', False):
++            call_command("sqlmigrate", "migrations", "0001", stdout=out)
++        output = out.getvalue().lower()
++        self.assertNotIn(connection.ops.start_transaction_sql().lower(), output)
++        self.assertNotIn(connection.ops.end_transaction_sql().lower(), output)
++
+     @override_settings(MIGRATION_MODULES={'migrations': 'migrations.test_migrations'})
+     def test_sqlmigrate_backwards(self):
+         """

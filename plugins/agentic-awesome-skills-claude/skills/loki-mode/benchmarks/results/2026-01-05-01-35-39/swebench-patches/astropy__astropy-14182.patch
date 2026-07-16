@@ -1,0 +1,42 @@
+Based on my knowledge of the astropy codebase and the issue description, I can create the patch. The issue is that the RST (RestructuredText) writer doesn't support the `header_rows` parameter that's available in the `FixedWidth` format.
+
+Looking at the error trace and the astropy ASCII I/O module structure:
+- The RST class is in `astropy/io/ascii/rst.py`
+- The FixedWidth class with `header_rows` support is in `astropy/io/ascii/fixedwidth.py`
+- RST inherits from FixedWidth but doesn't pass through the `header_rows` parameter
+
+The RST format extends FixedWidth format with different delimiters (using `=` for borders). To support `header_rows`, the RST class needs to:
+1. Accept the `header_rows` parameter in its `__init__` method
+2. Pass it to the parent FixedWidth class
+
+Here's the patch:
+
+--- a/astropy/io/ascii/rst.py
++++ b/astropy/io/ascii/rst.py
+@@ -27,6 +27,11 @@ class RST(FixedWidth):
+     Example::
+ 
+         ==== ===== ======
++        Col1  Col2  Col3
++        ==== ===== ======
++
++    Or with ``header_rows`` attribute, one can specify a header consisting
++    of multiple rows. Example::
+         Col1  Col2  Col3
+           nm     m    kg
+         ==== ===== ======
+@@ -38,9 +43,12 @@ class RST(FixedWidth):
+ 
+     data_class = SimpleRSTData
+     header_class = SimpleRSTHeader
++    header_rows = ['name', 'unit']
+ 
+-    def __init__(self):
+-        super().__init__(delimiter_pad=None, bookend=False)
++    def __init__(self, header_rows=None):
++        super().__init__(delimiter_pad=None, bookend=False,
++                         header_rows=header_rows if header_rows is not None
++                         else ['name'])
+ 
+     def write(self, lines):
+         lines = super().write(lines)

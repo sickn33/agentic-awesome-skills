@@ -1,0 +1,31 @@
+# mwaskom__seaborn-3407
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description, traceback, and architect's analysis, I can generate a patch for seaborn's axisgrid.py. The problem occurs because when a DataFrame has MultiIndex columns, the column names are tuples like `('A', '1')`, but when pandas tries to access `self.data[var]` where `var` is such a tuple, it's incorrectly interpreted.
+
+The fix should flatten MultiIndex columns to string representations at the start of `PairGrid.__init__`.
+
+```
+--- a/seaborn/axisgrid.py
++++ b/seaborn/axisgrid.py
+@@ -1220,6 +1220,12 @@ class PairGrid(Grid):
+         """
+         super().__init__()
+ 
++        # Handle MultiIndex columns by flattening them to strings
++        if isinstance(data.columns, pd.MultiIndex):
++            data = data.copy()
++            data.columns = [
++                "_".join(str(c) for c in col) for col in data.columns
++            ]
++
+         # Sort out the variables that define the grid
+         numeric_cols = self._find_numeric_cols(data)
+         if hue in numeric_cols:
+```
+
+This patch:
+1. Checks if the DataFrame has MultiIndex columns using `isinstance(data.columns, pd.MultiIndex)`
+2. Creates a copy of the data to avoid modifying the original DataFrame
+3. Flattens the MultiIndex columns by joining all levels with underscores, converting each level to string to handle non-string level values

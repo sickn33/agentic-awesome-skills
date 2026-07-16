@@ -1,0 +1,18 @@
+# django__django-11620
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I can generate the patch for the Django issue. The fix is straightforward - change the exception handling in `technical_404_response` from catching `Resolver404` to catching the broader `Http404` exception.
+
+```
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -479,7 +479,7 @@ def technical_404_response(request, exception):
+     try:
+         tried = resolver.resolve(request.path_info)
+         resolved = True
+-    except Resolver404:
++    except Http404:
+         tried = resolver.resolve404()
+         resolved = False
+ ```

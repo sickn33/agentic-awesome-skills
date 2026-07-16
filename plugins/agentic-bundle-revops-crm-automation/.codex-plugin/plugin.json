@@ -1,0 +1,33 @@
+{
+  "name": "aasb-revops-crm-automation",
+  "version": "14.5.0",
+  "description": "Install the \"RevOps & CRM Automation\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "revops-crm-automation",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "RevOps & CRM Automation",
+    "shortDescription": "Specialized Packs · 7 curated skills",
+    "longDescription": "For revenue operations, support handoffs, and CRM-heavy automation. Covers Hubspot Automation, Sendgrid Automation, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Packs",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

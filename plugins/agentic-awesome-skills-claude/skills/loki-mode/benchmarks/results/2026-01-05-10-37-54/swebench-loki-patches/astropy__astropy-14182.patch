@@ -1,0 +1,19 @@
+# astropy__astropy-14182
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/astropy/io/ascii/rst.py
++++ b/astropy/io/ascii/rst.py
+@@ -27,6 +27,12 @@ class RST(FixedWidth):
+     data_class = SimpleRSTData
+     header_class = SimpleRSTHeader
+ 
++    def __init__(self, header_rows=None):
++        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)
++
++    def write(self, lines):
++        lines = super().write(lines)
++        lines = [lines[1]] + lines + [lines[1]]
++        return lines
+-    def __init__(self):
+-        super().__init__(delimiter_pad=None, bookend=False)

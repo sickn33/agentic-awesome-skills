@@ -1,0 +1,170 @@
+{
+  "description": "Exemplo de WhatsApp Flow - Formulario de agendamento com 3 telas",
+  "version": "3.0",
+  "screens": [
+    {
+      "id": "PERSONAL_INFO",
+      "title": "Dados Pessoais",
+      "data": {},
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextHeading",
+            "text": "Agende sua consulta"
+          },
+          {
+            "type": "TextBody",
+            "text": "Preencha seus dados para agendar."
+          },
+          {
+            "type": "TextInput",
+            "name": "customer_name",
+            "label": "Nome completo",
+            "required": true,
+            "input-type": "text"
+          },
+          {
+            "type": "TextInput",
+            "name": "customer_email",
+            "label": "E-mail",
+            "required": true,
+            "input-type": "email"
+          },
+          {
+            "type": "TextInput",
+            "name": "customer_phone",
+            "label": "Telefone",
+            "required": true,
+            "input-type": "phone"
+          },
+          {
+            "type": "Footer",
+            "label": "Próximo",
+            "on-click-action": {
+              "name": "navigate",
+              "next": { "type": "screen", "name": "APPOINTMENT_DETAILS" },
+              "payload": {
+                "customer_name": "${form.customer_name}",
+                "customer_email": "${form.customer_email}",
+                "customer_phone": "${form.customer_phone}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "APPOINTMENT_DETAILS",
+      "title": "Detalhes do Agendamento",
+      "data": {},
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextHeading",
+            "text": "Escolha data e serviço"
+          },
+          {
+            "type": "Dropdown",
+            "name": "service_type",
+            "label": "Tipo de serviço",
+            "required": true,
+            "data-source": [
+              { "id": "consulta_inicial", "title": "Consulta Inicial" },
+              { "id": "retorno", "title": "Retorno" },
+              { "id": "exame_rotina", "title": "Exame de Rotina" },
+              { "id": "procedimento", "title": "Procedimento" }
+            ]
+          },
+          {
+            "type": "DatePicker",
+            "name": "appointment_date",
+            "label": "Data desejada",
+            "required": true
+          },
+          {
+            "type": "Dropdown",
+            "name": "appointment_time",
+            "label": "Horário preferido",
+            "required": true,
+            "data-source": [
+              { "id": "08:00", "title": "08:00" },
+              { "id": "09:00", "title": "09:00" },
+              { "id": "10:00", "title": "10:00" },
+              { "id": "11:00", "title": "11:00" },
+              { "id": "14:00", "title": "14:00" },
+              { "id": "15:00", "title": "15:00" },
+              { "id": "16:00", "title": "16:00" }
+            ]
+          },
+          {
+            "type": "TextArea",
+            "name": "observations",
+            "label": "Observações (opcional)",
+            "required": false
+          },
+          {
+            "type": "Footer",
+            "label": "Revisar",
+            "on-click-action": {
+              "name": "navigate",
+              "next": { "type": "screen", "name": "CONFIRMATION" },
+              "payload": {
+                "customer_name": "${data.customer_name}",
+                "customer_email": "${data.customer_email}",
+                "customer_phone": "${data.customer_phone}",
+                "service_type": "${form.service_type}",
+                "appointment_date": "${form.appointment_date}",
+                "appointment_time": "${form.appointment_time}",
+                "observations": "${form.observations}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CONFIRMATION",
+      "title": "Confirmação",
+      "terminal": true,
+      "data": {},
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextHeading",
+            "text": "Confirme seu agendamento"
+          },
+          {
+            "type": "TextBody",
+            "text": "Nome: ${data.customer_name}\nE-mail: ${data.customer_email}\nTelefone: ${data.customer_phone}\n\nServiço: ${data.service_type}\nData: ${data.appointment_date}\nHorário: ${data.appointment_time}\n\nObservações: ${data.observations}"
+          },
+          {
+            "type": "OptIn",
+            "name": "consent",
+            "label": "Concordo em receber confirmações por WhatsApp",
+            "required": true
+          },
+          {
+            "type": "Footer",
+            "label": "Confirmar Agendamento",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "customer_name": "${data.customer_name}",
+                "customer_email": "${data.customer_email}",
+                "customer_phone": "${data.customer_phone}",
+                "service_type": "${data.service_type}",
+                "appointment_date": "${data.appointment_date}",
+                "appointment_time": "${data.appointment_time}",
+                "observations": "${data.observations}",
+                "consent": "${form.consent}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

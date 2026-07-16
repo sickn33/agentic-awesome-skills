@@ -1,0 +1,16 @@
+# scikit-learn__scikit-learn-13779
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the scikit-learn codebase and the issue described, I'll generate the patch. The bug occurs because in the `fit` method, the code checks for `sample_weight` support on all estimators before filtering out `None` ones. The fix is to filter out `None` estimators before doing the `sample_weight` support check.
+
+--- a/sklearn/ensemble/voting.py
++++ b/sklearn/ensemble/voting.py
+@@ -78,7 +78,7 @@ class _BaseVoting(TransformerMixin, _BaseHeterogeneousEnsemble):
+ 
+         if sample_weight is not None:
+             for name, step in self.estimators:
+-                if not has_fit_parameter(step, 'sample_weight'):
++                if step is not None and not has_fit_parameter(step, 'sample_weight'):
+                     raise ValueError('Underlying estimator \'%s\' does not'
+                                      ' support sample weights.' % name)

@@ -1,0 +1,14 @@
+# astropy__astropy-6938
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the existing patch and the architect's analysis, here is the fix:
+
+--- a/astropy/io/fits/fitsrec.py
++++ b/astropy/io/fits/fitsrec.py
+@@ -1262,7 +1262,7 @@ class FITS_rec(np.recarray):
+ 
+         # Replace exponent separator in floating point numbers
+         if 'D' in format:
+-            output_field.replace(encode_ascii('E'), encode_ascii('D'))
++            output_field = output_field.replace(encode_ascii('E'), encode_ascii('D'))

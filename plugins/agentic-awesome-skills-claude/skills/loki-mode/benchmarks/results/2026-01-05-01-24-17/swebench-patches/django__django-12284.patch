@@ -1,0 +1,31 @@
+Based on my knowledge of Django's codebase and the issue description, I can provide the patch. The bug is in `django/db/models/fields/__init__.py` in the `contribute_to_class` method. 
+
+The issue is that when a child model overrides a field with different choices, the `hasattr` check prevents the `get_FOO_display` method from being updated because the parent class already defined it. The solution is to check if the method exists in the class's own `__dict__` rather than using `hasattr`, which also looks at parent classes.
+
+Here's the patch:
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -763,7 +763,7 @@ class Field(RegisterLookupMixin):
+             setattr(cls, self.attname, self.descriptor_class(self))
+         if self.choices is not None:
+             setattr(cls, 'get_%s_display' % self.name,
+-                    partialmethod(cls._get_FIELD_display, field=self))
++                partialmethod(cls._get_FIELD_display, field=self))
+ 
+     def get_filter_kwargs_for_object(self, obj):
+         """
+
+Wait, that's not quite right. Let me reconsider the issue more carefully.
+
+The problem is on line 766 where there's a check `if not hasattr(cls, 'get_%s_display' % self.name)` that was added in commit 2d38eb0ab9f78d68c083a5b78b1eca39027b279a. This check prevents the method from being set if it already exists (from a parent class). The fix is to always set the method when the field has choices, removing the hasattr check.
+
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -763,8 +763,7 @@ class Field(RegisterLookupMixin):
+         if self.choices is not None:
+-            if not hasattr(cls, 'get_%s_display' % self.name):
+-                setattr(cls, 'get_%s_display' % self.name,
+-                        partialmethod(cls._get_FIELD_display, field=self))
++            setattr(cls, 'get_%s_display' % self.name,
++                    partialmethod(cls._get_FIELD_display, field=self))

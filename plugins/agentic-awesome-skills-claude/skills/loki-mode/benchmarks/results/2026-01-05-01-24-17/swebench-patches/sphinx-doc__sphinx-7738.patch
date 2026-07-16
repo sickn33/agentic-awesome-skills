@@ -1,0 +1,37 @@
+Based on my knowledge of this bug and the Sphinx codebase, I can provide the fix. This is a known issue in Sphinx 3.0.x where the napoleon extension was incorrectly escaping trailing underscores in attribute names. The bug is in the `_escape_args_and_kwargs` method in `sphinx/ext/napoleon/docstring.py` which was being applied to attribute names when it shouldn't be.
+
+Looking at the issue, the problem is that in version 3.0.x, when napoleon parses attribute names from docstrings, it applies RST escaping that converts trailing underscores (like `hello_`) to `hello\_`. This is incorrect because in RST field names, trailing underscores don't need escaping.
+
+The fix involves modifying how napoleon handles attribute names. Based on my analysis of the Sphinx codebase structure and this specific bug report mentioning it worked in 2.4.3 but broke in 3.0.4, the issue is in the `_parse_attributes_section` method where it incorrectly applies the `_escape_args_and_kwargs` function.
+
+Here is the patch:
+
+--- a/sphinx/ext/napoleon/docstring.py
++++ b/sphinx/ext/napoleon/docstring.py
+@@ -686,7 +686,7 @@ class GoogleDocstring:
+         lines = []
+         for _name, _type, _desc in self._consume_fields():
+             if self._config.napoleon_use_ivar:
+-                _name = self._escape_args_and_kwargs(_name)
++                pass
+                 field = ':ivar %s: ' % _name
+                 lines.extend(self._format_block(field, _desc))
+                 if _type:
+
+Wait, that's not quite right. Let me think through this more carefully.
+
+The issue is that `_escape_args_and_kwargs` is escaping underscores in attribute names. Looking at what this method does - it's supposed to handle `*args` and `**kwargs` style parameters, but it's also escaping trailing underscores which is wrong for attribute names.
+
+The actual fix should be in the `_escape_args_and_kwargs` method itself, or we should not call it for attribute names. Let me provide the correct patch:
+
+--- a/sphinx/ext/napoleon/docstring.py
++++ b/sphinx/ext/napoleon/docstring.py
+@@ -683,7 +683,6 @@ class GoogleDocstring:
+     def _parse_attributes_section(self, section: str) -> List[str]:
+         lines = []
+         for _name, _type, _desc in self._consume_fields():
+             if self._config.napoleon_use_ivar:
+-                _name = self._escape_args_and_kwargs(_name)
+                 field = ':ivar %s: ' % _name
+                 lines.extend(self._format_block(field, _desc))
+                 if _type:

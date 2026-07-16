@@ -1,0 +1,17 @@
+Based on my research and understanding of the Django migration issue, I can now provide the fix. The issue is in Django's migration autodetector where when a primary key field is renamed, the autodetector incorrectly generates an AlterField operation for ForeignKey fields that reference the renamed field, using the old field name in `to_field`.
+
+The hint confirms this is a regression from commit `dcdd219ee1e062dc6189f382e0298e0adf5d5ddf`. The fix is to not generate the AlterField operation when the only change is the `to_field` pointing to a renamed field, since the RenameField operation already handles updating these references.
+
+Here is the patch:
+
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -939,6 +939,8 @@ class MigrationAutodetector:
+                             ),
+                         )
+                     )
++                    self.renamed_fields[app_label, model_name, old_field_name] = new_field_name
++
+     def generate_added_fields(self):
+         """Make AddField operations."""
+         for app_label, model_name, field_name in sorted(self.new_field_keys - self.old_field_keys):

@@ -1,0 +1,157 @@
+Now I have a clear understanding of the urllib3 exception hierarchy:
+
+- `HTTPError` is the base
+- `DecodeError(HTTPError)` - line 69
+- `TimeoutError(HTTPError)` - line 124
+  - `ReadTimeoutError(TimeoutError, RequestError)` - line 132
+  - `ConnectTimeoutError(TimeoutError)` - line 138
+
+The issue is that in `adapters.py`, the code catches `(_SSLError, _HTTPError)` but only explicitly handles certain subclasses. When `DecodeError` or `TimeoutError` (the base class) is raised, it falls through to `else: raise` and leaks out.
+
+Looking at the issue and the traceback, I need to understand what version of requests this issue pertains to. The issue mentions old code paths. Let me look at the original requests repository version to understand the exact state when this issue was reported.
+
+Based on the hints in the issue:
+1. `DecodeError` needs to be wrapped as `ContentDecodingError`
+2. `TimeoutError` needs to be wrapped as `Timeout` (the base timeout class in requests)
+
+The fix should:
+1. Import `DecodeError` from urllib3 in adapters.py  
+2. Import `TimeoutError` from urllib3 in adapters.py (it's not currently imported there)
+3. Add exception handlers for these exceptions in the `send` method
+
+Looking at the models.py code, it already handles `DecodeError` properly in `iter_content`, wrapping it as `ContentDecodingError`. But the adapters.py `send` method doesn't handle it when the exception occurs during the `conn.urlopen()` call.
+
+Let me now create the patch. The fix is in `adapters.py`:
+
+1. Add imports for `DecodeError` and `TimeoutError` from urllib3
+2. In the exception handling block (around line 685-694), catch `DecodeError` and wrap it as `ContentDecodingError`, and catch the base `TimeoutError` and wrap it as `Timeout`
+
+--- a/requests/adapters.py
++++ b/requests/adapters.py
+@@ -11,6 +11,8 @@ import typing
+ import warnings
+ 
+ from urllib3.exceptions import ClosedPoolError, ConnectTimeoutError
++from urllib3.exceptions import DecodeError as _DecodeError
++from urllib3.exceptions import TimeoutError as _TimeoutError
+ from urllib3.exceptions import HTTPError as _HTTPError
+ from urllib3.exceptions import InvalidHeader as _InvalidHeader
+ from urllib3.exceptions import (
+@@ -31,6 +33,7 @@ from .auth import _basic_auth_str
+ from .compat import basestring, urlparse
+ from .cookies import extract_cookies_to_jar
+ from .exceptions import (
++    ContentDecodingError,
+     ConnectionError,
+     ConnectTimeout,
+     InvalidHeader,
+@@ -40,6 +43,7 @@ from .exceptions import (
+     ProxyError,
+     ReadTimeout,
+     RetryError,
++    Timeout,
+     SSLError,
+ )
+ from .models import Response
+@@ -685,6 +689,10 @@ class HTTPAdapter(BaseAdapter):
+             raise SSLError(e, request=request)
+         elif isinstance(e, ReadTimeoutError):
+             raise ReadTimeout(e, request=request)
++        elif isinstance(e, _DecodeError):
++            raise ContentDecodingError(e, request=request)
++        elif isinstance(e, _TimeoutError):
++            raise Timeout(e, request=request)
+         elif isinstance(e, _InvalidHeader):
+             raise InvalidHeader(e, request=request)
+         else:
+
+Wait, I need to re-check the exact line numbers by re-reading the file. Let me create the proper patch based on the actual line numbers I saw:
+
+Looking at the adapters.py file I read:
+- Line 14: `from urllib3.exceptions import ClosedPoolError, ConnectTimeoutError`
+- Lines 34-45 are the imports from `.exceptions`
+- Lines 685-694 are the exception handling block
+
+The patch should add the imports and modify the exception handling. Here's the unified diff:
+
+--- a/requests/adapters.py
++++ b/requests/adapters.py
+@@ -14,6 +14,8 @@
+ from urllib3.exceptions import ClosedPoolError, ConnectTimeoutError
+ from urllib3.exceptions import HTTPError as _HTTPError
+ from urllib3.exceptions import InvalidHeader as _InvalidHeader
++from urllib3.exceptions import DecodeError as _DecodeError
++from urllib3.exceptions import TimeoutError as _TimeoutError
+ from urllib3.exceptions import (
+     LocationValueError,
+     MaxRetryError,
+@@ -32,6 +34,7 @@ from .auth import _basic_auth_str
+ from .compat import basestring, urlparse
+ from .cookies import extract_cookies_to_jar
+ from .exceptions import (
++    ContentDecodingError,
+     ConnectionError,
+     ConnectTimeout,
+     InvalidHeader,
+@@ -41,6 +44,7 @@ from .exceptions import (
+     ProxyError,
+     ReadTimeout,
+     RetryError,
++    Timeout,
+     SSLError,
+ )
+ from .models import Response
+@@ -688,6 +692,10 @@ class HTTPAdapter(BaseAdapter):
+             raise SSLError(e, request=request)
+         elif isinstance(e, ReadTimeoutError):
+             raise ReadTimeout(e, request=request)
++        elif isinstance(e, _DecodeError):
++            raise ContentDecodingError(e)
++        elif isinstance(e, _TimeoutError):
++            raise Timeout(e, request=request)
+         elif isinstance(e, _InvalidHeader):
+             raise InvalidHeader(e, request=request)
+         else:
+
+--- a/requests/adapters.py
++++ b/requests/adapters.py
+@@ -14,6 +14,8 @@
+ from urllib3.exceptions import ClosedPoolError, ConnectTimeoutError
+ from urllib3.exceptions import HTTPError as _HTTPError
+ from urllib3.exceptions import InvalidHeader as _InvalidHeader
++from urllib3.exceptions import DecodeError as _DecodeError
++from urllib3.exceptions import TimeoutError as _TimeoutError
+ from urllib3.exceptions import (
+     LocationValueError,
+     MaxRetryError,
+@@ -32,6 +34,7 @@ from .auth import _basic_auth_str
+ from .compat import basestring, urlparse
+ from .cookies import extract_cookies_to_jar
+ from .exceptions import (
++    ContentDecodingError,
+     ConnectionError,
+     ConnectTimeout,
+     InvalidHeader,
+@@ -41,6 +44,7 @@ from .exceptions import (
+     ProxyError,
+     ReadTimeout,
+     RetryError,
++    Timeout,
+     SSLError,
+ )
+ from .models import Response
+@@ -685,9 +689,13 @@ class HTTPAdapter(BaseAdapter):
+         except (_SSLError, _HTTPError) as e:
+             if isinstance(e, _SSLError):
+                 # This branch is for urllib3 versions earlier than v1.22
+                 raise SSLError(e, request=request)
+             elif isinstance(e, ReadTimeoutError):
+                 raise ReadTimeout(e, request=request)
++            elif isinstance(e, _DecodeError):
++                raise ContentDecodingError(e)
++            elif isinstance(e, _TimeoutError):
++                raise Timeout(e, request=request)
+             elif isinstance(e, _InvalidHeader):
+                 raise InvalidHeader(e, request=request)
+             else:
+                 raise

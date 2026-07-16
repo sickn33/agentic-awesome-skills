@@ -1,0 +1,25 @@
+# sympy__sympy-18199
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my analysis of the issue and the existing patch example, I can generate the proper patch. The issue is that `nthroot_mod` doesn't check for the case where `a % p == 0`, which means `x = 0` should be a valid root.
+
+```
+--- a/sympy/ntheory/residue_ntheory.py
++++ b/sympy/ntheory/residue_ntheory.py
+@@ -746,6 +746,14 @@ def nthroot_mod(a, n, p, all_roots=False):
+     a, n, p = as_int(a), as_int(n), as_int(p)
+     if n < 1:
+         raise ValueError("n should be positive")
++
++    # If a % p == 0, then x = 0 is a root since 0**n = 0 = a mod p
++    if a % p == 0:
++        if all_roots:
++            return [0]
++        else:
++            return 0
++
+     if a % p == 1:
+         if all_roots:
+             return [1]
+```

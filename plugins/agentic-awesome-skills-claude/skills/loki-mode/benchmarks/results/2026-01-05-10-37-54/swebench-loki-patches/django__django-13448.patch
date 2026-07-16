@@ -1,0 +1,94 @@
+# django__django-13448
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I can generate the patch. The bug is that when `TEST: {"MIGRATE": False}` is set, `serialize_db_to_string()` is still called and tries to query tables that don't exist. The fix needs to run `syncdb` to create tables when migrations are skipped.
+
+```
+--- a/django/db/backends/base/creation.py
++++ b/django/db/backends/base/creation.py
+@@ -58,6 +58,7 @@ class BaseDatabaseCreation:
+         test_database_name = self._get_test_db_name()
+ 
+         if verbosity >= 1:
++            from django.apps import apps
+             action = 'Creating'
+             if keepdb:
+                 action = "Using existing"
+@@ -69,14 +70,25 @@ class BaseDatabaseCreation:
+         # We then serialize the current state of the database into a string
+         # and store it on the connection. This slightly horrific process is so people
+         # who are testing on databases without transactions or parties who are
+-        # for the entire duration of the tests.
++        # using TransactionTestCase can ensure each test runs on a fresh database.
+         if serialize:
+             self.connection._test_serialized_contents = self.serialize_db_to_string()
+ 
+         call_command('createcachetable', database=self.connection.alias)
+ 
+-        # Ensure a connection for the side effect of initializing the test database.
+-        self.connection.ensure_connection()
++        if migrate:
++            call_command(
++                'migrate',
++                verbosity=max(verbosity - 1, 0),
++                interactive=False,
++                database=self.connection.alias,
++                run_syncdb=True,
++            )
++        else:
++            # If migrations are disabled, run syncdb to create tables
++            # by pretending all apps have no migrations.
++            from django.apps import apps
++            from django.conf import settings
+ 
+         return test_database_name
+```
+
+Wait, let me reconsider. Looking at the traceback more carefully:
+
+1. `create_test_db` is called with `serialize=True` (default)
+2. When `migrate=False`, migrations are skipped
+3. But `serialize_db_to_string()` is still called, which tries to query all tables
+4. Since tables don't exist (no migrations ran), it fails
+
+The fix should either:
+1. Skip serialization when `migrate=False`, OR
+2. Run `syncdb` to create tables when `migrate=False`
+
+The architect suggests option 2 - running syncdb with mocked `MIGRATION_MODULES`. Here's the correct patch:
+
+--- a/django/db/backends/base/creation.py
++++ b/django/db/backends/base/creation.py
+@@ -51,6 +51,8 @@ class BaseDatabaseCreation:
+         database with the confirm parameter. Returns the name of the test
+         database created.
+         """
++        from django.apps import apps
++
+         # We could skip this call if keepdb is True, but we instead
+         # give it the keepdb param. This is to handle the case
+         # where the test DB doesn't exist, in which case we need to
+@@ -71,6 +73,17 @@ class BaseDatabaseCreation:
+                 database=self.connection.alias,
+                 run_syncdb=True,
+             )
++        else:
++            # Disable migrations for all apps when MIGRATE is False
++            # but still call migrate --run-syncdb to create tables.
++            from django.core.management import call_command
++            from unittest.mock import patch
++
++            with patch.object(settings, 'MIGRATION_MODULES', {
++                app.label: None for app in apps.get_app_configs()
++            }):
++                call_command(
++                    'migrate',
++                    verbosity=max(verbosity - 1, 0),
++                    interactive=False,
++                    database=self.connection.alias,
++                    run_syncdb=True,
++                )
+ 
+         # We then serialize the current state of the database into a string
+         # and store it on the connection. This slightly horrific process is so people

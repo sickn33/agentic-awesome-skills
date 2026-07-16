@@ -1,0 +1,15 @@
+That's a different issue. Based on the problem statement and hints provided, the fix is straightforward. The issue is that when `models.Model` is serialized in the `bases` tuple of a migration, it outputs `models.Model` but doesn't include the necessary import statement `from django.db import models`.
+
+Here's the patch:
+
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -273,7 +273,7 @@ class TypeSerializer(BaseSerializer):
+ class TypeSerializer(BaseSerializer):
+     def serialize(self):
+         special_cases = [
+-            (models.Model, "models.Model", []),
++            (models.Model, "models.Model", ['from django.db import models']),
+             (type(None), 'type(None)', []),
+         ]
+         for case, string, imports in special_cases:

@@ -1,0 +1,47 @@
+Based on the issue description and the hints provided, I can analyze the problem and generate the fix. The issue is in Django's `django/contrib/auth/migrations/0011_update_proxy_permissions.py` migration file. Let me reconstruct the fix based on the detailed bug report.
+
+The problem:
+1. When a regular model is deleted and recreated as a proxy model with the same name, permissions already exist
+2. The migration tries to update permissions for proxy models but fails with IntegrityError because the permission already exists with the content type it's trying to update to
+3. The fix should handle the case where permissions already exist by reusing them instead of trying to create duplicates
+
+Based on the issue (commit reference 181fb60159e54d442d3610f4afba6f066a6dac05 mentioned as the regression), the migration needs to be updated to handle the case where a permission with the target content_type_id and codename already exists.
+
+Here's the patch:
+
+--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py
++++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py
+@@ -24,9 +24,24 @@ def update_proxy_model_permissions(apps, schema_editor, reverse=False):
+             proxy_content_type = ContentType.objects.get_for_model(Model, for_concrete_model=False)
+         old_content_type = cycled[concrete_content_type.pk]
+         new_content_type = cycled[proxy_content_type.pk]
+-        Permission.objects.filter(
++
++        # Get all permissions for this proxy model
++        permissions = Permission.objects.filter(
+             permissions_query,
+             content_type=old_content_type,
+-        ).update(content_type=new_content_type)
++        )
++        for permission in permissions:
++            # Check if there's already a permission with the new content type
++            # and the same codename. If so, delete the old permission.
++            # Otherwise, update the content type.
++            try:
++                with transaction.atomic():
++                    permission.content_type = new_content_type
++                    permission.save()
++            except IntegrityError:
++                # Permission already exists with the new content type,
++                # delete the old one.
++                permission.delete()
+ 
+ 
+ def revert_proxy_model_permissions(apps, schema_editor):
+--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py
++++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py
+@@ -1,3 +1,5 @@
++from django.db import IntegrityError, transaction
++
+ from django.db import migrations
+ from django.db.models import Q

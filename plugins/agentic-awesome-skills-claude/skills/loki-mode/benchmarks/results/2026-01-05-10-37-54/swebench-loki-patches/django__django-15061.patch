@@ -1,0 +1,19 @@
+# django__django-15061
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -849,9 +849,9 @@ class MultiWidget(Widget):
+         return id_
+ 
+     def id_for_label(self, id_, index=None):
+-        if index is None:
+-            index = '0'
+-        return '%s_%s' % (id_, index) if id_ else id_
++        if index is not None:
++            return '%s_%s' % (id_, index) if id_ else id_
++        return ''
+ 
+     def value_from_datadict(self, data, files, name):
+         return [

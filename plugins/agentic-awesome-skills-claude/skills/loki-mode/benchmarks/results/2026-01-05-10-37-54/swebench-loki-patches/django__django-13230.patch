@@ -1,0 +1,24 @@
+# django__django-13230
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/contrib/syndication/views.py
++++ b/django/contrib/syndication/views.py
+@@ -89,6 +89,9 @@ class Feed:
+     def item_pubdate(self, item):
+         return None
+ 
++    def item_comments(self, item):
++        return None
++
+     def item_extra_kwargs(self, item):
+         """
+         Return an extra keyword arguments dictionary that is used with
+@@ -171,6 +174,7 @@ class Feed:
+             author_email=author_email,
+             author_link=author_link,
+             categories=self._get_dynamic_attr("item_categories", item),
++            comments=self._get_dynamic_attr("item_comments", item),
+             item_copyright=self._get_dynamic_attr("item_copyright", item),
+             **self.item_extra_kwargs(item),
+         )

@@ -1,0 +1,62 @@
+# django__django-12856
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of Django's codebase, I'll generate the patch. The issue is that `_check_constraints()` doesn't validate that fields in `UniqueConstraint` exist. The fix involves importing `UniqueConstraint` and adding field validation similar to what `unique_together` does.
+
+```
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -17,6 +17,7 @@ from django.db.models.fields.related import (
+     ForeignObjectRel, OneToOneField, lazy_related_operation, resolve_relation,
+ )
+ from django.db.models.functions import Coalesce
++from django.db.models.constraints import UniqueConstraint
+ from django.db.models.manager import Manager
+ from django.db.models.options import Options
+ from django.db.models.query import Q
+@@ -1953,6 +1954,16 @@ class Model(metaclass=ModelBase):
+     @classmethod
+     def _check_constraints(cls, databases):
+         errors = []
++        for constraint in cls._meta.constraints:
++            if isinstance(constraint, UniqueConstraint) and constraint.fields:
++                errors.extend(
++                    cls._check_local_fields(
++                        constraint.fields,
++                        "constraints",
++                    )
++                )
++        return errors
++
+         for db in databases:
+             if not router.allow_migrate_model(db, cls):
+                 continue
+```
+
+Wait, I need to reconsider this. The method `_check_constraints` already has content checking database features. The field validation should be added before the database-specific checks, and it shouldn't return early. Let me revise:
+
+```
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -17,6 +17,7 @@ from django.db.models.fields.related import (
+     ForeignObjectRel, OneToOneField, lazy_related_operation, resolve_relation,
+ )
+ from django.db.models.functions import Coalesce
++from django.db.models.constraints import UniqueConstraint
+ from django.db.models.manager import Manager
+ from django.db.models.options import Options
+ from django.db.models.query import Q
+@@ -1953,6 +1954,11 @@ class Model(metaclass=ModelBase):
+     @classmethod
+     def _check_constraints(cls, databases):
+         errors = []
++        for constraint in cls._meta.constraints:
++            if isinstance(constraint, UniqueConstraint) and constraint.fields:
++                errors.extend(
++                    cls._check_local_fields(constraint.fields, "constraints")
++                )
+         for db in databases:
+             if not router.allow_migrate_model(db, cls):
+                 continue
+```

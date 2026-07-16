@@ -1,0 +1,197 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+ignore: {}
+patch: {}
+exclude:
+  global:
+    - plugins/**:
+        reason: >-
+          Generated plugin mirrors duplicate canonical skills; scan canonical
+          skills/** sources instead.
+        created: 2026-06-23T04:44:17.255Z
+    - skills/competitor-analysis/scripts/capture_screenshots.mjs:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/competitor-analysis/scripts/extract_vs_names.mjs:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/competitor-analysis/scripts/gate_candidates.mjs:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/competitor-analysis/scripts/list_urls.mjs:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/competitor-analysis/scripts/merge_partials.mjs:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/diary/scripts/fetch_diaries.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/diary/scripts/master_diary_sync.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/diary/scripts/prepare_context.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/docx-official/ooxml/scripts/pack.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/hugging-face-paper-publisher/scripts/paper_manager.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/landing-page-generator/scripts/landing_page_scaffolder.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/lint-and-validate/scripts/lint_runner.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/mobile-design/scripts/mobile_audit.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/monte-carlo-push-ingestion/scripts/templates/hive/collect_and_push_lineage.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/monte-carlo-push-ingestion/scripts/templates/hive/collect_and_push_query_logs.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/monte-carlo-push-ingestion/scripts/templates/hive/collect_lineage.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/monte-carlo-push-ingestion/scripts/templates/hive/collect_query_logs.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/monte-carlo-validation-notebook/scripts/generate_notebook_url.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/monte-carlo-validation-notebook/scripts/resolve_dbt_schema.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pdf-official/scripts/check_bounding_boxes.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pdf-official/scripts/create_validation_image.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pdf-official/scripts/extract_form_field_info.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pdf-official/scripts/fill_fillable_fields.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pdf-official/scripts/fill_pdf_form_with_annotations.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/playwright-skill/run.js:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pptx-official/ooxml/scripts/pack.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pptx-official/scripts/rearrange.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/pptx-official/scripts/replace.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/remote-gpu-trainer/scripts/verify_local.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/senior-frontend/scripts/bundle_analyzer.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/skill-installer/scripts/install_skill.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/skill-sentinel/scripts/run_audit.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/telegram/scripts/setup_project.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/whatsapp-cloud-api/scripts/setup_project.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - skills/youtube-notetaker/scripts/write_library_item.py:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z
+    - tools/bin/install.js:
+        reason: >-
+          Snyk Code path traversal false positive after installer path guards
+          and symlink boundary tests; the installer intentionally accepts local
+          target directories.
+        created: 2026-07-03T07:31:16Z
+    - tools/scripts/pr_preflight.cjs:
+        reason: >-
+          Snyk Code path traversal false positive after CLI path guards;
+          this utility intentionally accepts local filesystem paths.
+        created: 2026-07-03T06:44:29Z

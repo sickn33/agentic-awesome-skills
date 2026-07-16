@@ -1,0 +1,4 @@
+interface:
+  display_name: "Batch Refactor Orchestrator"
+  short_description: "Plan and parallelize large refactors safely."
+  default_prompt: "Use $orchestrate-batch-refactor to analyze target scope, plan parallel workstreams, and execute multi-agent refactors safely."

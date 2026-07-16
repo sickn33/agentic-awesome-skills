@@ -1,0 +1,32 @@
+# sympy__sympy-13773
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+This is a standalone patch request for the SymPy repository. I need to generate the patch based on my knowledge of the SymPy codebase structure. Let me search for information about how the SymPy Matrix `__matmul__` is typically implemented.
+
+Based on my knowledge of SymPy's codebase structure and the architect's analysis, I can generate the appropriate patch. The `__matmul__` and `__rmatmul__` methods are in `sympy/matrices/common.py` within the `MatrixArithmetic` class.
+
+```
+--- a/sympy/matrices/common.py
++++ b/sympy/matrices/common.py
+@@ -1973,10 +1973,26 @@ class MatrixArithmetic(MatrixRequired):
+             return self._eval_scalar_rmul(other)
+ 
+     @call_highest_priority('__rmatmul__')
+     def __matmul__(self, other):
+-        return self.__mul__(other)
++        other = _matrixify(other)
++        if not getattr(other, 'is_Matrix', False):
++            raise ValueError("Scalar operands are not allowed, use '*' instead")
++        return self.__mul__(other)
+ 
+     @call_highest_priority('__matmul__')
+     def __rmatmul__(self, other):
+-        return self.__rmul__(other)
++        other = _matrixify(other)
++        if not getattr(other, 'is_Matrix', False):
++            raise ValueError("Scalar operands are not allowed, use '*' instead")
++        return self.__rmul__(other)
+ 
+     @call_highest_priority('__mul__')
+```

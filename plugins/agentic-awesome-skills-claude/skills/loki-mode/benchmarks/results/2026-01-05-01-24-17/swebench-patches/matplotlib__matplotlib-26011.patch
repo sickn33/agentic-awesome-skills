@@ -1,0 +1,90 @@
+Based on the issue description and the hints provided, I have enough information to generate the patch. The issue is that when an axis is shared with another, the `xlim_changed` and `ylim_changed` callbacks do not get called when the change is induced by a shared axis because `emit=False` is passed.
+
+The solution from the discussion is to use a marker to prevent infinite recursion while still emitting the callbacks. Let me create the patch based on the code snippets and solution discussed in the issue:
+
+--- a/lib/matplotlib/axes/_base.py
++++ b/lib/matplotlib/axes/_base.py
+@@ -36,6 +36,10 @@ _log = logging.getLogger(__name__)
+ 
+ 
+ class _axis_method_wrapper:
++    """
++    Helper class to wrap axis methods for use on Axes objects.
++    """
++
+     """
+     Helper class to wrap a method on an Axis subclass to be exposed on Axes.
+ 
+@@ -3618,14 +3622,17 @@ class _AxesBase(martist.Artist):
+             self._autoscaleXon = bool(auto)
+ 
+         if emit:
+             self.callbacks.process('xlim_changed', self)
+             # Call all of the other x-axes that are shared with this one
+             for other in self._shared_x_axes.get_siblings(self):
+                 if other is not self:
+-                    other.set_xlim(self.viewLim.intervalx,
+-                                   emit=False, auto=auto)
++                    other._stale_viewlims[name] = False
++                    if other.viewLim.intervalx != self.viewLim.intervalx:
++                        other.set_xlim(self.viewLim.intervalx,
++                                       emit=False, auto=auto)
++                        other.callbacks.process('xlim_changed', other)
+                     if other.figure != self.figure:
+                         other.figure.canvas.draw_idle()
+         self.stale = True
+@@ -3780,14 +3787,17 @@ class _AxesBase(martist.Artist):
+             self._autoscaleYon = bool(auto)
+ 
+         if emit:
+             self.callbacks.process('ylim_changed', self)
+             # Call all of the other y-axes that are shared with this one
+             for other in self._shared_y_axes.get_siblings(self):
+                 if other is not self:
+-                    other.set_ylim(self.viewLim.intervaly,
+-                                   emit=False, auto=auto)
++                    other._stale_viewlims[name] = False
++                    if other.viewLim.intervaly != self.viewLim.intervaly:
++                        other.set_ylim(self.viewLim.intervaly,
++                                       emit=False, auto=auto)
++                        other.callbacks.process('ylim_changed', other)
+                     if other.figure != self.figure:
+                         other.figure.canvas.draw_idle()
+         self.stale = True
+
+Wait, I need to look more carefully at the actual code structure. Let me check the issue hints again for the exact code context and line numbers.
+
+Based on the issue description and the proposed solutions in the discussion, here's the correct patch:
+
+--- a/lib/matplotlib/axes/_base.py
++++ b/lib/matplotlib/axes/_base.py
+@@ -3617,10 +3617,12 @@ class _AxesBase(martist.Artist):
+         if emit:
+             self.callbacks.process('xlim_changed', self)
+             # Call all of the other x-axes that are shared with this one
+             for other in self._shared_x_axes.get_siblings(self):
+                 if other is not self:
+-                    other.set_xlim(self.viewLim.intervalx,
+-                                   emit=False, auto=auto)
++                    if other.viewLim.intervalx != self.viewLim.intervalx:
++                        other.set_xlim(self.viewLim.intervalx,
++                                       emit=False, auto=auto)
++                        other.callbacks.process('xlim_changed', other)
+                     if other.figure != self.figure:
+                         other.figure.canvas.draw_idle()
+         self.stale = True
+@@ -3779,10 +3781,12 @@ class _AxesBase(martist.Artist):
+         if emit:
+             self.callbacks.process('ylim_changed', self)
+             # Call all of the other y-axes that are shared with this one
+             for other in self._shared_y_axes.get_siblings(self):
+                 if other is not self:
+-                    other.set_ylim(self.viewLim.intervaly,
+-                                   emit=False, auto=auto)
++                    if other.viewLim.intervaly != self.viewLim.intervaly:
++                        other.set_ylim(self.viewLim.intervaly,
++                                       emit=False, auto=auto)
++                        other.callbacks.process('ylim_changed', other)
+                     if other.figure != self.figure:
+                         other.figure.canvas.draw_idle()
+         self.stale = True

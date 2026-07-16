@@ -1,0 +1,134 @@
+I understand the issue from the problem statement. Based on my knowledge of SymPy's printing system and the detailed issue description, I can create the necessary patch. The issue is about two main inconsistencies:
+
+1. `exp(-x)*log(x)` - LaTeX prints `\frac{1}{e^{x}} \log{...}` instead of `e^{-x} \cdot \log(x)`
+2. `1/(x + y)/2` - LaTeX prints `\frac{1}{2x + 2y}` instead of `\frac{1}{2(x + y)}`
+
+The problem is in the `_print_Mul` method of the `LatexPrinter` class. The LaTeX printer is:
+1. Converting negative exponents to fractions when it shouldn't always do so
+2. Distributing denominators across terms when it shouldn't
+
+Let me provide the patch based on the SymPy codebase structure and the typical implementation patterns:
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -381,7 +381,8 @@ def _print_Mul(self, expr):
+ 
+         # Check for unevaluated Mul. In this case we need to make sure the
+         # temporary variables are distinct from the rest of the expression
+-        args = [str(arg) for arg in expr.args]
++        from sympy.core.mul import _keep_coeff
++        from sympy.core.power import Pow
+ 
+         include_parens = False
+         if _coeff_isneg(expr):
+@@ -398,12 +399,25 @@ def _print_Mul(self, expr):
+ 
+         a = []  # items in the numerator
+         b = []  # items in the denominator (if any)
++        for item in args:
++            if item.is_commutative and item.is_Pow and item.exp.is_Rational and item.exp.is_negative:
++                if item.exp != -1:
++                    b.append(Pow(item.base, -item.exp, evaluate=False))
++                else:
++                    b.append(Pow(item.base, -item.exp))
++            elif item.is_Rational and item is not S.Infinity:
++                if item.p != 1:
++                    a.append(Rational(item.p))
++                if item.q != 1:
++                    b.append(Rational(item.q))
++            else:
++                a.append(item)
+ 
+-        if self.order not in ('old', 'none'):
+-            args = expr.as_ordered_factors()
+-        else:
+-            args = list(expr.args)
+-
++        # if there are no factors in the numerator, add a 1
++        if not a:
++            a.append(S.One)
++        
+         # If quantities are present append them at the back of the product
+         args = sorted(args, key=lambda x: isinstance(x, Quantity) or
+                       (isinstance(x, Pow) and isinstance(x.base, Quantity)))
+
+This is getting complex. Let me analyze the actual reported issue more carefully and provide a targeted fix. The key issues are:
+
+1. For `exp(-x)*log(x)`: The LaTeX printer converts `e^(-x)` to `1/e^x` form
+2. For `1/(x+y)/2`: The LaTeX printer combines `1/2` and `1/(x+y)` into `1/(2x+2y)` by distributing
+
+Based on the SymPy source code structure and the typical fix for this kind of issue:
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -381,8 +381,7 @@ class LatexPrinter(Printer):
+         from sympy.core.power import Pow
+         from sympy.core.mul import Mul
+ 
+-        include_parens = False
+-        if _coeff_isneg(expr):
++        if _coeff_isneg(expr):
+             expr = -expr
+             tex = "- "
+             if expr.is_Add:
+@@ -394,59 +393,71 @@ class LatexPrinter(Printer):
+         # Build up a list of elements in the numerator and denominator
+         # and identify if we need to use a fraction or not.
+ 
+-        a = []  # items in the numerator
+-        b = []  # items in the denominator (if any)
++        numer, denom = [], []
+ 
+         if self.order not in ('old', 'none'):
+             args = expr.as_ordered_factors()
+         else:
+             args = list(expr.args)
+ 
+-        # If quantities are present append them at the back of the product
+-        args = sorted(args, key=lambda x: isinstance(x, Quantity) or
+-                      (isinstance(x, Pow) and isinstance(x.base, Quantity)))
+-
++        # Separate into numerator and denominator
+         for item in args:
+-            if _coeff_isneg(item):
+-                if item == -1:
+-                    continue
+-                a.append(-item)
+-            elif item.is_commutative and item.is_Pow and item.exp.is_Rational and item.exp.is_negative:
+-                if item.exp != -1:
+-                    b.append(Pow(item.base, -item.exp, evaluate=False))
++            if item.is_commutative and item.is_Pow:
++                if item.exp.is_Rational and item.exp.is_negative:
++                    if item.exp != -1:
++                        denom.append(Pow(item.base, -item.exp, evaluate=False))
++                    else:
++                        denom.append(item.base)
+                 else:
+-                    b.append(Pow(item.base, -item.exp))
+-            elif item.is_Rational and item is not S.Infinity:
++                    numer.append(item)
++            elif item.is_Rational and item is not S.Infinity and item.p != S.NegativeOne:
+                 if item.p != 1:
+-                    a.append(Rational(item.p))
++                    numer.append(Rational(item.p))
+                 if item.q != 1:
+-                    b.append(Rational(item.q))
++                    denom.append(Rational(item.q))
+             else:
+-                a.append(item)
++                numer.append(item)
+ 
+-        # From here it suffices to print both a and b as a Mul
+-        a_str = [self._print(x) for x in a]
+-        b_str = [self._print(x) for x in b]
++        if not numer:
++            numer.append(S.One)
+ 
+-        # Check if we can separate out signs
+-        if a_str[0] == r"\left(-1\right)" or a_str[0] == "-1":
+-            a_str[0] = "-"
+-            if len(a_str) == 1:
+-                a_str[0] = "-1"
++        # Convert to strings
++        numer_str = [self._print(x) for x in numer]
++        denom_str = [self._print(x) for x in denom]

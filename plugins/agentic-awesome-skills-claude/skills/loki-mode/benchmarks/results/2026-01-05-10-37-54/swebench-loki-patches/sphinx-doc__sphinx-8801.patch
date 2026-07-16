@@ -1,0 +1,101 @@
+# sphinx-doc__sphinx-8801
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+I need to look for a real sphinx repository. This appears to be a different project. Let me generate the patch based on my knowledge of the Sphinx codebase for the 3.x branch where this bug exists:
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -695,7 +695,14 @@ class Documenter:
+                 # suppress warning for instance attribute when autodoc_inherit_docstrings
+                 pass
+             elif self.env.config.autodoc_inherit_docstrings:
+-                doc = Documenter.get_doc(self, encoding, ignore)
++                doc = Documenter.get_doc(self, encoding, ignore)  # type: ignore
++                # if there is no docstring, try to get the docstring from the parent class
++                # this handles annotation-only members with comment docstrings (#: syntax)
++                if not doc and hasattr(self, 'parent') and hasattr(self.parent, '__mro__'):
++                    for cls in self.parent.__mro__[1:]:
++                        if self.objpath[-1] in getattr(cls, '__annotations__', {}):
++                            doc = self._get_docstring_from_class(cls)
++                            if doc:
++                                break
+         else:
+             doc = Documenter.get_doc(self, encoding, ignore)
+         return doc
+@@ -1633,6 +1640,22 @@ class DataDocumenterMixinBase:
+         """Check the subject is annotation only property."""
+         return False
+ 
++    def _get_docstring_from_class(self: "Documenter", cls: Any) -> List[List[str]]:
++        """Get docstring for an annotation-only member from the specified class."""
++        try:
++            # Try to get the comment docstring using the class's source
++            analyzer = ModuleAnalyzer.for_module(cls.__module__)
++            analyzer.analyze()
++            key = (cls.__qualname__, self.objpath[-1])
++            if key in analyzer.attr_docs:
++                return [analyzer.attr_docs[key]]
++        except PycodeError:
++            pass
++        return []
++
+ 
+ class GenericAliasMixin(DataDocumenterMixinBase):
+     """
+@@ -1761,6 +1784,17 @@ class UninitializedMixin(DataDocumenterMixinBase):
+         else:
+             return super().get_doc(encoding, ignore)  # type: ignore
+ 
++        # If no docstring found and this is an inherited member, check parent classes
++        if not doc and self.parent:
++            for cls in self.parent.__mro__[1:]:
++                if hasattr(cls, '__annotations__') and self.objpath[-1] in cls.__annotations__:
++                    parent_doc = self._get_docstring_from_class(cls)
++                    if parent_doc:
++                        doc = parent_doc
++                        break
++
++        return doc
++
+ 
+ class DataDocumenter(UninitializedMixin, GenericAliasMixin, NewTypeMixin,
+                      TypeVarMixin, ClassLevelDocumenter):
+```
+
+Actually, let me provide a more accurate and complete patch based on the specific issue. The issue is that when `get_doc()` is called for an annotation-only inherited member, it doesn't look up the `#:` comment docstring from the parent class. Let me create a precise fix:
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1761,9 +1761,24 @@ class UninitializedMixin(DataDocumenterMixinBase):
+             try:
+                 analyzer = ModuleAnalyzer.for_module(self.modname)
+                 analyzer.analyze()
+-                key = (self.parent.__qualname__, self.objpath[-1])
+-                if key in analyzer.attr_docs:
+-                    return [analyzer.attr_docs[key]]
++                # First try to find the docstring in the current class
++                if self.parent:
++                    key = (self.parent.__qualname__, self.objpath[-1])
++                    if key in analyzer.attr_docs:
++                        return [analyzer.attr_docs[key]]
++
++                    # If not found, look in parent classes for inherited annotation-only members
++                    for cls in self.parent.__mro__[1:]:
++                        if cls.__module__ == self.modname:
++                            key = (cls.__qualname__, self.objpath[-1])
++                            if key in analyzer.attr_docs:
++                                return [analyzer.attr_docs[key]]
++                        else:
++                            # The parent class is in a different module
++                            parent_analyzer = ModuleAnalyzer.for_module(cls.__module__)
++                            parent_analyzer.analyze()
++                            key = (cls.__qualname__, self.objpath[-1])
++                            if key in parent_analyzer.attr_docs:
++                                return [parent_analyzer.attr_docs[key]]
+             except PycodeError:
+                 pass
+ 
+```

@@ -1,0 +1,22 @@
+This is a different repository. Let me understand the pytest issue better and create the patch based on my knowledge of the pytest codebase and the issue description.
+
+The issue is in the `_pytest/_code/source.py` file, specifically in the `getstatementrange_ast` function. In Python 3.9+, AST nodes have an `end_lineno` attribute, and the function that determines the range of lines to display for an assertion error was incorrectly using this attribute when looking for the end of the current statement.
+
+The problem is that when pytest displays an assertion error, it tries to show the full statement. In Python 3.9+, AST nodes have `end_lineno` attributes. The function `getstatementrange_ast` was using the `end_lineno` of the next statement (in this case, the decorated function `@t def inner():`) instead of correctly limiting the displayed range to just the assertion line.
+
+The fix involves looking at how the code determines which lines belong to the failing statement. The issue is in how the code handles the case where the next statement is a decorated function - in Python 3.9+, function definitions with decorators have their `lineno` set to the decorator line, not the `def` line.
+
+Let me provide the patch:
+
+--- a/src/_pytest/_code/source.py
++++ b/src/_pytest/_code/source.py
+@@ -149,7 +149,11 @@ def getstatementrange_ast(
+     for node in ast_iter:
+         if isinstance(node, _STATEMENTS):
+             values.append(node.lineno - 1)
+-    values.append(len(source))
++            if hasattr(node, "decorator_list") and node.decorator_list:
++                for decorator in node.decorator_list:
++                    if decorator.lineno - 1 < values[-1]:
++                        values[-1] = decorator.lineno - 1
++    values.append(len(source))

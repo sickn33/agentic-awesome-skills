@@ -1,0 +1,153 @@
+# sphinx-doc__sphinx-10325
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of the Sphinx autodoc module and the issue description, I'll generate a patch. The key changes needed are:
+
+1. Create/modify an `inherited_members_option` function to parse comma-separated class names into a set
+2. Update the filtering logic in `filter_members()` to check against a set of class names instead of a single class name
+
+Here is the patch:
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -103,6 +103,21 @@ def bool_option(arg: Any) -> bool:
+     return True
+ 
+ 
++def inherited_members_option(arg: Any) -> Union[object, Set[str]]:
++    """Used to convert the :inherited-members: option to auto directives."""
++    if arg in (None, True):
++        return 'object'
++    elif arg:
++        return set(x.strip() for x in arg.split(','))
++    else:
++        return 'object'
++
++
++def member_order_option(arg: Any) -> Optional[str]:
++    """Used to convert the :member-order: option to auto directives."""
++    return arg
++
++
+ def merge_special_members_option(options: Dict) -> None:
+     """Merge :special-members: option to :members: option."""
+     if 'special-members' in options and options['special-members'] is not ALL:
+@@ -696,10 +711,10 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+     option_spec: OptionSpec = {
+         'members': members_option,
+         'undoc-members': bool_option,
+-        'inherited-members': bool_option,
++        'inherited-members': inherited_members_option,
+         'show-inheritance': bool_option,
+         'member-order': member_order_option,
+         'exclude-members': members_set_option,
+         'private-members': members_option,
+         'special-members': members_option,
+         'class-doc-from': class_doc_from_option,
+@@ -756,7 +771,7 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+         for cls in self.object.__mro__:
+             if cls.__name__ == inherited_members:
+                 return False
+-            if cls.__name__ == self.object.__name__:
++            elif isinstance(inherited_members, (set, frozenset)) and cls.__name__ in inherited_members:
+                 return False
+             if name in cls.__dict__:
+                 return True
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -103,6 +103,17 @@ def bool_option(arg: Any) -> bool:
+     return True
+ 
+ 
++def inherited_members_option(arg: Any) -> Union[object, Set[str]]:
++    """Used to convert the :inherited-members: option to auto directives."""
++    if arg in (None, True):
++        return 'object'
++    elif arg:
++        return set(x.strip() for x in arg.split(','))
++    else:
++        return 'object'
++
++
+ def merge_special_members_option(options: Dict) -> None:
+     """Merge :special-members: option to :members: option."""
+     if 'special-members' in options and options['special-members'] is not ALL:
+@@ -696,7 +707,7 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+     option_spec: OptionSpec = {
+         'members': members_option,
+         'undoc-members': bool_option,
+-        'inherited-members': bool_option,
++        'inherited-members': inherited_members_option,
+         'show-inheritance': bool_option,
+         'member-order': member_order_option,
+         'exclude-members': members_set_option,
+@@ -751,10 +762,15 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+                 return True
+ 
+         inherited_members = self.options.inherited_members
++        if isinstance(inherited_members, set):
++            unhappy_bases = inherited_members
++        else:
++            unhappy_bases = {inherited_members}
++
+         for cls in self.object.__mro__:
+-            if cls.__name__ == inherited_members:
++            if cls.__name__ in unhappy_bases:
+                 return False
+-            if cls.__name__ == self.object.__name__:
++            elif cls.__name__ == self.object.__name__:
+                 return False
+             if name in cls.__dict__:
+                 return True
+```
+
+Let me provide a cleaner, properly formatted patch:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -103,6 +103,17 @@ def bool_option(arg: Any) -> bool:
+     return True
+ 
+ 
++def inherited_members_option(arg: Any) -> Union[object, Set[str]]:
++    """Used to convert the :inherited-members: option to auto directives."""
++    if arg in (None, True):
++        return 'object'
++    elif arg:
++        return set(x.strip() for x in arg.split(','))
++    else:
++        return 'object'
++
++
+ def merge_special_members_option(options: Dict) -> None:
+     """Merge :special-members: option to :members: option."""
+     if 'special-members' in options and options['special-members'] is not ALL:
+@@ -696,7 +707,7 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+     option_spec: OptionSpec = {
+         'members': members_option,
+         'undoc-members': bool_option,
+-        'inherited-members': bool_option,
++        'inherited-members': inherited_members_option,
+         'show-inheritance': bool_option,
+         'member-order': member_order_option,
+         'exclude-members': members_set_option,
+@@ -751,10 +762,15 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):
+                 return True
+ 
+         inherited_members = self.options.inherited_members
++        if isinstance(inherited_members, set):
++            unhappy_bases = inherited_members
++        else:
++            unhappy_bases = {inherited_members}
++
+         for cls in self.object.__mro__:
+-            if cls.__name__ == inherited_members:
++            if cls.__name__ in unhappy_bases:
+                 return False
+-            if cls.__name__ == self.object.__name__:
++            elif cls.__name__ == self.object.__name__:
+                 return False
+             if name in cls.__dict__:
+                 return True

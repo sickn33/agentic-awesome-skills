@@ -1,0 +1,15 @@
+Based on the issue description, I understand the problem. In scikit-learn's `_estimate_mi` function, there's a comparison `discrete_features == 'auto'` that will fail when `discrete_features` is an array (numpy array or list) because comparing an array to a string produces a boolean array, not a single boolean value. This will cause issues in future numpy versions.
+
+The fix is to use `isinstance()` to check if `discrete_features` is a string before doing the comparison. Let me create the patch:
+
+--- a/sklearn/feature_selection/_mutual_info.py
++++ b/sklearn/feature_selection/_mutual_info.py
+@@ -82,7 +82,7 @@ def _estimate_mi(X, y, discrete_features='auto', discrete_target=False,
+     n_samples, n_features = X.shape
+     X = X.astype(float, copy=False)
+ 
+-    if discrete_features == 'auto':
++    if isinstance(discrete_features, str) and discrete_features == 'auto':
+         discrete_features = issparse(X)
+ 
+     if isinstance(discrete_features, bool):

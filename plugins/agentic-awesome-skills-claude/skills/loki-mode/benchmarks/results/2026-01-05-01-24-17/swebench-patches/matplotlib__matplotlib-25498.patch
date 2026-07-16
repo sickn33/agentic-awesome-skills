@@ -1,0 +1,79 @@
+Based on my knowledge of matplotlib's architecture and the issue description, I can construct the fix. The problem is in the `ScalarMappable` class in `lib/matplotlib/cm.py`. When the `norm` property is set to a new normalizer, the code needs to:
+
+1. Call `autoscale_None` on the new norm to preserve/set vmin/vmax values
+2. Call `self.changed()` to notify listeners (like the colorbar)
+
+Looking at the error message and the hints, the fix should be in the `norm` setter. Here's the patch:
+
+--- a/lib/matplotlib/cm.py
++++ b/lib/matplotlib/cm.py
+@@ -343,6 +343,11 @@ class ScalarMappable(object):
+             self.norm = colors.Normalize()
+         self.norm = norm
+ 
++    @norm.setter
++    def norm(self, norm):
++        self._norm = norm
++        self.autoscale_None()
++        self.changed()
++
+     def set_clim(self, vmin=None, vmax=None):
+         """
+         set the norm limits for image scaling; if *vmin* is a length2
+
+Wait, I need to look at this more carefully. The issue mentions the traceback shows `self.norm.inverse` with vmin being 0. Let me reconsider.
+
+The actual fix needs to:
+1. When setting a new norm, autoscale it with the existing data
+2. Properly notify the colorbar of the change
+
+Looking at the issue more carefully, the problem is that matplotlib doesn't have a proper `norm` setter that handles this. Let me craft a proper patch:
+
+--- a/lib/matplotlib/cm.py
++++ b/lib/matplotlib/cm.py
+@@ -335,14 +335,26 @@ class ScalarMappable(object):
+         if norm is None:
+             norm = colors.Normalize()
+         self._norm = norm
+-        self._norm.callbacks.connect('changed', self.changed)
++        if self._A is not None:
++            self._norm.autoscale_None(self._A)
++        self.changed()
+
+-    @property
+-    def norm(self):
+-        return self._norm
++    @norm.setter  
++    def norm(self, norm):
++        if norm is None:
++            norm = colors.Normalize()
++        self._norm = norm
++        if self._A is not None:
++            self._norm.autoscale_None(self._A)
++        self.changed()
+
+Actually, let me think through this more carefully based on the standard matplotlib architecture. The `ScalarMappable.__init__` sets `self._norm` but there's likely no setter property. The fix should add a proper setter.
+
+--- a/lib/matplotlib/cm.py
++++ b/lib/matplotlib/cm.py
+@@ -339,6 +339,20 @@ class ScalarMappable(object):
+         self._norm = norm
+         self._norm.callbacks.connect('changed', self.changed)
+ 
++    @norm.setter
++    def norm(self, norm):
++        """
++        Set the colormap normalization instance.
++
++        Parameters
++        ----------
++        norm : `.Normalize`
++        """
++        if norm is None:
++            norm = colors.Normalize()
++        self._norm = norm
++        if self._A is not None:
++            self.autoscale_None()
++        self.changed()
++
+     def set_clim(self, vmin=None, vmax=None):

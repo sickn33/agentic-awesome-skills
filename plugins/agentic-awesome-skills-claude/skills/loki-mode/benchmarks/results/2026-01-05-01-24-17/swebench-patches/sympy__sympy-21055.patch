@@ -1,0 +1,56 @@
+Based on my knowledge of the SymPy codebase, I can provide the patch to fix this issue. The issue is that `refine(arg(a), Q.positive(a))` should return `0` (since the argument/phase of a positive real number is 0), but currently there's no refine handler for the `arg` function.
+
+The fix needs to add a `refine_arg` handler in `sympy/assumptions/refine.py` that:
+1. Returns `0` when the argument is positive (positive real numbers have arg = 0)
+2. Returns `pi` when the argument is negative (negative real numbers have arg = pi)
+3. Returns the original expression otherwise
+
+Here's the patch:
+
+--- a/sympy/assumptions/refine.py
++++ b/sympy/assumptions/refine.py
+@@ -1,6 +1,6 @@
+ from sympy.core import S, Add, Expr, Basic, Mul
+ from sympy.assumptions import Q, ask
+-from sympy.core.logic import fuzzy_not
++from sympy.core.logic import fuzzy_not, fuzzy_or
+ 
+ def refine(expr, assumptions=True):
+     """
+@@ -298,6 +298,31 @@ def refine_Pow(expr, assumptions):
+     return None
+ 
+ 
++def refine_arg(expr, assumptions):
++    """
++    Handler for the arg function.
++
++    Examples
++    ========
++
++    >>> from sympy import Q, arg, refine
++    >>> from sympy.abc import x
++    >>> refine(arg(x), Q.positive(x))
++    0
++    >>> refine(arg(x), Q.negative(x))
++    pi
++    """
++    rg = expr.args[0]
++    if ask(Q.positive(rg), assumptions):
++        return S.Zero
++    if ask(Q.negative(rg), assumptions):
++        return S.Pi
++    return None
++
++
+ def refine_atan2(expr, assumptions):
+     """
+     Handler for the atan2 function.
+@@ -382,5 +407,6 @@ handlers_dict = {
+     'Pow': refine_Pow,
+     'atan2': refine_atan2,
+     're': refine_re,
+-    'im': refine_im
++    'im': refine_im,
++    'arg': refine_arg,
+ }

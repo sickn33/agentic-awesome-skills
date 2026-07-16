@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "description": "Daily News Report 缓存文件，用于避免重复抓取和跟踪历史表现",
+
+  "last_run": {
+    "date": "2026-01-21",
+    "duration_seconds": 180,
+    "items_collected": 20,
+    "items_published": 20,
+    "sources_used": ["hn", "hf_papers", "james_clear", "fs_blog", "scotthyoung"]
+  },
+
+  "source_stats": {
+    "_comment": "记录每个源的历史表现，用于动态调整优先级",
+    "hn": {
+      "total_fetches": 0,
+      "success_count": 0,
+      "avg_items_per_fetch": 0,
+      "avg_quality_score": 0,
+      "last_fetch": null,
+      "last_success": null
+    }
+  },
+
+  "url_cache": {
+    "_comment": "已处理的 URL 缓存，避免重复收录",
+    "_ttl_hours": 168,
+    "entries": {}
+  },
+
+  "content_hashes": {
+    "_comment": "内容指纹，用于去重",
+    "_ttl_hours": 168,
+    "entries": {}
+  },
+
+  "article_history": {
+    "_comment": "已收录文章的简要记录",
+    "2026-01-21": []
+  }
+}

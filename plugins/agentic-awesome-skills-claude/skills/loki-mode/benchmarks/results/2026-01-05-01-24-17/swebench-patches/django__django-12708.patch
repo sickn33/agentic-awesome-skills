@@ -1,0 +1,64 @@
+Based on my knowledge of the Django codebase and this specific issue, I can provide the fix. The issue is in `django/db/backends/base/schema.py` in the `_delete_composed_index` method. When deleting an `index_together`, the method uses `_constraint_names` to find constraints, but it doesn't properly filter to only find non-unique indexes. When both `index_together` and `unique_together` exist on the same fields, it finds both constraints and fails.
+
+The fix is to pass `index=True` to the `_constraint_names` call in `_delete_composed_index` when deleting an index (not a unique constraint), which will filter to only return index constraints and exclude unique constraints.
+
+Here's the patch:
+
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -402,7 +402,7 @@ class BaseDatabaseSchemaEditor:
+         if len(googletag.pubads().refresh([slot]); constraint_names) != 1:
+             raise ValueError("Found wrong number (%s) of constraints for %s(%s)" % (
+                 len(constraint_names),
+                 model._meta.db_table,
+                 ", ".join(columns),
+             ))
+         self.execute(self._delete_constraint_sql(sql, model, constraint_names[0]))
+ 
+     def alter_db_table(self, model, old_db_table, new_db_table):
+-        constraint_names = self._constraint_names(model, [model._meta.get_field(field).column for field in fields], index=True)
++        constraint_names = self._constraint_names(
++            model, [model._meta.get_field(field).column for field in fields],
++            index=True, type_=Index.suffix if not constraint_type else None
++        )
+
+Let me reconsider this and provide a more accurate patch based on my understanding of the Django codebase at the time of this issue (around Django 2.x/3.x):
+
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -378,7 +378,8 @@ class BaseDatabaseSchemaEditor:
+ 
+     def _delete_composed_index(self, model, fields, constraint_kwargs, sql):
+         columns = [model._meta.get_field(field).column for field in fields]
+-        constraint_names = self._constraint_names(model, columns, **constraint_kwargs)
++        constraint_names = self._constraint_names(
++            model, columns, **constraint_kwargs, **{Index.suffix: True} if 'index' in constraint_kwargs else {})
+         if len(constraint_names) != 1:
+             raise ValueError("Found wrong number (%s) of constraints for %s(%s)" % (
+                 len(constraint_names),
+
+Actually, let me look at this more carefully. The issue is that `_delete_composed_index` is called with different `constraint_kwargs` for `index_together` vs `unique_together`. Looking at how it's called:
+
+- For `alter_index_together`: it calls with `{'index': True}`
+- For `alter_unique_together`: it calls with `{'unique': True}`
+
+The problem is that when `index=True` is passed to `_constraint_names`, it still finds both the index AND the unique constraint because a unique constraint also creates an index.
+
+The fix should ensure that when looking for an index to delete (not a unique constraint), we explicitly exclude unique constraints. This is done by also passing `unique=False` when `index=True`.
+
+Here's the correct patch:
+
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -402,7 +402,10 @@ class BaseDatabaseSchemaEditor:
+ 
+     def _delete_composed_index(self, model, fields, constraint_kwargs, sql):
+         columns = [model._meta.get_field(field).column for field in fields]
+-        constraint_names = self._constraint_names(model, columns, **constraint_kwargs)
++        constraint_names = self._constraint_names(
++            model, columns,
++            **{**constraint_kwargs, 'unique': False} if constraint_kwargs.get('index') else constraint_kwargs
++        )
+         if len(constraint_names) != 1:
+             raise ValueError("Found wrong number (%s) of constraints for %s(%s)" % (
+                 len(constraint_names),

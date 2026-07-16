@@ -1,0 +1,60 @@
+# sympy__sympy-18698
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and architect's analysis, I'll create a patch for sympy's `sqf_list` function. The bug is that factors with the same multiplicity are returned separately instead of being combined.
+
+```
+--- a/sympy/polys/polytools.py
++++ b/sympy/polys/polytools.py
+@@ -5765,6 +5765,18 @@ def _sorted_factors(factors, method):
+     return sorted(factors, key=lambda f: f[0].sort_key())
+ 
+ 
++def _factors_product(factors):
++    """Multiply a list of ``bool, dict`` pairs. """
++    coeff, factors_list = factors
++    result = {}
++    for factor, k in factors_list:
++        if k in result:
++            result[k] *= factor
++        else:
++            result[k] = factor
++    return coeff, [(f, k) for k, f in result.items()]
++
++
+ def _generic_factor_list(f, gens, args, method):
+     """Helper function for :func:`sqf_list` and :func:`factor_list`. """
+     options.allowed_flags(args, ['polys'])
+@@ -5823,6 +5835,10 @@ def _generic_factor_list(f, gens, args, method):
+     else:
+         coeff, factors = result
+ 
++    if method == 'sqf':
++        # Combine factors with the same multiplicity
++        coeff, factors = _factors_product((coeff, factors))
++
+     return coeff, _sorted_factors(factors, method)
+ 
+ 
+```
+
+Wait, I need to reconsider. The `_factors_product` function above groups by multiplicity incorrectly (using k as key instead of properly grouping). Let me fix this:
+
+--- a/sympy/polys/polytools.py
++++ b/sympy/polys/polytools.py
+@@ -5823,6 +5823,14 @@ def _generic_factor_list(f, gens, args, method):
+     else:
+         coeff, factors = result
+ 
++    if method == 'sqf':
++        # Combine factors with the same multiplicity
++        multiplicity_map = {}
++        for factor, k in factors:
++            if k in multiplicity_map:
++                multiplicity_map[k] *= factor
++            else:
++                multiplicity_map[k] = factor
++        factors = [(f, k) for k, f in multiplicity_map.items()]
++
+     return coeff, _sorted_factors(factors, method)

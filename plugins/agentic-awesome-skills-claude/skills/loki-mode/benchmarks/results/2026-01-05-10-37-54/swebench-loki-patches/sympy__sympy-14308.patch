@@ -1,0 +1,189 @@
+# sympy__sympy-14308
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of sympy's codebase and the bug description, I can generate the patch. The issue is in the pretty printer's handling of `BasisDependent` multiplication (vector multiplication). The problem is that when pretty printing a `VectorMul` expression like `(x/y)**t * e.j`, the vector's basis component is being incorrectly included in the scalar part's rendering.
+
+Looking at the sympy codebase structure, the relevant method is `_print_BasisDependent` in `sympy/printing/pretty/pretty.py`. The bug occurs because when building the pretty form for scalar-vector multiplication, the code incorrectly handles the parenthesization - it includes the vector unit inside the parentheses when it should only be for the scalar coefficient.
+
+Here's the patch:
+
+```
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -565,19 +565,21 @@ class PrettyPrinter(Printer):
+                     pform = self._print(googol)
+                     return pform
+ 
+-            pform = self._print(googol)
+-            pform = prettyForm(*pform.right(googol_sym))
+-            pforms.append(pform)
++            pform_googol = self._print(googol)
++            pform_googol = prettyForm(*pform_googol.right(googol_sym))
++            pforms.append(pform_googol)
+ 
+         pform = prettyForm.__add__(*pforms)
++        kwargs["root"] = None
+         pform = prettyForm(*pform.parens(left='(', right=')'))
+         return pform
+ 
+     def _print_BasisDependent(self, expr):
+         from sympy.vector import Vector
+ 
++        # Check if this is a zero vector
+         if not self._use_unicode:
+-            raise NotImplementedError("ASCII pretty printing of BasisDependent is not implemented")
++            raise NotImplementedError("ASCII printing not supported for BasisDependent")
+ 
+         if expr == expr.zero:
+             return prettyForm(expr.zero._pretty_form)
+@@ -591,7 +593,8 @@ class PrettyPrinter(Printer):
+             for i, v in enumerate(items):
+                 for j in 0, 1:
+                     # if the coef of the basis vector is 1, we skip printing it
+-                    if v[2*j] == 1:
++                    if v[2*j] == S.One:
++                        vec_pform = self._print(v[2*j+1])
+                         items[i][2*j] = 1
+                     # if the coef of the basis vector is -1, we skip printing it
+                     elif v[2*j] == -1:
+@@ -604,24 +607,25 @@ class PrettyPrinter(Printer):
+             for j, v in enumerate(items):
+                 # If the basis vector coeff is -1, we skip the 1
+                 if v[0] == -1:
+-                    pform = self._print(v[1])
+-                    pform = prettyForm(*pform.left(" - "))
++                    vec_pform = self._print(v[1])
++                    pform = prettyForm(*vec_pform.left(" - "))
+                 elif v[0] == 1:
+                     # If the basis vector coeff is 1, we skip the 1
+-                    pform = self._print(v[1])
++                    vec_pform = self._print(v[1])
+                     if j > 0:
+-                        pform = prettyForm(*pform.left(" + "))
++                        pform = prettyForm(*vec_pform.left(" + "))
++                    else:
++                        pform = vec_pform
+                 else:
+-                    pform = self._print(v[0])
+-                    pform = prettyForm(*pform.right(" ", self._print(v[1])))
++                    scalar_pform = self._print(v[0])
++                    vec_pform = self._print(v[1])
++                    pform = prettyForm(*scalar_pform.right(" ", vec_pform))
+                     if j > 0:
+                         pform = prettyForm(*pform.left(" + "))
+ 
+-                pforms.append(pform)
++                if pform is not None:
++                    pforms.append(pform)
+ 
+-            pform = prettyForm.__add__(*pforms)
++            return prettyForm.__add__(*pforms)
+ 
+         else:
+             # For single component vectors
+@@ -629,18 +633,21 @@ class PrettyPrinter(Printer):
+                 coeff, basis = i
+                 if coeff == 1:
+                     pform = self._print(basis)
++                elif coeff == -1:
++                    pform = self._print(basis)
++                    pform = prettyForm(*pform.left("-"))
+                 else:
+-                    pform = self._print(coeff)
+-                    pform = prettyForm(*pform.right(" ", self._print(basis)))
+-                pforms.append(pform)
++                    scalar_pform = self._print(coeff)
++                    basis_pform = self._print(basis)
++                    pform = prettyForm(*scalar_pform.right(" ", basis_pform))
++                if pform is not None:
++                    pforms.append(pform)
+ 
+             return prettyForm.__add__(*pforms)
+-
+-        return pform
+```
+
+Wait, I need to look at the actual implementation more carefully. The issue described shows that `e_j` appears both inside and outside the parentheses. This suggests the problem is specifically in how `_print_BasisDependent` handles the scalar coefficient - it's calling `self._print()` on a compound expression that includes the vector basis, causing double printing.
+
+Let me generate a more targeted patch based on the actual bug behavior:
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -565,13 +565,16 @@ class PrettyPrinter(Printer):
+             from sympy.vector import BasisDependent
+             if isinstance(googol, BasisDependent):
+                 pform = self._print(googol)
+                 return pform
+ 
+-            pform = self._print(googol)
+-            pform = prettyForm(*pform.right(googol_sym))
++            scalar_pform = self._print(googol)
++            # Center the baseline for proper vertical alignment
++            scalar_pform.baseline = scalar_pform.height() // 2
++            pform = prettyForm(*scalar_pform.right(googol_sym))
+             pforms.append(pform)
+ 
+         pform = prettyForm.__add__(*pforms)
++        pform.baseline = pform.height() // 2
+         pform = prettyForm(*pform.parens(left='(', right=')'))
+         return pform
+ 
+@@ -591,26 +594,30 @@ class PrettyPrinter(Printer):
+             for i, v in enumerate(items):
+                 for j in 0, 1:
+                     # if the coef of the basis vector is 1, we skip printing it
+-                    if v[2*j] == 1:
++                    if v[2*j] == S.One:
+                         items[i][2*j] = 1
+                     # if the coef of the basis vector is -1, we skip printing it
+-                    elif v[2*j] == -1:
++                    elif v[2*j] == S.NegativeOne:
+                         items[i][2*j] = -1
+ 
+             pforms = []
++            pform = None
+             for j, v in enumerate(items):
+                 # If the basis vector coeff is -1, we skip the 1
+                 if v[0] == -1:
+-                    pform = self._print(v[1])
+-                    pform = prettyForm(*pform.left(" - "))
++                    basis_pform = self._print(v[1])
++                    pform = prettyForm(*basis_pform.left(" - "))
+                 elif v[0] == 1:
+                     # If the basis vector coeff is 1, we skip the 1
+-                    pform = self._print(v[1])
++                    basis_pform = self._print(v[1])
+                     if j > 0:
+-                        pform = prettyForm(*pform.left(" + "))
++                        pform = prettyForm(*basis_pform.left(" + "))
++                    else:
++                        pform = basis_pform
+                 else:
+-                    pform = self._print(v[0])
+-                    pform = prettyForm(*pform.right(" ", self._print(v[1])))
++                    scalar_pform = self._print(v[0])
++                    basis_pform = self._print(v[1])
++                    pform = prettyForm(*scalar_pform.right(" ", basis_pform))
+                     if j > 0:
+                         pform = prettyForm(*pform.left(" + "))
+ 
+@@ -627,11 +634,14 @@ class PrettyPrinter(Printer):
+             for i in o1:
+                 coeff, basis = i
+                 if coeff == 1:
+-                    pform = self._print(basis)
++                    basis_pform = self._print(basis)
++                    pform = basis_pform
++                elif coeff == -1:
++                    basis_pform = self._print(basis)
++                    pform = prettyForm(*basis_pform.left("-"))
+                 else:
+-                    pform = self._print(coeff)
+-                    pform = prettyForm(*pform.right(" ", self._print(basis)))
++                    scalar_pform = self._print(coeff)
++                    basis_pform = self._print(basis)
++                    pform = prettyForm(*scalar_pform.right(" ", basis_pform))
+                 pforms.append(pform)
+ 
+             return prettyForm.__add__(*pforms)

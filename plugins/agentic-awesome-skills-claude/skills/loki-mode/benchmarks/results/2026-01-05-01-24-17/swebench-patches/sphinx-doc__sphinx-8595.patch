@@ -1,0 +1,15 @@
+I understand. Based on my knowledge of the Sphinx autodoc extension and this specific issue, I can provide the fix. The bug is in the `ModuleDocumenter.get_object_members()` method. When `__all__` is an empty list, the code treats it as falsy and falls back to showing all members instead of respecting the empty list.
+
+The issue is in `sphinx/ext/autodoc/__init__.py`. The problematic code checks `if __all__:` which evaluates to `False` for an empty list. It should check `if __all__ is not None:` instead.
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1023,7 +1023,7 @@ class ModuleDocumenter(Documenter):
+     def get_object_members(self, want_all: bool) -> Tuple[bool, ObjectMembers]:
+         members = self.get_module_members()
+         if want_all:
+-            if not self.__all__:
++            if self.__all__ is None:
+                 # for implicit module members, check __module__ to avoid
+                 # temporary objects that are not really module members
+                 return True, list(members.values())

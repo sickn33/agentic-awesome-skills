@@ -1,0 +1,41 @@
+This repository doesn't contain the sphinx source code. Based on the issue description, I need to create a patch for the sphinx-doc/sphinx repository. Let me understand the issue better and create the appropriate patch.
+
+The issue states that:
+1. `_parse_parameters_section` respects `napoleon_use_param` config
+2. `_parse_other_parameters_section` does NOT respect this config - it always formats as if `napoleon_use_param` was False
+
+The fix should make `_parse_other_parameters_section` follow the same logic as `_parse_parameters_section`.
+
+Based on the code snippets in the issue:
+
+```python
+def _parse_other_parameters_section(self, section):
+    # type: (unicode) -> List[unicode]
+    return self._format_fields(_('Other Parameters'), self._consume_fields())
+
+def _parse_parameters_section(self, section):
+    # type: (unicode) -> List[unicode]
+    fields = self._consume_fields()
+    if self._config.napoleon_use_param:
+        return self._format_docutils_params(fields)
+    else:
+        return self._format_fields(_('Parameters'), fields)
+```
+
+The fix should update `_parse_other_parameters_section` to check `napoleon_use_param` just like `_parse_parameters_section` does.
+
+--- a/sphinx/ext/napoleon/docstring.py
++++ b/sphinx/ext/napoleon/docstring.py
+@@ -617,7 +617,11 @@ class GoogleDocstring:
+ 
+     def _parse_other_parameters_section(self, section):
+         # type: (unicode) -> List[unicode]
+-        return self._format_fields(_('Other Parameters'), self._consume_fields())
++        fields = self._consume_fields()
++        if self._config.napoleon_use_param:
++            return self._format_docutils_params(fields)
++        else:
++            return self._format_fields(_('Other Parameters'), fields)
+ 
+     def _parse_parameters_section(self, section):
+         # type: (unicode) -> List[unicode]

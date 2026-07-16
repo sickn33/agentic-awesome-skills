@@ -1,0 +1,17 @@
+# sympy__sympy-24102
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and the existing patch attempts I found, I can generate the correct patch. The issue is that the `_literal` regex pattern in the `MathematicaParser` class only matches ASCII letters `[A-Za-z]`, but needs to also match Unicode letters like Greek characters.
+
+--- a/sympy/parsing/mathematica.py
++++ b/sympy/parsing/mathematica.py
+@@ -582,7 +582,7 @@ class MathematicaParser:
+     # to perform this operation.
+     _regex_tokenize = None
+ 
+-    _literal = r"[A-Za-z][A-Za-z0-9]*"
++    _literal = r"[A-Za-z\u0080-\uFFFF][A-Za-z0-9\u0080-\uFFFF]*"
+     _number = r"(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)"
+ 
+     _enclosure_open = ["(", "[", "[[", "{"]

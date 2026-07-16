@@ -1,0 +1,96 @@
+Based on the issue description and my knowledge of scikit-learn's ColumnTransformer, I can analyze the bug and create the fix. The issue is in the `_hstack` method of `_column_transformer.py` where the pandas output handling doesn't properly account for transformers with zero features.
+
+Looking at the traceback:
+1. Line 750: `fit_transform` calls `self._hstack(list(Xs))`
+2. Line 862: `output.columns = names_out` - This is where the error occurs
+
+The bug is that when generating feature names for pandas output, `_add_prefix_for_feature_names_out` uses `self._iter(fitted=True)` which skips transformers with 0 features (because they're not fitted). But `Xs` may still have empty arrays for those transformers that were included in the horizontal stacking.
+
+Let me create the patch based on the scikit-learn version 1.2.0 mentioned in the issue:
+
+```
+--- a/sklearn/compose/_column_transformer.py
++++ b/sklearn/compose/_column_transformer.py
+@@ -850,10 +850,11 @@ class ColumnTransformer(TransformerMixin, _BaseComposition):
+             output = pd.concat(Xs, axis=1)
+ 
+             # If all transformers define `get_feature_names_out`, then transform
+-            # will adjust the column names to be consistent with `get_feature_names_out`.
+-            # Otherwise column names will be `output.columns`.
++            # will adjust the column names to be consistent with
++            # `get_feature_names_out`. Otherwise column names will be
++            # `output.columns`.
+             if not self._feature_names_out_for_transform:
+                 return output
+ 
+             names_out = self._add_prefix_for_feature_names_out(
+-                list(self._iter(fitted=True, replace_strings=True))
++                list(self._iter(fitted=True, replace_strings=True, column_as_labels=False))
+             )
+             output.columns = names_out
+             return output
+```
+
+Wait, I need to look at this more carefully. The issue is that when `Xs` contains results from all transformers (including those with 0 features which produce empty outputs), but `_iter(fitted=True)` only returns fitted transformers, there's a mismatch.
+
+Let me analyze the actual code flow based on the error message:
+- `_hstack` receives `Xs` (list of transformed outputs)
+- For pandas output, it needs to set column names
+- `_add_prefix_for_feature_names_out` gets the names from `_iter(fitted=True)`
+- But transformers with 0 features aren't fitted, so they don't appear in `_iter(fitted=True)`
+
+The fix should ensure that when getting feature names for pandas output, we properly handle transformers that have 0 features. The key insight from the traceback is that `names_out` has 0 elements while `output` has 3 elements - this suggests `_add_prefix_for_feature_names_out` is returning an empty list when it should return names for the numerical features.
+
+Looking at scikit-learn 1.2.x, the issue is in how `_iter` is called. When a transformer has no columns to transform, it produces no output, but the iteration still needs to align with what's actually produced.
+
+The fix should be in the `_hstack` method to properly zip the transformed arrays with the iteration results. Here's the patch:
+
+--- a/sklearn/compose/_column_transformer.py
++++ b/sklearn/compose/_column_transformer.py
+@@ -853,11 +853,15 @@ class ColumnTransformer(TransformerMixin, _BaseComposition):
+             # will adjust the column names to be consistent with
+             # `get_feature_names_out`. Otherwise column names will be
+             # `output.columns`.
+-            if not self._feature_names_out_for_transform:
++            if not self._feature_names_out:
+                 return output
+ 
+             names_out = self._add_prefix_for_feature_names_out(
+-                list(self._iter(fitted=True, replace_strings=True))
++                list(
++                    (name, trans, columns)
++                    for name, trans, columns in self._iter(fitted=True, replace_strings=True)
++                    if len(columns) > 0
++                )
+             )
+             output.columns = names_out
+             return output
+
+Actually, looking at this more carefully, I realize the root issue is different. Let me trace through what happens:
+
+1. When `fit_transform` is called, it fits and transforms each transformer
+2. For transformers with 0 features, they are skipped in fitting
+3. In `_hstack`, `Xs` contains only the outputs from transformers that actually produced output
+4. But `_iter(fitted=True)` may return different transformers than what's in `Xs`
+
+The fix needs to ensure alignment between what's in `Xs` and what's iterated over in `_add_prefix_for_feature_names_out`.
+
+Looking at the actual scikit-learn code structure for version 1.2.0, the issue is in `_hstack`. When calling `_add_prefix_for_feature_names_out`, we need to filter to only include transformers that actually produced output (i.e., have features).
+
+Here's the correct patch:
+
+--- a/sklearn/compose/_column_transformer.py
++++ b/sklearn/compose/_column_transformer.py
+@@ -856,7 +856,11 @@ class ColumnTransformer(TransformerMixin, _BaseComposition):
+                 return output
+ 
+             names_out = self._add_prefix_for_feature_names_out(
+-                list(self._iter(fitted=True, replace_strings=True))
++                list(
++                    (name, trans, columns)
++                    for name, trans, columns in self._iter(fitted=True, replace_strings=True)
++                    if len(columns) > 0
++                )
+             )
+             output.columns = names_out
+             return output

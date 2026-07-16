@@ -1,19 +1,24 @@
 ---
-name: Skill Request
-about: Suggest a new skill for the collection
+name: Actionable Improvement Request
+about: Request a concrete, scoped improvement once the work is clear enough for an Issue
 title: "[REQ] "
 labels: enhancement
 assignees: sickn33
 ---
 
-**Is your feature request related to a problem? Please describe.**
+> For early-stage ideas, brainstorming, and “would this be useful?” proposals, please start in GitHub Discussions Ideas. Open an Issue when the request is concrete and actionable.
+
+**What problem should this improve?**
 A clear and concise description of what the problem is. Ex: I'm always frustrated when [...]
 
-**Describe the solution you'd like**
-A description of the skill you want. What trigger should it have? What files should it effect?
+**What concrete change are you asking for?**
+A description of the skill, workflow, docs change, or repo improvement you want. What should be added or changed?
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**What does success look like?**
+Describe the expected outcome, acceptance criteria, or user-visible result.
+
+**Related discussion or prior art**
+Link any relevant discussion, similar skill, docs, issue, or external reference.
 
 **Additional context**
 Add any other context or screenshots about the feature request here.

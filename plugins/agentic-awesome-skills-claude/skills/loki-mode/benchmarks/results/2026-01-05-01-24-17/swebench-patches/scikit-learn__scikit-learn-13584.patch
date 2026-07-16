@@ -1,0 +1,25 @@
+I can see the buggy code at lines 95-98. The problem is on line 95-96:
+
+```python
+    for k, v in params.items():
+        if (v != init_params[k] and
+                not (is_scalar_nan(init_params[k]) and is_scalar_nan(v))):
+```
+
+When `v` is a numpy array, `v != init_params[k]` returns an array of boolean values, and using that in an `if` statement causes the ValueError.
+
+The fix changes `v != init_params[k]` to `repr(v) != repr(init_params[k])`.
+
+Now I can generate the patch:
+
+--- a/sklearn/utils/_pprint.py
++++ b/sklearn/utils/_pprint.py
+@@ -92,7 +92,7 @@ def _changed_params(estimator):
+     init_params = signature(init_func).parameters
+     init_params = {name: param.default for name, param in init_params.items()}
+     for k, v in params.items():
+-        if (v != init_params[k] and
++        if (repr(v) != repr(init_params[k]) and
+                 not (is_scalar_nan(init_params[k]) and is_scalar_nan(v))):
+             filtered_params[k] = v
+     return filtered_params

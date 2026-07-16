@@ -1,0 +1,28 @@
+This is a skill repository, not the Django repository. The issue is from Django's repository. Based on the issue description, I can generate the patch directly since it clearly describes the fix needed for Django's `contrib/auth/validators.py` file.
+
+The issue states that:
+1. `ASCIIUsernameValidator` and `UnicodeUsernameValidator` use `r'^[\w.@+-]+$'`
+2. The fix is to change to `r'\A[\w.@+-]+\Z'`
+
+Here's the patch:
+
+--- a/django/contrib/auth/validators.py
++++ b/django/contrib/auth/validators.py
+@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
+ 
+ @deconstructible
+ class ASCIIUsernameValidator(validators.RegexValidator):
+-    regex = r'^[\w.@+-]+$'
++    regex = r'\A[\w.@+-]+\Z'
+     message = _(
+         'Enter a valid username. This value may contain only English letters, '
+         'numbers, and @/./+/-/_ characters.'
+@@ -17,7 +17,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):
+ 
+ @deconstructible
+ class UnicodeUsernameValidator(validators.RegexValidator):
+-    regex = r'^[\w.@+-]+$'
++    regex = r'\A[\w.@+-]+\Z'
+     message = _(
+         'Enter a valid username. This value may contain only letters, '
+         'numbers, and @/./+/-/_ characters.'

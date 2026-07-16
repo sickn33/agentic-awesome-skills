@@ -1,0 +1,13 @@
+# sympy__sympy-15345
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/printing/mathematica.py
++++ b/sympy/printing/mathematica.py
+@@ -31,6 +31,8 @@ known_functions = {
+     "asech": [(lambda x: True, "ArcSech")],
+     "acsch": [(lambda x: True, "ArcCsch")],
+     "conjugate": [(lambda x: True, "Conjugate")],
++    "Max": [(lambda *x: True, "Max")],
++    "Min": [(lambda *x: True, "Min")],
+ }

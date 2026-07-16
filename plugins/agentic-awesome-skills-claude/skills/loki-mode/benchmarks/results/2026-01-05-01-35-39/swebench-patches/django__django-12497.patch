@@ -1,0 +1,21 @@
+Based on the issue description and the patch file I found, I can provide the correct fix. The issue is:
+
+1. The hint incorrectly says `ForeignKey("%s", symmetrical=False, through="%s")`
+2. `symmetrical` and `through` are ManyToManyField arguments, not ForeignKey arguments
+3. `symmetrical=False` is outdated (not required since Django 3.0)
+
+The fix changes `ForeignKey` to `ManyToManyField` and removes `symmetrical=False`:
+
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -1251,8 +1251,8 @@ class ManyToManyField(RelatedField):
+                     id='fields.E335',
+                     hint=(
+                         'If you want to create a recursive relationship, '
+-                        'use ForeignKey("%s", symmetrical=False, through="%s").'
+-                    ) % (
++                        'use ManyToManyField("%s", through="%s").'
++                    ) % (
+                         RECURSIVE_RELATIONSHIP_CONSTANT,
+                         relationship_model_name,
+                     ),

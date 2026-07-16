@@ -1,0 +1,26 @@
+Based on the issue description and hints provided, I have enough context to generate the fix. The problem is in `sympy/functions/elementary/complexes.py` in the `Abs.eval` method. The hints clearly explain:
+
+1. The issue is around lines 616-621 where there's a conjugate check
+2. The fix should add a check for `arg.is_extended_real` before computing the conjugate
+3. The condition should also be changed from `if _arg != conj or _arg != -conj:` to `if _arg not in (conj, -conj):`
+
+Here's the patch:
+
+--- a/sympy/functions/elementary/complexes.py
++++ b/sympy/functions/elementary/complexes.py
+@@ -612,6 +612,8 @@ class Abs(Function):
+             return sqrt(expand_mul(arg*conj))
+         if arg.is_imaginary:
+             return abs(im(arg))
++        if arg.is_extended_real:
++            return
+         if arg.is_Pow:
+             base, exponent = arg.as_base_exp()
+             if base.is_extended_real:
+@@ -621,7 +623,7 @@ class Abs(Function):
+                     return base**re(exponent)
+         # More general case; avoid abs(re(arg)**2) recursion
+         _arg = signsimp(arg, evaluate=False)
+-        if _arg != conj or _arg != -conj:
++        if _arg not in (conj, -conj):
+             return

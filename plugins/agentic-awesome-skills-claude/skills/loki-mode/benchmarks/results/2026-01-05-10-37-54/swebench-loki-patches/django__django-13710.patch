@@ -1,0 +1,42 @@
+# django__django-13710
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1,6 +1,6 @@
+ import copy
+ import json
+-from functools import partial, update_wrapper
++from functools import lru_cache, partial, update_wrapper
+ from urllib.parse import quote as urlquote
+ 
+ from django import forms
+@@ -2012,6 +2012,14 @@ class InlineModelAdmin(BaseModelAdmin):
+     classes = None
+     template = None
+ 
++    @lru_cache(maxsize=1)
++    def _has_explicit_verbose_name(self):
++        """Check if verbose_name was explicitly set on this class."""
++        for cls in type(self).__mro__:
++            if 'verbose_name' in cls.__dict__:
++                return cls is not InlineModelAdmin
++        return False
++
+     @property
+     def verbose_name(self):
+         return self._verbose_name or self.model._meta.verbose_name
+@@ -2022,7 +2030,11 @@ class InlineModelAdmin(BaseModelAdmin):
+ 
+     @property
+     def verbose_name_plural(self):
+-        return self._verbose_name_plural or self.model._meta.verbose_name_plural
++        if self._verbose_name_plural:
++            return self._verbose_name_plural
++        if self._has_explicit_verbose_name():
++            return format_lazy('{}s', self._verbose_name)
++        return self.model._meta.verbose_name_plural
+ 
+     @verbose_name_plural.setter
+     def verbose_name_plural(self, value):

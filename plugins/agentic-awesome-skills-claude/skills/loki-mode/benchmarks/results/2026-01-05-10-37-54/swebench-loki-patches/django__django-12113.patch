@@ -1,0 +1,24 @@
+# django__django-12113
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/db/backends/sqlite3/creation.py
++++ b/django/db/backends/sqlite3/creation.py
+@@ -51,7 +51,16 @@ class DatabaseCreation(BaseDatabaseCreation):
+         return test_database_name
+ 
+     def test_db_signature(self):
+-        """
+-        Return a tuple that uniquely identifies a test database.
+-        """
+-        return (self.connection.settings_dict['NAME'],)
++        """
++        Return a tuple that uniquely identifies a test database.
++
++        This takes into account the special TEST['NAME'] setting for SQLite.
++        """
++        test_database_name = self._get_test_db_name()
++        sig = [self.connection.settings_dict['NAME']]
++        if test_database_name and test_database_name != ':memory:':
++            sig.append(test_database_name)
++        return tuple(sig)

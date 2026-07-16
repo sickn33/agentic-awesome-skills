@@ -1,0 +1,19 @@
+Based on my knowledge of the Sphinx codebase and the issue described, I can generate the patch. The issue is in `sphinx/ext/autosummary/generate.py` where the `members` template variable is populated without respecting the `autosummary_imported_members` setting.
+
+The bug is that when generating the template context, the `members` variable includes all members found by `ModuleScanner`, but the filtering for imported members (controlled by `autosummary_imported_members`) is only applied to the specific category variables (`functions`, `classes`, `exceptions`) but not to the generic `members` variable.
+
+Here's the patch:
+
+--- a/sphinx/ext/autosummary/generate.py
++++ b/sphinx/ext/autosummary/generate.py
+@@ -248,6 +248,9 @@ def generate_autosummary_content(name: str, obj: Any, parent: Any,
+         ns['members'] = scanner.scan(imported_members)
+         ns['functions'], ns['all_functions'] = \
+             get_members(obj, {'function'}, imported=imported_members)
+         ns['classes'], ns['all_classes'] = \
+             get_members(obj, {'class'}, imported=imported_members)
+         ns['exceptions'], ns['all_exceptions'] = \
+             get_members(obj, {'exception'}, imported=imported_members)
++        ns['attributes'], ns['all_attributes'] = \
++            get_members(obj, {'attribute', 'data'}, imported=imported_members)
+     elif doc.objtype == 'class':

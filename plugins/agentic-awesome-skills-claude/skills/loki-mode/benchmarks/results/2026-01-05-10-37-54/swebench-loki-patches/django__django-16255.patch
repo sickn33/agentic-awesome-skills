@@ -1,0 +1,17 @@
+# django__django-16255
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/contrib/sitemaps/__init__.py
++++ b/django/contrib/sitemaps/__init__.py
+@@ -167,7 +167,7 @@ class Sitemap:
+             return None
+         if callable(self.lastmod):
+             try:
+-                return max([self.lastmod(item) for item in self.items()])
+-            except TypeError:
++                return max((self.lastmod(item) for item in self.items()), default=None)
++            except TypeError:
+                 return None
+         else:
+             return self.lastmod

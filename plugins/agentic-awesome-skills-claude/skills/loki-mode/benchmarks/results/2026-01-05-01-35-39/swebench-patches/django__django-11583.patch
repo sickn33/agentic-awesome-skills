@@ -1,0 +1,25 @@
+Based on the issue description and the stack trace, I understand the problem. The issue is in Django's `django/utils/autoreload.py` file in the `iter_modules_and_files` function. When `path.resolve().absolute()` is called, it can throw a `ValueError: embedded null byte` error on some systems with corrupted paths or paths containing null bytes.
+
+The fix is to wrap the `path.resolve().absolute()` call in a try-except block to catch the `ValueError` and continue processing other files.
+
+Based on the stack trace showing line 132 in the original code:
+```python
+results.add(path.resolve().absolute())
+```
+
+Here's the patch:
+
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -129,7 +129,12 @@ def iter_modules_and_files(modules, extra_files):
+             # The code importing this module is broken and let's not worry
+             # about it.
+             continue
+-        results.add(path.resolve().absolute())
++        try:
++            results.add(path.resolve().absolute())
++        except ValueError as e:
++            # The path contains a null byte (embedded null byte) on Windows or
++            # other systems. Skip this path as it cannot be used.
++            continue
+     return frozenset(results)

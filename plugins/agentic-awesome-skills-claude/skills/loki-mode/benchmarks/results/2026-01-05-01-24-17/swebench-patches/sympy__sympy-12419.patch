@@ -1,0 +1,35 @@
+Based on the issue discussion and the hints provided, I can generate the fix. The problem is clearly identified in the GitHub issue discussion:
+
+The `_entry` method of the `Identity` class in `sympy/matrices/expressions/matexpr.py` currently returns `S.One` when `i == j` and `S.Zero` otherwise. However, this comparison fails for symbolic indices because it incorrectly assumes that if `i` and `j` are different symbols, they represent different values.
+
+The fix, as discussed in the issue, is to use `KroneckerDelta(i, j)` to properly handle the case where we don't know if `i == j` until actual values are substituted.
+
+Here is the patch:
+
+--- a/sympy/matrices/expressions/matexpr.py
++++ b/sympy/matrices/expressions/matexpr.py
+@@ -1,6 +1,7 @@
+ from __future__ import print_function, division
+ 
+ from functools import wraps
++from sympy.functions.special.tensor_functions import KroneckerDelta
+ 
+ from sympy.core import S, Symbol, Tuple, Integer, Basic, Expr
+ from sympy.core.decorators import call_highest_priority
+@@ -278,10 +279,11 @@ class Identity(MatrixExpr):
+         return self.rows
+ 
+     def _entry(self, i, j):
+-        if i == j:
+-            return S.One
+-        else:
+-            return S.Zero
++        eq = Eq(i, j)
++        if eq is S.true:
++            return S.One
++        elif eq is S.false:
++            return S.Zero
++        return KroneckerDelta(i, j)
+ 
+     def _eval_transpose(self):
+         return self

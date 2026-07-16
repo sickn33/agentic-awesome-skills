@@ -1,0 +1,60 @@
+This task is about fixing a GitHub issue in the mwaskom/seaborn repository. The current directory doesn't contain the seaborn codebase. Based on the traceback, I can see the issue is in `seaborn/_stats/regression.py`. The problem is that `PolyFit._fit_predict` doesn't handle missing data (None/NaN values) before calling `np.polyfit`.
+
+Looking at the traceback:
+1. The error occurs when calling `np.polyfit(x, y, self.order)` in line 30 of `regression.py`
+2. The `_fit_predict` method needs to filter out missing values before processing
+
+Let me generate a patch based on the traceback information showing the relevant code structure:
+
+```
+--- a/seaborn/_stats/regression.py
++++ b/seaborn/_stats/regression.py
+@@ -25,6 +25,8 @@ class PolyFit(Stat):
+     def _fit_predict(self, data):
+ 
+         x = data["x"]
+         y = data["y"]
++        if x.isna().any() or y.isna().any():
++            mask = x.notna() & y.notna()
++            x, y = x[mask], y[mask]
+         if len(x) <= self.order:
+             xx = yy = []
+         else:
+```
+
+Wait, let me look more carefully at the traceback to understand the exact line numbers and code structure:
+
+- Line 28: `xx = yy = []`  
+- Line 29: `else:`
+- Line 30: `p = np.polyfit(x, y, self.order)`
+- Line 31: `xx = np.linspace(x.min(), x.max(), self.gridsize)`
+- Line 32: `yy = np.polyval(p, xx)`
+
+So the structure appears to be:
+```python
+def _fit_predict(self, data):
+    x = data["x"]
+    y = data["y"]
+    if len(x) <= self.order:
+        xx = yy = []
+    else:
+        p = np.polyfit(x, y, self.order)
+        xx = np.linspace(x.min(), x.max(), self.gridsize)
+        yy = np.polyval(p, xx)
+```
+
+The fix should drop NaN values before the fitting. Here's the patch:
+
+--- a/seaborn/_stats/regression.py
++++ b/seaborn/_stats/regression.py
+@@ -23,6 +23,9 @@ class PolyFit(Stat):
+     def _fit_predict(self, data):
+ 
+         x = data["x"]
+         y = data["y"]
++        if x.isna().any() or y.isna().any():
++            mask = x.notna() & y.notna()
++            x, y = x[mask], y[mask]
+         if len(x) <= self.order:
+             xx = yy = []
+         else:

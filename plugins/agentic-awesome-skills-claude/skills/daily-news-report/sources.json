@@ -1,0 +1,183 @@
+{
+  "version": "2.1",
+  "last_updated": "2026-01-21",
+
+  "sources": {
+    "tier1": {
+      "description": "高命中率源，优先抓取",
+      "batch_a": [
+        {
+          "id": "hn",
+          "name": "Hacker News",
+          "url": "https://news.ycombinator.com",
+          "fetch_method": "webfetch",
+          "extract": "top_10",
+          "enabled": true,
+          "avg_quality": 4.5,
+          "success_rate": 0.95
+        },
+        {
+          "id": "hf_papers",
+          "name": "HuggingFace Papers",
+          "url": "https://huggingface.co/papers",
+          "fetch_method": "webfetch",
+          "extract": "top_voted",
+          "enabled": true,
+          "avg_quality": 4.8,
+          "success_rate": 0.98
+        }
+      ],
+      "batch_b": [
+        {
+          "id": "one_useful_thing",
+          "name": "One Useful Thing",
+          "url": "https://www.oneusefulthing.org",
+          "fetch_method": "webfetch",
+          "extract": "latest_3",
+          "enabled": true,
+          "avg_quality": 4.7,
+          "success_rate": 0.92
+        },
+        {
+          "id": "paul_graham",
+          "name": "Paul Graham Essays",
+          "url": "https://paulgraham.com/articles.html",
+          "fetch_method": "webfetch",
+          "extract": "latest_5",
+          "enabled": true,
+          "avg_quality": 4.6,
+          "success_rate": 0.99
+        }
+      ]
+    },
+
+    "tier2": {
+      "description": "中等命中率，按需抓取",
+      "batch_a": [
+        {
+          "id": "james_clear",
+          "name": "James Clear 3-2-1",
+          "url": "https://jamesclear.com/3-2-1",
+          "fetch_method": "webfetch",
+          "extract": "latest_issue",
+          "enabled": true,
+          "avg_quality": 4.3,
+          "success_rate": 0.90
+        },
+        {
+          "id": "fs_blog",
+          "name": "Farnam Street Brain Food",
+          "url": "https://fs.blog/brain-food",
+          "fetch_method": "webfetch",
+          "extract": "latest_issue",
+          "enabled": true,
+          "avg_quality": 4.4,
+          "success_rate": 0.88
+        }
+      ],
+      "batch_b": [
+        {
+          "id": "hackernoon_pm",
+          "name": "HackerNoon PM",
+          "url": "https://hackernoon.com/c/product-management",
+          "fetch_method": "webfetch",
+          "extract": "latest_5",
+          "enabled": true,
+          "avg_quality": 3.8,
+          "success_rate": 0.85
+        },
+        {
+          "id": "scotthyoung",
+          "name": "Scott Young Blog",
+          "url": "https://scotthyoung.com/blog/articles",
+          "fetch_method": "webfetch",
+          "extract": "latest_3",
+          "enabled": true,
+          "avg_quality": 4.0,
+          "success_rate": 0.90
+        }
+      ]
+    },
+
+    "tier3_browser": {
+      "description": "需要浏览器渲染的源",
+      "sources": [
+        {
+          "id": "producthunt",
+          "name": "Product Hunt",
+          "url": "https://www.producthunt.com",
+          "fetch_method": "browser",
+          "extract": "today_top_5",
+          "enabled": true,
+          "avg_quality": 4.2,
+          "success_rate": 0.75,
+          "note": "需要无头浏览器，403 on WebFetch"
+        },
+        {
+          "id": "latent_space",
+          "name": "Latent Space",
+          "url": "https://www.latent.space",
+          "fetch_method": "browser",
+          "extract": "latest_3",
+          "enabled": true,
+          "avg_quality": 4.6,
+          "success_rate": 0.70,
+          "note": "Substack 需要 JS 渲染"
+        }
+      ]
+    },
+
+    "disabled": {
+      "description": "已禁用的源（失效或低质量）",
+      "sources": [
+        {
+          "id": "tldr_ai",
+          "name": "TLDR AI",
+          "url": "https://tldr.tech/ai",
+          "reason": "订阅页面，无文章列表",
+          "disabled_date": "2026-01-21"
+        },
+        {
+          "id": "bensbites",
+          "name": "Ben's Bites",
+          "url": "https://bensbites.com/archive",
+          "reason": "需要登录/付费墙",
+          "disabled_date": "2026-01-21"
+        },
+        {
+          "id": "interconnects",
+          "name": "Interconnects AI",
+          "url": "https://interconnects.ai",
+          "reason": "内容提取失败，Substack 结构问题",
+          "disabled_date": "2026-01-21"
+        },
+        {
+          "id": "beehiiv_rss",
+          "name": "Beehiiv RSS feeds",
+          "url": "https://rss.beehiiv.com",
+          "reason": "RSS 抓取困难",
+          "disabled_date": "2026-01-21"
+        }
+      ]
+    }
+  },
+
+  "fetch_config": {
+    "webfetch": {
+      "timeout_ms": 30000,
+      "retry_count": 1,
+      "cache_ttl_minutes": 60
+    },
+    "browser": {
+      "timeout_ms": 45000,
+      "wait_for_selector": "article, .post, .item",
+      "screenshot_on_error": true
+    }
+  },
+
+  "quality_thresholds": {
+    "min_score_to_include": 3,
+    "target_items": 20,
+    "early_stop_threshold": 25
+  }
+}

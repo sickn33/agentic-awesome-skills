@@ -1,0 +1,23 @@
+# pydata__xarray-5131
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and my knowledge of the xarray codebase, I can generate the patch. The issue describes that the `__repr__` method has a trailing whitespace in the format string. The typical pattern in xarray's groupby.py is:
+
+```python
+def __repr__(self):
+    return "{}, grouped over {!r} \n{} groups with labels {}.".format(...)
+```
+
+The trailing space before `\n` needs to be removed.
+
+--- a/xarray/core/groupby.py
++++ b/xarray/core/groupby.py
+@@ -436,7 +436,7 @@ class GroupBy:
+     def __repr__(self):
+         return "{}, grouped over {!r}\n{} groups with labels {}.".format(
+             self.__class__.__name__,
+             self._unique_coord.name,
+             self._unique_coord.size,
+             ", ".join(format_array_flat(self._unique_coord, 30).split()),
+         )

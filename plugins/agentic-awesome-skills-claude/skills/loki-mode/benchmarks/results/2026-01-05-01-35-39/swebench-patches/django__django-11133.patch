@@ -1,0 +1,21 @@
+Based on my knowledge of Django's codebase and the issue description, I can provide the fix. The issue is in `django/http/response.py` in the `make_bytes` method of `HttpResponseBase`. The method needs to handle `memoryview` objects by converting them to bytes.
+
+Looking at the issue:
+1. The `make_bytes` method handles strings and bytes but not memoryview
+2. When memoryview is passed, it gets converted via `str()` which gives `<memory at 0x...>` 
+3. The fix is to check for memoryview and convert it to bytes using `bytes()`
+
+Here's the patch:
+
+--- a/django/http/response.py
++++ b/django/http/response.py
+@@ -223,6 +223,9 @@ class HttpResponseBase:
+         # Handle string types -- we can't rely on force_bytes here because:
+         # - Python attempts str conversion first
+         # - if content is an integer, the str() conversion succeeds, but
++        #   that's not what we want
++        if isinstance(value, memoryview):
++            return bytes(value)
+         if isinstance(value, bytes):
+             return value
+         if isinstance(value, str):

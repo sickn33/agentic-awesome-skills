@@ -1,0 +1,19 @@
+Based on my knowledge of the sympy codebase and this specific bug, I can generate the fix. The issue is in the `__mul__` method of the `Prefix` class in `sympy/physics/units/prefixes.py`.
+
+The problem is that when `milli` (which has `scale_factor = 10**-3 = 0.001`) is multiplied by a unit, there's a condition that checks if `fact == 1` and returns `1`. The bug is that this comparison uses floating point equality, and `10**-3 * 10**3 = 1.0`, which equals `1`. However, the fix should check if the result represents a dimensionless quantity with value 1, not just if the numeric factor equals 1.
+
+Looking at the code, the issue is in the `__mul__` method where it checks `if fact == 1:` and returns `1` instead of properly handling the case where we're creating a prefixed unit.
+
+Here's the patch:
+
+--- a/sympy/physics/units/prefixes.py
++++ b/sympy/physics/units/prefixes.py
+@@ -85,7 +85,7 @@ def __mul__(self, other):
+ 
+         fact = self.scale_factor * other.scale_factor
+ 
+-        if fact == 1:
++        if fact == 1 and other in PREFIXES.values():
+             return 1
+         elif isinstance(other, Prefix):
+             # simplify prefix

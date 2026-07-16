@@ -1,0 +1,24 @@
+# matplotlib__matplotlib-24970
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I can generate the patch. The bug is in matplotlib's `lib/matplotlib/colors.py` file in the `Colormap.__call__` method. The issue is that special marker values (N+1, N, N+2 for over/under/bad) overflow when the array dtype is uint8 (max 255) and N=256.
+
+The fix is to upcast the array to a larger integer type before assigning these special values.
+
+```
+--- a/lib/matplotlib/colors.py
++++ b/lib/matplotlib/colors.py
+@@ -727,6 +727,11 @@ class Colormap:
+                 xa = xa.astype(int)
+         # Set the over-range indices before the under-range;
+         # otherwise the under-range values get converted to over-range.
++        # With NumPy 1.24+, out-of-bound integers can't be assigned to
++        # integer arrays with smaller dtype. Ensure xa can hold the
++        # special values (_i_over, _i_under, _i_bad) which may exceed 255.
++        if xa.dtype.kind in ('u', 'i') and xa.dtype.itemsize < 4:
++            xa = xa.astype(np.int32)
+         xa[xa > self.N - 1] = self._i_over
+         xa[xa < 0] = self._i_under
+         xa[mask_bad] = self._i_bad
+```

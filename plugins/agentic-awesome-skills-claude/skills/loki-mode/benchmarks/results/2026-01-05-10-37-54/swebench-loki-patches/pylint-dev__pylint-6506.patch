@@ -1,0 +1,36 @@
+# pylint-dev__pylint-6506
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, I'll generate the patch for fixing the traceback issue. The fix involves catching `_UnrecognizedOptionError` in `run.py` and printing a user-friendly error message instead of letting the exception propagate.
+
+```
+--- a/pylint/lint/run.py
++++ b/pylint/lint/run.py
+@@ -17,6 +17,7 @@ from pylint.config.config_initialization import _config_initialization
+ from pylint.config.exceptions import ArgumentPreprocessingError
+ from pylint.constants import full_version
+ from pylint.lint.base_options import _make_linter_options
++from pylint.config.exceptions import _UnrecognizedOptionError
+ from pylint.lint.pylinter import PyLinter
+ 
+ try:
+@@ -132,9 +133,14 @@ class Run:
+                 _make_linter_options(linter),
+             )
+ 
+-            args = _config_initialization(
+-                linter, args, reporter, config_file=self._rcfile, verbose_mode=self._verbose
+-            )
++            try:
++                args = _config_initialization(
++                    linter, args, reporter, config_file=self._rcfile, verbose_mode=self._verbose
++                )
++            except _UnrecognizedOptionError as exc:
++                msg = ", ".join(exc.options)
++                print(f"pylint: error: unrecognized arguments: {msg}", file=sys.stderr)
++                sys.exit(32)
+ 
+             if linter.config.jobs < 0:
+                 print(
+```

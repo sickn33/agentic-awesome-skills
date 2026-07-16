@@ -1,0 +1,55 @@
+Based on the issue description, I can understand the problem clearly and provide a fix. The issue is in `sympy/matrices/matrices.py` in the `is_upper` method. The code iterates over indices that go beyond the matrix dimensions for tall matrices (more rows than columns).
+
+The current code:
+```python
+return all(self[i, j].is_zero
+           for i in range(1, self.rows)
+           for j in range(i))
+```
+
+For a 4x2 matrix, this generates indices including (3, 2) which is out of bounds since the matrix only has 2 columns (indices 0 and 1).
+
+The fix should limit `j` to be less than both `i` and `self.cols`:
+
+```python
+return all(self[i, j].is_zero
+           for i in range(1, self.rows)
+           for j in range(min(i, self.cols)))
+```
+
+Similarly, `is_lower` likely has the same issue for wide matrices (more columns than rows).
+
+The current `is_lower` code would be something like:
+```python
+return all(self[i, j].is_zero
+           for i in range(self.rows - 1)
+           for j in range(i + 1, self.cols))
+```
+
+For `is_lower`, the issue would be with wide matrices where `i` could exceed the row limit. The fix would be:
+```python
+return all(self[i, j].is_zero
+           for i in range(min(self.rows, self.cols) - 1)
+           for j in range(i + 1, self.cols))
+```
+
+Here's the patch:
+
+--- a/sympy/matrices/matrices.py
++++ b/sympy/matrices/matrices.py
+@@ -1109,7 +1109,7 @@ class MatrixProperties(MatrixRequired):
+         """
+         return all(self[i, j].is_zero
+                    for i in range(1, self.rows)
+-                   for j in range(i))
++                   for j in range(min(i, self.cols)))
+ 
+     @property
+     def is_lower(self):
+@@ -1131,5 +1131,5 @@ class MatrixProperties(MatrixRequired):
+         True
+         """
+         return all(self[i, j].is_zero
+-                   for i in range(self.rows - 1)
++                   for i in range(min(self.rows, self.cols) - 1)
+                    for j in range(i + 1, self.cols))

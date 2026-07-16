@@ -1,0 +1,29 @@
+# django__django-16400
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of Django's codebase, I can generate the patch. The issue is in `django/contrib/auth/management/__init__.py` where the `create_permissions()` function creates Permission objects without setting `_state.db`, causing the ContentType lookup to use the wrong database.
+
+--- a/django/contrib/auth/management/__init__.py
++++ b/django/contrib/auth/management/__init__.py
+@@ -93,12 +93,15 @@ def create_permissions(app_config, verbosity=2, interactive=True, using=DEFAULT_
+     )
+     ctypes = set(ctypes)
+ 
+-    perms = [
+-        Permission(codename=codename, name=name, content_type=ct)
+-        for ct, (codename, name) in searched_perms
+-        if (ct.pk, codename) not in all_perms
+-    ]
++    perms = []
++    for ct, (codename, name) in searched_perms:
++        if (ct.pk, codename) not in all_perms:
++            permission = Permission()
++            permission._state.db = using
++            permission.codename = codename
++            permission.name = name
++            permission.content_type = ct
++            perms.append(permission)
+     Permission.objects.using(using).bulk_create(perms)
+     if verbosity >= 2:
+         for perm in perms:

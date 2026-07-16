@@ -1,0 +1,69 @@
+# pytest-dev__pytest-5692
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of pytest's junitxml.py structure, I'll generate a patch that adds the hostname and timestamp properties to the generated JUnit XML reports:
+
+```
+--- a/src/_pytest/junitxml.py
++++ b/src/_pytest/junitxml.py
+@@ -12,6 +12,8 @@ import functools
+ import os
+ import re
+ import sys
++import platform
++from datetime import datetime
+ from typing import Callable
+ from typing import Dict
+ from typing import List
+@@ -441,6 +443,7 @@ class LogXML:
+         self.node_reporters = {}  # type: Dict[Tuple[Union[str, TestReport], object], _NodeReporter]
+         self.node_reporters_ordered = []  # type: List[_NodeReporter]
+         self.global_properties = []  # type: List[Tuple[str, str]]
++        self.suite_start_time = None  # type: Optional[float]
+ 
+         # List of reports that failed on call but teardown is pending.
+         self.open_reports = []  # type: List[TestReport]
+@@ -531,6 +534,9 @@ class LogXML:
+     def pytest_sessionstart(self):
+         self.suite_start_time = time.time()
+ 
++    def pytest_sessionstart(self):
++        self.suite_start_time = time.time()
++
+     def pytest_sessionfinish(self):
+         dirname = os.path.dirname(os.path.abspath(self.logfile))
+         if not os.path.isdir(dirname):
+@@ -647,6 +653,8 @@ class LogXML:
+             errors=str(self.stats.get("error", 0)),
+             skipped=str(self.stats.get("skipped", 0)),
+             tests=str(numtests),
++            hostname=platform.node(),
++            timestamp=datetime.fromtimestamp(self.suite_start_time).isoformat(timespec="seconds"),
+             time="%.3f" % suite_time_delta,
+         )
+         logfile.write(Junit.testsuite(self._get_global_properties_node(), *suite_node))
+```
+
+Wait, let me reconsider - the patch above has issues. Let me generate a cleaner, correct patch based on the typical structure of pytest's junitxml.py:
+
+--- a/src/_pytest/junitxml.py
++++ b/src/_pytest/junitxml.py
+@@ -12,6 +12,8 @@ import functools
+ import os
+ import re
+ import sys
++import platform
++from datetime import datetime
+ from typing import Callable
+ from typing import Dict
+ from typing import List
+@@ -652,6 +654,8 @@ class LogXML:
+             errors=str(self.stats.get("error", 0)),
+             skipped=str(self.stats.get("skipped", 0)),
+             tests=str(numtests),
++            hostname=platform.node(),
++            timestamp=datetime.fromtimestamp(self.suite_start_time).isoformat(timespec="seconds"),
+             time="%.3f" % suite_time_delta,
+         )
+         logfile.write(Junit.testsuite(self._get_global_properties_node(), *suite_node))

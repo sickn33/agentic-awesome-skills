@@ -1,0 +1,32 @@
+# django__django-13768
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/django/dispatch/dispatcher.py
++++ b/django/dispatch/dispatcher.py
+@@ -1,4 +1,5 @@
+ import threading
++import logging
+ import weakref
+ 
+ from django.utils.inspect import func_accepts_kwargs
+@@ -6,6 +7,8 @@ from django.utils.inspect import func_accepts_kwargs
+ def _make_id(target):
+     if hasattr(target, '__func__'):
+         return (id(target.__self__), id(target.__func__))
+     return id(target)
+ 
++logger = logging.getLogger('django.dispatch')
++
+ 
+ NONE_ID = _make_id(None)
+@@ -206,6 +209,12 @@ class Signal:
+                 responses.append((receiver, response))
+             except Exception as err:
++                logger.exception(
++                    'Error calling %s in Signal.send_robust() (%s)',
++                    receiver.__qualname__ if hasattr(receiver, '__qualname__') else receiver,
++                    err,
++                )
+                 responses.append((receiver, err))
+         return responses

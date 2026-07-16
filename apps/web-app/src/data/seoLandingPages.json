@@ -1,0 +1,263 @@
+[
+  {
+    "slug": "antigravity-cli-skills",
+    "title": "Antigravity CLI Skills | Installable AI agent playbooks",
+    "description": "Install Antigravity CLI skills from the Agentic Awesome Skills GitHub repository, with curated playbooks for coding agents, reviews, testing, and workflow automation.",
+    "eyebrow": "Antigravity CLI",
+    "h1": "Antigravity CLI skills for agentic coding workflows",
+    "summary": "Use Agentic Awesome Skills as a GitHub-backed library of reusable SKILL.md playbooks for Antigravity CLI and adjacent coding-agent runtimes.",
+    "primaryIntent": "Find installable skills and workflow playbooks for Antigravity CLI.",
+    "keywords": [
+      "Antigravity CLI skills",
+      "Antigravity skills GitHub",
+      "AI agent skills",
+      "SKILL.md playbooks"
+    ],
+    "relatedTerms": [
+      "antigravity",
+      "cli",
+      "agent",
+      "coding agent",
+      "codex",
+      "claude",
+      "cursor",
+      "gemini",
+      "playbook",
+      "workflow"
+    ],
+    "relatedCategories": [
+      "ai-agents",
+      "agent-orchestration",
+      "coding",
+      "development",
+      "developer-tools",
+      "workflow"
+    ],
+    "sections": [
+      {
+        "heading": "What to install first",
+        "body": "Start with focused coding, review, testing, documentation, and release skills instead of activating the entire catalog on day one."
+      },
+      {
+        "heading": "Why this repository fits Antigravity",
+        "body": "The library is organized around portable skill instructions, specialized plugins, bundles, and workflows that can be reused across agent hosts."
+      },
+      {
+        "heading": "When the full library is too broad",
+        "body": "Use curated bundles and plugin packs to keep the active skill surface small while preserving access to the complete GitHub source."
+      }
+    ],
+    "links": [
+      {
+        "label": "Open the GitHub repository",
+        "href": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      {
+        "label": "Read installation docs",
+        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/usage.md"
+      },
+      {
+        "label": "Compare specialized plugins",
+        "to": "/plugins"
+      }
+    ]
+  },
+  {
+    "slug": "github-ai-skills-repository",
+    "title": "GitHub AI Skills Repository | Agentic Awesome Skills",
+    "description": "Browse the Agentic Awesome Skills GitHub repository: an installable library of AI agent skills, specialized plugins, bundles, and reusable coding workflows.",
+    "eyebrow": "GitHub repository",
+    "h1": "A GitHub repository for installable AI agent skills",
+    "summary": "Agentic Awesome Skills is the canonical GitHub source for SKILL.md playbooks, installer flows, plugin packs, bundles, and workflow documentation.",
+    "primaryIntent": "Find a GitHub repository of reusable AI coding assistant skills.",
+    "keywords": [
+      "GitHub AI skills repository",
+      "AI agent skills GitHub",
+      "awesome skills GitHub",
+      "coding assistant skills"
+    ],
+    "relatedTerms": [
+      "github",
+      "repository",
+      "source",
+      "open source",
+      "oss",
+      "skill",
+      "skills",
+      "assistant",
+      "coding assistant"
+    ],
+    "relatedCategories": [
+      "code",
+      "code-quality",
+      "coding",
+      "development",
+      "developer-tools",
+      "github",
+      "tool-quality"
+    ],
+    "sections": [
+      {
+        "heading": "Canonical source of truth",
+        "body": "The GitHub repository contains the skill source, installer CLI, user docs, plugin mirrors, bundles, workflows, and release history."
+      },
+      {
+        "heading": "Searchable catalog",
+        "body": "The hosted catalog gives users a fast browsing layer over the repository so they can discover skills before installing them."
+      },
+      {
+        "heading": "Reusable across agents",
+        "body": "The same library supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related assistant runtimes."
+      }
+    ],
+    "links": [
+      {
+        "label": "Open GitHub source",
+        "href": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      {
+        "label": "Install from npm",
+        "href": "https://www.npmjs.com/package/agentic-awesome-skills"
+      },
+      {
+        "label": "Browse all skills",
+        "to": "/"
+      }
+    ]
+  },
+  {
+    "slug": "antigravity-plugins",
+    "title": "Antigravity Plugins | Specialized AI coding workflow packs",
+    "description": "Compare Antigravity-compatible plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, and agent workflows.",
+    "eyebrow": "Plugin packs",
+    "h1": "Antigravity plugins for focused agent workflows",
+    "summary": "Specialized plugins package the right skills for a domain so users can start with a narrow, practical surface instead of the full library.",
+    "primaryIntent": "Find Antigravity plugin packs and focused AI workflow distributions.",
+    "keywords": [
+      "Antigravity plugins",
+      "Antigravity plugin",
+      "AI coding plugins",
+      "specialized skill plugins"
+    ],
+    "relatedTerms": [
+      "plugin",
+      "plugins",
+      "bundle",
+      "pack",
+      "security",
+      "frontend",
+      "backend",
+      "data",
+      "devops",
+      "qa",
+      "testing",
+      "mobile",
+      "documents",
+      "web app"
+    ],
+    "relatedCategories": [
+      "backend",
+      "data",
+      "devops",
+      "document-processing",
+      "frontend",
+      "mobile",
+      "security",
+      "test-automation",
+      "testing",
+      "web-development"
+    ],
+    "sections": [
+      {
+        "heading": "Focused distributions",
+        "body": "Plugin packs group related skills for domains such as frontend, security, data, documents, DevOps, QA, mobile, and agent systems."
+      },
+      {
+        "heading": "Lower activation cost",
+        "body": "A plugin gives the assistant a tighter instruction set, reducing noise when the full catalog is more than the current task needs."
+      },
+      {
+        "heading": "Still backed by the full repo",
+        "body": "Each plugin remains part of the larger Agentic Awesome Skills repository and can be traced back to canonical skill sources."
+      }
+    ],
+    "links": [
+      {
+        "label": "Compare all plugin packs",
+        "to": "/plugins"
+      },
+      {
+        "label": "Open GitHub plugins",
+        "href": "https://github.com/sickn33/agentic-awesome-skills/tree/main/plugins"
+      },
+      {
+        "label": "Read plugin docs",
+        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/plugins.md"
+      }
+    ]
+  },
+  {
+    "slug": "skills-para-antigravity",
+    "title": "Skills para Antigravity | Installable AI coding skills",
+    "description": "Find skills para Antigravity in the Agentic Awesome Skills GitHub library, including installable playbooks for coding agents, plugins, bundles, and workflows.",
+    "eyebrow": "International search",
+    "h1": "Skills para Antigravity and AI coding agents",
+    "summary": "A practical entry point for users searching for skills para Antigravity, Antigravity skills, or GitHub playbooks for AI coding assistants.",
+    "primaryIntent": "Serve international searches for skills para Antigravity.",
+    "keywords": [
+      "skills para Antigravity",
+      "Antigravity skills",
+      "skills Antigravity GitHub",
+      "AI coding assistant skills"
+    ],
+    "relatedTerms": [
+      "para",
+      "espanol",
+      "español",
+      "portugues",
+      "portuguese",
+      "spanish",
+      "international",
+      "antigravity",
+      "assistant"
+    ],
+    "relatedCategories": [
+      "andruia",
+      "business-strategy",
+      "content",
+      "education",
+      "leiloeiro",
+      "marketing",
+      "research",
+      "writing"
+    ],
+    "sections": [
+      {
+        "heading": "Installable skill playbooks",
+        "body": "The repository provides reusable SKILL.md instructions that help AI coding assistants plan, implement, test, review, document, and ship work."
+      },
+      {
+        "heading": "Works beyond one host",
+        "body": "Antigravity is one target surface, but the library also supports other assistant runtimes through direct installs and plugin distributions."
+      },
+      {
+        "heading": "Start with the catalog",
+        "body": "Use the hosted catalog to compare skills and plugin packs, then open the GitHub repository for installation and source details."
+      }
+    ],
+    "links": [
+      {
+        "label": "Browse the catalog",
+        "to": "/"
+      },
+      {
+        "label": "Open the GitHub repository",
+        "href": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      {
+        "label": "Compare plugins",
+        "to": "/plugins"
+      }
+    ]
+  }
+]

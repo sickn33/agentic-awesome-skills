@@ -1,0 +1,29 @@
+This is a different issue (15308 about Trace). The issue I'm working on is 15595 about MatrixElement indices. The problem is clear from the hints - `_print_MatrixElement` needs to call `self._print` on the indices.
+
+Let me understand what the correct fix should be. The issue is:
+- Current code: `'_{%s, %s}' % (expr.i, expr.j)` - this directly converts indices to strings
+- Should be: `'_{%s, %s}' % (self._print(expr.i), self._print(expr.j))` - this properly prints indices through the LaTeX printer
+
+When indices are `Dummy` symbols (like `i_1` from summations), they get represented as `_i_1` in their string form, causing the double underscore issue in LaTeX.
+
+The fix is straightforward:
+
+```
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1519,4 +1519,4 @@ class LatexPrinter(Printer):
+ 
+     def _print_MatrixElement(self, expr):
+         return self.parenthesize(expr.parent, PRECEDENCE["Atom"], strict=True) \
+-            + '_{%s, %s}' % (expr.i, expr.j)
++            + '_{%s, %s}' % (self._print(expr.i), self._print(expr.j))
+```
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1519,4 +1519,4 @@
+ 
+     def _print_MatrixElement(self, expr):
+         return self.parenthesize(expr.parent, PRECEDENCE["Atom"], strict=True) \
+-            + '_{%s, %s}' % (expr.i, expr.j)
++            + '_{%s, %s}' % (self._print(expr.i), self._print(expr.j))

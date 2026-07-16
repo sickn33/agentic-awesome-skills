@@ -1,0 +1,19 @@
+# django__django-15400
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the analysis provided and standard Django source code structure, I can generate the patch for the `SimpleLazyObject.__radd__` issue. The fix adds the `__radd__` method using the `new_method_proxy` pattern with a lambda that reverses the operand order.
+
+```
+--- a/django/utils/functional.py
++++ b/django/utils/functional.py
+@@ -396,6 +396,8 @@ class SimpleLazyObject(LazyObject):
+     # SimpleLazyObject to int.
+     __copy__ = new_method_proxy(copy.copy)
+ 
++    __radd__ = new_method_proxy(lambda self, other: other + self)
++
+     def __deepcopy__(self, memo):
+         if self._wrapped is empty:
+             # We have to use SimpleLazyObject, not self.__class__, because the
+```

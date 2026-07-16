@@ -1,0 +1,31 @@
+# sympy__sympy-15011
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/utilities/lambdify.py
++++ b/sympy/utilities/lambdify.py
+@@ -739,10 +739,21 @@ def _preprocess(self, args, expr):
+         from sympy import Symbol, Function, flatten, Derivative, ordered, Basic
+         from sympy.matrices import DeferredVector
+ 
+-        # Args of type Dummy can cause name collisions with args
+-        # of type Symbol.  Force dummify of everything in this
+-        # temporary situation to handle a corner case:
+-        dummify = self._dummify or any(isinstance(arg, Basic) and arg.has(Dummy) for arg in flatten(args))
++        # Check if dummify is needed
++        dummify = self._dummify
++
++        if not dummify:
++            # Args of type Dummy can cause name collisions with args
++            # of type Symbol.  Force dummify of everything in this
++            # temporary situation to handle a corner case:
++            dummify = any(isinstance(arg, Basic) and arg.has(Dummy) for arg in flatten(args))
++
++        if not dummify:
++            # Check if any MatrixSymbol has an invalid Python identifier name
++            from sympy.matrices import MatrixSymbol
++            dummify = any(isinstance(arg, MatrixSymbol) and not self._is_safe_ident(arg.name)
++                          for arg in flatten(args))
+ 
+         argstrs = [None]*len(args)
+         for arg, i in reversed(list(ordered(zip(args, range(len(args)))))):

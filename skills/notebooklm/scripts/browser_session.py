@@ -9,6 +9,7 @@ import time
 import sys
 from typing import Any, Dict, Optional
 from pathlib import Path
+from urllib.parse import urlparse
 
 from patchright.sync_api import BrowserContext, Page
 
@@ -16,6 +17,14 @@ from patchright.sync_api import BrowserContext, Page
 sys.path.insert(0, str(Path(__file__).parent))
 
 from browser_utils import StealthUtils
+
+
+def _get_hostname(url: str) -> str:
+    """Extract a normalized hostname from a URL."""
+    try:
+        return (urlparse(url).hostname or "").lower()
+    except ValueError:
+        return ""
 
 
 class BrowserSession:
@@ -61,7 +70,7 @@ class BrowserSession:
             self.page.goto(self.notebook_url, wait_until="domcontentloaded", timeout=30000)
 
             # Check if login is needed
-            if "accounts.google.com" in self.page.url:
+            if _get_hostname(self.page.url) == "accounts.google.com":
                 raise RuntimeError("Authentication required. Please run auth_manager.py setup first.")
 
             # Wait for page to be ready

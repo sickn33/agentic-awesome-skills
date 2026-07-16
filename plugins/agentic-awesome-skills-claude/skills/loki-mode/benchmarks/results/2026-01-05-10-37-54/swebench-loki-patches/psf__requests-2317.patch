@@ -1,0 +1,38 @@
+# psf__requests-2317
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -13,7 +13,7 @@ from datetime import datetime
+ from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str
+ from .cookies import (
+     cookiejar_from_dict, extract_cookies_to_jar, RequestsCookieJar, merge_cookies)
+-from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT
++from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT, to_native_str
+ from .hooks import default_hooks, dispatch_hook
+ from .utils import to_key_val_list, default_headers
+ from .exceptions import TooManyRedirects, ChunkedEncodingError, ContentDecodingError
+@@ -425,7 +425,7 @@ class Session(SessionRedirectMixin):
+             params=None,
+             auth=None,
+             cookies=None,
+-            hooks=None,):
++            hooks=None):
+ 
+         cookies = cookies or {}
+         headers = headers or {}
+@@ -434,7 +434,12 @@ class Session(SessionRedirectMixin):
+         for (k, v) in list(cookies.items()):
+             req.headers.set_cookie(k, v)
+ 
+-        method = builtin_str(method)
++        # Support for bytes method (e.g. b'GET') - decode to native string
++        if isinstance(method, bytes):
++            method = method.decode('utf-8')
++        else:
++            method = builtin_str(method)
++
+         # Create the Request.
+         req = Request(
+             method = method.upper(),

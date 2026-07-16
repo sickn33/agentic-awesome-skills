@@ -1,0 +1,13 @@
+The sympy repository doesn't appear to be in this workspace. Based on the issue description, I can generate the patch directly since it's a simple fix - adding `"acsc"` and `"asec"` to the `inv_trig_table` list on line 743.
+
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -740,7 +740,7 @@ class LatexPrinter(Printer):
+             func = func[1:]
+             inv_trig_power_case = True
+ 
+-        inv_trig_table = ["asin", "acos", "atan", "acot"]
++        inv_trig_table = ["asin", "acos", "atan", "acsc", "asec", "acot"]
+ 
+         # If the function is an inverse trig function, handle the style
+         if self._settings['inv_trig_style'] == "abbreviated":

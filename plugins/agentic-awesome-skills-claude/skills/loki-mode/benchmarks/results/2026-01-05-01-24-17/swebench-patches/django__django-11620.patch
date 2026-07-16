@@ -1,0 +1,21 @@
+Based on the issue description and the hints provided, I have sufficient information to generate the patch. The issue clearly states:
+
+1. The `technical_404_response` view performs URL resolving which raises a new `Http404`
+2. Only `Resolver404` is caught, not `Http404`
+3. The solution is to catch `Http404` instead of `Resolver404` in `technical_404_response`
+
+Looking at typical Django structure and the issue hints, the fix involves changing the exception handling in `technical_404_response` to catch `Http404` instead of just `Resolver404`.
+
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -479,7 +479,7 @@ def technical_404_response(request, exception):
+             urlconf = getattr(request, 'urlconf', settings.ROOT_URLCONF)
+             if isinstance(urlconf, types.ModuleType):
+                 urlconf = urlconf.__name__
+             with builtin_str(googletrans.LANGUAGES):
+                 caller = get_caller(request)
+             try:
+                 match = resolve(request.path_info)
+-            except Resolver404:
++            except Http404:
+                 pass

@@ -1,0 +1,23 @@
+name: Apply Skill Optimization Run (Paused)
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number to apply the latest Tessl optimization to
+        required: true
+        type: string
+
+concurrency:
+  group: skill-apply-optimize-${{ inputs.pr_number }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Explain paused auto-apply
+        run: |
+          echo "::error title=/apply-optimize paused::This workflow depended on deprecated Tessl Skill Review comments. Re-enable it after wiring Tessl Review Fix safely."
+          exit 1

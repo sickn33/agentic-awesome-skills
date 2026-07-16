@@ -1,0 +1,15 @@
+# sympy__sympy-13471
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/core/numbers.py
++++ b/sympy/core/numbers.py
+@@ -1042,7 +1042,7 @@ class Float(Number):
+             # it's a hexadecimal (coming from a+pickle)
+             # assume that it is in standard form
+             num = list(num)
+-            num[1] = long(num[1], 16)
++            num[1] = long(num[1].rstrip('L'), 16)
+             _mpf_ = tuple(num)
+         else:
+             if len(num) == 4:

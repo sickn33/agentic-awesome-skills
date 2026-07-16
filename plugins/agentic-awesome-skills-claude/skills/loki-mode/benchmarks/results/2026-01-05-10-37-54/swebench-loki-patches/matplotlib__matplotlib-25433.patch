@@ -1,0 +1,126 @@
+# matplotlib__matplotlib-25433
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis, this is for an external matplotlib repository. Since I cannot access the actual matplotlib source files, I will generate the patch based on my knowledge of matplotlib's widgets.py structure and the bug analysis provided.
+
+The issue is that `RangeSlider.on_changed` fires during mouse drag events while the mouse is still pressed. When `clf()` destroys the slider mid-interaction, the event handling breaks. The fix is to ensure proper cleanup of the event state or defer callbacks.
+
+```
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -580,6 +580,7 @@ class SliderBase(AxesWidget):
+         self._active_handle = None
+         self.valmin = valmin
+         self.valmax = valmax
++        self._changed_callbacks_blocked = False
+         valinit = self._value_in_bounds(valinit)
+         if orientation == "vertical":
+             self.ax.set_ylim((valmin, valmax))
+@@ -639,6 +640,8 @@ class SliderBase(AxesWidget):
+ 
+     def _update(self, event):
+         """Update the slider position."""
++        if self._changed_callbacks_blocked:
++            return
+         if self.ignore(event) or event.button != 1:
+             return
+ 
+@@ -653,6 +656,18 @@ class SliderBase(AxesWidget):
+             self._active_handle = None
+             return
+ 
++        if event.name == 'button_release_event':
++            self._changed_callbacks_blocked = False
++
++    def _process_callbacks_safely(self, val):
++        """Process changed callbacks with proper state management."""
++        # Block callbacks during processing to prevent issues if clf() is called
++        self._changed_callbacks_blocked = True
++        try:
++            self._observers.process('changed', val)
++        finally:
++            self._changed_callbacks_blocked = False
++
+ 
+ class Slider(SliderBase):
+     """
+@@ -809,7 +824,11 @@ class Slider(SliderBase):
+         self.val = val
+         if self.eventson:
+             self._observers.process('changed', val)
++    
++    def set_val_safe(self, val):
++        """Set the slider value, with safe callback handling."""
++        self._set_val_internal(val)
++        if self.eventson:
++            self._process_callbacks_safely(val)
+ 
+ 
+ class RangeSlider(SliderBase):
+@@ -1029,7 +1048,12 @@ class RangeSlider(SliderBase):
+         self._update_selection_poly(*val)
+         self.val = val
+         if self.eventson:
+-            self._observers.process('changed', val)
++            # Only process callbacks on button release to prevent issues
++            # when clf() is called in the callback (which destroys the slider
++            # while the mouse is still captured during drag)
++            if not hasattr(self, '_dragging') or not self._dragging:
++                self._observers.process('changed', val)
++            self._pending_callback_val = val
+ 
+     def on_changed(self, func):
+         """
+```
+
+Let me provide a cleaner, more focused patch that addresses the core issue:
+
+```
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -580,6 +580,8 @@ class SliderBase(AxesWidget):
+         self._active_handle = None
+         self.valmin = valmin
+         self.valmax = valmax
++        self._dragging = False
++        self._pending_val = None
+         valinit = self._value_in_bounds(valinit)
+         if orientation == "vertical":
+             self.ax.set_ylim((valmin, valmax))
+@@ -651,8 +653,17 @@ class SliderBase(AxesWidget):
+             return
+ 
+         if event.name == 'button_press_event' and event.inaxes == self.ax:
++            self._dragging = True
+             self._active_handle = handle
+         if val is not None:
+             self.set_val(val)
+         if event.name == 'button_release_event':
++            self._dragging = False
+             self._active_handle = None
++            # Process pending callbacks after mouse release to prevent issues
++            # when clf() is called in on_changed (which would destroy the slider
++            # while mouse is still captured during drag)
++            if self._pending_val is not None:
++                pending = self._pending_val
++                self._pending_val = None
++                self._observers.process('changed', pending)
+ 
+ 
+ class Slider(SliderBase):
+@@ -1029,7 +1040,12 @@ class RangeSlider(SliderBase):
+         self._update_selection_poly(*val)
+         self.val = val
+         if self.eventson:
+-            self._observers.process('changed', val)
++            # Defer callback processing until mouse release when dragging
++            # to prevent issues when clf() is called in the callback
++            if self._dragging:
++                self._pending_val = val
++            else:
++                self._observers.process('changed', val)
+ 
+     def on_changed(self, func):
+         """
+```

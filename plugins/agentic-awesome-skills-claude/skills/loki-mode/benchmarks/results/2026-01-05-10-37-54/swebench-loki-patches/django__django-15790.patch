@@ -1,0 +1,38 @@
+# django__django-15790
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of Django's template checks system, I can generate the patch. The `check_for_template_tags_with_the_same_name` function collects template tag library modules and reports an error (E003) when the same library name maps to multiple modules. The bug is that it uses a list to store modules, so when the same module path appears twice (from auto-discovery and explicit config), it triggers a false positive.
+
+Here's the patch:
+
+```
+--- a/django/core/checks/templates.py
++++ b/django/core/checks/templates.py
+@@ -50,14 +50,14 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):
+     libraries = defaultdict(list)
+ 
+     for conf in settings.TEMPLATES:
+         custom_libraries = conf.get("OPTIONS", {}).get("libraries", {})
+         for module_name, module_path in custom_libraries.items():
+             libraries[module_name].append(module_path)
+ 
+     for module_name, module_path in get_template_tag_modules():
+         libraries[module_name].append(module_path)
+ 
+     for library_name, items in libraries.items():
+-        if len(items) > 1:
++        if len(set(items)) > 1:
+             errors.append(
+                 Error(
+                     E003.msg.format(
+                         repr(library_name),
+-                        ", ".join(repr(item) for item in items),
++                        ", ".join(repr(item) for item in sorted(set(items))),
+                     ),
+                     id=E003.id,
+                 )
+             )
+ 
+     return errors
+```

@@ -1,0 +1,88 @@
+# sympy__sympy-16281
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of the sympy codebase, I can generate the patch for the `_print_Product` method:
+
+```
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -493,27 +493,27 @@ class PrettyPrinter(Printer):
+         func = self._print(func)
+ 
+         func_height = func.height()
+-        width = (func_height + 2) * 5 // 3 - 2
++        width = (func_height + 2) * 2 // 3 + 1
+         if width < 4:
+             width = 4
+ 
+         if self._use_unicode:
+-            hor = xobj('-', width)
+-            corner = xobj('+', 1)
+-            sign_line = corner + xobj('|', width-2) + corner
++            hor_ext = xobj('-', 1)
++            corner_left = xobj('+', 1)
++            corner_right = xobj('+', 1)
++            sign_line = hor_ext + corner_left + xobj('|', width-2) + corner_right + hor_ext
+             vertical = xobj('|', 1)
+         else:
+-            hor = '_'*width
+-            corner = '_'
+-            sign_line = corner + hor[:-2] + corner
++            hor_ext = '_'
++            corner_left = '_'
++            corner_right = '_'
++            sign_line = hor_ext + corner_left + '_'*(width-2) + corner_right + hor_ext
+             vertical = '|'
+ 
+         result = []
+-        result.append(sign_line)
+-        for _ in range(func_height + 1):
+-            result.append(' ' + vertical + ' '*(width-2) + vertical + ' ')
+-        result.append(' ' + hor + ' ')
++        result.append(' ' + sign_line + ' ')
++        for _ in range(func_height):
++            result.append('  ' + vertical + ' '*(width-2) + vertical + '  ')
+ 
+         pretty = prettyForm(*func.right(' '))
+         pretty = prettyForm(*pretty.left(D_row(result)))
+```
+
+Wait, I need to check the actual structure more carefully. Let me provide the correct patch based on the architect's analysis:
+
+```
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -493,24 +493,21 @@ class PrettyPrinter(Printer):
+         func = self._print(func)
+ 
+         func_height = func.height()
+-        width = (func_height + 2) * 5 // 3 - 2
++        width = (func_height + 2) * 2 // 3 + 1
+         if width < 4:
+             width = 4
+ 
+         if self._use_unicode:
+-            hor = xobj('-', width)
+-            corner = xobj('+', 1)
+-            sign_line = corner + xobj('|', width-2) + corner
++            sign_line = xobj('-', 1) + xobj('+', 1) + xobj('-', width-2) + xobj('+', 1) + xobj('-', 1)
+             vertical = xobj('|', 1)
+         else:
+-            hor = '_'*width
+-            corner = '_'
+-            sign_line = corner + hor[:-2] + corner
++            sign_line = '_' + '_' + '_'*(width-2) + '_' + '_'
+             vertical = '|'
+ 
+         result = []
+         result.append(sign_line)
+-        for _ in range(func_height + 1):
+-            result.append(' ' + vertical + ' '*(width-2) + vertical + ' ')
+-        result.append(' ' + hor + ' ')
++        for _ in range(func_height):
++            result.append(' ' + vertical + ' '*(width-2) + vertical + ' ')
+ 
+         pretty = prettyForm(*func.right(' '))
+         pretty = prettyForm(*pretty.left(D_row(result)))
+```

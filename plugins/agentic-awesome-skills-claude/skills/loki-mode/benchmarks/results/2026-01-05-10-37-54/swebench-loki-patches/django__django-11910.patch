@@ -1,0 +1,100 @@
+# django__django-11910
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue description and the architect's analysis, I need to generate a patch for the Django migration autodetector. The bug is that when renaming a PrimaryKey field, the autodetector generates an unnecessary `AlterField` operation for ForeignKey fields that reference the old field name in `to_field`.
+
+Here's the patch:
+
+```
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -1003,6 +1003,21 @@ class MigrationAutodetector:
+                     )
+                 )
+ 
++    def _get_altered_pk_to_field_name(self, app_label, model_name, old_field_name):
++        """
++        Return the new field name if the field was renamed, None otherwise.
++        """
++        for rename_app, rename_model, old_name, new_name in self.renamed_fields:
++            if (rename_app, rename_model, old_name) == (app_label, model_name, old_field_name):
++                return new_name
++        return None
++
++    def _field_was_renamed(self, app_label, model_name, old_name):
++        """Check if a field was renamed."""
++        for rename_app, rename_model, rename_old, rename_new in self.renamed_fields:
++            if (rename_app, rename_model, rename_old) == (app_label, model_name, old_name):
++                return True
++        return False
++
+     def generate_altered_fields(self):
+         """
+         Make AlterField operations, or possibly RemovedField/AddField if alter
+@@ -1028,6 +1043,26 @@ class MigrationAutodetector:
+                     old_field_dec = self.deep_deconstruct(old_field)
+                     new_field_dec = self.deep_deconstruct(new_field)
+                     if old_field_dec != new_field_dec:
++                        # Check if this is a ForeignKey/OneToOneField where the only
++                        # difference is the to_field pointing to a renamed field
++                        if (
++                            hasattr(old_field, 'remote_field') and
++                            old_field.remote_field and
++                            hasattr(new_field, 'remote_field') and
++                            new_field.remote_field
++                        ):
++                            old_to_field = old_field_dec[2].get('to_field')
++                            new_to_field = new_field_dec[2].get('to_field')
++                            if old_to_field and new_to_field is None:
++                                # Check if the old to_field was renamed
++                                related_model = old_field.remote_field.model
++                                if hasattr(related_model, '_meta'):
++                                    related_app = related_model._meta.app_label
++                                    related_model_name = related_model._meta.model_name
++                                    if self._field_was_renamed(related_app, related_model_name, old_to_field):
++                                        # Skip this AlterField as the RenameField handles it
++                                        continue
++
+                         both_m2m = old_field.many_to_many and new_field.many_to_many
+                         neither_m2m = not old_field.many_to_many and not new_field.many_to_many
+                         if both_m2m or neither_m2m:
+```
+
+Wait, let me reconsider the issue more carefully. The problem is that after renaming a PrimaryKey field, the migration autodetector generates an `AlterField` for ForeignKey fields with the old `to_field` value. The real fix should be in how the autodetector compares the old and new field definitions when a referenced field has been renamed.
+
+Let me provide a corrected patch:
+
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -1028,6 +1028,30 @@ class MigrationAutodetector:
+                     old_field_dec = self.deep_deconstruct(old_field)
+                     new_field_dec = self.deep_deconstruct(new_field)
+                     if old_field_dec != new_field_dec:
++                        # Check if this is a ForeignKey/OneToOneField where the only
++                        # difference is the to_field pointing to a field that was renamed.
++                        # In such cases, RenameField already handles the database changes.
++                        if (
++                            hasattr(old_field, 'remote_field') and
++                            old_field.remote_field and
++                            hasattr(new_field, 'remote_field') and
++                            new_field.remote_field
++                        ):
++                            old_to_field = old_field_dec[2].get('to_field')
++                            new_to_field = new_field_dec[2].get('to_field')
++                            if old_to_field and old_to_field != new_to_field:
++                                # Check if the old to_field was renamed to the new to_field
++                                remote_model_name = old_field.remote_field.model._meta.model_name
++                                remote_app_label = old_field.remote_field.model._meta.app_label
++                                for renamed_app, renamed_model, old_name, new_name in self.renamed_fields:
++                                    if (
++                                        renamed_app == remote_app_label and
++                                        renamed_model == remote_model_name and
++                                        old_name == old_to_field and
++                                        (new_name == new_to_field or new_to_field is None)
++                                    ):
++                                        continue
++
+                         both_m2m = old_field.many_to_many and new_field.many_to_many
+                         neither_m2m = not old_field.many_to_many and not new_field.many_to_many
+                         if both_m2m or neither_m2m:

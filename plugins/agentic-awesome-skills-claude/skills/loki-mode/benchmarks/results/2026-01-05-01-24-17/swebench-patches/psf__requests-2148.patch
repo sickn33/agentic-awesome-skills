@@ -1,0 +1,37 @@
+Now I have all the information I need. The fix needs to:
+
+1. Import `socket` at the top of the file
+2. Add `ConnectionError` to the imports from `.exceptions`
+3. Catch `socket.error` in the `generate()` function and wrap it in `ConnectionError`
+
+Here's the patch:
+
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -7,6 +7,7 @@ This module contains the primary objects that power Requests.
+ """
+ 
+ import collections
++import socket
+ import datetime
+ 
+ from io import BytesIO, UnsupportedOperation
+@@ -21,7 +22,7 @@ from .packages.urllib3.filepost import encode_multipart_formdata
+ from .packages.urllib3.util import parse_url
+ from .packages.urllib3.exceptions import DecodeError
+ from .exceptions import (
+-    HTTPError, RequestException, MissingSchema, InvalidURL,
++    HTTPError, ConnectionError, RequestException, MissingSchema, InvalidURL,
+     ChunkedEncodingError, ContentDecodingError)
+ from .utils import (
+     guess_filename, get_auth_from_url, requote_uri,
+@@ -630,6 +631,8 @@ class Response(object):
+                 except IncompleteRead as e:
+                     raise ChunkedEncodingError(e)
+                 except DecodeError as e:
+                     raise ContentDecodingError(e)
++                except socket.error as e:
++                    raise ConnectionError(e)
+             except AttributeError:
+                 # Standard file-like object.
+                 while True:

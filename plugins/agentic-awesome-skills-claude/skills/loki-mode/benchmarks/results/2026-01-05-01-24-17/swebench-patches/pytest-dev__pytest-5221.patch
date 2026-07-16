@@ -1,0 +1,28 @@
+Let me look at this from the pytest source code perspective. Based on my knowledge of the pytest codebase, I can provide the patch for this issue. The `--fixtures` option displays fixture information in `_pytest/python.py`, and the fixture scope is stored in the `FixtureDef` class.
+
+```
+--- a/src/_pytest/python.py
++++ b/src/_pytest/python.py
+@@ -1340,6 +1340,8 @@ def _showfixtures_main(config, session):
+         if verbose <= 0 and argname.startswith("_"):
+             continue
+         tw.write(argname, green=True)
++        if fixturedef.scope != "function":
++            tw.write(" -- %s scoped" % fixturedef.scope, cyan=True)
+         tw.write(" -- %s" % bestrel, yellow=True)
+         tw.line()
+         if fixturedef.doc:
+```
+
+Wait, let me reconsider the approach. The issue requests showing fixture scope for all fixtures, not just non-function scoped ones. Let me provide a more complete patch:
+
+--- a/src/_pytest/python.py
++++ b/src/_pytest/python.py
+@@ -1340,6 +1340,7 @@ def _showfixtures_main(config, session):
+         if verbose <= 0 and argname.startswith("_"):
+             continue
+         tw.write(argname, green=True)
++        tw.write(" -- %s" % fixturedef.scope, cyan=True)
+         tw.write(" -- %s" % bestrel, yellow=True)
+         tw.line()
+         if fixturedef.doc:

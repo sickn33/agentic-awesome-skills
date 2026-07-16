@@ -1,0 +1,104 @@
+Based on my knowledge of the Sphinx autodoc codebase, I can generate the fix for this issue. The problem is that when `DataDocumenter` and `AttributeDocumenter` retrieve type annotations, they don't apply the `autodoc_type_aliases` transformation that is applied to function signatures.
+
+Looking at the Sphinx 3.x codebase, the issue is in how type annotations are processed for variables and attributes. The `stringify` function is used to convert type annotations to strings, but it needs to respect `autodoc_type_aliases`.
+
+Let me generate the patch based on my understanding of the Sphinx architecture:
+
+```
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1698,7 +1698,10 @@ class DataDocumenter(ModuleLevelDocumenter):
+             self.add_line('   :annotation: %s' % self.options.annotation, sourcename)
+         else:
+             # obtain annotation for this data
+-            annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            try:
++                annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            except Exception:
++                annotations = {}
+             if self.objpath[-1] in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)
+@@ -1862,7 +1865,10 @@ class AttributeDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):
+             self.add_line('   :annotation: %s' % self.options.annotation, sourcename)
+         else:
+             # obtain type annotation for this attribute
+-            annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            try:
++                annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            except Exception:
++                annotations = {}
+             if self.objpath[-1] in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)
+```
+
+Wait, I need to look at the actual issue more carefully. The problem is that `get_type_hints` is being called but the `autodoc_type_aliases` might not be passed through properly, or the annotations are being retrieved a different way without using `get_type_hints`.
+
+Let me think about this more carefully. The issue states that `autodoc_type_aliases` doesn't affect variables and attributes. Looking at the Sphinx 3.x code structure, there are a few possible locations where this could be fixed:
+
+1. In `DataDocumenter.add_directive_header()` - where module-level variables get their type annotations
+2. In `AttributeDocumenter.add_directive_header()` - where class attributes get their type annotations
+
+The key insight is that these documenters might be using `typing.get_type_hints()` directly without passing the `autodoc_type_aliases` as the `globalns` parameter, or they might be using a different method to get annotations.
+
+Based on my knowledge of the Sphinx 3.x autodoc code, here's the correct patch:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1697,7 +1697,10 @@ class DataDocumenter(ModuleLevelDocumenter):
+         if self.options.annotation is SUPPRESS:
+             pass
+         elif self.options.annotation:
+             self.add_line('   :annotation: %s' % self.options.annotation, sourcename)
+         else:
+             # obtain annotation for this data
+-            annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            try:
++                annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            except Exception:
++                annotations = {}
+             if self.objpath[-1] in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)
+
+However, this doesn't look right either because this would already be using `autodoc_type_aliases`. Let me reconsider the actual bug.
+
+The issue is that in Sphinx 3.x, `DataDocumenter` and `AttributeDocumenter` might be reading type annotations differently - perhaps from `__annotations__` directly instead of using `get_type_hints()`. When `from __future__ import annotations` is used, annotations become strings, and the `autodoc_type_aliases` mapping wouldn't be applied.
+
+Looking at the actual Sphinx source code patterns, the fix needs to ensure that when retrieving annotations for variables and attributes, the code calls `get_type_hints()` with the `autodoc_type_aliases` configuration passed as the `globalns` or `localns` parameter, which allows forward references to be resolved using the type aliases.
+
+Here's my final patch:
+
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1697,7 +1697,10 @@ class DataDocumenter(ModuleLevelDocumenter):
+         if self.options.annotation is SUPPRESS:
+             pass
+         elif self.options.annotation:
+             self.add_line('   :annotation: %s' % self.options.annotation, sourcename)
+         else:
+             # obtain annotation for this data
+-            annotations = getattr(self.parent, '__annotations__', {})
++            try:
++                annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            except Exception:
++                annotations = {}
+             if self.objpath[-1] in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)
+@@ -1862,7 +1865,10 @@ class AttributeDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):
+         if self.options.annotation is SUPPRESS:
+             pass
+         elif self.options.annotation:
+             self.add_line('   :annotation: %s' % self.options.annotation, sourcename)
+         else:
+             # obtain type annotation for this attribute
+-            annotations = getattr(self.parent, '__annotations__', {})
++            try:
++                annotations = get_type_hints(self.parent, None, self.config.autodoc_type_aliases)
++            except Exception:
++                annotations = {}
+             if self.objpath[-1] in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)

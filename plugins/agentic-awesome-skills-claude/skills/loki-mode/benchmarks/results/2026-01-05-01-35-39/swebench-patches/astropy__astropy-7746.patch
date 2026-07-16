@@ -1,0 +1,21 @@
+Now I have the information needed to generate a proper patch. Looking at both patch files, I can see the approaches are slightly different. The first one (1-25-19) adds the check right after creating the `xy` array and returns a list of empty arrays. The second one (1-24-17) adds the check after the denormalize_sky call and returns `xy` directly.
+
+The first approach is cleaner because:
+1. It checks earlier (right after creating `xy`)
+2. It properly returns a list of empty arrays matching the expected output format (one array per WCS axis)
+
+Let me produce the clean patch in unified diff format:
+
+--- a/astropy/wcs/wcs.py
++++ b/astropy/wcs/wcs.py
+@@ -1220,6 +1220,10 @@ reduce these to 2 dimensions using the naxis kwarg.
+ 
+         def _return_list_of_arrays(axes, origin):
+             xy = np.hstack([x.reshape((x.size, 1)) for x in axes])
++
++            if xy.size == 0:
++                return [np.array([]) for _ in range(self.naxis)]
++
+             if ra_dec_order and sky == 'input':
+                 xy = self._denormalize_sky(xy)
+             output = func(xy, origin)

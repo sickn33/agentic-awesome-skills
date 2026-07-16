@@ -1,0 +1,23 @@
+# scikit-learn__scikit-learn-13497
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sklearn/feature_selection/_mutual_info.py
++++ b/sklearn/feature_selection/_mutual_info.py
+@@ -1,6 +1,7 @@
+ # Author: Nikolay Mayorov <n59_ru@hotmail.com>
+ # License: 3-clause BSD
+ 
++import numpy as np
+ from sklearn.metrics.cluster import mutual_info_score
+ from sklearn.neighbors import NearestNeighbors
+ from sklearn.preprocessing import scale
+@@ -47,7 +48,7 @@ def _estimate_mi(X, y, discrete_features='auto', discrete_target=False,
+     n_samples, n_features = X.shape
+ 
+     # Determine discrete features
+-    if discrete_features == 'auto':
++    if isinstance(discrete_features, str) and discrete_features == 'auto':
+         discrete_mask = np.zeros(n_features, dtype=bool)
+         for i in range(n_features):
+             if np.issubdtype(X[:, i].dtype, np.integer):

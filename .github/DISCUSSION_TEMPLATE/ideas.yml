@@ -1,0 +1,62 @@
+title: "[Idea] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use Ideas for new skills, bundles, workflows, docs improvements, or repo-wide experiments that still need shaping.
+  - type: input
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Start with the user or maintainer problem, not the implementation.
+      placeholder: "Example: There is no reliable skill for triaging large CI failures across multiple workflows."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed idea
+      description: Describe the skill, feature, or change you would like to see.
+      placeholder: Explain the proposed capability and what it should help people do.
+    validations:
+      required: true
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Real use cases
+      description: Give concrete scenarios, prompts, or workflows this would unlock.
+      placeholder: |
+        - Who needs this?
+        - What task are they doing?
+        - What does success look like?
+    validations:
+      required: true
+  - type: textarea
+    id: prior-art
+    attributes:
+      label: Related skills, tools, or prior art
+      description: Link similar skills, docs, repos, examples, or discussions if they exist.
+      placeholder: |
+        - Similar skill:
+        - Related doc:
+        - External reference:
+    validations:
+      required: false
+  - type: dropdown
+    id: contribution-interest
+    attributes:
+      label: Are you willing to help build this?
+      options:
+        - Yes, I can open a PR
+        - Yes, but I need guidance
+        - Maybe, depending on scope
+        - No, just sharing the idea
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Before posting
+      options:
+        - label: I searched existing discussions and issues for similar ideas.
+          required: true

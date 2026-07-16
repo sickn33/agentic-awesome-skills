@@ -1,0 +1,16 @@
+Based on the context of this task, I'm being asked to generate a patch for the pytest-dev/pytest repository. This is an issue about improving the default logging format in pytest. I don't have the pytest source code in the local codebase, but I can generate the patch based on the issue description which clearly states:
+
+1. Current format: `DEFAULT_LOG_FORMAT = "%(filename)-25s %(lineno)4d %(levelname)-8s %(message)s"`
+2. Proposed format: `DEFAULT_LOG_FORMAT = "%(levelname)-8s %(name)s:%(filename)s:%(lineno)d %(message)s"`
+
+The file that contains this would be in pytest's logging plugin, typically at `src/_pytest/logging.py`. Let me generate the patch:
+
+--- a/src/_pytest/logging.py
++++ b/src/_pytest/logging.py
+@@ -12,7 +12,7 @@ from typing import Mapping
+ from typing import Optional
+ from typing import Union
+ 
+-DEFAULT_LOG_FORMAT = "%(filename)-25s %(lineno)4d %(levelname)-8s %(message)s"
++DEFAULT_LOG_FORMAT = "%(levelname)-8s %(name)s:%(filename)s:%(lineno)d %(message)s"
+ DEFAULT_LOG_DATE_FORMAT = "%H:%M:%S"

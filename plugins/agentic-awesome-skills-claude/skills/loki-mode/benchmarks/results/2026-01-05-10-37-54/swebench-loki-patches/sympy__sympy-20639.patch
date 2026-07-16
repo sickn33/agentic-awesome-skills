@@ -1,0 +1,20 @@
+# sympy__sympy-20639
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+--- a/sympy/printing/pretty/pretty.py
++++ b/sympy/printing/pretty/pretty.py
+@@ -1811,7 +1811,12 @@ def _print_Pow(self, power):
+                 bpretty.baseline = 0
+                 bpretty = bpretty**' '
+                 return bpretty
+-            n, d = fraction(expt)
++            # Only try to render as radical if exponent is a Pow (not exp)
++            # exp(-1) has args=(-1,) not (base, power) structure
++            if expt.func is S.Exp1.func or (hasattr(expt, 'is_Pow') and not expt.is_Pow):
++                n, d = S.One, S.One  # Force standard power notation
++            else:
++                n, d = fraction(expt)
+             if n is S.One and d.is_Atom and not e.is_Integer and self._settings['root_notation']:
+                 bpretty = self._print(b)
+                 bpretty = self._hprint_header(bpretty, self._print(d))

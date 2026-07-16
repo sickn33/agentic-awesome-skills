@@ -1,0 +1,173 @@
+{
+  "description": "Exemplos de templates prontos para submissao ao WhatsApp para aprovacao.",
+  "templates": [
+    {
+      "name": "welcome_customer_v1",
+      "category": "MARKETING",
+      "language": "pt_BR",
+      "description": "Mensagem de boas-vindas para novos clientes",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Bem-vindo(a)!"
+        },
+        {
+          "type": "BODY",
+          "text": "Olá {{1}}, seja bem-vindo(a) à {{2}}! 🎉\n\nEstamos felizes em ter você conosco. Confira nossas ofertas especiais para novos clientes.",
+          "example": {
+            "body_text": [["Maria", "Loja Example"]]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "Responda SAIR para cancelar"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Ver Ofertas",
+              "url": "https://example.com/ofertas"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "Falar com Atendente"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "order_confirmation_v1",
+      "category": "UTILITY",
+      "language": "pt_BR",
+      "description": "Confirmacao de pedido com detalhes",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Pedido Confirmado ✅"
+        },
+        {
+          "type": "BODY",
+          "text": "Olá {{1}}, seu pedido #{{2}} foi confirmado!\n\nValor total: R$ {{3}}\nForma de pagamento: {{4}}\nPrevisão de entrega: {{5}}",
+          "example": {
+            "body_text": [["João", "12345", "199,90", "Cartão de crédito", "3 dias úteis"]]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "Obrigado pela sua compra!"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Rastrear Pedido",
+              "url": "https://example.com/tracking/{{1}}",
+              "example": ["12345"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shipping_notification_v1",
+      "category": "UTILITY",
+      "language": "pt_BR",
+      "description": "Notificacao de envio com rastreamento",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "Pedido Enviado 📦"
+        },
+        {
+          "type": "BODY",
+          "text": "Olá {{1}}, seu pedido #{{2}} foi enviado!\n\nTransportadora: {{3}}\nCódigo de rastreio: {{4}}\nPrevisão de entrega: {{5}}",
+          "example": {
+            "body_text": [["Maria", "67890", "Correios", "BR123456789BR", "5 dias úteis"]]
+          }
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "URL",
+              "text": "Rastrear Envio",
+              "url": "https://example.com/track/{{1}}",
+              "example": ["BR123456789BR"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "appointment_reminder_v1",
+      "category": "UTILITY",
+      "language": "pt_BR",
+      "description": "Lembrete de agendamento",
+      "components": [
+        {
+          "type": "BODY",
+          "text": "Olá {{1}}, lembrando que você tem um agendamento:\n\n📅 Data: {{2}}\n⏰ Horário: {{3}}\n📍 Local: {{4}}\n\nPrecisa reagendar?",
+          "example": {
+            "body_text": [["Carlos", "15/03/2026", "14:00", "Av. Paulista, 1000 - São Paulo"]]
+          }
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "Confirmar"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "Reagendar"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "Cancelar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nps_survey_v1",
+      "category": "MARKETING",
+      "language": "pt_BR",
+      "description": "Pesquisa de satisfacao NPS",
+      "components": [
+        {
+          "type": "BODY",
+          "text": "Olá {{1}}! Gostaríamos de saber sua opinião sobre o atendimento recente.\n\nDe 1 a 5, qual sua nota para nosso atendimento?\n\n⭐ 1-2: Precisa melhorar\n⭐ 3: Regular\n⭐ 4-5: Muito bom",
+          "example": {
+            "body_text": [["Ana"]]
+          }
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "1-2 ⭐"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "3 ⭐⭐⭐"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "4-5 ⭐⭐⭐⭐⭐"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

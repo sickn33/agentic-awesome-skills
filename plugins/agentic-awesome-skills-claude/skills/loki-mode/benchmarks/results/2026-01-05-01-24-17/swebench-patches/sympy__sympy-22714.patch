@@ -1,0 +1,486 @@
+The sympy codebase is not in this directory. Since this is a GitHub issue from the sympy/sympy repository, I need to understand the issue based on my knowledge of the SymPy codebase. Let me analyze the error and provide a patch.
+
+Based on the error traceback and my understanding of the SymPy codebase:
+
+1. The error occurs in `sympy/geometry/point.py` at line 153 in the `Point.__new__` method
+2. The issue is that when `evaluate(False)` is active, the `is_real` property of coordinates returns `None` (unknown) instead of `True`
+3. The check `if any(a.is_number and im(a).is_zero is False for a in coords)` is failing because with `evaluate(False)`, the `im(a)` function doesn't properly evaluate
+
+The issue is that when `evaluate(False)` context is active, the `im(a).is_zero` check returns `None` instead of `True` for real integer values, because the imaginary part computation doesn't simplify/evaluate.
+
+Looking at the code flow:
+1. `Point2D.__new__` calls `Point.__new__`
+2. `Point.__new__` checks if coordinates are imaginary 
+3. When `evaluate(False)` is set globally, `im(Integer(1))` returns an unevaluated `im(1)` instead of `0`
+4. The check `im(a).is_zero is False` becomes `None is False` which is `True` (incorrectly)
+
+Wait, let me reconsider. The condition `im(a).is_zero is False` means:
+- If `im(a).is_zero` is `True` -> condition is `False` (good, not imaginary)
+- If `im(a).is_zero` is `False` -> condition is `True` (bad, is imaginary)
+- If `im(a).is_zero` is `None` -> condition is `False` (not matching, but this should be fine)
+
+Let me think about this differently. The error says "Imaginary coordinates are not permitted", which means the code thinks the coordinates ARE imaginary. With `evaluate(False)`, `im(Integer(1))` might not be evaluated to `0`, so when checking `is_zero`, it could return `None`, and the logic might be different.
+
+Actually, looking more carefully at the error, the issue is likely that when `evaluate(False)` is active:
+- `im(a)` doesn't evaluate to `0` for real numbers
+- Instead it stays as `im(1)` unevaluated
+- The check `im(a).is_zero` returns `None` (unknown) 
+- But the existing code might check `not is_zero` or similar which would trigger the error
+
+Let me reconsider the check pattern. The code likely has:
+
+```python
+if any(a.is_number and im(a).is_zero is False for a in coords):
+    raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+With `evaluate(False)`:
+- `Integer(1).is_number` returns `True` 
+- `im(Integer(1))` with evaluate=False returns an unevaluated `im(1)` 
+- `im(1).is_zero` returns `None` (can't determine without evaluation)
+- `None is False` is `False`, so this shouldn't trigger...
+
+Wait, let me check another possibility. The code might be:
+
+```python
+if any(a.is_number and not im(a).is_zero for a in coords):
+```
+
+With this:
+- `not None` is `True`
+- So this would trigger the error
+
+Or the code might be checking `is_real`:
+
+```python
+if any(coord.is_real is False for coord in coords):
+```
+
+With `evaluate(False)`:
+- `Integer(1).is_real` might return `None` instead of `True`
+
+Actually, I recall that `Integer` should always have `is_real = True` regardless of evaluate context because it's a property, not a computed value.
+
+The issue must be in how the coordinates are being processed. When parsing with `evaluate(False)`, the expression `Integer(1)` might not be properly simplified.
+
+Looking at line 153 more carefully based on the error - the issue is likely that the coordinates are being sympified and during that process with evaluate=False, something goes wrong.
+
+Let me provide the fix based on the standard SymPy pattern - the fix should ensure that coordinate validation doesn't depend on the global evaluate context:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -149,7 +149,7 @@ class Point(GeometryEntity):
+             coords = coords[0]
+ 
+         # unpack the coords and flags from the Tuple
+-        coords = Tuple(*coords)
++        coords = Tuple(*coords, evaluate=False)
+         evaluate = kwargs.get('evaluate', global_parameters.evaluate)
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
+@@ -150,7 +150,9 @@ class Point(GeometryEntity):
+ 
+         # unpack the coords and flags from the Tuple
+         coords = Tuple(*coords)
+-        evaluate = kwargs.get('evaluate', global_parameters.evaluate)
++        evaluate = kwargs.get('evaluate', True) if 'evaluate' in kwargs else \
++            global_parameters.evaluate
++
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
+         # check for imaginary coordinates
+
+Actually, I need to look at this from a different angle. The issue is that when checking for imaginary coordinates, the `im()` function or `is_real` property doesn't work correctly under `evaluate(False)` context.
+
+The fix should make the coordinate validation happen with evaluation enabled, regardless of the global context. Here's the proper fix:
+
+```python
+# When checking coordinates, we need to evaluate them to determine if they're real
+with evaluate(True):
+    if any(a.is_number and im(a).is_zero is False for a in coords):
+        raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+But actually, looking at this issue more carefully, the real problem is that the `is_number` property should return `True` for `Integer(1)` but when used with unevaluated expressions, there might be an issue.
+
+Let me write a more targeted fix. The issue is that the check for imaginary coordinates should be done with evaluation enabled since we need to actually evaluate whether coordinates are imaginary:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -148,12 +148,15 @@ class Point(GeometryEntity):
+         if len(coords) == 1 and iterable(coords[0]) and not is_sequence(coords[0], Tuple):
+             coords = coords[0]
+ 
+-        # unpack the coords and flags from the Tuple
+-        coords = Tuple(*coords)
+         evaluate = kwargs.get('evaluate', global_parameters.evaluate)
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
++        # unpack the coords and flags from the Tuple
++        # always evaluate coordinates to check for imaginary values
++        coords = Tuple(*coords)
++
+         # check for imaginary coordinates
++        from sympy.core.parameters import global_parameters
+         if any(a.is_number and im(a).is_zero is False for a in coords):
+             raise ValueError('Imaginary coordinates are not permitted.')
+
+Hmm, this still doesn't fix the issue. Let me think about what actually happens:
+
+1. User code: `with sp.evaluate(False): sp.S('Point2D(Integer(1),Integer(2))')`
+2. The string is parsed, `Integer(1)` and `Integer(2)` are created with `evaluate=False` context
+3. `Point2D.__new__` is called with these Integer arguments
+4. Inside `Point.__new__`, `Tuple(*coords)` is called - this should work fine
+5. The check `any(a.is_number and im(a).is_zero is False for a in coords)` is executed
+6. Under `evaluate(False)` context, `im(Integer(1))` might not return `0`
+
+The fix should ensure the imaginary check happens with evaluation enabled:
+
+```python
+from sympy.core.parameters import global_parameters
+
+# check for imaginary coordinates - must be done with evaluation
+with global_parameters.evaluate(True):
+    if any(a.is_number and im(a).is_zero is False for a in coords):
+        raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+Wait, but `global_parameters.evaluate` is a property, not a context manager. The context manager is `sympy.core.evaluate`.
+
+Let me provide the correct fix:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -147,6 +147,8 @@ class Point(GeometryEntity):
+         """
+         from sympy.functions.elementary.complexes import im
++        from sympy.core.parameters import global_parameters
++        from sympy.core.decorators import _sympifyit
+ 
+         if len(coords) == 1 and iterable(coords[0]) and not is_sequence(coords[0], Tuple):
+             coords = coords[0]
+@@ -157,8 +159,11 @@ class Point(GeometryEntity):
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
+         # check for imaginary coordinates
+-        if any(a.is_number and im(a).is_zero is False for a in coords):
+-            raise ValueError('Imaginary coordinates are not permitted.')
++        # evaluate the coordinates to properly check for imaginary values
++        # even when global evaluate is False
++        if evaluate or not all(a.is_real for a in coords if a.is_number):
++            if any(a.is_number and im(a).is_zero is False for a in coords):
++                raise ValueError('Imaginary coordinates are not permitted.')
+
+Actually, this is getting complicated. Let me step back and think about the simplest fix.
+
+The core issue is that `im(Integer(1)).is_zero` returns `None` when `evaluate=False` is set globally, because `im(1)` doesn't evaluate to `0`.
+
+The simplest fix is to wrap the coordinate validation in an evaluate(True) context:
+
+```python
+from sympy.core.parameters import evaluate
+
+# check for imaginary coordinates
+with evaluate(True):
+    if any(a.is_number and im(a).is_zero is False for a in coords):
+        raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+But wait, `evaluate` from `sympy.core.parameters` is not a context manager directly - the context manager is typically `sympy.evaluate` or imported differently.
+
+Looking at SymPy's codebase structure, the evaluate context manager is usually:
+- `from sympy.core.evaluate import global_evaluate` (older versions)
+- `from sympy.core.parameters import global_parameters` where `global_parameters.evaluate` is used
+
+The context manager is typically `sympy.evaluate` which is a class.
+
+Here's the proper fix:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -147,6 +147,7 @@ class Point(GeometryEntity):
+         """
+         from sympy.functions.elementary.complexes import im
++        from sympy import evaluate as _evaluate
+
+         if len(coords) == 1 and iterable(coords[0]) and not is_sequence(coords[0], Tuple):
+             coords = coords[0]
+@@ -157,8 +158,10 @@ class Point(GeometryEntity):
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
+         # check for imaginary coordinates
+-        if any(a.is_number and im(a).is_zero is False for a in coords):
+-            raise ValueError('Imaginary coordinates are not permitted.')
++        # ensure evaluation is enabled for this check regardless of global setting
++        with _evaluate(True):
++            if any(a.is_number and im(a).is_zero is False for a in coords):
++                raise ValueError('Imaginary coordinates are not permitted.')
+
+But actually, looking at this more, `sympy.evaluate` might cause circular imports. Let me check the actual import structure.
+
+In SymPy, `evaluate` is typically accessed as:
+- `sympy.evaluate` - the top-level context manager
+- `sympy.core.parameters.evaluate` - sometimes used internally
+
+For internal use in `sympy/geometry/point.py`, it should be safe to import from `sympy`.
+
+Actually, the cleanest solution that avoids any import issues is to use the `Expr._from_mpmath` approach or to directly check the coordinate values:
+
+The simplest and most robust fix is to check `is_real` property directly on the coordinates before checking `im()`:
+
+Actually, I realize now that the real issue might be simpler. The problem could be that when `evaluate=False`, the coordinate values passed to Point are somehow wrapped or unevaluated in a way that makes `is_number` return unexpected values.
+
+Let me provide a fix that ensures proper evaluation during the coordinate check:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -151,8 +151,12 @@ class Point(GeometryEntity):
+         on_morph = kwargs.get('on_morph', 'warn')
+
+         # check for imaginary coordinates
+-        if any(a.is_number and im(a).is_zero is False for a in coords):
+-            raise ValueError('Imaginary coordinates are not permitted.')
++        # Note: we need to check im(a).is_zero with evaluation enabled,
++        # otherwise unevaluated expressions may not properly report is_zero
++        for a in coords:
++            if a.is_number:
++                if im(a).is_zero is False:
++                    raise ValueError('Imaginary coordinates are not permitted.')
+
+No wait, this doesn't fix the fundamental issue that `im(Integer(1))` under `evaluate(False)` doesn't return `0`.
+
+Let me think about this more carefully. The `evaluate` context manager affects how expressions are constructed. When you do `im(Integer(1))` under `evaluate(False)`, the `im` function is called but the result might not be simplified to `0`.
+
+The fix needs to either:
+1. Force evaluation when calling `im(a)` 
+2. Skip the check when the coordinate is clearly real (like checking `a.is_real` first)
+3. Use a different method to check for imaginary values
+
+Option 2 seems cleanest - if `a.is_real is True`, we don't need to call `im()`:
+
+```python
+# check for imaginary coordinates
+for a in coords:
+    if a.is_number and a.is_real is False:
+        if im(a).is_zero is False:
+            raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+But this changes the logic. The original checks if `im(a).is_zero is False`, meaning the imaginary part is definitively non-zero. 
+
+Let me re-read the original condition: `a.is_number and im(a).is_zero is False`
+
+This should only raise if:
+1. `a` is a number (is_number = True)
+2. The imaginary part's `is_zero` is explicitly `False` (not `None`, not `True`)
+
+So with `evaluate(False)`:
+- `Integer(1).is_number` -> `True`
+- `im(Integer(1))` -> might be `im(1)` unevaluated instead of `0`
+- `im(1).is_zero` -> should be `True` if it's `0`, but if it's `im(1)` unevaluated, it might be `None`
+
+Wait, if `im(1).is_zero` is `None`, then `None is False` is `False`, so it shouldn't raise!
+
+Let me reconsider. Maybe the issue is elsewhere. Let me look at what happens when you create `Point2D` with `evaluate=False`:
+
+Looking at line 912 in the error traceback, that's in `Point2D.__new__`. The flow is:
+1. `Point2D.__new__` is called
+2. It calls `Point(*args, **kwargs)` (line 912)
+3. `Point.__new__` is invoked
+4. Error happens at line 153
+
+So the issue is in `Point.__new__` at line 153. Let me reconsider what could cause `im(a).is_zero is False` to be `True` when it shouldn't be.
+
+Oh wait! I think I understand now. The issue might be that with `evaluate(False)`, the `Tuple(*coords)` line might not properly sympify the coordinates, or the coordinates arrive in an unexpected form.
+
+Let me look at this more carefully. When parsing `'Point2D(Integer(1),Integer(2))'` with `evaluate(False)`:
+- The parser creates the expression
+- `Integer(1)` and `Integer(2)` are created
+- These are passed to `Point2D.__new__`
+
+Actually, I wonder if the issue is that with `evaluate=False`, the `im()` function returns something unexpected.
+
+Let me check what `im(Integer(1))` returns with `evaluate=False`:
+- Normally: `im(Integer(1))` returns `Integer(0)` (which has `is_zero=True`)
+- With `evaluate=False`: `im(Integer(1))` might return `im(1)` (unevaluated), which has `is_zero=None`
+
+So `im(1).is_zero is False` would be `None is False` which is `False`. This shouldn't cause the error!
+
+Unless... the check is `not im(a).is_zero` instead of `im(a).is_zero is False`. Let me check:
+- `not None` is `True`
+- So `not im(a).is_zero` with `im(a).is_zero = None` would be `True`, triggering the error!
+
+Hmm, but the error message says line 153, and my analysis assumes the condition is `im(a).is_zero is False`. Let me consider that the actual code might have a different condition.
+
+Actually, I bet the actual condition in some versions is:
+```python
+if any(a.is_number and not im(a).is_zero for a in coords):
+```
+
+With this:
+- `Integer(1).is_number` -> `True`
+- `im(Integer(1))` under `evaluate(False)` -> `im(1)` unevaluated
+- `im(1).is_zero` -> `None`
+- `not None` -> `True`
+- Condition is `True`, error is raised!
+
+This makes sense! The fix would be to change from `not im(a).is_zero` to `im(a).is_zero is False`:
+
+```python
+# Before (buggy):
+if any(a.is_number and not im(a).is_zero for a in coords):
+    raise ValueError('Imaginary coordinates are not permitted.')
+
+# After (fixed):
+if any(a.is_number and im(a).is_zero is False for a in coords):
+    raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+This would make `None` not trigger the error, only explicit `False`.
+
+Actually wait, let me reconsider. Even with the proper `is False` check, there could still be an issue. The real problem is that the coordinate validation logic needs to handle the case where evaluation is disabled.
+
+Looking at this from a different angle - the safest fix is to ensure that when we can't determine if a coordinate is imaginary (i.e., `im(a).is_zero` is `None`), we should NOT raise an error. We should only raise when we're CERTAIN the coordinate is imaginary.
+
+The fix should be:
+```python
+if any(a.is_number and im(a).is_zero is False for a in coords):
+```
+
+But if the existing code already has this, then the issue is elsewhere. Let me think about what else could go wrong...
+
+Oh! I think I found it. The issue might be with how `im()` behaves when the global evaluate flag is False. The `im` function might not even be returning an `im(1)` expression - it might be returning something else entirely, or the `is_zero` property might be implemented differently.
+
+Actually, a simpler possibility: the issue might be that `Integer(1)` created under `evaluate=False` has some weird behavior. Or the issue could be in the `Tuple(*coords)` call.
+
+Let me approach this differently. Rather than guessing, the safest comprehensive fix is:
+
+1. When checking for imaginary coordinates, first check `a.is_real`
+2. Only call `im(a)` if `is_real` is not `True`
+
+```python
+# check for imaginary coordinates
+for a in coords:
+    if a.is_number:
+        if a.is_real is False:
+            # Definitely not real, check if imaginary part is non-zero
+            if im(a).is_zero is False:
+                raise ValueError('Imaginary coordinates are not permitted.')
+        elif a.is_real is None:
+            # Can't determine if real, but need to check imaginary part
+            # This can happen with unevaluated expressions
+            pass  # Allow it through, don't raise an error
+```
+
+Or even simpler - the condition should only raise when we're CERTAIN the coordinate is imaginary:
+
+```python
+# check for imaginary coordinates
+# Only raise if coordinate is definitively imaginary (is_real is explicitly False
+# and imaginary part is explicitly non-zero)
+if any(a.is_number and a.is_real is False and im(a).is_zero is False for a in coords):
+    raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+But this changes the semantics. The original intent is to catch complex numbers like `1+2j`.
+
+Let me provide the minimal fix that should work:
+
+The issue is that with `evaluate=False`, we can't reliably determine if a coordinate is imaginary. The fix should be to skip the imaginary check when we can't evaluate, OR to force evaluation for this specific check.
+
+Here's my final patch:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -151,8 +151,11 @@ class Point(GeometryEntity):
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
+         # check for imaginary coordinates
+-        if any(a.is_number and im(a).is_zero is False for a in coords):
+-            raise ValueError('Imaginary coordinates are not permitted.')
++        # Need to use fuzzy_not to handle the case where im(a).is_zero is None
++        # (which can happen when global evaluate is False)
++        from sympy.core.logic import fuzzy_not
++        if any(a.is_number and fuzzy_not(im(a).is_zero) for a in coords):
++            raise ValueError('Imaginary coordinates are not permitted.')
+
+No wait, `fuzzy_not(None)` is still `None`, and `any()` would treat that as falsey. That's not the issue.
+
+Let me look at this from yet another angle. The error traceback shows:
+```
+File "/home/avinash/.local/lib/python3.8/site-packages/sympy/geometry/point.py", line 153, in __new__
+    raise ValueError('Imaginary coordinates are not permitted.')
+```
+
+So line 153 is the `raise` statement. The condition that triggers it must be on line 152 or earlier.
+
+Given the typical SymPy code structure, the condition is likely:
+```python
+if any(a.is_number and im(a).is_nonzero for a in coords):
+```
+
+or 
+```python
+if any(im(a) for a in coords if a.is_number):
+```
+
+If it's `im(a).is_nonzero`:
+- With evaluation: `im(1).is_nonzero` is `False`
+- Without evaluation: `im(1).is_nonzero` might be `None` or the unevaluated `im(1)` is truthy
+
+If it's just `im(a)`:
+- With evaluation: `im(1)` returns `0` which is falsey
+- Without evaluation: `im(1)` returns an unevaluated `im(1)` expression which is truthy!
+
+This is likely the issue! The condition might be:
+```python
+if any(im(a) for a in coords if a.is_number):
+```
+
+And `im(Integer(1))` under `evaluate=False` returns `im(1)` which is truthy (any non-zero expression is truthy), triggering the error.
+
+The fix would be:
+```python
+if any(a.is_number and im(a).is_zero is False for a in coords):
+```
+
+This explicitly checks if `is_zero` is `False`, not just if `im(a)` is truthy.
+
+Let me write the final patch based on this analysis:
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -149,10 +149,13 @@ class Point(GeometryEntity):
+             coords = coords[0]
+ 
+         # unpack the coords and flags from the Tuple
+         coords = Tuple(*coords)
+         evaluate = kwargs.get('evaluate', global_parameters.evaluate)
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
+         # check for imaginary coordinates
+-        if any(im(a) for a in coords if a.is_number):
++        # Use 'is_zero is False' instead of truthiness check to handle
++        # the case where evaluate is False and im() returns an unevaluated expression
++        if any(a.is_number and im(a).is_zero is False for a in coords):
+             raise ValueError('Imaginary coordinates are not permitted.')
+
+This is my best guess at the fix. The key insight is that the original code likely uses a truthiness check on `im(a)` which fails when `evaluate=False` because unevaluated expressions are truthy.
+
+--- a/sympy/geometry/point.py
++++ b/sympy/geometry/point.py
+@@ -148,10 +148,12 @@ class Point(GeometryEntity):
+         if len(coords) == 1 and iterable(coords[0]) and not is_sequence(coords[0], Tuple):
+             coords = coords[0]
+ 
+         # unpack the coords and flags from the Tuple
+         coords = Tuple(*coords)
+         evaluate = kwargs.get('evaluate', global_parameters.evaluate)
+         on_morph = kwargs.get('on_morph', 'warn')
+ 
+         # check for imaginary coordinates
+-        if any(im(a) for a in coords if a.is_number):
++        # Use 'is_zero is False' to properly handle unevaluated expressions
++        # when evaluate=False is set globally
++        if any(a.is_number and im(a).is_zero is False for a in coords):
+             raise ValueError('Imaginary coordinates are not permitted.')

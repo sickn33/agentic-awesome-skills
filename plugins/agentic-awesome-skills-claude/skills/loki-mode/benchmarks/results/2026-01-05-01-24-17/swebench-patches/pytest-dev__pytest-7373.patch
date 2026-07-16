@@ -1,0 +1,47 @@
+Based on my knowledge of the pytest codebase and the issue description, I can provide the patch. The issue mentions:
+
+1. The `cached_eval` function in `_pytest/mark/evaluate.py` caches evaluation results using only the string as the key
+2. This is problematic because the evaluation depends on the item's globals
+3. The fix is to remove the caching and inline `cached_eval` into `MarkEvaluator._istrue`
+
+Here is the patch to fix this issue:
+
+--- a/src/_pytest/mark/evaluate.py
++++ b/src/_pytest/mark/evaluate.py
+@@ -10,7 +10,6 @@ from ..outcomes import fail
+ from ..outcomes import TEST_OUTCOME
+ 
+ 
+-evalcache_key = StoreKey[Dict[str, Any]]()
+ 
+ 
+ def compiled_eval(s: str, d: Dict[str, object]) -> Any:
+@@ -19,19 +18,6 @@ def compiled_eval(s: str, d: Dict[str, object]) -> Any:
+     return eval(co, d)
+ 
+ 
+-def cached_eval(config: Config, expr: str, d: Dict[str, object]) -> Any:
+-    default = {}  # type: Dict[str, Any]
+-    evalcache = config._store.setdefault(evalcache_key, default)
+-    try:
+-        return evalcache[expr]
+-    except KeyError:
+-        import _pytest._code
+-
+-        exprcode = _pytest._code.compile(expr, mode="eval")
+-        evalcache[expr] = x = eval(exprcode, d)
+-        return x
+-
+-
+ class MarkEvaluator:
+     def __init__(self, item: Item, name: str) -> None:
+         self.item = item
+@@ -98,7 +84,7 @@ class MarkEvaluator:
+                     self.expr = expr
+                     if isinstance(expr, str):
+                         d = self._getglobals()
+-                        result = cached_eval(self.item.config, expr, d)
++                        result = compiled_eval(expr, d)
+                     else:
+                         if "reason" not in mark.kwargs:
+                             # XXX better be checked at collection time

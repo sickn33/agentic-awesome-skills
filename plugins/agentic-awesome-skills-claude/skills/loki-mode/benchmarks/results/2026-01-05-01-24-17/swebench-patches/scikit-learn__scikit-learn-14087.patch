@@ -1,0 +1,33 @@
+Based on my knowledge of this specific scikit-learn bug, I can provide the fix. This is a known issue (#14087) in scikit-learn 0.21.x where the `coefs_paths` array has incorrect dimensions when `refit=False` due to a change in how the coefficients were stored.
+
+The bug is in the `fit` method of `LogisticRegressionCV`. When `refit=False`, the code tries to average coefficients across folds using:
+```python
+w = np.mean([coefs_paths[:, i, best_indices[i], :]
+             for i in range(len(folds))], axis=0)
+```
+
+But `coefs_paths` in the multi-class case (when using OvR) has shape `(n_folds, n_cs, n_features)` for binary or `(n_classes, n_folds, n_cs, n_features)` for multiclass. The issue is that in the binary case, `coefs_paths` is 3D, not 4D.
+
+The fix involves checking the number of dimensions of `coefs_paths` and handling the binary classification case (where there's effectively only one class) differently from the multiclass case.
+
+Here's the patch:
+
+--- a/sklearn/linear_model/logistic.py
++++ b/sklearn/linear_model/logistic.py
+@@ -2189,9 +2189,15 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,
+                 if self.multi_class == 'multinomial':
+                     w = np.mean([coefs_paths[i, best_indices[i], :]
+                                  for i in range(len(folds))], axis=0)
+                 else:
+-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]
+-                                 for i in range(len(folds))], axis=0)
++                    if coefs_paths.ndim == 3:
++                        # Binary classification case: coefs_paths has shape
++                        # (n_folds, n_cs, n_features)
++                        w = np.mean([coefs_paths[i, best_indices[i], :]
++                                     for i in range(len(folds))], axis=0)
++                    else:
++                        w = np.mean([coefs_paths[:, i, best_indices[i], :]
++                                     for i in range(len(folds))], axis=0)
+ 
+                 best_indices_C = best_indices % len(self.Cs_)

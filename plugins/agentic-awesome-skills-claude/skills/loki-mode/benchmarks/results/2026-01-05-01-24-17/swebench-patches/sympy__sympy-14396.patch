@@ -1,0 +1,38 @@
+Based on my knowledge of the SymPy codebase and the error message in the issue, I can understand the problem. The issue is in `sympy/polys/polyoptions.py` in the `Domain.preprocess` method. Looking at the traceback and error message:
+
+```
+OptionError: expected a valid domain specification, got RR[y,z]
+```
+
+The code handles `QQ[...]` (rational polynomial rings) but doesn't handle `RR[...]` (real polynomial rings). Let me generate the patch based on the standard sympy codebase structure.
+
+The `Domain.preprocess` method needs to be extended to handle `RR[...]` patterns similar to how it handles `QQ[...]` patterns.
+
+--- a/sympy/polys/polyoptions.py
++++ b/sympy/polys/polyoptions.py
+@@ -469,6 +469,12 @@ class Domain(with_metaclass(OptionType, Option)):
+             if ground in ['Z', 'ZZ']:
+                 return sympy.polys.domains.ZZ.poly_ring(*gens)
+ 
++            if ground in ['R', 'RR']:
++                return sympy.polys.domains.RR.poly_ring(*gens)
++
++            if ground in ['C', 'CC']:
++                return sympy.polys.domains.CC.poly_ring(*gens)
++
+         r_polys = cls._re_polynomial.match(domain)
+ 
+         if r_polys is not None:
+@@ -478,6 +484,12 @@ class Domain(with_metaclass(OptionType, Option)):
+             if ground in ['Z', 'ZZ']:
+                 return sympy.polys.domains.ZZ.frac_field(*gens)
+ 
++            if ground in ['R', 'RR']:
++                return sympy.polys.domains.RR.frac_field(*gens)
++
++            if ground in ['C', 'CC']:
++                return sympy.polys.domains.CC.frac_field(*gens)
++
+         r_algebraic = cls._re_algebraic.match(domain)
+ 
+         if r_algebraic is not None:

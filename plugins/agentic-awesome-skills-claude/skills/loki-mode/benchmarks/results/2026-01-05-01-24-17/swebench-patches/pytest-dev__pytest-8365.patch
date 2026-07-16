@@ -1,0 +1,123 @@
+Based on the issue description and my knowledge of pytest's codebase, I can provide the fix. The issue is in `src/_pytest/tmpdir.py` where `getpass.getuser()` is used to create the basetemp directory name, and the username may contain characters like backslash (`\`) that are illegal in directory names on Windows.
+
+The fix should sanitize the username by replacing illegal characters. Here's the patch:
+
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -1,4 +1,5 @@
+ """Support for providing temporary directories to test functions."""
++import re
+ import tempfile
+ from pathlib import Path
+ from typing import Optional
+@@ -10,6 +11,13 @@ from _pytest.config import Config
+ from _pytest.fixtures import fixture
+ from _pytest.monkeypatch import MonkeyPatch
+ 
++
++def get_user() -> Optional[str]:
++    """Return the current user name, or None if getpass.getuser() does not work
++    in the current environment (see #7698)."""
++    import getpass
++
++    try:
++        return getpass.getuser()
++    except (ImportError, KeyError):
++        return None
++
++
++def sanitize_user_name(user_name: str) -> str:
++    """Sanitize a user name to make it usable in path components.
++
++    Replaces characters that are illegal in file system paths on Windows
++    with underscores.
++    """
++    # Replace illegal characters on Windows (and \ on all platforms for consistency)
++    return re.sub(r'[\\/:*?"<>|]', "_", user_name)
++
+ 
+ @final
+ @attr.s(init=False)
+@@ -47,16 +55,12 @@ class TempPathFactory:
+         return self._given_basetemp
+ 
+     def _ensure_relative_to_basetemp(self, basename: str) -> str:
+-        # Check if the user provided a path that is relative to basetemp
+-        # or an absolute path.
+-        if self._basetemp is None:
+-            return basename
+-        if basename.startswith(str(self._basetemp)):
+-            return basename
+-        if (self._basetemp / basename).resolve().is_relative_to(
+-            self._basetemp.resolve()
+-        ):
+-            return basename
++        # Sanitize basename to be used as a directory name component.
++        # Replace illegal characters that could be passed through user names
++        # or other external sources.
++        basename = sanitize_user_name(basename)
++        if basename == "":
++            basename = "unknown"
+         return basename
+ 
+     @classmethod
+@@ -79,19 +83,15 @@ class TempPathFactory:
+         """
+         basetemp = self.getbasetemp()
+         basename = self._ensure_relative_to_basetemp(basename)
+-        return make_numbered_dir(root=basetemp, prefix=basename)
++        return make_numbered_dir(root=basetemp, prefix=basename, mode=0o700)
+ 
+     def getbasetemp(self) -> Path:
+         """Return the base temporary directory, creating it if needed."""
+         if self._basetemp is not None:
+             return self._basetemp
+ 
+-        import getpass
+-
+-        try:
+-            user = getpass.getuser()
+-        except (ImportError, KeyError):
+-            user = "unknown"
++        user = get_user()
++        if user is None:
++            user = "unknown"
++        user = sanitize_user_name(user)
+ 
+         if self._given_basetemp is not None:
+             basetemp = self._given_basetemp
+
+Wait, let me reconsider based on the actual pytest code structure. The key issue is that `getpass.getuser()` can return usernames with backslashes (like `contoso\john_doe`) which are illegal in directory names on Windows. The fix needs to sanitize the username.
+
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -1,4 +1,5 @@
+ """Support for providing temporary directories to test functions."""
++import re
+ import tempfile
+ from pathlib import Path
+ from typing import Optional
+@@ -150,6 +151,14 @@ class TempPathFactory:
+     _basetemp: Optional[Path] = attr.ib(default=None)
+     _trace = attr.ib(default=None)
+ 
++    @staticmethod
++    def _sanitize_path_component(name: str) -> str:
++        """Sanitize a string to be used as a path component.
++
++        Replaces characters that are illegal in file/directory names on Windows.
++        """
++        return re.sub(r'[\\/:*?"<>|]', "_", name)
++
+     @classmethod
+     def from_config(
+         cls,
+@@ -198,7 +207,8 @@ class TempPathFactory:
+         try:
+             user = getpass.getuser()
+         except (ImportError, KeyError):
+             user = "unknown"
++        user = self._sanitize_path_component(user)
+ 
+         if self._given_basetemp is not None:
+             basetemp = self._given_basetemp

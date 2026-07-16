@@ -1,0 +1,17 @@
+Based on the issue description and error traceback, I can generate the fix. The problem is in `sklearn/preprocessing/label.py` at the `transform` method (around line 134). When an empty list is passed to `transform()`, numpy creates an array with dtype `float64`, but `np.searchsorted` fails when trying to cast from `float64` to the string dtype of `self.classes_`.
+
+The fix is to handle the empty input case by checking if the input array is empty and returning an empty integer array immediately.
+
+Here's the patch:
+
+--- a/sklearn/preprocessing/label.py
++++ b/sklearn/preprocessing/label.py
+@@ -128,6 +128,8 @@ class LabelEncoder(BaseEstimator, TransformerMixin):
+         """
+         check_is_fitted(self, 'classes_')
+         y = column_or_1d(y, warn=True)
++        if len(y) == 0:
++            return np.array([], dtype=int)
+ 
+         classes = np.unique(y)
+         if len(np.intersect1d(classes, self.classes_)) < len(classes):

@@ -1,0 +1,33 @@
+{
+  "name": "aasb-full-stack-developer",
+  "version": "14.5.0",
+  "description": "Install the \"Full-Stack Developer\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "full-stack-developer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Full-Stack Developer",
+    "shortDescription": "Web Development · 8 curated skills",
+    "longDescription": "For end-to-end web application development. Covers Senior Fullstack, Frontend Developer, and 6 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Web Development",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "brandColor": "#111827"
+  }
+}

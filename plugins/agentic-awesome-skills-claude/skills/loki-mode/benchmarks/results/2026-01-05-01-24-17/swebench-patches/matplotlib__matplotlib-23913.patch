@@ -1,0 +1,207 @@
+Based on my knowledge of the matplotlib codebase and the GitHub issue, I'll create the patch for adding a `draggable` keyword parameter to the Legend class. The issue requests:
+1. Add a `draggable` keyword to the Legend `__init__` function
+2. Deprecate `draggable()` in favor of `set_draggable()` and `get_draggable()` methods
+
+Here's the patch:
+
+--- a/lib/matplotlib/legend.py
++++ b/lib/matplotlib/legend.py
+@@ -22,6 +22,7 @@ from matplotlib import _api, _docstring, colors, offsetbox
+ from matplotlib.artist import Artist, allow_rasterization
+ from matplotlib.cbook import silent_list
+ from matplotlib.font_manager import FontProperties
++from matplotlib.offsetbox import DraggableOffsetBox
+ from matplotlib.lines import Line2D
+ from matplotlib.patches import (Patch, Rectangle, Shadow, FancyBboxPatch,
+                                  StepPatch)
+@@ -298,6 +299,14 @@ handler : the legend handler.
+     fancybox: bool or None, default: :rc:`legend.fancybox`
+         Whether round edges should be enabled around the `.FancyBboxPatch`
+         which makes up the legend's background.
++
++    draggable: bool, default: False
++        Whether the legend can be dragged with the mouse.
+     """)
+ 
+ 
+@@ -329,6 +338,7 @@ class Legend(Artist):
+                  borderpad=None,      # whitespace inside the legend border
+                  labelspacing=None,   # vertical space between the legend entries
+                  handlelength=None,   # length of the legend handles
+                  handleheight=None,   # height of the legend handles
+                  handletextpad=None,  # pad between the legend handle and text
+                  borderaxespad=None,  # pad between the axes and legend border
+                  columnspacing=None,  # spacing between columns
+@@ -341,6 +351,7 @@ class Legend(Artist):
+                  title_fontproperties=None,  # properties for the legend title
+                  alignment="center",         # control alignment within the legend box
+                  *,
++                 draggable=False,
+                  ncol=1  # synonym for ncols (backward compatibility)
+                  ):
+         """
+@@ -523,6 +534,9 @@ class Legend(Artist):
+         self._draggable = None
+ 
++        # Enable dragging if requested
++        self.set_draggable(draggable)
++
+         # Set the title and alignment.
+         self.set_title(title, prop=title_prop_fp)
+         self._alignment = alignment
+@@ -1086,10 +1100,18 @@ class Legend(Artist):
+             self._draggable.disconnect()
+         self._draggable = None
+ 
++    def get_draggable(self):
++        """Return whether the legend is draggable."""
++        return self._draggable is not None
++
+     def draggable(self, state=None, use_blit=False, update="loc"):
+         """
+-        Enable or disable mouse dragging support of the legend.
++        Enable or disable the legend being draggable with the mouse.
++
++        .. deprecated:: 3.x
++            Use `.set_draggable` and `.get_draggable` instead.
+ 
++        """
++        _api.warn_deprecated(
++            "3.x", name="draggable", alternative="set_draggable or get_draggable")
+         Parameters
+         ----------
+         state : bool or None
+@@ -1121,6 +1143,52 @@ class Legend(Artist):
+                 return self._draggable
+             else:
+                 self.set_draggable(False)
++
++    def set_draggable(self, state, use_blit=False, update="loc"):
++        """
++        Enable or disable mouse dragging support of the legend.
++
++        Parameters
++        ----------
++        state : bool
++            Whether mouse dragging is enabled.
++        use_blit : bool, optional
++            Use blitting for faster image composition. For details see
++            :ref:`func-animation`.
++        update : {'loc', 'bbox'}, optional
++            The legend parameter to be changed when dragged:
++
++            - 'loc': update the *loc* parameter of the legend
++            - 'bbox': update the *bbox_to_anchor* parameter of the legend
++
++        Returns
++        -------
++        `.DraggableLegend` or *None*
++            If *state* is ``True`` this returns the `.DraggableLegend` helper
++            instance. Otherwise this returns *None*.
++        """
++        if state:
++            if self._draggable is None:
++                self._draggable = DraggableLegend(self, use_blit, update)
++            return self._draggable
++        else:
++            if self._draggable is not None:
++                self._draggable.disconnect()
++            self._draggable = None
++            return None
+
+Let me provide a cleaner, more accurate patch based on the standard matplotlib legend.py structure:
+
+--- a/lib/matplotlib/legend.py
++++ b/lib/matplotlib/legend.py
+@@ -301,6 +301,9 @@ handler : the legend handler.
+ 
+     fancybox : bool or None
+         Control whether a fancy box is used.
++
++    draggable : bool, default: False
++        Whether the legend can be dragged with the mouse.
+     """)
+ 
+ 
+@@ -338,6 +341,7 @@ class Legend(Artist):
+                  title_fontproperties=None,
+                  alignment="center",
+                  *,
++                 draggable=False,
+                  ncol=1
+                  ):
+         """
+@@ -520,6 +524,9 @@ class Legend(Artist):
+ 
+         self._draggable = None
+ 
++        # Enable dragging if requested.
++        self.set_draggable(draggable)
++
+         # set the text color
+ 
+     def _set_artist_props(self, a):
+@@ -1082,9 +1089,20 @@ class Legend(Artist):
+             self._draggable.disconnect()
+         self._draggable = None
+ 
++    def get_draggable(self):
++        """Return whether the legend is draggable."""
++        return self._draggable is not None
++
+     def draggable(self, state=None, use_blit=False, update="loc"):
+         """
+         Enable or disable mouse dragging support of the legend.
++
++        .. deprecated:: 3.6
++            Use `.set_draggable()` instead.
++
++        Parameters
++        ----------
++        state : bool or None
+ 
+         Parameters
+         ----------
+@@ -1112,6 +1130,42 @@ class Legend(Artist):
+         -------
+         `.DraggableLegend` or *None*
+         """
++        _api.warn_deprecated(
++            "3.6", name="draggable", alternative="set_draggable or get_draggable")
++        if state is None:
++            return self._draggable is not None
++        if state:
++            if self._draggable is None:
++                self._draggable = DraggableLegend(self, use_blit, update)
++            return self._draggable
++        else:
++            if self._draggable is not None:
++                self._draggable.disconnect()
++            self._draggable = None
++
++    def set_draggable(self, state, use_blit=False, update="loc"):
++        """
++        Enable or disable mouse dragging support of the legend.
++
++        Parameters
++        ----------
++        state : bool
++            Whether mouse dragging is enabled.
++        use_blit : bool, optional
++            Use blitting for faster image composition. For details see
++            :ref:`func-animation`.
++        update : {'loc', 'bbox'}, optional
++            The legend parameter to be changed when dragged:
++
++            - 'loc': update the *loc* parameter of the legend
++            - 'bbox': update the *bbox_to_anchor* parameter of the legend
++
++        Returns
++        -------
++        `.DraggableLegend` or *None*
++            If *state* is ``True`` this returns the `.DraggableLegend` helper
++            instance. Otherwise this returns *None*.
++        """
+         if state is None:
+             return self._draggable is not None
+         if state:

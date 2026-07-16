@@ -359,7 +359,7 @@ pytest --cov=your_package
 
 ## License
 
-This project is licensed under the ${LICENSE} License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the ${LICENSE} License - see the LICENSE file for details.
 ```
 
 ### Example 5: Function Documentation Generator

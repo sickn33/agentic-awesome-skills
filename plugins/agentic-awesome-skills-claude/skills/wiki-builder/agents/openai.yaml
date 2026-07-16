@@ -1,0 +1,5 @@
+interface:
+  display_name: "Wiki Builder"
+  short_description: "Start and maintain configurable research wikis"
+  brand_color: "#334155"
+  default_prompt: "Use $wiki-builder to start a new configurable research wiki."

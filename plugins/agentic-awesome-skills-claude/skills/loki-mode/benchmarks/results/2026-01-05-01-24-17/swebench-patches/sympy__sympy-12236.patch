@@ -1,0 +1,20 @@
+Based on my knowledge of sympy and the issue description, I can create the patch. The problem is in the `apart` function in `sympy/polys/partfrac.py`. When polynomial division is performed with a polynomial ring domain like `ZZ[y]`, fractional coefficients get truncated to zero. The fix is to convert the domain to its field of fractions before performing division.
+
+Looking at the issue details:
+1. The `apart` function calls `P.div(Q, auto=True)` 
+2. When the domain is `ZZ[y]`, division that produces fractional coefficients fails
+3. The `auto=True` flag should handle this, but it doesn't work correctly for polynomial ring domains
+
+The fix should ensure that the domain is converted to a field before polynomial division in the `apart` function. Based on the discussion in the issue hints, the fix should be in `sympy/polys/partfrac.py` where the polynomial division occurs.
+
+--- a/sympy/polys/partfrac.py
++++ b/sympy/polys/partfrac.py
+@@ -93,7 +93,12 @@ def apart(f, x=None, full=False, **options):
+     P, Q = f.as_numer_denom()
+ 
+     _options = options.copy()
+-    options = set_defaults(options, extension=True)
++    options = set_defaults(options, extension=True, field=True)
+     try:
+         (P, Q), opt = parallel_poly_from_expr((P, Q), x, **options)
+     except PolificationFailed as exc:

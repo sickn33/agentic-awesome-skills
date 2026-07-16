@@ -1,0 +1,25 @@
+Based on my knowledge of Django and the issue description, I can construct the patch. The issue is in the `iter_modules_and_files` function in `django/utils/autoreload.py`. The problem is that when a module is `__main__` (like `manage.py`), its `__spec__` attribute is `None`, so it gets skipped by the current logic.
+
+The fix needs to handle the `__main__` module specially by checking for `__file__` attribute when `__spec__` is `None`.
+
+Looking at the regression commit mentioned (c8720e7696ca41f3262d5369365cc1bd72a216ca) and the issue hints, the fix should:
+1. Check if the module is `__main__` and has a `__file__` attribute
+2. If so, include that file in the watched files
+
+Here's the patch:
+
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -113,6 +113,12 @@ def iter_modules_and_files(modules, extra_files):
+     sys_file_paths = []
+     for module in modules:
+         # During debugging (with PyDev) the 'ichunks.py' script is copied to a temp
++        # __main__ (usually manage.py) doesn't have a __spec__ set, so we check
++        # for __file__ directly.
++        if getattr(module, '__name__', None) == '__main__':
++            if hasattr(module, '__file__'):
++                sys_file_paths.append(module.__file__)
++            continue
+         # dir. See https://github.com/fabioz/PyDev.Debugger/blob/2d5b98f0/
+         # _pydevd_bundle/pydevd_filtering.py#L25
+         if getattr(module, "__spec__", None) is None:

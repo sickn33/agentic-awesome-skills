@@ -1,0 +1,35 @@
+Based on my understanding of the GitHub issue and the requests library, I need to generate a patch that modifies the `register_hook` method to accept lists in the dictionary values of the hooks argument.
+
+The issue states:
+1. Currently you can only specify one hook function per hook
+2. If you pass in a list of hook functions, the code wraps the list in a list which fails
+3. The fix is to make `register_hook` handle both single callables and lists of callables
+
+Looking at the original code pattern (pre-fix), the `register_hook` method would have simply appended the hook value without checking if it's iterable. The fix adds logic to:
+1. Check if `hook` is a `Callable` - if so, append it
+2. Check if `hook` is iterable - if so, extend the list with all callable items from the iterable
+
+Based on the code structure and the issue description, here's the patch:
+
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -1,6 +1,6 @@
+ # -*- coding: utf-8 -*-
+ 
+-from .compat import urlparse, str
++from .compat import urlparse, str, Callable
+ from .cookies import cookiejar_from_dict, morsel_to_cookie
+ from .structures import CaseInsensitiveDict
+ 
+@@ -90,7 +90,10 @@ class Request(object):
+     def register_hook(self, event, hook):
+         """Properly register a hook."""
+ 
+-        self.hooks[event].append(hook)
++        if isinstance(hook, Callable):
++            self.hooks[event].append(hook)
++        elif hasattr(hook, '__iter__'):
++            self.hooks[event].extend(h for h in hook if isinstance(h, Callable))
+ 
+     def deregister_hook(self, event, hook):
+         """Deregister a previously registered hook.

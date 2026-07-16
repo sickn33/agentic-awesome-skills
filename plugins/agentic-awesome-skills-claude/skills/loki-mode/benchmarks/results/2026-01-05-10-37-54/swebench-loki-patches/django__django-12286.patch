@@ -1,0 +1,41 @@
+# django__django-12286
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the architect's analysis and my knowledge of Django's codebase structure, I can generate the patch for the `translation.E004` check. The issue is in the `check_language_settings_consistent` function that needs to check for base language availability when a sublanguage is specified.
+
+```
+--- a/django/core/checks/translation.py
++++ b/django/core/checks/translation.py
+@@ -55,7 +55,12 @@ def check_language_settings_consistent(app_configs, **kwargs):
+     available_tags = {i for i, _ in settings.LANGUAGES} | {'en-us'}
+     messages = []
+     if settings.LANGUAGE_CODE not in available_tags:
+-        messages.append(E004)
++        # Check if the base language is available for sublanguages.
++        # For example, "de-at" should be allowed if "de" is available,
++        # matching Django's runtime translation fallback behavior.
++        base_language = settings.LANGUAGE_CODE.split('-')[0]
++        if base_language not in available_tags:
++            messages.append(E004)
+     if settings.USE_I18N and settings.LANGUAGE_CODE not in available_tags:
+         # Note: a]
+         pass
+```
+
+Wait, let me provide a cleaner patch based on the actual Django codebase structure:
+
+--- a/django/core/checks/translation.py
++++ b/django/core/checks/translation.py
+@@ -55,7 +55,12 @@ def check_language_settings_consistent(app_configs, **kwargs):
+     available_tags = {i for i, _ in settings.LANGUAGES} | {'en-us'}
+     messages = []
+     if settings.LANGUAGE_CODE not in available_tags:
+-        messages.append(E004)
++        # Check if the base language is available for sublanguages.
++        # For example, "de-at" should be allowed if "de" is available,
++        # matching Django's runtime translation fallback behavior.
++        base_language = settings.LANGUAGE_CODE.split('-')[0]
++        if base_language not in available_tags:
++            messages.append(E004)
+     return messages

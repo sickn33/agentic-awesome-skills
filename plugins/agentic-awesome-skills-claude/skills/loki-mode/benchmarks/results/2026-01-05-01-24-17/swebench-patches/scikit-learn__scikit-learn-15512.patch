@@ -1,0 +1,77 @@
+Based on my knowledge of the scikit-learn codebase and the issue described, I can provide the patch. The issue is in the `affinity_propagation_.py` file where when the algorithm doesn't converge, it should return empty cluster centers and -1 labels as documented, but instead returns the last iteration's results.
+
+Looking at the standard scikit-learn 0.20.x implementation, the fix needs to:
+1. Add a convergence check after the main iteration loop
+2. When not converged, set `cluster_centers_indices` to empty array and `labels` to -1
+
+Here's the patch:
+
+```
+--- a/sklearn/cluster/affinity_propagation_.py
++++ b/sklearn/cluster/affinity_propagation_.py
+@@ -41,6 +41,14 @@ def affinity_propagation(S, preference=None, convergence_iter=15, max_iter=200,
+         Cluster labels for each point.
+ 
+     cluster_centers_indices : array, shape (n_clusters,)
++        Index of clusters centers.
++
++    n_iter : int
++        Number of iterations run.
++
++    References
++    ----------
++    Brendan J. Frey and Delbert Dueck, "Clustering by Passing Messages
+         Index of clusters centers
+ 
+     n_iter : int
+@@ -195,6 +203,15 @@ def affinity_propagation(S, preference=None, convergence_iter=15, max_iter=200,
+             if verbose:
+                 print("Converged after %d iterations." % it)
+             break
++    else:
++        if verbose:
++            print("Did not converge")
++
++    I = np.flatnonzero(E)
++    K = I.size  # Identify exemplars
++
++    if K > 0 and not unconverged:
++        c = np.argmax(S[:, I], axis=1)
+     else:
+         if verbose:
+             print("Did not converge")
+```
+
+Let me provide a cleaner, more accurate patch based on the actual sklearn 0.20.x codebase structure:
+
+--- a/sklearn/cluster/affinity_propagation_.py
++++ b/sklearn/cluster/affinity_propagation_.py
+@@ -195,11 +195,23 @@ def affinity_propagation(S, preference=None, convergence_iter=15, max_iter=200,
+             if verbose:
+                 print("Converged after %d iterations." % it)
+             break
+     else:
++        it += 1
+         if verbose:
+             print("Did not converge")
+ 
+     I = np.flatnonzero(E)
+     K = I.size  # Identify exemplars
+ 
+-    if K > 0:
++    if K > 0 and it < max_iter:
+         c = np.argmax(S[:, I], axis=1)
+         c[I] = np.arange(K)  # Identify clusters
+         # Refine the final set of exemplars and clusters andடுreturn results
+@@ -213,8 +225,12 @@ def affinity_propagation(S, preference=None, convergence_iter=15, max_iter=200,
+         labels = np.empty((n_samples, 1))
+         cluster_centers_indices = None
+         labels.fill(np.nan)
+     else:
++        warnings.warn("Affinity propagation did not converge, this model "
++                      "will not have any cluster centers.", ConvergenceWarning)
++        cluster_centers_indices = np.array([])
++        labels = np.array([-1] * n_samples)
+ 
+     if return_n_iter:
+         return cluster_centers_indices, labels, it + 1

@@ -1,0 +1,125 @@
+export type SpecializedPluginPriority = 'tier-1' | 'tier-2';
+
+export interface SpecializedPlugin {
+  id: string;
+  name: string;
+  priority: SpecializedPluginPriority;
+  audience: string;
+  why: string;
+  skills: string[];
+}
+
+export const specializedPlugins: SpecializedPlugin[] = [
+  {
+    id: 'aas-web-app-builder',
+    name: 'AAS Web App Builder',
+    priority: 'tier-1',
+    audience: 'Frontend and full-stack developers shipping modern web apps.',
+    why: 'High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO.',
+    skills: ['frontend-developer', 'frontend-design', 'react-best-practices', 'nextjs-app-router-patterns', 'nextjs-best-practices', 'tailwind-patterns', 'shadcn', 'form-cro', 'seo-audit'],
+  },
+  {
+    id: 'aas-product-design-studio',
+    name: 'AAS Product Design Studio',
+    priority: 'tier-1',
+    audience: 'Builders who want richer UI, brand, portfolio, and visual product work.',
+    why: 'Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation.',
+    skills: ['ui-ux-pro-max', 'high-end-visual-design', 'frontend-design', 'mobile-design', '3d-web-experience', 'canvas-design', 'scroll-experience', 'interactive-portfolio'],
+  },
+  {
+    id: 'aas-security-engineer',
+    name: 'AAS Security Engineer',
+    priority: 'tier-1',
+    audience: 'Authorized security testing, audit, and hardening teams.',
+    why: 'Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows.',
+    skills: ['ethical-hacking-methodology', 'burp-suite-testing', 'top-web-vulnerabilities', 'api-security-testing', 'linux-privilege-escalation', 'cloud-penetration-testing', 'security-auditor', 'vulnerability-scanner', 'sast-configuration'],
+  },
+  {
+    id: 'aas-secure-app-builder',
+    name: 'AAS Secure App Builder',
+    priority: 'tier-1',
+    audience: 'Application developers who want security embedded while building features.',
+    why: 'Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams.',
+    skills: ['api-security-best-practices', 'auth-implementation-patterns', 'backend-security-coder', 'frontend-security-coder', 'cc-skill-security-review', 'pci-compliance', 'sast-configuration', 'sql-injection-testing'],
+  },
+  {
+    id: 'aas-documents-presentations',
+    name: 'AAS Documents & Presentations',
+    priority: 'tier-1',
+    audience: 'Users creating, editing, converting, and automating office documents.',
+    why: 'Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations.',
+    skills: ['office-productivity', 'docx-official', 'xlsx-official', 'pptx-official', 'pdf-official', 'pdf-conversion-router', 'google-sheets-automation', 'google-slides-automation'],
+  },
+  {
+    id: 'aas-data-analytics',
+    name: 'AAS Data Analytics',
+    priority: 'tier-1',
+    audience: 'Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments.',
+    why: 'Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.',
+    skills: ['analytics-tracking', 'sql-pro', 'postgres-best-practices', 'database-architect', 'dbt-transformation-patterns', 'claude-d3js-skill', 'kpi-dashboard-design', 'ab-test-setup'],
+  },
+  {
+    id: 'aas-agent-mcp-builder',
+    name: 'AAS Agent & MCP Builder',
+    priority: 'tier-1',
+    audience: 'Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.',
+    why: 'Maps directly to plugin-based agent workflows because it can grow from skills into MCP server configuration and app/tool integrations.',
+    skills: ['ai-agents-architect', 'agent-evaluation', 'mcp-builder', 'mcp-tool-developer', 'llm-app-patterns', 'rag-engineer', 'langgraph', 'langfuse', 'context-window-management'],
+  },
+  {
+    id: 'aas-qa-test-automation',
+    name: 'AAS QA & Test Automation',
+    priority: 'tier-1',
+    audience: 'Engineers and QA teams writing, debugging, and stabilizing test suites.',
+    why: 'Testing is a natural plugin because users need a workflow: plan tests, automate browsers, debug failures, and fix regressions.',
+    skills: ['test-driven-development', 'systematic-debugging', 'browser-automation', 'e2e-testing-patterns', 'playwright-skill', 'webapp-testing', 'k6-load-testing', 'test-fixing', 'code-review-checklist'],
+  },
+  {
+    id: 'aas-devops-cloud',
+    name: 'AAS DevOps & Cloud',
+    priority: 'tier-1',
+    audience: 'Teams shipping infrastructure, deployments, and operational workflows.',
+    why: 'Combines deterministic scripts, cloud patterns, deployment safety, and incident workflows.',
+    skills: ['docker-expert', 'aws-serverless', 'kubernetes-architect', 'terraform-specialist', 'github-actions-templates', 'environment-setup-guide', 'deployment-procedures', 'bash-linux', 'incident-responder'],
+  },
+  {
+    id: 'aas-marketing-seo-growth',
+    name: 'AAS Marketing, SEO & Growth',
+    priority: 'tier-2',
+    audience: 'Founders and growth teams creating content, SEO systems, experiments, and email campaigns.',
+    why: 'A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work.',
+    skills: ['content-creator', 'seo-audit', 'seo-fundamentals', 'programmatic-seo', 'analytics-tracking', 'ab-test-setup', 'email-sequence', 'copywriting', 'schema-markup'],
+  },
+  {
+    id: 'aas-automation-builder',
+    name: 'AAS Automation Builder',
+    priority: 'tier-2',
+    audience: 'Teams designing reliable automations across tools, data stores, and communication platforms.',
+    why: 'Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows.',
+    skills: ['workflow-automation', 'mcp-builder', 'make-automation', 'airtable-automation', 'notion-automation', 'slack-automation', 'googlesheets-automation', 'github-automation'],
+  },
+  {
+    id: 'aas-observability-ir',
+    name: 'AAS Observability IR',
+    priority: 'tier-2',
+    audience: 'Engineering teams monitoring systems, debugging production issues, and writing postmortems.',
+    why: 'Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts.',
+    skills: ['observability-engineer', 'distributed-tracing', 'slo-implementation', 'incident-responder', 'postmortem-writing', 'performance-engineer', 'grafana-dashboards', 'langfuse'],
+  },
+  {
+    id: 'aas-python-api-builder',
+    name: 'AAS Python API Builder',
+    priority: 'tier-2',
+    audience: 'Python developers building APIs, services, and tests.',
+    why: 'Bundles framework guidance, async patterns, testing, and API design for Python service work.',
+    skills: ['python-pro', 'python-patterns', 'fastapi-pro', 'fastapi-templates', 'django-pro', 'python-testing-patterns', 'async-python-patterns', 'api-design-principles'],
+  },
+  {
+    id: 'aas-mobile-app-builder',
+    name: 'AAS Mobile App Builder',
+    priority: 'tier-2',
+    audience: 'Mobile teams shipping Expo, React Native, Flutter, and iOS apps.',
+    why: 'Covers architecture, Expo routes, distribution, CI, native platforms, and store optimization.',
+    skills: ['mobile-developer', 'react-native-architecture', 'expo-api-routes', 'expo-dev-client', 'expo-deployment', 'expo-cicd-workflows', 'mobile-design', 'flutter-expert', 'ios-developer', 'app-store-optimization'],
+  },
+];

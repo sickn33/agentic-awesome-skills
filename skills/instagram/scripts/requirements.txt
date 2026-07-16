@@ -1,0 +1,5 @@
+httpx>=0.27.0
+Pillow>=10.0.0
+aiosqlite>=0.20.0
+uvicorn>=0.30.0
+fastapi>=0.115.0

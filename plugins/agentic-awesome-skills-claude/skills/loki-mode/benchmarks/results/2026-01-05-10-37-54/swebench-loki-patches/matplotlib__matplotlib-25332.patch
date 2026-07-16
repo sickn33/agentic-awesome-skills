@@ -1,0 +1,42 @@
+# matplotlib__matplotlib-25332
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of matplotlib's codebase and the issue description, I'll generate the patch. The Figure class in matplotlib has `__getstate__` and `__setstate__` methods, and `_align_label_groups` is a dictionary containing `Grouper` objects (from `matplotlib.cbook`) that use weak references internally.
+
+```
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -3067,6 +3067,14 @@ None}, optional
+ 
+     def __getstate__(self):
+         state = super().__getstate__()
++
++        # The _align_label_groups attribute contains Grouper objects that use
++        # weak references internally. We need to reconstruct them with the
++        # dereferenced (strong) values for pickling.
++        state["_align_label_groups"] = {
++            k: [ref() for ref in v._mapping if ref() is not None]
++            for k, v in state["_align_label_groups"].items()
++        }
+         # The canvas cannot currently be pickled, but this has the benefit
+         # of meaning that a figure can be detached from one canvas, and
+         # re-attached to another.
+@@ -3077,6 +3085,16 @@ None}, optional
+ 
+     def __setstate__(self, state):
+         self._callbacks = cbook.CallbackRegistry()
++
++        # Restore _align_label_groups from the pickled list of axes back
++        # to Grouper objects with weak references.
++        _align_label_groups = state.pop("_align_label_groups")
++        state["_align_label_groups"] = {
++            "x": cbook.Grouper(),
++            "y": cbook.Grouper(),
++        }
++        for k, v in _align_label_groups.items():
++            state["_align_label_groups"][k].join(*v)
+         self.__dict__ = state
+         self._fig_callbacks._connect_picklable()
+         for ax in self.axes:
+```

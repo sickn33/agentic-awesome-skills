@@ -1,0 +1,33 @@
+This repository doesn't contain the pytest source code. Since this is asking about fixing a GitHub issue in pytest-dev/pytest, I need to provide a patch based on my knowledge of the pytest codebase. The JUnit XML reporting in pytest is handled by `src/_pytest/junitxml.py`.
+
+Based on my knowledge of pytest's junitxml.py implementation and the issue requesting `hostname` and `timestamp` properties in the testsuite XML element, here's the patch:
+
+--- a/src/_pytest/junitxml.py
++++ b/src/_pytest/junitxml.py
+@@ -1,6 +1,8 @@
+ """Report test results in JUnit-XML format, for use with Jenkins and build
+ integration servers.
+ 
++Based on initial code from Ross Lawley.
++
+ Output conforms to
+ https://github.com/jenkinsci/xunit-plugin/blob/master/
+ src/main/resources/org/jenkinsci/plugins/xunit/types/model/xsd/junit-10.xsd
+@@ -8,6 +10,8 @@ src/main/resources/org/jenkinsci/plugins/xunit/types/model/xsd/junit-10.xsd
+ import functools
+ import os
+ import re
++import platform
++from datetime import datetime
+ from typing import Callable
+ from typing import Dict
+ from typing import List
+@@ -652,6 +656,8 @@ class LogXML:
+             numtests=self.stats["passed"]
+             + self.stats["failure"]
+             + self.stats["error"],
++            hostname=platform.node(),
++            timestamp=datetime.fromtimestamp(self.suite_start_time).isoformat(),
+         )
+         logfile.write(Junit.testsuite(self._get_global_properties_node(), *suite_node))
+         logfile.close()

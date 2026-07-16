@@ -1,0 +1,21 @@
+# django__django-12908
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Django's codebase and the issue description, I can generate the appropriate patch. The `distinct()` method in Django's QuerySet class needs to check if a combinator (union/intersection/difference) is set and raise a `NotSupportedError` if so.
+
+```
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1176,6 +1176,10 @@ class QuerySet:
+ 
+     def distinct(self, *field_names):
+         """Return a new QuerySet instance that will select only distinct results."""
++        if self.query.combinator:
++            raise NotSupportedError(
++                'Calling distinct() after %s() is not supported.' % self.query.combinator
++            )
+         assert not self.query.is_sliced, \
+             "Cannot call distinct() after .distinct() or .order_by()[:n] (slicing)."
+         obj = self._chain()
+```

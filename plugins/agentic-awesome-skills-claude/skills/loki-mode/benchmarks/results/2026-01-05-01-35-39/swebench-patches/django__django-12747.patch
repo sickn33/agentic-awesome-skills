@@ -1,0 +1,43 @@
+Based on my knowledge of Django's codebase and the issue description, let me provide the patch. The issue is in `django/db/models/deletion.py` in the `Collector.delete()` method. When zero objects are deleted for "simple" models, the code still includes a dictionary entry with a zero count, while for models with foreign keys it returns an empty dictionary.
+
+The fix should ensure consistency by not including model labels with zero counts in the result dictionary.
+
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -408,6 +408,8 @@ class Collector:
+                             sender=model, origin=self.origin,
+                         )
+ 
++        for model, instances in self.data.items():
++            deleted_counter[model._meta.label] += len(instances)
+         # update collected instances
+         for instances_for_fieldvalues in self.field_updates.values():
+             for (field, value), instances in instances_for_fieldvalues.items():
+@@ -418,8 +420,6 @@ class Collector:
+             query = sql.UpdateQuery(model)
+             query.update_batch(pk_list, {field.name: value}, self.using)
+ 
+-        for model, instances in self.data.items():
+-            deleted_counter[model._meta.label] += len(instances)
+         # fast deletes
+         for qs in self.fast_deletes:
+             count = qs._raw_delete(using=self.using)
+
+Wait, I need to reconsider. The issue is that when there are zero objects to delete, the inconsistency comes from how the `deleted_counter` is initialized and populated. Let me trace through the logic more carefully.
+
+The issue states:
+- Models with FK: result is `(0, {})`
+- Simple models: result is `(0, {'my_app.BlockLibrary': 0})`
+
+This suggests that for simple models, the counter is being incremented by 0, but the key is still added. The fix should filter out zero counts from the result.
+
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -431,4 +431,6 @@ class Collector:
+         for model, instances in self.data.items():
+             for instance in instances:
+                 setattr(instance, model._meta.pk.attname, None)
+-        return sum(deleted_counter.values()), dict(deleted_counter)
++        # Omit the model-label keys that have zero objects deleted.
++        return sum(deleted_counter.values()), {
++            model_label: count for model_label, count in deleted_counter.items() if count}

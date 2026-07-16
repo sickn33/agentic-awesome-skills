@@ -1,0 +1,37 @@
+Based on my knowledge of the Django codebase and the issue description, I can provide the fix. The issue is in `django/core/management/commands/sqlmigrate.py` where `self.output_transaction` is set based only on `migration.atomic` but should also check `connection.features.can_rollback_ddl`.
+
+Here's the patch:
+
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -50,7 +50,7 @@ class Command(BaseCommand):
+         plan = [(executor.loader.graph.nodes[targets[0]], options['backwards'])]
+ 
+         # Show begin/end around output only for atomic migrations
+-        self.output_transaction = migration.atomic
++        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl
+ 
+         # Make a plan that represents just the requested migrations and show SQL
+         # for it
+--- a/tests/migrations/test_commands.py
++++ b/tests/migrations/test_commands.py
+@@ -600,6 +600,18 @@ class MigrateTests(MigrationTestBase):
+             self.assertNotIn(connection.ops.start_transaction_sql(), output)
+             self.assertNotIn(connection.ops.end_transaction_sql(), output)
+ 
++    @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
++    def test_sqlmigrate_for_non_transactional_databases(self):
++        """
++        sqlmigrate does not wrap output in BEGIN/COMMIT if the database
++        doesn't support transactional DDL.
++        """
++        out = io.StringIO()
++        with mock.patch.object(connection.features, 'can_rollback_ddl', False):
++            call_command("sqlmigrate", "migrations", "0001", stdout=out)
++        output = out.getvalue().lower()
++        self.assertNotIn(connection.ops.start_transaction_sql().lower(), output)
++        self.assertNotIn(connection.ops.end_transaction_sql().lower(), output)
++
+     @override_settings(
+         INSTALLED_APPS=[
+             "migrations.migrations_test_apps.migrated_app",

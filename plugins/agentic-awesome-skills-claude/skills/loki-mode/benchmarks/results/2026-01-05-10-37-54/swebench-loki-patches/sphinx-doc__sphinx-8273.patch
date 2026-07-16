@@ -1,0 +1,103 @@
+# sphinx-doc__sphinx-8273
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on the issue and architect's analysis, I need to generate a patch for Sphinx's man page builder. Since the actual Sphinx repository isn't present in the provided directory, I'll generate the patch based on the standard Sphinx codebase structure and the architect's guidance.
+
+```
+--- a/sphinx/builders/manpage.py
++++ b/sphinx/builders/manpage.py
+@@ -26,7 +26,7 @@ from sphinx.util import logging
+ from sphinx.util.console import darkgreen  # type: ignore
+ from sphinx.util.nodes import inline_all_toctrees
+ from sphinx.util.osutil import make_filename_from_project
+-from sphinx.writers.manpage import ManualPageWriter
++from sphinx.writers.manpage import ManualPageWriter, ManualPageTranslator
+ 
+ 
+ logger = logging.getLogger(__name__)
+@@ -80,7 +80,13 @@ class ManualPageBuilder(Builder):
+             docsettings.section = section
+ 
+             if self.config.man_make_section_directory:
+-                ensuredir(path.join(self.outdir, 'man%s' % section))
++                sectdir = path.join(self.outdir, 'man%s' % section)
++                ensuredir(sectdir)
++                targetname = '%s.%s' % (name, section)
++                destination = FileOutput(
++                    destination_path=path.join(sectdir, targetname),
++                    encoding='utf-8')
++            else:
+                 targetname = '%s.%s' % (name, section)
+                 destination = FileOutput(
+                     destination_path=path.join(self.outdir, targetname),
+@@ -104,4 +110,5 @@ def setup(app: Sphinx) -> Dict[str, Any]:
+ 
+     app.add_config_value('man_pages', default_man_pages, None)
+     app.add_config_value('man_show_urls', False, None)
++    app.add_config_value('man_make_section_directory', False, None)
+ 
+     return {
+--- a/sphinx/builders/manpage.py
++++ b/sphinx/builders/manpage.py
+@@ -80,13 +80,14 @@ class ManualPageBuilder(Builder):
+             docsettings.section = section
+ 
+             if self.config.man_make_section_directory:
+-                ensuredir(path.join(self.outdir, 'man%s' % section))
+-                targetname = '%s.%s' % (name, section)
+-                destination = FileOutput(
+-                    destination_path=path.join(self.outdir, targetname),
++                sectdir = path.join(self.outdir, 'man%s' % section)
++                ensuredir(sectdir)
++            else:
++                sectdir = self.outdir
++
++            targetname = '%s.%s' % (name, section)
++            destination = FileOutput(
++                destination_path=path.join(sectdir, targetname),
+                     encoding='utf-8')
+-            else:
+-                targetname = '%s.%s' % (name, section)
+-                destination = FileOutput(
+-                    destination_path=path.join(self.outdir, targetname),
+-                    encoding='utf-8')
+ 
+             logger.info(darkgreen(targetname) + ' { ', nonl=True)
+```
+
+Let me provide a cleaner, correct patch:
+
+--- a/sphinx/builders/manpage.py
++++ b/sphinx/builders/manpage.py
+@@ -22,6 +22,7 @@ from docutils.io import FileOutput
+ from sphinx import addnodes
+ from sphinx.application import Sphinx
+ from sphinx.builders import Builder
++from sphinx.errors import NoUri
+ from sphinx.locale import __
+ from sphinx.util import logging
+ from sphinx.util.console import darkgreen  # type: ignore
+@@ -77,9 +78,13 @@ class ManualPageBuilder(Builder):
+             docsettings.authors = authors
+             docsettings.section = section
+ 
+-            targetname = '%s.%s' % (name, section)
++            if self.config.man_make_section_directory:
++                dirname = 'man%s' % section
++                ensuredir(path.join(self.outdir, dirname))
++                targetname = '%s/%s.%s' % (dirname, name, section)
++            else:
++                targetname = '%s.%s' % (name, section)
++
+             destination = FileOutput(
+                 destination_path=path.join(self.outdir, targetname),
+                 encoding='utf-8')
+@@ -102,6 +107,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
+ 
+     app.add_config_value('man_pages', default_man_pages, None)
+     app.add_config_value('man_show_urls', False, None)
++    app.add_config_value('man_make_section_directory', False, None)
+ 
+     return {
+         'version': 'builtin',

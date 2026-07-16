@@ -1,0 +1,121 @@
+# django__django-14155
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+Based on my knowledge of Django's codebase and the issue description (django__django-14155), I can generate the appropriate patch. The `ResolverMatch` class is in `django/urls/resolvers.py` and needs to be modified to unwrap `functools.partial` objects in `__init__()`.
+
+Here is the patch:
+
+```
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -1,6 +1,7 @@
+ """
+ This module converts requested URLs to callback view functions.
+ 
++functools is imported for handling partial functions.
+ URLResolver is the main class here. Its resolve() method takes a URL (as
+ a string) and returns a ResolverMatch object which provides access to all
+ attributes of the resolved URL match.
+@@ -8,6 +9,7 @@
+ import functools
+ import inspect
+ import re
++import types
+ from importlib import import_module
+ from urllib.parse import quote
+ 
+@@ -32,6 +34,18 @@ class ResolverMatch:
+ 
+     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route='', tried=None):
+         self.func = func
++        self.args = args
++        self.kwargs = kwargs
++        # Unwrap functools.partial objects to get the underlying function
++        # and merge pre-bound arguments.
++        while isinstance(func, functools.partial):
++            self.args = func.args + self.args
++            self.kwargs = {**func.keywords, **self.kwargs}
++            func = func.func
++        # Store unwrapped function for path calculation
++        self._func_path = self._get_func_path(func)
++        self.view_name = ':'.join(filter(None, [*namespaces or [], url_name or self._func_path]))
++
+         self.args = args
+         self.kwargs = kwargs
+         if isinstance(func, functools.partial):
+@@ -32,17 +34,24 @@ class ResolverMatch:
+ 
+     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route='', tried=None):
+         self.func = func
+-        self.args = args
+-        self.kwargs = kwargs
+-        if isinstance(func, functools.partial):
+-            func = func.func
+-        if not hasattr(func, '__name__'):
+-            # A class-based view
+-            self._func_path = func.__class__.__module__ + '.' + func.__class__.__name__
++        # Handle functools.partial objects: unwrap them to get the underlying
++        # function and merge partial's args/kwargs with resolver's args/kwargs.
++        unwrapped_func = func
++        partial_args = ()
++        partial_kwargs = {}
++        while isinstance(unwrapped_func, functools.partial):
++            partial_args = unwrapped_func.args + partial_args
++            partial_kwargs = {**unwrapped_func.keywords, **partial_kwargs}
++            unwrapped_func = unwrapped_func.func
++        self.args = partial_args + args
++        self.kwargs = {**partial_kwargs, **kwargs}
++        if not hasattr(unwrapped_func, '__name__'):
++            # A class-based view or other callable without __name__
++            self._func_path = unwrapped_func.__class__.__module__ + '.' + unwrapped_func.__class__.__name__
+         else:
+-            # A function-based view
+-            self._func_path = func.__module__ + '.' + func.__name__
+-
++            # A function-based view or other callable with __name__
++            self._func_path = unwrapped_func.__module__ + '.' + unwrapped_func.__name__
+         view_path = url_name or self._func_path
+         self.url_name = url_name
+         self.app_names = app_names or []
+
+```
+
+Wait, that patch has duplicate/conflicting sections. Let me provide a clean patch:
+
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -32,17 +32,24 @@ class ResolverMatch:
+ 
+     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route='', tried=None):
+         self.func = func
+-        self.args = args
+-        self.kwargs = kwargs
+-        if isinstance(func, functools.partial):
+-            func = func.func
+-        if not hasattr(func, '__name__'):
+-            # A class-based view
+-            self._func_path = func.__class__.__module__ + '.' + func.__class__.__name__
++        # Handle functools.partial: unwrap to get the underlying function
++        # and merge partial's pre-bound args/kwargs with resolver's args/kwargs.
++        unwrapped_func = func
++        partial_args = ()
++        partial_kwargs = {}
++        while isinstance(unwrapped_func, functools.partial):
++            partial_args = unwrapped_func.args + partial_args
++            partial_kwargs = {**unwrapped_func.keywords, **partial_kwargs}
++            unwrapped_func = unwrapped_func.func
++        self.args = partial_args + args
++        self.kwargs = {**partial_kwargs, **kwargs}
++        if not hasattr(unwrapped_func, '__name__'):
++            # A class-based view or other callable without __name__
++            self._func_path = unwrapped_func.__class__.__module__ + '.' + unwrapped_func.__class__.__name__
+         else:
+-            # A function-based view
+-            self._func_path = func.__module__ + '.' + func.__name__
+-
++            # A function-based view or other callable with __name__
++            self._func_path = unwrapped_func.__module__ + '.' + unwrapped_func.__name__
+         view_path = url_name or self._func_path
+         self.url_name = url_name
+         self.app_names = app_names or []

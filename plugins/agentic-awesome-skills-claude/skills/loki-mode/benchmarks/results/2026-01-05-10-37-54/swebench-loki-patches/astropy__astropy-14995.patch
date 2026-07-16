@@ -1,0 +1,19 @@
+# astropy__astropy-14995
+# Loki Mode Multi-Agent Patch
+# Attempts: 1
+
+The issue is for astropy/astropy repository, but the current working directory is a different project. Based on the architect's analysis, I need to generate a patch for the astropy repository. The bug is in `astropy/nddata/mixins/ndarithmetic.py` where `elif operand is None:` should be `elif operand.mask is None:`.
+
+Based on the issue description and architect's analysis, I can generate the patch. The fix is straightforward - changing the condition from checking if `operand is None` to checking if `operand.mask is None`.
+
+--- a/astropy/nddata/mixins/ndarithmetic.py
++++ b/astropy/nddata/mixins/ndarithmetic.py
+@@ -485,7 +485,7 @@ class NDArithmeticMixin:
+         # directly depends on the type of self.mask.
+         if self.mask is None and operand is not None:
+             return deepcopy(operand.mask)
+-        elif operand is None:
++        elif operand.mask is None:
+             return deepcopy(self.mask)
+         else:
+             # Now lets calculate the resulting mask (operation enforces copy)

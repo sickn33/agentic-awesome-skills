@@ -1,0 +1,24 @@
+Based on the problem statement and hints provided, I can generate the patch directly. The issue is clear: in the `itermonomials` function, when checking if a monomial meets the `min_degree` requirement, the code incorrectly uses `max(powers.values())` instead of `sum(powers.values())`. The `max` function checks if any single variable has a power >= min_degree, but for total degree we need the sum of all powers.
+
+Here's the patch:
+
+--- a/sympy/polys/monomials.py
++++ b/sympy/polys/monomials.py
+@@ -127,7 +127,7 @@ def itermonomials(variables, max_degrees, min_degrees=None):
+                 for variable in item:
+                     if variable != 1:
+                         powers[variable] += 1
+-                if max(powers.values()) >= min_degree:
++                if sum(powers.values()) >= min_degree:
+                     monomials_list_comm.append(Mul(*item))
+             yield from set(monomials_list_comm)
+         else:
+@@ -139,7 +139,7 @@ def itermonomials(variables, max_degrees, min_degrees=None):
+                 for variable in item:
+                     if variable != 1:
+                         powers[variable] += 1
+-                if max(powers.values()) >= min_degree:
++                if sum(powers.values()) >= min_degree:
+                     monomials_list_non_comm.append(Mul(*item))
+             yield from set(monomials_list_non_comm)
+     else:

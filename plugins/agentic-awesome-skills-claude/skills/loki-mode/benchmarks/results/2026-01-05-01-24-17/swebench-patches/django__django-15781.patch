@@ -1,0 +1,18 @@
+The Django repository doesn't appear to be in the current directory. Based on the issue and hints provided, I can generate the patch directly since the change is clearly described in the hint:
+
+The fix is to use `kwargs.setdefault("formatter_class", DjangoHelpFormatter)` before creating the parser, and then pass `**kwargs` to `CommandParser` without hardcoding `formatter_class`. This allows users to override the formatter through kwargs while keeping `DjangoHelpFormatter` as the default.
+
+--- a/django/core/management/base.py
++++ b/django/core/management/base.py
+@@ -286,10 +286,10 @@ class BaseCommand:
+         Create and return the ``ArgumentParser`` which will be used to
+         parse the arguments to this command.
+         """
++        kwargs.setdefault("formatter_class", DjangoHelpFormatter)
+         parser = CommandParser(
+             prog="%s %s" % (os.path.basename(prog_name), subcommand),
+             description=self.help or None,
+-            formatter_class=DjangoHelpFormatter,
+             missing_args_message=getattr(self, "missing_args_message", None),
+             called_from_command_line=getattr(self, "_called_from_command_line", None),
+             **kwargs,
