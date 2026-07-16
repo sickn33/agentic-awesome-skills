@@ -1097,6 +1097,12 @@ function approveWorkflowRun(projectRoot, repoSlug, run) {
   );
 }
 
+function isSameRepositoryPullRequest(repoSlug, prDetails) {
+  const headRepository = prDetails?.headRepository?.nameWithOwner;
+  return typeof headRepository === "string"
+    && headRepository.toLowerCase() === String(repoSlug || "").toLowerCase();
+}
+
 function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {}) {
   const prNumber = Number(prDetails?.number);
   const tuple = pullRequestTuple(prDetails);
@@ -1120,8 +1126,9 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   fetchObjects(projectRoot, baseOid, headOid, dependencies);
   const mergeBaseOid = getMergeBase(projectRoot, baseOid, headOid, dependencies);
   const records = readRecords(projectRoot, mergeBaseOid, headOid, dependencies);
+  const sameRepository = isSameRepositoryPullRequest(repoSlug, prDetails);
   const preliminaryPolicy = classifyRecords(records, { requireBlobSizes: false });
-  if (!preliminaryPolicy?.approvalSafe) {
+  if (!sameRepository && !preliminaryPolicy?.approvalSafe) {
     const reasons = Array.isArray(preliminaryPolicy?.reasons) && preliminaryPolicy.reasons.length
       ? preliminaryPolicy.reasons.slice(0, 12).join(", ")
       : "unclassified local diff";
@@ -1129,7 +1136,7 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   }
   const blobSizes = getSizes(projectRoot, records, dependencies);
   const policy = classifyRecords(records, { blobSizes });
-  if (!policy?.approvalSafe) {
+  if (!sameRepository && !policy?.approvalSafe) {
     const reasons = Array.isArray(policy?.reasons) && policy.reasons.length
       ? policy.reasons.slice(0, 12).join(", ")
       : "unclassified local diff";
@@ -1199,6 +1206,7 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
     evidence,
     records,
     policy,
+    sameRepository,
     runs: validatedRuns,
     approvedRuns: options.dryRun ? [] : validatedRuns,
   };

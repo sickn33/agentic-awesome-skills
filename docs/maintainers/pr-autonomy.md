@@ -56,13 +56,15 @@ A successful `manual-review-required` check means only that the requirement was 
 1. captures base and head object IDs;
 2. fetches those objects without checking out pull-request code;
 3. computes a complete NUL-delimited raw Git diff with full object IDs and modes;
-4. rejects unsafe paths, modes, symlinks, gitlinks, executable files, unknown types, oversized blobs, incomplete metadata, or non-allowlisted workflows;
+4. for external PRs, rejects unsafe paths, modes, symlinks, gitlinks, executable files, unknown types, oversized blobs, incomplete metadata, or non-allowlisted workflows;
 5. verifies workflow event, workflow identity, pull-request number, and head SHA;
 6. recomputes changed-skill evidence over the exact merge-base-to-head record set and requires one-to-one coverage of every skill-content Git record;
 7. rejects operational errors, malformed evidence, incomplete snapshots, score-component regressions, provenance identity regressions, or any other deterministic blocker;
 8. re-reads both pull-request base and head before and after approval and immediately before merge.
 
 A real merge also requires effective server-side protection for `main`: the four exact GitHub-Actions-owned checks (`pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview`), strict up-to-date enforcement, pull-request-only changes, administrator enforcement, no applicable ruleset bypass actors, and no merge queue. If that enforcement cannot be proven, `merge:batch` refuses non-dry-run operation. Base drift is never retried with stale evidence; the batch must be rerun from the new tuple. Pre-existing auto-merge state is rejected, and the immediate GitHub merge endpoint must return `merged: true` before post-merge work begins.
+
+Same-repository maintainer PRs may legitimately change repository-wide policy, tooling, workflows, or documentation, so the fork content allowlist does not apply to them. They remain bound to the protected branch, trusted-base evidence evaluator, exact PR/base/head tuple, semantic-review requirements, and required checks. Missing or mismatched head-repository identity is treated as external and therefore fails closed under the fork allowlist.
 
 For canonical `SKILL.md` or allowlisted supporting skill-content changes, the maintainer supplies `--reviewed-head <full-sha>`. A stale, abbreviated, or mismatched SHA fails closed. The Skill Review check itself is required only for `SKILL.md` changes because that workflow is path-filtered; support-only changes still require the exact-SHA human attestation.
 

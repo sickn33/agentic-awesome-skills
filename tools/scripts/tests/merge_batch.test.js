@@ -536,6 +536,38 @@ function approvalDependencies(overrides = {}) {
 }
 
 {
+  const prDetails = {
+    number: 450,
+    baseRefName: "main",
+    baseRefOid: BASE_SHA,
+    headRefOid: HEAD_SHA,
+    headRefName: "maintenance/internal",
+    headRepository: { nameWithOwner: "OWNER/REPO" },
+  };
+  let classifications = 0;
+  const dependencies = approvalDependencies({
+    classifyChangeRecords() {
+      classifications += 1;
+      return {
+        approvalSafe: false,
+        reasons: ["record_0:new_unapproved_path"],
+        requiresHumanReview: false,
+        canonicalSkillChanges: [],
+      };
+    },
+    listActionRequiredRuns() { return []; },
+    loadPullRequestDetails() { return prDetails; },
+  });
+  const result = mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {
+    dependencies,
+    reviewedHeads: [HEAD_SHA],
+  });
+  assert.strictEqual(result.sameRepository, true);
+  assert.strictEqual(classifications, 2);
+  assert.deepStrictEqual(result.runs, []);
+}
+
+{
   const record = {
     status: "M",
     old_path: "skills/example/SKILL.md",

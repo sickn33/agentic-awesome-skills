@@ -35,7 +35,8 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 - fetch the exact base/head objects and classify the complete raw Git diff
 - recompute changed-skill evidence with evaluator code materialized from the trusted `main` commit
 - reject incomplete evidence coverage, deterministic quality/security/provenance regressions, and base/head drift
-- poll for asynchronously-created fork runs and approve only post-reopen runs waiting on `action_required` when every path, mode, object, size, and workflow identity is allowlisted
+- for external PRs, poll for asynchronously-created fork runs and approve only post-reopen runs waiting on `action_required` when every path, mode, object, size, and workflow identity is allowlisted
+- for same-repository maintainer PRs, allow repository-wide source changes while still enforcing trusted changed-skill evidence, exact-head review, required checks, branch protection, and immutable PR identity
 - wait only for check suites belonging to the post-reopen workflow generation; older runs on the same head SHA cannot satisfy or fail the gate
 - call GitHub's immediate squash-merge endpoint and continue only when it reports `merged: true`
 - pull the protected `main`; its trusted workflow opens a canonical-sync bot PR for generated artifacts and contributor credits when needed
@@ -64,7 +65,7 @@ Stop and switch to the manual playbook when:
 - the PR is `CONFLICTING`
 - `merge:batch` reports a check failure that needs source changes, not maintainer automation
 - the PR needs a manual README credits decision
-- the local diff contains a symlink, gitlink, executable mode, unknown path/type, oversized blob, or other non-allowlisted change
+- an external PR's local diff contains a symlink, gitlink, executable mode, unknown path/type, oversized blob, or other non-allowlisted change
 - the workflow run cannot be bound to the intended PR number, current head SHA, `pull_request` event, and trusted workflow definition
 - fork approval or branch permissions are missing
 - effective strict protection for `main` cannot be proven

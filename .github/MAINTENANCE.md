@@ -243,7 +243,7 @@ We used this flow for PRs [#220](https://github.com/sickn33/agentic-awesome-skil
 **Maintainer shortcut for batched PRs:**
 
 - Use `npm run merge:batch -- --prs 450,449,446,451` to automate the ordered maintainer flow for multiple PRs. See [docs/maintainers/merge-batch.md](../docs/maintainers/merge-batch.md) for the short usage guide.
-- The script keeps the GitHub-only squash merge rule, handles fork-run approvals and stale PR metadata refresh, waits only on fresh required checks, retries `Base branch was modified`, and runs the mandatory post-merge `sync:contributors` follow-up on `main`.
+- The script keeps the GitHub-only squash merge rule, handles fork-run approvals and stale PR metadata refresh, waits only on fresh required checks, retries `Base branch was modified`, and runs the mandatory post-merge `sync:contributors` follow-up on `main`. The fork content allowlist applies only to external PRs; same-repository maintainer PRs may change repository-wide source while remaining subject to protected checks, trusted changed-skill evidence, exact-head review, and immutable PR identity.
 - It is intentionally not a conflict resolver. If a PR is conflicting, stop and follow the manual conflict playbook.
 
 ### C. Post-Merge Credits Sync (Mandatory After Every PR Merge)
