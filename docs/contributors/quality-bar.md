@@ -47,7 +47,7 @@ A list of known edge cases or things the skill _cannot_ do.
 
 If a skill includes command examples, remote fetch steps, secrets, or mutation guidance, the PR must document the risk and pass `npm run security:docs` in addition to normal validation.
 
-For pull requests that add or modify `SKILL.md`, GitHub also runs the automated `skill-review` workflow. Treat that review as part of the normal PR quality gate and address any actionable findings before merge.
+For pull requests that add or modify `SKILL.md`, GitHub also runs the automated `skill-review` workflow. Treat that review as part of the normal PR quality gate and address any actionable findings before merge. A successful result is reused when a later push has the identical changed-skill content; if Tessl credits are unavailable, the workflow records `manual-review-required` for exact-head maintainer attestation instead of pretending an automated review passed.
 Automated checks are necessary, but they do **not** replace manual reviewer judgment on logic, safety, and likely failure modes.
 
 `npm run security:docs` enforces a repo-wide scan for:

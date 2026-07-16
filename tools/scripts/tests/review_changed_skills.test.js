@@ -9,7 +9,10 @@ const {
   ensureRepoRelative,
   getChangedSkillDirs,
   getChangedSkillFiles,
+  isQuotaFailure,
+  reviewFingerprint,
   reviewLabel,
+  writePlan,
 } = require(path.join(repoRoot, 'tools', 'scripts', 'review_changed_skills.cjs'));
 
 const changed = getChangedSkillFiles('base', 'head', {
@@ -88,3 +91,59 @@ assert.deepStrictEqual(
 );
 
 assert.strictEqual(reviewLabel('123', 'skills/alpha'), 'pr-123-skills-alpha');
+
+const alphaFingerprint = reviewFingerprint(['skills/alpha'], {
+  cacheVersion: '1',
+  repoRoot: tempDir,
+  threshold: '80',
+  workspace: 'antigravity-awesome-skills',
+});
+assert.match(alphaFingerprint, /^[0-9a-f]{64}$/);
+assert.strictEqual(
+  reviewFingerprint(['skills/alpha'], {
+    cacheVersion: '1',
+    repoRoot: tempDir,
+    threshold: '80',
+    workspace: 'antigravity-awesome-skills',
+  }),
+  alphaFingerprint,
+);
+assert.notStrictEqual(
+  reviewFingerprint(['skills/alpha'], {
+    cacheVersion: '2',
+    repoRoot: tempDir,
+    threshold: '80',
+    workspace: 'antigravity-awesome-skills',
+  }),
+  alphaFingerprint,
+);
+
+fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'SKILL.md'), 'alpha changed');
+assert.notStrictEqual(
+  reviewFingerprint(['skills/alpha'], {
+    cacheVersion: '1',
+    repoRoot: tempDir,
+    threshold: '80',
+    workspace: 'antigravity-awesome-skills',
+  }),
+  alphaFingerprint,
+);
+
+const githubOutput = path.join(tempDir, 'github-output.txt');
+const plan = writePlan(['skills/alpha'], {
+  cacheVersion: '1',
+  githubOutput,
+  repoRoot: tempDir,
+  threshold: '80',
+  workspace: 'antigravity-awesome-skills',
+});
+assert.strictEqual(plan.hasSkills, true);
+assert.strictEqual(plan.skillCount, 1);
+assert.match(fs.readFileSync(githubOutput, 'utf8'), /has-skills=true/);
+assert.match(fs.readFileSync(githubOutput, 'utf8'), /skill-count=1/);
+assert.match(fs.readFileSync(githubOutput, 'utf8'), /fingerprint=[0-9a-f]{64}/);
+
+assert.strictEqual(isQuotaFailure('Credit quota exceeded for this workspace'), true);
+assert.strictEqual(isQuotaFailure('Insufficient credits remaining'), true);
+assert.strictEqual(isQuotaFailure('Monthly credit allowance has been reached'), true);
+assert.strictEqual(isQuotaFailure('Network request failed'), false);

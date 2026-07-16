@@ -125,18 +125,30 @@ const skillReviewWorkflow = fs.readFileSync(
   "utf8",
 );
 assert.match(skillReviewWorkflow, /^permissions:\n  contents: read$/m);
+assert.match(skillReviewWorkflow, /^  review-attempt:$/m);
 assert.match(skillReviewWorkflow, /^  review:$/m);
 assert.match(skillReviewWorkflow, /^  manual-review-required:$/m);
 assert.match(skillReviewWorkflow, /^  missing-review-credentials:$/m);
 assert.match(
   skillReviewWorkflow,
-  /if: \$\{\{ needs\.review-state\.outputs\.configured != 'true' && github\.event\.pull_request\.head\.repo\.full_name != github\.repository \}\}/,
+  /needs\.review-attempt\.outputs\.outcome == 'quota'/,
+  "quota exhaustion must route to exact-head manual review",
 );
 assert.match(
   skillReviewWorkflow,
-  /if: \$\{\{ needs\.review-state\.outputs\.configured != 'true' && github\.event\.pull_request\.head\.repo\.full_name == github\.repository \}\}/,
+  /github\.event\.pull_request\.head\.repo\.full_name != github\.repository/,
+);
+assert.match(
+  skillReviewWorkflow,
+  /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/,
 );
 assert.match(skillReviewWorkflow, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
+assert.match(skillReviewWorkflow, /review_changed_skills\.cjs --plan/);
+assert.match(skillReviewWorkflow, /actions\/cache\/restore@[0-9a-f]{40}/);
+assert.match(skillReviewWorkflow, /actions\/cache\/save@[0-9a-f]{40}/);
+assert.match(skillReviewWorkflow, /tessl-review-v1-\$\{\{ steps\.plan\.outputs\.fingerprint \}\}/);
+assert.match(skillReviewWorkflow, /steps\.review-cache\.outputs\.cache-hit != 'true'/);
+assert.match(skillReviewWorkflow, /needs\.review-attempt\.outputs\.outcome == 'reviewed'/);
 assert.ok(
   skillReviewWorkflow.indexOf("- name: Checkout pull request content") <
     skillReviewWorkflow.indexOf("- name: Checkout trusted base scripts"),

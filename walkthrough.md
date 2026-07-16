@@ -270,3 +270,10 @@
 - Corrected the Skill Review workflow and trusted review helper to use the token-visible `antigravity-awesome-skills` Tessl workspace instead of the renamed repository slug.
 - Added a repository-variable override so future Tessl workspace migrations can be handled through `TESSL_WORKSPACE` without another workflow patch.
 - Updated the review command regression test to lock the corrected workspace argument.
+
+# Maintenance Walkthrough - 2026-07-16 Tessl Credit Guard
+
+- Added a deterministic fingerprint over the changed `SKILL.md` content and active review policy.
+- Reuse a previously successful review for identical content, avoiding Tessl setup and another charged review after unrelated PR pushes or base refreshes.
+- Route an explicit Tessl credit/quota failure to `manual-review-required` with exact-head attestation; unrelated Tessl failures still fail closed.
+- Added regression coverage for fingerprint invalidation, GitHub Actions cache wiring, quota classification, and truthful review outcomes.

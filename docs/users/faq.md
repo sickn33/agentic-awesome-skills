@@ -423,7 +423,7 @@ Common fixes:
 
 ### My PR triggered the `skill-review` automated check. What is it?
 
-Since v8.0.0, GitHub automatically runs a `skill-review` workflow on any PR that adds or modifies a `SKILL.md` file. It reviews your skill against the quality bar and flags common issues — missing sections, weak triggers, or risky command patterns. The workflow now uses Tessl Review; fork PRs may need maintainer manual review when GitHub withholds repository secrets.
+Since v8.0.0, GitHub automatically runs a `skill-review` workflow on any PR that adds or modifies a `SKILL.md` file. It reviews your skill against the quality bar and flags common issues — missing sections, weak triggers, or risky command patterns. The workflow now uses Tessl Review; fork PRs may need maintainer manual review when GitHub withholds repository secrets. Successful reviews are keyed to the changed skill content, so unrelated pushes and base-branch refreshes reuse the result without spending more Tessl credits. If the monthly credit quota is unavailable, the workflow requests an exact-head maintainer review rather than returning a false automated pass.
 
 **If it reports findings:**
 

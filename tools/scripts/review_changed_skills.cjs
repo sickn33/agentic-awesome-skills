@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync, spawnSync } = require('node:child_process');
 
 const DEFAULT_THRESHOLD = '80';
 const DEFAULT_WORKSPACE = 'antigravity-awesome-skills';
+const DEFAULT_CACHE_VERSION = '1';
+const QUOTA_EXIT_CODE = 75;
 
 function runGit(args, options = {}) {
   return execFileSync('git', args, {
@@ -86,12 +89,71 @@ function reviewLabel(prNumber, skillDir) {
   return `pr-${prNumber}-${safeSkill}`;
 }
 
+function reviewFingerprint(skillDirs, options = {}) {
+  const repoRoot = options.repoRoot || process.cwd();
+  const hash = crypto.createHash('sha256');
+  const policy = {
+    cacheVersion: options.cacheVersion || DEFAULT_CACHE_VERSION,
+    reviewPlugin: options.reviewPlugin || '',
+    threshold: options.threshold || DEFAULT_THRESHOLD,
+    workspace: options.workspace || DEFAULT_WORKSPACE,
+  };
+
+  hash.update(`${JSON.stringify(policy)}\0`);
+  for (const skillDir of [...skillDirs].sort()) {
+    const skillPath = ensureRepoRelative(path.join(skillDir, 'SKILL.md'), repoRoot);
+    hash.update(`${skillDir}\0`);
+    hash.update(fs.readFileSync(skillPath));
+    hash.update('\0');
+  }
+
+  return hash.digest('hex');
+}
+
+function isQuotaFailure(output) {
+  const message = String(output || '');
+  return (
+    /\b(?:credit|credits|quota|allowance)\b[\s\S]{0,160}\b(?:depleted|exhausted|exceeded|insufficient|limit|reached|remaining|available)\b/iu.test(message) ||
+    /\b(?:depleted|exhausted|exceeded|insufficient|limit|reached)\b[\s\S]{0,160}\b(?:credit|credits|quota|allowance)\b/iu.test(message)
+  );
+}
+
+function appendGitHubOutput(name, value, outputPath = process.env.GITHUB_OUTPUT) {
+  if (!outputPath) {
+    return;
+  }
+  fs.appendFileSync(outputPath, `${name}=${value}\n`);
+}
+
+function writePlan(skillDirs, options = {}) {
+  const hasSkills = skillDirs.length > 0;
+  const fingerprint = hasSkills ? reviewFingerprint(skillDirs, options) : 'none';
+  const plan = {
+    fingerprint,
+    hasSkills,
+    skillCount: skillDirs.length,
+  };
+
+  appendGitHubOutput('fingerprint', fingerprint, options.githubOutput);
+  appendGitHubOutput('has-skills', String(hasSkills), options.githubOutput);
+  appendGitHubOutput('skill-count', String(skillDirs.length), options.githubOutput);
+  console.log(JSON.stringify(plan));
+  return plan;
+}
+
 function runTessl(args, options = {}) {
   const result = spawnSync('tessl', args, {
     cwd: options.cwd || process.cwd(),
     encoding: 'utf8',
-    stdio: 'inherit',
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
+
+  if (result.stdout) {
+    process.stdout.write(result.stdout);
+  }
+  if (result.stderr) {
+    process.stderr.write(result.stderr);
+  }
 
   if (result.error) {
     throw result.error;
@@ -102,7 +164,10 @@ function runTessl(args, options = {}) {
   }
 
   if (result.status !== 0) {
-    throw new Error(`tessl ${args.join(' ')} failed with exit code ${result.status}`);
+    const error = new Error(`tessl ${args.join(' ')} failed with exit code ${result.status}`);
+    error.exitCode = result.status;
+    error.quotaFailure = isQuotaFailure(`${result.stdout || ''}\n${result.stderr || ''}`);
+    throw error;
   }
 }
 
@@ -113,9 +178,20 @@ function main() {
   const threshold = process.env.TESSL_REVIEW_THRESHOLD || DEFAULT_THRESHOLD;
   const reviewPlugin = process.env.TESSL_REVIEW_PLUGIN;
   const prNumber = process.env.PR_NUMBER;
+  const planOnly = process.argv.includes('--plan');
 
   const files = getChangedSkillFiles(baseSha, headSha);
   const skillDirs = getChangedSkillDirs(files);
+
+  if (planOnly) {
+    writePlan(skillDirs, {
+      cacheVersion: process.env.TESSL_REVIEW_CACHE_VERSION,
+      reviewPlugin,
+      threshold,
+      workspace,
+    });
+    return;
+  }
 
   if (skillDirs.length === 0) {
     console.log('No changed SKILL.md files to review.');
@@ -140,14 +216,19 @@ if (require.main === module) {
     main();
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
-    process.exitCode = 1;
+    process.exitCode = error && error.quotaFailure ? QUOTA_EXIT_CODE : 1;
   }
 }
 
 module.exports = {
+  QUOTA_EXIT_CODE,
+  appendGitHubOutput,
   buildReviewArgs,
   ensureRepoRelative,
   getChangedSkillDirs,
   getChangedSkillFiles,
+  isQuotaFailure,
+  reviewFingerprint,
   reviewLabel,
+  writePlan,
 };
