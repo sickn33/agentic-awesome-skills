@@ -9,6 +9,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.6.0] - 2026-07-16 - "Diagnostics, Review Efficiency, and Protected Maintenance"
+
+> Three new skills for Claude Code, Codex CLI, Gemini CLI, Cursor, Antigravity, and other agent workflows: Android overheating diagnosis, evidence-labeled competitor ad research, and uncertainty-aware campaign optimization, backed by more reliable Tessl review and protected maintainer automation.
+
+## Start Here
+
+- Install: `npx agentic-awesome-skills@14.6.0`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+## Added
+
+- Added **diagnose-android-overheating**, a read-only-first Android and HyperOS investigation workflow for correlating thermal state, power use, wakelocks, radio activity, and workload evidence without treating one snapshot as proof (PR #854).
+- Added **competitor-ad-intelligence** for evidence-labeled competitor paid-ad research across public libraries, landing pages, offer structure, and creative patterns while keeping observations separate from inference (PR #852).
+- Added **ad-campaign-analyzer** for diagnosing campaign efficiency and proposing bounded budget reallocation tests with uncertainty, measurement quality, and rollback conditions made explicit (PR #853).
+
+## Changed
+
+- Made repository maintenance consistently pull-request-only across maintainer policy and the `git-pushing`, `git-pr-workflows-git-workflow`, `finishing-a-development-branch`, `github-automation`, and `repo-maintainer` skills (PR #864).
+- Extended `merge:batch` to support same-repository maintainer PRs while keeping external PRs behind the strict fork content allowlist, trusted changed-skill evidence, exact-head review, required checks, and protected `main`.
+- Regenerated the canonical catalog, hosted assets, skill indexes, plugin bundles, and Claude/Codex mirrors for 1,965 skills.
+
+## Fixed
+
+- Corrected Tessl workspace selection and added a repository-variable override for future workspace migrations (PRs #856 and #858).
+- Reused successful Tessl review only for an identical changed-skill fingerprint, conserving review credits without weakening semantic-review truthfulness; explicit quota failures now route to exact-head manual review while unrelated failures remain fail-closed (PR #860).
+- Bound PR body-refresh retries to newly materialized workflow and check-suite IDs, preventing older runs on the same commit from satisfying or failing a refreshed merge gate (PR #864).
+- Made check selection prefer workflow creation time over late completion time and added regression coverage for delayed fork approvals, fresh Skill Review suites, and internal maintainer batches.
+
+## Validation
+
+- Passed protected `pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview` checks for every source and canonical-sync PR in the cycle.
+- Passed Tessl review for the five updated maintenance skills with scores of 93, 99, 88, 93, and 96 against the required threshold of 80.
+- Passed the full repository suite, documentation security, reference validation, warning-budget enforcement, Dependency Review, Snyk, Socket, all CodeQL analyzers, canonical mirror checks, and final Pages deployment.
+- Verified the three new skills and updated maintenance metadata on the live hosted catalog.
+
+## Credits
+
+- **[@himanshub42](https://github.com/himanshub42)** and **[gooseworks-ai/goose-skills](https://github.com/gooseworks-ai/goose-skills)** for `competitor-ad-intelligence` and `ad-campaign-analyzer` (PRs #852 and #853).
+
 ## [14.5.0] - 2026-07-15 - "Private Context, Optimization, and Local Operations"
 
 > Four reviewed community skills for private session-derived profiles, bounded parameter optimization, credential-isolated SSH operations, and low-context Anytype automation, with maintainer hardening and synchronized distributions.
