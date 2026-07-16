@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-15T17:16:56.000Z
 
-Total skills: 1962
+Total skills: 1963
 
 ## agent-behavior (5)
 
@@ -908,6 +908,12 @@ Total skills: 1962
 | --- | --- | --- | --- | --- | --- |
 | `drizzle-migration-conflict` | Diagnose, repair, and prevent Drizzle Kit migration conflicts involving generated SQL, snapshots, journals, merge queues, and team workflows. | critical | chaunsin/agent-skills | drizzle, migrations, database, ci, merge-conflicts | drizzle, migrations, database, ci, merge-conflicts, migration, conflict, diagnose, repair, prevent, kit, conflicts |
 | `weaviate` | Search, query, inspect, create, and import data into Weaviate vector database collections using official scripts and references. | critical | weaviate/agent-skills | weaviate, vector-database, semantic-search, hybrid-search, data-import | weaviate, vector-database, semantic-search, hybrid-search, data-import, search, query, inspect, import, data, vector, database |
+
+## debugging (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `diagnose-android-overheating` | Use when diagnosing Android overheating, idle heat, thermal throttling, charging or radio heat, or abnormal battery drain with read-only ADB evidence and app... | critical | self | android, adb, overheating, thermal, battery, diagnostics | android, adb, overheating, thermal, battery, diagnostics, diagnose, diagnosing, idle, heat, throttling, charging |
 
 ## design (18)
 

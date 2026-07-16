@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagnose Android Overheating"
+  short_description: "Find Android heat causes with safe ADB evidence"
+  default_prompt: "Diagnose why this Android device is overheating using read-only evidence first, then propose the smallest reversible fix."
