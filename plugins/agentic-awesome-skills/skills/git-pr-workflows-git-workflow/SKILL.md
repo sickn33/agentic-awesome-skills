@@ -25,8 +25,6 @@ Orchestrate a comprehensive git workflow from code review through PR creation, l
 ## Instructions
 
 - Clarify goals, constraints, and required inputs.
-- Read repository policy and effective branch protection before selecting a branch strategy. Trunk-based development does not imply a direct push: when the target branch is protected, use a short-lived branch and the repository's required pull-request workflow.
-- If the repository defines a mandatory maintainer workflow or guarded merge command, use it instead of this generic orchestration for merge/release actions. In `agentic-awesome-skills`, defer to `antigravity-maintainer-batch-release` and `npm run merge:batch`.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
 - If detailed examples are required, open `resources/implementation-playbook.md`.
@@ -89,7 +87,7 @@ Orchestrate a comprehensive git workflow from code review through PR creation, l
 
 ### 1. Branch Management
 - Use Task tool with subagent_type="cicd-automation::deployment-engineer"
-- Prompt: "Based on workflow type [--trunk-based or --feature-branch] and the repository's effective branch protection, prepare the branch strategy. For feature branches, follow the repository naming convention. For trunk-based work, use a short-lived branch and PR whenever the target is protected; direct target-branch pushes are allowed only when repository policy and server protection both permit them. Current branch: [insert branch], target: [insert target branch]. Verify no conflicts with target branch."
+- Prompt: "Based on workflow type [--trunk-based or --feature-branch], prepare branch strategy. For feature branch: ensure branch name follows pattern (feature|bugfix|hotfix)/<ticket>-<description>. For trunk-based: prepare for direct main push with feature flag strategy if needed. Current branch: [insert branch], target: [insert target branch]. Verify no conflicts with target branch."
 - Expected output: Branch preparation commands and conflict status
 
 ### 2. Pre-Push Validation

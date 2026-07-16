@@ -62,7 +62,7 @@ Automate GitHub repository management, issue tracking, pull request workflows, b
 3. `GITHUB_LIST_PULL_REQUESTS_FILES` - Review changed files [Optional]
 4. `GITHUB_CREATE_A_PULL_REQUEST` - Create a new PR [Required]
 5. `GITHUB_CREATE_AN_ISSUE_COMMENT` - Post review comments [Optional]
-6. `GITHUB_LIST_CHECK_RUNS_FOR_A_REF` - Verify required CI status before merge [Required]
+6. `GITHUB_LIST_CHECK_RUNS_FOR_A_REF` - Verify CI status before merge [Optional]
 7. `GITHUB_MERGE_A_PULL_REQUEST` - Merge after explicit user approval [Required]
 
 **Key parameters**:
@@ -76,7 +76,6 @@ Automate GitHub repository management, issue tracking, pull request workflows, b
 - `GITHUB_CREATE_A_PULL_REQUEST` fails with 422 if base/head are invalid, identical, or already merged
 - `GITHUB_MERGE_A_PULL_REQUEST` can be rejected if PR is draft, closed, or branch protection applies
 - Always verify mergeable status with `GITHUB_GET_A_PULL_REQUEST` immediately before merging
-- Read repository maintainer policy and branch protection before choosing a merge tool. If the repository provides a guarded merge command, use it instead of `GITHUB_MERGE_A_PULL_REQUEST`; for `agentic-awesome-skills`, use `npm run merge:batch` so exact-SHA review, fresh check-suite binding, and protected `main` are enforced.
 - Require explicit user confirmation before calling MERGE
 
 ### 3. Manage Repositories and Branches

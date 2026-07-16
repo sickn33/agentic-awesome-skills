@@ -26,10 +26,6 @@ Activate when:
 - Monthly/quarterly repo health checks
 - Onboarding to a new codebase
 
-## Repository Policy Gate
-
-Before auditing or mutating the repository, read its `AGENTS.md`, maintainer documentation, branch protection, and package scripts. If the repository names a mandatory maintainer skill or guarded command, delegate to that workflow and do not invent a parallel branch, merge, synchronization, or release path. In `agentic-awesome-skills`, `antigravity-maintainer-batch-release` and `npm run merge:batch` take precedence over this generic skill; `main` is pull-request-only.
-
 ## What This Skill Does
 
 ### 🔍 **Phase 1: Comprehensive Audit**
