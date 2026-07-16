@@ -12,6 +12,8 @@ license_source: https://github.com/Wolfe-Jam/faf-skills/blob/main/LICENSE
 
 # Repository Maintainer
 
+## Overview
+
 Audit repository health, apply authorized repairs narrowly, and finish through the repository's own protected workflow.
 
 ## When to Use
@@ -29,7 +31,7 @@ Before mutation:
 
 If the repository names a mandatory maintainer skill or guarded command, delegate to it instead of inventing a parallel branch, merge, sync, or release path. In `agentic-awesome-skills`, use `antigravity-maintainer-batch-release` and `npm run merge:batch`; `main` is pull-request-only.
 
-## Workflow
+## Usage
 
 ### 1. Establish the baseline
 
