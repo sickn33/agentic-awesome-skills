@@ -15298,6 +15298,37 @@
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
   },
   {
+    "id": "diagnose-android-overheating",
+    "path": "skills/diagnose-android-overheating",
+    "category": "debugging",
+    "name": "diagnose-android-overheating",
+    "description": "Diagnose Android overheating, idle heat, thermal throttling, charging or radio heat, and abnormal battery drain with read-only ADB evidence and approval gates before device changes.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-07-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "android",
+      "adb",
+      "overheating",
+      "thermal",
+      "battery",
+      "diagnostics"
+    ]
+  },
+  {
     "id": "diagnosing-bugs",
     "path": "skills/diagnosing-bugs",
     "category": "development",

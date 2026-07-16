@@ -12789,6 +12789,25 @@
       "runtime_files": []
     },
     {
+      "id": "diagnose-android-overheating",
+      "path": "skills/diagnose-android-overheating",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "diagnosing-bugs",
       "path": "skills/diagnosing-bugs",
       "targets": {
@@ -37705,10 +37724,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1962,
+    "total_skills": 1963,
     "supported": {
-      "codex": 1888,
-      "claude": 1910
+      "codex": 1889,
+      "claude": 1911
     },
     "blocked": {
       "codex": 74,

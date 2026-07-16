@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-15T17:16:56.000Z",
-  "total": 1962,
+  "total": 1963,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -19225,6 +19225,39 @@
         "trigger"
       ],
       "path": "skills/devrel-content/SKILL.md"
+    },
+    {
+      "id": "diagnose-android-overheating",
+      "canonical_id": "diagnose-android-overheating",
+      "name": "diagnose-android-overheating",
+      "description": "Diagnose Android overheating, idle heat, thermal throttling, charging or radio heat, and abnormal battery drain with read-only ADB evidence and approval gates before device changes.",
+      "category": "debugging",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "android",
+        "adb",
+        "overheating",
+        "thermal",
+        "battery",
+        "diagnostics"
+      ],
+      "triggers": [
+        "android",
+        "adb",
+        "overheating",
+        "thermal",
+        "battery",
+        "diagnostics",
+        "diagnose",
+        "idle",
+        "heat",
+        "throttling",
+        "charging",
+        "radio"
+      ],
+      "path": "skills/diagnose-android-overheating/SKILL.md"
     },
     {
       "id": "diagnosing-bugs",
