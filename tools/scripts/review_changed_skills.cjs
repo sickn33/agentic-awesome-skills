@@ -5,7 +5,7 @@ const path = require('node:path');
 const { execFileSync, spawnSync } = require('node:child_process');
 
 const DEFAULT_THRESHOLD = '80';
-const DEFAULT_WORKSPACE = 'sickn33';
+const DEFAULT_WORKSPACE = 'antigravity-awesome-skills';
 
 function runGit(args, options = {}) {
   return execFileSync('git', args, {
