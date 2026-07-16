@@ -260,6 +260,6 @@
 
 # Maintenance Walkthrough - 2026-07-16 Tessl Workspace Repair
 
-- Corrected the Skill Review workflow and trusted review helper to use the account-scoped `sickn33` Tessl workspace instead of the nonexistent repository-name workspace.
+- Corrected the Skill Review workflow and trusted review helper to use the token-visible `antigravity-awesome-skills` Tessl workspace instead of the renamed repository slug.
 - Added a repository-variable override so future Tessl workspace migrations can be handled through `TESSL_WORKSPACE` without another workflow patch.
 - Updated the review command regression test to lock the corrected workspace argument.

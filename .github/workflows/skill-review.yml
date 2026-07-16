@@ -26,7 +26,7 @@ jobs:
       TESSL_REVIEW_THRESHOLD: '80'
       # Tessl workspaces are account-scoped; keep the repository variable as
       # an override so a future workspace migration does not require code changes.
-      TESSL_WORKSPACE: ${{ vars.TESSL_WORKSPACE || 'sickn33' }}
+      TESSL_WORKSPACE: ${{ vars.TESSL_WORKSPACE || 'antigravity-awesome-skills' }}
     permissions:
       contents: read
     steps:
