@@ -46,8 +46,6 @@ jobs:
       - uses: tesslio/setup-tessl@25ec223fc0da33b41b8044ff5ab2b85235f4f91e
         with:
           token: ${{ secrets.TESSL_TOKEN || secrets.TESSL_API_TOKEN }}
-      - name: List Tessl workspaces for CI diagnosis
-        run: tessl workspace list
       - name: Review changed skills
         run: node trusted-base/tools/scripts/review_changed_skills.cjs
         env:
