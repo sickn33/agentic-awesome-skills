@@ -24,7 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TESSL_REVIEW_THRESHOLD: '80'
-      TESSL_WORKSPACE: agentic-awesome-skills
+      # Tessl workspaces are account-scoped; keep the repository variable as
+      # an override so a future workspace migration does not require code changes.
+      TESSL_WORKSPACE: ${{ vars.TESSL_WORKSPACE || 'sickn33' }}
     permissions:
       contents: read
     steps:
