@@ -11331,6 +11331,39 @@
     }
   },
   {
+    "id": "competitor-ad-intelligence",
+    "path": "skills/competitor-ad-intelligence",
+    "category": "marketing",
+    "name": "competitor-ad-intelligence",
+    "description": "Research public competitor ads, analyze creative patterns and landing pages, and produce an evidence-labeled strategic teardown.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "gooseworks-ai/goose-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/gooseworks-ai/goose-skills/blob/main/LICENSE",
+    "tags": [
+      "ads",
+      "competitive-intelligence",
+      "meta-ads",
+      "google-ads",
+      "marketing"
+    ]
+  },
+  {
     "id": "competitor-alternatives",
     "path": "skills/competitor-alternatives",
     "category": "business",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-15T17:16:56.000Z",
-  "total": 1963,
+  "total": 1964,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -13491,6 +13491,41 @@
         "positioning"
       ],
       "path": "skills/competitive-landscape/SKILL.md"
+    },
+    {
+      "id": "competitor-ad-intelligence",
+      "canonical_id": "competitor-ad-intelligence",
+      "name": "competitor-ad-intelligence",
+      "description": "Research public competitor ads, analyze creative patterns and landing pages, and produce an evidence-labeled strategic teardown.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "gooseworks-ai/goose-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/gooseworks-ai/goose-skills/blob/main/LICENSE",
+      "tags": [
+        "ads",
+        "competitive-intelligence",
+        "meta-ads",
+        "google-ads",
+        "marketing"
+      ],
+      "triggers": [
+        "ads",
+        "competitive-intelligence",
+        "meta-ads",
+        "google-ads",
+        "marketing",
+        "competitor",
+        "ad",
+        "intelligence",
+        "research",
+        "public",
+        "analyze",
+        "creative"
+      ],
+      "path": "skills/competitor-ad-intelligence/SKILL.md"
     },
     {
       "id": "competitor-alternatives",

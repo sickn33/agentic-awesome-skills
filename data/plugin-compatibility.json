@@ -8965,6 +8965,25 @@
       "runtime_files": []
     },
     {
+      "id": "competitor-ad-intelligence",
+      "path": "skills/competitor-ad-intelligence",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "competitor-alternatives",
       "path": "skills/competitor-alternatives",
       "targets": {
@@ -37724,10 +37743,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1963,
+    "total_skills": 1964,
     "supported": {
-      "codex": 1889,
-      "claude": 1911
+      "codex": 1890,
+      "claude": 1912
     },
     "blocked": {
       "codex": 74,

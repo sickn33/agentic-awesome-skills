@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-15T17:16:56.000Z
 
-Total skills: 1963
+Total skills: 1964
 
 ## agent-behavior (5)
 
@@ -1448,7 +1448,7 @@ Total skills: 1963
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (52)
+## marketing (53)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1459,6 +1459,7 @@ Total skills: 1963
 | `brand-guidelines-anthropic` | To access Anthropic's official brand identity and style resources, use this skill. | unknown | community | brand, guidelines, anthropic | brand, guidelines, anthropic, access, official, identity, style, resources, skill |
 | `brand-guidelines-community` | To access Anthropic's official brand identity and style resources, use this skill. | unknown | community | brand, guidelines, community | brand, guidelines, community, access, anthropic, official, identity, style, resources, skill |
 | `brevo-automation` | Automate Brevo (formerly Sendinblue) email marketing operations through Composio's Brevo toolkit via Rube MCP. | critical | community | brevo | brevo, automation, automate, formerly, sendinblue, email, marketing, operations, through, composio, toolkit, via |
+| `competitor-ad-intelligence` | Research public competitor ads, analyze creative patterns and landing pages, and produce an evidence-labeled strategic teardown. | critical | gooseworks-ai/goose-skills | ads, competitive-intelligence, meta-ads, google-ads, marketing | ads, competitive-intelligence, meta-ads, google-ads, marketing, competitor, ad, intelligence, research, public, analyze, creative |
 | `competitor-analysis` | Research competitors with Browserbase discovery, enrichment lanes, screenshots, matrices, and HTML reports. | safe | browserbase/skills | competitor-analysis, browserbase, market-research, browser-automation | competitor-analysis, browserbase, market-research, browser-automation, competitor, analysis, research, competitors, discovery, enrichment, lanes, screenshots |
 | `content-creator` | Professional-grade brand voice analysis, SEO optimization, and platform-specific content frameworks. | unknown | community | content, creator | content, creator, professional, grade, brand, voice, analysis, seo, optimization, platform, specific, frameworks |
 | `convertkit-automation` | Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and broadcast stats. Always search tools first for current sch... | critical | community | convertkit | convertkit, automation, automate, kit, tasks, via, rube, mcp, composio, subscribers, tags, broadcasts |
