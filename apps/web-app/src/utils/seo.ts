@@ -1,7 +1,7 @@
 import type { SeoJsonLdValue, SeoMeta, TwitterCard, Skill } from '../types';
 import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
 
-export const DEFAULT_TOP_SKILL_COUNT = 40;
+export const DEFAULT_TOP_SKILL_COUNT = 180;
 export const DEFAULT_SOCIAL_IMAGE = 'social-card.png';
 const SITE_NAME = 'Agentic Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
@@ -31,6 +31,7 @@ export interface SeoLandingPage {
   keywords: string[];
   relatedTerms?: string[];
   relatedCategories?: string[];
+  featuredSkillIds?: string[];
   sections: SeoLandingPageSection[];
   links: SeoLandingPageLink[];
 }
@@ -443,7 +444,7 @@ export function buildPluginsMeta(pluginCount: number): SeoMeta {
   };
 }
 
-export function buildTopicLandingMeta(page: SeoLandingPage): SeoMeta {
+export function buildTopicLandingMeta(page: SeoLandingPage, featuredSkills: ReadonlyArray<Skill> = []): SeoMeta {
   const canonicalPath = `${TOPIC_ROUTE_PREFIX}/${page.slug}`;
   const keywords = page.keywords.join(', ');
 
@@ -468,12 +469,14 @@ export function buildTopicLandingMeta(page: SeoLandingPage): SeoMeta {
         keywords,
         mainEntity: {
           '@type': 'ItemList',
-          name: `${page.eyebrow} topics`,
-          itemListElement: page.sections.map((section, index) => ({
+          name: `${page.eyebrow} recommended skills`,
+          numberOfItems: featuredSkills.length || page.sections.length,
+          itemListElement: (featuredSkills.length > 0 ? featuredSkills : page.sections).map((entry, index) => ({
             '@type': 'ListItem',
             position: index + 1,
-            name: section.heading,
-            description: section.body,
+            name: 'id' in entry ? entry.name : entry.heading,
+            description: 'id' in entry ? entry.description : entry.body,
+            ...('id' in entry ? { url: getCanonicalUrl(`/skill/${encodeURIComponent(entry.id)}`, canonicalUrl.replace(/\/topics\/[^/]+\/?$/, '')) } : {}),
           })),
         },
       },

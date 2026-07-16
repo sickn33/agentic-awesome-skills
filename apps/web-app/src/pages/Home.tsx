@@ -128,7 +128,8 @@ export function Home(): React.ReactElement {
 
       <div className="catalog-content">
         <section className="catalog-hero">
-          <h1>Find the right skill.<br />Ship the better agent.</h1>
+          <h1>Installable AI agent skills for Codex, Claude Code, Cursor, Gemini, and Antigravity</h1>
+          <p><strong>Find the right skill. Ship the better agent.</strong></p>
           <p>Search {catalogCountLabel} installable skills, plugins, and workflows — curated for real agent work.</p>
 
           <label className="catalog-search">

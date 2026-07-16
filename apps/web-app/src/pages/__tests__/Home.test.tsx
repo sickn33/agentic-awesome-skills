@@ -88,6 +88,11 @@ describe('Home', () => {
         expect(document.title).toContain('Agentic Awesome Skills');
       });
 
+      expect(screen.getByRole('heading', {
+        level: 1,
+        name: /Installable AI agent skills for Codex, Claude Code, Cursor, Gemini, and Antigravity/i,
+      })).toBeInTheDocument();
+      expect(screen.getByText(/Find the right skill\. Ship the better agent\./i)).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Compose an exact install/i })).toHaveAttribute('href', '/workbench');
       expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildSitemap, getSeoLandingPaths, selectTopSkillEntries } from './generate-sitemap.js';
+import { buildSitemap, DEFAULT_TOP_SKILL_COUNT, getSeoLandingPaths, selectTopSkillEntries } from './generate-sitemap.js';
 
 describe('sitemap generation script helpers', () => {
   it('builds top skill entries sorted by stars/date/name without duplicates', () => {
@@ -64,16 +64,16 @@ describe('sitemap generation script helpers', () => {
   });
 
   it('keeps the default public sitemap skill count reproducible', () => {
-    const catalog = Array.from({ length: 43 }, (_, index) => ({
+    const catalog = Array.from({ length: DEFAULT_TOP_SKILL_COUNT + 1 }, (_, index) => ({
       id: `skill-${String(index).padStart(2, '0')}`,
-      stars: 43 - index,
+      stars: DEFAULT_TOP_SKILL_COUNT + 1 - index,
     }));
 
     const xml = buildSitemap(catalog, undefined, 'https://example.com');
     const skillRoutes = xml.match(/https:\/\/example\.com\/skill\//g) || [];
 
-    expect(skillRoutes).toHaveLength(42);
-    expect(xml).toContain('https://example.com/skill/skill-41/</loc>');
-    expect(xml).not.toContain('https://example.com/skill/skill-42/</loc>');
+    expect(skillRoutes).toHaveLength(180);
+    expect(xml).toContain('https://example.com/skill/skill-179/</loc>');
+    expect(xml).not.toContain('https://example.com/skill/skill-180/</loc>');
   });
 });

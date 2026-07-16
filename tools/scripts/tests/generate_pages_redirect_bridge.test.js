@@ -187,10 +187,18 @@ try {
 
   const productionOutputRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'pages-redirect-production-'));
   try {
+    const productionSitemapPath = path.join(productionOutputRoot, 'sitemap.xml');
+    const productionBase = 'https://sickn33.github.io/agentic-awesome-skills/';
+    const productionUrls = [
+      productionBase,
+      ...Array.from({ length: 186 }, (_, index) => `${productionBase}skill/production-${index + 1}/`),
+    ];
+    fs.writeFileSync(productionSitemapPath, sitemap(productionUrls), 'utf8');
     const productionManifest = generateBridge({
+      sitemapPath: productionSitemapPath,
       outputDirectory: path.join(productionOutputRoot, 'bridge'),
     });
-    assert.strictEqual(productionManifest.route_count, 49);
+    assert.strictEqual(productionManifest.route_count, 187);
   } finally {
     fs.rmSync(productionOutputRoot, { recursive: true, force: true });
   }

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Skill } from '../../types';
 import {
+  DEFAULT_TOP_SKILL_COUNT,
   DEFAULT_SOCIAL_IMAGE,
   buildHomeMeta,
   buildSkillFallbackMeta,
@@ -28,6 +29,10 @@ function createSkill(overrides: Record<string, unknown> = {}) {
 }
 
 describe('SEO helpers', () => {
+  it('keeps hydrated priority metadata aligned with the curated sitemap scope', () => {
+    expect(DEFAULT_TOP_SKILL_COUNT).toBe(180);
+  });
+
   it('builds homepage metadata with the canonical catalog message', () => {
     const meta = buildHomeMeta(10);
 

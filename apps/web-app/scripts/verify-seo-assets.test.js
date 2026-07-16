@@ -6,6 +6,7 @@ import {
   assertManifest,
   assertIndexDiscoveryMeta,
   assertStaticIndexShell,
+  assertWebmasterVerificationMeta,
   assertPluginsDiscoveryMeta,
   analyzeSitemap,
   assertPrerenderedPluginRoutes,
@@ -24,6 +25,16 @@ import {
 const FIXTURE_ROOT_URL = 'https://owner.github.io/repo/';
 const FIXTURE_SOCIAL_IMAGE_URL = 'https://owner.github.io/repo/social-card.png';
 const PACKAGE_URL = 'https://www.npmjs.com/package/agentic-awesome-skills';
+
+describe('Bing Webmaster Tools verification metadata', () => {
+  it('requires the current verification token', () => {
+    const html = '<meta name="msvalidate.01" content="CAC904EB0D2DD1B22B5F2BC540CAD654" />';
+
+    expect(() => assertWebmasterVerificationMeta(html)).not.toThrow();
+    expect(() => assertWebmasterVerificationMeta('<meta name="msvalidate.01" content="stale" />'))
+      .toThrow('current Bing Webmaster Tools verification token');
+  });
+});
 
 function buildRouteIdentityHtml({
   routeUrl,

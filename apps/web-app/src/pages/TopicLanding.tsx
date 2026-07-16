@@ -1,14 +1,17 @@
 import { Link, useParams } from 'react-router-dom';
 import { Icon } from '../components/ui/Icon';
-import { getSeoLandingPage, seoLandingPages } from '../data/seoLandingPages';
+import { useSkills } from '../context/SkillContext';
+import { getCuratedSkillsForSeoLandingPage, getSeoLandingPage, seoLandingPages } from '../data/seoLandingPages';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildTopicLandingFallbackMeta, buildTopicLandingMeta } from '../utils/seo';
 
 export function TopicLanding(): React.ReactElement {
   const { slug } = useParams<{ slug: string }>();
   const page = getSeoLandingPage(slug);
+  const { skills } = useSkills();
+  const curatedSkills = page ? getCuratedSkillsForSeoLandingPage(page, skills) : [];
 
-  usePageMeta(page ? buildTopicLandingMeta(page) : buildTopicLandingFallbackMeta(slug));
+  usePageMeta(page ? buildTopicLandingMeta(page, curatedSkills) : buildTopicLandingFallbackMeta(slug));
 
   if (!page) {
     return (
@@ -115,6 +118,26 @@ export function TopicLanding(): React.ReactElement {
             </p>
           </article>
         ))}
+      </section>
+
+      <section className="topic-continue" aria-labelledby="recommended-skills-title">
+        <h2 id="recommended-skills-title" className="text-xl font-bold tracking-normal text-slate-900 dark:text-slate-100">
+          Recommended skills for this workflow
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+          These catalog entries are selected from the current library using editorial picks and deterministic topic matching.
+        </p>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          {curatedSkills.map((skill) => (
+            <article key={skill.id} className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                <Link to={`/skill/${encodeURIComponent(skill.id)}`}>@{skill.name}</Link>
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{skill.description}</p>
+              <p className="mt-3 text-xs font-medium uppercase tracking-wide text-slate-500">{skill.category}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="topic-continue">

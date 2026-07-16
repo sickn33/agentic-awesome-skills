@@ -95,7 +95,7 @@ function assert(condition, message) {
 function parseCliArgs(argv) {
   const defaultMinSkillUrls = parseCount(
     process.env.PRERENDER_VERIFY_MIN_SKILL_URLS || process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT,
-    40,
+    180,
   );
   const args = {
     sitemapPath: 'dist/sitemap.xml',
@@ -683,6 +683,14 @@ export function assertIndexSocialMeta(htmlText) {
   assertMetaContent(htmlText, 'name', 'twitter:image:alt');
 }
 
+export function assertWebmasterVerificationMeta(htmlText) {
+  const bingVerificationToken = extractMetaContent(htmlText, 'name', 'msvalidate.01');
+  assert(
+    bingVerificationToken === 'CAC904EB0D2DD1B22B5F2BC540CAD654',
+    'Index HTML must expose the current Bing Webmaster Tools verification token.',
+  );
+}
+
 function readSkillCountLabel(distDir) {
   try {
     const skills = JSON.parse(readFile(path.join(distDir, 'skills.json'), distDir));
@@ -984,7 +992,10 @@ export function runVerification({
   );
   assertIndexSocialMeta(indexHtml);
   assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel, requireHostedUrl });
-  assertStaticIndexShell(readFile(sourceIndexPath), { expectedSkillCountLabel, requireHostedUrl });
+  assertWebmasterVerificationMeta(indexHtml);
+  const sourceIndexHtml = readFile(sourceIndexPath);
+  assertStaticIndexShell(sourceIndexHtml, { expectedSkillCountLabel, requireHostedUrl });
+  assertWebmasterVerificationMeta(sourceIndexHtml);
   assertSocialCard(readBinaryFile(socialImagePath), { expectedSkillCountLabel });
   assertRobots(readFile(robotsPath), {
     expectedSitemapUrl: new URL('sitemap.xml', sitemapReport.rootUrl).href,

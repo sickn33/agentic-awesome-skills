@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Expanded the curated hosted sitemap from 42 to 180 deterministic skill routes and added crawlable static home/topic fallbacks so search engines can discover useful catalog hubs without mass-indexing the full library.
+- Enriched the four search-intent landing pages with real recommended skills, stronger internal links, and matching `ItemList` structured data while preserving canonical trailing-slash identities.
+- Replaced the marketing-only homepage heading with a descriptive AI-agent-skills heading while retaining the existing slogan as supporting copy.
+
+### Fixed
+
+- Added the current Bing Webmaster verification identity and updated the legacy Pages redirect generator contract to cover the expanded 187-route sitemap.
+
 ## [14.6.0] - 2026-07-16 - "Diagnostics, Review Efficiency, and Protected Maintenance"
 
 > Three new skills for Claude Code, Codex CLI, Gemini CLI, Cursor, Antigravity, and other agent workflows: Android overheating diagnosis, evidence-labeled competitor ad research, and uncertainty-aware campaign optimization, backed by more reliable Tessl review and protected maintainer automation.

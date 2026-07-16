@@ -33,6 +33,16 @@
       "developer-tools",
       "workflow"
     ],
+    "featuredSkillIds": [
+      "antigravity-agent-manager",
+      "antigravity-design-expert",
+      "antigravity-skill-orchestrator",
+      "antigravity-workflows",
+      "analyze-project",
+      "dispatch",
+      "subagent-orchestrator",
+      "recursive-context-pruning-token-budgeting"
+    ],
     "sections": [
       {
         "heading": "What to install first",
@@ -95,6 +105,16 @@
       "developer-tools",
       "github",
       "tool-quality"
+    ],
+    "featuredSkillIds": [
+      "address-github-comments",
+      "agentic-actions-auditor",
+      "github-actions-advanced",
+      "github-actions-debugger",
+      "github-actions-templates",
+      "codebase-audit-pre-push",
+      "code-review-ai-ai-review",
+      "cicd-automation-workflow-automate"
     ],
     "sections": [
       {
@@ -167,6 +187,16 @@
       "testing",
       "web-development"
     ],
+    "featuredSkillIds": [
+      "design-taste-frontend",
+      "api-security-best-practices",
+      "api-security-testing",
+      "github-actions-templates",
+      "building-native-ui",
+      "i18n-localization",
+      "agent-creator",
+      "aws-mcp-setup"
+    ],
     "sections": [
       {
         "heading": "Focused distributions",
@@ -230,6 +260,16 @@
       "marketing",
       "research",
       "writing"
+    ],
+    "featuredSkillIds": [
+      "antigravity-agent-manager",
+      "antigravity-design-expert",
+      "antigravity-skill-orchestrator",
+      "antigravity-workflows",
+      "i18n-localization",
+      "azure-ai-translation-document-py",
+      "azure-ai-translation-text-py",
+      "azure-ai-translation-ts"
     ],
     "sections": [
       {

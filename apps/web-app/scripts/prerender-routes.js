@@ -281,6 +281,28 @@ function getRelatedLandingPagesForSkill(landingPages, skill, limit = 3) {
   return selected.slice(0, maxItems);
 }
 
+function getCuratedSkillsForLandingPage(page, skills, limit = 12) {
+  const maxItems = Math.max(0, limit);
+  if (maxItems === 0 || !Array.isArray(skills)) return [];
+
+  const byId = new Map(skills.map((skill) => [skill.id, skill]));
+  const editorial = (Array.isArray(page.featuredSkillIds) ? page.featuredSkillIds : [])
+    .map((id) => byId.get(id))
+    .filter(Boolean);
+  const selectedIds = new Set(editorial.map((skill) => skill.id));
+  const scored = skills
+    .map((skill, index) => ({ skill, index, score: scoreLandingPageForSkill(page, skill) }))
+    .filter(({ skill, score }) => score > 0 && !selectedIds.has(skill.id))
+    .sort((a, b) => {
+      if (a.score !== b.score) return b.score - a.score;
+      const idCompare = safeText(a.skill.id).localeCompare(safeText(b.skill.id), undefined, { sensitivity: 'base' });
+      return idCompare || a.index - b.index;
+    })
+    .map(({ skill }) => skill);
+
+  return [...editorial, ...scored].slice(0, maxItems);
+}
+
 function buildStaticLinkList(links) {
   return links
     .map((link) => `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`)
@@ -299,7 +321,32 @@ function buildPrerenderFallback({ heading, description, links }) {
   ].join('');
 }
 
-function buildTopicFallback({ page, landingPages, siteBaseUrl }) {
+function buildHomeFallback({ landingPages, siteBaseUrl }) {
+  const links = [
+    { href: routeToUrl('/workbench', siteBaseUrl), label: 'Build an exact skill install' },
+    { href: routeToUrl('/plugins', siteBaseUrl), label: 'Compare specialized plugin packs' },
+    ...landingPages.filter((page) => page.slug).map((page) => ({
+      href: routeToUrl(`/topics/${encodeURIComponent(page.slug)}`, siteBaseUrl),
+      label: page.h1,
+    })),
+  ];
+
+  return [
+    '<main data-prerender-fallback="true">',
+    '<h1>Installable AI agent skills for Codex, Claude Code, Cursor, Gemini, and Antigravity</h1>',
+    '<p><strong>Find the right skill. Ship the better agent.</strong></p>',
+    '<p>Browse a GitHub-backed catalog of reusable SKILL.md playbooks, specialized plugins, bundles, and workflows.</p>',
+    `<nav aria-label="Catalog hubs"><ul>${buildStaticLinkList(links)}</ul></nav>`,
+    '</main>',
+  ].join('');
+}
+
+function buildTopicFallback({ page, landingPages, skills, siteBaseUrl }) {
+  const curatedSkills = getCuratedSkillsForLandingPage(page, skills);
+  const skillLinks = curatedSkills.map((skill) => ({
+    href: routeToUrl(`/skill/${encodeURIComponent(skill.id)}`, siteBaseUrl),
+    label: `@${safeText(skill.name) || safeText(skill.id)}`,
+  }));
   const relatedLinks = landingPages
     .filter((landing) => landing.slug && landing.slug !== page.slug)
     .slice(0, 3)
@@ -308,11 +355,19 @@ function buildTopicFallback({ page, landingPages, siteBaseUrl }) {
       label: landing.h1,
     }));
 
-  return buildPrerenderFallback({
-    heading: page.h1,
-    description: page.summary,
-    links: relatedLinks,
-  });
+  const sections = (Array.isArray(page.sections) ? page.sections : [])
+    .map((section) => `<section><h2>${escapeHtml(section.heading)}</h2><p>${escapeHtml(section.body)}</p></section>`)
+    .join('');
+
+  return [
+    '<main data-prerender-fallback="true">',
+    `<h1>${escapeHtml(page.h1)}</h1>`,
+    `<p>${escapeHtml(page.summary)}</p>`,
+    sections,
+    skillLinks.length > 0 ? `<nav aria-label="Recommended skills"><h2>Recommended skills</h2><ul>${buildStaticLinkList(skillLinks)}</ul></nav>` : '',
+    `<nav aria-label="Related topic guides"><h2>Related topic guides</h2><ul>${buildStaticLinkList(relatedLinks)}</ul></nav>`,
+    '</main>',
+  ].join('');
 }
 
 function buildSkillFallback({ skill, landingPages, siteBaseUrl }) {
@@ -622,7 +677,7 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
   };
 }
 
-function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
+function buildTopicLandingMeta({ page, featuredSkills = [], imageUrl, canonicalUrl }) {
   const catalogBaseUrl = canonicalUrl.replace(/\/topics\/[^/]+\/?$/, '');
   const keywords = Array.isArray(page.keywords) ? page.keywords.join(', ') : '';
   const sourceCodeEntity = {
@@ -679,15 +734,22 @@ function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
         keywords,
         mainEntity: {
           '@type': 'ItemList',
-          name: `${page.eyebrow} topics`,
-          itemListElement: Array.isArray(page.sections)
-            ? page.sections.map((section, index) => ({
+          name: `${page.eyebrow} recommended skills`,
+          numberOfItems: featuredSkills.length || (Array.isArray(page.sections) ? page.sections.length : 0),
+          itemListElement: featuredSkills.length > 0
+            ? featuredSkills.map((skill, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              name: safeText(skill.name) || safeText(skill.id),
+              description: safeText(skill.description),
+              url: routeToUrl(`/skill/${encodeURIComponent(skill.id)}`, catalogBaseUrl),
+            }))
+            : (Array.isArray(page.sections) ? page.sections.map((section, index) => ({
               '@type': 'ListItem',
               position: index + 1,
               name: section.heading,
               description: section.body,
-            }))
-            : [],
+            })) : []),
         },
       },
       {
@@ -812,7 +874,7 @@ function main() {
   const skills = readCatalog();
   const landingPages = readSeoLandingPages();
   const siteBaseUrl = getSiteBaseUrl();
-  const topCount = parseCount(process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT, 40);
+  const topCount = parseCount(process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT, 180);
   const topSkillPaths = selectTopSkillEntries(skills, topCount);
   const skillMap = new Map(skills.map((skill) => [skill.id, skill]));
   const topSkillSet = new Set(topSkillPaths.map((routePath) => routePath.replace(/^\/skill\//, '')));
@@ -824,7 +886,7 @@ function main() {
     imageUrl: socialImage,
     canonicalUrl: homeCanonical,
   });
-  writePrerenderedRoute('/', template, homeMeta);
+  writePrerenderedRoute('/', template, homeMeta, buildHomeFallback({ landingPages, siteBaseUrl }));
 
   const pluginsCanonical = routeToUrl('/plugins', siteBaseUrl);
   const pluginsMeta = buildPluginsMeta({
@@ -850,6 +912,7 @@ function main() {
     const canonicalUrl = routeToUrl(routePath, siteBaseUrl);
     const landingMeta = buildTopicLandingMeta({
       page,
+      featuredSkills: getCuratedSkillsForLandingPage(page, skills),
       imageUrl: socialImage,
       canonicalUrl,
     });
@@ -857,7 +920,7 @@ function main() {
       routePath,
       template,
       landingMeta,
-      buildTopicFallback({ page, landingPages, siteBaseUrl }),
+      buildTopicFallback({ page, landingPages, skills, siteBaseUrl }),
     );
   }
 
