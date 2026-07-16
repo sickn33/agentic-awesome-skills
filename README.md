@@ -391,6 +391,8 @@ Key source families include:
 
 - [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill) — Cloudflare Web Security Audit Skill (by Cloudflare)
 
+- **[gooseworks-ai/goose-skills](https://github.com/gooseworks-ai/goose-skills)**: Source for the `competitor-ad-intelligence` skill - evidence-labeled research across public ad libraries, creative patterns, landing-page funnels, and strategic counter-plays (MIT).
+
 - **[supernovae-st/nika-agents](https://github.com/supernovae-st/nika-agents)**: Official upstream source for the `nika` skill and its deterministic, budget-aware AI workflow runner (MIT skill content; AGPL-3.0 engine).
 - **[atdy/maoxuan-product-agent](https://github.com/atdy/maoxuan-product-agent)**: Source for the `product-decision-agent` skill - Chinese-first product judgment across prioritization, growth, operations, data, delivery, and cross-functional collaboration, with 36 tested scenarios (MIT).
 - **[hafiz-actyte/idea-autopsy](https://github.com/hafiz-actyte/idea-autopsy)**: Source for the `idea-autopsy` skill - business-idea validation that hunts the one sentence that kills an idea before you build: kill-list check, five hard filters, free-AI one-prompt test, and live ad-market verification (MIT).
