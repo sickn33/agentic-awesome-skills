@@ -2,6 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { digestJson, sha256 } from "./canonical.mjs";
 import { runProcess } from "./process.mjs";
 
@@ -57,6 +58,11 @@ export function parseDelimitedObserver(text, zones = {}) {
   return summarizeEvents(events);
 }
 
+function shellQuote(value) {
+  if (/[\0\r\n]/.test(value)) throw new Error("Observer command contains forbidden control characters");
+  return `'${value.replaceAll("'", `'\\''`)}'`;
+}
+
 function summarizeEvents(events) {
   const byKind = (kind) => events.filter((entry) => entry.kind === kind);
   return {
@@ -66,11 +72,6 @@ function summarizeEvents(events) {
     events,
     eventDigest: digestJson(events),
   };
-}
-
-function shellQuote(value) {
-  if (/[\0\r\n]/.test(value)) throw new Error("Observer command contains forbidden control characters");
-  return `'${value.replaceAll("'", `'\\''`)}'`;
 }
 
 async function linuxObserved(executable, args, options) {
@@ -93,57 +94,75 @@ async function linuxObserved(executable, args, options) {
   return { result, observation: parseLinuxStrace(raw, options.zones), backend: "linux-strace-process-tree" };
 }
 
-async function macObserved(executable, args, options) {
-  if (!commandExists("dtrace")) throw Object.assign(new Error("dtrace is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
-  const script = path.join(options.evidenceDir, `observer-${process.pid}.d`);
-  const output = path.join(options.evidenceDir, `observer-${process.pid}.trace`);
-  const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
-  fs.writeFileSync(script, `
-#pragma D option quiet
-syscall::socket*:entry,syscall::connect*:entry,syscall::bind*:entry,syscall::listen*:entry,syscall::accept*:entry,syscall::sendto*:entry,syscall::sendmsg*:entry,syscall::recvfrom*:entry,syscall::recvmsg*:entry
-/pid == $target || progenyof($target)/ { printf("network|%d|%s\\n", pid, probefunc); }
-syscall::open*:entry
-/(pid == $target || progenyof($target)) && ((arg1 & 3) != 0 || (arg1 & 0x600) != 0)/ { printf("write|%d|%s|%s\\n", pid, probefunc, copyinstr(arg0)); }
-syscall::*write*:entry
-/(pid == $target || progenyof($target)) && arg0 > 2/ { printf("write|%d|%s|fd=%d\\n", pid, probefunc, arg0); }
-syscall::mkdir*:entry,syscall::rmdir*:entry,syscall::unlink*:entry,syscall::rename*:entry,syscall::link*:entry,syscall::symlink*:entry,syscall::*truncate*:entry,syscall::*chmod*:entry,syscall::*chown*:entry,syscall::*sync*:entry
-/pid == $target || progenyof($target)/ { printf("write|%d|%s\\n", pid, probefunc); }
-proc:::exec-success
-/progenyof($target)/ { printf("process|%d|exec\\n", pid); }
-`, { mode: 0o600 });
-  const command = [executable, ...args].map(shellQuote).join(" ");
-  // DTrace's macOS `-c` launcher cannot reliably execute binaries from the
-  // hosted-toolcache path directly. Start a root-readable wrapper and let the
-  // shell perform the final exec while DTrace observes the same target PID and
-  // its progeny. No untrusted text is interpolated without shellQuote().
-  fs.writeFileSync(launcher, `#!/bin/zsh\nexec ${command}\n`, { mode: 0o700 });
-  const dtrace = await runProcess("sudo", ["-n", "dtrace", "-q", "-s", script, "-c", launcher, "-o", output], options);
-  fs.rmSync(script, { force: true });
-  fs.rmSync(launcher, { force: true });
-  if (dtrace.code !== 0 || !fs.existsSync(output)) {
-    throw Object.assign(new Error(`DTrace failed closed: ${dtrace.stderr.slice(0, 500)}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
+function fsUsageLines(text) {
+  return text.split(/\r?\n/).map((line) => line.trim()).filter((line) => /^\d{2}:\d{2}:\d{2}\.\d+/.test(line));
+}
+
+export function parseMacFsUsage(filesystemText, networkText, execText, zones = {}) {
+  const events = [];
+  for (const line of fsUsageLines(networkText)) events.push({ kind: "network", targetDigest: redactToken(line, zones) });
+  for (const line of fsUsageLines(filesystemText)) {
+    if (/\b(?:write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
+      events.push({ kind: "write", targetDigest: redactToken(line, zones) });
+    }
   }
-  const raw = fs.readFileSync(output, "utf8");
-  fs.rmSync(output, { force: true });
+  const execLines = fsUsageLines(execText);
+  for (const line of execLines.slice(1)) events.push({ kind: "process", targetDigest: redactToken(line, zones) });
+  return summarizeEvents(events);
+}
+
+async function macObserved(executable, args, options) {
+  if (!commandExists("fs_usage")) throw Object.assign(new Error("fs_usage is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  const gate = path.join(options.evidenceDir, `observer-${process.pid}.go`);
+  const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
+  const command = [executable, ...args].map(shellQuote).join(" ");
+  fs.writeFileSync(launcher, `#!/bin/zsh\nwhile [[ ! -e ${shellQuote(gate)} ]]; do sleep 0.01; done\nexec ${command}\n`, { mode: 0o700 });
+  let rootPid = 0;
+  const commandPromise = runProcess("/bin/zsh", [launcher], {
+    ...options,
+    onSpawn(child) { rootPid = child.pid; },
+  });
+  if (!rootPid) throw Object.assign(new Error("Observed process did not start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  const observers = ["filesys", "network", "exec"].map((mode) => {
+    let pid = 0;
+    const promise = runProcess("sudo", ["-n", "/usr/bin/fs_usage", "-w", "-f", mode, String(rootPid)], {
+      ...options,
+      timeoutMs: (options.timeoutMs ?? 30_000) + 5_000,
+      maxOutputBytes: 8 * 1024 * 1024,
+      onSpawn(child) { pid = child.pid; },
+    });
+    return { mode, get pid() { return pid; }, promise };
+  });
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  fs.writeFileSync(gate, "go\n", { mode: 0o600 });
+  const result = await commandPromise;
+  for (const observer of observers) {
+    if (observer.pid) await runProcess("sudo", ["-n", "kill", "-INT", String(observer.pid)], { timeoutMs: 5_000 });
+  }
+  const traces = await Promise.all(observers.map(async (observer) => {
+    const trace = await observer.promise;
+    return [observer.mode, `${trace.stdout}\n${trace.stderr}`];
+  }));
+  fs.rmSync(gate, { force: true });
+  fs.rmSync(launcher, { force: true });
+  const byMode = Object.fromEntries(traces);
   return {
-    // DTrace writes probe records to -o while the observed command keeps its
-    // stdout/stderr streams on the wrapper process. Preserve those protocol
-    // bytes for the black-box MCP assertions.
-    result: { ...dtrace, stdout: dtrace.stdout, stderr: dtrace.stderr },
-    observation: parseDelimitedObserver(raw, options.zones),
-    backend: "macos-dtrace-process-tree",
+    result,
+    observation: parseMacFsUsage(byMode.filesys, byMode.network, byMode.exec, options.zones),
+    backend: "macos-fs_usage-process",
   };
 }
 
 async function windowsObserved(executable, args, options) {
-  const script = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "observers", "windows-etw.ps1");
-  if (!fs.existsSync(script) || !commandExists("powershell.exe")) {
+  const script = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "observers", "windows-etw.ps1");
+  const powershell = commandExists("pwsh.exe") ? "pwsh.exe" : "powershell.exe";
+  if (!fs.existsSync(script) || !commandExists(powershell)) {
     throw Object.assign(new Error("Windows ETW observer is unavailable"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
   const trace = path.join(options.evidenceDir, `windows-etw-${process.pid}.jsonl`);
   const encodedArgs = Buffer.from(JSON.stringify(args), "utf8").toString("base64");
   const resultFile = path.join(options.evidenceDir, `windows-result-${process.pid}.json`);
-  const wrapper = await runProcess("powershell.exe", [
+  const wrapper = await runProcess(powershell, [
     "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
     "-File", script,
     "-Executable", executable,

@@ -9,6 +9,7 @@ export function runProcess(executable, args, options = {}) {
       windowsHide: true,
       stdio: [options.stdin === undefined ? "ignore" : "pipe", "pipe", "pipe"],
     });
+    if (typeof options.onSpawn === "function") options.onSpawn(child);
     const stdout = [];
     const stderr = [];
     let stdoutBytes = 0;
