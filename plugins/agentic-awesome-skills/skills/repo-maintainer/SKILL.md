@@ -31,6 +31,14 @@ Before mutation:
 
 If the repository names a mandatory maintainer skill or guarded command, delegate to it instead of inventing a parallel branch, merge, sync, or release path. In `agentic-awesome-skills`, use `antigravity-maintainer-batch-release` and `npm run merge:batch`; `main` is pull-request-only.
 
+For the AAS agent-first control plane, also preserve the independent acceptance boundary:
+
+- keep product, verifier, and benchmark-gold changes in separate protected pull requests;
+- never expose held-out or abstention labels to product code, tuning, or manual diagnosis;
+- run acceptance against the packed CLI/MCP artifact as a black box on every frozen operating-system and runtime leg;
+- re-freeze the verifier baseline after an independently reviewed verifier or tuning-gold correction, then rebase and retest the product;
+- treat any hard-policy violation, write/network attempt from MCP, nondeterministic canonical payload, or partial transactional state as a release blocker.
+
 ## Usage
 
 ### 1. Establish the baseline
