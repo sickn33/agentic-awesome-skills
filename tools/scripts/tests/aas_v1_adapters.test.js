@@ -202,8 +202,10 @@ test("Windows sensitive-byte and directory-flush contracts stay fail-closed", as
   const privateWrite = safetySource.indexOf("await handle.writeFile(bytes)", privateWriteStart);
   assert.ok(privateAcl > privateWriteStart && privateAcl < privateWrite);
 
-  assert.ok(durabilitySource.includes("CreateFileW($args[0],0x40000000,7,"));
-  assert.ok(!durabilitySource.includes("CreateFileW($args[0],0x80000000,7,"));
+  assert.ok(durabilitySource.includes("CreateFileW($directoryPath,0x40000000,7,"));
+  assert.ok(!durabilitySource.includes("CreateFileW($directoryPath,0x80000000,7,"));
+  assert.ok(durabilitySource.includes("$env:${WINDOWS_DIRECTORY_FLUSH_PATH_ENV}"));
+  assert.ok(!durabilitySource.includes("CreateFileW($args[0]"));
   assert.ok(durabilitySource.includes("AAS_WIN32_DIRECTORY_FLUSH_FAILURE"));
   assert.ok(durabilitySource.includes("GetLastWin32Error()"));
 });

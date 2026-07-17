@@ -4,19 +4,31 @@ const fs = require("node:fs");
 const fsp = require("node:fs/promises");
 const { spawnSync } = require("node:child_process");
 
+const WINDOWS_DIRECTORY_FLUSH_PATH_ENV = "AAS_WINDOWS_DIRECTORY_FLUSH_PATH";
 const WINDOWS_DIRECTORY_FLUSH = [
   "$ErrorActionPreference='Stop'",
   "$source='using System; using System.Runtime.InteropServices; public static class AasDirectoryFlush { [DllImport(\"kernel32.dll\", CharSet=CharSet.Unicode, SetLastError=true)] public static extern IntPtr CreateFileW(string n, uint a, uint s, IntPtr p, uint c, uint f, IntPtr t); [DllImport(\"kernel32.dll\", SetLastError=true)] public static extern bool FlushFileBuffers(IntPtr h); [DllImport(\"kernel32.dll\", SetLastError=true)] public static extern bool CloseHandle(IntPtr h); }'",
   "Add-Type -TypeDefinition $source",
   "function Write-AasFlushFailure([string]$phase,[uint32]$nativeCode,[int]$exitCode){[Console]::Out.WriteLine(('AAS_WIN32_DIRECTORY_FLUSH_FAILURE|{0}|{1}' -f $phase,$nativeCode));exit $exitCode}",
+  `$directoryPath=$env:${WINDOWS_DIRECTORY_FLUSH_PATH_ENV}`,
+  "if([string]::IsNullOrWhiteSpace($directoryPath)){Write-AasFlushFailure 'input' 0 40}",
   // FlushFileBuffers requires a handle opened with GENERIC_WRITE. Keep all
   // sharing flags so the durability probe does not become an exclusivity lock.
-  "$h=[AasDirectoryFlush]::CreateFileW($args[0],0x40000000,7,[IntPtr]::Zero,3,0x02000000,[IntPtr]::Zero)",
+  "$h=[AasDirectoryFlush]::CreateFileW($directoryPath,0x40000000,7,[IntPtr]::Zero,3,0x02000000,[IntPtr]::Zero)",
   "if($h -eq [IntPtr](-1)){$nativeCode=[Runtime.InteropServices.Marshal]::GetLastWin32Error();Write-AasFlushFailure 'createFileW' ([uint32]$nativeCode) 41}",
   "try{if(-not [AasDirectoryFlush]::FlushFileBuffers($h)){$nativeCode=[Runtime.InteropServices.Marshal]::GetLastWin32Error();Write-AasFlushFailure 'flushFileBuffers' ([uint32]$nativeCode) 42}}finally{[void][AasDirectoryFlush]::CloseHandle($h)}",
 ].join(";");
 
-const WINDOWS_FAILURE_PATTERN = /^AAS_WIN32_DIRECTORY_FLUSH_FAILURE\|(createFileW|flushFileBuffers)\|(\d{1,10})$/m;
+const WINDOWS_FAILURE_PATTERN = /^AAS_WIN32_DIRECTORY_FLUSH_FAILURE\|(input|createFileW|flushFileBuffers)\|(\d{1,10})$/m;
+
+function windowsFlushEnvironment(directoryPath) {
+  const environment = {};
+  for (const [name, value] of Object.entries(process.env)) {
+    if (name.toUpperCase() !== WINDOWS_DIRECTORY_FLUSH_PATH_ENV) environment[name] = value;
+  }
+  environment[WINDOWS_DIRECTORY_FLUSH_PATH_ENV] = directoryPath;
+  return environment;
+}
 
 function windowsFailureDetails(result) {
   const details = {
@@ -56,8 +68,14 @@ function durabilityError(cause, details = {}) {
 function flushWindowsDirectory(directoryPath, cause) {
   if (process.platform !== "win32") throw cause;
   const result = spawnSync("powershell.exe", [
-    "-NoProfile", "-NonInteractive", "-Command", WINDOWS_DIRECTORY_FLUSH, directoryPath,
-  ], { encoding: "utf8", windowsHide: true, timeout: 15000, maxBuffer: 64 * 1024 });
+    "-NoProfile", "-NonInteractive", "-Command", WINDOWS_DIRECTORY_FLUSH,
+  ], {
+    encoding: "utf8",
+    env: windowsFlushEnvironment(directoryPath),
+    windowsHide: true,
+    timeout: 15000,
+    maxBuffer: 64 * 1024,
+  });
   if (result.status !== 0 || result.error) {
     throw durabilityError(result.error || cause, windowsFailureDetails(result));
   }
