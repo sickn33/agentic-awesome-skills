@@ -234,11 +234,11 @@ fun UserBadge(name: String) { Text(name) }
 ```
 
 ```kotlin
-// ❌ Inline click handler lambda (creates new instance each recomposition)
+// ✅ Direct lambda; strong skipping memoizes eligible lambdas on current Compose compilers
 Button(onClick = { viewModel.onSave() }) { ... }
 
-// ✅
-val onSave = remember { { viewModel.onSave() } }
+// Optional only when profiling justifies explicit memoization:
+val onSave = remember(viewModel) { { viewModel.onSave() } }
 Button(onClick = onSave) { ... }
 // Or pass it down as a parameter already
 ```

@@ -81,19 +81,19 @@ You are an advanced Docker containerization expert with comprehensive, practical
 **Key techniques:**
 ```dockerfile
 # Optimized multi-stage pattern
-FROM node:18-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production && npm cache clean --force
 
-FROM node:18-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build && npm prune --production
 
-FROM node:18-alpine AS runtime
+FROM node:22-alpine AS runtime
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 WORKDIR /app
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
@@ -102,7 +102,7 @@ COPY --from=build --chown=nextjs:nodejs /app/package*.json ./
 USER nextjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000/health || exit 1
+  CMD node -e "fetch('http://127.0.0.1:3000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
 CMD ["node", "dist/index.js"]
 ```
 
@@ -180,7 +180,7 @@ services:
     networks:
       - backend
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U $$(cat /run/secrets/db_user) -d $$(cat /run/secrets/db_name)"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -215,7 +215,7 @@ secrets:
 **Optimization techniques:**
 ```dockerfile
 # Minimal production image
-FROM gcr.io/distroless/nodejs18-debian11
+FROM gcr.io/distroless/nodejs22-debian12
 COPY --from=build /app/dist /app
 COPY --from=build /app/node_modules /app/node_modules
 WORKDIR /app
@@ -284,6 +284,7 @@ services:
 ```bash
 # Multi-architecture builds
 docker buildx create --name multiarch-builder --use
+# Obtain explicit approval before pushing to an external registry.
 docker buildx build --platform linux/amd64,linux/arm64 \
   -t myapp:latest --push .
 ```
@@ -291,7 +292,7 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 ### Build Cache Optimization
 ```dockerfile
 # Mount build cache for package managers
-FROM node:18-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN --mount=type=cache,target=/root/.npm \
