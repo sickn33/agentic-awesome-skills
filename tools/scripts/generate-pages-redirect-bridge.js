@@ -295,7 +295,7 @@ function generateBridge(options) {
   }
 
   const manifest = {
-    schema_version: 2,
+    schema_version: 3,
     deployment_scope: 'separate GitHub Pages user-site subdirectory',
     not_for_current_project_pages: true,
     source_sitemap_sha256: sha256(sitemapSource),
