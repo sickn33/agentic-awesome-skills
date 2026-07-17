@@ -31,24 +31,39 @@
           "javascript-testing-patterns"
         ]
       ]
+    },
+    {
+      "solutionId": "jest-generated-component-suite",
+      "allowedSkillIds": [
+        "jest-skill",
+        "unit-testing-test-generate"
+      ],
+      "requiredGroups": [
+        [
+          "jest-skill"
+        ],
+        [
+          "unit-testing-test-generate"
+        ]
+      ]
     }
   ],
   "ambiguous": false,
   "reviews": [
     {
-      "reviewer": "codex-independent-alpha",
+      "reviewer": "gold-equivalence-independent-adjudicator",
       "decision": "approved",
-      "reviewedDigest": "sha256-76697f79d76acaaf26cafb43002af3a8e8c47437a3c3bb5663a6b3bee6ee7a56"
+      "reviewedDigest": "sha256-b77cf14dcd25917d8dddeedd73d56472a3aa956ed2ecda9650987e06b48590d3"
     },
     {
-      "reviewer": "codex-independent-beta",
+      "reviewer": "gold-equivalence-independent-beta",
       "decision": "approved",
-      "reviewedDigest": "sha256-76697f79d76acaaf26cafb43002af3a8e8c47437a3c3bb5663a6b3bee6ee7a56"
+      "reviewedDigest": "sha256-b77cf14dcd25917d8dddeedd73d56472a3aa956ed2ecda9650987e06b48590d3"
     }
   ],
   "provenance": {
-    "source": "independent-synthetic-tuning-gold-authoring",
-    "version": "1.0.0",
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
     "reviewedAt": "2026-07-17"
   }
 }

@@ -31,24 +31,39 @@
           "postman-newman-automation"
         ]
       ]
+    },
+    {
+      "solutionId": "pytest-api-mock-contract",
+      "allowedSkillIds": [
+        "api-testing-observability-api-mock",
+        "python-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "api-testing-observability-api-mock"
+        ],
+        [
+          "python-testing-patterns"
+        ]
+      ]
     }
   ],
   "ambiguous": false,
   "reviews": [
     {
-      "reviewer": "codex-independent-alpha",
+      "reviewer": "gold-equivalence-independent-adjudicator",
       "decision": "approved",
-      "reviewedDigest": "sha256-c49d741a2913f06cc163e39ac541c8fc279467bd33aba82b0c31df608a7ed5ab"
+      "reviewedDigest": "sha256-89ee39d9f9364e2a8871d0e56dded988f4562e79e9a7b5c2d7830356144da289"
     },
     {
-      "reviewer": "codex-independent-beta",
+      "reviewer": "gold-equivalence-independent-beta",
       "decision": "approved",
-      "reviewedDigest": "sha256-c49d741a2913f06cc163e39ac541c8fc279467bd33aba82b0c31df608a7ed5ab"
+      "reviewedDigest": "sha256-89ee39d9f9364e2a8871d0e56dded988f4562e79e9a7b5c2d7830356144da289"
     }
   ],
   "provenance": {
-    "source": "independent-synthetic-tuning-gold-authoring",
-    "version": "1.0.0",
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
     "reviewedAt": "2026-07-17"
   }
 }

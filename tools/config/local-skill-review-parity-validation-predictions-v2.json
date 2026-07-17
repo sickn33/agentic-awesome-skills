@@ -1,0 +1,383 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas-tessl-parity-pre-reveal-predictions",
+  "manifestSelectionSha256": "d6b48d26646337dde7ee0d21b085294619a8d24ba72a856cea97842aea3af1e5",
+  "split": "validation",
+  "predictions": {
+    "tool-use-guardian": {
+      "score": 63,
+      "description": [
+        3,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "react-state-management": {
+      "score": 75,
+      "description": [
+        2,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "systematic-debugging": {
+      "score": 68,
+      "description": [
+        1,
+        3,
+        1,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    "telegram": {
+      "score": 64,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        2,
+        3,
+        2
+      ]
+    },
+    "helpdesk-automation": {
+      "score": 74,
+      "description": [
+        3,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "bun-development": {
+      "score": 65,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "deprecation-and-migration": {
+      "score": 90,
+      "description": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "agent-squad/rex": {
+      "score": 76,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        3,
+        3,
+        3,
+        2
+      ]
+    },
+    "debugging-and-error-recovery": {
+      "score": 87,
+      "description": [
+        3,
+        3,
+        3,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "python-pro": {
+      "score": 49,
+      "description": [
+        1,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        1,
+        2,
+        2,
+        2
+      ]
+    },
+    "solidity-security": {
+      "score": 64,
+      "description": [
+        1,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        3,
+        2,
+        2,
+        3
+      ]
+    },
+    "ux-flow": {
+      "score": 61,
+      "description": [
+        1,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        3,
+        2,
+        2,
+        2
+      ]
+    },
+    "youtube-notetaker": {
+      "score": 75,
+      "description": [
+        1,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        3,
+        3,
+        3,
+        3
+      ]
+    },
+    "finishing-a-development-branch": {
+      "score": 82,
+      "description": [
+        1,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "writing-great-skills": {
+      "score": 68,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    "slack-bot-builder": {
+      "score": 53,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        1,
+        2,
+        2,
+        2
+      ]
+    },
+    "software-architecture": {
+      "score": 71,
+      "description": [
+        3,
+        3,
+        3,
+        1
+      ],
+      "content": [
+        2,
+        2,
+        1,
+        3
+      ]
+    },
+    "beautiful-prose": {
+      "score": 86,
+      "description": [
+        2,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "manifest": {
+      "score": 87,
+      "description": [
+        3,
+        3,
+        3,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "aws-skills": {
+      "score": 39,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "fastapi-router-py": {
+      "score": 62,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        3,
+        2,
+        2,
+        1
+      ]
+    },
+    "odoo-orm-expert": {
+      "score": 68,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        3,
+        2,
+        2,
+        3
+      ]
+    },
+    "ask-copilot": {
+      "score": 77,
+      "description": [
+        3,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    "azure-identity-rust": {
+      "score": 68,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        3,
+        2,
+        2,
+        3
+      ]
+    },
+    "bulletmind": {
+      "score": 73,
+      "description": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    }
+  }
+}

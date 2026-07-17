@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "baselineVersion": "1.0.0",
+  "baselineVersion": "1.0.1",
   "status": "frozen",
   "digestAlgorithm": "sha256",
   "excludedPaths": [
@@ -8,8 +8,8 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-c7a4d4b3efa9f2bdf5a126fc3c384680d39534880a3900302785397e4ddd451c",
-  "fileCount": 712,
+  "rootDigest": "sha256-c1b06bb3fbbee31a7bff81fe184e84b7cdd872e7629149cce12a5c70c5895035",
+  "fileCount": 722,
   "files": [
     {
       "path": "README.md",
@@ -2163,8 +2163,8 @@
     },
     {
       "path": "baseline/v1/benchmark/manifest.json",
-      "bytes": 1075,
-      "sha256": "a36b8cde366bb89f72a0b802ae38aad4175107ab91f4847e3ae924edbd1d2fa5"
+      "bytes": 1172,
+      "sha256": "675dd5778ee562dcdfa25eef3a43ae43b42f1f1f82352fa49f6bbf79961cab1b"
     },
     {
       "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/agent-architecture.repository-maintenance-agent.json",
@@ -2508,8 +2508,8 @@
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/security-operations.ci-agent-security.json",
-      "bytes": 1292,
-      "sha256": "85e9b166ac58f932c71ef1349b5cff9c6a62a663b7932ade6426eaa252fcfce0"
+      "bytes": 1636,
+      "sha256": "f6f938bcbc6b1231ffae5bc06fc15deff5eaa1a826e25aac5e1bee4d57fa6ddf"
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/security-operations.local-mcp-security.json",
@@ -2518,13 +2518,13 @@
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/api-design-contracts.partner-orders-api.json",
-      "bytes": 1310,
-      "sha256": "42bd40a7efac4f057a466baef840aedaedd6e66f2c8aa65e95420d7620c5ce99"
+      "bytes": 1637,
+      "sha256": "c5910bad9a7bd97f5609e3de1423c87eef1180bfd8455c4d180b5e2b867d9813"
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/api-design-contracts.research-catalog-api.json",
-      "bytes": 1312,
-      "sha256": "527088cee8cb6e33d35d3c0f1e00dd5a276984114b27a085fc3eed1bdeaf9ec6"
+      "bytes": 1639,
+      "sha256": "a3b4a4748de6b037e3012af239b1d368958a1ba31085b73d8e19874b40f510ba"
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/async-integrations.document-jobs.json",
@@ -2608,8 +2608,8 @@
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/release-rollback.canary-api-release.json",
-      "bytes": 1284,
-      "sha256": "6cc43bc86a08683de61db6bb3f88d4e6f0d814db5ff40f94b5e54c33321e1f4b"
+      "bytes": 1532,
+      "sha256": "0fa78239ee29f247a8fc26422efbb5bf76defbb8503e5ee97c01c2e7ae16b1e6"
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/release-rollback.schema-compatible-release.json",
@@ -2688,8 +2688,8 @@
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/integration-contract.gateway-contract-tests.json",
-      "bytes": 1318,
-      "sha256": "aaf9cd4600d46c55028773f7f83a69bf957a343b7a79f22f8fa39ae05fb4e237"
+      "bytes": 1679,
+      "sha256": "f72f760701db3a4c20ca61305829adbd1986e7f02ed4c450dd09382faa93c2cf"
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/integration-contract.partner-contract-tests.json",
@@ -2708,13 +2708,13 @@
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/unit-component.admin-ui-tests.json",
-      "bytes": 1264,
-      "sha256": "af8fc7159129d4127bc3c1981c365016e2fd75750428ca21844760090250a48e"
+      "bytes": 1589,
+      "sha256": "611fe64ab19fba0d73e88d525dda41e342e887925bb1a3ef0668be936dc28a0b"
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/unit-component.design-system-tests.json",
-      "bytes": 1269,
-      "sha256": "3a799765d8a3db7db193c06388165f2f7b1eb3c19fedf8fc7f31d2ccc6bf6e08"
+      "bytes": 1594,
+      "sha256": "6683278472a301c5f701ce317d10cc0fd34ea74b41b45cc842ffaf5fe5550372"
     },
     {
       "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/application-data-auth.operations-portal.json",
@@ -2769,12 +2769,12 @@
     {
       "path": "baseline/v1/benchmark/tuning/index.json",
       "bytes": 40014,
-      "sha256": "12b509f6bbde70ab3ae1b8eb2830d96c7062340f10fd753792ccc979c3fdb89f"
+      "sha256": "3c03a678e7dddcaeacf09e5258b8419d5fef0ec329b9b544ec0f74680e619d71"
     },
     {
       "path": "baseline/v1/benchmark/tuning/manifest.json",
-      "bytes": 949,
-      "sha256": "732aa6ab1388a4daeb433fc4e49b81af7d6c186c5cf2a49b60a012b3aed64bb7"
+      "bytes": 2413,
+      "sha256": "bc4c25c64683949358751c5f7edb8c968f69a07eb39002008cb47ff6b7936526"
     },
     {
       "path": "baseline/v1/budgets.json",
@@ -3457,14 +3457,44 @@
       "sha256": "bdb4f00deaf8d9e7fb7c259130555249e619fd4f18a33bcbb55fee30e3d92b7f"
     },
     {
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-adjudicator.json",
+      "bytes": 11109,
+      "sha256": "ad8c87f03287989b7dbbacaebc42aa11e9f4564a0f08af2b6361e02d389bd160"
+    },
+    {
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-alpha.json",
+      "bytes": 6032,
+      "sha256": "ec48b476a76a0332114e65db25badd92737ac6547c5a397d9456b2be4fb11689"
+    },
+    {
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-beta.json",
+      "bytes": 6557,
+      "sha256": "01cbe88f9d55690b32e61cbd567c3560987654dbd4bee70daec926d740e060c3"
+    },
+    {
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-ci-tiebreak.json",
+      "bytes": 2027,
+      "sha256": "dbc01ab488cd904370af0a27f9f14a92891edd0187549ace5c48d8cc88d9bebf"
+    },
+    {
+      "path": "baseline/v1/reviews/tuning-diagnostic-before-gold.json",
+      "bytes": 32147,
+      "sha256": "ae33eb201792dbcd5b28e5a71de36594f6c0e38709b6c86848de4420328f7001"
+    },
+    {
+      "path": "baseline/v1/reviews/tuning-gold-equivalence-audit.json",
+      "bytes": 14123,
+      "sha256": "d280cf0021d3d3be527ece98e355bf93724d96a1bd6d718bb8cf48703478121e"
+    },
+    {
       "path": "baseline/v1/runtime-matrix.json",
       "bytes": 8639,
       "sha256": "f354a5759a5ccddec326ffa06ee88f8c97f7f7d40544c2d5bf5f0eb2b7ecfd13"
     },
     {
       "path": "ownership.v1.json",
-      "bytes": 1924,
-      "sha256": "8a3fb248d02ba6905331b57c0b5ee1394b2efa6042c12d9566c5cdaa64805f39"
+      "bytes": 3698,
+      "sha256": "a08a75640a8f95e394755e67846c623b8574857597d75d29516252b12b004e1b"
     },
     {
       "path": "schemas/benchmark-case.schema.json",
@@ -3522,14 +3552,24 @@
       "sha256": "e6888b6e3cebcd2a8b6d5284c1c161940017c44349e2da3796ec5aaf9deb4c0c"
     },
     {
+      "path": "schemas/tuning-gold-equivalence-audit.schema.json",
+      "bytes": 5016,
+      "sha256": "5d9256df0040c2f2e0a52bb18143791d82531ef4b07013e40562a1fff342904c"
+    },
+    {
+      "path": "schemas/tuning-gold-equivalence-review.schema.json",
+      "bytes": 4246,
+      "sha256": "c00a49c81c8912a72c2316b0bfd7df2057ed2366eadfbb73b835602321b179b0"
+    },
+    {
       "path": "verifier/bin/check-baseline.mjs",
-      "bytes": 10874,
-      "sha256": "8a625c502c55ddde16b15464846fa40e680f2a2d80e8c962120d5244b00d0a44"
+      "bytes": 13207,
+      "sha256": "f8e7fa50de191c2254a3c9b55b45f5670118d5281cc977a58222fa5b85b70998"
     },
     {
       "path": "verifier/bin/freeze-baseline.mjs",
       "bytes": 3312,
-      "sha256": "2626d4f03f96a61f2e5deb393eed113fff8216b46478a921ee6ab56a5fabf40c"
+      "sha256": "0fd74f758fd76956656c46cfd2825ff2716d8c0127bb2624e7d5d2a390930bb6"
     },
     {
       "path": "verifier/bin/validate-benchmark.mjs",
@@ -3538,13 +3578,18 @@
     },
     {
       "path": "verifier/bin/validate-schemas.mjs",
-      "bytes": 3675,
-      "sha256": "5564770ecce961a7d797baf5dfd19362f3156e1ab4418c0d3bf7155ecbde446c"
+      "bytes": 4264,
+      "sha256": "d4d25e471ce693eb6d5ee0d01ea4332fc767993d0dc79dd922e5cd5c5dadb679"
     },
     {
       "path": "verifier/bin/validate-secondary-corpora.mjs",
       "bytes": 7753,
       "sha256": "f3bc117b5d7e9ce62501abcd25a7831744e75a7d5e49a15ae59138552087cf88"
+    },
+    {
+      "path": "verifier/bin/validate-tuning-gold-equivalence-audit.mjs",
+      "bytes": 18175,
+      "sha256": "195ab4708d7bf032082281360fa62e2e85c6515d1465a481ffc36e63d5f8aae3"
     },
     {
       "path": "verifier/lib/metrics.mjs",
@@ -3554,12 +3599,12 @@
     {
       "path": "verifier/package-lock.json",
       "bytes": 2953,
-      "sha256": "6ac6a7eb69a4fa8ac4c96c7cab6d0ba1121b79667a7b1dafc0ac4459ad33fb25"
+      "sha256": "036646405be913db4dcb90b3fa8131988c295b3783d57bd079320539a80be782"
     },
     {
       "path": "verifier/package.json",
-      "bytes": 896,
-      "sha256": "dd96546ee73e76cc692fd3dd6e3c6073cbb79dd8e5ba9f656a1d8c439305ae69"
+      "bytes": 1037,
+      "sha256": "698aa246606b487f1cab027ac3b8084bc2b2ebb3496c68ecf1558fe501d869e3"
     },
     {
       "path": "verifier/tests/baseline-check.test.mjs",
@@ -3570,6 +3615,11 @@
       "path": "verifier/tests/metrics.test.mjs",
       "bytes": 3860,
       "sha256": "d40f73128ad55994c7afc4518e5365cb0e00303be36e4c1f6391d734f4084606"
+    },
+    {
+      "path": "verifier/tests/tuning-gold-equivalence-audit.test.mjs",
+      "bytes": 1102,
+      "sha256": "28d9bfaa045c68ebdcef4fd79a7b319433b7c3fd8562878775bdac2b7c65449e"
     }
   ]
 }

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas-local-skill-review-operational-receipt",
+  "acceptedUse": "production-triage-and-codex-assisted-review",
+  "acceptedAgreement": {
+    "label": "codex-assisted-validation-v2",
+    "exact": 149,
+    "total": 200,
+    "rate": 0.745,
+    "blind": false,
+    "deterministicScannerAlone": false
+  },
+  "historicalEvidence": {
+    "validationGoldSha256": "cf080e1bc7e02648e0d11d70f1f05fe5e4d284e464df2c30ecdd7e634df12482",
+    "validationAdjudicatedLevelsSha256": "b116243817d3843924024c816f962b83f93e8b6cda24bb1e3bc5368bd81766f2",
+    "guideV2Sha256": "867884fe92837b8690e40f2e52bcf07c0b51896064ace2d35a324b65062f4a12",
+    "blindPredictionsSha256": "2de060e198af8f88ea3d3e2b334ab2badcb22a733e2294b5d9b75bc70d248040",
+    "blindGoldSha256": "c8f93fdf44f8fee1b13683aae522c0460198f4d5a8c5965d261563c41c9be062",
+    "deterministicV9BlindAgreement": 0.57143,
+    "codexAssistedBlindAgreement": 0.72857,
+    "tesslRepeatSelfAgreement": 0.74167
+  },
+  "fullCatalogScan": {
+    "trackedSkills": 1965,
+    "completed": 1965,
+    "failures": 0,
+    "manualReviewRequired": 1371,
+    "localPass": 594,
+    "priorityCounts": {
+      "P0": 0,
+      "P1": 346,
+      "P2": 1421,
+      "P3": 198
+    },
+    "resultsSha256": "e4b944ddf1ee2463750c4f0287ab242538748472f84f51d8e44dfc34aad565f3",
+    "reviewerVersion": "0.6.0",
+    "schemaVersion": 10
+  },
+  "claims": {
+    "equivalentToTessl": false,
+    "identicalToTessl": false,
+    "predictsTesslPass": false,
+    "tesslRuntimeDependency": false,
+    "blindStabilityDemonstrated": false
+  },
+  "futureTesslUse": "sample-only-when-credits-are-available",
+  "revealedLabelsMayBeRetuned": false
+}

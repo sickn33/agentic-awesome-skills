@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "reviewVersion": "1.0.0",
+  "auditId": "aas-v1-tuning-gold-equivalence-1.0.1",
+  "reviewer": {
+    "identity": "gold-equivalence-independent-ci-tiebreak",
+    "kind": "independent-agent-tiebreak-review",
+    "scorerImplementer": false
+  },
+  "scope": {
+    "repositoryCommit": "09f2d8612d2e68a087377685e9c876bd737e1782",
+    "packageVersion": "14.6.0",
+    "diagnosticSha256": "ae33eb201792dbcd5b28e5a71de36594f6c0e38709b6c86848de4420328f7001",
+    "tuningOnly": true,
+    "assignedClaimCount": 1,
+    "heldOutContentsRead": false,
+    "abstentionLabelsRead": false,
+    "readOnlyReview": true
+  },
+  "skillEvidence": [
+    {
+      "skillId": "multi-agent-architect",
+      "path": "skills/multi-agent-architect/SKILL.md",
+      "sha256": "46c9287a5d9b81ab08ca39a5059f391e874e50d06cff7823ea6d70901c221ff8",
+      "lineRanges": ["50-65", "292-306", "319-329"]
+    },
+    {
+      "skillId": "threat-modeling-expert",
+      "path": "skills/threat-modeling-expert/SKILL.md",
+      "sha256": "e091531614639439ab664277be72870ba7159cc6efc4a744f74b478dff0a09d1",
+      "lineRanges": ["13-21", "39-48"]
+    }
+  ],
+  "decisions": [
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+      "skillId": "multi-agent-architect",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "multi-agent-threat-boundary-review",
+        "allowedSkillIds": ["multi-agent-architect", "threat-modeling-expert"],
+        "requiredGroups": [["multi-agent-architect"], ["threat-modeling-expert"]]
+      },
+      "reason": "The pair has a non-redundant division of labor: threat-modeling-expert supplies structured threat review, while multi-agent-architect supplies least-privilege tool binding, prompt-input sanitization, permission layers and tool-call auditability."
+    }
+  ],
+  "decisionCounts": {
+    "ADD_TO_ALLOWED_EQUIVALENT": 1,
+    "REJECT_NOT_EQUIVALENT": 0,
+    "AMBIGUOUS_NEEDS_ADJUDICATION": 0
+  },
+  "reviewedAt": "2026-07-17"
+}

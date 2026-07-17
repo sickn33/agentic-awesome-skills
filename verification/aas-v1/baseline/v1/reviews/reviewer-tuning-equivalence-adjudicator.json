@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "reviewVersion": "1.0.0",
+  "auditId": "aas-v1-tuning-gold-equivalence-1.0.1",
+  "reviewer": {
+    "identity": "gold-equivalence-independent-adjudicator",
+    "kind": "independent-agent-adjudication",
+    "scorerImplementer": false
+  },
+  "scope": {
+    "repositoryCommit": "09f2d8612d2e68a087377685e9c876bd737e1782",
+    "packageVersion": "14.6.0",
+    "diagnosticSha256": "ae33eb201792dbcd5b28e5a71de36594f6c0e38709b6c86848de4420328f7001",
+    "tuningOnly": true,
+    "assignedClaimCount": 19,
+    "heldOutContentsRead": false,
+    "abstentionLabelsRead": false,
+    "readOnlyReview": true
+  },
+  "skillEvidence": [
+    {
+      "skillId": "agent-tool-builder",
+      "path": "skills/agent-tool-builder/SKILL.md",
+      "sha256": "d32f031ee373cb91618e2cb489e486258b1efa098621f403771b42013f733b03",
+      "lineRanges": ["18-20", "340-432", "675-681"]
+    },
+    {
+      "skillId": "multi-agent-architect",
+      "path": "skills/multi-agent-architect/SKILL.md",
+      "sha256": "46c9287a5d9b81ab08ca39a5059f391e874e50d06cff7823ea6d70901c221ff8",
+      "lineRanges": ["21-35", "292-306", "319-330"]
+    },
+    {
+      "skillId": "api-and-interface-design",
+      "path": "skills/api-and-interface-design/SKILL.md",
+      "sha256": "e8f5bbbfb32c50e61499eda125c6af8ad38e084cf6b47adebd0a0a263e924ab1",
+      "lineRanges": ["13-46", "68-125", "269-301"]
+    },
+    {
+      "skillId": "api-documenter",
+      "path": "skills/api-documenter/SKILL.md",
+      "sha256": "6c08bd68f45cf03280b2a34f6d3bd94e92dba06c0ff4eb6b7b61a4813e0358b9",
+      "lineRanges": ["10-44", "96-114"]
+    },
+    {
+      "skillId": "kubernetes-architect",
+      "path": "skills/kubernetes-architect/SKILL.md",
+      "sha256": "122d2a64642bd0ce5a7fe56017d892496cd08b64f99871d4e2546d4ba8fd0bb9",
+      "lineRanges": ["10-33", "47-59", "83-88", "123-155"]
+    },
+    {
+      "skillId": "security-bluebook-builder",
+      "path": "skills/security-bluebook-builder/SKILL.md",
+      "sha256": "d4f053069cb503b3756fa6937003052d783c814fcccff25ae23dc1865b014085",
+      "lineRanges": ["10-16", "20-32", "40-50"]
+    },
+    {
+      "skillId": "python-testing-patterns",
+      "path": "skills/python-testing-patterns/SKILL.md",
+      "sha256": "467fdbc399027e09da7df551c2088dad0e2fa7cba590be3059b40bfcbc63794a",
+      "lineRanges": ["11-29"]
+    },
+    {
+      "skillId": "api-testing-observability-api-mock",
+      "path": "skills/api-testing-observability-api-mock/SKILL.md",
+      "sha256": "65f57d1dc925210f083cc78874d4c839da4c73b5e0474b45922d20d9463fa527",
+      "lineRanges": ["13-18", "26-45"]
+    },
+    {
+      "skillId": "unit-testing-test-generate",
+      "path": "skills/unit-testing-test-generate/SKILL.md",
+      "sha256": "3fdc338d79aa50a5e546c1ecfe983b583dd13827804dd8236b44d1de056748fe",
+      "lineRanges": ["9-27", "44-60", "154-249", "251-320"]
+    }
+  ],
+  "decisions": [
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.build-metadata-mcp",
+      "skillId": "agent-tool-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The skill lacks the required read-only-resource semantics and is incomplete as a coherent solution."
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.local-catalog-mcp",
+      "skillId": "agent-tool-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "Generic tool access controls do not establish the explicit offline read-only-resource contract."
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+      "skillId": "multi-agent-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "Useful tool-boundary guidance does not supply an agent threat-review method and is not an equivalent solution without further adjudication."
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.local-mcp-security",
+      "skillId": "multi-agent-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The skill lacks MCP-specific threat review, returned-content trust labels and read-only boundary guidance."
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.partner-orders-api",
+      "skillId": "api-documenter",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "interface-design-documenter",
+        "allowedSkillIds": ["api-and-interface-design", "api-documenter"],
+        "requiredGroups": [["api-and-interface-design"], ["api-documenter"]]
+      },
+      "reason": "The exact pair covers stable interface design, OpenAPI, machine-readable documentation, validation, versioning and migration guidance."
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.research-catalog-api",
+      "skillId": "api-documenter",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "interface-design-documenter",
+        "allowedSkillIds": ["api-and-interface-design", "api-documenter"],
+        "requiredGroups": [["api-and-interface-design"], ["api-documenter"]]
+      },
+      "reason": "The exact pair covers the stable public contract, OpenAPI artifact review, versioning, backward compatibility and machine-readable docs."
+    },
+    {
+      "caseId": "tuning.deployment-devops.containers.worker-container",
+      "skillId": "kubernetes-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The Docker-only first-container case lacks Kubernetes context and the skill does not establish the required health-check design."
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+      "skillId": "kubernetes-architect",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "kubernetes-architecture-canary",
+        "allowedSkillIds": ["kubernetes-architect"],
+        "requiredGroups": [["kubernetes-architect"]]
+      },
+      "reason": "The exact solution covers Kubernetes canary delivery, staging validation, rollback planning, observability and operational documentation."
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.schema-compatible-release",
+      "skillId": "kubernetes-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The skill has no PostgreSQL migration or schema-compatibility sequencing workflow."
+    },
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.ci-token-exposure",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "A policy mini-runbook is not operational incident triage, evidence preservation and remediation verification."
+    },
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.session-anomaly",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "Policy drafting does not perform session-anomaly triage or verify containment remediation."
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.internal-auth-hardening",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The skill does not implement secret lifecycle, credential migration or rotation."
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.service-credential-boundaries",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "Trust-boundary policy does not supply secret lifecycle and rotation workflows."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "skillId": "python-testing-patterns",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "pytest-api-mock-contract",
+        "allowedSkillIds": ["api-testing-observability-api-mock", "python-testing-patterns"],
+        "requiredGroups": [["api-testing-observability-api-mock"], ["python-testing-patterns"]]
+      },
+      "reason": "For the Python gateway, the exact pair supplies a repeatable pytest/CI runner plus deterministic contract-aware mocks and fixtures."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "skillId": "api-testing-observability-api-mock",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "pytest-api-mock-contract",
+        "allowedSkillIds": ["api-testing-observability-api-mock", "python-testing-patterns"],
+        "requiredGroups": [["api-testing-observability-api-mock"], ["python-testing-patterns"]]
+      },
+      "reason": "The exact pair supplies contract-aware deterministic mocks while the Python companion supplies runner and CI evidence."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+      "skillId": "python-testing-patterns",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The TypeScript case does not justify a Python-only test harness."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+      "skillId": "api-testing-observability-api-mock",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "It is a partial mock specialist but the product pair lacks a coherent TypeScript CI integration runner."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.admin-ui-tests",
+      "skillId": "unit-testing-test-generate",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "jest-generated-component-suite",
+        "allowedSkillIds": ["jest-skill", "unit-testing-test-generate"],
+        "requiredGroups": [["jest-skill"], ["unit-testing-test-generate"]]
+      },
+      "reason": "The conservative exact pair supplies an explicit Jest runner plus React patterns, mocks, coverage and CI integration."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.design-system-tests",
+      "skillId": "unit-testing-test-generate",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "jest-generated-component-suite",
+        "allowedSkillIds": ["jest-skill", "unit-testing-test-generate"],
+        "requiredGroups": [["jest-skill"], ["unit-testing-test-generate"]]
+      },
+      "reason": "The conservative exact pair supplies an explicit Jest runner plus React patterns, mocks, coverage and CI integration."
+    }
+  ],
+  "decisionCounts": {
+    "ADD_TO_ALLOWED_EQUIVALENT": 7,
+    "REJECT_NOT_EQUIVALENT": 12,
+    "AMBIGUOUS_NEEDS_ADJUDICATION": 0
+  },
+  "reviewedAt": "2026-07-17"
+}

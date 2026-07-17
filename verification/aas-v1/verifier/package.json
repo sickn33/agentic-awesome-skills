@@ -1,6 +1,6 @@
 {
   "name": "aas-v1-independent-verifier",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,8 @@
     "check:benchmark": "node bin/validate-benchmark.mjs",
     "check:benchmark:frozen": "node bin/validate-benchmark.mjs --require-approvals",
     "check:secondary": "node bin/validate-secondary-corpora.mjs",
-    "check:secondary:frozen": "node bin/validate-secondary-corpora.mjs --require-approvals",
+    "check:secondary:frozen": "node bin/validate-secondary-corpora.mjs --require-approvals && node bin/validate-tuning-gold-equivalence-audit.mjs",
+    "check:tuning-gold-audit": "node bin/validate-tuning-gold-equivalence-audit.mjs",
     "freeze:write": "node bin/freeze-baseline.mjs --write",
     "freeze:check": "node bin/freeze-baseline.mjs",
     "test": "node --test tests/*.test.mjs"

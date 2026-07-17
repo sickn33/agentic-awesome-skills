@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "tuningVersion": "1.0.0",
+  "tuningVersion": "1.0.1",
   "status": "frozen",
   "purpose": "Weight, alias, and ontology tuning only; never used as held-out release evidence.",
   "index": "index.json",
@@ -23,17 +23,46 @@
     "verifiedAgainstHeldOutCaseCount": 180
   },
   "provenance": {
-    "source": "independent-synthetic-tuning-manifest-authoring",
-    "version": "1.0.0",
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
     "reviewedAt": "2026-07-17"
+  },
+  "equivalenceAudit": {
+    "auditId": "aas-v1-tuning-gold-equivalence-1.0.1",
+    "path": "../../reviews/tuning-gold-equivalence-audit.json",
+    "sha256": "d280cf0021d3d3be527ece98e355bf93724d96a1bd6d718bb8cf48703478121e",
+    "diagnosticSha256": "ae33eb201792dbcd5b28e5a71de36594f6c0e38709b6c86848de4420328f7001",
+    "omittedInclusionsAudited": 19,
+    "changedPairs": 7
   },
   "reviews": [
     {
-      "reviewer": "codex-independent-alpha",
-      "decision": "approved"
+      "reviewer": "gold-equivalence-independent-alpha",
+      "decision": "approved",
+      "scope": "primary-disjoint-a",
+      "report": "../../reviews/reviewer-tuning-equivalence-alpha.json",
+      "reportSha256": "ec48b476a76a0332114e65db25badd92737ac6547c5a397d9456b2be4fb11689"
     },
     {
-      "decision": "approved"
+      "reviewer": "gold-equivalence-independent-beta",
+      "decision": "approved",
+      "scope": "primary-disjoint-b",
+      "report": "../../reviews/reviewer-tuning-equivalence-beta.json",
+      "reportSha256": "01cbe88f9d55690b32e61cbd567c3560987654dbd4bee70daec926d740e060c3"
+    },
+    {
+      "reviewer": "gold-equivalence-independent-adjudicator",
+      "decision": "approved",
+      "scope": "independent-adjudication",
+      "report": "../../reviews/reviewer-tuning-equivalence-adjudicator.json",
+      "reportSha256": "ad8c87f03287989b7dbbacaebc42aa11e9f4564a0f08af2b6361e02d389bd160"
+    },
+    {
+      "reviewer": "gold-equivalence-independent-ci-tiebreak",
+      "decision": "approved",
+      "scope": "single-claim-tiebreak",
+      "report": "../../reviews/reviewer-tuning-equivalence-ci-tiebreak.json",
+      "reportSha256": "dbc01ab488cd904370af0a27f9f14a92891edd0187549ace5c48d8cc88d9bebf"
     }
   ]
 }

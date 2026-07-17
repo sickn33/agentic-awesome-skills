@@ -31,24 +31,39 @@
           "javascript-testing-patterns"
         ]
       ]
+    },
+    {
+      "solutionId": "jest-generated-component-suite",
+      "allowedSkillIds": [
+        "jest-skill",
+        "unit-testing-test-generate"
+      ],
+      "requiredGroups": [
+        [
+          "jest-skill"
+        ],
+        [
+          "unit-testing-test-generate"
+        ]
+      ]
     }
   ],
   "ambiguous": false,
   "reviews": [
     {
-      "reviewer": "codex-independent-alpha",
+      "reviewer": "gold-equivalence-independent-adjudicator",
       "decision": "approved",
-      "reviewedDigest": "sha256-283525f1d35efec5aee27a4f4b256e18e11e862529f542a6179466b7b40f28ce"
+      "reviewedDigest": "sha256-665dc06c2ce3abd17a0478a9da1a3fa4264ac65ad514d776a78f8a8b2fb4b44b"
     },
     {
-      "reviewer": "codex-independent-beta",
+      "reviewer": "gold-equivalence-independent-beta",
       "decision": "approved",
-      "reviewedDigest": "sha256-283525f1d35efec5aee27a4f4b256e18e11e862529f542a6179466b7b40f28ce"
+      "reviewedDigest": "sha256-665dc06c2ce3abd17a0478a9da1a3fa4264ac65ad514d776a78f8a8b2fb4b44b"
     }
   ],
   "provenance": {
-    "source": "independent-synthetic-tuning-gold-authoring",
-    "version": "1.0.0",
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
     "reviewedAt": "2026-07-17"
   }
 }

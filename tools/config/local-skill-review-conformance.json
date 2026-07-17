@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "kind": "aas-local-skill-review-conformance",
+  "profiles": {
+    "bad": {
+      "description": "Helpful.",
+      "body": "## Understanding Hacker Types\n\n## Common Attack Types",
+      "repeat": { "line": "Background taxonomy material with no executable guidance.", "count": 340 }
+    },
+    "medium": {
+      "description": "Review documentation and report issues.",
+      "body": "## When to Use\n\n1. Review the supplied artifact.",
+      "repeat": { "linePrefix": "Guidance note ", "lineSuffix": " explains relevant context.", "count": 55 },
+      "tail": "- Adapted material; verify local paths, tools, credentials, and agent features before acting."
+    },
+    "good": {
+      "description": "Review, validate, and audit README, API documentation, and changelog changes; use this skill when the user asks to check documentation before release, but do not use it for source-code review.",
+      "body": "## When to Use\n\n1. Inspect the input.\n2. Validate the output.\n3. Report evidence.\n\n```sh\ncheck-one\n```\n\n```sh\ncheck-two\n```\n\nIf validation fails, fix it and re-run the checks before completion."
+    }
+  },
+  "expectedDimensions": {
+    "description.specificity": [1, 2, 3],
+    "description.trigger_term_quality": [1, 2, 3],
+    "description.completeness": [1, 2, 3],
+    "description.distinctiveness_conflict_risk": [1, 2, 3],
+    "content.conciseness": [1, 2, 3],
+    "content.actionability": [1, 2, 3],
+    "content.workflow_clarity": [1, 2, 3],
+    "content.progressive_disclosure": [1, 2, 3]
+  },
+  "cases": {
+    "simple-skill": {
+      "description": "Rewrite the previous answer more briefly when the user asks for a concise version.",
+      "body": "## When to Use\n\nRewrite only the previous answer.\n\n## Workflow\n\n1. Preserve the substance.\n2. Return a shorter answer.\n\n## Limitations\n\nDo not perform unrelated work."
+    },
+    "instruction-only": {
+      "description": "Follow a bounded instruction-only workflow when the user asks to normalize one text response.",
+      "body": "## When to Use\n\nUse only for the supplied text.\n\n## Workflow\n\n1. Inspect the text.\n2. Normalize it.\n3. Verify the output.\n\n## Limitations\n\nDo not use tools or external sources."
+    },
+    "risky-workflow-without-feedback-loop": {
+      "description": "Run an authorized security review when the user explicitly supplies a permitted target.",
+      "body": "## When to Use\n\nUse only with written authorization.\n\n## Workflow\n\n1. Run the approved database operation against the authorized target.\n2. Report the finding.\n\n## Limitations\n\nNever act outside the approved scope."
+    },
+    "progressive-disclosure-with-real-bundle": {
+      "description": "Design API pagination when the user asks for cursor or offset contract guidance.",
+      "body": "## When to Use\n\nUse for API pagination contract design.\n\n## Workflow\n\n1. Inspect the API constraints.\n2. Validate the proposed contract.\n3. Open `references/pagination.md` only for advanced pagination cases.\n\n## Limitations\n\nDo not implement unrelated backend code.",
+      "reference": { "path": "skills/synthetic/references/pagination.md", "text": "# Advanced pagination\n\nUse cursor validation only for advanced pagination cases.\n" }
+    },
+    "invalid-frontmatter": {
+      "rawText": "---\nname: [invalid\ndescription: broken\n---\n\n## When to Use\nBroken fixture.\n"
+    }
+  }
+}

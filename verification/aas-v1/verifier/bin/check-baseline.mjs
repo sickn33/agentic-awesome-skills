@@ -44,6 +44,7 @@ assert(metrics.canonicalComparisonExcludedFields.length === 4, "AAS_BASELINE_CAN
 
 const benchmark = readJson("baseline/v1/benchmark/manifest.json");
 const heldOut = readJson("baseline/v1/benchmark/held-out-index.json");
+const tuningManifest = readJson("baseline/v1/benchmark/tuning/manifest.json");
 const expectedIntents = [
   "web-application-delivery",
   "api-backend-delivery",
@@ -53,6 +54,11 @@ const expectedIntents = [
   "agent-mcp-development",
 ];
 assert(JSON.stringify(benchmark.intents) === JSON.stringify(expectedIntents), "AAS_BASELINE_INTENTS", "The six frozen intents changed.");
+assert(benchmark.benchmarkVersion === "1.0.1", "AAS_BASELINE_BENCHMARK_VERSION", "The independently amended benchmark must be version 1.0.1.");
+assert(tuningManifest.tuningVersion === "1.0.1"
+  && tuningManifest.equivalenceAudit?.auditId === "aas-v1-tuning-gold-equivalence-1.0.1"
+  && tuningManifest.equivalenceAudit?.changedPairs === 7,
+"AAS_BASELINE_TUNING_AUDIT", "The tuning-gold equivalence amendment is missing or incomplete.");
 assert(heldOut.cases.length === 180, "AAS_BASELINE_HELDOUT_COUNT", `Expected 180 descriptors, found ${heldOut.cases.length}.`);
 assert(new Set(heldOut.cases.map((entry) => entry.caseId)).size === 180, "AAS_BASELINE_CASE_ID_DUPLICATE", "Held-out case IDs must be unique.");
 assert(new Set(heldOut.cases.map((entry) => entry.taskFamilyId)).size === 180, "AAS_BASELINE_TASK_FAMILY_DUPLICATE", "Task families must be unique.");
@@ -122,11 +128,43 @@ const reviewerReportsValid = ownership.reviewers.every((reviewer) => {
     .digest("hex");
   return digest === reviewer.reportSha256;
 });
+const reviewAmendmentsValid = Array.isArray(ownership.reviewAmendments)
+  && ownership.reviewAmendments.length === 1
+  && ownership.reviewAmendments.every((amendment) => {
+    if (amendment.auditId !== "aas-v1-tuning-gold-equivalence-1.0.1"
+      || amendment.claimsReviewed !== 19
+      || amendment.changedPairs !== 7
+      || amendment.minimumIndependentReviewsPerChangedPair !== 2
+      || !Array.isArray(amendment.reports)
+      || amendment.reports.length !== 4) return false;
+    const auditPath = path.join(root, amendment.audit);
+    if (!fs.existsSync(auditPath)) return false;
+    const auditDigest = crypto.createHash("sha256").update(fs.readFileSync(auditPath)).digest("hex");
+    if (auditDigest !== amendment.auditSha256) return false;
+    const audit = JSON.parse(fs.readFileSync(auditPath, "utf8"));
+    if (audit.auditId !== amendment.auditId || audit.scope?.changedPairCount !== amendment.changedPairs) return false;
+    const identities = new Set();
+    for (const reviewer of amendment.reports) {
+      if (!reviewer.identity || reviewer.scorerImplementer !== false || reviewer.reviewedClaims < 1) return false;
+      identities.add(reviewer.identity);
+      const reportPath = path.join(root, reviewer.report);
+      if (!fs.existsSync(reportPath)) return false;
+      const bytes = fs.readFileSync(reportPath);
+      const digest = crypto.createHash("sha256").update(bytes).digest("hex");
+      if (digest !== reviewer.reportSha256) return false;
+      const report = JSON.parse(bytes.toString("utf8"));
+      if (report.reviewer?.identity !== reviewer.identity
+        || report.reviewer?.scorerImplementer !== false
+        || report.decisions?.length !== reviewer.reviewedClaims) return false;
+    }
+    return identities.size === amendment.reports.length;
+  });
 requireForFreeze(
   ownership.status === "frozen"
     && reviewerIdentities.size >= 2
     && ownership.reviewers.some((reviewer) => reviewer.scorerImplementer === false)
     && reviewerReportsValid
+    && reviewAmendmentsValid
     && ownership.repositorySettings.settingsVerified === true
     && ownership.verificationEnvironment.requiredReviewersVerified === true
     && ownership.verificationEnvironment.productPullRequestsMayModifyBaseline === false,
