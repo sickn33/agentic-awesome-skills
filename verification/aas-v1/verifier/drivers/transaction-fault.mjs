@@ -79,7 +79,10 @@ function laterBoundarySnapshot(className, targetRoot, skillId) {
   const later = {
     lock: (relative) => /^\.aas-bootstrap-|^\.aas-transaction-recovery-/.test(relative)
       || relative.includes("/staged/") || relative === `.agents/skills/${skillId}` || relative === ".aas/managed-state.codex.json",
-    fsync: (relative) => /^\.aas-transaction-recovery-[a-f0-9]+\.wal$/.test(relative),
+    // The WAL is reversible recovery metadata and may be created immediately
+    // after the observed bootstrap fsync. A kill at this boundary is too late
+    // only if it reaches user-visible publication or the state-last commit.
+    fsync: (relative) => relative === `.agents/skills/${skillId}` || relative === ".aas/managed-state.codex.json",
     journal: (relative) => relative.includes("/staged/") || relative === `.agents/skills/${skillId}` || relative === ".aas/managed-state.codex.json",
     write: (relative) => relative === `.agents/skills/${skillId}` || relative === ".aas/managed-state.codex.json",
     backup: (relative) => relative === ".aas/managed-state.codex.json",
