@@ -53,6 +53,7 @@ try {
   $rootRows = 0
   $networkRows = 0
   $writeRows = 0
+  $rootEventSamples = New-Object System.Collections.Generic.List[string]
   foreach ($row in (Import-Csv -LiteralPath $csv)) {
     $totalRows++
     $serialized = $row | ConvertTo-Json -Compress
@@ -69,6 +70,12 @@ try {
     $pidValue = Get-IntegerField $row @("(?i)^Process.*Id$", "(?i)^PID$")
     if (!$childPids.Contains($pidValue)) { continue }
     $rootRows++
+    if ($rootEventSamples.Count -lt 12) {
+      $safeIdentity = (($row.PSObject.Properties | Where-Object {
+        $_.Name -match '(?i)^(Event Name|Type|Event ID|Opcode|Task|Keyword|PID|Provider Name|Provider Guid)$'
+      } | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join ';')
+      if ($safeIdentity -and !$rootEventSamples.Contains($safeIdentity)) { $rootEventSamples.Add($safeIdentity) }
+    }
     if ($eventName -match "(?i)(TCP|UDP|DNS|Connect|Socket|Network)") {
       $networkRows++
       $lines.Add("network|$pidValue|$serialized")
@@ -93,6 +100,7 @@ try {
       rootRows = $rootRows
       networkRows = $networkRows
       writeRows = $writeRows
+      rootEventSamples = @($rootEventSamples)
     }
   }
   [IO.File]::WriteAllText($ResultOutput, ($receipt | ConvertTo-Json -Compress), (New-Object Text.UTF8Encoding($false)))

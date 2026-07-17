@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-d8466cee6825f9c61542837909fae475b1cb2ce2df87992bf0b9a0a63b1c2e94",
+  "rootDigest": "sha256-e63a0081fb257d153801ef4f439583ab65f13e76a74de5febd463da4c6d29b07",
   "fileCount": 754,
   "files": [
     {
@@ -3698,8 +3698,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 10709,
-      "sha256": "a08961eae243ae2256f2465ed329542faad53d80e8519f079f1070d1b961c89f"
+      "bytes": 10861,
+      "sha256": "2a8067a24b58e9ce7c5b0e4847e36b60d3aa325c99b20b976f259595b31ca98e"
     },
     {
       "path": "verifier/lib/prng.mjs",
@@ -3708,8 +3708,8 @@
     },
     {
       "path": "verifier/lib/process.mjs",
-      "bytes": 1671,
-      "sha256": "b51de29796b8c96a0f0615cda83a332671daa8203aba386f93122371cb59e366"
+      "bytes": 1714,
+      "sha256": "1d012de74092ea787b220c3741c5b597c1f7e6c9fabcd5a8ef3cf3d79abeec52"
     },
     {
       "path": "verifier/lib/receipt.mjs",
@@ -3733,8 +3733,8 @@
     },
     {
       "path": "verifier/observers/windows-etw.ps1",
-      "bytes": 4432,
-      "sha256": "4267793daedba8cda80bbc576e99fa21b8905a1953a22d3f0448b6f8f6b00cd2"
+      "bytes": 4955,
+      "sha256": "cbe1628678ac2b9fdd620931aa2d64b93cbc564bb3949e23d9fead22a9c05d5c"
     },
     {
       "path": "verifier/package-lock.json",

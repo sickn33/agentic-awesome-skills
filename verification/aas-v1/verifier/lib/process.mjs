@@ -6,6 +6,7 @@ export function runProcess(executable, args, options = {}) {
     const child = spawn(executable, args, {
       cwd: options.cwd,
       env: options.env,
+      detached: options.detached === true,
       windowsHide: true,
       stdio: [options.stdin === undefined ? "ignore" : "pipe", "pipe", "pipe"],
     });

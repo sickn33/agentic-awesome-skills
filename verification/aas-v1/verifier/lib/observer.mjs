@@ -125,9 +125,13 @@ async function macObserved(executable, args, options) {
   if (!rootPid) throw Object.assign(new Error("Observed process did not start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   const observers = ["filesys", "network", "exec"].map((mode) => {
     let pid = 0;
-    const promise = runProcess("sudo", ["-n", "/usr/bin/fs_usage", "-w", "-f", mode, String(rootPid)], {
+    const observerTimeoutMs = (options.timeoutMs ?? 30_000) + 5_000;
+    const promise = runProcess("sudo", [
+      "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)), "-f", mode, String(rootPid),
+    ], {
       ...options,
-      timeoutMs: (options.timeoutMs ?? 30_000) + 5_000,
+      detached: true,
+      timeoutMs: observerTimeoutMs,
       maxOutputBytes: 8 * 1024 * 1024,
       onSpawn(child) { pid = child.pid; },
     });
@@ -137,7 +141,9 @@ async function macObserved(executable, args, options) {
   fs.writeFileSync(gate, "go\n", { mode: 0o600 });
   const result = await commandPromise;
   for (const observer of observers) {
-    if (observer.pid) await runProcess("sudo", ["-n", "kill", "-INT", String(observer.pid)], { timeoutMs: 5_000 });
+    if (observer.pid) {
+      await runProcess("sudo", ["-n", "/bin/kill", "-INT", `-${observer.pid}`], { timeoutMs: 5_000 });
+    }
   }
   const traces = await Promise.all(observers.map(async (observer) => {
     const trace = await observer.promise;
