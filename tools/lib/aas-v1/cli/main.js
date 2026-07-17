@@ -53,7 +53,7 @@ function parseOptions(argv) {
 const COMMAND_OPTIONS = Object.freeze({
   "catalog status": new Set(["cache-root", "version", "digest", "integrity", "help"]),
   "catalog update": new Set(["cache-root", "version", "help"]),
-  "mcp configure": new Set(["host", "scope", "config", "cache-root", "version", "backup-dir", "retention", "approve", "help"]),
+  "mcp configure": new Set(["host", "scope", "config", "cache-root", "version", "runtime-integrity", "runtime-closure-digest", "backup-dir", "retention", "approve", "help"]),
   "mcp backups cleanup": new Set(["config", "backup-dir", "keep", "approve", "help"]),
   "stack init": new Set(["goal", "catalog-digest", "cache-root", "host", "scope", "name", "out", "help"]),
   "stack recommend": new Set(["profile", "catalog-digest", "cache-root", "help"]),
@@ -311,7 +311,7 @@ function help() {
     commands: [
       "catalog status [--cache-root <absolute> --version <semver> --digest <sha256> --integrity <npm-sri>]",
       "catalog update --cache-root <absolute> --version <semver>",
-      "mcp configure --host codex|claude --scope user|project --config <absolute> --cache-root <absolute> [--version <semver>] [--backup-dir <absolute>] [--approve <digest>]",
+      "mcp configure --host codex|claude --scope user|project --config <absolute> --cache-root <absolute> [--version <semver>] [--runtime-integrity <npm-sri> --runtime-closure-digest <sha256>] [--backup-dir <absolute>] [--approve <digest>]",
       "mcp backups cleanup --config <absolute> --backup-dir <absolute> --keep <count> [--approve <digest>]",
       "stack init --goal <goal> [--catalog-digest <sha256> --cache-root <absolute>]",
       "stack recommend --profile <json> [--catalog-digest <sha256> --cache-root <absolute>]",
@@ -331,6 +331,8 @@ function mcpServer({ host, cacheRoot, version, integrity }) {
 }
 
 function configApprovalDigest({ host, scope, configPath, cacheRoot, release, patch }) {
+  const runtime = { package: release.package, version: release.version, integrity: release.integrity };
+  if (release.closureDigest) runtime.closureDigest = release.closureDigest;
   return core.sha256(core.canonicalJson({
     schemaVersion: 1,
     action: "mcp.configure",
@@ -338,9 +340,40 @@ function configApprovalDigest({ host, scope, configPath, cacheRoot, release, pat
     scope,
     configPathDigest: core.sha256(configPath),
     cacheRootDigest: core.sha256(cacheRoot),
-    runtime: { package: release.package, version: release.version, integrity: release.integrity },
+    runtime,
     config: { exists: patch.exists, currentDigest: patch.currentDigest, nextDigest: patch.nextDigest },
   }));
+}
+
+function explicitCachedRuntime(options) {
+  const integrity = options["runtime-integrity"];
+  const closureDigest = options["runtime-closure-digest"];
+  if ((integrity === undefined) !== (closureDigest === undefined)) {
+    throw cliError("AAS_CLI_RUNTIME_IDENTITY_INCOMPLETE", "invalidInput", {
+      requiredOptions: ["runtime-integrity", "runtime-closure-digest"],
+    });
+  }
+  if (integrity === undefined) return null;
+  try { core.cache.parseNpmIntegrity(integrity); } catch {
+    throw cliError("AAS_CLI_RUNTIME_INTEGRITY_INVALID", "invalidInput", { option: "runtime-integrity" });
+  }
+  if (!/^sha256-[0-9a-f]{64}$/.test(closureDigest)) {
+    throw cliError("AAS_CLI_RUNTIME_CLOSURE_DIGEST_INVALID", "invalidInput", { option: "runtime-closure-digest" });
+  }
+  return { integrity, closureDigest };
+}
+
+async function verifiedCachedRuntime({ cacheRoot, version, integrity, closureDigest }) {
+  const status = await core.cache.runtimeStatus({
+    cacheRoot,
+    packageVersion: version,
+    integrity,
+    closureDigest,
+  });
+  if (status.status !== "verified") {
+    throw cliError("AAS_RUNTIME_NOT_VERIFIED", "integrity", { status: status.status });
+  }
+  return status;
 }
 
 async function mcpConfigure(options, dependencies = {}) {
@@ -354,7 +387,13 @@ async function mcpConfigure(options, dependencies = {}) {
   const retention = boundedInteger(options.retention, "retention", 1, 100, 5);
   const version = options.version || packageMetadata.version;
   const fetcher = dependencies.fetcher;
-  const release = await core.cache.inspectRuntimeRelease({ version, ...(fetcher ? { fetcher } : {}) });
+  const cachedIdentity = explicitCachedRuntime(options);
+  const cached = cachedIdentity
+    ? await verifiedCachedRuntime({ cacheRoot, version, ...cachedIdentity })
+    : null;
+  const release = cached
+    ? cached.runtimeIdentity
+    : await core.cache.inspectRuntimeRelease({ version, ...(fetcher ? { fetcher } : {}) });
   const patch = await buildPatch({ host, scope, configPath, server: mcpServer({ host, cacheRoot, version: release.version, integrity: release.integrity }) });
   const approvalDigest = configApprovalDigest({ host, scope, configPath, cacheRoot, release, patch });
   const preview = {
@@ -362,7 +401,12 @@ async function mcpConfigure(options, dependencies = {}) {
     status: "approvalRequired",
     action: "mcp.configure",
     approvalDigest,
-    runtime: { package: release.package, version: release.version, integrity: release.integrity },
+    runtime: {
+      package: release.package,
+      version: release.version,
+      integrity: release.integrity,
+      ...(release.closureDigest ? { closureDigest: release.closureDigest } : {}),
+    },
     config: {
       host,
       scope,
@@ -376,18 +420,20 @@ async function mcpConfigure(options, dependencies = {}) {
   };
   if (!options.approve) return preview;
   if (options.approve !== approvalDigest) throw cliError("AAS_ADAPTER_APPROVAL_MISMATCH", "approval", {});
-  const installed = await core.cache.installRuntimeFromRegistry({
-    cacheRoot,
-    version: release.version,
-    expectedIntegrity: release.integrity,
-    ...(fetcher ? { fetcher } : {}),
-  });
+  const installed = cachedIdentity
+    ? await verifiedCachedRuntime({ cacheRoot, version: release.version, ...cachedIdentity })
+    : await core.cache.installRuntimeFromRegistry({
+      cacheRoot,
+      version: release.version,
+      expectedIntegrity: release.integrity,
+      ...(fetcher ? { fetcher } : {}),
+    });
   const applied = await applyHostConfigPatch({ patch, approved: true, backupDirectory, retention });
   return {
     ok: true,
     status: applied.status === "alreadyConfigured" ? "alreadyConfigured" : "configured",
     runtime: installed.runtimeIdentity,
-    runtimeCacheStatus: installed.status,
+    runtimeCacheStatus: cachedIdentity ? "verified" : installed.status,
     config: { host, scope, digest: applied.configDigest, backupCreated: Boolean(applied.backup) },
   };
 }

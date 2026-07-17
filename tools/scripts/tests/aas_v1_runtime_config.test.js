@@ -193,6 +193,89 @@ test("mcp configure previews without writes, binds exact approval, then configur
   assert.equal((await fsp.stat(backups)).mode & 0o777, 0o700);
 });
 
+test("mcp configure can bind an already verified runtime without registry access", async (t) => {
+  const root = await temp(t);
+  const cacheRoot = path.join(root, "cache");
+  const config = path.join(root, ".mcp.json");
+  await fsp.writeFile(config, '{"mcpServers":{}}\n', { mode: 0o600 });
+  const fixture = releaseFixture();
+  const installed = await core.cache.installRuntimeFromRegistry({
+    cacheRoot,
+    version: "14.6.0",
+    expectedIntegrity: fixture.integrity,
+    fetcher: fixture.fetcher,
+  });
+  let fetchAttempts = 0;
+  const noNetwork = async () => {
+    fetchAttempts += 1;
+    throw new Error("registry access is forbidden for an explicitly pinned cached runtime");
+  };
+  const options = {
+    host: "claude",
+    scope: "project",
+    config,
+    "cache-root": cacheRoot,
+    "backup-dir": path.join(root, "backups"),
+    version: "14.6.0",
+    "runtime-integrity": fixture.integrity,
+    "runtime-closure-digest": installed.runtimeIdentity.closureDigest,
+  };
+  const preview = await mcpConfigure(options, { fetcher: noNetwork });
+  assert.equal(preview.status, "approvalRequired");
+  assert.deepEqual(preview.runtime, installed.runtimeIdentity);
+  const configured = await mcpConfigure({ ...options, approve: preview.approvalDigest }, { fetcher: noNetwork });
+  assert.equal(configured.status, "configured");
+  assert.equal(configured.runtimeCacheStatus, "verified");
+  assert.deepEqual(configured.runtime, installed.runtimeIdentity);
+  assert.equal(fetchAttempts, 0);
+  const parsed = JSON.parse(await fsp.readFile(config, "utf8"));
+  assert.deepEqual(parsed.mcpServers.aas.args, [
+    core.cache.runtimeMcpPath({ cacheRoot, packageVersion: "14.6.0", integrity: fixture.integrity }),
+    "--cache-root",
+    cacheRoot,
+  ]);
+});
+
+test("mcp configure fails closed on incomplete, missing, or changed cached runtime identity", async (t) => {
+  const root = await temp(t);
+  const cacheRoot = path.join(root, "cache");
+  const config = path.join(root, ".mcp.json");
+  const initialConfig = '{"mcpServers":{}}\n';
+  await fsp.writeFile(config, initialConfig, { mode: 0o600 });
+  const fixture = releaseFixture();
+  const base = { host: "claude", scope: "project", config, "cache-root": cacheRoot, version: "14.6.0" };
+  await assert.rejects(
+    mcpConfigure({ ...base, "runtime-integrity": fixture.integrity }),
+    (error) => error.code === "AAS_CLI_RUNTIME_IDENTITY_INCOMPLETE",
+  );
+  await assert.rejects(
+    mcpConfigure({ ...base, "runtime-closure-digest": core.sha256("missing") }),
+    (error) => error.code === "AAS_CLI_RUNTIME_IDENTITY_INCOMPLETE",
+  );
+  await assert.rejects(
+    mcpConfigure({ ...base, "runtime-integrity": fixture.integrity, "runtime-closure-digest": core.sha256("missing") }),
+    (error) => error.code === "AAS_RUNTIME_NOT_VERIFIED" && error.details.status === "missing",
+  );
+  const installed = await core.cache.installRuntimeFromRegistry({
+    cacheRoot,
+    version: "14.6.0",
+    expectedIntegrity: fixture.integrity,
+    fetcher: fixture.fetcher,
+  });
+  const options = {
+    ...base,
+    "runtime-integrity": fixture.integrity,
+    "runtime-closure-digest": installed.runtimeIdentity.closureDigest,
+  };
+  const preview = await mcpConfigure(options);
+  await fsp.appendFile(core.cache.runtimeMcpPath({ cacheRoot, packageVersion: "14.6.0", integrity: fixture.integrity }), "tamper");
+  await assert.rejects(
+    mcpConfigure({ ...options, approve: preview.approvalDigest }),
+    (error) => error.code === "AAS_RUNTIME_NOT_VERIFIED" && error.details.status === "invalid",
+  );
+  assert.equal(await fsp.readFile(config, "utf8"), initialConfig);
+});
+
 test("mcp configure rejects relative machine paths and a registry identity change", async (t) => {
   const root = await temp(t);
   const config = path.join(root, "config.toml");
