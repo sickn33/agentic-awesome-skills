@@ -13,7 +13,7 @@ Build persistent agents on Azure AI Foundry using the Microsoft Agent Framework 
 ## Architecture
 
 ```
-User Query → AzureAIAgentsProvider → Azure AI Agent Service (Persistent)
+User Query → AzureAIAgentClient → Azure AI Agent Service (Persistent)
                     ↓
               Agent.run() / Agent.run_stream()
                     ↓
@@ -25,12 +25,14 @@ User Query → AzureAIAgentsProvider → Azure AI Agent Service (Persistent)
 ## Installation
 
 ```bash
-# Full framework (recommended)
-pip install agent-framework --pre
-
-# Or Azure-specific package only
-pip install agent-framework-azure-ai --pre
+# This integration is still a release candidate. Pin the tested API surface.
+pip install "agent-framework-azure-ai==1.0.0rc6" azure-identity
 ```
+
+These examples target `AzureAIAgentClient` from `agent-framework-azure-ai`
+1.0.0rc6. Do not substitute the older `AzureAIAgentsProvider` API. The newer
+Microsoft Foundry Responses integration uses `FoundryChatClient` from
+`agent-framework-foundry` and has a different client, tool, and session model.
 
 ## Environment Variables
 
@@ -58,15 +60,15 @@ credential = DefaultAzureCredential()
 
 ```python
 import asyncio
-from agent_framework.azure import AzureAIAgentsProvider
+from agent_framework_azure_ai import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentsProvider(credential=credential) as provider,
+        AzureAIAgentClient(credential=credential) as client,
     ):
-        agent = await provider.create_agent(
+        agent = client.create_agent(
             name="MyAgent",
             instructions="You are a helpful assistant.",
         )
@@ -82,7 +84,7 @@ asyncio.run(main())
 ```python
 from typing import Annotated
 from pydantic import Field
-from agent_framework.azure import AzureAIAgentsProvider
+from agent_framework_azure_ai import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 def get_weather(
@@ -99,9 +101,9 @@ def get_current_time() -> str:
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentsProvider(credential=credential) as provider,
+        AzureAIAgentClient(credential=credential) as client,
     ):
-        agent = await provider.create_agent(
+        agent = client.create_agent(
             name="WeatherAgent",
             instructions="You help with weather and time queries.",
             tools=[get_weather, get_current_time],  # Pass functions directly
@@ -111,44 +113,15 @@ async def main():
         print(result.text)
 ```
 
-### Agent with Hosted Tools
-
-```python
-from agent_framework import (
-    HostedCodeInterpreterTool,
-    HostedFileSearchTool,
-    HostedWebSearchTool,
-)
-from agent_framework.azure import AzureAIAgentsProvider
-from azure.identity.aio import AzureCliCredential
-
-async def main():
-    async with (
-        AzureCliCredential() as credential,
-        AzureAIAgentsProvider(credential=credential) as provider,
-    ):
-        agent = await provider.create_agent(
-            name="MultiToolAgent",
-            instructions="You can execute code, search files, and search the web.",
-            tools=[
-                HostedCodeInterpreterTool(),
-                HostedWebSearchTool(name="Bing"),
-            ],
-        )
-        
-        result = await agent.run("Calculate the factorial of 20 in Python")
-        print(result.text)
-```
-
 ### Streaming Responses
 
 ```python
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentsProvider(credential=credential) as provider,
+        AzureAIAgentClient(credential=credential) as client,
     ):
-        agent = await provider.create_agent(
+        agent = client.create_agent(
             name="StreamingAgent",
             instructions="You are a helpful assistant.",
         )
@@ -163,15 +136,15 @@ async def main():
 ### Conversation Threads
 
 ```python
-from agent_framework.azure import AzureAIAgentsProvider
+from agent_framework_azure_ai import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentsProvider(credential=credential) as provider,
+        AzureAIAgentClient(credential=credential) as client,
     ):
-        agent = await provider.create_agent(
+        agent = client.create_agent(
             name="ChatAgent",
             instructions="You are a helpful assistant.",
             tools=[get_weather],
@@ -196,7 +169,7 @@ async def main():
 
 ```python
 from pydantic import BaseModel, ConfigDict
-from agent_framework.azure import AzureAIAgentsProvider
+from agent_framework_azure_ai import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 class WeatherResponse(BaseModel):
@@ -210,9 +183,9 @@ class WeatherResponse(BaseModel):
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentsProvider(credential=credential) as provider,
+        AzureAIAgentClient(credential=credential) as client,
     ):
-        agent = await provider.create_agent(
+        agent = client.create_agent(
             name="StructuredAgent",
             instructions="Provide weather information in structured format.",
             response_format=WeatherResponse,
@@ -223,116 +196,23 @@ async def main():
         print(f"{weather.location}: {weather.temperature}°{weather.unit}")
 ```
 
-## Provider Methods
+## Client Methods
 
 | Method | Description |
 |--------|-------------|
-| `create_agent()` | Create new agent on Azure AI service |
-| `get_agent(agent_id)` | Retrieve existing agent by ID |
-| `as_agent(sdk_agent)` | Wrap SDK Agent object (no HTTP call) |
-
-## Hosted Tools Quick Reference
-
-| Tool | Import | Purpose |
-|------|--------|---------|
-| `HostedCodeInterpreterTool` | `from agent_framework import HostedCodeInterpreterTool` | Execute Python code |
-| `HostedFileSearchTool` | `from agent_framework import HostedFileSearchTool` | Search vector stores |
-| `HostedWebSearchTool` | `from agent_framework import HostedWebSearchTool` | Bing web search |
-| `HostedMCPTool` | `from agent_framework import HostedMCPTool` | Service-managed MCP |
-| `MCPStreamableHTTPTool` | `from agent_framework import MCPStreamableHTTPTool` | Client-managed MCP |
-
-## Complete Example
-
-```python
-import asyncio
-from typing import Annotated
-from pydantic import BaseModel, Field
-from agent_framework import (
-    HostedCodeInterpreterTool,
-    HostedWebSearchTool,
-    MCPStreamableHTTPTool,
-)
-from agent_framework.azure import AzureAIAgentsProvider
-from azure.identity.aio import AzureCliCredential
-
-
-def get_weather(
-    location: Annotated[str, Field(description="City name")],
-) -> str:
-    """Get weather for a location."""
-    return f"Weather in {location}: 72°F, sunny"
-
-
-class AnalysisResult(BaseModel):
-    summary: str
-    key_findings: list[str]
-    confidence: float
-
-
-async def main():
-    async with (
-        AzureCliCredential() as credential,
-        MCPStreamableHTTPTool(
-            name="Docs MCP",
-            url="https://learn.microsoft.com/api/mcp",
-        ) as mcp_tool,
-        AzureAIAgentsProvider(credential=credential) as provider,
-    ):
-        agent = await provider.create_agent(
-            name="ResearchAssistant",
-            instructions="You are a research assistant with multiple capabilities.",
-            tools=[
-                get_weather,
-                HostedCodeInterpreterTool(),
-                HostedWebSearchTool(name="Bing"),
-                mcp_tool,
-            ],
-        )
-        
-        thread = agent.get_new_thread()
-        
-        # Non-streaming
-        result = await agent.run(
-            "Search for Python best practices and summarize",
-            thread=thread,
-        )
-        print(f"Response: {result.text}")
-        
-        # Streaming
-        print("\nStreaming: ", end="")
-        async for chunk in agent.run_stream("Continue with examples", thread=thread):
-            if chunk.text:
-                print(chunk.text, end="", flush=True)
-        print()
-        
-        # Structured output
-        result = await agent.run(
-            "Analyze findings",
-            thread=thread,
-            response_format=AnalysisResult,
-        )
-        analysis = AnalysisResult.model_validate_json(result.text)
-        print(f"\nConfidence: {analysis.confidence}")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
+| `create_agent()` | Create a `ChatAgent` configured with this client |
+| `get_response()` | Request a non-streaming chat response directly |
+| `get_streaming_response()` | Request a streaming chat response directly |
+| `close()` | Close the underlying service client and managed resources |
 
 ## Conventions
 
-- Always use async context managers: `async with provider:`
+- Close both the async credential and client, preferably with `async with`.
 - Pass functions directly to `tools=` parameter (auto-converted to AIFunction)
 - Use `Annotated[type, Field(description=...)]` for function parameters
 - Use `get_new_thread()` for multi-turn conversations
-- Prefer `HostedMCPTool` for service-managed MCP, `MCPStreamableHTTPTool` for client-managed
-
-## Reference Files
-
-- references/tools.md: Detailed hosted tool patterns
-- references/mcp.md: MCP integration (hosted + local)
-- references/threads.md: Thread and conversation management
-- references/advanced.md: OpenAPI, citations, structured outputs
+- Re-check the pinned integration before adopting hosted tools; tool factories differ
+  between `AzureAIAgentClient` and `FoundryChatClient`.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

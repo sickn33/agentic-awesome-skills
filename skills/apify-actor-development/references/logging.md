@@ -2,9 +2,9 @@
 
 ## JavaScript and TypeScript
 
-**ALWAYS use the `apify/log` package for logging** - This package contains critical security logic including censoring sensitive data (Apify tokens, API keys, credentials) to prevent accidental exposure in logs.
+Use the Apify logger instead of `console.log()` for level-aware Actor logging. Import the standalone logger from `@apify/log`; importing the supported `log` export from `apify` or `crawlee` is also valid. Do not pass tokens, API keys, credentials, or other sensitive values to any logging call: the documented logger API does not guarantee automatic credential redaction.
 
-### Available Log Levels in `apify/log`
+### Available Log Levels
 
 The Apify log package provides the following methods for logging:
 
@@ -29,7 +29,7 @@ The Apify log package provides the following methods for logging:
 
 ## Python
 
-**ALWAYS use `Actor.log` for logging** - This logger contains critical security logic including censoring sensitive data (Apify tokens, API keys, credentials) to prevent accidental exposure in logs.
+Use `Actor.log` for the SDK's configured, level-aware Python logging. Do not pass tokens, API keys, credentials, or other sensitive values to logging calls.
 
 ### Available Log Levels
 

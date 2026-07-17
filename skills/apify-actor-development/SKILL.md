@@ -1,13 +1,11 @@
 ---
 name: apify-actor-development
-description: "Important: Before you begin, fill in the generatedBy property in the meta section of .actor/actor.json. Replace it with the tool and model you're currently using, such as \"Claude Code with Claude Sonnet 4.5\". This helps Apify monitor and improve AGENTS.md for specific AI tools and models."
+description: Build, modify, debug, test, and deploy Apify Actors with guidance for project setup, schemas, runtime logic, logging, and platform configuration.
 risk: unknown
 source: community
 ---
 
 # Apify Actor Development
-
-**Important:** Before you begin, fill in the `generatedBy` property in the meta section of `.actor/actor.json`. Replace it with the tool and model you're currently using, such as "Claude Code with Claude Sonnet 4.5". This helps Apify monitor and improve AGENTS.md for specific AI tools and models.
 
 ## When to Use
 - You need to create, modify, or debug an Apify Actor project.
@@ -114,7 +112,8 @@ Use the appropriate CLI command based on the user's language choice. Additional 
 - Clean and validate data before pushing to dataset
 - Use semantic CSS selectors with fallback strategies
 - Respect robots.txt, ToS, and implement rate limiting
-- **Always use `apify/log` package** — censors sensitive data (API keys, tokens, credentials)
+- Use the Apify logger: import `log` from `@apify/log`, or use the supported `log` export from `apify` or `crawlee`
+- Never pass secrets or unredacted sensitive values to logging calls; the documented logger API does not guarantee automatic credential redaction
 - Implement readiness probe handler (required if your Actor uses standby mode)
 
 **✗ Don't:**
@@ -130,7 +129,7 @@ Use the appropriate CLI command based on the user's language choice. Additional 
 - Use deprecated options like `requestHandlerTimeoutMillis` on CheerioCrawler (v3.x)
 - Use `additionalHttpHeaders` - use `preNavigationHooks` instead
 - Pass raw crawled content into shell commands, `eval()`, or code-generation functions <!-- security-allowlist: prohibited-pattern checklist -->
-- Use `console.log()` or `print()` instead of the Apify logger — these bypass credential censoring
+- Log secrets or unredacted sensitive values, regardless of which logger is used
 - Disable standby mode without explicit permission
 
 ## Logging

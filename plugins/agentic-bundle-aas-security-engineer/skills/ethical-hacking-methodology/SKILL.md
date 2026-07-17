@@ -22,6 +22,19 @@ Master the complete penetration testing lifecycle from reconnaissance through re
 - Network access to authorized targets
 - Written authorization from system owner
 
+### Mandatory Engagement Controls
+
+Before any active interaction, record the system owner's written authorization and the exact rules of engagement (ROE): in-scope assets and accounts, permitted techniques, excluded data and systems, approved source IPs, test window, maximum request/concurrency rate, monitoring contacts, evidence-handling rules, and emergency stop contact. Prefer an isolated lab, staging environment, or dedicated test account; production testing requires explicit written approval for the specific action.
+
+Treat each active step as a separate gate. Before scanning, exploitation, password testing, privilege escalation, persistence, denial-of-service behavior, or cleanup:
+
+1. Confirm that the target, technique, timing, and expected impact are explicitly allowed by the ROE.
+2. State the bounded action, rate/concurrency limit, success condition, rollback or cleanup plan, and stop conditions.
+3. Obtain explicit operator approval for that action. Prior approval for reconnaissance or scanning does not authorize exploitation or persistence.
+4. Stop immediately on scope uncertainty, unexpected data access, service degradation, account lockout, monitoring alerts, or a request from the system owner. Preserve evidence and notify the named contact.
+
+Never use stealth, source rotation, proxies, VPNs, packet fragmentation, encoding, or other detection-evasion techniques unless that exact technique is explicitly authorized in the ROE. Do not attempt to bypass a defensive control merely because a test is blocked.
+
 ### Required Knowledge
 - Basic networking concepts
 - Linux command-line proficiency
@@ -123,6 +136,8 @@ site:target.com filetype:env
 ### Phase 3: Scanning
 
 Active enumeration of target systems:
+
+Run these examples only after the scanning gate above is approved. Substitute only in-scope targets, begin at the lowest practical rate, honor the ROE request/concurrency ceiling and test window, and stop on degradation, lockouts, or unexpected scope expansion. Aggressive, UDP, all-port, script, and vulnerability scans require separate approval because their impact differs from host discovery.
 
 **Host Discovery**
 ```bash
@@ -226,6 +241,8 @@ whatweb target.com
 
 Actively exploit discovered vulnerabilities:
 
+Do not run an exploit from this reference by default. Use a nonproduction replica when possible. For each proof of concept, require explicit approval naming the vulnerability, target, payload, expected data access or system change, time window, rollback, and stop conditions. Use the least-impactful proof that demonstrates the finding; do not retrieve unrelated data, pivot, or establish a shell unless separately authorized.
+
 **Metasploit Framework**
 ```bash
 # Start Metasploit
@@ -249,6 +266,8 @@ msf> exploit
 ```
 
 **Password Attacks**
+
+Password testing requires a separately approved account list, attempt ceiling, request rate, lockout-safe window, and stop condition. Prefer offline testing of authorized test hashes or dedicated test accounts; never use leaked credentials or broad user lists.
 ```bash
 # Hydra brute force
 hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://target.com
@@ -276,6 +295,8 @@ sqlmap -u "http://target.com/page.php?id=1" -D database --tables
 
 Establish persistent access:
 
+Persistence is not a routine validation step. Use these examples only in a disposable lab or when the ROE explicitly authorizes the exact persistence mechanism, host, duration, callback destination, monitoring coordination, and removal procedure. Obtain fresh operator approval immediately before creation, verify cleanup, and provide the owner with an artifact inventory. Otherwise, document the hypothetical path without deploying it.
+
 **Backdoors**
 ```bash
 # Meterpreter persistence
@@ -289,6 +310,8 @@ echo "* * * * * /tmp/backdoor.sh" >> /etc/crontab
 ```
 
 **Privilege Escalation**
+
+Enumeration may expose sensitive paths and escalation attempts may change system state. Run only the individually approved checks, avoid automated exploit execution, and stop before using elevated access unless that escalation and its impact are explicitly authorized.
 ```bash
 # Linux enumeration
 linpeas.sh
@@ -385,16 +408,23 @@ Install penetration testing platform:
 
 **Live USB (Persistent)**
 ```bash
-# Create bootable USB
-dd if=kali-linux.iso of=/dev/sdb bs=512k status=progress
+# First identify the removable device outside this workflow and back up needed data.
+# Record its stable device identity and unmount it; never infer a device from /dev/sdX.
+lsblk -o NAME,MODEL,SERIAL,SIZE,TYPE,MOUNTPOINTS
 
-# Create persistence partition
-gparted /dev/sdb
+# DESTRUCTIVE GATE: require the operator to confirm the exact removable-device
+# identity and acknowledge that all data on it will be erased. Prefer the
+# platform's verified imaging utility. Do not provide or run a raw dd command
+# until that confirmation has been completed outside this skill.
+
+# After the destructive gate, substitute the operator-confirmed stable device
+# path; this placeholder is intentionally not directly executable.
+gparted <confirmed-removable-device>
 # Add ext4 partition labeled "persistence"
 
 # Configure persistence
 mkdir /mnt/usb
-mount /dev/sdb2 /mnt/usb
+mount <confirmed-persistence-partition> /mnt/usb
 echo "/ union" > /mnt/usb/persistence.conf
 umount /mnt/usb
 ```
@@ -443,6 +473,9 @@ umount /mnt/usb
 - Never test without written permission
 - Stay within defined scope
 - Report unauthorized access attempts
+- Reconfirm authorization before every active technique or material increase in impact
+- Enforce the approved rate, concurrency, time window, stop conditions, and cleanup plan
+- Prefer nonproduction targets and dedicated test accounts
 
 ### Professional Standards
 - Follow rules of engagement
@@ -455,10 +488,10 @@ umount /mnt/usb
 ### Scans Blocked
 
 **Solutions:**
-1. Use slower scan rates
-2. Try different scanning techniques
-3. Use proxy or VPN
-4. Fragment packets
+1. Stop and determine whether the block or alert is a defined stop condition
+2. Notify the monitoring contact and verify that the target, source IP, rate, and window match the ROE
+3. Resume only with explicit approval, usually at a lower approved rate or in a nonproduction replica
+4. Do not rotate sources, use a proxy or VPN, fragment packets, encode payloads, or otherwise evade the control unless that exact technique is authorized in the ROE
 
 ### Exploits Failing
 

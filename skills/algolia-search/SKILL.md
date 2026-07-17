@@ -30,7 +30,7 @@ Key hooks:
 ### Code_example
 
 // lib/algolia.ts
-import algoliasearch from 'algoliasearch/lite';
+import { liteClient as algoliasearch } from 'algoliasearch/lite';
 
 export const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -202,7 +202,7 @@ Best practices:
 ### Code_example
 
 // lib/algolia-admin.ts (SERVER ONLY)
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 
 // Admin client - NEVER expose to frontend
 const adminClient = algoliasearch(
@@ -210,7 +210,7 @@ const adminClient = algoliasearch(
   process.env.ALGOLIA_ADMIN_KEY!  // Admin key for indexing
 );
 
-const index = adminClient.initIndex('products');
+const INDEX_NAME = 'products';
 
 // Batch indexing (recommended approach)
 export async function indexProducts(products: Product[]) {
@@ -228,54 +228,76 @@ export async function indexProducts(products: Product[]) {
   const BATCH_SIZE = 1000;
   for (let i = 0; i < records.length; i += BATCH_SIZE) {
     const batch = records.slice(i, i + BATCH_SIZE);
-    await index.saveObjects(batch);
+    await adminClient.saveObjects({
+      indexName: INDEX_NAME,
+      objects: batch,
+    });
   }
 }
 
 // Partial update - update only specific fields
 export async function updateProductPrice(productId: string, price: number) {
-  await index.partialUpdateObject({
+  await adminClient.partialUpdateObject({
+    indexName: INDEX_NAME,
     objectID: productId,
-    price,
-    updatedAt: Date.now(),
+    attributesToUpdate: {
+      price,
+      updatedAt: Date.now(),
+    },
   });
 }
 
 // Partial update with operations
 export async function incrementViewCount(productId: string) {
-  await index.partialUpdateObject({
+  await adminClient.partialUpdateObject({
+    indexName: INDEX_NAME,
     objectID: productId,
-    viewCount: {
-      _operation: 'Increment',
-      value: 1,
+    attributesToUpdate: {
+      viewCount: {
+        _operation: 'Increment',
+        value: 1,
+      },
     },
   });
 }
 
 // Delete records (prefer this over deleteBy)
 export async function deleteProducts(productIds: string[]) {
-  await index.deleteObjects(productIds);
+  await adminClient.deleteObjects({
+    indexName: INDEX_NAME,
+    objectIDs: productIds,
+  });
 }
 
 // Full reindex with zero-downtime (atomic swap)
 export async function fullReindex(products: Product[]) {
-  const tempIndex = adminClient.initIndex('products_temp');
-
   // Index to temp index
-  await tempIndex.saveObjects(
-    products.map((p) => ({
+  await adminClient.saveObjects({
+    indexName: 'products_temp',
+    objects: products.map((p) => ({
       objectID: p.id,
       ...p,
-    }))
-  );
+    })),
+  });
 
   // Copy settings from main index
-  await adminClient.copyIndex('products', 'products_temp', {
-    scope: ['settings', 'synonyms', 'rules'],
+  await adminClient.operationIndex({
+    indexName: INDEX_NAME,
+    operationIndexParams: {
+      operation: 'copy',
+      destination: 'products_temp',
+      scope: ['settings', 'synonyms', 'rules'],
+    },
   });
 
   // Atomic swap
-  await adminClient.moveIndex('products_temp', 'products');
+  await adminClient.operationIndex({
+    indexName: 'products_temp',
+    operationIndexParams: {
+      operation: 'move',
+      destination: INDEX_NAME,
+    },
+  });
 }
 
 ### Anti_patterns
@@ -318,7 +340,7 @@ const searchClient = algoliasearch(
 
 // Server-side: Generate secured API key
 // lib/algolia-secured-key.ts
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 
 const adminClient = algoliasearch(
   process.env.ALGOLIA_APP_ID!,
@@ -396,17 +418,17 @@ Custom ranking:
 ### Code_example
 
 // scripts/configure-index.ts
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 
 const adminClient = algoliasearch(
   process.env.ALGOLIA_APP_ID!,
   process.env.ALGOLIA_ADMIN_KEY!
 );
 
-const index = adminClient.initIndex('products');
-
 async function configureIndex() {
-  await index.setSettings({
+  await adminClient.setSettings({
+    indexName: 'products',
+    indexSettings: {
     // Searchable attributes in order of importance
     searchableAttributes: [
       'name',              // Most important
@@ -451,10 +473,13 @@ async function configureIndex() {
     // Distinct (deduplication)
     attributeForDistinct: 'productFamily',
     distinct: true,
+    },
   });
 
   // Add synonyms
-  await index.saveSynonyms([
+  await adminClient.saveSynonyms({
+    indexName: 'products',
+    synonymHit: [
     {
       objectID: 'phone-mobile',
       type: 'synonym',
@@ -466,16 +491,19 @@ async function configureIndex() {
       input: 'laptop',
       synonyms: ['notebook', 'portable computer'],
     },
-  ]);
+    ],
+  });
 
   // Add rules (query-based customization)
-  await index.saveRules([
+  await adminClient.saveRules({
+    indexName: 'products',
+    rules: [
     {
       objectID: 'boost-sale-items',
-      condition: {
+      conditions: [{
         anchoring: 'contains',
         pattern: 'sale',
-      },
+      }],
       consequence: {
         params: {
           filters: 'onSale:true',
@@ -483,7 +511,8 @@ async function configureIndex() {
         },
       },
     },
-  ]);
+    ],
+  });
 
   console.log('Index configured successfully');
 }
@@ -652,7 +681,7 @@ Query Suggestions require a separate index generated by Algolia.
 // components/Autocomplete.tsx
 'use client';
 import { autocomplete, getAlgoliaResults } from '@algolia/autocomplete-js';
-import algoliasearch from 'algoliasearch/lite';
+import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { useEffect, useRef } from 'react';
 import '@algolia/autocomplete-theme-classic';
 
