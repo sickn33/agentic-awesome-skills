@@ -341,9 +341,13 @@ export function macObserverBudgets(candidateTimeoutMs = 30_000) {
     });
   }
   const startupMs = 1_500;
-  const readinessMaxAttempts = 2;
+  // fs_usage can delay live output for more than two four-second canary
+  // processes on loaded hosted macOS runners. Keep probing with independently
+  // visible writes before the candidate starts; this widens observation
+  // readiness only and does not relax any candidate evidence requirement.
+  const readinessMaxAttempts = 4;
   const readinessProcessTimeoutMs = 10_000;
-  const readinessDelayMs = 250;
+  const readinessDelayMs = 500;
   const drainMs = 1_000;
   return {
     startupMs,
