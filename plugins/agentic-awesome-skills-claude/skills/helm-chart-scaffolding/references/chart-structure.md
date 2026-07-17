@@ -93,7 +93,7 @@ type: library
 - Shared template helpers
 - Cannot be installed directly
 - Used as dependency by other charts
-- No templates/ directory
+- Stores reusable named templates and helpers in `templates/`; non-underscore files are not rendered as Kubernetes resources for a library chart
 
 ## Values Files Organization
 
@@ -443,7 +443,7 @@ metadata:
 
 ### Hook Types
 
-- `pre-install`: Before templates rendered
+- `pre-install`: After templates are rendered, but before Helm creates resources in Kubernetes
 - `post-install`: After all resources loaded
 - `pre-delete`: Before any resources deleted
 - `post-delete`: After all resources deleted
@@ -455,7 +455,7 @@ metadata:
 
 ### Hook Weight
 
-Controls hook execution order (-5 to 5, lower runs first)
+Controls hook execution order with an integer encoded as a string. Negative and positive weights are allowed; Helm does not impose a `-5` to `5` range. Lower weights run first.
 
 ### Hook Deletion Policies
 

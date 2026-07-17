@@ -193,6 +193,8 @@ data:
 
     echo "Database is ready!"
 
+    # Enable only after explicit approval of the exact context, namespace,
+    # migration plan, backup, abort criteria, and recovery procedure.
     # Run migrations
     if [ "$RUN_MIGRATIONS" = "true" ]; then
       echo "Running database migrations..."

@@ -282,6 +282,9 @@ spec:
 - Cannot be 0 if maxSurge is 0
 
 **Best practices:**
+
+Choose one strategy; the following are separate, mutually exclusive examples.
+
 ```yaml
 # Zero-downtime deployment
 strategy:
@@ -289,14 +292,18 @@ strategy:
   rollingUpdate:
     maxSurge: 1
     maxUnavailable: 0
+```
 
+```yaml
 # Fast deployment (can have brief downtime)
 strategy:
   type: RollingUpdate
   rollingUpdate:
     maxSurge: 2
     maxUnavailable: 1
+```
 
+```yaml
 # Complete replacement
 strategy:
   type: Recreate
@@ -545,6 +552,8 @@ affinity:
 
 **Pod Affinity/Anti-Affinity:**
 
+Choose and merge only the scheduling rule required by the workload; these examples are alternatives.
+
 ```yaml
 # Spread pods across nodes
 affinity:
@@ -554,7 +563,9 @@ affinity:
         matchLabels:
           app: my-app
       topologyKey: kubernetes.io/hostname
+```
 
+```yaml
 # Co-locate with database
 affinity:
   podAffinity:
@@ -635,6 +646,8 @@ spec:
 ```
 
 ### Init Container for Dependencies
+
+Do not enable the migration init container as part of a routine rollout. It requires a separately reviewed migration plan, backup and recovery procedure, exact context/namespace, and explicit approval immediately before deployment. Prefer a one-shot, observable migration job when retrying an init container could be unsafe.
 
 ```yaml
 spec:
@@ -748,6 +761,6 @@ kubectl logs <pod-name>
 
 ## Related Resources
 
-- [Kubernetes Deployment API Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#deployment-v1-apps)
+- [Kubernetes Deployment API Reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/)
 - [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 - [Resource Management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)

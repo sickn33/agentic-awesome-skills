@@ -21,13 +21,22 @@ license_source: "https://github.com/davidondrej/skills/blob/main/LICENSE"
 - Use when a task needs a real logged-in browser, visible interaction, or JS-heavy page control.
 - Use when static fetches are insufficient and CDP browser automation is appropriate.
 
-Direct browser control via CDP. For task-specific edits, use `agent-workspace/agent_helpers.py`. For setup, install, or connection problems, read install.md.
+Direct browser control via CDP. After installing the upstream runtime, task-specific helpers live in its configured `agent-workspace/agent_helpers.py`; those runtime files are not bundled with this skill. For setup, install, or connection problems, read `references/install.md`.
 
 **Routing check first:** if the task needs no interaction (no clicks, logins, or forms) and you just want page content, use DeepAPI `POST /v1/scrape/website` instead of driving a browser — see the `deepapi` skill. Use browser-harness when the task needs a real browser: interaction, JS-heavy flows, logged-in sessions, or visual verification.
 
-Domain skills (community-contributed per-site playbooks under `agent-workspace/domain-skills/`) are off by default. Set `BH_DOMAIN_SKILLS=1` to enable them; see the bottom section.
+Domain skills (community-contributed per-site playbooks in the installed upstream runtime's `agent-workspace/domain-skills/`) are off by default. Set `BH_DOMAIN_SKILLS=1` to enable them; see the bottom section.
 
 **If `BH_DOMAIN_SKILLS=1` and the task is site-specific, read every file in the matching `agent-workspace/domain-skills/<site>/` directory before inventing an approach.**
+
+## Safety boundaries
+
+- Default to a dedicated, isolated browser profile with no personal sessions. Connecting to an everyday profile requires informed, explicit user consent naming the profile/account and allowed domains; do not treat general approval for browser automation as consent to expose all open tabs, cookies, history, or accounts.
+- Before each external or irreversible action, show the exact target and payload and obtain immediate confirmation. This includes uploads, form submissions, messages, email, purchases, payments, account changes, deletions, and publication. Reconfirm if the target, recipient, amount, file, or content changes.
+- Do not read, expose, enter, or transmit sensitive data beyond the approved task scope. Stop for credentials, secrets, payment data, health or identity data, and MFA challenges; ask the user to complete credential and MFA entry directly unless they explicitly authorize a safer supported flow.
+- Keep navigation and inspection within the approved accounts, domains, and tabs. Treat cross-origin frames, raw CDP, screenshots, and DOM extraction as access to potentially sensitive content, not as blanket permission.
+- Remote browsers may incur charges. State the provider, requested session/profile, expected billing boundary, and timeout, then obtain explicit cost approval before starting one.
+- Syncing cookies to Browser Use cloud requires separate informed consent. Name the local profile/account, exact allowed domains, destination cloud profile, what is uploaded, retention expectation, and how to revoke/delete the cloud profile. Sync only the minimum scoped profile after approval; never sync by default.
 
 ## Usage
 
@@ -54,7 +63,7 @@ run.py calls ensure_daemon() before exec — you never start/stop manually unles
 
 ### Remote browsers
 
-Use remote for parallel sub-agents (each gets its own isolated browser via a distinct BU_NAME) or on a headless server. BROWSER_USE_API_KEY must be set. start_remote_daemon, list_cloud_profiles, list_local_profiles, sync_local_profile are pre-imported.
+Use remote for parallel sub-agents (each gets its own isolated browser via a distinct BU_NAME) or on a headless server. `BROWSER_USE_API_KEY` must be set. Before starting a billable browser, apply the cost-approval gate above. `start_remote_daemon`, `list_cloud_profiles`, `list_local_profiles`, and `sync_local_profile` are provided by the installed upstream runtime.
 
 When supervising those sub-agents, after each check send the user one very short status line: what they are doing and whether they are on track.
 
@@ -77,11 +86,11 @@ print(page_info())
 
 start_remote_daemon prints liveUrl and auto-opens it in the local browser (if a GUI is detected) so the user can watch along. Headless servers print only — share the URL with the user. The daemon PATCHes the cloud browser to stop on shutdown, which persists profile state. Running remote daemons bill until timeout.
 
-Profiles (cookies-only login state) live in interaction-skills/profile-sync.md — covers list_cloud_profiles(), the chat-driven "which profile?" pattern, and sync_local_profile() for uploading a local Chrome profile.
+Profile-sync guidance is an upstream runtime path installed with browser-harness, not an asset in this bundle. Read its `interaction-skills/profile-sync.md`, then apply the separate cookie-sync consent gate above before uploading anything.
 
 ## Interaction skills
 
-If you start struggling with a specific mechanic while navigating, look in interaction-skills/ for helpers. They cover reusable UI mechanics like dialogs, tabs, dropdowns, iframes, and uploads. The available interaction skills are:
+After installing the upstream runtime, look in its `interaction-skills/` directory for reusable UI mechanics such as dialogs, tabs, dropdowns, iframes, and uploads. These files are upstream runtime paths, not files shipped in this AAS bundle. The upstream directory may include:
 - connection.md
 - cookies.md
 - cross-origin-iframes.md
@@ -116,7 +125,7 @@ If you start struggling with a specific mechanic while navigating, look in inter
 ## Design constraints
 
 - Coordinate clicks default. Input.dispatchMouseEvent goes through iframes/shadow/cross-origin at the compositor level.
-- Connect to the user's running Chrome. Don't launch your own browser.
+- Use a dedicated isolated profile by default. Connect to the user's everyday browser only after the explicit profile/account/domain consent described above.
 - cdp-use is only for CDPClient.send_raw. Prefer raw CDP strings over typed wrappers.
 - run.py stays tiny. No argparse, subcommands, or extra control layer.
 - Core helpers stay short. Put task-specific helper additions in `agent-workspace/agent_helpers.py`; daemon/bootstrap and remote session admin live in the core package.
@@ -130,9 +139,9 @@ Installed at `~/Developer/browser-harness` as editable `uv tool install -e .`. B
 
 **Brave Browser:** Works identically to Chrome. Enable remote debugging at `brave://inspect/#remote-debugging` (same checkbox). The harness auto-discovers Brave's profile directory.
 
-## Authenticated content extraction (proven pattern)
+## Authenticated content extraction
 
-browser-harness connects to the user's real browser with their active sessions — ideal for extracting content from login-walled sites where `web_extract` or Hermes's built-in `browser_navigate` fail (e.g. X/Twitter articles, LinkedIn, paywalled sites).
+When the user has explicitly approved a named real profile/account and allowed domains, browser-harness can use that active session to extract login-walled content where static tools fail. Prefer an isolated profile with only the needed account. Never extend extraction to unrelated tabs, domains, or sensitive account data.
 
 **Pattern:**
 ```bash
@@ -157,44 +166,10 @@ print("Written", len(text), "chars")
 - X/Twitter articles render inline — just scroll/extract via DOM, no extra click needed
 - For very long pages, `js(...)` with `innerText` grabs everything including below-fold content
 
-## Hermes Agent integration
-
-Installed at `~/Developer/browser-harness` as editable `uv tool install -e .`. Binary at `~/.local/bin/browser-harness`. Skill at `~/.hermes/skills/browser-harness/`.
-
-**Frontmatter pitfall:** The upstream SKILL.md ships with `name: browser` in frontmatter, which collides with Hermes's built-in `browser` toolset. When copying into `~/.hermes/skills/`, rename to `name: browser-harness` in the frontmatter.
-
-**Brave Browser:** Works identically to Chrome. Enable remote debugging at `brave://inspect/#remote-debugging` (same checkbox). The harness auto-discovers Brave's profile directory.
-
-## Authenticated content extraction (proven pattern)
-
-browser-harness connects to the user's real browser with active sessions — ideal for login-walled sites where `web_extract` or Hermes's built-in `browser_navigate` fail (X/Twitter articles, LinkedIn, paywalled sites).
-
-```bash
-browser-harness -c '
-new_tab("https://x.com/user/status/123456")
-wait_for_load()
-import time
-time.sleep(5)  # let JS-heavy pages render
-text = js("""
-    const article = document.querySelector("article");
-    if (article) return article.innerText;
-    return document.body.innerText;
-""")
-with open("/tmp/extracted.txt", "w") as f:
-    f.write(text)
-print("Written", len(text), "chars")
-'
-```
-
-- Write to a temp file to avoid shell escaping issues with large text
-- Use `time.sleep()` generously for JS-heavy SPAs (X, LinkedIn need 3-5s)
-- X/Twitter articles render inline — just scroll/extract via DOM, no extra click needed
-- `js(...)` with `innerText` grabs everything including below-fold content
-
 ## Gotchas (field-tested)
 
 - **Brave Browser** uses `brave://inspect/#remote-debugging` instead of `chrome://inspect/...`. The harness auto-discovers Brave's data dir.
-- Login-walled content extraction (e.g. X/Twitter articles): navigate with `new_tab(url)`, `wait_for_load()`, then extract via `js("document.querySelector('article').innerText")`. Write to a temp file to avoid shell escaping: `with open('/tmp/out.txt', 'w') as f: f.write(text)`. The user's existing browser session handles auth automatically.
+- For approved login-walled extraction (e.g. X/Twitter articles), navigate with `new_tab(url)`, `wait_for_load()`, then extract via `js("document.querySelector('article').innerText")`. Write to a temp file to avoid shell escaping: `with open('/tmp/out.txt', 'w') as f: f.write(text)`. Use only the isolated or explicitly approved profile/account/domain scope.
 - Omnibox popups are fake page targets. Filter chrome://omnibox-popup... and other internals when you need a real tab.
 - CDP target order != Chrome's visible tab-strip order. Use UI automation when the user means "the first/second tab I can see"; Target.activateTarget only shows a known target.
 - Default daemon sessions can go stale. ensure_real_tab() re-attaches to a real page.
@@ -216,5 +191,5 @@ If you learn anything non-obvious — a private API, stable selector, framework 
 
 ## Limitations
 
-- Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.
+- This AAS text is adapted from `davidondrej/skills`. The executable runtime, installation repository, and post-install paths described here belong to `browser-use/browser-harness` (MIT). The original import revision of the adaptation is not recorded; do not imply that the two sources are identical or revision-bound.
 - For commands, remote access, scheduling, browser automation, or file-changing workflows, get explicit user approval and confirm the target environment first.
