@@ -1,12 +1,24 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 import { digestJson } from "../lib/canonical.mjs";
 import {
   assertTransactionEvidenceSemantics,
+  readTransactionEvidence,
   TRANSACTION_FAULT_CLASSES,
   TRANSACTION_RACE_CLASSES,
   transactionEvidenceFailures,
 } from "../lib/transaction-evidence.mjs";
+
+test("malformed transaction JSON maps to the public schema failure", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "aas-transaction-json-"));
+  const file = path.join(root, "evidence.json");
+  fs.writeFileSync(file, "{not-json");
+  assert.throws(() => readTransactionEvidence(file, () => true), { code: "AAS_VERIFIER_TRANSACTION_EVIDENCE_SCHEMA" });
+  fs.rmSync(root, { recursive: true, force: true });
+});
 
 const digest = (label) => digestJson({ label });
 const candidate = Object.freeze({

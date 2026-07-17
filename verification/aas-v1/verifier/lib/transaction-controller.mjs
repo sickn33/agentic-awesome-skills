@@ -1,0 +1,656 @@
+import fs from "node:fs";
+import path from "node:path";
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { digestJson, sha256 } from "./canonical.mjs";
+import { snapshotTree } from "./fs-evidence.mjs";
+import { candidateEnvironment, installCandidate, parseJsonLines } from "./runtime.mjs";
+import { prepareRuntimeCache } from "./suites.mjs";
+import { inspectPackageTarball } from "./tarball.mjs";
+import { runObserved } from "./observer.mjs";
+
+const FAULT_CLASSES = Object.freeze(["lock", "journal", "backup", "write", "fsync", "rename", "commit"]);
+const RACE_CLASSES = Object.freeze(["concurrency", "drift", "symlink-swap", "target-swap", "corrupt-journal", "recovery-race"]);
+const CONTROLLER_VERSION = "1.0.0";
+const DRIVER = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "drivers", "transaction-fault.mjs");
+const RACE_DRIVER = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "drivers", "transaction-race.mjs");
+
+function assert(condition, code, details = {}) {
+  if (!condition) throw Object.assign(new Error(code), { code, details });
+}
+
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+function readOneJson(result, expectedCode = 0) {
+  assert(result.code === expectedCode, "AAS_TRANSACTION_CONTROLLER_CLI_EXIT", {
+    expectedCode, actualCode: result.code, stderrDigest: sha256(result.stderr || ""),
+  });
+  const values = parseJsonLines(result.stdout || "");
+  assert(values.length === 1, "AAS_TRANSACTION_CONTROLLER_CLI_OUTPUT");
+  return values[0];
+}
+
+function commandDigest(executable, args) {
+  return digestJson({ executable: path.basename(executable), args: args.map((value) => path.isAbsolute(value) ? sha256(value) : value) });
+}
+
+function unmanagedDigest(targetRoot) {
+  return snapshotTree(path.join(targetRoot, "unmanaged-sentinel")).digest;
+}
+
+function logicalSnapshot(targetRoot, skillId) {
+  const destination = path.join(targetRoot, ".agents", "skills", skillId);
+  const stateFile = path.join(targetRoot, ".aas", "managed-state.codex.json");
+  return {
+    managedStateDigest: fs.existsSync(stateFile) ? sha256(fs.readFileSync(stateFile)) : null,
+    managedDestinationDigest: fs.existsSync(destination) ? snapshotTree(destination).digest : null,
+    unmanagedDigest: unmanagedDigest(targetRoot),
+  };
+}
+
+function logicalDigest(targetRoot, skillId) {
+  return digestJson(logicalSnapshot(targetRoot, skillId));
+}
+
+function recoveryArtifacts(targetRoot) {
+  if (!fs.existsSync(targetRoot)) return [];
+  const rootNames = fs.readdirSync(targetRoot).filter((name) => /^\.aas-(?:bootstrap|layout|transaction)/.test(name));
+  const transactionRoot = path.join(targetRoot, ".aas", "transactions");
+  const nested = fs.existsSync(transactionRoot) ? snapshotTree(transactionRoot).entries : [];
+  return [...rootNames, ...nested.map((entry) => `.aas/transactions/${entry.path}`)].sort();
+}
+
+function finalState(targetRoot, skillId, expectedDigest, plan) {
+  const destination = path.join(targetRoot, ".agents", "skills", skillId);
+  const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
+  if (!fs.existsSync(destination) && !fs.existsSync(state)) return "previous";
+  if (!fs.existsSync(destination) || !fs.existsSync(state)) return "partial";
+  const stateValue = JSON.parse(fs.readFileSync(state, "utf8"));
+  return snapshotTree(destination).digest === expectedDigest && stateValue.stateDigest === plan.payload.stateCommit.nextDigest ? "new" : "partial";
+}
+
+async function run(executable, args, options = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(executable, args, {
+      cwd: options.cwd,
+      env: options.env,
+      windowsHide: true,
+      detached: options.detached === true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    const stdout = [];
+    const stderr = [];
+    child.stdout.on("data", (chunk) => stdout.push(chunk));
+    child.stderr.on("data", (chunk) => stderr.push(chunk));
+    child.once("error", reject);
+    const timer = setTimeout(() => {
+      terminateTree(child.pid).catch(() => {});
+    }, options.timeoutMs ?? 60_000);
+    child.once("close", (code, signal) => {
+      clearTimeout(timer);
+      resolve({ code: code ?? 128, signal, stdout: Buffer.concat(stdout).toString("utf8"), stderr: Buffer.concat(stderr).toString("utf8") });
+    });
+  });
+}
+
+function startProcess(executable, args, options = {}) {
+  const child = spawn(executable, args, {
+    cwd: options.cwd,
+    env: options.env,
+    windowsHide: true,
+    detached: false,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  const stdout = [];
+  const stderr = [];
+  child.stdout.on("data", (chunk) => stdout.push(chunk));
+  child.stderr.on("data", (chunk) => stderr.push(chunk));
+  const completed = new Promise((resolve, reject) => {
+    child.once("error", reject);
+    child.once("close", (code, signal) => resolve({
+      code: code ?? 128,
+      signal,
+      stdout: Buffer.concat(stdout).toString("utf8"),
+      stderr: Buffer.concat(stderr).toString("utf8"),
+    }));
+  });
+  return { child, completed };
+}
+
+async function waitForActiveLock(targetRoot, expectedPid, timeoutMs = 30_000) {
+  const lockPath = path.join(targetRoot, ".aas-transaction.lock");
+  const started = Date.now();
+  while (Date.now() - started < timeoutMs) {
+    try {
+      const text = fs.readFileSync(lockPath, "utf8");
+      const value = JSON.parse(text);
+      if (text.endsWith("\n") && value.pid === expectedPid && value.kind === "apply"
+        && /^[a-f0-9]{48}$/.test(value.token || "")) return digestJson({ pid: value.pid, token: value.token, planDigest: value.planDigest });
+    } catch {}
+    await sleep(2);
+  }
+  throw Object.assign(new Error("AAS_TRANSACTION_CONTROLLER_CONCURRENCY_BOUNDARY_NOT_OBSERVED"), { code: "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_BOUNDARY_NOT_OBSERVED" });
+}
+
+async function terminateTree(pid) {
+  if (!Number.isSafeInteger(pid) || pid <= 0) return;
+  if (process.platform === "win32") {
+    await run("taskkill.exe", ["/PID", String(pid), "/T", "/F"], { timeoutMs: 10_000 }).catch(() => null);
+    return;
+  }
+  try { process.kill(-pid, "SIGKILL"); } catch (error) {
+    if (error.code !== "ESRCH") throw error;
+  }
+}
+
+async function spawnUntil({ executable, args, cwd, env, predicate, timeoutMs = 30_000 }) {
+  const child = spawn(executable, args, { cwd, env, detached: process.platform !== "win32", windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+  const stdout = [];
+  const stderr = [];
+  child.stdout.on("data", (chunk) => stdout.push(chunk));
+  child.stderr.on("data", (chunk) => stderr.push(chunk));
+  const closed = new Promise((resolve, reject) => {
+    child.once("error", reject);
+    child.once("close", (code, signal) => resolve({ code: code ?? 128, signal }));
+  });
+  const events = [];
+  const started = Date.now();
+  let observed = null;
+  while (Date.now() - started < timeoutMs) {
+    observed = predicate();
+    if (observed) {
+      events.push({ elapsedMilliseconds: Date.now() - started, observed });
+      await terminateTree(child.pid);
+      break;
+    }
+    const settled = await Promise.race([closed.then(() => true), sleep(2).then(() => false)]);
+    if (settled) break;
+  }
+  const outcome = await closed;
+  assert(observed, "AAS_TRANSACTION_CONTROLLER_BOUNDARY_NOT_OBSERVED", {
+    commandDigest: commandDigest(executable, args), code: outcome.code, signal: outcome.signal,
+    stdoutDigest: sha256(Buffer.concat(stdout)), stderrDigest: sha256(Buffer.concat(stderr)),
+  });
+  return {
+    ...outcome,
+    stdout: Buffer.concat(stdout).toString("utf8"),
+    stderr: Buffer.concat(stderr).toString("utf8"),
+    observation: { events, eventDigest: digestJson(events) },
+  };
+}
+
+function listMatching(root, matcher) {
+  const found = [];
+  const visit = (directory) => {
+    if (!fs.existsSync(directory)) return;
+    for (const name of fs.readdirSync(directory)) {
+      const absolute = path.join(directory, name);
+      let stat;
+      try { stat = fs.lstatSync(absolute); } catch { continue; }
+      const relative = path.relative(root, absolute).split(path.sep).join("/");
+      if (matcher(relative, stat)) found.push(relative);
+      if (stat.isDirectory() && !stat.isSymbolicLink()) visit(absolute);
+    }
+  };
+  visit(root);
+  return found.sort();
+}
+
+function boundaryPredicate(className, targetRoot, skillId) {
+  const matchers = {
+    lock: (relative) => relative === ".aas-transaction.lock",
+    journal: (relative) => /^\.aas-transaction-recovery-[a-f0-9]+\.wal$/.test(relative),
+    backup: (relative) => relative.includes("/backups/") && relative.endsWith(`/${skillId}`),
+    write: (relative, stat) => relative.includes("/staged/") && stat.isFile(),
+    // Publication of the durable bootstrap record can only happen after its
+    // bytes and file descriptor have been flushed. Observing it from another
+    // process is therefore an external durability-boundary signal.
+    fsync: (relative) => /^\.aas-bootstrap-recovery-[a-f0-9]+\.json$/.test(relative),
+    rename: (relative) => relative === `.agents/skills/${skillId}`,
+    commit: (relative) => relative === ".aas/managed-state.codex.json",
+  };
+  return () => {
+    const matches = listMatching(targetRoot, matchers[className]);
+    if (!matches.length) return null;
+    if (className === "journal") {
+      try {
+        const text = fs.readFileSync(path.join(targetRoot, matches[0]), "utf8");
+        const first = JSON.parse(text.split("\n").filter(Boolean)[0]);
+        if (!text.includes("\n") || first.event !== "started" || first.sequence !== 0) return null;
+      } catch { return null; }
+    }
+    return { class: className, pathsDigest: digestJson(matches), count: matches.length };
+  };
+}
+
+async function publicCli(fixture, args, expectedCode = 0) {
+  const result = await run(process.execPath, [fixture.aas, ...args], {
+    cwd: fixture.caseRoot,
+    env: fixture.env,
+    timeoutMs: 120_000,
+  });
+  return { result, value: readOneJson(result, expectedCode) };
+}
+
+async function createFixture(context, id, { installed = false, desired = true } = {}) {
+  const caseRoot = path.join(context.workRoot, id);
+  const targetRoot = path.join(caseRoot, "target");
+  fs.mkdirSync(targetRoot, { recursive: true, mode: 0o700 });
+  fs.mkdirSync(path.join(targetRoot, ".aas"), { mode: 0o700 });
+  fs.mkdirSync(path.join(targetRoot, ".agents", "skills"), { recursive: true, mode: 0o700 });
+  fs.mkdirSync(path.join(targetRoot, "unmanaged-sentinel"), { mode: 0o700 });
+  fs.writeFileSync(path.join(targetRoot, "unmanaged-sentinel", "keep.txt"), "unmanaged-must-survive\n", { mode: 0o600 });
+  const fixture = { ...context, id, caseRoot, targetRoot };
+  const manifestPath = path.join(caseRoot, "aas-stack.json");
+  const initialized = await publicCli(fixture, ["stack", "init", "--goal", "test", "--out", manifestPath]);
+  assert(initialized.value.status === "initialized", "AAS_TRANSACTION_CONTROLLER_INIT");
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  manifest.skills = desired || installed ? [{ id: context.skillId }] : [];
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest)}\n`);
+  const planPath = path.join(caseRoot, "plan.json");
+  const planArgs = [
+    "stack", "plan", "--manifest", manifestPath, "--target", "codex:project", "--target-root", targetRoot,
+    "--cache-root", context.cacheRoot, "--runtime-version", context.runtime.version,
+    "--runtime-integrity", context.runtime.integrity, "--out", planPath,
+  ];
+  const planned = await publicCli(fixture, planArgs);
+  assert(planned.value.status === "planned", "AAS_TRANSACTION_CONTROLLER_PLAN");
+  let plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+  if (installed) {
+    const applied = await publicCli(fixture, [
+      "stack", "apply", "--experimental-apply", "--plan", planPath, "--target-root", targetRoot,
+      "--cache-root", context.cacheRoot, "--approve", plan.digest,
+    ]);
+    assert(applied.value.status === "applied", "AAS_TRANSACTION_CONTROLLER_SEED_APPLY");
+    manifest.skills = desired ? [{ id: context.skillId }] : [];
+    fs.writeFileSync(manifestPath, `${JSON.stringify(manifest)}\n`);
+    fs.rmSync(planPath);
+    const replanned = await publicCli(fixture, planArgs);
+    assert(replanned.value.status === "planned", "AAS_TRANSACTION_CONTROLLER_REPLAN");
+    plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+  }
+  return { ...fixture, manifestPath, planPath, plan, beforeDigest: logicalDigest(targetRoot, context.skillId), unmanagedBefore: unmanagedDigest(targetRoot) };
+}
+
+function applyArgs(fixture) {
+  return [
+    "stack", "apply", "--experimental-apply", "--plan", fixture.planPath, "--target-root", fixture.targetRoot,
+    "--cache-root", fixture.cacheRoot, "--approve", fixture.plan.digest,
+  ];
+}
+
+async function doctor(fixture) {
+  return publicCli(fixture, ["stack", "doctor", "--plan", fixture.planPath, "--target-root", fixture.targetRoot, "--cache-root", fixture.cacheRoot]);
+}
+
+async function recover(fixture) {
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    const diagnosis = await doctor(fixture);
+    if (diagnosis.value.status === "recoveryRequired") {
+      const recovery = diagnosis.value.recoveries[0];
+      const action = recovery.allowedActions.includes("rollback") ? "rollback" : "cleanup";
+      const base = [
+        "stack", "recover", "--experimental-recovery", "--plan", fixture.planPath, "--target-root", fixture.targetRoot,
+        "--cache-root", fixture.cacheRoot, "--id", recovery.recoveryId, "--action", action,
+      ];
+      const preview = await publicCli(fixture, base);
+      assert(preview.value.status === "approvalRequired", "AAS_TRANSACTION_CONTROLLER_RECOVERY_PREVIEW");
+      const applied = await publicCli(fixture, [...base, "--approve", preview.value.recoveryPlan.digest]);
+      return { action, status: applied.value.status, planDigest: preview.value.recoveryPlan.digest };
+    }
+    if (diagnosis.value.status === "healthy") return { action: "none", status: "healthy", planDigest: fixture.plan.digest };
+    await sleep(10);
+  }
+  throw Object.assign(new Error("AAS_TRANSACTION_CONTROLLER_RECOVERY_UNAVAILABLE"), { code: "AAS_TRANSACTION_CONTROLLER_RECOVERY_UNAVAILABLE" });
+}
+
+function evidenceRecord(fixture, className, kind, injectionAction, observedOperation, observation, outcome, recoveryResult, expectedFinal) {
+  const afterDigest = logicalDigest(fixture.targetRoot, fixture.skillId);
+  const unmanagedAfter = unmanagedDigest(fixture.targetRoot);
+  const expectedSkillDigest = fixture.plan.payload.operations.find((operation) => operation.skillId === fixture.skillId)?.resultTreeDigest || null;
+  const observedFinal = afterDigest === fixture.beforeDigest
+    ? "previous"
+    : expectedSkillDigest ? finalState(fixture.targetRoot, fixture.skillId, expectedSkillDigest, fixture.plan) : "partial";
+  const noPartialState = observedFinal === expectedFinal && unmanagedAfter === fixture.unmanagedBefore && recoveryArtifacts(fixture.targetRoot).length === 0;
+  assert(noPartialState, "AAS_TRANSACTION_CONTROLLER_PARTIAL_STATE", { className, observedFinal, expectedFinal, artifacts: recoveryArtifacts(fixture.targetRoot) });
+  return {
+    executionId: `${kind}-${className}`,
+    class: className,
+    kind,
+    observedOperation,
+    injectionAction,
+    planDigest: fixture.plan.digest,
+    commandDigest: commandDigest(process.execPath, [fixture.aas, ...applyArgs(fixture)]),
+    observerEventDigest: observation.eventDigest,
+    beforeDigest: fixture.beforeDigest,
+    afterDigest,
+    unmanagedBeforeDigest: fixture.unmanagedBefore,
+    unmanagedAfterDigest: unmanagedAfter,
+    exitCode: outcome.code,
+    exitSignal: outcome.signal || null,
+    recoveryAction: recoveryResult.action,
+    recoveryStatus: recoveryResult.status,
+    recoveryPlanDigest: recoveryResult.planDigest,
+    finalState: observedFinal,
+    noPartialState: true,
+  };
+}
+
+async function faultCase(context, className) {
+  const replace = className === "backup";
+  const fixture = await createFixture(context, `fault-${className}`, { installed: replace, desired: !replace });
+  const args = applyArgs(fixture);
+  const observed = await runObserved(process.execPath, [DRIVER], {
+    cwd: fixture.caseRoot,
+    env: fixture.env,
+    stdin: JSON.stringify({
+      executable: process.execPath,
+      args: [fixture.aas, ...args],
+      cwd: fixture.caseRoot,
+      env: fixture.env,
+      targetRoot: fixture.targetRoot,
+      skillId: fixture.skillId,
+      className,
+      timeoutMs: 120_000,
+    }),
+    timeoutMs: 130_000,
+    maxOutputBytes: 1024 * 1024,
+    zones: fixture.zones,
+    evidenceDir: path.join(fixture.evidenceDir, `fault-${className}`),
+  });
+  assert(observed.result.code === 0, "AAS_TRANSACTION_CONTROLLER_NATIVE_OBSERVER_CASE_FAILED", {
+    className, code: observed.result.code, stderrDigest: sha256(observed.result.stderr || ""),
+  });
+  const driverValue = parseJsonLines(observed.result.stdout)[0];
+  const nativeBackendExpected = process.platform === "linux" ? observed.backend === "linux-strace-process-tree"
+    : process.platform === "darwin" ? observed.backend === "macos-fs_usage-process"
+      : observed.backend === "windows-etw-kernel-process-tree";
+  const lineageVerified = nativeBackendExpected
+    && observed.result.timedOut !== true
+    && observed.result.outputLimitExceeded !== true
+    && (process.platform !== "win32" || observed.diagnostics?.processTreeEmpty === true);
+  const walEvents = driverValue?.wal?.events || [];
+  const walBoundaryValid = className === "lock" || className === "fsync"
+    ? walEvents.length === 0
+    : className === "journal"
+      ? walEvents.length === 1 && walEvents[0] === "started"
+      : className === "commit"
+        ? walEvents.includes("committed")
+        : !walEvents.includes("committed");
+  assert(driverValue?.observed && driverValue.recoveryLockPresent === true && driverValue.laterBoundaries.length === 0
+      && observed.observation.writeAttempts > 0 && observed.observation.childProcesses > 0 && lineageVerified && walBoundaryValid,
+    "AAS_TRANSACTION_CONTROLLER_NATIVE_OBSERVATION_MISSING", {
+      className,
+      writeAttempts: observed.observation.writeAttempts,
+      childProcesses: observed.observation.childProcesses,
+      laterBoundaries: driverValue?.laterBoundaries || [],
+      recoveryLockPresent: driverValue?.recoveryLockPresent ?? null,
+      lineageVerified,
+      walEvents,
+    });
+  const killed = {
+    ...driverValue.outcome,
+    observation: {
+      events: [{ boundary: driverValue.observed, nativeEventDigest: observed.observation.eventDigest }],
+      eventDigest: digestJson({ boundary: driverValue.observed, native: observed.observation.eventDigest, wal: driverValue.wal }),
+    },
+    backend: observed.backend,
+  };
+  const recoveryResult = await recover(fixture);
+  const expectedFinal = className === "commit" ? "new" : "previous";
+  // A remove plan's pre-kill seeded installation is its previous state.
+  if (replace) {
+    const destination = path.join(fixture.targetRoot, ".agents", "skills", fixture.skillId);
+    assert(fs.existsSync(destination), "AAS_TRANSACTION_CONTROLLER_BACKUP_NOT_RESTORED");
+  }
+  const record = evidenceRecord(
+    fixture, className, "faultBoundary", "kill", `external-filesystem:${className}`,
+    killed.observation, killed, recoveryResult, expectedFinal,
+  );
+  return { record, backend: observed.backend, lineageVerified, overflow: observed.result.outputLimitExceeded === true };
+}
+
+async function raceCase(context, className) {
+  const fixture = await createFixture(context, `race-${className}`);
+  let outcome;
+  let observation;
+  let recoveryResult = { action: "none", status: "healthy", planDigest: fixture.plan.digest };
+  let expectedFinal = "previous";
+  let native = null;
+  if (className === "concurrency") {
+    const args = applyArgs(fixture);
+    const first = startProcess(process.execPath, [fixture.aas, ...args], { cwd: fixture.caseRoot, env: fixture.env });
+    const liveLockDigest = await waitForActiveLock(fixture.targetRoot, first.child.pid);
+    const secondResult = await run(process.execPath, [fixture.aas, ...args], { cwd: fixture.caseRoot, env: fixture.env, timeoutMs: 120_000 });
+    const results = [await first.completed, secondResult];
+    const values = results.map((result) => ({ result, value: parseJsonLines(result.code === 0 ? result.stdout : result.stderr)[0] }));
+    assert(values.some(({ value }) => value?.status === "applied"), "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NO_WINNER");
+    assert(values[1].value?.code === "AAS_TRANSACTION_LOCKED", "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NOT_SERIALIZED", { code: values[1].value?.code });
+    outcome = secondResult;
+    observation = { eventDigest: digestJson({ liveLockDigest, outcomes: values.map(({ value }) => ({ status: value?.status || null, code: value?.code || null })) }) };
+    expectedFinal = "new";
+  } else if (["drift", "symlink-swap", "target-swap"].includes(className)) {
+    const observed = await runObserved(process.execPath, [RACE_DRIVER], {
+      cwd: fixture.caseRoot,
+      env: fixture.env,
+      stdin: JSON.stringify({
+        executable: process.execPath,
+        args: [fixture.aas, ...applyArgs(fixture)],
+        cwd: fixture.caseRoot,
+        env: fixture.env,
+        caseRoot: fixture.caseRoot,
+        targetRoot: fixture.targetRoot,
+        skillId: fixture.skillId,
+        className,
+        timeoutMs: 120_000,
+      }),
+      timeoutMs: 130_000,
+      maxOutputBytes: 1024 * 1024,
+      zones: fixture.zones,
+      evidenceDir: path.join(fixture.evidenceDir, `race-${className}`),
+    });
+    assert(observed.result.code === 0 && observed.observation.writeAttempts > 0 && observed.observation.childProcesses > 0,
+      "AAS_TRANSACTION_CONTROLLER_DYNAMIC_RACE_NOT_OBSERVED", { className, code: observed.result.code });
+    const driverValue = parseJsonLines(observed.result.stdout)[0];
+    assert(driverValue?.boundaryDigest && driverValue.outsideBefore === driverValue.outsideAfter
+      && driverValue.outcome.code !== 0 && typeof driverValue.value?.code === "string",
+    "AAS_TRANSACTION_CONTROLLER_DYNAMIC_RACE_BINDING", { className, value: driverValue?.value || null });
+    outcome = driverValue.outcome;
+    observation = {
+      eventDigest: digestJson({
+        nativeEventDigest: observed.observation.eventDigest,
+        boundaryDigest: driverValue.boundaryDigest,
+        outsideDigest: driverValue.outsideAfter,
+        productCode: driverValue.value.code,
+      }),
+    };
+    recoveryResult = await recover(fixture);
+    const lineageVerified = observed.result.timedOut !== true && observed.result.outputLimitExceeded !== true
+      && (process.platform !== "win32" || observed.diagnostics?.processTreeEmpty === true);
+    assert(lineageVerified, "AAS_TRANSACTION_CONTROLLER_DYNAMIC_RACE_LINEAGE");
+    native = { backend: observed.backend, lineageVerified, overflow: observed.result.outputLimitExceeded === true };
+  } else {
+    const killed = await spawnUntil({
+      executable: process.execPath, args: [fixture.aas, ...applyArgs(fixture)], cwd: fixture.caseRoot, env: fixture.env,
+      predicate: boundaryPredicate("journal", fixture.targetRoot, fixture.skillId), timeoutMs: 120_000,
+    });
+    if (className === "corrupt-journal") {
+      const wal = fs.readdirSync(fixture.targetRoot).find((name) => name.endsWith(".wal"));
+      assert(wal, "AAS_TRANSACTION_CONTROLLER_WAL_MISSING");
+      fs.appendFileSync(path.join(fixture.targetRoot, wal), "{corrupt");
+      const diagnosis = await doctor(fixture);
+      assert(diagnosis.value.status === "recoveryRequired", "AAS_TRANSACTION_CONTROLLER_CORRUPT_JOURNAL_ACCEPTED", {
+        status: diagnosis.value.status,
+      });
+      const recovered = await recover(fixture);
+      const prefixFixture = await createFixture(context, "race-corrupt-journal-prefix");
+      const prefixKilled = await spawnUntil({
+        executable: process.execPath,
+        args: [prefixFixture.aas, ...applyArgs(prefixFixture)],
+        cwd: prefixFixture.caseRoot,
+        env: prefixFixture.env,
+        predicate: boundaryPredicate("journal", prefixFixture.targetRoot, prefixFixture.skillId),
+        timeoutMs: 120_000,
+      });
+      const prefixWalName = fs.readdirSync(prefixFixture.targetRoot).find((name) => name.endsWith(".wal"));
+      assert(prefixWalName, "AAS_TRANSACTION_CONTROLLER_PREFIX_WAL_MISSING");
+      const prefixWal = path.join(prefixFixture.targetRoot, prefixWalName);
+      const prefixLines = fs.readFileSync(prefixWal, "utf8").split("\n").filter(Boolean);
+      const firstRecord = JSON.parse(prefixLines[0]);
+      firstRecord.recordDigest = `sha256-${"0".repeat(64)}`;
+      prefixLines[0] = JSON.stringify(firstRecord);
+      fs.writeFileSync(prefixWal, `${prefixLines.join("\n")}\n`);
+      const prefixBeforeDoctor = logicalDigest(prefixFixture.targetRoot, prefixFixture.skillId);
+      const prefixUnmanagedBefore = unmanagedDigest(prefixFixture.targetRoot);
+      const prefixDiagnosis = await doctor(prefixFixture);
+      const prefixAfterDoctor = logicalDigest(prefixFixture.targetRoot, prefixFixture.skillId);
+      const prefixUnmanagedAfter = unmanagedDigest(prefixFixture.targetRoot);
+      assert(prefixDiagnosis.value.status === "degraded"
+        && prefixDiagnosis.value.findings.some((finding) => /CORRUPT|SCHEMA|DIGEST/.test(finding.code))
+        && prefixBeforeDoctor === prefixAfterDoctor && prefixUnmanagedBefore === prefixUnmanagedAfter,
+      "AAS_TRANSACTION_CONTROLLER_CORRUPT_PREFIX_NOT_FAIL_CLOSED", {
+        status: prefixDiagnosis.value.status,
+        findings: prefixDiagnosis.value.findings.map((finding) => finding.code),
+      });
+      outcome = killed;
+      observation = {
+        eventDigest: digestJson({
+          tornTail: {
+            killed: killed.observation.eventDigest,
+            diagnosisStatus: diagnosis.value.status,
+            recoveryId: diagnosis.value.recoveries[0].recoveryId,
+            tailDigest: sha256("{corrupt"),
+          },
+          corruptPrefix: {
+            killed: prefixKilled.observation.eventDigest,
+            diagnosisStatus: prefixDiagnosis.value.status,
+            findings: prefixDiagnosis.value.findings.map((finding) => finding.code),
+            beforeDigest: prefixBeforeDoctor,
+            afterDigest: prefixAfterDoctor,
+            unmanagedBeforeDigest: prefixUnmanagedBefore,
+            unmanagedAfterDigest: prefixUnmanagedAfter,
+          },
+        }),
+      };
+      recoveryResult = recovered;
+      fs.rmSync(prefixFixture.caseRoot, { recursive: true, force: true });
+    } else {
+      let diagnosis;
+      for (let attempt = 0; attempt < 50; attempt += 1) {
+        diagnosis = await doctor(fixture);
+        if (diagnosis.value.status === "recoveryRequired") break;
+        await sleep(10);
+      }
+      const rec = diagnosis.value.recoveries[0];
+      const action = rec.allowedActions.includes("rollback") ? "rollback" : "cleanup";
+      const base = ["stack", "recover", "--experimental-recovery", "--plan", fixture.planPath, "--target-root", fixture.targetRoot, "--cache-root", fixture.cacheRoot, "--id", rec.recoveryId, "--action", action];
+      const preview = await publicCli(fixture, base);
+      const args = [...base, "--approve", preview.value.recoveryPlan.digest];
+      const [one, two] = await Promise.all([
+        run(process.execPath, [fixture.aas, ...args], { cwd: fixture.caseRoot, env: fixture.env }),
+        run(process.execPath, [fixture.aas, ...args], { cwd: fixture.caseRoot, env: fixture.env }),
+      ]);
+      const successes = [one, two].filter((result) => result.code === 0);
+      assert(successes.length === 1, "AAS_TRANSACTION_CONTROLLER_RECOVERY_RACE_NOT_SERIALIZED", { codes: [one.code, two.code] });
+      outcome = [one, two].find((result) => result.code !== 0);
+      observation = { eventDigest: digestJson([one, two].map((result) => ({ code: result.code, signal: result.signal }))) };
+      recoveryResult = { action, status: parseJsonLines(successes[0].stdout)[0].status, planDigest: preview.value.recoveryPlan.digest };
+    }
+  }
+  observation = {
+    eventDigest: digestJson({
+      processEvidence: observation.eventDigest,
+      filesystemEvidence: {
+        beforeDigest: fixture.beforeDigest,
+        afterDigest: logicalDigest(fixture.targetRoot, fixture.skillId),
+        unmanagedBeforeDigest: fixture.unmanagedBefore,
+        unmanagedAfterDigest: unmanagedDigest(fixture.targetRoot),
+        recoveryArtifacts: recoveryArtifacts(fixture.targetRoot),
+      },
+    }),
+  };
+  const record = evidenceRecord(
+    fixture, className, "race", className === "concurrency" ? "concurrent" : className,
+    `external-race:${className}`, observation, outcome, recoveryResult, expectedFinal,
+  );
+  return native ? { record, ...native } : { record };
+}
+
+export async function generateTransactionEvidence({ tarball, workRoot, zones }) {
+  const inspection = inspectPackageTarball(tarball);
+  assert(inspection.failures.length === 0, "AAS_TRANSACTION_CONTROLLER_TARBALL_INVALID", { failures: inspection.failures });
+  fs.mkdirSync(workRoot, { recursive: true, mode: 0o700 });
+  const runtime = await installCandidate(tarball, path.join(workRoot, "candidate-install"));
+  const cacheRoot = path.join(workRoot, "runtime-cache");
+  const tarballBytes = fs.readFileSync(tarball);
+  const promoted = await prepareRuntimeCache(runtime, tarballBytes, inspection.sha512, cacheRoot);
+  // This evidence-backed skill is deliberately non-trivial in size, giving
+  // the external observer a useful staging window without modifying the
+  // verified runtime or manufacturing a synthetic source tree.
+  const skillId = fs.existsSync(path.join(runtime.packageRoot, "skills", "react-best-practices")) ? "react-best-practices" : "ai-agents-architect";
+  const context = {
+    workRoot: path.join(workRoot, "cases"), cacheRoot, runtime: promoted.runtimeIdentity,
+    aas: runtime.bins.aas, skillId, env: candidateEnvironment(zones), zones,
+    evidenceDir: path.join(workRoot, "native-observer-evidence"),
+  };
+  fs.mkdirSync(context.workRoot, { recursive: true, mode: 0o700 });
+  fs.mkdirSync(context.evidenceDir, { recursive: true, mode: 0o700 });
+  const boundaryEvidence = [];
+  const nativeBackends = new Set();
+  const nativeLineage = [];
+  const nativeOverflow = [];
+  for (const className of FAULT_CLASSES) {
+    const result = await faultCase(context, className);
+    boundaryEvidence.push(result.record);
+    nativeBackends.add(result.backend);
+    nativeLineage.push(result.lineageVerified);
+    nativeOverflow.push(result.overflow);
+  }
+  for (const className of RACE_CLASSES) {
+    const result = await raceCase(context, className);
+    boundaryEvidence.push(result.record);
+    if (result.backend) nativeBackends.add(result.backend);
+    if (result.lineageVerified !== undefined) nativeLineage.push(result.lineageVerified);
+    if (result.overflow !== undefined) nativeOverflow.push(result.overflow);
+  }
+  assert(nativeBackends.size === 1, "AAS_TRANSACTION_CONTROLLER_OBSERVER_AMBIGUOUS", { backends: [...nativeBackends] });
+  assert(nativeLineage.every(Boolean) && nativeOverflow.every((value) => value === false), "AAS_TRANSACTION_CONTROLLER_OBSERVER_INCOMPLETE");
+  const eventDigest = digestJson(boundaryEvidence.map((item) => item.observerEventDigest));
+  const backend = [...nativeBackends][0];
+  return {
+    schemaVersion: 1,
+    status: "passed",
+    productionBinary: true,
+    testMode: false,
+    mocked: false,
+    candidate: {
+      package: runtime.manifest.name,
+      version: runtime.manifest.version,
+      tarballSha512: inspection.sha512,
+      installedTreeSha256: runtime.treeDigest,
+      aasEntrypointSha256: sha256(fs.readFileSync(runtime.bins.aas)),
+    },
+    controller: { version: CONTROLLER_VERSION, digest: digestJson({ version: CONTROLLER_VERSION, faultClasses: FAULT_CLASSES, raceClasses: RACE_CLASSES }) },
+    observer: {
+      backend,
+      eventDigest,
+      eventCount: boundaryEvidence.length,
+      overflow: nativeOverflow.some(Boolean),
+      ambiguousLineage: !nativeLineage.every(Boolean),
+    },
+    faultBoundaryClasses: [...FAULT_CLASSES],
+    raceClasses: [...RACE_CLASSES],
+    executions: boundaryEvidence.length,
+    killExecutions: FAULT_CLASSES.length,
+    swapExecutions: boundaryEvidence.filter((item) => item.injectionAction.endsWith("swap")).length,
+    recoveryExecutions: boundaryEvidence.filter((item) => !["none", "fail-closed"].includes(item.recoveryAction)).length,
+    partialStates: 0,
+    unmanagedMutations: 0,
+    hardPolicyViolations: 0,
+    boundaryEvidence,
+  };
+}
+
+export { FAULT_CLASSES, RACE_CLASSES };

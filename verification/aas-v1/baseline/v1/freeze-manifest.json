@@ -8,8 +8,8 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-8413fa955c4926a041237f815356853ecee6cf6aee9825697724d06beabd0a81",
-  "fileCount": 757,
+  "rootDigest": "sha256-a234fcab5b987a8c444c4c9e65bf06775a6a6ec0ac4ff0baf04a2035e8ab802e",
+  "fileCount": 763,
   "files": [
     {
       "path": "README.md",
@@ -3573,8 +3573,8 @@
     },
     {
       "path": "schemas/product-transaction-evidence.schema.json",
-      "bytes": 2902,
-      "sha256": "806b390497ca7789749cdec15030c23e13d8c373fae1ead968b75de104dde2b5"
+      "bytes": 5217,
+      "sha256": "eb1c566215580c3b0598d0200727e16d3290bfc2700e0fc5a5eabaaead1fe94c"
     },
     {
       "path": "schemas/product-verifier-manifest.schema.json",
@@ -3617,6 +3617,11 @@
       "sha256": "0fd74f758fd76956656c46cfd2825ff2716d8c0127bb2624e7d5d2a390930bb6"
     },
     {
+      "path": "verifier/bin/generate-transaction-evidence.mjs",
+      "bytes": 1389,
+      "sha256": "e6cb7931302824264ee6b3a037f673e194187b3f75f5ce673ed70de1e91efb5a"
+    },
+    {
       "path": "verifier/bin/merge-product-evidence.mjs",
       "bytes": 1174,
       "sha256": "62a9bfca49c008c5ef11156d42c5b02a66c9722099a9d9e8f3ba31a9fa5f188f"
@@ -3648,8 +3653,8 @@
     },
     {
       "path": "verifier/bin/verify-product.mjs",
-      "bytes": 8811,
-      "sha256": "3b9e5ef4d0803b5ccda12c14bd2b5e00bf4e072f50dcc09bef7596c6d6316cd7"
+      "bytes": 8475,
+      "sha256": "2707179f492c4fd98f429f820142683b9cfb4f6583f1c9e6a47f1274b5b7056c"
     },
     {
       "path": "verifier/drivers/fuzz.cjs",
@@ -3670,6 +3675,16 @@
       "path": "verifier/drivers/property.cjs",
       "bytes": 10358,
       "sha256": "ec35432454c5867cff1ea265cf1a6a2c889afc36689a8e521186f658e08e67f5"
+    },
+    {
+      "path": "verifier/drivers/transaction-fault.mjs",
+      "bytes": 7373,
+      "sha256": "c296efd606e6da5008dcda4df2b1ea2f6742968d5c93a400bfefb75074d126c5"
+    },
+    {
+      "path": "verifier/drivers/transaction-race.mjs",
+      "bytes": 4615,
+      "sha256": "9706d0b170bdfbd37db40f65fd819043fd3fb61fbadba51f28147d6c27ecfb2a"
     },
     {
       "path": "verifier/drivers/windows-tree-child.ps1",
@@ -3742,6 +3757,16 @@
       "sha256": "b0092b585006a581e127408f3a560d1b5a77cbb9c7a1c8b9f7e74a0514e5c949"
     },
     {
+      "path": "verifier/lib/transaction-controller.mjs",
+      "bytes": 32618,
+      "sha256": "6cdd56163238a830471fd186310e2d0cc4b4633b839edbb52e5cc428d6c36cd7"
+    },
+    {
+      "path": "verifier/lib/transaction-evidence.mjs",
+      "bytes": 11460,
+      "sha256": "2fff15ff8ae040c602848653502b341a7014fe1ab7571c2bfe667e3f114c7c00"
+    },
+    {
       "path": "verifier/observers/windows-etw.ps1",
       "bytes": 9245,
       "sha256": "7e7da41a8334e66c1f4b19ce4ec9a74c461708f4c333c55b861f2746511f8f53"
@@ -3754,12 +3779,12 @@
     {
       "path": "verifier/package-lock.json",
       "bytes": 2953,
-      "sha256": "036646405be913db4dcb90b3fa8131988c295b3783d57bd079320539a80be782"
+      "sha256": "1dab9aa6bd27350ccd90950b79109862c2a2c4363e9f691b3490602560e38203"
     },
     {
       "path": "verifier/package.json",
-      "bytes": 1205,
-      "sha256": "d5add74f94d14ac6d0b8566eeda47b98360d0995af5efed1fe51a060694b68d7"
+      "bytes": 1277,
+      "sha256": "a19c6096414c03e0472d8fa945293c8be3ba624e25017988a97ee1723d10e30a"
     },
     {
       "path": "verifier/tests/aggregate.test.mjs",
@@ -3787,9 +3812,14 @@
       "sha256": "a4b6effd1be8b7a65da764fd46d783cb037a4016245bbe838e14e6b942fae687"
     },
     {
+      "path": "verifier/tests/transaction-evidence-semantics.test.mjs",
+      "bytes": 10033,
+      "sha256": "572dd378f4d66a0a1591bc4bf0faf5f64d5e68e1ff6f2bf68ffaaddf58779d5d"
+    },
+    {
       "path": "verifier/tests/transaction-evidence.test.mjs",
-      "bytes": 1804,
-      "sha256": "8fb73620c3ea46b5d7f918a6d429257164518465edaf9b2415514c4f574bb78a"
+      "bytes": 3091,
+      "sha256": "ee06b8f5a4c8eba4c3771ed24cd412cc30c456ff64b970c271cea13d653f6d18"
     },
     {
       "path": "verifier/tests/tuning-gold-equivalence-audit.test.mjs",

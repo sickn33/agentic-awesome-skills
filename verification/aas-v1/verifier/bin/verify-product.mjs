@@ -9,6 +9,7 @@ import { snapshotZones } from "../lib/fs-evidence.mjs";
 import { selfTestObserver } from "../lib/observer.mjs";
 import { executableDigest, loadReceiptValidator, SUITE_IDS, writeCanonicalReceipt } from "../lib/receipt.mjs";
 import { installCandidate, isolatedZones, systemIdentity } from "../lib/runtime.mjs";
+import { assertTransactionEvidenceSemantics, readTransactionEvidence } from "../lib/transaction-evidence.mjs";
 import {
   packageSuite, prepareRuntimeCache, suite, verifyAdapters, verifyEntrypoints,
   verifyFuzz, verifyHostile, verifyLegacy, verifyMcp, verifyProperty,
@@ -40,16 +41,24 @@ function failedSuite(id, error) {
   return { id, status: "failed", executions: 0, failures: 1, evidenceSha256: digestJson(evidence), evidence };
 }
 
-function transactionSuite(file, manifest, validator) {
+function transactionSuite(file, manifest, validator, inspection, runtime, job, nativeObserver) {
   if (!file || !fs.existsSync(file)) throw Object.assign(new Error("OS-level transaction evidence is required"), { code: "AAS_VERIFIER_TRANSACTION_EVIDENCE_MISSING" });
-  const value = readJson(file);
-  if (!validator(value)) throw Object.assign(new Error("Transaction evidence schema failed"), { code: "AAS_VERIFIER_TRANSACTION_EVIDENCE_SCHEMA" });
-  const fault = new Set(value.faultBoundaryClasses || []);
-  const race = new Set(value.raceClasses || []);
-  for (const item of manifest.faultBoundaryClasses) if (!fault.has(item)) throw Object.assign(new Error(`Fault boundary not covered: ${item}`), { code: "AAS_VERIFIER_FAULT_BOUNDARY_MISSING" });
-  for (const item of manifest.raceClasses) if (!race.has(item)) throw Object.assign(new Error(`Race class not covered: ${item}`), { code: "AAS_VERIFIER_RACE_CLASS_MISSING" });
-  if (value.testMode === true || value.mocked === true || value.productionBinary !== true) throw Object.assign(new Error("Transaction evidence is not production black-box evidence"), { code: "AAS_VERIFIER_TRANSACTION_NOT_BLACK_BOX" });
-  if (value.partialStates !== 0 || value.unmanagedMutations !== 0 || value.hardPolicyViolations !== 0) throw Object.assign(new Error("Transaction safety invariant failed"), { code: "AAS_VERIFIER_TRANSACTION_INVARIANT" });
+  const value = readTransactionEvidence(file, validator);
+  const expectedCandidate = {
+    package: runtime.manifest.name,
+    version: runtime.manifest.version,
+    tarballSha512: inspection.sha512,
+    installedTreeSha256: runtime.treeDigest,
+    aasEntrypointSha256: sha256(fs.readFileSync(runtime.bins.aas)),
+  };
+  assertTransactionEvidenceSemantics(value, {
+    expectedCandidate,
+    jobId: job.id,
+    nativeObserverBackend: nativeObserver.backend,
+    controllerVersion: "1.0.0",
+    faultBoundaryClasses: manifest.faultBoundaryClasses,
+    raceClasses: manifest.raceClasses,
+  });
   return suite("transaction", value, value.executions || 0);
 }
 
@@ -97,7 +106,7 @@ await run("property", () => verifyProperty(runtime, budgets, runtimeMatrix.jobs.
 await run("fuzz", () => verifyFuzz(runtime, budgets, runtimeMatrix.jobs.indexOf(job), verifierRoot));
 await run("hostile", () => verifyHostile(runtime, zones, evidenceDir, hostileManifest, path.join(baselineRoot, "hostile"), verifierRoot));
 await run("legacy", () => verifyLegacy(runtime, zones, verifierRoot, path.join(baselineRoot, "legacy", "14.6.0")));
-await run("transaction", () => transactionSuite(options["transaction-evidence"], manifest, transactionValidator));
+await run("transaction", () => transactionSuite(options["transaction-evidence"], manifest, transactionValidator, inspection, runtime, job, observer));
 await run("adapters", () => verifyAdapters(runtime, zones, path.join(baselineRoot, "host-adapters"), inspection.sha512, runtimePromotion.identity.closureDigest));
 for (const id of SUITE_IDS) if (!suites.some((entry) => entry.id === id)) suites.push(failedSuite(id, Object.assign(new Error("Suite did not execute"), { code: "AAS_VERIFIER_SUITE_MISSING" })));
 

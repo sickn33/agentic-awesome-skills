@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { digestJson } from "./canonical.mjs";
 
 export const TRANSACTION_FAULT_CLASSES = Object.freeze([
@@ -31,6 +32,20 @@ const RACE_FINAL_STATE = Object.freeze({
   "corrupt-journal": "previous",
   "recovery-race": "previous",
 });
+
+export function readTransactionEvidence(file, validator) {
+  let value;
+  try { value = JSON.parse(fs.readFileSync(file, "utf8")); } catch (cause) {
+    throw Object.assign(new Error("Transaction evidence is not valid JSON"), {
+      code: "AAS_VERIFIER_TRANSACTION_EVIDENCE_SCHEMA",
+      cause,
+    });
+  }
+  if (!validator(value)) {
+    throw Object.assign(new Error("Transaction evidence schema failed"), { code: "AAS_VERIFIER_TRANSACTION_EVIDENCE_SCHEMA" });
+  }
+  return value;
+}
 
 function failure(code, details = {}) {
   return { code, details };
