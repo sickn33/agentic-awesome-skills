@@ -3,6 +3,8 @@
 const { canonicalJson } = require("./canonical-json");
 const { compareStrings, sortedUnique, tokenize } = require("./normalize");
 
+const FORBIDDEN_QUERY_SYNTAX = /[\u0000-\u001f\u007f\\^$*?()[\]{}|]/u;
+
 function validateLimit(value, fallback = 20, maximum = 50) {
   const limit = value === undefined ? fallback : value;
   if (!Number.isInteger(limit) || limit < 1 || limit > maximum) {
@@ -14,7 +16,8 @@ function validateLimit(value, fallback = 20, maximum = 50) {
 }
 
 function searchSkills(catalog, input = {}) {
-  if (typeof input.query !== "string" || input.query.length > 256) {
+  if (typeof input.query !== "string" || [...input.query].length > 256
+    || Buffer.byteLength(input.query, "utf8") > 1024 || FORBIDDEN_QUERY_SYNTAX.test(input.query)) {
     const error = new Error("query must be a string of at most 256 characters");
     error.code = "AAS_INPUT_QUERY_INVALID";
     throw error;
@@ -90,4 +93,4 @@ function diffCatalogs(left, right) {
   };
 }
 
-module.exports = { validateLimit, searchSkills, getSkill, diffCatalogs };
+module.exports = { FORBIDDEN_QUERY_SYNTAX, validateLimit, searchSkills, getSkill, diffCatalogs };

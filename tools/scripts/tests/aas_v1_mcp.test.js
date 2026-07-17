@@ -166,6 +166,15 @@ test("search, get, resource read, recommendation, inspection, and unavailable ve
   assert.ok(recommendation.result.structuredContent.recommended.length <= 25);
   assert.ok(recommendation.result.structuredContent.exclusions.length <= 25);
 
+  const pathologicalSearch = await server.handle({
+    jsonrpc: "2.0",
+    id: 131,
+    method: "tools/call",
+    params: { name: "search_skills", arguments: { query: "^(a+)+$" } },
+  });
+  assert.equal(pathologicalSearch.result.isError, true);
+  assert.equal(pathologicalSearch.result.structuredContent.code, "AAS_INPUT_QUERY_INVALID");
+
   const inspection = await server.handle({
     jsonrpc: "2.0",
     id: 14,

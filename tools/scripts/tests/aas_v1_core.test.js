@@ -197,6 +197,8 @@ test("search is bounded and stable", () => {
     skill("alpha-test", { tokens: ["react", "testing"], capabilities: null }),
   ]);
   assert.deepEqual(searchSkills(catalog, { query: "react", limit: 2 }).results.map((entry) => entry.id), ["alpha-test", "beta-test"]);
+  assert.doesNotThrow(() => searchSkills(catalog, { query: "c++ node.js api/v1", limit: 2 }));
+  assert.throws(() => searchSkills(catalog, { query: "^(a+)+$", limit: 2 }), { code: "AAS_INPUT_QUERY_INVALID" });
   assert.doesNotThrow(() => canonicalJson(searchSkills(catalog, { query: "react", limit: 2 })));
   assert.throws(() => searchSkills(catalog, { query: "x", limit: 51 }), (error) => error.code === "AAS_INPUT_LIMIT_INVALID");
 });
