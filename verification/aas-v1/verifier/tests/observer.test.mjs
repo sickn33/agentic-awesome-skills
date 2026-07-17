@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { macObserverBudgets, parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage, windowsObserverBudgets } from "../lib/observer.mjs";
+import { macObserverBudgets, parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage, rewriteMacObservedNodeInput, windowsObserverBudgets } from "../lib/observer.mjs";
 
 test("strace parser counts failed network attempts and non-stream writes", () => {
   const result = parseLinuxStrace([
@@ -65,4 +65,15 @@ test("combined macOS fs_usage parser enforces canary ordering and classifies can
   assert.deepEqual([result.networkAttempts, result.writeAttempts, result.childProcesses], [1, 1, 1]);
   assert.throws(() => parseMacCombinedFsUsage("12:00:00.010 WrData[A] F=3 /tmp/aas-start-1 aasobs.1\n", {}, "aas-ready-1", "aas-start-1"), /readiness canary/);
   assert.throws(() => parseMacCombinedFsUsage("12:00:00.010 WrData[A] F=3 /tmp/aas-ready-1 aasobs.1\n", {}, "aas-ready-1", "aas-start-1"), /candidate start canary/);
+});
+
+test("macOS observer keeps transaction children inside its native process filter", () => {
+  const input = JSON.stringify({ executable: "/usr/local/bin/node", args: ["candidate.js"], untouched: true });
+  assert.deepEqual(JSON.parse(rewriteMacObservedNodeInput(input, "/usr/local/bin/node", "/tmp/aasobs123")), {
+    executable: "/tmp/aasobs123",
+    args: ["candidate.js"],
+    untouched: true,
+  });
+  assert.equal(rewriteMacObservedNodeInput(input, "/other/node", "/tmp/aasobs123"), input);
+  assert.equal(rewriteMacObservedNodeInput("not-json", "/usr/local/bin/node", "/tmp/aasobs123"), "not-json");
 });

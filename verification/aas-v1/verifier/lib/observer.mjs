@@ -155,6 +155,17 @@ export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "", c
   return summarizeEvents(events);
 }
 
+export function rewriteMacObservedNodeInput(stdin, originalExecutable, observedExecutable) {
+  if (typeof stdin !== "string" || !stdin.length) return stdin;
+  try {
+    const value = JSON.parse(stdin);
+    if (!value || typeof value !== "object" || Array.isArray(value) || value.executable !== originalExecutable) return stdin;
+    return JSON.stringify({ ...value, executable: observedExecutable });
+  } catch {
+    return stdin;
+  }
+}
+
 async function macObserved(executable, args, options) {
   if (!commandExists("fs_usage")) throw Object.assign(new Error("fs_usage is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   if (path.resolve(executable) !== path.resolve(process.execPath)) {
@@ -279,7 +290,13 @@ async function macObserved(executable, args, options) {
       throw Object.assign(new Error("fs_usage did not confirm readiness before the candidate deadline"), { code: "AAS_OBSERVER_UNAVAILABLE" });
     }
     assertObserverActive("candidate-start");
-    const result = await runProcess(observedExecutable, [launcher], options);
+    const result = await runProcess(observedExecutable, [launcher], {
+      ...options,
+      // fs_usage filters by executable name rather than ancestry. Make a
+      // transaction driver launch the byte-identical observed Node copy so
+      // the candidate child remains inside the native process filter.
+      stdin: rewriteMacObservedNodeInput(options.stdin, process.execPath, observedExecutable),
+    });
     await new Promise((resolve) => setTimeout(resolve, budgets.drainMs));
     assertObserverActive("candidate-drain");
     await stopObserver();
