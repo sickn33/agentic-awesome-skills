@@ -1,6 +1,6 @@
 ---
 name: skill-developer
-description: "Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, following Anthropic's official best practices including the 500-line rule and progressive disclosure pattern."
+description: "Guide for creating and managing skills in a custom Claude Code auto-activation system, using this repository's 500-line and progressive-disclosure conventions."
 risk: unknown
 source: community
 date_added: "2026-02-27"
@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 ## Purpose
 
-Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, following Anthropic's official best practices including the 500-line rule and progressive disclosure pattern.
+Comprehensive guide for creating and managing skills in a custom Claude Code auto-activation system, following this repository's conventions including the 500-line rule and progressive disclosure pattern.
 
 ## When to Use This Skill
 
@@ -183,7 +183,7 @@ Based on testing:
 - Adjust file path patterns
 - Test content patterns against actual files
 
-### Step 5: Follow Anthropic Best Practices
+### Step 5: Follow Repository Conventions
 
 ✅ Keep SKILL.md under 500 lines
 ✅ Use progressive disclosure with reference files
@@ -379,7 +379,7 @@ See [TRIGGER_TYPES.md](TRIGGER_TYPES.md) for complete details.
 - **File markers**: `// @skip-validation` (permanent skip)
 - **Env vars**: `SKIP_SKILL_GUARDRAILS` (emergency disable)
 
-### Anthropic Best Practices
+### Repository Conventions
 
 ✅ **500-line rule**: Keep SKILL.md under 500 lines
 ✅ **Progressive disclosure**: Use reference files for details
@@ -422,7 +422,7 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for complete debugging guide.
 
 ---
 
-**Skill Status**: COMPLETE - Restructured following Anthropic best practices ✅
+**Skill Status**: COMPLETE - Restructured following repository conventions ✅
 **Line Count**: < 500 (following 500-line rule) ✅
 **Progressive Disclosure**: Reference files for detailed information ✅
 
