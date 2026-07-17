@@ -69,6 +69,13 @@ functional lifecycle without claiming that Windows cache-promotion durability
 is certified. Native directory-flush and interrupted-promotion evidence remains
 part of the certified-v1 transaction gate.
 
+Windows preview creation of the regenerable manifest and immutable plan uses
+the explicit `--preview-windows-output` opt-in. The CLI fsyncs the file and
+returns `outputDurability: "fileSyncedDirectoryUnverified"` together with
+`certificationStatus: "notCertified"`; without that flag it remains fail-closed.
+This opt-in never applies to skill installation, host configuration, apply, or
+recovery.
+
 Required functional suites are:
 
 1. **Package and entrypoints** — allowlisted package contents; `aas`,

@@ -266,10 +266,16 @@ async function main() {
     : await aas.cache.promoteRuntime({ cacheRoot, release, parsed: parsedArchive });
 
   const manifestPath = path.join(workRoot, "aas-stack.json");
+  const previewOutputArgs = process.platform === "win32" ? ["--preview-windows-output"] : [];
   const initialized = parseCliSuccess(runNode(aasBin, [
     "stack", "init", "--out", manifestPath, "--name", "preview-smoke", "--goal", "agent-boundaries",
+    ...previewOutputArgs,
   ], { cwd: projectRoot }), "INIT");
   assert.equal(initialized.status, "initialized");
+  if (process.platform === "win32") {
+    assert.equal(initialized.certificationStatus, "notCertified");
+    assert.equal(initialized.outputDurability, "fileSyncedDirectoryUnverified");
+  }
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   assert.deepEqual(manifest.skills, []);
 
@@ -359,8 +365,13 @@ async function main() {
     "--target-root", projectRoot, "--cache-root", cacheRoot,
     "--runtime-version", metadata.version, "--runtime-integrity", runtimeIntegrity,
     "--out", planPath,
+    ...previewOutputArgs,
   ], { cwd: projectRoot }), "PLAN");
   assert.equal(planned.status, "planned");
+  if (process.platform === "win32") {
+    assert.equal(planned.certificationStatus, "notCertified");
+    assert.equal(planned.outputDurability, "fileSyncedDirectoryUnverified");
+  }
   const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
   const beforeDoctor = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   const doctor = parseCliSuccess(runNode(aasBin, [

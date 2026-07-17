@@ -36,7 +36,7 @@ function parseOptions(argv) {
       continue;
     }
     const key = token.slice(2);
-    if (["help", "override-managed-drift", "experimental-apply", "experimental-recovery"].includes(key)) {
+    if (["help", "override-managed-drift", "experimental-apply", "experimental-recovery", "preview-windows-output"].includes(key)) {
       if (Object.hasOwn(options, key)) throw cliError("AAS_CLI_OPTION_DUPLICATE", "invalidInput", { option: key });
       options[key] = true;
       continue;
@@ -55,10 +55,10 @@ const COMMAND_OPTIONS = Object.freeze({
   "catalog update": new Set(["cache-root", "version", "help"]),
   "mcp configure": new Set(["host", "scope", "config", "cache-root", "version", "runtime-integrity", "runtime-closure-digest", "backup-dir", "retention", "approve", "help"]),
   "mcp backups cleanup": new Set(["config", "backup-dir", "keep", "approve", "help"]),
-  "stack init": new Set(["goal", "catalog-digest", "cache-root", "host", "scope", "name", "out", "help"]),
+  "stack init": new Set(["goal", "catalog-digest", "cache-root", "host", "scope", "name", "out", "preview-windows-output", "help"]),
   "stack recommend": new Set(["profile", "catalog-digest", "cache-root", "help"]),
   "stack validate": new Set(["manifest", "help"]),
-  "stack plan": new Set(["manifest", "target", "target-root", "cache-root", "runtime-version", "runtime-integrity", "out", "override-managed-drift", "help"]),
+  "stack plan": new Set(["manifest", "target", "target-root", "cache-root", "runtime-version", "runtime-integrity", "out", "override-managed-drift", "preview-windows-output", "help"]),
   "stack apply": new Set(["plan", "target-root", "cache-root", "approve", "experimental-apply", "help"]),
   "stack doctor": new Set(["plan", "target-root", "cache-root", "help"]),
   "stack recover": new Set(["plan", "target-root", "cache-root", "id", "action", "approve", "experimental-recovery", "help"]),
@@ -111,13 +111,17 @@ function readJsonFile(filePath, maximumBytes = 4 * 1024 * 1024) {
   return JSON.parse(text);
 }
 
-function writeNewJson(filePath, value) {
+function writeNewJson(filePath, value, { previewWindowsOutput = false } = {}) {
   const absolute = path.resolve(filePath);
   const parent = path.dirname(absolute);
   const stat = fs.lstatSync(parent);
   if (!stat.isDirectory() || stat.isSymbolicLink()) throw cliError("AAS_CLI_OUTPUT_PARENT_UNSAFE", "filesystem", {});
+  if (previewWindowsOutput && process.platform !== "win32") {
+    throw cliError("AAS_CLI_PREVIEW_WINDOWS_OUTPUT_UNSUPPORTED", "invalidInput", {});
+  }
   const temporary = path.join(parent, `.aas-write-${process.pid}-${Date.now()}`);
   let descriptor;
+  let linked = false;
   try {
     descriptor = fs.openSync(temporary, fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_WRONLY, 0o600);
     fs.writeFileSync(descriptor, `${core.canonicalJson(value)}\n`);
@@ -125,12 +129,20 @@ function writeNewJson(filePath, value) {
     fs.closeSync(descriptor);
     descriptor = undefined;
     fs.linkSync(temporary, absolute);
+    linked = true;
     fs.unlinkSync(temporary);
-    const parentDescriptor = fs.openSync(parent, fs.constants.O_RDONLY);
-    try { fs.fsyncSync(parentDescriptor); } finally { fs.closeSync(parentDescriptor); }
+    try {
+      const parentDescriptor = fs.openSync(parent, fs.constants.O_RDONLY);
+      try { fs.fsyncSync(parentDescriptor); } finally { fs.closeSync(parentDescriptor); }
+      return { outputDurability: "directorySynced", certificationStatus: "certifiable" };
+    } catch (error) {
+      if (!previewWindowsOutput) throw error;
+      return { outputDurability: "fileSyncedDirectoryUnverified", certificationStatus: "notCertified" };
+    }
   } catch (error) {
     if (descriptor !== undefined) fs.closeSync(descriptor);
     try { fs.unlinkSync(temporary); } catch {}
+    if (linked) try { fs.unlinkSync(absolute); } catch {}
     if (error.code === "EEXIST") throw cliError("AAS_CLI_OUTPUT_EXISTS", "conflict", {});
     throw error;
   }
@@ -244,8 +256,14 @@ async function stackInit(options) {
   const validation = core.stack.validateManifest(manifest);
   if (!validation.ok) throw cliError(validation.code, validation.category, validation.details);
   const output = options.out || "aas-stack.json";
-  writeNewJson(output, manifest);
-  return { ok: true, status: "initialized", path: path.resolve(output), manifestDigest: validation.manifestDigest };
+  const written = writeNewJson(output, manifest, { previewWindowsOutput: options["preview-windows-output"] === true });
+  return {
+    ok: true,
+    status: "initialized",
+    path: path.resolve(output),
+    manifestDigest: validation.manifestDigest,
+    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview", ...written } : {}),
+  };
 }
 
 async function stackPlan(options, dependencies = {}) {
@@ -300,8 +318,15 @@ async function stackPlan(options, dependencies = {}) {
       position: "final",
     },
   });
-  writeNewJson(requireOption(options, "out"), plan);
-  return { ok: true, status: "planned", planDigest: plan.digest, operationCount: plan.payload.operations.length, out: path.resolve(options.out) };
+  const written = writeNewJson(requireOption(options, "out"), plan, { previewWindowsOutput: options["preview-windows-output"] === true });
+  return {
+    ok: true,
+    status: "planned",
+    planDigest: plan.digest,
+    operationCount: plan.payload.operations.length,
+    out: path.resolve(options.out),
+    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview", ...written } : {}),
+  };
 }
 
 function help() {
@@ -313,10 +338,10 @@ function help() {
       "catalog update --cache-root <absolute> --version <semver>",
       "mcp configure --host codex|claude --scope user|project --config <absolute> --cache-root <absolute> [--version <semver>] [--runtime-integrity <npm-sri> --runtime-closure-digest <sha256>] [--backup-dir <absolute>] [--approve <digest>]",
       "mcp backups cleanup --config <absolute> --backup-dir <absolute> --keep <count> [--approve <digest>]",
-      "stack init --goal <goal> [--catalog-digest <sha256> --cache-root <absolute>]",
+      "stack init --goal <goal> [--catalog-digest <sha256> --cache-root <absolute>] [--preview-windows-output]",
       "stack recommend --profile <json> [--catalog-digest <sha256> --cache-root <absolute>]",
       "stack validate --manifest <aas-stack.json>",
-      "stack plan --manifest <file> --target <host:scope> --target-root <dir> --cache-root <absolute> --runtime-version <semver> --runtime-integrity <npm-sri> --out <file>",
+      "stack plan --manifest <file> --target <host:scope> --target-root <dir> --cache-root <absolute> --runtime-version <semver> --runtime-integrity <npm-sri> --out <file> [--preview-windows-output]",
       "stack apply --experimental-apply --plan <file> --target-root <dir> --cache-root <absolute> --approve <plan-digest> (EXPERIMENTAL; NOT CERTIFIED)",
       "stack doctor --plan <file> --target-root <dir> --cache-root <absolute>",
       "stack recover --experimental-recovery --plan <file> --target-root <dir> --cache-root <absolute> --id <id> --action rollback|cleanup [--approve <digest>] (EXPERIMENTAL; NOT CERTIFIED)",
