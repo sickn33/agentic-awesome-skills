@@ -58,6 +58,15 @@ function logicalDigest(targetRoot, skillId) {
   return digestJson(logicalSnapshot(targetRoot, skillId));
 }
 
+export function portableTreeDigest(root) {
+  const entries = snapshotTree(root).entries.map((entry) => {
+    if (entry.type === "directory") return { path: entry.path, type: entry.type };
+    assert(entry.type === "file", "AAS_TRANSACTION_CONTROLLER_EXPECTED_TREE_UNSAFE", { type: entry.type });
+    return { path: entry.path, type: entry.type, size: entry.size, sha256: entry.sha256 };
+  });
+  return digestJson(entries);
+}
+
 function recoveryArtifacts(targetRoot) {
   if (!fs.existsSync(targetRoot)) return [];
   const rootNames = fs.readdirSync(targetRoot).filter((name) => /^\.aas-(?:bootstrap|layout|transaction)/.test(name));
@@ -120,13 +129,13 @@ export function walBoundaryIsValid(className, walEvents) {
   return !walEvents.includes("committed");
 }
 
-function finalState(targetRoot, skillId, expectedDigest, plan) {
+function finalState(targetRoot, skillId, expectedContentDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
   if (!fs.existsSync(destination) && !fs.existsSync(state)) return "previous";
   if (!fs.existsSync(destination) || !fs.existsSync(state)) return "partial";
   const stateValue = JSON.parse(fs.readFileSync(state, "utf8"));
-  return snapshotTree(destination).digest === expectedDigest && stateValue.stateDigest === plan.payload.stateCommit.nextDigest ? "new" : "partial";
+  return portableTreeDigest(destination) === expectedContentDigest && stateValue.stateDigest === plan.payload.stateCommit.nextDigest ? "new" : "partial";
 }
 
 async function run(executable, args, options = {}) {
@@ -330,7 +339,15 @@ async function createFixture(context, id, { installed = false, desired = true, a
     assert(replanned.value.status === "planned", "AAS_TRANSACTION_CONTROLLER_REPLAN");
     plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
   }
-  return { ...fixture, manifestPath, planPath, plan, beforeDigest: logicalDigest(targetRoot, context.skillId), unmanagedBefore: unmanagedDigest(targetRoot) };
+  return {
+    ...fixture,
+    manifestPath,
+    planPath,
+    plan,
+    beforeDigest: logicalDigest(targetRoot, context.skillId),
+    expectedSkillContentDigest: portableTreeDigest(path.join(context.packageRoot, "skills", context.skillId)),
+    unmanagedBefore: unmanagedDigest(targetRoot),
+  };
 }
 
 function applyArgs(fixture) {
@@ -372,10 +389,11 @@ async function recover(fixture) {
 function evidenceRecord(fixture, className, kind, injectionAction, observedOperation, observation, outcome, recoveryResult, expectedFinal) {
   const afterDigest = logicalDigest(fixture.targetRoot, fixture.skillId);
   const unmanagedAfter = unmanagedDigest(fixture.targetRoot);
-  const expectedSkillDigest = fixture.plan.payload.operations.find((operation) => operation.skillId === fixture.skillId)?.resultTreeDigest || null;
   const observedFinal = afterDigest === fixture.beforeDigest
     ? "previous"
-    : expectedSkillDigest ? finalState(fixture.targetRoot, fixture.skillId, expectedSkillDigest, fixture.plan) : "partial";
+    : fixture.expectedSkillContentDigest
+      ? finalState(fixture.targetRoot, fixture.skillId, fixture.expectedSkillContentDigest, fixture.plan)
+      : "partial";
   const noPartialState = observedFinal === expectedFinal && unmanagedAfter === fixture.unmanagedBefore && recoveryArtifacts(fixture.targetRoot).length === 0;
   assert(noPartialState, "AAS_TRANSACTION_CONTROLLER_PARTIAL_STATE", { className, observedFinal, expectedFinal, artifacts: recoveryArtifacts(fixture.targetRoot) });
   return {
@@ -664,7 +682,7 @@ export async function generateTransactionEvidence({ tarball, workRoot, zones }) 
   const backupSkillIds = selectBackupSkillIds(runtime.packageRoot, skillId);
   const context = {
     workRoot: path.join(workRoot, "cases"), cacheRoot, runtime: promoted.runtimeIdentity,
-    aas: runtime.bins.aas, skillId, backupSkillIds, env: candidateEnvironment(zones), zones,
+    aas: runtime.bins.aas, packageRoot: runtime.packageRoot, skillId, backupSkillIds, env: candidateEnvironment(zones), zones,
     evidenceDir: path.join(workRoot, "native-observer-evidence"),
   };
   fs.mkdirSync(context.workRoot, { recursive: true, mode: 0o700 });

@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { portableTreeDigest, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -113,4 +113,22 @@ test("WAL boundary rules reject commits without rejecting reversible recovery me
   assert.equal(walBoundaryIsValid("fsync", ["started", "committed"]), false);
   assert.equal(walBoundaryIsValid("commit", ["started", "committed"]), true);
   assert.equal(walBoundaryIsValid("backup", ["started", "committed"]), false);
+});
+
+test("portable tree evidence compares content without product-specific digest metadata", (t) => {
+  const left = fs.mkdtempSync(path.join(os.tmpdir(), "aas-controller-tree-left-"));
+  const right = fs.mkdtempSync(path.join(os.tmpdir(), "aas-controller-tree-right-"));
+  t.after(() => {
+    fs.rmSync(left, { recursive: true, force: true });
+    fs.rmSync(right, { recursive: true, force: true });
+  });
+  for (const root of [left, right]) {
+    fs.mkdirSync(path.join(root, "nested"));
+    fs.writeFileSync(path.join(root, "nested", "SKILL.md"), "same bytes\n");
+  }
+  fs.chmodSync(path.join(left, "nested", "SKILL.md"), 0o600);
+  fs.chmodSync(path.join(right, "nested", "SKILL.md"), 0o644);
+  assert.equal(portableTreeDigest(left), portableTreeDigest(right));
+  fs.writeFileSync(path.join(right, "nested", "SKILL.md"), "changed bytes\n");
+  assert.notEqual(portableTreeDigest(left), portableTreeDigest(right));
 });
