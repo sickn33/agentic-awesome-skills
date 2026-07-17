@@ -69,7 +69,7 @@ try {
     return 0
   }
   function Convert-ObservedInteger([string]$raw) {
-    $value = $raw.Trim()
+    $value = $raw.Trim().Trim('"').Trim("'")
     $parsed = 0
     if ([int]::TryParse($value, [ref]$parsed)) { return $parsed }
     if ($value -match '^0[xX][0-9a-fA-F]+$') {
@@ -84,7 +84,7 @@ try {
         if ($direct -gt 0) { return $direct }
       }
     }
-    $payloadPattern = '(?i)(?:^|[;,{\s])["'']?' + [regex]::Escape($name) + '["'']?\s*[:=]\s*(0[xX][0-9a-fA-F]+|[0-9]+)'
+    $payloadPattern = '(?i)(?:^|[;,{\s])["'']?' + [regex]::Escape($name) + '["'']?\s*[:=]\s*["'']?(0[xX][0-9a-fA-F]+|[0-9]+)["'']?'
     foreach ($property in $row.PSObject.Properties) {
       $text = [string]$property.Value
       $match = [regex]::Match($text, $payloadPattern)
@@ -108,11 +108,15 @@ try {
     $serialized = $row | ConvertTo-Json -Compress
     $eventName = (($row.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join " ")
     $providerName = ([string]$row.'Event Name').Trim()
+    $eventType = ([string]$row.Type).Trim()
     $eventId = Get-IntegerField $row @("(?i)^Event ID$")
     $opcode = Get-IntegerField $row @("(?i)^Opcode$")
-    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 1 -and $opcode -eq 1) {
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventType -eq 'Start' -and $opcode -eq 1) {
       $processStartRows++
-      $parentPid = Get-PayloadInteger $row 'ParentProcessID'
+      # Process Start events are emitted in the creating process context, so the
+      # ETW header PID is the parent. The payload ProcessID is the new process.
+      $parentPid = Get-IntegerField $row @("(?i)^PID$")
+      if ($parentPid -eq 0) { $parentPid = Get-PayloadInteger $row 'ParentProcessID' }
       $newPid = Get-PayloadInteger $row 'ProcessID'
       if ($childPids.Contains($parentPid) -and $newPid -gt 0 -and !$childPids.Contains($newPid)) {
         $childPids.Add($newPid) | Out-Null
@@ -120,8 +124,9 @@ try {
       }
       continue
     }
-    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 2 -and $opcode -eq 2) {
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventType -eq 'Stop' -and $opcode -eq 2) {
       $stoppedPid = Get-PayloadInteger $row 'ProcessID'
+      if ($stoppedPid -eq 0) { $stoppedPid = Get-IntegerField $row @("(?i)^PID$") }
       if ($stoppedPid -eq $rootPid) {
         $rootStopRows++
         $rootExitObserved = $true

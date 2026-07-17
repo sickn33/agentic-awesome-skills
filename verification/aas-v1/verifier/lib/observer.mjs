@@ -258,7 +258,14 @@ async function macObserved(executable, args, options) {
         timeoutMs: budgets.readinessProcessTimeoutMs,
       });
       if (readinessResult.code !== 0 || readinessResult.timedOut) {
-        throw Object.assign(new Error("macOS readiness process failed"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+        const diagnostic = JSON.stringify({
+          code: readinessResult.code,
+          signal: readinessResult.signal,
+          timedOut: readinessResult.timedOut,
+          outputLimitExceeded: readinessResult.outputLimitExceeded,
+          stderr: readinessResult.stderr.slice(0, 240),
+        });
+        throw Object.assign(new Error(`macOS readiness process failed: ${diagnostic}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
       }
       await new Promise((resolve) => setTimeout(resolve, budgets.readinessDelayMs));
       assertObserverActive("readiness-after-probe");
@@ -318,7 +325,7 @@ export function macObserverBudgets(candidateTimeoutMs = 30_000) {
   }
   const startupMs = 1_500;
   const readinessMaxAttempts = 2;
-  const readinessProcessTimeoutMs = 6_000;
+  const readinessProcessTimeoutMs = 10_000;
   const readinessDelayMs = 250;
   const drainMs = 1_000;
   return {
