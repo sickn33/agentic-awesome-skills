@@ -443,24 +443,25 @@ export async function selfTestObserver(options) {
 
 async function selfTestWindowsProcessTree(options) {
   const drivers = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "drivers");
-  const rootDriver = path.join(drivers, "windows-tree-root.cjs");
+  const rootDriver = path.join(drivers, "windows-tree-root.ps1");
   const childDriver = path.join(drivers, "windows-tree-child.ps1");
   const jobSource = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "observers", "windows-job.cs");
   const powershell = commandExists("pwsh.exe") ? "pwsh.exe" : "powershell.exe";
   const readyCanary = path.join(options.evidenceDir, `child-ready-${process.pid}.txt`);
   const rootAckCanary = path.join(options.evidenceDir, `root-ack-${process.pid}.txt`);
   const childCanary = path.join(options.evidenceDir, `child-after-parent-${process.pid}.txt`);
-  const observed = await runObserved(process.execPath, [
-    rootDriver,
-    powershell,
-    childDriver,
-    jobSource,
-    readyCanary,
-    rootAckCanary,
-    childCanary,
+  const observed = await runObserved(powershell, [
+    "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+    "-File", rootDriver,
+    "-Powershell", powershell,
+    "-ChildDriver", childDriver,
+    "-JobSource", jobSource,
+    "-ReadyCanary", readyCanary,
+    "-RootAckCanary", rootAckCanary,
+    "-AfterParentCanary", childCanary,
   ], {
     ...options,
-    timeoutMs: 5_000,
+    timeoutMs: 10_000,
   });
   const childPid = Number.parseInt(observed.result.stdout.trim(), 10);
   const sessionName = observed.diagnostics?.sessionName;

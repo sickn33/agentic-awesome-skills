@@ -8,6 +8,6 @@ param(
 $ErrorActionPreference = "Stop"
 Add-Type -Path $JobSource
 [IO.File]::WriteAllText($ReadyCanary, "ready", (New-Object Text.UTF8Encoding($false)))
-if (![AasVerifier.JobProcess]::WaitForProcessExit($ParentProcessId, 3000)) { exit 66 }
+if (![AasVerifier.JobProcess]::WaitForProcessExit($ParentProcessId, 6000)) { exit 66 }
 [IO.File]::WriteAllText($AfterParentCanary, "child", (New-Object Text.UTF8Encoding($false)))
 while ($true) { Start-Sleep -Seconds 1 }

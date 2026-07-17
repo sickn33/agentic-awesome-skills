@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-ed13f680cff42ffe56fc12c2cb808af73d83ba834faa48d20950ae3bc4295f70",
+  "rootDigest": "sha256-bbb38721c78cee9e9c05ed66f59008a7ab76bf146ebd7ab172e4f82ca03388d4",
   "fileCount": 757,
   "files": [
     {
@@ -3674,12 +3674,12 @@
     {
       "path": "verifier/drivers/windows-tree-child.ps1",
       "bytes": 596,
-      "sha256": "41e81b679292f9bef3cff588a4ebb37eee5951e04ae7c6b841b11987f36a3dc4"
+      "sha256": "b1f1efcd6a041ad8578ec0f1566089f8b2b2d985f0e7ff03a4dc267a9a851a63"
     },
     {
-      "path": "verifier/drivers/windows-tree-root.cjs",
-      "bytes": 1076,
-      "sha256": "5e304eecd3cec83d38a2c6aad4aca63963dbef3cafe057b86dda258616b6a4c7"
+      "path": "verifier/drivers/windows-tree-root.ps1",
+      "bytes": 1449,
+      "sha256": "2faa5f4dc953576e0a0dbd2a34fc749af47abc78010e73860efa31f2e2c431b8"
     },
     {
       "path": "verifier/lib/aggregate.mjs",
@@ -3708,8 +3708,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 24930,
-      "sha256": "337bdca0a4e24895af7e7cb0c8fe07806983f406e0c25d8cd0f694fe94009f7f"
+      "bytes": 25113,
+      "sha256": "74a0d2b6dbae066a3dc2ff0d47392a0c8eb07c3dc60f7d827464f5f5e7a3cf81"
     },
     {
       "path": "verifier/lib/prng.mjs",
