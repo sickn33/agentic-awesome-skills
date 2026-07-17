@@ -21,33 +21,34 @@ Sending text to the synthesizer in small chunks (sentence-by-sentence or word-by
 - Inconsistent voice characteristics between chunks
 
 ### Solution
-Buffer the entire LLM response before sending it to the synthesizer:
+Buffer to a stable, bounded synthesis segment. Whole-response buffering adds
+latency and weakens interruption; tiny fragments can create choppy audio.
 
-**❌ Bad: Yields sentence-by-sentence**
+**❌ Bad: Yields every transport chunk**
 ```python
 async def generate_response(self, prompt):
-    async for sentence in llm_stream:
-        # This creates multiple TTS calls!
-        yield GeneratedResponse(message=BaseMessage(text=sentence))
+    async for chunk in llm_stream:
+        yield GeneratedResponse(message=BaseMessage(text=chunk))
 ```
 
-**✅ Good: Buffer entire response**
+**✅ Better: Emit tested sentence or size-bounded segments**
 ```python
 async def generate_response(self, prompt):
-    # Buffer the entire response
-    full_response = ""
+    segment = ""
     async for chunk in llm_stream:
-        full_response += chunk
-    
-    # Yield once with complete response
-    yield GeneratedResponse(message=BaseMessage(text=full_response))
+        segment += chunk
+        if sentence_boundary(segment) or len(segment) >= MAX_SEGMENT_CHARS:
+            yield GeneratedResponse(message=BaseMessage(text=segment))
+            segment = ""
+    if segment:
+        yield GeneratedResponse(message=BaseMessage(text=segment))
 ```
 
 ### Why This Works
-- Single TTS call for the entire response
-- Consistent voice characteristics
-- Proper timing and pacing
-- No gaps or overlaps
+- Bounded latency to first audio
+- Fewer discontinuities than transport-chunk synthesis
+- Cancellation between segments
+- A measurable tuning point for the selected TTS contract
 
 ---
 
@@ -448,7 +449,7 @@ await asyncio.sleep(max(seconds_per_chunk - processing_time, 0))
 
 | Problem | Root Cause | Solution |
 |---------|-----------|----------|
-| Audio jumping | Multiple TTS calls | Buffer entire response |
+| Audio jumping | Unbounded tiny synthesis fragments | Use tested bounded segments |
 | Echo/feedback | Transcriber active during bot speech | Mute transcriber |
 | Interrupts not working | All chunks sent immediately | Rate-limit chunks |
 | Memory leaks | Unclosed streams | Proper cleanup |
@@ -461,7 +462,7 @@ await asyncio.sleep(max(seconds_per_chunk - processing_time, 0))
 
 ## Best Practices
 
-1. **Always buffer LLM responses** before sending to synthesizer
+1. **Use tested bounded synthesis segments** and preserve cancellation
 2. **Always mute transcriber** when bot is speaking
 3. **Always rate-limit audio chunks** to enable interrupts
 4. **Always cleanup resources** in finally blocks

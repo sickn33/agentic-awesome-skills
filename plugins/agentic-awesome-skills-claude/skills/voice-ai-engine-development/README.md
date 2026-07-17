@@ -1,6 +1,6 @@
 # Voice AI Engine Development Skill
 
-Build production-ready real-time conversational AI voice engines with async worker pipelines, streaming transcription, LLM agents, and TTS synthesis.
+Design and review real-time conversational voice pipelines with async workers, streaming transcription, LLM agents, and TTS synthesis. Included code is illustrative scaffolding, not a production-ready integration.
 
 ## Overview
 
@@ -26,8 +26,8 @@ This skill provides comprehensive guidance for building voice AI engines that en
 - `SKILL.md` - Comprehensive guide to voice AI engine development
 
 ### Examples
-- `complete_voice_engine.py` - Full working implementation
-- `gemini_agent_example.py` - LLM agent with proper response buffering
+- `complete_voice_engine.py` - Local simulated pipeline scaffold; provider and deployment boundaries are intentionally incomplete
+- `gemini_agent_example.py` - Simulated LLM streaming and bounded synthesis-segment scaffold
 - `interrupt_system_example.py` - Interrupt handling demonstration
 
 ### Templates
@@ -36,7 +36,7 @@ This skill provides comprehensive guidance for building voice AI engines that en
 
 ### References
 - `common_pitfalls.md` - Common issues and solutions
-- `provider_comparison.md` - Comparison of transcription, LLM, and TTS providers
+- `provider_comparison.md` - Evidence worksheet for evaluating transcription, LLM, and TTS providers
 
 ## Key Concepts
 
@@ -57,7 +57,7 @@ Each worker:
 
 ### Critical Implementation Details
 
-1. **Buffer LLM Responses** - Always buffer the entire LLM response before sending to synthesizer to prevent audio jumping
+1. **Segment LLM Responses** - Buffer to tested sentence or size boundaries; preserve cancellation and avoid both whole-response latency and tiny-fragment audio
 2. **Mute Transcriber** - Mute the transcriber when bot speaks to prevent echo/feedback loops
 3. **Rate-Limit Audio** - Send audio chunks at real-time speed to enable interrupts
 4. **Proper Cleanup** - Always cleanup resources in finally blocks to prevent memory leaks
@@ -65,22 +65,22 @@ Each worker:
 ## Supported Providers
 
 ### Transcription
-- Deepgram (fastest, best for real-time)
-- AssemblyAI (highest accuracy)
-- Azure Speech (enterprise-grade)
-- Google Cloud Speech (multi-language)
+- Deepgram
+- AssemblyAI
+- Azure Speech
+- Google Cloud Speech
 
 ### LLM
-- OpenAI GPT-4 (highest quality)
-- Google Gemini (cost-effective)
-- Anthropic Claude (safety-focused)
+- OpenAI
+- Google Gemini
+- Anthropic Claude
 
 ### TTS
-- ElevenLabs (most natural voices)
-- Azure TTS (enterprise-grade)
-- Google Cloud TTS (cost-effective)
-- Amazon Polly (AWS integration)
-- Play.ht (voice cloning)
+- ElevenLabs
+- Azure TTS
+- Google Cloud TTS
+- Amazon Polly
+- PlayHT
 
 ## Common Use Cases
 
@@ -120,22 +120,20 @@ synthesizer = factory.create_synthesizer(config)  # ElevenLabs, Azure, etc.
 
 ## Testing
 
-The skill includes examples for:
-- Unit testing workers in isolation
-- Integration testing the full pipeline
-- Testing interrupt functionality
-- Testing with different providers
+The skill outlines test shapes for worker isolation, pipeline integration, and interrupts. They are illustrative snippets, not an executable provider test suite; add project-specific fixtures, credentials, failure cases, and assertions.
 
 ## Best Practices
 
-1. ✅ Always stream at every stage (transcription, LLM, synthesis)
-2. ✅ Buffer entire LLM responses before synthesis
+1. ✅ Stream where the selected provider contract supports cancellation and backpressure
+2. ✅ Use bounded synthesis segments validated for latency and audio continuity
 3. ✅ Mute transcriber during bot speech
 4. ✅ Rate-limit audio chunks for interrupts
 5. ✅ Maintain conversation history for context
 6. ✅ Use proper error handling in worker loops
 7. ✅ Cleanup resources in finally blocks
 8. ✅ Use LINEAR16 PCM at 16kHz for audio
+
+Provider capabilities, model names, formats, prices, quotas, regions, and retention policies change. Date each comparison and verify current primary documentation. Before real users, add authenticated and origin-checked transport, consent, AI disclosure, privacy/retention controls, tenant limits, abuse prevention, and human escalation.
 
 ## Common Pitfalls
 

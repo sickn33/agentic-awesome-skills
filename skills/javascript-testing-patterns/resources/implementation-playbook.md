@@ -224,30 +224,37 @@ export class ApiService {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
     });
+    if (!response.ok) {
+      throw new Error('Could not create user');
+    }
     return response.json();
   }
 }
 
 // services/api.service.test.ts
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApiService } from './api.service';
 
-// Mock fetch globally
-global.fetch = vi.fn();
+const fetchMock = vi.fn();
 
 describe('ApiService', () => {
   let service: ApiService;
 
   beforeEach(() => {
     service = new ApiService();
-    vi.clearAllMocks();
+    fetchMock.mockReset();
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   describe('fetchUser', () => {
     it('should fetch user successfully', async () => {
       const mockUser = { id: '1', name: 'John', email: 'john@example.com' };
 
-      (fetch as any).mockResolvedValueOnce({
+      fetchMock.mockResolvedValueOnce({
         ok: true,
         json: async () => mockUser,
       });
@@ -259,7 +266,7 @@ describe('ApiService', () => {
     });
 
     it('should throw error if user not found', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      fetchMock.mockResolvedValueOnce({
         ok: false,
       });
 
@@ -272,7 +279,7 @@ describe('ApiService', () => {
       const newUser = { name: 'John', email: 'john@example.com' };
       const createdUser = { id: '1', ...newUser };
 
-      (fetch as any).mockResolvedValueOnce({
+      fetchMock.mockResolvedValueOnce({
         ok: true,
         json: async () => createdUser,
       });
@@ -287,6 +294,14 @@ describe('ApiService', () => {
           body: JSON.stringify(newUser),
         })
       );
+    });
+
+    it('should throw if the create request fails', async () => {
+      fetchMock.mockResolvedValueOnce({ ok: false });
+
+      await expect(
+        service.createUser({ name: 'John', email: 'john@example.com' })
+      ).rejects.toThrow('Could not create user');
     });
   });
 });
@@ -747,6 +762,7 @@ export function UserForm({ onSubmit }: Props) {
   );
 }
 
+// @vitest-environment jsdom
 // components/UserForm.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
@@ -810,6 +826,7 @@ export function useCounter(initialValue = 0) {
   return { count, increment, decrement, reset };
 }
 
+// @vitest-environment jsdom
 // hooks/useCounter.test.ts
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
@@ -904,6 +921,7 @@ describe('UserService', () => {
 ## Snapshot Testing
 
 ```typescript
+// @vitest-environment jsdom
 // components/UserCard.test.tsx
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';

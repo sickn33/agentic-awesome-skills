@@ -26,8 +26,8 @@ and delivery status callbacks.
 
 Key considerations:
 - Phone numbers must be in E.164 format (+1234567890)
-- Default rate limit: 80 messages per second (MPS)
-- Messages over 160 characters are split (and cost more)
+- Throughput depends on the sender type, destination, account configuration, and approved capacity; read the limits for the exact Messaging Service or sender in use
+- SMS segmentation depends on encoding: GSM-7 uses 160 characters for one segment and 153 per concatenated segment; UCS-2 uses 70 and 67. Extended GSM-7 characters may count twice. Prefer Twilio's reported `NumSegments` for billing and delivery records
 - Carrier filtering can block messages (especially to US numbers)
 
 **When to use**: Sending notifications to users,Transactional messages (order confirmations, shipping),Alerts and reminders
@@ -65,7 +65,7 @@ class TwilioSMS:
 
         Args:
             to: Recipient phone number in E.164 format
-            body: Message text (160 chars = 1 segment)
+            body: Message text; encoding determines segment count
             status_callback: URL for delivery status webhooks
 
         Returns:
@@ -78,11 +78,6 @@ class TwilioSMS:
                 "error": "Phone number must be in E.164 format (+1234567890)"
             }
 
-        # Check message length (warn about segmentation)
-        segment_count = (len(body) + 159) // 160
-        if segment_count > 1:
-            print(f"Warning: Message will be sent as {segment_count} segments")
-
         try:
             message = self.client.messages.create(
                 to=to,
@@ -94,8 +89,7 @@ class TwilioSMS:
             return {
                 "success": True,
                 "message_sid": message.sid,
-                "status": message.status,
-                "segments": segment_count
+                "status": message.status
             }
 
         except TwilioRestException as e:
@@ -328,25 +322,31 @@ TwiML, Twilio executes it. Stateless, so use URL params or sessions.
 from flask import Flask, request, Response
 from twilio.twiml.voice_response import VoiceResponse, Gather
 from twilio.request_validator import RequestValidator
+from functools import wraps
+from urllib.parse import urlsplit
 import os
 
 app = Flask(__name__)
 
 def validate_twilio_request(f):
-    """Decorator to validate requests are from Twilio."""
+    """Validate form-encoded Twilio voice webhooks."""
+    @wraps(f)
     def wrapper(*args, **kwargs):
         validator = RequestValidator(os.environ["TWILIO_AUTH_TOKEN"])
-
-        # Get request details
-        url = request.url
-        params = request.form.to_dict()
+        public_base = os.environ["TWILIO_PUBLIC_BASE_URL"].rstrip("/")
+        parsed = urlsplit(public_base)
+        if parsed.scheme != "https" or not parsed.netloc:
+            raise RuntimeError("TWILIO_PUBLIC_BASE_URL must be a trusted HTTPS URL")
+        query = request.query_string.decode("ascii")
+        url = f"{public_base}{request.path}" + (f"?{query}" if query else "")
         signature = request.headers.get("X-Twilio-Signature", "")
 
-        if not validator.validate(url, params, signature):
+        # Voice webhooks in this example are form encoded. JSON callbacks need
+        # the raw-body validation shown in the Webhook Handler Pattern below.
+        if not validator.validate(url, request.form, signature):
             return "Invalid request", 403
 
         return f(*args, **kwargs)
-    wrapper.__name__ = f.__name__
     return wrapper
 
 @app.route("/voice/incoming", methods=["POST"])
@@ -476,7 +476,7 @@ Key WhatsApp rules:
 - 24-hour session window: Can only reply within 24 hours of user message
 - Template messages: Pre-approved templates for outside session window
 - Opt-in required: Users must explicitly consent to receive messages
-- Rate limit: 80 MPS default (up to 400 with approval)
+- Throughput is sender-, destination-, and account-specific; use the configured capacity shown by Twilio for this sender
 - Character limits: Non-template 1024 chars, templates ~550 chars
 
 **When to use**: Customer support with rich media,Order notifications with buttons,Marketing messages (with templates),Interactive flows (booking, surveys)
@@ -597,6 +597,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 @app.route("/webhooks/whatsapp", methods=["POST"])
+@validate_twilio_request
 def whatsapp_webhook():
     """Handle incoming WhatsApp messages."""
     from_number = request.form.get("From", "").replace("whatsapp:", "")
@@ -659,11 +660,23 @@ Twilio sends webhooks for:
 from flask import Flask, request, abort
 from twilio.request_validator import RequestValidator
 from functools import wraps
+from hashlib import sha256
+from hmac import compare_digest
+from urllib.parse import urlsplit
 import os
 import logging
 
 app = Flask(__name__)
 logger = logging.getLogger(__name__)
+
+def canonical_external_url() -> str:
+    """Rebuild the exact public URL from trusted configuration, not proxy headers."""
+    public_base = os.environ["TWILIO_PUBLIC_BASE_URL"].rstrip("/")
+    parsed = urlsplit(public_base)
+    if parsed.scheme != "https" or not parsed.netloc:
+        raise RuntimeError("TWILIO_PUBLIC_BASE_URL must be a trusted HTTPS URL")
+    query = request.query_string.decode("ascii")
+    return f"{public_base}{request.path}" + (f"?{query}" if query else "")
 
 def validate_twilio_signature(f):
     """
@@ -674,16 +687,25 @@ def validate_twilio_signature(f):
     def wrapper(*args, **kwargs):
         validator = RequestValidator(os.environ["TWILIO_AUTH_TOKEN"])
 
-        # Build full URL (including query params)
-        url = request.url
-
-        # Get POST body as dict
-        params = request.form.to_dict()
-
-        # Get signature from header
+        url = canonical_external_url()
         signature = request.headers.get("X-Twilio-Signature", "")
 
-        if not validator.validate(url, params, signature):
+        if request.mimetype == "application/json":
+            # Twilio signs the URL containing bodySHA256. Verify that hash
+            # against the untouched body, then validate the URL signature
+            # without form parameters.
+            raw_body = request.get_data(cache=True)
+            expected_hash = request.args.get("bodySHA256", "")
+            actual_hash = sha256(raw_body).hexdigest()
+            body_valid = bool(expected_hash) and compare_digest(
+                expected_hash, actual_hash
+            )
+            signature_valid = validator.validate(url, {}, signature)
+        else:
+            body_valid = True
+            signature_valid = validator.validate(url, request.form, signature)
+
+        if not body_valid or not signature_valid:
             logger.warning(f"Invalid Twilio signature from {request.remote_addr}")
             abort(403)
 
@@ -819,10 +841,11 @@ def handle_failed_call(call_sid: str, status: str):
 
 Handle Twilio rate limits and implement proper retry logic.
 
-Default limits:
-- SMS: 80 messages per second (MPS)
-- Voice: Varies by number type and region
-- API calls: 100 requests per second
+Capacity is configuration-specific. Determine the applicable throughput from
+the sender type, destination, Messaging Service or Voice configuration, account
+limits, and any approved capacity. Treat 20429/30429 responses and Twilio's
+documented headers or console values as runtime evidence rather than assuming a
+global messages-per-second or API-request limit.
 
 Error codes:
 - 20429: Voice API rate limit
@@ -899,21 +922,25 @@ def send_sms(to: str, body: str):
         body=body
     )
 
-# Bulk sending with rate limiting
+# Bulk sending with process-local pacing
 import asyncio
-from asyncio import Semaphore
+from asyncio import Lock
 
 class RateLimitedSender:
     """
-    Send messages with built-in rate limiting.
-    Stays under Twilio's 80 MPS limit.
+    Pace messages at an explicitly configured rate.
+
+    Distributed workers need a shared limiter rather than this process-local lock.
     """
 
-    def __init__(self, client, from_number: str, mps: int = 50):
+    def __init__(self, client, from_number: str, configured_mps: float):
+        if configured_mps <= 0:
+            raise ValueError("configured_mps must be positive")
         self.client = client
         self.from_number = from_number
-        self.mps = mps
-        self.semaphore = Semaphore(mps)
+        self.interval = 1 / configured_mps
+        self._pace_lock = Lock()
+        self._next_send = 0.0
 
     async def send_bulk(self, messages: list[dict]) -> list[dict]:
         """
@@ -933,31 +960,29 @@ class RateLimitedSender:
         return await asyncio.gather(*tasks, return_exceptions=True)
 
     async def _send_with_limit(self, to: str, body: str):
-        """Send single message with semaphore-based rate limit."""
-        async with self.semaphore:
-            try:
-                # Use sync client in thread pool
-                loop = asyncio.get_event_loop()
-                result = await loop.run_in_executor(
-                    None,
-                    lambda: self.client.messages.create(
-                        to=to,
-                        from_=self.from_number,
-                        body=body
-                    )
-                )
-                return {"success": True, "sid": result.sid, "to": to}
+        """Reserve a send slot, then invoke the synchronous SDK off-loop."""
+        async with self._pace_lock:
+            loop = asyncio.get_running_loop()
+            now = loop.time()
+            await asyncio.sleep(max(0, self._next_send - now))
+            self._next_send = max(now, self._next_send) + self.interval
 
-            except TwilioRestException as e:
-                return {"success": False, "error": str(e), "to": to}
+        try:
+            result = await asyncio.to_thread(
+                self.client.messages.create,
+                to=to,
+                from_=self.from_number,
+                body=body
+            )
+            return {"success": True, "sid": result.sid, "to": to}
 
-            finally:
-                # Delay to maintain rate limit
-                await asyncio.sleep(1 / self.mps)
+        except TwilioRestException as e:
+            return {"success": False, "error": str(e), "to": to}
 
 # Usage
 async def send_campaign():
-    sender = RateLimitedSender(client, from_number, mps=50)
+    # Set this from the capacity approved/configured for this sender.
+    sender = RateLimitedSender(client, from_number, configured_mps=50)
 
     messages = [
         {"to": "+14155551234", "body": "Hello!"},
@@ -975,7 +1000,7 @@ async def send_campaign():
 - Retrying immediately without backoff
 - No jitter causing thundering herd
 - Retrying non-rate-limit errors
-- Exceeding Twilio's MPS limit
+- Configuring a send rate without checking the exact sender/account capacity
 
 ## Sharp Edges
 
@@ -1004,6 +1029,7 @@ Recommended fix:
 ```python
 # In your webhook handler
 @app.route("/webhooks/sms/incoming", methods=["POST"])
+@validate_twilio_signature
 def incoming_sms():
     from_number = request.form.get("From")
     body = request.form.get("Body", "").strip().upper()
@@ -1150,22 +1176,25 @@ def sanitize_message(text: str) -> str:
 
     return text
 
-# Use toll-free or short code for high volume
-# 10DLC is for <10K msg/day
-# Toll-free: up to 10K msg/day
-# Short code: 100K+ msg/day
+# Select sender type from the current destination, use-case, registration,
+# account-tier, and approved-capacity documentation. Do not encode universal
+# daily limits; obtain the effective throughput for this Messaging Service.
 ```
 
 ## Monitor delivery rates
 
 ```python
-def track_delivery_rate():
+def track_delivery_rate(minimum_expected_rate: float):
     sent = get_messages_with_status("sent")
     delivered = get_messages_with_status("delivered")
 
+    if not sent:
+        return
     rate = len(delivered) / len(sent) * 100
 
-    if rate < 95:
+    # Calibrate this threshold from an approved baseline for the same route,
+    # sender, destination, and message class; 95% is not universal.
+    if rate < minimum_expected_rate:
         alert_team(f"Delivery rate dropped to {rate}%")
 ```
 
@@ -1197,6 +1226,7 @@ Recommended fix:
 from twilio.request_validator import RequestValidator
 from flask import Flask, request, abort
 from functools import wraps
+from urllib.parse import urlsplit
 import os
 
 def require_twilio_signature(f):
@@ -1205,16 +1235,21 @@ def require_twilio_signature(f):
     def wrapper(*args, **kwargs):
         validator = RequestValidator(os.environ["TWILIO_AUTH_TOKEN"])
 
-        # Full URL including query string
-        url = request.url
-
-        # POST body as dict
-        params = request.form.to_dict()
+        public_base = os.environ["TWILIO_PUBLIC_BASE_URL"].rstrip("/")
+        parsed = urlsplit(public_base)
+        if parsed.scheme != "https" or not parsed.netloc:
+            raise RuntimeError("TWILIO_PUBLIC_BASE_URL must be a trusted HTTPS URL")
+        query = request.query_string.decode("ascii")
+        url = f"{public_base}{request.path}" + (f"?{query}" if query else "")
 
         # Signature header
         signature = request.headers.get("X-Twilio-Signature", "")
 
-        if not validator.validate(url, params, signature):
+        # This endpoint accepts form-encoded callbacks. For JSON, use the
+        # raw-body/bodySHA256 branch in validate_twilio_signature above.
+        if request.mimetype == "application/json":
+            abort(415)
+        if not validator.validate(url, request.form, signature):
             abort(403)
 
         return f(*args, **kwargs)
@@ -1230,11 +1265,9 @@ def twilio_webhook():
 ## Common validation gotchas
 
 ```python
-# URL must match EXACTLY what Twilio called
-# If behind proxy, you might need:
-url = request.headers.get("X-Forwarded-Proto", "http") + "://" + \
-      request.headers.get("X-Forwarded-Host", request.host) + \
-      request.path
+# URL must match EXACTLY what Twilio called. Configure the public HTTPS base
+# URL and append request.path/query; do not trust client-supplied Forwarded or
+# X-Forwarded-* headers unless a trusted proxy strips and rewrites them.
 
 # If using ngrok, URL changes each restart
 # Use consistent URL in production
@@ -1304,6 +1337,7 @@ class WhatsAppSession:
 
 ```python
 @app.route("/webhooks/whatsapp", methods=["POST"])
+@validate_twilio_signature
 def whatsapp_incoming():
     from_phone = request.form.get("From").replace("whatsapp:", "")
 
@@ -1370,7 +1404,8 @@ client = Client(creds["sid"], creds["token"])
 
 ```python
 # Auth Token has full account access
-# API Keys can be scoped and revoked
+# Restricted API Keys can be scoped to supported permissions; Standard API
+# Keys are revocable but should not be described as permission-scoped.
 
 # Create API Key in Twilio Console
 client = Client(

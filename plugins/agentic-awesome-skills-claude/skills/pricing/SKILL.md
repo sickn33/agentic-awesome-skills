@@ -113,7 +113,7 @@ Ask: "As a customer uses more of [metric], do they get more value?"
 
 **Good tier (Entry):** Core features, limited usage, low price
 **Better tier (Recommended):** Full features, reasonable limits, anchor price
-**Best tier (Premium):** Everything, advanced features, 2-3x Better price
+**Best tier (Premium):** Everything, advanced features, and a price supported by segment research, delivered value, and unit economics
 
 ### Tier Differentiation
 
@@ -136,14 +136,16 @@ Four questions that identify acceptable price range:
 3. Expensive but might consider
 4. A bargain
 
-Analyze intersections to find optimal pricing zone.
+The intersections describe perceived price acceptability for the surveyed audience. They do not measure demand, conversion, or causal willingness to pay. Treat the resulting range as a hypothesis to triangulate with behavioral evidence, segment differences, alternatives, and unit economics.
 
 ### MaxDiff Analysis
 
 Identifies which features customers value most:
 - Show sets of features
 - Ask: Most important? Least important?
-- Results inform tier packaging
+- Results estimate relative feature priorities within the tested design; they do not mechanically determine tiers, price points, or willingness to pay
+
+Choose sample size from the research design, expected heterogeneity, number of segments and tasks, and the precision needed for the decision. Do not apply a universal respondent target; document uncertainty and avoid segment-level conclusions when a segment is underpowered.
 
 **For detailed research methods**: See [references/research-methods.md](references/research-methods.md)
 
@@ -159,8 +161,8 @@ Identifies which features customers value most:
 - "It's so cheap!" feedback
 
 **Business signals:**
-- Very high conversion rates (>40%)
-- Very low churn (<3% monthly)
+- Conversion or win rates are stronger than the relevant historical or segment baseline
+- Retention remains healthy for the affected cohorts after controlling for product and acquisition changes
 - Strong unit economics
 
 **Product signals:**
@@ -188,13 +190,13 @@ Identifies which features customers value most:
 - Feature comparison table
 - Who each tier is for
 - FAQ section
-- Annual discount callout (17-20%)
+- Annual discount callout when the discount is supported by cash-flow, retention, and payback economics
 - Money-back guarantee
 - Customer logos/trust signals
 
 ### Pricing Psychology
-- **Anchoring:** Show higher-priced option first
-- **Decoy effect:** Middle tier should be best value
+- **Anchoring:** Test whether presenting a higher-priced option improves comprehension without obscuring tradeoffs
+- **Choice architecture:** Make each tier's audience, limits, and total cost clear; do not add a deliberately inferior option to manipulate selection
 - **Charm pricing:** $49 vs. $50 (for value-focused)
 - **Round pricing:** $50 vs. $49 (for premium)
 
@@ -213,7 +215,7 @@ Identifies which features customers value most:
 - [ ] Chosen number of tiers
 - [ ] Differentiated tiers clearly
 - [ ] Set price points based on research
-- [ ] Created annual discount strategy
+- [ ] Checked price points and discounts against evidence, segment needs, and unit economics
 - [ ] Planned enterprise/custom tier
 
 ---
