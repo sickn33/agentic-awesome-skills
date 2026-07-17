@@ -12,6 +12,7 @@ const {
 } = require("../adapters");
 const { scanJson } = require("../mcp/strict-json");
 const { createSkillTargetAdapter, ADAPTER_VERSION } = require("../target-adapter");
+const { fsyncDirectorySync } = require("../durability");
 const { inspectLayout, resolveDestination } = require("../transaction/safety");
 const { validateInstance } = require("../schema-validator");
 
@@ -132,8 +133,7 @@ function writeNewJson(filePath, value, { previewWindowsOutput = false } = {}) {
     linked = true;
     fs.unlinkSync(temporary);
     try {
-      const parentDescriptor = fs.openSync(parent, fs.constants.O_RDONLY);
-      try { fs.fsyncSync(parentDescriptor); } finally { fs.closeSync(parentDescriptor); }
+      fsyncDirectorySync(parent);
       return { outputDurability: "directorySynced", certificationStatus: "certifiable" };
     } catch (error) {
       if (!previewWindowsOutput) throw error;
