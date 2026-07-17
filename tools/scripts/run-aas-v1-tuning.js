@@ -180,6 +180,22 @@ function assessCase(result, benchmarkCase, goldCase) {
   };
 }
 
+function recommendationInputForBenchmarkCase(benchmarkCase) {
+  const fields = [
+    "intent",
+    "targets",
+    "profile",
+    "criticalGoals",
+    "nonCriticalGoals",
+    "minimumNonCriticalGoalCoverage",
+    "policy",
+    "maxSkills",
+  ];
+  return Object.fromEntries(fields
+    .filter((field) => benchmarkCase[field] !== undefined)
+    .map((field) => [field, benchmarkCase[field]]));
+}
+
 function mean(values) {
   return values.length === 0 ? null : values.reduce((sum, value) => sum + value, 0) / values.length;
 }
@@ -222,7 +238,7 @@ function macroAverage(perIntent, field) {
 
 function buildReport(catalog, pairs) {
   const caseReports = pairs.map(({ benchmarkCase, goldCase }) => {
-    const result = recommendStack(catalog, benchmarkCase);
+    const result = recommendStack(catalog, recommendationInputForBenchmarkCase(benchmarkCase));
     return assessCase(result, benchmarkCase, goldCase);
   });
   const intents = [...new Set(caseReports.map((report) => report.intent))].sort(compareStrings);
@@ -313,4 +329,5 @@ module.exports = {
   enumerateTuningPairs,
   listJsonFiles,
   macroAverage,
+  recommendationInputForBenchmarkCase,
 };

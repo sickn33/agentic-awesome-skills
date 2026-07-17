@@ -7,6 +7,7 @@ const {
   assessInclusion,
   enumerateTuningPairs,
   macroAverage,
+  recommendationInputForBenchmarkCase,
 } = require("../run-aas-v1-tuning");
 
 test("tuning runner enumerates only the paired tuning corpus", () => {
@@ -40,6 +41,18 @@ test("inclusion precision selects one coherent gold solution instead of their un
     matchedSolutionId: "solution-a",
     precision: 0.5,
   });
+});
+
+test("tuning fixtures are projected onto the strict public recommendation input", () => {
+  const benchmarkCase = enumerateTuningPairs()[0].benchmarkCase;
+  const input = recommendationInputForBenchmarkCase(benchmarkCase);
+  assert.equal(input.intent, benchmarkCase.intent);
+  assert.equal(input.profile, benchmarkCase.profile);
+  assert.equal(Object.hasOwn(input, "caseId"), false);
+  assert.equal(Object.hasOwn(input, "provenance"), false);
+  assert.equal(Object.hasOwn(input, "requiresSkill"), false);
+  assert.equal(Object.hasOwn(input, "schemaVersion"), false);
+  assert.equal(Object.hasOwn(input, "taskFamilyFingerprint"), false);
 });
 
 test("intent precision is pooled over inclusions and macro is unweighted", () => {
