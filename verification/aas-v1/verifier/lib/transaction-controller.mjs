@@ -616,7 +616,7 @@ export async function generateTransactionEvidence({ tarball, workRoot, zones }) 
   // verified runtime or manufacturing a synthetic source tree.
   const skillId = fs.existsSync(path.join(runtime.packageRoot, "skills", "react-best-practices")) ? "react-best-practices" : "ai-agents-architect";
   const backupSkillIds = fs.readdirSync(path.join(runtime.packageRoot, "skills"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name !== skillId)
+    .filter((entry) => entry.isDirectory() && entry.name !== skillId && /^[a-z0-9][a-z0-9-]*$/.test(entry.name))
     .map((entry) => entry.name)
     .sort()
     .slice(0, 12);
