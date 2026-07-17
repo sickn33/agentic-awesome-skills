@@ -249,7 +249,7 @@ async function macObserved(executable, args, options) {
       ...options,
       detached: true,
       timeoutMs: budgets.observerTimeoutMs,
-      maxOutputBytes: 8 * 1024 * 1024,
+      maxOutputBytes: budgets.traceMaxOutputBytes,
       onSpawn(child) { observerPid = child.pid; },
       onStdoutData: captureObserverOutput(options.onStdoutData),
       onStderrData: captureObserverOutput(options.onStderrData),
@@ -351,6 +351,7 @@ export function macObserverBudgets(candidateTimeoutMs = 30_000) {
     readinessProcessTimeoutMs,
     readinessDelayMs,
     drainMs,
+    traceMaxOutputBytes: 64 * 1024 * 1024,
     observerTimeoutMs: startupMs
       + readinessMaxAttempts * (readinessProcessTimeoutMs + readinessDelayMs)
       + candidateTimeoutMs
