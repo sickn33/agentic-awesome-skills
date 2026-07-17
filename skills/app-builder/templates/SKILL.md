@@ -2,7 +2,9 @@
 name: templates
 description: "Project scaffolding templates for new applications. Use when creating new projects from scratch. Contains 12 templates for various tech stacks."
 risk: unknown
-source: community
+source: https://github.com/vudovn/antigravity-kit
+source_repo: vudovn/antigravity-kit
+source_type: community
 date_added: "2026-02-27"
 ---
 
