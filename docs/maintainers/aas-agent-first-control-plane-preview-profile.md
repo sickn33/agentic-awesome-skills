@@ -62,6 +62,13 @@ Every matrix job must install the exact candidate tarball with lifecycle
 scripts disabled and run without checkout-only runtime dependencies. No job may
 be skipped or allowed to fail.
 
+On Windows, the preview verifier may materialize its own isolated runtime-cache
+fixture and must then have the production core verify the complete identity and
+every cached byte before `plan`, `doctor`, or MCP use. This proves the read-only
+functional lifecycle without claiming that Windows cache-promotion durability
+is certified. Native directory-flush and interrupted-promotion evidence remains
+part of the certified-v1 transaction gate.
+
 Required functional suites are:
 
 1. **Package and entrypoints** — allowlisted package contents; `aas`,

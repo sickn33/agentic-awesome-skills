@@ -105,6 +105,44 @@ function snapshotTree(root) {
   return sha256(stable(records));
 }
 
+async function provisionVerifiedPreviewRuntime(aas, { cacheRoot, release, parsed }) {
+  const scanned = aas.cache.runtimeRecords(parsed.entries, release.version);
+  const targetPath = aas.cache.runtimeCachePath({
+    cacheRoot,
+    packageVersion: release.version,
+    integrity: release.integrity,
+  });
+  fs.mkdirSync(targetPath, { recursive: true, mode: 0o700 });
+  for (const record of scanned.records) {
+    const destination = path.join(targetPath, ...record.path.split("/"));
+    fs.mkdirSync(path.dirname(destination), { recursive: true, mode: 0o700 });
+    fs.writeFileSync(destination, record.bytes, { flag: "wx", mode: 0o600 });
+  }
+  const identity = aas.cache.validateRuntimeIdentity({
+    schemaVersion: 1,
+    package: release.package,
+    version: release.version,
+    integrity: release.integrity,
+    closureDigest: scanned.closureDigest,
+    digestVersion: aas.cache.DIGEST_VERSION,
+    assets: scanned.assets,
+    provenance: release.provenance,
+  });
+  fs.writeFileSync(
+    path.join(targetPath, aas.cache.RUNTIME_IDENTITY_FILE),
+    `${aas.canonicalJson(identity)}\n`,
+    { flag: "wx", mode: 0o600 },
+  );
+  const verified = await aas.cache.runtimeStatus({
+    cacheRoot,
+    packageVersion: release.version,
+    integrity: release.integrity,
+    closureDigest: scanned.closureDigest,
+  });
+  assert.equal(verified.status, "verified");
+  return verified;
+}
+
 class JsonLineClient {
   constructor(script, args, cwd) {
     this.child = spawn(process.execPath, [script, ...args], {
@@ -214,16 +252,18 @@ async function main() {
   const runtimeIntegrity = sha512Sri(tarballBytes);
   const aas = require(path.join(packageRoot, "tools/lib/aas-v1/index.js"));
   const parsedArchive = aas.cache.parsePackageArchive(tarballBytes);
-  const promoted = await aas.cache.promoteRuntime({
-    cacheRoot,
-    release: {
-      package: metadata.name,
-      version: metadata.version,
-      integrity: runtimeIntegrity,
-      provenance: { registryOrigin: "https://registry.npmjs.org", signaturesPresent: false, attestationsPresent: false },
-    },
-    parsed: parsedArchive,
-  });
+  const release = {
+    package: metadata.name,
+    version: metadata.version,
+    integrity: runtimeIntegrity,
+    provenance: { registryOrigin: "https://registry.npmjs.org", signaturesPresent: false, attestationsPresent: false },
+  };
+  // Windows directory-flush capability belongs to the certified-v1 durability
+  // gate. The preview runner materializes only its isolated test cache, then
+  // requires the production core to verify every byte before lifecycle use.
+  const promoted = process.platform === "win32"
+    ? await provisionVerifiedPreviewRuntime(aas, { cacheRoot, release, parsed: parsedArchive })
+    : await aas.cache.promoteRuntime({ cacheRoot, release, parsed: parsedArchive });
 
   const manifestPath = path.join(workRoot, "aas-stack.json");
   const initialized = parseCliSuccess(runNode(aasBin, [
