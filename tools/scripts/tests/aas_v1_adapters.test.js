@@ -204,4 +204,6 @@ test("Windows sensitive-byte and directory-flush contracts stay fail-closed", as
 
   assert.ok(durabilitySource.includes("CreateFileW($args[0],0x40000000,7,"));
   assert.ok(!durabilitySource.includes("CreateFileW($args[0],0x80000000,7,"));
+  assert.ok(durabilitySource.includes("AAS_WIN32_DIRECTORY_FLUSH_FAILURE"));
+  assert.ok(durabilitySource.includes("GetLastWin32Error()"));
 });
