@@ -1,12 +1,10 @@
-# Build and deploy the web app to GitHub Pages.
+# Build and deploy the web app to GitHub Pages only after an explicit release dispatch.
 # Enable in repo: Settings → Pages → Source: GitHub Actions.
 # Site URL: https://<owner>.github.io/<repo>/
 
 name: Deploy Web App to GitHub Pages
 
 on:
-  push:
-    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:
@@ -23,7 +21,6 @@ env:
 
 jobs:
   build:
-    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip pages]')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
