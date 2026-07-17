@@ -97,6 +97,7 @@ async function macObserved(executable, args, options) {
   if (!commandExists("dtrace")) throw Object.assign(new Error("dtrace is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   const script = path.join(options.evidenceDir, `observer-${process.pid}.d`);
   const output = path.join(options.evidenceDir, `observer-${process.pid}.trace`);
+  const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
   fs.writeFileSync(script, `
 #pragma D option quiet
 syscall::socket:entry,syscall::connect:entry,syscall::bind:entry,syscall::listen:entry,syscall::accept:entry,syscall::sendto:entry,syscall::recvfrom:entry
@@ -111,8 +112,14 @@ proc:::exec-success
 /progenyof($target)/ { printf("process|%d|exec\\n", pid); }
 `, { mode: 0o600 });
   const command = [executable, ...args].map(shellQuote).join(" ");
-  const dtrace = await runProcess("sudo", ["-n", "dtrace", "-q", "-s", script, "-c", command, "-o", output], options);
+  // DTrace's macOS `-c` launcher cannot reliably execute binaries from the
+  // hosted-toolcache path directly. Start a root-readable wrapper and let the
+  // shell perform the final exec while DTrace observes the same target PID and
+  // its progeny. No untrusted text is interpolated without shellQuote().
+  fs.writeFileSync(launcher, `#!/bin/zsh\nexec ${command}\n`, { mode: 0o700 });
+  const dtrace = await runProcess("sudo", ["-n", "dtrace", "-q", "-s", script, "-c", launcher, "-o", output], options);
   fs.rmSync(script, { force: true });
+  fs.rmSync(launcher, { force: true });
   if (dtrace.code !== 0 || !fs.existsSync(output)) {
     throw Object.assign(new Error(`DTrace failed closed: ${dtrace.stderr.slice(0, 500)}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
