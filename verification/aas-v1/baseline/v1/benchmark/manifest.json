@@ -1,7 +1,7 @@
 {
   "$schema": "../../../schemas/benchmark-manifest.schema.json",
   "schemaVersion": 1,
-  "benchmarkVersion": "1.0.0",
+  "benchmarkVersion": "1.0.1",
   "status": "frozen",
   "intents": [
     "web-application-delivery",
@@ -28,7 +28,9 @@
   "tuning": {
     "manifest": "tuning/manifest.json",
     "separatedFromHeldOut": true,
-    "status": "frozen"
+    "status": "frozen",
+    "version": "1.0.1",
+    "equivalenceAudit": "../reviews/tuning-gold-equivalence-audit.json"
   },
   "labelsFrozen": true,
   "antiCheating": {

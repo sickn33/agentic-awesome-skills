@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "reviewVersion": "1.0.0",
+  "auditId": "aas-v1-tuning-gold-equivalence-1.0.1",
+  "reviewer": {
+    "identity": "gold-equivalence-independent-alpha",
+    "kind": "independent-agent-review",
+    "scorerImplementer": false
+  },
+  "scope": {
+    "repositoryCommit": "09f2d8612d2e68a087377685e9c876bd737e1782",
+    "packageVersion": "14.6.0",
+    "diagnosticSha256": "ae33eb201792dbcd5b28e5a71de36594f6c0e38709b6c86848de4420328f7001",
+    "tuningOnly": true,
+    "assignedClaimCount": 9,
+    "heldOutContentsRead": false,
+    "abstentionLabelsRead": false,
+    "readOnlyReview": true
+  },
+  "skillEvidence": [
+    {
+      "skillId": "agent-tool-builder",
+      "path": "skills/agent-tool-builder/SKILL.md",
+      "sha256": "d32f031ee373cb91618e2cb489e486258b1efa098621f403771b42013f733b03",
+      "lineRanges": ["18-20", "34-41", "340-432", "601-681"]
+    },
+    {
+      "skillId": "multi-agent-architect",
+      "path": "skills/multi-agent-architect/SKILL.md",
+      "sha256": "46c9287a5d9b81ab08ca39a5059f391e874e50d06cff7823ea6d70901c221ff8",
+      "lineRanges": ["21-37", "292-306", "310-331"]
+    },
+    {
+      "skillId": "api-documenter",
+      "path": "skills/api-documenter/SKILL.md",
+      "sha256": "6c08bd68f45cf03280b2a34f6d3bd94e92dba06c0ff4eb6b7b61a4813e0358b9",
+      "lineRanges": ["10-28", "34-44", "96-114", "162-180"]
+    },
+    {
+      "skillId": "kubernetes-architect",
+      "path": "skills/kubernetes-architect/SKILL.md",
+      "sha256": "122d2a64642bd0ce5a7fe56017d892496cd08b64f99871d4e2546d4ba8fd0bb9",
+      "lineRanges": ["10-28", "47-59", "117-131", "167-170"]
+    }
+  ],
+  "decisions": [
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.build-metadata-mcp",
+      "skillId": "agent-tool-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The skill covers MCP tools, schemas and stdio startup but not the required read-only resource boundary; it is incomplete alone and redundant beside the existing MCP builders."
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.local-catalog-mcp",
+      "skillId": "agent-tool-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The skill does not establish the case-defining offline, no-write and read-only-resource contract."
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+      "skillId": "multi-agent-architect",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "multi-agent-threat-boundary-review",
+        "allowedSkillIds": ["multi-agent-architect", "threat-modeling-expert"],
+        "requiredGroups": [["multi-agent-architect"], ["threat-modeling-expert"]]
+      },
+      "reason": "It supplies least-privilege tool binding, input sanitization, permission layers, secret handling and tool-call logging; threat-modeling-expert supplies the separate threat-review group."
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.local-mcp-security",
+      "skillId": "multi-agent-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "LangGraph security guidance does not establish MCP stdio/read-only boundaries or trust labels for untrusted returned content."
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.partner-orders-api",
+      "skillId": "api-documenter",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "interface-design-documenter",
+        "allowedSkillIds": ["api-and-interface-design", "api-documenter"],
+        "requiredGroups": [["api-and-interface-design"], ["api-documenter"]]
+      },
+      "reason": "With the existing interface-design skill, api-documenter supplies OpenAPI authoring, contract validation, machine-readable documentation, versioning and backward-compatibility guidance."
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.research-catalog-api",
+      "skillId": "api-documenter",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "interface-design-documenter",
+        "allowedSkillIds": ["api-and-interface-design", "api-documenter"],
+        "requiredGroups": [["api-and-interface-design"], ["api-documenter"]]
+      },
+      "reason": "The framework-neutral skill covers offline OpenAPI review, contract validation, machine-readable documentation, versioning and backward compatibility alongside interface design."
+    },
+    {
+      "caseId": "tuning.deployment-devops.containers.worker-container",
+      "skillId": "kubernetes-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The case is Docker-only and the skill explicitly excludes work without Kubernetes or orchestration."
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+      "skillId": "kubernetes-architect",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "kubernetes-architecture-canary",
+        "allowedSkillIds": ["kubernetes-architect"],
+        "requiredGroups": [["kubernetes-architect"]]
+      },
+      "reason": "The Kubernetes case directly matches staging validation, rollback planning, Argo/Flagger canaries, progressive delivery, observability and safe deployment guidance."
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.schema-compatible-release",
+      "skillId": "kubernetes-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The PostgreSQL compatibility case has no Kubernetes context and requires migration-specific sequencing and rollback evidence."
+    }
+  ],
+  "decisionCounts": {
+    "ADD_TO_ALLOWED_EQUIVALENT": 4,
+    "REJECT_NOT_EQUIVALENT": 5,
+    "AMBIGUOUS_NEEDS_ADJUDICATION": 0
+  },
+  "reviewedAt": "2026-07-17"
+}

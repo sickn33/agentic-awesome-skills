@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/tuning-gold-equivalence-audit.schema.json",
+  "title": "AAS v1 tuning gold equivalence audit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "auditId", "auditVersion", "baseline", "diagnostic", "scope", "reviewReports", "claims", "changedPairs", "metricImplications", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "auditId": { "const": "aas-v1-tuning-gold-equivalence-1.0.1" },
+    "auditVersion": { "const": "1.0.0" },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repositoryCommit", "packageVersion", "previousFreezeRootDigest", "publicSkillsIndexSha256"],
+      "properties": {
+        "repositoryCommit": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "packageVersion": { "const": "14.6.0" },
+        "previousFreezeRootDigest": { "$ref": "#/$defs/prefixedSha256" },
+        "publicSkillsIndexSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "catalogDigest", "caseCount", "tuningOnly"],
+      "properties": {
+        "path": { "const": "baseline/v1/reviews/tuning-diagnostic-before-gold.json" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "catalogDigest": { "$ref": "#/$defs/prefixedSha256" },
+        "caseCount": { "const": 60 },
+        "tuningOnly": { "const": true }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["omissionCaseCount", "omittedInclusionCount", "changedPairCount", "heldOutCasesOrGoldReadByReviewers", "abstentionLabelsReadByReviewers", "metricFormulasChanged", "productCodeChanged"],
+      "properties": {
+        "omissionCaseCount": { "const": 17 },
+        "omittedInclusionCount": { "const": 19 },
+        "changedPairCount": { "const": 7 },
+        "heldOutCasesOrGoldReadByReviewers": { "const": false },
+        "abstentionLabelsReadByReviewers": { "const": false },
+        "metricFormulasChanged": { "const": false },
+        "productCodeChanged": { "const": false }
+      }
+    },
+    "reviewReports": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reviewer", "role", "path", "sha256", "claimCount", "scorerImplementer"],
+        "properties": {
+          "reviewer": { "type": "string", "minLength": 1 },
+          "role": { "type": "string", "minLength": 1 },
+          "path": { "pattern": "^baseline/v1/reviews/reviewer-tuning-equivalence-.*\\.json$", "type": "string" },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "claimCount": { "type": "integer", "minimum": 1, "maximum": 19 },
+          "scorerImplementer": { "const": false }
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 19,
+      "maxItems": 19,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["caseId", "skillId", "decision", "resolution", "reviewers"],
+        "properties": {
+          "caseId": { "pattern": "^tuning\\.", "type": "string" },
+          "skillId": { "type": "string", "minLength": 1 },
+          "decision": { "enum": ["ADD_TO_ALLOWED_EQUIVALENT", "REJECT_NOT_EQUIVALENT"] },
+          "solutionId": { "type": "string", "minLength": 1 },
+          "resolution": { "type": "string", "minLength": 1 },
+          "reviewers": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    },
+    "changedPairs": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["caseId", "priorPairDigest", "newPairDigest", "solutionId", "approvingReviewers"],
+        "properties": {
+          "caseId": { "pattern": "^tuning\\.", "type": "string" },
+          "priorPairDigest": { "$ref": "#/$defs/prefixedSha256" },
+          "newPairDigest": { "$ref": "#/$defs/prefixedSha256" },
+          "solutionId": { "type": "string", "minLength": 1 },
+          "approvingReviewers": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    },
+    "metricImplications": { "type": "object" },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "version", "reviewedAt"],
+      "properties": {
+        "source": { "const": "independent-tuning-gold-equivalence-audit" },
+        "version": { "const": "1.0.1" },
+        "reviewedAt": { "format": "date", "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "prefixedSha256": { "pattern": "^sha256-[0-9a-f]{64}$", "type": "string" }
+  }
+}

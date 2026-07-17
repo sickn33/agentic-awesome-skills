@@ -31,24 +31,35 @@
           "kubernetes-deployment"
         ]
       ]
+    },
+    {
+      "solutionId": "kubernetes-architecture-canary",
+      "allowedSkillIds": [
+        "kubernetes-architect"
+      ],
+      "requiredGroups": [
+        [
+          "kubernetes-architect"
+        ]
+      ]
     }
   ],
   "ambiguous": false,
   "reviews": [
     {
-      "reviewer": "codex-independent-alpha",
+      "reviewer": "gold-equivalence-independent-adjudicator",
       "decision": "approved",
-      "reviewedDigest": "sha256-6ada85bc3775d909036b1ccbe834039f991373311d173f5d3d2a34f663cbefd7"
+      "reviewedDigest": "sha256-4b99c753b82666c9b20cd18a54d0b1c584e320b8c6529baafb33c5f66323c662"
     },
     {
-      "reviewer": "codex-independent-beta",
+      "reviewer": "gold-equivalence-independent-alpha",
       "decision": "approved",
-      "reviewedDigest": "sha256-6ada85bc3775d909036b1ccbe834039f991373311d173f5d3d2a34f663cbefd7"
+      "reviewedDigest": "sha256-4b99c753b82666c9b20cd18a54d0b1c584e320b8c6529baafb33c5f66323c662"
     }
   ],
   "provenance": {
-    "source": "independent-synthetic-tuning-gold-authoring",
-    "version": "1.0.0",
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
     "reviewedAt": "2026-07-17"
   }
 }

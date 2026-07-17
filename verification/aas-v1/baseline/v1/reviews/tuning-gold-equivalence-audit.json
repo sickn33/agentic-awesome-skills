@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "auditId": "aas-v1-tuning-gold-equivalence-1.0.1",
+  "auditVersion": "1.0.0",
+  "baseline": {
+    "repositoryCommit": "09f2d8612d2e68a087377685e9c876bd737e1782",
+    "packageVersion": "14.6.0",
+    "previousFreezeRootDigest": "sha256-c7a4d4b3efa9f2bdf5a126fc3c384680d39534880a3900302785397e4ddd451c",
+    "publicSkillsIndexSha256": "073d00a736d2b8dd252c719da760b7bb1d9fd232fa70bc9fe01bb48b1428a3f3"
+  },
+  "diagnostic": {
+    "path": "baseline/v1/reviews/tuning-diagnostic-before-gold.json",
+    "sha256": "ae33eb201792dbcd5b28e5a71de36594f6c0e38709b6c86848de4420328f7001",
+    "catalogDigest": "sha256-2bcd615d3801594746ecae7e69395bdf88096a0bab78f8d5761f6e538f551edb",
+    "caseCount": 60,
+    "tuningOnly": true
+  },
+  "scope": {
+    "omissionCaseCount": 17,
+    "omittedInclusionCount": 19,
+    "changedPairCount": 7,
+    "heldOutCasesOrGoldReadByReviewers": false,
+    "abstentionLabelsReadByReviewers": false,
+    "metricFormulasChanged": false,
+    "productCodeChanged": false
+  },
+  "reviewReports": [
+    {
+      "reviewer": "gold-equivalence-independent-alpha",
+      "role": "primary-disjoint-a",
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-alpha.json",
+      "sha256": "ec48b476a76a0332114e65db25badd92737ac6547c5a397d9456b2be4fb11689",
+      "claimCount": 9,
+      "scorerImplementer": false
+    },
+    {
+      "reviewer": "gold-equivalence-independent-beta",
+      "role": "primary-disjoint-b",
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-beta.json",
+      "sha256": "01cbe88f9d55690b32e61cbd567c3560987654dbd4bee70daec926d740e060c3",
+      "claimCount": 10,
+      "scorerImplementer": false
+    },
+    {
+      "reviewer": "gold-equivalence-independent-adjudicator",
+      "role": "independent-adjudicator",
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-adjudicator.json",
+      "sha256": "ad8c87f03287989b7dbbacaebc42aa11e9f4564a0f08af2b6361e02d389bd160",
+      "claimCount": 19,
+      "scorerImplementer": false
+    },
+    {
+      "reviewer": "gold-equivalence-independent-ci-tiebreak",
+      "role": "independent-tiebreak",
+      "path": "baseline/v1/reviews/reviewer-tuning-equivalence-ci-tiebreak.json",
+      "sha256": "dbc01ab488cd904370af0a27f9f14a92891edd0187549ace5c48d8cc88d9bebf",
+      "claimCount": 1,
+      "scorerImplementer": false
+    }
+  ],
+  "claims": [
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.build-metadata-mcp",
+      "skillId": "agent-tool-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.local-catalog-mcp",
+      "skillId": "agent-tool-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+      "skillId": "multi-agent-architect",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "multi-agent-threat-boundary-review",
+      "resolution": "independent-tiebreak-with-dissent-retained",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator", "gold-equivalence-independent-ci-tiebreak"]
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.local-mcp-security",
+      "skillId": "multi-agent-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.partner-orders-api",
+      "skillId": "api-documenter",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "interface-design-documenter",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.research-catalog-api",
+      "skillId": "api-documenter",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "interface-design-documenter",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.deployment-devops.containers.worker-container",
+      "skillId": "kubernetes-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+      "skillId": "kubernetes-architect",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "kubernetes-architecture-canary",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.schema-compatible-release",
+      "skillId": "kubernetes-architect",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.ci-token-exposure",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.session-anomaly",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.internal-auth-hardening",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.service-credential-boundaries",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "skillId": "python-testing-patterns",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "pytest-api-mock-contract",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "skillId": "api-testing-observability-api-mock",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "pytest-api-mock-contract",
+      "resolution": "independent-agreement",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+      "skillId": "python-testing-patterns",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "ambiguity-adjudicated-reject",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+      "skillId": "api-testing-observability-api-mock",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "resolution": "ambiguity-adjudicated-reject",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.admin-ui-tests",
+      "skillId": "unit-testing-test-generate",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "jest-generated-component-suite",
+      "resolution": "independent-agreement-on-conservative-exact-gold",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.design-system-tests",
+      "skillId": "unit-testing-test-generate",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "solutionId": "jest-generated-component-suite",
+      "resolution": "independent-agreement-on-conservative-exact-gold",
+      "reviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    }
+  ],
+  "changedPairs": [
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+      "priorPairDigest": "sha256-584306f171df223d5a326a4027805bf57374826db9db266db2fc2622499b280a",
+      "newPairDigest": "sha256-8166b509f33719884800caa30a35b93c19a7532ba42b79caec8fb8ac9885cd74",
+      "solutionId": "multi-agent-threat-boundary-review",
+      "approvingReviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-ci-tiebreak"]
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.partner-orders-api",
+      "priorPairDigest": "sha256-8ad5add3c6889ed5372e4358a23ab6bf80ae83d57bbb42f49b1fba818a851813",
+      "newPairDigest": "sha256-1494fd21d58cad7d549a0ea132c423c7902e304fd71aa6b8123eb8be2787b0da",
+      "solutionId": "interface-design-documenter",
+      "approvingReviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.research-catalog-api",
+      "priorPairDigest": "sha256-774dc3ea6d9d56cc5c62359a7da545aeaf4e9dc657bcdacfda9c8f390573523a",
+      "newPairDigest": "sha256-122f4173c22fea61413f168fdd29bd9cc418dfe710f6201fa2ba38d5d47d6ece",
+      "solutionId": "interface-design-documenter",
+      "approvingReviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+      "priorPairDigest": "sha256-6ada85bc3775d909036b1ccbe834039f991373311d173f5d3d2a34f663cbefd7",
+      "newPairDigest": "sha256-4b99c753b82666c9b20cd18a54d0b1c584e320b8c6529baafb33c5f66323c662",
+      "solutionId": "kubernetes-architecture-canary",
+      "approvingReviewers": ["gold-equivalence-independent-alpha", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "priorPairDigest": "sha256-c49d741a2913f06cc163e39ac541c8fc279467bd33aba82b0c31df608a7ed5ab",
+      "newPairDigest": "sha256-89ee39d9f9364e2a8871d0e56dded988f4562e79e9a7b5c2d7830356144da289",
+      "solutionId": "pytest-api-mock-contract",
+      "approvingReviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.admin-ui-tests",
+      "priorPairDigest": "sha256-283525f1d35efec5aee27a4f4b256e18e11e862529f542a6179466b7b40f28ce",
+      "newPairDigest": "sha256-665dc06c2ce3abd17a0478a9da1a3fa4264ac65ad514d776a78f8a8b2fb4b44b",
+      "solutionId": "jest-generated-component-suite",
+      "approvingReviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.design-system-tests",
+      "priorPairDigest": "sha256-76697f79d76acaaf26cafb43002af3a8e8c47437a3c3bb5663a6b3bee6ee7a56",
+      "newPairDigest": "sha256-b77cf14dcd25917d8dddeedd73d56472a3aa956ed2ecda9650987e06b48590d3",
+      "solutionId": "jest-generated-component-suite",
+      "approvingReviewers": ["gold-equivalence-independent-beta", "gold-equivalence-independent-adjudicator"]
+    }
+  ],
+  "metricImplications": {
+    "formula": "unchanged-frozen-tuning-diagnostic-formula",
+    "before": {
+      "macro": {
+        "verifiedCoverage": 0.3666666666666667,
+        "inclusionPrecision": 0.5638888888888889,
+        "criticalGoalCoverage": 0.6166666666666667,
+        "nonCriticalGoalCoverage": 0.5333333333333333
+      },
+      "perIntentInclusionPrecision": {
+        "agent-mcp-development": 0.6,
+        "api-backend-delivery": 0.8,
+        "deployment-devops": 0.25,
+        "security-review-hardening": 0.3333333333333333,
+        "test-qa-automation": 0.4,
+        "web-application-delivery": 1
+      }
+    },
+    "after": {
+      "macro": {
+        "verifiedCoverage": 0.3666666666666667,
+        "inclusionPrecision": 0.7222222222222223,
+        "criticalGoalCoverage": 0.6166666666666667,
+        "nonCriticalGoalCoverage": 0.5333333333333333
+      },
+      "perIntentInclusionPrecision": {
+        "agent-mcp-development": 0.7,
+        "api-backend-delivery": 1,
+        "deployment-devops": 0.5,
+        "security-review-hardening": 0.3333333333333333,
+        "test-qa-automation": 0.8,
+        "web-application-delivery": 1
+      }
+    },
+    "delta": {
+      "macroInclusionPrecision": 0.15833333333333344,
+      "verifiedCoverage": 0,
+      "criticalGoalCoverage": 0,
+      "nonCriticalGoalCoverage": 0,
+      "acceptedInclusions": 8
+    },
+    "postAuditGates": {
+      "hardPolicyViolations": true,
+      "inclusionPrecision": false,
+      "verifiedCoverage": false
+    }
+  },
+  "provenance": {
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
+    "reviewedAt": "2026-07-17"
+  }
+}

@@ -31,24 +31,39 @@
           "threat-modeling-expert"
         ]
       ]
+    },
+    {
+      "solutionId": "multi-agent-threat-boundary-review",
+      "allowedSkillIds": [
+        "multi-agent-architect",
+        "threat-modeling-expert"
+      ],
+      "requiredGroups": [
+        [
+          "multi-agent-architect"
+        ],
+        [
+          "threat-modeling-expert"
+        ]
+      ]
     }
   ],
   "ambiguous": false,
   "reviews": [
     {
-      "reviewer": "codex-independent-alpha",
+      "reviewer": "gold-equivalence-independent-alpha",
       "decision": "approved",
-      "reviewedDigest": "sha256-584306f171df223d5a326a4027805bf57374826db9db266db2fc2622499b280a"
+      "reviewedDigest": "sha256-8166b509f33719884800caa30a35b93c19a7532ba42b79caec8fb8ac9885cd74"
     },
     {
-      "reviewer": "codex-independent-beta",
+      "reviewer": "gold-equivalence-independent-ci-tiebreak",
       "decision": "approved",
-      "reviewedDigest": "sha256-584306f171df223d5a326a4027805bf57374826db9db266db2fc2622499b280a"
+      "reviewedDigest": "sha256-8166b509f33719884800caa30a35b93c19a7532ba42b79caec8fb8ac9885cd74"
     }
   ],
   "provenance": {
-    "source": "independent-synthetic-tuning-gold-authoring",
-    "version": "1.0.0",
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
     "reviewedAt": "2026-07-17"
   }
 }

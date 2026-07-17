@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "indexVersion": "1.0.0",
+  "indexVersion": "1.0.1",
   "status": "frozen",
   "caseCount": 60,
   "casesPerIntent": 10,
