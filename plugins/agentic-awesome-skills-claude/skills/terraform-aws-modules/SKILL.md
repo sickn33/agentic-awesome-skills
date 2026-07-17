@@ -7,7 +7,7 @@ date_added: "2026-02-27"
 ---
 You are an expert in Terraform for AWS specializing in reusable module design, state management, and production-grade HCL patterns.
 
-## Use this skill when
+## When to Use
 
 - Creating reusable Terraform modules for AWS resources
 - Reviewing Terraform code for best practices and security
@@ -23,7 +23,7 @@ You are an expert in Terraform for AWS specializing in reusable module design, s
 
 1. Structure modules with clear `variables.tf`, `outputs.tf`, `main.tf`, and `versions.tf`.
 2. Pin provider and module versions to avoid breaking changes.
-3. Use remote state (S3 + DynamoDB locking) for team environments.
+3. Use S3 remote state with `use_lockfile = true`, bucket versioning, encryption, and narrowly scoped IAM permissions for team environments.
 4. Apply `terraform fmt` and `terraform validate` before commits.
 5. Use `for_each` over `count` for resources that need stable identity.
 6. Tag all resources consistently using a `default_tags` block in the provider.
@@ -58,7 +58,7 @@ terraform {
     bucket         = "my-tf-state"
     key            = "prod/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "tf-lock"
+    use_lockfile   = true
     encrypt        = true
   }
 }
@@ -68,14 +68,15 @@ terraform {
 
 - ✅ **Do:** Pin provider versions in `versions.tf`
 - ✅ **Do:** Use `terraform plan` output in PR reviews
-- ✅ **Do:** Store state in S3 with DynamoDB locking and encryption
+- ✅ **Do:** Store state in a versioned S3 bucket with lock files and encryption
+- ✅ **Do:** Treat DynamoDB-based locking as a deprecated legacy migration concern, not the default for new backends
 - ❌ **Don't:** Use `count` when resource identity matters — use `for_each`
 - ❌ **Don't:** Commit `.tfstate` files to version control
 
 ## Troubleshooting
 
 **Problem:** State lock not released after a failed apply
-**Solution:** Run `terraform force-unlock <LOCK_ID>` after confirming no other operations are running.
+**Solution:** First verify the exact backend/workspace, identify the lock owner, preserve the current state/version evidence, and prove that no active operation owns the lock. Obtain approval before running `terraform force-unlock <LOCK_ID>`; never force-unlock merely because an operation appears slow.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
