@@ -3,17 +3,25 @@
 const fs = require("node:fs");
 const { spawn } = require("node:child_process");
 
-const [childDriver, readyCanary, rootAckCanary, afterParentCanary] = process.argv.slice(2);
-if (!childDriver || !readyCanary || !rootAckCanary || !afterParentCanary) process.exit(64);
+const [powershell, childDriver, jobSource, readyCanary, rootAckCanary, afterParentCanary] = process.argv.slice(2);
+if (!powershell || !childDriver || !jobSource || !readyCanary || !rootAckCanary || !afterParentCanary) process.exit(64);
 
-const child = spawn(process.execPath, [childDriver, readyCanary, afterParentCanary], {
+const child = spawn(powershell, [
+  "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+  "-File", childDriver,
+  "-JobSource", jobSource,
+  "-ParentProcessId", String(process.pid),
+  "-ReadyCanary", readyCanary,
+  "-AfterParentCanary", afterParentCanary,
+], {
+  detached: true,
   stdio: ["ignore", "ignore", "inherit"],
   windowsHide: true,
 });
 fs.writeSync(1, String(child.pid));
 child.unref();
 
-const deadline = Date.now() + 1_000;
+const deadline = Date.now() + 3_000;
 const readiness = setInterval(() => {
   if (fs.existsSync(readyCanary)) {
     clearInterval(readiness);

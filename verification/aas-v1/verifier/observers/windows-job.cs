@@ -32,6 +32,7 @@ namespace AasVerifier
         private const uint CreateNoWindow = 0x08000000;
         private const uint StartfUseStdHandles = 0x00000100;
         private const uint JobObjectLimitKillOnJobClose = 0x00002000;
+        private const uint Synchronize = 0x00100000;
         private const int JobObjectBasicAccountingInformationClass = 1;
         private const int JobObjectExtendedLimitInformationClass = 9;
         private static readonly IntPtr InvalidHandleValue = new IntPtr(-1);
@@ -163,6 +164,9 @@ namespace AasVerifier
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool TerminateProcess(IntPtr process, uint exitCode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr OpenProcess(uint desiredAccess, [MarshalAs(UnmanagedType.Bool)] bool inheritHandle, int processId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern uint WaitForSingleObject(IntPtr handle, uint milliseconds);
@@ -372,6 +376,26 @@ namespace AasVerifier
             uint exitCode;
             if (!GetExitCodeProcess(handles.ProcessHandle, out exitCode)) ThrowLastError("GetExitCodeProcess failed");
             return exitCode;
+        }
+
+        public static bool WaitForProcessExit(int processId, int milliseconds)
+        {
+            if (processId <= 0) throw new ArgumentOutOfRangeException("processId");
+            if (milliseconds < 1 || milliseconds > 900000) throw new ArgumentOutOfRangeException("milliseconds");
+            IntPtr process = OpenProcess(Synchronize, false, processId);
+            if (process == IntPtr.Zero) ThrowLastError("OpenProcess for parent synchronization failed");
+            try
+            {
+                uint result = WaitForSingleObject(process, (uint)milliseconds);
+                if (result == WaitObject0) return true;
+                if (result == WaitTimeout) return false;
+                ThrowLastError("WaitForSingleObject for parent synchronization failed");
+                return false;
+            }
+            finally
+            {
+                CloseHandle(process);
+            }
         }
 
         public static void Close(JobProcessHandles handles)

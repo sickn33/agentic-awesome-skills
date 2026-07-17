@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage, windowsObserverBudgets } from "../lib/observer.mjs";
+import { macObserverBudgets, parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage, windowsObserverBudgets } from "../lib/observer.mjs";
 
 test("strace parser counts failed network attempts and non-stream writes", () => {
   const result = parseLinuxStrace([
@@ -29,6 +29,18 @@ test("Windows observer separates the candidate limit from ETW finalization grace
   });
   assert.throws(() => windowsObserverBudgets(0), (error) => error.code === "AAS_OBSERVER_INVALID_TIMEOUT");
   assert.throws(() => windowsObserverBudgets(900_001), (error) => error.code === "AAS_OBSERVER_INVALID_TIMEOUT");
+});
+
+test("macOS observer lifetime covers readiness, candidate, drain, and stop margin", () => {
+  assert.deepEqual(macObserverBudgets(10_000), {
+    startupMs: 1_500,
+    readinessMaxAttempts: 10,
+    readinessProcessTimeoutMs: 2_000,
+    readinessDelayMs: 350,
+    drainMs: 1_000,
+    observerTimeoutMs: 41_000,
+  });
+  assert.throws(() => macObserverBudgets(0), (error) => error.code === "AAS_OBSERVER_INVALID_TIMEOUT");
 });
 
 test("macOS fs_usage parser separates network, writes, and child execs", () => {

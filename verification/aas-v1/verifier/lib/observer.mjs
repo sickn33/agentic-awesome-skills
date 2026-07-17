@@ -155,6 +155,7 @@ async function macObserved(executable, args, options) {
   if (path.resolve(executable) !== path.resolve(process.execPath)) {
     throw Object.assign(new Error("macOS verifier supports only the pinned Node executable"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
+  const budgets = macObserverBudgets(options.timeoutMs);
   const sequence = `${process.pid.toString(36)}${Date.now().toString(36).slice(-5)}`.slice(-8);
   const observedName = `aasobs${sequence}`;
   const observedExecutable = path.join(options.evidenceDir, observedName);
@@ -177,51 +178,155 @@ async function macObserved(executable, args, options) {
     "",
   ].join("\n"), { mode: 0o600 });
   let observerPid = 0;
-  const observerTimeoutMs = (options.timeoutMs ?? 30_000) + 5_000;
-  const observerPromise = runProcess("sudo", [
-    "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
-    observedName,
-  ], {
-    ...options,
-    detached: true,
-    timeoutMs: observerTimeoutMs,
-    maxOutputBytes: 8 * 1024 * 1024,
-    onSpawn(child) { observerPid = child.pid; },
-  });
-  await new Promise((resolve) => setTimeout(resolve, 1_000));
-  const readinessProgram = `process.title=${JSON.stringify(observedName)};const fs=require('node:fs');const fd=fs.openSync(${JSON.stringify(readinessCanary)},'w',0o600);fs.writeSync(fd,'ready');fs.fsyncSync(fd);fs.closeSync(fd);`;
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    const readinessResult = await runProcess(observedExecutable, ["-e", readinessProgram], {
-      cwd: options.cwd,
-      env: options.env,
-      timeoutMs: 5_000,
+  let observerOutcome = null;
+  let observerPromise = null;
+  let observerStopStarted = false;
+  let observerCleanupFailed = false;
+  let liveObserverOutput = "";
+  let captureLiveOutput = true;
+  const captureObserverOutput = (callback) => (chunk) => {
+    if (captureLiveOutput) liveObserverOutput = `${liveObserverOutput}${chunk.toString("utf8")}`.slice(-1024 * 1024);
+    if (typeof callback === "function") callback(chunk);
+  };
+  let readinessAttempts = 0;
+  let readinessObservedLive = false;
+  const stopObserver = async () => {
+    if (observerStopStarted) return;
+    observerStopStarted = true;
+    if (!observerPid) return;
+    const group = `-${observerPid}`;
+    const probe = async () => runProcess("sudo", ["-n", "/bin/kill", "-0", group], { timeoutMs: 5_000 }).catch(() => null);
+    const initialProbe = await probe();
+    if (!initialProbe) {
+      observerCleanupFailed = true;
+      return;
+    }
+    if (initialProbe.code !== 0) return;
+    await runProcess("sudo", ["-n", "/bin/kill", "-INT", group], { timeoutMs: 5_000 }).catch(() => null);
+    await Promise.race([observerPromise, new Promise((resolve) => setTimeout(resolve, 1_000))]);
+    const afterInterrupt = await probe();
+    if (afterInterrupt?.code === 0) {
+      await runProcess("sudo", ["-n", "/bin/kill", "-KILL", group], { timeoutMs: 5_000 }).catch(() => null);
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+    const finalProbe = await probe();
+    observerCleanupFailed = !finalProbe || finalProbe.code === 0;
+  };
+  const assertObserverActive = (stage) => {
+    if (!observerOutcome) return;
+    const result = observerOutcome.result;
+    const diagnostic = JSON.stringify({
+      stage,
+      code: result?.code ?? null,
+      signal: result?.signal ?? null,
+      timedOut: result?.timedOut ?? null,
+      outputLimitExceeded: result?.outputLimitExceeded ?? null,
+      error: observerOutcome.error?.message ?? null,
     });
-    if (readinessResult.code !== 0) throw Object.assign(new Error("macOS readiness process failed"), { code: "AAS_OBSERVER_UNAVAILABLE" });
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    throw Object.assign(new Error(`fs_usage exited before observation completed: ${diagnostic}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  };
+  try {
+    observerPromise = runProcess("sudo", [
+      "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(budgets.observerTimeoutMs / 1000)),
+      observedName,
+    ], {
+      ...options,
+      detached: true,
+      timeoutMs: budgets.observerTimeoutMs,
+      maxOutputBytes: 8 * 1024 * 1024,
+      onSpawn(child) { observerPid = child.pid; },
+      onStdoutData: captureObserverOutput(options.onStdoutData),
+      onStderrData: captureObserverOutput(options.onStderrData),
+    }).then(
+      (result) => (observerOutcome = { result }),
+      (error) => (observerOutcome = { error }),
+    );
+    await new Promise((resolve) => setTimeout(resolve, budgets.startupMs));
+    assertObserverActive("startup");
+    const readinessProgram = `process.title=${JSON.stringify(observedName)};const fs=require('node:fs');const fd=fs.openSync(${JSON.stringify(readinessCanary)},'w',0o600);fs.writeSync(fd,'ready');fs.fsyncSync(fd);fs.closeSync(fd);`;
+    for (let attempt = 0; attempt < budgets.readinessMaxAttempts; attempt += 1) {
+      assertObserverActive("readiness-before-probe");
+      readinessAttempts += 1;
+      const readinessResult = await runProcess(observedExecutable, ["-e", readinessProgram], {
+        cwd: options.cwd,
+        env: options.env,
+        timeoutMs: budgets.readinessProcessTimeoutMs,
+      });
+      if (readinessResult.code !== 0 || readinessResult.timedOut) {
+        throw Object.assign(new Error("macOS readiness process failed"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+      }
+      await new Promise((resolve) => setTimeout(resolve, budgets.readinessDelayMs));
+      assertObserverActive("readiness-after-probe");
+      if (liveObserverOutput.includes(readinessToken)) {
+        readinessObservedLive = true;
+        captureLiveOutput = false;
+        break;
+      }
+    }
+    if (!readinessObservedLive) {
+      throw Object.assign(new Error("fs_usage did not confirm readiness before the candidate deadline"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    }
+    assertObserverActive("candidate-start");
+    const result = await runProcess(observedExecutable, [launcher], options);
+    await new Promise((resolve) => setTimeout(resolve, budgets.drainMs));
+    assertObserverActive("candidate-drain");
+    await stopObserver();
+    if (observerCleanupFailed) {
+      throw Object.assign(new Error("fs_usage process group survived bounded cleanup"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    }
+    const outcome = await observerPromise;
+    if (outcome.error) throw Object.assign(new Error("fs_usage observer process failed to start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    const trace = outcome.result;
+    if (trace.outputLimitExceeded) throw Object.assign(new Error("fs_usage trace exceeded the observer limit"), { code: "AAS_OBSERVER_OVERFLOW" });
+    if (trace.timedOut) throw Object.assign(new Error("fs_usage exceeded its derived lifecycle budget"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    const raw = `${trace.stdout}\n${trace.stderr}`;
+    return {
+      result,
+      observation: parseMacCombinedFsUsage(raw, options.zones, readinessToken, candidateToken),
+      backend: "macos-fs_usage-process",
+      diagnostics: {
+        bytes: Buffer.byteLength(raw),
+        eventLines: fsUsageLines(raw).length,
+        readinessCanaryObserved: raw.includes(readinessToken),
+        candidateCanaryObserved: raw.includes(candidateToken),
+        readinessAttempts,
+        readinessObservedLive,
+        preview: fsUsageLines(raw).length ? null : raw.trim().slice(0, 160),
+      },
+    };
+  } finally {
+    captureLiveOutput = false;
+    await stopObserver();
+    if (observerPromise) await observerPromise.catch(() => null);
+    fs.rmSync(readinessCanary, { force: true });
+    fs.rmSync(candidateCanary, { force: true });
+    fs.rmSync(launcher, { force: true });
+    fs.rmSync(observedExecutable, { force: true });
   }
-  const result = await runProcess(observedExecutable, [launcher], options);
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  if (observerPid) {
-    await runProcess("sudo", ["-n", "/bin/kill", "-INT", `-${observerPid}`], { timeoutMs: 5_000 });
+}
+
+export function macObserverBudgets(candidateTimeoutMs = 30_000) {
+  if (!Number.isSafeInteger(candidateTimeoutMs) || candidateTimeoutMs < 1 || candidateTimeoutMs > 15 * 60_000) {
+    throw Object.assign(new Error("macOS observer timeout must be an integer from 1 to 900000 milliseconds"), {
+      code: "AAS_OBSERVER_INVALID_TIMEOUT",
+    });
   }
-  const trace = await observerPromise;
-  if (trace.outputLimitExceeded) throw Object.assign(new Error("fs_usage trace exceeded the observer limit"), { code: "AAS_OBSERVER_OVERFLOW" });
-  const raw = `${trace.stdout}\n${trace.stderr}`;
-  fs.rmSync(readinessCanary, { force: true });
-  fs.rmSync(candidateCanary, { force: true });
-  fs.rmSync(launcher, { force: true });
-  fs.rmSync(observedExecutable, { force: true });
+  const startupMs = 1_500;
+  const readinessMaxAttempts = 10;
+  const readinessProcessTimeoutMs = 2_000;
+  const readinessDelayMs = 350;
+  const drainMs = 1_000;
   return {
-    result,
-    observation: parseMacCombinedFsUsage(raw, options.zones, readinessToken, candidateToken),
-    backend: "macos-fs_usage-process",
-    diagnostics: {
-      bytes: Buffer.byteLength(raw),
-      eventLines: fsUsageLines(raw).length,
-      readinessCanaryObserved: raw.includes(readinessToken),
-      candidateCanaryObserved: raw.includes(candidateToken),
-      preview: fsUsageLines(raw).length ? null : raw.trim().slice(0, 160),
-    },
+    startupMs,
+    readinessMaxAttempts,
+    readinessProcessTimeoutMs,
+    readinessDelayMs,
+    drainMs,
+    observerTimeoutMs: startupMs
+      + readinessMaxAttempts * (readinessProcessTimeoutMs + readinessDelayMs)
+      + candidateTimeoutMs
+      + drainMs
+      + 5_000,
   };
 }
 
@@ -339,13 +444,23 @@ export async function selfTestObserver(options) {
 async function selfTestWindowsProcessTree(options) {
   const drivers = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "drivers");
   const rootDriver = path.join(drivers, "windows-tree-root.cjs");
-  const childDriver = path.join(drivers, "windows-tree-child.cjs");
+  const childDriver = path.join(drivers, "windows-tree-child.ps1");
+  const jobSource = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "observers", "windows-job.cs");
+  const powershell = commandExists("pwsh.exe") ? "pwsh.exe" : "powershell.exe";
   const readyCanary = path.join(options.evidenceDir, `child-ready-${process.pid}.txt`);
   const rootAckCanary = path.join(options.evidenceDir, `root-ack-${process.pid}.txt`);
   const childCanary = path.join(options.evidenceDir, `child-after-parent-${process.pid}.txt`);
-  const observed = await runObserved(process.execPath, [rootDriver, childDriver, readyCanary, rootAckCanary, childCanary], {
+  const observed = await runObserved(process.execPath, [
+    rootDriver,
+    powershell,
+    childDriver,
+    jobSource,
+    readyCanary,
+    rootAckCanary,
+    childCanary,
+  ], {
     ...options,
-    timeoutMs: 1_500,
+    timeoutMs: 5_000,
   });
   const childPid = Number.parseInt(observed.result.stdout.trim(), 10);
   const sessionName = observed.diagnostics?.sessionName;

@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-aa73f4b72fed3b932ef0db28ec62b8053ba4cf2841e050baa568721dd0c12c68",
+  "rootDigest": "sha256-ed13f680cff42ffe56fc12c2cb808af73d83ba834faa48d20950ae3bc4295f70",
   "fileCount": 757,
   "files": [
     {
@@ -3672,14 +3672,14 @@
       "sha256": "ec35432454c5867cff1ea265cf1a6a2c889afc36689a8e521186f658e08e67f5"
     },
     {
-      "path": "verifier/drivers/windows-tree-child.cjs",
-      "bytes": 715,
-      "sha256": "7ebadbf120c8190033125acc8c9f356e2abecf93475adc001de8f1ed3da17b6c"
+      "path": "verifier/drivers/windows-tree-child.ps1",
+      "bytes": 596,
+      "sha256": "41e81b679292f9bef3cff588a4ebb37eee5951e04ae7c6b841b11987f36a3dc4"
     },
     {
       "path": "verifier/drivers/windows-tree-root.cjs",
-      "bytes": 810,
-      "sha256": "6ee929cdf8ddcefbb1f6c8dcc7301df7cac2aee4a8de4a29ec3fff13e2747da3"
+      "bytes": 1076,
+      "sha256": "5e304eecd3cec83d38a2c6aad4aca63963dbef3cafe057b86dda258616b6a4c7"
     },
     {
       "path": "verifier/lib/aggregate.mjs",
@@ -3708,8 +3708,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 20125,
-      "sha256": "27458f4643866d34db527ce39f8ff28b6f26a050a3369a5b530e7e31bf5bacfb"
+      "bytes": 24930,
+      "sha256": "337bdca0a4e24895af7e7cb0c8fe07806983f406e0c25d8cd0f694fe94009f7f"
     },
     {
       "path": "verifier/lib/prng.mjs",
@@ -3748,8 +3748,8 @@
     },
     {
       "path": "verifier/observers/windows-job.cs",
-      "bytes": 16331,
-      "sha256": "574d06e2d546489a0a2e9c1377d3303fd2569405bdedd17197a333072250bba4"
+      "bytes": 17497,
+      "sha256": "421bab01514ccbe165f5223a3aa38953be527036d88876cd0002677d148745e9"
     },
     {
       "path": "verifier/package-lock.json",
@@ -3783,8 +3783,8 @@
     },
     {
       "path": "verifier/tests/observer.test.mjs",
-      "bytes": 2980,
-      "sha256": "78aae6d28b2d045df91ad8adf30b269928e834a23c5794cffd9701b84c1f23c0"
+      "bytes": 3424,
+      "sha256": "1f7ec7830986fdf80cd0bf16d415d773715512b1ee05f99582a8f1c1309bdac6"
     },
     {
       "path": "verifier/tests/transaction-evidence.test.mjs",
