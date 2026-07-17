@@ -91,7 +91,7 @@ Key: Explicit reasoning traces make debugging possible
 
 ## Basic ReAct Implementation
 """
-from langchain.agents import create_react_agent
+from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 
 # Define the ReAct prompt template
@@ -108,39 +108,33 @@ Thought: I now know the final answer
 Final Answer: the answer
 '''
 
-# Create the agent
-agent = create_react_agent(
-    llm=ChatOpenAI(model="gpt-4o"),
+# LangChain v1 uses create_agent for the supported agent API.
+agent = create_agent(
+    model=ChatOpenAI(model="gpt-4o"),
     tools=tools,
-    prompt=react_prompt,
+    system_prompt=react_prompt,
 )
 
 # Execute with step limit
 result = agent.invoke(
-    {"input": query},
-    config={"max_iterations": 10}  # Prevent runaway loops
+    {"messages": [{"role": "user", "content": query}]},
+    config={"recursion_limit": 10}  # Prevent runaway graph execution
 )
 """
 
 ## LangGraph ReAct (Production)
 """
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from langgraph.checkpoint.postgres import PostgresSaver
 
-# Production checkpointer
-checkpointer = PostgresSaver.from_conn_string(
-    os.environ["POSTGRES_URL"]
-)
-
-agent = create_react_agent(
-    model=llm,
-    tools=tools,
-    checkpointer=checkpointer,  # Durable state
-)
-
-# Invoke with thread for state persistence
-config = {"configurable": {"thread_id": "user-123"}}
-result = agent.invoke({"messages": [query]}, config)
+# Keep the saver connection open for the agent's lifetime.
+with PostgresSaver.from_conn_string(os.environ["POSTGRES_URL"]) as checkpointer:
+    checkpointer.setup()  # Run once when initializing the checkpoint schema.
+    agent = create_agent(model=llm, tools=tools, checkpointer=checkpointer)
+    config = {"configurable": {"thread_id": "user-123"}}
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": query}]}, config
+    )
 """
 
 ### Plan-Execute Pattern
@@ -168,7 +162,7 @@ Disadvantages:
 
 ## LangGraph Plan-Execute
 """
-from langgraph.prebuilt import create_plan_and_execute_agent
+from langgraph.graph import StateGraph, START, END
 
 # Planner creates the task list
 planner_prompt = '''
@@ -185,23 +179,21 @@ Current step: {current_step}
 Execute this step using available tools.
 '''
 
-agent = create_plan_and_execute_agent(
-    planner=planner_llm,
-    executor=executor_llm,
-    tools=tools,
-    replan_on_error=True,  # Re-plan if step fails
-)
+# Define planner and executor nodes that update your typed state, then wire the
+# supported StateGraph explicitly. This makes replanning and approval visible.
+builder = StateGraph(PlanState)
+builder.add_node("plan", plan_node)
+builder.add_node("execute", execute_node)
+builder.add_edge(START, "plan")
+builder.add_edge("plan", "execute")
+builder.add_conditional_edges("execute", route_after_step, {
+    "replan": "plan", "done": END,
+})
 
-# Human approval of plan
-config = {
-    "configurable": {
-        "thread_id": "task-456",
-    },
-    "interrupt_before": ["execute"],  # Pause before execution
-}
-
-# First call creates plan
-plan = agent.invoke({"objective": goal}, config)
+# Compile with interrupt_before to approve the stored plan before execution.
+agent = builder.compile(checkpointer=checkpointer, interrupt_before=["execute"])
+config = {"configurable": {"thread_id": "task-456"}}
+plan = agent.invoke({"objective": goal, "steps": [], "results": []}, config)
 
 # Review plan, then continue
 if human_approves(plan):
@@ -454,19 +446,14 @@ LangGraph 1.0 provides this natively.
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.graph import StateGraph
 
-# Production checkpointer (not MemorySaver!)
-checkpointer = PostgresSaver.from_conn_string(
-    os.environ["POSTGRES_URL"]
-)
-
-# Build graph with checkpointing
-graph = StateGraph(AgentState)
-# ... add nodes and edges ...
-
-agent = graph.compile(checkpointer=checkpointer)
-
-# Each invocation saves state
-config = {"configurable": {"thread_id": "long-task-789"}}
+# Production saver (not MemorySaver). Keep its connection open while invoking.
+with PostgresSaver.from_conn_string(os.environ["POSTGRES_URL"]) as checkpointer:
+    checkpointer.setup()  # Initialize tables once per database.
+    graph = StateGraph(AgentState)
+    # ... add nodes and edges ...
+    agent = graph.compile(checkpointer=checkpointer)
+    config = {"configurable": {"thread_id": "long-task-789"}}
+    result = agent.invoke(initial_state, config)
 
 # Start task
 agent.invoke({"goal": complex_goal}, config)

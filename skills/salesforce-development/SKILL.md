@@ -55,6 +55,10 @@ export default class MyComponent extends LightningElement {
     return getFieldValue(this.account.data, ACCOUNT_NAME);
   }
 
+  get industry() {
+    return getFieldValue(this.account.data, ACCOUNT_INDUSTRY);
+  }
+
   get isLoading() {
     return !this.account.data && !this.account.error;
   }
@@ -512,6 +516,9 @@ class SalesforceBulkClient extends SalesforceClient {
       }
     );
 
+    if (!response.ok) {
+      throw new Error(`Create bulk job failed: ${response.status} ${await response.text()}`);
+    }
     return response.json();
   }
 
@@ -519,7 +526,7 @@ class SalesforceBulkClient extends SalesforceClient {
     // Convert to CSV
     const csv = this.recordsToCSV(records);
 
-    await fetch(
+    const response = await fetch(
       `${this.instanceUrl}/services/data/v59.0/jobs/ingest/${jobId}/batches`,
       {
         method: 'PUT',
@@ -530,10 +537,13 @@ class SalesforceBulkClient extends SalesforceClient {
         body: csv
       }
     );
+    if (!response.ok) {
+      throw new Error(`Upload bulk data failed: ${response.status} ${await response.text()}`);
+    }
   }
 
   private async closeJob(jobId: string): Promise<void> {
-    await fetch(
+    const response = await fetch(
       `${this.instanceUrl}/services/data/v59.0/jobs/ingest/${jobId}`,
       {
         method: 'PATCH',
@@ -544,6 +554,9 @@ class SalesforceBulkClient extends SalesforceClient {
         body: JSON.stringify({ state: 'UploadComplete' })
       }
     );
+    if (!response.ok) {
+      throw new Error(`Close bulk job failed: ${response.status} ${await response.text()}`);
+    }
   }
 
   private async waitForJobCompletion(jobId: string): Promise<any> {
@@ -559,6 +572,9 @@ class SalesforceBulkClient extends SalesforceClient {
         }
       );
 
+      if (!response.ok) {
+        throw new Error(`Poll bulk job failed: ${response.status} ${await response.text()}`);
+      }
       const job = await response.json();
 
       if (job.state === 'JobComplete') {
@@ -590,6 +606,9 @@ class SalesforceBulkClient extends SalesforceClient {
       }
     );
 
+    if (!response.ok) {
+      throw new Error(`Fetch failed results failed: ${response.status} ${await response.text()}`);
+    }
     const csv = await response.text();
     return this.parseCSV(csv);
   }

@@ -1383,7 +1383,11 @@ const result: E.Either<Error, User> = pipe(
 const fetchData = (): TE.TaskEither<Error, Data> =>
   pipe(
     TE.tryCatch(
-      () => fetch('/api/data'),
+      async () => {
+        const response = await fetch('/api/data');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response;
+      },
       () => new Error('Failed') // Lost the original error!
     )
   );
@@ -1539,7 +1543,7 @@ export const enrichUser = (user: User): TE.TaskEither<Error, EnrichedUser> => /*
 export async function getUser(id: string): Promise<User> {
   const result = await pipe(
     fetchUser(id),
-    TE.flatMap(validateUser >>> TE.fromEither),
+    TE.flatMap((data) => TE.fromEither(validateUser(data))),
     TE.flatMap(enrichUser)
   )();
 

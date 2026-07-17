@@ -53,7 +53,8 @@ Master modern Angular development with Signals, Standalone Components, Zoneless 
 
 ## 1. Signals: The New Reactive Primitive
 
-Signals are Angular's fine-grained reactivity system, replacing zone.js-based change detection.
+Signals model fine-grained reactive state. Zoneless change detection is a separate
+configuration choice; adopting signals does not by itself remove Zone.js.
 
 ### Core Concepts
 
@@ -580,7 +581,7 @@ export class ProductStore {
 
 ---
 
-## 9. Forms with Signals (Coming in v22+)
+## 9. Forms with Signals
 
 ### Current Reactive Forms
 
@@ -616,30 +617,39 @@ export class UserFormComponent {
 }
 ```
 
-### Signal-Aware Form Patterns (Preview)
+### Signal Forms (Angular 21+; stable in Angular 22)
 
 ```typescript
-// Future Signal Forms API (experimental)
 import { Component, signal } from '@angular/core';
+import { email, form, FormField, required } from '@angular/forms/signals';
 
-@Component({...})
+@Component({
+  selector: 'app-signal-form',
+  imports: [FormField],
+  template: `
+    <input [formField]="userForm.name" />
+    <input type="email" [formField]="userForm.email" />
+    <button [disabled]="!userForm().valid()">Submit</button>
+  `,
+})
 export class SignalFormComponent {
-  name = signal('');
-  email = signal('');
-
-  // Computed validation
-  isValid = computed(() =>
-    this.name().length > 0 &&
-    this.email().includes('@')
-  );
+  model = signal({ name: '', email: '' });
+  userForm = form(this.model, (path) => {
+    required(path.name);
+    required(path.email);
+    email(path.email);
+  });
 
   submit() {
-    if (this.isValid()) {
-      console.log({ name: this.name(), email: this.email() });
+    if (this.userForm().valid()) {
+      console.log(this.model());
     }
   }
 }
 ```
+
+Use the reactive-forms example for applications below Angular 21. Verify the
+exact Signal Forms API against the Angular version pinned by the application.
 
 ---
 
