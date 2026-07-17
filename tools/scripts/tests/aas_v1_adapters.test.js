@@ -129,10 +129,12 @@ test("symlink, non-regular, and ownership mismatches are rejected", async (t) =>
   const directory = await temporaryDirectory(t);
   const real = path.join(directory, "real.toml");
   const link = path.join(directory, "link.toml");
+  const nonRegular = path.join(directory, "non-regular");
   await fsp.writeFile(real, "");
   await fsp.symlink(real, link);
+  await fsp.mkdir(nonRegular);
   await assert.rejects(inspectHostConfig({ host: "codex", scope: "project", configPath: link }), (error) => error.code === "AAS_ADAPTER_CONFIG_UNSAFE");
-  await assert.rejects(inspectHostConfig({ host: "codex", scope: "project", configPath: directory }), (error) => error.code === "AAS_ADAPTER_CONFIG_UNSAFE");
+  await assert.rejects(inspectHostConfig({ host: "codex", scope: "project", configPath: nonRegular }), (error) => error.code === "AAS_ADAPTER_CONFIG_UNSAFE");
   const stat = await fsp.stat(real);
   await assert.rejects(inspectRegularFile(real, { expectedUid: stat.uid + 1 }), (error) => error.code === "AAS_ADAPTER_OWNERSHIP_MISMATCH");
 });
