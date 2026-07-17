@@ -1,6 +1,6 @@
 ---
 name: frontend-mobile-development-component-scaffold
-description: "You are a React component architecture expert specializing in scaffolding production-ready, accessible, and performant components. Generate complete component implementations with TypeScript, tests, s"
+description: "Scaffold accessible React and React Native component foundations with TypeScript, tests, styles, and documentation. Use when generating a component structure that will be completed and validated for the target application."
 risk: unknown
 source: community
 date_added: "2026-02-27"
@@ -8,7 +8,7 @@ date_added: "2026-02-27"
 
 # React/React Native Component Scaffolding
 
-You are a React component architecture expert specializing in scaffolding production-ready, accessible, and performant components. Generate complete component implementations with TypeScript, tests, styles, and documentation following modern best practices.
+You are a React component architecture expert specializing in accessible and performant component scaffolds. Generate TypeScript, test, style, and documentation foundations that callers can complete for their application.
 
 ## Use this skill when
 
@@ -22,7 +22,7 @@ You are a React component architecture expert specializing in scaffolding produc
 
 ## Context
 
-The user needs automated component scaffolding that creates consistent, type-safe React components with proper structure, hooks, styling, accessibility, and test coverage. Focus on reusable patterns and scalable architecture.
+The user needs automated component scaffolding that creates consistent, type-safe React component foundations with structure, hooks, styling, accessibility, and starter tests. Focus on reusable patterns and scalable architecture; leave application-specific behavior explicit as placeholders.
 
 ## Requirements
 
@@ -241,8 +241,11 @@ const styles = StyleSheet.create({
 class ComponentTestGenerator {
   generateTests(spec: ComponentSpec): string {
     return `
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { axe, toHaveNoViolations } from 'jest-axe';
 import { ${spec.name} } from './${spec.name}';
+
+expect.extend(toHaveNoViolations);
 
 describe('${spec.name}', () => {
   const defaultProps = {
@@ -250,25 +253,14 @@ ${spec.props.filter(p => p.required).map(p => `    ${p.name}: ${this.getMockValu
   };
 
   it('renders without crashing', () => {
-    render(<${spec.name} {...defaultProps} />);
-    expect(screen.getByRole('${this.inferAriaRole(spec.type)}')).toBeInTheDocument();
+    const { container } = render(<${spec.name} {...defaultProps} />);
+    expect(container.firstElementChild).toBeInTheDocument();
   });
 
-  it('displays correct content', () => {
-    render(<${spec.name} {...defaultProps} />);
-    expect(screen.getByText(/content/i)).toBeVisible();
+  it('renders the generated content placeholder', () => {
+    const { container } = render(<${spec.name} {...defaultProps} />);
+    expect(container.firstElementChild).toBeEmptyDOMElement();
   });
-
-${spec.props.filter(p => p.type.includes('()') || p.name.startsWith('on')).map(p => `
-  it('calls ${p.name} when triggered', () => {
-    const mock${this.capitalize(p.name)} = jest.fn();
-    render(<${spec.name} {...defaultProps} ${p.name}={mock${this.capitalize(p.name)}} />);
-
-    const trigger = screen.getByRole('button');
-    fireEvent.click(trigger);
-
-    expect(mock${this.capitalize(p.name)}).toHaveBeenCalledTimes(1);
-  });`).join('\n')}
 
   it('meets accessibility standards', async () => {
     const { container } = render(<${spec.name} {...defaultProps} />);
@@ -396,14 +388,14 @@ export const Interactive: Story = {
 
 ## Output Format
 
-1. **Component File**: Fully implemented React/React Native component
+1. **Component File**: React/React Native scaffold with explicit placeholders for application behavior
 2. **Type Definitions**: TypeScript interfaces and types
 3. **Styles**: CSS modules, styled-components, or Tailwind config
-4. **Tests**: Complete test suite with coverage
+4. **Tests**: Starter render and accessibility tests to extend with application behavior
 5. **Stories**: Storybook stories for documentation
 6. **Index File**: Barrel exports for clean imports
 
-Focus on creating production-ready, accessible, and maintainable components that follow modern React patterns and best practices.
+Focus on creating accessible and maintainable component foundations that follow modern React patterns and are completed and validated in the target application.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

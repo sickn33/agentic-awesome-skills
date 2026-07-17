@@ -1,13 +1,8 @@
 ---
 name: sharp-edges
-description: sharp-edges
+description: "Identifies error-prone APIs, dangerous configurations, and footgun designs that enable security mistakes. Use when reviewing API designs, configuration schemas, cryptographic library ergonomics, or evaluating whether code follows secure-by-default principles."
 risk: unknown
 source: community
----
-
----
-name: sharp-edges
-description: "Identifies error-prone APIs, dangerous configurations, and footgun designs that enable security mistakes. Use when reviewing API designs, configuration schemas, cryptographic library ergonomics, or evaluating whether code follows 'secure by...
 ---
 
 # Sharp Edges Analysis
@@ -58,11 +53,10 @@ APIs that let developers choose algorithms invite choosing wrong ones.
 - Enums/strings selecting cryptographic primitives
 - Configuration options for security mechanisms
 
-**Example - PHP password_hash allowing weak algorithms:**
+**Example - choosing a general-purpose hash for passwords:**
 ```php
-// DANGEROUS: allows crc32, md5, sha1
-password_hash($password, PASSWORD_DEFAULT); // Good - no choice
-hash($algorithm, $password); // BAD: accepts "crc32"
+password_hash($password, PASSWORD_DEFAULT); // Good: password-specific API and safe default
+hash($algorithm, $password); // Dangerous for passwords: general-purpose API accepts unsuitable hashes such as "crc32"
 ```
 
 ### 2. Dangerous Defaults
@@ -253,33 +247,6 @@ If a finding seems questionable, return to Phase 2 and probe more edge cases.
 | Medium | Unusual but possible misconfiguration | Negative timeout has unexpected meaning |
 | Low | Requires deliberate misuse | Obscure parameter combination |
 
-## References
-
-**By category:**
-
-- **Cryptographic APIs**: See references/crypto-apis.md
-- **Configuration Patterns**: See references/config-patterns.md
-- **Authentication/Session**: See references/auth-patterns.md
-- **Real-World Case Studies**: See references/case-studies.md (OpenSSL, GMP, etc.)
-
-**By language** (general footguns, not crypto-specific):
-
-| Language | Guide |
-|----------|-------|
-| C/C++ | references/lang-c.md |
-| Go | references/lang-go.md |
-| Rust | references/lang-rust.md |
-| Swift | references/lang-swift.md |
-| Java | references/lang-java.md |
-| Kotlin | references/lang-kotlin.md |
-| C# | references/lang-csharp.md |
-| PHP | references/lang-php.md |
-| JavaScript/TypeScript | references/lang-javascript.md |
-| Python | references/lang-python.md |
-| Ruby | references/lang-ruby.md |
-
-See also references/language-specific.md for a combined quick reference.
-
 ## Quality Checklist
 
 Before concluding analysis:
@@ -291,7 +258,7 @@ Before concluding analysis:
 - [ ] Considered all three adversary types
 - [ ] Verified error paths don't bypass security
 - [ ] Checked configuration validation
-- [ ] Constructor params validated (not just defaulted) - see config-patterns.md
+- [ ] Constructor parameters are validated, not merely given safe defaults
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

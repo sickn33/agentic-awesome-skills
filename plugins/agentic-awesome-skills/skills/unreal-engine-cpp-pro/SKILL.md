@@ -30,8 +30,8 @@ Do not use this skill when:
 ## Core Principles
 
 1.  **UObject & Garbage Collection**:
-    *   Always use `UPROPERTY()` for `UObject*` member variables to ensure they are tracked by the Garbage Collector (GC).
-    *   Use `TStrongObjectPtr<>` if you need to keep a root reference outside of a UObject graph, but prefer `addToRoot()` generally.
+    *   For persistent UE5 object references in reflected members, prefer `UPROPERTY()` with `TObjectPtr<>` so the Garbage Collector can track them.
+    *   Use `TStrongObjectPtr<>` when non-`UObject` ownership must keep an object alive. Reserve `AddToRoot()` for exceptional, explicitly balanced lifetime management because it bypasses normal GC reachability.
     *   Understand the `IsValid()` check vs `nullptr`. `IsValid()` handles pending kill state safely.
 
 2.  **Unreal Reflection System**:
@@ -79,7 +79,7 @@ if (TargetActor->Implements<UInteractable>()) {
 }
 ```
 
-### 3. Async Loading (Soft References)
+### 3. Soft References and Synchronous Loading
 Avoid hard references (`UPROPERTY(EditDefaultsOnly) TSubclassOf<AActor>`) for massive assets which force load orders. Use `TSoftClassPtr` or `TSoftObjectPtr`.
 
 ```cpp
@@ -88,7 +88,7 @@ TSoftClassPtr<AWeapon> WeaponClassToLoad;
 
 void AMyCharacter::Equip() {
     if (WeaponClassToLoad.IsPending()) {
-        WeaponClassToLoad.LoadSynchronous(); // Or use StreamableManager for async
+        WeaponClassToLoad.LoadSynchronous(); // Blocks; use StreamableManager request APIs for asynchronous loading
     }
 }
 ```
@@ -109,7 +109,7 @@ void AMyCharacter::Equip() {
 ## Checklist before PR
 
 - [ ] Does this Actor need to Tick? Can it be a Timer?
-- [ ] Are all `UObject*` members wrapped in `UPROPERTY`?
+- [ ] Do persistent reflected object members use `UPROPERTY()` with `TObjectPtr` where appropriate?
 - [ ] Are hard references (TSubclassOf) causing load chains? Can they be Soft Ptrs?
 - [ ] Did you clean up verified delegates in `EndPlay`?
 

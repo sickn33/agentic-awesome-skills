@@ -48,7 +48,7 @@ Message history contains the conversation between the user and agent, including 
 Message history serves as scratchpad memory where agents track progress, maintain task state, and preserve reasoning across turns. Effective management of message history is critical for long-horizon task completion.
 
 **Tool Outputs**
-Tool outputs are the results of agent actions: file contents, search results, command execution output, API responses, and similar data. Tool outputs comprise the majority of tokens in typical agent trajectories, with research showing observations (tool outputs) can reach 83.9% of total context usage.
+Tool outputs are the results of agent actions: file contents, search results, command execution output, API responses, and similar data. In tool-heavy trajectories, these observations can comprise a large share of context usage.
 
 Tool outputs consume context whether they are relevant to current decisions or not. This creates pressure for strategies like observation masking, compaction, and selective tool result retention.
 
@@ -71,7 +71,7 @@ This approach keeps agents fast while giving them access to more context on dema
 
 The assumption that larger context windows solve memory problems has been empirically debunked. Context engineering means finding the smallest possible set of high-signal tokens that maximize the likelihood of desired outcomes.
 
-Several factors create pressure for context efficiency. Processing cost grows disproportionately with context length—not just double the cost for double the tokens, but exponentially more in time and computing resources. Model performance degrades beyond certain context lengths even when the window technically supports more tokens. Long inputs remain expensive even with prefix caching.
+Several factors create pressure for context efficiency. Standard self-attention has quadratic time and memory complexity in sequence length, although production architectures and caching can change practical scaling. Model performance can degrade at longer context lengths even when the window technically supports more tokens. Long inputs remain expensive even with prefix caching.
 
 The guiding principle is informativity over exhaustiveness. Include what matters for the decision at hand, exclude what does not, and design systems that can access additional information on demand.
 
@@ -149,7 +149,7 @@ docs/api/authentication.md   # Only when auth context needed
 3. Use progressive disclosure to defer loading until needed
 4. Organize system prompts with clear section boundaries
 5. Monitor context usage during development
-6. Implement compaction triggers at 70-80% utilization
+6. Choose compaction triggers empirically for the model, runtime, task, and quality target
 7. Design for context degradation rather than hoping to avoid it
 8. Prefer smaller high-signal context over larger low-signal context
 
