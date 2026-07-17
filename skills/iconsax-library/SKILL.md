@@ -1,4 +1,4 @@
---- 
+---
 name: iconsax-library
 description: Extensive icon library and AI-driven icon generation skill for premium UI/UX design.
 risk: safe
@@ -28,14 +28,15 @@ Trigger this skill when:
    - `Linear`: For ultra-minimalism and clarity.
    - `Bold`/`Bulk`: For solid weight and emphasis in premium dark modes.
    - `Two-tone`: For highly branded, colorful, and distinct aesthetics.
-3. **Search or Generate**: Find the existing icon, or if it doesn't exist, use [Iconsax AI](https://app.iconsax.io/ai) to generate a custom variation that perfectly matches the chosen style.
-4. **Integration**: Implementation using SVGs or web components, ensuring precise alignment and sizing.
+3. **Search or Generate**: Prefer a licensed existing icon. Use an external generator only when it is available and the user approves any upload or account use.
+4. **Integration**: Record source/license, preserve the SVG view box, and add an accessible name for meaningful icons or hide decorative icons from assistive technology.
 
 ## Strict Rules
 
-- **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. DO NOT use common, generic, or default browser/framework icons. Every icon must feel intentional and premium.
+- **Project Fit First**: Follow the project's existing icon system unless the user asks to change it.
 - **Strict Consistency**: Stick to ONE style (e.g., only "Two-tone") throughout a single project to maintain high-end polish.
 - **Sizing & Alignment**: Follow strict, standard grid sizes (24x24) to ensure absolute crispness on high-DPI displays.
+- **Rights & Approval**: Verify license and attribution requirements; do not upload confidential assets or add dependencies without approval.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
