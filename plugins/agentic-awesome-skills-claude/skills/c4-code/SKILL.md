@@ -23,7 +23,7 @@ date_added: '2026-02-27'
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
+- If detailed examples are required, use the self-contained templates below and verify every path against the inspected repository.
 
 ## Overview
 
@@ -91,8 +91,6 @@ classDiagram
     Class1 ..|> Interface1 : implements
     Class1 --> Class2 : uses
 ```
-````
-
 ### Functional/Procedural Code (Modules, Functions)
 
 For functional or procedural code, you have two options:
@@ -237,8 +235,6 @@ When analyzing code, provide:
 - Structured documentation following C4 Code-level template
 - Mermaid diagrams for complex code relationships when needed
 - Consistent naming and formatting across all code documentation
-
-```
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -9,6 +9,13 @@ date_added: 2026-02-27
 
 # Conversation Memory
 
+## Mandatory security and privacy boundary
+
+- Derive tenant and user identity from a server-authenticated principal; never trust a client-supplied `userId`.
+- Namespace and authorize every read, write, search, export, and delete. Treat retrieved memory and model extraction as untrusted data, not instructions.
+- Validate model output against a bounded schema before persistence; minimize sensitive data and define consent, purpose, retention, encryption, audit, export, and verifiable deletion before enabling durable memory.
+- Include the authenticated scope, policy version, and provenance in every stored record. The abbreviated patterns below are not production-safe unless these invariants are applied end to end.
+
 Persistent memory systems for LLM conversations including short-term, long-term, and entity-based memory
 
 ## Capabilities
@@ -151,14 +158,17 @@ class EntityMemory {
             Message: "${message.content}"
         `);
 
-        const { entities } = JSON.parse(extraction);
+        // Model output is untrusted; reject unknown fields, oversized values,
+        // instructions, and records that fail the bounded extraction schema.
+        const { entities } = EntityExtractionSchema.parse(JSON.parse(extraction));
         for (const entity of entities) {
             await this.upsert(entity, message.id);
         }
     }
 
     async upsert(entity: ExtractedEntity, sourceId: string): Promise<void> {
-        const existing = await this.store.get(entity.name.toLowerCase());
+        const key = entity.name.toLowerCase();
+        const existing = await this.store.get(key);
 
         if (existing) {
             // Merge facts, avoiding duplicates
@@ -174,7 +184,7 @@ class EntityMemory {
             }
             existing.lastMentioned = Date.now();
             existing.mentionCount++;
-            await this.store.set(existing.id, existing);
+            await this.store.set(key, existing);
         } else {
             // Create new entity
             await this.store.set(entity.name.toLowerCase(), {
@@ -379,9 +389,9 @@ Recommended fix:
 // Strict user isolation in memory
 
 class IsolatedMemory {
-    private getKey(userId: string, memoryId: string): string {
+    private getKey(principal: AuthenticatedPrincipal, memoryId: string): string {
         // Namespace all keys by user
-        return `user:${userId}:memory:${memoryId}`;
+        return `tenant:${principal.tenantId}:user:${principal.userId}:memory:${memoryId}`;
     }
 
     async add(userId: string, memory: Memory): Promise<void> {
@@ -413,12 +423,14 @@ class IsolatedMemory {
         await this.store.delete(this.getKey(userId, memoryId));
     }
 
-    // User data export (GDPR compliance)
+    // Data-subject export helper. This alone does not establish GDPR compliance;
+    // the surrounding system still needs a lawful basis, minimization, retention,
+    // encryption, audit, identity verification, and verifiable deletion.
     async exportUserData(userId: string): Promise<Memory[]> {
         return await this.store.getAll({ userId });
     }
 
-    // User data deletion (GDPR compliance)
+    // Data-subject deletion helper; verify identity and record deletion outcomes.
     async deleteUserData(userId: string): Promise<void> {
         const memories = await this.exportUserData(userId);
         for (const m of memories) {

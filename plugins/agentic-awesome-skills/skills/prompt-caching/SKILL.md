@@ -52,7 +52,7 @@ const client = new Anthropic();
 // Cache the stable parts of your prompt
 async function queryWithCaching(userQuery: string) {
     const response = await client.messages.create({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-6",
         max_tokens: 1024,
         system: [
             {
@@ -78,8 +78,7 @@ async function queryWithCaching(userQuery: string) {
     return response;
 }
 
-// Cost savings: 90% reduction on cached tokens
-// Latency savings: Up to 2x faster
+// Measure provider-specific cost and latency from response usage; do not assume universal savings.
 
 ### Response Caching
 
@@ -96,18 +95,21 @@ class ResponseCache {
     private ttl = 3600;  // 1 hour default
 
     // Exact match caching
-    async getCached(prompt: string): Promise<string | null> {
-        const key = this.hashPrompt(prompt);
+    async getCached(scope: CacheScope, prompt: string, params: ModelParams): Promise<string | null> {
+        const key = this.cacheKey(scope, prompt, params);
         return await redis.get(`response:${key}`);
     }
 
-    async setCached(prompt: string, response: string): Promise<void> {
-        const key = this.hashPrompt(prompt);
+    async setCached(scope: CacheScope, prompt: string, params: ModelParams, response: string): Promise<void> {
+        const key = this.cacheKey(scope, prompt, params);
         await redis.set(`response:${key}`, response, 'EX', this.ttl);
     }
 
-    private hashPrompt(prompt: string): string {
-        return createHash('sha256').update(prompt).digest('hex');
+    private cacheKey(scope: CacheScope, prompt: string, params: ModelParams): string {
+        // scope must be derived server-side and include tenant/user authorization.
+        // params must include every output-affecting input: model/version, system
+        // instructions, tool schema, safety policy, locale, and generation settings.
+        return createHash('sha256').update(JSON.stringify({ scope, prompt, params })).digest('hex');
     }
 
     // Semantic similarity caching
@@ -127,14 +129,12 @@ class ResponseCache {
     // Temperature-aware caching
     async getCachedWithParams(
         prompt: string,
-        params: { temperature: number; model: string }
+        params: ModelParams & { scope: CacheScope }
     ): Promise<string | null> {
         // Only cache low-temperature responses
         if (params.temperature > 0.5) return null;
 
-        const key = this.hashPrompt(
-            `${prompt}|${params.model}|${params.temperature}`
-        );
+        const key = this.cacheKey(params.scope, prompt, params);
         return await redis.get(`response:${key}`);
     }
 }
@@ -169,7 +169,7 @@ class CAGSystem {
     async query(userQuery: string): Promise<string> {
         // Use cached context directly in prompt
         const response = await client.messages.create({
-            model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-6",
             max_tokens: 1024,
             system: [
                 {
@@ -232,23 +232,15 @@ class OptimizedCache {
     async queryWithCache(prompt: string): Promise<string> {
         const cacheKey = this.hash(prompt);
 
-        // Non-blocking cache check
-        const cachedPromise = this.cache.get(cacheKey);
-        const llmPromise = this.queryLLM(prompt);
-
-        // Race: use cache if available before LLM returns
-        const cached = await Promise.race([
-            cachedPromise,
-            sleep(50).then(() => null)  // 50ms cache timeout
-        ]);
+        // Complete the bounded cache lookup before starting a billable request.
+        const cached = await this.cache.get(cacheKey);
 
         if (cached) {
-            // Cancel LLM request if possible
             return cached;
         }
 
         // Cache miss: continue with LLM
-        const response = await llmPromise;
+        const response = await this.queryLLM(prompt);
 
         // Async cache write (don't block response)
         this.cache.set(cacheKey, response).catch(console.error);
