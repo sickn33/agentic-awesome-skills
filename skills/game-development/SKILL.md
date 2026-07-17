@@ -73,7 +73,7 @@ RENDER → Draw the frame (interpolated)
 
 | Pattern | Use When | Example |
 |---------|----------|---------|
-| **State Machine** | 3–5 discrete states | Player: Idle→Walk→Jump |
+| **State Machine** | 3-5 discrete states | Player: Idle→Walk→Jump |
 | **Object Pooling** | Frequent spawn/destroy | Bullets, particles |
 | **Observer/Events** | Cross-system communication | Health→UI updates |
 | **ECS** | Thousands of similar entities | RTS units, particles |
@@ -109,7 +109,7 @@ Abstract input into ACTIONS, not raw keys:
 
 | AI Type | Complexity | Use When |
 |---------|------------|----------|
-| **FSM** | Simple | 3–5 states, predictable behavior |
+| **FSM** | Simple | 3-5 states, predictable behavior |
 | **Behavior Tree** | Medium | Modular, designer-friendly |
 | **GOAP** | High | Emergent, planning-based |
 | **Utility AI** | High | Scoring-based decisions |

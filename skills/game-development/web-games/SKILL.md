@@ -78,9 +78,9 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 
 ### Decision
 
-- **New GPU-heavy projects:** WebGPU with WebGL fallback
-- **Broad legacy / simple 2D:** WebGL or Canvas 2D is enough
-- **Feature detection:** check `navigator.gpu`
+- **New GPU-heavy projects**: Use WebGPU with WebGL fallback
+- **Broad legacy / simple 2D**: Start with WebGL or Canvas 2D
+- **Feature detection**: Check `navigator.gpu`
 
 ---
 
@@ -97,11 +97,11 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 
 ### Optimization Priority
 
-1. Asset compression (KTX2, Draco, WebP as relevant)
-2. Lazy loading
-3. Object pooling (avoid GC spikes)
-4. Draw call batching
-5. Web Workers for heavy compute
+1. **Asset compression** - KTX2, Draco, WebP
+2. **Lazy loading** - Load on demand
+3. **Object pooling** - Avoid GC
+4. **Draw call batching** - Reduce state changes
+5. **Web Workers** - Offload heavy computation
 
 ---
 
@@ -115,7 +115,7 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 
 | Phase | Load |
 |-------|------|
-| Startup | Core assets, keep first load small |
+| Startup | Core assets, <2MB |
 | Gameplay | Stream on demand |
 | Background | Prefetch next level |
 
@@ -138,12 +138,12 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 
 ## 7. Anti-Patterns
 
-| Don't | Do |
-|-------|-----|
+| ❌ Don't | ✅ Do |
+|----------|-------|
 | Load all assets upfront | Progressive loading |
 | Ignore tab visibility | Pause when hidden |
 | Block on audio load | Lazy load audio |
-| Skip compression | Compress large assets |
+| Skip compression | Compress everything |
 | Assume fast connection | Handle slow networks |
 | Leave canvas engines running off-screen | Tear down guests |
 

@@ -29,7 +29,7 @@ date_added: "2026-02-27"
 | Component | Purpose |
 |-----------|---------|
 | **Atlas** | Combine textures, reduce draw calls |
-| **Animation** | Frame sequences (often 8–24 FPS) |
+| **Animation** | Frame sequences (often 8-24 FPS) |
 | **Pivot** | Rotation/scale origin |
 | **Layering** | Z-order control |
 
@@ -45,7 +45,7 @@ date_added: "2026-02-27"
 
 | Factor | Recommendation |
 |--------|----------------|
-| **Size** | 16×16, 32×32, 64×64 |
+| **Size** | 16x16, 32x32, 64x64 |
 | **Auto-tiling** | Use for terrain |
 | **Collision** | Simplified shapes |
 
@@ -85,7 +85,7 @@ date_added: "2026-02-27"
 
 ### Screen Shake
 
-- Short duration (50–200ms)
+- Short duration (50-200ms)
 - Diminishing intensity
 - Use sparingly
 
@@ -109,8 +109,8 @@ date_added: "2026-02-27"
 
 ## 6. Anti-Patterns
 
-| Don't | Do |
-|-------|-----|
+| ❌ Don't | ✅ Do |
+|----------|-------|
 | Separate textures | Use atlases |
 | Complex collision shapes | Simplified collision |
 | Jittery camera | Smooth following |
