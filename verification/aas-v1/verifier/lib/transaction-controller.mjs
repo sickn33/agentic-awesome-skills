@@ -290,6 +290,7 @@ async function doctor(fixture) {
 }
 
 async function recover(fixture) {
+  let completed = null;
   for (let attempt = 0; attempt < 50; attempt += 1) {
     const diagnosis = await doctor(fixture);
     if (diagnosis.value.status === "recoveryRequired") {
@@ -302,9 +303,12 @@ async function recover(fixture) {
       const preview = await publicCli(fixture, base);
       assert(preview.value.status === "approvalRequired", "AAS_TRANSACTION_CONTROLLER_RECOVERY_PREVIEW");
       const applied = await publicCli(fixture, [...base, "--approve", preview.value.recoveryPlan.digest]);
-      return { action, status: applied.value.status, planDigest: preview.value.recoveryPlan.digest };
+      completed = { action, status: applied.value.status, planDigest: preview.value.recoveryPlan.digest };
+      continue;
     }
-    if (diagnosis.value.status === "healthy") return { action: "none", status: "healthy", planDigest: fixture.plan.digest };
+    if (diagnosis.value.status === "healthy") {
+      return completed || { action: "none", status: "healthy", planDigest: fixture.plan.digest };
+    }
     await sleep(10);
   }
   throw Object.assign(new Error("AAS_TRANSACTION_CONTROLLER_RECOVERY_UNAVAILABLE"), { code: "AAS_TRANSACTION_CONTROLLER_RECOVERY_UNAVAILABLE" });
@@ -383,8 +387,13 @@ async function faultCase(context, className) {
       : className === "commit"
         ? walEvents.includes("committed")
         : !walEvents.includes("committed");
+  // fs_usage observes the byte-identical child executable directly but does
+  // not emit process-creation records. On macOS, executable binding plus the
+  // native write trace establishes lineage; Linux/Windows must also expose a
+  // child-process event from their process-tree observers.
+  const childLineageObserved = process.platform === "darwin" || observed.observation.childProcesses > 0;
   assert(driverValue?.observed && driverValue.recoveryLockPresent === true && driverValue.laterBoundaries.length === 0
-      && observed.observation.writeAttempts > 0 && observed.observation.childProcesses > 0 && lineageVerified && walBoundaryValid,
+      && observed.observation.writeAttempts > 0 && childLineageObserved && lineageVerified && walBoundaryValid,
     "AAS_TRANSACTION_CONTROLLER_NATIVE_OBSERVATION_MISSING", {
       className,
       writeAttempts: observed.observation.writeAttempts,
