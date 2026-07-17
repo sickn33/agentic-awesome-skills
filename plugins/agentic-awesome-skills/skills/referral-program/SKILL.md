@@ -401,6 +401,14 @@ Program costs = Rewards paid + Tool costs + Management time
 
 ## Fraud Prevention
 
+Before collecting fraud signals or launching incentives, document the applicable
+jurisdictions, program terms, tax treatment, required disclosures, and a lawful
+basis for each data field. Collect the minimum data needed, restrict access, set
+a retention/deletion schedule, and provide a support path for incorrect fraud
+decisions. Device fingerprints and IP addresses can be personal data; do not add
+them silently or retain them indefinitely. Obtain legal/privacy review when the
+program crosses jurisdictions or pays cash-equivalent rewards.
+
 ### Common Referral Fraud
 
 - Self-referrals (creating fake accounts)
@@ -559,6 +567,8 @@ Typical findings:
 - [ ] Create referral landing page
 - [ ] Design email templates
 - [ ] Set up tracking and attribution
+- [ ] Complete privacy, disclosure, tax, and jurisdiction review
+- [ ] Document data minimization, access, retention, deletion, and appeals
 - [ ] Define fraud prevention rules
 - [ ] Create terms and conditions
 - [ ] Test complete referral flow

@@ -16,6 +16,12 @@ Covers OpenAI Realtime API, Vapi for voice agents, Deepgram for transcription, E
 for synthesis, LiveKit for real-time infrastructure, and WebRTC fundamentals. Knows how to
 build low-latency, production-ready voice experiences.
 
+Before capturing audio or transcripts, provide a clear recording/AI disclosure,
+obtain any consent required in every participant's jurisdiction, and define who
+can access recordings. Minimize stored content, encrypt it in transit and at rest,
+set a deletion/retention schedule, and provide a deletion path. Do not silently
+reuse voice data for training, identity inference, or voice cloning.
+
 **Role**: Voice AI Architect
 
 You are an expert in building real-time voice applications. You think in terms of
@@ -164,10 +170,16 @@ async def voice_session():
                 print("User started speaking")
 
             elif event["type"] == "response.function_call_arguments.done":
-                # Handle tool call
+                # Treat model-selected tool calls as untrusted input.
                 name = event["name"]
                 args = json.loads(event["arguments"])
-                result = call_function(name, args)
+                handlers = {"get_weather": get_weather}
+                if name not in handlers or set(args) != {"location"}:
+                    raise ValueError("Unsupported tool call")
+                if not isinstance(args["location"], str) or not args["location"].strip():
+                    raise ValueError("Invalid tool arguments")
+                handler = handlers.get(name)
+                result = handler(args["location"])
                 await ws.send(json.dumps({
                     "type": "conversation.item.create",
                     "item": {
@@ -187,9 +199,11 @@ Build voice agents with Vapi platform
 
 from flask import Flask, request, jsonify
 import vapi
+import hmac
+import os
 
 app = Flask(__name__)
-client = vapi.Vapi(api_key="...")
+client = vapi.Vapi(api_key=os.environ["VAPI_API_KEY"])
 
 # Create an assistant
 assistant = client.assistants.create(
@@ -218,6 +232,12 @@ assistant = client.assistants.create(
 # Webhook for conversation events
 @app.route("/vapi/webhook", methods=["POST"])
 def vapi_webhook():
+    # Configure a Vapi Bearer Token custom credential for this server URL.
+    supplied = request.headers.get("Authorization", "")
+    expected = f"Bearer {os.environ['VAPI_WEBHOOK_TOKEN']}"
+    if not hmac.compare_digest(supplied, expected):
+        return jsonify({"error": "unauthorized"}), 401
+
     event = request.json
 
     if event["type"] == "function-call":
@@ -225,12 +245,17 @@ def vapi_webhook():
         name = event["functionCall"]["name"]
         args = event["functionCall"]["parameters"]
 
-        if name == "check_order":
-            result = check_order(args["order_id"])
+        # Allowlist tools and validate arguments before any side effect.
+        if name == "check_order" and set(args) == {"order_id"}:
+            order_id = args["order_id"]
+            if not isinstance(order_id, str) or not order_id.strip():
+                return jsonify({"error": "invalid arguments"}), 400
+            result = check_order(order_id)
             return jsonify({"result": result})
+        return jsonify({"error": "unsupported tool"}), 400
 
     elif event["type"] == "end-of-call-report":
-        # Call ended - save transcript
+        # Store only with documented consent and a configured retention policy.
         transcript = event["transcript"]
         save_transcript(event["call"]["id"], transcript)
 

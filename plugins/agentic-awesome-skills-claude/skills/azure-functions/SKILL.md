@@ -248,19 +248,23 @@ public class OrderWorkflow
         [OrchestrationTrigger] TaskOrchestrationContext context)
     {
         var order = context.GetInput<Order>();
+        var retryOptions = new TaskOptions(
+            new TaskRetryOptions(new RetryPolicy(
+                maxNumberOfAttempts: 3,
+                firstRetryInterval: TimeSpan.FromSeconds(5))));
 
         // Functions execute sequentially, state persisted between each
         var validated = await context.CallActivityAsync<ValidatedOrder>(
-            "ValidateOrder", order);
+            "ValidateOrder", order, retryOptions);
 
         var payment = await context.CallActivityAsync<PaymentResult>(
-            "ProcessPayment", validated);
+            "ProcessPayment", validated, retryOptions);
 
         var shipped = await context.CallActivityAsync<ShippingResult>(
-            "ShipOrder", new ShipRequest { Order = validated, Payment = payment });
+            "ShipOrder", new ShipRequest { Order = validated, Payment = payment }, retryOptions);
 
         var notification = await context.CallActivityAsync<bool>(
-            "SendNotification", shipped);
+            "SendNotification", shipped, retryOptions);
 
         return new OrderResult
         {
@@ -587,9 +591,15 @@ public static async Task<HttpResponseData> StartLongRunning(
 // }
 
 // Alternative: Queue-based pattern without Durable Functions
+public sealed class StartWorkResult
+{
+    [QueueOutput("work-queue")]
+    public WorkItem QueueMessage { get; init; }
+    public HttpResponseData HttpResponse { get; init; }
+}
+
 [Function("StartWork")]
-[QueueOutput("work-queue")]
-public static async Task<WorkItem> StartWork(
+public static async Task<StartWorkResult> StartWork(
     [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
     FunctionContext context)
 {
@@ -611,7 +621,11 @@ public static async Task<WorkItem> StartWork(
         statusUrl = $"/api/status/{workId}"
     });
 
-    return workItem;
+    return new StartWorkResult
+    {
+        QueueMessage = workItem,
+        HttpResponse = response
+    };
 }
 
 [Function("ProcessWork")]
