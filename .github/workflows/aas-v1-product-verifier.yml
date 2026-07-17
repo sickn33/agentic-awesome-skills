@@ -1,0 +1,189 @@
+name: AAS v1 product verifier
+
+on:
+  pull_request_target:
+    branches: [main]
+    paths:
+      - "tools/bin/aas.js"
+      - "tools/bin/aas-mcp.js"
+      - "tools/lib/aas-v1/**"
+      - "data/aas-v1/**"
+      - "schemas/aas-v1/**"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+    inputs:
+      candidate_commit:
+        description: Full candidate commit SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aas-v1-product-${{ github.event.pull_request.head.sha || inputs.candidate_commit }}
+  cancel-in-progress: false
+
+jobs:
+  candidate-pack:
+    name: Candidate tarball
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      commit: ${{ steps.identity.outputs.commit }}
+    steps:
+      - name: Resolve immutable candidate
+        id: identity
+        shell: bash
+        env:
+          PR_SHA: ${{ github.event.pull_request.head.sha }}
+          INPUT_SHA: ${{ inputs.candidate_commit }}
+        run: |
+          sha="${PR_SHA:-$INPUT_SHA}"
+          [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || exit 64
+          echo "commit=$sha" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.identity.outputs.commit }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+          cache: npm
+          cache-dependency-path: candidate/package-lock.json
+      - name: Pack without lifecycle execution
+        working-directory: candidate
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/aas-candidate"
+          npm pack --ignore-scripts --json --pack-destination "$RUNNER_TEMP/aas-candidate" > "$RUNNER_TEMP/aas-pack.json"
+          test "$(find "$RUNNER_TEMP/aas-candidate" -maxdepth 1 -name '*.tgz' -type f | wc -l | tr -d ' ')" = 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aas-v1-candidate-${{ steps.identity.outputs.commit }}
+          path: ${{ runner.temp }}/aas-candidate/*.tgz
+          if-no-files-found: error
+          retention-days: 14
+
+  verify:
+    name: ${{ matrix.id }}
+    needs: candidate-pack
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: linux-node-22
+            os: ubuntu-24.04
+            node: 22.23.1
+            fs_type: ext4
+            fs_case: sensitive
+          - id: linux-node-24
+            os: ubuntu-24.04
+            node: 24.18.0
+            fs_type: ext4
+            fs_case: sensitive
+          - id: macos-node-22
+            os: macos-15-intel
+            node: 22.23.1
+            fs_type: apfs
+            fs_case: insensitive-preserving
+          - id: macos-node-24
+            os: macos-15-intel
+            node: 24.18.0
+            fs_type: apfs
+            fs_case: insensitive-preserving
+          - id: windows-node-22
+            os: windows-2025
+            node: 22.23.1
+            fs_type: ntfs
+            fs_case: insensitive-preserving
+          - id: windows-node-24
+            os: windows-2025
+            node: 24.18.0
+            fs_type: ntfs
+            fs_case: insensitive-preserving
+    runs-on: ${{ matrix.os }}
+    continue-on-error: false
+    timeout-minutes: 45
+    steps:
+      - name: Checkout protected verifier revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: trusted
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: aas-v1-candidate-${{ needs.candidate-pack.outputs.commit }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: trusted/verification/aas-v1/verifier/package-lock.json
+      - name: Install verifier dependencies only
+        working-directory: trusted/verification/aas-v1/verifier
+        run: npm ci --ignore-scripts
+      - name: Verify protected freeze before candidate execution
+        working-directory: trusted/verification/aas-v1/verifier
+        run: npm run freeze:check
+      - name: Run black-box verifier
+        shell: bash
+        env:
+          AAS_VERIFIER_RUNNER_LABEL: ${{ matrix.os }}
+          AAS_VERIFIER_FILESYSTEM_TYPE: ${{ matrix.fs_type }}
+          AAS_VERIFIER_FILESYSTEM_CASE: ${{ matrix.fs_case }}
+        run: |
+          tarball="$(find "$RUNNER_TEMP/candidate" -maxdepth 1 -name '*.tgz' -type f -print -quit)"
+          node trusted/verification/aas-v1/verifier/bin/verify-product.mjs \
+            --tarball "$tarball" \
+            --candidate-commit "${{ needs.candidate-pack.outputs.commit }}" \
+            --verifier-commit "${{ github.workflow_sha }}" \
+            --job-id "${{ matrix.id }}" \
+            --transaction-evidence "$RUNNER_TEMP/aas-transaction-evidence.json" \
+            --work-root "$RUNNER_TEMP/aas-v1-work" \
+            --out "$RUNNER_TEMP/aas-v1-${{ matrix.id }}.json"
+      - name: Upload immutable job receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aas-v1-receipt-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.id }}
+          path: ${{ runner.temp }}/aas-v1-${{ matrix.id }}.json
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    name: Aggregate exact matrix
+    if: always()
+    needs: [candidate-pack, verify]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: trusted
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: aas-v1-receipt-${{ github.run_id }}-${{ github.run_attempt }}-*
+          path: ${{ runner.temp }}/receipts
+          merge-multiple: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+      - name: Merge and enforce all six receipts
+        shell: bash
+        run: |
+          npm ci --ignore-scripts --prefix trusted/verification/aas-v1/verifier
+          node trusted/verification/aas-v1/verifier/bin/merge-product-evidence.mjs \
+            --out "$RUNNER_TEMP/aas-v1-evidence-bundle.json" \
+            "$RUNNER_TEMP"/receipts/*.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aas-v1-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/aas-v1-evidence-bundle.json
+          if-no-files-found: error
+          retention-days: 30

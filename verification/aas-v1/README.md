@@ -31,6 +31,45 @@ A green gate proves internal consistency and byte identity of the frozen
 baseline. Product acceptance still requires the separate black-box evidence
 defined in the goal contract.
 
+## Product verifier
+
+The product verifier accepts one `npm pack --ignore-scripts` tarball and runs
+from a checkout controlled by the verifier owner. It installs the candidate
+outside that checkout and exercises only the three published binaries or
+driver subprocesses that import the packed production core. Test-mode hooks
+are forbidden.
+
+The protected acceptance workflow has six mandatory jobs: Node 22 and 24 on
+Linux, macOS Intel, and Windows. Every job emits one canonical, immutable
+receipt for the exact nine-suite set. The aggregator rejects missing or
+duplicate jobs, candidate/verifier digest drift, reduced 100,000-property or
+50,000-fuzz denominators, non-identical canonical payloads, missing hostile or
+legacy cases, and incomplete fault/race coverage.
+
+Two workflow surfaces are intentionally distinct:
+
+- `aas-v1-verifier-harness.yml` validates this verifier, schemas, freeze and
+  the native observer sentinel on all six runtimes. It makes no product claim.
+- `aas-v1-product-verifier.yml` runs only for product-affecting changes or an
+  explicit dispatch. Product acceptance additionally requires an external,
+  production-binary transaction report. A missing report fails closed with
+  `AAS_VERIFIER_TRANSACTION_EVIDENCE_MISSING`; static or test-mode evidence is
+  rejected. The workflow is not allowed to turn that missing controller into
+  a skipped or allowed-failure job.
+
+Example acceptance entrypoint:
+
+```sh
+node verification/aas-v1/verifier/bin/verify-product.mjs \
+  --tarball /absolute/agentic-awesome-skills.tgz \
+  --candidate-commit 0123456789012345678901234567890123456789 \
+  --verifier-commit 0123456789012345678901234567890123456789 \
+  --job-id linux-node-22 \
+  --transaction-evidence /absolute/transaction-evidence.json \
+  --work-root /absolute/isolated-work \
+  --out /absolute/job-receipt.json
+```
+
 ## Freeze protocol
 
 1. Land this baseline through a dedicated PR before scorer implementation.

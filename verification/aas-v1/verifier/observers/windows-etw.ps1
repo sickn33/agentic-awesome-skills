@@ -34,17 +34,33 @@ try {
   $lines = New-Object System.Collections.Generic.List[string]
   $childPids = New-Object System.Collections.Generic.HashSet[int]
   $childPids.Add($rootPid) | Out-Null
+  function Get-IntegerField($row, [string[]]$patterns) {
+    foreach ($property in $row.PSObject.Properties) {
+      foreach ($pattern in $patterns) {
+        if ($property.Name -match $pattern) {
+          $parsed = 0
+          if ([int]::TryParse([string]$property.Value, [ref]$parsed)) { return $parsed }
+        }
+      }
+    }
+    return 0
+  }
   foreach ($row in (Import-Csv -LiteralPath $csv)) {
     $serialized = $row | ConvertTo-Json -Compress
-    $pidValue = 0
-    foreach ($name in @("ProcessId", "Process ID", "PID")) {
-      if ($row.PSObject.Properties.Name -contains $name) { [void][int]::TryParse($row.$name, [ref]$pidValue) }
+    $eventName = (($row.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join " ")
+    if ($eventName -match "(?i)(Process.*Start|Start.*Process)") {
+      $parentPid = Get-IntegerField $row @("(?i)^Parent.*Process.*Id$", "(?i)^Parent.*PID$")
+      $newPid = Get-IntegerField $row @("(?i)^New.*Process.*Id$", "(?i)^Process.*Id$", "(?i)^PID$")
+      if ($childPids.Contains($parentPid) -and $newPid -gt 0 -and !$childPids.Contains($newPid)) {
+        $childPids.Add($newPid) | Out-Null
+        $lines.Add("process|$newPid|parent=$parentPid")
+      }
+      continue
     }
+    $pidValue = Get-IntegerField $row @("(?i)^Process.*Id$", "(?i)^PID$")
     if (!$childPids.Contains($pidValue)) { continue }
-    $eventName = (($row.PSObject.Properties.Value | ForEach-Object { $_.Value }) -join " ")
     if ($eventName -match "(?i)(TCP|UDP|DNS|Connect|Socket|Network)") { $lines.Add("network|$pidValue|$serialized") }
-    elseif ($eventName -match "(?i)(File.*(?:Create|Write|Delete|Rename)|Directory.*(?:Create|Delete)|SetInformation|Flush)") { $lines.Add("write|$pidValue|$serialized") }
-    elseif ($eventName -match "(?i)(Process.*Start|Thread.*Start)" -and $pidValue -ne $rootPid) { $lines.Add("process|$pidValue|$serialized") }
+    elseif ($eventName -match "(?i)(File.*(?:Write|Delete|Rename)|Directory.*(?:Create|Delete)|SetInformation|Flush|CreateAlways|CreateNew|Overwrite|Supersede)") { $lines.Add("write|$pidValue|$serialized") }
   }
   [IO.File]::WriteAllLines($TraceOutput, $lines, (New-Object Text.UTF8Encoding($false)))
   $receipt = [ordered]@{

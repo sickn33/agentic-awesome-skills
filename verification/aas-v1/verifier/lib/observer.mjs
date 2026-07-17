@@ -12,9 +12,8 @@ const FD_WRITE = /\b(?:write|writev|pwrite|pwritev)\s*\((\d+)(?:<[^>]*>)?,/;
 const PROCESS_CALL = /\b(?:execve|execveat|posix_spawn)\s*\(/;
 
 function commandExists(command) {
-  const probe = process.platform === "win32" ? "where.exe" : "command";
-  const args = process.platform === "win32" ? [command] : ["-v", command];
-  const result = spawnSync(probe, args, { encoding: "utf8", shell: process.platform !== "win32" });
+  const probe = process.platform === "win32" ? "where.exe" : "which";
+  const result = spawnSync(probe, [command], { encoding: "utf8", windowsHide: true });
   return result.status === 0;
 }
 
@@ -120,7 +119,10 @@ proc:::exec-success
   const raw = fs.readFileSync(output, "utf8");
   fs.rmSync(output, { force: true });
   return {
-    result: { ...dtrace, stdout: "", stderr: dtrace.stderr },
+    // DTrace writes probe records to -o while the observed command keeps its
+    // stdout/stderr streams on the wrapper process. Preserve those protocol
+    // bytes for the black-box MCP assertions.
+    result: { ...dtrace, stdout: dtrace.stdout, stderr: dtrace.stderr },
     observation: parseDelimitedObserver(raw, options.zones),
     backend: "macos-dtrace-process-tree",
   };

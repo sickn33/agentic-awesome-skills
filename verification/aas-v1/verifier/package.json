@@ -16,6 +16,7 @@
     "freeze:check": "node bin/freeze-baseline.mjs",
     "verify:product": "node bin/verify-product.mjs",
     "verify:merge": "node bin/merge-product-evidence.mjs",
+    "test:platform": "node bin/self-test-platform.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "engines": {

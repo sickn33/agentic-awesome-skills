@@ -1,0 +1,54 @@
+name: AAS v1 verifier harness
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "verification/aas-v1/**"
+      - ".github/workflows/aas-v1-verifier-harness.yml"
+      - ".github/workflows/aas-v1-product-verifier.yml"
+      - ".github/CODEOWNERS"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  harness:
+    name: ${{ matrix.id }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { id: linux-node-22, os: ubuntu-24.04, node: 22.23.1 }
+          - { id: linux-node-24, os: ubuntu-24.04, node: 24.18.0 }
+          - { id: macos-node-22, os: macos-15-intel, node: 22.23.1 }
+          - { id: macos-node-24, os: macos-15-intel, node: 24.18.0 }
+          - { id: windows-node-22, os: windows-2025, node: 22.23.1 }
+          - { id: windows-node-24, os: windows-2025, node: 24.18.0 }
+    runs-on: ${{ matrix.os }}
+    continue-on-error: false
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: verification/aas-v1/verifier/package-lock.json
+      - name: Install verifier without lifecycle execution
+        working-directory: verification/aas-v1/verifier
+        run: npm ci --ignore-scripts
+      - name: Schemas, structure, freeze and self-tests
+        working-directory: verification/aas-v1/verifier
+        shell: bash
+        run: |
+          npm run check:schemas
+          npm run check:structure
+          npm run freeze:check
+          npm test
+      - name: Platform-native observer sentinel
+        working-directory: verification/aas-v1/verifier
+        run: npm run test:platform -- --job-id ${{ matrix.id }}

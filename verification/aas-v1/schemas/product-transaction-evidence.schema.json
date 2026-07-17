@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/product-transaction-evidence.schema.json",
+  "title": "AAS v1 external production transaction evidence",
+  "type": "object",
+  "required": ["schemaVersion", "status", "productionBinary", "testMode", "mocked", "observer", "faultBoundaryClasses", "raceClasses", "executions", "killExecutions", "swapExecutions", "recoveryExecutions", "partialStates", "unmanagedMutations", "hardPolicyViolations", "boundaryEvidence"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "const": "passed" },
+    "productionBinary": { "const": true },
+    "testMode": { "const": false },
+    "mocked": { "const": false },
+    "observer": {
+      "type": "object",
+      "required": ["backend", "eventDigest", "overflow", "ambiguousLineage"],
+      "properties": {
+        "backend": { "enum": ["linux-strace-process-tree", "macos-dtrace-process-tree", "windows-etw-kernel-process-tree"] },
+        "eventDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "overflow": { "const": false },
+        "ambiguousLineage": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "faultBoundaryClasses": {
+      "type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true,
+      "items": { "enum": ["lock", "journal", "backup", "write", "fsync", "rename", "commit"] }
+    },
+    "raceClasses": {
+      "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true,
+      "items": { "enum": ["concurrency", "drift", "symlink-swap", "target-swap", "corrupt-journal", "recovery-race"] }
+    },
+    "executions": { "type": "integer", "minimum": 13 },
+    "killExecutions": { "type": "integer", "minimum": 7 },
+    "swapExecutions": { "type": "integer", "minimum": 2 },
+    "recoveryExecutions": { "type": "integer", "minimum": 2 },
+    "partialStates": { "const": 0 },
+    "unmanagedMutations": { "const": 0 },
+    "hardPolicyViolations": { "const": 0 },
+    "boundaryEvidence": {
+      "type": "array", "minItems": 13,
+      "items": {
+        "type": "object",
+        "required": ["class", "observedOperation", "injectionAction", "beforeDigest", "afterDigest", "finalState", "noPartialState"],
+        "properties": {
+          "class": { "type": "string", "minLength": 1 },
+          "observedOperation": { "type": "string", "minLength": 1 },
+          "injectionAction": { "enum": ["kill", "concurrent", "drift", "symlink-swap", "target-swap", "corrupt-journal", "recovery-race"] },
+          "beforeDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+          "afterDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+          "finalState": { "enum": ["previous", "new"] },
+          "noPartialState": { "const": true }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
