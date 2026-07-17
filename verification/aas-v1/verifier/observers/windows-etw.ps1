@@ -92,15 +92,16 @@ try {
       }
       continue
     }
-    if ($providerName -eq 'Microsoft-Windows-Winsock-AFD' -and $eventId -eq 1) {
+    if ($providerName -like 'Microsoft-Windows-Winsock*' -and $eventId -eq 1000) {
       $winsockCreateRows++
       $userModePid = Get-PayloadInteger $row 'UserModePid'
       if ($userModePid -gt 0 -and $winsockDecodedPids.Count -lt 8 -and !$winsockDecodedPids.Contains($userModePid)) {
         $winsockDecodedPids.Add($userModePid)
       }
-      if ($childPids.Contains($userModePid)) {
+      $networkPid = Get-IntegerField $row @("(?i)^Process.*Id$", "(?i)^PID$")
+      if ($childPids.Contains($networkPid) -or $childPids.Contains($userModePid)) {
         $networkRows++
-        $lines.Add("network|$userModePid|provider=$providerName;event=$eventId")
+        $lines.Add("network|$networkPid|provider=$providerName;event=$eventId")
       }
       continue
     }

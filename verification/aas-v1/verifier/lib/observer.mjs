@@ -132,6 +132,7 @@ export function parseMacCombinedFsUsage(text, zones = {}) {
 
 async function macObserved(executable, args, options) {
   if (!commandExists("fs_usage")) throw Object.assign(new Error("fs_usage is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  if (!fs.existsSync("/usr/bin/script")) throw Object.assign(new Error("script(1) is required for fs_usage readiness"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   const gate = path.join(options.evidenceDir, `observer-${process.pid}.go`);
   const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
   const command = [executable, ...args].map(shellQuote).join(" ");
@@ -160,8 +161,8 @@ async function macObserved(executable, args, options) {
       resolveReady();
     }
   };
-  const observerPromise = runProcess("sudo", [
-    "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
+  const observerPromise = runProcess("/usr/bin/script", [
+    "-q", "/dev/null", "sudo", "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
     "-f", "filesys", "-f", "network", "-f", "exec", String(rootPid),
   ], {
     ...options,
