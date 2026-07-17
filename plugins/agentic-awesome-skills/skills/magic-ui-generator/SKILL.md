@@ -1,4 +1,4 @@
---- 
+---
 name: magic-ui-generator
 description: Utilizes Magic by 21st.dev to generate, compare, and integrate multiple production-ready UI component variations.
 risk: safe
@@ -25,20 +25,21 @@ Trigger this skill whenever:
 ## Execution Workflow
 
 1. **Analyze Requirements**: Review the component description. Ensure the target output aligns with the project's stack (e.g., Next.js, TypeScript, Tailwind CSS). Define clear constraints for accessibility and responsiveness.
-2. **Generate Variations**: Interface with the Magic MCP server or use the `browser_subagent` to explore 21st.dev/magic to generate _several distinct, unconventional styles_ for the requested component.
+2. **Generate Variations**: Use Magic only if a compatible tool or browser is actually available and the user approves external processing. Otherwise produce local variations from project primitives.
    - **Pro Tip**: Use descriptive prompts pushing for modern aesthetics: "avant-garde SaaS pricing table with glassmorphism and animated borders" or "highly immersive contact form with dynamic floating labels."
 3. **Present Options**: Briefly describe the generated variations side-by-side. Highlight stylistic differences, layout approaches, and premium features (sticky headers, hover animations, etc.).
 4. **Integrate Selection**: Once a favorite variation is chosen:
    - Integrate the fully functional, production-ready TypeScript code.
-   - Ensure dependencies (`lucide-react`, `framer-motion`) are installed.
+   - Reuse existing dependencies; obtain approval before changing the dependency graph.
    - Handle proper props, types, and responsive behaviors.
 
 ## Strict Rules
 
-- **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. DO NOT build in common, generic, or safe styles. Push boundaries.
+- **Project Fit First**: Follow the requested design direction and existing design system; external generation is optional.
 - **Choice First**: Always offer multiple premium design variations before writing the final code to the project.
 - **Clean Code**: Ensure all generated code is clean TypeScript, accessible, and responsive.
-- **Full Ownership**: Treat all generated components as fully owned.
+- **Review Before Use**: Inspect generated code for accessibility, security, licenses, provenance, dependency risk, and compatibility before integration.
+- **Approval Boundary**: Do not upload private designs, install packages, or write generated code into the project without the relevant user approval.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

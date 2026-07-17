@@ -1,4 +1,4 @@
---- 
+---
 name: magic-animator
 description: AI-powered animation tool for creating motion in logos, UI, icons, and social media assets.
 risk: safe
@@ -25,15 +25,16 @@ Trigger this skill when:
 
 1. **Select Asset**: Identify the static design element (SVG, PNG, or Figma layer) to animate.
 2. **Choose Preset/Category**: Select the appropriate domain (Logos, UI, Icons, Social Media) to ensure the motion curves match the context.
-3. **Animate**: Use the **AI Animation Assistant** via chat-based prompts to request specific, premium motion (e.g., "Make it feel like a high-end luxury brand reveal" or "Give it a kinetic, elastic pop").
+3. **Animate**: If Magic Animator is available and approved, upload only assets the user is authorized to share; otherwise use a local animation workflow.
 4. **Refine**: If available, edit keyframes for further polish, ensuring easing curves feel natural and high-end.
-5. **Export & Integrate**: Export the final animation as **Lottie (JSON)** for web/mobile performance, or **GIF/MP4** for social.
+5. **Export & Integrate**: Export the approved format, inspect generated files, test reduced-motion behavior and performance, and retain source/provenance notes.
 
 ## Strict Rules
 
-- **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. DO NOT rely on basic, linear animations. Use motion to create a "wow" factor.
+- **Optional External Service**: Do not claim or invoke Magic Animator unless the tool is actually available and the user approves external processing.
 - **Purposeful Motion**: Every animation must feel deliberate and premium. Avoid chaotic or overly fast motion that distracts from the core UX.
 - **Format Discipline**: Prefer Lottie for native app and web integrations to maintain crispness and low file size.
+- **Rights & Privacy**: Do not upload confidential, personal, or third-party assets without authorization and applicable rights.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
