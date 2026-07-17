@@ -323,7 +323,7 @@ function buildPrerenderFallback({ heading, description, links }) {
 
 function buildHomeFallback({ landingPages, siteBaseUrl }) {
   const links = [
-    { href: routeToUrl('/workbench', siteBaseUrl), label: 'Build an exact skill install' },
+    { href: routeToUrl('/workbench', siteBaseUrl), label: 'Review an AAS stack and plan' },
     { href: routeToUrl('/plugins', siteBaseUrl), label: 'Compare specialized plugin packs' },
     ...landingPages.filter((page) => page.slug).map((page) => ({
       href: routeToUrl(`/topics/${encodeURIComponent(page.slug)}`, siteBaseUrl),
@@ -596,8 +596,8 @@ function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
 }
 
 function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
-  const title = 'Skill Workbench | Agentic Awesome Skills';
-  const description = 'Filter canonical skill evidence, compose an exact host-aware set, and preview a version-pinned install without filesystem writes.';
+  const title = 'Stack Review Workbench | Agentic Awesome Skills';
+  const description = 'Review an AAS stack manifest and immutable plan locally in your browser. Imports stay in memory and cannot install or apply changes.';
   const catalogBaseUrl = canonicalUrl.replace(/\/workbench\/?$/, '');
   const catalogRootUrl = `${catalogBaseUrl}/`;
   const sourceCodeEntity = {
@@ -627,7 +627,7 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         name: 'Agentic Awesome Skills Workbench',
-        headline: 'Build a precise, inspectable skill set',
+        headline: 'Review what your agent chose',
         description,
         url: canonicalUrl,
         mainEntityOfPage: canonicalUrl,

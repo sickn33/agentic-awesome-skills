@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:recommendation-input:v1",
+  "title": "AAS recommendation input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["intent", "targets", "profile", "criticalGoals", "nonCriticalGoals", "policy"],
+  "properties": {
+    "intent": { "enum": ["web-application-delivery", "api-backend-delivery", "test-qa-automation", "security-review-hardening", "deployment-devops", "agent-mcp-development"] },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["host", "scope"],
+        "properties": {
+          "host": { "enum": ["codex", "claude"] },
+          "scope": { "enum": ["project", "user"] }
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "projectType": { "type": "string", "maxLength": 2048 },
+        "languages": { "$ref": "#/$defs/boundedStrings" },
+        "frameworks": { "$ref": "#/$defs/boundedStrings" },
+        "context": { "type": "string", "maxLength": 2048 },
+        "constraints": { "$ref": "#/$defs/boundedStrings" },
+        "request": { "type": "string", "maxLength": 2048 }
+      }
+    },
+    "criticalGoals": { "$ref": "#/$defs/goals" },
+    "nonCriticalGoals": { "type": "array", "maxItems": 32, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "minimumNonCriticalGoalCoverage": { "type": "number", "minimum": 0.8, "maximum": 1 },
+    "maxSkills": { "type": "integer", "minimum": 1, "maximum": 12 },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedRisk", "requireKnownSource", "allowManualSetup"],
+      "properties": {
+        "allowedRisk": { "type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true, "items": { "enum": ["none", "safe", "unknown", "critical", "offensive"] } },
+        "requireKnownSource": { "type": "boolean" },
+        "allowManualSetup": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "boundedStrings": { "type": "array", "maxItems": 32, "uniqueItems": true, "items": { "type": "string", "maxLength": 256 } },
+    "goals": { "type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+  }
+}

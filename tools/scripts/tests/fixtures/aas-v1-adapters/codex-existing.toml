@@ -1,0 +1,18 @@
+# Anonymized Codex fixture. It is not a real user configuration.
+model = "example-model"
+
+[features]
+example_flag = true
+
+[mcp_servers.other]
+command = "other-server"
+args = ["--token", "fixture-secret-must-not-appear-in-preview"]
+
+[mcp_servers.aas]
+command = "old-aas-mcp" # preserve this comment
+args = ["--old"]
+enabled = false
+startup_timeout_sec = 20
+
+[notice]
+hide_example = true

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:doctor-result:v1",
+  "title": "AAS stack doctor result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "ok", "status", "protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "target", "findings", "recoveries"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "ok": { "const": true },
+    "status": { "enum": ["healthy", "degraded", "recoveryRequired"] },
+    "protocolVersion": { "type": "string", "minLength": 1 },
+    "coreVersion": { "type": "string", "minLength": 1 },
+    "metadataSchemaVersion": { "type": "string", "minLength": 1 },
+    "scorerVersion": { "type": "string", "minLength": 1 },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["host", "scope", "identityDigest"],
+      "properties": {
+        "host": { "enum": ["codex", "claude"] },
+        "scope": { "enum": ["project", "user"] },
+        "identityDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "category", "severity", "details"],
+        "properties": {
+          "code": { "$ref": "#/$defs/code" },
+          "category": { "type": "string", "minLength": 1 },
+          "severity": { "enum": ["info", "warning", "error"] },
+          "details": { "type": "object" }
+        }
+      }
+    },
+    "recoveries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["recoveryId", "allowedActions", "journalDigest", "planDigest"],
+        "properties": {
+          "recoveryId": { "type": "string", "pattern": "^recovery-[a-f0-9]{32,64}$" },
+          "allowedActions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["rollback", "cleanup"] } },
+          "journalDigest": { "$ref": "#/$defs/digest" },
+          "planDigest": { "$ref": "#/$defs/digest" },
+          "bootstrapOnly": { "type": "boolean" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+    "code": { "type": "string", "pattern": "^AAS_[A-Z0-9_]+$" }
+  }
+}

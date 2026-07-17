@@ -1,535 +1,363 @@
-import { useDeferredValue, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { VirtuosoGrid } from 'react-virtuoso';
-import packageMetadata from '../../../../package.json';
-import { Icon } from '../components/ui/Icon';
-import { useSkills } from '../context/SkillContext';
+import { useId, useMemo, useRef, useState } from 'react';
 import { usePageMeta } from '../hooks/usePageMeta';
-import type { RiskLevel, Skill } from '../types';
 import {
-  WORKBENCH_HOSTS,
-  buildInstallerCommand,
-  collectSelectionEvidence,
-  getHostCompatibility,
-  getRecordedProvenance,
-  getSetupType,
-  isWorkbenchHost,
-  matchesWorkbenchFilters,
-  normalizeSelectedIds,
-  parseSelectedIds,
-  type CompatibilityFacet,
-  type ProvenanceFacet,
-  type RiskFacet,
-  type SetupFacet,
-  type WorkbenchHost,
-} from '../utils/skillWorkbench';
+  WORKBENCH_MAX_IMPORT_BYTES,
+  WORKBENCH_MAX_JSON_DEPTH,
+  WorkbenchImportError,
+  parseWorkbenchArtifact,
+  readWorkbenchFile,
+  verifyPlanDigest,
+  type PlanReview,
+  type StackManifestReview,
+  type WorkbenchArtifactKind,
+} from '../utils/workbenchReview';
 
-const riskStyles: Record<RiskLevel, string> = {
-  none: 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300',
-  safe: 'border-teal-300 bg-teal-50 text-teal-800 dark:border-teal-800 dark:bg-teal-950/50 dark:text-teal-300',
-  unknown: 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300',
-  critical: 'border-orange-300 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-950/50 dark:text-orange-300',
-  offensive: 'border-rose-300 bg-rose-50 text-rose-900 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300',
-};
-
-const evidenceToneStyles = {
-  rose: 'border-rose-900/70 bg-rose-950/35 text-rose-200',
-  orange: 'border-orange-900/70 bg-orange-950/30 text-orange-200',
-  amber: 'border-amber-900/70 bg-amber-950/25 text-amber-200',
-  violet: 'border-violet-900/70 bg-violet-950/25 text-violet-200',
-  slate: 'border-slate-700 bg-slate-900 text-slate-300',
-} as const;
-
-function recordedRisk(skill: Skill): RiskLevel {
-  return skill.risk ?? 'unknown';
+interface ImportState<T> {
+  value: T | null;
+  error: string | null;
+  source: 'paste' | 'file' | null;
 }
 
-function EvidenceBucket({
-  summary,
-  entries,
-  tone,
-}: {
-  summary: string;
-  entries: string[];
-  tone: keyof typeof evidenceToneStyles;
-}): React.ReactElement | null {
-  if (entries.length === 0) return null;
+const EMPTY_IMPORT_STATE = { value: null, error: null, source: null } as const;
+
+function displayError(error: unknown): string {
+  return error instanceof WorkbenchImportError ? error.message : 'The artifact could not be reviewed.';
+}
+
+function shortDigest(value: string): string {
+  return `${value.slice(0, 18)}…${value.slice(-12)}`;
+}
+
+function DefinitionList({ entries }: { entries: Array<[string, React.ReactNode]> }): React.ReactElement {
   return (
-    <div className={`border px-2.5 py-2 ${evidenceToneStyles[tone]}`}>
-      <p>{entries.length} {summary}.</p>
-      <ul className="mt-1 space-y-1 font-mono text-[10px] leading-relaxed opacity-90">
-        {entries.map((entry) => <li key={entry} className="break-words">{entry}</li>)}
-      </ul>
-    </div>
+    <dl className="workbench-review__facts">
+      {entries.map(([label, value]) => (
+        <div key={label}>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 
-function buildWorkbenchQuery(selectedIds: Iterable<string>, host: WorkbenchHost): URLSearchParams {
-  const query = new URLSearchParams();
-  const normalized = normalizeSelectedIds(selectedIds);
-  if (normalized.length > 0) query.set('selected', normalized.join(','));
-  query.set('host', host);
-  return query;
+function PolicyReview({ policy }: { policy: StackManifestReview['policy'] }): React.ReactElement {
+  return (
+    <DefinitionList entries={[
+      ['Allowed risk', policy.allowedRisk.join(', ')],
+      ['Known source required', policy.requireKnownSource ? 'Yes' : 'No'],
+      ['Manual setup allowed', policy.allowManualSetup ? 'Yes' : 'No'],
+    ]} />
+  );
 }
 
-function WorkbenchCard({
-  skill,
-  selected,
-  host,
-  onToggle,
-}: {
-  skill: Skill;
-  selected: boolean;
-  host: WorkbenchHost;
-  onToggle: (skillId: string) => void;
-}): React.ReactElement {
-  const compatibility = getHostCompatibility(skill, host);
-  const provenance = getRecordedProvenance(skill);
-  const setup = getSetupType(skill);
-  const risk = recordedRisk(skill);
-  const recordedOrigin = skill.source_repo || skill.source || 'not recorded';
-
+function StackReview({ stack }: { stack: StackManifestReview }): React.ReactElement {
   return (
-    <article
-      className={`workbench-card relative flex h-full flex-col border bg-white p-4 transition-colors dark:bg-slate-950 ${selected
-        ? 'border-teal-500 shadow-[inset_4px_0_0_0_rgb(13_148_136)] dark:border-teal-500'
-        : 'border-slate-200 hover:border-slate-400 dark:border-slate-800 dark:hover:border-slate-600'
-        }`}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="truncate font-mono text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-            {skill.category}
-          </p>
-          <h2 className="mt-1 truncate text-base font-semibold text-slate-950 dark:text-slate-100">
-            {skill.name}
-          </h2>
+    <article className="workbench-review" aria-labelledby="stack-review-title">
+      <header className="workbench-review__heading">
+        <div>
+          <p>Validated stack manifest</p>
+          <h2 id="stack-review-title">{stack.name}</h2>
         </div>
-        <button
-          type="button"
-          aria-pressed={selected}
-          aria-label={`${selected ? 'Remove' : 'Select'} ${skill.name}`}
-          onClick={() => onToggle(skill.id)}
-          className={`shrink-0 border px-2.5 py-1.5 text-xs font-semibold transition-colors ${selected
-            ? 'border-teal-700 bg-teal-700 text-white hover:bg-teal-800'
-            : 'border-slate-300 bg-slate-50 text-slate-800 hover:border-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200'
-            }`}
-        >
-          {selected ? 'Selected' : 'Select'}
-        </button>
+        <span>Schema v{stack.schemaVersion}</span>
+      </header>
+
+      <section aria-labelledby="stack-catalog-title">
+        <h3 id="stack-catalog-title">Pinned catalog</h3>
+        <p className="workbench-review__note">Declared identity only. This browser view does not download catalog bytes or prove their integrity.</p>
+        <DefinitionList entries={[
+          ['Package', <code>{stack.catalog.package}</code>],
+          ['Version', <code>{stack.catalog.version}</code>],
+          ['Integrity', <code title={stack.catalog.integrity}>{shortDigest(stack.catalog.integrity)}</code>],
+        ]} />
+      </section>
+
+      <div className="workbench-review__columns">
+        <section aria-labelledby="stack-targets-title">
+          <h3 id="stack-targets-title">Targets</h3>
+          <ul className="workbench-review__rows">
+            {stack.targets.map((target) => <li key={`${target.host}:${target.scope}`}><strong>{target.host}</strong><span>{target.scope}</span></li>)}
+          </ul>
+        </section>
+        <section aria-labelledby="stack-policy-title">
+          <h3 id="stack-policy-title">Policy</h3>
+          <PolicyReview policy={stack.policy} />
+        </section>
       </div>
 
-      <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-        {skill.description}
-      </p>
-
-      <div className="mt-4 flex flex-wrap gap-1.5 text-[11px]">
-        <span className={`border px-2 py-1 font-semibold ${riskStyles[risk]}`}>risk: {risk}</span>
-        <span className="border border-slate-300 bg-slate-50 px-2 py-1 text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
-          source: {provenance}
-        </span>
-        <span className={`border px-2 py-1 ${compatibility === 'blocked'
-          ? 'border-rose-300 bg-rose-50 text-rose-800 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300'
-          : 'border-slate-300 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
-          }`}>
-          host: {compatibility}
-        </span>
-        {setup === 'manual' && (
-          <span className="border border-violet-300 bg-violet-50 px-2 py-1 text-violet-800 dark:border-violet-800 dark:bg-violet-950/50 dark:text-violet-300">
-            manual setup
-          </span>
-        )}
+      <div className="workbench-review__columns">
+        <section aria-labelledby="stack-goals-title">
+          <h3 id="stack-goals-title">Approved goals</h3>
+          <ul className="workbench-review__code-list">
+            {stack.intent.goals.map((goal) => <li key={goal}><code>{goal}</code></li>)}
+          </ul>
+        </section>
+        <section aria-labelledby="stack-skills-title">
+          <h3 id="stack-skills-title">Exact skills <span>{stack.skills.length}</span></h3>
+          {stack.skills.length === 0 ? <p className="workbench-review__empty">No skills selected.</p> : (
+            <ol className="workbench-review__code-list">
+              {stack.skills.map((skill) => <li key={skill.id}><code>{skill.id}</code></li>)}
+            </ol>
+          )}
+        </section>
       </div>
-
-      {skill.tags && skill.tags.length > 0 && (
-        <p className="mt-3 line-clamp-1 font-mono text-[11px] text-slate-500 dark:text-slate-400">
-          {skill.tags.map((tag) => `#${tag}`).join(' ')}
-        </p>
-      )}
-
-      <p title={recordedOrigin} className="mt-3 truncate font-mono text-[11px] text-slate-500 dark:text-slate-400">
-        origin: {recordedOrigin}
-      </p>
-      {setup === 'manual' && skill.plugin?.setup?.summary && (
-        <p className="mt-1 line-clamp-2 text-xs text-violet-800 dark:text-violet-300">
-          setup: {skill.plugin.setup.summary}
-        </p>
-      )}
-      {compatibility === 'blocked' && skill.plugin?.reasons?.length ? (
-        <p className="mt-1 line-clamp-2 text-xs text-rose-800 dark:text-rose-300">
-          recorded note: {skill.plugin.reasons.join(' ')}
-        </p>
-      ) : null}
-
-      <Link
-        to={`/skill/${encodeURIComponent(skill.id)}`}
-        className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 hover:text-teal-700 dark:text-slate-300 dark:hover:text-teal-300"
-      >
-        Inspect canonical skill
-        <Icon name="arrowRight" size={13} />
-      </Link>
     </article>
   );
 }
 
+function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
+  const { payload } = plan;
+  const unknownCount = payload.overrides.reduce((total, override) => total + override.unknownFields.length, 0);
+  return (
+    <article className="workbench-review" aria-labelledby="plan-review-title">
+      <header className="workbench-review__heading">
+        <div>
+          <p>Validated immutable plan</p>
+          <h2 id="plan-review-title">Single-target change review</h2>
+        </div>
+        <span>Schema v{plan.schemaVersion}</span>
+      </header>
+
+      <section aria-labelledby="plan-bindings-title">
+        <h3 id="plan-bindings-title">Bound identities</h3>
+        <DefinitionList entries={[
+          ['Plan digest (verified)', <code title={plan.digest}>{shortDigest(plan.digest)}</code>],
+          ['Manifest digest', <code title={payload.manifestDigest}>{shortDigest(payload.manifestDigest)}</code>],
+          ['Catalog', <><code>{payload.catalog.package}@{payload.catalog.version}</code><br /><code title={payload.catalog.integrity}>{shortDigest(payload.catalog.integrity)}</code></>],
+          ['Runtime', <><code>{payload.runtime.package}@{payload.runtime.version}</code><br /><code title={payload.runtime.closureDigest}>{shortDigest(payload.runtime.closureDigest)}</code></>],
+          ['Installed state', <code title={payload.installedState.digest}>{shortDigest(payload.installedState.digest)}</code>],
+        ]} />
+      </section>
+
+      <div className="workbench-review__columns">
+        <section aria-labelledby="plan-version-title">
+          <h3 id="plan-version-title">Producer versions</h3>
+          <DefinitionList entries={[
+            ['Protocol', payload.versions.protocolVersion],
+            ['Core', payload.versions.coreVersion],
+            ['Metadata schema', payload.versions.metadataSchemaVersion],
+            ['Scorer', payload.versions.scorerVersion],
+          ]} />
+        </section>
+        <section aria-labelledby="plan-target-title">
+          <h3 id="plan-target-title">Target</h3>
+          <DefinitionList entries={[
+            ['Host', payload.target.host],
+            ['Scope', payload.target.scope],
+            ['Adapter', payload.target.adapterVersion],
+            ['Identity', <code title={payload.target.identityDigest}>{shortDigest(payload.target.identityDigest)}</code>],
+          ]} />
+        </section>
+      </div>
+
+      <section aria-labelledby="plan-operations-title">
+        <div className="workbench-review__section-heading">
+          <h3 id="plan-operations-title">Operations</h3>
+          <span>{payload.operations.length}</span>
+        </div>
+        {payload.operations.length === 0 ? <p className="workbench-review__empty">No filesystem operations planned.</p> : (
+          <ol className="workbench-review__operation-list">
+            {payload.operations.map((operation) => (
+              <li key={`${operation.kind}:${operation.skillId}`}>
+                <header><strong>{operation.kind}</strong><code>{operation.skillId}</code>{operation.backupRequired ? <span>backup required</span> : null}</header>
+                <DefinitionList entries={[
+                  ['Source', operation.sourceTreeDigest ? <code title={operation.sourceTreeDigest}>{shortDigest(operation.sourceTreeDigest)}</code> : 'None'],
+                  ['Expected', operation.expectedTreeDigest ? <code title={operation.expectedTreeDigest}>{shortDigest(operation.expectedTreeDigest)}</code> : 'None'],
+                  ['Result', operation.resultTreeDigest ? <code title={operation.resultTreeDigest}>{shortDigest(operation.resultTreeDigest)}</code> : 'None'],
+                ]} />
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+
+      <section aria-labelledby="plan-overrides-title" className={payload.overrides.length > 0 ? 'workbench-review__attention' : ''}>
+        <div className="workbench-review__section-heading">
+          <h3 id="plan-overrides-title">Overrides and unknowns</h3>
+          <span>{payload.overrides.length} overrides · {unknownCount} unknown fields</span>
+        </div>
+        {payload.overrides.length === 0 ? <p className="workbench-review__empty">No overrides recorded.</p> : (
+          <ul className="workbench-review__override-list">
+            {payload.overrides.map((override) => (
+              <li key={`${override.kind}:${override.skillId}`}>
+                <header><strong>{override.kind}</strong><code>{override.skillId}</code></header>
+                <p><span>Reason codes</span> {override.reasonCodes.join(', ')}</p>
+                <p><span>Unknown fields</span> {override.unknownFields.length > 0 ? override.unknownFields.join(', ') : 'None'}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section aria-labelledby="plan-commit-title">
+        <h3 id="plan-commit-title">Final state commit</h3>
+        <DefinitionList entries={[
+          ['Previous', <code title={payload.stateCommit.previousDigest}>{shortDigest(payload.stateCommit.previousDigest)}</code>],
+          ['Next', <code title={payload.stateCommit.nextDigest}>{shortDigest(payload.stateCommit.nextDigest)}</code>],
+          ['Commit position', payload.stateCommit.position],
+        ]} />
+      </section>
+    </article>
+  );
+}
+
+function ArtifactImporter<T>({
+  kind,
+  title,
+  description,
+  state,
+  onState,
+}: {
+  kind: WorkbenchArtifactKind;
+  title: string;
+  description: string;
+  state: ImportState<T>;
+  onState: (state: ImportState<T>) => void;
+}): React.ReactElement {
+  const textareaId = useId();
+  const fileId = useId();
+  const [draft, setDraft] = useState('');
+  const importAttempt = useRef(0);
+
+  const validateText = async (input: string, source: 'paste' | 'file', attempt: number) => {
+    try {
+      const artifact = parseWorkbenchArtifact(input, kind);
+      if (artifact.kind === 'plan' && !await verifyPlanDigest(artifact.value)) {
+        throw new WorkbenchImportError('Plan digest does not match its canonical payload.');
+      }
+      if (attempt !== importAttempt.current) return;
+      onState({ value: artifact.value as T, error: null, source });
+    } catch (error) {
+      if (attempt !== importAttempt.current) return;
+      onState({ value: null, error: displayError(error), source: null });
+    }
+  };
+
+  const importText = async (input: string, source: 'paste') => {
+    const attempt = importAttempt.current + 1;
+    importAttempt.current = attempt;
+    await validateText(input, source, attempt);
+  };
+
+  const importFile = async (file: File | undefined) => {
+    if (!file) return;
+    const attempt = importAttempt.current + 1;
+    importAttempt.current = attempt;
+    try {
+      const input = await readWorkbenchFile(file);
+      if (attempt !== importAttempt.current) return;
+      setDraft(input);
+      await validateText(input, 'file', attempt);
+    } catch (error) {
+      if (attempt !== importAttempt.current) return;
+      onState({ value: null, error: displayError(error), source: null });
+    }
+  };
+
+  return (
+    <section className="workbench-importer" aria-labelledby={`${textareaId}-title`}>
+      <div>
+        <p>{kind === 'stack' ? '1' : '2'}</p>
+        <div>
+          <h2 id={`${textareaId}-title`}>{title}</h2>
+          <p>{description}</p>
+        </div>
+      </div>
+      <label htmlFor={textareaId}>Paste JSON</label>
+      <textarea
+        id={textareaId}
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
+        placeholder={kind === 'stack' ? '{ "schemaVersion": 1, "name": "…" }' : '{ "schemaVersion": 1, "kind": "aas.stack-plan", … }'}
+        rows={8}
+        spellCheck={false}
+        autoComplete="off"
+      />
+      <div className="workbench-importer__actions">
+        <button type="button" onClick={() => void importText(draft, 'paste')}>Review pasted {kind}</button>
+        <label htmlFor={fileId}>Choose {kind} JSON</label>
+        <input
+          id={fileId}
+          type="file"
+          accept=".json,application/json"
+          onChange={(event) => {
+            const file = event.currentTarget.files?.[0];
+            event.currentTarget.value = '';
+            void importFile(file);
+          }}
+        />
+        {(state.value || state.error || draft) ? (
+          <button type="button" className="workbench-importer__clear" onClick={() => { importAttempt.current += 1; setDraft(''); onState({ ...EMPTY_IMPORT_STATE }); }}>Clear</button>
+        ) : null}
+      </div>
+      <div aria-live="polite" className="workbench-importer__status">
+        {state.error ? <p role="alert">{state.error}</p> : null}
+        {state.value ? <p>Valid {kind} loaded from {state.source}. Held in this page only.</p> : null}
+      </div>
+    </section>
+  );
+}
+
 export function Workbench(): React.ReactElement {
-  const { skills, loading, error, refreshSkills } = useSkills();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('all');
-  const [risk, setRisk] = useState<RiskFacet>('all');
-  const [provenance, setProvenance] = useState<ProvenanceFacet>('all');
-  const [compatibility, setCompatibility] = useState<CompatibilityFacet>('all');
-  const [setup, setSetup] = useState<SetupFacet>('all');
-  const [copied, setCopied] = useState<'preview' | 'install' | 'share' | null>(null);
-  const deferredSearch = useDeferredValue(search);
+  const [stack, setStack] = useState<ImportState<StackManifestReview>>({ ...EMPTY_IMPORT_STATE });
+  const [plan, setPlan] = useState<ImportState<PlanReview>>({ ...EMPTY_IMPORT_STATE });
 
   usePageMeta(useMemo(() => ({
-    title: 'Skill Workbench | Agentic Awesome Skills',
-    description: 'Filter canonical skill evidence, compose an exact host-aware set, and preview a version-pinned install without filesystem writes.',
+    title: 'Stack Review Workbench | Agentic Awesome Skills',
+    description: 'Review an AAS stack manifest and immutable plan locally in your browser. Imports stay in memory and cannot install or apply changes.',
     canonicalPath: '/workbench',
   }), []));
-
-  const hostParam = searchParams.get('host');
-  const host: WorkbenchHost = isWorkbenchHost(hostParam) ? hostParam : 'codex';
-  const selectedIds = useMemo(
-    () => parseSelectedIds(searchParams.get('selected')),
-    [searchParams],
-  );
-  const skillsById = useMemo(() => new Map(skills.map((skill) => [skill.id, skill])), [skills]);
-  const selectedSkills = useMemo(
-    () => selectedIds.flatMap((skillId) => {
-      const skill = skillsById.get(skillId);
-      return skill ? [skill] : [];
-    }),
-    [selectedIds, skillsById],
-  );
-  const missingSelectedIds = useMemo(
-    () => selectedIds.filter((skillId) => !skillsById.has(skillId)),
-    [selectedIds, skillsById],
-  );
-  const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
-
-  const categories = useMemo(
-    () => ['all', ...new Set(skills.map((skill) => skill.category).filter(Boolean))].sort((a, b) => {
-      if (a === 'all') return -1;
-      if (b === 'all') return 1;
-      return a.localeCompare(b);
-    }),
-    [skills],
-  );
-
-  const filteredSkills = useMemo(
-    () => skills.filter((skill) => matchesWorkbenchFilters(skill, {
-      search: deferredSearch,
-      category,
-      risk,
-      provenance,
-      compatibility,
-      setup,
-    }, host)),
-    [category, compatibility, deferredSearch, host, provenance, risk, setup, skills],
-  );
-
-  const evidence = useMemo(
-    () => collectSelectionEvidence(selectedSkills, host),
-    [host, selectedSkills],
-  );
-
-  const commands = useMemo(() => {
-    if (selectedIds.length === 0 || missingSelectedIds.length > 0) return null;
-    return {
-      preview: buildInstallerCommand({ skillIds: selectedIds, host, version: packageMetadata.version, dryRun: true }),
-      install: buildInstallerCommand({ skillIds: selectedIds, host, version: packageMetadata.version, dryRun: false }),
-    };
-  }, [host, missingSelectedIds.length, selectedIds]);
-
-  const installBlocked = missingSelectedIds.length > 0 || evidence.blockedForHost.length > 0;
-
-  const updateUrlState = (nextSelectedIds: string[], nextHost = host) => {
-    setSearchParams(buildWorkbenchQuery(nextSelectedIds, nextHost), { replace: true });
-  };
-
-  const toggleSkill = (skillId: string) => {
-    const next = new Set(selectedIds);
-    if (next.has(skillId)) next.delete(skillId);
-    else next.add(skillId);
-    updateUrlState([...next]);
-  };
-
-  const changeHost = (nextHost: WorkbenchHost) => {
-    updateUrlState(selectedIds, nextHost);
-    setCompatibility('all');
-  };
-
-  const copyText = async (kind: 'preview' | 'install' | 'share', value: string) => {
-    await navigator.clipboard.writeText(value);
-    setCopied(kind);
-    window.setTimeout(() => setCopied(null), 1800);
-  };
-
-  const copyShareLink = async () => {
-    const query = buildWorkbenchQuery(selectedIds, host).toString();
-    const relative = `${import.meta.env.BASE_URL}workbench${query ? `?${query}` : ''}`;
-    await copyText('share', new URL(relative, window.location.origin).toString());
-  };
-
-  const resetFilters = () => {
-    setSearch('');
-    setCategory('all');
-    setRisk('all');
-    setProvenance('all');
-    setCompatibility('all');
-    setSetup('all');
-  };
 
   return (
     <div className="workbench-page">
       <header className="workbench-header">
-        <div className="absolute inset-y-0 left-0 w-1.5 bg-teal-400" />
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+        <div>
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-teal-300">Expert registry control bench</p>
-            <h1 className="mt-3 max-w-4xl text-3xl font-bold tracking-tight sm:text-5xl">
-              Build a precise, inspectable skill set
-            </h1>
-            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
-              Query recorded catalog evidence, select exact canonical IDs, expose host and risk conflicts, then preview a pinned install before it touches a target directory.
-            </p>
+            <h1>Review what your agent chose.</h1>
+            <p>Import an <code>aas-stack.json</code> and immutable plan to inspect identities, targets, operations, overrides, and unknowns before approving anything in the CLI.</p>
           </div>
-          <dl className="grid grid-cols-3 border border-slate-700 bg-slate-900/80 font-mono text-xs">
-            <div className="border-r border-slate-700 px-4 py-3">
-              <dt className="text-slate-500">catalog</dt>
-              <dd className="mt-1 text-lg text-slate-100">{skills.length.toLocaleString('en-US')}</dd>
-            </div>
-            <div className="border-r border-slate-700 px-4 py-3">
-              <dt className="text-slate-500">visible</dt>
-              <dd className="mt-1 text-lg text-slate-100">{filteredSkills.length.toLocaleString('en-US')}</dd>
-            </div>
-            <div className="px-4 py-3">
-              <dt className="text-slate-500">selected</dt>
-              <dd className="mt-1 text-lg text-teal-300">{selectedSkills.length}</dd>
-            </div>
+          <dl>
+            <div><dt>Privacy</dt><dd>In-memory only</dd></div>
+            <div><dt>Writes</dt><dd>None</dd></div>
+            <div><dt>Network</dt><dd>Not used</dd></div>
           </dl>
         </div>
       </header>
 
-      <div className="workbench-grid">
-        <aside className="workbench-filters" aria-label="Workbench filters">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-800 dark:text-slate-200">Query</h2>
-            <button type="button" onClick={resetFilters} className="text-xs font-semibold text-slate-500 underline underline-offset-4 hover:text-slate-900 dark:hover:text-slate-100">
-              Reset
-            </button>
-          </div>
+      <section className="workbench-boundary" aria-labelledby="workbench-boundary-title">
+        <h2 id="workbench-boundary-title">Review surface, not an installer</h2>
+        <p>This page cannot install, apply, share, or persist an imported artifact. Files are read only after you select them. Validation is structural; catalog identity is displayed as declared unless the plan binds it by digest.</p>
+        <p>Limits: {WORKBENCH_MAX_IMPORT_BYTES.toLocaleString('en-US')} UTF-8 bytes per artifact · {WORKBENCH_MAX_JSON_DEPTH} JSON levels.</p>
+      </section>
 
-          <div className="mt-4 space-y-4">
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Search recorded fields
-              <span className="relative mt-1.5 block">
-                <Icon name="search" size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                <input
-                  aria-label="Search recorded fields"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="name, tag, source…"
-                  className="h-10 w-full border border-slate-300 bg-white pl-9 pr-3 text-sm font-normal text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-teal-950"
-                />
-              </span>
-            </label>
-
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Category
-              <select aria-label="Filter workbench by category" value={category} onChange={(event) => setCategory(event.target.value)} className="mt-1.5 h-10 w-full border border-slate-300 bg-white px-2 text-sm font-normal dark:border-slate-700 dark:bg-slate-950">
-                {categories.map((value) => <option key={value} value={value}>{value === 'all' ? 'All categories' : value}</option>)}
-              </select>
-            </label>
-
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Risk label
-              <select aria-label="Filter workbench by risk" value={risk} onChange={(event) => setRisk(event.target.value as RiskFacet)} className="mt-1.5 h-10 w-full border border-slate-300 bg-white px-2 text-sm font-normal dark:border-slate-700 dark:bg-slate-950">
-                <option value="all">All risk labels</option>
-                <option value="none">none</option>
-                <option value="safe">safe</option>
-                <option value="unknown">unknown</option>
-                <option value="critical">critical</option>
-                <option value="offensive">offensive</option>
-              </select>
-            </label>
-
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Recorded provenance
-              <select aria-label="Filter workbench by provenance" value={provenance} onChange={(event) => setProvenance(event.target.value as ProvenanceFacet)} className="mt-1.5 h-10 w-full border border-slate-300 bg-white px-2 text-sm font-normal dark:border-slate-700 dark:bg-slate-950">
-                <option value="all">All provenance</option>
-                <option value="official">official</option>
-                <option value="community">community</option>
-                <option value="self">self</option>
-                <option value="unknown">unknown / not recorded</option>
-              </select>
-            </label>
-
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Selected host
-              <select aria-label="Select workbench host" value={host} onChange={(event) => changeHost(event.target.value as WorkbenchHost)} className="mt-1.5 h-10 w-full border border-slate-300 bg-white px-2 text-sm font-normal dark:border-slate-700 dark:bg-slate-950">
-                {WORKBENCH_HOSTS.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
-              </select>
-            </label>
-
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Host evidence
-              <select aria-label="Filter workbench by compatibility" value={compatibility} onChange={(event) => setCompatibility(event.target.value as CompatibilityFacet)} className="mt-1.5 h-10 w-full border border-slate-300 bg-white px-2 text-sm font-normal dark:border-slate-700 dark:bg-slate-950">
-                <option value="all">All host evidence</option>
-                <option value="supported">supported</option>
-                <option value="blocked">blocked</option>
-                <option value="unrecorded">unrecorded</option>
-              </select>
-            </label>
-
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Setup burden
-              <select aria-label="Filter workbench by setup" value={setup} onChange={(event) => setSetup(event.target.value as SetupFacet)} className="mt-1.5 h-10 w-full border border-slate-300 bg-white px-2 text-sm font-normal dark:border-slate-700 dark:bg-slate-950">
-                <option value="all">All setup states</option>
-                <option value="none">none recorded</option>
-                <option value="manual">manual setup</option>
-                <option value="unknown">unknown</option>
-              </select>
-            </label>
-          </div>
-        </aside>
-
-        <aside id="selection-panel" className="workbench-selection" aria-label="Selected skill ledger">
-          <div className="border-b border-slate-700 px-4 py-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-teal-300">Selection ledger</p>
-            <div className="mt-2 flex items-end justify-between gap-3">
-              <h2 className="text-xl font-semibold">{selectedSkills.length} exact skills</h2>
-              <span className="font-mono text-xs text-slate-400">v{packageMetadata.version}</span>
-            </div>
-          </div>
-
-          <div className="max-h-56 overflow-y-auto border-b border-slate-800 px-4 py-3">
-            {selectedIds.length === 0 ? (
-              <p className="text-sm leading-relaxed text-slate-400">Select canonical IDs from the results. Nothing broad is added automatically.</p>
-            ) : (
-              <ul className="space-y-2">
-                {selectedIds.map((skillId) => (
-                  <li key={skillId} className="flex items-center justify-between gap-2 font-mono text-xs">
-                    <span className={`truncate ${skillsById.has(skillId) ? 'text-slate-200' : 'text-rose-300'}`}>{skillId}</span>
-                    <button type="button" aria-label={`Remove ${skillId}`} onClick={() => toggleSkill(skillId)} className="shrink-0 text-slate-500 hover:text-rose-300">×</button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {selectedIds.length > 0 && (
-            <div aria-live="polite" className="space-y-2 border-b border-slate-800 px-4 py-3 text-xs">
-              <EvidenceBucket summary="selected IDs do not resolve in this catalog" entries={missingSelectedIds} tone="rose" />
-              <EvidenceBucket
-                summary="explicitly blocked for this host"
-                entries={evidence.blockedForHost.map((skill) => [
-                  skill.id,
-                  skill.plugin?.reasons?.join(' '),
-                ].filter(Boolean).join(' — '))}
-                tone="rose"
-              />
-              <EvidenceBucket
-                summary="critical/offensive risk labels"
-                entries={evidence.elevatedRisk.map((skill) => `${skill.id} — risk: ${recordedRisk(skill)}`)}
-                tone="orange"
-              />
-              <EvidenceBucket summary="unknown risk labels" entries={evidence.unknownRisk.map((skill) => skill.id)} tone="amber" />
-              <EvidenceBucket summary="without recorded provenance type" entries={evidence.missingProvenance.map((skill) => skill.id)} tone="amber" />
-              <EvidenceBucket
-                summary="require manual setup"
-                entries={evidence.manualSetup.map((skill) => [
-                  skill.id,
-                  skill.plugin?.setup?.summary,
-                ].filter(Boolean).join(' — '))}
-                tone="violet"
-              />
-              <EvidenceBucket summary="have no recorded compatibility for this host" entries={evidence.unrecordedForHost.map((skill) => skill.id)} tone="slate" />
-              {!installBlocked && evidence.elevatedRisk.length === 0 && evidence.unknownRisk.length === 0 && evidence.missingProvenance.length === 0 && evidence.manualSetup.length === 0 && evidence.unrecordedForHost.length === 0 && (
-                <p className="text-emerald-300">No recorded conflicts in the selected fields.</p>
-              )}
-            </div>
-          )}
-
-          <div className="space-y-3 px-4 py-4">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">1 / Preview without writes</p>
-              <p className="mt-1 text-[11px] leading-relaxed text-slate-400">
-                Exact selection is desired state for installer-managed entries. The dry run lists stale managed entries it would remove.
-              </p>
-              <code className="mt-1.5 block max-h-28 overflow-auto whitespace-pre-wrap break-all border border-slate-700 bg-black/40 p-2.5 font-mono text-[11px] leading-relaxed text-slate-300">
-                {commands?.preview ?? 'Select valid canonical IDs to generate a preview.'}
-              </code>
-              <button type="button" disabled={!commands} onClick={() => commands && void copyText('preview', commands.preview)} className="mt-2 w-full border border-slate-600 px-3 py-2 text-xs font-semibold transition-colors hover:border-teal-400 hover:text-teal-300 disabled:cursor-not-allowed disabled:opacity-40">
-                {copied === 'preview' ? 'Preview command copied' : 'Copy dry-run command'}
-              </button>
-            </div>
-
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">2 / Apply exact set</p>
-              <code className="mt-1.5 block max-h-28 overflow-auto whitespace-pre-wrap break-all border border-slate-700 bg-black/40 p-2.5 font-mono text-[11px] leading-relaxed text-slate-300">
-                {commands?.install ?? 'The install command appears only after exact resolution.'}
-              </code>
-              <button type="button" disabled={!commands || installBlocked} onClick={() => commands && void copyText('install', commands.install)} className="mt-2 w-full bg-teal-400 px-3 py-2 text-xs font-bold text-slate-950 transition-colors hover:bg-teal-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400">
-                {copied === 'install' ? 'Install command copied' : installBlocked ? 'Resolve blocked IDs first' : 'Copy pinned install command'}
-              </button>
-            </div>
-
-            <button type="button" disabled={selectedIds.length === 0} onClick={() => void copyShareLink()} className="w-full border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-300 hover:border-slate-500 disabled:cursor-not-allowed disabled:opacity-40">
-              {copied === 'share' ? 'Share URL copied' : 'Copy review URL'}
-            </button>
-          </div>
-        </aside>
-
-        <main className="workbench-results" aria-label="Workbench results">
-          <div className="mb-3 flex items-center justify-between gap-4 border-b border-slate-300 pb-3 dark:border-slate-800">
-            <p aria-live="polite" className="font-mono text-xs text-slate-600 dark:text-slate-400">
-              {filteredSkills.length.toLocaleString('en-US')} matching canonical skills
-            </p>
-            {selectedIds.length > 0 && (
-              <button type="button" onClick={() => updateUrlState([])} className="text-xs font-semibold text-slate-500 underline underline-offset-4 hover:text-rose-700 dark:hover:text-rose-300">
-                Clear selection
-              </button>
-            )}
-          </div>
-
-          {loading ? (
-            <div data-testid="workbench-loader" className="grid gap-3 md:grid-cols-2">
-              {[...Array(8)].map((_, index) => <div key={index} className="h-56 animate-pulse border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />)}
-            </div>
-          ) : error && skills.length === 0 ? (
-            <div className="border border-rose-300 bg-rose-50 p-6 text-sm text-rose-900 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200">
-              <h2 className="font-semibold">Unable to load the canonical catalog</h2>
-              <p className="mt-2">{error}</p>
-              <button type="button" onClick={() => void refreshSkills()} className="mt-4 border border-rose-500 px-3 py-2 font-semibold">Retry</button>
-            </div>
-          ) : filteredSkills.length === 0 ? (
-            <div className="border border-slate-300 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
-              <h2 className="font-semibold text-slate-950 dark:text-slate-100">No exact matches</h2>
-              <p className="mt-2 text-sm text-slate-500">Reset one or more recorded-data filters.</p>
-            </div>
-          ) : (
-            <VirtuosoGrid
-              useWindowScroll
-              totalCount={filteredSkills.length}
-              listClassName="workbench-result-list"
-              itemContent={(index) => {
-                const skill = filteredSkills[index];
-                return <WorkbenchCard key={skill.id} skill={skill} selected={selectedSet.has(skill.id)} host={host} onToggle={toggleSkill} />;
-              }}
-            />
-          )}
-        </main>
+      <div className="workbench-import-grid">
+        <ArtifactImporter
+          kind="stack"
+          title="Import desired state"
+          description="Paste or explicitly select the minimal stack manifest your agent proposed."
+          state={stack}
+          onState={setStack}
+        />
+        <ArtifactImporter
+          kind="plan"
+          title="Import immutable plan"
+          description="Paste or explicitly select the single-target plan generated after validation."
+          state={plan}
+          onState={setPlan}
+        />
       </div>
-      {selectedSkills.length > 0 && (
-        <a className="workbench-mobile-selection" href="#selection-panel">
-          <span>{selectedSkills.length} selected</span>
-          <strong>Review install <Icon name="arrowRight" size={16} /></strong>
-        </a>
-      )}
+
+      <section className="workbench-review-area" aria-label="Imported artifact review">
+        {stack.value ? <StackReview stack={stack.value} /> : null}
+        {plan.value ? <PlanReviewView plan={plan.value} /> : null}
+        {!stack.value && !plan.value ? (
+          <div className="workbench-review-empty">
+            <p>No artifact loaded</p>
+            <h2>Your review appears here.</h2>
+            <p>Nothing is read from your machine until you paste JSON or use a file chooser above.</p>
+          </div>
+        ) : null}
+      </section>
     </div>
   );
 }

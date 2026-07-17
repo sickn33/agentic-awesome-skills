@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:catalog-metadata:v1",
+  "title": "AAS catalog skill metadata v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "description", "category", "tags", "triggers", "searchTokens", "recommendationTokens", "metadata", "untrustedContentPath", "untrustedContentRef"],
+  "properties": {
+    "id": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "description": { "type": "string", "maxLength": 8192 },
+    "category": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tags": { "$ref": "#/$defs/strings" },
+    "triggers": { "$ref": "#/$defs/strings" },
+    "searchTokens": { "$ref": "#/$defs/strings" },
+    "recommendationTokens": { "$ref": "#/$defs/strings" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capabilities", "risk", "source", "license", "targets", "setup", "dependencies", "conflicts", "validation", "tests", "reviews"],
+      "properties": {
+        "capabilities": { "$ref": "#/$defs/judgment" },
+        "risk": { "$ref": "#/$defs/judgment" },
+        "source": { "$ref": "#/$defs/judgment" },
+        "license": { "$ref": "#/$defs/judgment" },
+        "targets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["codex", "claude"],
+          "properties": { "codex": { "$ref": "#/$defs/judgment" }, "claude": { "$ref": "#/$defs/judgment" } }
+        },
+        "setup": { "$ref": "#/$defs/judgment" },
+        "dependencies": { "$ref": "#/$defs/judgment" },
+        "conflicts": { "$ref": "#/$defs/judgment" },
+        "validation": { "$ref": "#/$defs/judgment" },
+        "tests": { "$ref": "#/$defs/judgment" },
+        "reviews": { "$ref": "#/$defs/judgment" }
+      }
+    },
+    "untrustedContentPath": { "type": ["string", "null"], "maxLength": 512 },
+    "untrustedContentRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assetPath", "offset", "length", "sha256"],
+      "properties": {
+        "assetPath": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "offset": { "type": "integer", "minimum": 0 },
+        "length": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*$" },
+    "strings": { "type": "array", "uniqueItems": true, "items": { "type": "string", "maxLength": 256 } },
+    "evidence": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+      "additionalProperties": true
+    },
+    "judgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value", "evidence"],
+      "properties": {
+        "status": { "enum": ["known", "unknown", "notApplicable"] },
+        "value": {},
+        "evidence": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/evidence" } }
+      }
+    }
+  }
+}

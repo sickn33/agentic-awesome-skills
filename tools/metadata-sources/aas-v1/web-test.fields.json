@@ -1,0 +1,2877 @@
+{
+  "schemaVersion": 1,
+  "auditId": "aas-v1-web-test-field-evidence-v1",
+  "createdAt": "2026-07-17",
+  "rubric": {
+    "provenance": "known only from a canonical URL/repository or package-attested origin; generic community/personal/self is unknown",
+    "setup": "prerequisites to activate/use the skill in Codex/Claude; enum none|automatic|manual|unknown",
+    "dependenciesAndConflicts": "only explicit inter-AAS-skill relationships; known-empty requires full-content relationship review",
+    "risk": "safe/none only after focused command, network, credential and destructive-behavior review; otherwise unknown"
+  },
+  "guardrails": {
+    "benchmarkGoldRead": false,
+    "heldOutCasesRead": false,
+    "heldOutGoldRead": false,
+    "tuningCaseInputsRead": false,
+    "repoFilesModified": false,
+    "sourceCandidateArtifact": "/tmp/aas-v1-audit-web-test.json"
+  },
+  "skills": {
+    "accessibility-compliance-accessibility-audit": {
+      "contentReview": {
+        "path": "skills/accessibility-compliance-accessibility-audit/SKILL.md",
+        "digest": "sha256-f0c76db2ccf2f2a0acca2f3384177eadbba83a499589d0b347914819210bd77a",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/accessibility-compliance-accessibility-audit/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-f0c76db2ccf2f2a0acca2f3384177eadbba83a499589d0b347914819210bd77a"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/accessibility-compliance-accessibility-audit/SKILL.md: Guidance/audit procedure only; no activation prerequisite or install step is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/accessibility-compliance-accessibility-audit/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/accessibility-compliance-accessibility-audit/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/accessibility-compliance-accessibility-audit/SKILL.md: No shell commands, network/credential operations, destructive actions, or automatic writes are present; it is audit/remediation guidance.",
+          "sha256-f0c76db2ccf2f2a0acca2f3384177eadbba83a499589d0b347914819210bd77a"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "accesslint-audit": {
+      "contentReview": {
+        "path": "skills/accesslint-audit/SKILL.md",
+        "digest": "sha256-bb18c5156d751db190d2ded56c4f172619fdd5dfc4651609f69379bc380bb5e6",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/AccessLint/skills"
+        },
+        "evidence": [
+          "skills/accesslint-audit/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-bb18c5156d751db190d2ded56c4f172619fdd5dfc4651609f69379bc380bb5e6"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "automatic",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/accesslint-audit/SKILL.md: Live flow says audit_live connects to or auto-launches Chrome with no user setup; HTML fallback is also described (lines 27-31)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/accesslint-audit/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/accesslint-audit/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/accesslint-audit/SKILL.md: Live browser/CDP or browser-MCP execution plus an optional fix mode that edits project files; exact tool trust and execution boundary are not evidenced.",
+          "sha256-bb18c5156d751db190d2ded56c4f172619fdd5dfc4651609f69379bc380bb5e6"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "accesslint-diff": {
+      "contentReview": {
+        "path": "skills/accesslint-diff/SKILL.md",
+        "digest": "sha256-604484bc175703c21e5f870ac08aaba0d50e06e9faea6168beb3a519393f361d",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/AccessLint/skills"
+        },
+        "evidence": [
+          "skills/accesslint-diff/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-604484bc175703c21e5f870ac08aaba0d50e06e9faea6168beb3a519393f361d"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "automatic",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/accesslint-diff/SKILL.md: Use flow invokes npx -y @accesslint packages and automatic Chrome ensure; a git working tree is a task precondition, not a package activation step (lines 21-48)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "accesslint-scan",
+            "relation": "alternative-full-audit",
+            "evidence": "skills/accesslint-diff/SKILL.md: description says use scan for full audit"
+          },
+          {
+            "targetId": "accesslint-audit",
+            "relation": "handoff-for-fixes",
+            "evidence": "skills/accesslint-diff/SKILL.md: line 68 hands bulk fixes to accesslint:audit"
+          }
+        ],
+        "evidence": [
+          "skills/accesslint-diff/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/accesslint-diff/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/accesslint-diff/SKILL.md: Runs unpinned @latest packages and mutates git state with stash/switch/pop while driving a browser (lines 21-50); safe classification requires stronger package and rollback evidence.",
+          "sha256-604484bc175703c21e5f870ac08aaba0d50e06e9faea6168beb3a519393f361d"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "accesslint-scan": {
+      "contentReview": {
+        "path": "skills/accesslint-scan/SKILL.md",
+        "digest": "sha256-ed6f7bce4d22cb250d0d4f62f00d54676799ed3f3b5bdeb1f1ef4c63589e6649",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/AccessLint/skills"
+        },
+        "evidence": [
+          "skills/accesslint-scan/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-ed6f7bce4d22cb250d0d4f62f00d54676799ed3f3b5bdeb1f1ef4c63589e6649"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "automatic",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/accesslint-scan/SKILL.md: Use flow invokes npx -y @accesslint/chrome and @accesslint/cli, so package acquisition/browser ensure is automatic at execution (lines 16-18)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "accesslint-audit",
+            "relation": "handoff-for-fixes",
+            "evidence": "skills/accesslint-scan/SKILL.md: line 31 hands bulk fixes to accesslint:audit"
+          }
+        ],
+        "evidence": [
+          "skills/accesslint-scan/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/accesslint-scan/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/accesslint-scan/SKILL.md: Runs unpinned @latest packages and a browser against a supplied URL (lines 17-18,36); package/network trust is not independently evidenced.",
+          "sha256-ed6f7bce4d22cb250d0d4f62f00d54676799ed3f3b5bdeb1f1ef4c63589e6649"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "api-testing-observability-api-mock": {
+      "contentReview": {
+        "path": "skills/api-testing-observability-api-mock/SKILL.md",
+        "digest": "sha256-65f57d1dc925210f083cc78874d4c839da4c73b5e0474b45922d20d9463fa527",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/api-testing-observability-api-mock/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-65f57d1dc925210f083cc78874d4c839da4c73b5e0474b45922d20d9463fa527"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/api-testing-observability-api-mock/SKILL.md: Behavioral design guidance; no install or host activation prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/api-testing-observability-api-mock/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/api-testing-observability-api-mock/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/api-testing-observability-api-mock/SKILL.md: Creates mock-service designs only; explicitly rejects production systems and real secrets/customer data (lines 22,28-29).",
+          "sha256-65f57d1dc925210f083cc78874d4c839da4c73b5e0474b45922d20d9463fa527"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "application-performance-performance-optimization": {
+      "contentReview": {
+        "path": "skills/application-performance-performance-optimization/SKILL.md",
+        "digest": "sha256-818397af06a075800029ea1b10efa9a8bfc62fb9983539818dacc5212282817c",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/application-performance-performance-optimization/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-818397af06a075800029ea1b10efa9a8bfc62fb9983539818dacc5212282817c"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/application-performance-performance-optimization/SKILL.md: The workflow assumes named subagent types plus optional Datadog/New Relic/Prometheus/Grafana/k6/Gatling, but does not define a single activation contract (lines 42-143)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/application-performance-performance-optimization/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/application-performance-performance-optimization/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/application-performance-performance-optimization/SKILL.md: Delegates to named subagents and external APM/load-test tools; may exercise real systems, and only textual approval safeguards are present.",
+          "sha256-818397af06a075800029ea1b10efa9a8bfc62fb9983539818dacc5212282817c"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "auth-implementation-patterns": {
+      "contentReview": {
+        "path": "skills/auth-implementation-patterns/SKILL.md",
+        "digest": "sha256-ac7abc9e3e8928323153ecc00619359cbdb56272831ed399c4b552b193132c96",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/auth-implementation-patterns/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-ac7abc9e3e8928323153ecc00619359cbdb56272831ed399c4b552b193132c96"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/auth-implementation-patterns/SKILL.md: Architecture guidance only; identity-provider/library choices are task inputs and no host activation step is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/auth-implementation-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/auth-implementation-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/auth-implementation-patterns/SKILL.md: Can change authentication, authorization, secret storage and token lifecycle; no executable implementation is pinned and no security validation evidence is present.",
+          "sha256-ac7abc9e3e8928323153ecc00619359cbdb56272831ed399c4b552b193132c96"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "awt-e2e-testing": {
+      "contentReview": {
+        "path": "skills/awt-e2e-testing/SKILL.md",
+        "digest": "sha256-67dfb03f10f10c2797f03218bc93d17a36b7783ef7f7b174fd3b4655fcb46d5f",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/ksgisang/awt-skill"
+        },
+        "evidence": [
+          "skills/awt-e2e-testing/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-67dfb03f10f10c2797f03218bc93d17a36b7783ef7f7b174fd3b4655fcb46d5f"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/awt-e2e-testing/SKILL.md: Explicit global install command: npx skills add ksgisang/awt-skill --skill awt -g (line 10)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/awt-e2e-testing/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/awt-e2e-testing/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/awt-e2e-testing/SKILL.md: Requires external global skill install and browser/OCR toolchain; repository/runtime behavior was not independently audited.",
+          "sha256-67dfb03f10f10c2797f03218bc93d17a36b7783ef7f7b174fd3b4655fcb46d5f"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "cypress-skill": {
+      "contentReview": {
+        "path": "skills/cypress-skill/SKILL.md",
+        "digest": "sha256-0468d0c9d8f5663aa41cb0fb654039aac8d6cb8581ed9b47086717bbe7e86464",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/LambdaTest/agent-skills/tree/main/cypress-skill"
+        },
+        "evidence": [
+          "skills/cypress-skill/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-0468d0c9d8f5663aa41cb0fb654039aac8d6cb8581ed9b47086717bbe7e86464"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/cypress-skill/SKILL.md: The skill uses npx cypress and optional LambdaTest/TestMu cloud, but does not state whether Cypress/plugin installation is automatic or pre-provisioned (lines 26-30, 173-195)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/cypress-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/cypress-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/cypress-skill/SKILL.md: Runs Cypress and optional LambdaTest/TestMu cloud paths with login/test credential flows; dependency/network/credential behavior is not independently attested.",
+          "sha256-0468d0c9d8f5663aa41cb0fb654039aac8d6cb8581ed9b47086717bbe7e86464"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "e2e-testing": {
+      "contentReview": {
+        "path": "skills/e2e-testing/SKILL.md",
+        "digest": "sha256-d98eb7c3459f8ce3e79282906dbb1982001b050aa19766e60428da045920fc99",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/e2e-testing/SKILL.md: source=\"personal\" is a generic/unattested label",
+          "sha256-d98eb7c3459f8ce3e79282906dbb1982001b050aa19766e60428da045920fc99"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/e2e-testing/SKILL.md: Composition bundle requires multiple other skills plus Playwright/browser/CI setup; it does not define a closed activation procedure (lines 24-150)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "playwright-skill",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: lines 27,65,83,101,119"
+          },
+          {
+            "targetId": "e2e-testing-patterns",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: lines 28,47"
+          },
+          {
+            "targetId": "test-automator",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: line 48"
+          },
+          {
+            "targetId": "webapp-testing",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: lines 66,120"
+          },
+          {
+            "targetId": "browser-automation",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: line 84"
+          },
+          {
+            "targetId": "ui-visual-validator",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: line 102"
+          },
+          {
+            "targetId": "github-actions-templates",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: line 137"
+          },
+          {
+            "targetId": "cicd-automation-workflow-automate",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/e2e-testing/SKILL.md: line 138"
+          },
+          {
+            "targetId": "testing-qa",
+            "relation": "related-workflow",
+            "evidence": "skills/e2e-testing/SKILL.md: line 163"
+          },
+          {
+            "targetId": "development",
+            "relation": "related-workflow",
+            "evidence": "skills/e2e-testing/SKILL.md: line 164"
+          },
+          {
+            "targetId": "web-performance-optimization",
+            "relation": "related-workflow",
+            "evidence": "skills/e2e-testing/SKILL.md: line 165"
+          }
+        ],
+        "evidence": [
+          "skills/e2e-testing/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/e2e-testing/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/e2e-testing/SKILL.md: Composition invokes many skills to install browsers, write tests and CI files, and run automation; aggregate behavior is not closed or attested.",
+          "sha256-d98eb7c3459f8ce3e79282906dbb1982001b050aa19766e60428da045920fc99"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "e2e-testing-patterns": {
+      "contentReview": {
+        "path": "skills/e2e-testing-patterns/SKILL.md",
+        "digest": "sha256-79bbbe1b2bfad92e76ca981c900a85675b43ca29d0c080b643ee9bc385baaeee",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/e2e-testing-patterns/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-79bbbe1b2bfad92e76ca981c900a85675b43ca29d0c080b643ee9bc385baaeee"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/e2e-testing-patterns/SKILL.md: Runner-independent design guidance; no install or host activation prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/e2e-testing-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/e2e-testing-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/e2e-testing-patterns/SKILL.md: Runner-independent test-design guidance; no command execution, credential handling, destructive operation, or automatic write is prescribed.",
+          "sha256-79bbbe1b2bfad92e76ca981c900a85675b43ca29d0c080b643ee9bc385baaeee"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "fixing-accessibility": {
+      "contentReview": {
+        "path": "skills/fixing-accessibility/SKILL.md",
+        "digest": "sha256-6d1661a0ccf9aa9d99538eae780c927c789496565ec4e7f5a3eec5ff394eafda",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/ibelick/ui-skills/tree/main/skills/fixing-accessibility"
+        },
+        "evidence": [
+          "skills/fixing-accessibility/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-6d1661a0ccf9aa9d99538eae780c927c789496565ec4e7f5a3eec5ff394eafda"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/fixing-accessibility/SKILL.md: Static source-guidance skill; no runtime tool or install prerequisite is declared, and runtime testing is explicitly out of scope (lines 23-24)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/fixing-accessibility/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/fixing-accessibility/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/fixing-accessibility/SKILL.md: Source-edit guidance is bounded to accessibility fixes; no commands, network calls, credential handling, or destructive workflow is prescribed.",
+          "sha256-6d1661a0ccf9aa9d99538eae780c927c789496565ec4e7f5a3eec5ff394eafda"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "frontend-api-integration-patterns": {
+      "contentReview": {
+        "path": "skills/frontend-api-integration-patterns/SKILL.md",
+        "digest": "sha256-db22a15dac87c32393738bf4d8e2f451f7a961ed77df4c755dd480536d31d24d",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/frontend-api-integration-patterns/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-db22a15dac87c32393738bf4d8e2f451f7a961ed77df4c755dd480536d31d24d"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/frontend-api-integration-patterns/SKILL.md: Code-pattern guidance only; no host activation or external tool prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-api-integration-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-api-integration-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/frontend-api-integration-patterns/SKILL.md: Fetch/DELETE snippets are target-application templates, not instructions for the agent to call a real endpoint; no shell execution, credentials, or automatic writes are prescribed.",
+          "sha256-db22a15dac87c32393738bf4d8e2f451f7a961ed77df4c755dd480536d31d24d"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "frontend-architecture": {
+      "contentReview": {
+        "path": "skills/frontend-architecture/SKILL.md",
+        "digest": "sha256-77d4b0f6e493a203567e612226efdcf3bbf7a3dbd6db5d2f69ad65f6d42fb6a5",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-architecture"
+        },
+        "evidence": [
+          "skills/frontend-architecture/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-77d4b0f6e493a203567e612226efdcf3bbf7a3dbd6db5d2f69ad65f6d42fb6a5"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/frontend-architecture/SKILL.md: Architecture guidance usable directly by the host; the npx command is in a publishing/installing appendix, not a prerequisite for the already installed skill (lines 406-412)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-architecture/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-architecture/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/frontend-architecture/SKILL.md: Project-structure guidance; the only npx command is a placeholder in the publishing appendix and cannot execute as written. No credential or destructive command is prescribed.",
+          "sha256-77d4b0f6e493a203567e612226efdcf3bbf7a3dbd6db5d2f69ad65f6d42fb6a5"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "frontend-data-contracts": {
+      "contentReview": {
+        "path": "skills/frontend-data-contracts/SKILL.md",
+        "digest": "sha256-1777ffc06b558037ea548b9338efbdc10b36aa0aafd8d0725accf424b7791315",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-data-contracts"
+        },
+        "evidence": [
+          "skills/frontend-data-contracts/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-1777ffc06b558037ea548b9338efbdc10b36aa0aafd8d0725accf424b7791315"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/frontend-data-contracts/SKILL.md: Architecture/code guidance usable directly by the host; the npx command is in a publishing appendix, not a runtime prerequisite (lines 318-324)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "frontend-architecture",
+            "relation": "pairs-with",
+            "evidence": "skills/frontend-data-contracts/SKILL.md: lines 21-23,43"
+          },
+          {
+            "targetId": "frontend-optimistic-mutations",
+            "relation": "foundation-for",
+            "evidence": "skills/frontend-data-contracts/SKILL.md: lines 21-24"
+          }
+        ],
+        "evidence": [
+          "skills/frontend-data-contracts/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-data-contracts/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/frontend-data-contracts/SKILL.md: Network/credential snippets are target-application code patterns; the only npx command is a non-executable publishing placeholder. No agent-side remote call or destructive command is prescribed.",
+          "sha256-1777ffc06b558037ea548b9338efbdc10b36aa0aafd8d0725accf424b7791315"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "frontend-dev-guidelines": {
+      "contentReview": {
+        "path": "skills/frontend-dev-guidelines/SKILL.md",
+        "digest": "sha256-20b4e743d94efa6ed31a71317ba5ebebb1fdbf2381c0c2627f0505037c6f97fa",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/frontend-dev-guidelines/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-20b4e743d94efa6ed31a71317ba5ebebb1fdbf2381c0c2627f0505037c6f97fa"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/frontend-dev-guidelines/SKILL.md: Code-convention guidance only; no activation prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "frontend-design",
+            "relation": "integration-with",
+            "evidence": "skills/frontend-dev-guidelines/SKILL.md: lines 335-336"
+          },
+          {
+            "targetId": "page-cro",
+            "relation": "integration-with",
+            "evidence": "skills/frontend-dev-guidelines/SKILL.md: line 337"
+          },
+          {
+            "targetId": "analytics-tracking",
+            "relation": "integration-with",
+            "evidence": "skills/frontend-dev-guidelines/SKILL.md: line 338"
+          },
+          {
+            "targetId": "backend-dev-guidelines",
+            "relation": "integration-with",
+            "evidence": "skills/frontend-dev-guidelines/SKILL.md: line 339"
+          }
+        ],
+        "evidence": [
+          "skills/frontend-dev-guidelines/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-dev-guidelines/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/frontend-dev-guidelines/SKILL.md: Code-convention guidance only; fetch/axios mentions are prohibitions/examples, with no agent-side network, credential, or shell behavior.",
+          "sha256-20b4e743d94efa6ed31a71317ba5ebebb1fdbf2381c0c2627f0505037c6f97fa"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "frontend-developer": {
+      "contentReview": {
+        "path": "skills/frontend-developer/SKILL.md",
+        "digest": "sha256-b81de9c6293be713fe0e4e27f2804a09a8a652396672dfef012284a72e6f8586",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/frontend-developer/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-b81de9c6293be713fe0e4e27f2804a09a8a652396672dfef012284a72e6f8586"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/frontend-developer/SKILL.md: Broad code guidance only; mentioned ecosystem tools are optional project choices rather than a host activation contract."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-developer/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-developer/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/frontend-developer/SKILL.md: Broad implementation guidance; tool names are recommendations, with no executable command, credential value, remote call, or destructive workflow.",
+          "sha256-b81de9c6293be713fe0e4e27f2804a09a8a652396672dfef012284a72e6f8586"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "frontend-lighthouse": {
+      "contentReview": {
+        "path": "skills/frontend-lighthouse/SKILL.md",
+        "digest": "sha256-15d52359bc4befe8ddac99c651cae61ee299fc0cd070466cb6ab28d7fb3ce54b",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "repository",
+          "repository": "stareezy-1/frontend-architecture-skill",
+          "licenseUrl": "https://github.com/stareezy-1/frontend-architecture-skill/blob/main/LICENSE"
+        },
+        "evidence": [
+          "skills/frontend-lighthouse/SKILL.md: source_repo frontmatter identifies the repository",
+          "sha256-15d52359bc4befe8ddac99c651cae61ee299fc0cd070466cb6ab28d7fb3ce54b"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/frontend-lighthouse/SKILL.md: Explicitly requires adding @lhci/cli and configuring production build/start plus CI workflow (lines 47-59, 215-260)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "frontend-seo",
+            "relation": "pairs-with",
+            "evidence": "skills/frontend-lighthouse/SKILL.md: lines 20-22"
+          },
+          {
+            "targetId": "frontend-architecture",
+            "relation": "pairs-with",
+            "evidence": "skills/frontend-lighthouse/SKILL.md: lines 20-22"
+          }
+        ],
+        "evidence": [
+          "skills/frontend-lighthouse/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-lighthouse/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/frontend-lighthouse/SKILL.md: Installs @lhci/cli, writes CI/config files, starts production builds and runs GitHub Actions; dependency/runtime integrity is not attested.",
+          "sha256-15d52359bc4befe8ddac99c651cae61ee299fc0cd070466cb6ab28d7fb3ce54b"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "frontend-mobile-development-component-scaffold": {
+      "contentReview": {
+        "path": "skills/frontend-mobile-development-component-scaffold/SKILL.md",
+        "digest": "sha256-7e13aeca47e65cfada1f1984fd7bc76a0a8d700c0987c85377688ecfb39d93e6",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/frontend-mobile-development-component-scaffold/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-7e13aeca47e65cfada1f1984fd7bc76a0a8d700c0987c85377688ecfb39d93e6"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/frontend-mobile-development-component-scaffold/SKILL.md: Generates code/examples without declaring a host-side activation step; project framework packages are task context."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-mobile-development-component-scaffold/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/frontend-mobile-development-component-scaffold/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/frontend-mobile-development-component-scaffold/SKILL.md: Code-generation examples only; no shell/network/credential/destructive behavior is prescribed.",
+          "sha256-7e13aeca47e65cfada1f1984fd7bc76a0a8d700c0987c85377688ecfb39d93e6"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "jest-skill": {
+      "contentReview": {
+        "path": "skills/jest-skill/SKILL.md",
+        "digest": "sha256-dec4f0ba5bce7458365573b6b084fb429f5e93ceca1b34f4e3b6764a0ce60f04",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/LambdaTest/agent-skills/tree/main/jest-skill"
+        },
+        "evidence": [
+          "skills/jest-skill/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-dec4f0ba5bce7458365573b6b084fb429f5e93ceca1b34f4e3b6764a0ce60f04"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/jest-skill/SKILL.md: Commands use npx jest and optional Testing Library, but installation/configuration provenance is not defined (lines 103-174)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/jest-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/jest-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/jest-skill/SKILL.md: Runs npx Jest, may update snapshots, and uses optional dependencies; package acquisition and write boundaries are not attested.",
+          "sha256-dec4f0ba5bce7458365573b6b084fb429f5e93ceca1b34f4e3b6764a0ce60f04"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "junit-5-skill": {
+      "contentReview": {
+        "path": "skills/junit-5-skill/SKILL.md",
+        "digest": "sha256-a8e1ef97d7dcf715b5b911da08930d7509f0a61126dba0f5b29f1fa285d704d6",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/LambdaTest/agent-skills/tree/main/junit-5-skill"
+        },
+        "evidence": [
+          "skills/junit-5-skill/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-a8e1ef97d7dcf715b5b911da08930d7509f0a61126dba0f5b29f1fa285d704d6"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/junit-5-skill/SKILL.md: Explicit Maven dependency block and Maven/Gradle run commands require project dependency setup (lines 183-207)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/junit-5-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/junit-5-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/junit-5-skill/SKILL.md: Runs Maven/Gradle and adds dependencies; package resolution and test-side effects are not attested.",
+          "sha256-a8e1ef97d7dcf715b5b911da08930d7509f0a61126dba0f5b29f1fa285d704d6"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "k6-load-testing": {
+      "contentReview": {
+        "path": "skills/k6-load-testing/SKILL.md",
+        "digest": "sha256-9b171afbebd31e355a87f91399ef519b89ce65ea1e2f4aa23bc3bf7f3ef06e27",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/k6-load-testing/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-9b171afbebd31e355a87f91399ef519b89ce65ea1e2f4aa23bc3bf7f3ef06e27"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/k6-load-testing/SKILL.md: Explicit platform-specific k6 install commands and optional Chromium install are provided (lines 35-49, 258)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "performance-engineer",
+            "relation": "related-skill",
+            "evidence": "skills/k6-load-testing/SKILL.md: line 616"
+          },
+          {
+            "targetId": "api-testing-observability-api-mock",
+            "relation": "related-skill",
+            "evidence": "skills/k6-load-testing/SKILL.md: line 617"
+          },
+          {
+            "targetId": "application-performance-performance-optimization",
+            "relation": "related-skill",
+            "evidence": "skills/k6-load-testing/SKILL.md: line 618"
+          }
+        ],
+        "evidence": [
+          "skills/k6-load-testing/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/k6-load-testing/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/k6-load-testing/SKILL.md: Installs/runs k6, can issue authenticated load against APIs/browsers, and includes production-impact warnings; target/rate/credential controls are not enforced.",
+          "sha256-9b171afbebd31e355a87f91399ef519b89ce65ea1e2f4aa23bc3bf7f3ef06e27"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "nextjs-best-practices": {
+      "contentReview": {
+        "path": "skills/nextjs-best-practices/SKILL.md",
+        "digest": "sha256-6488e1e2e001d737d688957c19264d42b29e558a8b2b9daff1d18863674e6106",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/nextjs-best-practices/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-6488e1e2e001d737d688957c19264d42b29e558a8b2b9daff1d18863674e6106"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/nextjs-best-practices/SKILL.md: Framework guidance only; no extra host activation prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/nextjs-best-practices/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/nextjs-best-practices/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/nextjs-best-practices/SKILL.md: Framework examples include API/DELETE semantics but do not instruct the agent to call a real endpoint or handle credentials; no shell or destructive workflow.",
+          "sha256-6488e1e2e001d737d688957c19264d42b29e558a8b2b9daff1d18863674e6106"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "openapi-spec-generation": {
+      "contentReview": {
+        "path": "skills/openapi-spec-generation/SKILL.md",
+        "digest": "sha256-9e38d12b362f01e0f72c86ccda38902ea87ed41eaf6f1ab1f063a67ddd221643",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/openapi-spec-generation/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-9e38d12b362f01e0f72c86ccda38902ea87ed41eaf6f1ab1f063a67ddd221643"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/openapi-spec-generation/SKILL.md: Specification/design guidance only; no concrete validator/generator prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/openapi-spec-generation/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/openapi-spec-generation/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/openapi-spec-generation/SKILL.md: Specification guidance only; no shell/network/credential/destructive behavior is prescribed.",
+          "sha256-9e38d12b362f01e0f72c86ccda38902ea87ed41eaf6f1ab1f063a67ddd221643"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "pagespeed-enhancer": {
+      "contentReview": {
+        "path": "skills/pagespeed-enhancer/SKILL.md",
+        "digest": "sha256-ee0de808ea6059782e79fa36697f454e922c8ffc1bc389759bae0fb540c2990b",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/pagespeed-enhancer/SKILL.md: source=\"personal\" is a generic/unattested label",
+          "sha256-ee0de808ea6059782e79fa36697f454e922c8ffc1bc389759bae0fb540c2990b"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/pagespeed-enhancer/SKILL.md: Report review needs no install, but full fix mode assumes cwebp, sharp or Pillow and external downloads; one setup state cannot be proven (lines 280-315, 539-543)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/pagespeed-enhancer/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/pagespeed-enhancer/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/pagespeed-enhancer/SKILL.md: Can download assets, edit headers/code and uninstall/install packages; tools and rollback boundaries are not attested.",
+          "sha256-ee0de808ea6059782e79fa36697f454e922c8ffc1bc389759bae0fb540c2990b"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "playwright-java": {
+      "contentReview": {
+        "path": "skills/playwright-java/SKILL.md",
+        "digest": "sha256-926783e260e485b9e49d9e30a6fa79506fab9d9b873a66cd8c61e641aa4aa170",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/playwright-java/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-926783e260e485b9e49d9e30a6fa79506fab9d9b873a66cd8c61e641aa4aa170"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/playwright-java/SKILL.md: Requires Java 17+, Playwright 1.44+, JUnit 5 and Allure plus browser install in CI (lines 17-19, 318-331)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/playwright-java/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/playwright-java/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/playwright-java/SKILL.md: Installs browser dependencies, runs Maven browser tests and handles stored auth state/artifacts; execution and credential boundaries are not attested.",
+          "sha256-926783e260e485b9e49d9e30a6fa79506fab9d9b873a66cd8c61e641aa4aa170"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "playwright-skill": {
+      "contentReview": {
+        "path": "skills/playwright-skill/SKILL.md",
+        "digest": "sha256-47291c4891287075d2e07de0155dc501d4d111caf74b322629a4c7cd527a0790",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/playwright-skill/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-47291c4891287075d2e07de0155dc501d4d111caf74b322629a4c7cd527a0790"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "manual",
+          "summary": "Run `npm run setup` in the skill directory before first use to install Playwright and Chromium.",
+          "docs": "SKILL.md"
+        },
+        "evidence": [
+          "skills/playwright-skill/SKILL.md: Frontmatter explicitly requires npm run setup to install Playwright and Chromium before first use (lines 8-10, 56-61)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/playwright-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/playwright-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/playwright-skill/SKILL.md: Downloads Playwright/Chromium, writes and executes temporary scripts, launches a visible browser and may automate authenticated flows; runtime is not independently attested.",
+          "sha256-47291c4891287075d2e07de0155dc501d4d111caf74b322629a4c7cd527a0790"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "pytest-skill": {
+      "contentReview": {
+        "path": "skills/pytest-skill/SKILL.md",
+        "digest": "sha256-2d43dd94763519e9308f8ed81155d9c33b84c6067018dc2bae35a10301034cf7",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/LambdaTest/agent-skills/tree/main/pytest-skill"
+        },
+        "evidence": [
+          "skills/pytest-skill/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-2d43dd94763519e9308f8ed81155d9c33b84c6067018dc2bae35a10301034cf7"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/pytest-skill/SKILL.md: The skill assumes pytest and several optional plugins but contains no install/activation contract (lines 43-193)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/pytest-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/pytest-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/pytest-skill/SKILL.md: Runs pytest plus optional plugins and local API clients; dependency acquisition and test side effects are not attested.",
+          "sha256-2d43dd94763519e9308f8ed81155d9c33b84c6067018dc2bae35a10301034cf7"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "python-testing-patterns": {
+      "contentReview": {
+        "path": "skills/python-testing-patterns/SKILL.md",
+        "digest": "sha256-467fdbc399027e09da7df551c2088dad0e2fa7cba590be3059b40bfcbc63794a",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/python-testing-patterns/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-467fdbc399027e09da7df551c2088dad0e2fa7cba590be3059b40bfcbc63794a"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/python-testing-patterns/SKILL.md: Guidance skill; no concrete activation/install step is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/python-testing-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/python-testing-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/python-testing-patterns/SKILL.md: Testing guidance only; no executable command, credential, network target, or destructive behavior is prescribed.",
+          "sha256-467fdbc399027e09da7df551c2088dad0e2fa7cba590be3059b40bfcbc63794a"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "react-best-practices": {
+      "contentReview": {
+        "path": "skills/react-best-practices/SKILL.md",
+        "digest": "sha256-75a1cf7ee1d59f56604b4db52d3cb680d1bfdbe5b064f6abc7acf8ba30acc1d3",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/react-best-practices/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-75a1cf7ee1d59f56604b4db52d3cb680d1bfdbe5b064f6abc7acf8ba30acc1d3"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/react-best-practices/SKILL.md: Static performance-rule guidance; no activation prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/react-best-practices/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/react-best-practices/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/react-best-practices/SKILL.md: Static performance rules only; no shell/network/credential/destructive behavior is prescribed.",
+          "sha256-75a1cf7ee1d59f56604b4db52d3cb680d1bfdbe5b064f6abc7acf8ba30acc1d3"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "react-component-performance": {
+      "contentReview": {
+        "path": "skills/react-component-performance/SKILL.md",
+        "digest": "sha256-e5ed04f3693f9ab303dd66b5c241134781bf1b10dfac23aa386d10cbd93a6d1a",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "repository",
+          "repository": "Dimillian/Skills"
+        },
+        "evidence": [
+          "skills/react-component-performance/SKILL.md: source frontmatter contains an owner/repository identifier",
+          "sha256-e5ed04f3693f9ab303dd66b5c241134781bf1b10dfac23aa386d10cbd93a6d1a"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/react-component-performance/SKILL.md: Validation requires React DevTools Profiler and baseline recordings (lines 24-26, 125-130)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/react-component-performance/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/react-component-performance/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/react-component-performance/SKILL.md: Bounded local profiling and one-at-a-time code optimization with before/after validation; no network, credentials, or destructive command.",
+          "sha256-e5ed04f3693f9ab303dd66b5c241134781bf1b10dfac23aa386d10cbd93a6d1a"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "screen-reader-testing": {
+      "contentReview": {
+        "path": "skills/screen-reader-testing/SKILL.md",
+        "digest": "sha256-351a27532ecfefb9ed832fc525466636b6f18c4f01ae0f96e5dbc59366ccfac4",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/screen-reader-testing/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-351a27532ecfefb9ed832fc525466636b6f18c4f01ae0f96e5dbc59366ccfac4"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/screen-reader-testing/SKILL.md: Effective use requires a configured screen reader/browser environment; the skill gives testing guidance but no automatic setup (lines 13-20)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/screen-reader-testing/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/screen-reader-testing/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/screen-reader-testing/SKILL.md: Manual accessibility-validation guidance only; no shell/network/credentials/destructive behavior is prescribed.",
+          "sha256-351a27532ecfefb9ed832fc525466636b6f18c4f01ae0f96e5dbc59366ccfac4"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "selenium-skill": {
+      "contentReview": {
+        "path": "skills/selenium-skill/SKILL.md",
+        "digest": "sha256-1b4ccb03b23ba99237c29776aafcc8d9507cb6465270779615efaf68a38e2210",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/LambdaTest/agent-skills/tree/main/selenium-skill"
+        },
+        "evidence": [
+          "skills/selenium-skill/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-1b4ccb03b23ba99237c29776aafcc8d9507cb6465270779615efaf68a38e2210"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/selenium-skill/SKILL.md: Requires a language binding/test runner and browser driver or Grid; project/cloud setup references are explicit (lines 43-59, 209-230)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/selenium-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/selenium-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/selenium-skill/SKILL.md: Runs language-specific dependencies/drivers or cloud Grid and may embed cloud credentials; execution/credential boundaries are not attested.",
+          "sha256-1b4ccb03b23ba99237c29776aafcc8d9507cb6465270779615efaf68a38e2210"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "senior-frontend": {
+      "contentReview": {
+        "path": "skills/senior-frontend/SKILL.md",
+        "digest": "sha256-dc3ac3f3d3ae7e7fcfaec3c10065fa87b22562200b6e145440b7554c487b3942",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/alirezarezvani/claude-skills"
+        },
+        "evidence": [
+          "skills/senior-frontend/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-dc3ac3f3d3ae7e7fcfaec3c10065fa87b22562200b6e145440b7554c487b3942"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/senior-frontend/SKILL.md: Scaffolding uses bundled Python scripts followed by npm install and project commands (lines 39-57, 94-120)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/senior-frontend/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/senior-frontend/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/senior-frontend/SKILL.md: Runs bundled Python generators and npm install/dev commands and writes project scaffolds; script/runtime integrity was not independently reviewed.",
+          "sha256-dc3ac3f3d3ae7e7fcfaec3c10065fa87b22562200b6e145440b7554c487b3942"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "tailwind-design-system": {
+      "contentReview": {
+        "path": "skills/tailwind-design-system/SKILL.md",
+        "digest": "sha256-2d2852085d419997ec8a75d798666afe20ff265e99602fc4ad78e6353c0f3746",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/tailwind-design-system/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-2d2852085d419997ec8a75d798666afe20ff265e99602fc4ad78e6353c0f3746"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/tailwind-design-system/SKILL.md: Design-system guidance only; no extra host activation step is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/tailwind-design-system/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/tailwind-design-system/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/tailwind-design-system/SKILL.md: Static design-system guidance only; no shell/network/credential/destructive behavior is prescribed.",
+          "sha256-2d2852085d419997ec8a75d798666afe20ff265e99602fc4ad78e6353c0f3746"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "testing-patterns": {
+      "contentReview": {
+        "path": "skills/testing-patterns/SKILL.md",
+        "digest": "sha256-0413a6d6a75664f1fecd7a5007156ff5df1b2ae563aed96f97c8dea5e16f4c95",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/testing-patterns/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-0413a6d6a75664f1fecd7a5007156ff5df1b2ae563aed96f97c8dea5e16f4c95"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/testing-patterns/SKILL.md: Assumes Jest/Testing Library and npm test scripts but does not state how dependencies are installed or verified (lines 248-256)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "react-ui-patterns",
+            "relation": "integration-with",
+            "evidence": "skills/testing-patterns/SKILL.md: line 261"
+          },
+          {
+            "targetId": "systematic-debugging",
+            "relation": "integration-with",
+            "evidence": "skills/testing-patterns/SKILL.md: line 262"
+          }
+        ],
+        "evidence": [
+          "skills/testing-patterns/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/testing-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/testing-patterns/SKILL.md: Writes tests and runs npm scripts; project command behavior and dependency integrity are not attested.",
+          "sha256-0413a6d6a75664f1fecd7a5007156ff5df1b2ae563aed96f97c8dea5e16f4c95"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "testing-qa": {
+      "contentReview": {
+        "path": "skills/testing-qa/SKILL.md",
+        "digest": "sha256-98756bbfbec107c77f9a52800efdd77be7e40749e298d07f79967fdc1b23241f",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/testing-qa/SKILL.md: source=\"personal\" is a generic/unattested label",
+          "sha256-98756bbfbec107c77f9a52800efdd77be7e40749e298d07f79967fdc1b23241f"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/testing-qa/SKILL.md: Composition bundle requires many other skills/toolchains and does not provide a closed activation procedure (lines 32-204)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "ai-ml",
+            "relation": "related-workflow",
+            "evidence": "skills/testing-qa/SKILL.md: line 232"
+          },
+          {
+            "targetId": "api-testing-observability-api-mock",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 81,93"
+          },
+          {
+            "targetId": "browser-automation",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 122,135"
+          },
+          {
+            "targetId": "cloud-devops",
+            "relation": "related-workflow",
+            "evidence": "skills/testing-qa/SKILL.md: line 231"
+          },
+          {
+            "targetId": "code-review-excellence",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: line 167"
+          },
+          {
+            "targetId": "code-reviewer",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 166,178"
+          },
+          {
+            "targetId": "development",
+            "relation": "related-workflow",
+            "evidence": "skills/testing-qa/SKILL.md: line 229"
+          },
+          {
+            "targetId": "e2e-testing-patterns",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 82,100,116"
+          },
+          {
+            "targetId": "find-bugs",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 168,182"
+          },
+          {
+            "targetId": "javascript-testing-patterns",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 52,67"
+          },
+          {
+            "targetId": "lint-and-validate",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 188,200"
+          },
+          {
+            "targetId": "performance-engineer",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 146,158"
+          },
+          {
+            "targetId": "performance-profiling",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: line 147"
+          },
+          {
+            "targetId": "playwright-skill",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 99,112"
+          },
+          {
+            "targetId": "python-testing-patterns",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 53,71"
+          },
+          {
+            "targetId": "screenshots",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 124,139"
+          },
+          {
+            "targetId": "security-audit",
+            "relation": "related-workflow",
+            "evidence": "skills/testing-qa/SKILL.md: line 230"
+          },
+          {
+            "targetId": "security-scanning-security-sast",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: line 169"
+          },
+          {
+            "targetId": "tdd-orchestrator",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: line 55"
+          },
+          {
+            "targetId": "test-automator",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 34,43"
+          },
+          {
+            "targetId": "test-driven-development",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 35,47"
+          },
+          {
+            "targetId": "unit-testing-test-generate",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 54,75"
+          },
+          {
+            "targetId": "verification-before-completion",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 189,204"
+          },
+          {
+            "targetId": "web-performance-optimization",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: line 148"
+          },
+          {
+            "targetId": "webapp-testing",
+            "relation": "skills-to-invoke",
+            "evidence": "skills/testing-qa/SKILL.md: lines 101,123"
+          }
+        ],
+        "evidence": [
+          "skills/testing-qa/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/testing-qa/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/testing-qa/SKILL.md: Invokes a broad set of mutating/test/security/review skills; aggregate command/network/write behavior is not closed or attested.",
+          "sha256-98756bbfbec107c77f9a52800efdd77be7e40749e298d07f79967fdc1b23241f"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "ui-a11y": {
+      "contentReview": {
+        "path": "skills/ui-a11y/SKILL.md",
+        "digest": "sha256-6b273632251fcfafcc559747d0d87e76d00ddd935a8162247e358ab9a6953773",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-a11y"
+        },
+        "evidence": [
+          "skills/ui-a11y/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-6b273632251fcfafcc559747d0d87e76d00ddd935a8162247e358ab9a6953773"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/ui-a11y/SKILL.md: Static code audit/fix guidance; runtime screen-reader simulation is explicitly out of scope (lines 21-24)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/ui-a11y/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/ui-a11y/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/ui-a11y/SKILL.md: Bounded static source fixes; no shell/network/credential operation or destructive workflow is prescribed.",
+          "sha256-6b273632251fcfafcc559747d0d87e76d00ddd935a8162247e358ab9a6953773"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "ui-review": {
+      "contentReview": {
+        "path": "skills/ui-review/SKILL.md",
+        "digest": "sha256-4b3dc445c56ad66e9ebc92219c4fee7031267be2490fb532a8272ff3423ebd33",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-review"
+        },
+        "evidence": [
+          "skills/ui-review/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-4b3dc445c56ad66e9ebc92219c4fee7031267be2490fb532a8272ff3423ebd33"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/ui-review/SKILL.md: Read-only UI review checklist; no extra host/tool prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "ui-a11y",
+            "relation": "delegates-accessibility-only",
+            "evidence": "skills/ui-review/SKILL.md: line 21 references upstream command /ss-a11y; local catalog ID is ui-a11y from the same bitjaru/styleseed source"
+          }
+        ],
+        "evidence": [
+          "skills/ui-review/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/ui-review/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "none",
+        "evidence": [
+          "skills/ui-review/SKILL.md: Explicit review checklist with no edits, commands, network calls, credentials, or destructive operations.",
+          "sha256-4b3dc445c56ad66e9ebc92219c4fee7031267be2490fb532a8272ff3423ebd33"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "unit-testing-test-generate": {
+      "contentReview": {
+        "path": "skills/unit-testing-test-generate/SKILL.md",
+        "digest": "sha256-3fdc338d79aa50a5e546c1ecfe983b583dd13827804dd8236b44d1de056748fe",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/unit-testing-test-generate/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-3fdc338d79aa50a5e546c1ecfe983b583dd13827804dd8236b44d1de056748fe"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "none",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/unit-testing-test-generate/SKILL.md: Generates framework-specific test source; no host activation prerequisite is declared."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/unit-testing-test-generate/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/unit-testing-test-generate/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/unit-testing-test-generate/SKILL.md: Generates test source examples; no shell/network/credential/destructive behavior is prescribed.",
+          "sha256-3fdc338d79aa50a5e546c1ecfe983b583dd13827804dd8236b44d1de056748fe"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "vitest-skill": {
+      "contentReview": {
+        "path": "skills/vitest-skill/SKILL.md",
+        "digest": "sha256-dfd406a1ee995cbe2de1b5a0d155ab8d500ab8761da78ca61cc1b5ce5d3a7779",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/LambdaTest/agent-skills/tree/main/vitest-skill"
+        },
+        "evidence": [
+          "skills/vitest-skill/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-dfd406a1ee995cbe2de1b5a0d155ab8d500ab8761da78ca61cc1b5ce5d3a7779"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/vitest-skill/SKILL.md: Uses npx vitest and optional UI/coverage/component packages but does not define installation/setup (lines 124-157)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/vitest-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/vitest-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/vitest-skill/SKILL.md: Runs npx Vitest and optional UI/coverage/API paths; package acquisition and test side effects are not attested.",
+          "sha256-dfd406a1ee995cbe2de1b5a0d155ab8d500ab8761da78ca61cc1b5ce5d3a7779"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "wcag-audit-patterns": {
+      "contentReview": {
+        "path": "skills/wcag-audit-patterns/SKILL.md",
+        "digest": "sha256-f1ae46b2e7eeece4ae2bedae1af536b3d37af2d9c680c4424a04c3996a72885d",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/wcag-audit-patterns/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-f1ae46b2e7eeece4ae2bedae1af536b3d37af2d9c680c4424a04c3996a72885d"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/wcag-audit-patterns/SKILL.md: Workflow calls for axe, Lighthouse and WAVE scans but does not define whether those tools are available or how they are activated (lines 30-32)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/wcag-audit-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/wcag-audit-patterns/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "known",
+        "value": "safe",
+        "evidence": [
+          "skills/wcag-audit-patterns/SKILL.md: Calls for standard audit scans and manual checks but provides no remote target, credentials, destructive command, or automatic write; remediation remains user-scoped.",
+          "sha256-f1ae46b2e7eeece4ae2bedae1af536b3d37af2d9c680c4424a04c3996a72885d"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "web-performance-optimization": {
+      "contentReview": {
+        "path": "skills/web-performance-optimization/SKILL.md",
+        "digest": "sha256-38cf09230d50f48d37ae28e6b5324aea9f6fdeccfffdba76ecd444f6fee8e263",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/web-performance-optimization/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-38cf09230d50f48d37ae28e6b5324aea9f6fdeccfffdba76ecd444f6fee8e263"
+        ]
+      },
+      "setup": {
+        "status": "unknown",
+        "value": null,
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/web-performance-optimization/SKILL.md: Uses Lighthouse, bundle analysis, package install/uninstall and optional image tools without a single declared activation contract (lines 151-158, 354-359, 524)."
+        ]
+      },
+      "dependencies": {
+        "status": "known",
+        "value": [
+          {
+            "targetId": "react-best-practices",
+            "relation": "related-skill",
+            "evidence": "skills/web-performance-optimization/SKILL.md: line 633"
+          },
+          {
+            "targetId": "frontend-dev-guidelines",
+            "relation": "related-skill",
+            "evidence": "skills/web-performance-optimization/SKILL.md: line 634"
+          },
+          {
+            "targetId": "systematic-debugging",
+            "relation": "related-skill",
+            "evidence": "skills/web-performance-optimization/SKILL.md: line 635"
+          },
+          {
+            "targetId": "senior-architect",
+            "relation": "related-skill",
+            "evidence": "skills/web-performance-optimization/SKILL.md: line 636"
+          }
+        ],
+        "evidence": [
+          "skills/web-performance-optimization/SKILL.md: explicit AAS relationships listed above"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/web-performance-optimization/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/web-performance-optimization/SKILL.md: Runs external audits, installs/uninstalls packages, edits application assets and references live URLs; package/network/write boundaries are not attested.",
+          "sha256-38cf09230d50f48d37ae28e6b5324aea9f6fdeccfffdba76ecd444f6fee8e263"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "webapp-testing": {
+      "contentReview": {
+        "path": "skills/webapp-testing/SKILL.md",
+        "digest": "sha256-da02c666083f0642b4ae7a106f1b38d9ada0d6da01ff4e014b49d0300ab8a9ea",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/webapp-testing/SKILL.md: source=\"community\" is a generic/unattested label",
+          "sha256-da02c666083f0642b4ae7a106f1b38d9ada0d6da01ff4e014b49d0300ab8a9ea"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/webapp-testing/SKILL.md: Requires Python Playwright and a packaged with_server.py helper; the skill shows execution but no automatic dependency acquisition (lines 42-61)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/webapp-testing/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/webapp-testing/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/webapp-testing/SKILL.md: Writes and runs Python Playwright scripts against a server; Python/browser dependency and target boundaries are not attested.",
+          "sha256-da02c666083f0642b4ae7a106f1b38d9ada0d6da01ff4e014b49d0300ab8a9ea"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    },
+    "webdriverio-skill": {
+      "contentReview": {
+        "path": "skills/webdriverio-skill/SKILL.md",
+        "digest": "sha256-5d884620f500ec3d06f81ec72e264456ca24b3c2e4cfe2fcd915d486feefd18a",
+        "scope": "Every line was included in the full-file relationship and behavior scan; all matched command/network/credential/destructive and inter-skill sections were directly inspected."
+      },
+      "provenance": {
+        "status": "known",
+        "value": {
+          "type": "canonical-url",
+          "url": "https://github.com/LambdaTest/agent-skills/tree/main/webdriverio-skill"
+        },
+        "evidence": [
+          "skills/webdriverio-skill/SKILL.md: source frontmatter is a canonical URL",
+          "sha256-5d884620f500ec3d06f81ec72e264456ca24b3c2e4cfe2fcd915d486feefd18a"
+        ]
+      },
+      "setup": {
+        "status": "known",
+        "value": "manual",
+        "catalogClaim": {
+          "type": "none",
+          "summary": "",
+          "docs": null
+        },
+        "evidence": [
+          "skills/webdriverio-skill/SKILL.md: Explicit setup command npm init wdio@latest and WDIO run commands are required (lines 121-124)."
+        ]
+      },
+      "dependencies": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/webdriverio-skill/SKILL.md: full-content review found no explicit inter-AAS-skill relationship"
+        ]
+      },
+      "conflicts": {
+        "status": "known-empty",
+        "value": [],
+        "evidence": [
+          "skills/webdriverio-skill/SKILL.md: full-content review found no explicit inter-AAS-skill conflict declaration"
+        ]
+      },
+      "risk": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "skills/webdriverio-skill/SKILL.md: Initializes and runs WDIO with optional cloud/API paths; dependency/network/credential behavior is not attested.",
+          "sha256-5d884620f500ec3d06f81ec72e264456ca24b3c2e4cfe2fcd915d486feefd18a"
+        ],
+        "reviewDimensions": {
+          "commands": true,
+          "network": true,
+          "credentials": true,
+          "destructiveBehavior": true
+        }
+      }
+    }
+  },
+  "summary": {
+    "skillCount": 45,
+    "provenance": {
+      "unknown": 26,
+      "known": 19
+    },
+    "setup": {
+      "none": 19,
+      "automatic": 3,
+      "unknown": 11,
+      "manual": 12
+    },
+    "dependencies": {
+      "known-empty": 34,
+      "known": 11
+    },
+    "conflicts": {
+      "known-empty": 45
+    },
+    "risk": {
+      "safe": 20,
+      "unknown": 24,
+      "none": 1
+    },
+    "explicitRelationshipCount": 57,
+    "interpretation": "Known provenance does not imply safe behavior. Setup, dependency/conflict and risk evidence are independent fields. Unknown remains unknown wherever activation or behavior cannot be proven from the reviewed content."
+  }
+}

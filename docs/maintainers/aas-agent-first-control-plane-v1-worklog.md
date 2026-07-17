@@ -30,5 +30,68 @@
 
 ## Next evidence gate
 
-- Land the baseline in a dedicated protected pull request. The required `aas-v1-baseline` job must pass from the committed bytes on GitHub.
-- Only after the baseline commit lands on protected `main`, branch the product implementation. Product pull requests may consume but must not modify the frozen verification baseline.
+- Baseline landed through protected PR [#878](https://github.com/sickn33/agentic-awesome-skills/pull/878) as `09f2d8612d2e68a087377685e9c876bd737e1782`. Required `aas-v1-baseline`, source validation, and artifact preview passed from committed bytes.
+- Product implementation now runs in isolated worktree `/private/tmp/aas-agent-first-product` on `codex/aas-agent-first-control-plane-v1-product`, based on that protected commit. `verification/aas-v1` remains unchanged.
+
+## Phase 1 — Deterministic core and immutable state contracts
+
+- Added a pure CommonJS deterministic core with canonical JSON, explicit version handshake, allowlisted input normalization, public metadata judgments, complete-catalog search, deterministic recommendation/discovery lanes, fixed-point lexical factors, and greedy set-cover composition with skill budget, overlap penalty, dependencies, and conflicts.
+- Canonical registry identity uses `canonical_id`, exposing all 1,965 skills exactly once. Generated compatibility defaults are not treated as authoritative support evidence; absent reviewed metadata remains `unknown`.
+- The first tuning-only metadata overlay covered the 85 candidate IDs referenced by tuning gold. Independent audit rejected that approach as an indirect gold-derived whitelist: tuning/gold review is not proof of skill quality or provenance. This overlay is development history only and must be replaced before product acceptance. No held-out input was read.
+- Added 11 public v1 schemas, strict minimal-manifest validation, exact version handshake, and immutable single-target plan envelopes. Plans bind manifest, catalog, runtime, target identity, installed state, logical operations, overrides, and a final state commit without physical destination paths.
+- Added a tuning-only diagnostic runner. After conservative removal of unsupported capability claims, the honest baseline was macro verified coverage `0.366667` and macro inclusion precision `0.911859`. Coverage by intent was `0.4/0.2/0.4/0.4/0.4/0.4`; this is a development diagnostic, not held-out evidence or a release claim.
+- Corrected the compositor to be lexicographically coverage-first, forbid non-critical-only additions while critical goals remain uncovered, use exact versioned capability matching, and keep search-only ID tokens out of recommendation BM25. The same still-gold-derived development overlay then measured `0.366667` coverage and `0.928030` macro precision; it remains rejected as product evidence.
+- Added a benchmark-independent public review queue over all 1,965 catalog entries and 120 versioned capabilities. Three independent semantic audits selected and reviewed 121 unique candidates across the six intents without reading tuning gold or held-out data. Field-level risk, provenance, setup, dependency, and conflict evidence is being audited separately; unknown values remain unknown.
+
+## Phase 2 — Local runtime, CLI/MCP, transaction, and review UI slices
+
+- Added content-addressed catalog and runtime caches, canonical identity records, npm `dist.integrity` verification, data-only catalog update, a hardened archive parser, and atomic cache promotion. The hostile archive matrix passes 34/34; updater/cache/archive targeted tests pass 44/44.
+- A fresh current-worktree npm tarball was parsed and promoted as a runtime without lifecycle execution: 6,455 files, 99,652,053 expanded bytes, SRI `sha512-tulK12nYIjp0JNrwAUQgDnluU5X8BXuhzrJ5lBWeZvKBOA6ENs2/QuxKpgv4hR3hU/GaTQDdNSYTV7YLnJfERg==`, closure `sha256-5c8c616cea0c9fb5d62fc707647a71e554001bbea0dea915a4865bb92345f22c`; every cached byte verified.
+- Added the `aas` lifecycle for catalog status/update, stack init/recommend/validate/plan/apply/doctor/recover, exact plan/recovery approvals, and legacy argument dispatch isolation. Added Codex/Claude host adapters plus explicit `mcp configure` preview/apply and backup cleanup; real user configuration remains untouched.
+- Added the five-tool read-only local MCP server and resource template with strict bounded JSON-lines parsing, offline catalog resolution, no updater, no model, and no write surface. Unit/static evidence does not replace the required external syscall observation.
+- Added transactional apply with same-filesystem staging, exclusive lock, chained journal, backup, state-last commit, idempotence, and explicit recovery. Unit fault hooks do not replace the required production-binary kill/swap/race matrix.
+- Replaced the manual Workbench selector with in-memory paste/upload review of stack and plan artifacts. The route is isolated from catalog/Supabase fetch, renders text-only evidence, and exposes no install/apply/share/persistence surface. App tests pass 152/152 and the production build/prerender passes locally.
+- Current integrated AAS v1 unit suite passed 87/87 before the latest runtime and metadata-hardening additions; a fresh full rerun is required after integration. Frozen `verification/aas-v1` remains unchanged from protected baseline commit `09f2d8612d2e68a087377685e9c876bd737e1782`.
+
+## Phase 2 integration update — current product tree
+
+- Replaced the rejected tuning-derived overlay with committed, benchmark-independent review sources. The pipeline deterministically validates 120 public capability queues, imports 121 independent metadata reviews, builds 121 overrides, and emits all 1,965 catalog records at catalog digest `sha256-cf14b1b22b826b5aed3f82f7ea3c8895b4b5ae1af372bd310b7154db80bb4628`. Dependency-path tests forbid frozen verification, held-out, and gold inputs. No held-out case has been read by the product implementation.
+- Real Draft 2020-12 instance validation now covers recommendation input, catalog manifest, plans, recovery plans, journal records, managed state, doctor output, and CLI success/error envelopes. Recommendation validation occurs before normalization, so malformed booleans, targets, policy, and unknown fields fail closed.
+- Runtime packaging now bundles the declared npm dependency closure and promotes only allowlisted runtime assets. The current commit-bound tarball is 42,307,013 bytes with SHA-256 `3a1478e84f02692313a72656041b0d114dcc57d1906c53f0da83243dfdc2c9f1` and npm integrity `sha512-T2kL318lXJBms8GeFIbeMcCileDWJ2gqCjpckQa4llWsWpA7jFdRNeuD2EfN0Ce/7K2LkBuFNDD0GdM2jegbXg==`; its 7,237 selected runtime assets total 100,632,903 bytes and bind closure digest `sha256-bb527d301fa696ba319ccd6b1a745410da1861b5f86f328ceb46e4ca6e085b5c`. The tarball is installed into an isolated content-addressed cache, reverified byte-for-byte, and launches `aas-mcp` successfully with `NODE_PATH` cleared. The published `aas` and `aas-mcp` bins are asserted executable on POSIX and smoke-tested from the installed tarball.
+- Transaction recovery now uses a root-anchored WAL plus bootstrap evidence, crash-safe pending publication, immutable checkpoints, mutation intent/completion records, target locking, state-last commit, and retryable rollback/cleanup. Explicit fault tests cover bootstrap rename before fsync, layout publication before fsync, tombstone cleanup interruption, torn WAL tails, interrupted mutation recovery, post-commit cleanup, empty prior state, live locks, stale recovery guards, and symlink/containment drift.
+- Windows-specific source paths reject NTFS streams/device aliases/reserved names, harden backup and staging ACLs before sensitive bytes, preserve existing config ACLs, and request a `GENERIC_WRITE` directory handle for `FlushFileBuffers`. These paths fail closed but are not claimed as executed evidence until the protected Windows matrix runs.
+- Recommendation output now keeps full deterministic scoring while returning compact evidence summaries: at most 25 candidates per lane, 25 detailed exclusions, total/returned counts, reason-code counts, and at most eight content-addressed evidence references per candidate. It no longer embeds a second copy of itself. Across all 60 tuning cases, the largest serialized MCP tool result is 203,884 bytes. The frozen hostile regex-like search query is rejected before tokenization while normal technical queries such as `c++ node.js api/v1` remain valid.
+- `mcp configure` now has two explicit and non-ambiguous runtime paths. Registry bootstrap/update continues to preview and bind the exact npm SRI before download. Supplying both `--runtime-integrity` and `--runtime-closure-digest` selects an already verified content-addressed runtime without any registry access; preview binds the complete identity and apply reverifies every cached byte immediately before the atomic host-config write. Supplying only one identity component, a missing runtime, a closure mismatch, or post-preview tampering fails closed without a config write.
+- Current local gates: skill validation for 1,965 skills, docs-security checks, deterministic catalog checks, 128/128 AAS v1 tests, the complete repository test suite, 152/152 Workbench tests, production Vite build/prerender, package-content checks, isolated CLI/MCP tarball smoke, and `git diff --check` pass. This supersedes the earlier stale 87-test snapshot above.
+- The canonical `repo-maintainer` skill now preserves the independent product/verifier/gold boundary. Its packaged mirrors remain owned by the protected canonical-sync flow and will be regenerated only after the source PR lands. The installed private `antigravity-maintainer-batch-release` skill and its UI metadata were also updated and validated so future sweeps retain the same frozen-matrix, black-box, and publication-approval gates.
+- Honest tuning-only diagnostic remains below release thresholds: macro verified coverage `0.366667`, macro inclusion precision `0.563889`, critical-goal coverage `0.616667`, and non-critical-goal coverage `0.533333`, with zero hard-policy violations. Inspection showed semantically valid alternatives omitted from the current frozen tuning gold. Changing that gold is prohibited without a separate independent equivalence audit, explicit approval, protected PR, and baseline re-freeze.
+
+## Remaining approval gates
+
+- Explicit approval was granted for the independently owned product black-box verifier and six-job Node 22/24 acceptance workflow for Linux, macOS, and Windows. That work remains isolated from the product branch and must land through its own protected PR before the baseline is re-frozen.
+- Explicit approval was granted for an independent tuning-gold equivalence audit. Its accepted equivalences, review evidence, and updated freeze remain isolated on their own branch and must land through a separate protected PR. Product code has not tuned around the known omissions or read held-out inputs.
+- Only after those two gates pass may the clean-tarball held-out/abstention evaluator, 100,000 property cases, 50,000 parser/MCP fuzz cases, observed zero-network/zero-write MCP traces, production-binary fault/race matrix, legacy differential, host smoke tests, and exact evidence bundle be treated as release acceptance.
+- Tag, npm publication, Pages deployment, or writes to real user MCP configuration remain separately approval-gated and have not occurred.
+
+## 2026-07-17 — Additive agent-first preview profile
+
+- The frozen certified-v1 design, benchmark, hostile corpus, verifier, and goal
+  remain unchanged. The new preview profile is an intermediate product-learning
+  gate and cannot complete the active certified-v1 goal.
+- `stack apply` and `stack recover` are now disabled by default in the preview.
+  Controlled development requires `--experimental-apply` or
+  `--experimental-recovery`; successful writes are labelled experimental.
+- Added a packed-product functional runner for `init -> recommend -> validate ->
+  plan -> doctor`, deterministic explanation output, all five local stdio MCP
+  tools, the skill resource template, read-only project/cache snapshots, legacy
+  isolation, and default write guards.
+- Added a six-job Node 22/24 matrix for Linux, macOS, and Windows, plus Workbench
+  tests/build and a fail-closed receipt aggregator. A passing bundle must say
+  `previewQualified: true` and `certifiedV1: false` and must enumerate native
+  syscall observation, transactional crash/race certification, the 80/90/100
+  benchmark, real host writes, and public release as not evaluated.
+- The preview contract and evidence bundle preserve this boundary. Any further
+  canonical maintainer-skill wording change remains a separate source/sync
+  maintenance action, so this product PR does not create registry drift.
+- No npm package, GitHub release, Pages deployment, announcement, or real MCP
+  configuration write is authorized by this profile.

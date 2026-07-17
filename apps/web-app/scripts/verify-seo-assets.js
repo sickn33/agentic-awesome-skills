@@ -869,8 +869,8 @@ export function assertPrerenderedWorkbenchRoutes(workbenchUrls, distDir = 'dist'
       `Missing prerendered page for workbench route: ${parsed.pathname}. Expected ${filePath}.`,
     );
     const html = readFile(filePath, distDir);
-    assert(extractTitle(html).includes('Skill Workbench'), 'Workbench prerender must expose its exact product title.');
-    assert(extractMetaContent(html, 'name', 'description')?.includes('exact host-aware set'), 'Workbench prerender must describe exact composition.');
+    assert(extractTitle(html).includes('Stack Review Workbench'), 'Workbench prerender must expose its exact review product title.');
+    assert(extractMetaContent(html, 'name', 'description')?.includes('Imports stay in memory'), 'Workbench prerender must describe in-memory review.');
   }
 }
 
