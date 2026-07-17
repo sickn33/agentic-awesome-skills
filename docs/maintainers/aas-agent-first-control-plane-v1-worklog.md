@@ -20,7 +20,7 @@
 - The legacy harness binds the exact dependency closure, runtime tree, and entrypoint; validates pre/post filesystem evidence; constrains case, target, and fake-Git paths; observes and denies Node networking with a sentinel self-test; and records zero network attempts. Full OS-syscall observation remains a separate black-box product acceptance gate and is not claimed by this corpus.
 - Live `main` protection now requires `aas-v1-baseline`, while retaining `pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview`; admin enforcement remains enabled and force-pushes/deletions remain disabled.
 - Local gate: 9/9 verifier tests, schema validation, structure validation, frozen benchmark and secondary corpora, hostile fixtures, legacy snapshots, and freeze readiness all pass.
-- Content-addressed freeze manifest: 712 files, root digest `sha256-bb15570eabc4501f099ca247059c9e5cc0e71d4163e7963e9f54a09e103bf1dc`; an immediate independent `freeze:check` reproduced it exactly.
+- Content-addressed freeze manifest: 712 files, root digest `sha256-ab3aa6b53a4f2416207e060fabd11c909ad2039bc0b16874f41c2c1ba4343bc3`; an immediate independent `freeze:check` reproduced it exactly. GitHub's Linux replay exposed and then verified the explicit RFC 1952 OS-byte normalization used by the gzip hostile fixtures.
 
 ## Feasibility decisions
 

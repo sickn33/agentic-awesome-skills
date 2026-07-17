@@ -9,7 +9,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = path.dirname(fileURLToPath(import.meta.url));
 
 export const fixtureContract = Object.freeze({
-  generatorVersion: 1,
+  generatorVersion: 2,
   archive: {
     format: "ustar",
     maxEntries: 16,
@@ -90,6 +90,14 @@ function deterministicBytes(length) {
     bytes[index] = (state ^ (state >>> 14)) & 0xff;
   }
   return bytes;
+}
+
+function deterministicGzip(bytes) {
+  const compressed = zlib.gzipSync(bytes, { level: 9, mtime: 0 });
+  // RFC 1952 byte 9 is an informational OS identifier. Node/zlib emits the
+  // host value, so normalize it to "unknown" to keep fixtures byte-identical.
+  compressed[9] = 0xff;
+  return compressed;
 }
 
 function exactJsonSize(size) {
@@ -181,8 +189,8 @@ export function buildCorpus() {
       tar([file("catalog/a.bin", Buffer.alloc(maxFile, 0x41)), file("catalog/b.bin", Buffer.alloc(maxTotal - maxFile, 0x42))]),
     )],
     ["decompression-ratio-bomb", archiveCase(
-      zlib.gzipSync(tar([file("catalog/bomb.bin", Buffer.alloc(65536))]), { level: 9, mtime: 0 }),
-      zlib.gzipSync(tar([file("catalog/bounded.bin", deterministicBytes(4096))]), { level: 9, mtime: 0 }),
+      deterministicGzip(tar([file("catalog/bomb.bin", Buffer.alloc(65536))])),
+      deterministicGzip(tar([file("catalog/bounded.bin", deterministicBytes(4096))])),
       "tar.gz",
     )],
     ["malformed-mcp-framing", inputCase(

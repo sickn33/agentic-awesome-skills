@@ -249,12 +249,12 @@
       "surface": "archive",
       "exploit": {
         "path": "fixtures/archive/decompression-ratio-bomb/exploit.tar.gz",
-        "sha256": "071df83dd09910f4b08571ebf5c46670d4dd65580e82c6d1ebcbd1cba297e3ce",
+        "sha256": "405d55fbcff83da76cf1eb551d70e7dc40feccba401a71fe48d1940d22d03d0c",
         "expected": "reject"
       },
       "boundaryControl": {
         "path": "fixtures/archive/decompression-ratio-bomb/boundary-control.tar.gz",
-        "sha256": "41eb1a999cf74250729f06d98dd4aa7109a4a3bd14cbf19b50d5488efe889e20",
+        "sha256": "52d9a2bd4547307de0bf9cfef95ecc50c1ee65d25a7cc8b89dd08427fb3e91ef",
         "expected": "accept"
       },
       "status": "frozen"
@@ -492,7 +492,7 @@
     "boundaryControlMustRemainAccepted": true
   },
   "fixtureContract": {
-    "generatorVersion": 1,
+    "generatorVersion": 2,
     "archive": {
       "format": "ustar",
       "maxEntries": 16,

@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-bb15570eabc4501f099ca247059c9e5cc0e71d4163e7963e9f54a09e103bf1dc",
+  "rootDigest": "sha256-ab3aa6b53a4f2416207e060fabd11c909ad2039bc0b16874f41c2c1ba4343bc3",
   "fileCount": 712,
   "files": [
     {
@@ -2839,12 +2839,12 @@
     {
       "path": "baseline/v1/hostile/fixtures/archive/decompression-ratio-bomb/boundary-control.tar.gz",
       "bytes": 4269,
-      "sha256": "41eb1a999cf74250729f06d98dd4aa7109a4a3bd14cbf19b50d5488efe889e20"
+      "sha256": "52d9a2bd4547307de0bf9cfef95ecc50c1ee65d25a7cc8b89dd08427fb3e91ef"
     },
     {
       "path": "baseline/v1/hostile/fixtures/archive/decompression-ratio-bomb/exploit.tar.gz",
       "bytes": 178,
-      "sha256": "071df83dd09910f4b08571ebf5c46670d4dd65580e82c6d1ebcbd1cba297e3ce"
+      "sha256": "405d55fbcff83da76cf1eb551d70e7dc40feccba401a71fe48d1940d22d03d0c"
     },
     {
       "path": "baseline/v1/hostile/fixtures/archive/device-entry/boundary-control.tar",
@@ -3108,13 +3108,13 @@
     },
     {
       "path": "baseline/v1/hostile/generate-fixtures.mjs",
-      "bytes": 12919,
-      "sha256": "165389d18058510049687520cd700d8ec20a4bf28668585ef95b1397cc70926a"
+      "bytes": 13185,
+      "sha256": "db19d7c2d31ca82feb9ded003b9fea132061d0a87a8c3716b4b691e02e64c399"
     },
     {
       "path": "baseline/v1/hostile/manifest.json",
       "bytes": 18280,
-      "sha256": "59df0dd080ba4c150ebeef64a71d8acd809c5d91e89bc1626efd810a8965c345"
+      "sha256": "2e8c51b09459cc353a2e112be0583a14b21c10e7c3e92943abb79625d53c75c6"
     },
     {
       "path": "baseline/v1/hostile/verify-fixtures.mjs",
