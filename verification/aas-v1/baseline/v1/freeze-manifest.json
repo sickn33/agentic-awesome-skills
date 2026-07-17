@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-e9c79d47b01085fa56521dbf29fe296799ae57c5a2a30bda55cd50704eacd199",
+  "rootDigest": "sha256-ad3a52cac11e15110adab3bf54b568ea6ffe334830cec71f543e3b6ada1fe8c6",
   "fileCount": 754,
   "files": [
     {
@@ -3698,8 +3698,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 13017,
-      "sha256": "6af193469095350ce3b4bfd8b67094849d3a8ace571b18bd6fdb2139f81a1225"
+      "bytes": 14061,
+      "sha256": "35fd4f4aef23876112260cc1cd4a0d6306a24f4a91003ce9b88e3288ee7581fb"
     },
     {
       "path": "verifier/lib/prng.mjs",
