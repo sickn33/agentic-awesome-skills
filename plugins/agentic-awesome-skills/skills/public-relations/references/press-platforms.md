@@ -12,20 +12,18 @@ Journalists posting "I need a source for X" — you respond, sometimes you get q
 
 ---
 
-## The Major Platforms
+## Current Source-Request Channels
 
-| Platform | What it is | Cost | Quality |
-|----------|-----------|------|---------|
-| **[Connectively](https://www.connectively.us)** (formerly HARO) | Daily email digest of journalist queries | Free tier; paid for filters | Mixed — high volume, lots of noise |
-| **[Qwoted](https://www.qwoted.com)** | Web app with journalist requests | Free; paid for outreach | Good — better-quality outlets |
-| **[Featured](https://featured.com)** | Web app, expert profiles, journalist requests | Free tier; paid pro | Good for thought-leadership snippets |
-| **[Help A B2B Writer](https://helpab2bwriter.com)** | Twice-weekly email of B2B queries | Free | High — B2B-focused, low spam |
-| **[SourceBottle](https://www.sourcebottle.com)** | Australia-focused but global queries | Free | Variable |
-| **[Terkel](https://terkel.io)** | Roundup-style ("we asked 50 experts…") | Free | Volume-heavy, low effort |
-| **[JournoRequests](https://twitter.com/journorequests)** | X account aggregating tweets | Free | UK-skewed, real-time |
-| **#JournoRequest** (X hashtag) | Live journalist requests | Free | Real-time, fast-moving |
+Services change, close, rebrand, and alter access terms. Do not rely on a static vendor list. At the time of the task, verify availability, terms, audience, and current request quality before recommending a channel.
 
-**Recommended starter set:** Connectively + Qwoted + Help A B2B Writer + monitoring `#JournoRequest` on X.
+Useful channel categories include:
+
+- Journalist source-request marketplaces and newsletters
+- Requests published by an outlet, journalist, or editor on their verified channels
+- Professional communities with moderated media-request boards
+- Direct replies to a clearly attributable request on the journalist's recent beat
+
+Prefer channels whose current requests, identity controls, deadlines, and terms can be verified. Never send a response or create a paid account without user approval.
 
 ---
 
@@ -181,7 +179,8 @@ Before you start responding:
 - [ ] One-line credential is written and rehearsed
 - [ ] Headshot is high-res and at a public URL
 - [ ] You have 3–5 specific stories / data points ready to deploy
-- [ ] You've decided which 2–3 platforms to use (don't try all 7)
+- [ ] You've verified and selected a small set of currently operating channels
+- [ ] The user has approved the recipients and final responses before sending
 - [ ] You've blocked a daily 20-min window for triage
 - [ ] You're logging responses in a tracker
 

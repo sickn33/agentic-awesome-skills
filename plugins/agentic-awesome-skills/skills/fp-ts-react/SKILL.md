@@ -139,11 +139,11 @@ const validateName = (name: string): E.Either<string, string> =>
 ```typescript
 import * as E from 'fp-ts/Either'
 import { sequenceS } from 'fp-ts/Apply'
-import { getSemigroup } from 'fp-ts/NonEmptyArray'
+import * as NEA from 'fp-ts/NonEmptyArray'
 import { pipe } from 'fp-ts/function'
 
 // This collects ALL errors, not just the first one
-const validateAll = sequenceS(E.getApplicativeValidation(getSemigroup<string>()))
+const validateAll = sequenceS(E.getApplicativeValidation(NEA.getSemigroup<string>()))
 
 interface SignupForm {
   name: string
@@ -157,12 +157,12 @@ interface ValidatedForm {
   password: string
 }
 
-function validateForm(form: SignupForm): E.Either<string[], ValidatedForm> {
+function validateForm(form: SignupForm): E.Either<NEA.NonEmptyArray<string>, ValidatedForm> {
   return pipe(
     validateAll({
-      name: pipe(validateName(form.name), E.mapLeft(e => [e])),
-      email: pipe(validateEmail(form.email), E.mapLeft(e => [e])),
-      password: pipe(validatePassword(form.password), E.mapLeft(e => [e])),
+      name: pipe(validateName(form.name), E.mapLeft(NEA.of)),
+      email: pipe(validateEmail(form.email), E.mapLeft(NEA.of)),
+      password: pipe(validatePassword(form.password), E.mapLeft(NEA.of)),
     })
   )
 }
@@ -433,17 +433,17 @@ type GoodState = RemoteData<Error, User>
 
 ## 5. Referential Stability (Preventing Re-renders)
 
-fp-ts values like `O.some(1)` create new objects each render. React sees them as "changed".
+fp-ts constructors like `O.some(1)` create new objects when called during rendering. Values held in React state remain stable until their setter runs.
 
 ### The Problem
 
 ```typescript
-// ❌ BAD: Creates new Option every render
+// ❌ BAD: Creates a new Option during every render
 function BadComponent() {
-  const [value, setValue] = useState(O.some(1))
+  const value = O.some(1)
 
   useEffect(() => {
-    // This runs EVERY render because O.some(1) !== O.some(1)
+    // This runs after every render because value is a new object
     console.log('value changed')
   }, [value])
 }
@@ -621,6 +621,7 @@ async function submitForm(
   formData: FormData
 ): Promise<FormState> {
   const data = {
+    name: formData.get('name') as string,
     email: formData.get('email') as string,
     password: formData.get('password') as string,
   }
@@ -648,6 +649,7 @@ function SignupForm() {
 
   return (
     <form action={formAction}>
+      <input name="name" type="text" />
       <input name="email" type="email" />
       <input name="password" type="password" />
 
@@ -664,7 +666,7 @@ function SignupForm() {
 ### useOptimistic for Instant Feedback (React 19+)
 
 ```typescript
-import { useOptimistic } from 'react'
+import { startTransition, useOptimistic } from 'react'
 
 function TodoList({ todos }: { todos: Todo[] }) {
   const [optimisticTodos, addOptimisticTodo] = useOptimistic(
@@ -675,11 +677,11 @@ function TodoList({ todos }: { todos: Todo[] }) {
   const addTodo = async (text: string) => {
     const newTodo = { id: crypto.randomUUID(), text, done: false }
 
-    // Immediately show in UI
-    addOptimisticTodo(newTodo)
-
-    // Actually save (will reconcile when done)
-    await saveTodo(newTodo)
+    // Immediately show in UI within a Transition
+    startTransition(async () => {
+      addOptimisticTodo(newTodo)
+      await saveTodo(newTodo)
+    })
   }
 
   return (
