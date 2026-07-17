@@ -55,19 +55,31 @@ test("CLI stack lifecycle creates a minimal manifest, immutable plan, applies it
   assert.deepEqual(fs.readdirSync(item.root).sort(), beforeDoctor, "doctor must remain read-only on a fresh target");
   await assert.rejects(execute([
     "stack", "apply", "--plan", planPath, "--target-root", item.root,
+    "--approve", plan.digest,
+  ], item.dependencies), { code: "AAS_STACK_APPLY_EXPERIMENTAL_DISABLED" });
+  await assert.rejects(execute([
+    "stack", "recover", "--plan", planPath, "--target-root", item.root,
+    "--id", "preview-recovery", "--action", "cleanup",
+  ], item.dependencies), { code: "AAS_STACK_RECOVERY_EXPERIMENTAL_DISABLED" });
+  assert.equal(fs.existsSync(path.join(item.root, ".agents")), false, "preview apply must be disabled without explicit opt-in");
+  assert.equal(fs.existsSync(path.join(item.root, ".aas")), false, "preview apply guard must not create AAS state");
+  await assert.rejects(execute([
+    "stack", "apply", "--experimental-apply", "--plan", planPath, "--target-root", item.root,
     "--approve", `sha256-${"0".repeat(64)}`,
   ], item.dependencies), { code: "AAS_TRANSACTION_APPROVAL_MISMATCH" });
   assert.equal(fs.existsSync(path.join(item.root, ".agents")), false, "a rejected approval must not create target directories");
   const applied = await execute([
-    "stack", "apply", "--plan", planPath, "--target-root", item.root,
+    "stack", "apply", "--experimental-apply", "--plan", planPath, "--target-root", item.root,
     "--approve", plan.digest,
   ], item.dependencies);
   assert.equal(applied.status, "applied");
+  assert.equal(applied.releaseProfile, "preview");
+  assert.equal(applied.certificationStatus, "experimental");
   assert.equal(fs.existsSync(path.join(item.root, ".agents", "skills", "ai-agents-architect", "SKILL.md")), true);
   const doctor = await execute(["stack", "doctor", "--plan", planPath, "--target-root", item.root], item.dependencies);
   assert.equal(doctor.status, "healthy");
   const again = await execute([
-    "stack", "apply", "--plan", planPath, "--target-root", item.root,
+    "stack", "apply", "--experimental-apply", "--plan", planPath, "--target-root", item.root,
     "--approve", plan.digest,
   ], item.dependencies);
   assert.equal(again.status, "alreadyApplied");

@@ -72,3 +72,26 @@
 - Explicit approval was granted for an independent tuning-gold equivalence audit. Its accepted equivalences, review evidence, and updated freeze remain isolated on their own branch and must land through a separate protected PR. Product code has not tuned around the known omissions or read held-out inputs.
 - Only after those two gates pass may the clean-tarball held-out/abstention evaluator, 100,000 property cases, 50,000 parser/MCP fuzz cases, observed zero-network/zero-write MCP traces, production-binary fault/race matrix, legacy differential, host smoke tests, and exact evidence bundle be treated as release acceptance.
 - Tag, npm publication, Pages deployment, or writes to real user MCP configuration remain separately approval-gated and have not occurred.
+
+## 2026-07-17 — Additive agent-first preview profile
+
+- The frozen certified-v1 design, benchmark, hostile corpus, verifier, and goal
+  remain unchanged. The new preview profile is an intermediate product-learning
+  gate and cannot complete the active certified-v1 goal.
+- `stack apply` and `stack recover` are now disabled by default in the preview.
+  Controlled development requires `--experimental-apply` or
+  `--experimental-recovery`; successful writes are labelled experimental.
+- Added a packed-product functional runner for `init -> recommend -> validate ->
+  plan -> doctor`, deterministic explanation output, all five local stdio MCP
+  tools, the skill resource template, read-only project/cache snapshots, legacy
+  isolation, and default write guards.
+- Added a six-job Node 22/24 matrix for Linux, macOS, and Windows, plus Workbench
+  tests/build and a fail-closed receipt aggregator. A passing bundle must say
+  `previewQualified: true` and `certifiedV1: false` and must enumerate native
+  syscall observation, transactional crash/race certification, the 80/90/100
+  benchmark, real host writes, and public release as not evaluated.
+- The preview contract and evidence bundle preserve this boundary. Any further
+  canonical maintainer-skill wording change remains a separate source/sync
+  maintenance action, so this product PR does not create registry drift.
+- No npm package, GitHub release, Pages deployment, announcement, or real MCP
+  configuration write is authorized by this profile.

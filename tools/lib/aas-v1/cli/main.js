@@ -36,7 +36,7 @@ function parseOptions(argv) {
       continue;
     }
     const key = token.slice(2);
-    if (["help", "override-managed-drift"].includes(key)) {
+    if (["help", "override-managed-drift", "experimental-apply", "experimental-recovery"].includes(key)) {
       if (Object.hasOwn(options, key)) throw cliError("AAS_CLI_OPTION_DUPLICATE", "invalidInput", { option: key });
       options[key] = true;
       continue;
@@ -59,9 +59,9 @@ const COMMAND_OPTIONS = Object.freeze({
   "stack recommend": new Set(["profile", "catalog-digest", "cache-root", "help"]),
   "stack validate": new Set(["manifest", "help"]),
   "stack plan": new Set(["manifest", "target", "target-root", "cache-root", "runtime-version", "runtime-integrity", "out", "override-managed-drift", "help"]),
-  "stack apply": new Set(["plan", "target-root", "cache-root", "approve", "help"]),
+  "stack apply": new Set(["plan", "target-root", "cache-root", "approve", "experimental-apply", "help"]),
   "stack doctor": new Set(["plan", "target-root", "cache-root", "help"]),
-  "stack recover": new Set(["plan", "target-root", "cache-root", "id", "action", "approve", "help"]),
+  "stack recover": new Set(["plan", "target-root", "cache-root", "id", "action", "approve", "experimental-recovery", "help"]),
 });
 
 function invocationKey(positional) {
@@ -317,9 +317,9 @@ function help() {
       "stack recommend --profile <json> [--catalog-digest <sha256> --cache-root <absolute>]",
       "stack validate --manifest <aas-stack.json>",
       "stack plan --manifest <file> --target <host:scope> --target-root <dir> --cache-root <absolute> --runtime-version <semver> --runtime-integrity <npm-sri> --out <file>",
-      "stack apply --plan <file> --target-root <dir> --cache-root <absolute> --approve <plan-digest>",
+      "stack apply --experimental-apply --plan <file> --target-root <dir> --cache-root <absolute> --approve <plan-digest> (EXPERIMENTAL; NOT CERTIFIED)",
       "stack doctor --plan <file> --target-root <dir> --cache-root <absolute>",
-      "stack recover --plan <file> --target-root <dir> --cache-root <absolute> --id <id> --action rollback|cleanup [--approve <digest>]",
+      "stack recover --experimental-recovery --plan <file> --target-root <dir> --cache-root <absolute> --id <id> --action rollback|cleanup [--approve <digest>] (EXPERIMENTAL; NOT CERTIFIED)",
     ],
   };
 }
@@ -489,19 +489,41 @@ async function execute(argv, dependencies = {}) {
     const target = plan.payload?.target;
     if (!target) throw cliError("AAS_TRANSACTION_PLAN_INVALID", "integrity", {});
     if (target.adapterVersion !== ADAPTER_VERSION) throw cliError("AAS_PLAN_ADAPTER_VERSION_INCOMPATIBLE", "incompatibleVersion", {});
+    if (command === "apply" && options["experimental-apply"] !== true) {
+      throw cliError("AAS_STACK_APPLY_EXPERIMENTAL_DISABLED", "policy", {
+        releaseProfile: "preview",
+        certificationStatus: "notCertified",
+        requiredOption: "experimental-apply",
+      });
+    }
+    if (command === "recover" && options["experimental-recovery"] !== true) {
+      throw cliError("AAS_STACK_RECOVERY_EXPERIMENTAL_DISABLED", "policy", {
+        releaseProfile: "preview",
+        certificationStatus: "notCertified",
+        requiredOption: "experimental-recovery",
+      });
+    }
     const runtime = await verifiedRuntimeFor(options, plan.payload.runtime, dependencies);
     if (core.canonicalJson(runtime.identity) !== core.canonicalJson(plan.payload.runtime)) {
       throw cliError("AAS_TRANSACTION_RUNTIME_IDENTITY_MISMATCH", "integrity", {});
     }
     const adapter = adapterFor(options, target, runtime.sourceRoot);
     if (command === "apply") {
-      return core.transaction.applyPlan({ plan, adapter, approvalDigest: requireOption(options, "approve") });
+      const result = core.transaction.applyPlan({ plan, adapter, approvalDigest: requireOption(options, "approve") });
+      return { ...result, releaseProfile: "preview", certificationStatus: "experimental" };
     }
     if (command === "doctor") return core.transaction.doctor({ target, adapter });
     const action = requireOption(options, "action");
     const recoveryPlan = core.transaction.buildRecoveryPlan({ plan, adapter, recoveryId: requireOption(options, "id"), action });
-    if (!options.approve) return { ok: true, status: "approvalRequired", recoveryPlan };
-    return core.transaction.recover({ recoveryPlan, plan, adapter, approvalDigest: options.approve });
+    if (!options.approve) return {
+      ok: true,
+      status: "approvalRequired",
+      recoveryPlan,
+      releaseProfile: "preview",
+      certificationStatus: "experimental",
+    };
+    const result = core.transaction.recover({ recoveryPlan, plan, adapter, approvalDigest: options.approve });
+    return { ...result, releaseProfile: "preview", certificationStatus: "experimental" };
   }
   throw cliError("AAS_CLI_COMMAND_UNKNOWN", "invalidInput", { command });
 }
