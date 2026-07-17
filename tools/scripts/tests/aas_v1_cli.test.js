@@ -7,7 +7,7 @@ const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
 const core = require("../../lib/aas-v1");
-const { execute, main } = require("../../lib/aas-v1/cli/main");
+const { execute, main, windowsOutputDurabilityDetails } = require("../../lib/aas-v1/cli/main");
 
 const ROOT = path.resolve(__dirname, "../../..");
 
@@ -27,6 +27,21 @@ function fixture() {
   };
   return { root, runtime, dependencies };
 }
+
+test("Windows output reports certified durability without marking the preview fallback", () => {
+  assert.deepEqual(
+    windowsOutputDurabilityDetails({ outputDurability: "directorySynced", certificationStatus: "certifiable" }, "win32"),
+    { outputDurability: "directorySynced", certificationStatus: "certifiable" },
+  );
+  assert.deepEqual(
+    windowsOutputDurabilityDetails({ outputDurability: "fileSyncedDirectoryUnverified", certificationStatus: "notCertified" }, "win32"),
+    { releaseProfile: "preview", outputDurability: "fileSyncedDirectoryUnverified", certificationStatus: "notCertified" },
+  );
+  assert.deepEqual(
+    windowsOutputDurabilityDetails({ outputDurability: "directorySynced", certificationStatus: "certifiable" }, "linux"),
+    {},
+  );
+});
 
 test("CLI stack lifecycle creates a minimal manifest, immutable plan, applies it, and diagnoses it", async (context) => {
   const item = fixture();

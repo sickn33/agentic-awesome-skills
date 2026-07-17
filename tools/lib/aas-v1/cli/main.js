@@ -148,6 +148,14 @@ function writeNewJson(filePath, value, { previewWindowsOutput = false } = {}) {
   }
 }
 
+function windowsOutputDurabilityDetails(written, platform = process.platform) {
+  if (platform !== "win32") return {};
+  return {
+    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview" } : {}),
+    ...written,
+  };
+}
+
 function targetKey(target) {
   return `${target.host}:${target.scope}`;
 }
@@ -262,7 +270,7 @@ async function stackInit(options) {
     status: "initialized",
     path: path.resolve(output),
     manifestDigest: validation.manifestDigest,
-    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview", ...written } : {}),
+    ...windowsOutputDurabilityDetails(written),
   };
 }
 
@@ -325,7 +333,7 @@ async function stackPlan(options, dependencies = {}) {
     planDigest: plan.digest,
     operationCount: plan.payload.operations.length,
     out: path.resolve(options.out),
-    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview", ...written } : {}),
+    ...windowsOutputDurabilityDetails(written),
   };
 }
 
@@ -610,5 +618,6 @@ module.exports = {
   parseOptions,
   readJsonFile,
   stackPlan,
+  windowsOutputDurabilityDetails,
   writeNewJson,
 };
