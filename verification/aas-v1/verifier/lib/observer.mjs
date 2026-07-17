@@ -242,7 +242,17 @@ async function windowsObserved(executable, args, options) {
     "-ResultOutput", resultFile,
   ], options);
   if (wrapper.code !== 0 || !fs.existsSync(trace) || !fs.existsSync(resultFile)) {
-    throw Object.assign(new Error(`ETW observer failed closed: ${wrapper.stderr.slice(0, 500)}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    const diagnostic = JSON.stringify({
+      wrapperCode: wrapper.code,
+      signal: wrapper.signal,
+      timedOut: wrapper.timedOut,
+      outputLimitExceeded: wrapper.outputLimitExceeded,
+      traceExists: fs.existsSync(trace),
+      resultExists: fs.existsSync(resultFile),
+      stderr: wrapper.stderr.slice(0, 500),
+      stdout: wrapper.stdout.slice(0, 500),
+    });
+    throw Object.assign(new Error(`ETW observer failed closed: ${diagnostic}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
   const raw = fs.readFileSync(trace, "utf8");
   const result = JSON.parse(fs.readFileSync(resultFile, "utf8"));
