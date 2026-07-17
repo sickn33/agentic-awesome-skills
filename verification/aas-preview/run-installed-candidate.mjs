@@ -53,9 +53,12 @@ function main() {
   const tarball = path.join(args["artifact-root"], tarballs[0]);
   fs.mkdirSync(args["install-root"], { recursive: true, mode: 0o700 });
   fs.mkdirSync(args["work-root"], { recursive: true, mode: 0o700 });
-  const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+  const npmCommand = process.platform === "win32" ? process.execPath : "npm";
+  const npmArgs = process.platform === "win32"
+    ? [path.join(path.dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js")]
+    : [];
   const npmCache = path.join(args["work-root"], "npm-cache");
-  run(npm, [
+  run(npmCommand, [...npmArgs,
     "install", "--ignore-scripts", "--no-package-lock", "--no-audit", "--no-fund",
     "--prefix", args["install-root"], tarball,
   ], { code: "NPM_INSTALL_FAILED", env: { ...process.env, npm_config_cache: npmCache } });
