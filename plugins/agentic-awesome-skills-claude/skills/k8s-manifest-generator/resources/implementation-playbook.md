@@ -43,6 +43,15 @@ Use this skill when you need to:
 - Are there any secrets or configuration files needed?
 - What are the CPU and memory requirements?
 - Does the application need to be exposed externally?
+- What exact kube context and namespace are in scope?
+- Which policy engine and manifest diff workflow are required?
+- What rollout health, abort, and rollback criteria apply?
+
+### Operational boundary
+
+Generate and inspect manifests locally first. Before any cluster-backed command, display and verify the exact kube context and namespace. Run client-side validation before server-side dry-run, then review policy and diff results. Server-side dry-run contacts the cluster and still requires permission for the named context and namespace.
+
+Do not create `LoadBalancer`, `NodePort`, Ingress, or other external exposure; apply or delete resources; or run database/data migrations without an explicit approval that names the target context, namespace, resources, and expected impact. Before an approved rollout, capture the current revision, define health and abort thresholds, and prepare rollback or recovery steps. Monitor the rollout and stop on an abort condition.
 
 ### 2. Create Deployment Manifest
 
@@ -196,22 +205,10 @@ data:
 **For sensitive data:**
 
 ```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: <app-name>-secret
-  namespace: <namespace>
-type: Opaque
-stringData:
-  DATABASE_PASSWORD: "changeme"
-  API_KEY: "secret-api-key"
-  # For certificate files
-  tls.crt: |
-    -----BEGIN CERTIFICATE-----
-    ...
-    -----END CERTIFICATE-----
-  tls.key: |
-    <BASE64_PRIVATE_KEY>
+# Reference a Secret provisioned by an approved secret-management workflow.
+envFrom:
+- secretRef:
+    name: <externally-provisioned-secret-name>
 ```
 
 **Security considerations:**
@@ -376,11 +373,22 @@ overlays/
 **Validation steps:**
 
 ```bash
-# Dry-run validation
-kubectl apply -f manifest.yaml --dry-run=client
+# Set and verify the approved target explicitly.
+CONTEXT=<approved-context>
+NAMESPACE=<approved-namespace>
+kubectl config get-contexts "$CONTEXT"
 
-# Server-side validation
-kubectl apply -f manifest.yaml --dry-run=server
+# Local/client-side validation (does not submit the object to the API server).
+kubectl --context "$CONTEXT" --namespace "$NAMESPACE" apply \
+  -f manifest.yaml --dry-run=client
+
+# Cluster-backed preflight; obtain permission for this target first.
+kubectl --context "$CONTEXT" --namespace "$NAMESPACE" apply \
+  -f manifest.yaml --dry-run=server
+
+# Review policy results with the repository's approved policy tool, then diff.
+<policy-check-command> manifest.yaml
+kubectl --context "$CONTEXT" --namespace "$NAMESPACE" diff -f manifest.yaml
 
 # Validate with kubeval
 kubeval manifest.yaml
@@ -400,6 +408,11 @@ kube-linter lint manifest.yaml
 - [ ] Security context is set
 - [ ] Labels follow conventions
 - [ ] Namespace exists or is created
+- [ ] Exact context and namespace were verified
+- [ ] Client and permitted server dry-runs passed
+- [ ] Policy and diff output were reviewed
+- [ ] External exposure, apply, or migrations have specific approval when applicable
+- [ ] Current revision, health/abort criteria, rollout monitor, and rollback are recorded
 
 ## Common Patterns
 
@@ -454,8 +467,8 @@ The following templates are available in the `assets/` directory:
 - `deployment-template.yaml` - Standard deployment with best practices
 - `service-template.yaml` - Service configurations (ClusterIP, LoadBalancer, NodePort)
 - `configmap-template.yaml` - ConfigMap examples with different data types
-- `secret-template.yaml` - Secret examples (to be generated, not committed)
-- `pvc-template.yaml` - PersistentVolumeClaim templates
+
+Secret and PersistentVolumeClaim patterns are documented in this playbook; there are no separate `secret-template.yaml` or `pvc-template.yaml` assets in this bundle.
 
 ## Reference Documentation
 
@@ -483,7 +496,7 @@ The following templates are available in the `assets/` directory:
 - Check events: `kubectl get events --sort-by='.lastTimestamp'`
 
 **Service not accessible:**
-- Verify selector matches pod labels: `kubectl get endpoints <service-name>`
+- Verify selector matches pod labels and inspect EndpointSlices: `kubectl --context <approved-context> --namespace <approved-namespace> get endpointslices -l kubernetes.io/service-name=<service-name>`
 - Check service type and port configuration
 - Test from within cluster: `kubectl run debug --rm -it --image=busybox -- sh`
 
@@ -496,10 +509,12 @@ The following templates are available in the `assets/` directory:
 
 After creating manifests:
 1. Store in Git repository
-2. Set up CI/CD pipeline for deployment
+2. Review client/server dry-run, policy, and diff results for the approved context and namespace
 3. Consider using Helm or Kustomize for templating
 4. Implement GitOps with ArgoCD or Flux
 5. Add monitoring and observability
+
+Applying resources is a separate approved action. Immediately before apply, reconfirm external exposure and migrations, record the current revision and rollback procedure, then monitor rollout status against the agreed health and abort criteria.
 
 ## Related Skills
 

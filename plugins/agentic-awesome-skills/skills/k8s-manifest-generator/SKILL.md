@@ -29,6 +29,10 @@ Use this skill when you need to:
 ## Instructions
 
 - Clarify goals, constraints, and required inputs.
+- Before suggesting any cluster operation, require the exact kube context and namespace and distinguish local rendering from client-side and server-side dry-runs.
+- Treat server-side dry-runs, diffs, and policy checks as read-only preflight steps; do not apply resources until their output has been reviewed.
+- Require explicit approval immediately before creating external exposure, applying or deleting resources, or running database or data migrations. State the exact resources and target environment in that approval.
+- For an approved rollout, record the current revision, define health and abort criteria, monitor rollout status, and provide a tested rollback command or recovery procedure.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
 - If detailed examples are required, open `resources/implementation-playbook.md`.

@@ -5,15 +5,17 @@ description: Install browser-harness into the current agent and connect it to a 
 
 # `browser-harness` installation
 
-Use this file only for browser-harness install, browser connection setup, and connection troubleshooting. For day-to-day browser work, read `SKILL.md`. Task-specific edits belong in `agent-workspace/agent_helpers.py` and `agent-workspace/domain-skills/`.
+Use this file only for browser-harness install, browser connection setup, and connection troubleshooting. For day-to-day browser work, read `SKILL.md`. After installation, task-specific edits belong in the upstream runtime's configured `agent-workspace/agent_helpers.py` and `agent-workspace/domain-skills/`; those paths are not bundled with this AAS skill.
 
 ## Recommended `browser-harness` setup
 
-Clone the repo once into a durable location, then install it as an editable tool so `browser-harness` works from any directory:
+Clone a verified upstream revision into a durable location, then install it as an editable tool so `browser-harness` works from any directory. The revision below is the signed GitHub release `v0.1.6` (`6d0ac1634325b8b042a1431ba0bf3b75b4fbb460`); review and deliberately update the pin when adopting a newer release.
 
 ```bash
-git clone https://github.com/browser-use/browser-harness
+git clone --branch v0.1.6 --single-branch https://github.com/browser-use/browser-harness
 cd browser-harness
+git checkout --detach 6d0ac1634325b8b042a1431ba0bf3b75b4fbb460
+test "$(git rev-parse HEAD)" = "6d0ac1634325b8b042a1431ba0bf3b75b4fbb460"
 uv tool install -e .
 command -v browser-harness
 ```
@@ -69,11 +71,13 @@ This section is the source of truth for how browser-harness connects to a browse
 
 Browser-harness can connect to any Chrome or Chromium-based browser on your computer, or to a Browser Use cloud browser.
 
-**Cloud browsers** are managed by the Browser Use cloud API. Start one in Python with `start_remote_daemon("work", ...)`. Authentication is via the `BROWSER_USE_API_KEY` environment variable; the harness handles the WebSocket URL itself. To carry your local Chrome cookies into a cloud browser, install the Browser Use `profile-use` helper only after reviewing the upstream installer instructions, then call `uuid = sync_local_profile("MyChromeProfile")` followed by `start_remote_daemon("work", profileId=uuid)`. Cookies are the only thing synced — not localStorage, not extensions, not history.
+**Cloud browsers** are managed by the Browser Use cloud API and may incur charges. Before calling `start_remote_daemon("work", ...)`, state the provider, timeout, profile, and expected billing boundary and obtain explicit cost approval. Authentication is via the `BROWSER_USE_API_KEY` environment variable; the harness handles the WebSocket URL itself.
+
+Cookie sync is a separate, sensitive transfer and is never the default. Before installing or using the upstream `profile-use` helper, obtain informed explicit consent that names the local profile/account, exact allowed domains, destination cloud profile, and the fact that cookies will leave the device. Explain the provider's current retention controls and the concrete revocation/deletion procedure, verify them against current provider documentation, and give the user a chance to decline. Sync only the minimum approved scope; if domain-scoped export cannot be enforced, do not sync unless the user knowingly approves the broader exposure. Cookies are the only documented data synced—not localStorage, extensions, or history—but cookies can grant account access.
 
 **Local browsers** require remote debugging to be enabled. There are two ways, and they suit different use cases.
 
-*Way 1: chrome://inspect/#remote-debugging checkbox — uses your real profile.* In your running Chrome, navigate to `chrome://inspect/#remote-debugging` and tick the "Allow remote debugging for this browser instance" checkbox. This setting is per-profile and sticky: tick it once and it persists across every future Chrome launch of that profile. Then run any `browser-harness` command. On Chrome 144 and later, the first attach by the harness triggers an in-browser "Allow remote debugging?" popup that you must click Allow on. The popup may reappear on later attaches under conditions that are not fully characterized.[^1] This path inherits your everyday Chrome's logins, extensions, history, and bookmarks, which makes it the right choice for an agent helping you with tasks in your real browser.
+*Way 1: chrome://inspect/#remote-debugging checkbox — uses your real profile and is opt-in.* Use this only after informed explicit consent naming the browser profile/account and allowed domains. Explain that CDP can expose open tabs, screenshots, DOM content, cookies, history, and authenticated sessions beyond the immediate page. In the approved Chrome profile, navigate to `chrome://inspect/#remote-debugging` and tick the "Allow remote debugging for this browser instance" checkbox. This setting is per-profile and sticky: tick it once and it persists across future Chrome launches of that profile. Then run a scoped `browser-harness` command. On Chrome 144 and later, the first attach triggers an in-browser "Allow remote debugging?" popup that the user must approve. The popup may reappear later.[^1]
 
 *Way 2: command-line flag — uses an isolated profile, no popups ever.* Launch Chrome with `--remote-debugging-port=9222 --user-data-dir=<path>`. Two precisions:
 
@@ -82,15 +86,17 @@ Browser-harness can connect to any Chrome or Chromium-based browser on your comp
 
 Tell the harness which port you launched on by setting `BU_CDP_URL=http://127.0.0.1:9222` before running `browser-harness`.
 
-For most tasks where the agent acts on your behalf in your normal browser, use Way 1. For automation that runs without you watching, or any case where popup interruptions are unacceptable, use Way 2 or a cloud browser.
+Default to Way 2 with a dedicated profile. Use Way 1 only when the task genuinely requires an existing authenticated session and the user has given the profile/account/domain consent above. Use cloud only after the separate cost and data-transfer approvals.
 
 [^1]: The conditions that cause Chrome to re-show the "Allow remote debugging?" popup on a subsequent attach (time elapsed since previous Allow, daemon restart, browser restart, new CDP session, version-dependent options like "Allow for N hours") are not fully characterized. Way 2 sidesteps this entirely.
 
 ## First time setup
 
-Try yourself before asking the user to do anything. Retry transient errors briefly. Only ask the user when a step genuinely needs them — ticking a checkbox, clicking Allow.
+Retry non-destructive diagnostics briefly. Ask the user whenever a step requires consent or can affect their browser state, including enabling real-profile debugging, clicking Allow, starting a billable cloud browser, syncing cookies, terminating processes, or deleting IPC files.
 
-If the user hasn't said which connection method to use, default to Way 1 if Chrome is already running, Way 2 if not. Cloud is only used when the user opts in.
+If the user has not selected a connection method, default to Way 2 with a dedicated isolated profile. Do not infer consent to attach to an already-running everyday profile. Cloud is only used after explicit approval.
+
+Before the first probe below, establish the approved connection method. For the default Way 2, obtain approval to launch a local browser and start the dedicated non-default profile described above. Do not run the probe against an unspecified already-running browser.
 
 1. Try the harness:
 
@@ -105,10 +111,10 @@ If the user hasn't said which connection method to use, default to Way 1 if Chro
 3. Match the output to a case:
 
    - **chrome FAIL** → no Chrome process detected.
-     - **Way 1**: ask the user to open their target Chrome themselves.
-     - **Way 2**: launch Chrome yourself with `--remote-debugging-port=9222 --user-data-dir=<non-default path>`, then set `BU_CDP_URL=http://127.0.0.1:9222` for the harness (see the Browser connection reference).
+     - **Way 1**: after the required real-profile consent, ask the user to open the approved profile themselves.
+     - **Way 2**: with approval to launch a local browser, use `--remote-debugging-port=9222 --user-data-dir=<dedicated non-default path>`, then set `BU_CDP_URL=http://127.0.0.1:9222` for the harness (see the Browser connection reference).
 
-   - **chrome ok, daemon FAIL** → Way 1 setup is incomplete. Tell the user to:
+   - **chrome ok, daemon FAIL** → if Way 1 was explicitly approved, its setup may be incomplete. Tell the user to:
      - navigate to `chrome://inspect/#remote-debugging` in their Chrome and tick "Allow remote debugging for this browser instance" if not yet ticked (one-time per profile)
      - click Allow on the in-browser popup if it appears (every attach on Chrome 144+)
 
@@ -125,7 +131,7 @@ If the user hasn't said which connection method to use, default to Way 1 if Chro
      browser-harness -c 'restart_daemon()'
      ```
 
-     If that hangs, escalate: kill all Chrome and daemon processes, then reopen Chrome and retry. On macOS/Linux, also remove `/tmp/bu-default.sock` and `/tmp/bu-default.pid` if they linger.
+     If that hangs, stop and show the exact processes and IPC paths implicated. Obtain explicit approval before terminating any Chrome or daemon process or removing `/tmp/bu-default.sock` or `/tmp/bu-default.pid`; never kill all Chrome processes by default because that can destroy unrelated user work. After approval, affect only the identified harness-owned processes and stale files, then reopen the approved browser profile and retry.
 
 4. After any fix, retry step 1.
 
