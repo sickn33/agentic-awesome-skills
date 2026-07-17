@@ -20,7 +20,7 @@ npm run pages:redirect-bridge -- --output /new/output/directory
 
 The generator keeps the curated sitemap route count locked while deriving the skill count from `skills_index.json`. It also preserves the legacy Google verification file and the Bing verification meta tag on the legacy root page.
 
-Manifest schema version `3` records both redirect coverage and webmaster-verification evidence for automation consumers.
+Manifest schema version `3` records source-repository provenance, redirect coverage, and webmaster-verification evidence for automation consumers.
 
 Verify a checked-out target repository byte-for-byte:
 

@@ -60,6 +60,7 @@ try {
   const outputOne = path.join(fixtureRoot, '.codex', 'bridge-one');
   const manifest = generateBridge(bridgeOptions(outputOne));
   assert.strictEqual(manifest.schema_version, 3);
+  assert.strictEqual(manifest.source_repository, 'https://github.com/sickn33/agentic-awesome-skills');
   assert.strictEqual(manifest.source_sitemap_route_count, 4);
   assert.strictEqual(manifest.current_skill_route_count, 2);
   assert.strictEqual(manifest.route_count, 5);

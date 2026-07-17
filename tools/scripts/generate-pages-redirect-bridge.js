@@ -296,6 +296,7 @@ function generateBridge(options) {
 
   const manifest = {
     schema_version: 3,
+    source_repository: 'https://github.com/sickn33/agentic-awesome-skills',
     deployment_scope: 'separate GitHub Pages user-site subdirectory',
     not_for_current_project_pages: true,
     source_sitemap_sha256: sha256(sitemapSource),

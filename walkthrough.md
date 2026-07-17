@@ -283,5 +283,6 @@
 - Made redirect generation follow the current `skills_index.json` count while retaining the curated sitemap-count lock and exact route-set validation.
 - Added `pages:redirect-verify` for byte-exact managed-tree validation plus bounded or full live route probing.
 - Versioned the redirect manifest contract as schema `3`, including webmaster-verification evidence consumed by the protected sync.
+- Added explicit source-repository provenance to the live manifest and used that change to exercise the complete protected auto-sync cycle.
 - Documented the protected cross-repository synchronization contract for `sickn33/sickn33.github.io`.
 - Added regression coverage for webmaster tokens, reserved-path collisions, dynamic skill counts, local drift, stale files, and live manifest/route verification.
