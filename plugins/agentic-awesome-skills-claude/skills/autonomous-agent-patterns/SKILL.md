@@ -358,48 +358,34 @@ class ApprovalManager:
 
 ```python
 class SandboxedExecution:
-    """
-    Execute code/commands in isolated environment
-    """
+    """Execute an approved argv vector inside a separately enforced sandbox."""
 
-    def __init__(self, workspace_dir: str):
-        self.workspace = workspace_dir
-        self.allowed_commands = ["npm", "python", "node", "git", "ls", "cat"]
-        self.blocked_paths = ["/etc", "/usr", "/bin", os.path.expanduser("~")]
+    def __init__(self, workspace_dir: str, allowed_executables: dict[str, str]):
+        self.workspace = os.path.realpath(workspace_dir)
+        # Trusted configuration maps a capability name to an absolute executable.
+        self.allowed_executables = allowed_executables
 
-    def validate_path(self, path: str) -> bool:
-        """Ensure path is within workspace"""
-        real_path = os.path.realpath(path)
-        workspace_real = os.path.realpath(self.workspace)
-        return real_path.startswith(workspace_real)
+    def validate_path(self, candidate: str) -> bool:
+        real = os.path.realpath(os.path.join(self.workspace, candidate))
+        return os.path.commonpath([self.workspace, real]) == self.workspace
 
-    def validate_command(self, command: str) -> bool:
-        """Check if command is allowed"""
-        cmd_parts = shlex.split(command)
-        if not cmd_parts:
-            return False
+    def execute_sandboxed(self, capability: str, args: list[str]) -> ToolResult:
+        executable = self.allowed_executables.get(capability)
+        if not executable or not os.path.isabs(executable):
+            return ToolResult(success=False, error="Capability is not allowed")
+        if any("\x00" in arg for arg in args):
+            return ToolResult(success=False, error="Invalid argument")
 
-        base_cmd = cmd_parts[0]
-        return base_cmd in self.allowed_commands
-
-    def execute_sandboxed(self, command: str) -> ToolResult:
-        if not self.validate_command(command):
-            return ToolResult(
-                success=False,
-                error=f"Command not allowed: {command}"
-            )
-
-        # Execute in isolated environment
+        # This process boundary is not the sandbox by itself. The caller must also
+        # enforce filesystem, network, resource, and credential isolation.
         result = subprocess.run(
-            command,
-            shell=True,
+            [executable, *args],
+            shell=False,
             cwd=self.workspace,
             capture_output=True,
             timeout=30,
-            env={
-                **os.environ,
-                "HOME": self.workspace,  # Isolate home directory
-            }
+            env={"HOME": self.workspace, "PATH": "/usr/bin:/bin"},
+            check=False,
         )
 
         return ToolResult(
@@ -716,17 +702,18 @@ class MCPAgent:
         Return only the Python code.
         """)
 
-        # Save and install
+        # Save as an untrusted draft; never hot-load generated code.
         server_name = self._extract_name(description)
-        path = f"./mcp_servers/{server_name}/server.py"
+        path = f"./mcp_drafts/{server_name}/server.py"
 
         with open(path, 'w') as f:
             f.write(code)
 
-        # Hot-reload
-        self.connect_server(server_name, {"path": path})
-
-        return f"Created tool: {server_name}"
+        return (
+            f"Drafted tool at {path}. Before loading it, require human review, "
+            "dependency and static analysis, tests in a network-disabled sandbox, "
+            "a capability manifest, and explicit approval of the exact reviewed hash."
+        )
 ```
 
 ---

@@ -513,7 +513,10 @@ on:
 
 jobs:
   rebase:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/rebase')
+    if: >-
+      github.event.issue.pull_request &&
+      github.event.comment.body == '/rebase' &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
 
     steps:
@@ -528,19 +531,19 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Rebase PR
+        env:
+          PR_NUMBER: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Fetch PR branch
-          gh pr checkout ${{ github.event.issue.number }}
+          gh pr checkout "$PR_NUMBER"
 
           # Rebase onto main
           git fetch origin main
           git rebase origin/main
 
-          # Force push
+          # The trusted maintainer's exact /rebase comment authorizes this branch rewrite.
           git push --force-with-lease
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Comment result
         uses: actions/github-script@v7
         with:
@@ -687,26 +690,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extract question
+      - name: Extract untrusted question without shell interpolation
         id: question
-        run: |
-          # Extract text after @ai-helper
-          question=$(echo "${{ github.event.comment.body }}" | sed 's/.*@ai-helper//')
-          echo "question=$question" >> $GITHUB_OUTPUT
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.comment?.body ?? '';
+            core.setOutput('question', body.split('@ai-helper').slice(1).join('@ai-helper').trim());
 
       - name: Get context
         id: context
-        run: |
-          if [ "${{ github.event.issue.pull_request }}" != "" ]; then
-            # It's a PR - get diff
-            gh pr diff ${{ github.event.issue.number }} > context.txt
-          else
-            # It's an issue - get description
-            gh issue view ${{ github.event.issue.number }} --json body -q .body > context.txt
-          fi
-          echo "context=$(cat context.txt)" >> $GITHUB_OUTPUT
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            core.setOutput('context', `${issue.data.title}\n\n${issue.data.body ?? ''}`);
 
       - name: AI Response
         uses: actions/github-script@v7
