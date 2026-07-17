@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-c50402eaf10145fb2ea5d0cd04d05aa45708b1b190e02e4edb6bbed63ed7ed7b",
+  "rootDigest": "sha256-4cab843662314dd0cee621dad583d1c1facda4f9999ee63a0ba722901192946d",
   "fileCount": 754,
   "files": [
     {
@@ -3503,8 +3503,8 @@
     },
     {
       "path": "baseline/v1/runtime-matrix.json",
-      "bytes": 8781,
-      "sha256": "cafe11ab150652fbd4b8fd7c052e60ddafe30a745ca37fc82625e56e25fc530f"
+      "bytes": 8879,
+      "sha256": "418e218d932863d056020d196d2d8e66becd96754da66f873fa55e1d60461de6"
     },
     {
       "path": "baseline/v1/verifier-manifest.json",
@@ -3698,8 +3698,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 13695,
-      "sha256": "58afa656ab3a9d00461b9e4f614907d5f0fb03ee6f3435ea3c2a068b538bc84a"
+      "bytes": 14742,
+      "sha256": "630866b9c211f346ecbbf733f12c9ebefae5bbcbe1cf91ba35b2d35fb526bdaa"
     },
     {
       "path": "verifier/lib/prng.mjs",
@@ -3768,8 +3768,8 @@
     },
     {
       "path": "verifier/tests/observer.test.mjs",
-      "bytes": 2392,
-      "sha256": "989840ee98c470edf811e0aca17ea05734da5e04b012c44b11a325f7a7d9211e"
+      "bytes": 2517,
+      "sha256": "ed89dd8468dbe1cd8e3c5ba173648690d0c0a3d46d4111cade208b055f1e014b"
     },
     {
       "path": "verifier/tests/transaction-evidence.test.mjs",

@@ -33,15 +33,15 @@ test("macOS fs_usage parser separates network, writes, and child execs", () => {
   assert.equal(result.childProcesses, 1);
 });
 
-test("combined macOS fs_usage parser requires bootstrap lineage and classifies native calls", () => {
+test("combined macOS fs_usage parser enforces canary ordering and classifies candidate calls", () => {
   const result = parseMacCombinedFsUsage([
-    "12:00:00.005 WrData[A] F=3 /tmp/aas-ready-1 zsh.1",
-    "12:00:00.010 execve node node.1",
+    "12:00:00.005 WrData[A] F=3 /tmp/aas-ready-1 aasobs.1",
+    "12:00:00.010 WrData[A] F=3 /tmp/aas-start-1 aasobs.1",
     "12:00:00.020 WrData[A] F=3 /tmp/canary node.1",
     "12:00:00.030 connect 127.0.0.1:9 node.1",
     "12:00:00.040 posix_spawn child node.1",
-  ].join("\n"), {}, "aas-ready-1");
+  ].join("\n"), {}, "aas-ready-1", "aas-start-1");
   assert.deepEqual([result.networkAttempts, result.writeAttempts, result.childProcesses], [1, 1, 1]);
-  assert.throws(() => parseMacCombinedFsUsage("12:00:00.020 WrData[A] F=3 /tmp/canary node.1\n"), /bootstrap exec/);
-  assert.throws(() => parseMacCombinedFsUsage("12:00:00.010 execve node node.1\n", {}, "aas-ready-1"), /readiness canary/);
+  assert.throws(() => parseMacCombinedFsUsage("12:00:00.010 WrData[A] F=3 /tmp/aas-start-1 aasobs.1\n", {}, "aas-ready-1", "aas-start-1"), /readiness canary/);
+  assert.throws(() => parseMacCombinedFsUsage("12:00:00.010 WrData[A] F=3 /tmp/aas-ready-1 aasobs.1\n", {}, "aas-ready-1", "aas-start-1"), /candidate start canary/);
 });

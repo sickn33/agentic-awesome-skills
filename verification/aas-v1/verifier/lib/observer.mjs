@@ -111,65 +111,74 @@ export function parseMacFsUsage(filesystemText, networkText, execText, zones = {
   return summarizeEvents(events);
 }
 
-export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "") {
-  const events = [];
-  const execLines = [];
+export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "", candidateToken = "") {
+  const classified = [];
   let readinessIndex = -1;
+  let candidateIndex = -1;
   const lines = fsUsageLines(text);
   for (const [index, line] of lines.entries()) {
     if (/\b(?:socket|connect|bind|listen|accept|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo)\b/i.test(line)) {
-      events.push({ kind: "network", targetDigest: redactToken(line, zones) });
+      classified.push({ index, kind: "network", line });
     } else if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
       if (readinessToken && line.includes(readinessToken)) readinessIndex = index;
-      else events.push({ kind: "write", targetDigest: redactToken(line, zones) });
+      else if (candidateToken && line.includes(candidateToken)) candidateIndex = index;
+      else classified.push({ index, kind: "write", line });
     } else if (/\b(?:execve|posix_spawn|exec|spawn)\b/i.test(line)) {
-      execLines.push({ index, line });
+      classified.push({ index, kind: "process", line });
     }
   }
+  const diagnostic = () => JSON.stringify({
+    eventLines: lines.length,
+    readinessTokenAnywhere: readinessToken ? text.includes(readinessToken) : null,
+    candidateTokenAnywhere: candidateToken ? text.includes(candidateToken) : null,
+    callNames: [...new Set(lines.map((line) => line.match(/^\d{2}:\d{2}:\d{2}\.\d+\s+(\S+)/)?.[1]).filter(Boolean))].slice(0, 24),
+  });
   if (readinessToken && readinessIndex < 0) {
-    const callNames = [...new Set(lines.map((line) => line.match(/^\d{2}:\d{2}:\d{2}\.\d+\s+(\S+)/)?.[1]).filter(Boolean))].slice(0, 24);
-    const diagnostic = JSON.stringify({ eventLines: lines.length, readinessTokenAnywhere: text.includes(readinessToken), callNames });
-    throw Object.assign(new Error(`fs_usage missed the pre-exec readiness canary: ${diagnostic}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    throw Object.assign(new Error(`fs_usage missed the observer readiness canary: ${diagnostic()}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
-  const bootstrapIndex = readinessToken ? execLines.findIndex((entry) => entry.index > readinessIndex) : 0;
-  if (bootstrapIndex < 0 || !execLines.length) {
-    throw Object.assign(new Error("fs_usage did not observe the gated bootstrap exec"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
+  if (candidateToken && candidateIndex < 0) {
+    throw Object.assign(new Error(`fs_usage missed the candidate start canary: ${diagnostic()}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
-  if (readinessToken && execLines.some((entry) => entry.index < readinessIndex)) {
-    throw Object.assign(new Error("fs_usage observed ambiguous exec lineage before readiness"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
+  if (candidateToken && candidateIndex <= readinessIndex) {
+    throw Object.assign(new Error("fs_usage canary ordering is ambiguous"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
   }
-  for (const { line } of execLines.slice(bootstrapIndex + 1)) events.push({ kind: "process", targetDigest: redactToken(line, zones) });
+  const boundary = candidateToken ? candidateIndex : -1;
+  const events = classified
+    .filter((entry) => entry.index > boundary)
+    .map(({ kind, line }) => ({ kind, targetDigest: redactToken(line, zones) }));
   return summarizeEvents(events);
 }
 
 async function macObserved(executable, args, options) {
   if (!commandExists("fs_usage")) throw Object.assign(new Error("fs_usage is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
-  const gate = path.join(options.evidenceDir, `observer-${process.pid}.go`);
-  const preflightGate = path.join(options.evidenceDir, `observer-${process.pid}.preflight`);
-  const readinessCanary = path.join(options.evidenceDir, `aas-ready-${process.pid}`);
+  if (path.resolve(executable) !== path.resolve(process.execPath)) {
+    throw Object.assign(new Error("macOS verifier supports only the pinned Node executable"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  }
+  const sequence = `${process.pid.toString(36)}${Date.now().toString(36).slice(-5)}`.slice(-8);
+  const observedName = `aasobs${sequence}`;
+  const observedExecutable = path.join(options.evidenceDir, observedName);
+  const readinessCanary = path.join(options.evidenceDir, `aas-ready-${sequence}`);
+  const candidateCanary = path.join(options.evidenceDir, `aas-start-${sequence}`);
   const readinessToken = path.basename(readinessCanary);
+  const candidateToken = path.basename(candidateCanary);
   const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
-  const command = [executable, ...args].map(shellQuote).join(" ");
+  fs.copyFileSync(executable, observedExecutable, fs.constants.COPYFILE_FICLONE);
+  fs.chmodSync(observedExecutable, 0o700);
+  const encodedArgs = Buffer.from(JSON.stringify(args), "utf8").toString("base64");
   fs.writeFileSync(launcher, [
-    "#!/bin/zsh",
-    "zmodload zsh/zselect",
-    `while [[ ! -e ${shellQuote(preflightGate)} ]]; do zselect -t 1; done`,
-    `printf ready > ${shellQuote(readinessCanary)}`,
-    `while [[ ! -e ${shellQuote(gate)} ]]; do zselect -t 1; done`,
-    `exec ${command}`,
+    "const fs = require('node:fs');",
+    `const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600);`,
+    "fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd);",
+    `const args = JSON.parse(Buffer.from(${JSON.stringify(encodedArgs)}, 'base64').toString('utf8'));`,
+    "if (args[0] === '-e') { process.argv = [process.execPath, ...args.slice(2)]; eval(args[1]); }",
+    "else { process.argv = [process.execPath, ...args]; require('node:module').runMain(); }",
     "",
-  ].join("\n"), { mode: 0o700 });
-  let rootPid = 0;
-  const commandPromise = runProcess("/bin/zsh", [launcher], {
-    ...options,
-    onSpawn(child) { rootPid = child.pid; },
-  });
-  if (!rootPid) throw Object.assign(new Error("Observed process did not start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  ].join("\n"), { mode: 0o600 });
   let observerPid = 0;
   const observerTimeoutMs = (options.timeoutMs ?? 30_000) + 5_000;
   const observerPromise = runProcess("sudo", [
     "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
-    String(rootPid),
+    observedName,
   ], {
     ...options,
     detached: true,
@@ -178,10 +187,14 @@ async function macObserved(executable, args, options) {
     onSpawn(child) { observerPid = child.pid; },
   });
   await new Promise((resolve) => setTimeout(resolve, 1_000));
-  fs.writeFileSync(preflightGate, "go\n", { mode: 0o600 });
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  fs.writeFileSync(gate, "go\n", { mode: 0o600 });
-  const result = await commandPromise;
+  const readinessProgram = `const fs=require('node:fs');const fd=fs.openSync(${JSON.stringify(readinessCanary)},'w',0o600);fs.writeSync(fd,'ready');fs.fsyncSync(fd);fs.closeSync(fd);`;
+  const readinessResult = await runProcess(observedExecutable, ["-e", readinessProgram], {
+    cwd: options.cwd,
+    env: options.env,
+    timeoutMs: 5_000,
+  });
+  if (readinessResult.code !== 0) throw Object.assign(new Error("macOS readiness process failed"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  const result = await runProcess(observedExecutable, [launcher], options);
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (observerPid) {
     await runProcess("sudo", ["-n", "/bin/kill", "-INT", `-${observerPid}`], { timeoutMs: 5_000 });
@@ -189,18 +202,19 @@ async function macObserved(executable, args, options) {
   const trace = await observerPromise;
   if (trace.outputLimitExceeded) throw Object.assign(new Error("fs_usage trace exceeded the observer limit"), { code: "AAS_OBSERVER_OVERFLOW" });
   const raw = `${trace.stdout}\n${trace.stderr}`;
-  fs.rmSync(gate, { force: true });
-  fs.rmSync(preflightGate, { force: true });
   fs.rmSync(readinessCanary, { force: true });
+  fs.rmSync(candidateCanary, { force: true });
   fs.rmSync(launcher, { force: true });
+  fs.rmSync(observedExecutable, { force: true });
   return {
     result,
-    observation: parseMacCombinedFsUsage(raw, options.zones, readinessToken),
+    observation: parseMacCombinedFsUsage(raw, options.zones, readinessToken, candidateToken),
     backend: "macos-fs_usage-process",
     diagnostics: {
       bytes: Buffer.byteLength(raw),
       eventLines: fsUsageLines(raw).length,
       readinessCanaryObserved: raw.includes(readinessToken),
+      candidateCanaryObserved: raw.includes(candidateToken),
       preview: fsUsageLines(raw).length ? null : raw.trim().slice(0, 160),
     },
   };
