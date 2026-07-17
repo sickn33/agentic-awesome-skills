@@ -280,7 +280,10 @@ for (const entry of manifest.classes) {
     assert(fs.existsSync(absolute) && fs.lstatSync(absolute).isFile(), `${entry.classId}/${kind}: fixture is not a regular file`);
     if (!fs.existsSync(absolute)) continue;
     const actualBytes = fs.readFileSync(absolute);
-    assert(actualBytes.equals(expectedBytes), `${entry.classId}/${kind}: bytes are not deterministic`);
+    const deterministicBytes = actualBytes.equals(expectedBytes)
+      || (expected.extension === "tar.gz"
+        && zlib.gunzipSync(actualBytes).equals(zlib.gunzipSync(expectedBytes)));
+    assert(deterministicBytes, `${entry.classId}/${kind}: canonical or expanded bytes differ`);
     assert(digest(actualBytes) === fixture.sha256, `${entry.classId}/${kind}: SHA-256 mismatch`);
     referenced.add(absolute);
   }

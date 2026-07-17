@@ -252,6 +252,16 @@ function sha256(bytes) {
   return crypto.createHash("sha256").update(bytes).digest("hex");
 }
 
+function preserveCanonicalGzip(file, generated, extension) {
+  if (extension !== "tar.gz" || !fs.existsSync(file)) return generated;
+  const frozen = fs.readFileSync(file);
+  try {
+    return zlib.gunzipSync(frozen).equals(zlib.gunzipSync(generated)) ? frozen : generated;
+  } catch {
+    return generated;
+  }
+}
+
 function writeCorpus() {
   const manifestPath = path.join(root, "manifest.json");
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
@@ -268,12 +278,14 @@ function writeCorpus() {
     fs.mkdirSync(directoryPath, { recursive: true });
     const exploitPath = path.join(directoryPath, `exploit.${fixture.extension}`);
     const controlPath = path.join(directoryPath, `boundary-control.${fixture.extension}`);
-    fs.writeFileSync(exploitPath, fixture.exploit, { mode: 0o644 });
-    fs.writeFileSync(controlPath, fixture.boundaryControl, { mode: 0o644 });
+    const exploitBytes = preserveCanonicalGzip(exploitPath, fixture.exploit, fixture.extension);
+    const controlBytes = preserveCanonicalGzip(controlPath, fixture.boundaryControl, fixture.extension);
+    fs.writeFileSync(exploitPath, exploitBytes, { mode: 0o644 });
+    fs.writeFileSync(controlPath, controlBytes, { mode: 0o644 });
     entry.exploit.path = path.relative(root, exploitPath).split(path.sep).join("/");
-    entry.exploit.sha256 = sha256(fixture.exploit);
+    entry.exploit.sha256 = sha256(exploitBytes);
     entry.boundaryControl.path = path.relative(root, controlPath).split(path.sep).join("/");
-    entry.boundaryControl.sha256 = sha256(fixture.boundaryControl);
+    entry.boundaryControl.sha256 = sha256(controlBytes);
     entry.status = "frozen";
   }
 

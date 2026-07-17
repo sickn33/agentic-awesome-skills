@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-ab3aa6b53a4f2416207e060fabd11c909ad2039bc0b16874f41c2c1ba4343bc3",
+  "rootDigest": "sha256-c7a4d4b3efa9f2bdf5a126fc3c384680d39534880a3900302785397e4ddd451c",
   "fileCount": 712,
   "files": [
     {
@@ -2783,8 +2783,8 @@
     },
     {
       "path": "baseline/v1/hostile/README.md",
-      "bytes": 961,
-      "sha256": "deaabd1feee0b7a7a85385245b52ac50e2bac6e928d7aece7623978c9746236b"
+      "bytes": 1276,
+      "sha256": "c646d5c5587a3159f34c0f335a9a6c644340afe05df601d89dd9f9d11b9a1d1c"
     },
     {
       "path": "baseline/v1/hostile/fixtures/archive/absolute-posix-path/boundary-control.tar",
@@ -3108,8 +3108,8 @@
     },
     {
       "path": "baseline/v1/hostile/generate-fixtures.mjs",
-      "bytes": 13185,
-      "sha256": "db19d7c2d31ca82feb9ded003b9fea132061d0a87a8c3716b4b691e02e64c399"
+      "bytes": 13673,
+      "sha256": "bd27cbddc11143fc83945e3205c44390364086e89558d362e7ad25499132ded4"
     },
     {
       "path": "baseline/v1/hostile/manifest.json",
@@ -3118,8 +3118,8 @@
     },
     {
       "path": "baseline/v1/hostile/verify-fixtures.mjs",
-      "bytes": 16415,
-      "sha256": "5176025ef5d51cac080340e14b90f9c0cc4e9c5d0c7220349662305392c0b395"
+      "bytes": 16595,
+      "sha256": "7967736e4530aaba1f8822f57c62cd1978c89073e7e83c883cff7e77dd440f6a"
     },
     {
       "path": "baseline/v1/legacy/14.6.0/.gitignore",

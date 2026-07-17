@@ -10,6 +10,11 @@ JSON or JSONL inputs. It never extracts an archive or executes fixture content.
 The numeric boundaries used by the pairs are frozen in
 `manifest.json.fixtureContract`.
 
+The two gzip fixtures are bound to their committed SHA-256 bytes. Because zlib
+releases can produce different valid DEFLATE streams, regeneration preserves
+the committed stream when its expanded canonical USTAR bytes match; verification
+requires both the frozen compressed digest and deterministic expanded bytes.
+
 Regenerate and verify deterministically with Node.js 22 or 24:
 
 ```sh
