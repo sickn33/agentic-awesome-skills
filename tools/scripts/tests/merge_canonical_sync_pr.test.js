@@ -5,6 +5,11 @@ const canonicalMerge = require("../merge_canonical_sync_pr.cjs");
 const HEAD = "a".repeat(40);
 const options = canonicalMerge.parseArgs(["--repo", "owner/repo", "--pr", "42", "--head", HEAD]);
 assert.strictEqual(options.pollSeconds, 10);
+assert.strictEqual(options.skipPages, false);
+const noPages = canonicalMerge.parseArgs(["--repo", "owner/repo", "--pr", "42", "--head", HEAD, "--skip-pages"]);
+assert.strictEqual(noPages.skipPages, true);
+assert.deepStrictEqual(canonicalMerge.verificationWorkflows(options), ["ci.yml", "pages.yml", "codeql.yml"]);
+assert.deepStrictEqual(canonicalMerge.verificationWorkflows(noPages), ["ci.yml", "codeql.yml"]);
 assert.throws(() => canonicalMerge.parseArgs(["--repo", "owner/repo", "--pr", "42", "--head", "short"]), /full SHA-1/);
 
 const CHECK_SUITE_ID = 777;

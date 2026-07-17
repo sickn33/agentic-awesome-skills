@@ -8,9 +8,13 @@ const BOT_BRANCH = "automation/canonical-repo-state";
 const CI_WORKFLOW_PATH = ".github/workflows/ci.yml";
 
 function parseArgs(argv) {
-  const options = { pollSeconds: 10, maxAttempts: 180 };
+  const options = { pollSeconds: 10, maxAttempts: 180, skipPages: false };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
+    if (argument === "--skip-pages") {
+      options.skipPages = true;
+      continue;
+    }
     if (["--repo", "--pr", "--head", "--poll-seconds", "--max-attempts"].includes(argument)) {
       const value = argv[index + 1];
       if (!value || value.startsWith("--")) throw new Error(`${argument} requires a value.`);
@@ -27,6 +31,10 @@ function parseArgs(argv) {
   if (!Number.isInteger(options.pollSeconds) || options.pollSeconds <= 0) throw new Error("--poll-seconds must be positive.");
   if (!Number.isInteger(options.maxAttempts) || options.maxAttempts <= 0) throw new Error("--max-attempts must be positive.");
   return options;
+}
+
+function verificationWorkflows(options = {}) {
+  return options.skipPages ? ["ci.yml", "codeql.yml"] : ["ci.yml", "pages.yml", "codeql.yml"];
 }
 
 function runGh(args, options = {}) {
@@ -213,7 +221,7 @@ async function main() {
   ));
   if (merged?.merged !== true) throw new Error(`Canonical-sync merge failed: ${merged?.message || "merged=false"}`);
 
-  for (const workflow of ["ci.yml", "pages.yml", "codeql.yml"]) {
+  for (const workflow of verificationWorkflows(options)) {
     runGh([
       "api",
       `repos/${options.repo}/actions/workflows/${workflow}/dispatches`,
@@ -223,7 +231,8 @@ async function main() {
       "ref=main",
     ]);
   }
-  process.stdout.write(`[canonical-sync] merged PR #${options.pr} at ${options.head} and dispatched main verification.\n`);
+  const pages = options.skipPages ? " without Pages publication" : " including Pages verification";
+  process.stdout.write(`[canonical-sync] merged PR #${options.pr} at ${options.head} and dispatched main verification${pages}.\n`);
 }
 
 if (require.main === module) {
@@ -241,5 +250,6 @@ module.exports = {
   summarizeChecks,
   validateProtectedMain,
   validatePullRequest,
+  verificationWorkflows,
   waitForChecks,
 };
