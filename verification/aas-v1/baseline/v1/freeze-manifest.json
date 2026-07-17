@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-4fdee78ecfd20a03c7d45f0075d143428b108a2cfc06375f4176f68a226f0035",
+  "rootDigest": "sha256-8413fa955c4926a041237f815356853ecee6cf6aee9825697724d06beabd0a81",
   "fileCount": 757,
   "files": [
     {
@@ -3708,8 +3708,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 26111,
-      "sha256": "a467dc863b2e290ce375303f77d381044b4986dd6437a173ea108992249c4bff"
+      "bytes": 26123,
+      "sha256": "c8ff0f1aad94c06ddb089078f0e6b06c33e68b74c52319115adc33b3ea63ccd4"
     },
     {
       "path": "verifier/lib/prng.mjs",
@@ -3743,13 +3743,13 @@
     },
     {
       "path": "verifier/observers/windows-etw.ps1",
-      "bytes": 8979,
-      "sha256": "a408c4b0c5c2bc0c84b4d02e3daf106d7ea4324449d6637599807690ce8cbe85"
+      "bytes": 9245,
+      "sha256": "7e7da41a8334e66c1f4b19ce4ec9a74c461708f4c333c55b861f2746511f8f53"
     },
     {
       "path": "verifier/observers/windows-job.cs",
-      "bytes": 17497,
-      "sha256": "421bab01514ccbe165f5223a3aa38953be527036d88876cd0002677d148745e9"
+      "bytes": 18109,
+      "sha256": "155c916ffcce7dfc81cbce6087009f7da5c982c37aa45692b15df92b18c22967"
     },
     {
       "path": "verifier/package-lock.json",

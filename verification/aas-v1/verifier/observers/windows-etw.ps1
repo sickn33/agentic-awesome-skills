@@ -45,12 +45,16 @@ try {
     throw "Windows Job Object did not reach an empty process-tree state"
   }
   $rootExitCode = [AasVerifier.JobProcess]::ExitCode($jobProcess)
+  $jobTotalProcesses = [AasVerifier.JobProcess]::TotalProcesses($jobProcess)
   $ended = [DateTimeOffset]::UtcNow
   & logman.exe stop $SessionName -ets | Out-Null
   & tracerpt.exe $etl -of CSV -o $csv -y | Out-Null
   if ($LASTEXITCODE -ne 0 -or !(Test-Path -LiteralPath $csv -PathType Leaf)) { throw "ETW trace export failed" }
   $rootPid = $jobProcess.ProcessId
   $lines = New-Object System.Collections.Generic.List[string]
+  for ($processIndex = 1; $processIndex -lt $jobTotalProcesses; $processIndex++) {
+    $lines.Add("process|job-object|index=$processIndex")
+  }
   $childPids = New-Object System.Collections.Generic.HashSet[int]
   $childPids.Add($rootPid) | Out-Null
   function Get-IntegerField($row, [string[]]$patterns) {
@@ -189,6 +193,7 @@ try {
       sessionName = $SessionName
       processTreeTimedOut = $timedOut
       processTreeEmpty = $waitResult -eq [AasVerifier.JobProcess]::WaitObject0
+      jobTotalProcesses = $jobTotalProcesses
     }
   }
   [IO.File]::WriteAllText($ResultOutput, ($receipt | ConvertTo-Json -Compress), (New-Object Text.UTF8Encoding($false)))

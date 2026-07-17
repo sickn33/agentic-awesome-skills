@@ -366,6 +366,21 @@ namespace AasVerifier
             }
         }
 
+        public static uint TotalProcesses(JobProcessHandles handles)
+        {
+            JobObjectBasicAccountingInformation accounting = new JobObjectBasicAccountingInformation();
+            if (!QueryInformationJobObject(
+                handles.JobHandle,
+                JobObjectBasicAccountingInformationClass,
+                ref accounting,
+                Marshal.SizeOf(typeof(JobObjectBasicAccountingInformation)),
+                IntPtr.Zero))
+            {
+                ThrowLastError("QueryInformationJobObject failed");
+            }
+            return accounting.TotalProcesses;
+        }
+
         public static void Terminate(JobProcessHandles handles, uint exitCode)
         {
             if (!TerminateJobObject(handles.JobHandle, exitCode)) ThrowLastError("TerminateJobObject failed");

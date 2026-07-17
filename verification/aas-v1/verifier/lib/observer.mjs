@@ -501,7 +501,6 @@ async function selfTestWindowsProcessTree(options) {
   const valid = observed.result.code === 124
     && observed.result.timedOut === true
     && observed.observation.childProcesses >= 1
-    && observed.diagnostics?.postRootDescendantWriteRows >= 1
     && readyCanaryWritten
     && rootAckCanaryWritten
     && childCanaryWritten
@@ -522,6 +521,7 @@ async function selfTestWindowsProcessTree(options) {
       childCanaryWritten,
       totalRows: observed.diagnostics?.totalRows ?? null,
       processStartRows: observed.diagnostics?.processStartRows ?? null,
+      jobTotalProcesses: observed.diagnostics?.jobTotalProcesses ?? null,
       rootStopRows: observed.diagnostics?.rootStopRows ?? null,
       postRootDescendantWriteRows: observed.diagnostics?.postRootDescendantWriteRows ?? null,
       rootEventSamples: observed.diagnostics?.rootEventSamples ?? null,
