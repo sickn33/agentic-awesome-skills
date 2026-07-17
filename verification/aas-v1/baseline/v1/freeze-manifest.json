@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-340b25c11055376c38ba2344ad4db7fff4127ddaaac6145f81cd0aec0fa40210",
+  "rootDigest": "sha256-888ba577fe37369ec37b6733fb1b06a4b27aedeb9d5f46f4963b622863c496d5",
   "fileCount": 764,
   "files": [
     {
@@ -3758,8 +3758,8 @@
     },
     {
       "path": "verifier/lib/transaction-controller.mjs",
-      "bytes": 37223,
-      "sha256": "c4101fc54fc9671ca26aefaccee5d1e668fafa799475da758cab2807f404434b"
+      "bytes": 37728,
+      "sha256": "c730d1465c6a1bc8bc5210c06f9a1c5a1d61d70de08e5631fc4328c7892a7c0d"
     },
     {
       "path": "verifier/lib/transaction-evidence.mjs",
@@ -3823,8 +3823,8 @@
     },
     {
       "path": "verifier/tests/transaction-evidence.test.mjs",
-      "bytes": 8422,
-      "sha256": "266864f035a0f67bcea001dcf548557b108419983cc167bf9f7a356458e10717"
+      "bytes": 8749,
+      "sha256": "81ffcb1656e18faea193de01c247de7e74630d773fde2a17e750b9848d176abd"
     },
     {
       "path": "verifier/tests/tuning-gold-equivalence-audit.test.mjs",

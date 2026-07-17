@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { faultFixtureProfile, nativeObservationLineage, portableTreeDigest, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { faultFixtureProfile, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -169,4 +169,10 @@ test("write faults use a policy-safe corpus to expose the transient staging boun
     desired: true,
     additionalSkills: [],
   });
+});
+
+test("concurrency races keep the externally observed target lock contended", () => {
+  const corpus = ["large-a", "large-b"];
+  assert.deepEqual(raceFixtureProfile("concurrency", corpus), { additionalSkills: corpus });
+  assert.deepEqual(raceFixtureProfile("drift", corpus), { additionalSkills: [] });
 });

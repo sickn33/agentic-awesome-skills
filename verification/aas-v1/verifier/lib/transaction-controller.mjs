@@ -156,6 +156,15 @@ export function faultFixtureProfile(className, backupSkillIds) {
   };
 }
 
+export function raceFixtureProfile(className, contentionSkillIds) {
+  return {
+    // Keep the first apply active long enough for a separately spawned CLI to
+    // contend on the externally observed lock. A one-skill apply can complete
+    // between lock observation and process scheduling on fast Linux runners.
+    additionalSkills: className === "concurrency" ? contentionSkillIds : [],
+  };
+}
+
 function finalState(targetRoot, skillId, expectedContentDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
@@ -521,7 +530,7 @@ async function faultCase(context, className) {
 }
 
 async function raceCase(context, className) {
-  const fixture = await createFixture(context, `race-${className}`);
+  const fixture = await createFixture(context, `race-${className}`, raceFixtureProfile(className, context.backupSkillIds));
   let outcome;
   let observation;
   let recoveryResult = { action: "none", status: "healthy", planDigest: fixture.plan.digest };
@@ -535,7 +544,10 @@ async function raceCase(context, className) {
     const results = [await first.completed, secondResult];
     const values = results.map((result) => ({ result, value: parseJsonLines(result.code === 0 ? result.stdout : result.stderr)[0] }));
     assert(values.some(({ value }) => value?.status === "applied"), "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NO_WINNER");
-    assert(values[1].value?.code === "AAS_TRANSACTION_LOCKED", "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NOT_SERIALIZED", { code: values[1].value?.code });
+    assert(values[1].value?.code === "AAS_TRANSACTION_LOCKED", "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NOT_SERIALIZED", {
+      code: values[1].value?.code,
+      status: values[1].value?.status,
+    });
     outcome = secondResult;
     observation = { eventDigest: digestJson({ liveLockDigest, outcomes: values.map(({ value }) => ({ status: value?.status || null, code: value?.code || null })) }) };
     expectedFinal = "new";
