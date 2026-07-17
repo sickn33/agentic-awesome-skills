@@ -35,6 +35,7 @@
     "check:stale-claims": "node tools/scripts/run-python.js tools/scripts/check_stale_claims.py",
     "check:live-seo": "node tools/scripts/check-live-seo-geo.js",
     "pages:redirect-bridge": "node tools/scripts/generate-pages-redirect-bridge.js",
+    "pages:redirect-verify": "node tools/scripts/verify-pages-redirect-bridge.js",
     "traffic:normalize": "node tools/scripts/normalize_traffic_snapshots.js",
     "traffic:migration-readiness": "node tools/scripts/audit_search_migration_readiness.js",
     "check:warning-budget": "node tools/scripts/run-python.js tools/scripts/check_validation_warning_budget.py",

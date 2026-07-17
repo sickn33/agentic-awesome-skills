@@ -8,10 +8,12 @@ const path = require('path');
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DEFAULT_SITEMAP = path.join(REPO_ROOT, 'apps', 'web-app', 'public', 'sitemap.xml');
 const DEFAULT_SKILLS_INDEX = path.join(REPO_ROOT, 'skills_index.json');
+const GOOGLE_VERIFICATION_FILENAME = 'google5815fd8827d2319c.html';
+const DEFAULT_GOOGLE_VERIFICATION = path.join(REPO_ROOT, 'apps', 'web-app', 'public', GOOGLE_VERIFICATION_FILENAME);
+const BING_VERIFICATION_TOKEN = 'CAC904EB0D2DD1B22B5F2BC540CAD654';
 const DEFAULT_CURRENT_BASE = 'https://sickn33.github.io/agentic-awesome-skills/';
 const DEFAULT_LEGACY_BASE = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const DEFAULT_EXPECTED_ROUTES = 187;
-const DEFAULT_EXPECTED_SKILLS = 1965;
 const SAFE_SEGMENT = /^[A-Za-z0-9._~-]+$/;
 
 function isSafeSegment(value) {
@@ -113,13 +115,16 @@ function outputRelativePath(legacyBase, relativeRoute) {
   return path.posix.join(...baseSegments, relativeRoute, 'index.html');
 }
 
-function redirectHtml(destination) {
+function redirectHtml(destination, options = {}) {
   const escaped = htmlEscape(destination);
+  const bingVerification = options.bingVerificationToken
+    ? `\n    <meta name="msvalidate.01" content="${htmlEscape(options.bingVerificationToken)}">`
+    : '';
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">${bingVerification}
     <meta http-equiv="refresh" content="0; url=${escaped}">
     <link rel="canonical" href="${escaped}">
     <title>Agentic Awesome Skills has moved</title>
@@ -190,15 +195,19 @@ function assertSafeOutput(outputDirectory, repoRoot) {
   }
 }
 
-function writeBridge(stagingDirectory, redirects, sitemapRedirects, manifest, legacyBase) {
+function writeBridge(stagingDirectory, redirects, sitemapRedirects, manifest, legacyBase, googleVerificationSource) {
   for (const redirect of redirects) {
     const filePath = path.join(stagingDirectory, ...redirect.output_file.split('/'));
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    fs.writeFileSync(filePath, redirectHtml(redirect.to), 'utf8');
+    const isLegacyRoot = redirect.from === legacyBase.toString();
+    fs.writeFileSync(filePath, redirectHtml(redirect.to, {
+      bingVerificationToken: isLegacyRoot ? BING_VERIFICATION_TOKEN : null,
+    }), 'utf8');
   }
   const legacyDirectory = path.join(stagingDirectory, ...legacyBase.pathname.split('/').filter(Boolean));
   fs.mkdirSync(legacyDirectory, { recursive: true });
   fs.writeFileSync(path.join(legacyDirectory, 'sitemap.xml'), legacySitemap(sitemapRedirects), 'utf8');
+  fs.writeFileSync(path.join(legacyDirectory, GOOGLE_VERIFICATION_FILENAME), googleVerificationSource);
   fs.writeFileSync(path.join(stagingDirectory, 'redirect-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
   fs.writeFileSync(path.join(stagingDirectory, '.nojekyll'), '', 'utf8');
 }
@@ -207,6 +216,7 @@ function generateBridge(options) {
   const repoRoot = path.resolve(options.repoRoot || REPO_ROOT);
   const sitemapPath = path.resolve(options.sitemapPath || DEFAULT_SITEMAP);
   const skillsIndexPath = path.resolve(options.skillsIndexPath || DEFAULT_SKILLS_INDEX);
+  const googleVerificationPath = path.resolve(options.googleVerificationPath || DEFAULT_GOOGLE_VERIFICATION);
   if (!options.outputDirectory) throw new Error('--output is required');
   const outputDirectory = path.resolve(options.outputDirectory);
   const currentBase = canonicalBase(options.currentBase || DEFAULT_CURRENT_BASE, 'current base');
@@ -214,18 +224,25 @@ function generateBridge(options) {
   if (currentBase.toString() === legacyBase.toString()) throw new Error('current and legacy bases must be distinct');
   const expectedRoutes = Number(options.expectedRoutes ?? DEFAULT_EXPECTED_ROUTES);
   if (!Number.isSafeInteger(expectedRoutes) || expectedRoutes <= 0) throw new Error('expected route count must be a positive integer');
-  const expectedSkills = Number(options.expectedSkills ?? DEFAULT_EXPECTED_SKILLS);
-  if (!Number.isSafeInteger(expectedSkills) || expectedSkills <= 0) throw new Error('expected skill count must be a positive integer');
+  const expectedSkills = options.expectedSkills == null ? null : Number(options.expectedSkills);
+  if (expectedSkills != null && (!Number.isSafeInteger(expectedSkills) || expectedSkills <= 0)) {
+    throw new Error('expected skill count must be a positive integer');
+  }
   assertSafeOutput(outputDirectory, repoRoot);
 
   const sitemapSource = fs.readFileSync(sitemapPath, 'utf8');
   const skillsIndexSource = fs.readFileSync(skillsIndexPath, 'utf8');
+  const googleVerificationSource = fs.readFileSync(googleVerificationPath);
+  const expectedGoogleVerification = `google-site-verification: ${GOOGLE_VERIFICATION_FILENAME}`;
+  if (googleVerificationSource.toString('utf8').trim() !== expectedGoogleVerification) {
+    throw new Error(`Google verification file must contain exactly: ${expectedGoogleVerification}`);
+  }
   const locations = parseSitemap(sitemapSource);
   const skillIds = parseSkillIds(skillsIndexSource);
   if (locations.length !== expectedRoutes) {
     throw new Error(`sitemap route count ${locations.length} does not match locked expectation ${expectedRoutes}`);
   }
-  if (skillIds.length !== expectedSkills) {
+  if (expectedSkills != null && skillIds.length !== expectedSkills) {
     throw new Error(`skills index count ${skillIds.length} does not match locked expectation ${expectedSkills}`);
   }
 
@@ -269,6 +286,13 @@ function generateBridge(options) {
   if (redirects.some(({ output_file }) => output_file.startsWith(`${legacySitemapPath}/`))) {
     throw new Error(`generated route collides with reserved legacy sitemap path: ${legacySitemapPath}`);
   }
+  const googleVerificationOutputPath = path.posix.join(
+    ...legacyBase.pathname.split('/').filter(Boolean),
+    GOOGLE_VERIFICATION_FILENAME,
+  );
+  if (redirects.some(({ output_file }) => output_file.startsWith(`${googleVerificationOutputPath}/`))) {
+    throw new Error(`generated route collides with reserved Google verification path: ${googleVerificationOutputPath}`);
+  }
 
   const manifest = {
     schema_version: 2,
@@ -284,6 +308,17 @@ function generateBridge(options) {
     legacy_sitemap_route_count: sitemapRedirects.length,
     legacy_sitemap_policy: 'curated current sitemap routes only',
     legacy_sitemap: legacySitemapPath,
+    webmaster_verification: {
+      google: {
+        legacy_file: googleVerificationOutputPath,
+        sha256: sha256(googleVerificationSource),
+      },
+      bing: {
+        legacy_page: outputRelativePath(legacyBase, ''),
+        meta_name: 'msvalidate.01',
+        token: BING_VERIFICATION_TOKEN,
+      },
+    },
     redirects,
   };
 
@@ -291,7 +326,7 @@ function generateBridge(options) {
   let stagingDirectory = null;
   try {
     stagingDirectory = fs.mkdtempSync(path.join(path.dirname(outputDirectory), `.${path.basename(outputDirectory)}.${process.pid}.`));
-    writeBridge(stagingDirectory, redirects, sitemapRedirects, manifest, legacyBase);
+    writeBridge(stagingDirectory, redirects, sitemapRedirects, manifest, legacyBase, googleVerificationSource);
     fs.renameSync(stagingDirectory, outputDirectory);
   } finally {
     if (stagingDirectory && fs.existsSync(stagingDirectory)) fs.rmSync(stagingDirectory, { recursive: true, force: true });
@@ -305,6 +340,7 @@ function parseArgs(argv) {
     '--output': 'outputDirectory',
     '--sitemap': 'sitemapPath',
     '--skills-index': 'skillsIndexPath',
+    '--google-verification': 'googleVerificationPath',
     '--current-base': 'currentBase',
     '--legacy-base': 'legacyBase',
     '--expected-routes': 'expectedRoutes',
@@ -328,7 +364,7 @@ function parseArgs(argv) {
 function main() {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) {
-    process.stdout.write('Usage: node tools/scripts/generate-pages-redirect-bridge.js --output NEW_DIR [--sitemap FILE] [--skills-index FILE] [--expected-routes N] [--expected-skills N]\n');
+    process.stdout.write('Usage: node tools/scripts/generate-pages-redirect-bridge.js --output NEW_DIR [--sitemap FILE] [--skills-index FILE] [--google-verification FILE] [--expected-routes N] [--expected-skills N]\n');
     return;
   }
   const manifest = generateBridge(options);
@@ -351,4 +387,6 @@ module.exports = {
   parseSkillIds,
   parseSitemap,
   redirectHtml,
+  BING_VERIFICATION_TOKEN,
+  GOOGLE_VERIFICATION_FILENAME,
 };

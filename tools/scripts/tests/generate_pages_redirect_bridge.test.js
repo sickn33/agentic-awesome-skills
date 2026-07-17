@@ -10,6 +10,8 @@ const { generateBridge } = require(scriptPath);
 const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'pages-redirect-bridge-'));
 const sitemapPath = path.join(fixtureRoot, 'sitemap.xml');
 const skillsIndexPath = path.join(fixtureRoot, 'skills_index.json');
+const googleVerificationPath = path.join(fixtureRoot, 'google5815fd8827d2319c.html');
+const googleVerificationBody = 'google-site-verification: google5815fd8827d2319c.html';
 const current = 'https://example.github.io/agentic-awesome-skills/';
 const legacy = 'https://example.github.io/antigravity-awesome-skills/';
 
@@ -26,6 +28,7 @@ function bridgeOptions(outputDirectory, overrides = {}) {
     repoRoot: fixtureRoot,
     sitemapPath,
     skillsIndexPath,
+    googleVerificationPath,
     outputDirectory,
     currentBase: current,
     legacyBase: legacy,
@@ -52,6 +55,7 @@ try {
   const locations = [current, `${current}plugins/`, `${current}topics/github-ai-skills-repository/`, `${current}skill/brainstorming/`];
   fs.writeFileSync(sitemapPath, sitemap(locations), 'utf8');
   writeSkills(skillsIndexPath, ['brainstorming', 'catalog-only']);
+  fs.writeFileSync(googleVerificationPath, googleVerificationBody, 'utf8');
 
   const outputOne = path.join(fixtureRoot, '.codex', 'bridge-one');
   const manifest = generateBridge(bridgeOptions(outputOne));
@@ -60,6 +64,9 @@ try {
   assert.strictEqual(manifest.current_skill_route_count, 2);
   assert.strictEqual(manifest.route_count, 5);
   assert.strictEqual(manifest.legacy_sitemap_route_count, 4);
+  assert.strictEqual(manifest.webmaster_verification.google.legacy_file, 'antigravity-awesome-skills/google5815fd8827d2319c.html');
+  assert.strictEqual(manifest.webmaster_verification.bing.meta_name, 'msvalidate.01');
+  assert.strictEqual(manifest.webmaster_verification.bing.token, 'CAC904EB0D2DD1B22B5F2BC540CAD654');
   assert.strictEqual(manifest.redirects.length, 5);
   assert.strictEqual(new Set(manifest.redirects.map((redirect) => redirect.from)).size, 5);
   assert.strictEqual(new Set(manifest.redirects.map((redirect) => redirect.output_file)).size, 5);
@@ -76,10 +83,24 @@ try {
   assert(!fs.existsSync(path.join(outputOne, 'antigravity-awesome-skills/skill/removed-skill/index.html')));
   assert(!manifest.redirects.some(({ from }) => from === `${legacy}skill/removed-skill/`));
 
+  const legacyRootHtml = fs.readFileSync(path.join(outputOne, 'antigravity-awesome-skills/index.html'), 'utf8');
+  assert.strictEqual((legacyRootHtml.match(/name="msvalidate\.01"/g) || []).length, 1);
+  assert.match(legacyRootHtml, /name="msvalidate\.01" content="CAC904EB0D2DD1B22B5F2BC540CAD654"/);
+  assert(
+    legacyRootHtml.indexOf('name="msvalidate.01"') < legacyRootHtml.indexOf('http-equiv="refresh"'),
+    'Bing verification must appear before the redirect refresh',
+  );
+
   const pluginHtml = fs.readFileSync(path.join(outputOne, 'antigravity-awesome-skills/plugins/index.html'), 'utf8');
   assert.match(pluginHtml, /http-equiv="refresh" content="0; url=https:\/\/example\.github\.io\/agentic-awesome-skills\/plugins\/"/);
   assert.match(pluginHtml, /rel="canonical" href="https:\/\/example\.github\.io\/agentic-awesome-skills\/plugins\/"/);
   assert.match(pluginHtml, /<a href="https:\/\/example\.github\.io\/agentic-awesome-skills\/plugins\/">/);
+  assert(!pluginHtml.includes('msvalidate.01'), 'Bing verification belongs only on the legacy root');
+  const copiedGoogleVerification = fs.readFileSync(
+    path.join(outputOne, 'antigravity-awesome-skills/google5815fd8827d2319c.html'),
+    'utf8',
+  );
+  assert.strictEqual(copiedGoogleVerification, googleVerificationBody, 'Google verification must be copied byte-for-byte');
   const legacySitemapSource = fs.readFileSync(path.join(outputOne, 'antigravity-awesome-skills/sitemap.xml'), 'utf8');
   assert.strictEqual((legacySitemapSource.match(/<loc>/g) || []).length, 4, 'legacy sitemap stays on the curated source sitemap');
   assert(!legacySitemapSource.includes('/skill/catalog-only/'), 'catalog-only redirects must not expand crawler discovery');
@@ -142,6 +163,23 @@ try {
     expectedSkills: 3,
   })), /skills index count 2 does not match locked expectation 3/);
 
+  const dynamicSkillCountOutput = path.join(fixtureRoot, '.codex', 'dynamic-skill-count');
+  const dynamicSkillCountManifest = generateBridge(bridgeOptions(dynamicSkillCountOutput, { expectedSkills: null }));
+  assert.strictEqual(dynamicSkillCountManifest.current_skill_route_count, 2, 'omitting the skill-count lock follows the current index');
+
+  const invalidGoogleVerification = path.join(fixtureRoot, 'invalid-google.html');
+  fs.writeFileSync(invalidGoogleVerification, 'stale verification token', 'utf8');
+  assert.throws(() => generateBridge(bridgeOptions(path.join(fixtureRoot, '.codex', 'invalid-google'), {
+    googleVerificationPath: invalidGoogleVerification,
+  })), /Google verification file must contain exactly/);
+
+  const collidingSitemap = path.join(fixtureRoot, 'google-collision.xml');
+  fs.writeFileSync(collidingSitemap, sitemap([current, `${current}google5815fd8827d2319c.html/`]), 'utf8');
+  assert.throws(() => generateBridge(bridgeOptions(path.join(fixtureRoot, '.codex', 'google-collision'), {
+    sitemapPath: collidingSitemap,
+    expectedRoutes: 2,
+  })), /reserved Google verification path/);
+
   const trackedOutput = path.join(fixtureRoot, 'apps', 'web-app', 'public', 'bridge');
   assert.throws(() => generateBridge(bridgeOptions(trackedOutput)), /only under ignored \.codex/);
 
@@ -189,6 +227,7 @@ try {
     scriptPath,
     '--sitemap', sitemapPath,
     '--skills-index', skillsIndexPath,
+    '--google-verification', googleVerificationPath,
     '--output', cliOutput,
     '--current-base', current,
     '--legacy-base', legacy,
@@ -206,11 +245,11 @@ try {
   try {
     const productionOutput = path.join(productionOutputRoot, 'bridge');
     const productionManifest = generateBridge({ outputDirectory: productionOutput });
-    assert.strictEqual(productionManifest.source_sitemap_route_count, 187);
-    assert.strictEqual(productionManifest.current_skill_route_count, 1965);
-    assert.strictEqual(productionManifest.route_count, 1972);
-    assert.strictEqual(productionManifest.legacy_sitemap_route_count, 187);
     const productionSkills = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', '..', '..', 'skills_index.json'), 'utf8'));
+    assert.strictEqual(productionManifest.source_sitemap_route_count, 187);
+    assert.strictEqual(productionManifest.current_skill_route_count, productionSkills.length);
+    assert.strictEqual(productionManifest.route_count, productionSkills.length + 7);
+    assert.strictEqual(productionManifest.legacy_sitemap_route_count, 187);
     const expectedSkillUrls = new Set(productionSkills.map(({ id }) => `https://sickn33.github.io/agentic-awesome-skills/skill/${id}/`));
     const actualSkillUrls = new Set(productionManifest.redirects.map(({ to }) => to).filter((url) => url.includes('/skill/')));
     assert.deepStrictEqual(actualSkillUrls, expectedSkillUrls, 'production bridge must cover exactly every current skill id');
@@ -218,6 +257,12 @@ try {
     assert(!productionManifest.redirects.some(({ to }) => to.endsWith('/skill/merge-batch-e2e-test/')));
     const productionLegacySitemap = fs.readFileSync(path.join(productionOutput, 'antigravity-awesome-skills/sitemap.xml'), 'utf8');
     assert.strictEqual((productionLegacySitemap.match(/<loc>/g) || []).length, 187);
+    assert.strictEqual(
+      fs.readFileSync(path.join(productionOutput, 'antigravity-awesome-skills/google5815fd8827d2319c.html'), 'utf8'),
+      fs.readFileSync(path.resolve(__dirname, '..', '..', '..', 'apps/web-app/public/google5815fd8827d2319c.html'), 'utf8'),
+    );
+    const productionRootHtml = fs.readFileSync(path.join(productionOutput, 'antigravity-awesome-skills/index.html'), 'utf8');
+    assert.match(productionRootHtml, /name="msvalidate\.01" content="CAC904EB0D2DD1B22B5F2BC540CAD654"/);
   } finally {
     fs.rmSync(productionOutputRoot, { recursive: true, force: true });
   }

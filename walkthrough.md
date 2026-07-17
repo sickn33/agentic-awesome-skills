@@ -277,3 +277,10 @@
 - Reuse a previously successful review for identical content, avoiding Tessl setup and another charged review after unrelated PR pushes or base refreshes.
 - Route an explicit Tessl credit/quota failure to `manual-review-required` with exact-head attestation; unrelated Tessl failures still fail closed.
 - Added regression coverage for fingerprint invalidation, GitHub Actions cache wiring, quota classification, and truthful review outcomes.
+# Maintenance Walkthrough - 2026-07-17 Legacy Redirect Infrastructure
+
+- Preserved the Google Search Console HTML verification file on the legacy Pages path and the Bing Webmaster Tools meta token on the legacy root redirect.
+- Made redirect generation follow the current `skills_index.json` count while retaining the curated sitemap-count lock and exact route-set validation.
+- Added `pages:redirect-verify` for byte-exact managed-tree validation plus bounded or full live route probing.
+- Documented the protected cross-repository synchronization contract for `sickn33/sickn33.github.io`.
+- Added regression coverage for webmaster tokens, reserved-path collisions, dynamic skill counts, local drift, stale files, and live manifest/route verification.
