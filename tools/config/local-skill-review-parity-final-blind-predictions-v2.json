@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas-tessl-parity-pre-reveal-predictions",
+  "manifestSelectionSha256": "d6b48d26646337dde7ee0d21b085294619a8d24ba72a856cea97842aea3af1e5",
+  "split": "final_blind",
+  "predictions": {
+    "xiaohongshu-content-strategist": {
+      "score": 92,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        3,
+        3,
+        3,
+        3
+      ]
+    },
+    "frontend-optimistic-mutations": {
+      "score": 83,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "tool-design": {
+      "score": 82,
+      "description": [
+        3,
+        3,
+        3,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "whatsapp-cloud-api": {
+      "score": 85,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    "iterate-pr": {
+      "score": 89,
+      "description": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    "co-marketing": {
+      "score": 75,
+      "description": [
+        1,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "improve-codebase-architecture": {
+      "score": 76,
+      "description": [
+        3,
+        2,
+        2,
+        3
+      ],
+      "content": [
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    "ai-agents-architect": {
+      "score": 69,
+      "description": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "error-diagnostics-error-analysis": {
+      "score": 68,
+      "description": [
+        2,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "outlook-automation": {
+      "score": 83,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "skill-sentinel": {
+      "score": 77,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        2,
+        3,
+        2
+      ]
+    },
+    "rust-async-patterns": {
+      "score": 59,
+      "description": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "app-builder/templates": {
+      "score": 68,
+      "description": [
+        2,
+        2,
+        3,
+        2
+      ],
+      "content": [
+        3,
+        2,
+        2,
+        1
+      ]
+    },
+    "agent-squad/alex": {
+      "score": 83,
+      "description": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    "distributed-tracing": {
+      "score": 67,
+      "description": [
+        2,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "threejs-fundamentals": {
+      "score": 84,
+      "description": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "developer-listening": {
+      "score": 71,
+      "description": [
+        1,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "temporal-golang-pro": {
+      "score": 78,
+      "description": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "hf-mcp": {
+      "score": 78,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "variant-analysis": {
+      "score": 84,
+      "description": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        2,
+        2,
+        3,
+        2
+      ]
+    },
+    "monte-carlo-asset-health": {
+      "score": 77,
+      "description": [
+        2,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        3,
+        2,
+        2,
+        1
+      ]
+    },
+    "pagespeed-enhancer": {
+      "score": 79,
+      "description": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "backend-dev-guidelines": {
+      "score": 61,
+      "description": [
+        1,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "using-git-worktrees": {
+      "score": 86,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    "k6-load-testing": {
+      "score": 77,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "complexity-cuts": {
+      "score": 83,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        2
+      ]
+    },
+    "make-automation": {
+      "score": 77,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        1,
+        3,
+        3,
+        2
+      ]
+    },
+    "expo-ui-jetpack-compose": {
+      "score": 62,
+      "description": [
+        1,
+        2,
+        1,
+        2
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    "circleci-automation": {
+      "score": 78,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "deterministic-design": {
+      "score": 58,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    "hybrid-search-implementation": {
+      "score": 59,
+      "description": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "content": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "team-collaboration-standup-notes": {
+      "score": 48,
+      "description": [
+        2,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "app-builder": {
+      "score": 53,
+      "description": [
+        3,
+        2,
+        2,
+        2
+      ],
+      "content": [
+        1,
+        2,
+        2,
+        1
+      ]
+    },
+    "ssh-penetration-testing": {
+      "score": 78,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "apple-container": {
+      "score": 86,
+      "description": [
+        3,
+        3,
+        2,
+        3
+      ],
+      "content": [
+        2,
+        3,
+        3,
+        3
+      ]
+    }
+  }
+}

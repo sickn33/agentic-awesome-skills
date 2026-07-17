@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas-tessl-parity-oracle-freeze",
+  "frozenAt": "2026-07-17T15:01:05+02:00",
+  "tesslCliVersion": "0.91.0",
+  "reviewPlugin": {
+    "ref": "tessl/default-skill-review@0.1.0",
+    "packageSha256": "4c8873c1fc10bfb6e5de6f19ffb4c3cb0081526d4fc12623fddf1c904af92281",
+    "reviewerSkillSha256": "9e73f3a817901736dc169e6bcbadd438d3dd326460f07b666ba2aa4dc422ff39",
+    "descriptionRubricSha256": "729986d9a72be69716e7530b0bddfe82489c250bb26cf67cf9b1c725ede12c6b",
+    "contentRubricSha256": "a693f4776bc3ef10b73aa4911b38782a97af26303d357d271a20045cc1634777",
+    "configSha256": "1cd36f9bdb0fc6e00d57f14c5545fe5a9c48da3c42502cad442ce20548adcc9e"
+  },
+  "observedBackend": {
+    "agent": "claude",
+    "model": "glm-5.2",
+    "tier": "authed_free",
+    "rule": "Every collected run must match these fields or be isolated into a new oracle cohort."
+  },
+  "legacyEvidence": {
+    "analyzerVersion": "aas-tessl-aligned-heuristics-v9",
+    "analyzerSha256": "9c00605972a5a8ceb7421a49f3138625c66e911596678851356b8dd3d3920e70",
+    "calibrationManifestSha256": "92fb9c2d194688383ed8ea5098f7fc0cd8b2f00b6b1eaa4e6055a378a21a0b93",
+    "goldSha256": "2d249f30fe7cd4389b1df51429a226c3b4b2a38d42efecc41585853ec615831a",
+    "preRevealHoldoutPredictionsSha256": "6e9a13735b9877110512ddb703bf99e0c4c26d9b6862ac84120de543deb46e4b",
+    "untouchedHoldout": {
+      "skills": 4,
+      "dimensionLabels": 32,
+      "exactAgreement": 0.53125,
+      "scoreMae": 9.75
+    }
+  },
+  "creditAccountAtFreeze": {
+    "plan": "free",
+    "limit": 1000,
+    "used": 250,
+    "remaining": 750,
+    "overageAllowed": false,
+    "windowStart": "2026-07-01T00:00:00.000Z"
+  },
+  "authorizedNewReviewCalls": "until_credit_exhaustion",
+  "authorizedAdditionalCredits": 750,
+  "observedCreditsPerReview": 10,
+  "uniqueBenchmarkSkills": 60,
+  "validationSkills": 25,
+  "finalBlindSkills": 35,
+  "stabilitySkills": 15,
+  "forcedRepeatCalls": 15
+}

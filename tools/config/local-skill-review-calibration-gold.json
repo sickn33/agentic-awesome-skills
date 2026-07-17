@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "reviewPlugin": "tessl/default-skill-review@0.1.0",
+  "tuning": {
+    "short": { "reviewRunId": "019f6f1e-4f7f-75ae-85d1-360aca515674", "warnings": 1, "score": 67, "description": [2, 2, 2, 2], "content": [2, 2, 3, 3] },
+    "create-pr": { "reviewRunId": "019f6f21-8c39-7014-beff-7e84ed9eaa32", "warnings": 1, "score": 74, "description": [2, 2, 2, 2], "content": [3, 2, 3, 3] },
+    "documentation-templates": { "reviewRunId": "019f6f21-a1b8-7042-b42f-8eda148260ce", "warnings": 1, "score": 77, "description": [2, 3, 2, 2], "content": [3, 3, 2, 2] },
+    "docs-guard": { "reviewRunId": "019f6f23-1ccc-7305-99f8-cfa728827bf2", "warnings": 1, "score": 92, "description": [3, 3, 2, 3], "content": [3, 3, 3, 3] },
+    "hig-platforms": { "reviewRunId": "019f6f21-f7d8-7009-9e7d-e83bb93278b2", "warnings": 1, "score": 68, "description": [2, 2, 2, 2], "content": [3, 2, 2, 3] },
+    "agent-evaluation": { "reviewRunId": "019f6f22-442d-73cc-b629-a74231d151ae", "warnings": 2, "score": 49, "description": [2, 2, 2, 2], "content": [1, 2, 2, 1] },
+    "advogado-especialista": { "reviewRunId": "019f6f22-0fb8-7628-8e5b-768ffe7bc261", "warnings": 2, "score": 69, "description": [2, 2, 2, 2], "content": [2, 3, 3, 2] },
+    "ethical-hacking-methodology": { "reviewRunId": "019f6f22-dfd4-75b9-8e67-55ba3c9acae3", "warnings": 1, "score": 59, "description": [2, 2, 2, 3], "content": [1, 3, 2, 1] }
+  },
+  "holdout": {
+    "cc-skill-continuous-learning": { "reviewRunId": "019f6f2b-7670-7642-84c3-d7c7932349ea", "warnings": 1, "score": 28, "description": [1, 1, 1, 1], "content": [2, 1, 1, 2] },
+    "source-driven-development": { "reviewRunId": "019f6f2b-f037-750f-9336-d625eb615fca", "warnings": 1, "score": 80, "description": [2, 2, 3, 3], "content": [2, 3, 3, 2] },
+    "gemini-deep-research": { "reviewRunId": "019f6f2b-a1c8-761d-97a0-80d66a6610ca", "warnings": 1, "score": 78, "description": [3, 2, 2, 3], "content": [3, 3, 2, 2] },
+    "browser-automation": { "reviewRunId": "019f6f2b-a9d7-737d-bcea-e339b406a6a0", "warnings": 2, "score": 64, "description": [2, 2, 2, 2], "content": [2, 3, 2, 2] }
+  },
+  "dimensionOrder": {
+    "description": ["specificity", "trigger_term_quality", "completeness", "distinctiveness_conflict_risk"],
+    "content": ["conciseness", "actionability", "workflow_clarity", "progressive_disclosure"]
+  }
+}

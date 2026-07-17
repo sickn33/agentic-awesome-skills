@@ -1,0 +1,568 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas-codex-tessl-level-judgments",
+  "guideVersion": "codex-tessl-levels-v1",
+  "split": "validation",
+  "items": [
+    {
+      "skillId": "tool-use-guardian",
+      "bundleHash": "e8fea5e297601f37cb179483fffe84ca722c0b041d7774b2d399d57a588084fa",
+      "description": {
+        "specificity": {
+          "score": 3,
+          "reasoning": "\"Monitors, retries, fixes, and learns\" plus \"Auto-recovers\" states multiple concrete verb-object actions; level 2 is too low because the actions are explicit and varied, and no level 4 exists."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"truncated JSON, timeouts, rate limits, and mid-chain failures\" gives natural problem terms, but they are not framed as user activation phrases required for level 3; level 1 is too low because the terms are recognizable user problems."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "\"reliability wrapper\" and the recovery actions explain what it does, but no explicit when-to-use guidance appears, so level 3 fails; level 1 is too low because the capability is clear."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "\"tool-call reliability wrapper\" defines a precise niche, but the description supplies no explicit routing boundary from adjacent retry or error-recovery skills, so level 3 fails; level 1 is too low because the tool-failure niche is specific."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The recovery table and four-step explanation are useful, but \"every AI agent needs\" and \"Free forever\" add marketing padding and the overview repeats the description, blocking level 3; level 1 is too low because operational guidance still dominates."
+        },
+        "actionability": {
+          "score": 2,
+          "reasoning": "The file gives `npx skills add` and precise recovery rules such as \"Exponential backoff, max 3 retries\", but never shows how to wrap or invoke a tool call, so level 3 fails; level 1 is too low because several concrete policies and a command are present."
+        },
+        "workflow_clarity": {
+          "score": 2,
+          "reasoning": "\"Pre-Call Validation\", \"Failure Classification\", \"Chain Protection\", and \"Learning\" provide an ordered model, but no executable end-to-end validation or recovery loop is shown, blocking level 3; level 1 is too low because the sequence and failure actions are explicit."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "The 90-line body is navigable through clear sections such as \"How It Works\" and \"Best Practices\", but it remains a longer monolith with no routed bundle detail, so level 3 is not earned; level 1 is too low because navigation is not failed."
+        }
+      }
+    },
+    {
+      "skillId": "react-state-management",
+      "bundleHash": "7ead26a1fa4ae836692f8b2befb302f613af730c53ea4b5402e11b4f8c36f82e",
+      "description": {
+        "specificity": {
+          "score": 2,
+          "reasoning": "\"setting up global state, managing server state, or choosing\" supplies multiple actions, but the imperative \"Master\" violates the required third-person voice and reduces specificity from level 3; level 1 is too low because the actions and named libraries are concrete."
+        },
+        "trigger_term_quality": {
+          "score": 3,
+          "reasoning": "\"Use when setting up global state, managing server state, or choosing between state management solutions\" gives multiple natural activation formulations; level 2 is too low because both common tasks and variations are explicit, and no level 4 exists."
+        },
+        "completeness": {
+          "score": 3,
+          "reasoning": "The first sentence identifies React state-management capabilities and the explicit \"Use when\" clause identifies activation scenarios; level 2 is too low because what and when are independently stated, and no level 4 exists."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 3,
+          "reasoning": "The explicit triggers \"global state\", \"server state\", and \"choosing between state management solutions\" route specifically to React state work; level 2 is too low because the activation boundary is stated, and no level 4 exists."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The 450-line body is dense with usable Redux, Zustand, Jotai, and React Query material, but repeats patterns and keeps extensive implementation detail inline, blocking level 3; level 1 is too low because low-value padding does not dominate."
+        },
+        "actionability": {
+          "score": 2,
+          "reasoning": "Examples such as `configureStore`, `createUserSlice`, and `useMutation` are concrete, but several snippets depend on undefined types, APIs, imports, or surrounding files, so level 3's end-to-end completeness fails; level 1 is too low because substantial reusable code is supplied."
+        },
+        "workflow_clarity": {
+          "score": 2,
+          "reasoning": "The selection criteria and numbered patterns guide solution choice, but complex setup and migration work lacks a consistent validate-fix-retry checkpoint, blocking level 3; level 1 is too low because the material is clearly ordered and includes an optimistic-update rollback."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Headings make the long monolith navigable, but `resources/implementation-playbook.md` is referenced without a frozen bundle file and extensive detail remains inline, so level 3 fails; level 1 is too low because the real content is still easy to locate in the body."
+        }
+      }
+    },
+    {
+      "skillId": "systematic-debugging",
+      "bundleHash": "abf644f97ccd9ce75371b0987411ddcf1d0f680ea4b67b624bb7de73442f9c76",
+      "description": {
+        "specificity": {
+          "score": 1,
+          "reasoning": "\"Use when encountering any bug, test failure, or unexpected behavior\" names situations but no capability action, so level 2 is too high; no lower level exists."
+        },
+        "trigger_term_quality": {
+          "score": 3,
+          "reasoning": "\"bug, test failure, or unexpected behavior\" is an explicit activation clause with multiple natural user problem formulations; level 2 is too low because the common variations are covered, and no level 4 exists."
+        },
+        "completeness": {
+          "score": 1,
+          "reasoning": "The description explicitly says when to activate but never states what the skill does beyond that trigger, so level 2 is too high; no lower level exists."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "The explicit bug and test-failure triggers establish the debugging domain, but \"any bug\" overlaps adjacent debugging skills without a separating boundary, blocking level 3; level 1 is too low because it is not generic outside technical failures."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The four phases contain dense operational guidance, but the \"Iron Law\", red flags, rationalizations, and impact sections repeat the same root-cause-first message, blocking level 3; level 1 is too low because useful procedure dominates."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "Commands such as diagnostic shell probes and the concrete reproduce-trace-hypothesize-test-fix process are reusable end to end; level 2 is too low because execution details and decision rules are explicit, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "\"You MUST complete each phase before proceeding\" is backed by four sequenced phases, test checkpoints, return-to-Phase-1 recovery, and an architecture stop after three failures; level 2 is too low because validation and recovery are explicit, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 3,
+          "reasoning": "The body provides a clear overview and routes supporting techniques to real one-level files such as `root-cause-tracing.md` and `defense-in-depth.md`; level 2 is too low because navigation and bundle routing are explicit, and no level 4 exists."
+        }
+      }
+    },
+    {
+      "skillId": "telegram",
+      "bundleHash": "fc8a7d86a195e534bab3cbc678db9b9cd597659419777d08013413f8f6b8942d",
+      "description": {
+        "specificity": {
+          "score": 2,
+          "reasoning": "\"Setup com BotFather, mensagens, webhooks, inline keyboards, grupos, canais\" lists concrete features and a domain, but nominal features are not multiple explicit verb-object actions required for level 3; level 1 is too low because the scope is detailed."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "Terms such as \"Telegram Bot API\", \"webhooks\", and \"inline keyboards\" are natural domain keywords, but they are not presented as activation triggers, blocking level 3; level 1 is too low because users plausibly use these terms."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description clearly states the Telegram integration scope and supplied boilerplates, but gives no explicit when-to-use guidance, so level 3 fails; level 1 is too low because what it covers is clear."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "\"Telegram Bot API\" creates a precise product niche, but product specificity alone supplies no boundary from adjacent Telegram or messaging skills, blocking level 3; level 1 is too low because the domain is unmistakable."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The 585-line body has useful code and API guidance, but repeats the overview and keeps large message-type and editing references inline, so level 3 efficiency is not reached; level 1 is too low because most content remains operational."
+        },
+        "actionability": {
+          "score": 2,
+          "reasoning": "Commands such as `scripts/setup_project.py`, `scripts/test_bot.py`, and numerous API examples are concrete, but malformed fences, missing imports, and bare fragments require execution details to be invented, blocking level 3; level 1 is too low because working entry points exist."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "The decision tree, BotFather setup, token test, message test, webhook registration, and retry handler provide sequence, validation, and recovery for the complex workflow; level 2 is too low because explicit checks and retry paths are present, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "The reference table points to real one-level reference files and real scripts/assets, but the very long body still embeds extensive API material that could be delegated, blocking level 3; level 1 is too low because routing and headings remain clear."
+        }
+      }
+    },
+    {
+      "skillId": "helpdesk-automation",
+      "bundleHash": "96fd9903ff7a36aed9dc0e1079161ba2a2ad15b99bba5430851acadb7efca962",
+      "description": {
+        "specificity": {
+          "score": 3,
+          "reasoning": "\"list tickets, manage views, use canned responses, and configure custom fields\" states four concrete verb-object actions; level 2 is too low because multiple capabilities are explicit, and no level 4 exists."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"HelpDesk tasks\", \"tickets\", \"canned responses\", and \"custom fields\" are natural terms, but no explicit user activation phrasing is provided, blocking level 3; level 1 is too low because the terms match common requests."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description explicitly lists what the skill automates, but \"Always search tools first\" is an operating rule rather than when a user should activate it, so level 3 fails; level 1 is too low because capabilities are strong."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "\"via Rube MCP (Composio)\" narrows the implementation, but no explicit boundary distinguishes it from other HelpDesk automation skills, blocking level 3; level 1 is too low because the product and task scope are precise."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The body is mostly dense tool guidance, but ticket pagination and pitfalls are repeated across Core Workflows, Common Patterns, and Known Pitfalls, blocking level 3; level 1 is too low because operational value dominates."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "Exact tool slugs, required parameters, cursor pairs, and setup calls such as `RUBE_MANAGE_CONNECTIONS` are sufficient to execute the read workflows; level 2 is too low because key steps and values are specified, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "Setup requires verifying availability and ACTIVE status, each workflow has an ordered tool sequence, and pagination plus 429 backoff supplies continuation and recovery; level 2 is too low because checkpoints and failure handling are explicit, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Clear workflow headings and a quick-reference table make the 176-line monolith navigable, but no bundle split routes detailed parameter material out of the main file, blocking level 3; level 1 is too low because organization works."
+        }
+      }
+    },
+    {
+      "skillId": "bun-development",
+      "bundleHash": "8dd1bd269886625e001a5ef05b5ea50bf58e17ddcd4a5b4d627ff35d79b7da6b",
+      "description": {
+        "specificity": {
+          "score": 2,
+          "reasoning": "\"JavaScript/TypeScript development with the Bun runtime\" names a clear domain and activity, but it states no multiple concrete verb-object actions required for level 3; level 1 is too low because the runtime and development scope are explicit."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"JavaScript/TypeScript\" and \"Bun runtime\" are natural terms, but they are not framed as activation variations, blocking level 3; level 1 is too low because users naturally mention Bun and JS/TS."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description states a broad Bun development purpose, but no explicit when-to-use clause appears, so level 3 fails; level 1 is too low because what domain it serves is clear."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "The Bun runtime provides a recognizable niche, but niche precision alone does not set a boundary from Bun-specific adjacent skills, blocking level 3; level 1 is too low because it will not collide with unrelated development skills."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The 707-line body is dense with commands and code, but broad package, API, test, bundling, migration, and performance references all remain inline and some setup is duplicated, blocking level 3; level 1 is too low because low-value padding does not dominate."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "Copy-ready commands such as `bun init`, `bun test --coverage`, and `bun build`, plus complete project, server, database, and test examples, support direct execution; level 2 is too low because guidance is reusable across core tasks, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 2,
+          "reasoning": "Numbered sections and migration steps provide ordering, but complex setup, build, and migration recipes lack explicit validation and fix-retry checkpoints, blocking level 3; level 1 is too low because sequences and expected artifacts are stated."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Strong numbered headings make the very long monolith internally navigable, but no one-level bundle references offload detailed material, blocking level 3; level 1 is too low because navigation is clear rather than failed."
+        }
+      }
+    },
+    {
+      "skillId": "deprecation-and-migration",
+      "bundleHash": "3e85b18b19b817b0baac92ba69622cf65567ce3657c1768b94807f858b2ed8b5",
+      "description": {
+        "specificity": {
+          "score": 3,
+          "reasoning": "\"removing old systems\", \"migrating users\", and \"deciding whether to maintain or sunset\" state multiple explicit verb-object actions; level 2 is too low because capabilities are concrete and varied, and no level 4 exists."
+        },
+        "trigger_term_quality": {
+          "score": 3,
+          "reasoning": "Three explicit \"Use when\" clauses cover natural requests about removal, migration, maintenance, and sunsetting; level 2 is too low because common user formulations and variations are directly framed as triggers, and no level 4 exists."
+        },
+        "completeness": {
+          "score": 3,
+          "reasoning": "\"Manages deprecation and migration\" states what, while the three \"Use when\" clauses state when; level 2 is too low because both elements are explicit and independently identifiable, and no level 4 exists."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 3,
+          "reasoning": "The triggers explicitly limit routing to removing, migrating, maintaining, or sunsetting existing systems and features; level 2 is too low because this is a conflict-resistant lifecycle boundary, and no level 4 exists."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The decision framework and migration process are useful, but conceptual exposition such as \"Code Is a Liability\" and the rationalizations section repeat ideas and keep 220 lines inline, blocking level 3; level 1 is too low because practical guidance dominates."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "The five-question decision tree, four-step migration process, notice template, adapter code, and verification checklist provide reusable end-to-end guidance; level 2 is too low because key decisions and outputs are specified, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "\"Build the Replacement\", \"Announce and Document\", \"Migrate Incrementally\", and \"Remove\" form a gated sequence ending in metrics, tests, and zero-usage verification; level 2 is too low because validation checkpoints are explicit, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Clear headings and tables make the 220-line body navigable, but all patterns, examples, and conceptual detail remain in one file with no routed bundle material, blocking level 3; level 1 is too low because the monolith is not hard to navigate."
+        }
+      }
+    },
+    {
+      "skillId": "agent-squad/rex",
+      "bundleHash": "baf05068ff4d40e0d00f902955e2594137be54ee8b15f5c88543fe26d5ab7429",
+      "description": {
+        "specificity": {
+          "score": 2,
+          "reasoning": "\"Translates user intent into a precise, unambiguous specification and requirements\" gives one concrete action and output, but not multiple actions required for level 3; level 1 is too low because the action and artifact are precise."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"user intent\", \"specification\", and \"requirements\" are natural task terms, but no explicit activation phrasing or variants appear, blocking level 3; level 1 is too low because these are recognizable user needs."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description clearly states what Rex produces, but it does not explicitly say when to activate the skill, so level 3 fails; level 1 is too low because the capability is unambiguous."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "The requirements-specification niche is precise, but no explicit boundary separates it from product requirements or planning skills, blocking level 3; level 1 is too low because the output is clearly scoped."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 3,
+          "reasoning": "Rules such as \"at most 3 clarifying questions\", MoSCoW requirements, and the report template keep the body focused on execution with little generic explanation; level 2 is too low because nearly every section changes behavior or output, and no level 4 exists."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "The exact REX REPORT template, user-story syntax, acceptance-criterion format, and handoff rules fully determine the instruction-only task; level 2 is too low because no key output detail must be invented, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "Intent, audience, edge cases, stories, constraints, structured output, and handoff define a complete requirements-analysis flow, including blocking-question flags and amendment handling; level 2 is too low because the task is fully determined, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Responsibilities, output, handoff, and style headings make the 125-line body internally navigable, but it remains a longer self-contained monolith without routed references, blocking level 3; level 1 is too low because disclosure is orderly."
+        }
+      }
+    },
+    {
+      "skillId": "debugging-and-error-recovery",
+      "bundleHash": "f4d42bc5fc93ed160ae7e5cf0a17d3586068046d0851b3766e617dea37da6e0b",
+      "description": {
+        "specificity": {
+          "score": 3,
+          "reasoning": "\"Guides systematic root-cause debugging\" and \"finding and fixing the root cause\" state concrete diagnostic and repair actions; level 2 is too low because multiple explicit actions are present, and no level 4 exists."
+        },
+        "trigger_term_quality": {
+          "score": 3,
+          "reasoning": "\"tests fail, builds break, behavior doesn't match expectations, or you encounter any unexpected error\" supplies multiple natural user problem formulations in an explicit trigger; level 2 is too low because coverage is broad and concrete, and no level 4 exists."
+        },
+        "completeness": {
+          "score": 3,
+          "reasoning": "The first sentence states the root-cause debugging capability and the two \"Use when\" sentences state activation scenarios; level 2 is too low because what and when are both explicit, and no level 4 exists."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "The explicit failure triggers establish debugging scope, but they overlap the adjacent systematic-debugging skill and provide no separating boundary, blocking level 3; level 1 is too low because routing stays within technical failures."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "The triage trees and commands are dense and useful, but the stop rule, rationalizations, red flags, and verification sections repeat the same discipline across 314 lines, blocking level 3; level 1 is too low because operational content dominates."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "Specific `npm test`, `git bisect`, reproduction, reduction, regression-test, build, and manual-check instructions support end-to-end debugging; level 2 is too low because commands and decisions are concrete, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "The six-step stop-reproduce-localize-reduce-fix-guard-verify flow contains explicit branching, regression checks, full-suite checks, and non-reproducible recovery; level 2 is too low because checkpoints and feedback loops are comprehensive, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Descriptive headings and diagnostic trees make the long file navigable, but all detailed patterns remain in a single 314-line body without routed references, blocking level 3; level 1 is too low because navigation succeeds."
+        }
+      }
+    },
+    {
+      "skillId": "python-pro",
+      "bundleHash": "8419c8d70878f117cd6908dc11025ff089a1b86d456ce927f13d25c1fdefa2e2",
+      "description": {
+        "specificity": {
+          "score": 1,
+          "reasoning": "\"Master Python 3.12+\" is imperative second-person voice and the rest lists nominal domains such as async and performance rather than multiple actions, so the voice penalty makes level 2 too high; no lower level exists."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"Python 3.12+\", \"async programming\", `uv`, `ruff`, `pydantic`, and `FastAPI` are natural domain terms, but they are not framed as activation phrases, blocking level 3; level 1 is too low because common user vocabulary is extensive."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description identifies modern Python expertise and domains, but provides no explicit when-to-use guidance, so level 3 fails; level 1 is too low because its purpose is evident."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "Python 3.12+ and named modern tools narrow the niche, but no explicit boundary distinguishes it from other Python development skills, blocking level 3; level 1 is too low because the ecosystem is specific."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 1,
+          "reasoning": "Large \"Capabilities\", \"Behavioral Traits\", and \"Knowledge Base\" lists repeatedly enumerate broad Python knowledge Claude already has, so low-value duplication dominates and level 2 is too high; no lower level exists."
+        },
+        "actionability": {
+          "score": 2,
+          "reasoning": "The four-step instructions and eight-step response approach direct analysis, implementation, testing, profiling, and documentation, but provide no executable examples or task-complete procedure, blocking level 3; level 1 is too low because concrete behavioral directives exist."
+        },
+        "workflow_clarity": {
+          "score": 2,
+          "reasoning": "\"Confirm runtime\", \"Choose patterns\", \"Implement and test\", and \"Profile and tune\" provide a sequence, but broad production work lacks explicit validation thresholds and recovery loops, blocking level 3; level 1 is too low because ordering exists."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Clear topical headings make the 162-line monolith navigable, but extensive lists that could be split remain inline and no references are provided, blocking level 3; level 1 is too low because organization itself has not failed."
+        }
+      }
+    },
+    {
+      "skillId": "solidity-security",
+      "bundleHash": "019a1cc84290f54864ce8687c88f195bad4fb6b020a2536c7b3ff42c7ab44605",
+      "description": {
+        "specificity": {
+          "score": 1,
+          "reasoning": "\"Master smart contract security best practices\" uses imperative second-person voice and nominal topics rather than multiple verb-object actions, so the required voice penalty makes level 2 too high; no lower level exists."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"smart contract security\", \"vulnerability prevention\", and \"Solidity\" are natural user terms, but no explicit activation phrasing appears, blocking level 3; level 1 is too low because the vocabulary is relevant and specific."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description states the smart-contract security subject and intended outcome, but not when the skill should be used, so level 3 fails; level 1 is too low because what it covers is recognizable."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "The Solidity security niche is clear, but niche precision alone supplies no boundary from smart-contract audit or DeFi-security skills, blocking level 3; level 1 is too low because unrelated skills would not trigger."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 3,
+          "reasoning": "The 43-line body limits itself to triggers, exclusions, four operating directives, and one clearly signaled resource without conceptual padding; level 2 is too low because the content is focused and token-efficient, and no level 4 exists."
+        },
+        "actionability": {
+          "score": 2,
+          "reasoning": "Directives to clarify inputs, apply practices, validate, and open `resources/implementation-playbook.md` are concrete starting points, but execution detail lives outside the body and must be selected or invented, blocking level 3; level 1 is too low because actionable directions exist."
+        },
+        "workflow_clarity": {
+          "score": 2,
+          "reasoning": "The instruction bullets give a basic clarify-apply-validate progression, but security auditing and implementation lack explicit checkpoints and recovery, blocking level 3; level 1 is too low because a sequence and validation requirement are present."
+        },
+        "progressive_disclosure": {
+          "score": 3,
+          "reasoning": "The short self-contained overview clearly routes detailed patterns to the real one-level `resources/implementation-playbook.md`; level 2 is too low because the split is explicit and easy to navigate, and no level 4 exists."
+        }
+      }
+    },
+    {
+      "skillId": "ux-flow",
+      "bundleHash": "be36bceee91af2248db5b56e8c6fd5c88983da6e6acf469716b07b4288524490",
+      "description": {
+        "specificity": {
+          "score": 1,
+          "reasoning": "\"Design user flows and navigation structure\" is one imperative verb with related objects rather than multiple actions, and the second-person imperative penalty makes level 2 too high; no lower level exists."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"user flows\", \"navigation structure\", and \"UX patterns\" are natural task terms, but they are not framed as activation guidance, blocking level 3; level 1 is too low because users plausibly request these artifacts."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description clearly states the design output, but no explicit when-to-use clause appears, so level 3 fails; level 1 is too low because the capability is clear."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "The user-flow and navigation niche is specific, but no boundary from page design, information architecture, or prototyping appears in the description, blocking level 3; level 1 is too low because the scope is not generic design."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 3,
+          "reasoning": "The 74-line body focuses on activation boundaries, concrete UX rules, and the required output without explaining basic concepts at length; level 2 is too low because useful density is high, and no level 4 exists."
+        },
+        "actionability": {
+          "score": 2,
+          "reasoning": "Rules such as \"Maximum 3 taps\" and the exact diagram, inventory, edge-case, and scaffold outputs are concrete, but missing `CLAUDE.md`, `DESIGN-LANGUAGE.md`, `components/patterns/`, and `/ss-page` conventions leave key execution detail unavailable, blocking level 3; level 1 is too low because many directives remain usable."
+        },
+        "workflow_clarity": {
+          "score": 2,
+          "reasoning": "The four numbered instructions establish read-apply-output-generate order, but page generation is complex and has no validation or recovery checkpoint, blocking level 3; level 1 is too low because the sequence and deliverables are explicit."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "The short body is well sectioned, but it routes required detail to absent files and undefined `/ss-page` conventions, so level 3's real navigable references fail; level 1 is too low because the body itself remains navigable and contains substantive rules."
+        }
+      }
+    },
+    {
+      "skillId": "youtube-notetaker",
+      "bundleHash": "647beeea4b7da8ef91b66931c7dffb303fa7e46cdb2ab2b1363ce7f146e1ba93",
+      "description": {
+        "specificity": {
+          "score": 1,
+          "reasoning": "\"Turn YouTube talks into local study notes\" gives one concrete transformation with several output features, but the imperative second-person voice reduces the otherwise level-2 specificity to level 1; no lower level exists."
+        },
+        "trigger_term_quality": {
+          "score": 2,
+          "reasoning": "\"YouTube talks\", \"study notes\", \"slides\", and \"transcripts\" are natural terms, but they are not framed as activation variations, blocking level 3; level 1 is too low because common request vocabulary is present."
+        },
+        "completeness": {
+          "score": 2,
+          "reasoning": "The description precisely states the YouTube-to-notes capability and outputs, but it does not explicitly say when to activate the skill, so level 3 fails; level 1 is too low because what it does is strong."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 2,
+          "reasoning": "The local YouTube study-note niche is precise, but no explicit boundary separates it from transcription, summarization, or video-downloading skills, blocking level 3; level 1 is too low because the combined artifact is distinctive."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 3,
+          "reasoning": "The architecture, eight pipeline stages, file shape, and gotchas are dense operational material with little generic explanation; level 2 is too low because useful density remains high despite 210 lines, and no level 4 exists."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "Exact setup, download, detection, curation, extraction, transcript, assembly, serve, and verify commands form a copy-ready workflow using real bundled scripts; level 2 is too low because execution is end to end, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "The numbered pipeline culminates in \"Serve and verify (always do this)\", gives HTTP assertions and browser inspection, and includes recovery guidance for embedding and server failures; level 2 is too low because validation and feedback are explicit, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 3,
+          "reasoning": "The body acts as a navigable workflow while routing execution to real one-level `scripts/` helpers and the real `reference/artifact.html`; level 2 is too low because bundle paths are explicit and verified, and no level 4 exists."
+        }
+      }
+    },
+    {
+      "skillId": "finishing-a-development-branch",
+      "bundleHash": "5290259966989c7130dfa3fc6526a64ffff5d38faed8f4fd9e85bb33823843c0",
+      "description": {
+        "specificity": {
+          "score": 1,
+          "reasoning": "The description says it \"guides completion\" and \"presenting structured options\", but the second-person phrase \"you need to decide\" triggers the required voice penalty from level 2 to level 1; no lower level exists."
+        },
+        "trigger_term_quality": {
+          "score": 3,
+          "reasoning": "\"implementation is complete, all tests pass\" and deciding how to integrate through \"merge, PR, or cleanup\" are multiple natural activation conditions; level 2 is too low because common finishing scenarios are explicit, and no level 4 exists."
+        },
+        "completeness": {
+          "score": 3,
+          "reasoning": "The explicit \"Use when\" conditions state when, while \"presenting structured options for merge, PR, or cleanup\" states what; level 2 is too low because both elements are independently clear, and no level 4 exists."
+        },
+        "distinctiveness_conflict_risk": {
+          "score": 3,
+          "reasoning": "The boundary \"implementation is complete, all tests pass\" distinctly routes only branch-finishing work and names merge, PR, or cleanup outcomes; level 2 is too low because adjacent implementation work is explicitly excluded by timing, and no level 4 exists."
+        }
+      },
+      "content": {
+        "conciseness": {
+          "score": 2,
+          "reasoning": "Commands, options, and safety gates are useful, but Quick Reference, Common Mistakes, and Red Flags repeat earlier process rules across 218 lines, blocking level 3; level 1 is too low because operational guidance dominates."
+        },
+        "actionability": {
+          "score": 3,
+          "reasoning": "Exact test, merge-base, merge, push, PR, confirmation, branch deletion, and worktree commands make every allowed choice executable; level 2 is too low because key commands and user prompts are supplied, and no level 4 exists."
+        },
+        "workflow_clarity": {
+          "score": 3,
+          "reasoning": "Five ordered steps gate options on passing tests and branch protection, verify merged results, stop on failure, and require typed confirmation before discard; level 2 is too low because validation and recovery or stop paths are explicit, and no level 4 exists."
+        },
+        "progressive_disclosure": {
+          "score": 2,
+          "reasoning": "Process, option, mistakes, and reference headings make the long body navigable, but all detailed branches remain in one file without routed references, blocking level 3; level 1 is too low because organization is clear."
+        }
+      }
+    }
+  ]
+}

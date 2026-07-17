@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "analyzerVersion": "aas-tessl-aligned-heuristics-v5",
+  "frozenBeforeHoldoutResults": true,
+  "dimensionOrder": {
+    "description": ["specificity", "trigger_term_quality", "completeness", "distinctiveness_conflict_risk"],
+    "content": ["conciseness", "actionability", "workflow_clarity", "progressive_disclosure"]
+  },
+  "predictions": {
+    "cc-skill-continuous-learning": { "warnings": 1, "score": 53, "description": [1, 1, 1, 1], "content": [3, 2, 3, 3] },
+    "source-driven-development": { "warnings": 1, "score": 71, "description": [2, 2, 2, 2], "content": [3, 3, 2, 2] },
+    "gemini-deep-research": { "warnings": 1, "score": 79, "description": [2, 2, 2, 2], "content": [3, 3, 3, 3] },
+    "browser-automation": { "warnings": 2, "score": 60, "description": [2, 2, 2, 2], "content": [1, 3, 3, 1] }
+  }
+}
