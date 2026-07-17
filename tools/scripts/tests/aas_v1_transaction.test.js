@@ -230,6 +230,48 @@ test("bootstrap publication failure preserves plan-bound recovery evidence", () 
   fs.rmSync(fx.sandbox, { recursive: true });
 });
 
+test("cleanup recovery closes a WAL created before layout materialization", () => {
+  const fx = fixture();
+  fs.rmSync(fx.transactionDirectory, { recursive: true });
+  writeTree(path.join(fx.skillsDirectory, "unmanaged"), { "keep.txt": "untouched\n" });
+  const unmanagedBefore = treeDigest(path.join(fx.skillsDirectory, "unmanaged"));
+  const plan = buildInstallPlan(fx);
+  const inspected = inspectLayout(fx.adapter, plan.payload.target);
+  assert.equal(inspected.missingDirectories.length, 1);
+  assert.equal(path.basename(inspected.missingDirectories[0]), path.basename(fx.transactionDirectory));
+  const applyLock = acquireLock(inspected, plan);
+  const recoveryId = recoveryIdFor(plan.digest, TARGET_ID);
+  const markerName = `.aas-layout-${recoveryId}`;
+  const bootstrapBody = {
+    directories: inspected.missingDirectories
+      .map((directory) => path.relative(inspected.root, directory).split(path.sep).join("/")),
+    markerName,
+    markerToken: applyLock.token,
+    planDigest: plan.digest,
+    recoveryId,
+    schemaVersion: 1,
+    targetIdentityDigest: TARGET_ID,
+  };
+  fs.writeFileSync(path.join(fx.root, `.aas-bootstrap-${recoveryId}.json`), `${canonicalJson({
+    ...bootstrapBody,
+    recordDigest: sha256(canonicalJson(bootstrapBody)),
+  })}\n`);
+  createJournal(fx.root, recoveryId, plan.digest, TARGET_ID);
+  fs.closeSync(applyLock.descriptor);
+  fs.writeFileSync(applyLock.path, `${canonicalJson({ ...applyLock.record, pid: 2147483647 })}\n`);
+
+  const diagnosis = doctor({ target: plan.payload.target, adapter: fx.adapter });
+  assert.equal(diagnosis.status, "recoveryRequired");
+  assert.equal(diagnosis.recoveries[0].bootstrapOnly, undefined);
+  const cleanup = buildRecoveryPlan({ plan, adapter: fx.adapter, recoveryId, action: "cleanup" });
+  assert.equal(cleanup.payload.bootstrapOnly, false);
+  assert.equal(recover({ recoveryPlan: cleanup, plan, adapter: fx.adapter, approvalDigest: cleanup.digest }).status, "cleaned");
+  assert.equal(fs.existsSync(fx.transactionDirectory), false);
+  assert.equal(treeDigest(path.join(fx.skillsDirectory, "unmanaged")), unmanagedBefore);
+  assert.equal(doctor({ target: plan.payload.target, adapter: fx.adapter }).status, "healthy");
+  fs.rmSync(fx.sandbox, { recursive: true });
+});
+
 test("layout publication failure is tracked before fsync and leaves no partial artifact", () => {
   const fx = fixture();
   fs.rmSync(fx.skillsDirectory, { recursive: true });

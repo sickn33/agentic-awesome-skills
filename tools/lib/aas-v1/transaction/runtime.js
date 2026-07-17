@@ -1267,7 +1267,12 @@ function recover({ recoveryPlan, plan, adapter, approvalDigest, onBoundary }) {
       releaseLock(guard);
     }
   }
-  const strictLayout = resolveLayout(adapter, plan.payload.target);
+  // A valid WAL may exist before materializeLayout publishes every planned
+  // directory. Only an early, mutation-free cleanup may close that crash
+  // window with an incomplete marker-bound layout; every other recovery keeps
+  // the strict full-layout requirement.
+  let strictLayout = inspectLayout(adapter, plan.payload.target);
+  verifyTargetIdentity(adapter, strictLayout, plan.payload.target);
   if (canonicalJson(recoveryPlan.payload.operations) !== canonicalJson(expectedRecoveryOperations(
     plan,
     recoveryPlan.payload.action,
@@ -1275,6 +1280,22 @@ function recover({ recoveryPlan, plan, adapter, approvalDigest, onBoundary }) {
   ))) throw transactionError("AAS_RECOVERY_OPERATIONS_MISMATCH", "integrity", {});
   let journal = readJournal(strictLayout.root, recoveryPlan.payload.recoveryId);
   verifyCheckpoint(journal, recoveryPlan.payload.checkpoint);
+  if (strictLayout.missingDirectories.length) {
+    const bootstrap = readBootstrapRecord(strictLayout, recoveryPlan.payload.recoveryId, { allowMissing: false });
+    const planned = new Set(bootstrap.directories);
+    const missing = strictLayout.missingDirectories
+      .map((directory) => path.relative(strictLayout.root, directory).split(path.sep).join("/"));
+    const earlyEvents = new Set(["started", "layoutDirectoryCreated", "failed", "recoveryStarted"]);
+    const earlyCleanup = recoveryPlan.payload.action === "cleanup"
+      && missing.every((logicalId) => planned.has(logicalId))
+      && journal.records.every((record) => earlyEvents.has(record.event));
+    if (!earlyCleanup) {
+      strictLayout = resolveLayout(adapter, plan.payload.target);
+      verifyTargetIdentity(adapter, strictLayout, plan.payload.target);
+      journal = readJournal(strictLayout.root, recoveryPlan.payload.recoveryId);
+      verifyCheckpoint(journal, recoveryPlan.payload.checkpoint);
+    }
+  }
   let lock;
   let retiredLock;
   let retiredGuard;
