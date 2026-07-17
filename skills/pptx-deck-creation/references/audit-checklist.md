@@ -20,16 +20,20 @@ A.y < B.y + B.h  AND  B.y < A.y + A.h
 For each text object estimate whether its text fits within its bbox.
 
 Rough capacity (Latin):
-- Characters per line ≈ `(bbox.w × 72) / (font_size × 0.5)`, using `0.5 em` as an average Latin glyph-width factor
+- Characters per line ≈ `(bbox.w × 72) / (font_size × 0.5)`, using `0.5 em`
+  as an average Latin glyph-width factor
 - Lines available ≈ `(bbox.h × 72) / (font_size × 1.2)`
   _(bbox in inches, font_size in pt)_
 
 Adjustments:
-- **CJK / full-width text:** use a glyph-width factor near `1.0 em` instead of `0.5 em`. The extractor reports `non_ascii_text` — use it to flag CJK-heavy slides.
+- **CJK / full-width text:** halve the characters-per-line value (full-width glyphs ≈ 2× Latin advance). The extractor reports `non_ascii_text` — use it to flag CJK-heavy slides.
 - **Text on a shape/card:** subtract ≈0.1 in of inner padding from each side of the shape before computing capacity; the text occupies the inset inner area, not the full shape.
 
 - **Pass:** estimated text volume ≤ available capacity.
-- **Warning:** likely overflow → inspect the generated PPTX or rendered preview, then shorten bullets, enlarge the bbox, or split the slide when clipping is confirmed. This estimate is a triage heuristic, not a deterministic failure by itself.
+- **Warning:** likely overflow → inspect the generated PPTX or rendered preview,
+  then shorten bullets, enlarge the bbox, or split the slide when clipping is
+  confirmed. This estimate is a triage heuristic, not a deterministic failure
+  by itself.
   **Never set `font_size` below 9 pt for `classification: "content"` objects.**
 
 ## 3. Font Size Minimums

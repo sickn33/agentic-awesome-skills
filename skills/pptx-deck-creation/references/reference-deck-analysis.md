@@ -6,8 +6,9 @@ This file is static guidance for inspecting existing `.pptx` files and defining 
 
 - Keep only static guidance for reference-deck prompt context, extraction, folder analysis, and style-master inspection.
 - Do not place runtime scripts, model assets, importable Python modules, or generated artifacts here.
-- This skill ships no importable code; implement the extraction/style-analysis contract on demand with `python-pptx`.
-- `python-snippets.md` holds documentation-only `python-pptx` guidance — approach notes plus short illustrative snippets. Do not import from it or recreate packaged `.py` resources from it.
+- This skill ships no importable code; implement the extraction/style-analysis and read-only OOXML inspection contracts on demand with `python-pptx`, `zipfile`, and a secure XML parser.
+- `reference-deck-analysis-patterns.md` holds documentation-only `python-pptx` guidance — approach notes plus short illustrative snippets. Do not import from it or recreate packaged `.py` resources from it.
+- `ooxml-parsing.md` holds documentation-only package-part, relationship, namespace, and security guidance. It is not a runtime dependency or script template.
 
 ## Analysis Recipes
 
@@ -28,15 +29,34 @@ Produce a full JSON extraction including:
 - `summary` complexity metrics
 - `slides[*].layout_tree` with groups/objects
 - `ooxml_elements` for render-aware inspection
+- resolved package relationships, OOXML-only markers, and parsing exceptions
 
-### 3. Folder Batch Recipe
+### 3. OOXML Package Inspection Recipe
+
+Use read-only package inspection when high-level APIs do not expose the needed
+evidence: slide order, theme tokens, masters/layouts, notes, comments,
+animations, media, charts, or non-modeled formatting.
+
+- Resolve slide order from `ppt/presentation.xml` and its relationship part.
+	Do not derive it from `slideN.xml` filenames.
+- Resolve every relationship target relative to its owning source part, not its
+	`.rels` part. Retain the relationship type, target, and unreadable XML errors
+	in the result.
+- Preserve theme colors and fonts as tokens when they cannot be reliably
+	resolved to RGB values.
+- Parse untrusted XML with a secure parser; do not enable DTDs, entity
+	expansion, or network access.
+- Keep the source package read-only and never copy its XML parts into a new
+	deck.
+
+### 4. Folder Batch Recipe
 
 Process a folder of decks to produce:
 
 - One `.pptx-spec.json` file per deck
 - A `manifest.json` to track outputs
 
-### 4. Style Master Recipe
+### 5. Style Master Recipe
 
 Run style-only analysis when you need design lock signals:
 
@@ -44,7 +64,7 @@ Run style-only analysis when you need design lock signals:
 - Typography and font-size distribution
 - Master/layout usage and flow patterns
 
-### 5. Reference Template Catalog Recipe
+### 6. Reference Template Catalog Recipe
 
 When a reference deck should inform a new deck's layout rhythm, produce a
 human-readable catalog from the existing prompt-context, extraction, and
@@ -83,9 +103,11 @@ Suggested catalog shape:
 ## Related Responsibilities
 
 This reference covers PPTX prompt context, extraction, folder batch analysis,
-style-master inspection, and the derived reference-template catalog only.
+style-master inspection, read-only OOXML package inspection, and the derived
+reference-template catalog only. See [OOXML parsing guidance](ooxml-parsing.md)
+for the package-part map and parser safety rules.
 
 - Use the parent `pptx-deck-creation` workflow for narrative/source preparation,
-  together with [design profiles](design-profiles.md) for profile selection.
+	together with [design profiles](design-profiles.md) for profile selection.
 - Use [visual asset guidelines](visual-asset-adapters.md) for acquiring and
-  placing icons, images, SVGs, and infographics.
+	placing icons, images, SVGs, and infographics.

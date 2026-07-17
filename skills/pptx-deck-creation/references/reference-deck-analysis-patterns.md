@@ -1,4 +1,4 @@
-# PPTX Python Snippets
+# Reference-Deck Analysis Patterns
 
 It describes how to approach PPTX extraction and style analysis with `python-pptx`, using short illustrative
 snippets — not a packaged module to copy wholesale.

@@ -19,9 +19,9 @@ Shared rules:
 - On failure, write a failure manifest; never substitute a placeholder and call it generated.
 - Never request secrets in chat or a prompt dialog. For cloud auth use `.env` or `az login`.
 - Before a billable generation call or any request that sends user-provided or
-  source material to a third party, disclose the provider/model, the material
-  that will leave the machine, likely cost, and output path. Obtain explicit
-  confirmation unless the user already authorized that exact operation.
+    source material to a third party, disclose the provider/model, the material
+    that will leave the machine, likely cost, and output path. Obtain explicit
+    confirmation unless the user already authorized that exact operation.
 
 ---
 
@@ -62,7 +62,7 @@ def icon_search(query, limit=8, prefix=None, color=None, out_dir="assets/icons")
 
 ## 2. Web Image Search
 
-Prefer the browsing or image-search capability available in the current client.
+Prefer the VS Code fetch tools (`fetch_webpage`) or an MCP image-search tool you have available.
 When you already have a direct image URL (from search results or the user), download it locally:
 
 ```python
@@ -102,8 +102,9 @@ Generate through a user-managed provider (OpenAI or Azure OpenAI). Read credenti
 never accept secrets via chat.
 
 Before running the snippet, obtain the external-call confirmation described in
-the shared rules. If `output_path` already exists, choose a new path or obtain
-separate overwrite confirmation; do not silently replace it.
+the shared rules. If `output_path` or its manifest already exists, choose a new
+path or obtain separate explicit overwrite confirmation; do not silently
+replace either file.
 
 ```python
 import base64, json, os
@@ -111,15 +112,20 @@ from pathlib import Path
 from openai import OpenAI, AzureOpenAI  # provided by the user's environment
 
 def text_to_infographic(prompt, output_path, provider="openai",
-                        model_or_deployment="gpt-image-1", size="1024x1024"):
+                        model_or_deployment="gpt-image-1", size="1024x1024",
+                        confirmed=False, allow_overwrite=False):
     output = Path(output_path)
     manifest_path = output.with_suffix(".manifest.json")
     existing = [path for path in (output, manifest_path) if path.exists()]
-    if existing:
+    if existing and not allow_overwrite:
         raise FileExistsError(f"Refusing to overwrite existing paths: {existing}")
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest = {"provider": provider, "model_or_deployment": model_or_deployment,
                 "output_path": output_path}
+    if not confirmed:
+        manifest.update(status="cancelled", error="External generation was not confirmed")
+        manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        return manifest
     try:
         if provider == "azure-openai":
             client = AzureOpenAI(
@@ -130,17 +136,20 @@ def text_to_infographic(prompt, output_path, provider="openai",
         else:
             client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
         result = client.images.generate(model=model_or_deployment, prompt=prompt, size=size)
-        output.parent.mkdir(parents=True, exist_ok=True)
         output.write_bytes(base64.b64decode(result.data[0].b64_json))
         manifest["status"] = "ok"
     except Exception as exc:  # report, never fake-generate
         manifest.update(status="error", error=str(exc))
-    manifest_path.write_text(json.dumps(manifest, indent=2))
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return manifest
 ```
 
-- Ask the user for any missing non-secret values: provider, prompt,
-  model/deployment, size, and output path.
+- Collect missing values via `vscode_askQuestions`: provider, prompt, model/deployment, size, output path.
+- Before calling the function, disclose the provider/model, material leaving
+  the machine, likely cost, and output path. Set `confirmed=True` only after
+  the user explicitly authorizes that exact external request. Set
+  `allow_overwrite=True` only after separate explicit approval to replace every
+  existing output or manifest path.
 - Use `.env` or `az login` for auth; never ask for keys/tokens in chat or the dialog.
 - Use generated art as a supporting visual. Recreate essential text, labels,
   metrics, and steps with native PowerPoint objects. Add a vector asset only
@@ -155,4 +164,5 @@ NotebookLM has no public generation API, so treat this as an optional, user-conf
 - If the user has a NotebookLM/MCP bridge tool configured, call it with `source_refs` + `prompt`,
   then save the returned image locally and record provenance.
 - If no bridge is configured, **fall back to Text → Infographic (section 4)** or omit the asset.
-- Apply the same provenance and failure-manifest rules as the other generation guidelines.
+- Apply the same confirmation, overwrite, provenance, and failure-manifest
+    rules as the other generation guidelines.
