@@ -100,13 +100,13 @@ async function macObserved(executable, args, options) {
   const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
   fs.writeFileSync(script, `
 #pragma D option quiet
-syscall::socket:entry,syscall::connect:entry,syscall::bind:entry,syscall::listen:entry,syscall::accept:entry,syscall::sendto:entry,syscall::recvfrom:entry
+syscall::socket*:entry,syscall::connect*:entry,syscall::bind*:entry,syscall::listen*:entry,syscall::accept*:entry,syscall::sendto*:entry,syscall::sendmsg*:entry,syscall::recvfrom*:entry,syscall::recvmsg*:entry
 /pid == $target || progenyof($target)/ { printf("network|%d|%s\\n", pid, probefunc); }
-syscall::open:entry,syscall::open_nocancel:entry
+syscall::open*:entry
 /(pid == $target || progenyof($target)) && ((arg1 & 3) != 0 || (arg1 & 0x600) != 0)/ { printf("write|%d|%s|%s\\n", pid, probefunc, copyinstr(arg0)); }
-syscall::write:entry,syscall::write_nocancel:entry
+syscall::*write*:entry
 /(pid == $target || progenyof($target)) && arg0 > 2/ { printf("write|%d|%s|fd=%d\\n", pid, probefunc, arg0); }
-syscall::mkdir:entry,syscall::rmdir:entry,syscall::unlink:entry,syscall::rename:entry,syscall::link:entry,syscall::symlink:entry,syscall::truncate:entry,syscall::ftruncate:entry,syscall::chmod:entry,syscall::chown:entry,syscall::fsync:entry
+syscall::mkdir*:entry,syscall::rmdir*:entry,syscall::unlink*:entry,syscall::rename*:entry,syscall::link*:entry,syscall::symlink*:entry,syscall::*truncate*:entry,syscall::*chmod*:entry,syscall::*chown*:entry,syscall::*sync*:entry
 /pid == $target || progenyof($target)/ { printf("write|%d|%s\\n", pid, probefunc); }
 proc:::exec-success
 /progenyof($target)/ { printf("process|%d|exec\\n", pid); }
