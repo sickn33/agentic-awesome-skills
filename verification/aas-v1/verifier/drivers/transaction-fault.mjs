@@ -75,7 +75,7 @@ function walEvidence(targetRoot) {
   return { events: records.map((record) => record.event), digest: digest(records), pathDigest: digest(wal) };
 }
 
-function laterBoundaryEvidence(className, targetRoot, skillId) {
+function laterBoundarySnapshot(className, targetRoot, skillId) {
   const later = {
     lock: (relative) => /^\.aas-bootstrap-|^\.aas-transaction-recovery-/.test(relative)
       || relative.includes("/staged/") || relative === `.agents/skills/${skillId}` || relative === ".aas/managed-state.codex.json",
@@ -86,7 +86,24 @@ function laterBoundaryEvidence(className, targetRoot, skillId) {
     rename: (relative) => relative === ".aas/managed-state.codex.json",
     commit: () => false,
   };
-  return listMatching(targetRoot, later[className]);
+  return listMatching(targetRoot, later[className]).map((relative) => {
+    const absolute = path.join(targetRoot, relative);
+    const stat = fs.lstatSync(absolute);
+    if (stat.isFile()) {
+      return { path: relative, type: "file", size: stat.size, contentDigest: digest(fs.readFileSync(absolute).toString("base64")) };
+    }
+    if (stat.isSymbolicLink()) return { path: relative, type: "symlink", target: fs.readlinkSync(absolute) };
+    return { path: relative, type: stat.isDirectory() ? "directory" : "special", size: stat.size };
+  });
+}
+
+function changedLaterBoundaries(before, after) {
+  const beforeByPath = new Map(before.map((entry) => [entry.path, JSON.stringify(entry)]));
+  const afterByPath = new Map(after.map((entry) => [entry.path, JSON.stringify(entry)]));
+  return [
+    ...after.filter((entry) => beforeByPath.get(entry.path) !== JSON.stringify(entry)).map((entry) => entry.path),
+    ...before.filter((entry) => !afterByPath.has(entry.path)).map((entry) => `removed:${entry.path}`),
+  ].sort();
 }
 
 function terminate(pid) {
@@ -102,6 +119,7 @@ function terminate(pid) {
 const chunks = [];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const input = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+const beforeLaterBoundaries = laterBoundarySnapshot(input.className, input.targetRoot, input.skillId);
 const child = spawn(input.executable, input.args, {
   cwd: input.cwd,
   env: input.env,
@@ -152,7 +170,9 @@ while (Date.now() - started < input.timeoutMs) {
 if (!observed) terminate(child.pid);
 const outcome = await closed;
 for (const watcher of watchers) watcher.close();
-const laterBoundaries = observed ? laterBoundaryEvidence(input.className, input.targetRoot, input.skillId) : [];
+const laterBoundaries = observed
+  ? changedLaterBoundaries(beforeLaterBoundaries, laterBoundarySnapshot(input.className, input.targetRoot, input.skillId))
+  : [];
 const recoveryLockPresent = fs.existsSync(path.join(input.targetRoot, ".aas-transaction.lock"));
 const wal = walEvidence(input.targetRoot);
 process.stdout.write(`${JSON.stringify({

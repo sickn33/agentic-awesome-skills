@@ -1,6 +1,19 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { macObserverBudgets, parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage, rewriteMacObservedNodeInput, windowsObserverBudgets } from "../lib/observer.mjs";
+import { runProcess } from "../lib/process.mjs";
+
+test("process runner distinguishes observer cleanup kills from timeouts", async () => {
+  const externallyKilled = await runProcess(process.execPath, ["-e", "setInterval(() => {}, 1000)"], {
+    timeoutMs: 5_000,
+    onSpawn(child) { setTimeout(() => child.kill("SIGKILL"), 25); },
+  });
+  assert.equal(externallyKilled.signal, "SIGKILL");
+  assert.equal(externallyKilled.timedOut, false);
+  const timedOut = await runProcess(process.execPath, ["-e", "setInterval(() => {}, 1000)"], { timeoutMs: 25 });
+  assert.equal(timedOut.signal, "SIGKILL");
+  assert.equal(timedOut.timedOut, true);
+});
 
 test("strace parser counts failed network attempts and non-stream writes", () => {
   const result = parseLinuxStrace([
