@@ -129,6 +129,20 @@ export function walBoundaryIsValid(className, walEvents) {
   return !walEvents.includes("committed");
 }
 
+export function nativeObservationLineage(platform, observed) {
+  const backendExpected = platform === "linux"
+    ? observed?.backend === "linux-strace-process-tree"
+    : platform === "darwin"
+      ? observed?.backend === "macos-fs_usage-process"
+      : observed?.backend === "windows-etw-kernel-process-tree";
+  const childObserved = platform === "darwin" || (observed?.observation?.childProcesses ?? 0) > 0;
+  const verified = backendExpected
+    && observed?.result?.timedOut !== true
+    && observed?.result?.outputLimitExceeded !== true
+    && (platform !== "win32" || observed?.diagnostics?.processTreeEmpty === true);
+  return { childObserved, verified };
+}
+
 function finalState(targetRoot, skillId, expectedContentDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
@@ -454,20 +468,15 @@ async function faultCase(context, className) {
     recoveryLockPresent: driverValue?.recoveryLockPresent ?? null,
     stderrDigest: sha256(observed.result.stderr || ""),
   });
-  const nativeBackendExpected = process.platform === "linux" ? observed.backend === "linux-strace-process-tree"
-    : process.platform === "darwin" ? observed.backend === "macos-fs_usage-process"
-      : observed.backend === "windows-etw-kernel-process-tree";
-  const lineageVerified = nativeBackendExpected
-    && observed.result.timedOut !== true
-    && observed.result.outputLimitExceeded !== true
-    && (process.platform !== "win32" || observed.diagnostics?.processTreeEmpty === true);
+  const nativeLineage = nativeObservationLineage(process.platform, observed);
+  const lineageVerified = nativeLineage.verified;
   const walEvents = driverValue?.wal?.events || [];
   const walBoundaryValid = walBoundaryIsValid(className, walEvents);
   // fs_usage observes the byte-identical child executable directly but does
   // not emit process-creation records. On macOS, executable binding plus the
   // native write trace establishes lineage; Linux/Windows must also expose a
   // child-process event from their process-tree observers.
-  const childLineageObserved = process.platform === "darwin" || observed.observation.childProcesses > 0;
+  const childLineageObserved = nativeLineage.childObserved;
   assert(driverValue?.observed && driverValue.recoveryLockPresent === true && driverValue.laterBoundaries.length === 0
       && observed.observation.writeAttempts > 0 && childLineageObserved && lineageVerified && walBoundaryValid,
     "AAS_TRANSACTION_CONTROLLER_NATIVE_OBSERVATION_MISSING", {
@@ -540,7 +549,8 @@ async function raceCase(context, className) {
       zones: fixture.zones,
       evidenceDir: path.join(fixture.evidenceDir, `race-${className}`),
     });
-    assert(observed.result.code === 0 && observed.observation.writeAttempts > 0 && observed.observation.childProcesses > 0,
+    const nativeLineage = nativeObservationLineage(process.platform, observed);
+    assert(observed.result.code === 0 && observed.observation.writeAttempts > 0 && nativeLineage.childObserved,
       "AAS_TRANSACTION_CONTROLLER_DYNAMIC_RACE_NOT_OBSERVED", { className, code: observed.result.code });
     const driverValue = parseJsonLines(observed.result.stdout)[0];
     assert(driverValue?.boundaryDigest && driverValue.outsideBefore === driverValue.outsideAfter
@@ -556,8 +566,7 @@ async function raceCase(context, className) {
       }),
     };
     recoveryResult = await recover(fixture);
-    const lineageVerified = observed.result.timedOut !== true && observed.result.outputLimitExceeded !== true
-      && (process.platform !== "win32" || observed.diagnostics?.processTreeEmpty === true);
+    const lineageVerified = nativeLineage.verified;
     assert(lineageVerified, "AAS_TRANSACTION_CONTROLLER_DYNAMIC_RACE_LINEAGE");
     native = { backend: observed.backend, lineageVerified, overflow: observed.result.outputLimitExceeded === true };
   } else {

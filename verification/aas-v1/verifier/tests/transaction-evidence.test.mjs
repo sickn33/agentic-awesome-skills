@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { portableTreeDigest, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { nativeObservationLineage, portableTreeDigest, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -131,4 +131,23 @@ test("portable tree evidence compares content without product-specific digest me
   assert.equal(portableTreeDigest(left), portableTreeDigest(right));
   fs.writeFileSync(path.join(right, "nested", "SKILL.md"), "changed bytes\n");
   assert.notEqual(portableTreeDigest(left), portableTreeDigest(right));
+});
+
+test("native lineage accepts macOS executable binding without invented child events", () => {
+  const base = { result: { timedOut: false, outputLimitExceeded: false }, observation: { childProcesses: 0 }, diagnostics: {} };
+  assert.deepEqual(nativeObservationLineage("darwin", { ...base, backend: "macos-fs_usage-process" }), {
+    childObserved: true,
+    verified: true,
+  });
+  assert.deepEqual(nativeObservationLineage("linux", { ...base, backend: "linux-strace-process-tree" }), {
+    childObserved: false,
+    verified: true,
+  });
+  assert.equal(nativeObservationLineage("linux", { ...base, backend: "macos-fs_usage-process" }).verified, false);
+  assert.equal(nativeObservationLineage("win32", {
+    ...base,
+    backend: "windows-etw-kernel-process-tree",
+    observation: { childProcesses: 1 },
+    diagnostics: { processTreeEmpty: true },
+  }).verified, true);
 });
