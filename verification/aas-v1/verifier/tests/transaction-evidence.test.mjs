@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { nativeObservationLineage, portableTreeDigest, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { faultFixtureProfile, nativeObservationLineage, portableTreeDigest, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -150,4 +150,23 @@ test("native lineage accepts macOS executable binding without invented child eve
     observation: { childProcesses: 1 },
     diagnostics: { processTreeEmpty: true },
   }).verified, true);
+});
+
+test("write faults use a policy-safe corpus to expose the transient staging boundary", () => {
+  const corpus = ["large-a", "large-b"];
+  assert.deepEqual(faultFixtureProfile("write", corpus), {
+    installed: false,
+    desired: true,
+    additionalSkills: corpus,
+  });
+  assert.deepEqual(faultFixtureProfile("backup", corpus), {
+    installed: true,
+    desired: false,
+    additionalSkills: corpus,
+  });
+  assert.deepEqual(faultFixtureProfile("commit", corpus), {
+    installed: false,
+    desired: true,
+    additionalSkills: [],
+  });
 });

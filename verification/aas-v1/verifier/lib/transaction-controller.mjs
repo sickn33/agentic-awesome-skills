@@ -143,6 +143,19 @@ export function nativeObservationLineage(platform, observed) {
   return { childObserved, verified };
 }
 
+export function faultFixtureProfile(className, backupSkillIds) {
+  const replace = className === "backup";
+  return {
+    installed: replace,
+    desired: !replace,
+    // A single small skill can be copied and renamed between two external
+    // polling samples. Stage the same policy-safe corpus used by the backup
+    // case so the write boundary remains observable without instrumenting or
+    // slowing the candidate under test.
+    additionalSkills: className === "write" || replace ? backupSkillIds : [],
+  };
+}
+
 function finalState(targetRoot, skillId, expectedContentDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
@@ -434,12 +447,9 @@ function evidenceRecord(fixture, className, kind, injectionAction, observedOpera
 }
 
 async function faultCase(context, className) {
-  const replace = className === "backup";
-  const fixture = await createFixture(context, `fault-${className}`, {
-    installed: replace,
-    desired: !replace,
-    additionalSkills: replace ? context.backupSkillIds : [],
-  });
+  const profile = faultFixtureProfile(className, context.backupSkillIds);
+  const replace = profile.installed;
+  const fixture = await createFixture(context, `fault-${className}`, profile);
   const args = applyArgs(fixture);
   const observed = await runObserved(process.execPath, [DRIVER], {
     cwd: fixture.caseRoot,
