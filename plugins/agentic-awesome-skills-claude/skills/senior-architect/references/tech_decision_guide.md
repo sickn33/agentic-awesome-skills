@@ -1,103 +1,15 @@
-# Tech Decision Guide
+# Technical Decision Record
 
-## Overview
+Use this compact structure for an architecture decision:
 
-This reference guide provides comprehensive information for senior architect.
+1. **Status and owner:** proposed, accepted, superseded, or rejected; accountable decision owner.
+2. **Context:** observed current state, problem, constraints, and deadline.
+3. **Decision drivers:** security, privacy, cost, latency, reliability, operability, skills, and compatibility requirements that actually apply.
+4. **Options:** viable alternatives, including keeping the current design.
+5. **Decision:** selected option and why it best fits the evidence.
+6. **Consequences:** benefits, trade-offs, new failure modes, and operational ownership.
+7. **Validation:** tests, measurements, threat review, and acceptance thresholds.
+8. **Migration and rollback:** stages, compatibility window, abort signals, and recovery owner.
+9. **Unknowns:** assumptions requiring human or runtime confirmation.
 
-## Patterns and Practices
-
-### Pattern 1: Best Practice Implementation
-
-**Description:**
-Detailed explanation of the pattern.
-
-**When to Use:**
-- Scenario 1
-- Scenario 2
-- Scenario 3
-
-**Implementation:**
-```typescript
-// Example code implementation
-export class Example {
-  // Implementation details
-}
-```
-
-**Benefits:**
-- Benefit 1
-- Benefit 2
-- Benefit 3
-
-**Trade-offs:**
-- Consider 1
-- Consider 2
-- Consider 3
-
-### Pattern 2: Advanced Technique
-
-**Description:**
-Another important pattern for senior architect.
-
-**Implementation:**
-```typescript
-// Advanced example
-async function advancedExample() {
-  // Code here
-}
-```
-
-## Guidelines
-
-### Code Organization
-- Clear structure
-- Logical separation
-- Consistent naming
-- Proper documentation
-
-### Performance Considerations
-- Optimization strategies
-- Bottleneck identification
-- Monitoring approaches
-- Scaling techniques
-
-### Security Best Practices
-- Input validation
-- Authentication
-- Authorization
-- Data protection
-
-## Common Patterns
-
-### Pattern A
-Implementation details and examples.
-
-### Pattern B
-Implementation details and examples.
-
-### Pattern C
-Implementation details and examples.
-
-## Anti-Patterns to Avoid
-
-### Anti-Pattern 1
-What not to do and why.
-
-### Anti-Pattern 2
-What not to do and why.
-
-## Tools and Resources
-
-### Recommended Tools
-- Tool 1: Purpose
-- Tool 2: Purpose
-- Tool 3: Purpose
-
-### Further Reading
-- Resource 1
-- Resource 2
-- Resource 3
-
-## Conclusion
-
-Key takeaways for using this reference guide effectively.
+Do not present vendor claims or generic best practices as project evidence. Date volatile cost, limit, and feature comparisons and link to the primary sources used.

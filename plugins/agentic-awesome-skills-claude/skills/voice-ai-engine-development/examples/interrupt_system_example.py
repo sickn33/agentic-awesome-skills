@@ -163,7 +163,7 @@ class SynthesisWorkerWithInterrupts:
                 seconds_spoken = chunk_idx * seconds_per_chunk
                 partial_message = synthesis_result.get_message_up_to(seconds_spoken)
                 
-                logger.info(f"📝 [SYNTHESIZER] Partial message: '{partial_message}'")
+                logger.info("synthesis interrupted", extra={"chars_spoken": len(partial_message)})
                 
                 return partial_message, True  # cut_off = True
             
@@ -227,7 +227,7 @@ class TranscriptionWorkerWithInterrupts:
         self.conversation.is_human_speaking = True
         
         # Continue processing transcription...
-        logger.info(f"🎤 [TRANSCRIPTION] Received: '{transcription.message}'")
+        logger.info("transcription received", extra={"chars": len(transcription.message)})
 
 
 # ============================================================================
@@ -242,11 +242,16 @@ class MockTranscription:
 
 @dataclass
 class MockSynthesisResult:
-    async def chunk_generator(self):
+    async def _chunks(self):
         """Generate mock audio chunks"""
         for i in range(10):
             await asyncio.sleep(0.1)
             yield type('obj', (object,), {'chunk': b'\x00' * 1024})()
+
+    @property
+    def chunk_generator(self):
+        """Return the async iterator expected by the example consumer."""
+        return self._chunks()
     
     def get_message_up_to(self, seconds: float) -> str:
         """Get partial message up to specified seconds"""

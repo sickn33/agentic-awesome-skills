@@ -235,23 +235,25 @@ def fast_squares(n):
 # Benchmark
 n = 100000
 
-slow_time = timeit.timeit(lambda: slow_squares(n), number=100)
-fast_time = timeit.timeit(lambda: fast_squares(n), number=100)
+slow_runs = timeit.repeat(lambda: slow_squares(n), repeat=5, number=100)
+fast_runs = timeit.repeat(lambda: fast_squares(n), repeat=5, number=100)
+slow_time = min(slow_runs)
+fast_time = min(fast_runs)
 
 print(f"Loop: {slow_time:.4f}s")
 print(f"Comprehension: {fast_time:.4f}s")
 print(f"Speedup: {slow_time/fast_time:.2f}x")
 
-# Even faster for simple operations: map
-def faster_squares(n):
-    """Use map for even better performance."""
+# Alternative worth measuring for the actual callable and Python version
+def map_squares(n):
+    """Use map; do not assume it is faster than a comprehension."""
     return list(map(lambda x: x**2, range(n)))
 ```
 
 ### Pattern 6: Generator Expressions for Memory
 
 ```python
-import sys
+import tracemalloc
 
 def list_approach():
     """Memory-intensive list."""
@@ -263,14 +265,19 @@ def generator_approach():
     data = (i**2 for i in range(1000000))
     return sum(data)
 
-# Memory comparison
-list_data = [i for i in range(1000000)]
-gen_data = (i for i in range(1000000))
+def peak_bytes(operation):
+    """Measure peak traced allocations for the complete operation."""
+    tracemalloc.start()
+    try:
+        operation()
+        return tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
 
-print(f"List size: {sys.getsizeof(list_data)} bytes")
-print(f"Generator size: {sys.getsizeof(gen_data)} bytes")
-
-# Generators use constant memory regardless of size
+# sys.getsizeof() is shallow and excludes referred-to objects. Compare the
+# complete workloads instead; repeat in a fresh process for rigorous results.
+print(f"List peak: {peak_bytes(list_approach)} bytes")
+print(f"Generator peak: {peak_bytes(generator_approach)} bytes")
 ```
 
 ### Pattern 7: String Concatenation
@@ -485,7 +492,8 @@ print(f"Cache info: {fibonacci_fast.cache_info()}")
 ### Pattern 13: Using __slots__ for Memory
 
 ```python
-import sys
+import gc
+import tracemalloc
 
 class RegularClass:
     """Regular class with __dict__."""
@@ -503,19 +511,18 @@ class SlottedClass:
         self.y = y
         self.z = z
 
-# Memory comparison
-regular = RegularClass(1, 2, 3)
-slotted = SlottedClass(1, 2, 3)
+def allocation_peak(factory):
+    """Measure aggregate allocations; shallow object size omits __dict__."""
+    gc.collect()
+    tracemalloc.start()
+    try:
+        objects = [factory(i, i + 1, i + 2) for i in range(10000)]
+        return tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
 
-print(f"Regular class size: {sys.getsizeof(regular)} bytes")
-print(f"Slotted class size: {sys.getsizeof(slotted)} bytes")
-
-# Significant savings with many instances
-regular_objects = [RegularClass(i, i+1, i+2) for i in range(10000)]
-slotted_objects = [SlottedClass(i, i+1, i+2) for i in range(10000)]
-
-print(f"\nMemory for 10000 regular objects: ~{sys.getsizeof(regular) * 10000} bytes")
-print(f"Memory for 10000 slotted objects: ~{sys.getsizeof(slotted) * 10000} bytes")
+print(f"Regular allocation peak: {allocation_peak(RegularClass)} bytes")
+print(f"Slotted allocation peak: {allocation_peak(SlottedClass)} bytes")
 ```
 
 ### Pattern 14: Multiprocessing for CPU-Bound Tasks
@@ -682,15 +689,13 @@ print(cursor.fetchall())
 import tracemalloc
 import gc
 
-def memory_leak_example():
-    """Example that leaks memory."""
-    leaked_objects = []
+_retained_objects = []
+
+def retained_reference_example():
+    """Simulate a leak by retaining objects beyond the call lifetime."""
 
     for i in range(100000):
-        # Objects added but never removed
-        leaked_objects.append([i] * 100)
-
-    # In real code, this would be an unintended reference
+        _retained_objects.append([i] * 100)
 
 def track_memory_usage():
     """Track memory allocations."""
@@ -700,7 +705,7 @@ def track_memory_usage():
     snapshot1 = tracemalloc.take_snapshot()
 
     # Run code
-    memory_leak_example()
+    retained_reference_example()
 
     # Take snapshot after
     snapshot2 = tracemalloc.take_snapshot()
@@ -712,6 +717,8 @@ def track_memory_usage():
     for stat in top_stats[:10]:
         print(stat)
 
+    _retained_objects.clear()
+    gc.collect()
     tracemalloc.stop()
 
 # Monitor memory

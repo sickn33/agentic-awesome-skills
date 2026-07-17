@@ -161,7 +161,7 @@ class VoiceComponentFactory:
         # from .transcribers.deepgram import DeepgramTranscriber
         # return DeepgramTranscriber(
         #     api_key=config.get("deepgramApiKey"),
-        #     model=config.get("deepgramModel", "nova-2"),
+        #     model=config["deepgramModel"],  # current model ID, explicitly configured
         #     language=config.get("language", "en-US")
         # )
         raise NotImplementedError("Deepgram transcriber not implemented")
@@ -191,7 +191,7 @@ class VoiceComponentFactory:
         # from .agents.openai import OpenAIAgent
         # return OpenAIAgent(
         #     api_key=config.get("openaiApiKey"),
-        #     model=config.get("openaiModel", "gpt-4"),
+        #     model=config["openaiModel"],  # current model ID, explicitly configured
         #     system_prompt=config.get("prompt", "You are a helpful assistant.")
         # )
         raise NotImplementedError("OpenAI agent not implemented")
@@ -202,7 +202,7 @@ class VoiceComponentFactory:
         # from .agents.gemini import GeminiAgent
         # return GeminiAgent(
         #     api_key=config.get("geminiApiKey"),
-        #     model=config.get("geminiModel", "gemini-pro"),
+        #     model=config["geminiModel"],  # current model ID, explicitly configured
         #     system_prompt=config.get("prompt", "You are a helpful assistant.")
         # )
         raise NotImplementedError("Gemini agent not implemented")
@@ -223,7 +223,7 @@ class VoiceComponentFactory:
         # return ElevenLabsSynthesizer(
         #     api_key=config.get("elevenlabsApiKey"),
         #     voice_id=config.get("elevenlabsVoiceId"),
-        #     model_id=config.get("elevenlabsModel", "eleven_monolingual_v1")
+        #     model_id=config["elevenlabsModel"],  # current model ID, explicitly configured
         # )
         raise NotImplementedError("ElevenLabs synthesizer not implemented")
     
@@ -259,11 +259,14 @@ def example_usage():
     config = {
         "transcriberProvider": "deepgram",
         "deepgramApiKey": "your-api-key",
+        "deepgramModel": "<verified-current-model-id>",
         "llmProvider": "gemini",
         "geminiApiKey": "your-api-key",
+        "geminiModel": "<verified-current-model-id>",
         "voiceProvider": "elevenlabs",
         "elevenlabsApiKey": "your-api-key",
         "elevenlabsVoiceId": "your-voice-id",
+        "elevenlabsModel": "<verified-current-model-id>",
         "prompt": "You are a helpful AI assistant."
     }
     

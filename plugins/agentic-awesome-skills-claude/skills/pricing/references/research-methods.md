@@ -8,7 +8,7 @@
 
 ## Van Westendorp Price Sensitivity Meter
 
-The Van Westendorp survey identifies the acceptable price range for your product.
+The Van Westendorp survey estimates a perceived price-acceptability range for the surveyed audience. It does not measure observed demand or establish a revenue-maximizing price.
 
 ### The Four Questions
 
@@ -24,15 +24,15 @@ Ask each respondent:
 2. Find the intersections:
    - **Point of Marginal Cheapness (PMC):** "Too cheap" crosses "Expensive"
    - **Point of Marginal Expensiveness (PME):** "Too expensive" crosses "Cheap"
-   - **Optimal Price Point (OPP):** "Too cheap" crosses "Too expensive"
+   - **Conventionally named Optimal Price Point (OPP):** "Too cheap" crosses "Too expensive"; the label does not establish that this price is economically optimal
    - **Indifference Price Point (IDP):** "Expensive" crosses "Cheap"
 
-**The acceptable price range:** PMC to PME
-**Optimal pricing zone:** Between OPP and IDP
+**Perceived acceptability range:** PMC to PME
+**Exploratory central range:** Between OPP and IDP; validate it against behavior, alternatives, segment differences, and unit economics
 
 ### Survey Tips
-- Need 100-300 respondents for reliable data
-- Segment by persona (different willingness to pay)
+- Determine sample size from the design, desired precision, audience heterogeneity, and planned segment analysis; there is no universal reliable respondent count
+- Segment only when the design has enough observations to support the comparison
 - Use realistic product descriptions
 - Consider adding purchase intent questions
 
@@ -46,16 +46,17 @@ Optimal Price Point:          $49/mo
 Indifference Price Point:     $59/mo
 Point of Marginal Expensiveness: $79/mo
 
-Recommended range: $49-59/mo
-Current price: $39/mo (below optimal)
-Opportunity: 25-50% price increase without significant demand impact
+Exploratory perceived range: $49-59/mo
+Current price: $39/mo (below that surveyed range)
+Next step: test price hypotheses against observed conversion, retention,
+segment response, and unit economics before changing price
 ```
 
 ---
 
 ## MaxDiff Analysis (Best-Worst Scaling)
 
-MaxDiff identifies which features customers value most, informing packaging decisions.
+MaxDiff estimates relative stated priorities among the features and choice sets tested. It can inform packaging research, but does not by itself determine tiers, willingness to pay, or purchase behavior.
 
 ### How It Works
 
@@ -80,19 +81,11 @@ Which feature is LEAST important to you?
 
 ### Analyzing Results
 
-Features are ranked by utility score:
-- High utility = Must-have (include in base tier)
-- Medium utility = Differentiator (use for tier separation)
-- Low utility = Nice-to-have (premium tier or cut)
+Features are ranked by relative utility score within the tested design. Treat high, medium, and low scores as evidence about stated priority—not automatic labels such as must-have, differentiator, or expendable.
 
 ### Using MaxDiff for Packaging
 
-| Utility Score | Packaging Decision |
-|---------------|-------------------|
-| Top 20% | Include in all tiers (table stakes) |
-| 20-50% | Use to differentiate tiers |
-| 50-80% | Higher tiers only |
-| Bottom 20% | Consider cutting or premium add-on |
+Use the scores to form packaging hypotheses, then combine them with segment-level needs, feature dependencies, product strategy, cost to serve, and behavioral tests. Do not map score percentiles mechanically to base, premium, or cut decisions.
 
 ---
 
@@ -101,14 +94,14 @@ Features are ranked by utility score:
 **Direct method (simple but biased):**
 "How much would you pay for [product]?"
 
-**Better: Gabor-Granger method:**
+**Structured stated-intent method: Gabor-Granger:**
 "Would you buy [product] at [$X]?" (Yes/No)
-Vary price across respondents to build demand curve.
+Vary price across respondents to estimate a stated purchase-intent curve. Do not present it as observed demand without behavioral validation.
 
-**Even better: Conjoint analysis:**
+**Tradeoff method: Conjoint analysis:**
 Show product bundles at different prices
 Respondents choose preferred option
-Statistical analysis reveals price sensitivity per feature
+Statistical analysis estimates preferences and price sensitivity under the study design; results still depend on sample, attributes, tasks, and external validation
 
 ---
 
@@ -120,7 +113,7 @@ Track how customers use your product:
 - Volume metrics (users, records, API calls)
 - Outcome metrics (revenue generated, time saved)
 
-### 2. Correlate with customer success
+### 2. Test associations with customer success
 - Which usage patterns predict retention?
 - Which usage patterns predict expansion?
 - Which customers pay the most, and why?
@@ -128,7 +121,7 @@ Track how customers use your product:
 ### 3. Identify value thresholds
 - At what usage level do customers "get it"?
 - At what usage level do they expand?
-- At what usage level should price increase?
+- At what usage level might a different price or package be worth testing?
 
 ### Example Analysis
 
@@ -145,8 +138,9 @@ Average monthly active users: 3
 Average projects: 2
 Average integrations: 0
 
-Insight: Value correlates with team adoption (users)
-        and depth of use (integrations)
+Observed association: High-LTV customers in this sample use more seats
+                      and integrations; this does not establish causation
 
-Recommendation: Price per user, gate integrations to higher tiers
+Hypothesis to test: Compare seat- or usage-based packaging and integration
+                    access against alternatives, adoption, and unit economics
 ```

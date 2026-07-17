@@ -1,14 +1,14 @@
 ---
 name: solidity-security
-description: "Master smart contract security best practices, vulnerability prevention, and secure Solidity development patterns."
-risk: safe
+description: "Review Solidity contracts for reentrancy, access-control, arithmetic, oracle, upgrade, and deployment risks. Use for project-specific test and audit preparation, never as certification or deployment approval."
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
 
 # Solidity Security
 
-Master smart contract security best practices, vulnerability prevention, and secure Solidity development patterns.
+Review Solidity contracts and prepare project-specific security evidence without treating examples or tool output as certification or deployment approval.
 
 ## Use this skill when
 
@@ -28,7 +28,10 @@ Master smart contract security best practices, vulnerability prevention, and sec
 ## Instructions
 
 - Clarify goals, constraints, and required inputs.
-- Apply relevant best practices and validate outcomes.
+- Pin the Solidity compiler, dependency, chain, proxy, and test-tool versions before recommending code.
+- Treat examples as review aids, not deployment-ready contracts. Require project-specific tests, independent audit, and an explicit human deployment approval.
+- Never deploy, upgrade, pause, transfer assets, change roles, or submit a transaction without confirming the network, signer, addresses, simulation, rollback plan, and user approval.
+- Apply relevant best practices and validate outcomes with static analysis, unit tests, fuzzing, invariant tests, and a fork or testnet simulation as appropriate.
 - Provide actionable steps and verification.
 - If detailed examples are required, open `resources/implementation-playbook.md`.
 
@@ -38,5 +41,5 @@ Master smart contract security best practices, vulnerability prevention, and sec
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Do not treat the output as a substitute for environment-specific validation, testing, formal review, or an independent professional audit.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,6 +1,6 @@
 ---
 name: senior-fullstack
-description: "Complete toolkit for senior fullstack with modern tools and best practices."
+description: "Planning and review aid for full-stack changes, quality evidence, and deployment readiness."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -8,213 +8,68 @@ date_added: "2026-02-27"
 
 # Senior Fullstack
 
-Complete toolkit for senior fullstack with modern tools and best practices.
+Use this skill to plan and review a full-stack change across user experience, API, data, security, tests, and operations. It does not scaffold applications, apply fixes, perform deep code analysis, or certify production readiness.
 
-## Quick Start
+## Workflow
 
-### Main Capabilities
+1. Confirm the change owner, user outcome, acceptance criteria, affected environments, and data sensitivity.
+2. Inspect the current repository and runtime evidence with project-specific read-only tools. Treat skipped checks and missing evidence as unknown.
+3. Map the request through UI states, API contracts, authorization, persistence, background work, observability, and rollback.
+4. Select the smallest change that fits existing project conventions; document deviations and migration risks.
+5. Define tests for success, failure, permissions, compatibility, and recovery before implementation.
+6. Review the proposed diff and evidence. Before any mutation or deployment, apply the gate in `references/development_workflows.md`.
 
-This skill provides three core capabilities through automated scripts:
+## Bundled Scripts
 
-```bash
-# Script 1: Fullstack Scaffolder
-python scripts/fullstack_scaffolder.py [options]
-
-# Script 2: Project Scaffolder
-python scripts/project_scaffolder.py [options]
-
-# Script 3: Code Quality Analyzer
-python scripts/code_quality_analyzer.py [options]
-```
-
-## Core Capabilities
-
-### 1. Fullstack Scaffolder
-
-Automated tool for fullstack scaffolder tasks.
-
-**Features:**
-- Automated scaffolding
-- Best practices built-in
-- Configurable templates
-- Quality checks
-
-**Usage:**
-```bash
-python scripts/fullstack_scaffolder.py <project-path> [options]
-```
-
-### 2. Project Scaffolder
-
-Comprehensive analysis and optimization tool.
-
-**Features:**
-- Deep analysis
-- Performance metrics
-- Recommendations
-- Automated fixes
-
-**Usage:**
-```bash
-python scripts/project_scaffolder.py <target-path> [--verbose]
-```
-
-### 3. Code Quality Analyzer
-
-Advanced tooling for specialized tasks.
-
-**Features:**
-- Expert-level automation
-- Custom configurations
-- Integration ready
-- Production-grade output
-
-**Usage:**
-```bash
-python scripts/code_quality_analyzer.py [arguments] [options]
-```
-
-## Reference Documentation
-
-### Tech Stack Guide
-
-Comprehensive guide available in `references/tech_stack_guide.md`:
-
-- Detailed patterns and practices
-- Code examples
-- Best practices
-- Anti-patterns to avoid
-- Real-world scenarios
-
-### Architecture Patterns
-
-Complete workflow documentation in `references/architecture_patterns.md`:
-
-- Step-by-step processes
-- Optimization strategies
-- Tool integrations
-- Performance tuning
-- Troubleshooting guide
-
-### Development Workflows
-
-Technical reference guide in `references/development_workflows.md`:
-
-- Technology stack details
-- Configuration examples
-- Integration patterns
-- Security considerations
-- Scalability guidelines
-
-## Tech Stack
-
-**Languages:** TypeScript, JavaScript, Python, Go, Swift, Kotlin
-**Frontend:** React, Next.js, React Native, Flutter
-**Backend:** Node.js, Express, GraphQL, REST APIs
-**Database:** PostgreSQL, Prisma, NeonDB, Supabase
-**DevOps:** Docker, Kubernetes, Terraform, GitHub Actions, CircleCI
-**Cloud:** AWS, GCP, Azure
-
-## Development Workflow
-
-### 1. Setup and Configuration
+The scripts are retained as explicit compatibility stubs. They do not scaffold, analyze, fix, or write project files. Running one returns a nonzero unsupported status so that an empty result cannot be interpreted as success.
 
 ```bash
-# Install dependencies
-npm install
-# or
-pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
-```
-
-### 2. Run Quality Checks
-
-```bash
-# Use the analyzer script
+python scripts/fullstack_scaffolder.py .
 python scripts/project_scaffolder.py .
-
-# Review recommendations
-# Apply fixes
+python scripts/code_quality_analyzer.py .
 ```
 
-### 3. Implement Best Practices
+Each command requires a target path; there is no `--analyze` option. Use `--help` to inspect the supported interface. Any future file-generating implementation must default to preview, refuse existing destinations, and require an explicit `--force` path with backup plus atomic replacement.
 
-Follow the patterns and practices documented in:
-- `references/tech_stack_guide.md`
-- `references/architecture_patterns.md`
-- `references/development_workflows.md`
+## Review Output
 
-## Best Practices Summary
+A useful full-stack review note should include:
 
-### Code Quality
-- Follow established patterns
-- Write comprehensive tests
-- Document decisions
-- Review regularly
+- scope, owner, acceptance criteria, and observed baseline;
+- affected routes, components, API contracts, schemas, jobs, and integrations;
+- authentication, authorization, input validation, privacy, and secret-handling checks;
+- loading, empty, error, retry, concurrency, and accessibility behavior;
+- migration, compatibility, caching, observability, and rollback considerations;
+- tests run with exact results, checks not run, remaining risks, and approval owner.
 
-### Performance
-- Measure before optimizing
-- Use appropriate caching
-- Optimize critical paths
-- Monitor in production
+Do not label a change production-ready solely because it builds or because a stub reports no findings.
 
-### Security
-- Validate all inputs
-- Use parameterized queries
-- Implement proper authentication
-- Keep dependencies updated
+## Mutation and Deployment Gate
 
-### Maintainability
-- Write clear code
-- Use consistent naming
-- Add helpful comments
-- Keep it simple
+Commands found in a project are evidence to review, not authorization to run them. Before writing files, changing data, or deploying:
 
-## Common Commands
+1. identify the exact repository, account, environment, cluster/context, and namespace;
+2. verify authorization and obtain explicit approval for the exact proposed mutation;
+3. preview the diff, generated files, migration plan, or infrastructure plan;
+4. preserve existing work and define backup, rollback, abort signals, and responsible owner;
+5. run relevant tests and security checks in a non-production environment when feasible;
+6. execute only the approved scope and verify application, data, and infrastructure health afterward.
 
-```bash
-# Development
-npm run dev
-npm run build
-npm run test
-npm run lint
+Never infer deployment approval from repository access. Do not run `docker compose up`, `kubectl apply`, database migrations, destructive package commands, or equivalent mutations without this gate.
 
-# Analysis
-python scripts/project_scaffolder.py .
-python scripts/code_quality_analyzer.py --analyze
+## References
 
-# Deployment
-docker build -t app:latest .
-docker-compose up -d
-kubectl apply -f k8s/
-```
-
-## Troubleshooting
-
-### Common Issues
-
-Check the comprehensive troubleshooting section in `references/development_workflows.md`.
-
-### Getting Help
-
-- Review reference documentation
-- Check script output messages
-- Consult tech stack documentation
-- Review error logs
-
-## Resources
-
-- Pattern Reference: `references/tech_stack_guide.md`
-- Workflow Guide: `references/architecture_patterns.md`
-- Technical Guide: `references/development_workflows.md`
-- Tool Scripts: `scripts/` directory
+- `references/tech_stack_guide.md` — evidence-based stack selection prompts.
+- `references/architecture_patterns.md` — boundary and integration review prompts.
+- `references/development_workflows.md` — implementation and deployment safety gate.
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+
+Use this skill to plan or review a bounded full-stack change where a human owns implementation and release decisions.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- The bundled scripts intentionally fail closed because their advertised automation is not implemented.
+- This skill does not inspect a repository by itself, generate a working application, apply fixes, or deploy software.
+- Framework and provider guidance must be checked against the versions actually used by the project.
+- Stop and request a human decision when ownership, permissions, destructive impact, or rollback acceptance is unclear.
