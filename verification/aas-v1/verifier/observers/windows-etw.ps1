@@ -102,7 +102,7 @@ try {
     $eventName = (($row.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join " ")
     $providerName = ([string]$row.'Event Name').Trim()
     $eventId = Get-IntegerField $row @("(?i)^Event ID$")
-    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 1) {
+    if ($providerName -like 'Microsoft-Windows-Kernel-Process*' -and $eventId -eq 1) {
       $processStartRows++
       $parentPid = Get-PayloadInteger $row 'ParentProcessID'
       if ($parentPid -eq 0) { $parentPid = Get-PayloadInteger $row 'ParentProcessId' }
@@ -114,7 +114,7 @@ try {
       }
       continue
     }
-    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 2) {
+    if ($providerName -like 'Microsoft-Windows-Kernel-Process*' -and $eventId -eq 2) {
       $stoppedPid = Get-PayloadInteger $row 'ProcessID'
       if ($stoppedPid -eq 0) { $stoppedPid = Get-PayloadInteger $row 'ProcessId' }
       if ($stoppedPid -eq $rootPid) {
