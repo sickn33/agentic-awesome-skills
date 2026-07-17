@@ -30,7 +30,7 @@ function predicate(className, targetRoot, skillId) {
   const matchers = {
     lock: (relative) => relative === ".aas-transaction.lock",
     journal: (relative) => /^\.aas-transaction-recovery-[a-f0-9]+\.wal$/.test(relative),
-    backup: (relative) => relative.includes("/backups/") && relative.endsWith(`/${skillId}`),
+    backup: (relative) => relative.includes("/backups/") && relative.split("/backups/")[1]?.split("/").length === 1,
     write: (relative, stat) => relative.includes("/staged/") && stat.isFile(),
     fsync: (relative) => /^\.aas-bootstrap-recovery-[a-f0-9]+\.json$/.test(relative),
     rename: (relative) => relative === `.agents/skills/${skillId}`,

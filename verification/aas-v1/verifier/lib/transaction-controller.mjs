@@ -62,7 +62,9 @@ function recoveryArtifacts(targetRoot) {
   if (!fs.existsSync(targetRoot)) return [];
   const rootNames = fs.readdirSync(targetRoot).filter((name) => /^\.aas-(?:bootstrap|layout|transaction)/.test(name));
   const transactionRoot = path.join(targetRoot, ".aas", "transactions");
-  const nested = fs.existsSync(transactionRoot) ? snapshotTree(transactionRoot).entries : [];
+  const nested = fs.existsSync(transactionRoot)
+    ? snapshotTree(transactionRoot).entries.filter((entry) => !(entry.type === "directory" && entry.path === "codex"))
+    : [];
   return [...rootNames, ...nested.map((entry) => `.aas/transactions/${entry.path}`)].sort();
 }
 
@@ -238,7 +240,7 @@ async function publicCli(fixture, args, expectedCode = 0) {
   return { result, value: readOneJson(result, expectedCode) };
 }
 
-async function createFixture(context, id, { installed = false, desired = true } = {}) {
+async function createFixture(context, id, { installed = false, desired = true, additionalSkills = [] } = {}) {
   const caseRoot = path.join(context.workRoot, id);
   const targetRoot = path.join(caseRoot, "target");
   fs.mkdirSync(targetRoot, { recursive: true, mode: 0o700 });
@@ -251,7 +253,8 @@ async function createFixture(context, id, { installed = false, desired = true } 
   const initialized = await publicCli(fixture, ["stack", "init", "--goal", "test", "--out", manifestPath]);
   assert(initialized.value.status === "initialized", "AAS_TRANSACTION_CONTROLLER_INIT");
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  manifest.skills = desired || installed ? [{ id: context.skillId }] : [];
+  const selectedSkills = [context.skillId, ...additionalSkills].map((id) => ({ id }));
+  manifest.skills = desired || installed ? selectedSkills : [];
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest)}\n`);
   const planPath = path.join(caseRoot, "plan.json");
   const planArgs = [
@@ -268,7 +271,7 @@ async function createFixture(context, id, { installed = false, desired = true } 
       "--cache-root", context.cacheRoot, "--approve", plan.digest,
     ]);
     assert(applied.value.status === "applied", "AAS_TRANSACTION_CONTROLLER_SEED_APPLY");
-    manifest.skills = desired ? [{ id: context.skillId }] : [];
+    manifest.skills = desired ? selectedSkills : [];
     fs.writeFileSync(manifestPath, `${JSON.stringify(manifest)}\n`);
     fs.rmSync(planPath);
     const replanned = await publicCli(fixture, planArgs);
@@ -348,7 +351,11 @@ function evidenceRecord(fixture, className, kind, injectionAction, observedOpera
 
 async function faultCase(context, className) {
   const replace = className === "backup";
-  const fixture = await createFixture(context, `fault-${className}`, { installed: replace, desired: !replace });
+  const fixture = await createFixture(context, `fault-${className}`, {
+    installed: replace,
+    desired: !replace,
+    additionalSkills: replace ? context.backupSkillIds : [],
+  });
   const args = applyArgs(fixture);
   const observed = await runObserved(process.execPath, [DRIVER], {
     cwd: fixture.caseRoot,
@@ -368,10 +375,15 @@ async function faultCase(context, className) {
     zones: fixture.zones,
     evidenceDir: path.join(fixture.evidenceDir, `fault-${className}`),
   });
-  assert(observed.result.code === 0, "AAS_TRANSACTION_CONTROLLER_NATIVE_OBSERVER_CASE_FAILED", {
-    className, code: observed.result.code, stderrDigest: sha256(observed.result.stderr || ""),
-  });
   const driverValue = parseJsonLines(observed.result.stdout)[0];
+  assert(observed.result.code === 0, "AAS_TRANSACTION_CONTROLLER_NATIVE_OBSERVER_CASE_FAILED", {
+    className,
+    code: observed.result.code,
+    observed: Boolean(driverValue?.observed),
+    laterBoundaryCount: driverValue?.laterBoundaries?.length ?? null,
+    recoveryLockPresent: driverValue?.recoveryLockPresent ?? null,
+    stderrDigest: sha256(observed.result.stderr || ""),
+  });
   const nativeBackendExpected = process.platform === "linux" ? observed.backend === "linux-strace-process-tree"
     : process.platform === "darwin" ? observed.backend === "macos-fs_usage-process"
       : observed.backend === "windows-etw-kernel-process-tree";
@@ -603,9 +615,15 @@ export async function generateTransactionEvidence({ tarball, workRoot, zones }) 
   // the external observer a useful staging window without modifying the
   // verified runtime or manufacturing a synthetic source tree.
   const skillId = fs.existsSync(path.join(runtime.packageRoot, "skills", "react-best-practices")) ? "react-best-practices" : "ai-agents-architect";
+  const backupSkillIds = fs.readdirSync(path.join(runtime.packageRoot, "skills"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name !== skillId)
+    .map((entry) => entry.name)
+    .sort()
+    .slice(0, 12);
+  assert(backupSkillIds.length === 12, "AAS_TRANSACTION_CONTROLLER_BACKUP_FIXTURE_INCOMPLETE");
   const context = {
     workRoot: path.join(workRoot, "cases"), cacheRoot, runtime: promoted.runtimeIdentity,
-    aas: runtime.bins.aas, skillId, env: candidateEnvironment(zones), zones,
+    aas: runtime.bins.aas, skillId, backupSkillIds, env: candidateEnvironment(zones), zones,
     evidenceDir: path.join(workRoot, "native-observer-evidence"),
   };
   fs.mkdirSync(context.workRoot, { recursive: true, mode: 0o700 });
