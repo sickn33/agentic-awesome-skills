@@ -8,8 +8,8 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-a234fcab5b987a8c444c4c9e65bf06775a6a6ec0ac4ff0baf04a2035e8ab802e",
-  "fileCount": 763,
+  "rootDigest": "sha256-9d86796560f5a6fca8169259d820ca7c2895419e98bba428332dba4936f8eb09",
+  "fileCount": 764,
   "files": [
     {
       "path": "README.md",
@@ -3743,8 +3743,8 @@
     },
     {
       "path": "verifier/lib/runtime.mjs",
-      "bytes": 3325,
-      "sha256": "c64560584c9a379c92b26606c04d1ff8855d58a4018658cc704d7a873927080c"
+      "bytes": 4213,
+      "sha256": "65c658f07226d2e2d28b6a27f1c2df03213f6ae85b6370dcdd1ca5fdd50f5641"
     },
     {
       "path": "verifier/lib/suites.mjs",
@@ -3758,8 +3758,8 @@
     },
     {
       "path": "verifier/lib/transaction-controller.mjs",
-      "bytes": 32618,
-      "sha256": "6cdd56163238a830471fd186310e2d0cc4b4633b839edbb52e5cc428d6c36cd7"
+      "bytes": 32774,
+      "sha256": "ec27139f3b532bc996ae5ebe0268420ced7b057cb616b3f4c18465808d450146"
     },
     {
       "path": "verifier/lib/transaction-evidence.mjs",
@@ -3810,6 +3810,11 @@
       "path": "verifier/tests/observer.test.mjs",
       "bytes": 3424,
       "sha256": "a4b6effd1be8b7a65da764fd46d783cb037a4016245bbe838e14e6b942fae687"
+    },
+    {
+      "path": "verifier/tests/runtime.test.mjs",
+      "bytes": 1191,
+      "sha256": "daed89d3add8b5c8d0870200ef734455f5c7042ef124ec741fcbd3c8b6677415"
     },
     {
       "path": "verifier/tests/transaction-evidence-semantics.test.mjs",

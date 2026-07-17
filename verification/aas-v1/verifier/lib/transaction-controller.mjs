@@ -24,8 +24,12 @@ function sleep(milliseconds) {
 }
 
 function readOneJson(result, expectedCode = 0) {
+  let structuredErrorCode = null;
+  try {
+    structuredErrorCode = parseJsonLines(result.stderr || "")[0]?.code || null;
+  } catch {}
   assert(result.code === expectedCode, "AAS_TRANSACTION_CONTROLLER_CLI_EXIT", {
-    expectedCode, actualCode: result.code, stderrDigest: sha256(result.stderr || ""),
+    expectedCode, actualCode: result.code, structuredErrorCode, stderrDigest: sha256(result.stderr || ""),
   });
   const values = parseJsonLines(result.stdout || "");
   assert(values.length === 1, "AAS_TRANSACTION_CONTROLLER_CLI_OUTPUT");

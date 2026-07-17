@@ -5,17 +5,31 @@ import { digestJson } from "./canonical.mjs";
 import { snapshotTree } from "./fs-evidence.mjs";
 import { runProcess } from "./process.mjs";
 
-function npmExecutable() {
-  return process.platform === "win32" ? "npm.cmd" : "npm";
+function quoteWindowsCommandToken(value) {
+  if (typeof value !== "string" || value.length === 0 || /[\0\r\n"%&|<>^()!]/.test(value)) {
+    throw Object.assign(new Error("Unsafe Windows npm command token"), { code: "AAS_VERIFIER_UNSAFE_NPM_ARGUMENT" });
+  }
+  return `"${value}"`;
+}
+
+export function npmInvocation(args, platform = process.platform, environment = process.env) {
+  if (platform !== "win32") return { executable: "npm", args };
+  const executable = environment.ComSpec || environment.COMSPEC || "C:\\Windows\\System32\\cmd.exe";
+  if (!path.win32.isAbsolute(executable) || path.win32.basename(executable).toLowerCase() !== "cmd.exe") {
+    throw Object.assign(new Error("Windows command processor is not trusted"), { code: "AAS_VERIFIER_UNSAFE_COMSPEC" });
+  }
+  const command = ["npm.cmd", ...args].map(quoteWindowsCommandToken).join(" ");
+  return { executable, args: ["/D", "/S", "/C", command] };
 }
 
 export async function installCandidate(tarball, root) {
   fs.mkdirSync(root, { recursive: true, mode: 0o700 });
   fs.writeFileSync(path.join(root, "package.json"), `${JSON.stringify({ private: true }, null, 2)}\n`, { mode: 0o600 });
   const npmCache = path.join(root, ".npm-cache");
-  const result = await runProcess(npmExecutable(), [
+  const invocation = npmInvocation([
     "install", "--ignore-scripts", "--no-audit", "--no-fund", "--no-package-lock", "--save=false", path.resolve(tarball),
-  ], {
+  ]);
+  const result = await runProcess(invocation.executable, invocation.args, {
     cwd: root,
     env: { ...process.env, npm_config_cache: npmCache, npm_config_ignore_scripts: "true" },
     timeoutMs: 180_000,
