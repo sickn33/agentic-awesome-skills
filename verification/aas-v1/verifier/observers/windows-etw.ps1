@@ -79,8 +79,15 @@ try {
   }
   function Get-PayloadInteger($row, [string]$name) {
     foreach ($property in $row.PSObject.Properties) {
+      if (([string]$property.Name).Trim() -ieq $name) {
+        $direct = Convert-ObservedInteger ([string]$property.Value)
+        if ($direct -gt 0) { return $direct }
+      }
+    }
+    $payloadPattern = '(?i)(?:^|[;,{\s])["'']?' + [regex]::Escape($name) + '["'']?\s*[:=]\s*(0[xX][0-9a-fA-F]+|[0-9]+)'
+    foreach ($property in $row.PSObject.Properties) {
       $text = [string]$property.Value
-      $match = [regex]::Match($text, "(?i)(?:^|[;,{\s])$([regex]::Escape($name))\s*[:=]\s*(0[xX][0-9a-fA-F]+|[0-9]+)")
+      $match = [regex]::Match($text, $payloadPattern)
       if ($match.Success) { return Convert-ObservedInteger $match.Groups[1].Value }
     }
     return 0
@@ -102,21 +109,19 @@ try {
     $eventName = (($row.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join " ")
     $providerName = ([string]$row.'Event Name').Trim()
     $eventId = Get-IntegerField $row @("(?i)^Event ID$")
-    if ($providerName -like 'Microsoft-Windows-Kernel-Process*' -and $eventId -eq 1) {
+    $opcode = Get-IntegerField $row @("(?i)^Opcode$")
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 3 -and $opcode -eq 1) {
       $processStartRows++
       $parentPid = Get-PayloadInteger $row 'ParentProcessID'
-      if ($parentPid -eq 0) { $parentPid = Get-PayloadInteger $row 'ParentProcessId' }
       $newPid = Get-PayloadInteger $row 'ProcessID'
-      if ($newPid -eq 0) { $newPid = Get-PayloadInteger $row 'ProcessId' }
       if ($childPids.Contains($parentPid) -and $newPid -gt 0 -and !$childPids.Contains($newPid)) {
         $childPids.Add($newPid) | Out-Null
         $lines.Add("process|$newPid|parent=$parentPid")
       }
       continue
     }
-    if ($providerName -like 'Microsoft-Windows-Kernel-Process*' -and $eventId -eq 2) {
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 4 -and $opcode -eq 2) {
       $stoppedPid = Get-PayloadInteger $row 'ProcessID'
-      if ($stoppedPid -eq 0) { $stoppedPid = Get-PayloadInteger $row 'ProcessId' }
       if ($stoppedPid -eq $rootPid) {
         $rootStopRows++
         $rootExitObserved = $true
