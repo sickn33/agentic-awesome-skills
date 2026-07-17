@@ -16,6 +16,11 @@ const DEFAULT_CURRENT_PAGES_URL = 'https://sickn33.github.io/agentic-awesome-ski
 const DEFAULT_LEGACY_PAGES_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const SNAPSHOT_DIRECTORY = /^\d{4}-\d{2}-\d{2}$/;
 const DEFAULT_MAX_EVIDENCE_AGE_DAYS = 7;
+const SAFE_SEGMENT = /^[A-Za-z0-9._~-]+$/;
+
+function isSafeSegment(value) {
+  return typeof value === 'string' && value !== '.' && value !== '..' && SAFE_SEGMENT.test(value);
+}
 const DASHBOARD_FILES = {
   gsc: {
     file: 'google-search-console.json',
@@ -70,7 +75,31 @@ function parseSitemap(filePath, errors) {
     .map((match) => withTrailingSlash(match[1]))
     .filter(Boolean);
   if (!locations.length) errors.push('current sitemap: contains no valid <loc> URLs');
+  if (new Set(locations).size !== locations.length) errors.push('current sitemap: contains duplicate URLs after normalization');
   return [...new Set(locations)].sort();
+}
+
+function parseSkillUrls(filePath, currentPagesUrl, errors) {
+  const payload = readJson(filePath, errors, 'skills index');
+  if (!payload) return [];
+  if (!Array.isArray(payload) || !payload.length) {
+    errors.push('skills index: expected a non-empty array');
+    return [];
+  }
+  const urls = [];
+  const seen = new Set();
+  payload.forEach((entry, index) => {
+    const id = entry && entry.id;
+    if (!id || !isSafeSegment(id)) {
+      errors.push(`skills index: entry ${index} has an unsafe or missing id`);
+    } else if (seen.has(id)) {
+      errors.push(`skills index: duplicate id ${id}`);
+    } else {
+      seen.add(id);
+      urls.push(new URL(`skill/${id}/`, currentPagesUrl).toString());
+    }
+  });
+  return urls.sort();
 }
 
 function inferLegacyPagesUrl(currentPagesUrl) {
@@ -228,10 +257,10 @@ function manifestPairs(payload) {
   return [];
 }
 
-function redirectCoverage(manifestPath, currentUrls, currentPagesUrl, legacyPagesUrl, errors) {
-  if (!manifestPath) return { status: 'fail', expected: currentUrls.length, covered: 0, missing: currentUrls, message: 'No redirect manifest was supplied.' };
+function redirectCoverage(manifestPath, expectedCurrentUrls, currentPagesUrl, legacyPagesUrl, errors) {
+  if (!manifestPath) return { status: 'fail', expected: expectedCurrentUrls.length, covered: 0, missing: expectedCurrentUrls, message: 'No redirect manifest was supplied.' };
   const payload = readJson(manifestPath, errors, 'redirect manifest');
-  if (!payload) return { status: 'fail', expected: currentUrls.length, covered: 0, missing: currentUrls, message: 'Redirect manifest is unreadable.' };
+  if (!payload) return { status: 'fail', expected: expectedCurrentUrls.length, covered: 0, missing: expectedCurrentUrls, message: 'Redirect manifest is unreadable.' };
   const redirects = new Map();
   const duplicates = [];
   const invalid = [];
@@ -246,23 +275,23 @@ function redirectCoverage(manifestPath, currentUrls, currentPagesUrl, legacyPage
       redirects.set(from, to);
     }
   }
-  const expectedPairs = new Map(currentUrls.map((currentUrl) => [
+  const expectedPairs = new Map(expectedCurrentUrls.map((currentUrl) => [
     withTrailingSlash(currentUrl.replace(currentPagesUrl, legacyPagesUrl)),
     currentUrl,
   ]));
-  const missing = currentUrls.filter((currentUrl) => {
+  const missing = expectedCurrentUrls.filter((currentUrl) => {
     const legacyUrl = withTrailingSlash(currentUrl.replace(currentPagesUrl, legacyPagesUrl));
     return redirects.get(legacyUrl) !== currentUrl;
   });
   const unexpected = [...redirects.entries()]
     .filter(([from, to]) => expectedPairs.get(from) !== to)
     .map(([from, to]) => ({ from, to }));
-  const exact = currentUrls.length && !missing.length && !duplicates.length && !invalid.length && !unexpected.length
+  const exact = expectedCurrentUrls.length && !missing.length && !duplicates.length && !invalid.length && !unexpected.length
     && redirects.size === expectedPairs.size;
   return {
     status: exact ? 'pass' : 'fail',
-    expected: currentUrls.length,
-    covered: currentUrls.length - missing.length,
+    expected: expectedCurrentUrls.length,
+    covered: expectedCurrentUrls.length - missing.length,
     missing,
     duplicates,
     invalid,
@@ -298,6 +327,7 @@ function auditMigrationReadiness(options = {}) {
   const repoRoot = path.resolve(options.repoRoot || path.resolve(__dirname, '..', '..'));
   const errors = [];
   const sitemapPath = path.resolve(repoRoot, options.sitemapPath || 'apps/web-app/public/sitemap.xml');
+  const skillsIndexPath = path.resolve(repoRoot, options.skillsIndexPath || 'skills_index.json');
   const snapshotRoot = path.resolve(repoRoot, options.snapshotRoot || '.codex/traffic-snapshots');
   const currentPackagePath = path.resolve(repoRoot, options.currentPackagePath || 'package.json');
   const asOfDate = options.asOfDate || new Date().toISOString().slice(0, 10);
@@ -307,6 +337,8 @@ function auditMigrationReadiness(options = {}) {
   const currentUrls = parseSitemap(sitemapPath, errors);
   const currentPagesUrl = withTrailingSlash(options.currentPagesUrl || DEFAULT_CURRENT_PAGES_URL);
   const legacyPagesUrl = withTrailingSlash(options.legacyPagesUrl || DEFAULT_LEGACY_PAGES_URL || inferLegacyPagesUrl(currentPagesUrl));
+  const currentSkillUrls = currentPagesUrl ? parseSkillUrls(skillsIndexPath, currentPagesUrl, errors) : [];
+  const expectedRedirectUrls = [...new Set([...currentUrls, ...currentSkillUrls])].sort();
   const identitiesDistinct = Boolean(currentPagesUrl && legacyPagesUrl && currentPagesUrl !== legacyPagesUrl);
   const currentSitemap = {
     status: identitiesDistinct && currentUrls.includes(currentPagesUrl) && currentUrls.every((url) => url.startsWith(currentPagesUrl)) ? 'pass' : 'fail',
@@ -328,7 +360,7 @@ function auditMigrationReadiness(options = {}) {
     google_search_console: dashboardEvidence(snapshotRoot, DASHBOARD_FILES.gsc, currentPagesUrl, legacyPagesUrl, errors, asOfDate, maxEvidenceAgeDays),
     bing_webmaster: dashboardEvidence(snapshotRoot, DASHBOARD_FILES.bing, currentPagesUrl, legacyPagesUrl, errors, asOfDate, maxEvidenceAgeDays),
     redirect_manifest_coverage: redirectCoverage(
-      options.redirectManifestPath && path.resolve(repoRoot, options.redirectManifestPath), currentUrls, currentPagesUrl, legacyPagesUrl, errors,
+      options.redirectManifestPath && path.resolve(repoRoot, options.redirectManifestPath), expectedRedirectUrls, currentPagesUrl, legacyPagesUrl, errors,
     ),
     npm_identities: packageIdentity(
       currentPackagePath,
@@ -368,6 +400,7 @@ function parseArgs(argv) {
   const options = {};
   const aliases = {
     '--repo-root': 'repoRoot', '--snapshot-root': 'snapshotRoot', '--sitemap': 'sitemapPath',
+    '--skills-index': 'skillsIndexPath',
     '--redirect-manifest': 'redirectManifestPath', '--current-package': 'currentPackagePath',
     '--legacy-package': 'legacyPackagePath', '--current-pages-url': 'currentPagesUrl',
     '--legacy-pages-url': 'legacyPagesUrl', '--current-package-name': 'currentPackageName', '--output': 'outputPath',

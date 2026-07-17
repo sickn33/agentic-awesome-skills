@@ -18,10 +18,12 @@ function fixture({ currentProperties = true, legacyOnly = false, malformed = fal
   const legacy = 'https://example.github.io/antigravity-awesome-skills/';
   fs.mkdirSync(path.join(root, 'apps/web-app/public'), { recursive: true });
   fs.writeFileSync(path.join(root, 'apps/web-app/public/sitemap.xml'), `<?xml version="1.0"?><urlset><url><loc>${current}</loc></url><url><loc>${current}plugins/</loc></url></urlset>`);
+  writeJson(path.join(root, 'skills_index.json'), [{ id: 'catalog-only' }]);
   writeJson(path.join(root, 'package.json'), { name: 'agentic-awesome-skills', version: '14.2.0' });
   writeJson(path.join(root, 'legacy-package.json'), { name: 'antigravity-awesome-skills', version: '13.13.0', deprecated: 'Moved to agentic-awesome-skills' });
   writeJson(path.join(root, 'redirects.json'), { redirects: [
     { from: legacy, to: current }, { from: `${legacy}plugins/`, to: `${current}plugins/` },
+    { from: `${legacy}skill/catalog-only/`, to: `${current}skill/catalog-only/` },
   ] });
   const property = legacyOnly ? legacy : current;
   const snapshot = new Date().toISOString().slice(0, 10);
@@ -172,6 +174,32 @@ function options(root) {
 
 {
   const { root } = fixture();
+  const redirects = JSON.parse(fs.readFileSync(path.join(root, 'redirects.json'), 'utf8'));
+  redirects.redirects = redirects.redirects.filter(({ to }) => !to.endsWith('/skill/catalog-only/'));
+  writeJson(path.join(root, 'redirects.json'), redirects);
+  const report = auditMigrationReadiness(options(root));
+  assert.strictEqual(report.status, 'not_ready', 'every current catalog skill requires an exact redirect');
+  assert.deepStrictEqual(report.checks.redirect_manifest_coverage.missing, ['https://example.github.io/agentic-awesome-skills/skill/catalog-only/']);
+}
+
+for (const unsafeId of ['../escape', '.', '..']) {
+  const { root } = fixture();
+  writeJson(path.join(root, 'skills_index.json'), [{ id: unsafeId }]);
+  const report = auditMigrationReadiness(options(root));
+  assert.strictEqual(report.status, 'not_ready', `unsafe catalog id ${unsafeId} must fail closed`);
+  assert(report.errors.some((error) => error.includes('unsafe or missing id')));
+}
+
+{
+  const { root, current } = fixture();
+  fs.writeFileSync(path.join(root, 'apps/web-app/public/sitemap.xml'), `<?xml version="1.0"?><urlset><url><loc>${current}</loc></url><url><loc>https://EXAMPLE.github.io:443/agentic-awesome-skills/</loc></url></urlset>`);
+  const report = auditMigrationReadiness(options(root));
+  assert.strictEqual(report.status, 'not_ready', 'normalized duplicate sitemap URLs must fail closed');
+  assert(report.errors.some((error) => error.includes('duplicate URLs after normalization')));
+}
+
+{
+  const { root } = fixture();
   fs.writeFileSync(path.join(root, 'apps/web-app/public/sitemap.xml'), '<?xml version="1.0"?><urlset><url><loc>https://evil.example/not-the-project/</loc></url></urlset>');
   writeJson(path.join(root, 'package.json'), { name: 'unrelated-package', version: '1.0.0' });
   const report = auditMigrationReadiness({ ...options(root), currentPagesUrl: undefined, legacyPagesUrl: undefined, currentPackageName: undefined });
@@ -185,7 +213,7 @@ function options(root) {
   const report = auditMigrationReadiness(options(root));
   assert.strictEqual(report.status, 'ready');
   assert.deepStrictEqual(report.failed_checks, []);
-  assert.strictEqual(report.checks.redirect_manifest_coverage.covered, 2);
+  assert.strictEqual(report.checks.redirect_manifest_coverage.covered, 3);
 }
 
 {

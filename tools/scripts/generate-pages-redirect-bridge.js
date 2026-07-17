@@ -7,10 +7,16 @@ const path = require('path');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DEFAULT_SITEMAP = path.join(REPO_ROOT, 'apps', 'web-app', 'public', 'sitemap.xml');
+const DEFAULT_SKILLS_INDEX = path.join(REPO_ROOT, 'skills_index.json');
 const DEFAULT_CURRENT_BASE = 'https://sickn33.github.io/agentic-awesome-skills/';
 const DEFAULT_LEGACY_BASE = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const DEFAULT_EXPECTED_ROUTES = 187;
+const DEFAULT_EXPECTED_SKILLS = 1965;
 const SAFE_SEGMENT = /^[A-Za-z0-9._~-]+$/;
+
+function isSafeSegment(value) {
+  return typeof value === 'string' && value !== '.' && value !== '..' && SAFE_SEGMENT.test(value);
+}
 
 function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -61,6 +67,25 @@ function parseSitemap(source) {
   return rawLocations;
 }
 
+function parseSkillIds(source) {
+  let payload;
+  try {
+    payload = JSON.parse(source);
+  } catch (error) {
+    throw new Error(`skills index is not valid JSON: ${error.message}`);
+  }
+  if (!Array.isArray(payload) || !payload.length) throw new Error('skills index must be a non-empty array');
+  const ids = payload.map((entry, index) => {
+    const id = entry && entry.id;
+    if (!id || !isSafeSegment(id)) {
+      throw new Error(`skills index entry ${index} has an unsafe or missing id`);
+    }
+    return id;
+  });
+  if (new Set(ids).size !== ids.length) throw new Error('skills index contains duplicate ids');
+  return ids;
+}
+
 function safeRelativeRoute(currentUrl, currentBase) {
   if (currentUrl.protocol !== 'https:' || currentUrl.origin !== currentBase.origin || currentUrl.search || currentUrl.hash) {
     throw new Error(`sitemap URL is outside the current HTTPS identity: ${currentUrl.toString()}`);
@@ -71,7 +96,7 @@ function safeRelativeRoute(currentUrl, currentBase) {
   const relative = currentUrl.pathname.slice(currentBase.pathname.length);
   const segments = relative.split('/').filter(Boolean);
   for (const segment of segments) {
-    if (segment === '.' || segment === '..' || !SAFE_SEGMENT.test(segment)) {
+    if (!isSafeSegment(segment)) {
       throw new Error(`sitemap URL contains an unsafe path segment: ${currentUrl.toString()}`);
     }
   }
@@ -81,7 +106,7 @@ function safeRelativeRoute(currentUrl, currentBase) {
 function outputRelativePath(legacyBase, relativeRoute) {
   const baseSegments = legacyBase.pathname.split('/').filter(Boolean);
   for (const segment of baseSegments) {
-    if (segment === '.' || segment === '..' || !SAFE_SEGMENT.test(segment)) {
+    if (!isSafeSegment(segment)) {
       throw new Error('legacy base contains an unsafe path segment');
     }
   }
@@ -165,7 +190,7 @@ function assertSafeOutput(outputDirectory, repoRoot) {
   }
 }
 
-function writeBridge(stagingDirectory, redirects, manifest, legacyBase) {
+function writeBridge(stagingDirectory, redirects, sitemapRedirects, manifest, legacyBase) {
   for (const redirect of redirects) {
     const filePath = path.join(stagingDirectory, ...redirect.output_file.split('/'));
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -173,7 +198,7 @@ function writeBridge(stagingDirectory, redirects, manifest, legacyBase) {
   }
   const legacyDirectory = path.join(stagingDirectory, ...legacyBase.pathname.split('/').filter(Boolean));
   fs.mkdirSync(legacyDirectory, { recursive: true });
-  fs.writeFileSync(path.join(legacyDirectory, 'sitemap.xml'), legacySitemap(redirects), 'utf8');
+  fs.writeFileSync(path.join(legacyDirectory, 'sitemap.xml'), legacySitemap(sitemapRedirects), 'utf8');
   fs.writeFileSync(path.join(stagingDirectory, 'redirect-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
   fs.writeFileSync(path.join(stagingDirectory, '.nojekyll'), '', 'utf8');
 }
@@ -181,6 +206,7 @@ function writeBridge(stagingDirectory, redirects, manifest, legacyBase) {
 function generateBridge(options) {
   const repoRoot = path.resolve(options.repoRoot || REPO_ROOT);
   const sitemapPath = path.resolve(options.sitemapPath || DEFAULT_SITEMAP);
+  const skillsIndexPath = path.resolve(options.skillsIndexPath || DEFAULT_SKILLS_INDEX);
   if (!options.outputDirectory) throw new Error('--output is required');
   const outputDirectory = path.resolve(options.outputDirectory);
   const currentBase = canonicalBase(options.currentBase || DEFAULT_CURRENT_BASE, 'current base');
@@ -188,17 +214,42 @@ function generateBridge(options) {
   if (currentBase.toString() === legacyBase.toString()) throw new Error('current and legacy bases must be distinct');
   const expectedRoutes = Number(options.expectedRoutes ?? DEFAULT_EXPECTED_ROUTES);
   if (!Number.isSafeInteger(expectedRoutes) || expectedRoutes <= 0) throw new Error('expected route count must be a positive integer');
+  const expectedSkills = Number(options.expectedSkills ?? DEFAULT_EXPECTED_SKILLS);
+  if (!Number.isSafeInteger(expectedSkills) || expectedSkills <= 0) throw new Error('expected skill count must be a positive integer');
   assertSafeOutput(outputDirectory, repoRoot);
 
   const sitemapSource = fs.readFileSync(sitemapPath, 'utf8');
+  const skillsIndexSource = fs.readFileSync(skillsIndexPath, 'utf8');
   const locations = parseSitemap(sitemapSource);
+  const skillIds = parseSkillIds(skillsIndexSource);
   if (locations.length !== expectedRoutes) {
     throw new Error(`sitemap route count ${locations.length} does not match locked expectation ${expectedRoutes}`);
   }
+  if (skillIds.length !== expectedSkills) {
+    throw new Error(`skills index count ${skillIds.length} does not match locked expectation ${expectedSkills}`);
+  }
 
-  const redirects = locations.map((location) => {
+  const skillIdSet = new Set(skillIds);
+  const sitemapRoutes = locations.map((location) => {
     const currentUrl = new URL(location);
     const relativeRoute = safeRelativeRoute(currentUrl, currentBase);
+    const segments = relativeRoute.split('/');
+    if (segments[0] === 'skill' && (segments.length !== 2 || !skillIdSet.has(segments[1]))) {
+      throw new Error(`sitemap skill route is absent from the current skills index: ${currentUrl.toString()}`);
+    }
+    return { currentUrl, relativeRoute };
+  });
+  const normalisedSitemapUrls = sitemapRoutes.map(({ currentUrl }) => currentUrl.toString());
+  if (new Set(normalisedSitemapUrls).size !== normalisedSitemapUrls.length) {
+    throw new Error('sitemap contains duplicate URLs after normalization');
+  }
+  const allRoutes = new Map(sitemapRoutes.map(({ currentUrl, relativeRoute }) => [currentUrl.toString(), { currentUrl, relativeRoute }]));
+  for (const id of skillIds) {
+    const currentUrl = new URL(`skill/${id}/`, currentBase);
+    allRoutes.set(currentUrl.toString(), { currentUrl, relativeRoute: `skill/${id}` });
+  }
+
+  const toRedirect = ({ currentUrl, relativeRoute }) => {
     const from = new URL(relativeRoute ? `${relativeRoute}/` : '', legacyBase).toString();
     const to = currentUrl.toString();
     return {
@@ -206,7 +257,9 @@ function generateBridge(options) {
       to,
       output_file: outputRelativePath(legacyBase, relativeRoute),
     };
-  });
+  };
+  const redirects = [...allRoutes.values()].map(toRedirect);
+  const sitemapRedirects = sitemapRoutes.map(toRedirect).sort((left, right) => left.from.localeCompare(right.from));
   if (!redirects.some(({ to }) => to === currentBase.toString())) throw new Error('sitemap does not contain the current root route');
   if (new Set(redirects.map(({ from }) => from)).size !== redirects.length) throw new Error('legacy mapping is not one-to-one');
   if (new Set(redirects.map(({ output_file }) => output_file)).size !== redirects.length) throw new Error('multiple routes map to the same output file');
@@ -218,13 +271,18 @@ function generateBridge(options) {
   }
 
   const manifest = {
-    schema_version: 1,
+    schema_version: 2,
     deployment_scope: 'separate GitHub Pages user-site subdirectory',
     not_for_current_project_pages: true,
     source_sitemap_sha256: sha256(sitemapSource),
+    source_skills_index_sha256: sha256(skillsIndexSource),
     current_base: currentBase.toString(),
     legacy_base: legacyBase.toString(),
+    source_sitemap_route_count: locations.length,
+    current_skill_route_count: skillIds.length,
     route_count: redirects.length,
+    legacy_sitemap_route_count: sitemapRedirects.length,
+    legacy_sitemap_policy: 'curated current sitemap routes only',
     legacy_sitemap: legacySitemapPath,
     redirects,
   };
@@ -233,7 +291,7 @@ function generateBridge(options) {
   let stagingDirectory = null;
   try {
     stagingDirectory = fs.mkdtempSync(path.join(path.dirname(outputDirectory), `.${path.basename(outputDirectory)}.${process.pid}.`));
-    writeBridge(stagingDirectory, redirects, manifest, legacyBase);
+    writeBridge(stagingDirectory, redirects, sitemapRedirects, manifest, legacyBase);
     fs.renameSync(stagingDirectory, outputDirectory);
   } finally {
     if (stagingDirectory && fs.existsSync(stagingDirectory)) fs.rmSync(stagingDirectory, { recursive: true, force: true });
@@ -246,9 +304,11 @@ function parseArgs(argv) {
   const aliases = {
     '--output': 'outputDirectory',
     '--sitemap': 'sitemapPath',
+    '--skills-index': 'skillsIndexPath',
     '--current-base': 'currentBase',
     '--legacy-base': 'legacyBase',
     '--expected-routes': 'expectedRoutes',
+    '--expected-skills': 'expectedSkills',
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -268,7 +328,7 @@ function parseArgs(argv) {
 function main() {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) {
-    process.stdout.write('Usage: node tools/scripts/generate-pages-redirect-bridge.js --output NEW_DIR [--sitemap FILE] [--expected-routes N]\n');
+    process.stdout.write('Usage: node tools/scripts/generate-pages-redirect-bridge.js --output NEW_DIR [--sitemap FILE] [--skills-index FILE] [--expected-routes N] [--expected-skills N]\n');
     return;
   }
   const manifest = generateBridge(options);
@@ -288,6 +348,7 @@ module.exports = {
   generateBridge,
   htmlEscape,
   parseArgs,
+  parseSkillIds,
   parseSitemap,
   redirectHtml,
 };

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Added the current Bing Webmaster verification identity and updated the legacy Pages redirect generator contract to cover the expanded 187-route sitemap.
+- Expanded the legacy Pages bridge to every one of the 1,965 current catalog skills plus seven structural routes, while keeping crawler discovery limited to the curated 187-route sitemap and making migration-readiness checks enforce the same exact catalog coverage.
 
 ## [14.6.0] - 2026-07-16 - "Diagnostics, Review Efficiency, and Protected Maintenance"
 
