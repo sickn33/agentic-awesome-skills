@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.observability-performance.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "polyglot-telemetry-conventions",
+      "allowedSkillIds": [
+        "observability-and-instrumentation",
+        "observability-engineer",
+        "distributed-debugging-debug-trace",
+        "observability-monitoring-slo-implement",
+        "grafana-dashboards"
+      ],
+      "requiredGroups": [
+        [
+          "observability-and-instrumentation",
+          "observability-engineer"
+        ],
+        [
+          "distributed-debugging-debug-trace"
+        ],
+        [
+          "observability-monitoring-slo-implement",
+          "grafana-dashboards"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7467f5fd43570e6fe21aef9d6943e4e41cd8c9b4f5e75049be3c7b0249a05924"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7467f5fd43570e6fe21aef9d6943e4e41cd8c9b4f5e75049be3c7b0249a05924"
+    }
+  ]
+}

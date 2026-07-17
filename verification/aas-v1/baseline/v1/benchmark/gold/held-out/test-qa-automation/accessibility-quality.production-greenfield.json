@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "accesslint-audit-and-diff",
+      "allowedSkillIds": [
+        "accesslint-audit",
+        "accesslint-diff",
+        "wcag-audit-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "accesslint-audit"
+        ],
+        [
+          "accesslint-diff"
+        ],
+        [
+          "wcag-audit-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ca5ca2916b3fcd26f309c17e7094703a74b8e1665643483c8a3fbbee7ca914a1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ca5ca2916b3fcd26f309c17e7094703a74b8e1665643483c8a3fbbee7ca914a1"
+    }
+  ]
+}

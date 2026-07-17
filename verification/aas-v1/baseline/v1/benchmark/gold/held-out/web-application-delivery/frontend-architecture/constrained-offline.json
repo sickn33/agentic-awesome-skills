@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.frontend-architecture.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-sveltekit-architecture",
+      "allowedSkillIds": [
+        "sveltekit",
+        "frontend-dev-guidelines"
+      ],
+      "requiredGroups": [
+        [
+          "sveltekit"
+        ],
+        [
+          "frontend-dev-guidelines"
+        ]
+      ]
+    },
+    {
+      "solutionId": "offline-sveltekit-ui-engineering",
+      "allowedSkillIds": [
+        "sveltekit",
+        "frontend-ui-engineering"
+      ],
+      "requiredGroups": [
+        [
+          "sveltekit"
+        ],
+        [
+          "frontend-ui-engineering"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0a381b7f82d4686366e240be2394391e7f7c5ced1e73f4451dfe2a8402e0f67b"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0a381b7f82d4686366e240be2394391e7f7c5ced1e73f4451dfe2a8402e0f67b"
+    }
+  ]
+}

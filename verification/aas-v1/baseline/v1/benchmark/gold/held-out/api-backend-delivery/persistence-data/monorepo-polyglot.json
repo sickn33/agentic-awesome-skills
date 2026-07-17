@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.persistence-data.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "service-owned-persistence",
+      "allowedSkillIds": [
+        "database-architect",
+        "database-design",
+        "architecture-patterns",
+        "database-migration",
+        "postgres-best-practices"
+      ],
+      "requiredGroups": [
+        [
+          "database-architect",
+          "database-design",
+          "architecture-patterns"
+        ],
+        [
+          "database-migration",
+          "postgres-best-practices"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1d38966804eae75ec960f41f0a0c56eeb1ff5b11fbfd5cfb6d2324b44e059900"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1d38966804eae75ec960f41f0a0c56eeb1ff5b11fbfd5cfb6d2324b44e059900"
+    }
+  ]
+}

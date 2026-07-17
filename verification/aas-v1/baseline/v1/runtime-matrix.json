@@ -1,0 +1,148 @@
+{
+  "$schema": "../../schemas/runtime-matrix.schema.json",
+  "schemaVersion": 1,
+  "matrixVersion": "1.0.0",
+  "status": "frozen",
+  "expectedIdentityContract": {
+    "provider": "github-hosted-actions",
+    "frozenFields": [
+      "job.id",
+      "job.os",
+      "job.runnerImage.label",
+      "job.architecture",
+      "job.nodePatch",
+      "job.filesystem.expectedType",
+      "job.observer.contractVersion",
+      "job.observer.backend"
+    ],
+    "validation": "A job fails closed before candidate execution unless every frozen field matches an independently probed value. Mutable weekly image build identifiers are evidence in the runtime receipt, not frozen identity fields."
+  },
+  "receiptContract": {
+    "schemaVersion": 1,
+    "canonicalization": "RFC-8785-JCS",
+    "digest": "SHA-256",
+    "immutability": "Each job writes one canonical receipt, computes its digest, and uploads it once under a run-id, run-attempt and job-id qualified artifact name. A receipt is never updated in place.",
+    "requiredObservedFields": [
+      "jobId",
+      "repositoryCommit",
+      "workflowRunId",
+      "workflowRunAttempt",
+      "runnerImageLabel",
+      "runnerImageOS",
+      "runnerImageVersion",
+      "runnerImageRelease",
+      "osVersion",
+      "kernelVersion",
+      "processArchitecture",
+      "nodeVersion",
+      "nodeExecutableSha256",
+      "filesystemType",
+      "filesystemCaseSensitivity",
+      "observerContractVersion",
+      "observerBackend",
+      "observerExecutableSha256",
+      "observerSelfTestDigest",
+      "networkAttemptCount",
+      "writeAttemptCount",
+      "projectSnapshotBeforeSha256",
+      "projectSnapshotAfterSha256",
+      "cacheSnapshotBeforeSha256",
+      "cacheSnapshotAfterSha256"
+    ],
+    "mutableRunnerReceiptFields": [
+      "runnerImageVersion",
+      "runnerImageRelease",
+      "osVersion",
+      "kernelVersion",
+      "nodeExecutableSha256",
+      "observerExecutableSha256"
+    ],
+    "comparisonRule": "Mutable receipt fields may differ between weekly hosted images without changing this baseline. They remain immutable within their content-addressed receipt and are never omitted from evidence."
+  },
+  "observerContract": {
+    "id": "aas-attempt-observer",
+    "version": "1.0.0",
+    "scope": "candidate process and complete descendant process tree",
+    "launchOrder": "The external observer starts before the candidate and writes evidence outside the observed process tree.",
+    "networkRule": "Every socket creation, connect, bind, listen, DNS, send or equivalent network syscall/event is an attempt. The permitted count for MCP verification is zero; blocked or failed attempts still count.",
+    "writeRule": "Every create, write, truncate, rename, delete, directory mutation, permission mutation, symlink or hardlink syscall/event outside the candidate stdout and stderr handles is an attempt. Project and cache permitted counts are zero.",
+    "redaction": "Receipts store operation class, target zone and SHA-256 of normalized target identity; raw paths, endpoints, configuration values and file contents are forbidden.",
+    "selfTest": {
+      "required": true,
+      "procedure": "Before candidate execution, an observer-owned child performs one temporary-file write attempt and one refused loopback connection attempt. The job must observe exactly both sentinel events and then discard their isolated fixture.",
+      "failurePolicy": "Unavailable observer, missing sentinel, ambiguous PID lineage, dropped events or observer overflow fails the job; fallback and skip are forbidden."
+    },
+    "filesystemCorroboration": "Canonical metadata snapshots of project and AAS cache are captured before and after candidate execution. Equal snapshots corroborate no mutation but never replace attempt observation."
+  },
+  "jobs": [
+    {
+      "id": "linux-node-22",
+      "os": "linux",
+      "nodeMajor": 22,
+      "nodePatch": "22.23.1",
+      "runnerImage": {"provider": "github-hosted-actions", "label": "ubuntu-24.04", "expectedFamily": "Ubuntu 24.04", "weeklyBuildIsReceiptOnly": true},
+      "architecture": "x64",
+      "filesystem": {"expectedType": "ext4", "expectedCaseSensitivity": "sensitive", "probe": "findmnt -T the runner temporary directory with explicit FSTYPE and OPTIONS output, followed by an isolated mixed-case identity probe"},
+      "observer": {"contractVersion": "1.0.0", "backend": "linux-strace-process-tree", "backendRequirement": "strace follow-forks syscall trace for network and filesystem mutation classes", "selfTestRequired": true},
+      "status": "frozen"
+    },
+    {
+      "id": "linux-node-24",
+      "os": "linux",
+      "nodeMajor": 24,
+      "nodePatch": "24.18.0",
+      "runnerImage": {"provider": "github-hosted-actions", "label": "ubuntu-24.04", "expectedFamily": "Ubuntu 24.04", "weeklyBuildIsReceiptOnly": true},
+      "architecture": "x64",
+      "filesystem": {"expectedType": "ext4", "expectedCaseSensitivity": "sensitive", "probe": "findmnt -T the runner temporary directory with explicit FSTYPE and OPTIONS output, followed by an isolated mixed-case identity probe"},
+      "observer": {"contractVersion": "1.0.0", "backend": "linux-strace-process-tree", "backendRequirement": "strace follow-forks syscall trace for network and filesystem mutation classes", "selfTestRequired": true},
+      "status": "frozen"
+    },
+    {
+      "id": "macos-node-22",
+      "os": "macos",
+      "nodeMajor": 22,
+      "nodePatch": "22.23.1",
+      "runnerImage": {"provider": "github-hosted-actions", "label": "macos-15-intel", "expectedFamily": "macOS 15 Intel", "weeklyBuildIsReceiptOnly": true},
+      "architecture": "x64",
+      "filesystem": {"expectedType": "apfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "diskutil info for the runner temporary volume plus an isolated mixed-case identity probe"},
+      "observer": {"contractVersion": "1.0.0", "backend": "macos-dtrace-process-tree", "backendRequirement": "DTrace syscall probes following candidate descendants for network and filesystem mutation classes", "selfTestRequired": true},
+      "status": "frozen"
+    },
+    {
+      "id": "macos-node-24",
+      "os": "macos",
+      "nodeMajor": 24,
+      "nodePatch": "24.18.0",
+      "runnerImage": {"provider": "github-hosted-actions", "label": "macos-15-intel", "expectedFamily": "macOS 15 Intel", "weeklyBuildIsReceiptOnly": true},
+      "architecture": "x64",
+      "filesystem": {"expectedType": "apfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "diskutil info for the runner temporary volume plus an isolated mixed-case identity probe"},
+      "observer": {"contractVersion": "1.0.0", "backend": "macos-dtrace-process-tree", "backendRequirement": "DTrace syscall probes following candidate descendants for network and filesystem mutation classes", "selfTestRequired": true},
+      "status": "frozen"
+    },
+    {
+      "id": "windows-node-22",
+      "os": "windows",
+      "nodeMajor": 22,
+      "nodePatch": "22.23.1",
+      "runnerImage": {"provider": "github-hosted-actions", "label": "windows-2025", "expectedFamily": "Windows Server 2025", "weeklyBuildIsReceiptOnly": true},
+      "architecture": "x64",
+      "filesystem": {"expectedType": "ntfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "PowerShell Get-Volume for the runner temporary drive plus fsutil and an isolated mixed-case identity probe"},
+      "observer": {"contractVersion": "1.0.0", "backend": "windows-etw-kernel-process-tree", "backendRequirement": "ETW kernel process, file I/O and TCP/IP providers plus the Microsoft-Windows-DNS-Client provider, correlated by process lineage", "selfTestRequired": true},
+      "status": "frozen"
+    },
+    {
+      "id": "windows-node-24",
+      "os": "windows",
+      "nodeMajor": 24,
+      "nodePatch": "24.18.0",
+      "runnerImage": {"provider": "github-hosted-actions", "label": "windows-2025", "expectedFamily": "Windows Server 2025", "weeklyBuildIsReceiptOnly": true},
+      "architecture": "x64",
+      "filesystem": {"expectedType": "ntfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "PowerShell Get-Volume for the runner temporary drive plus fsutil and an isolated mixed-case identity probe"},
+      "observer": {"contractVersion": "1.0.0", "backend": "windows-etw-kernel-process-tree", "backendRequirement": "ETW kernel process, file I/O and TCP/IP providers plus the Microsoft-Windows-DNS-Client provider, correlated by process lineage", "selfTestRequired": true},
+      "status": "frozen"
+    }
+  ],
+  "skipsAllowed": false,
+  "continueOnErrorAllowed": false,
+  "exactCanonicalPayloadMatchRequired": true
+}

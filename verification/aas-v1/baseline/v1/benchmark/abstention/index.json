@@ -1,0 +1,416 @@
+{
+  "schemaVersion": 1,
+  "corpusVersion": "1.0.0",
+  "status": "frozen",
+  "expectedStatus": "insufficientCoverage",
+  "frozenSupportedIntents": [
+    "web-application-delivery",
+    "api-backend-delivery",
+    "test-qa-automation",
+    "security-review-hardening",
+    "deployment-devops",
+    "agent-mcp-development"
+  ],
+  "reasonCodeRegistry": "reason-codes.v1.json",
+  "families": [
+    "creative-content",
+    "media-production",
+    "personal-planning",
+    "professional-advice",
+    "physical-systems",
+    "non-web-software"
+  ],
+  "cases": [
+    {
+      "caseId": "abstention.creative-content.historical-novella",
+      "family": "creative-content",
+      "inputPath": "cases/creative-content/historical-novella.json",
+      "labelPath": "labels/creative-content/historical-novella.json",
+      "taskFamilyFingerprint": "sha256:136ffbf95118af69f66f86d583b84135e54382c265b43c1826c25a7c6bb15a78",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.creative-content.wedding-speech",
+      "family": "creative-content",
+      "inputPath": "cases/creative-content/wedding-speech.json",
+      "labelPath": "labels/creative-content/wedding-speech.json",
+      "taskFamilyFingerprint": "sha256:c178cd053e8e6ed043e6a1c42006efcd0088f0ae166713084796ef1dbce978a4",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.creative-content.bilingual-poetry-edit",
+      "family": "creative-content",
+      "inputPath": "cases/creative-content/bilingual-poetry-edit.json",
+      "labelPath": "labels/creative-content/bilingual-poetry-edit.json",
+      "taskFamilyFingerprint": "sha256:d6cddac076c5e4439d35a65f89d14d1219da184fc7b8622942119a1541031ca0",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.creative-content.childrens-story",
+      "family": "creative-content",
+      "inputPath": "cases/creative-content/childrens-story.json",
+      "labelPath": "labels/creative-content/childrens-story.json",
+      "taskFamilyFingerprint": "sha256:469b3ea48364dc670ae92f3205c32d9a0d07cbda4b18b0aec13b3459c61e94ae",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.creative-content.magazine-narrative",
+      "family": "creative-content",
+      "inputPath": "cases/creative-content/magazine-narrative.json",
+      "labelPath": "labels/creative-content/magazine-narrative.json",
+      "taskFamilyFingerprint": "sha256:3aed13f7af126aa79162d29362d7b9d6819c9e1eb3b051b89d451fc1d2958eb8",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.media-production.documentary-storyboard",
+      "family": "media-production",
+      "inputPath": "cases/media-production/documentary-storyboard.json",
+      "labelPath": "labels/media-production/documentary-storyboard.json",
+      "taskFamilyFingerprint": "sha256:8a5e1bf7296caf40a4252a3e5e85a277c409b7f98c8d06898a6617710535c790",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.media-production.podcast-mastering",
+      "family": "media-production",
+      "inputPath": "cases/media-production/podcast-mastering.json",
+      "labelPath": "labels/media-production/podcast-mastering.json",
+      "taskFamilyFingerprint": "sha256:69ee04ecb0b72334095cfe121865dd523d249325ef48e34f7b2579df5d72422e",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.media-production.photo-color-grade",
+      "family": "media-production",
+      "inputPath": "cases/media-production/photo-color-grade.json",
+      "labelPath": "labels/media-production/photo-color-grade.json",
+      "taskFamilyFingerprint": "sha256:c45212bf2252d79b44176778784e7712d903161c2a7b19de6fc0c75362ee9116",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.media-production.string-arrangement",
+      "family": "media-production",
+      "inputPath": "cases/media-production/string-arrangement.json",
+      "labelPath": "labels/media-production/string-arrangement.json",
+      "taskFamilyFingerprint": "sha256:53ae440bce016a343fcf7fb92e8d96f368bcc0c50cb8f21cf76ad0f4012eedcd",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.media-production.product-animation",
+      "family": "media-production",
+      "inputPath": "cases/media-production/product-animation.json",
+      "labelPath": "labels/media-production/product-animation.json",
+      "taskFamilyFingerprint": "sha256:78430aca14020345a8b5b0f499430f28340fd455f8dabf53c4bb443e98ba3cd1",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.personal-planning.japan-itinerary",
+      "family": "personal-planning",
+      "inputPath": "cases/personal-planning/japan-itinerary.json",
+      "labelPath": "labels/personal-planning/japan-itinerary.json",
+      "taskFamilyFingerprint": "sha256:f721e32e3a52f25db5e3ad7922ee3dab18ca5d184f66556f2a251be807a86f7f",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.personal-planning.vegetarian-meals",
+      "family": "personal-planning",
+      "inputPath": "cases/personal-planning/vegetarian-meals.json",
+      "labelPath": "labels/personal-planning/vegetarian-meals.json",
+      "taskFamilyFingerprint": "sha256:83384e36533327b9d1ed8fd06ca367b9481029483f4f46c376b104f71e6d5693",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.personal-planning.apartment-declutter",
+      "family": "personal-planning",
+      "inputPath": "cases/personal-planning/apartment-declutter.json",
+      "labelPath": "labels/personal-planning/apartment-declutter.json",
+      "taskFamilyFingerprint": "sha256:53985391ce885bb3a03722ec7e70a5ddc2eb246a5b7dc1f82cd212b7dd8982fe",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.personal-planning.wedding-seating",
+      "family": "personal-planning",
+      "inputPath": "cases/personal-planning/wedding-seating.json",
+      "labelPath": "labels/personal-planning/wedding-seating.json",
+      "taskFamilyFingerprint": "sha256:cd821960ef560f36d8dd23637c983d655115ae28ce9b6c2732a341c60058a7ca",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.personal-planning.capsule-wardrobe",
+      "family": "personal-planning",
+      "inputPath": "cases/personal-planning/capsule-wardrobe.json",
+      "labelPath": "labels/personal-planning/capsule-wardrobe.json",
+      "taskFamilyFingerprint": "sha256:40bdadeb4cae9624124564ce7a5389a8905d64e9a0ba7d391297909d9a07fd34",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.professional-advice.medical-diagnosis",
+      "family": "professional-advice",
+      "inputPath": "cases/professional-advice/medical-diagnosis.json",
+      "labelPath": "labels/professional-advice/medical-diagnosis.json",
+      "taskFamilyFingerprint": "sha256:7ca9c54417fd05dcb25fec0f17ce007a4d34da9fb33401b32e248a46dedaa00e",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.professional-advice.tenancy-dispute",
+      "family": "professional-advice",
+      "inputPath": "cases/professional-advice/tenancy-dispute.json",
+      "labelPath": "labels/professional-advice/tenancy-dispute.json",
+      "taskFamilyFingerprint": "sha256:0aeed452203d53dc7c0914a0cc5d9b4d44a686146f307b02442b9d41722d09a2",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.professional-advice.investment-allocation",
+      "family": "professional-advice",
+      "inputPath": "cases/professional-advice/investment-allocation.json",
+      "labelPath": "labels/professional-advice/investment-allocation.json",
+      "taskFamilyFingerprint": "sha256:a888fdb91e954b93ab7df996396486b56cdfde376481384ce9d6ce5332e59f2b",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.professional-advice.tax-position",
+      "family": "professional-advice",
+      "inputPath": "cases/professional-advice/tax-position.json",
+      "labelPath": "labels/professional-advice/tax-position.json",
+      "taskFamilyFingerprint": "sha256:ed74e2196cd0792917775bca7df6ace243cae85680bc7174256a4d5fa7062c8f",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.professional-advice.clinical-nutrition",
+      "family": "professional-advice",
+      "inputPath": "cases/professional-advice/clinical-nutrition.json",
+      "labelPath": "labels/professional-advice/clinical-nutrition.json",
+      "taskFamilyFingerprint": "sha256:a43acf38c22ec80bcf6462dd70e49be3fe1bf2cc1731a5130b05cdd026e8e71b",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.physical-systems.hvac-diagnosis",
+      "family": "physical-systems",
+      "inputPath": "cases/physical-systems/hvac-diagnosis.json",
+      "labelPath": "labels/physical-systems/hvac-diagnosis.json",
+      "taskFamilyFingerprint": "sha256:ac5077edf1503a49dac6429f200231dba353176bcbf585c4664b17c935f9f1a9",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.physical-systems.cnc-fixture",
+      "family": "physical-systems",
+      "inputPath": "cases/physical-systems/cnc-fixture.json",
+      "labelPath": "labels/physical-systems/cnc-fixture.json",
+      "taskFamilyFingerprint": "sha256:a80a490d1174746ca6c0a5f02f374ea95acb1efc68d7824abd3e8679b8d0407b",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.physical-systems.electrical-rewire",
+      "family": "physical-systems",
+      "inputPath": "cases/physical-systems/electrical-rewire.json",
+      "labelPath": "labels/physical-systems/electrical-rewire.json",
+      "taskFamilyFingerprint": "sha256:e1842efdfbd5d4126ca56071243c66dfb25134d467b2c5443495d75d4d4f2f14",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.physical-systems.bicycle-drivetrain",
+      "family": "physical-systems",
+      "inputPath": "cases/physical-systems/bicycle-drivetrain.json",
+      "labelPath": "labels/physical-systems/bicycle-drivetrain.json",
+      "taskFamilyFingerprint": "sha256:0db34896a1580f9f01591d70b4a0ce5d7a4eff0ff6bd42f919247b367ee26ecb",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.physical-systems.orchard-irrigation",
+      "family": "physical-systems",
+      "inputPath": "cases/physical-systems/orchard-irrigation.json",
+      "labelPath": "labels/physical-systems/orchard-irrigation.json",
+      "taskFamilyFingerprint": "sha256:28e0a7f651646e42f97406b9e4a9884b1925565047dd70e8f73011860537bdf8",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.non-web-software.ios-field-notes",
+      "family": "non-web-software",
+      "inputPath": "cases/non-web-software/ios-field-notes.json",
+      "labelPath": "labels/non-web-software/ios-field-notes.json",
+      "taskFamilyFingerprint": "sha256:db89d915ca8d9a8fbe36d8678a6df610f6d41d925492b8b9ed21a3f2b7528522",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.non-web-software.android-transit",
+      "family": "non-web-software",
+      "inputPath": "cases/non-web-software/android-transit.json",
+      "labelPath": "labels/non-web-software/android-transit.json",
+      "taskFamilyFingerprint": "sha256:f43fd94963eeb04b7b12da4b7616989a4fbb101a0a3b566c9d4fb4ddc6c55a9c",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.non-web-software.unreal-coop-game",
+      "family": "non-web-software",
+      "inputPath": "cases/non-web-software/unreal-coop-game.json",
+      "labelPath": "labels/non-web-software/unreal-coop-game.json",
+      "taskFamilyFingerprint": "sha256:c708b84c7640049e6a55b9e2c78c2ae5cca0301bf6c81c28557d1dba514358be",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.non-web-software.macos-menu-utility",
+      "family": "non-web-software",
+      "inputPath": "cases/non-web-software/macos-menu-utility.json",
+      "labelPath": "labels/non-web-software/macos-menu-utility.json",
+      "taskFamilyFingerprint": "sha256:0da700f1e24b920694197aa5f555ec4003bddc4fa60017ea0befb4799b7c4c89",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "abstention.non-web-software.embedded-rust-sensor",
+      "family": "non-web-software",
+      "inputPath": "cases/non-web-software/embedded-rust-sensor.json",
+      "labelPath": "labels/non-web-software/embedded-rust-sensor.json",
+      "taskFamilyFingerprint": "sha256:3d8f51264ff80e3c6ec53d0d43e4931ab091e25c1fc0a2b8fdf10c48bfbdbb47",
+      "provenance": {
+        "source": "AAS v1 independent OOD corpus authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    }
+  ],
+  "reviews": []
+}

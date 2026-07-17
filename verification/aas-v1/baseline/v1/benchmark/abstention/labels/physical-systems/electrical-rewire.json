@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.physical-systems.electrical-rewire",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PHYSICAL_SYSTEMS"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-de3ea7db3c6fc288dd794b112cd5483353f88126f3cad5fabb14a810e9c1babc"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-de3ea7db3c6fc288dd794b112cd5483353f88126f3cad5fabb14a810e9c1babc"
+    }
+  ]
+}

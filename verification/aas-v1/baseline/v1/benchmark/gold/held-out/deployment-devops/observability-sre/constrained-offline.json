@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "local-prometheus",
+      "allowedSkillIds": [
+        "prometheus-configuration"
+      ],
+      "requiredGroups": [
+        [
+          "prometheus-configuration"
+        ]
+      ]
+    },
+    {
+      "solutionId": "local-server-operations",
+      "allowedSkillIds": [
+        "server-management"
+      ],
+      "requiredGroups": [
+        [
+          "server-management"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-76dc4c74a3f0cc99c9f2416766d96254b68990e2a1f8bb643d87f66c04d46180"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-76dc4c74a3f0cc99c9f2416766d96254b68990e2a1f8bb643d87f66c04d46180"
+    }
+  ]
+}

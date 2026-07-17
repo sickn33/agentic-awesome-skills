@@ -1,0 +1,80 @@
+{
+  "caseId": "help-long",
+  "evidence": {
+    "harnessFiles": [],
+    "networkAttemptDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "networkAttempts": []
+  },
+  "expectedExitCode": 0,
+  "fakeGitTrace": [],
+  "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "filesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "fixtureState": "clean",
+  "invariants": {
+    "fixtureDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8",
+    "harnessEvidenceExcluded": true,
+    "noStackStateCreated": true
+  },
+  "invocation": {
+    "args": [
+      "--help"
+    ],
+    "cwd": "<CASE_ROOT>/workspace",
+    "executable": "<BASELINE_RUNTIME>/node_modules/agentic-awesome-skills/tools/bin/install.js"
+  },
+  "observedExitCode": 0,
+  "packageIdentity": {
+    "distIntegrity": "sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg==",
+    "package": "agentic-awesome-skills",
+    "version": "14.6.0"
+  },
+  "preFilesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "preTreeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50",
+  "schemaVersion": 1,
+  "signal": null,
+  "stderr": "",
+  "stdout": "\nagentic-awesome-skills — installer\n\n  npx agentic-awesome-skills [install] [options]\n\n  Shallow-clones the skills repo into your agent's skills directory.\n\nOptions:\n  --cursor       Install to ~/.cursor/skills (Cursor)\n  --claude       Install to ~/.claude/skills (Claude Code)\n  --gemini       Install to ~/.gemini/skills (Gemini CLI)\n  --codex        Install to ~/.codex/skills (Codex CLI)\n  --kiro         Install to ~/.kiro/skills (Kiro CLI)\n  --antigravity  Install to ~/.agents/skills (Antigravity IDE / OpenCode-style layout)\n  --agy          Install to ~/.gemini/antigravity-cli/skills (Antigravity CLI slash commands)\n  --path <dir>   Install to <dir> (default: ~/.agents/skills)\n  --risk <csv>     Install only skills matching these risk labels\n  --category <csv> Install only skills matching these categories\n  --tags <csv>     Install only skills matching these tags\n  --skills <csv>   Set exact managed skill names, ids, or nested skill paths\n  --dry-run        Preview installs/updates/removals for every target without writing\n  --version        Print the installer version\n  --release <ver>  Clone tag v<ver> (e.g. 4.6.0 -> v4.6.0)\n  --tag <tag>      Clone this tag or branch (e.g. v4.6.0, main)\n\nExamples:\n  npx agentic-awesome-skills\n  npx agentic-awesome-skills --cursor\n  npx agentic-awesome-skills --kiro\n  npx agentic-awesome-skills --antigravity\n  npx agentic-awesome-skills --agy\n  npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none\n  npx agentic-awesome-skills --path .agents/skills --tags debugging,typescript-legacy-\n  npx agentic-awesome-skills --codex --skills frontend-design,game-development/2d-games --dry-run\n  npx agentic-awesome-skills --release 4.6.0\n  npx agentic-awesome-skills --path ./my-skills\n  npx agentic-awesome-skills --claude --codex    Install to multiple targets\n\n",
+  "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+}

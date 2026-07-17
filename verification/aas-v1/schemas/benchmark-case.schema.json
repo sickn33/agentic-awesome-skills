@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/benchmark-case.schema.json",
+  "title": "AAS v1 held-out benchmark case",
+  "type": "object",
+  "required": ["schemaVersion", "caseId", "intent", "targets", "profile", "criticalGoals", "nonCriticalGoals", "requiresSkill", "policy", "provenance", "taskFamilyFingerprint"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "caseId": { "type": "string", "minLength": 1 },
+    "intent": { "type": "string", "minLength": 1 },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["host", "scope"],
+        "properties": {
+          "host": { "enum": ["codex", "claude"] },
+          "scope": { "const": "project" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "profile": { "type": "object" },
+    "criticalGoals": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+    "nonCriticalGoals": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "minimumNonCriticalGoalCoverage": { "type": "number", "minimum": 0.8, "maximum": 1 },
+    "requiresSkill": { "type": "boolean" },
+    "policy": {
+      "type": "object",
+      "required": ["allowedRisk", "requireKnownSource", "allowManualSetup"],
+      "properties": {
+        "allowedRisk": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["none", "safe", "critical", "offensive"] }
+        },
+        "requireKnownSource": { "type": "boolean" },
+        "allowManualSetup": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source", "version", "reviewedAt"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "reviewedAt": { "type": "string", "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "taskFamilyFingerprint": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

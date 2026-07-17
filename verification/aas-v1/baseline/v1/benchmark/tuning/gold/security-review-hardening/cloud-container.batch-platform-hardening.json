@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.cloud-container.batch-platform-hardening",
+  "acceptedSolutions": [
+    {
+      "solutionId": "container-and-cloud-audit",
+      "allowedSkillIds": [
+        "container-security-hardening",
+        "aws-security-audit"
+      ],
+      "requiredGroups": [
+        [
+          "container-security-hardening"
+        ],
+        [
+          "aws-security-audit"
+        ]
+      ]
+    },
+    {
+      "solutionId": "container-and-aws-iam",
+      "allowedSkillIds": [
+        "container-security-hardening",
+        "aws-iam-best-practices"
+      ],
+      "requiredGroups": [
+        [
+          "container-security-hardening"
+        ],
+        [
+          "aws-iam-best-practices"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-82a32c5b17cff43f1900d5cf586d3669f0392ed3cc7f5cc52d272312aa17caa1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-82a32c5b17cff43f1900d5cf586d3669f0392ed3cc7f5cc52d272312aa17caa1"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

@@ -6,3 +6,9 @@
 
 # Documentation
 *.md @sickn33
+
+# AAS v1 independently frozen verifier baseline. Independent reviewer
+# attestations are content-addressed inside the protected baseline.
+/verification/aas-v1/ @sickn33
+/.github/workflows/aas-v1-baseline-check.yml @sickn33
+/.github/CODEOWNERS @sickn33

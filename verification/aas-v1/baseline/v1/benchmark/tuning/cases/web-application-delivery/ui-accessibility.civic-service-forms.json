@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.web-application-delivery.ui-accessibility.civic-service-forms",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "public-service application form portal",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React"
+    ],
+    "context": "multi-step forms used with keyboard and screen readers",
+    "constraints": [
+      "WCAG 2.2 AA",
+      "repeatable local evidence"
+    ]
+  },
+  "criticalGoals": [
+    "wcag-audit",
+    "keyboard-and-screen-reader-validation"
+  ],
+  "nonCriticalGoals": [
+    "regression-evidence",
+    "accessible-component-guidance"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.web-application-delivery.ui-accessibility.civic-service-forms"
+}

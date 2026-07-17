@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/hostile-corpus-manifest.schema.json",
+  "title": "AAS v1 hostile archive and input corpus",
+  "type": "object",
+  "required": ["schemaVersion", "corpusVersion", "status", "classes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "corpusVersion": { "type": "string" },
+    "status": { "enum": ["structureOnly", "frozen"] },
+    "classes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["classId", "surface", "exploit", "boundaryControl", "status"],
+        "properties": {
+          "classId": { "type": "string" },
+          "surface": { "enum": ["archive", "input"] },
+          "exploit": { "$ref": "#/$defs/fixture" },
+          "boundaryControl": { "$ref": "#/$defs/fixture" },
+          "status": { "enum": ["pendingFixtures", "frozen"] }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fixture": {
+      "type": "object",
+      "required": ["path", "sha256", "expected"],
+      "properties": {
+        "path": { "type": ["string", "null"] },
+        "sha256": { "type": ["string", "null"] },
+        "expected": { "enum": ["reject", "accept"] }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.ci-cd.polyglot-service-ci",
+  "acceptedSolutions": [
+    {
+      "solutionId": "github-actions-pipeline",
+      "allowedSkillIds": [
+        "github-actions-advanced"
+      ],
+      "requiredGroups": [
+        [
+          "github-actions-advanced"
+        ]
+      ]
+    },
+    {
+      "solutionId": "provider-neutral-cicd",
+      "allowedSkillIds": [
+        "ci-cd-and-automation"
+      ],
+      "requiredGroups": [
+        [
+          "ci-cd-and-automation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-004ffa58fe896b1d5d00a4967c22ec0e0943f081a606205a0210101aeb70b188"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-004ffa58fe896b1d5d00a4967c22ec0e0943f081a606205a0210101aeb70b188"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

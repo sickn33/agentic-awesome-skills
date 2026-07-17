@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.physical-systems.electrical-rewire", "intent": "building-electrical-design",
+  "profile": { "request": "Specify a rewiring plan for an older apartment kitchen", "existing": "limited circuits with an outdated panel", "loads": ["induction hob", "oven", "dishwasher", "refrigerator"], "requestedOutcome": "circuit and protection design", "constraints": ["occupied dwelling", "local code approval", "licensed electrician required"] },
+  "criticalGoals": ["design a code-compliant electrical installation", "protect occupants and equipment"],
+  "nonCriticalGoals": ["calculate circuit loads", "select protection strategy", "plan isolation", "minimize disruption", "prepare inspection documentation"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD building-electrical scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:e1842efdfbd5d4126ca56071243c66dfb25134d467b2c5443495d75d4d4f2f14"
+}

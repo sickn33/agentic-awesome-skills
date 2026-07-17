@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "k6-offline-bounded",
+      "allowedSkillIds": [
+        "k6-load-testing"
+      ],
+      "requiredGroups": [
+        [
+          "k6-load-testing"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-304ebc43ed569a95cd154d26f6751fe53e48656c034d6d3b2604d44d2f3ccbb1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-304ebc43ed569a95cd154d26f6751fe53e48656c034d6d3b2604d44d2f3ccbb1"
+    }
+  ]
+}

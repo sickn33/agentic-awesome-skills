@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.infrastructure-as-code.mature-legacy-migration",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Municipal records platform",
+    "stack": {
+      "languages": [
+        "Java",
+        "Bash"
+      ],
+      "runtime": "datacenter and cloud",
+      "delivery": "hybrid infrastructure"
+    },
+    "team": {
+      "engineers": 9,
+      "operationsModel": "operations handoff",
+      "experience": "legacy domain experts"
+    },
+    "environment": {
+      "maturity": "mature legacy migration",
+      "topology": "virtual machines moving incrementally to managed infrastructure",
+      "connectivity": "restricted outbound"
+    },
+    "constraints": [
+      "no big-bang cutover",
+      "preserve current recovery path",
+      "limited maintenance windows"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "capture existing infrastructure and migrate it without destructive recreation"
+  },
+  "criticalGoals": [
+    "import current resources safely",
+    "stage reversible migration increments"
+  ],
+  "nonCriticalGoals": [
+    "lock provider and module versions",
+    "preview changes before apply",
+    "detect drift",
+    "retain state recovery evidence",
+    "record resource ownership"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on infrastructure-as-code delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.infrastructure-as-code.mature-legacy-migration"
+}

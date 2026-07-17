@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.auth-authorization.vendor-access-api",
+  "acceptedSolutions": [
+    {
+      "solutionId": "auth-and-api-security",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "api-security-best-practices"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "api-security-best-practices"
+        ]
+      ]
+    },
+    {
+      "solutionId": "auth-and-backend-hardening",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "backend-security-coder"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "backend-security-coder"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-09d34523901f5244ef660be18964f83e8ee7e730013bf31fdf80029db4b412bb"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-09d34523901f5244ef660be18964f83e8ee7e730013bf31fdf80029db4b412bb"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

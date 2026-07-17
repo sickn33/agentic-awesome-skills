@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.threat-modeling.wallet-service-threats",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "digital wallet authorization service",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Node.js"
+    ],
+    "context": "new service with user, operator, and third-party trust boundaries",
+    "constraints": [
+      "defensive review only",
+      "auditable mitigations"
+    ]
+  },
+  "criticalGoals": [
+    "threat-enumeration",
+    "mitigation-mapping"
+  ],
+  "nonCriticalGoals": [
+    "security-requirements",
+    "trust-boundary-review"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.security-review-hardening.threat-modeling.wallet-service-threats"
+}

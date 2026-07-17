@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.application-data-auth.mature-legacy-migration",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "system": "Customer self-service single-page application",
+    "currentAuth": "homegrown cookie session with scattered client checks",
+    "targetAuth": "standards-based OIDC through an existing backend",
+    "migration": "feature-by-feature",
+    "constraints": [
+      "keep sessions valid during transition",
+      "no simultaneous rewrite",
+      "preserve existing API error contracts"
+    ]
+  },
+  "criticalGoals": [
+    "migrate authentication without weakening server authorization",
+    "centralize frontend API and session handling"
+  ],
+  "nonCriticalGoals": [
+    "normalize legacy errors",
+    "handle mixed old and new routes",
+    "remove client-only guards",
+    "support rollback",
+    "document session transitions"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario informed by incremental web session modernization",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.application-data-auth.mature-legacy-migration"
+}

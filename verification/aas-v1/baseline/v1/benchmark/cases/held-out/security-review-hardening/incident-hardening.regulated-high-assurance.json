@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.incident-hardening.regulated-high-assurance",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "regulated-high-assurance",
+    "projectSummary": "Regulated AWS payment workload hardening after an over-privileged role was used outside its normal job",
+    "stack": {
+      "languages": [
+        "kotlin"
+      ],
+      "frameworks": [
+        "spring"
+      ],
+      "identity": [
+        "aws-iam"
+      ],
+      "deployment": [
+        "aws"
+      ]
+    },
+    "constraints": [
+      "access revoked",
+      "evidence preservation required",
+      "segregation of duties"
+    ],
+    "authorization": {
+      "scope": "defensive IAM posture review and remediation verification for the regulated owned workload",
+      "mode": "read-only",
+      "productionChanges": "formal-approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "identify residual excessive privileges",
+    "verify role hardening",
+    "map remediation to compliance evidence"
+  ],
+  "nonCriticalGoals": [
+    "define periodic access review",
+    "document break-glass controls"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.incident-hardening.regulated-high-assurance"
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.agent-architecture.repository-maintenance-agent",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "local repository maintenance agent",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Agent runtime"
+    ],
+    "context": "agent coordinates read-only analysis and separately approved changes",
+    "constraints": [
+      "human approval",
+      "bounded delegation"
+    ]
+  },
+  "criticalGoals": [
+    "agent-boundaries",
+    "tool-orchestration"
+  ],
+  "nonCriticalGoals": [
+    "delegation-policy",
+    "failure-handling"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.agent-architecture.repository-maintenance-agent"
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.mcp-tooling.local-catalog-mcp",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "local catalog MCP server",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "MCP",
+      "stdio"
+    ],
+    "context": "bounded search and item inspection over local verified data",
+    "constraints": [
+      "offline operation",
+      "no writes"
+    ]
+  },
+  "criticalGoals": [
+    "mcp-tool-contract",
+    "stdio-lifecycle"
+  ],
+  "nonCriticalGoals": [
+    "schema-validation",
+    "read-only-resource"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.mcp-tooling.local-catalog-mcp"
+}

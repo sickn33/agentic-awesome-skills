@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.evaluation-testing.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "production-agent-evals",
+      "allowedSkillIds": [
+        "agent-evaluation",
+        "llm-ops",
+        "evaluation",
+        "agent-orchestration-improve-agent"
+      ],
+      "requiredGroups": [
+        [
+          "agent-evaluation",
+          "evaluation"
+        ],
+        [
+          "llm-ops",
+          "agent-orchestration-improve-agent"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-4e161d6a3567c59c26b620745a083f05cb59387185704051f5dd3977750e1a70"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-4e161d6a3567c59c26b620745a083f05cb59387185704051f5dd3977750e1a70"
+    }
+  ]
+}

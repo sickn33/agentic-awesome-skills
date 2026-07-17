@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.mcp-tooling.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-bounded-mcp",
+      "allowedSkillIds": [
+        "mcp-builder",
+        "mcp-builder-ms",
+        "mcp-tool-developer",
+        "api-design-principles",
+        "security-and-hardening"
+      ],
+      "requiredGroups": [
+        [
+          "mcp-builder",
+          "mcp-builder-ms",
+          "mcp-tool-developer"
+        ],
+        [
+          "api-design-principles"
+        ],
+        [
+          "security-and-hardening"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8379838b6f65f6c6cdc96d0ead47fdcae3b48d636aec208865979a8c5fbf00cf"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8379838b6f65f6c6cdc96d0ead47fdcae3b48d636aec208865979a8c5fbf00cf"
+    }
+  ]
+}

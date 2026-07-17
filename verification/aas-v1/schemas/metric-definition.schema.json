@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/metric-definition.schema.json",
+  "title": "AAS v1 benchmark metric definition",
+  "type": "object",
+  "required": ["schemaVersion", "metricVersion", "heldOutCasesPerIntent", "thresholds", "formulas", "denominatorRules", "canonicalComparisonExcludedFields"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "metricVersion": { "type": "string", "minLength": 1 },
+    "heldOutCasesPerIntent": { "const": 30 },
+    "thresholds": {
+      "type": "object",
+      "required": ["verifiedCoverage", "inclusionPrecision", "criticalGoalCoverage", "minimumNonCriticalGoalCoverage", "outOfCoverageAbstention", "hardPolicyViolations", "canonicalReproducibility"],
+      "properties": {
+        "verifiedCoverage": { "const": 0.8 },
+        "inclusionPrecision": { "const": 0.9 },
+        "criticalGoalCoverage": { "const": 1 },
+        "minimumNonCriticalGoalCoverage": { "const": 0.8 },
+        "outOfCoverageAbstention": { "const": 1 },
+        "hardPolicyViolations": { "const": 0 },
+        "canonicalReproducibility": { "const": 1 }
+      },
+      "additionalProperties": false
+    },
+    "formulas": { "type": "object", "minProperties": 8 },
+    "denominatorRules": { "type": "object", "minProperties": 4 },
+    "canonicalComparisonExcludedFields": {
+      "type": "array",
+      "items": { "enum": ["timestamp", "correlationId", "localizedMessage", "diagnostics"] },
+      "uniqueItems": true,
+      "minItems": 4,
+      "maxItems": 4
+    }
+  }
+}

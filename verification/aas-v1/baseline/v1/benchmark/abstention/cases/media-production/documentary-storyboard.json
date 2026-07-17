@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.media-production.documentary-storyboard", "intent": "film-storyboarding",
+  "profile": { "request": "Create a visual storyboard plan for a ten-minute conservation documentary", "locations": ["wetland", "research station"], "availableFootage": ["interviews", "wildlife", "field work"], "delivery": "sixteen-by-nine video", "constraints": ["small crew", "naturalistic tone", "no reenactments"] },
+  "criticalGoals": ["translate the narrative into visual sequences", "plan coverage that the crew can capture"],
+  "nonCriticalGoals": ["define shot progression", "place interviews", "plan transitions", "identify missing footage", "respect the naturalistic tone"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD film-production scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:8a5e1bf7296caf40a4252a3e5e85a277c409b7f98c8d06898a6617710535c790"
+}

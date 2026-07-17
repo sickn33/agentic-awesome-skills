@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/runtime-matrix.schema.json",
+  "title": "AAS v1 exact runtime verifier matrix",
+  "type": "object",
+  "required": ["schemaVersion", "status", "jobs", "skipsAllowed", "continueOnErrorAllowed"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["structureOnly", "frozen"] },
+    "jobs": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["id", "os", "nodeMajor", "nodePatch", "runnerImage", "architecture", "filesystem", "observer", "status"]
+      }
+    },
+    "skipsAllowed": { "const": false },
+    "continueOnErrorAllowed": { "const": false }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-dependency-evidence",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies",
+        "cyber-audit"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ],
+        [
+          "cyber-audit"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-97452704753147a919d8627927dd7a4268c7c555cc9b9cb3017ad38c3bcff359"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-97452704753147a919d8627927dd7a4268c7c555cc9b9cb3017ad38c3bcff359"
+    }
+  ]
+}

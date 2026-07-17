@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.monorepo-polyglot",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "polyglot commerce service monorepo",
+    "languages": [
+      "Go",
+      "Java",
+      "TypeScript"
+    ],
+    "frameworks": [
+      "gRPC",
+      "Spring Boot",
+      "Node.js"
+    ],
+    "testingContext": "coordinated service traffic must expose cross-service saturation points",
+    "constraints": [
+      "mixed protocols",
+      "distributed staging",
+      "shared performance budgets"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "multi-service-load-model",
+    "shared-performance-thresholds",
+    "cross-service-bottleneck-analysis"
+  ],
+  "nonCriticalGoals": [
+    "scenario-modularity",
+    "machine-readable-results"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.load-performance.monorepo-polyglot"
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.web-application-delivery.web-testing-quality.subscription-journeys",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "subscription management web application",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Next.js",
+      "React"
+    ],
+    "context": "regression coverage for authenticated billing journeys",
+    "constraints": [
+      "stable test data",
+      "browser portability"
+    ]
+  },
+  "criticalGoals": [
+    "browser-critical-paths",
+    "deterministic-test-isolation"
+  ],
+  "nonCriticalGoals": [
+    "cross-browser-regression",
+    "maintainable-e2e-patterns"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.web-application-delivery.web-testing-quality.subscription-journeys"
+}

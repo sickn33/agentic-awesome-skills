@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.web-application-delivery.frontend-architecture.content-workspace",
+  "acceptedSolutions": [
+    {
+      "solutionId": "feature-oriented-react",
+      "allowedSkillIds": [
+        "frontend-architecture",
+        "react-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "frontend-architecture"
+        ],
+        [
+          "react-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "guidelines-and-react-practices",
+      "allowedSkillIds": [
+        "frontend-dev-guidelines",
+        "react-best-practices"
+      ],
+      "requiredGroups": [
+        [
+          "frontend-dev-guidelines"
+        ],
+        [
+          "react-best-practices"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b1e9b04a6148786011c0a0952bd4303168e5d8b5e97ab479a594ce5d2b22fed4"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b1e9b04a6148786011c0a0952bd4303168e5d8b5e97ab479a594ce5d2b22fed4"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

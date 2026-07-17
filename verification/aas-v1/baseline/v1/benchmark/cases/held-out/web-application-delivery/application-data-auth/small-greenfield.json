@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.application-data-auth.small-greenfield",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Volunteer scheduling web app",
+    "stack": [
+      "Next.js App Router",
+      "Supabase Postgres",
+      "Supabase Auth"
+    ],
+    "roles": [
+      "volunteer",
+      "coordinator"
+    ],
+    "flows": [
+      "email sign-in",
+      "protected schedules",
+      "role-aware mutations"
+    ],
+    "constraints": [
+      "two developers",
+      "hosted service acceptable",
+      "avoid custom token handling"
+    ]
+  },
+  "criticalGoals": [
+    "integrate Supabase authentication correctly with Next.js",
+    "protect server and client data access by role"
+  ],
+  "nonCriticalGoals": [
+    "handle session refresh",
+    "separate trusted server checks",
+    "validate auth redirects",
+    "model coordinator permissions",
+    "document sign-out behavior"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on small hosted Next.js and Supabase applications",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.application-data-auth.small-greenfield"
+}

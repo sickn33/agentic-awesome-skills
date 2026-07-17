@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.integration-contract.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "openapi-newman-ci",
+      "allowedSkillIds": [
+        "postman-openapi-converter",
+        "newman-cicd-integration",
+        "api-testing-observability-api-mock"
+      ],
+      "requiredGroups": [
+        [
+          "postman-openapi-converter"
+        ],
+        [
+          "newman-cicd-integration"
+        ],
+        [
+          "api-testing-observability-api-mock"
+        ]
+      ]
+    },
+    {
+      "solutionId": "openapi-newman-portable",
+      "allowedSkillIds": [
+        "postman-openapi-converter",
+        "postman-newman-automation",
+        "api-testing-observability-api-mock"
+      ],
+      "requiredGroups": [
+        [
+          "postman-openapi-converter"
+        ],
+        [
+          "postman-newman-automation"
+        ],
+        [
+          "api-testing-observability-api-mock"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7b2cad2e10b2db43ee87eea71876685517f26509b2273d29c56398cd2387dad0"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7b2cad2e10b2db43ee87eea71876685517f26509b2273d29c56398cd2387dad0"
+    }
+  ]
+}

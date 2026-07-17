@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.security-operations.mature-legacy-migration",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "legacySystem": "broadly-permissioned-automation-bot",
+    "agentShape": "policy-governed-agent",
+    "constraints": [
+      "existing-integrations",
+      "unknown-tool-provenance",
+      "phased-permission-reduction",
+      "no-service-interruption"
+    ]
+  },
+  "criticalGoals": [
+    "reduce legacy agent authority without breaking operations",
+    "inventory and threat-model every existing integration"
+  ],
+  "nonCriticalGoals": [
+    "introduce shadow policy before enforcement",
+    "scan legacy skills and tool descriptions"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.security-operations.mature-legacy-migration"
+}

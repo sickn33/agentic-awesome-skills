@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.security-operations.production-greenfield",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "production-greenfield",
+    "teamSize": 20,
+    "agentShape": "customer-operations-agent",
+    "toolSurface": "internal-and-third-party-mcp",
+    "constraints": [
+      "tenant-isolation",
+      "supply-chain-risk",
+      "approval-policy",
+      "incident-response"
+    ]
+  },
+  "criticalGoals": [
+    "define enforceable governance for every tool call",
+    "contain hostile tool content and compromised integrations"
+  ],
+  "nonCriticalGoals": [
+    "record verifiable action receipts",
+    "establish security monitoring and revocation"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.security-operations.production-greenfield"
+}

@@ -1,0 +1,13 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1,
+  "caseId": "abstention.creative-content.childrens-story",
+  "intent": "childrens-fiction",
+  "profile": { "request": "Plan an illustrated story about managing first-day-of-school anxiety", "readerAge": "six to eight", "format": "thirty-two pages", "protagonist": "a cautious young otter", "constraints": ["reassuring rather than didactic", "read-aloud cadence", "no frightening imagery"] },
+  "criticalGoals": ["create an age-appropriate emotional arc", "resolve anxiety without dismissing it"],
+  "nonCriticalGoals": ["define page turns", "suggest visual beats", "use repeatable phrasing", "support read-aloud rhythm", "avoid moralizing"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD children's-fiction scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:469b3ea48364dc670ae92f3205c32d9a0d07cbda4b18b0aec13b3459c61e94ae"
+}

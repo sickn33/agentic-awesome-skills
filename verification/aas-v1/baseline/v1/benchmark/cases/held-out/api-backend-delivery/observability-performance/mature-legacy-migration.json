@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.observability-performance.mature-legacy-migration",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "languages": [
+      "csharp"
+    ],
+    "frameworks": [
+      "dotnet-framework"
+    ],
+    "topology": "monolith-and-new-services",
+    "constraints": [
+      "sparse-telemetry",
+      "no-large-rewrite",
+      "unknown-bottlenecks",
+      "phased-instrumentation"
+    ]
+  },
+  "criticalGoals": [
+    "establish end-to-end visibility across legacy and new components",
+    "profile before choosing performance changes"
+  ],
+  "nonCriticalGoals": [
+    "define migration health indicators",
+    "add tracing without destabilizing the monolith"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.observability-performance.mature-legacy-migration"
+}

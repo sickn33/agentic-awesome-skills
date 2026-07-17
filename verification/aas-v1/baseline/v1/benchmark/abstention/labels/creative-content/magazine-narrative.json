@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.creative-content.magazine-narrative",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_CREATIVE_CONTENT"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-64afeb28b1f9ddff8ead70959e1e076012fc97cb30ac7969991659cbeefe0a4c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-64afeb28b1f9ddff8ead70959e1e076012fc97cb30ac7969991659cbeefe0a4c"
+    }
+  ]
+}

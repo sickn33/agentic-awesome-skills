@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen",
+  "minimumApprovals": 2,
+  "requireNonScorerReviewer": true,
+  "reviewers": [
+    {
+      "identity": "codex-independent-alpha",
+      "kind": "independent-agent-review",
+      "report": "baseline/v1/reviews/reviewer-alpha.json",
+      "reportSha256": "8e0e90789cf0de116bb58ca1971911dcd0f0135d5eb97bead8911e1cea0080aa",
+      "scorerImplementer": false,
+      "reviewedPairs": 270
+    },
+    {
+      "identity": "codex-independent-beta",
+      "kind": "independent-agent-review",
+      "report": "baseline/v1/reviews/reviewer-beta.json",
+      "reportSha256": "bdb4f00deaf8d9e7fb7c259130555249e619fd4f18a33bcbb55fee30e3d92b7f",
+      "scorerImplementer": false,
+      "reviewedPairs": 270
+    }
+  ],
+  "protectedPaths": [
+    "verification/aas-v1/**",
+    ".github/workflows/aas-v1-baseline-check.yml",
+    ".github/CODEOWNERS"
+  ],
+  "repositorySettings": {
+    "repository": "sickn33/agentic-awesome-skills",
+    "branch": "main",
+    "soloMaintainer": true,
+    "requiredReviewCount": 0,
+    "requiredStatusContext": "aas-v1-baseline",
+    "enforceAdmins": true,
+    "allowForcePushes": false,
+    "allowDeletions": false,
+    "observedRequiredStatusContexts": [
+      "pr-policy",
+      "pr-evidence",
+      "source-validation",
+      "artifact-preview",
+      "aas-v1-baseline"
+    ],
+    "verifiedAt": "2026-07-17",
+    "settingsVerified": true
+  },
+  "verificationEnvironment": {
+    "model": "content-addressed-independent-reports-plus-protected-status",
+    "baselineFreezeManifest": "baseline/v1/freeze-manifest.json",
+    "productPullRequestsMayModifyBaseline": false,
+    "requiredReviewersVerified": true,
+    "limitation": "The repository has one GitHub collaborator. Independence is enforced by two content-addressed reviewer reports, a separately frozen baseline commit, and a required status check; it is not represented as two GitHub account approvals."
+  }
+}

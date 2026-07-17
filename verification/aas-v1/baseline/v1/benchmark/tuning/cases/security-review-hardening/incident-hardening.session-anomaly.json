@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.incident-hardening.session-anomaly",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "customer identity service",
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot"
+    ],
+    "context": "unexpected session reuse followed by a containment change",
+    "constraints": [
+      "defensive response",
+      "verify remediation"
+    ]
+  },
+  "criticalGoals": [
+    "incident-triage",
+    "hardening-runbook"
+  ],
+  "nonCriticalGoals": [
+    "safe-remediation",
+    "recurrence-prevention"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.security-review-hardening.incident-hardening.session-anomaly"
+}

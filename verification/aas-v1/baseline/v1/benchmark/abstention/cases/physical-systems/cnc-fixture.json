@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.physical-systems.cnc-fixture", "intent": "manufacturing-fixture-design",
+  "profile": { "request": "Design a machining fixture for a small aluminum housing", "process": "three-axis milling", "batch": 400, "partFeatures": ["thin wall", "two datum bores", "sealed face"], "constraints": ["single setup preferred", "avoid distortion", "repeatable inspection access"] },
+  "criticalGoals": ["define stable physical workholding", "preserve datum accuracy without distorting the part"],
+  "nonCriticalGoals": ["plan locating points", "plan clamping", "support tool access", "enable inspection", "reduce changeover time"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD manufacturing-engineering scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:a80a490d1174746ca6c0a5f02f374ea95acb1efc68d7824abd3e8679b8d0407b"
+}

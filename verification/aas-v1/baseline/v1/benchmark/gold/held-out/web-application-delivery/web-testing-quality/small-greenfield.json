@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "vitest-and-local-webapp-testing",
+      "allowedSkillIds": [
+        "vitest-skill",
+        "webapp-testing",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "vitest-skill"
+        ],
+        [
+          "webapp-testing"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "vitest-and-cypress",
+      "allowedSkillIds": [
+        "vitest-skill",
+        "cypress-skill",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "vitest-skill"
+        ],
+        [
+          "cypress-skill"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-911062f10a6a8b9aa71f2aa1a53a8c46a0cbd9e05f381ac26d073afebc09bab2"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-911062f10a6a8b9aa71f2aa1a53a8c46a0cbd9e05f381ac26d073afebc09bab2"
+    }
+  ]
+}

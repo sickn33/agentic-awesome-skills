@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-performance-delivery.mature-legacy-migration",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "system": "AngularJS supplier portal migrating to Angular",
+    "baseline": {
+      "initialJavaScript": "2.4 megabytes compressed",
+      "interactionLatency": "poor on warehouse laptops"
+    },
+    "migration": "hybrid routes for one year",
+    "constraints": [
+      "business workflows cannot pause",
+      "measure old and new routes",
+      "low-end hardware is representative"
+    ]
+  },
+  "criticalGoals": [
+    "find and fix the largest legacy frontend bottlenecks",
+    "guard performance throughout the Angular migration"
+  ],
+  "nonCriticalGoals": [
+    "compare route baselines",
+    "reduce bundle duplication",
+    "profile runtime interactions",
+    "set migration budgets",
+    "verify on low-end hardware"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on performance-sensitive Angular modernization",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-performance-delivery.mature-legacy-migration"
+}

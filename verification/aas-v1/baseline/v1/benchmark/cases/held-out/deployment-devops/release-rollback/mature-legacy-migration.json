@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.mature-legacy-migration",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Government permit registry",
+    "stack": {
+      "languages": [
+        "Java",
+        "SQL"
+      ],
+      "runtime": "legacy application plus replacement services",
+      "delivery": "phased modernization"
+    },
+    "team": {
+      "engineers": 9,
+      "operationsModel": "operations handoff",
+      "experience": "legacy domain experts"
+    },
+    "environment": {
+      "maturity": "mature legacy migration",
+      "topology": "virtual machines moving incrementally to managed infrastructure",
+      "connectivity": "restricted outbound"
+    },
+    "constraints": [
+      "no big-bang cutover",
+      "preserve current recovery path",
+      "limited maintenance windows"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "release replacement components incrementally with a tested legacy fallback"
+  },
+  "criticalGoals": [
+    "preserve data compatibility during rollback",
+    "avoid irreversible cutover before parity is proven"
+  ],
+  "nonCriticalGoals": [
+    "capture release evidence",
+    "define rollback triggers",
+    "retain the prior artifact",
+    "verify configuration readiness",
+    "record the live revision"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on release-rollback delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.release-rollback.mature-legacy-migration"
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "continuous integration review agent",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Agent runtime",
+      "GitHub Actions"
+    ],
+    "context": "untrusted change metadata can reach an agent with repository tools",
+    "constraints": [
+      "least privilege",
+      "no secret exposure"
+    ]
+  },
+  "criticalGoals": [
+    "agent-threat-review",
+    "tool-permission-boundaries"
+  ],
+  "nonCriticalGoals": [
+    "prompt-injection-controls",
+    "auditable-operations"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.security-operations.ci-agent-security"
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+  "acceptedSolutions": [
+    {
+      "solutionId": "reviewed-actions-canary",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "github-actions-advanced"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "github-actions-advanced"
+        ]
+      ]
+    },
+    {
+      "solutionId": "reviewed-kubernetes-canary",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "kubernetes-deployment"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "kubernetes-deployment"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6ada85bc3775d909036b1ccbe834039f991373311d173f5d3d2a34f663cbefd7"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6ada85bc3775d909036b1ccbe834039f991373311d173f5d3d2a34f663cbefd7"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

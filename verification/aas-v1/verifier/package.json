@@ -1,0 +1,25 @@
+{
+  "name": "aas-v1-independent-verifier",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:structure": "node bin/check-baseline.mjs --mode structure",
+    "check:freeze-ready": "node bin/check-baseline.mjs --mode freeze-ready",
+    "check:schemas": "node bin/validate-schemas.mjs",
+    "check:benchmark": "node bin/validate-benchmark.mjs",
+    "check:benchmark:frozen": "node bin/validate-benchmark.mjs --require-approvals",
+    "check:secondary": "node bin/validate-secondary-corpora.mjs",
+    "check:secondary:frozen": "node bin/validate-secondary-corpora.mjs --require-approvals",
+    "freeze:write": "node bin/freeze-baseline.mjs --write",
+    "freeze:check": "node bin/freeze-baseline.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1"
+  }
+}

@@ -1,0 +1,3575 @@
+{
+  "schemaVersion": 1,
+  "baselineVersion": "1.0.0",
+  "status": "frozen",
+  "digestAlgorithm": "sha256",
+  "excludedPaths": [
+    "baseline/v1/freeze-manifest.json",
+    "verifier/node_modules/",
+    "baseline/v1/legacy/14.6.0/_work/"
+  ],
+  "rootDigest": "sha256-bb15570eabc4501f099ca247059c9e5cc0e71d4163e7963e9f54a09e103bf1dc",
+  "fileCount": 712,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2801,
+      "sha256": "44a305ad7abb2823c6d946c98a6d0abc52175a5c003b75f55a58cbb8d9a01785"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/creative-content/bilingual-poetry-edit.json",
+      "bytes": 1204,
+      "sha256": "de0f0c362b5a77e7084972affe89a447e4578fe4b924a49f9d6b129f5b4654d9"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/creative-content/childrens-story.json",
+      "bytes": 1148,
+      "sha256": "92a9dffc20e64a6072d814b80494077a4c0f86026eab5b4191d98a7f9d5e843f"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/creative-content/historical-novella.json",
+      "bytes": 1189,
+      "sha256": "b17ea784675e2e24e52314e42c833e4e0132359b4bd879eb739dcd4a544dac68"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/creative-content/magazine-narrative.json",
+      "bytes": 1223,
+      "sha256": "e1133b6c0ac0143cce386393ce6024619d95dc919a992474887ebd13a2c6b882"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/creative-content/wedding-speech.json",
+      "bytes": 1144,
+      "sha256": "0f08b1d93caeac86fbe82ea9a0f75f88b4a8a4f028a91bd4eef97338622fc0bd"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/media-production/documentary-storyboard.json",
+      "bytes": 1227,
+      "sha256": "f80578085eee9552f3e24438f5240548c2907228d4be8d85ea39e09d062bb8b0"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/media-production/photo-color-grade.json",
+      "bytes": 1204,
+      "sha256": "2ad6f8ec994ab8c7e2aa13342ec67d9d7042c87f626d9c7e2e931a12d42a512a"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/media-production/podcast-mastering.json",
+      "bytes": 1166,
+      "sha256": "798d3fa77945db9183648359f891a974151b83210bd02e0e55452079b3d82be6"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/media-production/product-animation.json",
+      "bytes": 1205,
+      "sha256": "707b3b5cd4e977f79f273f267adb4cd8457ac60b76c022758cfc034a263bebcd"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/media-production/string-arrangement.json",
+      "bytes": 1181,
+      "sha256": "72e83f69c9e6ea6489063d2e26a47d48d3b267f6f9baccdae2a1e2ec59c1fa7e"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/non-web-software/android-transit.json",
+      "bytes": 1201,
+      "sha256": "f9685f0a4844c78e6604d9fcc70f42309574efdcf391df705464c02df99a511c"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/non-web-software/embedded-rust-sensor.json",
+      "bytes": 1248,
+      "sha256": "1b979790e9eecacd5be55a02ff7cab8c099e8a2cbe41e145cd666a04c8b318e5"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/non-web-software/ios-field-notes.json",
+      "bytes": 1172,
+      "sha256": "6d48d3ca0b89618ecdc323fa5e2c717f4dba18136520de61342b40117fc0467f"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/non-web-software/macos-menu-utility.json",
+      "bytes": 1197,
+      "sha256": "94b76c9cee4cc1358c5ec1ce6b4b07fce84278bf4abb285bcd70acfe2383c6a7"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/non-web-software/unreal-coop-game.json",
+      "bytes": 1209,
+      "sha256": "e58335c1f800496728b3a561787e07d2a72a0c597b2258e9f3451ae0997a59a9"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/personal-planning/apartment-declutter.json",
+      "bytes": 1210,
+      "sha256": "2df585c273d6aee010d546aa93a64d5247138e06c5636841e00a804eb195d99f"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/personal-planning/capsule-wardrobe.json",
+      "bytes": 1225,
+      "sha256": "63c3b73ab1371cf6c4ea855e793e35fd717aaa3b64683fcfaecfaf703b307168"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/personal-planning/japan-itinerary.json",
+      "bytes": 1141,
+      "sha256": "4dc7140da5f4d45cabf0c7f7c218fdfb4e75dfff31687f8587d9c9d939b4b720"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/personal-planning/vegetarian-meals.json",
+      "bytes": 1197,
+      "sha256": "9c8739fb829ce386ad5c9c3dbb82da618f7842bbac7a96a98dce952a45bd16ad"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/personal-planning/wedding-seating.json",
+      "bytes": 1219,
+      "sha256": "ad67f646bd312bd52ba7b2d87934800de93338926997ff64f64049f07412fb00"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/physical-systems/bicycle-drivetrain.json",
+      "bytes": 1218,
+      "sha256": "1b1d207414d9d5593c9cd171fd0e5c0e9dd368d92f2ac40d191c3cc975ecbbd4"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/physical-systems/cnc-fixture.json",
+      "bytes": 1151,
+      "sha256": "be169f11cc179646974b92b36df55b06525054ab20960544b52ebf483534e55a"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/physical-systems/electrical-rewire.json",
+      "bytes": 1226,
+      "sha256": "80fe4738c629d9101a3828a36af869676584d66475789add9a01926ab94523aa"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/physical-systems/hvac-diagnosis.json",
+      "bytes": 1278,
+      "sha256": "ad1813a787cb7ba0317c54b4ec761ffb5c18d55712e930a4a13cf2e54598746d"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/physical-systems/orchard-irrigation.json",
+      "bytes": 1168,
+      "sha256": "56f780ebd3f753004cdd45b4c33798c5245ececea9bd3076f40c9b445ac79c3e"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/professional-advice/clinical-nutrition.json",
+      "bytes": 1234,
+      "sha256": "01f196e8c41e7b1d17450320324903821e49a101343c832d75525c1ad79881e1"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/professional-advice/investment-allocation.json",
+      "bytes": 1267,
+      "sha256": "409ea5227ffd62866266f91c935ed229812a993985b3063d54eb2c8c2e24ad34"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/professional-advice/medical-diagnosis.json",
+      "bytes": 1220,
+      "sha256": "8b4a7dc317f9bf688f6e5b4b956d863b0c2ab90090aceadd78a7ede3f8089f75"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/professional-advice/tax-position.json",
+      "bytes": 1195,
+      "sha256": "51cca426943111e393802d35522fcc795b2ca887ee4c66281634ab9ff6dc64ae"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/cases/professional-advice/tenancy-dispute.json",
+      "bytes": 1204,
+      "sha256": "6b0565417d4b863176247b285468d1d97c87b560e385aa018153b924d69ad756"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/index.json",
+      "bytes": 16985,
+      "sha256": "4e0d6bd87216891b4957b6f6b63b0d3de97bb18428e8a27b8525839f9116ef53"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/creative-content/bilingual-poetry-edit.json",
+      "bytes": 646,
+      "sha256": "44214f6f1ffe8fe40393ae4e7aa2caccf57cb289299fb588f7059e91c4fa96e2"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/creative-content/childrens-story.json",
+      "bytes": 640,
+      "sha256": "5eb9af332ee4b25f23ed828455cc829ffa154f1141b66c1d72a4d667af58629c"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/creative-content/historical-novella.json",
+      "bytes": 643,
+      "sha256": "5cd02ab48bf93051ad4beda6ae52870d7873c0eb814efb60d7154162116e53c2"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/creative-content/magazine-narrative.json",
+      "bytes": 643,
+      "sha256": "a2b6d6e59b60ab2a92912f9edcf6085389fd3898ba76d367313f6403e5b55023"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/creative-content/wedding-speech.json",
+      "bytes": 639,
+      "sha256": "1121c8e0f3ae0e31c3c8e0e20231fcb93a77afa073e9df2aba9cbde4d37e58dc"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/media-production/documentary-storyboard.json",
+      "bytes": 647,
+      "sha256": "3f7956cd8da22d9479e05e8e1d4922bd4c15ee9ac4df352c49b21feb86c5ee9a"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/media-production/photo-color-grade.json",
+      "bytes": 642,
+      "sha256": "1cccfe350acd5da46669411915c9b750fdaaff9079b89f4f9d5827f080991097"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/media-production/podcast-mastering.json",
+      "bytes": 642,
+      "sha256": "ff4ef8f91e6fbe8a023c6db8b25d46ee96a1b99c25e5fc517e9ee89111e63f31"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/media-production/product-animation.json",
+      "bytes": 642,
+      "sha256": "a0c14519b1495391a31672768b3e4195c4e9dba284be695b7586355b8bd31bb7"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/media-production/string-arrangement.json",
+      "bytes": 643,
+      "sha256": "782c3bf561a450f4bbaf0343778a12cba4ac4c690c309ba5543483fdcf64ace2"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/non-web-software/android-transit.json",
+      "bytes": 640,
+      "sha256": "ee34ee0d4a933abcac0dc88514f56f347efe0920cbaa3b9b5c440871a821d1a8"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/non-web-software/embedded-rust-sensor.json",
+      "bytes": 645,
+      "sha256": "052e3ad3ad9d4f193d72bba830540f0b08416d1429a44e5f10f0a8f64cb1dd25"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/non-web-software/ios-field-notes.json",
+      "bytes": 640,
+      "sha256": "9ac31b3537aaafafe0ace027f57a87edee619322a1500b75b16a5a649bc4bdde"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/non-web-software/macos-menu-utility.json",
+      "bytes": 643,
+      "sha256": "5f748542f9f47131ddb4883ea96a1c70c15838d4742236d346ce0ffdf77f07bc"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/non-web-software/unreal-coop-game.json",
+      "bytes": 641,
+      "sha256": "a7d9abf2efb2c12a277a456830736d0689cefe3267533857ef5e266ffc9626f0"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/personal-planning/apartment-declutter.json",
+      "bytes": 646,
+      "sha256": "4627b88df1c691efc4da76652f666cb5b14c1477d15d0a6cbeda6ca5955cd169"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/personal-planning/capsule-wardrobe.json",
+      "bytes": 643,
+      "sha256": "1bbb37f0778a05851250f3d284698331a4cd664d0f5cd1d53deaa7bfc851b976"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/personal-planning/japan-itinerary.json",
+      "bytes": 642,
+      "sha256": "929c3c82b1c2e7445b79158f3e8b44396ad20bc31bf056589c8484feb3c8a6bf"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/personal-planning/vegetarian-meals.json",
+      "bytes": 643,
+      "sha256": "9d4c5398bc1cb9eaf6a3536264cf96713f5caa9772ef39d6d3449f31ee886397"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/personal-planning/wedding-seating.json",
+      "bytes": 642,
+      "sha256": "280519213f559220e5071d33ca60a5574587a7f86a6ef447788b37c4da7ac412"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/physical-systems/bicycle-drivetrain.json",
+      "bytes": 643,
+      "sha256": "daa5fa738445cc44ed378c7d49feeef1e30a3a89f24d2d7845d525166a6603ec"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/physical-systems/cnc-fixture.json",
+      "bytes": 636,
+      "sha256": "f68678863941ab4591a82c04b47802f1e71923cfb4ec37e70d101eb53ed9efc2"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/physical-systems/electrical-rewire.json",
+      "bytes": 642,
+      "sha256": "7b54dc98e0fde647c984c9f357e8ee7f1a34cfd9f0e6090912bc9e4bef2d26e5"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/physical-systems/hvac-diagnosis.json",
+      "bytes": 639,
+      "sha256": "4a97a5dea46f2e508853839cd23e0230c012d1f34f4deb4eaae712c352387c56"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/physical-systems/orchard-irrigation.json",
+      "bytes": 643,
+      "sha256": "632e0e827f29fc2a48f72d2aad7d091e285cb1905a7b81255212036bbf4ffeeb"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/professional-advice/clinical-nutrition.json",
+      "bytes": 649,
+      "sha256": "510c6041d68a45e1653d0e77bfc9198064fd1c1a586977fdea7c3465adcf4c73"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/professional-advice/investment-allocation.json",
+      "bytes": 652,
+      "sha256": "be50f88954dffcb8450e87f5e35dc498ce05ffa07b4ff640dd0ac1d7268d1536"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/professional-advice/medical-diagnosis.json",
+      "bytes": 648,
+      "sha256": "17e33c10ef3fb85c784b8eef69f8f144de6a329cb478cfde44365cfd6d700f83"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/professional-advice/tax-position.json",
+      "bytes": 643,
+      "sha256": "2cdd59850141f868dd2be1a3f6d7adf0de97651f55a4a6d86526bd9c5b574f0d"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/labels/professional-advice/tenancy-dispute.json",
+      "bytes": 646,
+      "sha256": "11f02d3b48e3c6168818772c69e1026f14766e620ccf4b2cb463073a6ecf81f7"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/reason-codes.v1.json",
+      "bytes": 1443,
+      "sha256": "78bdc3c96ca6bef99c569788b2ff87d84c0f9de5853f7b6b248d4738ee5da937"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/schemas/abstention-case.schema.json",
+      "bytes": 2397,
+      "sha256": "379c1818ed0bb74e14c7e2f8b022e211a4e717fa8c7eafc8d0daa6007084debb"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/schemas/abstention-index.schema.json",
+      "bytes": 1675,
+      "sha256": "9f6569ac7a324569f215928451c53d6910ef0bdc396aeabd88748af4e08fab94"
+    },
+    {
+      "path": "baseline/v1/benchmark/abstention/schemas/abstention-label.schema.json",
+      "bytes": 1395,
+      "sha256": "26f94c0d9bbecb5b79aad47c7d5f35659ceb6c869db47caa98a6024924812fc9"
+    },
+    {
+      "path": "baseline/v1/benchmark/authoring/apply-independent-reviews.mjs",
+      "bytes": 9105,
+      "sha256": "928b1e8afbae10eb448c64d9ad40f6f4bc9f84dc8dbfa0e4b5aca89d7d2e8f3a"
+    },
+    {
+      "path": "baseline/v1/benchmark/authoring/normalize-heldout-contract.mjs",
+      "bytes": 3252,
+      "sha256": "4dec990a8fa0bb46fba6bccd6d2cfa847cb09d3edbaa845fcd247c4b2405403a"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/agent-architecture/constrained-offline.json",
+      "bytes": 1194,
+      "sha256": "8b527f1af41f1b1527b986d8f8d5a3fd5cb9072117362aa02c24d8f51f373936"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/agent-architecture/mature-legacy-migration.json",
+      "bytes": 1259,
+      "sha256": "c509d97b675f837764bc08c869eda51f073eb868eebf2a4faf59ba10a8dd9884"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/agent-architecture/monorepo-polyglot.json",
+      "bytes": 1323,
+      "sha256": "0235afe76e6c8496800bf260af187538b12d553abfc7951d091d8e64a9558be0"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/agent-architecture/production-greenfield.json",
+      "bytes": 1281,
+      "sha256": "3154930f87d3477ae56720e1fc522a3733add1c52802d30a882dbababdb6cc29"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/agent-architecture/regulated-high-assurance.json",
+      "bytes": 1291,
+      "sha256": "b2adf5c9c9a2a0869cd7679c3ad93410df14fe155250bcebe0b8e5399c468ffd"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/agent-architecture/small-greenfield.json",
+      "bytes": 1191,
+      "sha256": "511b71bd3e208b9c486f9556b17eb2528074ba0a560d9dba812addebed67c1a5"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/evaluation-testing/constrained-offline.json",
+      "bytes": 1185,
+      "sha256": "28dc49c4371db30dbcb946bf1c226944b87dcbd12889dd6c287f776ce7d24a25"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/evaluation-testing/mature-legacy-migration.json",
+      "bytes": 1178,
+      "sha256": "30b0392a31dc5d8142e7160c2aaedd125116de04259123689a0ee43f026e641b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/evaluation-testing/monorepo-polyglot.json",
+      "bytes": 1299,
+      "sha256": "19f4fc6c5060d2aa53736591f2b5b75053f0133cf550813a59657fa4b3fb9b6b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/evaluation-testing/production-greenfield.json",
+      "bytes": 1253,
+      "sha256": "418e417660ea81010ec3ebb14f152b45e722f2e0de4accd79b24129674e71f3c"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/evaluation-testing/regulated-high-assurance.json",
+      "bytes": 1305,
+      "sha256": "36d50b2f08a36288840aec69d0ee28211a5c8845f8f70342b82e5e132bcbba05"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/evaluation-testing/small-greenfield.json",
+      "bytes": 1156,
+      "sha256": "27ba43ba685b8018543760d0736434ac3079e6e032c879caef719039237b5f62"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/mcp-tooling/constrained-offline.json",
+      "bytes": 1210,
+      "sha256": "bf012bda3cea6907e91bba5490181c6c8ef5190e38dd4d8406fe70dc085b4193"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/mcp-tooling/mature-legacy-migration.json",
+      "bytes": 1234,
+      "sha256": "8e20c741e19d05360e926b91d73498960de89568b8bc394f5e4bc2b3ee1941e7"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/mcp-tooling/monorepo-polyglot.json",
+      "bytes": 1318,
+      "sha256": "21306702f9ae28abff07308b20eb480637224e11191dc628c3a0850387c14f73"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/mcp-tooling/production-greenfield.json",
+      "bytes": 1247,
+      "sha256": "b67f4879f565746152d23848435cbf4fa6e42a1a99aeda6916b07119273958ab"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/mcp-tooling/regulated-high-assurance.json",
+      "bytes": 1325,
+      "sha256": "b7d680421ee747e9fdd33c0eb124e6cb79c138b8a5ea7741dd4bce0a0201d63b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/mcp-tooling/small-greenfield.json",
+      "bytes": 1184,
+      "sha256": "257dcb74ff667f515ac2965f8f591dbab480d0a78b4ee5ebb96bb20b3b7d5bdf"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/memory-context-retrieval/constrained-offline.json",
+      "bytes": 1235,
+      "sha256": "29938910aafdc95d6dd0e87be33f65f5d66ee4a8b962a74363916a41a3746944"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/memory-context-retrieval/mature-legacy-migration.json",
+      "bytes": 1233,
+      "sha256": "590666acf483e38b2355375e7f486ed064a41c25edb3b3df286a1622805b4fbb"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/memory-context-retrieval/monorepo-polyglot.json",
+      "bytes": 1325,
+      "sha256": "ee5631640837e70b806f8214a2cff0006570354f54a3ff0c97d6f355c7ea629d"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/memory-context-retrieval/production-greenfield.json",
+      "bytes": 1223,
+      "sha256": "89b533a02b9ce55e159431d14a94846200f316693a4579f8fb28e8ce058e7efa"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/memory-context-retrieval/regulated-high-assurance.json",
+      "bytes": 1312,
+      "sha256": "363e746529248e3642b700a3b537a6fc967295dad02ae069101b8a4ccb89b2bb"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/memory-context-retrieval/small-greenfield.json",
+      "bytes": 1177,
+      "sha256": "286caaa6af6613277c86806804bbf357c4d05c82af4a4003f7e4a7fdbd42d6df"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/security-operations/constrained-offline.json",
+      "bytes": 1210,
+      "sha256": "9042dd63026109cbb949404da47efe1c0b3aceaa10b32ae6d2439d98ae446d21"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/security-operations/mature-legacy-migration.json",
+      "bytes": 1258,
+      "sha256": "97885185953dad71ab7d08a432f2e48941132e3924bff80b210e9419cbd94e6d"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/security-operations/monorepo-polyglot.json",
+      "bytes": 1302,
+      "sha256": "ec7eaab916adf51e87eca5cebcc6dbc525be243db943f1b507ab735bd3fddd65"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/security-operations/production-greenfield.json",
+      "bytes": 1238,
+      "sha256": "97e86f6cf18c36442c479f6c39d5a8c09db1950c12a71b98743e8bbfa8632eaf"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/security-operations/regulated-high-assurance.json",
+      "bytes": 1302,
+      "sha256": "b7fd54d1e810182dfda81d3c71c17ba71a5325fea86aa502b3b7efdbdbe06b35"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/agent-mcp-development/security-operations/small-greenfield.json",
+      "bytes": 1180,
+      "sha256": "8e807b1c62cef1357e0aaa8a2ec88d86df303fa2037f9c564c77d0773955fe84"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/api-design-contracts/constrained-offline.json",
+      "bytes": 1257,
+      "sha256": "2d7360ab0934468cefc8b758fb1ce3123e3671d47f60bff5017ca7da2e6b0d2b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/api-design-contracts/mature-legacy-migration.json",
+      "bytes": 1308,
+      "sha256": "10ef6080a189d26d7340ba3e0ad1a835b833e6804500f26511c1c967deae1afa"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/api-design-contracts/monorepo-polyglot.json",
+      "bytes": 1384,
+      "sha256": "2dd3c4cd4e2ef02bd5bceda65f8db0050e080aee3efede035500ba3dc3dab780"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/api-design-contracts/production-greenfield.json",
+      "bytes": 1302,
+      "sha256": "61f4483aca4caed3ff296b87e149b64bb9d8008aa8bda5d3dc84c158e5092278"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/api-design-contracts/regulated-high-assurance.json",
+      "bytes": 1407,
+      "sha256": "34586a96680eb827ce3e5c33d35b3dbe81a2b8107a3a5a8a0183ec4c2a7ddd9a"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/api-design-contracts/small-greenfield.json",
+      "bytes": 1235,
+      "sha256": "64fee97860c4f9577ac9f0953f5d3c57853461e03bc019fc0c3699e2ef13ad2b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/async-integrations/constrained-offline.json",
+      "bytes": 1207,
+      "sha256": "aa2058ea8c8733d2ee243ab930b640f7b2da8ab882f71c3cbb49a1ac28b45adc"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/async-integrations/mature-legacy-migration.json",
+      "bytes": 1241,
+      "sha256": "058096336a20ce4ab703ec437156ccf6aded5ed07d0de48bc81a04c53e62245b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/async-integrations/monorepo-polyglot.json",
+      "bytes": 1323,
+      "sha256": "6848379e335fad15d6a6279cf6cc8046929ad3eaffcb0ae321c3eac08d289883"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/async-integrations/production-greenfield.json",
+      "bytes": 1271,
+      "sha256": "c5822ebc20b2b03c949a74d384d1e14a8d205daae81384dffeebda79c19784e4"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/async-integrations/regulated-high-assurance.json",
+      "bytes": 1294,
+      "sha256": "ebc330a456d0dd8df34311c29f320baacc4f2949bca21b4b1f241eeef2ac6aaf"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/async-integrations/small-greenfield.json",
+      "bytes": 1203,
+      "sha256": "372ffed2f055db7b057bd63b0934472f9cba4c7268d08acf1a122559066937de"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/auth-authorization/constrained-offline.json",
+      "bytes": 1267,
+      "sha256": "e70a8fce8bc9ed62f048f65a31a5fb64a91e0070ab76c3cae7669cfce7583494"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/auth-authorization/mature-legacy-migration.json",
+      "bytes": 1268,
+      "sha256": "cce17c3f5b90e43c6e46caf17c2a28b405682ef70cd0beb6e65f1bb8d91a0ef4"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/auth-authorization/monorepo-polyglot.json",
+      "bytes": 1328,
+      "sha256": "052cec59dbdb1544b35bede13c38f63089d5e3580e3b94780431cde6de4dbc0c"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/auth-authorization/production-greenfield.json",
+      "bytes": 1252,
+      "sha256": "b7a73bdb6c1d56955eda6f2c69fff550536f26a323bedf1a24015e393acbe491"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/auth-authorization/regulated-high-assurance.json",
+      "bytes": 1365,
+      "sha256": "c442d64d78a301dd8949f548f34b2693026a14430f6ad6f6361f7e990728b804"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/auth-authorization/small-greenfield.json",
+      "bytes": 1192,
+      "sha256": "76ab39001b8cdac2a86a43bc5a89ed8d84ac4aff60058cd69d7b95ca2ab2b611"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/observability-performance/constrained-offline.json",
+      "bytes": 1250,
+      "sha256": "e676afba48221d0c503ded57322913163c7b06741231b74660689c7489097fc6"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/observability-performance/mature-legacy-migration.json",
+      "bytes": 1277,
+      "sha256": "86d8a3da92f694f2c5179ecb0e31e9a8c331cee3a8b931ecb02fee1f91b834e7"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/observability-performance/monorepo-polyglot.json",
+      "bytes": 1324,
+      "sha256": "0d9acb22b33e65dbc037841561e2dc59e45cdeaa5f2674bbb15906a73eb4a50e"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/observability-performance/production-greenfield.json",
+      "bytes": 1270,
+      "sha256": "ae28806dee736f1eda2c5a27747b2b44fa190ec6cf8974daae78c5267548f1ac"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/observability-performance/regulated-high-assurance.json",
+      "bytes": 1327,
+      "sha256": "0af1dda820240111a8113c3ec13e37259617b547df175f8a0cf355eb029f5ca1"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/observability-performance/small-greenfield.json",
+      "bytes": 1164,
+      "sha256": "5084ffb49988e7b080f8336c923208e6eb7682ab7bc5c2801e749873c94ee0a7"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/persistence-data/constrained-offline.json",
+      "bytes": 1163,
+      "sha256": "be94fa96dc2d9527c13f2d667f5cac05955f86dabe43e02d5bfa189da9b8197f"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/persistence-data/mature-legacy-migration.json",
+      "bytes": 1207,
+      "sha256": "432189a7bc20009c9dfe1f3b1ee633485692a4dee0ff6f2302b11ba1b355ae37"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/persistence-data/monorepo-polyglot.json",
+      "bytes": 1309,
+      "sha256": "eea4b17e7859c74e3cd6215aa1c49f161132e34343dbaacbf6376b9cc1e00529"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/persistence-data/production-greenfield.json",
+      "bytes": 1243,
+      "sha256": "37c469a7ba3197055ec3b54656a305812f3cce75ecfa9fbadcad0a858955d71d"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/persistence-data/regulated-high-assurance.json",
+      "bytes": 1320,
+      "sha256": "4d07e2cc81e1160fd9540e4f30268ff31db9b8b1c451a53140ae03e26d3ad468"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/api-backend-delivery/persistence-data/small-greenfield.json",
+      "bytes": 1188,
+      "sha256": "b9b9069bb910aa33f602fa0a6b152e5ff135f23dad0d27994b0ba62df53e2f6e"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/ci-cd/constrained-offline.json",
+      "bytes": 1889,
+      "sha256": "1c92abec468ad8776143eb4ad134a834b4559725124859bfb98de4c0d935e4fc"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/ci-cd/mature-legacy-migration.json",
+      "bytes": 1964,
+      "sha256": "18aadee7713a4dad59c13745f7304dc97c5bc1a7f0e38a0b5faa501e36fe67bf"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/ci-cd/monorepo-polyglot.json",
+      "bytes": 1961,
+      "sha256": "da49e89471eec322c0d7c657fd3b75771e39e4bc963d91f328872cf558494dca"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/ci-cd/production-greenfield.json",
+      "bytes": 1809,
+      "sha256": "b0cc51b8b9733f30eef81b0bde7b6fcaf50236bd5de93cb48d7ce83545c48298"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/ci-cd/regulated-high-assurance.json",
+      "bytes": 1996,
+      "sha256": "b23c581a6e59483346c8cbddbb4f60e8a50824b0b31941d903ef64034ffd6210"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/ci-cd/small-greenfield.json",
+      "bytes": 1749,
+      "sha256": "49fbb6ff7d33d0610c473d0856d2b55da34a35d9c4395faafc3a057c4c8dc73c"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/containers/constrained-offline.json",
+      "bytes": 1910,
+      "sha256": "b16c936118210a355ce15ce8723e076d3cae8c12bc5120abda3be153698fd65c"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/containers/mature-legacy-migration.json",
+      "bytes": 1950,
+      "sha256": "4e946bfef42891586ab6aeaee08ac74c08022d37a299500fd98bc53cdce49202"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/containers/monorepo-polyglot.json",
+      "bytes": 1949,
+      "sha256": "20bffd245b29e20562648acc1b5dff0c5c0f6efa10ece4908519f488bdd8d632"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/containers/production-greenfield.json",
+      "bytes": 1831,
+      "sha256": "e2bf74196b15b4138b62ce78a7195cfb81e3eb6653f23df37efec3809037502e"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/containers/regulated-high-assurance.json",
+      "bytes": 2012,
+      "sha256": "9c08385a3385846add3561414c76e042cae116a51c4ba7a03135446a20ee7791"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/containers/small-greenfield.json",
+      "bytes": 1795,
+      "sha256": "d3bda0014871b2ba31ab07eb9122d060e669d879437ab287f18ce0706e48b70e"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/infrastructure-as-code/constrained-offline.json",
+      "bytes": 1955,
+      "sha256": "55bdd3438c1a4133403059acabcbe9050bdf0dcfdcefbf5fda0f68e4b9f8e8f7"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/infrastructure-as-code/mature-legacy-migration.json",
+      "bytes": 1964,
+      "sha256": "35a3be649b2c33175869bc022d3f036a5679a06c6ebadf7552b7a3b640e0b596"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/infrastructure-as-code/monorepo-polyglot.json",
+      "bytes": 2008,
+      "sha256": "fa7e51ee210abc5f5fe729a0810a328148eacec59f8dca7d327b50f6494bc2dc"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/infrastructure-as-code/production-greenfield.json",
+      "bytes": 1894,
+      "sha256": "db6564936d59e89d8d960468352f8d306e725983185b17e4c8c6d6372b391bdc"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/infrastructure-as-code/regulated-high-assurance.json",
+      "bytes": 2053,
+      "sha256": "15faa79902c764961d6e5eb8d5315707f906102a0b515908c0c71ada75f18103"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/infrastructure-as-code/small-greenfield.json",
+      "bytes": 1835,
+      "sha256": "398b4046d23fd91bc7b2f103d0264a6587e2c263c2da6c62b554cb5ecc894865"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/observability-sre/constrained-offline.json",
+      "bytes": 1944,
+      "sha256": "95bb208b5d69c15904232fb07c4f324fdbb115e38f634cb720f1bd394eeee146"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/observability-sre/mature-legacy-migration.json",
+      "bytes": 1967,
+      "sha256": "4175a3e22b88bd751201aa73c39ddbc45e70f7aed11fcf4cab96445c0fe3d460"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/observability-sre/monorepo-polyglot.json",
+      "bytes": 2002,
+      "sha256": "a40cb684083e30d7c1f6499407556c7eceea093cbebaed352b77fca14cc238db"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/observability-sre/production-greenfield.json",
+      "bytes": 1870,
+      "sha256": "aa5cf20aa2dcd7cce69fe6cafc89391bc33b1681d5299e9343eff4f8fc1948aa"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/observability-sre/regulated-high-assurance.json",
+      "bytes": 2028,
+      "sha256": "a3f2bb61dc3f3bd0196a763790f1c09265e8b011aa8d5bc575a5a9410612ba0a"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/observability-sre/small-greenfield.json",
+      "bytes": 1795,
+      "sha256": "4c9ebb203754c2c1b1ec64e05a585e4420f4921e3d8ce249df9a75fd4424a1b5"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/release-rollback/constrained-offline.json",
+      "bytes": 1966,
+      "sha256": "7481eb83da3a9d4e264fdbd0fa07a60a9eb82ea807337f684dffa89dd4a8bbff"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/release-rollback/mature-legacy-migration.json",
+      "bytes": 1989,
+      "sha256": "cd80ca3b3ec276c32ef071a77e24bb0a05828746fb1b3b609b48792980c7ac7d"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/release-rollback/monorepo-polyglot.json",
+      "bytes": 2034,
+      "sha256": "a82d49d7ccf4c8cc0948dd970571acd714a26de937a55120827dea53f1909103"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/release-rollback/production-greenfield.json",
+      "bytes": 1900,
+      "sha256": "aba288f8dbb5832430edc322d4e328a37343040cb1b53587a6368c2c82ed972c"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/release-rollback/regulated-high-assurance.json",
+      "bytes": 2085,
+      "sha256": "8111b72b5aaf24ba2400f53d96be3b52c2cbe0161f2c0434d1caa527660beb34"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/deployment-devops/release-rollback/small-greenfield.json",
+      "bytes": 1814,
+      "sha256": "3549f8b4c81db1ffbfeaca3c444dcaebadc968007f116f4b02b5246ed938e940"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/cloud-container.constrained-offline.json",
+      "bytes": 1736,
+      "sha256": "ec4f1c0e3887734899318257fdab8c79a76599beb641f421fafa2b41de354101"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/cloud-container.mature-legacy-migration.json",
+      "bytes": 1776,
+      "sha256": "f6d86f0192e217ed83edcd29f7790b16d9fd960d66f04dce10f69e2ccddc2adf"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/cloud-container.monorepo-polyglot.json",
+      "bytes": 1855,
+      "sha256": "c21cdf0b8c85469db45098568ea08761594268f7198a7eab290e46cca8fd29cb"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/cloud-container.production-greenfield.json",
+      "bytes": 1717,
+      "sha256": "2b67fc6ce0fbd2c7128c30f50ee10afa9294862fa22982644b8b38230eb9fc4f"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/cloud-container.regulated-high-assurance.json",
+      "bytes": 1846,
+      "sha256": "d8ec88c7d0e5d810e87d0d6d5f63373575e184768cf50bf3ab50dd9227880268"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/cloud-container.small-greenfield.json",
+      "bytes": 1655,
+      "sha256": "244a7771bc55f384fe836fe1f36f171a597407395d741dc9637744e7bc4c2b3f"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/code-dependency-review.constrained-offline.json",
+      "bytes": 1748,
+      "sha256": "b72e6e5bb3628ddcc79138986b80422bbc17a7a26fbcb4a2e0d15822fa951881"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/code-dependency-review.mature-legacy-migration.json",
+      "bytes": 1836,
+      "sha256": "d15d52aaa1ec4716f511fef1651b25ff33b0b6f1dd47fdc8556bd60a3682b552"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/code-dependency-review.monorepo-polyglot.json",
+      "bytes": 1889,
+      "sha256": "866e5d60f7e6d07d9ee941f45955ce1950b43e4c18463aed66fdba383addde69"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/code-dependency-review.production-greenfield.json",
+      "bytes": 1785,
+      "sha256": "9433c04d33a81d7c5e4b66ddc22a875426fe323a1c487e2551a52defa585519b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/code-dependency-review.regulated-high-assurance.json",
+      "bytes": 1828,
+      "sha256": "a7260523a7ca40985e9ccd9668070ccb4a3e079b567f3796f994fc1c0767bc6e"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/code-dependency-review.small-greenfield.json",
+      "bytes": 1707,
+      "sha256": "5db6afdc70309ce920e07bd51e847830eaffb0a0a4910c75252072a2e9f72c43"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/incident-hardening.constrained-offline.json",
+      "bytes": 1754,
+      "sha256": "83af8c7caa26e30ca737503e3ed9b0be7f2ebf8893fe5c4c32ca533130e4b0b1"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/incident-hardening.mature-legacy-migration.json",
+      "bytes": 1884,
+      "sha256": "5ea787de23ade7c01bdbe1d41feacfb6cec2e5f86ed34edc2080302a788c5246"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/incident-hardening.monorepo-polyglot.json",
+      "bytes": 1900,
+      "sha256": "724f06fb6f1d56b502354e93d96709ca9e42f508cc676ba2fefba62dacf4745f"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/incident-hardening.production-greenfield.json",
+      "bytes": 1817,
+      "sha256": "f0ac54ac69887a32676e18caff1fb0ef073b20719766bd4ed50d7c043f5d4dad"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/incident-hardening.regulated-high-assurance.json",
+      "bytes": 1882,
+      "sha256": "ed30e8b0c6c229fd36b7bb8e4023baf16673655d03dbc67f2cdbff20bc7648bf"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/incident-hardening.small-greenfield.json",
+      "bytes": 1741,
+      "sha256": "a0b4a8fe146aec7c8aadb677f8a1689a438247d0a080226ec2356aead334ca7b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/secrets-auth.constrained-offline.json",
+      "bytes": 1751,
+      "sha256": "c4df74bc1e6ff687a861f75a6103e1e9027bac413faaa71753fcf31e44b63bdc"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/secrets-auth.mature-legacy-migration.json",
+      "bytes": 1902,
+      "sha256": "def3b7f9bb560b4da9fded0686525723d61d96bceb1a5b8145c291171890c05f"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/secrets-auth.monorepo-polyglot.json",
+      "bytes": 1952,
+      "sha256": "2e7b236ae8d91263fed0d4f7e6e3e540438754229f51f170889cde9cf8d8e797"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/secrets-auth.production-greenfield.json",
+      "bytes": 1816,
+      "sha256": "7019831bb261351b0319858d071ee6c2b8d19a0ee06d2077251f0b6586311286"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/secrets-auth.regulated-high-assurance.json",
+      "bytes": 1865,
+      "sha256": "c1d9af0448e8831178426db3a210e1f91a34d6073116feed6b7769b046a7916a"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/secrets-auth.small-greenfield.json",
+      "bytes": 1780,
+      "sha256": "d798468b3649ddaa43d0f3b79eff5d91ee3aa3e8926bdfd84f81a0995d8fe593"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/threat-modeling.constrained-offline.json",
+      "bytes": 1689,
+      "sha256": "14ca0c18e33cba7a446c948c54b0ab273679dd2cfc314b473084d20739c9f9ea"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/threat-modeling.mature-legacy-migration.json",
+      "bytes": 1797,
+      "sha256": "e09a4c9f3b5cc9265c5dfdeaadcb62071df3eb236928557bab78e6a12aa28e2e"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/threat-modeling.monorepo-polyglot.json",
+      "bytes": 1875,
+      "sha256": "0a8d20681b027d9be9454b7957ce078f73c0cdb5d879a65fdf737d85a4d3d5a6"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/threat-modeling.production-greenfield.json",
+      "bytes": 1757,
+      "sha256": "edaf42ce971aca2b5893024b9fa85fb8bb1ef8d0a1b844310f37f254de199845"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/threat-modeling.regulated-high-assurance.json",
+      "bytes": 1830,
+      "sha256": "26ddc2558fb98a520eb96dfe11b937d8def0823de83554c5a92af695d9fc4cc8"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/security-review-hardening/threat-modeling.small-greenfield.json",
+      "bytes": 1665,
+      "sha256": "97e565739315b04e142f992796bce9aa7e7d61bd8e171936571b33ad461ca83f"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/accessibility-quality.constrained-offline.json",
+      "bytes": 1338,
+      "sha256": "b21011ff8bdace5b2447f2a71df3c0a34dbad56fdc1c3940665faa94e53509b1"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/accessibility-quality.mature-legacy-migration.json",
+      "bytes": 1382,
+      "sha256": "66fcc9e65c387788219deb4fbcff3847f9ec74431f5b23c145b17abab6d229b8"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/accessibility-quality.monorepo-polyglot.json",
+      "bytes": 1459,
+      "sha256": "df1c116e04e5017d61f4e0b724e83fa9e75ee955a1e4748038fa45ce42bc19f4"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/accessibility-quality.production-greenfield.json",
+      "bytes": 1361,
+      "sha256": "4555f4c3bb2993fd538dbad8d3d1461d07ead23a0fe5d0d95eb37694314fbc4c"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/accessibility-quality.regulated-high-assurance.json",
+      "bytes": 1399,
+      "sha256": "5dd58bad4de822387e2b9c176c18f74b0e8460eb2037940cf8cfc88d34d2a7fe"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/accessibility-quality.small-greenfield.json",
+      "bytes": 1279,
+      "sha256": "d3bd4f59bb220149d9f02a184edb50b6ced562747a755eeaac455802dcec8837"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/end-to-end-browser.constrained-offline.json",
+      "bytes": 1322,
+      "sha256": "fcc39ca488cae0d20756fde36ce4f91aef61d677e0dd435aa08482371cab831b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/end-to-end-browser.mature-legacy-migration.json",
+      "bytes": 1363,
+      "sha256": "003b7909b213d1abaa09ee64ec4fd9b5c772cc58bf2ab76b37daaaefae6090fc"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/end-to-end-browser.monorepo-polyglot.json",
+      "bytes": 1425,
+      "sha256": "301f7b07852670990bc57573a2ebd859cffc4b64386ceb06bde6b08aab2b788b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/end-to-end-browser.production-greenfield.json",
+      "bytes": 1308,
+      "sha256": "4a5bef840e3d27cc3106d3a4b5e30f1905051f12c1099cb430b5ab70ac6e69f8"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/end-to-end-browser.regulated-high-assurance.json",
+      "bytes": 1414,
+      "sha256": "2d51e512a42c51695fe8c02f59f3ee818f78b10e445f252ef9f288fb4bffbc51"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/end-to-end-browser.small-greenfield.json",
+      "bytes": 1266,
+      "sha256": "70a93533d3e8162510be0c49c40c3deb24eef7575fe4b1306ab0a78177fda13a"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/integration-contract.constrained-offline.json",
+      "bytes": 1339,
+      "sha256": "07aac5a4d3984e27ebc1701e736c389865f48a76e1801fc0d2b81018916292f8"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/integration-contract.mature-legacy-migration.json",
+      "bytes": 1352,
+      "sha256": "891260fca2e5d9fc5fb7494d5388119ea82cc0c6abf840e1ead8c058b3505390"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/integration-contract.monorepo-polyglot.json",
+      "bytes": 1416,
+      "sha256": "b8c6a0af7a05e926c4add37fe6de82246dabb81259a67e50546b52f356d64e33"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/integration-contract.production-greenfield.json",
+      "bytes": 1341,
+      "sha256": "2c653f200489bf6899d1db20d9836c8025ae1ad2c2da52256ea2c535c2c3696d"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/integration-contract.regulated-high-assurance.json",
+      "bytes": 1426,
+      "sha256": "01f2bf8fc95f4f3fba39edbb87bbd213de8a30ebf50cd7bf858757fba62b1a20"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/integration-contract.small-greenfield.json",
+      "bytes": 1296,
+      "sha256": "9f195b7cde75f9cade4077c1fbaddf109472ca1185473931ca79ff00b51cdf03"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/load-performance.constrained-offline.json",
+      "bytes": 1313,
+      "sha256": "c231829768e073e28454374bf36a054f152f9511b7bd007bfbee2c33bbe37f3d"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/load-performance.mature-legacy-migration.json",
+      "bytes": 1345,
+      "sha256": "07163fafcf8effa30837224fed18280238bf3ce3304877967b0a0382e2a90f6d"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/load-performance.monorepo-polyglot.json",
+      "bytes": 1413,
+      "sha256": "229f7cde006c4ec3e7cdcd6c16905f882d19806c115f8444cc8ba9468488d932"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/load-performance.production-greenfield.json",
+      "bytes": 1327,
+      "sha256": "58e56509c18c84c9710828f73c88b0fca41744aabdc8ad847bc5db02cce8d137"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/load-performance.regulated-high-assurance.json",
+      "bytes": 1430,
+      "sha256": "b041d7bc164e194fd0228c27956101b49717f44080cf90ea66096e7668516f64"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/load-performance.small-greenfield.json",
+      "bytes": 1230,
+      "sha256": "dbf5abe39241661139ecd49a4a7999760f2baf233f98d658d2e464faf1172066"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/unit-component.constrained-offline.json",
+      "bytes": 1262,
+      "sha256": "98f9feed6047c574de67030b230ded3927f2fdd60e0d398567dc0758acb935ed"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/unit-component.mature-legacy-migration.json",
+      "bytes": 1293,
+      "sha256": "88f86fe31a9c980d3fd3d86c99350a46aad96bbc625107ed233855d18368a69b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/unit-component.monorepo-polyglot.json",
+      "bytes": 1393,
+      "sha256": "b3473a690f00716be83232b70c23ba8c5eaed445e7c0a10686b4bb82ed3b3a27"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/unit-component.production-greenfield.json",
+      "bytes": 1255,
+      "sha256": "236ad78d2f1ab9052ca649c0bbb9fb1ecae05747f7365bc277bcffaf93b8c9a1"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/unit-component.regulated-high-assurance.json",
+      "bytes": 1376,
+      "sha256": "0da8cb351e3d61bd84bfd8a6a2fc759e848ea0ef1960c14e7bb1ff7c5bc89c8a"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/test-qa-automation/unit-component.small-greenfield.json",
+      "bytes": 1241,
+      "sha256": "1f7e6b2b1187dd55df3a44436f033477ef044048c64b7bae7c2a632cf2a3c9ca"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/application-data-auth/constrained-offline.json",
+      "bytes": 1555,
+      "sha256": "9f6816bfad68f251b1e3ba77aacc3374c23d105291af7e15ca38dcd4f1fb8bbd"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/application-data-auth/mature-legacy-migration.json",
+      "bytes": 1482,
+      "sha256": "e90f7852360aabc3e70c32e9b6e2a73d3c0be6b0d42b57687b93d0ce0fba3f1b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/application-data-auth/monorepo-polyglot.json",
+      "bytes": 1589,
+      "sha256": "7c8efec10c72ddcfd5ce8b4a144690ab4b8d6c9ca2ede43b11be0180f149efa3"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/application-data-auth/production-greenfield.json",
+      "bytes": 1575,
+      "sha256": "e3016deb12b4cea3328fd244b94714aed17938b676cf25b4398b0f81199c1249"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/application-data-auth/regulated-high-assurance.json",
+      "bytes": 1623,
+      "sha256": "ecb8b925776fe408c253cef5891f3816b81e102681c3e9c45a53983c0a33da29"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/application-data-auth/small-greenfield.json",
+      "bytes": 1508,
+      "sha256": "5c6e0706045781ad85258bdaf81b1870b242dfeaed88e4063234c6a397af08da"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/frontend-architecture/constrained-offline.json",
+      "bytes": 1606,
+      "sha256": "378b620f3b7e2f05db2689b1560d94b0f0bb8e70f05e62e3d9a5b0fed2a125ea"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/frontend-architecture/mature-legacy-migration.json",
+      "bytes": 1591,
+      "sha256": "e1e3552535fd37414488b90be26c7d9ffaba215bcbebb5967c9b03611c1b98df"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/frontend-architecture/monorepo-polyglot.json",
+      "bytes": 1728,
+      "sha256": "98abaa425877c3f4306a5181697915e7e5bfcb6709d4243eb9749f53133f2015"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/frontend-architecture/production-greenfield.json",
+      "bytes": 1767,
+      "sha256": "ec66078d6c8f80630c4252a632832924d9b1e3c7d0abd3ef895fbb17e8d62c74"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/frontend-architecture/regulated-high-assurance.json",
+      "bytes": 1703,
+      "sha256": "5c218abb7f167f60ae26c2da734791061cc810be53a61b2a754870d3d1dfa748"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/frontend-architecture/small-greenfield.json",
+      "bytes": 1581,
+      "sha256": "e2d53b61bbb79304656435ca80ce9c6ea906ec89d1527c41846cb66891b9f26b"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/ui-accessibility/constrained-offline.json",
+      "bytes": 1502,
+      "sha256": "cc99adbbf39e77cab2b97861da8a950c8df309ef8e16cf158315ccdc1ab8ac27"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/ui-accessibility/mature-legacy-migration.json",
+      "bytes": 1477,
+      "sha256": "83ca5384c1feb1874e6e10a7db4553c2e8dbedfbf1b5567681b85c7dcac3c1b7"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/ui-accessibility/monorepo-polyglot.json",
+      "bytes": 1647,
+      "sha256": "3b56c493c39472e7bf03afb456df958e018f3bbe34ce710e585fff0c71a37c04"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/ui-accessibility/production-greenfield.json",
+      "bytes": 1536,
+      "sha256": "56bb5b4178af184da98cd8645b9a8274c6b6690e34332912b7c87c0ccc0fb95f"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/ui-accessibility/regulated-high-assurance.json",
+      "bytes": 1619,
+      "sha256": "05ee7c47400fba7696a527ac61b04b8117bb638c9b584c683002bb46d375cbc3"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/ui-accessibility/small-greenfield.json",
+      "bytes": 1411,
+      "sha256": "3d2aeb94739bbc716acc2a87faab59be272d35b4305b58c2c6a4458b7175eb47"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-performance-delivery/constrained-offline.json",
+      "bytes": 1500,
+      "sha256": "71bcf9933d319ed6ba227f6d6d333e6ef3db3a97621a0dcb44ccc6129c4f80e9"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-performance-delivery/mature-legacy-migration.json",
+      "bytes": 1481,
+      "sha256": "3674a1136d5af60c138ddeee61bcd3f17f6b66aea63d0fdd798a8d7c33c27376"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-performance-delivery/monorepo-polyglot.json",
+      "bytes": 1611,
+      "sha256": "dba5cc2736364383b28ba2826264ea228af913f3324492d77d850d4950ff97f0"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-performance-delivery/production-greenfield.json",
+      "bytes": 1551,
+      "sha256": "3a89230a3f8f32630384db47a1adaa664473a5d9c198e34e60d076c864160389"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-performance-delivery/regulated-high-assurance.json",
+      "bytes": 1602,
+      "sha256": "43a6c643dd1965709cb37463b3bda4f98d0533c98bb82ee4761eaaa0330b1eb0"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-performance-delivery/small-greenfield.json",
+      "bytes": 1339,
+      "sha256": "88617129d4a0679691a1bd0cacfdb32ac41876ee1ed8b1b73172df8ca4624d91"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-testing-quality/constrained-offline.json",
+      "bytes": 1482,
+      "sha256": "387daf3cae3a39feaa260786d21eb7e00bd854c72b687676eb96eb3816b02c35"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-testing-quality/mature-legacy-migration.json",
+      "bytes": 1437,
+      "sha256": "19b97dd06631123daa96a4b885fc4ad0cf87f576b4472e022682325875d31ef1"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-testing-quality/monorepo-polyglot.json",
+      "bytes": 1597,
+      "sha256": "4f95089d43a70efb3a01ac7a7fdb6525a5d2313e183304e969a532e51a98e450"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-testing-quality/production-greenfield.json",
+      "bytes": 1457,
+      "sha256": "60d332f19549adb81a31c8e0459238fc98e9ade20e2fb85f4b30a2a6ab5c0957"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-testing-quality/regulated-high-assurance.json",
+      "bytes": 1613,
+      "sha256": "be46afebd186bf23f13ea466a1d1c4b18a398738580ffc5802d07ce667e95804"
+    },
+    {
+      "path": "baseline/v1/benchmark/cases/held-out/web-application-delivery/web-testing-quality/small-greenfield.json",
+      "bytes": 1335,
+      "sha256": "3f887e95b61cfad18612212b0f57f7d0d48d5d6d5ff3b8b234699f0fb992b193"
+    },
+    {
+      "path": "baseline/v1/benchmark/catalog-reference.json",
+      "bytes": 646,
+      "sha256": "cdb122f9d2646844e59db1908a4706dcf7be1d1a2b4af2428f25a88816179cd2"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/agent-architecture/constrained-offline.json",
+      "bytes": 1178,
+      "sha256": "dfb8f4b7b7f03fa24ec04d532fe790485c34cae83dc3167126fc6afce177d3df"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/agent-architecture/mature-legacy-migration.json",
+      "bytes": 1193,
+      "sha256": "13f707318a31f8906f1bf1c06815c6f398c7dfe77daf5119f01580539ef00d6a"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/agent-architecture/monorepo-polyglot.json",
+      "bytes": 1233,
+      "sha256": "54f2a1705daeef3aeedd2a0b2635ba2a67a48dba0f1b0def6b1a67de9a911a65"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/agent-architecture/production-greenfield.json",
+      "bytes": 1312,
+      "sha256": "0953e0653f98065b079e5a963dea30791c190f1118c4b794dc6641a88d094fbb"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/agent-architecture/regulated-high-assurance.json",
+      "bytes": 1218,
+      "sha256": "bd86108d8806df2a58433418a7d2cfb2b8d9ea93dec4f2c61ac05d0f562cda8b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/agent-architecture/small-greenfield.json",
+      "bytes": 1136,
+      "sha256": "1480da78fd8043dcd1c763f5a1332affde9e85dca83d04818decdc8609b60f00"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/evaluation-testing/constrained-offline.json",
+      "bytes": 1069,
+      "sha256": "fee60753e967a255e462cf80504a1ec2de2930847f6883021575d66ae9c2b98d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/evaluation-testing/mature-legacy-migration.json",
+      "bytes": 1163,
+      "sha256": "b513f9c3d13a980b69943185ce62411e50f7dd667f9d5b7f86947a5b5235483f"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/evaluation-testing/monorepo-polyglot.json",
+      "bytes": 1153,
+      "sha256": "a6674e4d755a5c41b907693b8e2f6c6fad745a0661bc28b67175bb659814c8c5"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/evaluation-testing/production-greenfield.json",
+      "bytes": 1086,
+      "sha256": "6b15402699a7aa37e3839a48f479cd0d2088c9478593dc39463c27fb3a4d6fd6"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/evaluation-testing/regulated-high-assurance.json",
+      "bytes": 1128,
+      "sha256": "9fa11b1cd6983c9d7de1e16ced5a14bb06d2119812045069851b24d2d9b5638e"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/evaluation-testing/small-greenfield.json",
+      "bytes": 1059,
+      "sha256": "76f4eee4431a557556b47680ee80219e704627e33577a48077132106f7e34dfc"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/mcp-tooling/constrained-offline.json",
+      "bytes": 1160,
+      "sha256": "dcca22aff5a8d4b6ea2f7e8f3b5b2539dbfe7394f1513ada8e01c8336b357314"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/mcp-tooling/mature-legacy-migration.json",
+      "bytes": 1178,
+      "sha256": "3aea307a701b470d05da71a5d2b03c13109554b3785b71eb0d3e422829375c79"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/mcp-tooling/monorepo-polyglot.json",
+      "bytes": 1147,
+      "sha256": "b97289f5e6152fe43c991cc547f766babeba02133e530434e54c79bad95dc9e2"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/mcp-tooling/production-greenfield.json",
+      "bytes": 1289,
+      "sha256": "5d706551996f167f8c1e28d61ecd7b3bf295b57308f0b3babd982e7c80fde567"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/mcp-tooling/regulated-high-assurance.json",
+      "bytes": 1247,
+      "sha256": "374e85f5609b2d79085daff1128682c1b250e7b64e4b859384e3a3556e916e7b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/mcp-tooling/small-greenfield.json",
+      "bytes": 1088,
+      "sha256": "44d5a9e3521ecd9d660bdbb200911b355b14d472cdcac87326ea306209796f16"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/memory-context-retrieval/constrained-offline.json",
+      "bytes": 1274,
+      "sha256": "f5e0709487e72f6eabe99f108b2d4c344a014a9177107864ac9a42e6431b6d75"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/memory-context-retrieval/mature-legacy-migration.json",
+      "bytes": 1297,
+      "sha256": "43de7c3dc9e3ee936362a12e83642e53704586c137c2e17f38108d163551fc22"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/memory-context-retrieval/monorepo-polyglot.json",
+      "bytes": 1253,
+      "sha256": "c4bb8568ff121955c6b54e9fc8294a0037b9334e2c7831f2075e18d938c7325d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/memory-context-retrieval/production-greenfield.json",
+      "bytes": 1300,
+      "sha256": "9dac8c5874670c485523d88cc42977f49893e30a098e8cbbef9165dcaec50d7c"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/memory-context-retrieval/regulated-high-assurance.json",
+      "bytes": 1258,
+      "sha256": "1df355796d3162cd75c222983f6c44d08441c719bdf1ae5501729cf235795785"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/memory-context-retrieval/small-greenfield.json",
+      "bytes": 1217,
+      "sha256": "0707f8a7ed348724a8ecd9bcd45155d461201fc92738c909e39de57d2c257ca8"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/security-operations/constrained-offline.json",
+      "bytes": 1223,
+      "sha256": "46ef52e7c2be756637954f1200e98d4de8b6c801efdf7ee1b8b91915f904a0e0"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/security-operations/mature-legacy-migration.json",
+      "bytes": 1322,
+      "sha256": "eaeb402fcf79f6f5a93e2e91656e0666c24e0d47fc28e6f9087444404d62b00a"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/security-operations/monorepo-polyglot.json",
+      "bytes": 1306,
+      "sha256": "385d9eb19b32e00874c9fd9171ea2bbc7fac8e83445a4887e7f27ee6bcc99715"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/security-operations/production-greenfield.json",
+      "bytes": 1246,
+      "sha256": "b4b5d0ccd30f8aa7cf692dd819e3bb42584d94f7a4dd7c13d51992ce7e55660f"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/security-operations/regulated-high-assurance.json",
+      "bytes": 1310,
+      "sha256": "561d5a9d0b41fc0e6e087827ee389a05b26de4832d4659b5ea46e901573b47b7"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/agent-mcp-development/security-operations/small-greenfield.json",
+      "bytes": 1220,
+      "sha256": "f6c3a8f6685587355c5ae683af314752fd6b4d1611f37644967a51ceb7a01f20"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/api-design-contracts/constrained-offline.json",
+      "bytes": 1184,
+      "sha256": "463e3ed4127283cae3796ef90f4ea7de22b67a5e01a9a595d626212c5b58d789"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/api-design-contracts/mature-legacy-migration.json",
+      "bytes": 1240,
+      "sha256": "2f6df2fcd3c186f8b24164f5f7364af9f8d711513220adcbfa8f469862fa12e5"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/api-design-contracts/monorepo-polyglot.json",
+      "bytes": 1163,
+      "sha256": "e507f6258b9d9afb0b8b862081c002da5cf788ec5b7c5f2c2c90819aafd2f172"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/api-design-contracts/production-greenfield.json",
+      "bytes": 1250,
+      "sha256": "2d90db65647144bf328e51f9113ac14aa40b8fccdf48b5054b0c44ef3ddeb2e6"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/api-design-contracts/regulated-high-assurance.json",
+      "bytes": 1241,
+      "sha256": "d0912cffa9e08231bb35ad60cf8223ddaa8e6fbba6f621286b96a5e0e7a3135b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/api-design-contracts/small-greenfield.json",
+      "bytes": 1182,
+      "sha256": "45b2d5b8b80ab6f8f39e696e570c3b10c7d83daf00422014362114dff77df7cc"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/async-integrations/constrained-offline.json",
+      "bytes": 1160,
+      "sha256": "f668d434784ee786d43c54bbf1b5e4efed4cac195e18a33ba2a80a162a243c45"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/async-integrations/mature-legacy-migration.json",
+      "bytes": 1244,
+      "sha256": "f4d12aaabe2f1bcb1d607cdcea9a00b1d4e79e18cce3c50922cbb3b5217a36b0"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/async-integrations/monorepo-polyglot.json",
+      "bytes": 1188,
+      "sha256": "f98b75ac8905f389a82775589878753d967094682dd793caff34430635aeb4ab"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/async-integrations/production-greenfield.json",
+      "bytes": 1235,
+      "sha256": "70e017986d2942cf02dd430e8487517160085d15cb98a42d505af6aff16a5f6b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/async-integrations/regulated-high-assurance.json",
+      "bytes": 1266,
+      "sha256": "4b3fc42fac10569bf2f251b2bd06d049f6faa0730824b0e15ea43bcdeabdada2"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/async-integrations/small-greenfield.json",
+      "bytes": 1109,
+      "sha256": "b34ea7b325ec2f230a9a1e2dd602ba00846074897562a1448565351de332aa49"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/auth-authorization/constrained-offline.json",
+      "bytes": 1149,
+      "sha256": "9cb56b0a0a597dfd30a81515a17bbe7142724e58df7f90ba67f89b896caf85c8"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/auth-authorization/mature-legacy-migration.json",
+      "bytes": 1247,
+      "sha256": "e9b343844737a6b5e0ccbc6fcdb8d3b50084a7f23fcfb0253123aea69b909dee"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/auth-authorization/monorepo-polyglot.json",
+      "bytes": 1240,
+      "sha256": "3e621229c7e25c2d7925100fa887cd94da0d0e30d14582512dd283b1b34e64e7"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/auth-authorization/production-greenfield.json",
+      "bytes": 1249,
+      "sha256": "33b0fe762439ce3b304bcdb63586616586378383928e523437ba082d80c97d86"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/auth-authorization/regulated-high-assurance.json",
+      "bytes": 1210,
+      "sha256": "83ea9219d8b65fbb584ef10c5547b726aa122f9693f534574ac54e6899414467"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/auth-authorization/small-greenfield.json",
+      "bytes": 1149,
+      "sha256": "96a32af45fdbaf19b12477fe1252967064fb0a5b8ee6ac732e21c4ded6245c1f"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/observability-performance/constrained-offline.json",
+      "bytes": 1157,
+      "sha256": "65ea763b61c9beea118e37a000f6ec56284db0b9f3cedf5006a5b8168090641e"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/observability-performance/mature-legacy-migration.json",
+      "bytes": 1307,
+      "sha256": "dfe7d41627e08b3426770af32bbbb8fbed40b3cb71dc3eef80200f79fb69d8ea"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/observability-performance/monorepo-polyglot.json",
+      "bytes": 1298,
+      "sha256": "9c4e01c6537b212bdaac249b23d164e2d227e2445ccda95c6e0a06a66b036697"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/observability-performance/production-greenfield.json",
+      "bytes": 1514,
+      "sha256": "d75c79af920ab48f15e881f7e46f03c02776bae18a5370688751addcb11d3192"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/observability-performance/regulated-high-assurance.json",
+      "bytes": 1478,
+      "sha256": "2eef6a0363c74865ca806f37d576d3a82ae81a6c4982a903ee68060234f1e0bd"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/observability-performance/small-greenfield.json",
+      "bytes": 1256,
+      "sha256": "92f136929865388e187707c9b7020c0cf05d6033d5b2aad8fbd2c2c2c6286569"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/persistence-data/constrained-offline.json",
+      "bytes": 1156,
+      "sha256": "c5e9a6f4794ac01f21b1a831bab2336ff5e9a979e9c7cc4865039d944672f994"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/persistence-data/mature-legacy-migration.json",
+      "bytes": 1299,
+      "sha256": "b21ac6282765e756b30b62bd22c92067bc3be065d6dab893c19f246a9ade2198"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/persistence-data/monorepo-polyglot.json",
+      "bytes": 1166,
+      "sha256": "890376e559d3d257cf61aaccc6ec94dfd574687c6a60d059e9b277bf18a55cd7"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/persistence-data/production-greenfield.json",
+      "bytes": 1343,
+      "sha256": "459ccc9e79b67187932f428ab84f3da31ec470c774fc7e7f10b1d105b06df2d3"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/persistence-data/regulated-high-assurance.json",
+      "bytes": 1176,
+      "sha256": "b2c4f49a66f423d511e1f5c50e24c6dad6f6b6bd6bc45b169ac1e9e53c04d604"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/api-backend-delivery/persistence-data/small-greenfield.json",
+      "bytes": 1180,
+      "sha256": "fd16340ab919e0b50bb40b741f4de48eca8132ab130fd1d61003a6af8b86194c"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/ci-cd/constrained-offline.json",
+      "bytes": 1098,
+      "sha256": "1e3206a1c13103197a962ad6e719b7b40e27e09b3e76dd62dc4bebba21a62b2e"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/ci-cd/mature-legacy-migration.json",
+      "bytes": 1123,
+      "sha256": "19dc9780e5a282541fb196a2aa60ab6a50ac196bcf7bd31f31999a34640716ca"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/ci-cd/monorepo-polyglot.json",
+      "bytes": 1114,
+      "sha256": "bbd2abfdcc3adc177cf38a9b8cef41c310f92fd65e163fb4e5efc5b6f39c3af7"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/ci-cd/production-greenfield.json",
+      "bytes": 1067,
+      "sha256": "6443ab553f05330c33776cdf0cfeaaf9d3e0a8c63696edea7f2c865fd6561592"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/ci-cd/regulated-high-assurance.json",
+      "bytes": 1106,
+      "sha256": "2de101e94b0ca82712a0426aa5051664b8f1525a8dc1558c48f552767f063e9d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/ci-cd/small-greenfield.json",
+      "bytes": 1087,
+      "sha256": "d351af35b27ed1373bc2d5ce72d74d800b250438b0ee8dfe70b030ac2a00b24c"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/containers/constrained-offline.json",
+      "bytes": 1074,
+      "sha256": "b96a90140af18c32a7e7c7ed192a06eb4be2410e339077e84405d29fccfa75a6"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/containers/mature-legacy-migration.json",
+      "bytes": 1077,
+      "sha256": "38407a818dde8d67a0e14529b252ec32fe5666deeab0055f88c124c4c829b137"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/containers/monorepo-polyglot.json",
+      "bytes": 1090,
+      "sha256": "26193f35527e9d39eb99f6ce87aec3b33d9d95f11471c9325b601bb5bb732fe9"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/containers/production-greenfield.json",
+      "bytes": 1097,
+      "sha256": "d381804de65b86a1134b8e2874ece096114dd8876459135f4f9b687cb4f9dcf3"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/containers/regulated-high-assurance.json",
+      "bytes": 1296,
+      "sha256": "1564aa77d8e8348333779a510f95e6e9ffb97b131af5d619e0cc6fbfc82b07a8"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/containers/small-greenfield.json",
+      "bytes": 1038,
+      "sha256": "2fce9609098de2449b0eb2a0e797c1a2180298033ee19b381c1761c950e97f3b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/infrastructure-as-code/constrained-offline.json",
+      "bytes": 1095,
+      "sha256": "c357682621fa603653381915659be3056b9ac4031044efdfb9e9557a121add49"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/infrastructure-as-code/mature-legacy-migration.json",
+      "bytes": 1114,
+      "sha256": "11e054b8b805408a5cbdc15d352448ebbe18ba682b2734cce1a2ead8a4d8dc94"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/infrastructure-as-code/monorepo-polyglot.json",
+      "bytes": 1093,
+      "sha256": "6631902d4f74d65889f6cf72d9bb00c017d0283cb1b5d5790b93333f4d7915ea"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/infrastructure-as-code/production-greenfield.json",
+      "bytes": 1107,
+      "sha256": "2cd1177977e48955ed21c77599773696948be8a80566fcf197842670a1316053"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/infrastructure-as-code/regulated-high-assurance.json",
+      "bytes": 1093,
+      "sha256": "4dda662f2c6cee571d0770d520340d1dc1794d92372a13f4de7bb80343054251"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/infrastructure-as-code/small-greenfield.json",
+      "bytes": 1095,
+      "sha256": "aca8eea5dbd3a8c83f99c87f32f350b3175bca6c08ba277f5b0ad1b33b2565ab"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/observability-sre/constrained-offline.json",
+      "bytes": 1099,
+      "sha256": "bd817090d9982205c6a16390100e622858ba7141697e87d0c3ca9b7b0781a0ca"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/observability-sre/mature-legacy-migration.json",
+      "bytes": 1171,
+      "sha256": "a5d3711711b0ea647712ff1e52ace9a2523ce172061cdb72fad5166f0c079b01"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/observability-sre/monorepo-polyglot.json",
+      "bytes": 1138,
+      "sha256": "835d04400ac89dabfdce97b59f9658f7217c23c0cbec9a8bc30a06ead9377615"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/observability-sre/production-greenfield.json",
+      "bytes": 1128,
+      "sha256": "27e4fc211628ccf0dc6d5702cdc04d7f4fa7c93f8e8b9011f6c21f1a8a45dc88"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/observability-sre/regulated-high-assurance.json",
+      "bytes": 1329,
+      "sha256": "b264b775f425efa288ccdc580202809ae6a6cd069eff73bba1bc93c9cd1f4bd0"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/observability-sre/small-greenfield.json",
+      "bytes": 1127,
+      "sha256": "b65754f47f906abb9180238478f8d63737d7730d0c937593ef8a3824311584d1"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/release-rollback/constrained-offline.json",
+      "bytes": 1255,
+      "sha256": "44380c20ddf2cb916440a1ce9a928736d22475f91260af790296b407da0ae42d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/release-rollback/mature-legacy-migration.json",
+      "bytes": 1270,
+      "sha256": "f49cac3f05d90c8295f735dbb8be6b1e0641ad244916023d880b1633ba0a2a61"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/release-rollback/monorepo-polyglot.json",
+      "bytes": 1270,
+      "sha256": "64fdce3de8e1dcc6bd8a4f11ee14bdc03834ccbbf03d3583462f61517ef45ea1"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/release-rollback/production-greenfield.json",
+      "bytes": 1167,
+      "sha256": "7a5cce165259069f03ceecd57b4a08a89865e5da242988f97385d248be33ac3d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/release-rollback/regulated-high-assurance.json",
+      "bytes": 1228,
+      "sha256": "8a91b215651cb340f14050f0d0f9e10025782dff9dcfb6586b8f49e56316bd76"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/deployment-devops/release-rollback/small-greenfield.json",
+      "bytes": 1248,
+      "sha256": "e9d684391fdc4bc6a4f49fe3bca05e05b1e18b14fdcdac799ae204d7bede8421"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/cloud-container.constrained-offline.json",
+      "bytes": 1263,
+      "sha256": "86e0f8f7c434e3d170e7aea133a6e3e403c8c13da3b2dbfbd491b0fa77db3b0c"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/cloud-container.mature-legacy-migration.json",
+      "bytes": 907,
+      "sha256": "68ce3b4bb52f83140cd7bf7b9dea689632d2bcd236022451f2364e761382485b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/cloud-container.monorepo-polyglot.json",
+      "bytes": 903,
+      "sha256": "8084aaa5914569ea1c832836debcb4145d5a21246ce79ef22a5f1691ae9b9044"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/cloud-container.production-greenfield.json",
+      "bytes": 1345,
+      "sha256": "f1685ea46a344b8e316df0799445941a63a34681e79725317cfdc92ba3125d62"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/cloud-container.regulated-high-assurance.json",
+      "bytes": 1527,
+      "sha256": "1371a4464b24f5e695e15a1b6ab6cf390515dcc4fdd72e448ba71c2a885144fb"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/cloud-container.small-greenfield.json",
+      "bytes": 903,
+      "sha256": "a866aa01db557e17fc53eb6211705c0ff79e19e898f81b64bb3b8f8517e6bd1e"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/code-dependency-review.constrained-offline.json",
+      "bytes": 1011,
+      "sha256": "e47d262746563f51394b7f1a419a11435b9f7d88cf6557e8413c76245d1ae0f3"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/code-dependency-review.mature-legacy-migration.json",
+      "bytes": 1269,
+      "sha256": "e2372b00ce9eda8968ac3bb20a3a6cad0b6aae058db7881222ab38ed7b12341a"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/code-dependency-review.monorepo-polyglot.json",
+      "bytes": 938,
+      "sha256": "9f962c3e72cbc67825c5d515cbf68ec603be660f2bf5c01b4f93855d2b0bc38c"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/code-dependency-review.production-greenfield.json",
+      "bytes": 1438,
+      "sha256": "d14d4b03415919bb5edc2af5329d7602d53179347d426fc103fbcb2acbda03b8"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/code-dependency-review.regulated-high-assurance.json",
+      "bytes": 1459,
+      "sha256": "bc4b820a916cc5fe37cee7d9f745b02da1f37b4a3f9e1f1f0b31b901c36c2d5f"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/code-dependency-review.small-greenfield.json",
+      "bytes": 1261,
+      "sha256": "2d927ecb1e45dfaa22d68ef1cc6458364b0d06599dbd608b1dff7335d27962d1"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/incident-hardening.constrained-offline.json",
+      "bytes": 946,
+      "sha256": "fe3116fed255d9f6fc77893d89ad79892e7ccba33e84c3fb76094986be017d1e"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/incident-hardening.mature-legacy-migration.json",
+      "bytes": 1055,
+      "sha256": "b4af5414cf72ca0484b1db1b2b9bddeea9fa07084fceb1f785f8108d472cba86"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/incident-hardening.monorepo-polyglot.json",
+      "bytes": 1386,
+      "sha256": "b625f0e43c3fba3065509d1a6db691583b50dd0b9518292139d6fec0f8747417"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/incident-hardening.production-greenfield.json",
+      "bytes": 1331,
+      "sha256": "7b9128f92f3fe81925793760e094d8c47102f1e034e729892a95891ed214ba77"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/incident-hardening.regulated-high-assurance.json",
+      "bytes": 1548,
+      "sha256": "90c9563baaf7abe336565d31d4c8fcbf7936819a9acb47cf88467b022eb7cad0"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/incident-hardening.small-greenfield.json",
+      "bytes": 1279,
+      "sha256": "e701892e9bac0bfca894dee329c391301aba070671189b44713cf5e15b9fce43"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/secrets-auth.constrained-offline.json",
+      "bytes": 1299,
+      "sha256": "3b6c14e03231d81a6b361c53dfbd25eef0c8088782ea093afea071c1febe9406"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/secrets-auth.mature-legacy-migration.json",
+      "bytes": 981,
+      "sha256": "59cc5b97b46a4ec0424b5ca261f9510958c364ef4fdb1c01f499590862a78d2e"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/secrets-auth.monorepo-polyglot.json",
+      "bytes": 979,
+      "sha256": "9cf874d58cd58f41504517c311a1b80659b0fe21b44cc16db3e6471be6eaac2b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/secrets-auth.production-greenfield.json",
+      "bytes": 1393,
+      "sha256": "9600da9f6a758f6e7968257d2b11c9013ac21245eaff10774d46c89fff1a92f3"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/secrets-auth.regulated-high-assurance.json",
+      "bytes": 1506,
+      "sha256": "9de4517f44dcbfe6c256362500ad201b2d5866afa937142a761e4b699e4553db"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/secrets-auth.small-greenfield.json",
+      "bytes": 1066,
+      "sha256": "de8c0aedd5537c5166c6cc153f639861d9ab323316d4ac48d967a173a2c8d6a2"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/threat-modeling.constrained-offline.json",
+      "bytes": 1462,
+      "sha256": "1732c79cb66f40bc04d1da78b730d327a73becbc7f9294e7c594c849053850b0"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/threat-modeling.mature-legacy-migration.json",
+      "bytes": 1103,
+      "sha256": "bb7b8feed4d6b8c5d14ee5131b0ca341c3c1b23b5f37a7902b513a2fad52760c"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/threat-modeling.monorepo-polyglot.json",
+      "bytes": 1101,
+      "sha256": "dd9a032ff6286f41e8a4fc6aebf3d24e573423a176a67a1f999f52a309aeb5af"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/threat-modeling.production-greenfield.json",
+      "bytes": 1102,
+      "sha256": "d72bcabb051f4d8847e4f3998f17bdf727d882a026a722580ed34dcf6d142709"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/threat-modeling.regulated-high-assurance.json",
+      "bytes": 1223,
+      "sha256": "57109b4010236bcec8b384a7fdcbbcc308c97e01fb0be11f4f1db5d0aff2fcd8"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/security-review-hardening/threat-modeling.small-greenfield.json",
+      "bytes": 1459,
+      "sha256": "e6e01767d0c2775c7bfc1e37058b64aa2816769ab1f0044a37854bbb04191821"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/accessibility-quality.constrained-offline.json",
+      "bytes": 960,
+      "sha256": "446d7f2c37ceeed04752a14b6472b00b86dceba68c647d18bbe759d75fefe69d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/accessibility-quality.mature-legacy-migration.json",
+      "bytes": 1101,
+      "sha256": "fa8fa433a09803f14835743defa857412f7371f3dc4b6512e93e7f4701eea4ef"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/accessibility-quality.monorepo-polyglot.json",
+      "bytes": 1103,
+      "sha256": "e262eb5ac0697ab7d47a6aec94d9d1cef1a8749bb411bd2674264d5008c0f8f3"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/accessibility-quality.production-greenfield.json",
+      "bytes": 1042,
+      "sha256": "b7ac611bbb2daf4bcc01e83b9b50faea0748998859ba66f8a2dd9278448d5cea"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/accessibility-quality.regulated-high-assurance.json",
+      "bytes": 1101,
+      "sha256": "21deec1da1c365aeec77084ead09c3df4ccbc4adfc5c77ea92c8cc1a1d02821b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/accessibility-quality.small-greenfield.json",
+      "bytes": 958,
+      "sha256": "55c86c6712536e31fc40051b424f5eb01f6eabd6d1c5829d92de41c4eccabfc2"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/end-to-end-browser.constrained-offline.json",
+      "bytes": 956,
+      "sha256": "7af8d103238378ee3571df37fa93ac8806f1ae77a7681e5bb6994b3cc5187dfd"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/end-to-end-browser.mature-legacy-migration.json",
+      "bytes": 1466,
+      "sha256": "ee329e18d74d38dcc97b60cfe0fe153676b4636f1d9becbce3d56046367ad831"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/end-to-end-browser.monorepo-polyglot.json",
+      "bytes": 1028,
+      "sha256": "116cc883308a5ce551eadb8c9488d2d80237ea947ac546334b9c30c834321f1b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/end-to-end-browser.production-greenfield.json",
+      "bytes": 969,
+      "sha256": "de8d227e8b968ac3f2538c2d0019a190dbaf526a1ce5897bc08cda44662c5260"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/end-to-end-browser.regulated-high-assurance.json",
+      "bytes": 1030,
+      "sha256": "0dfd8cf7571076228b3a4db44495284e26ac713e59309946f7b1006efa986b92"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/end-to-end-browser.small-greenfield.json",
+      "bytes": 1226,
+      "sha256": "9c967048b5b3f1cabcd6d78e160386876994a8027c06b92a521a0b0032502921"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/integration-contract.constrained-offline.json",
+      "bytes": 1103,
+      "sha256": "f3c791e9f926e1cd3fde672f32421625e6dab442ed41a4c9d694b91e18bdfa68"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/integration-contract.mature-legacy-migration.json",
+      "bytes": 1450,
+      "sha256": "0dbf85fe36292497b97625933a008c210fd07e22d11b7d58d40680edbec836e8"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/integration-contract.monorepo-polyglot.json",
+      "bytes": 1076,
+      "sha256": "778cd29b8034ea8c5783a291ee9820de8e4c6381d0829cd663d3fa54652f0800"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/integration-contract.production-greenfield.json",
+      "bytes": 1531,
+      "sha256": "47d8edb00172f5dc23b958e1a2da96b0ee4f7601143655a722cc597a74f65269"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/integration-contract.regulated-high-assurance.json",
+      "bytes": 1084,
+      "sha256": "6745ab381ec36dac6f85b96b3170557ece0377f9d0606546a2fb6798225cf3ac"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/integration-contract.small-greenfield.json",
+      "bytes": 1100,
+      "sha256": "426fe2b4935a71182b455ff0b758ea34f105e5bda774d2fdcb1f334df1fb66e6"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/load-performance.constrained-offline.json",
+      "bytes": 866,
+      "sha256": "5ea283b57af80b6c2e5428bfa61a2199a5d39e762f314afb3702540210b90df6"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/load-performance.mature-legacy-migration.json",
+      "bytes": 1008,
+      "sha256": "d3cc999820850643a93240bd69f7f367a69ebf2253fe36326694a5658f1c0675"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/load-performance.monorepo-polyglot.json",
+      "bytes": 1022,
+      "sha256": "d29a20d390c304fbe0e499365fc59a273c5acb86c60c90241428f771f103b789"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/load-performance.production-greenfield.json",
+      "bytes": 1006,
+      "sha256": "b4240c67aa6b21d1ea843f14600a57075328b8d5f83270af0464650a3b72a56b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/load-performance.regulated-high-assurance.json",
+      "bytes": 1074,
+      "sha256": "46e9c3d4404d8ab7d2010a4676cd0da6e061c5e090d737e3bd8df34027b97ecb"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/load-performance.small-greenfield.json",
+      "bytes": 862,
+      "sha256": "ddb62bbc31ba49abcdf1ca8be41af483ae7da04c90d61ece7eaec3d0eec9cc52"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/unit-component.constrained-offline.json",
+      "bytes": 934,
+      "sha256": "e19217ea011b2fa0f3e60e90f96353dad453225f01d83e0c30a54cb73764a490"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/unit-component.mature-legacy-migration.json",
+      "bytes": 958,
+      "sha256": "b28a23f64e79551dcb1b1e52b13862106684a5825e96814bb0fd151700af174e"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/unit-component.monorepo-polyglot.json",
+      "bytes": 1462,
+      "sha256": "387d84c9020195b6cf3d4a2592f5fd915c92ed0e9ea658e96f70f117c8c7c21d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/unit-component.production-greenfield.json",
+      "bytes": 921,
+      "sha256": "b4c0a6afabf0d9b03d613b82972e1e917cb69bcaf3902ac6998116525d46a3ca"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/unit-component.regulated-high-assurance.json",
+      "bytes": 926,
+      "sha256": "a43591b32511f5115a944109e7dbe16c46ed5f4aac15a64752ecf0f7f1d12e83"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/test-qa-automation/unit-component.small-greenfield.json",
+      "bytes": 1241,
+      "sha256": "36768af0d04e0906a108195006ed50d24cee8af89f329f0c1ffe6915b993ee79"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/application-data-auth/constrained-offline.json",
+      "bytes": 1352,
+      "sha256": "6d95c70ce045a03d4279a50ee9e96b95062a0b02beced1d2ae4bbd02740bb12a"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/application-data-auth/mature-legacy-migration.json",
+      "bytes": 1044,
+      "sha256": "2192e64bf0186f09691542ee7e28b3fa96ce96223223ca2ecedc985ff9afc2fb"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/application-data-auth/monorepo-polyglot.json",
+      "bytes": 1127,
+      "sha256": "5c07fcdc97cbfa3d1dfde135c9e3b02e8a08a657df98ab6c6ab7e12e6a3eed2d"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/application-data-auth/production-greenfield.json",
+      "bytes": 999,
+      "sha256": "251571b8a967648b1ec11a549f53070cdcbdf7ba990a7eba2a5c27f113d7adec"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/application-data-auth/regulated-high-assurance.json",
+      "bytes": 1120,
+      "sha256": "5a9826370db35e3abf345832a3170ca8300100a27c57a6c56c0478345675ce48"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/application-data-auth/small-greenfield.json",
+      "bytes": 968,
+      "sha256": "c47b093faa1c158d21a4328a259ffa0c60da1cd40c3267684cf014b3f980082f"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/frontend-architecture/constrained-offline.json",
+      "bytes": 1270,
+      "sha256": "f5ba6b4e8d6714d93cd0f8d68d22f411bbfcc1a565c95faf8b4b9ebed3b9268b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/frontend-architecture/mature-legacy-migration.json",
+      "bytes": 969,
+      "sha256": "9b65391022ac1d641a094da45e54a203d1315a41bc3b68001370c872a5be2903"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/frontend-architecture/monorepo-polyglot.json",
+      "bytes": 1289,
+      "sha256": "e645d45c609f6ff5e0da418f41c6021aac0743fad247bb860a41590ef546a24a"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/frontend-architecture/production-greenfield.json",
+      "bytes": 1478,
+      "sha256": "179c170da2ea3e2105587ac0ba000b15e7f5ff4ebcea1d364f88e2a6a74307f5"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/frontend-architecture/regulated-high-assurance.json",
+      "bytes": 1106,
+      "sha256": "93b1af8d3855b5efcee55476b41bf5b95db035946645c9d554b2bd908ac84dbc"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/frontend-architecture/small-greenfield.json",
+      "bytes": 1287,
+      "sha256": "91a3dd4ecf8685aa10319225ec7b8a86a65b6b885c9761749b8fdc3cf65a8c38"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/ui-accessibility/constrained-offline.json",
+      "bytes": 1345,
+      "sha256": "bf1b0176274ed6ea266da15b4e0c494b6b05f0b825509cb7290071802abe5b93"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/ui-accessibility/mature-legacy-migration.json",
+      "bytes": 1426,
+      "sha256": "1a1f39344fe7b8b86abc9e6238e17bce6423b24f927f9301bde1fc163b9ec5eb"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/ui-accessibility/monorepo-polyglot.json",
+      "bytes": 1470,
+      "sha256": "39eb532627a65e89106fad25c06933bffd164701681560714fb321bb92e52d48"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/ui-accessibility/production-greenfield.json",
+      "bytes": 1499,
+      "sha256": "6906861a5688bd7febead1d21a819639cc98ef193df3bd4f301210210926c8ed"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/ui-accessibility/regulated-high-assurance.json",
+      "bytes": 1126,
+      "sha256": "197d6433aa0a081b92af857a3117c9a358f88b0406a650904e3f5ba2be3cfb28"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/ui-accessibility/small-greenfield.json",
+      "bytes": 1250,
+      "sha256": "c84c400ddbf402fa1e8a4f3348f6948306c5505ee320fb0dee12d64525ead5e8"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-performance-delivery/constrained-offline.json",
+      "bytes": 1323,
+      "sha256": "4943ea8e5bc31a4ec3b489c024ca4629b4c5981e7fb0d252702aabcd7f809f55"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-performance-delivery/mature-legacy-migration.json",
+      "bytes": 1680,
+      "sha256": "b2e96885cd7f047aef27f7adc487288858d04fdaa06f2456e928a7c2db7aa67b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-performance-delivery/monorepo-polyglot.json",
+      "bytes": 1484,
+      "sha256": "3292bf6058fdabcac9eb4d537bbd377872ddae2daf3bba73e04cfabf7fe84112"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-performance-delivery/production-greenfield.json",
+      "bytes": 1502,
+      "sha256": "e9f4c115d830a2701e3b48e08a668704c9623bb9662190acda9c65ca3d129c6b"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-performance-delivery/regulated-high-assurance.json",
+      "bytes": 1342,
+      "sha256": "8ff551a42da7367bd96a9e9f59ddc9df441b9653a6f606f12cd234938a1d13e9"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-performance-delivery/small-greenfield.json",
+      "bytes": 1329,
+      "sha256": "4afc5f4054e3dee9e394b76456d6fb6ffd1d94d2811e3d9a9df1224ba24e0b09"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-testing-quality/constrained-offline.json",
+      "bytes": 1273,
+      "sha256": "f92e0f8d260231537488d893cccd86fcf19305c1efa9d9bf3923848756e72180"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-testing-quality/mature-legacy-migration.json",
+      "bytes": 1098,
+      "sha256": "0e29746c94d18eed912706a74162348eb246c9265480d9e985d7e0682181cbb4"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-testing-quality/monorepo-polyglot.json",
+      "bytes": 1575,
+      "sha256": "6de9a861c3ec0d313a315bacf0bd418f2e74eb69a5bac739865bc8d5c8fa0838"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-testing-quality/production-greenfield.json",
+      "bytes": 1423,
+      "sha256": "060309f38608830d7fe4533ded15c5ddddbc1940fb6f60fee6c648bd94f309ec"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-testing-quality/regulated-high-assurance.json",
+      "bytes": 1067,
+      "sha256": "c116f59bf0fce9e5a4e79fcb065681b27d8bab2dde3c79d38b261f959c57aa03"
+    },
+    {
+      "path": "baseline/v1/benchmark/gold/held-out/web-application-delivery/web-testing-quality/small-greenfield.json",
+      "bytes": 1398,
+      "sha256": "f7b7729f1ca02f13a08f294aa4f5507c47384bb84e2aaec65f430ea681b49ab9"
+    },
+    {
+      "path": "baseline/v1/benchmark/held-out-index.json",
+      "bytes": 111844,
+      "sha256": "f1b07e09ec27a57c2ae903ae867a190b9a12b38af1d1a0aaf60f96218134b333"
+    },
+    {
+      "path": "baseline/v1/benchmark/manifest.json",
+      "bytes": 1075,
+      "sha256": "a36b8cde366bb89f72a0b802ae38aad4175107ab91f4847e3ae924edbd1d2fa5"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/agent-architecture.repository-maintenance-agent.json",
+      "bytes": 1231,
+      "sha256": "ec1b3593ec738281a9173918d56ce4182afbb2430da4c78867a9a4865a36c9ff"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/agent-architecture.support-triage-agents.json",
+      "bytes": 1162,
+      "sha256": "4ad0cf2a48e267ea28e098368f38b22d6cfdb97553fdc8041b44d70e2c070164"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/evaluation-testing.code-review-agent-eval.json",
+      "bytes": 1147,
+      "sha256": "aa87b20cff2823e4b7c4c448c07f9225c56d9994c666fd3ed9a95d1ab0af95d6"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/evaluation-testing.tool-routing-regression.json",
+      "bytes": 1162,
+      "sha256": "0e2e36281db90574b7700779fd7a3e8771ea0e4b153cd7e7af876dd61584ee6a"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/mcp-tooling.build-metadata-mcp.json",
+      "bytes": 1187,
+      "sha256": "136a0260efc849a32a9c0ceb2dab269777c3b3023e94074652e39fa332984fbc"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/mcp-tooling.local-catalog-mcp.json",
+      "bytes": 1114,
+      "sha256": "35c40626937f8f434f292082479d08059a2c57c89b2b30f8215d7115736d202a"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/memory-context-retrieval.project-knowledge-memory.json",
+      "bytes": 1227,
+      "sha256": "bd3f53b56471df04d6ef1706281d8b42f1742c05fbeee9a4346d42cd67bcd994"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/memory-context-retrieval.support-case-memory.json",
+      "bytes": 1145,
+      "sha256": "62d5e0d49ffe57c6fa555492ebd279d6c557cf4a495772bda9fde118c25ae7b4"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/security-operations.ci-agent-security.json",
+      "bytes": 1197,
+      "sha256": "42827ad9462441bc2763607370e183ef6e8de05935ca98076480835ef934e31e"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/agent-mcp-development/security-operations.local-mcp-security.json",
+      "bytes": 1229,
+      "sha256": "6eb6c6610a41d0e8720fa8971cdb0f45f08e94956b296cffa39a67f5990a0010"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/api-design-contracts.partner-orders-api.json",
+      "bytes": 1155,
+      "sha256": "517f3bbbb3952653037980d6cc8f53443c1bc84d73487ce8e86bbc0f48f48105"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/api-design-contracts.research-catalog-api.json",
+      "bytes": 1225,
+      "sha256": "a7c057401465d2b3227bc91098e6f5df9ed5fa0fc9f2d2e6cc0c3fc7edba0e57"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/async-integrations.document-jobs.json",
+      "bytes": 1201,
+      "sha256": "2f33ab5ff39eb5852be190b9814a83352abf17789173dcdf1f723e20064cd03d"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/async-integrations.fulfilment-events.json",
+      "bytes": 1150,
+      "sha256": "003164187f9acda9e27b1fd61ab6f22bcdd5d761061bc4fa9b3e7b95f51a8e40"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/auth-authorization.clinical-records-api.json",
+      "bytes": 1148,
+      "sha256": "44173e6c1f8690a86d5467575484874a93113a2fce687869f04ef4c7cb41606c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/auth-authorization.vendor-access-api.json",
+      "bytes": 1198,
+      "sha256": "640533a4f5c1a450b832ef983b8089bf42130f54d1f11c95f442ea1ea2204ec2"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/observability-performance.search-api.json",
+      "bytes": 1116,
+      "sha256": "115041b1edc83d0e57dedc45cca5dae876ecef9eee64a10d3c61a6735f1572ab"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/observability-performance.shipment-api.json",
+      "bytes": 1122,
+      "sha256": "71275d2121acd8e62c07f835594ccb30a841214af2bce90692a52a01362137aa"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/persistence-data.inventory-modernization.json",
+      "bytes": 1150,
+      "sha256": "2563644b70bd65525237be7a08fb99c27c90dbd3935dc5f47d632b6979c89b7f"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/api-backend-delivery/persistence-data.tenant-ledger.json",
+      "bytes": 1151,
+      "sha256": "bab61146e83566502f307ce2c20d15bcafec8dc8ab3ccf97d7193fe7adccf047"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/ci-cd.library-release-ci.json",
+      "bytes": 1090,
+      "sha256": "daae7570eafd3ef394114a94cb1fa35e46e8c90ce2a23871805afdfbda9be76c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/ci-cd.polyglot-service-ci.json",
+      "bytes": 1165,
+      "sha256": "42265c7242eca97e700857d7c80320f95d0397d6b0c709990e72439accc9339c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/containers.service-orchestration.json",
+      "bytes": 1124,
+      "sha256": "365def421e3dfd71b330d2b1d51b11bf0306837092b16605a742979c4c77ff4d"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/containers.worker-container.json",
+      "bytes": 1080,
+      "sha256": "983f4bb306f1b48da36d3fa81e8a097e0b204a3efb3aedf7c67f0f401ac24122"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/infrastructure-as-code.cloud-environment-modules.json",
+      "bytes": 1196,
+      "sha256": "d824f3b90442b968d450a89e46b48c1d10aec7825408b65bc8c33679f0f107a1"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/infrastructure-as-code.platform-state-migration.json",
+      "bytes": 1139,
+      "sha256": "1d7347dc950ee2a541dc3ed8df30fb89ae8ac7420d03224f5d4fe0fb419f334a"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/observability-sre.data-pipeline-operations.json",
+      "bytes": 1217,
+      "sha256": "23ff94fa7384dc5d2eead2653193655a217e580eb2df8c7ac989d07e12c1303c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/observability-sre.payments-slo.json",
+      "bytes": 1129,
+      "sha256": "1f2f6a780946595c3058f3c3cde475e1cf8155f30b8950bab5ef2ecb251c04b0"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/release-rollback.canary-api-release.json",
+      "bytes": 1124,
+      "sha256": "2a6a8979e792fe491ebca19f1593f6d1bcb40baa6c5f1cbdd39222fc6e7a7d88"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/deployment-devops/release-rollback.schema-compatible-release.json",
+      "bytes": 1175,
+      "sha256": "3d1500ee793c02a9ee3e86ec4df74aa01e2b6c49c49efeb7d77aa329a8d36150"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/cloud-container.batch-platform-hardening.json",
+      "bytes": 1198,
+      "sha256": "5b759509c0da88b1095a29f7b6d15447adbb7c880e41ac3247834f5462ba3395"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/cloud-container.kubernetes-workload-hardening.json",
+      "bytes": 1181,
+      "sha256": "3bb1473d57b2aa432ffdee1124a4503e0dbdc773efdb00ce780ad6dad4bbea87"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/code-dependency-review.node-service-dependencies.json",
+      "bytes": 1232,
+      "sha256": "c6f436633145cf7bcbf1dc03e6b28442dd336db450c304166fef25fb1a0c4539"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/code-dependency-review.python-analytics-dependencies.json",
+      "bytes": 1192,
+      "sha256": "c2ccc43cecbb311311720c1b54ec6ccaf1bed1929d72e24c40dcf4fc8901f9c7"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/incident-hardening.ci-token-exposure.json",
+      "bytes": 1247,
+      "sha256": "887c0c13e7ba9063a2af994e3172051700df1dbf6682494d130564cab9adda6a"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/incident-hardening.session-anomaly.json",
+      "bytes": 1133,
+      "sha256": "878d56812e08855274bf4e83d4c893b234a51e56f96179948499f9067f2cd1af"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/secrets-auth.internal-auth-hardening.json",
+      "bytes": 1220,
+      "sha256": "1b009c9573e108dd42228e85d2989a8d5c3d14b2a7bb25f6e978190856e51fca"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/secrets-auth.service-credential-boundaries.json",
+      "bytes": 1184,
+      "sha256": "2573eda6a02198ff2a71e63fcd3702ff7084f843c2c7ebf9700fca8389cc2f30"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/threat-modeling.sync-client-threats.json",
+      "bytes": 1181,
+      "sha256": "65deea364cac5de5186bdd18ba55e08d1cab1d71f9d2baa831c6db116458c6a8"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/security-review-hardening/threat-modeling.wallet-service-threats.json",
+      "bytes": 1177,
+      "sha256": "c4e0cdb2d055525b927f2fff7e76bce93dfcdc75bc964bea7e32536304318338"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/accessibility-quality.documentation-a11y.json",
+      "bytes": 1196,
+      "sha256": "8805541e507e061324352087899e34ef0b2696b5087a361217de409ca518aa12"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/accessibility-quality.learning-portal-a11y.json",
+      "bytes": 1152,
+      "sha256": "db3e9aec49189cb57111ed4681196ba18e1b3a5e109156d88731c71fa5ade42f"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/end-to-end-browser.rental-checkout.json",
+      "bytes": 1120,
+      "sha256": "836c18b35ce6d45338cd7cfcd82bbbb9656db57f82d4f8832c41d1bd7a2996d1"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/end-to-end-browser.support-console.json",
+      "bytes": 1142,
+      "sha256": "52fe96ac6385a52df0e003f16f29dd2478fbe83608b5c45a673c60499831ad69"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/integration-contract.gateway-contract-tests.json",
+      "bytes": 1199,
+      "sha256": "e28b4eeda2e6a346a82ca0edb3da5509639c12e84ed92f053e6ae929d47f0853"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/integration-contract.partner-contract-tests.json",
+      "bytes": 1143,
+      "sha256": "0be5ee916c6481bd8a3594e0d80dd3b85eaa3633ef8180cce7728e00918b1575"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/load-performance.reporting-api-load.json",
+      "bytes": 1111,
+      "sha256": "e3f8904d752c8094cf3f8f770816fe66340a419a7f9f999c958a6b2e693a71c5"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/load-performance.ticket-release-load.json",
+      "bytes": 1167,
+      "sha256": "7765596bbd5156600815058621f4206706edbf468af448254ec3ffc31ab9215c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/unit-component.admin-ui-tests.json",
+      "bytes": 1138,
+      "sha256": "160d5d840ba3274161400e013acd6451fc746c6017234519043f1ed0932e7081"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/test-qa-automation/unit-component.design-system-tests.json",
+      "bytes": 1183,
+      "sha256": "edebdc20334193aee2498859f114aae1daedb27ca09828441e07c80e1f19a79e"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/application-data-auth.operations-portal.json",
+      "bytes": 1242,
+      "sha256": "4f8c80cb3ba18f9b40369c71ffc26ccb68c088808041398effe8f8f3c3317d84"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/application-data-auth.team-saas-console.json",
+      "bytes": 1194,
+      "sha256": "c96f2947457cec4654d76ba7ff5804c0129b244d89405957a20bb92a53a03637"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/frontend-architecture.analytics-dashboard.json",
+      "bytes": 1232,
+      "sha256": "c3c2ae696360bb8995373a00b8813f7004ac40f426081d2cb57ec430302ad108"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/frontend-architecture.content-workspace.json",
+      "bytes": 1212,
+      "sha256": "738be90d10b0ef25ad6db288f0055427711db0396ec36526f699538f57f03090"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/ui-accessibility.civic-service-forms.json",
+      "bytes": 1232,
+      "sha256": "e13bd321249c14d0c54e1efab7392042a5cd6407bfdfc67eeed71facf87d5960"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/ui-accessibility.commerce-checkout.json",
+      "bytes": 1178,
+      "sha256": "c51083fd7cd1db0d8a49c17e5cf95f97a02e7caabe515db7ef514a2f2c1f293e"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/web-performance-delivery.field-dashboard.json",
+      "bytes": 1186,
+      "sha256": "b2a89b5baa811272458fd50d8d7a04471c783cbbb274060d851e6eb1217ef42b"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/web-performance-delivery.media-storefront.json",
+      "bytes": 1257,
+      "sha256": "2a4b1f3fe7864168df1b34469cbd1c96f22a1cb86ab15b2ef9530975b53a7bcb"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/web-testing-quality.booking-journeys.json",
+      "bytes": 1187,
+      "sha256": "8227b7f05ff71b8172abdc0aeaa04f67997c60b9d386dec73052be6fe88d4ad6"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/cases/web-application-delivery/web-testing-quality.subscription-journeys.json",
+      "bytes": 1202,
+      "sha256": "4e7501d0a3ae3bd87a17b1b3e517b648682dfcca08ef1405108a2579bb4aede1"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/agent-architecture.repository-maintenance-agent.json",
+      "bytes": 1288,
+      "sha256": "92480238a88f7d85253464daec959aa49ee044b74354714654bf745db3e9aa07"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/agent-architecture.support-triage-agents.json",
+      "bytes": 1281,
+      "sha256": "d678b91300a024eccc8432c016ccec6fb44014de080dceea486c5c46839e5538"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/evaluation-testing.code-review-agent-eval.json",
+      "bytes": 1149,
+      "sha256": "ed683d2c338f639874f565de2fc6eb347f417c1cb9364f6df9c1ccbf905d02ff"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/evaluation-testing.tool-routing-regression.json",
+      "bytes": 1150,
+      "sha256": "60142b1ed4f15afd1fb364fcbc0a232a3f99291562d3d3ae6000f8883d09daee"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/mcp-tooling.build-metadata-mcp.json",
+      "bytes": 1078,
+      "sha256": "1737166c6521622cedfb62951f2c8ce3cda979a1278912729fc1fa8650aaae42"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/mcp-tooling.local-catalog-mcp.json",
+      "bytes": 1077,
+      "sha256": "7fda847f5522c9c28ba9fb01460f0b565c651a749e2b991a86bcc3bcc4b19438"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/memory-context-retrieval.project-knowledge-memory.json",
+      "bytes": 1270,
+      "sha256": "d284bb48e65d13009d60dd8b2e5fc977630d95fe51afadfe5ce0792c40b2034e"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/memory-context-retrieval.support-case-memory.json",
+      "bytes": 1265,
+      "sha256": "f2b2c9cce6d8952a6547eb9209a57ba87fc44850e7c8edd5a28e9966f4f415f6"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/security-operations.ci-agent-security.json",
+      "bytes": 1292,
+      "sha256": "85e9b166ac58f932c71ef1349b5cff9c6a62a663b7932ade6426eaa252fcfce0"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/agent-mcp-development/security-operations.local-mcp-security.json",
+      "bytes": 1293,
+      "sha256": "bc2b32197fa7dca358b36c7a99a3d9b707fc64f702e55eadd20c6a80cfca56af"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/api-design-contracts.partner-orders-api.json",
+      "bytes": 1310,
+      "sha256": "42bd40a7efac4f057a466baef840aedaedd6e66f2c8aa65e95420d7620c5ce99"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/api-design-contracts.research-catalog-api.json",
+      "bytes": 1312,
+      "sha256": "527088cee8cb6e33d35d3c0f1e00dd5a276984114b27a085fc3eed1bdeaf9ec6"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/async-integrations.document-jobs.json",
+      "bytes": 1272,
+      "sha256": "c9b9771eb0ed5d9de2c38094e1407581210c0166c2535e8732224237d443035a"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/async-integrations.fulfilment-events.json",
+      "bytes": 1254,
+      "sha256": "5679d000d7c00b4580d26eb0edca9a6715bbbbd8f58202491cee234a95642aa4"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/auth-authorization.clinical-records-api.json",
+      "bytes": 1339,
+      "sha256": "64f96e127855bd2726423f489f71ec84542beb0c1769b5f3f1eb8e8b2a73422c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/auth-authorization.vendor-access-api.json",
+      "bytes": 1336,
+      "sha256": "9e1664aee7c9d8620d02a1147ec437d26f406433192704eca55a8622b07a5cb2"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/observability-performance.search-api.json",
+      "bytes": 1364,
+      "sha256": "b93b2c714d626787c38acfa41263acf1df5987055e0022ecf8aa74100a5972e3"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/observability-performance.shipment-api.json",
+      "bytes": 1366,
+      "sha256": "845934d24f4ad48ad4af890d1073f05b9a005fd3dd78088803e3bf1aeaa60257"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/persistence-data.inventory-modernization.json",
+      "bytes": 1321,
+      "sha256": "551134ce466c0b7006ffaf830cc46d260fcdcba9b1d6c35962110211f265555c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/api-backend-delivery/persistence-data.tenant-ledger.json",
+      "bytes": 1311,
+      "sha256": "f5e25469a3114d4819cb62a6bd0ba8fb78157e2fe5a19d667aa96055a93ee30b"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/ci-cd.library-release-ci.json",
+      "bytes": 1102,
+      "sha256": "7e45eff2fbfe3c58c886259a2b37bc33da5519087b34a1f932b60e8f3da9548c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/ci-cd.polyglot-service-ci.json",
+      "bytes": 1103,
+      "sha256": "b50cdd2343a07433b78063431a2d674e7df45277512081b4993fe54c1675c969"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/containers.service-orchestration.json",
+      "bytes": 1106,
+      "sha256": "37d37ccfb87222ed9386f6b44125e1f4b6ff8be05f61e56630d24850f676ba1d"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/containers.worker-container.json",
+      "bytes": 1179,
+      "sha256": "bb51e70632ce17c0614b0d555772dcc0bb131e7982156f60be79090515bbddf5"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/infrastructure-as-code.cloud-environment-modules.json",
+      "bytes": 1105,
+      "sha256": "61cbbabfbf6b022aedb7dc43868c77879a636c8ec31deca95f63385195d4a924"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/infrastructure-as-code.platform-state-migration.json",
+      "bytes": 1104,
+      "sha256": "37ac6ccdd575d63ff2749ab22157a207ad45e21ba90facea16060bac2c69ca44"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/observability-sre.data-pipeline-operations.json",
+      "bytes": 1395,
+      "sha256": "15b728a10544b3dc2fdbf4bcd541517960acfa231ce6fe32496af875ca14f3b6"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/observability-sre.payments-slo.json",
+      "bytes": 1383,
+      "sha256": "e4e1158af75fdd0015d54afb73b354eaff9ab84de60316153bbc2e86a7b6277c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/release-rollback.canary-api-release.json",
+      "bytes": 1284,
+      "sha256": "6cc43bc86a08683de61db6bb3f88d4e6f0d814db5ff40f94b5e54c33321e1f4b"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/deployment-devops/release-rollback.schema-compatible-release.json",
+      "bytes": 1330,
+      "sha256": "05522425f3ed14ba47c54fb5d29d628d2d670f58ddc3e1ce60a6d78af2c06288"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/cloud-container.batch-platform-hardening.json",
+      "bytes": 1326,
+      "sha256": "13cac3885408a1b21015287f9f57b23ed5d3c81fe02c3b991cb843b9bc8e408d"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/cloud-container.kubernetes-workload-hardening.json",
+      "bytes": 1355,
+      "sha256": "46b5706e03fa8931e1627d139791096a46dc35b13832f276b7c52252612daab5"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/code-dependency-review.node-service-dependencies.json",
+      "bytes": 1265,
+      "sha256": "f480e5274a796d799a109ac044a4cda7dd8daa596255bc3e2a34a7ec9fa262e2"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/code-dependency-review.python-analytics-dependencies.json",
+      "bytes": 1269,
+      "sha256": "5d7c98dbce2713711e8f74ab2c6ba56611690ffc9fc58ccfc64c5ca83d57caf7"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/incident-hardening.ci-token-exposure.json",
+      "bytes": 1281,
+      "sha256": "82ea2176bf62ad16d6a4ad20caa39d8fb71974a39116e7d28f41c5fb8d22a4d6"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/incident-hardening.session-anomaly.json",
+      "bytes": 1279,
+      "sha256": "267c387b19ccbf573f425568a053ed9c0cbab2f63fdb90d3d65dcfd05c7664f0"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/secrets-auth.internal-auth-hardening.json",
+      "bytes": 1315,
+      "sha256": "b0c6f15393e91c1dfd0bdd6a4fdd164c934777ed3801574a25c5de3fe079dce9"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/secrets-auth.service-credential-boundaries.json",
+      "bytes": 1321,
+      "sha256": "5d55f4c6de963a6169901d9d547afc17e98cdde6740aab2c317d5383c1b3af8d"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/threat-modeling.sync-client-threats.json",
+      "bytes": 1338,
+      "sha256": "c48ff399a73035b1f5ed59afb13c24b99466ff9b78f41107d7ddc9796b27be9b"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/security-review-hardening/threat-modeling.wallet-service-threats.json",
+      "bytes": 1341,
+      "sha256": "1e4900b8bad3042aa7f68351cf851cd901b6ceef2b4b89e5588457f288b9a990"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/accessibility-quality.documentation-a11y.json",
+      "bytes": 1324,
+      "sha256": "db0788aea949b12bf1b5e61d4b4d6a9f9e30fe42663978ccd6bb0d1cdb48a7e6"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/accessibility-quality.learning-portal-a11y.json",
+      "bytes": 1326,
+      "sha256": "4de0a885a0f168e5e9b779da128accd977d825b65faed644b916a205483ef900"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/end-to-end-browser.rental-checkout.json",
+      "bytes": 1247,
+      "sha256": "5fc5a4b79bd5863772028e9326baf853dbdc870f3a4fc7d45e6cbad726147c32"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/end-to-end-browser.support-console.json",
+      "bytes": 1247,
+      "sha256": "7e7588ea8eb6a1101b012e62413d43ee591366b4f6263a23c008c6340025166b"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/integration-contract.gateway-contract-tests.json",
+      "bytes": 1318,
+      "sha256": "aaf9cd4600d46c55028773f7f83a69bf957a343b7a79f22f8fa39ae05fb4e237"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/integration-contract.partner-contract-tests.json",
+      "bytes": 1318,
+      "sha256": "0789deb0d4fb9652f9ae26826773655f7b97dd122cd0420fc1604abdb8257feb"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/load-performance.reporting-api-load.json",
+      "bytes": 1216,
+      "sha256": "fa9d57b799cdfb12d3c368a7168ceea92613fcbb848721ebda0911cc77de4b41"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/load-performance.ticket-release-load.json",
+      "bytes": 1217,
+      "sha256": "513dde1be42d05fd7fb500542fa0a5e2fe48edeeda0eedec243b3b1bc61dfcfd"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/unit-component.admin-ui-tests.json",
+      "bytes": 1264,
+      "sha256": "af8fc7159129d4127bc3c1981c365016e2fd75750428ca21844760090250a48e"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/test-qa-automation/unit-component.design-system-tests.json",
+      "bytes": 1269,
+      "sha256": "3a799765d8a3db7db193c06388165f2f7b1eb3c19fedf8fc7f31d2ccc6bf6e08"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/application-data-auth.operations-portal.json",
+      "bytes": 1447,
+      "sha256": "898bc0fc954561da3fcdc9808d5748cdb987f47b6a1c729d6f6fe41e836b2448"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/application-data-auth.team-saas-console.json",
+      "bytes": 1447,
+      "sha256": "0d7e3f06a269f794a81af96fbd10f7379c741d62cfc156d89ca186fc8dd54765"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/frontend-architecture.analytics-dashboard.json",
+      "bytes": 1296,
+      "sha256": "7c173cf52a439756a390e6abeaa35de22e3612cf029c8a833a0f38628608c311"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/frontend-architecture.content-workspace.json",
+      "bytes": 1294,
+      "sha256": "333792b26c2c1a9f073127c090d91d61242f04c9082122d941808356a1de4d06"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/ui-accessibility.civic-service-forms.json",
+      "bytes": 1333,
+      "sha256": "55093001bbbf7303ca5ea2ef3f7780c186eb0104429e3a6b545aeeb0b95b7ed5"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/ui-accessibility.commerce-checkout.json",
+      "bytes": 1331,
+      "sha256": "399abd3e3f72e17f98d610f324d6c17a8a4e77c48ae74cc17bb29cd519fae523"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/web-performance-delivery.field-dashboard.json",
+      "bytes": 1314,
+      "sha256": "5123c1e1a8876e8cb25f48561548726bf65c54b69c1db359c9bd978de344669c"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/web-performance-delivery.media-storefront.json",
+      "bytes": 1315,
+      "sha256": "79ebd866726c31d591ffbeb091b57b8d2fbb550ad97022d10e8a6381261cffa0"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/web-testing-quality.booking-journeys.json",
+      "bytes": 1240,
+      "sha256": "eb2a79922ce5ff665b20c321eaec33d28ba3544d1a136a75ab71584d528bcbed"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/gold/web-application-delivery/web-testing-quality.subscription-journeys.json",
+      "bytes": 1245,
+      "sha256": "c45735b0cab06514fcf8aed36ebafa716850cdf6cd7568a1cd21edbb70728e6a"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/index.json",
+      "bytes": 40014,
+      "sha256": "12b509f6bbde70ab3ae1b8eb2830d96c7062340f10fd753792ccc979c3fdb89f"
+    },
+    {
+      "path": "baseline/v1/benchmark/tuning/manifest.json",
+      "bytes": 949,
+      "sha256": "732aa6ab1388a4daeb433fc4e49b81af7d6c186c5cf2a49b60a012b3aed64bb7"
+    },
+    {
+      "path": "baseline/v1/budgets.json",
+      "bytes": 4548,
+      "sha256": "b94d527163b0fb76dd2515782b93b082c15109d1a1a22d04b6e64325814d1673"
+    },
+    {
+      "path": "baseline/v1/hostile/README.md",
+      "bytes": 961,
+      "sha256": "deaabd1feee0b7a7a85385245b52ac50e2bac6e928d7aece7623978c9746236b"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/absolute-posix-path/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "1daaf4a1b0e28db0a57a43935504c4b501edf53cc68b23cc4d6a21e73be79fe2"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/absolute-posix-path/exploit.tar",
+      "bytes": 2048,
+      "sha256": "5b01aedba2815210805ed0d273892206d7c062fbcf233fa265c805f85491c227"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/absolute-unc-path/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "83ddf7de065dfe52e1f8a97b2dc060b5a6843980ef60ac104ce0f794af9c0706"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/absolute-unc-path/exploit.tar",
+      "bytes": 2048,
+      "sha256": "e37c959979ac5f2a13e57e62e6b27cb470fcf39309126117b6a367232d7cebd5"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/absolute-windows-drive-path/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "c403f70ba9b0e6a48695f3f87bfecd5140bdad4c69535f80797ba8a0652e40bb"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/absolute-windows-drive-path/exploit.tar",
+      "bytes": 2048,
+      "sha256": "c869995c2b6a28903810c40c103e93f38c957be4e3b513e966f6365389b0fa64"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/anomalous-permissions/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "efb09985b91100637fe395a1a07526e25345ce2094ac33192f53384a684f5572"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/anomalous-permissions/exploit.tar",
+      "bytes": 2048,
+      "sha256": "c83ac5a544dfd2ecdc126e59daa7e5d4bb472320e2cd5f5cd70a7f9fd7168307"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/case-insensitive-collision/boundary-control.tar",
+      "bytes": 3072,
+      "sha256": "56f760269318f16b02fd2871cae65b8aac5ef61312c67377ca59279677c8dfba"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/case-insensitive-collision/exploit.tar",
+      "bytes": 3072,
+      "sha256": "dd17b96f5283e39299e1c27369be63f47f2a5c2e5071e635e9eb494e7c7c3184"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/decompression-ratio-bomb/boundary-control.tar.gz",
+      "bytes": 4269,
+      "sha256": "41eb1a999cf74250729f06d98dd4aa7109a4a3bd14cbf19b50d5488efe889e20"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/decompression-ratio-bomb/exploit.tar.gz",
+      "bytes": 178,
+      "sha256": "071df83dd09910f4b08571ebf5c46670d4dd65580e82c6d1ebcbd1cba297e3ce"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/device-entry/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "cb4b2242220c8552329e5af6f1bf72d1f47d791e58f468aa96f201f6aa5edd96"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/device-entry/exploit.tar",
+      "bytes": 1536,
+      "sha256": "68c02c6c7d1722ad6d4a7275adb07015e93cfe2e646062ed726dc3974ad77a5c"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/duplicate-file-entry/boundary-control.tar",
+      "bytes": 3072,
+      "sha256": "1b828b9ef7b4e155375f412d4e254f9f50d3bf3cc893d4678aebcf2e19edf99f"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/duplicate-file-entry/exploit.tar",
+      "bytes": 3072,
+      "sha256": "a8ff3d0f7655f73f7a0b9d05b827daaad156bd1f3db7aa00e73df6adb55ee0d9"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/expanded-total-size-limit/boundary-control.tar",
+      "bytes": 10240,
+      "sha256": "53de5cd8022d843c9c07d91fe25c55d3ed2b226387d92740149d91cfa77f6888"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/expanded-total-size-limit/exploit.tar",
+      "bytes": 10752,
+      "sha256": "9a211fb51d14cb75138b4edb1420ba9a455529e7a92af2d44c6c6ecd4bc743b9"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/fifo-entry/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "124c5a54cc2d82baddba5787e51b713d7a2ed4d46e448828f83e95b7d2363dec"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/fifo-entry/exploit.tar",
+      "bytes": 1536,
+      "sha256": "3b92511e97c85693db89afcf8ea9b20e99ac7a5088ae3f53b3d568cdaa693b24"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/file-count-limit/boundary-control.tar",
+      "bytes": 17408,
+      "sha256": "7354b2cc21b432e46e2060973f03001199eb90b7a36f64f7a06ac3af1f48d604"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/file-count-limit/exploit.tar",
+      "bytes": 18432,
+      "sha256": "156ef4c562243f69ab05b200e7dd8e7d0b564c923f2a54b01bf2dc7aff164dcc"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/file-directory-collision/boundary-control.tar",
+      "bytes": 2560,
+      "sha256": "1fc30d03c5804f11af22bfb91a095f482e4ee29839102d2146124bca393092f3"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/file-directory-collision/exploit.tar",
+      "bytes": 3072,
+      "sha256": "7a19d19f706a55e536e30251cb6683e7864edd7b243510b8d173636d9296b1b2"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/hardlink-entry/boundary-control.tar",
+      "bytes": 3072,
+      "sha256": "bb67acfa6c5528e0df64d9517664db38c9318763177f420a654a89c5c97be3ae"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/hardlink-entry/exploit.tar",
+      "bytes": 2560,
+      "sha256": "5a5e0f8db8070adeb8b0e0f80089dbaac5e9e9f2c781388efd81b20f12544636"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/relative-path-traversal/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "e282301e3ebe8a5c0749ee80e6543c418afcd70f2846e4b77acba51f0bf9c8c0"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/relative-path-traversal/exploit.tar",
+      "bytes": 2048,
+      "sha256": "a020f5c7a2ffe9dcf93c19fd874e686e3f4e6884935337ce6f70214ae6db7f8a"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/single-file-size-limit/boundary-control.tar",
+      "bytes": 5632,
+      "sha256": "332542cc51f6065efb1bcadf85bf16454c67ca1c4a5b6a00c7e954c8536fcb8b"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/single-file-size-limit/exploit.tar",
+      "bytes": 6144,
+      "sha256": "61486b174fa7a8f0f683870f85411355a9fb3e84e147cf0a880e7fcbad73b2f8"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/symlink-entry/boundary-control.tar",
+      "bytes": 2048,
+      "sha256": "17d0c331242c2a84d28731af5a3648df785ca0b024818d7f46219e7ae1ea8f00"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/symlink-entry/exploit.tar",
+      "bytes": 1536,
+      "sha256": "7fba853d3e3afeb69b9cb88f0484a6250a2cd3ea563b5f9ce2f6962f31c27229"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/unicode-normalization-collision/boundary-control.tar",
+      "bytes": 3072,
+      "sha256": "e891cbafce4e9fa9dffb394763262a62a2b73d84316e9709193da0d1cfd13040"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/archive/unicode-normalization-collision/exploit.tar",
+      "bytes": 3072,
+      "sha256": "f97e4726dc8125b080398ace90a2ab213c945ef33ce2e0967d23ab053a38d8c4"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/absolute-profile-path/boundary-control.json",
+      "bytes": 158,
+      "sha256": "1eec60e7c30bd778eb7853a8fe93b175a4dcf3c919ba1aeb068e5b7a1bf5045c"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/absolute-profile-path/exploit.json",
+      "bytes": 174,
+      "sha256": "bb62eb2b9d1f907efa51a462d9c222b8f310c9caed7b2e17cd0f6f9c112f2438"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/duplicate-json-key/boundary-control.json",
+      "bytes": 59,
+      "sha256": "461d21a8958c6f043aae345282a9d7f1027c9e88952d471c6dffa1e175cb453e"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/duplicate-json-key/exploit.json",
+      "bytes": 54,
+      "sha256": "1fd1420b3d9d44977dd8ba090c733061248fc0e8fea593bac225411f2cc4711d"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/forbidden-profile-field/boundary-control.json",
+      "bytes": 153,
+      "sha256": "f10838bcc7878eba33568ac6004214e6549415923443eb55aeef513442518222"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/forbidden-profile-field/exploit.json",
+      "bytes": 189,
+      "sha256": "528606e2945294802983746fd53796da9ba9bc520b38da9d89768026b2787a45"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/invalid-resource-uri/boundary-control.json",
+      "bytes": 104,
+      "sha256": "0d144f1d0c875dbfdd34a1e2042eaf2bcd6b941041dbca5d559ea0e25032e58f"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/invalid-resource-uri/exploit.json",
+      "bytes": 105,
+      "sha256": "a3af51e2a58e60f0bb346b51da345db6450edc5f3c03713c6dd6f2404b2f6f66"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/invalid-utf8/boundary-control.json",
+      "bytes": 18,
+      "sha256": "0c8a8e698cb14cf39aca924e87d8eae31f8291eb238f325f941e0a0a0fb3d91e"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/invalid-utf8/exploit.json",
+      "bytes": 15,
+      "sha256": "514eb055d9e370172942dd6a26f0525701afceac3d4c0a06c6b84232cb21be69"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/json-depth-limit/boundary-control.json",
+      "bytes": 167,
+      "sha256": "5b48c13e56713bdcb4757ab0f9cbdc39264deb4e51f4a9acaf2d65536be170e4"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/json-depth-limit/exploit.json",
+      "bytes": 177,
+      "sha256": "988e4b8368218e9280d49c83a4489797cbddabb433c60529a7930aff1cfcdbab"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/malformed-json/boundary-control.json",
+      "bytes": 111,
+      "sha256": "049aff746b6d64ae1cf1c121cb26fa3c7dfc03e64c001f168dd7082527ae00c3"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/malformed-json/exploit.json",
+      "bytes": 26,
+      "sha256": "22d36aa8cf8c0f806309eb31aa5820bd023e3a7bd813bfe40389e806478373e9"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/malformed-mcp-framing/boundary-control.jsonl",
+      "bytes": 111,
+      "sha256": "049aff746b6d64ae1cf1c121cb26fa3c7dfc03e64c001f168dd7082527ae00c3"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/malformed-mcp-framing/exploit.jsonl",
+      "bytes": 40,
+      "sha256": "1d90b9a0c11978dac623677bcc60c398c0cfd6729a8fffd25791e80c7aebda89"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/prompt-injection-content/boundary-control.json",
+      "bytes": 196,
+      "sha256": "4aa8712b472935d073ee8aeada415206f07d15f0bd1155ddde3a3d17937b5721"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/prompt-injection-content/exploit.json",
+      "bytes": 217,
+      "sha256": "bf016c6cd754bf322bad425c85426bd9bbb8c25b36d83b7730dc190f92a8132f"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/query-length-limit/boundary-control.json",
+      "bytes": 362,
+      "sha256": "a345231a310f96875fcc95443c1167d4bd8d6b688b216add83ba861c5e133fe8"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/query-length-limit/exploit.json",
+      "bytes": 363,
+      "sha256": "2cc9dcd8f8170acc15b230a6c1f6ce47c7bac707486cc82832e7f2dc352c444e"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/request-byte-limit/boundary-control.json",
+      "bytes": 4096,
+      "sha256": "a1462943e5779f0250fd6e83e5e5175573a5d1d7b44493c2f21aaabfd678ef45"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/request-byte-limit/exploit.json",
+      "bytes": 4097,
+      "sha256": "30ddbb1e00d3446c6fb51e3954521abf36e6896ce4b1ebd608ea9b030eb66c24"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/result-count-limit/boundary-control.json",
+      "bytes": 124,
+      "sha256": "fe6136143dfb8df7ff240cad4cd11b5c6ec39f42d5290d85843bdb817ea52caf"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/result-count-limit/exploit.json",
+      "bytes": 124,
+      "sha256": "2b73217f986735622aeb2823956b3d3334de383a8921f34b99c27cc76eaab55a"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/secret-canary/boundary-control.json",
+      "bytes": 192,
+      "sha256": "c9f8f824b625dd3938955e3d12342ddc6d2e78691e3f0bca2c6ded189f44b3e4"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/secret-canary/exploit.json",
+      "bytes": 181,
+      "sha256": "01b9dd49444bf4b36007f00e7f4861ad890d386c4601aac53a8e2ac10c4707f8"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/timeout-resource-exhaustion/boundary-control.json",
+      "bytes": 119,
+      "sha256": "917b96e042009b039a666d72038a7920416ba0118d07777ef51045eabbe3a966"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/timeout-resource-exhaustion/exploit.json",
+      "bytes": 113,
+      "sha256": "fdda5da94b4dc09244e7f619f0d87b055ebf6a868e9139a12583f98bc90eb447"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/version-incompatibility/boundary-control.json",
+      "bytes": 157,
+      "sha256": "9021b004eb9a6f23549541a78b50dc05d7a1a7ee1a9f98bd42be82ed73d2a582"
+    },
+    {
+      "path": "baseline/v1/hostile/fixtures/input/version-incompatibility/exploit.json",
+      "bytes": 157,
+      "sha256": "28e158158b28a4bd04ba17137a134caf1b158fece00c3076c88d1bd5a68d053e"
+    },
+    {
+      "path": "baseline/v1/hostile/generate-fixtures.mjs",
+      "bytes": 12919,
+      "sha256": "165389d18058510049687520cd700d8ec20a4bf28668585ef95b1397cc70926a"
+    },
+    {
+      "path": "baseline/v1/hostile/manifest.json",
+      "bytes": 18280,
+      "sha256": "59df0dd080ba4c150ebeef64a71d8acd809c5d91e89bc1626efd810a8965c345"
+    },
+    {
+      "path": "baseline/v1/hostile/verify-fixtures.mjs",
+      "bytes": 16415,
+      "sha256": "5176025ef5d51cac080340e14b90f9c0cc4e9c5d0c7220349662305392c0b395"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/.gitignore",
+      "bytes": 7,
+      "sha256": "a00baa25bb621fadb8d50ec7960ba0b73266741ce8959be6678cf3ae48570079"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/README.md",
+      "bytes": 2806,
+      "sha256": "1f3f7cd1c2e0a1f02c0425b0584e78f890fed3507310b3c7628285fab5b9669f"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/acquire-baseline.mjs",
+      "bytes": 5248,
+      "sha256": "e6ac26eac935e08417994c13db828c048afd8f90a1d30d3d72f645d12ec1d3ba"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/allowed-differences.json",
+      "bytes": 752,
+      "sha256": "d938d1f8016523774b2c4ac47128955ca644680d03193d041f7e35d3b27d5707"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/artifacts/agentic-awesome-skills-14.6.0.tgz",
+      "bytes": 43069,
+      "sha256": "98f8cbb399613621598ac6aeca619fc7c454530895b4e237eee695d82fbdf0cb"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/artifacts/registry-metadata.json",
+      "bytes": 2655,
+      "sha256": "c895e2e59ab9ab888096d7bbaf2a9b5f6c05767be6bf40ead8c9ef4f42ef4396"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/bin/git",
+      "bytes": 47,
+      "sha256": "aa78c02a4743ef5cf7c1d2a82b132109c61f78ba054c8f5060fc913d598147d9"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/bin/git.cmd",
+      "bytes": 33,
+      "sha256": "9cb1690e794e84f82fc3b9abb3d3caad06b4937e954d5690a81668523e670ee4"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/corpus-lib.mjs",
+      "bytes": 5027,
+      "sha256": "46765630ff6bc75f28ee31c04c94fdd47d9cf8f2e7c737d4107f82cf44f89e0e"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fake-git.mjs",
+      "bytes": 2438,
+      "sha256": "b3ba941972a47d2eb75605a541ca740dd48157f29b26b6980fc642baed43d440"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/docs/README.md",
+      "bytes": 99,
+      "sha256": "dfd5ed6431d5df7a23472b3724368c7b90b68969d6f3882bf9cb68dd41bcb341"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/skills/backend-dev-guidelines/SKILL.md",
+      "bytes": 228,
+      "sha256": "b049f574df39b163df459a19de50a25d4d8cb34b167eca7627eb0a6939b8be6e"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/skills/debugging-helper/SKILL.md",
+      "bytes": 211,
+      "sha256": "fc1954ddd608a05e24d334f46eff7a67e322e28b612b8e22708c407b1af4e851"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/skills/frontend-design/SKILL.md",
+      "bytes": 211,
+      "sha256": "3f46b065797009b9f1d7e1b380dbedfc93bd726816924df406509a4c41401c15"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/skills/game-development/2d-games/SKILL.md",
+      "bytes": 166,
+      "sha256": "b598f980804283585eac4e43ab1af0b528b991cbea2b6be300bb5ee4675d3d0c"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/skills/offensive-tool/SKILL.md",
+      "bytes": 201,
+      "sha256": "49e5dfc0a89c1909a5e895743a60cc6dd7a9f1d41774ad8c025a01eb1e2be236"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/skills/tamigi-vecchia-edizione-game-development/2d-games/SKILL.md",
+      "bytes": 225,
+      "sha256": "5da0d5e07cc305b62eead66d957ecaacea777fd6e67d41e4d68e34963e7e6076"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/fixture-repository/skills/typescript-legacy-helper/SKILL.md",
+      "bytes": 233,
+      "sha256": "4f01ba4116c00087ac3d2096bed5119365c1432d1c0a8f12fe32b342da7ff71e"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/generate-snapshots.mjs",
+      "bytes": 13812,
+      "sha256": "026790d72deec656a9e329b993ab1025c258ab1492a9ab891f9e4f6bd328c072"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/manifest.json",
+      "bytes": 18388,
+      "sha256": "a17e56e31737b412046f794c24e28ff75c16ea5a367ea696c8edb3548963c547"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/network-observer.cjs",
+      "bytes": 2047,
+      "sha256": "e1de0485bf75256e361d762e29046dee329c4bd6918fddc57d3ffdaa891fa83b"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshot-index.json",
+      "bytes": 16079,
+      "sha256": "c4eefaa135df94389d567b4b2237b418cd88ed76deebb4c6a067f397423c20cd"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/ambiguous-skill.json",
+      "bytes": 2724,
+      "sha256": "a4845f0598a773e917135b930e54e39959ea2c02bc79107d6d2690d7bdf9d9b1"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/apply-update-managed.json",
+      "bytes": 5363,
+      "sha256": "e57b08cd31186ea8960e144263f1d50e1f210b5d39f0e73791b9b7a141ef8a41"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/category-selector.json",
+      "bytes": 3059,
+      "sha256": "0daeeb19ddf7918bf2aa99771e8ed2489e155f5cd1e949fce31474d2b832bb9f"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/codex-home.json",
+      "bytes": 3196,
+      "sha256": "0e8c692779779ddd7d464e9e1abd7fd0f8007f41ae43fead9af0069f21fab484"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/combined-selection.json",
+      "bytes": 3095,
+      "sha256": "e701a057893f6cdd4de6f61fdd2e90314ddbbf5500b759960cb1394911838b5d"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/custom-absolute-path.json",
+      "bytes": 3225,
+      "sha256": "a06b1920a55be78fbb4d00ce296a5a6ee5bb38684242637408d1f2fa829ffbc7"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/custom-relative-path.json",
+      "bytes": 3258,
+      "sha256": "4b7f08a15a48ac74e80e3bf94956daf4ee4a05e31ca12a8aa79bf5fb7dfb326c"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/default-install.json",
+      "bytes": 6405,
+      "sha256": "c6a2e257525309080edc36baf45db5933b3ccea3288ae337aa657f3dc5783cd0"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/dry-run-missing-target.json",
+      "bytes": 2905,
+      "sha256": "0c0f7ee5048255d2ce5c97575d4ee3e91011126fd5151e3a8ea360f746d408be"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/dry-run-stale-managed.json",
+      "bytes": 5493,
+      "sha256": "b30a36c7b8fa877d661ccede5378e9cae4dd093968f559425ffea1e454674437"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/empty-exact-token.json",
+      "bytes": 2187,
+      "sha256": "07e37b76cd4f2532d3cfa80761cb68b56cea478566d5f1ff3bd330e4cca5fc36"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/exact-nested-skill.json",
+      "bytes": 2924,
+      "sha256": "956104efcee2ce922a7eb5f21a57b8441639c771bf5ec8d8a0f3a5e2a29594f7"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/exact-root-skill.json",
+      "bytes": 2892,
+      "sha256": "37fa7b5c7ff75ffdd6704505e655d1410be755c8bf25f1a733a698438d3f73fa"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/explicit-release.json",
+      "bytes": 3175,
+      "sha256": "b94cf13b3b4270bd25978cdc5dde642ee608109f2853a6422302b152e87106fa"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/explicit-tag.json",
+      "bytes": 3168,
+      "sha256": "997d70e047a5c24a4992d8d1459326900a57e86f0d67004ccddb2cf9fe298640"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/help-long.json",
+      "bytes": 3826,
+      "sha256": "7216ddab3cc37856bb149cdd4b065085778c5234543d6ca1e8fbb4065f58e92a"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/help-short.json",
+      "bytes": 3823,
+      "sha256": "d448ab52c6a00b1942304847de24794b5ac3c693b0f7c35063218b5d228dfbb0"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/literal-install.json",
+      "bytes": 3191,
+      "sha256": "81de2e6b1d8caedf2b0ac79ff7cc2e1b94454115aa502a4759227003bc290cd4"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/missing-value-category.json",
+      "bytes": 1987,
+      "sha256": "cb551d6dfd2472fbf76fd0976e0ba7222936c14163d8083316dceb47bfd89975"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/missing-value-path.json",
+      "bytes": 1975,
+      "sha256": "513034309a2e8336d687d9c2b0bb8cb8e76e2614dbcf30375217afa4608648ac"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/missing-value-release.json",
+      "bytes": 1984,
+      "sha256": "37a2808602c692a546ef47db8fa590a411dabbdb41f1fbcbff73082bca210288"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/missing-value-risk.json",
+      "bytes": 1975,
+      "sha256": "f7bd13345afff8ff80fb949afbbc90b649b0226008dbe703e9bdb5232913064e"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/missing-value-skills.json",
+      "bytes": 1981,
+      "sha256": "d3cbc405f5b8b7889d762e574d0b38628b73d23acd314a9c03a51d293db90ef1"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/missing-value-tag.json",
+      "bytes": 1972,
+      "sha256": "0075fcc7c7da07b4148485da0848fa603a91f150b0e02b5fd25a2636ea209a4b"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/missing-value-tags.json",
+      "bytes": 1975,
+      "sha256": "7c8ba60f6bcc29661b5a6a3926ccd9d916c1cf00773790ac39dbf9f1e78b7631"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/multi-target.json",
+      "bytes": 3593,
+      "sha256": "2e8202323953577365a45837c2aa709b96af5356a5c1a57be7556c6be32e9781"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/no-filter-match.json",
+      "bytes": 2625,
+      "sha256": "80be970678e08dafd39d728bd9e4c3a8327387465de79d9bbda051e9d1f9d3b5"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/risk-selector.json",
+      "bytes": 3163,
+      "sha256": "bdb2494586bd9b2b9fa0b6552fce9944b30eab4244643a1b258ba3b4b10d3eee"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/tags-selector.json",
+      "bytes": 2902,
+      "sha256": "be61656ff3335a2ca3b4632f18979a6f057c2a70221eae91aa1504bb1fff755f"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/target-agy.json",
+      "bytes": 3204,
+      "sha256": "e8ece70b482b614a833d43330f6c2784879269e0d39deb70e07b37d93ea8324c"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/target-antigravity.json",
+      "bytes": 3200,
+      "sha256": "5e707440ba35bcb09f6f60cd1d246f25d9ace92d38d4b603bb0bb35548a43c99"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/target-claude.json",
+      "bytes": 3190,
+      "sha256": "ae3dd0f9b1dc85f3c3e47fcbfb0cc79511e4819598400713e245d9e9803dc4a3"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/target-codex.json",
+      "bytes": 3185,
+      "sha256": "b08c3a582893b772b90dd2a3f4b2153e07d88f4485d0873659d5c301a69a5cc9"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/target-cursor.json",
+      "bytes": 3185,
+      "sha256": "b06f480978a83b15110a65ea824f9032123b4da0a364edaa34c1d5e6296c69b3"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/target-gemini.json",
+      "bytes": 3189,
+      "sha256": "a655dc504c67f42b1f26d8868ddc5ef2c03be81a58cb83a73f2f80910a48716c"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/target-kiro.json",
+      "bytes": 3177,
+      "sha256": "a3a9063c2c30ae7d4b3f94074d7b0d528207d1fc436de5851b050f53da89884d"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/unknown-command.json",
+      "bytes": 1974,
+      "sha256": "e538a1e8b334279a2dadc7110cab5f15546ff3f94378928017d0bbb1cb503328"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/unknown-flag.json",
+      "bytes": 1977,
+      "sha256": "42a9ddaf46c735e4861afb6876f4c68d76eee41eed7e72c5d6e677010d9c3c56"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/unknown-skill.json",
+      "bytes": 2603,
+      "sha256": "4c913cb54038e0914f5b6363b81c2d601445045905fd37d493aad0d268f379bb"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/unsafe-symlink-target.json",
+      "bytes": 2998,
+      "sha256": "ca1aeee6ee74ec6b898bed22b255459828dea7d6a6fe18e3231a41db715d323c"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/snapshots/version.json",
+      "bytes": 1935,
+      "sha256": "6623a791dafc4930ea5a44c079013f48c5a1805a9a394dc531ba4f28aa287a7e"
+    },
+    {
+      "path": "baseline/v1/legacy/14.6.0/validate-snapshots.mjs",
+      "bytes": 9346,
+      "sha256": "c22d7ba9b1ad8b9bfc8369b8142a76cd74722a48e68f904be0128c420849cd32"
+    },
+    {
+      "path": "baseline/v1/metrics.json",
+      "bytes": 2090,
+      "sha256": "d9e40b8b074e7bd29977e11271c1cb123f675e916ce6c1ebf012e679c78fcd3f"
+    },
+    {
+      "path": "baseline/v1/reviews/reviewer-alpha.json",
+      "bytes": 217899,
+      "sha256": "8e0e90789cf0de116bb58ca1971911dcd0f0135d5eb97bead8911e1cea0080aa"
+    },
+    {
+      "path": "baseline/v1/reviews/reviewer-beta.json",
+      "bytes": 3024,
+      "sha256": "bdb4f00deaf8d9e7fb7c259130555249e619fd4f18a33bcbb55fee30e3d92b7f"
+    },
+    {
+      "path": "baseline/v1/runtime-matrix.json",
+      "bytes": 8639,
+      "sha256": "f354a5759a5ccddec326ffa06ee88f8c97f7f7d40544c2d5bf5f0eb2b7ecfd13"
+    },
+    {
+      "path": "ownership.v1.json",
+      "bytes": 1924,
+      "sha256": "8a3fb248d02ba6905331b57c0b5ee1394b2efa6042c12d9566c5cdaa64805f39"
+    },
+    {
+      "path": "schemas/benchmark-case.schema.json",
+      "bytes": 2222,
+      "sha256": "9259aebba23a10be4586facc3b5e518d15bf42fd7ac737d09de9212444c3623e"
+    },
+    {
+      "path": "schemas/benchmark-gold.schema.json",
+      "bytes": 1764,
+      "sha256": "8de54d969038024886aa8bcf40c99011797a75ee8d9109ccbb621db45cbe1860"
+    },
+    {
+      "path": "schemas/benchmark-manifest.schema.json",
+      "bytes": 1011,
+      "sha256": "50863f462ad165f4189584d49577b48c34ec2ac371dae14646952b989986a10f"
+    },
+    {
+      "path": "schemas/budget-manifest.schema.json",
+      "bytes": 1224,
+      "sha256": "a3e7237e959ae6e08308396b21f1c195fc1886cf97ed6d2d25e12082252d6dc3"
+    },
+    {
+      "path": "schemas/evidence-bundle.schema.json",
+      "bytes": 1325,
+      "sha256": "56e410c82773f0a41c5b089b3b231f2e86f15cb2dcf7d3eb1e687c5f9a6000d2"
+    },
+    {
+      "path": "schemas/freeze-manifest.schema.json",
+      "bytes": 1035,
+      "sha256": "26a4b43310866c313acd92f86853e3cd173edb95654505f2936a5c78142b44ec"
+    },
+    {
+      "path": "schemas/held-out-index.schema.json",
+      "bytes": 1015,
+      "sha256": "01cd96d9a0b005c947745fd648aaff58f57644e5f1b48c88fccc424aee04d840"
+    },
+    {
+      "path": "schemas/hostile-corpus-manifest.schema.json",
+      "bytes": 1250,
+      "sha256": "e5d977201e3e5d66a0e4acf8ba553dbc7b4eeb8a76a6a2406507176a9578db9b"
+    },
+    {
+      "path": "schemas/legacy-command-corpus.schema.json",
+      "bytes": 1376,
+      "sha256": "3bd13c0cd906e8adcfa836fdc841dc332f87d00256d719aa7fc3854337de2689"
+    },
+    {
+      "path": "schemas/metric-definition.schema.json",
+      "bytes": 1556,
+      "sha256": "59d7e3055ca1249a5e59709a90754ac129ef6cd5cccf46a09ada792c87c7ab21"
+    },
+    {
+      "path": "schemas/runtime-matrix.schema.json",
+      "bytes": 765,
+      "sha256": "e6888b6e3cebcd2a8b6d5284c1c161940017c44349e2da3796ec5aaf9deb4c0c"
+    },
+    {
+      "path": "verifier/bin/check-baseline.mjs",
+      "bytes": 10874,
+      "sha256": "8a625c502c55ddde16b15464846fa40e680f2a2d80e8c962120d5244b00d0a44"
+    },
+    {
+      "path": "verifier/bin/freeze-baseline.mjs",
+      "bytes": 3312,
+      "sha256": "2626d4f03f96a61f2e5deb393eed113fff8216b46478a921ee6ab56a5fabf40c"
+    },
+    {
+      "path": "verifier/bin/validate-benchmark.mjs",
+      "bytes": 7954,
+      "sha256": "2a767871188268128ab7ca18c0cbfe1f636005715aaa3364160be9dbbfe41a33"
+    },
+    {
+      "path": "verifier/bin/validate-schemas.mjs",
+      "bytes": 3675,
+      "sha256": "5564770ecce961a7d797baf5dfd19362f3156e1ab4418c0d3bf7155ecbde446c"
+    },
+    {
+      "path": "verifier/bin/validate-secondary-corpora.mjs",
+      "bytes": 7753,
+      "sha256": "f3bc117b5d7e9ce62501abcd25a7831744e75a7d5e49a15ae59138552087cf88"
+    },
+    {
+      "path": "verifier/lib/metrics.mjs",
+      "bytes": 5187,
+      "sha256": "a10282482c80c1e05a047335e07e8df570ded0e0c674f0ecd6d6cc0b7a2e4cf1"
+    },
+    {
+      "path": "verifier/package-lock.json",
+      "bytes": 2953,
+      "sha256": "6ac6a7eb69a4fa8ac4c96c7cab6d0ba1121b79667a7b1dafc0ac4459ad33fb25"
+    },
+    {
+      "path": "verifier/package.json",
+      "bytes": 896,
+      "sha256": "dd96546ee73e76cc692fd3dd6e3c6073cbb79dd8e5ba9f656a1d8c439305ae69"
+    },
+    {
+      "path": "verifier/tests/baseline-check.test.mjs",
+      "bytes": 1329,
+      "sha256": "5bcd54a7fcac9857d2622565d922894cdbfa4391606bd7cd2576510252e3d654"
+    },
+    {
+      "path": "verifier/tests/metrics.test.mjs",
+      "bytes": 3860,
+      "sha256": "d40f73128ad55994c7afc4518e5365cb0e00303be36e4c1f6391d734f4084606"
+    }
+  ]
+}

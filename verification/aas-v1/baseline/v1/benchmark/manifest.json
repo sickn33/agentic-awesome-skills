@@ -1,0 +1,41 @@
+{
+  "$schema": "../../../schemas/benchmark-manifest.schema.json",
+  "schemaVersion": 1,
+  "benchmarkVersion": "1.0.0",
+  "status": "frozen",
+  "intents": [
+    "web-application-delivery",
+    "api-backend-delivery",
+    "test-qa-automation",
+    "security-review-hardening",
+    "deployment-devops",
+    "agent-mcp-development"
+  ],
+  "heldOut": {
+    "index": "held-out-index.json",
+    "casesPerIntent": 30,
+    "diversification": "five-sub-intents-by-six-archetypes",
+    "actualInputsPresent": true,
+    "goldLabelsPresent": true,
+    "ambiguousCasesRequireTwoReviews": true
+  },
+  "abstention": {
+    "index": "abstention/index.json",
+    "caseCount": 30,
+    "labelsFrozen": true,
+    "status": "frozen"
+  },
+  "tuning": {
+    "manifest": "tuning/manifest.json",
+    "separatedFromHeldOut": true,
+    "status": "frozen"
+  },
+  "labelsFrozen": true,
+  "antiCheating": {
+    "caseIdsPassedToCandidate": false,
+    "goldPathsPassedToCandidate": false,
+    "fixtureNamesPassedToCandidate": false,
+    "retriesAllowed": false,
+    "postResultRelabelingAllowed": false
+  }
+}

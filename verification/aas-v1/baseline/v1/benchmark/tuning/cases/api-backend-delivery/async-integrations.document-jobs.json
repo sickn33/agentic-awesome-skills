@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.async-integrations.document-jobs",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "document conversion job service",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "FastAPI",
+      "asyncio"
+    ],
+    "context": "queued jobs calling two external systems",
+    "constraints": [
+      "bounded retries",
+      "recoverable partial failures"
+    ]
+  },
+  "criticalGoals": [
+    "durable-event-processing",
+    "failure-compensation"
+  ],
+  "nonCriticalGoals": [
+    "async-boundary-design",
+    "idempotent-retries"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.async-integrations.document-jobs"
+}

@@ -1,0 +1,203 @@
+{
+  "caseId": "default-install",
+  "evidence": {
+    "harnessFiles": [
+      "fake-git.jsonl"
+    ],
+    "networkAttemptDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "networkAttempts": []
+  },
+  "expectedExitCode": 0,
+  "fakeGitTrace": [
+    {
+      "branch": "v14.6.0",
+      "command": "clone",
+      "depth": "1",
+      "destination": "<CLONE_DIR>",
+      "destinationContained": true,
+      "destinationWasEmpty": true,
+      "fixtureDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills.git",
+      "schemaVersion": 1
+    }
+  ],
+  "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+  "filesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "home/.agents",
+      "type": "directory"
+    },
+    {
+      "path": "home/.agents/skills",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/.antigravity-install-manifest.json",
+      "sha256": "sha256-c03f66427aa7647cfd4792696dde16ac54d3640b3d93b9638960240dc42aa18f",
+      "size": 307,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/backend-dev-guidelines",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/backend-dev-guidelines/SKILL.md",
+      "sha256": "sha256-b049f574df39b163df459a19de50a25d4d8cb34b167eca7627eb0a6939b8be6e",
+      "size": 228,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/debugging-helper",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/debugging-helper/SKILL.md",
+      "sha256": "sha256-fc1954ddd608a05e24d334f46eff7a67e322e28b612b8e22708c407b1af4e851",
+      "size": 211,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/docs",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/docs/README.md",
+      "sha256": "sha256-dfd5ed6431d5df7a23472b3724368c7b90b68969d6f3882bf9cb68dd41bcb341",
+      "size": 99,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/frontend-design",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/frontend-design/SKILL.md",
+      "sha256": "sha256-3f46b065797009b9f1d7e1b380dbedfc93bd726816924df406509a4c41401c15",
+      "size": 211,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/game-development",
+      "type": "directory"
+    },
+    {
+      "path": "home/.agents/skills/game-development/2d-games",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/game-development/2d-games/SKILL.md",
+      "sha256": "sha256-b598f980804283585eac4e43ab1af0b528b991cbea2b6be300bb5ee4675d3d0c",
+      "size": 166,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/offensive-tool",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/offensive-tool/SKILL.md",
+      "sha256": "sha256-49e5dfc0a89c1909a5e895743a60cc6dd7a9f1d41774ad8c025a01eb1e2be236",
+      "size": 201,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/tamigi-vecchia-edizione-game-development",
+      "type": "directory"
+    },
+    {
+      "path": "home/.agents/skills/tamigi-vecchia-edizione-game-development/2d-games",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/tamigi-vecchia-edizione-game-development/2d-games/SKILL.md",
+      "sha256": "sha256-5da0d5e07cc305b62eead66d957ecaacea777fd6e67d41e4d68e34963e7e6076",
+      "size": 225,
+      "type": "file"
+    },
+    {
+      "path": "home/.agents/skills/typescript-legacy-helper",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "home/.agents/skills/typescript-legacy-helper/SKILL.md",
+      "sha256": "sha256-4f01ba4116c00087ac3d2096bed5119365c1432d1c0a8f12fe32b342da7ff71e",
+      "size": 233,
+      "type": "file"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "fixtureState": "clean",
+  "invariants": {
+    "fixtureDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8",
+    "harnessEvidenceExcluded": true,
+    "noStackStateCreated": true
+  },
+  "invocation": {
+    "args": [],
+    "cwd": "<CASE_ROOT>/workspace",
+    "executable": "<BASELINE_RUNTIME>/node_modules/agentic-awesome-skills/tools/bin/install.js"
+  },
+  "observedExitCode": 0,
+  "packageIdentity": {
+    "distIntegrity": "sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg==",
+    "package": "agentic-awesome-skills",
+    "version": "14.6.0"
+  },
+  "preFilesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "preTreeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50",
+  "schemaVersion": 1,
+  "signal": null,
+  "stderr": "",
+  "stdout": "Cloning repository…\nCloning repository at v14.6.0…\n\nInstalling for 1 target(s):\n\nAntigravity:\n  ✓ Installed to <CASE_ROOT>/home/.agents/skills\n\nPick a bundle in docs/users/bundles.md and use @skill-name in your AI assistant.\n\nIf Antigravity hits context/truncation limits, see docs/users/agent-overload-recovery.md\n\nFor the agy CLI slash-command menu, install the Antigravity CLI layout with --agy.\n\nFor clone-based installs, use scripts/activate-skills.sh or scripts/activate-skills.bat\n\nFor Antigravity 2.0, OpenCode, or other .agents/skills installs, prefer a reduced install with --skills, --risk, --category, or --tags to avoid context overload.\n\nExample: npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none\n",
+  "treeDigest": "sha256-06ccfd8737a72e3af50e242d88c59a5eda5e9210e97a451ced96403e0489ce23"
+}

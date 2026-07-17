@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.api-design-contracts.partner-orders-api",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "partner order management API",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Fastify"
+    ],
+    "context": "new external REST contract with several partner clients",
+    "constraints": [
+      "backward compatibility",
+      "explicit error schemas"
+    ]
+  },
+  "criticalGoals": [
+    "stable-api-contract",
+    "openapi-definition"
+  ],
+  "nonCriticalGoals": [
+    "versioning-policy",
+    "machine-readable-documentation"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.api-design-contracts.partner-orders-api"
+}

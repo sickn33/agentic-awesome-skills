@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.physical-systems.hvac-diagnosis",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PHYSICAL_SYSTEMS"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-bb4c1eb0c77a799d9b3fb7f77fc4d97e93743f62a437619724577889307723cd"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-bb4c1eb0c77a799d9b3fb7f77fc4d97e93743f62a437619724577889307723cd"
+    }
+  ]
+}

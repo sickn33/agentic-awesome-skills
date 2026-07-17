@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.observability-sre.data-pipeline-operations",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "scheduled data processing platform",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "Container platform"
+    ],
+    "context": "late jobs are difficult to distinguish from failed jobs",
+    "constraints": [
+      "bounded cardinality",
+      "runbook-linked alerts"
+    ]
+  },
+  "criticalGoals": [
+    "service-level-objectives",
+    "operational-dashboards"
+  ],
+  "nonCriticalGoals": [
+    "alert-quality",
+    "incident-diagnostics"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.deployment-devops.observability-sre.data-pipeline-operations"
+}

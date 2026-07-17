@@ -1,0 +1,31 @@
+{
+  "additionalDifferencesRequireIndependentApproval": true,
+  "differences": [
+    {
+      "code": "candidate-package-version",
+      "reason": "Candidate version differs from 14.6.0.",
+      "scope": [
+        "version.stdout"
+      ]
+    },
+    {
+      "code": "candidate-default-release-ref",
+      "reason": "An unpinned candidate defaults to its own package version.",
+      "scope": [
+        "git.clone.branch"
+      ]
+    },
+    {
+      "code": "normalized-ephemeral-path",
+      "reason": "Harness-owned temporary roots are normalized token-for-token.",
+      "scope": [
+        "stdout",
+        "stderr",
+        "filesystem-report"
+      ]
+    }
+  ],
+  "genericOutputExclusionsAllowed": false,
+  "schemaVersion": 1,
+  "status": "frozen"
+}

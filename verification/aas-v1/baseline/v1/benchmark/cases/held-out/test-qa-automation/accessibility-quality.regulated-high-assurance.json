@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.regulated-high-assurance",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "regulated digital banking portal",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Angular"
+    ],
+    "testingContext": "authentication and transaction journeys need auditable WCAG conformance evidence",
+    "constraints": [
+      "WCAG 2.2 AA",
+      "no customer data",
+      "manual validation checkpoints",
+      "traceable findings"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "wcag22-aa-audit",
+    "critical-journey-accessibility",
+    "auditable-conformance-evidence"
+  ],
+  "nonCriticalGoals": [
+    "assistive-technology-checks",
+    "regression-tracking"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.accessibility-quality.regulated-high-assurance"
+}

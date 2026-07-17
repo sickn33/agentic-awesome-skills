@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.security-operations.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "least-privilege-agent-baseline",
+      "allowedSkillIds": [
+        "threat-modeling-expert",
+        "security-requirement-extraction",
+        "skill-audit",
+        "security-and-hardening",
+        "protect-mcp-governance"
+      ],
+      "requiredGroups": [
+        [
+          "threat-modeling-expert",
+          "security-requirement-extraction"
+        ],
+        [
+          "skill-audit"
+        ],
+        [
+          "security-and-hardening",
+          "protect-mcp-governance"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1a1e6270ccf21be20f01b651c2568c68b76fa0dfbdc24557d31e72e596af2ce1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1a1e6270ccf21be20f01b651c2568c68b76fa0dfbdc24557d31e72e596af2ce1"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.memory-context-retrieval.project-knowledge-memory",
+  "acceptedSolutions": [
+    {
+      "solutionId": "memory-and-context",
+      "allowedSkillIds": [
+        "memory-systems",
+        "context-engineering"
+      ],
+      "requiredGroups": [
+        [
+          "memory-systems"
+        ],
+        [
+          "context-engineering"
+        ]
+      ]
+    },
+    {
+      "solutionId": "agent-memory-management",
+      "allowedSkillIds": [
+        "agent-memory-systems",
+        "context-manager"
+      ],
+      "requiredGroups": [
+        [
+          "agent-memory-systems"
+        ],
+        [
+          "context-manager"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-9b63bad9674bdff26509e45bb55f0aa9f87d55e481444d0141698130d1a64d9c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-9b63bad9674bdff26509e45bb55f0aa9f87d55e481444d0141698130d1a64d9c"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

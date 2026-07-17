@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.evaluation-testing.monorepo-polyglot",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "mature",
+    "repositoryShape": "monorepo",
+    "languages": [
+      "python",
+      "typescript",
+      "go"
+    ],
+    "agentShape": "multiple-domain-agents",
+    "constraints": [
+      "shared-eval-contract",
+      "team-owned-fixtures",
+      "cross-model-comparison"
+    ]
+  },
+  "criticalGoals": [
+    "standardize agent evaluation across languages and teams",
+    "attribute failures to capabilities and agent boundaries"
+  ],
+  "nonCriticalGoals": [
+    "support equivalent gold solutions",
+    "aggregate results without hiding weak domains"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.evaluation-testing.monorepo-polyglot"
+}

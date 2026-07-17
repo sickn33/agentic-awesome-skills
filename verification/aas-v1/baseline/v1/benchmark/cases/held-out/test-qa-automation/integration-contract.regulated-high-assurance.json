@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.integration-contract.regulated-high-assurance",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "regulated payments API",
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "OpenAPI 3.1"
+    ],
+    "testingContext": "contract suite must exercise authorization boundaries and auditable API behavior",
+    "constraints": [
+      "no production credentials",
+      "local or CI execution",
+      "traceable evidence",
+      "negative security cases"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "api-contract-validation",
+    "authorization-boundary-tests",
+    "auditable-headless-execution"
+  ],
+  "nonCriticalGoals": [
+    "mock-third-party-services",
+    "machine-readable-reports"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.integration-contract.regulated-high-assurance"
+}

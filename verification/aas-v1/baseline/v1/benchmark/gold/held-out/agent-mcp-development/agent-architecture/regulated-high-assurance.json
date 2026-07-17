@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.agent-architecture.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "human-accountable-agent",
+      "allowedSkillIds": [
+        "ai-agents-architect",
+        "autonomous-agents",
+        "agent-tool-builder",
+        "threat-modeling-expert",
+        "security-requirement-extraction"
+      ],
+      "requiredGroups": [
+        [
+          "ai-agents-architect",
+          "autonomous-agents"
+        ],
+        [
+          "agent-tool-builder"
+        ],
+        [
+          "threat-modeling-expert",
+          "security-requirement-extraction"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-5121e6569d1bc72133c4c9166e77433cf30812180fbba943bedbbebc0fa6330e"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-5121e6569d1bc72133c4c9166e77433cf30812180fbba943bedbbebc0fa6330e"
+    }
+  ]
+}

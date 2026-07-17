@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.observability-performance.shipment-api",
+  "acceptedSolutions": [
+    {
+      "solutionId": "instrumentation-and-monitoring",
+      "allowedSkillIds": [
+        "observability-and-instrumentation",
+        "observability-monitoring-monitor-setup"
+      ],
+      "requiredGroups": [
+        [
+          "observability-and-instrumentation"
+        ],
+        [
+          "observability-monitoring-monitor-setup"
+        ]
+      ]
+    },
+    {
+      "solutionId": "observability-and-profiling",
+      "allowedSkillIds": [
+        "observability-engineer",
+        "performance-profiling"
+      ],
+      "requiredGroups": [
+        [
+          "observability-engineer"
+        ],
+        [
+          "performance-profiling"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f1ebd4d49b54c1512dd505cfe89ee1fb51940e94db5531218031a3d05368812f"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f1ebd4d49b54c1512dd505cfe89ee1fb51940e94db5531218031a3d05368812f"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

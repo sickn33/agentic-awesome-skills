@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.evaluation-testing.mature-legacy-migration",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "legacySystem": "prompt-snapshot-tests",
+    "agentShape": "tool-using-workflow-agent",
+    "constraints": [
+      "preserve-baseline",
+      "replace-string-matching",
+      "phased-eval-adoption"
+    ]
+  },
+  "criticalGoals": [
+    "replace brittle output snapshots with behavioral evaluation",
+    "prove no regression against legacy workflow outcomes"
+  ],
+  "nonCriticalGoals": [
+    "introduce adversarial cases",
+    "version datasets and judgments"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.evaluation-testing.mature-legacy-migration"
+}

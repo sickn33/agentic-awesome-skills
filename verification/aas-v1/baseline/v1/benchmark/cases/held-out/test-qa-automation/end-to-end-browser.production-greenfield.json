@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.production-greenfield",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "production commerce web platform",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Next.js",
+      "React"
+    ],
+    "testingContext": "checkout, account and refund journeys need release-gating E2E coverage",
+    "constraints": [
+      "Chromium Firefox and WebKit",
+      "parallel CI",
+      "trace artifacts",
+      "flaky-test control"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "critical-commerce-journeys",
+    "cross-browser-execution",
+    "reliable-e2e-patterns"
+  ],
+  "nonCriticalGoals": [
+    "visual-regression",
+    "failure-traces"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.end-to-end-browser.production-greenfield"
+}

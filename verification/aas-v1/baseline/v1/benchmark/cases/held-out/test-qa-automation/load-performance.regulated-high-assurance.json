@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.regulated-high-assurance",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "regulated real-time payments service",
+    "languages": [
+      "Java",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "Kafka"
+    ],
+    "testingContext": "capacity evidence must cover sustained traffic and controlled dependency degradation",
+    "constraints": [
+      "synthetic data only",
+      "auditable thresholds",
+      "no production load",
+      "reviewed scenarios"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "auditable-load-scenarios",
+    "capacity-threshold-validation",
+    "degradation-behavior-analysis"
+  ],
+  "nonCriticalGoals": [
+    "soak-testing",
+    "structured-evidence-report"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.load-performance.regulated-high-assurance"
+}

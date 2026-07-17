@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "e2e-production",
+      "allowedSkillIds": [
+        "e2e-testing",
+        "e2e-testing-patterns",
+        "smartui-skill"
+      ],
+      "requiredGroups": [
+        [
+          "e2e-testing"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-45a326c2e7bd03f03d6d7c2cd44aa3aa2f27eab3d5ef2f249a8f2670be0950d3"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-45a326c2e7bd03f03d6d7c2cd44aa3aa2f27eab3d5ef2f249a8f2670be0950d3"
+    }
+  ]
+}

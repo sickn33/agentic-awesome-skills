@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-performance-delivery.monorepo-polyglot",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "workspace": {
+      "webApps": [
+        "React customer",
+        "Angular operations",
+        "Astro documentation"
+      ],
+      "services": [
+        "Go gateway",
+        "Java search"
+      ]
+    },
+    "build": "shared CI with affected-project execution",
+    "problem": [
+      "inconsistent budgets",
+      "shared package regressions",
+      "slow full-suite audits"
+    ],
+    "goal": "comparable performance evidence without forcing identical frameworks"
+  },
+  "criticalGoals": [
+    "establish per-application performance budgets",
+    "detect shared-package performance regressions"
+  ],
+  "nonCriticalGoals": [
+    "run affected audits",
+    "retain comparable artifacts",
+    "respect framework differences",
+    "assign regression ownership",
+    "track bundle and rendering costs"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on performance governance in polyglot monorepos",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-performance-delivery.monorepo-polyglot"
+}

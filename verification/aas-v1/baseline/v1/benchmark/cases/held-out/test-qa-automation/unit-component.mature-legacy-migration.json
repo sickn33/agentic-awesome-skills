@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.mature-legacy-migration",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "mature Node.js business application",
+    "languages": [
+      "JavaScript"
+    ],
+    "frameworks": [
+      "CommonJS",
+      "Express"
+    ],
+    "testingContext": "large brittle Jest suite with global fixtures and snapshot overuse",
+    "constraints": [
+      "incremental migration",
+      "preserve existing coverage",
+      "reduce flaky tests"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "jest-unit-tests",
+    "stable-test-isolation",
+    "incremental-suite-modernization"
+  ],
+  "nonCriticalGoals": [
+    "test-data-factories",
+    "snapshot-discipline"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.unit-component.mature-legacy-migration"
+}

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.production-greenfield",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "production-greenfield",
+    "projectSummary": "New multi-tenant billing service approaching production readiness review",
+    "stack": {
+      "languages": [
+        "typescript"
+      ],
+      "frameworks": [
+        "node",
+        "postgresql"
+      ],
+      "deployment": [
+        "aws",
+        "containers"
+      ]
+    },
+    "constraints": [
+      "internet-facing",
+      "tenant isolation is critical",
+      "review before launch"
+    ],
+    "authorization": {
+      "scope": "defensive architecture review of the organization-owned service",
+      "mode": "non-destructive",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "model tenant-isolation threats",
+    "map production trust boundaries",
+    "derive launch-blocking mitigations"
+  ],
+  "nonCriticalGoals": [
+    "translate mitigations into testable requirements",
+    "prioritize residual risk"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.threat-modeling.production-greenfield"
+}

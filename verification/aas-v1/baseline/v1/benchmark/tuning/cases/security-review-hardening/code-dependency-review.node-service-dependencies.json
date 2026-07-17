@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.code-dependency-review.node-service-dependencies",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "TypeScript notification service",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Node.js"
+    ],
+    "context": "dependency review before a production release",
+    "constraints": [
+      "no automatic upgrades",
+      "advisory evidence"
+    ]
+  },
+  "criticalGoals": [
+    "dependency-risk-review",
+    "advisory-triage"
+  ],
+  "nonCriticalGoals": [
+    "upgrade-prioritization",
+    "supply-chain-evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.security-review-hardening.code-dependency-review.node-service-dependencies"
+}

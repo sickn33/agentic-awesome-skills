@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.regulated-high-assurance",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "regulated-high-assurance",
+    "projectSummary": "Regulated AWS container platform requiring auditable workload and cloud controls",
+    "stack": {
+      "languages": [
+        "java",
+        "go"
+      ],
+      "frameworks": [
+        "spring"
+      ],
+      "deployment": [
+        "aws",
+        "kubernetes",
+        "oci-images"
+      ]
+    },
+    "constraints": [
+      "PCI-aligned evidence",
+      "signed images",
+      "segregated workload identities"
+    ],
+    "authorization": {
+      "scope": "defensive cloud-container compliance review of the regulated owned platform",
+      "mode": "read-only",
+      "productionChanges": "formal-approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "enforce hardened container controls",
+    "verify AWS security posture",
+    "map findings to auditable controls"
+  ],
+  "nonCriticalGoals": [
+    "document image provenance gates",
+    "define periodic reassessment"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.cloud-container.regulated-high-assurance"
+}

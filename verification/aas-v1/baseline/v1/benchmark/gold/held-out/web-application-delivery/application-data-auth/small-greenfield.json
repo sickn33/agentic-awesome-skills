@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.application-data-auth.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "nextjs-supabase-integrated-auth",
+      "allowedSkillIds": [
+        "nextjs-supabase-auth",
+        "supabase"
+      ],
+      "requiredGroups": [
+        [
+          "nextjs-supabase-auth"
+        ],
+        [
+          "supabase"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-024ddf6e6d50150b002c831727f8b7e94eb75c1395fefa59b77acbdaaaf72b8d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-024ddf6e6d50150b002c831727f8b7e94eb75c1395fefa59b77acbdaaaf72b8d"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.containers.regulated-high-assurance",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Clinical data processing platform",
+    "stack": {
+      "languages": [
+        "Java",
+        "Go"
+      ],
+      "runtime": "hardened Kubernetes",
+      "delivery": "segmented cluster"
+    },
+    "team": {
+      "engineers": 18,
+      "operationsModel": "segregated platform and release roles",
+      "experience": "high assurance"
+    },
+    "environment": {
+      "maturity": "regulated production",
+      "topology": "multi-zone services with controlled environments",
+      "connectivity": "egress allowlisted"
+    },
+    "constraints": [
+      "auditable approvals",
+      "least-privilege automation",
+      "immutable evidence retention",
+      "tested rollback"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": true,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "harden container build and runtime controls for regulated workloads"
+  },
+  "criticalGoals": [
+    "prevent unsigned or policy-violating images",
+    "enforce least-privilege runtime isolation"
+  ],
+  "nonCriticalGoals": [
+    "add health checks",
+    "pin immutable image identities",
+    "separate secrets from configuration",
+    "retain rollback artifacts",
+    "document operations"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on containers delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.containers.regulated-high-assurance"
+}

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.observability-performance.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "redacted-auditable-observability",
+      "allowedSkillIds": [
+        "observability-and-instrumentation",
+        "observability-engineer",
+        "distributed-debugging-debug-trace",
+        "performance-profiling",
+        "application-performance-performance-optimization",
+        "observability-monitoring-slo-implement",
+        "security-and-hardening"
+      ],
+      "requiredGroups": [
+        [
+          "observability-and-instrumentation",
+          "observability-engineer"
+        ],
+        [
+          "security-and-hardening"
+        ],
+        [
+          "performance-profiling",
+          "application-performance-performance-optimization"
+        ],
+        [
+          "observability-monitoring-slo-implement"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-79944b62349f6eea2188b124df9e6afae200fe1a3ef00d707c733d887e31abd5"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-79944b62349f6eea2188b124df9e6afae200fe1a3ef00d707c733d887e31abd5"
+    }
+  ]
+}

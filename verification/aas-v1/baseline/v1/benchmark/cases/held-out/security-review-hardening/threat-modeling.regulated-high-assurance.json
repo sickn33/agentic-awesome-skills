@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.regulated-high-assurance",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "regulated-high-assurance",
+    "projectSummary": "Regulated payment authorization service undergoing a pre-certification architecture review",
+    "stack": {
+      "languages": [
+        "kotlin"
+      ],
+      "frameworks": [
+        "spring"
+      ],
+      "deployment": [
+        "private-cloud"
+      ]
+    },
+    "constraints": [
+      "PCI-aligned controls",
+      "audit trail required",
+      "no offensive testing in this phase"
+    ],
+    "authorization": {
+      "scope": "defensive threat and control analysis of the regulated owned service",
+      "mode": "non-destructive",
+      "productionChanges": "formal-approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "identify threats to authorization integrity",
+    "map mitigations to auditable controls",
+    "derive mandatory security requirements"
+  ],
+  "nonCriticalGoals": [
+    "prioritize residual risk",
+    "prepare review evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.threat-modeling.regulated-high-assurance"
+}

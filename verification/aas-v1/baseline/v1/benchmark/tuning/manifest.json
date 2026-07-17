@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "tuningVersion": "1.0.0",
+  "status": "frozen",
+  "purpose": "Weight, alias, and ontology tuning only; never used as held-out release evidence.",
+  "index": "index.json",
+  "caseRoot": "cases",
+  "goldRoot": "gold",
+  "caseCount": 60,
+  "casesPerIntent": 10,
+  "intents": [
+    "web-application-delivery",
+    "api-backend-delivery",
+    "test-qa-automation",
+    "security-review-hardening",
+    "deployment-devops",
+    "agent-mcp-development"
+  ],
+  "separation": {
+    "heldOutInputsIncluded": false,
+    "heldOutGoldIncluded": false,
+    "taskFamilyFingerprintsDisjoint": true,
+    "verifiedAgainstHeldOutCaseCount": 180
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-manifest-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved"
+    },
+    {
+      "decision": "approved"
+    }
+  ]
+}

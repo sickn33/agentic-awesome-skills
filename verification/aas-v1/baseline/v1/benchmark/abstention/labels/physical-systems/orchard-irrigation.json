@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.physical-systems.orchard-irrigation",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PHYSICAL_SYSTEMS"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-5f2fe09d8f321e64ea24b569d914b1b0d0702a648950e94745da4dc109f53a65"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-5f2fe09d8f321e64ea24b569d914b1b0d0702a648950e94745da4dc109f53a65"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.api-design-contracts.research-catalog-api",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "research dataset catalog API",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "FastAPI"
+    ],
+    "context": "existing internal endpoints becoming a documented public contract",
+    "constraints": [
+      "incremental versioning",
+      "offline schema review"
+    ]
+  },
+  "criticalGoals": [
+    "stable-api-contract",
+    "openapi-definition"
+  ],
+  "nonCriticalGoals": [
+    "versioning-policy",
+    "machine-readable-documentation"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.api-design-contracts.research-catalog-api"
+}

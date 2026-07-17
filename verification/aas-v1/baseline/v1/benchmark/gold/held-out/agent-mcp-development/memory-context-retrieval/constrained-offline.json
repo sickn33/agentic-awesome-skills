@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.memory-context-retrieval.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "on-device-memory-and-retrieval",
+      "allowedSkillIds": [
+        "agent-memory-systems",
+        "filesystem-context",
+        "embedding-strategies",
+        "similarity-search-patterns",
+        "rag-implementation",
+        "tree-ring-memory"
+      ],
+      "requiredGroups": [
+        [
+          "agent-memory-systems",
+          "tree-ring-memory"
+        ],
+        [
+          "filesystem-context"
+        ],
+        [
+          "embedding-strategies",
+          "similarity-search-patterns",
+          "rag-implementation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6b8a34c341b596eb804929a3c4ab3c5d1fad9c8d05cefe8861446c99784b8d81"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6b8a34c341b596eb804929a3c4ab3c5d1fad9c8d05cefe8861446c99784b8d81"
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "caseId": "apply-update-managed",
+  "evidence": {
+    "harnessFiles": [
+      "fake-git.jsonl"
+    ],
+    "networkAttemptDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "networkAttempts": []
+  },
+  "expectedExitCode": 0,
+  "fakeGitTrace": [
+    {
+      "branch": "v14.6.0",
+      "command": "clone",
+      "depth": "1",
+      "destination": "<CLONE_DIR>",
+      "destinationContained": true,
+      "destinationWasEmpty": true,
+      "fixtureDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8",
+      "repository": "https://github.com/sickn33/agentic-awesome-skills.git",
+      "schemaVersion": 1
+    }
+  ],
+  "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+  "filesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "targets/absolute",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/.antigravity-install-manifest.json",
+      "sha256": "sha256-fca2d5a82402be730369d0a02b4351021897da611f62877239c0c4cd4290b800",
+      "size": 109,
+      "type": "file"
+    },
+    {
+      "path": "targets/absolute/docs",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/docs/README.md",
+      "sha256": "sha256-dfd5ed6431d5df7a23472b3724368c7b90b68969d6f3882bf9cb68dd41bcb341",
+      "size": 99,
+      "type": "file"
+    },
+    {
+      "path": "targets/absolute/frontend-design",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/frontend-design/SKILL.md",
+      "sha256": "sha256-3f46b065797009b9f1d7e1b380dbedfc93bd726816924df406509a4c41401c15",
+      "size": 211,
+      "type": "file"
+    },
+    {
+      "path": "targets/absolute/unmanaged-sentinel",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/unmanaged-sentinel/KEEP.txt",
+      "sha256": "sha256-3aa5f0ffb6c795d780365d6eb1eeb95c38396d41cb5499d33ad875a4887e6c0c",
+      "size": 19,
+      "type": "file"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "fixtureState": "existing-managed-and-unmanaged",
+  "invariants": {
+    "fixtureDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8",
+    "harnessEvidenceExcluded": true,
+    "noStackStateCreated": true
+  },
+  "invocation": {
+    "args": [
+      "--path",
+      "<CASE_ROOT>/targets/absolute",
+      "--skills",
+      "frontend-design",
+      "--release",
+      "14.6.0"
+    ],
+    "cwd": "<CASE_ROOT>/workspace",
+    "executable": "<BASELINE_RUNTIME>/node_modules/agentic-awesome-skills/tools/bin/install.js"
+  },
+  "observedExitCode": 0,
+  "packageIdentity": {
+    "distIntegrity": "sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg==",
+    "package": "agentic-awesome-skills",
+    "version": "14.6.0"
+  },
+  "preFilesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "targets/absolute",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/.antigravity-install-manifest.json",
+      "sha256": "sha256-a0403c4d6563ac0d11835fb0026de26f681c2f125ee2fa143c776815303c9039",
+      "size": 120,
+      "type": "file"
+    },
+    {
+      "path": "targets/absolute/frontend-design",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/frontend-design/SKILL.md",
+      "sha256": "sha256-5cc790701cd25fc9a9afc52ac6e03bc087d3f389dd629642189f0bf19a8866b6",
+      "size": 21,
+      "type": "file"
+    },
+    {
+      "path": "targets/absolute/removed-managed",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/removed-managed/SKILL.md",
+      "sha256": "sha256-bcff81afa7e684d60a5b8e0300ef8dcd4cf8ff5d56b5191824b8a93f84f63aa9",
+      "size": 20,
+      "type": "file"
+    },
+    {
+      "path": "targets/absolute/unmanaged-sentinel",
+      "type": "directory"
+    },
+    {
+      "hardlinkCount": 1,
+      "path": "targets/absolute/unmanaged-sentinel/KEEP.txt",
+      "sha256": "sha256-3aa5f0ffb6c795d780365d6eb1eeb95c38396d41cb5499d33ad875a4887e6c0c",
+      "size": 19,
+      "type": "file"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "preTreeDigest": "sha256-b68c1be0bbbcb1d98c7b0c0feb14700b9abd12c202d6fb2bd80d626cd9f191ac",
+  "schemaVersion": 1,
+  "signal": null,
+  "stderr": "",
+  "stdout": "Cloning repository…\nCloning repository at v14.6.0…\n\nInstalling for 1 target(s):\n\nCustom:\n  Updating existing install at <CASE_ROOT>/targets/absolute…\n  Removed stale managed entry: removed-managed\n  ✓ Installed to <CASE_ROOT>/targets/absolute\n\nPick a bundle in docs/users/bundles.md and use @skill-name in your AI assistant.\n",
+  "treeDigest": "sha256-7caeed86af504f1367e6c2907b2b5e6c6563f4178a93f26c21096f7b408f1c6d"
+}

@@ -1,0 +1,86 @@
+{
+  "caseId": "empty-exact-token",
+  "evidence": {
+    "harnessFiles": [],
+    "networkAttemptDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "networkAttempts": []
+  },
+  "expectedExitCode": 1,
+  "fakeGitTrace": [],
+  "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "filesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "fixtureState": "clean",
+  "invariants": {
+    "fixtureDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8",
+    "harnessEvidenceExcluded": true,
+    "noStackStateCreated": true
+  },
+  "invocation": {
+    "args": [
+      "--path",
+      "<CASE_ROOT>/targets/missing",
+      "--skills",
+      "frontend-design,,backend-dev-guidelines",
+      "--release",
+      "14.6.0",
+      "--dry-run"
+    ],
+    "cwd": "<CASE_ROOT>/workspace",
+    "executable": "<BASELINE_RUNTIME>/node_modules/agentic-awesome-skills/tools/bin/install.js"
+  },
+  "observedExitCode": 1,
+  "packageIdentity": {
+    "distIntegrity": "sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg==",
+    "package": "agentic-awesome-skills",
+    "version": "14.6.0"
+  },
+  "preFilesystem": [
+    {
+      "path": "home",
+      "type": "directory"
+    },
+    {
+      "path": "outside",
+      "type": "directory"
+    },
+    {
+      "path": "targets",
+      "type": "directory"
+    },
+    {
+      "path": "tmp",
+      "type": "directory"
+    },
+    {
+      "path": "workspace",
+      "type": "directory"
+    }
+  ],
+  "preTreeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50",
+  "schemaVersion": 1,
+  "signal": null,
+  "stderr": "Error: --skills must be a comma-separated list of non-empty exact skill names, ids, or paths.\n",
+  "stdout": "",
+  "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+}

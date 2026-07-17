@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.physical-systems.hvac-diagnosis", "intent": "mechanical-system-diagnosis",
+  "profile": { "request": "Diagnose uneven cooling in a small office", "system": "split HVAC with four zones", "observations": ["two warm rooms", "intermittent compressor cycling", "recent filter replacement"], "requestedOutcome": "field diagnostic sequence and repair decision", "constraints": ["occupied building", "licensed work required for refrigerant"] },
+  "criticalGoals": ["identify the physical fault safely", "determine an appropriate repair path"],
+  "nonCriticalGoals": ["prioritize measurements", "avoid unnecessary parts", "separate airflow and refrigerant causes", "plan occupant safety", "define technician escalation"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD physical HVAC scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:ac5077edf1503a49dac6429f200231dba353176bcbf585c4664b17c935f9f1a9"
+}

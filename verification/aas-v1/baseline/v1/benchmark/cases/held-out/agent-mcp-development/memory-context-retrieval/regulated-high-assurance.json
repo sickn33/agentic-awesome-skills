@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.memory-context-retrieval.regulated-high-assurance",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "regulated-production",
+    "domain": "legal-casework",
+    "agentShape": "research-copilot",
+    "knowledgeScale": "privileged-and-public-materials",
+    "constraints": [
+      "matter-level-isolation",
+      "retention-policy",
+      "right-to-delete",
+      "evidence-chain"
+    ]
+  },
+  "criticalGoals": [
+    "enforce access and retention policy throughout memory",
+    "return attributable evidence without cross-matter leakage"
+  ],
+  "nonCriticalGoals": [
+    "support auditable forgetting",
+    "qualify sources before ingestion"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.memory-context-retrieval.regulated-high-assurance"
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.production-greenfield",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "production-greenfield",
+    "projectSummary": "New customer-data service preparing an AWS Kubernetes production launch",
+    "stack": {
+      "languages": [
+        "go"
+      ],
+      "frameworks": [],
+      "deployment": [
+        "aws",
+        "kubernetes",
+        "oci-images"
+      ]
+    },
+    "constraints": [
+      "internet-facing",
+      "workload identity required",
+      "no cluster mutation during review"
+    ],
+    "authorization": {
+      "scope": "defensive cloud and container posture review of the owned workload",
+      "mode": "read-only",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "harden images and pod runtime",
+    "review cloud identity boundaries",
+    "define production admission gates"
+  ],
+  "nonCriticalGoals": [
+    "prioritize posture findings",
+    "document rollout verification"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.cloud-container.production-greenfield"
+}

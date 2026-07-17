@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.personal-planning.capsule-wardrobe",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PERSONAL_PLANNING"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b7b85a45d0fd1d6f4f4d98709da19d05cb15eff423bd3f39f59ab523f71d1d55"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b7b85a45d0fd1d6f4f4d98709da19d05cb15eff423bd3f39f59ab523f71d1d55"
+    }
+  ]
+}

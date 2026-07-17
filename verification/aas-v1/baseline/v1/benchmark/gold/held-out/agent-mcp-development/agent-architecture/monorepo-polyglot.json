@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.agent-architecture.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "domain-agent-boundaries",
+      "allowedSkillIds": [
+        "ai-agents-architect",
+        "multi-agent-architect",
+        "multi-agent-patterns",
+        "agent-orchestration-multi-agent-optimize",
+        "agent-tool-builder"
+      ],
+      "requiredGroups": [
+        [
+          "ai-agents-architect",
+          "multi-agent-architect"
+        ],
+        [
+          "multi-agent-patterns"
+        ],
+        [
+          "agent-orchestration-multi-agent-optimize",
+          "agent-tool-builder"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-50c8a2eba4ef55187cb1f1e95a8c6cce46d14070d0b6bfc5390c3c733d49756e"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-50c8a2eba4ef55187cb1f1e95a8c6cce46d14070d0b6bfc5390c3c733d49756e"
+    }
+  ]
+}

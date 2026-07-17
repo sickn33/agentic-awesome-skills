@@ -1,0 +1,514 @@
+{
+  "$schema": "../../../schemas/hostile-corpus-manifest.schema.json",
+  "schemaVersion": 1,
+  "corpusVersion": "1.0.0",
+  "status": "frozen",
+  "classes": [
+    {
+      "classId": "relative-path-traversal",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/relative-path-traversal/exploit.tar",
+        "sha256": "a020f5c7a2ffe9dcf93c19fd874e686e3f4e6884935337ce6f70214ae6db7f8a",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/relative-path-traversal/boundary-control.tar",
+        "sha256": "e282301e3ebe8a5c0749ee80e6543c418afcd70f2846e4b77acba51f0bf9c8c0",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "absolute-posix-path",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/absolute-posix-path/exploit.tar",
+        "sha256": "5b01aedba2815210805ed0d273892206d7c062fbcf233fa265c805f85491c227",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/absolute-posix-path/boundary-control.tar",
+        "sha256": "1daaf4a1b0e28db0a57a43935504c4b501edf53cc68b23cc4d6a21e73be79fe2",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "absolute-windows-drive-path",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/absolute-windows-drive-path/exploit.tar",
+        "sha256": "c869995c2b6a28903810c40c103e93f38c957be4e3b513e966f6365389b0fa64",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/absolute-windows-drive-path/boundary-control.tar",
+        "sha256": "c403f70ba9b0e6a48695f3f87bfecd5140bdad4c69535f80797ba8a0652e40bb",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "absolute-unc-path",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/absolute-unc-path/exploit.tar",
+        "sha256": "e37c959979ac5f2a13e57e62e6b27cb470fcf39309126117b6a367232d7cebd5",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/absolute-unc-path/boundary-control.tar",
+        "sha256": "83ddf7de065dfe52e1f8a97b2dc060b5a6843980ef60ac104ce0f794af9c0706",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "symlink-entry",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/symlink-entry/exploit.tar",
+        "sha256": "7fba853d3e3afeb69b9cb88f0484a6250a2cd3ea563b5f9ce2f6962f31c27229",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/symlink-entry/boundary-control.tar",
+        "sha256": "17d0c331242c2a84d28731af5a3648df785ca0b024818d7f46219e7ae1ea8f00",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "hardlink-entry",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/hardlink-entry/exploit.tar",
+        "sha256": "5a5e0f8db8070adeb8b0e0f80089dbaac5e9e9f2c781388efd81b20f12544636",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/hardlink-entry/boundary-control.tar",
+        "sha256": "bb67acfa6c5528e0df64d9517664db38c9318763177f420a654a89c5c97be3ae",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "device-entry",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/device-entry/exploit.tar",
+        "sha256": "68c02c6c7d1722ad6d4a7275adb07015e93cfe2e646062ed726dc3974ad77a5c",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/device-entry/boundary-control.tar",
+        "sha256": "cb4b2242220c8552329e5af6f1bf72d1f47d791e58f468aa96f201f6aa5edd96",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "fifo-entry",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/fifo-entry/exploit.tar",
+        "sha256": "3b92511e97c85693db89afcf8ea9b20e99ac7a5088ae3f53b3d568cdaa693b24",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/fifo-entry/boundary-control.tar",
+        "sha256": "124c5a54cc2d82baddba5787e51b713d7a2ed4d46e448828f83e95b7d2363dec",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "duplicate-file-entry",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/duplicate-file-entry/exploit.tar",
+        "sha256": "a8ff3d0f7655f73f7a0b9d05b827daaad156bd1f3db7aa00e73df6adb55ee0d9",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/duplicate-file-entry/boundary-control.tar",
+        "sha256": "1b828b9ef7b4e155375f412d4e254f9f50d3bf3cc893d4678aebcf2e19edf99f",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "file-directory-collision",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/file-directory-collision/exploit.tar",
+        "sha256": "7a19d19f706a55e536e30251cb6683e7864edd7b243510b8d173636d9296b1b2",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/file-directory-collision/boundary-control.tar",
+        "sha256": "1fc30d03c5804f11af22bfb91a095f482e4ee29839102d2146124bca393092f3",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "case-insensitive-collision",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/case-insensitive-collision/exploit.tar",
+        "sha256": "dd17b96f5283e39299e1c27369be63f47f2a5c2e5071e635e9eb494e7c7c3184",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/case-insensitive-collision/boundary-control.tar",
+        "sha256": "56f760269318f16b02fd2871cae65b8aac5ef61312c67377ca59279677c8dfba",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "unicode-normalization-collision",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/unicode-normalization-collision/exploit.tar",
+        "sha256": "f97e4726dc8125b080398ace90a2ab213c945ef33ce2e0967d23ab053a38d8c4",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/unicode-normalization-collision/boundary-control.tar",
+        "sha256": "e891cbafce4e9fa9dffb394763262a62a2b73d84316e9709193da0d1cfd13040",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "anomalous-permissions",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/anomalous-permissions/exploit.tar",
+        "sha256": "c83ac5a544dfd2ecdc126e59daa7e5d4bb472320e2cd5f5cd70a7f9fd7168307",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/anomalous-permissions/boundary-control.tar",
+        "sha256": "efb09985b91100637fe395a1a07526e25345ce2094ac33192f53384a684f5572",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "file-count-limit",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/file-count-limit/exploit.tar",
+        "sha256": "156ef4c562243f69ab05b200e7dd8e7d0b564c923f2a54b01bf2dc7aff164dcc",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/file-count-limit/boundary-control.tar",
+        "sha256": "7354b2cc21b432e46e2060973f03001199eb90b7a36f64f7a06ac3af1f48d604",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "single-file-size-limit",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/single-file-size-limit/exploit.tar",
+        "sha256": "61486b174fa7a8f0f683870f85411355a9fb3e84e147cf0a880e7fcbad73b2f8",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/single-file-size-limit/boundary-control.tar",
+        "sha256": "332542cc51f6065efb1bcadf85bf16454c67ca1c4a5b6a00c7e954c8536fcb8b",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "expanded-total-size-limit",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/expanded-total-size-limit/exploit.tar",
+        "sha256": "9a211fb51d14cb75138b4edb1420ba9a455529e7a92af2d44c6c6ecd4bc743b9",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/expanded-total-size-limit/boundary-control.tar",
+        "sha256": "53de5cd8022d843c9c07d91fe25c55d3ed2b226387d92740149d91cfa77f6888",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "decompression-ratio-bomb",
+      "surface": "archive",
+      "exploit": {
+        "path": "fixtures/archive/decompression-ratio-bomb/exploit.tar.gz",
+        "sha256": "071df83dd09910f4b08571ebf5c46670d4dd65580e82c6d1ebcbd1cba297e3ce",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/archive/decompression-ratio-bomb/boundary-control.tar.gz",
+        "sha256": "41eb1a999cf74250729f06d98dd4aa7109a4a3bd14cbf19b50d5488efe889e20",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "malformed-mcp-framing",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/malformed-mcp-framing/exploit.jsonl",
+        "sha256": "1d90b9a0c11978dac623677bcc60c398c0cfd6729a8fffd25791e80c7aebda89",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/malformed-mcp-framing/boundary-control.jsonl",
+        "sha256": "049aff746b6d64ae1cf1c121cb26fa3c7dfc03e64c001f168dd7082527ae00c3",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "malformed-json",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/malformed-json/exploit.json",
+        "sha256": "22d36aa8cf8c0f806309eb31aa5820bd023e3a7bd813bfe40389e806478373e9",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/malformed-json/boundary-control.json",
+        "sha256": "049aff746b6d64ae1cf1c121cb26fa3c7dfc03e64c001f168dd7082527ae00c3",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "duplicate-json-key",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/duplicate-json-key/exploit.json",
+        "sha256": "1fd1420b3d9d44977dd8ba090c733061248fc0e8fea593bac225411f2cc4711d",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/duplicate-json-key/boundary-control.json",
+        "sha256": "461d21a8958c6f043aae345282a9d7f1027c9e88952d471c6dffa1e175cb453e",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "invalid-utf8",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/invalid-utf8/exploit.json",
+        "sha256": "514eb055d9e370172942dd6a26f0525701afceac3d4c0a06c6b84232cb21be69",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/invalid-utf8/boundary-control.json",
+        "sha256": "0c8a8e698cb14cf39aca924e87d8eae31f8291eb238f325f941e0a0a0fb3d91e",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "request-byte-limit",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/request-byte-limit/exploit.json",
+        "sha256": "30ddbb1e00d3446c6fb51e3954521abf36e6896ce4b1ebd608ea9b030eb66c24",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/request-byte-limit/boundary-control.json",
+        "sha256": "a1462943e5779f0250fd6e83e5e5175573a5d1d7b44493c2f21aaabfd678ef45",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "json-depth-limit",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/json-depth-limit/exploit.json",
+        "sha256": "988e4b8368218e9280d49c83a4489797cbddabb433c60529a7930aff1cfcdbab",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/json-depth-limit/boundary-control.json",
+        "sha256": "5b48c13e56713bdcb4757ab0f9cbdc39264deb4e51f4a9acaf2d65536be170e4",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "query-length-limit",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/query-length-limit/exploit.json",
+        "sha256": "2cc9dcd8f8170acc15b230a6c1f6ce47c7bac707486cc82832e7f2dc352c444e",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/query-length-limit/boundary-control.json",
+        "sha256": "a345231a310f96875fcc95443c1167d4bd8d6b688b216add83ba861c5e133fe8",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "result-count-limit",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/result-count-limit/exploit.json",
+        "sha256": "2b73217f986735622aeb2823956b3d3334de383a8921f34b99c27cc76eaab55a",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/result-count-limit/boundary-control.json",
+        "sha256": "fe6136143dfb8df7ff240cad4cd11b5c6ec39f42d5290d85843bdb817ea52caf",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "version-incompatibility",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/version-incompatibility/exploit.json",
+        "sha256": "28e158158b28a4bd04ba17137a134caf1b158fece00c3076c88d1bd5a68d053e",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/version-incompatibility/boundary-control.json",
+        "sha256": "9021b004eb9a6f23549541a78b50dc05d7a1a7ee1a9f98bd42be82ed73d2a582",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "invalid-resource-uri",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/invalid-resource-uri/exploit.json",
+        "sha256": "a3af51e2a58e60f0bb346b51da345db6450edc5f3c03713c6dd6f2404b2f6f66",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/invalid-resource-uri/boundary-control.json",
+        "sha256": "0d144f1d0c875dbfdd34a1e2042eaf2bcd6b941041dbca5d559ea0e25032e58f",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "forbidden-profile-field",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/forbidden-profile-field/exploit.json",
+        "sha256": "528606e2945294802983746fd53796da9ba9bc520b38da9d89768026b2787a45",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/forbidden-profile-field/boundary-control.json",
+        "sha256": "f10838bcc7878eba33568ac6004214e6549415923443eb55aeef513442518222",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "absolute-profile-path",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/absolute-profile-path/exploit.json",
+        "sha256": "bb62eb2b9d1f907efa51a462d9c222b8f310c9caed7b2e17cd0f6f9c112f2438",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/absolute-profile-path/boundary-control.json",
+        "sha256": "1eec60e7c30bd778eb7853a8fe93b175a4dcf3c919ba1aeb068e5b7a1bf5045c",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "secret-canary",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/secret-canary/exploit.json",
+        "sha256": "01b9dd49444bf4b36007f00e7f4861ad890d386c4601aac53a8e2ac10c4707f8",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/secret-canary/boundary-control.json",
+        "sha256": "c9f8f824b625dd3938955e3d12342ddc6d2e78691e3f0bca2c6ded189f44b3e4",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "prompt-injection-content",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/prompt-injection-content/exploit.json",
+        "sha256": "bf016c6cd754bf322bad425c85426bd9bbb8c25b36d83b7730dc190f92a8132f",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/prompt-injection-content/boundary-control.json",
+        "sha256": "4aa8712b472935d073ee8aeada415206f07d15f0bd1155ddde3a3d17937b5721",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    },
+    {
+      "classId": "timeout-resource-exhaustion",
+      "surface": "input",
+      "exploit": {
+        "path": "fixtures/input/timeout-resource-exhaustion/exploit.json",
+        "sha256": "fdda5da94b4dc09244e7f619f0d87b055ebf6a868e9139a12583f98bc90eb447",
+        "expected": "reject"
+      },
+      "boundaryControl": {
+        "path": "fixtures/input/timeout-resource-exhaustion/boundary-control.json",
+        "sha256": "917b96e042009b039a666d72038a7920416ba0118d07777ef51045eabbe3a966",
+        "expected": "accept"
+      },
+      "status": "frozen"
+    }
+  ],
+  "invariants": {
+    "exploitLeavesCacheUnchanged": true,
+    "exploitLaunchesNoChildProcess": true,
+    "exploitExecutesNoCode": true,
+    "boundaryControlMustRemainAccepted": true
+  },
+  "fixtureContract": {
+    "generatorVersion": 1,
+    "archive": {
+      "format": "ustar",
+      "maxEntries": 16,
+      "maxSingleFileBytes": 4096,
+      "maxExpandedTotalBytes": 8192,
+      "maxCompressionRatio": 64
+    },
+    "input": {
+      "framing": "utf8-json-lines",
+      "maxRequestBytes": 4096,
+      "maxJsonDepth": 16,
+      "maxQueryCodePoints": 256,
+      "maxResultCount": 50,
+      "supportedMcpProtocolVersions": [
+        "2025-06-18"
+      ]
+    }
+  }
+}

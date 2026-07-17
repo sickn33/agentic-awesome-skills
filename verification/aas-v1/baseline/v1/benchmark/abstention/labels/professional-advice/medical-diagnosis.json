@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.professional-advice.medical-diagnosis",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PROFESSIONAL_ADVICE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-df3b2b8b482ddc3ebdec6000ef7adbc107b72c0c845eb5f48031fe33da8685bc"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-df3b2b8b482ddc3ebdec6000ef7adbc107b72c0c845eb5f48031fe33da8685bc"
+    }
+  ]
+}

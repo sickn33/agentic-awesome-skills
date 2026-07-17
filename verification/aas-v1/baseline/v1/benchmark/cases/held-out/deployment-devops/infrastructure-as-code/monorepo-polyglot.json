@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.infrastructure-as-code.monorepo-polyglot",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Data products platform",
+    "stack": {
+      "languages": [
+        "Python",
+        "Go",
+        "TypeScript"
+      ],
+      "runtime": "cloud data and compute services",
+      "delivery": "multiple accounts and regions"
+    },
+    "team": {
+      "engineers": 28,
+      "operationsModel": "shared platform team",
+      "experience": "mixed specialist teams"
+    },
+    "environment": {
+      "maturity": "scaling",
+      "topology": "polyglot monorepo with multiple services",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "independent service ownership",
+      "selective builds and deployments",
+      "shared governance"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "govern infrastructure modules shared by autonomous service teams"
+  },
+  "criticalGoals": [
+    "preserve module ownership boundaries",
+    "prevent unsafe cross-stack coupling"
+  ],
+  "nonCriticalGoals": [
+    "lock provider and module versions",
+    "preview changes before apply",
+    "detect drift",
+    "retain state recovery evidence",
+    "record resource ownership"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on infrastructure-as-code delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.infrastructure-as-code.monorepo-polyglot"
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.professional-advice.investment-allocation",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PROFESSIONAL_ADVICE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b184f03216d3d30f375da86e35f2b24328f70350153cbfe2327a358027a0e517"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b184f03216d3d30f375da86e35f2b24328f70350153cbfe2327a358027a0e517"
+    }
+  ]
+}

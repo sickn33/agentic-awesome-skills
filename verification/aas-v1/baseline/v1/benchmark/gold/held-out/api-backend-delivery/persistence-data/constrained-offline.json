@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.persistence-data.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "bounded-local-persistence",
+      "allowedSkillIds": [
+        "database-design",
+        "database-migration",
+        "database-migrations-sql-migrations",
+        "sql-optimization-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "database-design"
+        ],
+        [
+          "database-migration",
+          "database-migrations-sql-migrations"
+        ],
+        [
+          "sql-optimization-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ffa128b26782cffe6f77be48da845a44b1db26986fbf1d1b7b8902aa0a723aad"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ffa128b26782cffe6f77be48da845a44b1db26986fbf1d1b7b8902aa0a723aad"
+    }
+  ]
+}

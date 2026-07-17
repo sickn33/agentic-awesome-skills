@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.containers.small-greenfield",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Neighborhood library lending API",
+    "stack": {
+      "languages": [
+        "Python"
+      ],
+      "runtime": "single OCI container",
+      "delivery": "small virtual private server"
+    },
+    "team": {
+      "engineers": 2,
+      "operationsModel": "developer-owned",
+      "experience": "mixed"
+    },
+    "environment": {
+      "maturity": "greenfield",
+      "topology": "single service",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "small operating budget",
+      "minimal platform overhead"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "containerize the service with a maintainable local and production workflow"
+  },
+  "criticalGoals": [
+    "produce a reproducible minimal image",
+    "run the service without root privileges"
+  ],
+  "nonCriticalGoals": [
+    "add health checks",
+    "pin immutable image identities",
+    "separate secrets from configuration",
+    "retain rollback artifacts",
+    "document operations"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on containers delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.containers.small-greenfield"
+}

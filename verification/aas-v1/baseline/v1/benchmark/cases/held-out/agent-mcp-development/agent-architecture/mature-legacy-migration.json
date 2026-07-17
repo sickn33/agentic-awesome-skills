@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.agent-architecture.mature-legacy-migration",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "languages": [
+      "java"
+    ],
+    "legacySystem": "rule-based-workflow-bot",
+    "agentShape": "incremental-agentic-replacement",
+    "constraints": [
+      "no-flag-day",
+      "behavior-parity",
+      "operator-override",
+      "phased-tool-adoption"
+    ]
+  },
+  "criticalGoals": [
+    "migrate to agentic control without losing deterministic safeguards",
+    "preserve operator control during mixed legacy and agent execution"
+  ],
+  "nonCriticalGoals": [
+    "define strangler boundaries",
+    "capture comparable run evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.agent-architecture.mature-legacy-migration"
+}

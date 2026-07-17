@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.non-web-software.macos-menu-utility", "intent": "native-macos-development",
+  "profile": { "request": "Create a native macOS menu-bar utility for switching audio devices", "platform": "macOS", "interface": "AppKit with a small SwiftUI settings window", "features": ["device list", "keyboard shortcut", "launch at login"], "constraints": ["sandbox-aware", "signed application", "no Electron or web view"] },
+  "criticalGoals": ["design a native macOS application", "integrate safely with system audio-device APIs"],
+  "nonCriticalGoals": ["manage menu lifecycle", "handle device changes", "configure login launch", "support keyboard access", "prepare signing requirements"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD native-macOS scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:0da700f1e24b920694197aa5f555ec4003bddc4fa60017ea0befb4799b7c4c89"
+}

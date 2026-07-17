@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.cloud-container.batch-platform-hardening",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "containerized batch processing platform",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "Docker",
+      "AWS"
+    ],
+    "context": "new cloud workload with least-privilege and image-hardening requirements",
+    "constraints": [
+      "non-destructive audit",
+      "reproducible controls"
+    ]
+  },
+  "criticalGoals": [
+    "container-hardening",
+    "cloud-permission-review"
+  ],
+  "nonCriticalGoals": [
+    "workload-isolation",
+    "deployment-policy"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.security-review-hardening.cloud-container.batch-platform-hardening"
+}

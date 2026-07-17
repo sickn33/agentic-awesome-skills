@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.persistence-data.mature-legacy-migration",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "languages": [
+      "php"
+    ],
+    "datastores": [
+      "mysql",
+      "postgresql"
+    ],
+    "dataVolume": "multi-terabyte",
+    "constraints": [
+      "near-zero-downtime",
+      "dual-read-transition",
+      "reconciliation-required"
+    ]
+  },
+  "criticalGoals": [
+    "plan a reversible database migration",
+    "preserve integrity during phased cutover"
+  ],
+  "nonCriticalGoals": [
+    "add migration observability and reconciliation",
+    "retune indexes for the target database"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.persistence-data.mature-legacy-migration"
+}

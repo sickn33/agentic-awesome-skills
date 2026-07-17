@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.non-web-software.unreal-coop-game",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_NON_WEB_SOFTWARE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-77a0cb4bb33556117b64c39eb30aa6f27864242e4bda639c716b40ddd97af88d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-77a0cb4bb33556117b64c39eb30aa6f27864242e4bda639c716b40ddd97af88d"
+    }
+  ]
+}

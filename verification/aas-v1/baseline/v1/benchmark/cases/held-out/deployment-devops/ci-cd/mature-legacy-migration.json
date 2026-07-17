@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.ci-cd.mature-legacy-migration",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Insurance batch-processing platform",
+    "stack": {
+      "languages": [
+        "Java",
+        "Bash"
+      ],
+      "runtime": "virtual machines plus new containers",
+      "delivery": "parallel legacy and modern pipelines"
+    },
+    "team": {
+      "engineers": 9,
+      "operationsModel": "operations handoff",
+      "experience": "legacy domain experts"
+    },
+    "environment": {
+      "maturity": "mature legacy migration",
+      "topology": "virtual machines moving incrementally to managed infrastructure",
+      "connectivity": "restricted outbound"
+    },
+    "constraints": [
+      "no big-bang cutover",
+      "preserve current recovery path",
+      "limited maintenance windows"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "introduce modern automation without interrupting the existing release train"
+  },
+  "criticalGoals": [
+    "run legacy and replacement pipelines safely in parallel",
+    "preserve a verified fallback path"
+  ],
+  "nonCriticalGoals": [
+    "cache dependencies safely",
+    "retain validation evidence",
+    "separate deployment identity",
+    "make failures diagnosable",
+    "document recovery"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on ci-cd delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.ci-cd.mature-legacy-migration"
+}

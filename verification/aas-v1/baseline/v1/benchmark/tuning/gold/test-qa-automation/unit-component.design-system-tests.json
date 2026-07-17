@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.unit-component.design-system-tests",
+  "acceptedSolutions": [
+    {
+      "solutionId": "vitest-component-suite",
+      "allowedSkillIds": [
+        "vitest-skill",
+        "javascript-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "vitest-skill"
+        ],
+        [
+          "javascript-testing-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "jest-component-suite",
+      "allowedSkillIds": [
+        "jest-skill",
+        "javascript-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "jest-skill"
+        ],
+        [
+          "javascript-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-76697f79d76acaaf26cafb43002af3a8e8c47437a3c3bb5663a6b3bee6ee7a56"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-76697f79d76acaaf26cafb43002af3a8e8c47437a3c3bb5663a6b3bee6ee7a56"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

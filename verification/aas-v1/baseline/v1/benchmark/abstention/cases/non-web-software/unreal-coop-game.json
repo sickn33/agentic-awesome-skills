@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.non-web-software.unreal-coop-game", "intent": "three-dimensional-game-development",
+  "profile": { "request": "Prototype a cooperative puzzle room in Unreal Engine", "players": 2, "implementation": ["C++ gameplay classes", "Blueprint presentation"], "features": ["replicated interactions", "shared puzzle state", "checkpoint reset"], "constraints": ["desktop build", "deterministic reset", "no web runtime"] },
+  "criticalGoals": ["design replicated cooperative gameplay", "keep puzzle state authoritative and resettable"],
+  "nonCriticalGoals": ["partition C++ and Blueprint roles", "handle late join", "synchronize interactions", "define checkpoints", "test two-client behavior"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD game-development scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:c708b84c7640049e6a55b9e2c78c2ae5cca0301bf6c81c28557d1dba514358be"
+}

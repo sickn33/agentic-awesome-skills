@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.security-operations.regulated-high-assurance",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "regulated-production",
+    "domain": "financial-market-operations",
+    "agentShape": "human-approved-operations-agent",
+    "constraints": [
+      "segregation-of-duties",
+      "signed-action-receipts",
+      "known-provenance-only",
+      "fail-closed"
+    ]
+  },
+  "criticalGoals": [
+    "enforce non-bypassable policy and human approval",
+    "produce auditable evidence for each privileged action"
+  ],
+  "nonCriticalGoals": [
+    "derive security requirements from the threat model",
+    "test revocation and incident containment"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.security-operations.regulated-high-assurance"
+}

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.ui-accessibility.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "legacy-scan-baseline-and-fix",
+      "allowedSkillIds": [
+        "accesslint-scan",
+        "accesslint-diff",
+        "wcag-audit-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "accesslint-scan"
+        ],
+        [
+          "accesslint-diff"
+        ],
+        [
+          "wcag-audit-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "legacy-audit-baseline-and-fix",
+      "allowedSkillIds": [
+        "accesslint-audit",
+        "accesslint-diff",
+        "wcag-audit-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "accesslint-audit"
+        ],
+        [
+          "accesslint-diff"
+        ],
+        [
+          "wcag-audit-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f4157a67438e83a44b9c680cec03f179b54d2ced4c34af2cb42ea8fafd093bfa"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f4157a67438e83a44b9c680cec03f179b54d2ced4c34af2cb42ea8fafd093bfa"
+    }
+  ]
+}

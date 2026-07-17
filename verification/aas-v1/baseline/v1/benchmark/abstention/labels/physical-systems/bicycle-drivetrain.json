@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.physical-systems.bicycle-drivetrain",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PHYSICAL_SYSTEMS"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-212edf3e9c6fe2f4b25a0a4d7a0338fbe99c8eb53e84978b54dc16f46dc90a40"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-212edf3e9c6fe2f4b25a0a4d7a0338fbe99c8eb53e84978b54dc16f46dc90a40"
+    }
+  ]
+}

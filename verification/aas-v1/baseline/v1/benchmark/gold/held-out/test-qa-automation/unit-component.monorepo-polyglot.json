@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "native-runner-matrix",
+      "allowedSkillIds": [
+        "vitest-skill",
+        "junit-5-skill",
+        "pytest-skill",
+        "testing-qa"
+      ],
+      "requiredGroups": [
+        [
+          "vitest-skill"
+        ],
+        [
+          "junit-5-skill"
+        ],
+        [
+          "pytest-skill"
+        ],
+        [
+          "testing-qa"
+        ]
+      ]
+    },
+    {
+      "solutionId": "jest-runner-matrix",
+      "allowedSkillIds": [
+        "jest-skill",
+        "junit-5-skill",
+        "pytest-skill",
+        "testing-qa"
+      ],
+      "requiredGroups": [
+        [
+          "jest-skill"
+        ],
+        [
+          "junit-5-skill"
+        ],
+        [
+          "pytest-skill"
+        ],
+        [
+          "testing-qa"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0ac9437524495af704d846e8be2651e4471100f9686ddc99847f084fdab38dfc"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0ac9437524495af704d846e8be2651e4471100f9686ddc99847f084fdab38dfc"
+    }
+  ]
+}

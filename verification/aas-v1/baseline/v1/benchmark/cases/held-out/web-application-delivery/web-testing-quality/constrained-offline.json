@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.constrained-offline",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "application": "Warehouse terminal web interface",
+    "lab": {
+      "network": "isolated",
+      "browsers": "preinstalled",
+      "workers": 4
+    },
+    "delivery": "signed quarterly bundle",
+    "testNeeds": [
+      "scanner input",
+      "offline queue",
+      "power-loss recovery"
+    ],
+    "constraints": [
+      "no package downloads during tests",
+      "no cloud browsers",
+      "bounded execution time"
+    ]
+  },
+  "criticalGoals": [
+    "define an offline-capable web test strategy",
+    "cover queue and recovery behavior deterministically"
+  ],
+  "nonCriticalGoals": [
+    "reuse preinstalled browsers",
+    "avoid remote services",
+    "simulate device input",
+    "retain local failure artifacts",
+    "keep the suite bounded"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on isolated industrial browser-test labs",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-testing-quality.constrained-offline"
+}

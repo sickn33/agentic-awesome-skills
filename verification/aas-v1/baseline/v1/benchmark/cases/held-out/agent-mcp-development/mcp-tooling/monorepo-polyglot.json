@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.mcp-tooling.monorepo-polyglot",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "mature",
+    "repositoryShape": "monorepo",
+    "languages": [
+      "typescript",
+      "python",
+      "go"
+    ],
+    "transport": "mixed-local-and-remote",
+    "toolSurface": "domain-owned-mcp-servers",
+    "constraints": [
+      "shared-conventions",
+      "independent-versioning",
+      "cross-host-compatibility"
+    ]
+  },
+  "criticalGoals": [
+    "standardize MCP contracts across implementations",
+    "keep domain servers independently deployable"
+  ],
+  "nonCriticalGoals": [
+    "define discovery and version negotiation",
+    "share conformance tests across languages"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.mcp-tooling.monorepo-polyglot"
+}

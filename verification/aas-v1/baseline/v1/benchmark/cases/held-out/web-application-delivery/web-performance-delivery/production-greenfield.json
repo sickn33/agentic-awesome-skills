@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-performance-delivery.production-greenfield",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Global Next.js fashion storefront",
+    "scale": {
+      "regions": 12,
+      "dailySessions": 900000,
+      "experiments": 20
+    },
+    "rendering": [
+      "server components",
+      "edge cache",
+      "client personalization"
+    ],
+    "targets": [
+      "Core Web Vitals at seventy-fifth percentile",
+      "performance budgets in CI"
+    ],
+    "risks": [
+      "third-party scripts",
+      "image-heavy catalog",
+      "hydration cost"
+    ]
+  },
+  "criticalGoals": [
+    "design production performance controls for Next.js",
+    "prevent regressions with objective delivery budgets"
+  ],
+  "nonCriticalGoals": [
+    "optimize React rendering",
+    "control third-party cost",
+    "improve image delivery",
+    "measure production-like builds",
+    "triage regional variance"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario informed by global ecommerce performance engineering",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-performance-delivery.production-greenfield"
+}

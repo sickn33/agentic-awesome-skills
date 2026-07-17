@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.async-integrations.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "local-store-and-forward",
+      "allowedSkillIds": [
+        "api-integration",
+        "event-sourcing-architect",
+        "event-store-design",
+        "saga-orchestration"
+      ],
+      "requiredGroups": [
+        [
+          "api-integration"
+        ],
+        [
+          "event-sourcing-architect",
+          "event-store-design"
+        ],
+        [
+          "saga-orchestration",
+          "event-sourcing-architect"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-441de9da54ae538b56262e9c3a531c960b5b404cfc9a0f0a281ea89ffc8bf9ba"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-441de9da54ae538b56262e9c3a531c960b5b404cfc9a0f0a281ea89ffc8bf9ba"
+    }
+  ]
+}

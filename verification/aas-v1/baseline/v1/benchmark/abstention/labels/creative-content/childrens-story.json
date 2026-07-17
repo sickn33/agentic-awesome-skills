@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.creative-content.childrens-story",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_CREATIVE_CONTENT"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fa84e3b1265462a96a98931c043f9857f463377578302b2d531c2c64ed0eeb4c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fa84e3b1265462a96a98931c043f9857f463377578302b2d531c2c64ed0eeb4c"
+    }
+  ]
+}

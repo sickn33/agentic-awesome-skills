@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.personal-planning.apartment-declutter",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PERSONAL_PLANNING"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-41ea6db15d87e3d513a7feddade7d1826c17f01329db3bd5640fdce42c129b23"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-41ea6db15d87e3d513a7feddade7d1826c17f01329db3bd5640fdce42c129b23"
+    }
+  ]
+}

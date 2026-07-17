@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.ci-cd.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "defensive-local-runner",
+      "allowedSkillIds": [
+        "bash-defensive-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "bash-defensive-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "provider-neutral-offline",
+      "allowedSkillIds": [
+        "ci-cd-and-automation"
+      ],
+      "requiredGroups": [
+        [
+          "ci-cd-and-automation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-67431de02bb4f5f96d82d30b45ccb079873933214c27da6f73751004d59a738c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-67431de02bb4f5f96d82d30b45ccb079873933214c27da6f73751004d59a738c"
+    }
+  ]
+}

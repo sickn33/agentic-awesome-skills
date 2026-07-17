@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.api-design-contracts.regulated-high-assurance",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "regulated-production",
+    "domain": "healthcare",
+    "languages": [
+      "csharp"
+    ],
+    "frameworks": [
+      "aspnet-core"
+    ],
+    "apiStyles": [
+      "rest"
+    ],
+    "consumers": [
+      "clinical-partners"
+    ],
+    "constraints": [
+      "auditability",
+      "data-minimization",
+      "known-provenance-only",
+      "safe-risk-only"
+    ]
+  },
+  "criticalGoals": [
+    "specify an auditable least-privilege API contract",
+    "make validation, authorization, and failure semantics explicit"
+  ],
+  "nonCriticalGoals": [
+    "publish a versioned OpenAPI contract",
+    "define compatibility review and deprecation controls"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.api-design-contracts.regulated-high-assurance"
+}

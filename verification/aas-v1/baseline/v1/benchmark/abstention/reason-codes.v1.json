@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "registryVersion": "1.0.0",
+  "namespace": "AAS_COVERAGE",
+  "stability": "appendOnlyWithinMajor",
+  "codes": [
+    { "code": "AAS_COVERAGE_OOD_CREATIVE_CONTENT", "family": "creative-content", "meaning": "The requested outcome is authored narrative or editorial content, outside the six frozen software-delivery intents." },
+    { "code": "AAS_COVERAGE_OOD_MEDIA_PRODUCTION", "family": "media-production", "meaning": "The requested outcome is audiovisual or visual-media production, outside the six frozen software-delivery intents." },
+    { "code": "AAS_COVERAGE_OOD_PERSONAL_PLANNING", "family": "personal-planning", "meaning": "The requested outcome is personal or household planning, outside the six frozen software-delivery intents." },
+    { "code": "AAS_COVERAGE_OOD_PROFESSIONAL_ADVICE", "family": "professional-advice", "meaning": "The requested outcome is individualized regulated professional advice, outside the six frozen software-delivery intents." },
+    { "code": "AAS_COVERAGE_OOD_PHYSICAL_SYSTEMS", "family": "physical-systems", "meaning": "The requested outcome concerns design, diagnosis, or repair of a physical system, outside the six frozen software-delivery intents." },
+    { "code": "AAS_COVERAGE_OOD_NON_WEB_SOFTWARE", "family": "non-web-software", "meaning": "The requested outcome is native, game, desktop, or embedded software rather than a frozen v1 software-delivery intent." }
+  ]
+}

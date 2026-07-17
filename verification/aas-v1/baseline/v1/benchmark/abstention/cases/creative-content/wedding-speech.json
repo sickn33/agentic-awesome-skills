@@ -1,0 +1,13 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1,
+  "caseId": "abstention.creative-content.wedding-speech",
+  "intent": "speechwriting",
+  "profile": { "request": "Rewrite a best-person wedding speech", "durationMinutes": 6, "audience": "multigenerational reception", "tone": ["warm", "witty", "not embarrassing"], "sourceMaterial": "three paraphrased shared memories", "constraints": ["avoid private jokes", "end with a toast"] },
+  "criticalGoals": ["produce a natural spoken narrative", "honor the couple without exposing private details"],
+  "nonCriticalGoals": ["open with a gentle joke", "connect the memories", "control timing", "make the toast memorable", "keep language inclusive"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD speechwriting scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:c178cd053e8e6ed043e6a1c42006efcd0088f0ae166713084796ef1dbce978a4"
+}

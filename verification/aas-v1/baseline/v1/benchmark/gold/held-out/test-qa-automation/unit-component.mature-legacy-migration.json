@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "jest-stabilization",
+      "allowedSkillIds": [
+        "jest-skill",
+        "javascript-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "jest-skill"
+        ],
+        [
+          "javascript-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-9622b68121d2c46f6f0993b0680449f53de163a2e8454d28e006e6d4de237c6a"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-9622b68121d2c46f6f0993b0680449f53de163a2e8454d28e006e6d4de237c6a"
+    }
+  ]
+}

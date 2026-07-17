@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.api-design-contracts.mature-legacy-migration",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "teamSize": 11,
+    "languages": [
+      "java"
+    ],
+    "frameworks": [
+      "spring"
+    ],
+    "apiStyles": [
+      "soap",
+      "rest"
+    ],
+    "consumers": [
+      "long-lived-enterprise-clients"
+    ],
+    "constraints": [
+      "no-flag-day",
+      "contract-compatibility",
+      "phased-deprecation"
+    ]
+  },
+  "criticalGoals": [
+    "design a compatible migration contract",
+    "define explicit deprecation and versioning rules"
+  ],
+  "nonCriticalGoals": [
+    "derive an OpenAPI description for the replacement API",
+    "map legacy operations to stable resources"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.api-design-contracts.mature-legacy-migration"
+}

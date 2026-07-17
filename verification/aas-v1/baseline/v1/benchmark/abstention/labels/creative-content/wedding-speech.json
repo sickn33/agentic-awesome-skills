@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.creative-content.wedding-speech",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_CREATIVE_CONTENT"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1bac2bb23423f11302a5a77def21ba74d6d7af8ff6fa5fb4610f5cf4072d614c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1bac2bb23423f11302a5a77def21ba74d6d7af8ff6fa5fb4610f5cf4072d614c"
+    }
+  ]
+}

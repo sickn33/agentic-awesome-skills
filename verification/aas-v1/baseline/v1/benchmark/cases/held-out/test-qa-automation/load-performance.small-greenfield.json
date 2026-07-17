@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.small-greenfield",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "small Go REST service",
+    "languages": [
+      "Go",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "net/http"
+    ],
+    "testingContext": "team needs a first repeatable latency and throughput baseline",
+    "constraints": [
+      "local execution",
+      "scripted scenarios",
+      "simple CI threshold"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "api-load-scenario",
+    "latency-throughput-thresholds",
+    "repeatable-local-run"
+  ],
+  "nonCriticalGoals": [
+    "ci-gating",
+    "result-summary"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.load-performance.small-greenfield"
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.auth-authorization.mature-legacy-migration",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "languages": [
+      "ruby"
+    ],
+    "frameworks": [
+      "rails"
+    ],
+    "identityModel": "server-sessions-to-oidc",
+    "constraints": [
+      "existing-users",
+      "no-forced-logout",
+      "mixed-old-new-routes",
+      "phased-cutover"
+    ]
+  },
+  "criticalGoals": [
+    "migrate authentication without account takeover or session confusion",
+    "preserve authorization behavior during dual operation"
+  ],
+  "nonCriticalGoals": [
+    "introduce token rotation and revocation",
+    "retire legacy credentials with auditable milestones"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.auth-authorization.mature-legacy-migration"
+}

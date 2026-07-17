@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.mature-legacy-migration",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "mature server-rendered insurance portal",
+    "languages": [
+      "Java",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "Selenium WebDriver",
+      "Spring MVC"
+    ],
+    "testingContext": "slow brittle Selenium suite needs staged modernization without losing coverage",
+    "constraints": [
+      "incremental migration",
+      "existing grid compatibility",
+      "preserve audited journeys"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "preserve-legacy-browser-coverage",
+    "reduce-e2e-flakiness",
+    "staged-framework-migration"
+  ],
+  "nonCriticalGoals": [
+    "page-object-refactor",
+    "parallel-execution"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.end-to-end-browser.mature-legacy-migration"
+}

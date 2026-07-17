@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.application-data-auth.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "centralized-auth-and-api-migration",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "frontend-api-integration-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "frontend-api-integration-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-307428b7159cf25c877ae1aa75b9cb8d00c38f8e2817b5ff9535e5bd7310fae6"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-307428b7159cf25c877ae1aa75b9cb8d00c38f8e2817b5ff9535e5bd7310fae6"
+    }
+  ]
+}

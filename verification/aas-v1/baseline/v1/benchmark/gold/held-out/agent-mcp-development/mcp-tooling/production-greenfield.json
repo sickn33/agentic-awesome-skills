@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.mcp-tooling.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "production-mcp-contracts",
+      "allowedSkillIds": [
+        "mcp-builder",
+        "mcp-builder-ms",
+        "mcp-tool-developer",
+        "api-design-principles",
+        "api-security-best-practices",
+        "observability-and-instrumentation"
+      ],
+      "requiredGroups": [
+        [
+          "mcp-builder",
+          "mcp-builder-ms",
+          "mcp-tool-developer"
+        ],
+        [
+          "api-design-principles"
+        ],
+        [
+          "api-security-best-practices"
+        ],
+        [
+          "observability-and-instrumentation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-c7dd90ef9d53f97d968afc70d63067dfb1dc3ff3796c9969767f35e1a93c715d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-c7dd90ef9d53f97d968afc70d63067dfb1dc3ff3796c9969767f35e1a93c715d"
+    }
+  ]
+}

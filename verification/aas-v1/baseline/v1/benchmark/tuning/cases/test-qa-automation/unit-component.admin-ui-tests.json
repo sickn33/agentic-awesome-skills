@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.unit-component.admin-ui-tests",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "administration single-page application",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React"
+    ],
+    "context": "existing test suite with brittle mocks and uneven component coverage",
+    "constraints": [
+      "deterministic tests",
+      "incremental adoption"
+    ]
+  },
+  "criticalGoals": [
+    "unit-test-runner",
+    "component-test-patterns"
+  ],
+  "nonCriticalGoals": [
+    "deterministic-mocking",
+    "coverage-reporting"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.test-qa-automation.unit-component.admin-ui-tests"
+}

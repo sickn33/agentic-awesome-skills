@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.media-production.product-animation", "intent": "three-dimensional-animation",
+  "profile": { "request": "Plan a thirty-second rendered product animation for a mechanical watch", "shots": ["exploded movement", "material close-up", "assembled hero turn"], "output": "four-k master and vertical cut", "constraints": ["physically plausible materials", "accurate component order", "no interactive web delivery"] },
+  "criticalGoals": ["design a feasible three-dimensional shot sequence", "represent the mechanism accurately"],
+  "nonCriticalGoals": ["define camera movement", "plan lighting", "stage the exploded view", "adapt the vertical cut", "estimate render priorities"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD three-dimensional media scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:78430aca14020345a8b5b0f499430f28340fd455f8dabf53c4bb443e98ba3cd1"
+}

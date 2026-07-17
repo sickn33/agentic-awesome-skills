@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.containers.monorepo-polyglot",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Media processing platform",
+    "stack": {
+      "languages": [
+        "Go",
+        "Python",
+        "Rust"
+      ],
+      "runtime": "Kubernetes plus job workers",
+      "delivery": "multiple container images"
+    },
+    "team": {
+      "engineers": 28,
+      "operationsModel": "shared platform team",
+      "experience": "mixed specialist teams"
+    },
+    "environment": {
+      "maturity": "scaling",
+      "topology": "polyglot monorepo with multiple services",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "independent service ownership",
+      "selective builds and deployments",
+      "shared governance"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "standardize multiple images without forcing one build strategy"
+  },
+  "criticalGoals": [
+    "isolate image build contexts",
+    "coordinate shared platform controls"
+  ],
+  "nonCriticalGoals": [
+    "add health checks",
+    "pin immutable image identities",
+    "separate secrets from configuration",
+    "retain rollback artifacts",
+    "document operations"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on containers delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.containers.monorepo-polyglot"
+}

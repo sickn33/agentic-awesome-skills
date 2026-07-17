@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.observability-performance.search-api",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "catalog search API",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "FastAPI"
+    ],
+    "context": "latency regression under mixed read traffic",
+    "constraints": [
+      "local profiling",
+      "explicit latency objective"
+    ]
+  },
+  "criticalGoals": [
+    "structured-telemetry",
+    "distributed-tracing"
+  ],
+  "nonCriticalGoals": [
+    "latency-profiling",
+    "service-level-objectives"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.observability-performance.search-api"
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "partner-facing REST service",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "OpenAPI"
+    ],
+    "context": "contract suite shared by API and consumer teams",
+    "constraints": [
+      "no production credentials",
+      "CI execution"
+    ]
+  },
+  "criticalGoals": [
+    "api-contract-fixtures",
+    "repeatable-integration-runner"
+  ],
+  "nonCriticalGoals": [
+    "boundary-mocking",
+    "ci-contract-evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.test-qa-automation.integration-contract.partner-contract-tests"
+}

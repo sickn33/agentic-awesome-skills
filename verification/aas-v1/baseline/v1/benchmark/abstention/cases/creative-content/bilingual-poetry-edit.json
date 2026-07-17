@@ -1,0 +1,13 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1,
+  "caseId": "abstention.creative-content.bilingual-poetry-edit",
+  "intent": "poetry-editing",
+  "profile": { "request": "Edit a bilingual Italian-English poetry sequence", "poems": 14, "form": "free verse", "editorialNeed": ["image consistency", "line-break rhythm", "translation resonance"], "constraints": ["preserve author voice", "do not force literal translation", "return editorial notes"] },
+  "criticalGoals": ["improve both-language poetic coherence", "preserve the writer's distinctive voice"],
+  "nonCriticalGoals": ["strengthen image patterns", "review lineation", "flag translation losses", "suggest sequence order", "explain material edits"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD literary-editing scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:d6cddac076c5e4439d35a65f89d14d1219da184fc7b8622942119a1541031ca0"
+}

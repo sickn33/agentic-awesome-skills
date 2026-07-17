@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "stabilize-selenium-first",
+      "allowedSkillIds": [
+        "selenium-skill",
+        "e2e-testing-patterns",
+        "test-framework-migration-skill"
+      ],
+      "requiredGroups": [
+        [
+          "selenium-skill"
+        ],
+        [
+          "e2e-testing-patterns"
+        ],
+        [
+          "test-framework-migration-skill"
+        ]
+      ]
+    },
+    {
+      "solutionId": "migrate-to-playwright-java",
+      "allowedSkillIds": [
+        "playwright-java",
+        "e2e-testing-patterns",
+        "test-framework-migration-skill"
+      ],
+      "requiredGroups": [
+        [
+          "playwright-java"
+        ],
+        [
+          "e2e-testing-patterns"
+        ],
+        [
+          "test-framework-migration-skill"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-d40d88cd794286f179384386e06bdce6add394300210aaeca37f52cf5c7ed438"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-d40d88cd794286f179384386e06bdce6add394300210aaeca37f52cf5c7ed438"
+    }
+  ]
+}

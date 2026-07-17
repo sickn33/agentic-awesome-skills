@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.evaluation-testing.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "behavioral-eval-migration",
+      "allowedSkillIds": [
+        "agent-evaluation",
+        "evaluation",
+        "deprecation-and-migration",
+        "unit-testing-test-generate"
+      ],
+      "requiredGroups": [
+        [
+          "agent-evaluation",
+          "evaluation"
+        ],
+        [
+          "deprecation-and-migration"
+        ],
+        [
+          "unit-testing-test-generate",
+          "agent-evaluation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6f24546a93b02d937ac211aabdf2cbbcc27bacb4d4caff9f2ec1279888d67a74"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6f24546a93b02d937ac211aabdf2cbbcc27bacb4d4caff9f2ec1279888d67a74"
+    }
+  ]
+}

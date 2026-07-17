@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "legacy-dependency-review",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ]
+      ]
+    },
+    {
+      "solutionId": "legacy-dependency-advisories",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies",
+        "cyber-audit"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ],
+        [
+          "cyber-audit"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f8ad64fd4d51baec736b5f58c3ed05befd4f2546d86b567753db8e8e47cb6c77"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f8ad64fd4d51baec736b5f58c3ed05befd4f2546d86b567753db8e8e47cb6c77"
+    }
+  ]
+}

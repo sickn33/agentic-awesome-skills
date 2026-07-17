@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.agent-architecture.regulated-high-assurance",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "regulated-production",
+    "domain": "health-insurance",
+    "languages": [
+      "csharp"
+    ],
+    "agentShape": "case-review-copilot",
+    "constraints": [
+      "human-final-decision",
+      "explainable-actions",
+      "data-minimization",
+      "tamper-evident-audit"
+    ]
+  },
+  "criticalGoals": [
+    "design bounded agent authority with human accountability",
+    "make every tool action and decision traceable"
+  ],
+  "nonCriticalGoals": [
+    "isolate sensitive context",
+    "define safe abstention and escalation"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.agent-architecture.regulated-high-assurance"
+}

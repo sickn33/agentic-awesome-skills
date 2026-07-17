@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.api-design-contracts.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "polyglot-contract-governance",
+      "allowedSkillIds": [
+        "api-and-interface-design",
+        "api-design-principles",
+        "api-patterns",
+        "openapi-spec-generation",
+        "frontend-data-contracts"
+      ],
+      "requiredGroups": [
+        [
+          "api-and-interface-design",
+          "api-design-principles"
+        ],
+        [
+          "openapi-spec-generation",
+          "frontend-data-contracts"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-e5afe8735e0bfc6193f48638b604b2039b8b556c71305e3f8fae408eae316b8d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-e5afe8735e0bfc6193f48638b604b2039b8b556c71305e3f8fae408eae316b8d"
+    }
+  ]
+}

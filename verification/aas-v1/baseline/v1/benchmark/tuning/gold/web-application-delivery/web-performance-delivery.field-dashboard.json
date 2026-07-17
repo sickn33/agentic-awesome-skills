@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.web-application-delivery.web-performance-delivery.field-dashboard",
+  "acceptedSolutions": [
+    {
+      "solutionId": "web-vitals-lighthouse",
+      "allowedSkillIds": [
+        "web-performance-optimization",
+        "frontend-lighthouse"
+      ],
+      "requiredGroups": [
+        [
+          "web-performance-optimization"
+        ],
+        [
+          "frontend-lighthouse"
+        ]
+      ]
+    },
+    {
+      "solutionId": "performance-lab-lighthouse",
+      "allowedSkillIds": [
+        "performance-optimization",
+        "frontend-lighthouse"
+      ],
+      "requiredGroups": [
+        [
+          "performance-optimization"
+        ],
+        [
+          "frontend-lighthouse"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b2c446599611ba658cf3db7141470913f22edbbf09893291f9ad418091b5ac5c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b2c446599611ba658cf3db7141470913f22edbbf09893291f9ad418091b5ac5c"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

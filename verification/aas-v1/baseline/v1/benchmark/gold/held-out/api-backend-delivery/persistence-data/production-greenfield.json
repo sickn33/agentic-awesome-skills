@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.persistence-data.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "production-postgres-discipline",
+      "allowedSkillIds": [
+        "database-architect",
+        "database-design",
+        "postgresql",
+        "postgres-best-practices",
+        "database-migration",
+        "database-migrations-sql-migrations",
+        "sql-optimization-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "database-architect",
+          "database-design",
+          "postgresql"
+        ],
+        [
+          "database-migration",
+          "database-migrations-sql-migrations"
+        ],
+        [
+          "postgres-best-practices",
+          "sql-optimization-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ceb99e16fa45eff86736fba0fd5893cf549a4cbbd0287d0a4953c7643fd40e27"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ceb99e16fa45eff86736fba0fd5893cf549a4cbbd0287d0a4953c7643fd40e27"
+    }
+  ]
+}

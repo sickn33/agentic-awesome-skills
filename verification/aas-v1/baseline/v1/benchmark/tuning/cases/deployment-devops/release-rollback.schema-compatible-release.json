@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.release-rollback.schema-compatible-release",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "database-backed application release",
+    "languages": [
+      "Python",
+      "SQL"
+    ],
+    "frameworks": [
+      "PostgreSQL"
+    ],
+    "context": "application and schema changes require safe sequencing",
+    "constraints": [
+      "backward compatibility",
+      "reversible application rollout"
+    ]
+  },
+  "criticalGoals": [
+    "release-procedure",
+    "rollback-validation"
+  ],
+  "nonCriticalGoals": [
+    "progressive-delivery",
+    "post-release-verification"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.deployment-devops.release-rollback.schema-compatible-release"
+}

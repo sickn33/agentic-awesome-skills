@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.infrastructure-as-code.small-greenfield",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Community donation portal",
+    "stack": {
+      "languages": [
+        "TypeScript"
+      ],
+      "runtime": "managed web and database services",
+      "delivery": "single cloud account"
+    },
+    "team": {
+      "engineers": 2,
+      "operationsModel": "developer-owned",
+      "experience": "mixed"
+    },
+    "environment": {
+      "maturity": "greenfield",
+      "topology": "single service",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "small operating budget",
+      "minimal platform overhead"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "codify a small cloud footprint without unnecessary module machinery"
+  },
+  "criticalGoals": [
+    "make infrastructure reproducible",
+    "keep state and credentials out of source artifacts"
+  ],
+  "nonCriticalGoals": [
+    "lock provider and module versions",
+    "preview changes before apply",
+    "detect drift",
+    "retain state recovery evidence",
+    "record resource ownership"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on infrastructure-as-code delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.infrastructure-as-code.small-greenfield"
+}

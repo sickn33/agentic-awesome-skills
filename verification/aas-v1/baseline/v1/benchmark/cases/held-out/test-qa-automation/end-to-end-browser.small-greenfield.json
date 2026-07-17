@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.small-greenfield",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "small customer booking web application",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React",
+      "Vite"
+    ],
+    "testingContext": "greenfield critical user journeys need browser automation",
+    "constraints": [
+      "local browsers",
+      "CI execution",
+      "stable selectors",
+      "low maintenance"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "browser-journey-tests",
+    "reliable-waiting",
+    "ci-browser-execution"
+  ],
+  "nonCriticalGoals": [
+    "cross-browser-coverage",
+    "visual-evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.end-to-end-browser.small-greenfield"
+}

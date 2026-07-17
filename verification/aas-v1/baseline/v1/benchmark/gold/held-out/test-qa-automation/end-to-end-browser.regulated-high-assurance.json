@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "playwright-java-audited",
+      "allowedSkillIds": [
+        "playwright-java",
+        "e2e-testing-patterns",
+        "testing-qa"
+      ],
+      "requiredGroups": [
+        [
+          "playwright-java"
+        ],
+        [
+          "e2e-testing-patterns"
+        ],
+        [
+          "testing-qa"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b39c28d265404247c8e9d38a6660eddde7dedd07279afc9e1acca8be1f9e431d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b39c28d265404247c8e9d38a6660eddde7dedd07279afc9e1acca8be1f9e431d"
+    }
+  ]
+}

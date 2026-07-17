@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.code-dependency-review.python-analytics-dependencies",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "Python analytics worker",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "Python packaging"
+    ],
+    "context": "mature dependency set with several transitive packages",
+    "constraints": [
+      "offline review snapshot",
+      "prioritized remediation"
+    ]
+  },
+  "criticalGoals": [
+    "dependency-risk-review",
+    "advisory-triage"
+  ],
+  "nonCriticalGoals": [
+    "upgrade-prioritization",
+    "supply-chain-evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.security-review-hardening.code-dependency-review.python-analytics-dependencies"
+}

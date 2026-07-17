@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.auth-authorization.clinical-records-api",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "clinical records integration API",
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot"
+    ],
+    "context": "token-based partner access with auditable authorization decisions",
+    "constraints": [
+      "deny by default",
+      "no sensitive logs"
+    ]
+  },
+  "criticalGoals": [
+    "authentication-baseline",
+    "authorization-policy"
+  ],
+  "nonCriticalGoals": [
+    "token-validation",
+    "secure-api-boundary"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.auth-authorization.clinical-records-api"
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.physical-systems.cnc-fixture",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PHYSICAL_SYSTEMS"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-060b52d091e827703be745f46aef5b8260957067f7c07adfb584e5b1d1ab1ed3"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-060b52d091e827703be745f46aef5b8260957067f7c07adfb584e5b1d1ab1ed3"
+    }
+  ]
+}

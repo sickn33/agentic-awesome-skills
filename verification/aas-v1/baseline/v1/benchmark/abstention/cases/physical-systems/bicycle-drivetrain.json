@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.physical-systems.bicycle-drivetrain", "intent": "bicycle-repair",
+  "profile": { "request": "Diagnose a touring bicycle drivetrain that skips under load", "components": ["rear derailleur", "eleven-speed cassette", "single chainring"], "observations": ["new cable", "wear unknown", "skipping in three sprockets"], "constraints": ["limited roadside tools", "two-day trip approaching"] },
+  "criticalGoals": ["identify the mechanical cause", "restore reliable shifting safely"],
+  "nonCriticalGoals": ["sequence inspections", "distinguish adjustment from wear", "identify required tools", "avoid damaging components", "define a temporary fallback"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD bicycle-maintenance scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:0db34896a1580f9f01591d70b4a0ce5d7a4eff0ff6bd42f919247b367ee26ecb"
+}

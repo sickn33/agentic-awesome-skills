@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.small-greenfield",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "small-greenfield",
+    "projectSummary": "Organization-owned appointment API before its first external pilot",
+    "stack": {
+      "languages": [
+        "typescript"
+      ],
+      "frameworks": [
+        "hono"
+      ],
+      "deployment": [
+        "managed-container"
+      ]
+    },
+    "constraints": [
+      "two-person team",
+      "no active exploitation",
+      "design-stage evidence only"
+    ],
+    "authorization": {
+      "scope": "defensive threat analysis of the organization-owned service",
+      "mode": "non-destructive",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "identify trust-boundary threats",
+    "map each material threat to a mitigation"
+  ],
+  "nonCriticalGoals": [
+    "derive security acceptance criteria",
+    "produce a reviewable threat register"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.threat-modeling.small-greenfield"
+}

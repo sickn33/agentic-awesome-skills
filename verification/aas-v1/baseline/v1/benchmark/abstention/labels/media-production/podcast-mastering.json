@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.media-production.podcast-mastering",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_MEDIA_PRODUCTION"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-e77e83030b56c9c35f7a9f71c0b3164006e0c7f5795f56d62bf9a04d8acae4d8"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-e77e83030b56c9c35f7a9f71c0b3164006e0c7f5795f56d62bf9a04d8acae4d8"
+    }
+  ]
+}

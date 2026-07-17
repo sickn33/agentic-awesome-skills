@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.web-application-delivery.ui-accessibility.commerce-checkout",
+  "acceptedSolutions": [
+    {
+      "solutionId": "wcag-audit-program",
+      "allowedSkillIds": [
+        "accessibility-compliance-accessibility-audit",
+        "wcag-audit-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "accessibility-compliance-accessibility-audit"
+        ],
+        [
+          "wcag-audit-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "accesslint-and-assistive-testing",
+      "allowedSkillIds": [
+        "accesslint-audit",
+        "screen-reader-testing"
+      ],
+      "requiredGroups": [
+        [
+          "accesslint-audit"
+        ],
+        [
+          "screen-reader-testing"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fc622ca3f3423d45e0dc46092210346c5eba45e7803f5966312989e0c9c126db"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fc622ca3f3423d45e0dc46092210346c5eba45e7803f5966312989e0c9c126db"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

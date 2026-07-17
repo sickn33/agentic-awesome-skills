@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/held-out-index.schema.json",
+  "title": "AAS v1 structural held-out descriptor index",
+  "type": "object",
+  "required": ["schemaVersion", "indexVersion", "status", "labelsFrozen", "archetypes", "intentSubIntents", "cases"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["structureOnly", "frozen"] },
+    "labelsFrozen": { "type": "boolean" },
+    "archetypes": { "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true },
+    "cases": {
+      "type": "array",
+      "minItems": 180,
+      "maxItems": 180,
+      "items": {
+        "type": "object",
+        "required": ["caseId", "intent", "subIntent", "archetype", "taskFamilyId", "inputPath", "goldPath", "provenance", "reviewStatus"],
+        "not": {
+          "anyOf": [
+            { "required": ["expectedStack"] },
+            { "required": ["acceptedSolutions"] }
+          ]
+        }
+      }
+    }
+  }
+}

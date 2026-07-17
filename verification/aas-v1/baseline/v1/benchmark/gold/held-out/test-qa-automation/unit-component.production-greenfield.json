@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "pytest-native",
+      "allowedSkillIds": [
+        "pytest-skill",
+        "testing-qa"
+      ],
+      "requiredGroups": [
+        [
+          "pytest-skill"
+        ],
+        [
+          "testing-qa"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fed163db3087a67fda6b5a2c0c0211ab62eb5d094d054b5f6f9e256bfc693982"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fed163db3087a67fda6b5a2c0c0211ab62eb5d094d054b5f6f9e256bfc693982"
+    }
+  ]
+}

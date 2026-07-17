@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "polyglot-dependency-scan",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-afb6cf3bd129ca9bf4d7c6bc8f10a6dbda279c9ee6e7eb5b84e49d87bd3bbc48"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-afb6cf3bd129ca9bf4d7c6bc8f10a6dbda279c9ee6e7eb5b84e49d87bd3bbc48"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-accesslint-wcag",
+      "allowedSkillIds": [
+        "accesslint-scan",
+        "wcag-audit-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "accesslint-scan"
+        ],
+        [
+          "wcag-audit-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0b40f313b898c804806afb0d4e86632da0a8fad6190344d380dc2b3d9515eb32"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0b40f313b898c804806afb0d4e86632da0a8fad6190344d380dc2b3d9515eb32"
+    }
+  ]
+}

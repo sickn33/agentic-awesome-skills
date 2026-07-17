@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.end-to-end-browser.rental-checkout",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "equipment rental checkout",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React"
+    ],
+    "context": "critical reservation and payment simulation journeys",
+    "constraints": [
+      "isolated test accounts",
+      "browser matrix"
+    ]
+  },
+  "criticalGoals": [
+    "critical-browser-journeys",
+    "stable-locators"
+  ],
+  "nonCriticalGoals": [
+    "cross-browser-execution",
+    "failure-diagnostics"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.test-qa-automation.end-to-end-browser.rental-checkout"
+}

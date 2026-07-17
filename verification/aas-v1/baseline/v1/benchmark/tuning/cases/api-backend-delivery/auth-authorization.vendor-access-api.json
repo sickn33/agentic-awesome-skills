@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.auth-authorization.vendor-access-api",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "vendor access management API",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "NestJS"
+    ],
+    "context": "service-to-user identity with organization-scoped permissions",
+    "constraints": [
+      "least privilege",
+      "revocable sessions"
+    ]
+  },
+  "criticalGoals": [
+    "authentication-baseline",
+    "authorization-policy"
+  ],
+  "nonCriticalGoals": [
+    "token-validation",
+    "secure-api-boundary"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.auth-authorization.vendor-access-api"
+}

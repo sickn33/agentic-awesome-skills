@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.observability-performance.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "production-telemetry-and-latency",
+      "allowedSkillIds": [
+        "observability-and-instrumentation",
+        "observability-engineer",
+        "distributed-debugging-debug-trace",
+        "performance-optimizer",
+        "application-performance-performance-optimization",
+        "observability-monitoring-slo-implement",
+        "grafana-dashboards"
+      ],
+      "requiredGroups": [
+        [
+          "observability-and-instrumentation",
+          "observability-engineer"
+        ],
+        [
+          "distributed-debugging-debug-trace"
+        ],
+        [
+          "performance-optimizer",
+          "application-performance-performance-optimization"
+        ],
+        [
+          "observability-monitoring-slo-implement",
+          "grafana-dashboards"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6f799d9240fad837bdfae6927d95daa2acb3d4c86470d61f1893995d077f151b"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6f799d9240fad837bdfae6927d95daa2acb3d4c86470d61f1893995d077f151b"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.end-to-end-browser.rental-checkout",
+  "acceptedSolutions": [
+    {
+      "solutionId": "local-e2e-browser-suite",
+      "allowedSkillIds": [
+        "e2e-testing",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "e2e-testing"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "cypress-browser-suite",
+      "allowedSkillIds": [
+        "cypress-skill",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "cypress-skill"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-baaa6b203eb85632fae0bb970d11dcc6f0056217528019bda6ac7fe0896b2bed"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-baaa6b203eb85632fae0bb970d11dcc6f0056217528019bda6ac7fe0896b2bed"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

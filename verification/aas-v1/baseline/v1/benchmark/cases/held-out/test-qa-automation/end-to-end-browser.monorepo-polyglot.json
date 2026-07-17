@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.monorepo-polyglot",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "polyglot monorepo with customer and operations portals",
+    "languages": [
+      "TypeScript",
+      "Java"
+    ],
+    "frameworks": [
+      "React",
+      "Spring Boot",
+      "Playwright"
+    ],
+    "testingContext": "TypeScript customer journeys and Java-owned operations flows need compatible browser suites",
+    "constraints": [
+      "language-native ownership",
+      "shared browser matrix",
+      "parallel CI"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "typescript-browser-suite",
+    "java-browser-suite",
+    "shared-cross-browser-policy"
+  ],
+  "nonCriticalGoals": [
+    "page-object-discipline",
+    "failure-artifacts"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.end-to-end-browser.monorepo-polyglot"
+}

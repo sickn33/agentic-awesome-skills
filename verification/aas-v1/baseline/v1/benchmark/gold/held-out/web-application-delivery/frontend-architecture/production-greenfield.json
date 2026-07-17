@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.frontend-architecture.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "next-app-router-production",
+      "allowedSkillIds": [
+        "nextjs-best-practices",
+        "react-best-practices",
+        "frontend-architecture"
+      ],
+      "requiredGroups": [
+        [
+          "nextjs-best-practices"
+        ],
+        [
+          "react-best-practices"
+        ],
+        [
+          "frontend-architecture"
+        ]
+      ]
+    },
+    {
+      "solutionId": "next-app-router-guidelines",
+      "allowedSkillIds": [
+        "nextjs-best-practices",
+        "react-best-practices",
+        "frontend-dev-guidelines"
+      ],
+      "requiredGroups": [
+        [
+          "nextjs-best-practices"
+        ],
+        [
+          "react-best-practices"
+        ],
+        [
+          "frontend-dev-guidelines"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7051b410e4bb316d01933709dd35b90a40ae4147dd28a4b4cbc2b52cace3a8ce"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7051b410e4bb316d01933709dd35b90a40ae4147dd28a4b4cbc2b52cace3a8ce"
+    }
+  ]
+}

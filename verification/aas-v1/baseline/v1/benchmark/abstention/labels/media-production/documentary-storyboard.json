@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.media-production.documentary-storyboard",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_MEDIA_PRODUCTION"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-481482a0d3f8d5e8326c7959cc5a827a3cdc4523353bde3585ec9ec5341f9306"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-481482a0d3f8d5e8326c7959cc5a827a3cdc4523353bde3585ec9ec5341f9306"
+    }
+  ]
+}

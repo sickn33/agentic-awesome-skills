@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.containers.mature-legacy-migration",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Enterprise resource planning extension",
+    "stack": {
+      "languages": [
+        "Java",
+        "Bash"
+      ],
+      "runtime": "virtual machines moving to containers",
+      "delivery": "hybrid estate"
+    },
+    "team": {
+      "engineers": 9,
+      "operationsModel": "operations handoff",
+      "experience": "legacy domain experts"
+    },
+    "environment": {
+      "maturity": "mature legacy migration",
+      "topology": "virtual machines moving incrementally to managed infrastructure",
+      "connectivity": "restricted outbound"
+    },
+    "constraints": [
+      "no big-bang cutover",
+      "preserve current recovery path",
+      "limited maintenance windows"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "move components to containers incrementally while retaining operational fallback"
+  },
+  "criticalGoals": [
+    "preserve legacy interoperability",
+    "make each migration stage reversible"
+  ],
+  "nonCriticalGoals": [
+    "add health checks",
+    "pin immutable image identities",
+    "separate secrets from configuration",
+    "retain rollback artifacts",
+    "document operations"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on containers delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.containers.mature-legacy-migration"
+}

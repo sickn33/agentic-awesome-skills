@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.mcp-tooling.mature-legacy-migration",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "legacy-migration",
+    "languages": [
+      "java"
+    ],
+    "legacySystem": "internal-rest-automation-api",
+    "transport": "mcp-facade",
+    "constraints": [
+      "preserve-existing-api",
+      "incremental-tools",
+      "no-credential-copy",
+      "rollback"
+    ]
+  },
+  "criticalGoals": [
+    "expose legacy capabilities through safe MCP boundaries",
+    "preserve existing API behavior during phased migration"
+  ],
+  "nonCriticalGoals": [
+    "map legacy failures to structured MCP errors",
+    "define deprecation and compatibility tests"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.mcp-tooling.mature-legacy-migration"
+}

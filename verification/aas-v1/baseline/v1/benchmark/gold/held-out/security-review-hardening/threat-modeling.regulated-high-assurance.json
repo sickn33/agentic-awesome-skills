@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "stride-compliance",
+      "allowedSkillIds": [
+        "stride-analysis-patterns",
+        "threat-mitigation-mapping",
+        "security-requirement-extraction",
+        "security-compliance-compliance-check"
+      ],
+      "requiredGroups": [
+        [
+          "stride-analysis-patterns"
+        ],
+        [
+          "threat-mitigation-mapping"
+        ],
+        [
+          "security-requirement-extraction"
+        ],
+        [
+          "security-compliance-compliance-check"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-745a2d85a95861006b78c93e92c4cf74aa54ec56fd8a9b8821de44c486b73dc7"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-745a2d85a95861006b78c93e92c4cf74aa54ec56fd8a9b8821de44c486b73dc7"
+    }
+  ]
+}

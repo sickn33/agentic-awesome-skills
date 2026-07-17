@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.persistence-data.tenant-ledger",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "multi-tenant account ledger service",
+    "languages": [
+      "TypeScript",
+      "SQL"
+    ],
+    "frameworks": [
+      "PostgreSQL"
+    ],
+    "context": "new relational model with tenant isolation and audit history",
+    "constraints": [
+      "zero-downtime migrations",
+      "referential integrity"
+    ]
+  },
+  "criticalGoals": [
+    "data-model-design",
+    "reversible-migrations"
+  ],
+  "nonCriticalGoals": [
+    "query-discipline",
+    "migration-safety"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.persistence-data.tenant-ledger"
+}

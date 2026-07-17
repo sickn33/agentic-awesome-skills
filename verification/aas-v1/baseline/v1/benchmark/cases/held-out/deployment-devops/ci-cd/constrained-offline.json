@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.ci-cd.constrained-offline",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Factory control software",
+    "stack": {
+      "languages": [
+        "Rust",
+        "Python"
+      ],
+      "runtime": "offline Linux appliances",
+      "delivery": "local runners and signed bundles"
+    },
+    "team": {
+      "engineers": 5,
+      "operationsModel": "site reliability rotation",
+      "experience": "offline systems"
+    },
+    "environment": {
+      "maturity": "isolated production",
+      "topology": "self-hosted cluster",
+      "connectivity": "air-gapped"
+    },
+    "constraints": [
+      "no hosted control plane",
+      "no runtime downloads",
+      "removable-media release transfer",
+      "locally reproducible operation"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "operate a complete pipeline on isolated runners"
+  },
+  "criticalGoals": [
+    "build and validate without network access",
+    "produce reproducible transferable release bundles"
+  ],
+  "nonCriticalGoals": [
+    "cache dependencies safely",
+    "retain validation evidence",
+    "separate deployment identity",
+    "make failures diagnosable",
+    "document recovery"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on ci-cd delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.ci-cd.constrained-offline"
+}

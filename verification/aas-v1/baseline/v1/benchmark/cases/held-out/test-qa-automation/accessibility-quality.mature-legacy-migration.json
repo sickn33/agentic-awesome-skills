@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.mature-legacy-migration",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "legacy government forms portal",
+    "languages": [
+      "JavaScript",
+      "Java"
+    ],
+    "frameworks": [
+      "jQuery",
+      "JSP"
+    ],
+    "testingContext": "known WCAG defects need a prioritized migration baseline without rewriting all pages",
+    "constraints": [
+      "incremental remediation",
+      "WCAG 2.2",
+      "manual and automated evidence",
+      "preserve functionality"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "legacy-wcag-audit",
+    "prioritized-barrier-remediation",
+    "incremental-regression-baseline"
+  ],
+  "nonCriticalGoals": [
+    "assistive-technology-review",
+    "selector-grounded-worklist"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.accessibility-quality.mature-legacy-migration"
+}

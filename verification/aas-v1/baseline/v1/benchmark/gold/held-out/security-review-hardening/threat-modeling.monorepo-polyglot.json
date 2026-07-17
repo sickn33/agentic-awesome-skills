@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "stride-cross-service",
+      "allowedSkillIds": [
+        "stride-analysis-patterns",
+        "threat-mitigation-mapping",
+        "security-requirement-extraction"
+      ],
+      "requiredGroups": [
+        [
+          "stride-analysis-patterns"
+        ],
+        [
+          "threat-mitigation-mapping"
+        ],
+        [
+          "security-requirement-extraction"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-3bc6d455dc4f207d0635fd8ee58e8614e30aefe8762cb45a355ed1f61cd52045"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-3bc6d455dc4f207d0635fd8ee58e8614e30aefe8762cb45a355ed1f61cd52045"
+    }
+  ]
+}

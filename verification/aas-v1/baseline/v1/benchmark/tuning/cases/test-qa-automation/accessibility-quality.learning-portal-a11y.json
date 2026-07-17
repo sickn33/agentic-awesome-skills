@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.accessibility-quality.learning-portal-a11y",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "online learning portal",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React"
+    ],
+    "context": "course navigation and assessments require an accessibility baseline",
+    "constraints": [
+      "keyboard coverage",
+      "repeatable evidence"
+    ]
+  },
+  "criticalGoals": [
+    "accessibility-audit",
+    "wcag-regression"
+  ],
+  "nonCriticalGoals": [
+    "assistive-technology-evidence",
+    "remediation-priorities"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.test-qa-automation.accessibility-quality.learning-portal-a11y"
+}

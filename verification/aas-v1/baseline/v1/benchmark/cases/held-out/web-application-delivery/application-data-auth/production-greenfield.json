@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.application-data-auth.production-greenfield",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "B2B procurement platform",
+    "frontend": "Next.js App Router",
+    "identity": "Clerk organizations",
+    "tenancy": {
+      "organizations": 600,
+      "roles": [
+        "buyer",
+        "approver",
+        "administrator"
+      ]
+    },
+    "integrations": [
+      "webhooks",
+      "user synchronization",
+      "invitation flow"
+    ],
+    "requirements": [
+      "server-side authorization",
+      "tenant isolation",
+      "auditable lifecycle events"
+    ]
+  },
+  "criticalGoals": [
+    "implement organization-aware authentication",
+    "enforce tenant and role authorization on the server"
+  ],
+  "nonCriticalGoals": [
+    "verify webhook signatures",
+    "synchronize user lifecycle safely",
+    "handle invitations",
+    "prevent client-only authorization",
+    "define session failure behavior"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario informed by production multi-tenant identity integrations",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.application-data-auth.production-greenfield"
+}

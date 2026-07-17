@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.ci-cd.monorepo-polyglot",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Retail analytics platform",
+    "stack": {
+      "languages": [
+        "TypeScript",
+        "Python",
+        "Go"
+      ],
+      "runtime": "containers and batch workers",
+      "delivery": "independently releasable services"
+    },
+    "team": {
+      "engineers": 28,
+      "operationsModel": "shared platform team",
+      "experience": "mixed specialist teams"
+    },
+    "environment": {
+      "maturity": "scaling",
+      "topology": "polyglot monorepo with multiple services",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "independent service ownership",
+      "selective builds and deployments",
+      "shared governance"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "run only affected workflows without losing cross-service safety"
+  },
+  "criticalGoals": [
+    "select affected packages deterministically",
+    "coordinate dependent service releases"
+  ],
+  "nonCriticalGoals": [
+    "cache dependencies safely",
+    "retain validation evidence",
+    "separate deployment identity",
+    "make failures diagnosable",
+    "document recovery"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on ci-cd delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.ci-cd.monorepo-polyglot"
+}

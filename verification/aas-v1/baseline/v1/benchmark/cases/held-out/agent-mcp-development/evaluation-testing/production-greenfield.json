@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.evaluation-testing.production-greenfield",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "production-greenfield",
+    "teamSize": 14,
+    "agentShape": "customer-support-agent-platform",
+    "evaluationMaturity": "prototype",
+    "constraints": [
+      "multiple-models",
+      "daily-deployments",
+      "cost-and-latency-budgets",
+      "human-escalation"
+    ]
+  },
+  "criticalGoals": [
+    "build a production evaluation harness for correctness and safety",
+    "gate releases on statistically meaningful repeated runs"
+  ],
+  "nonCriticalGoals": [
+    "measure latency and cost tradeoffs",
+    "monitor drift without leaking customer content"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.evaluation-testing.production-greenfield"
+}

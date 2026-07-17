@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.physical-systems.orchard-irrigation", "intent": "agricultural-irrigation-design",
+  "profile": { "request": "Design a drip-irrigation layout for a small hillside orchard", "area": "two hectares", "trees": 460, "waterSource": "storage tank with limited refill", "terrain": "twelve-meter elevation change", "constraints": ["seasonal drought", "pressure variation", "manual maintenance"] },
+  "criticalGoals": ["deliver uniform water across the physical site", "fit the available water and pressure limits"],
+  "nonCriticalGoals": ["zone the orchard", "size filtration", "manage elevation", "plan maintenance", "estimate irrigation cycles"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD agricultural-system scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:28e0a7f651646e42f97406b9e4a9884b1925565047dd70e8f73011860537bdf8"
+}

@@ -1,0 +1,50 @@
+name: AAS v1 baseline freeze
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  baseline-freeze:
+    name: aas-v1-baseline
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out candidate baseline
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Use the frozen verifier runtime
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22.23.1
+          cache: npm
+          cache-dependency-path: verification/aas-v1/verifier/package-lock.json
+
+      - name: Install verifier dependencies without lifecycle scripts
+        run: npm --prefix verification/aas-v1/verifier ci --ignore-scripts
+
+      - name: Run reference metric tests
+        run: npm --prefix verification/aas-v1/verifier test
+
+      - name: Validate frozen schemas and corpora
+        run: |
+          npm --prefix verification/aas-v1/verifier run check:schemas
+          npm --prefix verification/aas-v1/verifier run check:structure
+          npm --prefix verification/aas-v1/verifier run check:benchmark:frozen
+          npm --prefix verification/aas-v1/verifier run check:secondary:frozen
+
+      - name: Verify hostile fixtures and legacy snapshots
+        run: |
+          node verification/aas-v1/baseline/v1/hostile/verify-fixtures.mjs
+          node verification/aas-v1/baseline/v1/legacy/14.6.0/validate-snapshots.mjs
+
+      - name: Verify ownership, freeze readiness, and content digest
+        run: |
+          npm --prefix verification/aas-v1/verifier run check:freeze-ready
+          npm --prefix verification/aas-v1/verifier run freeze:check

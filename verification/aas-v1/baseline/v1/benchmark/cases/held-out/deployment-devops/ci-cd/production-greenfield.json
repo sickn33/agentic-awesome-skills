@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.ci-cd.production-greenfield",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Parcel-routing software-as-a-service",
+    "stack": {
+      "languages": [
+        "Go",
+        "TypeScript"
+      ],
+      "runtime": "containers",
+      "delivery": "staging and production"
+    },
+    "team": {
+      "engineers": 12,
+      "operationsModel": "platform-supported",
+      "experience": "experienced"
+    },
+    "environment": {
+      "maturity": "production greenfield",
+      "topology": "multi-environment service",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "zero-downtime production changes",
+      "defined service-level objectives"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": true,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "promote the same verified artifact through environments"
+  },
+  "criticalGoals": [
+    "build one immutable artifact",
+    "enforce gated environment promotion"
+  ],
+  "nonCriticalGoals": [
+    "cache dependencies safely",
+    "retain validation evidence",
+    "separate deployment identity",
+    "make failures diagnosable",
+    "document recovery"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on ci-cd delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.ci-cd.production-greenfield"
+}

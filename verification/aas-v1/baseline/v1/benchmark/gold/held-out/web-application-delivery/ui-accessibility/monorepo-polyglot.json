@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.ui-accessibility.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "shared-ui-accessibility-governance",
+      "allowedSkillIds": [
+        "accessibility-compliance-accessibility-audit",
+        "core-components",
+        "accesslint-diff"
+      ],
+      "requiredGroups": [
+        [
+          "accessibility-compliance-accessibility-audit"
+        ],
+        [
+          "core-components"
+        ],
+        [
+          "accesslint-diff"
+        ]
+      ]
+    },
+    {
+      "solutionId": "shared-ui-wcag-governance",
+      "allowedSkillIds": [
+        "wcag-audit-patterns",
+        "core-components",
+        "accesslint-diff"
+      ],
+      "requiredGroups": [
+        [
+          "wcag-audit-patterns"
+        ],
+        [
+          "core-components"
+        ],
+        [
+          "accesslint-diff"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-135a4579633476aba7001a4c2964d3fac6fb1b8fd7eb07ae370dd481f87e21b1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-135a4579633476aba7001a4c2964d3fac6fb1b8fd7eb07ae370dd481f87e21b1"
+    }
+  ]
+}

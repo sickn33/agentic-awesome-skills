@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.observability-performance.shipment-api",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "shipment tracking API",
+    "languages": [
+      "Go"
+    ],
+    "frameworks": [
+      "gRPC"
+    ],
+    "context": "several service hops with poor request correlation",
+    "constraints": [
+      "low-cardinality metrics",
+      "traceable failures"
+    ]
+  },
+  "criticalGoals": [
+    "structured-telemetry",
+    "distributed-tracing"
+  ],
+  "nonCriticalGoals": [
+    "latency-profiling",
+    "service-level-objectives"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.observability-performance.shipment-api"
+}

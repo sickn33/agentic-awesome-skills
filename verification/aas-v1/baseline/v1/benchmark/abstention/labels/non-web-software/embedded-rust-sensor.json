@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.non-web-software.embedded-rust-sensor",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_NON_WEB_SOFTWARE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-479bd3b8a71faf2e9edda2e19be3c8c668b5bb389ffc4ff30b22a9e52aa027ca"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-479bd3b8a71faf2e9edda2e19be3c8c668b5bb389ffc4ff30b22a9e52aa027ca"
+    }
+  ]
+}

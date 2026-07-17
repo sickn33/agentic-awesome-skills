@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.production-greenfield",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "production design system and customer portal",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React",
+      "Storybook",
+      "Next.js"
+    ],
+    "testingContext": "component and page changes need full audits plus regression-only accessibility diffs",
+    "constraints": [
+      "WCAG 2.2",
+      "CI change gate",
+      "baseline comparisons",
+      "actionable selectors"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "full-accessibility-audit",
+    "accessibility-regression-diff",
+    "component-and-page-coverage"
+  ],
+  "nonCriticalGoals": [
+    "ci-gating",
+    "prioritized-remediation"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.accessibility-quality.production-greenfield"
+}

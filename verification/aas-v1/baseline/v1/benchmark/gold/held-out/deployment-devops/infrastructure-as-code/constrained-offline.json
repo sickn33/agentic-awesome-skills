@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.infrastructure-as-code.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-terraform",
+      "allowedSkillIds": [
+        "terraform-infrastructure"
+      ],
+      "requiredGroups": [
+        [
+          "terraform-infrastructure"
+        ]
+      ]
+    },
+    {
+      "solutionId": "offline-practices",
+      "allowedSkillIds": [
+        "terraform-skill"
+      ],
+      "requiredGroups": [
+        [
+          "terraform-skill"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8da2c0512a5df052896eac9ec830b25392c7e26a3df4f48cc9530f2dd686d8e4"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8da2c0512a5df052896eac9ec830b25392c7e26a3df4f48cc9530f2dd686d8e4"
+    }
+  ]
+}

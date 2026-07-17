@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "regulated-wcag-evidence",
+      "allowedSkillIds": [
+        "accessibility-compliance-accessibility-audit",
+        "accesslint-audit",
+        "wcag-audit-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "accessibility-compliance-accessibility-audit"
+        ],
+        [
+          "accesslint-audit"
+        ],
+        [
+          "wcag-audit-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2e9ddb8f77b2ce42fc0eae0bfff9853ca2dc4489008ce622d6bae7721d8c5e38"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2e9ddb8f77b2ce42fc0eae0bfff9853ca2dc4489008ce622d6bae7721d8c5e38"
+    }
+  ]
+}

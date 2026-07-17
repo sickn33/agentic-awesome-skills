@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.agent-architecture.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "resource-bounded-local-agent",
+      "allowedSkillIds": [
+        "ai-agents-architect",
+        "autonomous-agents",
+        "agent-tool-builder",
+        "context-manager",
+        "filesystem-context"
+      ],
+      "requiredGroups": [
+        [
+          "ai-agents-architect",
+          "autonomous-agents"
+        ],
+        [
+          "agent-tool-builder"
+        ],
+        [
+          "context-manager",
+          "filesystem-context"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-c358e71c1e67855d3cb4f9aaf9cee7cf26751f80c932f46ce554d220078d8c64"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-c358e71c1e67855d3cb4f9aaf9cee7cf26751f80c932f46ce554d220078d8c64"
+    }
+  ]
+}

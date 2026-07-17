@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.agent-architecture.support-triage-agents",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "customer support triage agent system",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "Agent runtime"
+    ],
+    "context": "specialized agents classify requests and prepare suggested actions",
+    "constraints": [
+      "no autonomous external writes",
+      "clear handoffs"
+    ]
+  },
+  "criticalGoals": [
+    "agent-boundaries",
+    "tool-orchestration"
+  ],
+  "nonCriticalGoals": [
+    "delegation-policy",
+    "failure-handling"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.agent-architecture.support-triage-agents"
+}

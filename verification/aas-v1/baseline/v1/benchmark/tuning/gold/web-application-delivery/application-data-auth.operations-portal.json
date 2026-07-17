@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.web-application-delivery.application-data-auth.operations-portal",
+  "acceptedSolutions": [
+    {
+      "solutionId": "auth-and-data-contracts",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "frontend-data-contracts"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "frontend-data-contracts"
+        ]
+      ]
+    },
+    {
+      "solutionId": "secure-api-integration",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "frontend-security-coder",
+        "frontend-api-integration-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "frontend-security-coder"
+        ],
+        [
+          "frontend-api-integration-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a76f30035aa2d0af9dee33d34e50f3e8a39f0db885aced91bc2348e2a03f2675"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a76f30035aa2d0af9dee33d34e50f3e8a39f0db885aced91bc2348e2a03f2675"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

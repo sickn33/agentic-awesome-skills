@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.production-greenfield",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "production-greenfield",
+    "projectSummary": "New SaaS control plane with npm dependencies and GitHub Actions release automation",
+    "stack": {
+      "languages": [
+        "typescript"
+      ],
+      "packageEcosystems": [
+        "npm"
+      ],
+      "deployment": [
+        "aws",
+        "github-actions"
+      ]
+    },
+    "constraints": [
+      "release pipeline has publish credentials",
+      "read-only review",
+      "launch gate required"
+    ],
+    "authorization": {
+      "scope": "defensive dependency and workflow review of organization-owned assets",
+      "mode": "read-only",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "find vulnerable dependencies",
+    "review dependency provenance",
+    "detect unsafe CI dependency update paths"
+  ],
+  "nonCriticalGoals": [
+    "prioritize remediation before launch",
+    "document release supply-chain controls"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.code-dependency-review.production-greenfield"
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.non-web-software.ios-field-notes",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_NON_WEB_SOFTWARE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2b24232b0b4212121be881c24b70230d248378cc4493176058eb1b5d2a1169b1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2b24232b0b4212121be881c24b70230d248378cc4493176058eb1b5d2a1169b1"
+    }
+  ]
+}

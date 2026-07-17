@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.async-integrations.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "polyglot-events-and-sagas",
+      "allowedSkillIds": [
+        "api-integration",
+        "event-sourcing-architect",
+        "cqrs-implementation",
+        "saga-orchestration",
+        "projection-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "api-integration",
+          "event-sourcing-architect"
+        ],
+        [
+          "saga-orchestration"
+        ],
+        [
+          "cqrs-implementation",
+          "projection-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-432bb7b9cbaee07f88d3f2ca4bf42061dfa2cc6ffda8eb8273ff76c732eeecf5"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-432bb7b9cbaee07f88d3f2ca4bf42061dfa2cc6ffda8eb8273ff76c732eeecf5"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.personal-planning.vegetarian-meals", "intent": "household-meal-planning",
+  "profile": { "request": "Create a seven-day vegetarian household meal plan", "people": 3, "cookingNights": 4, "preferences": ["Mediterranean flavors", "seasonal produce"], "constraints": ["forty-minute weekday limit", "use leftovers", "one nut allergy", "ordinary supermarket ingredients"] },
+  "criticalGoals": ["produce a practical allergy-aware menu", "reuse ingredients without excessive repetition"],
+  "nonCriticalGoals": ["include a shopping structure", "balance quick and batch meals", "plan leftovers", "vary protein sources", "minimize waste"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD household-meal scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:83384e36533327b9d1ed8fd06ca367b9481029483f4f46c376b104f71e6d5693"
+}

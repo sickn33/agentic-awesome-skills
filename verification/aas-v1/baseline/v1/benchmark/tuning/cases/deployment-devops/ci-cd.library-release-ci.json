@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.ci-cd.library-release-ci",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "TypeScript library release pipeline",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "GitHub Actions"
+    ],
+    "context": "new validation and package publication workflow",
+    "constraints": [
+      "pinned actions",
+      "protected publication"
+    ]
+  },
+  "criticalGoals": [
+    "reproducible-ci",
+    "deployment-gates"
+  ],
+  "nonCriticalGoals": [
+    "pipeline-design",
+    "safe-automation"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.deployment-devops.ci-cd.library-release-ci"
+}

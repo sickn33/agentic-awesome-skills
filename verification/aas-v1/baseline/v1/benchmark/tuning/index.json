@@ -1,0 +1,849 @@
+{
+  "schemaVersion": 1,
+  "indexVersion": "1.0.0",
+  "status": "frozen",
+  "caseCount": 60,
+  "casesPerIntent": 10,
+  "cases": [
+    {
+      "caseId": "tuning.web-application-delivery.frontend-architecture.analytics-dashboard",
+      "intent": "web-application-delivery",
+      "subIntent": "frontend-architecture",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.frontend-architecture.analytics-dashboard",
+      "inputPath": "cases/web-application-delivery/frontend-architecture.analytics-dashboard.json",
+      "goldPath": "gold/web-application-delivery/frontend-architecture.analytics-dashboard.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.frontend-architecture.content-workspace",
+      "intent": "web-application-delivery",
+      "subIntent": "frontend-architecture",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.frontend-architecture.content-workspace",
+      "inputPath": "cases/web-application-delivery/frontend-architecture.content-workspace.json",
+      "goldPath": "gold/web-application-delivery/frontend-architecture.content-workspace.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.ui-accessibility.civic-service-forms",
+      "intent": "web-application-delivery",
+      "subIntent": "ui-accessibility",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.ui-accessibility.civic-service-forms",
+      "inputPath": "cases/web-application-delivery/ui-accessibility.civic-service-forms.json",
+      "goldPath": "gold/web-application-delivery/ui-accessibility.civic-service-forms.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.ui-accessibility.commerce-checkout",
+      "intent": "web-application-delivery",
+      "subIntent": "ui-accessibility",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.ui-accessibility.commerce-checkout",
+      "inputPath": "cases/web-application-delivery/ui-accessibility.commerce-checkout.json",
+      "goldPath": "gold/web-application-delivery/ui-accessibility.commerce-checkout.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.application-data-auth.team-saas-console",
+      "intent": "web-application-delivery",
+      "subIntent": "application-data-auth",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.application-data-auth.team-saas-console",
+      "inputPath": "cases/web-application-delivery/application-data-auth.team-saas-console.json",
+      "goldPath": "gold/web-application-delivery/application-data-auth.team-saas-console.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.application-data-auth.operations-portal",
+      "intent": "web-application-delivery",
+      "subIntent": "application-data-auth",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.application-data-auth.operations-portal",
+      "inputPath": "cases/web-application-delivery/application-data-auth.operations-portal.json",
+      "goldPath": "gold/web-application-delivery/application-data-auth.operations-portal.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.web-testing-quality.booking-journeys",
+      "intent": "web-application-delivery",
+      "subIntent": "web-testing-quality",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.web-testing-quality.booking-journeys",
+      "inputPath": "cases/web-application-delivery/web-testing-quality.booking-journeys.json",
+      "goldPath": "gold/web-application-delivery/web-testing-quality.booking-journeys.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.web-testing-quality.subscription-journeys",
+      "intent": "web-application-delivery",
+      "subIntent": "web-testing-quality",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.web-testing-quality.subscription-journeys",
+      "inputPath": "cases/web-application-delivery/web-testing-quality.subscription-journeys.json",
+      "goldPath": "gold/web-application-delivery/web-testing-quality.subscription-journeys.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.web-performance-delivery.media-storefront",
+      "intent": "web-application-delivery",
+      "subIntent": "web-performance-delivery",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.web-performance-delivery.media-storefront",
+      "inputPath": "cases/web-application-delivery/web-performance-delivery.media-storefront.json",
+      "goldPath": "gold/web-application-delivery/web-performance-delivery.media-storefront.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.web-application-delivery.web-performance-delivery.field-dashboard",
+      "intent": "web-application-delivery",
+      "subIntent": "web-performance-delivery",
+      "taskFamilyFingerprint": "tuning.v1.web-application-delivery.web-performance-delivery.field-dashboard",
+      "inputPath": "cases/web-application-delivery/web-performance-delivery.field-dashboard.json",
+      "goldPath": "gold/web-application-delivery/web-performance-delivery.field-dashboard.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.partner-orders-api",
+      "intent": "api-backend-delivery",
+      "subIntent": "api-design-contracts",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.api-design-contracts.partner-orders-api",
+      "inputPath": "cases/api-backend-delivery/api-design-contracts.partner-orders-api.json",
+      "goldPath": "gold/api-backend-delivery/api-design-contracts.partner-orders-api.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.api-design-contracts.research-catalog-api",
+      "intent": "api-backend-delivery",
+      "subIntent": "api-design-contracts",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.api-design-contracts.research-catalog-api",
+      "inputPath": "cases/api-backend-delivery/api-design-contracts.research-catalog-api.json",
+      "goldPath": "gold/api-backend-delivery/api-design-contracts.research-catalog-api.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.persistence-data.tenant-ledger",
+      "intent": "api-backend-delivery",
+      "subIntent": "persistence-data",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.persistence-data.tenant-ledger",
+      "inputPath": "cases/api-backend-delivery/persistence-data.tenant-ledger.json",
+      "goldPath": "gold/api-backend-delivery/persistence-data.tenant-ledger.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.persistence-data.inventory-modernization",
+      "intent": "api-backend-delivery",
+      "subIntent": "persistence-data",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.persistence-data.inventory-modernization",
+      "inputPath": "cases/api-backend-delivery/persistence-data.inventory-modernization.json",
+      "goldPath": "gold/api-backend-delivery/persistence-data.inventory-modernization.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.auth-authorization.vendor-access-api",
+      "intent": "api-backend-delivery",
+      "subIntent": "auth-authorization",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.auth-authorization.vendor-access-api",
+      "inputPath": "cases/api-backend-delivery/auth-authorization.vendor-access-api.json",
+      "goldPath": "gold/api-backend-delivery/auth-authorization.vendor-access-api.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.auth-authorization.clinical-records-api",
+      "intent": "api-backend-delivery",
+      "subIntent": "auth-authorization",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.auth-authorization.clinical-records-api",
+      "inputPath": "cases/api-backend-delivery/auth-authorization.clinical-records-api.json",
+      "goldPath": "gold/api-backend-delivery/auth-authorization.clinical-records-api.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.async-integrations.fulfilment-events",
+      "intent": "api-backend-delivery",
+      "subIntent": "async-integrations",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.async-integrations.fulfilment-events",
+      "inputPath": "cases/api-backend-delivery/async-integrations.fulfilment-events.json",
+      "goldPath": "gold/api-backend-delivery/async-integrations.fulfilment-events.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.async-integrations.document-jobs",
+      "intent": "api-backend-delivery",
+      "subIntent": "async-integrations",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.async-integrations.document-jobs",
+      "inputPath": "cases/api-backend-delivery/async-integrations.document-jobs.json",
+      "goldPath": "gold/api-backend-delivery/async-integrations.document-jobs.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.observability-performance.shipment-api",
+      "intent": "api-backend-delivery",
+      "subIntent": "observability-performance",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.observability-performance.shipment-api",
+      "inputPath": "cases/api-backend-delivery/observability-performance.shipment-api.json",
+      "goldPath": "gold/api-backend-delivery/observability-performance.shipment-api.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.api-backend-delivery.observability-performance.search-api",
+      "intent": "api-backend-delivery",
+      "subIntent": "observability-performance",
+      "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.observability-performance.search-api",
+      "inputPath": "cases/api-backend-delivery/observability-performance.search-api.json",
+      "goldPath": "gold/api-backend-delivery/observability-performance.search-api.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.design-system-tests",
+      "intent": "test-qa-automation",
+      "subIntent": "unit-component",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.unit-component.design-system-tests",
+      "inputPath": "cases/test-qa-automation/unit-component.design-system-tests.json",
+      "goldPath": "gold/test-qa-automation/unit-component.design-system-tests.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.admin-ui-tests",
+      "intent": "test-qa-automation",
+      "subIntent": "unit-component",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.unit-component.admin-ui-tests",
+      "inputPath": "cases/test-qa-automation/unit-component.admin-ui-tests.json",
+      "goldPath": "gold/test-qa-automation/unit-component.admin-ui-tests.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+      "intent": "test-qa-automation",
+      "subIntent": "integration-contract",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.integration-contract.partner-contract-tests",
+      "inputPath": "cases/test-qa-automation/integration-contract.partner-contract-tests.json",
+      "goldPath": "gold/test-qa-automation/integration-contract.partner-contract-tests.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "intent": "test-qa-automation",
+      "subIntent": "integration-contract",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.integration-contract.gateway-contract-tests",
+      "inputPath": "cases/test-qa-automation/integration-contract.gateway-contract-tests.json",
+      "goldPath": "gold/test-qa-automation/integration-contract.gateway-contract-tests.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.end-to-end-browser.rental-checkout",
+      "intent": "test-qa-automation",
+      "subIntent": "end-to-end-browser",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.end-to-end-browser.rental-checkout",
+      "inputPath": "cases/test-qa-automation/end-to-end-browser.rental-checkout.json",
+      "goldPath": "gold/test-qa-automation/end-to-end-browser.rental-checkout.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.end-to-end-browser.support-console",
+      "intent": "test-qa-automation",
+      "subIntent": "end-to-end-browser",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.end-to-end-browser.support-console",
+      "inputPath": "cases/test-qa-automation/end-to-end-browser.support-console.json",
+      "goldPath": "gold/test-qa-automation/end-to-end-browser.support-console.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.load-performance.ticket-release-load",
+      "intent": "test-qa-automation",
+      "subIntent": "load-performance",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.load-performance.ticket-release-load",
+      "inputPath": "cases/test-qa-automation/load-performance.ticket-release-load.json",
+      "goldPath": "gold/test-qa-automation/load-performance.ticket-release-load.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.load-performance.reporting-api-load",
+      "intent": "test-qa-automation",
+      "subIntent": "load-performance",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.load-performance.reporting-api-load",
+      "inputPath": "cases/test-qa-automation/load-performance.reporting-api-load.json",
+      "goldPath": "gold/test-qa-automation/load-performance.reporting-api-load.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.accessibility-quality.learning-portal-a11y",
+      "intent": "test-qa-automation",
+      "subIntent": "accessibility-quality",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.accessibility-quality.learning-portal-a11y",
+      "inputPath": "cases/test-qa-automation/accessibility-quality.learning-portal-a11y.json",
+      "goldPath": "gold/test-qa-automation/accessibility-quality.learning-portal-a11y.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.test-qa-automation.accessibility-quality.documentation-a11y",
+      "intent": "test-qa-automation",
+      "subIntent": "accessibility-quality",
+      "taskFamilyFingerprint": "tuning.v1.test-qa-automation.accessibility-quality.documentation-a11y",
+      "inputPath": "cases/test-qa-automation/accessibility-quality.documentation-a11y.json",
+      "goldPath": "gold/test-qa-automation/accessibility-quality.documentation-a11y.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.threat-modeling.wallet-service-threats",
+      "intent": "security-review-hardening",
+      "subIntent": "threat-modeling",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.threat-modeling.wallet-service-threats",
+      "inputPath": "cases/security-review-hardening/threat-modeling.wallet-service-threats.json",
+      "goldPath": "gold/security-review-hardening/threat-modeling.wallet-service-threats.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.threat-modeling.sync-client-threats",
+      "intent": "security-review-hardening",
+      "subIntent": "threat-modeling",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.threat-modeling.sync-client-threats",
+      "inputPath": "cases/security-review-hardening/threat-modeling.sync-client-threats.json",
+      "goldPath": "gold/security-review-hardening/threat-modeling.sync-client-threats.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.code-dependency-review.node-service-dependencies",
+      "intent": "security-review-hardening",
+      "subIntent": "code-dependency-review",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.code-dependency-review.node-service-dependencies",
+      "inputPath": "cases/security-review-hardening/code-dependency-review.node-service-dependencies.json",
+      "goldPath": "gold/security-review-hardening/code-dependency-review.node-service-dependencies.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.code-dependency-review.python-analytics-dependencies",
+      "intent": "security-review-hardening",
+      "subIntent": "code-dependency-review",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.code-dependency-review.python-analytics-dependencies",
+      "inputPath": "cases/security-review-hardening/code-dependency-review.python-analytics-dependencies.json",
+      "goldPath": "gold/security-review-hardening/code-dependency-review.python-analytics-dependencies.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.service-credential-boundaries",
+      "intent": "security-review-hardening",
+      "subIntent": "secrets-auth",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.secrets-auth.service-credential-boundaries",
+      "inputPath": "cases/security-review-hardening/secrets-auth.service-credential-boundaries.json",
+      "goldPath": "gold/security-review-hardening/secrets-auth.service-credential-boundaries.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.internal-auth-hardening",
+      "intent": "security-review-hardening",
+      "subIntent": "secrets-auth",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.secrets-auth.internal-auth-hardening",
+      "inputPath": "cases/security-review-hardening/secrets-auth.internal-auth-hardening.json",
+      "goldPath": "gold/security-review-hardening/secrets-auth.internal-auth-hardening.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.cloud-container.batch-platform-hardening",
+      "intent": "security-review-hardening",
+      "subIntent": "cloud-container",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.cloud-container.batch-platform-hardening",
+      "inputPath": "cases/security-review-hardening/cloud-container.batch-platform-hardening.json",
+      "goldPath": "gold/security-review-hardening/cloud-container.batch-platform-hardening.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.cloud-container.kubernetes-workload-hardening",
+      "intent": "security-review-hardening",
+      "subIntent": "cloud-container",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.cloud-container.kubernetes-workload-hardening",
+      "inputPath": "cases/security-review-hardening/cloud-container.kubernetes-workload-hardening.json",
+      "goldPath": "gold/security-review-hardening/cloud-container.kubernetes-workload-hardening.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.ci-token-exposure",
+      "intent": "security-review-hardening",
+      "subIntent": "incident-hardening",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.incident-hardening.ci-token-exposure",
+      "inputPath": "cases/security-review-hardening/incident-hardening.ci-token-exposure.json",
+      "goldPath": "gold/security-review-hardening/incident-hardening.ci-token-exposure.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.session-anomaly",
+      "intent": "security-review-hardening",
+      "subIntent": "incident-hardening",
+      "taskFamilyFingerprint": "tuning.v1.security-review-hardening.incident-hardening.session-anomaly",
+      "inputPath": "cases/security-review-hardening/incident-hardening.session-anomaly.json",
+      "goldPath": "gold/security-review-hardening/incident-hardening.session-anomaly.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.ci-cd.library-release-ci",
+      "intent": "deployment-devops",
+      "subIntent": "ci-cd",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.ci-cd.library-release-ci",
+      "inputPath": "cases/deployment-devops/ci-cd.library-release-ci.json",
+      "goldPath": "gold/deployment-devops/ci-cd.library-release-ci.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.ci-cd.polyglot-service-ci",
+      "intent": "deployment-devops",
+      "subIntent": "ci-cd",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.ci-cd.polyglot-service-ci",
+      "inputPath": "cases/deployment-devops/ci-cd.polyglot-service-ci.json",
+      "goldPath": "gold/deployment-devops/ci-cd.polyglot-service-ci.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.containers.worker-container",
+      "intent": "deployment-devops",
+      "subIntent": "containers",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.containers.worker-container",
+      "inputPath": "cases/deployment-devops/containers.worker-container.json",
+      "goldPath": "gold/deployment-devops/containers.worker-container.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.containers.service-orchestration",
+      "intent": "deployment-devops",
+      "subIntent": "containers",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.containers.service-orchestration",
+      "inputPath": "cases/deployment-devops/containers.service-orchestration.json",
+      "goldPath": "gold/deployment-devops/containers.service-orchestration.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.infrastructure-as-code.cloud-environment-modules",
+      "intent": "deployment-devops",
+      "subIntent": "infrastructure-as-code",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.infrastructure-as-code.cloud-environment-modules",
+      "inputPath": "cases/deployment-devops/infrastructure-as-code.cloud-environment-modules.json",
+      "goldPath": "gold/deployment-devops/infrastructure-as-code.cloud-environment-modules.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.infrastructure-as-code.platform-state-migration",
+      "intent": "deployment-devops",
+      "subIntent": "infrastructure-as-code",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.infrastructure-as-code.platform-state-migration",
+      "inputPath": "cases/deployment-devops/infrastructure-as-code.platform-state-migration.json",
+      "goldPath": "gold/deployment-devops/infrastructure-as-code.platform-state-migration.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.observability-sre.payments-slo",
+      "intent": "deployment-devops",
+      "subIntent": "observability-sre",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.observability-sre.payments-slo",
+      "inputPath": "cases/deployment-devops/observability-sre.payments-slo.json",
+      "goldPath": "gold/deployment-devops/observability-sre.payments-slo.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.observability-sre.data-pipeline-operations",
+      "intent": "deployment-devops",
+      "subIntent": "observability-sre",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.observability-sre.data-pipeline-operations",
+      "inputPath": "cases/deployment-devops/observability-sre.data-pipeline-operations.json",
+      "goldPath": "gold/deployment-devops/observability-sre.data-pipeline-operations.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+      "intent": "deployment-devops",
+      "subIntent": "release-rollback",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.release-rollback.canary-api-release",
+      "inputPath": "cases/deployment-devops/release-rollback.canary-api-release.json",
+      "goldPath": "gold/deployment-devops/release-rollback.canary-api-release.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.deployment-devops.release-rollback.schema-compatible-release",
+      "intent": "deployment-devops",
+      "subIntent": "release-rollback",
+      "taskFamilyFingerprint": "tuning.v1.deployment-devops.release-rollback.schema-compatible-release",
+      "inputPath": "cases/deployment-devops/release-rollback.schema-compatible-release.json",
+      "goldPath": "gold/deployment-devops/release-rollback.schema-compatible-release.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.agent-architecture.repository-maintenance-agent",
+      "intent": "agent-mcp-development",
+      "subIntent": "agent-architecture",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.agent-architecture.repository-maintenance-agent",
+      "inputPath": "cases/agent-mcp-development/agent-architecture.repository-maintenance-agent.json",
+      "goldPath": "gold/agent-mcp-development/agent-architecture.repository-maintenance-agent.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.agent-architecture.support-triage-agents",
+      "intent": "agent-mcp-development",
+      "subIntent": "agent-architecture",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.agent-architecture.support-triage-agents",
+      "inputPath": "cases/agent-mcp-development/agent-architecture.support-triage-agents.json",
+      "goldPath": "gold/agent-mcp-development/agent-architecture.support-triage-agents.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.local-catalog-mcp",
+      "intent": "agent-mcp-development",
+      "subIntent": "mcp-tooling",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.mcp-tooling.local-catalog-mcp",
+      "inputPath": "cases/agent-mcp-development/mcp-tooling.local-catalog-mcp.json",
+      "goldPath": "gold/agent-mcp-development/mcp-tooling.local-catalog-mcp.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.mcp-tooling.build-metadata-mcp",
+      "intent": "agent-mcp-development",
+      "subIntent": "mcp-tooling",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.mcp-tooling.build-metadata-mcp",
+      "inputPath": "cases/agent-mcp-development/mcp-tooling.build-metadata-mcp.json",
+      "goldPath": "gold/agent-mcp-development/mcp-tooling.build-metadata-mcp.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.evaluation-testing.code-review-agent-eval",
+      "intent": "agent-mcp-development",
+      "subIntent": "evaluation-testing",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.evaluation-testing.code-review-agent-eval",
+      "inputPath": "cases/agent-mcp-development/evaluation-testing.code-review-agent-eval.json",
+      "goldPath": "gold/agent-mcp-development/evaluation-testing.code-review-agent-eval.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.evaluation-testing.tool-routing-regression",
+      "intent": "agent-mcp-development",
+      "subIntent": "evaluation-testing",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.evaluation-testing.tool-routing-regression",
+      "inputPath": "cases/agent-mcp-development/evaluation-testing.tool-routing-regression.json",
+      "goldPath": "gold/agent-mcp-development/evaluation-testing.tool-routing-regression.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.memory-context-retrieval.project-knowledge-memory",
+      "intent": "agent-mcp-development",
+      "subIntent": "memory-context-retrieval",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.memory-context-retrieval.project-knowledge-memory",
+      "inputPath": "cases/agent-mcp-development/memory-context-retrieval.project-knowledge-memory.json",
+      "goldPath": "gold/agent-mcp-development/memory-context-retrieval.project-knowledge-memory.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.memory-context-retrieval.support-case-memory",
+      "intent": "agent-mcp-development",
+      "subIntent": "memory-context-retrieval",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.memory-context-retrieval.support-case-memory",
+      "inputPath": "cases/agent-mcp-development/memory-context-retrieval.support-case-memory.json",
+      "goldPath": "gold/agent-mcp-development/memory-context-retrieval.support-case-memory.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+      "intent": "agent-mcp-development",
+      "subIntent": "security-operations",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.security-operations.ci-agent-security",
+      "inputPath": "cases/agent-mcp-development/security-operations.ci-agent-security.json",
+      "goldPath": "gold/agent-mcp-development/security-operations.ci-agent-security.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    },
+    {
+      "caseId": "tuning.agent-mcp-development.security-operations.local-mcp-security",
+      "intent": "agent-mcp-development",
+      "subIntent": "security-operations",
+      "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.security-operations.local-mcp-security",
+      "inputPath": "cases/agent-mcp-development/security-operations.local-mcp-security.json",
+      "goldPath": "gold/agent-mcp-development/security-operations.local-mcp-security.json",
+      "provenance": {
+        "source": "independent-synthetic-tuning-index-authoring",
+        "version": "1.0.0",
+        "reviewedAt": "2026-07-17"
+      },
+      "reviewStatus": "approved"
+    }
+  ]
+}

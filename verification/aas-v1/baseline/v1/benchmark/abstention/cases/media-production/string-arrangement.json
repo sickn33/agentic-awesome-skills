@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.media-production.string-arrangement", "intent": "music-arrangement",
+  "profile": { "request": "Arrange an original piano song for string quartet", "duration": "four minutes", "style": "intimate contemporary chamber music", "performers": "intermediate conservatory students", "constraints": ["retain vocal space", "idiomatic bowing", "limited rehearsal time"] },
+  "criticalGoals": ["create playable quartet textures", "support rather than obscure the song"],
+  "nonCriticalGoals": ["distribute melodic material", "shape dynamics", "respect instrument ranges", "plan transitions", "limit rehearsal complexity"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD music-arrangement scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:53ae440bce016a343fcf7fb92e8d96f368bcc0c50cb8f21cf76ad0f4012eedcd"
+}
