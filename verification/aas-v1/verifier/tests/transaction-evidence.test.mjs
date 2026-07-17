@@ -164,6 +164,11 @@ test("write faults use a policy-safe corpus to expose the transient staging boun
     desired: false,
     additionalSkills: corpus,
   });
+  assert.deepEqual(faultFixtureProfile("rename", corpus), {
+    installed: false,
+    desired: true,
+    additionalSkills: corpus,
+  });
   assert.deepEqual(faultFixtureProfile("commit", corpus), {
     installed: false,
     desired: true,

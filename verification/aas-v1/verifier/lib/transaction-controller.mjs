@@ -145,6 +145,7 @@ export function nativeObservationLineage(platform, observed) {
 
 export function faultFixtureProfile(className, backupSkillIds) {
   const replace = className === "backup";
+  const requiresBoundaryWindow = className === "write" || className === "rename" || replace;
   return {
     installed: replace,
     desired: !replace,
@@ -152,7 +153,7 @@ export function faultFixtureProfile(className, backupSkillIds) {
     // polling samples. Stage the same policy-safe corpus used by the backup
     // case so the write boundary remains observable without instrumenting or
     // slowing the candidate under test.
-    additionalSkills: className === "write" || replace ? backupSkillIds : [],
+    additionalSkills: requiresBoundaryWindow ? backupSkillIds : [],
   };
 }
 
