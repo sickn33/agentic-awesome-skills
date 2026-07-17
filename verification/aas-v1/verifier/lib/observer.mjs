@@ -111,36 +111,52 @@ export function parseMacFsUsage(filesystemText, networkText, execText, zones = {
   return summarizeEvents(events);
 }
 
-export function parseMacCombinedFsUsage(text, zones = {}) {
+export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "") {
   const events = [];
   const execLines = [];
-  for (const line of fsUsageLines(text)) {
+  let readinessIndex = -1;
+  const lines = fsUsageLines(text);
+  for (const [index, line] of lines.entries()) {
     if (/\b(?:socket|connect|bind|listen|accept|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo)\b/i.test(line)) {
       events.push({ kind: "network", targetDigest: redactToken(line, zones) });
     } else if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
-      events.push({ kind: "write", targetDigest: redactToken(line, zones) });
+      if (readinessToken && line.includes(readinessToken)) readinessIndex = index;
+      else events.push({ kind: "write", targetDigest: redactToken(line, zones) });
     } else if (/\b(?:execve|posix_spawn|exec|spawn)\b/i.test(line)) {
-      execLines.push(line);
+      execLines.push({ index, line });
     }
   }
-  if (!execLines.length) {
+  if (readinessToken && readinessIndex < 0) {
+    throw Object.assign(new Error("fs_usage missed the pre-exec readiness canary"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  }
+  const bootstrapIndex = readinessToken ? execLines.findIndex((entry) => entry.index > readinessIndex) : 0;
+  if (bootstrapIndex < 0 || !execLines.length) {
     throw Object.assign(new Error("fs_usage did not observe the gated bootstrap exec"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
   }
-  for (const line of execLines.slice(1)) events.push({ kind: "process", targetDigest: redactToken(line, zones) });
+  if (readinessToken && execLines.some((entry) => entry.index < readinessIndex)) {
+    throw Object.assign(new Error("fs_usage observed ambiguous exec lineage before readiness"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
+  }
+  for (const { line } of execLines.slice(bootstrapIndex + 1)) events.push({ kind: "process", targetDigest: redactToken(line, zones) });
   return summarizeEvents(events);
 }
 
 async function macObserved(executable, args, options) {
   if (!commandExists("fs_usage")) throw Object.assign(new Error("fs_usage is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
-  if (!fs.existsSync("/usr/bin/script")) throw Object.assign(new Error("script(1) is required for fs_usage readiness"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   const gate = path.join(options.evidenceDir, `observer-${process.pid}.go`);
+  const preflightGate = path.join(options.evidenceDir, `observer-${process.pid}.preflight`);
+  const readinessCanary = path.join(options.evidenceDir, `aas-ready-${process.pid}`);
+  const readinessToken = path.basename(readinessCanary);
   const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
-  const traceFifo = path.join(options.evidenceDir, `observer-${process.pid}.fifo`);
-  const fifo = spawnSync("/usr/bin/mkfifo", [traceFifo], { encoding: "utf8" });
-  if (fifo.status !== 0) throw Object.assign(new Error("Unable to create fs_usage trace FIFO"), { code: "AAS_OBSERVER_UNAVAILABLE" });
-  fs.chmodSync(traceFifo, 0o600);
   const command = [executable, ...args].map(shellQuote).join(" ");
-  fs.writeFileSync(launcher, `#!/bin/zsh\nwhile [[ ! -e ${shellQuote(gate)} ]]; do sleep 0.01; done\nexec ${command}\n`, { mode: 0o700 });
+  fs.writeFileSync(launcher, [
+    "#!/bin/zsh",
+    "zmodload zsh/zselect",
+    `while [[ ! -e ${shellQuote(preflightGate)} ]]; do zselect -t 1; done`,
+    `printf ready > ${shellQuote(readinessCanary)}`,
+    `while [[ ! -e ${shellQuote(gate)} ]]; do zselect -t 1; done`,
+    `exec ${command}`,
+    "",
+  ].join("\n"), { mode: 0o700 });
   let rootPid = 0;
   const commandPromise = runProcess("/bin/zsh", [launcher], {
     ...options,
@@ -148,40 +164,9 @@ async function macObserved(executable, args, options) {
   });
   if (!rootPid) throw Object.assign(new Error("Observed process did not start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   let observerPid = 0;
-  let observerReady = false;
-  let resolveReady;
-  let rejectReady;
-  let startupText = "";
-  const traceChunks = [];
-  let traceBytes = 0;
-  let traceOverflow = false;
-  const readiness = new Promise((resolve, reject) => {
-    resolveReady = resolve;
-    rejectReady = reject;
-  });
   const observerTimeoutMs = (options.timeoutMs ?? 30_000) + 5_000;
-  const observeStartup = (chunk) => {
-    traceBytes += chunk.length;
-    if (traceBytes > 8 * 1024 * 1024) {
-      traceOverflow = true;
-      return;
-    }
-    traceChunks.push(Buffer.from(chunk));
-    if (observerReady) return;
-    startupText = `${startupText}${chunk.toString("utf8")}`.slice(-512);
-    if (/Tracing active\. Please wait/i.test(startupText)) {
-      observerReady = true;
-      resolveReady();
-    }
-  };
-  const traceStream = fs.createReadStream(traceFifo);
-  const traceEnded = new Promise((resolve, reject) => {
-    traceStream.on("data", observeStartup);
-    traceStream.once("end", resolve);
-    traceStream.once("error", reject);
-  });
-  const observerPromise = runProcess("/usr/bin/script", [
-    "-q", "-F", traceFifo, "sudo", "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
+  const observerPromise = runProcess("sudo", [
+    "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
     "-f", "filesys", "-f", "network", "-f", "exec", String(rootPid),
   ], {
     ...options,
@@ -190,13 +175,9 @@ async function macObserved(executable, args, options) {
     maxOutputBytes: 8 * 1024 * 1024,
     onSpawn(child) { observerPid = child.pid; },
   });
-  observerPromise.then((trace) => {
-    if (!observerReady) rejectReady(Object.assign(new Error(`fs_usage exited before readiness (${trace.code})`), { code: "AAS_OBSERVER_UNAVAILABLE" }));
-  }, rejectReady);
-  const readinessTimer = setTimeout(() => {
-    if (!observerReady) rejectReady(Object.assign(new Error("fs_usage readiness timed out"), { code: "AAS_OBSERVER_UNAVAILABLE" }));
-  }, 5_000);
-  await readiness.finally(() => clearTimeout(readinessTimer));
+  await new Promise((resolve) => setTimeout(resolve, 1_000));
+  fs.writeFileSync(preflightGate, "go\n", { mode: 0o600 });
+  await new Promise((resolve) => setTimeout(resolve, 300));
   fs.writeFileSync(gate, "go\n", { mode: 0o600 });
   const result = await commandPromise;
   await new Promise((resolve) => setTimeout(resolve, 300));
@@ -204,21 +185,20 @@ async function macObserved(executable, args, options) {
     await runProcess("sudo", ["-n", "/bin/kill", "-INT", `-${observerPid}`], { timeoutMs: 5_000 });
   }
   const trace = await observerPromise;
-  await Promise.race([traceEnded, new Promise((resolve) => setTimeout(resolve, 2_000))]);
-  traceStream.destroy();
-  if (traceOverflow) throw Object.assign(new Error("fs_usage trace exceeded the observer limit"), { code: "AAS_OBSERVER_OVERFLOW" });
-  const raw = Buffer.concat(traceChunks).toString("utf8");
+  if (trace.outputLimitExceeded) throw Object.assign(new Error("fs_usage trace exceeded the observer limit"), { code: "AAS_OBSERVER_OVERFLOW" });
+  const raw = `${trace.stdout}\n${trace.stderr}`;
   fs.rmSync(gate, { force: true });
+  fs.rmSync(preflightGate, { force: true });
+  fs.rmSync(readinessCanary, { force: true });
   fs.rmSync(launcher, { force: true });
-  fs.rmSync(traceFifo, { force: true });
   return {
     result,
-    observation: parseMacCombinedFsUsage(raw, options.zones),
+    observation: parseMacCombinedFsUsage(raw, options.zones, readinessToken),
     backend: "macos-fs_usage-process",
     diagnostics: {
       bytes: Buffer.byteLength(raw),
       eventLines: fsUsageLines(raw).length,
-      startupObserved: observerReady,
+      readinessCanaryObserved: raw.includes(readinessToken),
       preview: fsUsageLines(raw).length ? null : raw.trim().slice(0, 160),
     },
   };
