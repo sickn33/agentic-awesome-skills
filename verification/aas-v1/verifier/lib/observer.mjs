@@ -13,10 +13,15 @@ const OPEN_WRITE = /\b(?:open|openat|openat2)\s*\([^\n]*\b(?:O_WRONLY|O_RDWR|O_C
 const FD_WRITE = /\b(?:write|writev|pwrite|pwritev)\s*\((\d+)(?:<[^>]*>)?,/;
 const PROCESS_CALL = /\b(?:execve|execveat|posix_spawn)\s*\(/;
 
-function commandExists(command) {
+function resolveCommandPath(command) {
   const probe = process.platform === "win32" ? "where.exe" : "which";
   const result = spawnSync(probe, [command], { encoding: "utf8", windowsHide: true });
-  return result.status === 0;
+  if (result.status !== 0) return null;
+  return result.stdout.split(/\r?\n/).map((line) => line.trim()).find((line) => path.isAbsolute(line)) ?? null;
+}
+
+function commandExists(command) {
+  return resolveCommandPath(command) !== null;
 }
 
 function redactToken(token, zones) {
@@ -243,7 +248,7 @@ async function macObserved(executable, args, options) {
     );
     await new Promise((resolve) => setTimeout(resolve, budgets.startupMs));
     assertObserverActive("startup");
-    const readinessProgram = `process.title=${JSON.stringify(observedName)};const fs=require('node:fs');const fd=fs.openSync(${JSON.stringify(readinessCanary)},'w',0o600);fs.writeSync(fd,'ready');fs.fsyncSync(fd);fs.closeSync(fd);`;
+    const readinessProgram = `process.title=${JSON.stringify(observedName)};const fs=require('node:fs');const target=${JSON.stringify(readinessCanary)};const deadline=Date.now()+4000;function beat(){const fd=fs.openSync(target,'w',0o600);fs.writeSync(fd,'ready');fs.fsyncSync(fd);fs.closeSync(fd);if(Date.now()<deadline)setTimeout(beat,200);}beat();`;
     for (let attempt = 0; attempt < budgets.readinessMaxAttempts; attempt += 1) {
       assertObserverActive("readiness-before-probe");
       readinessAttempts += 1;
@@ -312,9 +317,9 @@ export function macObserverBudgets(candidateTimeoutMs = 30_000) {
     });
   }
   const startupMs = 1_500;
-  const readinessMaxAttempts = 10;
-  const readinessProcessTimeoutMs = 2_000;
-  const readinessDelayMs = 350;
+  const readinessMaxAttempts = 2;
+  const readinessProcessTimeoutMs = 6_000;
+  const readinessDelayMs = 250;
   const drainMs = 1_000;
   return {
     startupMs,
@@ -332,8 +337,8 @@ export function macObserverBudgets(candidateTimeoutMs = 30_000) {
 
 async function windowsObserved(executable, args, options) {
   const script = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "observers", "windows-etw.ps1");
-  const powershell = commandExists("pwsh.exe") ? "pwsh.exe" : "powershell.exe";
-  if (!fs.existsSync(script) || !commandExists(powershell)) {
+  const powershell = resolveCommandPath("pwsh.exe") ?? resolveCommandPath("powershell.exe");
+  if (!fs.existsSync(script) || !powershell) {
     throw Object.assign(new Error("Windows ETW observer is unavailable"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
   const trace = path.join(options.evidenceDir, `windows-etw-${process.pid}.jsonl`);
@@ -446,7 +451,8 @@ async function selfTestWindowsProcessTree(options) {
   const rootDriver = path.join(drivers, "windows-tree-root.ps1");
   const childDriver = path.join(drivers, "windows-tree-child.ps1");
   const jobSource = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "observers", "windows-job.cs");
-  const powershell = commandExists("pwsh.exe") ? "pwsh.exe" : "powershell.exe";
+  const powershell = resolveCommandPath("pwsh.exe") ?? resolveCommandPath("powershell.exe");
+  if (!powershell) throw Object.assign(new Error("Windows PowerShell runtime is unavailable"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   const readyCanary = path.join(options.evidenceDir, `child-ready-${process.pid}.txt`);
   const rootAckCanary = path.join(options.evidenceDir, `root-ack-${process.pid}.txt`);
   const childCanary = path.join(options.evidenceDir, `child-after-parent-${process.pid}.txt`);

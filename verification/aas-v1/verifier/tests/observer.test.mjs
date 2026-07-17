@@ -34,11 +34,11 @@ test("Windows observer separates the candidate limit from ETW finalization grace
 test("macOS observer lifetime covers readiness, candidate, drain, and stop margin", () => {
   assert.deepEqual(macObserverBudgets(10_000), {
     startupMs: 1_500,
-    readinessMaxAttempts: 10,
-    readinessProcessTimeoutMs: 2_000,
-    readinessDelayMs: 350,
+    readinessMaxAttempts: 2,
+    readinessProcessTimeoutMs: 6_000,
+    readinessDelayMs: 250,
     drainMs: 1_000,
-    observerTimeoutMs: 41_000,
+    observerTimeoutMs: 30_000,
   });
   assert.throws(() => macObserverBudgets(0), (error) => error.code === "AAS_OBSERVER_INVALID_TIMEOUT");
 });
