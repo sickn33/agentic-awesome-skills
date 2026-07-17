@@ -2,6 +2,7 @@
 
 const assert = require("node:assert/strict");
 const test = require("node:test");
+const { validateInstance } = require("../../lib/aas-v1/schema-validator");
 const {
   canonicalJson,
   loadBundledCatalog,
@@ -79,11 +80,14 @@ test("recommendation is invariant to catalog order", () => {
   ];
   const first = recommendStack(syntheticCatalog(entries), input);
   const second = recommendStack(syntheticCatalog([...entries].reverse()), input);
-  assert.equal(first.canonicalJson, second.canonicalJson);
+  assert.equal(canonicalJson(first), canonicalJson(second));
   assert.deepEqual(first.proposedStack.sort(), ["coverage-skill", "unit-skill"]);
   assert.equal(first.status, "complete");
   assert.equal(first.measures.goalCoverage, 1000);
   assert.equal(first.discoveryCandidates[0].id, "unknown-skill");
+  assert.equal(first.recommended[0].metadata.targets.status, "known");
+  assert.equal(first.recommended[0].metadata.targets.value.codex.value, "supported");
+  assert.equal(validateInstance("recommendation-output.schema.json", first), first);
 });
 
 test("recommendation is invariant to non-semantic skill ID permutations", () => {

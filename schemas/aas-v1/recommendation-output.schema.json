@@ -4,7 +4,7 @@
   "title": "AAS deterministic recommendation output v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["ok", "status", "protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "catalog", "normalizedInput", "recommended", "discoveryCandidates", "proposedStack", "includedSkillIds", "coveredGoals", "uncoveredGoals", "goalCapabilityMatrix", "exclusions", "hardPolicyViolations", "discoveryPromotions", "unknown", "measures", "canonicalJson"],
+  "required": ["ok", "status", "protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "catalog", "normalizedInput", "recommended", "discoveryCandidates", "candidateCounts", "proposedStack", "includedSkillIds", "coveredGoals", "uncoveredGoals", "goalCapabilityMatrix", "exclusions", "exclusionReasonCounts", "hardPolicyViolations", "discoveryPromotions", "unknown", "measures"],
   "properties": {
     "ok": { "const": true },
     "status": { "enum": ["complete", "partial", "insufficientCoverage"] },
@@ -14,8 +14,21 @@
     "scorerVersion": { "type": "string", "minLength": 1 },
     "catalog": { "$ref": "#/$defs/catalog" },
     "normalizedInput": { "type": "object" },
-    "recommended": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/candidate" } },
+    "recommended": { "type": "array", "maxItems": 25, "items": { "$ref": "#/$defs/candidate" } },
     "discoveryCandidates": { "type": "array", "maxItems": 25, "items": { "$ref": "#/$defs/candidate" } },
+    "candidateCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recommendedTotal", "recommendedReturned", "discoveryTotal", "discoveryReturned", "excludedTotal", "excludedReturned"],
+      "properties": {
+        "recommendedTotal": { "type": "integer", "minimum": 0 },
+        "recommendedReturned": { "type": "integer", "minimum": 0, "maximum": 25 },
+        "discoveryTotal": { "type": "integer", "minimum": 0 },
+        "discoveryReturned": { "type": "integer", "minimum": 0, "maximum": 25 },
+        "excludedTotal": { "type": "integer", "minimum": 0 },
+        "excludedReturned": { "type": "integer", "minimum": 0, "maximum": 25 }
+      }
+    },
     "proposedStack": { "$ref": "#/$defs/ids" },
     "includedSkillIds": { "$ref": "#/$defs/ids" },
     "coveredGoals": { "$ref": "#/$defs/strings" },
@@ -35,12 +48,17 @@
     },
     "exclusions": {
       "type": "array",
+      "maxItems": 25,
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": ["id", "reasonCodes"],
         "properties": { "id": { "$ref": "#/$defs/id" }, "reasonCodes": { "$ref": "#/$defs/strings" } }
       }
+    },
+    "exclusionReasonCounts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 1 }
     },
     "hardPolicyViolations": { "type": "array", "maxItems": 0 },
     "discoveryPromotions": { "type": "array", "items": { "type": "object" } },
@@ -54,8 +72,7 @@
         "metadataCompleteness": { "type": "integer", "minimum": 0, "maximum": 1000 },
         "evidenceStrength": { "type": "integer", "minimum": 0, "maximum": 1000 }
       }
-    },
-    "canonicalJson": { "type": "string" }
+    }
   },
   "$defs": {
     "id": { "type": "string", "minLength": 1, "maxLength": 256 },
@@ -73,15 +90,59 @@
     },
     "candidate": {
       "type": "object",
-      "required": ["id", "factors", "totalScore", "coveredGoals", "eligibility", "metadata"],
+      "additionalProperties": false,
+      "required": ["id", "factors", "totalScore", "coveredGoals", "eligibility", "evidenceRefs", "metadata"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "factors": { "type": "object", "additionalProperties": { "type": "integer" } },
         "totalScore": { "type": "integer" },
         "coveredGoals": { "$ref": "#/$defs/strings" },
-        "eligibility": { "type": "object" },
-        "metadata": { "type": "object" },
+        "evidenceRefs": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+        },
+        "eligibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["eligibleForRecommendation", "hardBlocked", "eligibilityReasonCodes", "evidenceLevel", "unknownFields", "targetCompatibility"],
+          "properties": {
+            "eligibleForRecommendation": { "type": "boolean" },
+            "hardBlocked": { "type": "boolean" },
+            "eligibilityReasonCodes": { "$ref": "#/$defs/strings" },
+            "evidenceLevel": { "enum": ["evidence-backed", "incomplete"] },
+            "unknownFields": { "$ref": "#/$defs/strings" },
+            "targetCompatibility": { "enum": ["supported", "blocked", "unknown"] }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["capabilities", "risk", "source", "setup", "targets", "dependencies", "conflicts", "validation", "tests", "reviews"],
+          "properties": {
+            "capabilities": { "$ref": "#/$defs/judgment" },
+            "risk": { "$ref": "#/$defs/judgment" },
+            "source": { "$ref": "#/$defs/judgment" },
+            "setup": { "$ref": "#/$defs/judgment" },
+            "targets": { "$ref": "#/$defs/judgment" },
+            "dependencies": { "$ref": "#/$defs/judgment" },
+            "conflicts": { "$ref": "#/$defs/judgment" },
+            "validation": { "$ref": "#/$defs/judgment" },
+            "tests": { "$ref": "#/$defs/judgment" },
+            "reviews": { "$ref": "#/$defs/judgment" }
+          }
+        },
         "insertionReason": { "type": "object" }
+      }
+    },
+    "judgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value"],
+      "properties": {
+        "status": { "enum": ["known", "unknown", "notApplicable"] },
+        "value": {}
       }
     }
   }

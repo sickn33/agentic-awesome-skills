@@ -1,10 +1,24 @@
 "use strict";
 
 const versions = require("./versions");
-const { canonicalJson } = require("./canonical-json");
 const { compareStrings, normalizeRecommendationInput, sortedUnique } = require("./normalize");
 
 const FIXED_POINT = 1000;
+const MAX_RETURNED_CANDIDATES = 25;
+const MAX_RETURNED_EXCLUSIONS = 25;
+const MAX_EVIDENCE_REFS = 8;
+const PUBLIC_METADATA_FIELDS = Object.freeze([
+  "capabilities",
+  "risk",
+  "source",
+  "setup",
+  "targets",
+  "dependencies",
+  "conflicts",
+  "validation",
+  "tests",
+  "reviews",
+]);
 
 function targetCompatibility(skill, targets) {
   const states = targets.map((target) => skill.metadata.targets?.[target.host]?.value ?? null);
@@ -201,6 +215,61 @@ function composeStack(candidates, input) {
   return { selected, uncovered: [...uncovered].sort(compareStrings) };
 }
 
+function collectEvidenceRefs(value, refs = new Set()) {
+  if (refs.size >= MAX_EVIDENCE_REFS || value === null || value === undefined) return refs;
+  if (typeof value === "string") {
+    if (/^sha256-[a-f0-9]{64}$/.test(value)) refs.add(value);
+    return refs;
+  }
+  if (Array.isArray(value)) {
+    for (const entry of value) collectEvidenceRefs(entry, refs);
+    return refs;
+  }
+  if (typeof value === "object") {
+    for (const key of Object.keys(value).sort(compareStrings)) collectEvidenceRefs(value[key], refs);
+  }
+  return refs;
+}
+
+function publicJudgment(judgment) {
+  const status = typeof judgment?.status === "string" ? judgment.status : "unknown";
+  const value = judgment && Object.hasOwn(judgment, "value") ? judgment.value : null;
+  return { status, value };
+}
+
+function publicTargets(targets) {
+  const entries = Object.entries(targets || {}).sort(([left], [right]) => compareStrings(left, right));
+  const value = Object.fromEntries(entries.map(([host, judgment]) => [host, publicJudgment(judgment)]));
+  return {
+    status: entries.length > 0 && entries.every(([, judgment]) => judgment?.status === "known") ? "known" : "unknown",
+    value,
+  };
+}
+
+function publicCandidate(candidate) {
+  return {
+    id: candidate.id,
+    factors: candidate.factors,
+    totalScore: candidate.totalScore,
+    coveredGoals: candidate.coveredGoals,
+    eligibility: candidate.eligibility,
+    evidenceRefs: [...collectEvidenceRefs(candidate.metadata)].sort(compareStrings),
+    metadata: Object.fromEntries(PUBLIC_METADATA_FIELDS.map((field) => [
+      field,
+      field === "targets" ? publicTargets(candidate.metadata.targets) : publicJudgment(candidate.metadata[field]),
+    ])),
+    ...(candidate.insertionReason ? { insertionReason: candidate.insertionReason } : {}),
+  };
+}
+
+function exclusionReasonCounts(exclusions) {
+  const counts = new Map();
+  for (const exclusion of exclusions) {
+    for (const code of exclusion.reasonCodes) counts.set(code, (counts.get(code) || 0) + 1);
+  }
+  return Object.fromEntries([...counts.entries()].sort(([left], [right]) => compareStrings(left, right)));
+}
+
 function recommendStack(catalog, rawInput) {
   const input = normalizeRecommendationInput(rawInput);
   const candidates = scoreCandidates(catalog, input);
@@ -227,14 +296,25 @@ function recommendStack(catalog, rawInput) {
   const status = composition.selected.length === 0
     ? "insufficientCoverage"
     : (criticalComplete && nonCriticalRatio >= input.minimumNonCriticalGoalCoverage ? "complete" : "partial");
-  const payload = {
+  const returnedRecommended = recommended.slice(0, MAX_RETURNED_CANDIDATES).map(publicCandidate);
+  const returnedDiscovery = discoveryCandidates.slice(0, MAX_RETURNED_CANDIDATES).map(publicCandidate);
+  const returnedExclusions = exclusions.slice(0, MAX_RETURNED_EXCLUSIONS);
+  return {
     ok: true,
     status,
     ...versions,
     catalog: { package: catalog.package, version: catalog.version, digest: catalog.digest },
     normalizedInput: input,
-    recommended: recommended.slice(0, 50),
-    discoveryCandidates,
+    recommended: returnedRecommended,
+    discoveryCandidates: returnedDiscovery,
+    candidateCounts: {
+      recommendedTotal: recommended.length,
+      recommendedReturned: returnedRecommended.length,
+      discoveryTotal: discoveryCandidates.length,
+      discoveryReturned: returnedDiscovery.length,
+      excludedTotal: exclusions.length,
+      excludedReturned: returnedExclusions.length,
+    },
     proposedStack: composition.selected.map((candidate) => candidate.id),
     includedSkillIds: composition.selected.map((candidate) => candidate.id),
     coveredGoals,
@@ -244,14 +324,22 @@ function recommendStack(catalog, rawInput) {
       critical: input.criticalGoals.includes(goal),
       skillIds: composition.selected.filter((candidate) => candidate.coveredGoals.includes(goal)).map((candidate) => candidate.id),
     })),
-    exclusions,
+    exclusions: returnedExclusions,
+    exclusionReasonCounts: exclusionReasonCounts(exclusions),
     hardPolicyViolations: [],
     discoveryPromotions: [],
     unknown: sortedUnique(discoveryCandidates.flatMap((candidate) => candidate.eligibility.unknownFields.map((field) => `${candidate.id}:${field}`))),
     measures: { goalCoverage: goalCoverageValue, metadataCompleteness, evidenceStrength },
   };
-  payload.canonicalJson = canonicalJson(payload);
-  return payload;
 }
 
-module.exports = { eligibility, bm25Fixed, scoreCandidates, composeStack, recommendStack };
+module.exports = {
+  MAX_RETURNED_CANDIDATES,
+  MAX_RETURNED_EXCLUSIONS,
+  eligibility,
+  bm25Fixed,
+  scoreCandidates,
+  composeStack,
+  publicCandidate,
+  recommendStack,
+};

@@ -161,6 +161,10 @@ test("search, get, resource read, recommendation, inspection, and unavailable ve
   });
   assert.equal(recommendation.result.structuredContent.ok, true);
   assert.ok(["complete", "partial", "insufficientCoverage"].includes(recommendation.result.structuredContent.status));
+  assert.ok(Buffer.byteLength(JSON.stringify(recommendation.result)) < 256 * 1024);
+  assert.equal(Object.hasOwn(recommendation.result.structuredContent, "canonicalJson"), false);
+  assert.ok(recommendation.result.structuredContent.recommended.length <= 25);
+  assert.ok(recommendation.result.structuredContent.exclusions.length <= 25);
 
   const inspection = await server.handle({
     jsonrpc: "2.0",
