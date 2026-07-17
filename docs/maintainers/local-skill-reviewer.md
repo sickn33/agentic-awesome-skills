@@ -30,11 +30,26 @@ npm run review:skills:triage -- --result-dir /private/tmp/aas-review-full --conc
 npm run review:skills:triage -- --resume --result-dir /private/tmp/aas-review-full --concurrency 4
 npm run review:skills:local -- review short --result-dir /private/tmp/aas-review
 npm run review:skills:local -- review short --merge-gate --result-dir /private/tmp/aas-review
+npm run review:skills:local:test
+```
+
+For one skill, create its packet, obtain the Codex judgment, then import and verify:
+
+```bash
 npm run review:skills:semantic:packet -- short --result-dir /private/tmp/aas-semantic-review
 npm run review:skills:semantic:import -- short --input /path/to/short-judgment.json --result-dir /private/tmp/aas-semantic-review
 npm run review:skills:semantic:verify -- short --result-dir /private/tmp/aas-semantic-review
-npm run review:skills:local:test
 ```
+
+For a batch, use the alternative preparation command, then obtain, import, and verify a Codex judgment for each escalated skill:
+
+```bash
+npm run review:skills:semantic:prepare -- --result-dir /private/tmp/aas-semantic-review
+npm run review:skills:semantic:import -- short --input /path/to/short-judgment.json --result-dir /private/tmp/aas-semantic-review
+npm run review:skills:semantic:verify -- short --result-dir /private/tmp/aas-semantic-review
+```
+
+Do not run `semantic:packet` and `semantic:prepare` for the same skill in the same result directory.
 
 Results default to a private OS temporary directory. A supplied `--result-dir` must stay outside the repository and pass the symlink-safe output checks. `scan-summary.json` contains score bands, priority counts, escalation reasons, and the first 25 manual-review priorities; `scan-results.jsonl` contains the complete per-skill records.
 
@@ -51,6 +66,8 @@ Codex interprets only cases that need judgment, beginning with P0/P1 and the rep
 3. Codex may propose and, when the task authorizes changes, apply a correction to the canonical skill through the normal reviewed workspace-editing path. The local reviewer itself has no apply capability.
 4. Review the resulting diff. Because the reviewer intentionally reads the Git index, stage the exact intended skill/reference blobs in the normal topic-branch workflow before rerunning it; never assume an unstaged edit was scanned. Also rerun `npm run validate`, `npm run validate:references`, `npm run security:docs`, and the relevant targeted tests; use full `npm test` for repository-wide or merge-bound work.
 5. Reinspect all changed references and mirrors. For a merge, review the exact full head SHA through the mandatory maintainer workflow; local triage or an earlier Codex judgment is not a substitute.
+
+For a single changed skill, use `semantic:packet`; use `semantic:prepare` when preparing a batch. Both routes feed the same judgment import and verification contract.
 
 A stale packet, changed bundle, malformed judgment, missing evidence, or incomplete output means no verified semantic review exists. The local reviewer never silently falls back from a failed semantic import.
 
