@@ -263,9 +263,11 @@ Future {
 
 // ✅
 Future {
-  blocking { val result = blockingHttpCall() }
-  // or use a dedicated blocking ExecutionContext
+  val result = blocking { blockingHttpCall() }
+  process(result)
 }
+// blocking is only a hint; compensation depends on the ExecutionContext.
+// Use a dedicated blocking ExecutionContext when the workload requires it.
 ```
 
 ```scala

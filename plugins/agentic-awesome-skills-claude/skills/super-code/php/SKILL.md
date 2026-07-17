@@ -98,7 +98,7 @@ function find(string $key): ?string { ... }
 
 ```php
 // ❌ Loose comparison
-if ($value == '0') { ... } // true for 0, '', false, null
+if ($value == '0') { ... } // performs type-dependent coercion; do not assume all falsy values compare equally
 
 // ✅
 if ($value === '0') { ... }
@@ -174,7 +174,7 @@ $msg = "Hello, {$name}! You have {$count} messages.";
 // ❌ Manual string contains check
 if (strpos($haystack, $needle) !== false) { ... }
 
-// ✅ (PHP 8.0+)
+// ✅ (PHP 8.1+)
 if (str_contains($haystack, $needle)) { ... }
 ```
 
@@ -271,11 +271,12 @@ $doubled = array_map(fn($x) => $x * 2, $numbers);
 ```
 
 ```php
-// ❌ Passing globals or using `global` keyword
-global $db;
-function getUser(int $id) {
-    global $db;
-    return $db->find($id);
+// ❌ Calling a repository method on PDO
+function getUser(PDO $db, int $id) { return $db->find($id); }
+
+// ✅ Depend on the abstraction that actually declares find()
+function getUser(UserRepository $users, int $id): ?User {
+    return $users->find($id);
 }
 
 // ✅ — dependency injection

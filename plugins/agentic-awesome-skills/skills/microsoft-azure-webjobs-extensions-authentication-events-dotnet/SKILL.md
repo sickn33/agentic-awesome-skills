@@ -23,9 +23,8 @@ dotnet add package Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents
 | Event | Purpose |
 |-------|---------|
 | `OnTokenIssuanceStart` | Add custom claims to tokens during issuance |
-| `OnAttributeCollectionStart` | Customize attribute collection UI before display |
-| `OnAttributeCollectionSubmit` | Validate/modify attributes after user submission |
-| `OnOtpSend` | Custom OTP delivery (SMS, email, etc.) |
+
+This WebJobs extension guide is limited to `OnTokenIssuanceStart`. Do not infer support for attribute-collection or OTP events from similarly named Microsoft Entra features; use the official package API surface for the pinned version.
 
 ## Core Workflows
 
@@ -49,11 +48,7 @@ public static class TokenEnrichmentFunction
         log.LogInformation("Token issuance event for user: {UserId}", 
             request.Data?.AuthenticationContext?.User?.Id);
 
-        // Create response with custom claims
-        var response = new WebJobsTokenIssuanceStartResponse();
-        
-        // Add claims to the token
-        response.Actions.Add(new WebJobsProvideClaimsForToken
+        request.Response.Actions.Add(new WebJobsProvideClaimsForToken
         {
             Claims = new Dictionary<string, string>
             {
@@ -64,7 +59,7 @@ public static class TokenEnrichmentFunction
             }
         });
 
-        return response;
+        return request.Completed();
     }
 }
 ```
@@ -95,14 +90,13 @@ public static class TokenEnrichmentWithExternalData
         if (string.IsNullOrEmpty(userId))
         {
             log.LogWarning("No user ID in request");
-            return new WebJobsTokenIssuanceStartResponse();
+            return request.Completed();
         }
 
         // Fetch user data from external API
         var userProfile = await GetUserProfileAsync(userId);
         
-        var response = new WebJobsTokenIssuanceStartResponse();
-        response.Actions.Add(new WebJobsProvideClaimsForToken
+        request.Response.Actions.Add(new WebJobsProvideClaimsForToken
         {
             Claims = new Dictionary<string, string>
             {
@@ -112,7 +106,7 @@ public static class TokenEnrichmentWithExternalData
             }
         });
 
-        return response;
+        return request.Completed();
     }
 
     private static async Task<UserProfile> GetUserProfileAsync(string userId)
@@ -127,7 +121,11 @@ public static class TokenEnrichmentWithExternalData
 public record UserProfile(string EmployeeId, string Department, string[] Roles);
 ```
 
-### 3. Attribute Collection - Customize UI (Start Event)
+### Unsupported historical examples: attribute collection and OTP
+
+The following legacy sketches are retained only as negative migration evidence. They are not part of the supported WebJobs extension contract and must not be copied or deployed. For these event families, select a currently documented Microsoft product/API and start from its official sample instead.
+
+### 3. Unsupported: Attribute Collection Start
 
 Customize the attribute collection page before it's displayed.
 
@@ -173,7 +171,7 @@ public static class AttributeCollectionStartFunction
 }
 ```
 
-### 4. Attribute Collection - Validate Submission (Submit Event)
+### 4. Unsupported: Attribute Collection Submit
 
 Validate and modify attributes after user submission.
 
@@ -237,7 +235,7 @@ public static class AttributeCollectionSubmitFunction
 }
 ```
 
-### 5. Custom OTP Delivery
+### 5. Unsupported: Custom OTP Delivery
 
 Send one-time passwords via custom channels (SMS, email, push notification).
 
@@ -297,19 +295,14 @@ public static class CustomOtpFunction
 }
 ```
 
-### 6. Function App Configuration
+### 6. Function App Configuration (in-process WebJobs model)
 
 Configure the Function App for authentication events.
 
 ```csharp
-// Program.cs (Isolated worker model)
-using Microsoft.Extensions.Hosting;
-
-var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
-    .Build();
-
-host.Run();
+// Do not combine this WebJobs extension with isolated-worker bootstrap.
+// Use the in-process Azure Functions/WebJobs project template supported by
+// the pinned package version and its official sample.
 ```
 
 ```json
@@ -350,19 +343,6 @@ host.Run();
 | `WebJobsTokenIssuanceStartRequest` | Token issuance event request |
 | `WebJobsTokenIssuanceStartResponse` | Token issuance event response |
 | `WebJobsProvideClaimsForToken` | Action to add claims |
-| `WebJobsAttributeCollectionStartRequest` | Attribute collection start request |
-| `WebJobsAttributeCollectionStartResponse` | Attribute collection start response |
-| `WebJobsAttributeCollectionSubmitRequest` | Attribute submission request |
-| `WebJobsAttributeCollectionSubmitResponse` | Attribute submission response |
-| `WebJobsSetPrefillValues` | Prefill form values |
-| `WebJobsShowBlockPage` | Block user with message |
-| `WebJobsShowValidationError` | Show validation errors |
-| `WebJobsModifyAttributeValues` | Modify submitted values |
-| `WebJobsOnOtpSendRequest` | OTP send event request |
-| `WebJobsOnOtpSendResponse` | OTP send event response |
-| `WebJobsOnOtpSendSuccess` | OTP sent successfully |
-| `WebJobsOnOtpSendFailed` | OTP send failed |
-| `WebJobsContinueWithDefaultBehavior` | Continue with default flow |
 
 ## Entra ID Configuration
 
