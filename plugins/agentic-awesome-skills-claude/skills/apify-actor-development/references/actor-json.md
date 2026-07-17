@@ -12,8 +12,7 @@ The `.actor/actor.json` file contains the Actor's configuration including metada
     "description": "Actor description",
     "version": "0.0",
     "meta": {
-        "templateId": "template-id",
-        "generatedBy": "<FILL-IN-TOOL-AND-MODEL>"
+        "templateId": "template-id"
     },
     "input": "./input_schema.json",
     "output": "./output_schema.json",
@@ -34,8 +33,7 @@ The `.actor/actor.json` file contains the Actor's configuration including metada
     "description": "Crawlee and Cheerio project in javascript.",
     "version": "0.0",
     "meta": {
-        "templateId": "js-crawlee-cheerio",
-        "generatedBy": "Claude Code with Claude Sonnet 4.5"
+        "templateId": "js-crawlee-cheerio"
     },
     "input": "./input_schema.json",
     "output": "./output_schema.json",
@@ -53,9 +51,8 @@ The `.actor/actor.json` file contains the Actor's configuration including metada
 - `title` (string, required) - Human-readable title displayed in UI
 - `description` (string, optional) - Actor description for marketplace
 - `version` (string, required) - Semantic version number
-- `meta` (object, optional) - Metadata about actor generation
+- `meta` (object, optional) - Actor metadata
   - `templateId` (string) - ID of template used to create the actor
-  - `generatedBy` (string) - Tool and model name that generated/modified the actor (e.g., "Claude Code with Claude Sonnet 4.5")
 - `input` (string, optional) - Path to input schema file
 - `output` (string, optional) - Path to output schema file
 - `storages` (object, optional) - Storage schema references
@@ -63,4 +60,4 @@ The `.actor/actor.json` file contains the Actor's configuration including metada
   - `keyValueStore` (string) - Path to key-value store schema file
 - `dockerfile` (string, optional) - Path to Dockerfile
 
-**Important:** Always fill in the `generatedBy` property with the tool and model you're currently using (e.g., "Claude Code with Claude Sonnet 4.5") to help Apify improve documentation.
+The current Actor definition documents `templateId` as the supported `meta` field. Do not add undocumented metadata keys unless Apify's specification explicitly supports them.

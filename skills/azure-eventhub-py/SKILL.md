@@ -14,8 +14,9 @@ Big data streaming platform for high-throughput event ingestion.
 
 ```bash
 pip install azure-eventhub azure-identity
-# For checkpointing with blob storage
-pip install azure-eventhub-checkpointstoreblob-aio
+# Add the checkpoint store matching the client style used below:
+pip install azure-eventhub-checkpointstoreblob       # synchronous
+pip install azure-eventhub-checkpointstoreblob-aio   # asynchronous
 ```
 
 ## Environment Variables
@@ -159,6 +160,7 @@ with consumer:
 ## Async Client
 
 ```python
+from azure.eventhub import EventData
 from azure.eventhub.aio import EventHubProducerClient, EventHubConsumerClient
 from azure.identity.aio import DefaultAzureCredential
 import asyncio
@@ -176,6 +178,15 @@ async def send_events():
         await producer.send_batch(batch)
 
 async def receive_events():
+    from azure.eventhub.extensions.checkpointstoreblobaio import BlobCheckpointStore
+
+    credential = DefaultAzureCredential()
+    checkpoint_store = BlobCheckpointStore(
+        blob_account_url="https://<account>.blob.core.windows.net",
+        container_name="checkpoints",
+        credential=credential,
+    )
+
     async def on_event(partition_context, event):
         print(event.body_as_str())
         await partition_context.update_checkpoint(event)
@@ -184,7 +195,8 @@ async def receive_events():
         fully_qualified_namespace="<namespace>.servicebus.windows.net",
         eventhub_name="my-eventhub",
         consumer_group="$Default",
-        credential=DefaultAzureCredential()
+        credential=credential,
+        checkpoint_store=checkpoint_store,
     ) as consumer:
         await consumer.receive(on_event=on_event)
 
@@ -230,14 +242,6 @@ with producer:
 5. **Handle batch size limits** — catch ValueError when batch is full
 6. **Use context managers** (`with`/`async with`) for proper cleanup
 7. **Set appropriate consumer groups** for different applications
-
-## Reference Files
-
-| File | Contents |
-|------|----------|
-| references/checkpointing.md | Checkpoint store patterns, blob checkpointing, checkpoint strategies |
-| references/partitions.md | Partition management, load balancing, starting positions |
-| scripts/setup_consumer.py | CLI for Event Hub info, consumer setup, and event sending/receiving |
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

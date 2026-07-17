@@ -68,17 +68,27 @@ Use `$MAILTRAP_API_TOKEN` in either `Authorization: Bearer ...` or `Api-Token: .
 
 ### Rate limits
 
-| Scope                   | Limit        | Window     |
-| ----------------------- | ------------ | ---------- |
-| Sending API (per token) | 150 requests | 10 seconds |
+Limits can vary by product, account, and current plan. Before sizing throughput or sending a batch, verify the current limit in the Mailtrap account and current documentation; do not assume a universal requests-per-window value. Use backoff on `429` and honor any retry guidance returned by the service.
 
-Use backoff on `429`.
+### Required preflight before a live send
+
+Treat every API, SMTP, batch, or Campaigns delivery as an external side effect. Before executing it:
+
+1. Confirm that the `from` address uses a Mailtrap-verified sending domain and sender identity.
+2. Preview the rendered subject, text/HTML or template variables, stream, sender, and complete recipient list. Do not expose tokens in the preview.
+3. Distinguish a sandbox check or an approved test-recipient send from a live-recipient send. Use `mailtrap-testing-with-sandbox` when delivery to real inboxes is not required; never substitute arbitrary real addresses for test recipients.
+4. Obtain the user's explicit approval for the previewed live send, including the exact audience and whether it is a single, batch, bulk, or Campaigns operation. Configuration or troubleshooting permission alone is not send approval.
+5. For bulk or promotional mail, verify documented consent or opt-in for every recipient, a working unsubscribe mechanism, suppression handling, and applicable legal or organizational compliance requirements. If any condition is unknown, stop before sending.
+
+After approval, execute only the approved send. A changed message, sender, audience, stream, schedule, or batch requires a new preview and approval.
 
 ### JSON body (non-template)
 
 Typical fields include `from`, `to`, `subject`, and `text` and/or `html`. Optional: `category`, `custom_variables`. Exact request bodies: [Transactional send](https://docs.mailtrap.io/developers/email-sending/transactional.md#post-api-send) and [Bulk send](https://docs.mailtrap.io/developers/email-sending/bulk.md#post-api-send).
 
 ### Examples (`curl`)
+
+The commands below are request templates. Populate them only with a verified sender and approved test recipients, preview the final payload, and do not execute them against a live endpoint until the **Required preflight before a live send** is complete.
 
 Transactional send (`send.api.mailtrap.io`):
 
