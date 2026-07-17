@@ -1,0 +1,355 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-07-17",
+  "sourceAudit": "/tmp/aas-v1-audit-api-deploy.json",
+  "scope": {
+    "skillCount": 40,
+    "tuningGoldRead": false,
+    "heldOutRead": false,
+    "contentBoundary": "Every regular file recursively under each canonical skills/<id>/ directory was read."
+  },
+  "rubric": {
+    "provenance": "known only when SKILL.md declares a canonical URL/repository or a package-attested origin; generic community/personal labels remain unknown",
+    "setup": "only Codex/Claude activation or use prerequisites; example-stack dependencies are conditional, not silently treated as host setup",
+    "dependenciesConflicts": "only explicit inter-AAS-skill relationships; known-empty requires a recursive full-content audit; advisory Related Skills are not dependencies",
+    "risk": "safe only after focused command, network, credential, and destructive-behavior review; direct deploy/push/apply/destroy/state mutation is critical; unresolved or conditional side effects remain unknown"
+  },
+  "skills": {
+    "api-and-interface-design": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-d0ee13b01a304c113c3fa591067b745bc48c578aaea4394c4edb96ac885d8825"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/addyosmani/agent-skills/tree/main/skills/api-and-interface-design", "repo": "addyosmani/agent-skills"}, "evidence": ["skills/api-and-interface-design/SKILL.md:5-6"]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Full-content audit found no host tool, MCP, credential, network, or installation prerequisite."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Design-only guidance and inert API examples; skills/api-and-interface-design/SKILL.md:306-307 requires verification and approval before destructive or costly changes."]}
+    },
+    "api-design-principles": {
+      "fullContentAudit": {"fileCount": 6, "digest": "sha256-4cf7ba38a0210cd3f544390c507bd6127bbfccf839616f9cbf2f3e3244b58fed"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/api-design-principles/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["All six files are guidance, templates, and examples; no host activation prerequisite is declared."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive six-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive six-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Templates use placeholder data and define endpoints but contain no live command, credential, network, or deployment execution path."]}
+    },
+    "api-patterns": {
+      "fullContentAudit": {"fileCount": 12, "digest": "sha256-ac6e4f0edb91e514e9be774f016196d1cbb2fdfe18657d37a4dd84ae284d31d4"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/api-patterns/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["The bundled validator is local and optional; no external service, credential, or installation prerequisite is declared."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["skills/api-patterns/SKILL.md:37-43 lists Related Skills only; recursive audit found no required inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive twelve-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Content is decision guidance plus a local static validator; no network, credential use, destructive command, or deployment action is prescribed."]}
+    },
+    "api-documenter": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-b0b3d625da8ea55ebd849f5710e4132e73b2af6a8da0e97594ba23df8fa6abb2"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/api-documenter/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Documentation authoring is usable without a configured service; named platforms are capability examples, not prerequisites."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["The skill produces documentation plans and artifacts; curl, auth, and deployment appear only as documentation subjects, not live execution instructions."]}
+    },
+    "openapi-spec-generation": {
+      "fullContentAudit": {"fileCount": 2, "digest": "sha256-cd1f752ac616333d71f0bac40cf0015b6f937c48f767990a858c1294a67bd1b3"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/openapi-spec-generation/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Node/npm and network access for optional Spectral, Redocly, or OpenAPI Generator validation/generation"]}, "evidence": ["skills/openapi-spec-generation/resources/implementation-playbook.md:897-899 and 983-1000."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["The playbook prescribes global npm installs and generator execution at lines 897-1000; the root safety text does not fully constrain install scope or network approval."]}
+    },
+    "openapi-spec-generator": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-94a39e19cf057dbc2c07b6530b63db6b04209e72084afb2749677832e9e9247e"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/openapi-spec-generator", "repo": "LambdaTest/agent-skills"}, "evidence": ["skills/openapi-spec-generator/SKILL.md:5-6"]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Core specification generation needs no host setup; the optional follow-up is represented as a conditional dependency."]},
+      "dependencies": {"status": "known", "value": [{"kind": "conditional-follow-up", "declaredName": "API Test Case Generator", "resolvedSkillId": null}], "evidence": ["skills/openapi-spec-generator/SKILL.md:313-324 asks the user first, then invokes the named skill if installed; no matching catalog ID exists."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Generates an inert specification, asks before the optional follow-up, and requires approval before destructive/costly actions at lines 331-335."]}
+    },
+    "api-security-best-practices": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-bdf5114194d8d39d48214b13157983cde1717df3da19d9cead6f1e0c56de3e7a"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/api-security-best-practices/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Framework packages and environment variables occur in generated examples, not as Codex/Claude activation prerequisites."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Examples use environment-backed placeholder secrets, avoid logging tokens, and contain no command that connects to or mutates a live service."]}
+    },
+    "auth-implementation-patterns": {
+      "fullContentAudit": {"fileCount": 2, "digest": "sha256-37075e7c55f808e9a25fcccd1f8b481c2d832703853944b5679b0cfecdbab173"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/auth-implementation-patterns/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Authentication technology selection is project context, not host activation setup."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Guidance explicitly forbids logging secrets/tokens and does not contain live credential, network, or destructive execution instructions; SKILL.md:35-38."]}
+    },
+    "api-integration": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-1b18c6ae2ca48c0dbd5141475a454872c44d916ecdaf6cbe5f94561283f8050f"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-integration-helper", "repo": "LambdaTest/agent-skills"}, "evidence": ["skills/api-integration/SKILL.md:5-6"]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Core output is an integration design; external APIs are examples, not activation prerequisites."]},
+      "dependencies": {"status": "known", "value": [{"kind": "conditional-follow-up", "declaredName": "api-security-patterns", "resolvedSkillId": null}], "evidence": ["skills/api-integration/SKILL.md:153-164 asks the user first and then invokes the skill if installed; no matching catalog ID exists."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Examples are inert design snippets; the follow-up requires user choice and lines 171-175 require verification and approval for destructive/costly actions."]}
+    },
+    "saga-orchestration": {
+      "fullContentAudit": {"fileCount": 2, "digest": "sha256-948c259726284111cb40ca7e66b4a659997dd616ef3fe2a3819454fdd1bfccf6"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/saga-orchestration/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Event stores and publishers are abstract example interfaces, not configured host prerequisites."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["All event publication and compensation paths are code templates over abstract services; no command, credential, or real endpoint is embedded."]}
+    },
+    "event-sourcing-architect": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-59e586e1554e2c69111740c571f61516a5673f39f8f8c639ac91b7f4bd2c4757"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/event-sourcing-architect/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Architecture guidance has no host activation prerequisite."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["No execution commands or credentials; SKILL.md:50-55 explicitly forbids mutating or deleting committed production events."]}
+    },
+    "database-design": {
+      "fullContentAudit": {"fileCount": 8, "digest": "sha256-64eea991350854df89a6603be128bb429aed7f87f066e964ac9e1956c263bda5"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/database-design/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["Eight-file content is decision guidance and schema examples; no live database prerequisite is declared for use."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive eight-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive eight-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["DDL appears as design examples and migration sequencing guidance, with no command or connection path that executes against a database."]}
+    },
+    "database-migration": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-c6db5a66047a0a3b08586c7ec7c43a92d88a57cf35b90cbd9b9ec347778fa440"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/database-migration/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Project ORM CLI and database access for migration execution"]}, "evidence": ["SKILL.md:63-64, 105-106, and 118-119 prescribe Sequelize, TypeORM, and Prisma commands."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["SKILL.md:59-64, 101-119, and 323-331 include apply, rollback, drop-table, and DROP TABLE execution paths against databases."]}
+    },
+    "database-migrations-sql-migrations": {
+      "fullContentAudit": {"fileCount": 2, "digest": "sha256-32cb3ac6449ac33866e6c5e6266a4fa3b4678318903f052c312fc7bf91c32c8a"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/database-migrations-sql-migrations/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["psql or equivalent database client, target database identity, and credentials for execution"]}, "evidence": ["resources/implementation-playbook.md:339-354 executes psql migrations and rollback SQL."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["The playbook executes DROP COLUMN/TABLE/INDEX, arbitrary migration statements, and schema-migration DELETE operations; lines 59, 208, 311-354, and 452-478."]}
+    },
+    "postgresql": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-2c6e0f7f19680467a1ceb3a78445847f2299f79fc41af7f75e5c0ce2ca381321"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/postgresql/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["PostgreSQL access only when applying or validating generated DDL"]}, "evidence": ["The skill is usable for design without a connection; live validation necessarily depends on a target database."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["SKILL.md:139 and 152-156 discuss dropping indexes, columns, constraints, and functions; safeguards exist at lines 34 and 152, but no universal approval/execution boundary is defined."]}
+    },
+    "sql-optimization-patterns": {
+      "fullContentAudit": {"fileCount": 2, "digest": "sha256-a97590947b82f8c811bfad58512f9532bbac98590048f2e17f46d2d8d5fcd32a"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/sql-optimization-patterns/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Database/query-plan access for live profiling or applying indexes"]}, "evidence": ["resources/implementation-playbook.md:428-454 recommends index/statistics changes that require database access when executed."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["The playbook recommends ANALYZE and index changes affecting writes but does not define a target/approval boundary; lines 428-454."]}
+    },
+    "distributed-tracing": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-070143362f48556c8ddf30b1442c04a82eaec67128ac82f1da4629ebedd38fcf"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/distributed-tracing/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["kubectl, cluster credentials, and network access for Jaeger operator deployment"]}, "evidence": ["SKILL.md:64-68 creates a namespace, fetches a remote manifest, and applies cluster resources."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["SKILL.md:449 Related Skills are advisory; full-content audit found no required inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["SKILL.md:64-68 performs network-backed kubectl create/apply operations against a cluster without an explicit approval gate."]}
+    },
+    "observability-and-instrumentation": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-3165c3f7f5b16bb3dc021aec94b88860f532b1fe6892d03b2dfbb13fe3568ca3"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/addyosmani/agent-skills/tree/main/skills/observability-and-instrumentation", "repo": "addyosmani/agent-skills"}, "evidence": ["skills/observability-and-instrumentation/SKILL.md:5-6"]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Project telemetry SDK/backend and staging access for live validation"]}, "evidence": ["SKILL.md:126-142 uses OpenTelemetry; lines 168-171 require staging traffic, traces, and alert delivery for validation."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Cross-skill mentions at lines 29-30 and 98 are advisory; no skill is required for activation."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["Lines 168-171 send test traffic and temporarily lower alert thresholds; lines 215-216 require verification/approval but do not define a machine-enforced boundary."]}
+    },
+    "slo-implementation": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-98b61b1bbc1b63c15ed5985cb08e3286ac1ff895b3294ac05d6f967ad77cf917"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/slo-implementation/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Metrics access only for live SLI/SLO validation"]}, "evidence": ["The skill can define SLOs offline; live calculation requires service metrics but no host plugin is mandatory."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Content produces SLO definitions, PromQL, and alert-rule examples; no command, credential value, destructive action, or live write path is prescribed."]}
+    },
+    "performance-profiling": {
+      "fullContentAudit": {"fileCount": 2, "digest": "sha256-7a4b1ea4fb8c0d6ace5f367a562f7ad76ac14d3f44de7c7b4e1f8ed0a81a1f87"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/performance-profiling/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Lighthouse CLI and network/browser access for automated URL profiling"]}, "evidence": ["SKILL.md:15 says to execute automated profiling; scripts/lighthouse_audit.py:8 and 58 require a globally available Lighthouse CLI."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["The bundled script launches Lighthouse against an arbitrary URL and lacks an allowlist, SSRF boundary, or explicit network approval contract."]}
+    },
+    "ci-cd-and-automation": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-a7def0a4f50044568ec93c8e9ef1753af3778f1e339182a304ced705cf106301"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/addyosmani/agent-skills/tree/main/skills/ci-cd-and-automation", "repo": "addyosmani/agent-skills"}, "evidence": ["skills/ci-cd-and-automation/SKILL.md:5-6"]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["CI provider access and repository/environment secrets for deployment workflows"]}, "evidence": ["SKILL.md:74-163 defines GitHub Actions and secrets; lines 214 and 275 use a Vercel token for deploy/rollback."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["Workflows install dependencies, run migrations, push changes, deploy with credentials, and roll back production; SKILL.md:88-163, 185-214, and 254-275."]}
+    },
+    "deployment-pipeline-design": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-519bf62e50392f5c3c7caeb6e370e344d79fb2865f1e389d89ac239bc7d2c189"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/deployment-pipeline-design/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Docker, kubectl, cluster/registry credentials, and network endpoints for executable examples"]}, "evidence": ["SKILL.md:145-154 and 229-278 build/push images, apply K8s resources, promote rollouts, call health endpoints, and post webhooks."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Related Skills at the end are advisory; full-content audit found no required inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["Direct docker push, kubectl apply/promote/undo, network curl, and secret-backed webhook paths appear at lines 229-357."]}
+    },
+    "github-actions-advanced": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-8e1c50b302a791692cdcabd2912c15fb5098c4a5737496d50c5b51a66850cb0d"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/github-actions-advanced/SKILL.md frontmatter declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["GitHub Actions repository access; environment/OIDC/secrets when enabling deployment and publication workflows"]}, "evidence": ["SKILL.md:332-452 configures cloud identity and secrets; lines 768-952 define push, deploy, publish, and automated PR workflows."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recommendations to docker-expert/kubernetes-architect are routing advice, not required inter-AAS dependencies."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["The skill creates workflows with package/image push, production deploy, release publication, write tokens, secret handling, and automated commits/PRs; lines 133-199 and 644-952."]}
+    },
+    "github-actions-templates": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-c8a248ae524977fff2cfc041ecb0bc9296c44a20ad15a9fc02565922a9305102"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/github-actions-templates/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["GitHub Actions plus registry, AWS, Kubernetes, and scanner credentials for the corresponding templates"]}, "evidence": ["SKILL.md:84-175 and 238-330 declares registry push, AWS credentials, K8s apply, NPM/Snyk tokens, and webhooks."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Related Skills at lines 348+ are advisory; no required inter-AAS dependency is declared."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["Templates push images, configure cloud credentials, apply Kubernetes resources, publish packages, and invoke external webhooks; lines 84-175 and 238-330."]}
+    },
+    "container-security-hardening": {
+      "fullContentAudit": {"fileCount": 4, "digest": "sha256-c4f0581049827e4db9497a40b7d56332bcdca5e387665e6e6d6637a3f22eee74"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/container-security-hardening/SKILL.md frontmatter declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Docker/BuildKit and optional Trivy, kubectl, or policy tooling for execution"]}, "evidence": ["SKILL.md:69-76 defines build, scan, runtime, and Kubernetes stages; full content includes docker/trivy/kubectl execution examples."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["docker-expert and other entries under Related Skills at lines 987+ are advisory; no required dependency is declared."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive four-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["The skill builds/runs/scans images and applies runtime/Kubernetes security controls; references/seccomp-profile-template.json also carries docker run commands, including an unconfined audit mode."]}
+    },
+    "docker-expert": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-bc632406da70164bcc235bd4c847ad48a90116726653549349480ac2f84025da"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/docker-expert/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Docker CLI/daemon and registry credentials for push workflows"]}, "evidence": ["SKILL.md:30-65 probes the daemon and builds/runs/stops containers; lines 286-288 push multi-arch images."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["Direct daemon mutations include build, run, exec, stop, buildx create, and registry push at lines 30-65 and 286-288."]}
+    },
+    "helm-chart-scaffolding": {
+      "fullContentAudit": {"fileCount": 6, "digest": "sha256-26cc20c1d4c4658542e082a2fd777e70b1e37fa4f0f20d9cb0e29fb0f04090ca"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/helm-chart-scaffolding/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Helm CLI and network access for dependency/repository operations"]}, "evidence": ["resources/implementation-playbook.md:275-344 uses helm dependency update/build, lint, dry-run/template, package, and repo index."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive six-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive six-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["Most Helm execution is local or dry-run, but dependency update/repository operations can use network and mutate local state; no explicit approval/network boundary is defined."]}
+    },
+    "kubernetes-architect": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-77302f755b80d78b792079f10094a5070b940ff8f214f0ca52a077f801c3ac6e"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/kubernetes-architect/SKILL.md frontmatter declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "none", "prerequisites": []}, "evidence": ["The audited file is architecture/design guidance; cluster credentials are not required to activate or produce the design."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Tool names are technology options, not inter-AAS dependencies; full-content audit found no required skill."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["No executable cluster command is supplied, and SKILL.md:30-32 explicitly forbids production changes without approvals and rollback plans."]}
+    },
+    "kubernetes-deployment": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-73c5712eea6f797c2bfabb6418bab1d2897294839fe4e876ca7514a5a5aeeede"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/kubernetes-deployment/SKILL.md:6 declares only source=personal without canonical URL/repo or attestation."]},
+      "setup": {"status": "known", "value": {"mode": "manual", "prerequisites": ["Declared AAS dependency skills", "Container registry and Kubernetes/service-mesh/observability access for execution"]}, "evidence": ["SKILL.md:25-150 is an orchestration workflow that explicitly invokes other skills and culminates in registry push, mesh install, and cluster deployment."]},
+      "dependencies": {"status": "known", "value": [
+        {"kind": "required-workflow", "skillId": "docker-expert"}, {"kind": "required-workflow", "skillId": "k8s-manifest-generator"}, {"kind": "required-workflow", "skillId": "kubernetes-architect"}, {"kind": "required-workflow", "skillId": "helm-chart-scaffolding"}, {"kind": "required-workflow", "skillId": "istio-traffic-management"}, {"kind": "required-workflow", "skillId": "linkerd-patterns"}, {"kind": "required-workflow", "skillId": "service-mesh-expert"}, {"kind": "required-workflow", "skillId": "k8s-security-policies"}, {"kind": "required-workflow", "skillId": "mtls-configuration"}, {"kind": "required-workflow", "skillId": "grafana-dashboards"}, {"kind": "required-workflow", "skillId": "prometheus-configuration"}, {"kind": "required-workflow", "skillId": "deployment-engineer"}, {"kind": "required-workflow", "skillId": "gitops-workflow"}
+      ], "evidence": ["SKILL.md:29-150 labels these as Skills to Invoke across seven workflow phases; every ID resolves in the catalog."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["Actions include image push, secret creation, service-mesh install, monitoring-stack install, and cluster deploy at lines 33-146."]}
+    },
+    "terraform-aws-modules": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-7844810001ab08506f8f4d086530153db1cf8334e69d1bcd259600feb03a220d"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/terraform-aws-modules/SKILL.md frontmatter declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Terraform CLI, AWS credentials, and state backend access for execution"]}, "evidence": ["SKILL.md:27, 70, and 77-78 requires Terraform validation/plan and can force-unlock remote state."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["SKILL.md:77-78 instructs terraform force-unlock against shared state; the skill targets live AWS infrastructure even though it requires confirming no competing operation."]}
+    },
+    "terraform-infrastructure": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-dadf5f79e7844f7f789e0094851ce1a00f03d64b606e28213dd1445f6bf4fa89"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/terraform-infrastructure/SKILL.md:6 declares source=personal without canonical URL/repo or attestation."]},
+      "setup": {"status": "known", "value": {"mode": "manual", "prerequisites": ["Declared AAS dependency skills", "Terraform/cloud credentials and backend access for provisioning"]}, "evidence": ["SKILL.md:25-157 explicitly invokes other skills to initialize, provision, manage state, plan/apply, and secure cloud infrastructure."]},
+      "dependencies": {"status": "known", "value": [
+        {"kind": "required-workflow", "skillId": "terraform-skill"}, {"kind": "required-workflow", "skillId": "terraform-specialist"}, {"kind": "required-workflow", "skillId": "terraform-module-library"}, {"kind": "required-workflow", "skillId": "cloud-architect"}, {"kind": "required-workflow", "skillId": "cicd-automation-workflow-automate"}, {"kind": "required-workflow", "skillId": "github-actions-templates"}, {"kind": "required-workflow", "skillId": "secrets-management"}
+      ], "evidence": ["SKILL.md:29-147 labels these Skills to Invoke across seven phases; duplicate references were deduplicated and all IDs resolve in the catalog."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["Workflow actions provision cloud resources, configure networking/state/secrets, and implement plan/apply pipelines; lines 33-157."]}
+    },
+    "terraform-module-library": {
+      "fullContentAudit": {"fileCount": 2, "digest": "sha256-32a543e34f1a3ee2f03f599eae5e95d9d4f624381341d1e48afca3dba1ab598a"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/terraform-module-library/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Terraform, Go/Terratest, cloud credentials, and an isolated test target for executable tests"]}, "evidence": ["SKILL.md:253-254 calls terraform.InitAndApply and terraform.Destroy."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive two-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["Terratest example at SKILL.md:253-254 creates and destroys real infrastructure when executed."]}
+    },
+    "terraform-specialist": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-b09530ee4647f949ae58e309b74c2d744df228db8161c5664540f0324e4589c1"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/terraform-specialist/SKILL.md frontmatter declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Terraform/OpenTofu, cloud credentials, and state backend access for execution"]}, "evidence": ["SKILL.md:26-32 and 88-124 covers apply workflows, state protection/recovery, and deployment automation."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["The skill manages state, apply, recovery, deployment automation, and infrastructure migration; review safeguards at lines 31-32 reduce but do not remove live-infrastructure impact."]}
+    },
+    "deployment-procedures": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-ba5fcd5a27dba31e3c9f8075ec4a4bef8ff534a2248c837ff03a30682dd82a25"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/deployment-procedures/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Target deployment platform CLI/credentials and monitoring access"]}, "evidence": ["SKILL.md:51-55 names push/CLI/Docker/kubectl execution paths; lines 94-101 direct deploy and rollback."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["The workflow explicitly executes deploys and rollback through push, container, and kubectl paths; SKILL.md:51-55, 94-101, and 154-155."]}
+    },
+    "pre-release-review": {
+      "fullContentAudit": {"fileCount": 3, "digest": "sha256-b54819cbf2d017190ff4d4a9a029bf2c1e9f985fc53d2be79b077f00007375e9"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/chaunsin/agent-skills", "repo": "chaunsin/agent-skills"}, "evidence": ["skills/pre-release-review/SKILL.md:7 and 14 declare source_repo plus canonical license URL."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["git for repository inspection", "gh authentication/network only when reviewing a remote PR"]}, "evidence": ["SKILL.md:69-72 makes gh optional/fail-closed; lines 88-106 list read-only git inspection commands."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Recursive three-file audit found no explicit inter-AAS skill dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Recursive three-file audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["SKILL.md:30-40 and 187 strictly prohibit writes, deploys, tags, migrations, secret disclosure, or infrastructure changes; all commands are read-only inspection."]}
+    },
+    "pre-ship-gate": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-24c5214ef4a510a9c0fbce214068d3256c2a8a75dc08b14cf4738f34f173b77b"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/Sharrmavishal/operating-kit", "repo": "Sharrmavishal/operating-kit"}, "evidence": ["skills/pre-ship-gate/SKILL.md:7 and 14 declare source_repo plus canonical license URL."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["curl, jq, network access, and an explicit health/version endpoint for live verification"]}, "evidence": ["SKILL.md:64-67 and 122 describe the read-only live revision check and placeholder replacement."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["SKILL.md:126-129 contains Related Skills only; full-content audit found no required dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["Network action is a read-only GET; lines 47, 104, and 123 keep the actual deploy with human/tooling, and line 124 forbids credentials in URLs."]}
+    },
+    "shipping-and-launch": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-64df52448211d8faa717057acf6aa8e291cb2a823bb94103d31997694e99cdb0"},
+      "provenance": {"status": "known", "value": {"url": "https://github.com/addyosmani/agent-skills/tree/main/skills/shipping-and-launch", "repo": "addyosmani/agent-skills"}, "evidence": ["skills/shipping-and-launch/SKILL.md:5-6"]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Target deployment tooling/credentials and database migration tooling when executing the launch plan"]}, "evidence": ["SKILL.md:104-134 describes staged production deploy; lines 260 and 265 use git push and Prisma rollback."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS dependency."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "critical", "evidence": ["The launch workflow performs production deployment and includes git push and database rollback commands at lines 104-134 and 260-265; approval notes do not make those effects read-only."]}
+    },
+    "grafana-dashboards": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-b6ff2951524655f51087e7b557411d6f48493d022681b31c29fc049c47edac23"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/grafana-dashboards/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Grafana/Prometheus access for live management; optional Terraform/Ansible for provisioning examples"]}, "evidence": ["SKILL.md:224-294 uses Prometheus/Grafana configuration; lines 349-371 provision and deploy dashboard files."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["SKILL.md:381+ Related Skills are advisory; no required inter-AAS dependency is declared."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["The skill can deploy dashboards and restart Grafana via provisioning examples at lines 349-371, but does not define a universal approval or target boundary."]}
+    },
+    "incident-responder": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-aea4af0ccf55e21a4ba19eff2a355d10ab41d1ed4f7e3653aeb9f6ff0fc7fec7"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/incident-responder/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Observability and incident communication access only for a live incident"]}, "evidence": ["SKILL.md:43-71 describes war-room, tracing, metrics, and network analysis inputs but no host plugin requirement."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Service dependency mapping is an incident-analysis concept, not an inter-AAS dependency; full-content audit found none."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "known", "value": "safe", "evidence": ["The file is diagnosis, coordination, and validation guidance; it contains no executable command, credential value, network endpoint, or instruction to mutate production directly."]}
+    },
+    "observability-engineer": {
+      "fullContentAudit": {"fileCount": 1, "digest": "sha256-30c9ed07ab2586e125a9607ad72d9c79ae0afe170bae3340c89d8e29e460f861"},
+      "provenance": {"status": "unknown", "value": null, "evidence": ["skills/observability-engineer/SKILL.md:5 declares only generic source=community."]},
+      "setup": {"status": "known", "value": {"mode": "conditional", "prerequisites": ["Selected monitoring/tracing backends and credentials for live implementation"]}, "evidence": ["SKILL.md:40-107 names Prometheus, Grafana, Jaeger, Zipkin, Kubernetes, and Docker integration points."]},
+      "dependencies": {"status": "known-empty", "value": [], "evidence": ["Technology dependency mapping is not an inter-AAS dependency; full-content audit found none."]},
+      "conflicts": {"status": "known-empty", "value": [], "evidence": ["Full-content audit found no explicit inter-AAS conflict."]},
+      "risk": {"status": "unknown", "value": "unknown", "evidence": ["The skill covers collector deployment, automated monitoring setup, Terraform modules, and network monitoring but lacks a universal approval/target boundary; SKILL.md:94-110 and 140-144."]}
+    }
+  },
+  "summary": {
+    "provenance": {"known": 8, "unknown": 32},
+    "risk": {"safe": 16, "unknown": 8, "critical": 16},
+    "dependencies": {"knownNonEmpty": 4, "knownEmpty": 36},
+    "conflicts": {"knownNonEmpty": 0, "knownEmpty": 40},
+    "importantFindings": [
+      "Two conditional follow-up skill names do not resolve to catalog IDs: API Test Case Generator and api-security-patterns.",
+      "kubernetes-deployment and terraform-infrastructure are true orchestration bundles with explicit required inter-AAS dependencies, not standalone skills.",
+      "Several current catalog safe labels become critical under this stricter behavioral rubric because full content includes deploy, push, apply, destroy, state mutation, or live credentials.",
+      "Generic source=community or source=personal is not sufficient provenance evidence."
+    ]
+  }
+}

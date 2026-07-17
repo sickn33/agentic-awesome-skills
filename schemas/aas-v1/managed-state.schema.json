@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:managed-state:v1",
+  "title": "AAS internal managed state v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "target", "catalog", "entries", "completedPlanDigests", "stateDigest"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["host", "scope", "adapterVersion", "identityDigest"],
+      "properties": {
+        "host": { "enum": ["codex", "claude"] },
+        "scope": { "enum": ["project", "user"] },
+        "adapterVersion": { "type": "string", "minLength": 1 },
+        "identityDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version", "integrity"],
+      "properties": {
+        "package": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "integrity": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skillId", "treeDigest", "catalogIntegrity", "installedByPlanDigest"],
+        "properties": {
+          "skillId": { "$ref": "#/$defs/id" },
+          "treeDigest": { "$ref": "#/$defs/digest" },
+          "catalogIntegrity": { "$ref": "#/$defs/digest" },
+          "installedByPlanDigest": { "$ref": "#/$defs/digest" }
+        }
+      }
+    },
+    "completedPlanDigests": { "type": "array", "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/digest" } },
+    "stateDigest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*$" }
+  }
+}

@@ -1,0 +1,3882 @@
+{
+  "schemaVersion": 1,
+  "auditId": "aas-v1-web-test-public-semantic-audit-2026-07-17",
+  "createdAt": "2026-07-17",
+  "scope": {
+    "intents": [
+      "web-application-delivery",
+      "test-qa-automation"
+    ],
+    "catalogPath": "data/catalog.json",
+    "catalogSkillCount": 1965,
+    "finalCandidateCount": 45,
+    "selectionPoolCount": 197
+  },
+  "guardrails": {
+    "benchmarkGoldRead": false,
+    "heldOutCasesRead": false,
+    "heldOutGoldRead": false,
+    "tuningCaseInputsRead": true,
+    "selectionIndependentOfBenchmarkGoldIds": true,
+    "repoFilesModified": false
+  },
+  "selectionMethod": {
+    "ruleVersion": "aas-v1-public-lexical-audit-v1",
+    "sources": [
+      "public tuning case criticalGoals/nonCriticalGoals/profile vocabulary for the two scoped intents",
+      "tools/lib/aas-v1/ontology.v1.json aliases",
+      "public catalog id/name/category/tags/triggers/description"
+    ],
+    "queryFamilies": {
+      "accessibility": [
+        "accessibility",
+        "a11y",
+        "wcag",
+        "screen reader",
+        "assistive technology",
+        "keyboard"
+      ],
+      "frontendArchitecture": [
+        "frontend",
+        "react",
+        "next.js",
+        "vite",
+        "component",
+        "feature module",
+        "feature-based",
+        "architecture",
+        "design system"
+      ],
+      "authData": [
+        "authentication",
+        "authorization",
+        "auth",
+        "session",
+        "oidc",
+        "typed",
+        "data contract",
+        "api integration"
+      ],
+      "browserE2E": [
+        "browser",
+        "end-to-end",
+        "e2e",
+        "playwright",
+        "cypress",
+        "webdriverio",
+        "selenium",
+        "locator",
+        "cross-browser"
+      ],
+      "unitComponent": [
+        "unit test",
+        "component test",
+        "vitest",
+        "jest",
+        "pytest",
+        "junit",
+        "mocking",
+        "test runner",
+        "coverage"
+      ],
+      "integrationContract": [
+        "integration test",
+        "contract test",
+        "api contract",
+        "openapi",
+        "fixture",
+        "mock api",
+        "api mock"
+      ],
+      "performance": [
+        "performance",
+        "load test",
+        "load testing",
+        "lighthouse",
+        "web vitals",
+        "latency",
+        "k6",
+        "bottleneck"
+      ]
+    },
+    "normalization": "lowercase; non [a-z0-9.+#/-] to spaces; collapse whitespace",
+    "fieldWeights": {
+      "id/name": 8,
+      "category": 6,
+      "tags/triggers": 4,
+      "description": 3
+    },
+    "poolRule": "For each query family, rank all matching skills by descending integer score and stable skill ID tie-break; take the union of the top 40 per family. Scores sum the first matching field weight for each term.",
+    "semanticReviewRule": "Inspect selected SKILL.md content and retain only candidates with at least one capability explicitly supported by the reviewed sections. Emit only capability names present in the public two-intent tuning vocabulary; do not infer missing metadata from prose.",
+    "notAWhitelist": "Eligibility is not asserted here. This is an evidence audit artifact; final recommendation eligibility remains policy/metadata-derived."
+  },
+  "canonicalCapabilityVocabulary": [
+    "accessibility-audit",
+    "accessible-component-guidance",
+    "api-contract-fixtures",
+    "api-integration-boundary",
+    "assistive-technology-evidence",
+    "boundary-mocking",
+    "browser-critical-paths",
+    "ci-contract-evidence",
+    "component-test-patterns",
+    "coverage-reporting",
+    "critical-browser-journeys",
+    "cross-browser-execution",
+    "cross-browser-regression",
+    "deterministic-mocking",
+    "deterministic-test-isolation",
+    "failure-diagnostics",
+    "feature-boundaries",
+    "frontend-auth-boundary",
+    "frontend-bottleneck-analysis",
+    "keyboard-and-screen-reader-validation",
+    "latency-thresholds",
+    "lighthouse-regression",
+    "load-scenario-design",
+    "maintainable-component-architecture",
+    "maintainable-e2e-patterns",
+    "migration-guidance",
+    "regression-evidence",
+    "remediation-priorities",
+    "repeatable-integration-runner",
+    "repeatable-performance-budget",
+    "repeatable-performance-run",
+    "result-review",
+    "secure-session-handling",
+    "shared-ui-conventions",
+    "stable-locators",
+    "typed-data-contracts",
+    "unit-test-runner",
+    "wcag-audit",
+    "wcag-regression",
+    "web-vitals-budget"
+  ],
+  "candidates": [
+    {
+      "id": "accessibility-compliance-accessibility-audit",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 16,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "wcag",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "assistive technology",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 1
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/accessibility-compliance-accessibility-audit/SKILL.md",
+        "sha256": "sha256-f0c76db2ccf2f2a0acca2f3384177eadbba83a499589d0b347914819210bd77a",
+        "summary": "Defines automated and manual WCAG auditing, keyboard and screen-reader checks, prioritized remediation, and ongoing regression practice.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessibility-audit",
+        "accessible-component-guidance",
+        "assistive-technology-evidence",
+        "keyboard-and-screen-reader-validation",
+        "regression-evidence",
+        "remediation-priorities",
+        "wcag-audit",
+        "wcag-regression"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": null
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "accesslint-audit",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "wcag",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 4
+          },
+          "browserE2E": {
+            "score": 3,
+            "matches": [
+              {
+                "term": "browser",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 35
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/accesslint-audit/SKILL.md",
+        "sha256": "sha256-bb18c5156d751db190d2ded56c4f172619fdd5dfc4651609f69379bc380bb5e6",
+        "summary": "Defines report and audit-edit-verify modes, live-DOM/static fallbacks, WCAG mapping, manual review boundaries, and verification.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessibility-audit",
+        "keyboard-and-screen-reader-validation",
+        "regression-evidence",
+        "remediation-priorities",
+        "wcag-audit"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "https://github.com/AccessLint/skills",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although live auditing requires AccessLint packages and a Chrome/CDP or browser integration."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "@accesslint/chrome",
+          "@accesslint/cli",
+          "Chrome/CDP or browser MCP for live mode"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "accesslint-diff",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 8
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/accesslint-diff/SKILL.md",
+        "sha256": "sha256-604484bc175703c21e5f870ac08aaba0d50e06e9faea6168beb3a519393f361d",
+        "summary": "Compares a live page with a baseline or branch and reports new, fixed, and unchanged accessibility violations.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "regression-evidence",
+        "wcag-regression"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "https://github.com/AccessLint/skills",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although the workflow uses AccessLint packages, a browser, git stash/branch operations, and temporary snapshots."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "@accesslint/chrome",
+          "@accesslint/cli",
+          "Chrome/CDP",
+          "git"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "accesslint-scan",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "wcag",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 5
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/accesslint-scan/SKILL.md",
+        "sha256": "sha256-ed6f7bce4d22cb250d0d4f62f00d54676799ed3f3b5bdeb1f1ef4c63589e6649",
+        "summary": "Runs a selector-grounded live-page WCAG scan and returns a fix worklist without edits.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessibility-audit",
+        "remediation-priorities",
+        "wcag-audit"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "https://github.com/AccessLint/skills",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although commands fetch/run AccessLint packages and require a browser."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "@accesslint/chrome",
+          "@accesslint/cli",
+          "Chrome/CDP"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "api-testing-observability-api-mock",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "mocking",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 10
+          },
+          "integrationContract": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "mock api",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "api mock",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 1
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/api-testing-observability-api-mock/SKILL.md",
+        "sha256": "sha256-65f57d1dc925210f083cc78874d4c839da4c73b5e0474b45922d20d9463fa527",
+        "summary": "Designs contract-aware mock APIs with deterministic fixtures, configurable scenarios/state transitions, error/latency behavior, and non-production data safeguards.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "api-contract-fixtures",
+        "boundary-mocking",
+        "deterministic-mocking"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; it specifies behavior but does not pin a mock-server runtime."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "A mock-server implementation must be selected by the project"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "application-performance-performance-optimization",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 3,
+            "matches": [
+              {
+                "term": "end-to-end",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 39
+          },
+          "performance": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "performance",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 8
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/application-performance-performance-optimization/SKILL.md",
+        "sha256": "sha256-818397af06a075800029ea1b10efa9a8bfc62fb9983539818dacc5212282817c",
+        "summary": "Defines baseline profiling, Core Web Vitals analysis, realistic load scenarios, performance budgets, regression tests, and continuous review across the stack.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "frontend-bottleneck-analysis",
+        "load-scenario-design",
+        "repeatable-performance-budget",
+        "repeatable-performance-run",
+        "result-review"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although the workflow assumes specific subagent types and several optional external services/tools; availability is not established."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Named performance-engineer/test-automator subagents",
+          "optional APM/tracing tools",
+          "k6/Gatling/Artillery",
+          "Lighthouse CI"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "auth-implementation-patterns",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "authData": {
+            "score": 16,
+            "matches": [
+              {
+                "term": "authentication",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "authorization",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "auth",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 2
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/auth-implementation-patterns/SKILL.md",
+        "sha256": "sha256-ac7abc9e3e8928323153ecc00619359cbdb56272831ed399c4b552b193132c96",
+        "summary": "Covers session, JWT, and OIDC strategy, token lifecycle, authorization policy enforcement, and credential-storage planning.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "secure-session-handling"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; it is architecture guidance and does not record provider/library prerequisites. It does not independently prove a frontend-specific auth boundary."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Chosen identity provider/auth libraries are project-specific"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "awt-e2e-testing",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "e2e",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "playwright",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 7
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/awt-e2e-testing/SKILL.md",
+        "sha256": "sha256-67dfb03f10f10c2797f03218bc93d17a36b7783ef7f7b174fd3b4655fcb46d5f",
+        "summary": "Defines declarative YAML browser scenarios executed by Playwright with visual/OCR matching and explanatory failure output.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "critical-browser-journeys",
+        "failure-diagnostics"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/ksgisang/awt-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although the description gives an external install command and the runtime has multiple native/tool dependencies."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "AWT package",
+          "Playwright",
+          "OpenCV/OCR components"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "cypress-skill",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 12,
+            "matches": [
+              {
+                "term": "e2e",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "cypress",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 5
+          },
+          "unitComponent": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "component test",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 11
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/cypress-skill/SKILL.md",
+        "sha256": "sha256-0468d0c9d8f5663aa41cb0fb654039aac8d6cb8581ed9b47086717bbe7e86464",
+        "summary": "Generates Cypress E2E/component/API tests with independent-test guidance, fixtures, network interception, browser selection, parallel runs, and optional cloud execution.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "boundary-mocking",
+        "component-test-patterns",
+        "critical-browser-journeys",
+        "cross-browser-execution",
+        "deterministic-test-isolation"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/LambdaTest/agent-skills/tree/main/cypress-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although Cypress is required and cloud paths require third-party tooling/credentials."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Cypress",
+          "optional LambdaTest/TestMu CLI and credentials"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "e2e-testing",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 22,
+            "matches": [
+              {
+                "term": "browser",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "end-to-end",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "e2e",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "playwright",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "cross-browser",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 1
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/e2e-testing/SKILL.md",
+        "sha256": "sha256-d98eb7c3459f8ce3e79282906dbb1982001b050aa19766e60428da045920fc99",
+        "summary": "Orchestrates Playwright setup, critical-flow planning, test data/fixtures, browser automation, cross-browser runs, parallel CI, and artifacts.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "browser-critical-paths",
+        "critical-browser-journeys",
+        "cross-browser-execution",
+        "cross-browser-regression",
+        "deterministic-test-isolation",
+        "failure-diagnostics",
+        "maintainable-e2e-patterns"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "personal",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although this bundle explicitly delegates to multiple other skills and requires Playwright/browser installation."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "playwright-skill",
+          "e2e-testing-patterns",
+          "browser-automation",
+          "webapp-testing",
+          "GitHub Actions templates"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "e2e-testing-patterns",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "end-to-end",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "e2e",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 9
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/e2e-testing-patterns/SKILL.md",
+        "sha256": "sha256-79bbbe1b2bfad92e76ca981c900a85675b43ca29d0c080b643ee9bc385baaeee",
+        "summary": "Defines critical journeys, stable selectors, dedicated test data, retries/tracing/isolation, browser matrices, CI parallelization, and artifacts.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "browser-critical-paths",
+        "critical-browser-journeys",
+        "cross-browser-execution",
+        "deterministic-test-isolation",
+        "failure-diagnostics",
+        "maintainable-e2e-patterns",
+        "stable-locators"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; the actual runner/browser dependencies are intentionally left to implementation."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "An E2E runner such as Playwright/Cypress is implied"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "fixing-accessibility",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 15,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "wcag",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "keyboard",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 2
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/fixing-accessibility/SKILL.md",
+        "sha256": "sha256-6d1661a0ccf9aa9d99538eae780c927c789496565ec4e7f5a3eec5ff394eafda",
+        "summary": "Provides a severity-ordered static HTML accessibility audit and fix checklist covering accessible names, keyboard access, focus, forms, ARIA, and WCAG compliance.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessible-component-guidance",
+        "keyboard-and-screen-reader-validation",
+        "remediation-priorities",
+        "wcag-audit"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/ibelick/ui-skills/tree/main/skills/fixing-accessibility",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; runtime verification and component-library availability are not established."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Established accessible primitives are recommended for complex widgets"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "frontend-api-integration-patterns",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 12,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "react",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 19
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/frontend-api-integration-patterns/SKILL.md",
+        "sha256": "sha256-db22a15dac87c32393738bf4d8e2f451f7a961ed77df4c755dd480536d31d24d",
+        "summary": "Defines centralized frontend API layers, normalized errors, cancellation, retry, race-control, and UI request-state patterns.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "api-integration-boundary"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; framework-specific request/cache dependencies are not enumerated."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Frontend JavaScript/TypeScript runtime"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "frontend-architecture",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 26,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "react",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "component",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "feature module",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "architecture",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 1
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/frontend-architecture/SKILL.md",
+        "sha256": "sha256-77d4b0f6e493a203567e612226efdcf3bbf7a3dbd6db5d2f69ad65f6d42fb6a5",
+        "summary": "Defines feature modules, curated public barrels, page-local components, shared promotion rules, and a single shared API-client boundary.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "feature-boundaries",
+        "maintainable-component-architecture",
+        "shared-ui-conventions"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-architecture",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "No external setup is declared; applicability still depends on a React-family project and adoption of its directory/import conventions."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "React or React Native project"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "frontend-data-contracts",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "react",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 31
+          },
+          "authData": {
+            "score": 7,
+            "matches": [
+              {
+                "term": "typed",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "data contract",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 33
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/frontend-data-contracts/SKILL.md",
+        "sha256": "sha256-1777ffc06b558037ea548b9338efbdc10b36aa0aafd8d0725accf424b7791315",
+        "summary": "Defines one typed fetch boundary, parse-at-the-edge schemas, normalized API envelopes/errors, and domain contract placement.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "api-integration-boundary",
+        "typed-data-contracts"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-data-contracts",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; schema-parser and lint-enforcement dependencies are not structured."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "React or React Native",
+          "TypeScript",
+          "runtime schema parser such as Zod is shown"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "frontend-dev-guidelines",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "component",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 32
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/frontend-dev-guidelines/SKILL.md",
+        "sha256": "sha256-20b4e743d94efa6ed31a71317ba5ebebb1fdbf2381c0c2627f0505037c6f97fa",
+        "summary": "Defines feature-based organization, cross-feature coupling rules, isolated API layers, typed responses, component standards, and performance-safe defaults.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "api-integration-boundary",
+        "feature-boundaries",
+        "maintainable-component-architecture",
+        "shared-ui-conventions",
+        "typed-data-contracts"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; the framework/tooling assumptions and any migration cost are not structured."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "React/TypeScript-style project conventions"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "frontend-developer",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 22,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "react",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "next.js",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "component",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "architecture",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 3
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/frontend-developer/SKILL.md",
+        "sha256": "sha256-b81de9c6293be713fe0e4e27f2804a09a8a652396672dfef012284a72e6f8586",
+        "summary": "Covers React/Next component architecture, design systems, accessibility, component testing, profiling, bundle analysis, and Core Web Vitals optimization.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessible-component-guidance",
+        "component-test-patterns",
+        "frontend-bottleneck-analysis",
+        "maintainable-component-architecture",
+        "shared-ui-conventions"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; the broad ecosystem dependencies and versions are descriptive rather than pinned."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "React/Next.js ecosystem tools are context-dependent"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "frontend-lighthouse",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "performance": {
+            "score": 16,
+            "matches": [
+              {
+                "term": "performance",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "lighthouse",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "web vitals",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 2
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/frontend-lighthouse/SKILL.md",
+        "sha256": "sha256-15d52359bc4befe8ddac99c651cae61ee299fc0cd070466cb6ab28d7fb3ce54b",
+        "summary": "Defines a production-build Lighthouse CI gate with named Core Web Vitals budgets, median runs, PR-blocking assertions, and HTML/JSON artifacts.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "lighthouse-regression",
+        "regression-evidence",
+        "repeatable-performance-budget",
+        "result-review",
+        "web-vitals-budget"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although @lhci/cli and a production server command are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Node.js",
+          "@lhci/cli",
+          "production build/start command",
+          "CI artifact upload"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "frontend-mobile-development-component-scaffold",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 24,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "react",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "component",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "architecture",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 2
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/frontend-mobile-development-component-scaffold/SKILL.md",
+        "sha256": "sha256-7e13aeca47e65cfada1f1984fd7bc76a0a8d700c0987c85377688ecfb39d93e6",
+        "summary": "Specifies consistent TypeScript React/React Native component scaffolds with accessibility, tests, styles, and documentation.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessible-component-guidance",
+        "component-test-patterns",
+        "maintainable-component-architecture",
+        "shared-ui-conventions"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; generated examples assume framework, styling, and test dependencies that the catalog does not enumerate."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "React or React Native",
+          "TypeScript",
+          "selected styling/test stack"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "jest-skill",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 15,
+            "matches": [
+              {
+                "term": "component test",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "jest",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "mocking",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 1
+          },
+          "integrationContract": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "integration test",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 8
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/jest-skill/SKILL.md",
+        "sha256": "sha256-dec4f0ba5bce7458365573b6b084fb429f5e93ceca1b34f4e3b6764a0ce60f04",
+        "summary": "Provides Jest unit/integration/component patterns, module mocks, fake timers, snapshots, coverage commands/thresholds, and CI guidance.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "component-test-patterns",
+        "coverage-reporting",
+        "deterministic-mocking",
+        "repeatable-integration-runner",
+        "unit-test-runner"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/LambdaTest/agent-skills/tree/main/jest-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although Jest and optional React Testing Library packages are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Node.js",
+          "Jest",
+          "optional Testing Library/jest-dom"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "junit-5-skill",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 14,
+            "matches": [
+              {
+                "term": "unit test",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "junit",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "mocking",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 2
+          },
+          "integrationContract": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "integration test",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 9
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/junit-5-skill/SKILL.md",
+        "sha256": "sha256-a8e1ef97d7dcf715b5b911da08930d7509f0a61126dba0f5b29f1fa285d704d6",
+        "summary": "Provides JUnit 5 unit/integration patterns, lifecycle/parameterized tests, Mockito mocks, Maven dependencies, timeouts, parallel setup, and Spring integration guidance.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "deterministic-mocking",
+        "repeatable-integration-runner",
+        "unit-test-runner"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/LambdaTest/agent-skills/tree/main/junit-5-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although explicit Maven dependencies and Java tooling are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Java",
+          "Maven or Gradle",
+          "JUnit Jupiter",
+          "Mockito",
+          "optional Spring test stack"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "k6-load-testing",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "browser",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 27
+          },
+          "performance": {
+            "score": 20,
+            "matches": [
+              {
+                "term": "performance",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "load test",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "load testing",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "k6",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 1
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/k6-load-testing/SKILL.md",
+        "sha256": "sha256-9b171afbebd31e355a87f91399ef519b89ce65ea1e2f4aa23bc3bf7f3ef06e27",
+        "summary": "Defines smoke/load/stress/spike/soak scenarios, SLA thresholds including p95/error/throughput, repeatable runs, JSON/JUnit artifacts, CI gates, and result interpretation.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "latency-thresholds",
+        "load-scenario-design",
+        "repeatable-performance-budget",
+        "repeatable-performance-run",
+        "result-review"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although k6 installation is explicit and browser/cloud paths add dependencies."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "k6",
+          "optional Chromium for k6 browser",
+          "optional k6 cloud"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "nextjs-best-practices",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 13,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "category",
+                "weight": 6
+              },
+              {
+                "term": "next.js",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "component",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 15
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/nextjs-best-practices/SKILL.md",
+        "sha256": "sha256-6488e1e2e001d737d688957c19264d42b29e558a8b2b9daff1d18863674e6106",
+        "summary": "Defines Server/Client Component boundaries, App Router file conventions, API routes, typed responses, data fetching, error boundaries, and performance principles.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "api-integration-boundary",
+        "maintainable-component-architecture",
+        "shared-ui-conventions",
+        "typed-data-contracts"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; supported Next.js version and project prerequisites are not structured."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Next.js App Router project"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "openapi-spec-generation",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "integrationContract": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "api contract",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "openapi",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 2
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/openapi-spec-generation/SKILL.md",
+        "sha256": "sha256-9e38d12b362f01e0f72c86ccda38902ea87ed41eaf6f1ab1f063a67ddd221643",
+        "summary": "Creates and validates versionable OpenAPI 3.1 contract artifacts from code or design-first inputs; it does not itself supply a repeatable integration runner.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "api-contract-fixtures"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; validation/generation tooling is not pinned."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "An OpenAPI parser/validator/generator is project-specific"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "pagespeed-enhancer",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 3,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 19
+          },
+          "performance": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "performance",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "lighthouse",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 11
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/pagespeed-enhancer/SKILL.md",
+        "sha256": "sha256-ee0de808ea6059782e79fa36697f454e922c8ffc1bc389759bae0fb540c2990b",
+        "summary": "Parses Lighthouse/PageSpeed results, identifies the critical-path bottleneck, prioritizes fixes by risk/effort, and provides metric-threshold review; it explicitly does not run the tests.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "frontend-bottleneck-analysis",
+        "remediation-priorities",
+        "result-review"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "personal",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although reports are required and some fixes assume external tools."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "User-supplied PageSpeed/Lighthouse report",
+          "optional cwebp, sharp, or Pillow"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "playwright-java",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 16,
+            "matches": [
+              {
+                "term": "e2e",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "playwright",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "selenium",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 3
+          },
+          "unitComponent": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "junit",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 13
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/playwright-java/SKILL.md",
+        "sha256": "sha256-926783e260e485b9e49d9e30a6fa79506fab9d9b873a66cd8c61e641aa4aa170",
+        "summary": "Defines Java Playwright POM tests with strict locators, fixtures/auth state, per-thread browser contexts, parallel execution, traces/video, and Allure reports.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "critical-browser-journeys",
+        "cross-browser-execution",
+        "deterministic-test-isolation",
+        "failure-diagnostics",
+        "maintainable-e2e-patterns",
+        "stable-locators"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although the skill explicitly requires a Java/Playwright/JUnit/Allure toolchain."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Java 17+",
+          "Playwright 1.44+",
+          "JUnit 5",
+          "Allure"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "playwright-skill",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "playwright",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 19
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/playwright-skill/SKILL.md",
+        "sha256": "sha256-47291c4891287075d2e07de0155dc501d4d111caf74b322629a4c7cd527a0790",
+        "summary": "Executes custom Playwright browser journeys through a bundled runner and demonstrates locator-based navigation and form flows.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "browser-critical-paths",
+        "stable-locators"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "manual",
+            "summary": "Run `npm run setup` in the skill directory before first use to install Playwright and Chromium.",
+            "docs": "SKILL.md"
+          },
+          "gap": "Manual setup is correctly declared, but it downloads Playwright/Chromium and defaults to a visible browser; CI/isolation semantics are not established."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Node.js",
+          "Playwright",
+          "Chromium",
+          "skill-local setup script"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "pytest-skill",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 12,
+            "matches": [
+              {
+                "term": "pytest",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "mocking",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 4
+          },
+          "integrationContract": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "fixture",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 11
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/pytest-skill/SKILL.md",
+        "sha256": "sha256-2d43dd94763519e9308f8ed81155d9c33b84c6067018dc2bae35a10301034cf7",
+        "summary": "Provides pytest fixtures, teardown/scoping, API/external-service mocking, parallel execution, markers, coverage, integration tests, and CI configuration.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "boundary-mocking",
+        "coverage-reporting",
+        "deterministic-mocking",
+        "repeatable-integration-runner",
+        "unit-test-runner"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/LambdaTest/agent-skills/tree/main/pytest-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although pytest and optional plugins are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Python",
+          "pytest",
+          "optional pytest-mock, pytest-cov, pytest-xdist, pytest-asyncio"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "python-testing-patterns",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "pytest",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "mocking",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 8
+          },
+          "integrationContract": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "fixture",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 12
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/python-testing-patterns/SKILL.md",
+        "sha256": "sha256-467fdbc399027e09da7df551c2088dad0e2fa7cba590be3059b40bfcbc63794a",
+        "summary": "Guides pytest unit/integration suites with fixtures, parameterization, external-service mocking, and TDD.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "boundary-mocking",
+        "deterministic-mocking",
+        "repeatable-integration-runner",
+        "unit-test-runner"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although pytest/tool plugins are implied."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Python",
+          "pytest and project-selected plugins"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "react-best-practices",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 14,
+            "matches": [
+              {
+                "term": "react",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "next.js",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "component",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 12
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/react-best-practices/SKILL.md",
+        "sha256": "sha256-75a1cf7ee1d59f56604b4db52d3cb680d1bfdbe5b064f6abc7acf8ba30acc1d3",
+        "summary": "Provides prioritized React/Next performance rules for async work, bundles, server serialization, rerenders, and rendering/JavaScript hot paths.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "frontend-bottleneck-analysis"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; rule applicability depends on framework/version and no profiling toolchain is pinned."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "React or Next.js project"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "react-component-performance",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "frontendArchitecture": {
+            "score": 16,
+            "matches": [
+              {
+                "term": "react",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "component",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 6
+          },
+          "performance": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "performance",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 16
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/react-component-performance/SKILL.md",
+        "sha256": "sha256-e5ed04f3693f9ab303dd66b5c241134781bf1b10dfac23aa386d10cbd93a6d1a",
+        "summary": "Defines a measure-diagnose-fix-validate workflow using React DevTools Profiler and before/after flamegraphs for slow components.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "frontend-bottleneck-analysis"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "Dimillian/Skills (MIT)",
+          "gap": "Source is identifiable text but not a canonical URL or release/content attestation."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although the validation workflow depends on React DevTools."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "React DevTools Profiler"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "screen-reader-testing",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "screen reader",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 6
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/screen-reader-testing/SKILL.md",
+        "sha256": "sha256-351a27532ecfefb9ed832fc525466636b6f18c4f01ae0f96e5dbc59366ccfac4",
+        "summary": "Provides practical screen-reader validation guidance for forms, navigation, and web application compatibility.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "assistive-technology-evidence",
+        "keyboard-and-screen-reader-validation"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; exact screen-reader/browser installation and supported matrix are not recorded."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "A screen reader and target browser are implied"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "selenium-skill",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "browser",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "selenium",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 10
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/selenium-skill/SKILL.md",
+        "sha256": "sha256-1b4ccb03b23ba99237c29776aafcc8d9507cb6465270779615efaf68a38e2210",
+        "summary": "Generates multi-language Selenium suites with locator priority, wait strategy, POM, parallel/grid execution, and screenshot/report diagnostics.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "critical-browser-journeys",
+        "cross-browser-execution",
+        "failure-diagnostics",
+        "maintainable-e2e-patterns",
+        "stable-locators"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/LambdaTest/agent-skills/tree/main/selenium-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although bindings, drivers/runners, and optional cloud credentials are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Language-specific Selenium binding and test runner",
+          "browser driver or Grid",
+          "optional LambdaTest/TestMu credentials"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "senior-frontend",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 3,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 20
+          },
+          "frontendArchitecture": {
+            "score": 18,
+            "matches": [
+              {
+                "term": "frontend",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "react",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "next.js",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "component",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 5
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/senior-frontend/SKILL.md",
+        "sha256": "sha256-dc3ac3f3d3ae7e7fcfaec3c10065fa87b22562200b6e145440b7554c487b3942",
+        "summary": "Provides React/Next scaffolding, typed component generation with tests, bundle analysis, dependency replacement, and accessibility-oriented implementation.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessible-component-guidance",
+        "component-test-patterns",
+        "frontend-bottleneck-analysis",
+        "maintainable-component-architecture"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "https://github.com/alirezarezvani/claude-skills",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although bundled Python scripts and optional npm dependencies are part of the workflow."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Python helper scripts",
+          "npm",
+          "optional NextAuth, React Query, Zod, Vitest, Testing Library, Storybook"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "tailwind-design-system",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 12
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/tailwind-design-system/SKILL.md",
+        "sha256": "sha256-2d2852085d419997ec8a75d798666afe20ff265e99602fc4ad78e6353c0f3746",
+        "summary": "Guides production design-system tokens, component variants, responsive patterns, and accessible Tailwind components.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessible-component-guidance",
+        "maintainable-component-architecture",
+        "shared-ui-conventions"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; Tailwind version/package availability is implied rather than recorded."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Tailwind CSS project"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "testing-patterns",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 12,
+            "matches": [
+              {
+                "term": "unit test",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "jest",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "mocking",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 5
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/testing-patterns/SKILL.md",
+        "sha256": "sha256-0413a6d6a75664f1fecd7a5007156ff5df1b2ae563aed96f97c8dea5e16f4c95",
+        "summary": "Defines Jest/Testing Library component factories, provider-aware rendering, deterministic mock factories, mock cleanup, TDD, and coverage execution.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "component-test-patterns",
+        "coverage-reporting",
+        "deterministic-mocking"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although Jest/Testing Library are assumed."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Jest",
+          "React Testing Library for component examples"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "testing-qa",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "browser",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "e2e",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 21
+          },
+          "unitComponent": {
+            "score": 3,
+            "matches": [
+              {
+                "term": "unit test",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 24
+          },
+          "integrationContract": {
+            "score": 3,
+            "matches": [
+              {
+                "term": "integration test",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 14
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/testing-qa/SKILL.md",
+        "sha256": "sha256-98756bbfbec107c77f9a52800efdd77be7e40749e298d07f79967fdc1b23241f",
+        "summary": "Orchestrates unit, integration, E2E, browser automation, coverage, test data, mocking, CI, and quality gates through referenced specialist skills.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "browser-critical-paths",
+        "coverage-reporting",
+        "repeatable-integration-runner",
+        "unit-test-runner"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "personal",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although this workflow bundle depends on multiple other skills and their toolchains."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "javascript-testing-patterns",
+          "unit-testing-test-generate",
+          "api-testing-observability-api-mock",
+          "playwright-skill",
+          "e2e-testing-patterns",
+          "browser-automation",
+          "webapp-testing"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "ui-a11y",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 12,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "tags/triggers",
+                "weight": 4
+              },
+              {
+                "term": "a11y",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 3
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/ui-a11y/SKILL.md",
+        "sha256": "sha256-6b273632251fcfafcc559747d0d87e76d00ddd935a8162247e358ab9a6953773",
+        "summary": "Provides a WCAG 2.2 AA static component/page audit with keyboard, focus, ARIA, and semantic checks; explicitly does not provide runtime screen-reader simulation.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessible-component-guidance",
+        "keyboard-and-screen-reader-validation",
+        "wcag-audit"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-a11y",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although the skill assumes StyleSeed conventions and recommends Radix UI."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "StyleSeed conventions",
+          "Radix UI recommended"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "ui-review",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "accessibility",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 14
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/ui-review/SKILL.md",
+        "sha256": "sha256-4b3dc445c56ad66e9ebc92219c4fee7031267be2490fb532a8272ff3423ebd33",
+        "summary": "Reviews UI code against component conventions, WCAG-AA checks, and performance/design-system rules.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessible-component-guidance",
+        "shared-ui-conventions",
+        "wcag-audit"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-review",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although the skill is scoped to StyleSeed and delegates accessibility-only work to another StyleSeed skill."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "StyleSeed conventions"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "unit-testing-test-generate",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 7,
+            "matches": [
+              {
+                "term": "unit test",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "coverage",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 9
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/unit-testing-test-generate/SKILL.md",
+        "sha256": "sha256-3fdc338d79aa50a5e546c1ecfe983b583dd13827804dd8236b44d1de056748fe",
+        "summary": "Selects language/framework runners and generates unit/component tests, mocks, fixtures, edge cases, and coverage-gap analysis.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "component-test-patterns",
+        "coverage-reporting",
+        "deterministic-mocking",
+        "unit-test-runner"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none; the generator emits framework-specific code but does not structure the required runner dependencies."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Generated tests require pytest/Jest/JUnit or another selected runner"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "vitest-skill",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "unitComponent": {
+            "score": 12,
+            "matches": [
+              {
+                "term": "vitest",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "jest",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 6
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/vitest-skill/SKILL.md",
+        "sha256": "sha256-dfd406a1ee995cbe2de1b5a0d155ab8d500ab8761da78ca61cc1b5ce5d3a7779",
+        "summary": "Provides Vitest unit/component/API patterns, vi mocks, configuration, coverage, and CI commands.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "component-test-patterns",
+        "coverage-reporting",
+        "deterministic-mocking",
+        "repeatable-integration-runner",
+        "unit-test-runner"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/LambdaTest/agent-skills/tree/main/vitest-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although Vitest and optional component/coverage packages are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Node.js",
+          "Vitest",
+          "optional Testing Library and v8 coverage provider"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "wcag-audit-patterns",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "accessibility": {
+            "score": 8,
+            "matches": [
+              {
+                "term": "wcag",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 7
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/wcag-audit-patterns/SKILL.md",
+        "sha256": "sha256-f1ae46b2e7eeece4ae2bedae1af536b3d37af2d9c680c4424a04c3996a72885d",
+        "summary": "Defines automated scans plus manual keyboard, focus-order, and screen-reader checks, mapping findings to WCAG criteria and remediation.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "accessibility-audit",
+        "accessible-component-guidance",
+        "keyboard-and-screen-reader-validation",
+        "remediation-priorities",
+        "wcag-audit"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "safe",
+          "gap": "Catalog risk classification exists, but this semantic audit did not independently security-test the skill."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": null
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "web-performance-optimization",
+      "intents": [
+        "test-qa-automation",
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "performance": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "performance",
+                "field": "id/name",
+                "weight": 8
+              },
+              {
+                "term": "web vitals",
+                "field": "description",
+                "weight": 3
+              }
+            ],
+            "rank": 7
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/web-performance-optimization/SKILL.md",
+        "sha256": "sha256-38cf09230d50f48d37ae28e6b5324aea9f6fdeccfffdba76ecd444f6fee8e263",
+        "summary": "Establishes Lighthouse/Core Web Vitals baselines, identifies frontend bottlenecks, applies targeted fixes, and reruns audits for before/after evidence.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "frontend-bottleneck-analysis",
+        "regression-evidence",
+        "result-review"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although Lighthouse and optional optimization tools are used."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Lighthouse and optional build/image tools such as sharp"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "webapp-testing",
+      "intents": [
+        "web-application-delivery"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 4,
+            "matches": [
+              {
+                "term": "playwright",
+                "field": "tags/triggers",
+                "weight": 4
+              }
+            ],
+            "rank": 33
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/webapp-testing/SKILL.md",
+        "sha256": "sha256-da02c666083f0642b4ae7a106f1b38d9ada0d6da01ff4e014b49d0300ab8a9ea",
+        "summary": "Provides a local-web-app workflow using native Python Playwright scripts, selector discovery, network-idle waits, and browser cleanup.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "browser-critical-paths"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "community",
+          "gap": "Catalog source is only a generic label; no canonical repository URL, release, or content attestation is present."
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although Python Playwright and browser binaries are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Python",
+          "playwright Python package",
+          "Chromium"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    },
+    {
+      "id": "webdriverio-skill",
+      "intents": [
+        "test-qa-automation"
+      ],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserE2E": {
+            "score": 11,
+            "matches": [
+              {
+                "term": "browser",
+                "field": "description",
+                "weight": 3
+              },
+              {
+                "term": "webdriverio",
+                "field": "id/name",
+                "weight": 8
+              }
+            ],
+            "rank": 12
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/webdriverio-skill/SKILL.md",
+        "sha256": "sha256-5d884620f500ec3d06f81ec72e264456ca24b3c2e4cfe2fcd915d486feefd18a",
+        "summary": "Generates WebdriverIO browser tests with multi-environment/browser configuration, waits, screenshots, network mocks, parallelism, and CI/cloud options.",
+        "reviewScope": "Full-file lexical scan plus direct inspection of the sections supporting the emitted capabilities; no behavioral execution or security review."
+      },
+      "supportedCanonicalCapabilities": [
+        "boundary-mocking",
+        "critical-browser-journeys",
+        "cross-browser-execution",
+        "failure-diagnostics"
+      ],
+      "evidenceGaps": {
+        "risk": {
+          "catalogValue": "unknown",
+          "gap": "Risk is unknown in the catalog; this audit makes no replacement risk assertion."
+        },
+        "source": {
+          "catalogValue": "https://github.com/LambdaTest/agent-skills/tree/main/webdriverio-skill",
+          "gap": null
+        },
+        "targets": {
+          "catalogValue": {
+            "codex": "supported",
+            "claude": "supported"
+          },
+          "gap": "Static catalog compatibility only; no live Codex/Claude execution proof was performed."
+        },
+        "setup": {
+          "catalogValue": {
+            "type": "none",
+            "summary": "",
+            "docs": null
+          },
+          "gap": "Catalog setup says none although WDIO packages and optional cloud credentials are required."
+        }
+      },
+      "dependencies": {
+        "observedOrImplied": [
+          "Node.js",
+          "WebdriverIO",
+          "optional LambdaTest/TestMu service and credentials"
+        ],
+        "structuredDependencyMetadataGap": "No versioned AAS dependency graph is declared for this skill; these notes come only from reviewed skill content."
+      },
+      "conflicts": {
+        "structuredDeclarationsObserved": [],
+        "note": "No explicit structured AAS conflict declaration was observed in the reviewed skill/catalog metadata. Functional overlap with other candidates is not treated as a conflict."
+      }
+    }
+  ],
+  "findings": {
+    "candidateCounts": {
+      "webApplicationDelivery": 33,
+      "testQaAutomation": 34,
+      "both": 22
+    },
+    "metadataGaps": {
+      "riskUnknown": 25,
+      "sourceEvidenceGap": 28,
+      "setupEvidenceGap": 43
+    },
+    "capabilityCandidateCounts": {
+      "accessibility-audit": 4,
+      "accessible-component-guidance": 9,
+      "api-contract-fixtures": 2,
+      "api-integration-boundary": 4,
+      "assistive-technology-evidence": 2,
+      "boundary-mocking": 5,
+      "browser-critical-paths": 5,
+      "ci-contract-evidence": 0,
+      "component-test-patterns": 8,
+      "coverage-reporting": 6,
+      "critical-browser-journeys": 7,
+      "cross-browser-execution": 6,
+      "cross-browser-regression": 1,
+      "deterministic-mocking": 8,
+      "deterministic-test-isolation": 4,
+      "failure-diagnostics": 6,
+      "feature-boundaries": 2,
+      "frontend-auth-boundary": 0,
+      "frontend-bottleneck-analysis": 7,
+      "keyboard-and-screen-reader-validation": 6,
+      "latency-thresholds": 1,
+      "lighthouse-regression": 1,
+      "load-scenario-design": 2,
+      "maintainable-component-architecture": 7,
+      "maintainable-e2e-patterns": 4,
+      "migration-guidance": 0,
+      "regression-evidence": 5,
+      "remediation-priorities": 6,
+      "repeatable-integration-runner": 6,
+      "repeatable-performance-budget": 3,
+      "repeatable-performance-run": 2,
+      "result-review": 5,
+      "secure-session-handling": 1,
+      "shared-ui-conventions": 7,
+      "stable-locators": 4,
+      "typed-data-contracts": 3,
+      "unit-test-runner": 7,
+      "wcag-audit": 7,
+      "wcag-regression": 2,
+      "web-vitals-budget": 1
+    },
+    "uncoveredCanonicalCapabilities": [
+      "ci-contract-evidence",
+      "frontend-auth-boundary",
+      "migration-guidance"
+    ],
+    "interpretation": "This audit found strong public-content evidence for many web/test capabilities, but it is not itself an eligibility decision. Unknown risk, generic source, static target compatibility, and setup/dependency gaps must remain unknown or policy-gated until separately evidenced."
+  }
+}

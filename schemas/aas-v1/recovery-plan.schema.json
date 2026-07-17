@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:recovery-plan:v1",
+  "title": "AAS approved recovery plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "digest", "payload"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "aas.recovery-plan" },
+    "digest": { "$ref": "#/$defs/digest" },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "kind", "versions", "recoveryId", "action", "bootstrapOnly", "planDigest", "journalDigest", "checkpoint", "targetIdentityDigest", "preconditions", "operations"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "aas.recovery-plan.payload" },
+        "versions": { "$ref": "#/$defs/versions" },
+        "recoveryId": { "type": "string", "pattern": "^recovery-[a-f0-9]{32,64}$" },
+        "action": { "enum": ["rollback", "cleanup"] },
+        "bootstrapOnly": { "type": "boolean" },
+        "planDigest": { "$ref": "#/$defs/digest" },
+        "journalDigest": { "$ref": "#/$defs/digest" },
+        "checkpoint": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["recordCount", "recordsDigest", "validBytes", "validBytesDigest", "tornTailDigest"],
+              "properties": {
+                "recordCount": { "type": "integer", "minimum": 1 },
+                "recordsDigest": { "$ref": "#/$defs/digest" },
+                "validBytes": { "type": "integer", "minimum": 1 },
+                "validBytesDigest": { "$ref": "#/$defs/digest" },
+                "tornTailDigest": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] }
+              }
+            }
+          ]
+        },
+        "targetIdentityDigest": { "$ref": "#/$defs/digest" },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["logicalId", "expectedDigest"],
+            "properties": {
+              "logicalId": { "type": "string", "minLength": 1, "maxLength": 256 },
+              "expectedDigest": { "$ref": "#/$defs/digest" }
+            }
+          }
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "logicalId"],
+            "properties": {
+              "kind": { "enum": ["restoreBackup", "removeStaged", "removeBackup", "removeBootstrapDirectory", "closeJournal", "restoreManagedState"] },
+              "logicalId": { "type": "string", "minLength": 1, "maxLength": 256 }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+    "versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion"],
+      "properties": {
+        "protocolVersion": { "type": "string", "minLength": 1 },
+        "coreVersion": { "type": "string", "minLength": 1 },
+        "metadataSchemaVersion": { "type": "string", "minLength": 1 },
+        "scorerVersion": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "aliases": {
+    "a11y": "accessibility",
+    "authn": "authentication",
+    "authz": "authorization",
+    "backend": "api-backend",
+    "ci/cd": "ci-cd",
+    "cicd": "ci-cd",
+    "devops": "deployment-devops",
+    "e2e": "end-to-end",
+    "frontend": "web-application",
+    "iac": "infrastructure-as-code",
+    "k8s": "kubernetes",
+    "mcp": "model-context-protocol",
+    "observability": "monitoring-observability",
+    "qa": "quality-assurance",
+    "sre": "site-reliability",
+    "ui": "user-interface",
+    "ux": "user-experience"
+  },
+  "intentAliases": {
+    "agent-mcp-development": ["agent", "model-context-protocol", "tooling", "evaluation", "memory"],
+    "api-backend-delivery": ["api", "api-backend", "authentication", "database", "integration"],
+    "deployment-devops": ["deployment", "deployment-devops", "ci-cd", "infrastructure-as-code", "site-reliability"],
+    "security-review-hardening": ["security", "hardening", "threat-modeling", "secrets", "dependencies"],
+    "test-qa-automation": ["test", "quality-assurance", "end-to-end", "performance", "accessibility"],
+    "web-application-delivery": ["web", "web-application", "user-interface", "accessibility", "performance"]
+  },
+  "capabilities": {
+    "agent-mcp-development": [
+      "agent-boundaries", "agent-evaluation-design", "agent-threat-review", "auditable-operations",
+      "context-budget", "context-retrieval", "delegation-policy", "failure-handling", "failure-metrics",
+      "mcp-tool-contract", "memory-boundaries", "prompt-injection-controls", "read-only-resource",
+      "regression-suite", "reproducible-cases", "schema-validation", "stale-memory-controls",
+      "stdio-lifecycle", "tool-orchestration", "tool-permission-boundaries"
+    ],
+    "api-backend-delivery": [
+      "async-boundary-design", "authentication-baseline", "authorization-policy", "data-model-design",
+      "distributed-tracing", "durable-event-processing", "failure-compensation", "idempotent-retries",
+      "latency-profiling", "machine-readable-documentation", "migration-safety", "openapi-definition",
+      "query-discipline", "reversible-migrations", "secure-api-boundary", "service-level-objectives",
+      "stable-api-contract", "structured-telemetry", "token-validation", "versioning-policy"
+    ],
+    "deployment-devops": [
+      "alert-quality", "container-build", "deployment-gates", "environment-separation", "health-checks",
+      "incident-diagnostics", "operational-dashboards", "orchestrated-deployment", "pipeline-design",
+      "plan-review", "post-release-verification", "progressive-delivery", "release-procedure",
+      "reproducible-ci", "reusable-infrastructure", "rollback-validation", "runtime-hardening",
+      "safe-automation", "service-level-objectives", "state-safety"
+    ],
+    "security-review-hardening": [
+      "advisory-triage", "authentication-hardening", "cloud-permission-review", "container-hardening",
+      "credential-boundaries", "dependency-risk-review", "deployment-policy", "hardening-runbook",
+      "incident-triage", "mitigation-mapping", "recurrence-prevention", "rotation-guidance",
+      "safe-remediation", "secret-lifecycle", "security-requirements", "supply-chain-evidence",
+      "threat-enumeration", "trust-boundary-review", "upgrade-prioritization", "workload-isolation"
+    ],
+    "test-qa-automation": [
+      "accessibility-audit", "api-contract-fixtures", "assistive-technology-evidence", "boundary-mocking",
+      "ci-contract-evidence", "component-test-patterns", "coverage-reporting", "critical-browser-journeys",
+      "cross-browser-execution", "deterministic-mocking", "failure-diagnostics", "latency-thresholds",
+      "load-scenario-design", "remediation-priorities", "repeatable-integration-runner",
+      "repeatable-performance-run", "result-review", "stable-locators", "unit-test-runner", "wcag-regression"
+    ],
+    "web-application-delivery": [
+      "accessible-component-guidance", "api-integration-boundary", "browser-critical-paths",
+      "cross-browser-regression", "deterministic-test-isolation", "feature-boundaries",
+      "frontend-auth-boundary", "frontend-bottleneck-analysis", "keyboard-and-screen-reader-validation",
+      "lighthouse-regression", "maintainable-component-architecture", "maintainable-e2e-patterns",
+      "migration-guidance", "regression-evidence", "repeatable-performance-budget",
+      "secure-session-handling", "shared-ui-conventions", "typed-data-contracts", "wcag-audit",
+      "web-vitals-budget"
+    ]
+  }
+}

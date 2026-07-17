@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:recommendation-output:v1",
+  "title": "AAS deterministic recommendation output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ok", "status", "protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "catalog", "normalizedInput", "recommended", "discoveryCandidates", "proposedStack", "includedSkillIds", "coveredGoals", "uncoveredGoals", "goalCapabilityMatrix", "exclusions", "hardPolicyViolations", "discoveryPromotions", "unknown", "measures", "canonicalJson"],
+  "properties": {
+    "ok": { "const": true },
+    "status": { "enum": ["complete", "partial", "insufficientCoverage"] },
+    "protocolVersion": { "type": "string", "minLength": 1 },
+    "coreVersion": { "type": "string", "minLength": 1 },
+    "metadataSchemaVersion": { "type": "string", "minLength": 1 },
+    "scorerVersion": { "type": "string", "minLength": 1 },
+    "catalog": { "$ref": "#/$defs/catalog" },
+    "normalizedInput": { "type": "object" },
+    "recommended": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/candidate" } },
+    "discoveryCandidates": { "type": "array", "maxItems": 25, "items": { "$ref": "#/$defs/candidate" } },
+    "proposedStack": { "$ref": "#/$defs/ids" },
+    "includedSkillIds": { "$ref": "#/$defs/ids" },
+    "coveredGoals": { "$ref": "#/$defs/strings" },
+    "uncoveredGoals": { "$ref": "#/$defs/strings" },
+    "goalCapabilityMatrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["goal", "critical", "skillIds"],
+        "properties": {
+          "goal": { "type": "string" },
+          "critical": { "type": "boolean" },
+          "skillIds": { "$ref": "#/$defs/ids" }
+        }
+      }
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "reasonCodes"],
+        "properties": { "id": { "$ref": "#/$defs/id" }, "reasonCodes": { "$ref": "#/$defs/strings" } }
+      }
+    },
+    "hardPolicyViolations": { "type": "array", "maxItems": 0 },
+    "discoveryPromotions": { "type": "array", "items": { "type": "object" } },
+    "unknown": { "$ref": "#/$defs/strings" },
+    "measures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["goalCoverage", "metadataCompleteness", "evidenceStrength"],
+      "properties": {
+        "goalCoverage": { "type": "integer", "minimum": 0, "maximum": 1000 },
+        "metadataCompleteness": { "type": "integer", "minimum": 0, "maximum": 1000 },
+        "evidenceStrength": { "type": "integer", "minimum": 0, "maximum": 1000 }
+      }
+    },
+    "canonicalJson": { "type": "string" }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "ids": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "strings": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version", "digest"],
+      "properties": {
+        "package": { "type": "string" },
+        "version": { "type": "string" },
+        "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["id", "factors", "totalScore", "coveredGoals", "eligibility", "metadata"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "factors": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "totalScore": { "type": "integer" },
+        "coveredGoals": { "$ref": "#/$defs/strings" },
+        "eligibility": { "type": "object" },
+        "metadata": { "type": "object" },
+        "insertionReason": { "type": "object" }
+      }
+    }
+  }
+}

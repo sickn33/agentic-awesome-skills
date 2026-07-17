@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:stack-manifest:v1",
+  "title": "AAS stack manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "name", "catalog", "targets", "intent", "policy", "skills"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._ -]*$" },
+    "catalog": { "$ref": "#/$defs/catalogIdentity" },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/target" }
+    },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["goals"],
+      "properties": {
+        "goals": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "policy": { "$ref": "#/$defs/policy" },
+    "skills": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id"],
+        "properties": { "id": { "$ref": "#/$defs/id" } }
+      }
+    }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*$" },
+    "catalogIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version", "integrity"],
+      "properties": {
+        "package": { "type": "string", "minLength": 1, "maxLength": 214, "pattern": "^(@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]*$" },
+        "integrity": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["host", "scope"],
+      "properties": {
+        "host": { "enum": ["codex", "claude"] },
+        "scope": { "enum": ["project", "user"] }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedRisk", "requireKnownSource", "allowManualSetup"],
+      "properties": {
+        "allowedRisk": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": { "enum": ["none", "safe", "unknown", "critical", "offensive"] }
+        },
+        "requireKnownSource": { "type": "boolean" },
+        "allowManualSetup": { "type": "boolean" }
+      }
+    }
+  }
+}

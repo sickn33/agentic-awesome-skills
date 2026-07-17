@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "anonymized": true,
+  "validatedAt": "2026-07-17",
+  "hosts": [
+    {
+      "host": "codex",
+      "hostVersion": "documentation-current-2026-07-17",
+      "scopeContracts": {
+        "user": "explicit path to config.toml",
+        "project": "explicit path to .codex/config.toml"
+      },
+      "serverContract": "[mcp_servers.aas] with command, args, enabled",
+      "documentation": "https://developers.openai.com/codex/config-reference/"
+    },
+    {
+      "host": "claude",
+      "hostVersion": "documentation-current-2026-07-17",
+      "scopeContracts": {
+        "user": "explicit caller-supplied path using the same JSON object contract",
+        "project": "explicit path to .mcp.json"
+      },
+      "serverContract": "mcpServers.aas with command, args, env",
+      "documentation": "https://docs.anthropic.com/en/docs/claude-code/mcp"
+    }
+  ]
+}

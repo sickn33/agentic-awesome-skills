@@ -8,6 +8,7 @@ const Workbench = lazy(() => import('./pages/Workbench'));
 const Plugins = lazy(() => import('./pages/Plugins'));
 const TopicLanding = lazy(() => import('./pages/TopicLanding'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const CatalogRouteProvider = lazy(() => import('./context/CatalogRouteProvider'));
 
 function App(): React.ReactElement {
   const logoSrc = `${import.meta.env.BASE_URL}agentic-skills-logo.png`;
@@ -83,11 +84,13 @@ function App(): React.ReactElement {
             }
           >
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route element={<CatalogRouteProvider />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/topics/:slug" element={<TopicLanding />} />
+                <Route path="/skill/:id" element={<SkillDetail />} />
+              </Route>
               <Route path="/plugins" element={<Plugins />} />
               <Route path="/workbench" element={<Workbench />} />
-              <Route path="/topics/:slug" element={<TopicLanding />} />
-              <Route path="/skill/:id" element={<SkillDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
