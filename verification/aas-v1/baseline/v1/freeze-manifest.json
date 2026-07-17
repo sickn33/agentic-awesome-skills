@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-2bb92ca8893dc7fcd2348decb2d69b41a6229f62826a094848cfec1e2bf7e330",
+  "rootDigest": "sha256-686fa2220b4ee6067707a176561cda63c132d1eb94b225d8fe7515d3b39805c2",
   "fileCount": 764,
   "files": [
     {
@@ -3743,8 +3743,8 @@
     },
     {
       "path": "verifier/lib/runtime.mjs",
-      "bytes": 4213,
-      "sha256": "65c658f07226d2e2d28b6a27f1c2df03213f6ae85b6370dcdd1ca5fdd50f5641"
+      "bytes": 3891,
+      "sha256": "3a559b1c95d06724dd42aa893c83ed46135a4b385a8fdc8e53de64acf1c50b89"
     },
     {
       "path": "verifier/lib/suites.mjs",
@@ -3813,8 +3813,8 @@
     },
     {
       "path": "verifier/tests/runtime.test.mjs",
-      "bytes": 1191,
-      "sha256": "daed89d3add8b5c8d0870200ef734455f5c7042ef124ec741fcbd3c8b6677415"
+      "bytes": 940,
+      "sha256": "ff56819f43eb72bf222a50faa0d1d1f748dc5ed0a19ae72215b3366c02de46e0"
     },
     {
       "path": "verifier/tests/transaction-evidence-semantics.test.mjs",

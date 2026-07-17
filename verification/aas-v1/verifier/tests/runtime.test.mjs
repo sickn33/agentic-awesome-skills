@@ -9,22 +9,16 @@ test("npm invocation executes directly on POSIX", () => {
   });
 });
 
-test("npm invocation uses the trusted Windows command processor for npm.cmd", () => {
-  assert.deepEqual(npmInvocation(["install", "C:\\runner temp\\candidate.tgz"], "win32", {
-    ComSpec: "C:\\Windows\\System32\\cmd.exe",
-  }), {
-    executable: "C:\\Windows\\System32\\cmd.exe",
-    args: ["/D", "/S", "/C", '"npm.cmd" "install" "C:\\runner temp\\candidate.tgz"'],
+test("npm invocation runs npm-cli.js through the current Windows Node binary", () => {
+  assert.deepEqual(npmInvocation(["install", "C:\\runner temp\\candidate.tgz"], "win32", "C:\\node\\node.exe"), {
+    executable: "C:\\node\\node.exe",
+    args: ["C:\\node\\node_modules\\npm\\bin\\npm-cli.js", "install", "C:\\runner temp\\candidate.tgz"],
   });
 });
 
-test("npm invocation rejects shell metacharacters and an untrusted COMSPEC", () => {
+test("npm invocation rejects an untrusted Windows Node executable", () => {
   assert.throws(
-    () => npmInvocation(["install", "C:\\tmp\\candidate&other.tgz"], "win32", { ComSpec: "C:\\Windows\\System32\\cmd.exe" }),
-    (error) => error.code === "AAS_VERIFIER_UNSAFE_NPM_ARGUMENT",
-  );
-  assert.throws(
-    () => npmInvocation(["install"], "win32", { ComSpec: "relative\\cmd.exe" }),
-    (error) => error.code === "AAS_VERIFIER_UNSAFE_COMSPEC",
+    () => npmInvocation(["install"], "win32", "relative\\node.exe"),
+    (error) => error.code === "AAS_VERIFIER_UNSAFE_NODE_EXECUTABLE",
   );
 });
