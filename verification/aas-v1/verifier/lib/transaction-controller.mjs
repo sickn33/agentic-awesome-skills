@@ -68,6 +68,49 @@ function recoveryArtifacts(targetRoot) {
   return [...rootNames, ...nested.map((entry) => `.aas/transactions/${entry.path}`)].sort();
 }
 
+export function selectBackupSkillIds(packageRoot, primarySkillId, limit = 12) {
+  const metadataPath = path.join(packageRoot, "tools", "lib", "aas-v1", "metadata-overrides.v1.json");
+  const metadata = JSON.parse(fs.readFileSync(metadataPath, "utf8"));
+  const skills = metadata?.skills;
+  assert(skills && typeof skills === "object" && !Array.isArray(skills), "AAS_TRANSACTION_CONTROLLER_BACKUP_METADATA_INVALID");
+  const acceptedJudgment = (value) => ["known", "notApplicable"].includes(value?.status);
+  const selected = Object.entries(skills)
+    .filter(([id, entry]) => id !== primarySkillId
+      && /^[a-z0-9][a-z0-9-]*$/.test(id)
+      && fs.existsSync(path.join(packageRoot, "skills", id, "SKILL.md"))
+      && entry?.reviewDecision === "supported"
+      && Array.isArray(entry?.capabilities)
+      && entry.capabilities.length > 0
+      && entry?.risk?.status === "known"
+      && ["none", "safe"].includes(entry.risk.value)
+      && entry?.source?.status === "known"
+      && entry.source.value != null
+      && entry?.setup?.status === "known"
+      && entry.setup.value !== "manual"
+      && entry?.targets?.codex?.status === "known"
+      && entry.targets.codex.value === "supported"
+      && acceptedJudgment(entry.dependencies)
+      && acceptedJudgment(entry.conflicts)
+      && acceptedJudgment(entry.validation))
+    .map(([id]) => {
+      const entries = snapshotTree(path.join(packageRoot, "skills", id)).entries;
+      return {
+        id,
+        files: entries.filter((entry) => entry.type === "file").length,
+        size: entries.filter((entry) => entry.type === "file").reduce((total, entry) => total + entry.size, 0),
+      };
+    })
+    .sort((left, right) => right.size - left.size
+      || right.files - left.files
+      || (left.id < right.id ? -1 : left.id > right.id ? 1 : 0))
+    .slice(0, limit);
+  assert(selected.length === limit, "AAS_TRANSACTION_CONTROLLER_BACKUP_FIXTURE_INCOMPLETE", {
+    required: limit,
+    selected: selected.length,
+  });
+  return selected.map((entry) => entry.id);
+}
+
 function finalState(targetRoot, skillId, expectedDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
@@ -615,12 +658,7 @@ export async function generateTransactionEvidence({ tarball, workRoot, zones }) 
   // the external observer a useful staging window without modifying the
   // verified runtime or manufacturing a synthetic source tree.
   const skillId = fs.existsSync(path.join(runtime.packageRoot, "skills", "react-best-practices")) ? "react-best-practices" : "ai-agents-architect";
-  const backupSkillIds = fs.readdirSync(path.join(runtime.packageRoot, "skills"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name !== skillId && /^[a-z0-9][a-z0-9-]*$/.test(entry.name))
-    .map((entry) => entry.name)
-    .sort()
-    .slice(0, 12);
-  assert(backupSkillIds.length === 12, "AAS_TRANSACTION_CONTROLLER_BACKUP_FIXTURE_INCOMPLETE");
+  const backupSkillIds = selectBackupSkillIds(runtime.packageRoot, skillId);
   const context = {
     workRoot: path.join(workRoot, "cases"), cacheRoot, runtime: promoted.runtimeIdentity,
     aas: runtime.bins.aas, skillId, backupSkillIds, env: candidateEnvironment(zones), zones,
