@@ -127,7 +127,9 @@ export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "") {
     }
   }
   if (readinessToken && readinessIndex < 0) {
-    throw Object.assign(new Error("fs_usage missed the pre-exec readiness canary"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    const callNames = [...new Set(lines.map((line) => line.match(/^\d{2}:\d{2}:\d{2}\.\d+\s+(\S+)/)?.[1]).filter(Boolean))].slice(0, 24);
+    const diagnostic = JSON.stringify({ eventLines: lines.length, readinessTokenAnywhere: text.includes(readinessToken), callNames });
+    throw Object.assign(new Error(`fs_usage missed the pre-exec readiness canary: ${diagnostic}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
   const bootstrapIndex = readinessToken ? execLines.findIndex((entry) => entry.index > readinessIndex) : 0;
   if (bootstrapIndex < 0 || !execLines.length) {
@@ -167,7 +169,7 @@ async function macObserved(executable, args, options) {
   const observerTimeoutMs = (options.timeoutMs ?? 30_000) + 5_000;
   const observerPromise = runProcess("sudo", [
     "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
-    "-f", "filesys", "-f", "network", "-f", "exec", String(rootPid),
+    String(rootPid),
   ], {
     ...options,
     detached: true,
