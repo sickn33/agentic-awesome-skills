@@ -67,7 +67,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 
 class SagaState(Enum):
@@ -98,6 +98,7 @@ class Saga:
     data: Dict[str, Any]
     steps: List[SagaStep]
     current_step: int = 0
+    version: int = 0
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: datetime = field(default_factory=datetime.utcnow)
 
@@ -120,6 +121,11 @@ class SagaOrchestrator(ABC):
         """Unique saga type identifier."""
         pass
 
+    @abstractmethod
+    def payload_for_step(self, step: SagaStep, data: Dict) -> Dict:
+        """Return only the fields required by this step's target service."""
+        pass
+
     async def start(self, data: Dict) -> Saga:
         """Start a new saga."""
         saga = Saga(
@@ -133,17 +139,25 @@ class SagaOrchestrator(ABC):
         await self._execute_next_step(saga)
         return saga
 
-    async def handle_step_completed(self, saga_id: str, step_name: str, result: Dict):
+    async def handle_step_completed(
+        self, saga_id: str, step_name: str, event_id: str, result: Dict
+    ):
         """Handle successful step completion."""
-        saga = await self.saga_store.get(saga_id)
+        # get_for_update and save_with_event must be one atomic transaction.
+        saga = await self.saga_store.get_for_update(saga_id)
+        if await self.saga_store.has_processed_event(saga_id, event_id):
+            return  # at-least-once delivery: duplicate completion is a no-op
+        if saga.current_step >= len(saga.steps):
+            raise ValueError("saga already terminal")
 
-        # Update step
-        for step in saga.steps:
-            if step.name == step_name:
-                step.status = "completed"
-                step.result = result
-                step.executed_at = datetime.utcnow()
-                break
+        step = saga.steps[saga.current_step]
+        if step.name != step_name or step.status != "executing":
+            raise ValueError("out-of-order or unexpected step completion")
+
+        expected_version = saga.version
+        step.status = "completed"
+        step.result = result
+        step.executed_at = datetime.utcnow()
 
         saga.current_step += 1
         saga.updated_at = datetime.utcnow()
@@ -151,11 +165,15 @@ class SagaOrchestrator(ABC):
         # Check if saga is complete
         if saga.current_step >= len(saga.steps):
             saga.state = SagaState.COMPLETED
-            await self.saga_store.save(saga)
+            await self.saga_store.save_with_event(
+                saga, event_id, expected_version=expected_version
+            )
             await self._on_saga_completed(saga)
         else:
             saga.state = SagaState.PENDING
-            await self.saga_store.save(saga)
+            await self.saga_store.save_with_event(
+                saga, event_id, expected_version=expected_version
+            )
             await self._execute_next_step(saga)
 
     async def handle_step_failed(self, saga_id: str, step_name: str, error: str):
@@ -191,7 +209,7 @@ class SagaOrchestrator(ABC):
             {
                 "saga_id": saga.saga_id,
                 "step_name": step.name,
-                **saga.data
+                **self.payload_for_step(step, saga.data)
             }
         )
 
@@ -284,6 +302,15 @@ class OrderFulfillmentSaga(SagaOrchestrator):
                 compensation="NotificationService.SendCancellationNotice"
             )
         ]
+
+    def payload_for_step(self, step: SagaStep, data: Dict) -> Dict:
+        fields = {
+            "reserve_inventory": ("order_id", "items"),
+            "process_payment": ("order_id", "payment_method"),
+            "create_shipment": ("order_id", "shipping_address"),
+            "send_confirmation": ("order_id", "customer_id"),
+        }[step.name]
+        return {name: data[name] for name in fields}
 
 
 # Usage

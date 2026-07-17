@@ -433,12 +433,12 @@ fp-ts values like `O.some(1)` create new objects each render. React sees them as
 ### The Problem
 
 ```typescript
-// ❌ BAD: Creates new Option every render
+// ❌ BAD: Creates a new Option during every render
 function BadComponent() {
-  const [value, setValue] = useState(O.some(1))
+  const value = O.some(1)
 
   useEffect(() => {
-    // This runs EVERY render because O.some(1) !== O.some(1)
+    // This runs after every render because value has a new reference
     console.log('value changed')
   }, [value])
 }
@@ -588,10 +588,12 @@ function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
   return <div>{user.name}</div>
 }
 
-// Parent provides the promise
-function App() {
-  const userPromise = fetchUser('1')  // Start fetching immediately
+// Create or obtain a cached Promise outside the suspending component.
+// In an application, use the framework's request/cache primitive.
+const userPromise = fetchUser('1')
 
+// Parent provides the stable promise
+function App() {
   return (
     <Suspense fallback={<Spinner />}>
       <UserProfile userPromise={userPromise} />
@@ -616,6 +618,7 @@ async function submitForm(
   formData: FormData
 ): Promise<FormState> {
   const data = {
+    name: formData.get('name') as string,
     email: formData.get('email') as string,
     password: formData.get('password') as string,
   }
@@ -643,6 +646,7 @@ function SignupForm() {
 
   return (
     <form action={formAction}>
+      <input name="name" type="text" />
       <input name="email" type="email" />
       <input name="password" type="password" />
 
@@ -659,7 +663,7 @@ function SignupForm() {
 ### useOptimistic for Instant Feedback (React 19+)
 
 ```typescript
-import { useOptimistic } from 'react'
+import { startTransition, useOptimistic } from 'react'
 
 function TodoList({ todos }: { todos: Todo[] }) {
   const [optimisticTodos, addOptimisticTodo] = useOptimistic(
@@ -667,14 +671,14 @@ function TodoList({ todos }: { todos: Todo[] }) {
     (state, newTodo: Todo) => [...state, { ...newTodo, pending: true }]
   )
 
-  const addTodo = async (text: string) => {
+  const addTodo = (text: string) => {
     const newTodo = { id: crypto.randomUUID(), text, done: false }
 
-    // Immediately show in UI
-    addOptimisticTodo(newTodo)
-
-    // Actually save (will reconcile when done)
-    await saveTodo(newTodo)
+    startTransition(async () => {
+      // Optimistic setters must run inside an Action/Transition.
+      addOptimisticTodo(newTodo)
+      await saveTodo(newTodo)
+    })
   }
 
   return (
