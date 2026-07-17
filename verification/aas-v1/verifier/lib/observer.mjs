@@ -111,6 +111,25 @@ export function parseMacFsUsage(filesystemText, networkText, execText, zones = {
   return summarizeEvents(events);
 }
 
+export function parseMacCombinedFsUsage(text, zones = {}) {
+  const events = [];
+  const execLines = [];
+  for (const line of fsUsageLines(text)) {
+    if (/\b(?:socket|connect|bind|listen|accept|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo)\b/i.test(line)) {
+      events.push({ kind: "network", targetDigest: redactToken(line, zones) });
+    } else if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
+      events.push({ kind: "write", targetDigest: redactToken(line, zones) });
+    } else if (/\b(?:execve|posix_spawn|exec|spawn)\b/i.test(line)) {
+      execLines.push(line);
+    }
+  }
+  if (!execLines.length) {
+    throw Object.assign(new Error("fs_usage did not observe the gated bootstrap exec"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
+  }
+  for (const line of execLines.slice(1)) events.push({ kind: "process", targetDigest: redactToken(line, zones) });
+  return summarizeEvents(events);
+}
+
 async function macObserved(executable, args, options) {
   if (!commandExists("fs_usage")) throw Object.assign(new Error("fs_usage is required"), { code: "AAS_OBSERVER_UNAVAILABLE" });
   const gate = path.join(options.evidenceDir, `observer-${process.pid}.go`);
@@ -123,43 +142,63 @@ async function macObserved(executable, args, options) {
     onSpawn(child) { rootPid = child.pid; },
   });
   if (!rootPid) throw Object.assign(new Error("Observed process did not start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
-  const observers = ["filesys", "network", "exec"].map((mode) => {
-    let pid = 0;
-    const observerTimeoutMs = (options.timeoutMs ?? 30_000) + 5_000;
-    const promise = runProcess("sudo", [
-      "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)), "-f", mode, String(rootPid),
-    ], {
-      ...options,
-      detached: true,
-      timeoutMs: observerTimeoutMs,
-      maxOutputBytes: 8 * 1024 * 1024,
-      onSpawn(child) { pid = child.pid; },
-    });
-    return { mode, get pid() { return pid; }, promise };
+  let observerPid = 0;
+  let observerReady = false;
+  let resolveReady;
+  let rejectReady;
+  let startupText = "";
+  const readiness = new Promise((resolve, reject) => {
+    resolveReady = resolve;
+    rejectReady = reject;
   });
-  await new Promise((resolve) => setTimeout(resolve, 1_500));
+  const observerTimeoutMs = (options.timeoutMs ?? 30_000) + 5_000;
+  const observeStartup = (chunk) => {
+    if (observerReady) return;
+    startupText = `${startupText}${chunk.toString("utf8")}`.slice(-512);
+    if (/Tracing active\. Please wait/i.test(startupText)) {
+      observerReady = true;
+      resolveReady();
+    }
+  };
+  const observerPromise = runProcess("sudo", [
+    "-n", "/usr/bin/fs_usage", "-w", "-t", String(Math.ceil(observerTimeoutMs / 1000)),
+    "-f", "filesys", "-f", "network", "-f", "exec", String(rootPid),
+  ], {
+    ...options,
+    detached: true,
+    timeoutMs: observerTimeoutMs,
+    maxOutputBytes: 8 * 1024 * 1024,
+    onSpawn(child) { observerPid = child.pid; },
+    onStdoutData: observeStartup,
+    onStderrData: observeStartup,
+  });
+  observerPromise.then((trace) => {
+    if (!observerReady) rejectReady(Object.assign(new Error(`fs_usage exited before readiness (${trace.code})`), { code: "AAS_OBSERVER_UNAVAILABLE" }));
+  }, rejectReady);
+  const readinessTimer = setTimeout(() => {
+    if (!observerReady) rejectReady(Object.assign(new Error("fs_usage readiness timed out"), { code: "AAS_OBSERVER_UNAVAILABLE" }));
+  }, 5_000);
+  await readiness.finally(() => clearTimeout(readinessTimer));
   fs.writeFileSync(gate, "go\n", { mode: 0o600 });
   const result = await commandPromise;
-  for (const observer of observers) {
-    if (observer.pid) {
-      await runProcess("sudo", ["-n", "/bin/kill", "-INT", `-${observer.pid}`], { timeoutMs: 5_000 });
-    }
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  if (observerPid) {
+    await runProcess("sudo", ["-n", "/bin/kill", "-INT", `-${observerPid}`], { timeoutMs: 5_000 });
   }
-  const traces = await Promise.all(observers.map(async (observer) => {
-    const trace = await observer.promise;
-    return [observer.mode, `${trace.stdout}\n${trace.stderr}`];
-  }));
+  const trace = await observerPromise;
+  const raw = `${trace.stdout}\n${trace.stderr}`;
   fs.rmSync(gate, { force: true });
   fs.rmSync(launcher, { force: true });
-  const byMode = Object.fromEntries(traces);
   return {
     result,
-    observation: parseMacFsUsage(byMode.filesys, byMode.network, byMode.exec, options.zones),
+    observation: parseMacCombinedFsUsage(raw, options.zones),
     backend: "macos-fs_usage-process",
-    diagnostics: Object.fromEntries(traces.map(([mode, raw]) => [mode, {
+    diagnostics: {
       bytes: Buffer.byteLength(raw),
       eventLines: fsUsageLines(raw).length,
-    }])),
+      startupObserved: observerReady,
+      preview: fsUsageLines(raw).length ? null : raw.trim().slice(0, 160),
+    },
   };
 }
 
@@ -205,7 +244,7 @@ export async function runObserved(executable, args, options) {
 
 export async function selfTestObserver(options) {
   const sentinel = path.join(options.evidenceDir, `sentinel-${process.pid}.txt`);
-  const program = `const fs=require('node:fs'),net=require('node:net');fs.writeFileSync(${JSON.stringify(sentinel)},'sentinel');const s=net.connect({host:'127.0.0.1',port:9});s.on('error',()=>setTimeout(()=>process.exit(0),750));setTimeout(()=>process.exit(1),2000);`;
+  const program = `const fs=require('node:fs'),net=require('node:net');const fd=fs.openSync(${JSON.stringify(sentinel)},'w',0o600);fs.writeSync(fd,'sentinel');fs.fsyncSync(fd);fs.closeSync(fd);const server=net.createServer(s=>s.end());server.listen(0,'127.0.0.1',()=>{const s=net.connect({host:'127.0.0.1',port:server.address().port},()=>s.end());s.on('close',()=>server.close(()=>setTimeout(()=>process.exit(0),500)));s.on('error',()=>process.exit(2));});setTimeout(()=>process.exit(1),3000);`;
   const observed = await runObserved(process.execPath, ["-e", program], { ...options, timeoutMs: 10_000 });
   fs.rmSync(sentinel, { force: true });
   if (observed.observation.networkAttempts < 1 || observed.observation.writeAttempts < 1) {

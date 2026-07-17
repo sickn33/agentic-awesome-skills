@@ -13,7 +13,7 @@ $arguments = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($Argume
 $providers = @(
   "Microsoft-Windows-Kernel-Process",
   "Microsoft-Windows-Kernel-File",
-  "Microsoft-Windows-Kernel-Network",
+  "Microsoft-Windows-Winsock-AFD",
   "Microsoft-Windows-DNS-Client"
 )
 
@@ -49,21 +49,58 @@ try {
     }
     return 0
   }
+  function Convert-ObservedInteger([string]$raw) {
+    $value = $raw.Trim()
+    $parsed = 0
+    if ([int]::TryParse($value, [ref]$parsed)) { return $parsed }
+    if ($value -match '^0[xX][0-9a-fA-F]+$') {
+      try { return [Convert]::ToInt32($value.Substring(2), 16) } catch { }
+    }
+    return 0
+  }
+  function Get-PayloadInteger($row, [string]$name) {
+    foreach ($property in $row.PSObject.Properties) {
+      $text = [string]$property.Value
+      $match = [regex]::Match($text, "(?i)(?:^|[;,{\s])$([regex]::Escape($name))\s*[:=]\s*(0[xX][0-9a-fA-F]+|[0-9]+)")
+      if ($match.Success) { return Convert-ObservedInteger $match.Groups[1].Value }
+    }
+    return 0
+  }
   $totalRows = 0
   $rootRows = 0
   $networkRows = 0
   $writeRows = 0
+  $winsockCreateRows = 0
+  $winsockDecodedPids = New-Object System.Collections.Generic.List[int]
+  $processStartRows = 0
   $rootEventSamples = New-Object System.Collections.Generic.List[string]
   foreach ($row in (Import-Csv -LiteralPath $csv)) {
     $totalRows++
     $serialized = $row | ConvertTo-Json -Compress
     $eventName = (($row.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join " ")
-    if ($eventName -match "(?i)(Process.*Start|Start.*Process)") {
-      $parentPid = Get-IntegerField $row @("(?i)^Parent.*Process.*Id$", "(?i)^Parent.*PID$")
-      $newPid = Get-IntegerField $row @("(?i)^New.*Process.*Id$", "(?i)^Process.*Id$", "(?i)^PID$")
+    $providerName = ([string]$row.'Event Name').Trim()
+    $eventId = Get-IntegerField $row @("(?i)^Event ID$")
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 1) {
+      $processStartRows++
+      $parentPid = Get-PayloadInteger $row 'ParentProcessID'
+      if ($parentPid -eq 0) { $parentPid = Get-PayloadInteger $row 'ParentProcessId' }
+      $newPid = Get-PayloadInteger $row 'ProcessID'
+      if ($newPid -eq 0) { $newPid = Get-PayloadInteger $row 'ProcessId' }
       if ($childPids.Contains($parentPid) -and $newPid -gt 0 -and !$childPids.Contains($newPid)) {
         $childPids.Add($newPid) | Out-Null
         $lines.Add("process|$newPid|parent=$parentPid")
+      }
+      continue
+    }
+    if ($providerName -eq 'Microsoft-Windows-Winsock-AFD' -and $eventId -eq 1) {
+      $winsockCreateRows++
+      $userModePid = Get-PayloadInteger $row 'UserModePid'
+      if ($userModePid -gt 0 -and $winsockDecodedPids.Count -lt 8 -and !$winsockDecodedPids.Contains($userModePid)) {
+        $winsockDecodedPids.Add($userModePid)
+      }
+      if ($childPids.Contains($userModePid)) {
+        $networkRows++
+        $lines.Add("network|$userModePid|provider=$providerName;event=$eventId")
       }
       continue
     }
@@ -76,13 +113,13 @@ try {
       } | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join ';')
       if ($safeIdentity -and !$rootEventSamples.Contains($safeIdentity)) { $rootEventSamples.Add($safeIdentity) }
     }
-    if ($eventName -match "(?i)(TCP|UDP|DNS|Connect|Socket|Network)") {
+    if ($providerName -eq 'Microsoft-Windows-DNS-Client') {
       $networkRows++
-      $lines.Add("network|$pidValue|$serialized")
+      $lines.Add("network|$pidValue|provider=$providerName;event=$eventId")
     }
-    elseif ($eventName -match "(?i)(File.*(?:Write|Delete|Rename)|Directory.*(?:Create|Delete)|SetInformation|Flush|CreateAlways|CreateNew|Overwrite|Supersede)") {
+    elseif ($providerName -eq 'Microsoft-Windows-Kernel-File' -and $eventId -in @(16,17,18,19)) {
       $writeRows++
-      $lines.Add("write|$pidValue|$serialized")
+      $lines.Add("write|$pidValue|provider=$providerName;event=$eventId")
     }
   }
   [IO.File]::WriteAllLines($TraceOutput, $lines, (New-Object Text.UTF8Encoding($false)))
@@ -100,6 +137,9 @@ try {
       rootRows = $rootRows
       networkRows = $networkRows
       writeRows = $writeRows
+      winsockCreateRows = $winsockCreateRows
+      winsockDecodedPids = @($winsockDecodedPids)
+      processStartRows = $processStartRows
       rootEventSamples = @($rootEventSamples)
     }
   }

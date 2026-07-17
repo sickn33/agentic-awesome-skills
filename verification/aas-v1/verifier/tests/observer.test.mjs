@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseDelimitedObserver, parseLinuxStrace, parseMacFsUsage } from "../lib/observer.mjs";
+import { parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage } from "../lib/observer.mjs";
 
 test("strace parser counts failed network attempts and non-stream writes", () => {
   const result = parseLinuxStrace([
@@ -31,4 +31,15 @@ test("macOS fs_usage parser separates network, writes, and child execs", () => {
   assert.equal(result.networkAttempts, 1);
   assert.equal(result.writeAttempts, 1);
   assert.equal(result.childProcesses, 1);
+});
+
+test("combined macOS fs_usage parser requires bootstrap lineage and classifies native calls", () => {
+  const result = parseMacCombinedFsUsage([
+    "12:00:00.010 execve node node.1",
+    "12:00:00.020 WrData[A] F=3 /tmp/canary node.1",
+    "12:00:00.030 connect 127.0.0.1:9 node.1",
+    "12:00:00.040 posix_spawn child node.1",
+  ].join("\n"));
+  assert.deepEqual([result.networkAttempts, result.writeAttempts, result.childProcesses], [1, 1, 1]);
+  assert.throws(() => parseMacCombinedFsUsage("12:00:00.020 WrData[A] F=3 /tmp/canary node.1\n"), /bootstrap exec/);
 });

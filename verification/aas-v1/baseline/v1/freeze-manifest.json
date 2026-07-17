@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-e63a0081fb257d153801ef4f439583ab65f13e76a74de5febd463da4c6d29b07",
+  "rootDigest": "sha256-c5865d3d2cdfc18a91af5b2d929708b7a417fb7ff8de65ce60aa3a872735755e",
   "fileCount": 754,
   "files": [
     {
@@ -3503,8 +3503,8 @@
     },
     {
       "path": "baseline/v1/runtime-matrix.json",
-      "bytes": 8711,
-      "sha256": "d6f38420829fcba461a6232f31da9c3c5bb0f8ec9d8146cc4e336c161cd53b64"
+      "bytes": 8781,
+      "sha256": "cafe11ab150652fbd4b8fd7c052e60ddafe30a745ca37fc82625e56e25fc530f"
     },
     {
       "path": "baseline/v1/verifier-manifest.json",
@@ -3698,8 +3698,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 10861,
-      "sha256": "2a8067a24b58e9ce7c5b0e4847e36b60d3aa325c99b20b976f259595b31ca98e"
+      "bytes": 12820,
+      "sha256": "de457dcaf6b0d6184ae3005bc76b811cf7e4340555fdff1b0a9c58e3999b036c"
     },
     {
       "path": "verifier/lib/prng.mjs",
@@ -3708,8 +3708,8 @@
     },
     {
       "path": "verifier/lib/process.mjs",
-      "bytes": 1714,
-      "sha256": "1d012de74092ea787b220c3741c5b597c1f7e6c9fabcd5a8ef3cf3d79abeec52"
+      "bytes": 1861,
+      "sha256": "7b155892ea76a6998c0d63751938b60568192f801affd516d02cd5d53b3374bb"
     },
     {
       "path": "verifier/lib/receipt.mjs",
@@ -3733,8 +3733,8 @@
     },
     {
       "path": "verifier/observers/windows-etw.ps1",
-      "bytes": 4955,
-      "sha256": "cbe1628678ac2b9fdd620931aa2d64b93cbc564bb3949e23d9fead22a9c05d5c"
+      "bytes": 6615,
+      "sha256": "d005b766d56513a931f3f6df8aff18b5db9ff76fc7a50609283ca61968520c5a"
     },
     {
       "path": "verifier/package-lock.json",
@@ -3768,8 +3768,8 @@
     },
     {
       "path": "verifier/tests/observer.test.mjs",
-      "bytes": 1597,
-      "sha256": "9a951863a3f9b3dc16073430c3a80f3b2e37b98537fff4dd2532f883218907b6"
+      "bytes": 2192,
+      "sha256": "6ade35bd1e611d379483c7c99c2ff4bf331f6316582fb6068a349848b6b82ee2"
     },
     {
       "path": "verifier/tests/transaction-evidence.test.mjs",

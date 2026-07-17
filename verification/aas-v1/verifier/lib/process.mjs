@@ -18,6 +18,8 @@ export function runProcess(executable, args, options = {}) {
     const maxOutputBytes = options.maxOutputBytes ?? 4 * 1024 * 1024;
     let killedForOutput = false;
     const collect = (chunks, kind) => (chunk) => {
+      const callback = kind === "stdout" ? options.onStdoutData : options.onStderrData;
+      if (typeof callback === "function") callback(chunk);
       if (kind === "stdout") stdoutBytes += chunk.length;
       else stderrBytes += chunk.length;
       if (stdoutBytes + stderrBytes > maxOutputBytes) {
