@@ -111,6 +111,15 @@ export function selectBackupSkillIds(packageRoot, primarySkillId, limit = 12) {
   return selected.map((entry) => entry.id);
 }
 
+export function walBoundaryIsValid(className, walEvents) {
+  if (!Array.isArray(walEvents) || walEvents.some((event) => typeof event !== "string")) return false;
+  if (className === "lock") return walEvents.length === 0;
+  if (className === "fsync") return !walEvents.includes("committed");
+  if (className === "journal") return walEvents[0] === "started" && !walEvents.includes("committed");
+  if (className === "commit") return walEvents.includes("committed");
+  return !walEvents.includes("committed");
+}
+
 function finalState(targetRoot, skillId, expectedDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
@@ -435,15 +444,7 @@ async function faultCase(context, className) {
     && observed.result.outputLimitExceeded !== true
     && (process.platform !== "win32" || observed.diagnostics?.processTreeEmpty === true);
   const walEvents = driverValue?.wal?.events || [];
-  const walBoundaryValid = className === "lock"
-    ? walEvents.length === 0
-    : className === "fsync"
-      ? !walEvents.includes("committed")
-      : className === "journal"
-        ? walEvents.length === 1 && walEvents[0] === "started"
-        : className === "commit"
-          ? walEvents.includes("committed")
-          : !walEvents.includes("committed");
+  const walBoundaryValid = walBoundaryIsValid(className, walEvents);
   // fs_usage observes the byte-identical child executable directly but does
   // not emit process-creation records. On macOS, executable binding plus the
   // native write trace establishes lineage; Linux/Windows must also expose a

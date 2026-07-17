@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { selectBackupSkillIds } from "../lib/transaction-controller.mjs";
+import { selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -101,4 +101,16 @@ test("backup fixtures use only policy-safe reviewed skills", (t) => {
     fs.writeFileSync(path.join(skillRoot, "SKILL.md"), `# ${id}\n${id === "safe-b" ? "larger fixture\n" : ""}`);
   }
   assert.deepEqual(selectBackupSkillIds(root, "unused-primary", 2), ["safe-b", "safe-a"]);
+});
+
+test("WAL boundary rules reject commits without rejecting reversible recovery metadata", () => {
+  assert.equal(walBoundaryIsValid("lock", []), true);
+  assert.equal(walBoundaryIsValid("lock", ["started"]), false);
+  assert.equal(walBoundaryIsValid("journal", ["started", "layoutDirectoryCreated"]), true);
+  assert.equal(walBoundaryIsValid("journal", []), false);
+  assert.equal(walBoundaryIsValid("journal", ["started", "committed"]), false);
+  assert.equal(walBoundaryIsValid("fsync", ["started", "mutationIntent"]), true);
+  assert.equal(walBoundaryIsValid("fsync", ["started", "committed"]), false);
+  assert.equal(walBoundaryIsValid("commit", ["started", "committed"]), true);
+  assert.equal(walBoundaryIsValid("backup", ["started", "committed"]), false);
 });
