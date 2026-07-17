@@ -110,7 +110,7 @@ try {
     $providerName = ([string]$row.'Event Name').Trim()
     $eventId = Get-IntegerField $row @("(?i)^Event ID$")
     $opcode = Get-IntegerField $row @("(?i)^Opcode$")
-    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 3 -and $opcode -eq 1) {
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 1 -and $opcode -eq 1) {
       $processStartRows++
       $parentPid = Get-PayloadInteger $row 'ParentProcessID'
       $newPid = Get-PayloadInteger $row 'ProcessID'
@@ -120,7 +120,7 @@ try {
       }
       continue
     }
-    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 4 -and $opcode -eq 2) {
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 2 -and $opcode -eq 2) {
       $stoppedPid = Get-PayloadInteger $row 'ProcessID'
       if ($stoppedPid -eq $rootPid) {
         $rootStopRows++

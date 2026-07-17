@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-d8db573c20f57337f639fa6e204f2776b5038ddeb6e8f7a17e4294c7f1e22f75",
+  "rootDigest": "sha256-3a1a266da01c1681289a85872b3e8ae8b24fe2f554ed65fb35d16650cb69c6ac",
   "fileCount": 757,
   "files": [
     {
@@ -3744,7 +3744,7 @@
     {
       "path": "verifier/observers/windows-etw.ps1",
       "bytes": 8561,
-      "sha256": "99f38a65a5e1665a0d6d95d6fb4cf7a2dcee1707a038bae5c60d1b91fd6e3183"
+      "sha256": "42a34820d4949a8a4e3cf2fac0ee30c66825bd80f8e9046ce5d1bc8f8f55f0c3"
     },
     {
       "path": "verifier/observers/windows-job.cs",
