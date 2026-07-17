@@ -166,6 +166,7 @@ async function macObserved(executable, args, options) {
   fs.chmodSync(observedExecutable, 0o700);
   const encodedArgs = Buffer.from(JSON.stringify(args), "utf8").toString("base64");
   fs.writeFileSync(launcher, [
+    `process.title = ${JSON.stringify(observedName)};`,
     "const fs = require('node:fs');",
     `const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600);`,
     "fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd);",
@@ -187,13 +188,16 @@ async function macObserved(executable, args, options) {
     onSpawn(child) { observerPid = child.pid; },
   });
   await new Promise((resolve) => setTimeout(resolve, 1_000));
-  const readinessProgram = `const fs=require('node:fs');const fd=fs.openSync(${JSON.stringify(readinessCanary)},'w',0o600);fs.writeSync(fd,'ready');fs.fsyncSync(fd);fs.closeSync(fd);`;
-  const readinessResult = await runProcess(observedExecutable, ["-e", readinessProgram], {
-    cwd: options.cwd,
-    env: options.env,
-    timeoutMs: 5_000,
-  });
-  if (readinessResult.code !== 0) throw Object.assign(new Error("macOS readiness process failed"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+  const readinessProgram = `process.title=${JSON.stringify(observedName)};const fs=require('node:fs');const fd=fs.openSync(${JSON.stringify(readinessCanary)},'w',0o600);fs.writeSync(fd,'ready');fs.fsyncSync(fd);fs.closeSync(fd);`;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const readinessResult = await runProcess(observedExecutable, ["-e", readinessProgram], {
+      cwd: options.cwd,
+      env: options.env,
+      timeoutMs: 5_000,
+    });
+    if (readinessResult.code !== 0) throw Object.assign(new Error("macOS readiness process failed"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
   const result = await runProcess(observedExecutable, [launcher], options);
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (observerPid) {
