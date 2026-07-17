@@ -43,12 +43,12 @@ jobs:
           sha="${PR_SHA:-$INPUT_SHA}"
           [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || exit 64
           echo "commit=$sha" >> "$GITHUB_OUTPUT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           ref: ${{ steps.identity.outputs.commit }}
           path: candidate
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 24.18.0
           cache: npm
@@ -60,7 +60,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/aas-candidate"
           npm pack --ignore-scripts --json --pack-destination "$RUNNER_TEMP/aas-candidate" > "$RUNNER_TEMP/aas-pack.json"
           test "$(find "$RUNNER_TEMP/aas-candidate" -maxdepth 1 -name '*.tgz' -type f | wc -l | tr -d ' ')" = 1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: aas-v1-candidate-${{ steps.identity.outputs.commit }}
           path: ${{ runner.temp }}/aas-candidate/*.tgz
@@ -109,16 +109,16 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout protected verifier revision
-        uses: actions/checkout@v4
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           ref: ${{ github.workflow_sha }}
           path: trusted
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: aas-v1-candidate-${{ needs.candidate-pack.outputs.commit }}
           path: ${{ runner.temp }}/candidate
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -147,7 +147,7 @@ jobs:
             --out "$RUNNER_TEMP/aas-v1-${{ matrix.id }}.json"
       - name: Upload immutable job receipt
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: aas-v1-receipt-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.id }}
           path: ${{ runner.temp }}/aas-v1-${{ matrix.id }}.json
@@ -160,17 +160,17 @@ jobs:
     needs: [candidate-pack, verify]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           ref: ${{ github.workflow_sha }}
           path: trusted
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           pattern: aas-v1-receipt-${{ github.run_id }}-${{ github.run_attempt }}-*
           path: ${{ runner.temp }}/receipts
           merge-multiple: true
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 24.18.0
       - name: Merge and enforce all six receipts
@@ -180,7 +180,7 @@ jobs:
           node trusted/verification/aas-v1/verifier/bin/merge-product-evidence.mjs \
             --out "$RUNNER_TEMP/aas-v1-evidence-bundle.json" \
             "$RUNNER_TEMP"/receipts/*.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: aas-v1-evidence-${{ github.run_id }}-${{ github.run_attempt }}
