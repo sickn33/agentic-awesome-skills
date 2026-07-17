@@ -1,6 +1,6 @@
 ---
 name: yann-lecun-tecnico
-description: "Sub-skill técnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervised Learning (SimCLR, MAE, BYOL), Energy-Based Models (EBMs) e código PyTorch completo."
+description: "Referência técnica sobre CNNs, LeNet, backpropagation, JEPA, AMI, self-supervised learning e energy-based models, com exemplos PyTorch simplificados."
 risk: safe
 source: community
 date_added: '2026-03-06'
@@ -23,11 +23,11 @@ tools:
 
 ## Overview
 
-Sub-skill técnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervised Learning (SimCLR, MAE, BYOL), Energy-Based Models (EBMs) e código PyTorch completo.
+Referência técnica sobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI, Self-Supervised Learning (SimCLR, MAE, BYOL), Energy-Based Models (EBMs) e exemplos PyTorch simplificados.
 
 ## When to Use This Skill
 
-- When you need specialized assistance with this domain
+- Ao comparar arquiteturas JEPA/SSL/EBM, revisar fórmulas ou preparar um protótipo educacional PyTorch que será validado contra o paper e a implementação oficial.
 
 ## Do Not Use This Skill When
 
@@ -37,9 +37,9 @@ Sub-skill técnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JE
 
 ## How It Works
 
-> Este módulo é carregado pelo agente yann-lecun principal quando a conversa
-> exige profundidade técnica. Você continua sendo LeCun — apenas com acesso
-> a todo o arsenal técnico.
+> Este material resume ideias associadas a Yann LeCun e trabalhos relacionados.
+> Não representa o autor, não fala em seu nome e não substitui os papers ou as
+> implementações oficiais.
 
 ---
 
@@ -147,7 +147,7 @@ L_JEPA = ||s_y - s_hat_y||^2    # MSE no espaço de representações
 theta_bar <- m * theta_bar + (1-m) * theta   # m ~ 0.996
 ```
 
-**Por que JEPA supera geração de pixels/tokens**:
+**Comparação conceitual (não é uma superioridade universal)**:
 
 | Abordagem | Prevê | Capacidade gasta em | Semântica |
 |-----------|-------|---------------------|-----------|
@@ -156,82 +156,30 @@ theta_bar <- m * theta_bar + (1-m) * theta   # m ~ 0.996
 | Contrastiva | Invariâncias | Negativos (batch grande) | Sim |
 | **JEPA** | **Representação abstrata** | **Relações semânticas** | **Eficientemente** |
 
-## I-Jepa: Pseudocódigo Pytorch Completo
+## I-Jepa: Esboço Não Executável
 
-```python
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import copy
+```text
+1. Gere máscaras de contexto e alvo com shapes e posições explícitos.
+2. Codifique o contexto com o encoder treinável.
+3. Codifique os alvos com o encoder EMA sem gradiente.
+4. Passe embeddings de contexto e posições-alvo ao predictor.
+5. Compare previsões e embeddings-alvo; atualize o encoder EMA após o optimizer.
+6. Teste shapes, ausência de sobreposição indevida, colapso e reprodutibilidade.
+```
 
-class IJEPA(nn.Module):
-    """
-    I-JEPA: Image Joint Embedding Predictive Architecture
-    Assran et al. 2023 — CVPR
-    """
-    def __init__(self, encoder, predictor, momentum=0.996):
-        super().__init__()
-        self.context_encoder = encoder
-        self.target_encoder = copy.deepcopy(encoder)
-        self.predictor = predictor
-        self.momentum = momentum
-
-        for param in self.target_encoder.parameters():
-            param.requires_grad = False
-
-    @torch.no_grad()
-    def update_target_encoder(self):
-        """EMA update"""
-        for param_ctx, param_tgt in zip(
-            self.context_encoder.parameters(),
-            self.target_encoder.parameters()
-        ):
-            param_tgt.data = (
-                self.momentum * param_tgt.data +
-                (1 - self.momentum) * param_ctx.data
-            )
-
-    def forward(self, images):
-        context_patches, target_patches, masks = self.create_masks(images)
-        context_embeds = self.context_encoder(context_patches, masks)
-
-        with torch.no_grad():
-            target_embeds = self.target_encoder(target_patches)
-
-        predicted_embeds = self.predictor(context_embeds, target_positions)
-        loss = F.mse_loss(predicted_embeds, target_embeds.detach())
-        return loss
-
-    def create_masks(self, images, num_target_blocks=4, context_scale=0.85):
-        """
-        Estratégia I-JEPA:
-        - Múltiplos blocos alvo aleatórios (alto aspect ratio)
-        - Contexto: imagem com blocos alvo mascarados
-        """
-        B, C, H, W = images.shape
-        patch_size = 16
-        n_patches_h = H // patch_size
-        n_patches_w = W // patch_size
-
-        target_masks = generate_random_blocks(
-            n_patches_h, n_patches_w,
-            num_blocks=num_target_blocks,
-            scale_range=(0.15, 0.2),
-            aspect_ratio_range=(0.75, 1.5)
-        )
-        context_mask = ~targe
+Este é apenas o fluxo conceitual: a política de máscaras, positional embeddings,
+normalização, schedules e distributed training deve vir do paper e do código
+oficial da versão escolhida.
 
 ## V-Jepa: Extensão Temporal
 
-```python
+Prever representação de frames futuros em posições mascaradas:
 
-## Prever Representação De Frames Futuros Em Posições Mascaradas
-
+```text
 L_V_JEPA = E[||f_target(video_masked) - g(f_ctx(video_ctx), positions)||^2]
-
-## Sem Nenhum Label.
-
 ```
+
+Sem labels, sujeito às definições e ao protocolo experimental do trabalho citado.
 
 ## Hierarquia De Encoders
 
@@ -370,14 +318,15 @@ class EnergyBasedModel(nn.Module):
         loss = E_pos.mean() - E_neg.mean()
         reg = 0.1 * (E_pos.pow(2).mean() + E_neg.pow(2).mean())
         return loss + reg
-
-## Ebms Capturam Isso Naturalmente — São Sobre Compatibilidade, Não Probabilidade."
-
 ```
+
+EBMs modelam compatibilidade por energia; a interpretação e o método de treino
+dependem da formulação escolhida.
 
 **JEPA como EBM no espaço de representações**:
 ```
 E(x, y) = ||f_theta(x) - g_phi(f_theta_bar(y))||^2
+```
 
 ## Simclr Simplificado
 
@@ -486,7 +435,7 @@ class LeNet5Modern(nn.Module):
 ## Jepa Papers
 
 - Assran et al. (2023). "Self-Supervised Learning from Images with a JEPA" — CVPR 2023 (I-JEPA)
-- Bardes et al. (2024). "V-JEPA: Self-Supervised Learning of Video Representations" — NeurIPS 2023
+- Bardes et al. (2024). "V-JEPA: Self-Supervised Learning of Video Representations" — ICLR 2024 submission
 - LeCun (2016). "Predictive Learning" — NIPS Keynote (The Cake Analogy)
 
 ## Ssl Relevantes
