@@ -1,0 +1,7 @@
+model = "gpt-5"
+unknown_fixture_key = "preserve-me"
+fixture_secret = "AAS_SECRET_CANARY_DO_NOT_EMIT_8f37ec75"
+
+[mcp_servers.existing]
+command = "existing-server"
+args = ["--unchanged"]

@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/product-verifier-receipt.schema.json",
+  "title": "AAS v1 black-box product verifier job receipt",
+  "type": "object",
+  "required": ["schemaVersion", "receiptVersion", "status", "job", "candidate", "verifier", "environment", "observer", "zones", "suites", "canonicalPayload", "failures", "receiptDigest"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "receiptVersion": { "const": "1.0.0" },
+    "status": { "enum": ["passed", "failed"] },
+    "job": {
+      "type": "object",
+      "required": ["id", "workflowRunId", "workflowRunAttempt"],
+      "properties": {
+        "id": { "enum": ["linux-node-22", "linux-node-24", "macos-node-22", "macos-node-24", "windows-node-22", "windows-node-24"] },
+        "workflowRunId": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+        "workflowRunAttempt": { "type": "string", "pattern": "^[1-9][0-9]*$" }
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["commit", "package", "version", "tarballBytes", "tarballSha256", "tarballSha512", "packManifestSha256", "installTreeSha256"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "package": { "const": "agentic-awesome-skills" },
+        "version": { "type": "string", "minLength": 1 },
+        "tarballBytes": { "type": "integer", "minimum": 1 },
+        "tarballSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "tarballSha512": { "type": "string", "pattern": "^sha512-[A-Za-z0-9+/]+={0,2}$" },
+        "packManifestSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "installTreeSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "verifier": {
+      "type": "object",
+      "required": ["version", "commit", "rootDigest", "contractDigest", "owner"],
+      "properties": {
+        "version": { "const": "1.0.0" },
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "rootDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "contractDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "owner": { "const": "aas-v1-independent-verifier" }
+      },
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "required": ["platform", "osVersion", "kernelVersion", "architecture", "nodeVersion", "nodeExecutableSha256", "runnerImageLabel", "runnerImageVersion", "filesystemType", "filesystemCaseSensitivity"],
+      "properties": {
+        "platform": { "enum": ["linux", "darwin", "win32"] },
+        "osVersion": { "type": "string", "minLength": 1 },
+        "kernelVersion": { "type": "string", "minLength": 1 },
+        "architecture": { "const": "x64" },
+        "nodeVersion": { "type": "string", "pattern": "^v(?:22|24)\\.[0-9]+\\.[0-9]+$" },
+        "nodeExecutableSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "runnerImageLabel": { "type": "string", "minLength": 1 },
+        "runnerImageVersion": { "type": "string", "minLength": 1 },
+        "filesystemType": { "enum": ["ext4", "apfs", "ntfs"] },
+        "filesystemCaseSensitivity": { "enum": ["sensitive", "insensitive-preserving"] }
+      },
+      "additionalProperties": false
+    },
+    "observer": {
+      "type": "object",
+      "required": ["contractVersion", "backend", "selfTestDigest", "networkSentinels", "writeSentinels", "overflow", "ambiguousLineage"],
+      "properties": {
+        "contractVersion": { "const": "1.0.0" },
+        "backend": { "enum": ["linux-strace-process-tree", "macos-dtrace-process-tree", "windows-etw-kernel-process-tree"] },
+        "selfTestDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "networkSentinels": { "type": "integer", "minimum": 1 },
+        "writeSentinels": { "type": "integer", "minimum": 1 },
+        "overflow": { "const": false },
+        "ambiguousLineage": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "zones": {
+      "type": "object",
+      "required": ["home", "project", "cache", "tmp"],
+      "properties": {
+        "home": { "$ref": "#/$defs/zone" },
+        "project": { "$ref": "#/$defs/zone" },
+        "cache": { "$ref": "#/$defs/zone" },
+        "tmp": { "$ref": "#/$defs/zone" }
+      },
+      "additionalProperties": false
+    },
+    "suites": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": { "$ref": "#/$defs/suite" }
+    },
+    "canonicalPayload": {
+      "type": "object",
+      "required": ["sha256", "excludedFields", "sampleCount"],
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "excludedFields": { "const": ["timestamp", "correlationId", "localizedMessage", "diagnostics"] },
+        "sampleCount": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "suite", "detailDigest"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^AAS_VERIFIER_[A-Z0-9_]+$" },
+          "suite": { "type": "string" },
+          "detailDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "receiptDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+  },
+  "$defs": {
+    "zone": {
+      "type": "object",
+      "required": ["beforeSha256", "afterSha256", "persistentWriteCount"],
+      "properties": {
+        "beforeSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "afterSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "persistentWriteCount": { "const": 0 }
+      },
+      "additionalProperties": false
+    },
+    "suite": {
+      "type": "object",
+      "required": ["id", "status", "executions", "failures", "evidenceSha256", "evidence"],
+      "properties": {
+        "id": { "enum": ["package", "entrypoints", "mcp", "property", "fuzz", "hostile", "legacy", "transaction", "adapters"] },
+        "status": { "enum": ["passed", "failed"] },
+        "executions": { "type": "integer", "minimum": 0 },
+        "failures": { "type": "integer", "minimum": 0 },
+        "evidenceSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "evidence": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

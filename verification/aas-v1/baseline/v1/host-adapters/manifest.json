@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen",
+  "fixtures": [
+    {
+      "host": "codex",
+      "path": "codex-config.toml",
+      "hostVersion": "Codex config contract validated 2026-07-17",
+      "provenance": "Anonymized synthetic fixture preserving the public MCP configuration shape",
+      "validatedAt": "2026-07-17"
+    },
+    {
+      "host": "claude",
+      "path": "claude-config.json",
+      "hostVersion": "Claude Code MCP config contract validated 2026-07-17",
+      "provenance": "Anonymized synthetic fixture preserving the public MCP configuration shape",
+      "validatedAt": "2026-07-17"
+    }
+  ],
+  "canary": "AAS_SECRET_CANARY_DO_NOT_EMIT_8f37ec75",
+  "requiredInvariants": ["unknown-fields-preserved", "minimal-patch", "mode-owner-preserved", "atomic-write", "user-only-backup", "secret-redacted", "unsafe-file-rejected"]
+}

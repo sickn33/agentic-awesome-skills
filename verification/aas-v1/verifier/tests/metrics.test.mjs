@@ -16,6 +16,12 @@ const gold = {
   requiresSkill: true,
 };
 
+const acceptedSolutions = [{
+  solutionId: "solution-a",
+  allowedSkillIds: ["skill-a", "skill-helper"],
+  requiredGroups: [["skill-a"]],
+}];
+
 const validResult = {
   terminal: true,
   schemaValid: true,
@@ -26,16 +32,24 @@ const validResult = {
 };
 
 test("verified case requires all critical and at least 80 percent non-critical coverage", () => {
-  assert.equal(evaluateCase(validResult, gold).verified, true);
-  assert.equal(evaluateCase({ ...validResult, coveredGoals: validResult.coveredGoals.slice(0, -1) }, gold).verified, false);
-  assert.equal(evaluateCase({ ...validResult, coveredGoals: validResult.coveredGoals.slice(1) }, gold).verified, false);
+  assert.equal(evaluateCase(validResult, gold, acceptedSolutions).verified, true);
+  assert.equal(evaluateCase({ ...validResult, coveredGoals: validResult.coveredGoals.slice(0, -1) }, gold, acceptedSolutions).verified, false);
+  assert.equal(evaluateCase({ ...validResult, coveredGoals: validResult.coveredGoals.slice(1) }, gold, acceptedSolutions).verified, false);
 });
 
 test("hard policy, timeout, empty required stack, and hidden discovery override fail verification", () => {
-  assert.equal(evaluateCase({ ...validResult, hardPolicyViolations: ["risk"] }, gold).verified, false);
-  assert.equal(evaluateCase({ ...validResult, timedOut: true }, gold).verified, false);
-  assert.equal(evaluateCase({ ...validResult, includedSkillIds: [] }, gold).verified, false);
-  assert.equal(evaluateCase({ ...validResult, discoveryPromotions: [{ id: "skill-a", visibleOverride: false }] }, gold).verified, false);
+  assert.equal(evaluateCase({ ...validResult, hardPolicyViolations: ["risk"] }, gold, acceptedSolutions).verified, false);
+  assert.equal(evaluateCase({ ...validResult, timedOut: true }, gold, acceptedSolutions).verified, false);
+  assert.equal(evaluateCase({ ...validResult, includedSkillIds: [] }, gold, acceptedSolutions).verified, false);
+  assert.equal(evaluateCase({ ...validResult, discoveryPromotions: [{ id: "skill-a", visibleOverride: false }] }, gold, acceptedSolutions).verified, false);
+});
+
+test("candidate coverage self-claims cannot replace independently accepted required groups", () => {
+  const lying = { ...validResult, includedSkillIds: ["skill-helper"] };
+  const report = evaluateCase(lying, gold, acceptedSolutions);
+  assert.equal(report.criticalGoalCoverage, 1);
+  assert.equal(report.independentlyAcceptedStack, false);
+  assert.equal(report.verified, false);
 });
 
 test("precision scores one coherent alternative rather than a union", () => {
@@ -67,12 +81,12 @@ test("coverage denominator stays 30 when results are missing", () => {
   assert.equal(aggregateIntent(reports.slice(0, 23)).verifiedCoverage < 0.8, true);
 });
 
-test("intent precision is pooled over inclusions rather than averaged per case", () => {
+test("intent precision is the mean of per-stack precision rather than pooled inclusions", () => {
   const aggregate = aggregateIntent([
     { verified: true, acceptedInclusionCount: 1, inclusionCount: 1 },
     { verified: true, acceptedInclusionCount: 1, inclusionCount: 9 },
   ]);
-  assert.equal(aggregate.inclusionPrecision, 0.2);
+  assert.equal(aggregate.inclusionPrecision, (1 + (1 / 9)) / 2);
   assert.equal(aggregate.acceptedInclusions, 2);
   assert.equal(aggregate.totalInclusions, 10);
 });

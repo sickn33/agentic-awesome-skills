@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/product-verifier-manifest.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "verifierVersion", "status", "owner", "candidatePackage", "candidateEntrypoints", "publicContract", "requiredSuites", "matrixAllocation", "faultBoundaryClasses", "raceClasses", "candidateIsolation", "receiptCanonicalization", "protectedWorkflow"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "verifierVersion": { "const": "1.0.0" },
+    "status": { "const": "frozen" },
+    "owner": { "const": "aas-v1-independent-verifier" },
+    "candidatePackage": { "const": "agentic-awesome-skills" },
+    "candidateEntrypoints": {
+      "const": { "aas": "tools/bin/aas.js", "aas-mcp": "tools/bin/aas-mcp.js", "agentic-awesome-skills": "tools/bin/install.js" }
+    },
+    "publicContract": {
+      "type": "object",
+      "required": ["protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "tools", "resourceTemplates", "commands", "catalogDigestPattern"],
+      "properties": {
+        "protocolVersion": { "const": "2025-06-18" },
+        "coreVersion": { "const": "1.0.0" },
+        "metadataSchemaVersion": { "const": "1.0.0" },
+        "scorerVersion": { "const": "1.0.0" },
+        "tools": { "const": ["search_skills", "get_skill", "recommend_stack", "inspect_stack", "diff_stack"] },
+        "resourceTemplates": { "const": ["aas://skills/{id}"] },
+        "commands": { "const": ["catalog status", "catalog update", "mcp configure", "mcp backups cleanup", "stack init", "stack recommend", "stack validate", "stack plan", "stack apply", "stack doctor", "stack recover"] },
+        "catalogDigestPattern": { "const": "^sha256-[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "requiredSuites": {
+      "const": ["package", "entrypoints", "mcp", "property", "fuzz", "hostile", "legacy", "transaction", "adapters"]
+    },
+    "matrixAllocation": {
+      "type": "object",
+      "required": ["algorithm", "allJobsRunCanonicalSample", "canonicalSampleExecutions"],
+      "properties": {
+        "algorithm": { "const": "global execution index modulo six in runtime-matrix job order" },
+        "allJobsRunCanonicalSample": { "const": true },
+        "canonicalSampleExecutions": { "const": 60 }
+      },
+      "additionalProperties": false
+    },
+    "faultBoundaryClasses": { "const": ["lock", "journal", "backup", "write", "fsync", "rename", "commit"] },
+    "raceClasses": { "const": ["concurrency", "drift", "symlink-swap", "target-swap", "corrupt-journal", "recovery-race"] },
+    "candidateIsolation": {
+      "type": "object",
+      "required": ["requiresProcessSeparation", "requiresSeparateOsIdentity", "testHooksAllowed", "deniedRoots", "candidateInput", "failurePolicy"],
+      "properties": {
+        "requiresProcessSeparation": { "const": true },
+        "requiresSeparateOsIdentity": { "const": false },
+        "testHooksAllowed": { "const": false },
+        "deniedRoots": { "const": ["verifier", "benchmark", "gold", "evidence"] },
+        "candidateInput": { "const": "tarball plus normalized public profiles only" },
+        "failurePolicy": { "const": "fail-closed" }
+      },
+      "additionalProperties": false
+    },
+    "receiptCanonicalization": { "type": "string", "minLength": 1 },
+    "protectedWorkflow": { "const": ".github/workflows/aas-v1-product-verifier.yml" }
+  },
+  "additionalProperties": false
+}

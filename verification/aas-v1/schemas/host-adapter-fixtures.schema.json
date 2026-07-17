@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/host-adapter-fixtures.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "status", "fixtures", "canary", "requiredInvariants"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "const": "frozen" },
+    "fixtures": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["host", "path", "hostVersion", "provenance", "validatedAt"],
+        "properties": {
+          "host": { "enum": ["codex", "claude"] },
+          "path": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+          "hostVersion": { "type": "string", "minLength": 1 },
+          "provenance": { "type": "string", "minLength": 1 },
+          "validatedAt": { "type": "string", "format": "date" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "canary": { "type": "string", "pattern": "^AAS_SECRET_CANARY_DO_NOT_EMIT_" },
+    "requiredInvariants": {
+      "const": ["unknown-fields-preserved", "minimal-patch", "mode-owner-preserved", "atomic-write", "user-only-backup", "secret-redacted", "unsafe-file-rejected"]
+    }
+  },
+  "additionalProperties": false
+}

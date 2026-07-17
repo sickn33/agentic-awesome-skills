@@ -14,6 +14,8 @@
     "check:tuning-gold-audit": "node bin/validate-tuning-gold-equivalence-audit.mjs",
     "freeze:write": "node bin/freeze-baseline.mjs --write",
     "freeze:check": "node bin/freeze-baseline.mjs",
+    "verify:product": "node bin/verify-product.mjs",
+    "verify:merge": "node bin/merge-product-evidence.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "engines": {

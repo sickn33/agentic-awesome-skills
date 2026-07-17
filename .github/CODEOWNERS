@@ -11,4 +11,5 @@
 # attestations are content-addressed inside the protected baseline.
 /verification/aas-v1/ @sickn33
 /.github/workflows/aas-v1-baseline-check.yml @sickn33
+/.github/workflows/aas-v1-product-verifier.yml @sickn33
 /.github/CODEOWNERS @sickn33

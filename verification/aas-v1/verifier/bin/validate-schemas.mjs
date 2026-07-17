@@ -73,6 +73,8 @@ validate("tuning-gold-equivalence-review.schema.json", [
 validate("tuning-gold-equivalence-audit.schema.json", [
   path.join(baselineRoot, "reviews", "tuning-gold-equivalence-audit.json"),
 ]);
+validate("product-verifier-manifest.schema.json", [path.join(baselineRoot, "verifier-manifest.json")]);
+validate("host-adapter-fixtures.schema.json", [path.join(baselineRoot, "host-adapters", "manifest.json")]);
 
 const abstentionRoot = path.join(benchmarkRoot, "abstention");
 const abstentionSchemas = path.join(abstentionRoot, "schemas");

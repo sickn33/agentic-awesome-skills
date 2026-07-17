@@ -99,8 +99,16 @@ requireForFreeze(hostile.status === "frozen" && hostile.classes.every((entry) =>
 const runtime = readJson("baseline/v1/runtime-matrix.json");
 const expectedJobs = new Set(["linux-node-22", "linux-node-24", "macos-node-22", "macos-node-24", "windows-node-22", "windows-node-24"]);
 assert(runtime.jobs.length === 6 && runtime.jobs.every((job) => expectedJobs.has(job.id)), "AAS_BASELINE_RUNTIME_MATRIX", "Runtime matrix must contain exactly six OS/Node jobs.");
+assert(new Set(runtime.jobs.map((job) => job.id)).size === expectedJobs.size, "AAS_BASELINE_RUNTIME_MATRIX_DUPLICATE", "Runtime matrix job IDs must be unique.");
+assert([...expectedJobs].every((id) => runtime.jobs.some((job) => job.id === id)), "AAS_BASELINE_RUNTIME_MATRIX_EXHAUSTIVE", "Runtime matrix must contain every frozen job exactly once.");
+assert(new Set(runtime.jobs.map((job) => `${job.os}/${job.nodePatch}`)).size === expectedJobs.size, "AAS_BASELINE_RUNTIME_MATRIX_IDENTITY_DUPLICATE", "OS/Node identities must be unique.");
 assert(runtime.skipsAllowed === false && runtime.continueOnErrorAllowed === false, "AAS_BASELINE_MATRIX_FAILURE_POLICY", "Skips and allowed failures are forbidden.");
 requireForFreeze(runtime.status === "frozen" && runtime.jobs.every((job) => job.nodePatch && job.runnerImage && job.architecture && job.filesystem && job.observer && job.status === "frozen"), "AAS_BASELINE_RUNTIME_IDENTITIES_PENDING", "Exact Node, runner, architecture, filesystem, or observer identities are pending.");
+
+const verifierManifest = readJson("baseline/v1/verifier-manifest.json");
+assert(verifierManifest.requiredSuites.length === 9 && new Set(verifierManifest.requiredSuites).size === 9, "AAS_BASELINE_PRODUCT_SUITE_SET", "The product verifier must require nine unique suites.");
+assert(verifierManifest.candidateIsolation.requiresProcessSeparation === true && verifierManifest.candidateIsolation.testHooksAllowed === false, "AAS_BASELINE_CANDIDATE_ISOLATION", "Candidate code requires an external process and forbids test hooks.");
+assert(verifierManifest.faultBoundaryClasses.length === 7 && verifierManifest.raceClasses.length === 6, "AAS_BASELINE_TRANSACTION_COVERAGE", "Fault/race class contracts changed.");
 
 const legacy = readJson("baseline/v1/legacy/14.6.0/manifest.json");
 assert(legacy.baseline.version === "14.6.0", "AAS_BASELINE_LEGACY_VERSION", "Legacy baseline version changed.");
