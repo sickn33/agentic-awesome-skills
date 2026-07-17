@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added an offline local skill reviewer for deterministic repository-wide triage, evidence-bound scoring, P0-P3 priorities, and Codex-assisted manual review. Its documented 74.5% validation agreement is not a claim of equivalence with Tessl, and Tessl remains an optional future sample audit rather than a runtime dependency.
+
 ### Changed
 
 - Expanded the curated hosted sitemap from 42 to 180 deterministic skill routes and added crawlable static home/topic fallbacks so search engines can discover useful catalog hubs without mass-indexing the full library.
