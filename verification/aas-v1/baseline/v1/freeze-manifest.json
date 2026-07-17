@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-39202f4bdc19e942cc47eef8e2f09ae45de88ed7176f460919e91f3d422597b4",
+  "rootDigest": "sha256-e84ea18fa31b01a85d8e985da315217de4335c07b144609c1079d08c2aa71ded",
   "fileCount": 764,
   "files": [
     {
@@ -3758,8 +3758,8 @@
     },
     {
       "path": "verifier/lib/transaction-controller.mjs",
-      "bytes": 35786,
-      "sha256": "2e8fcf80cc717fb1fce29458a3e77cb375d4d436ed3692e5ba364c978038db3b"
+      "bytes": 35840,
+      "sha256": "8df3cb0fdae5c96535faf10597bf5c7b226697dba30f4f7b8fc5ec8e8415b959"
     },
     {
       "path": "verifier/lib/transaction-evidence.mjs",

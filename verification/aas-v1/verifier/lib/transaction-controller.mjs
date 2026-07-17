@@ -435,13 +435,15 @@ async function faultCase(context, className) {
     && observed.result.outputLimitExceeded !== true
     && (process.platform !== "win32" || observed.diagnostics?.processTreeEmpty === true);
   const walEvents = driverValue?.wal?.events || [];
-  const walBoundaryValid = className === "lock" || className === "fsync"
+  const walBoundaryValid = className === "lock"
     ? walEvents.length === 0
-    : className === "journal"
-      ? walEvents.length === 1 && walEvents[0] === "started"
-      : className === "commit"
-        ? walEvents.includes("committed")
-        : !walEvents.includes("committed");
+    : className === "fsync"
+      ? !walEvents.includes("committed")
+      : className === "journal"
+        ? walEvents.length === 1 && walEvents[0] === "started"
+        : className === "commit"
+          ? walEvents.includes("committed")
+          : !walEvents.includes("committed");
   // fs_usage observes the byte-identical child executable directly but does
   // not emit process-creation records. On macOS, executable binding plus the
   // native write trace establishes lineage; Linux/Windows must also expose a
