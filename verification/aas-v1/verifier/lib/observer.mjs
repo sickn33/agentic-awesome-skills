@@ -2,6 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { digestJson, sha256 } from "./canonical.mjs";
 import { runProcess } from "./process.mjs";
@@ -233,6 +234,8 @@ async function windowsObserved(executable, args, options) {
   const trace = path.join(options.evidenceDir, `windows-etw-${process.pid}.jsonl`);
   const encodedArgs = Buffer.from(JSON.stringify(args), "utf8").toString("base64");
   const resultFile = path.join(options.evidenceDir, `windows-result-${process.pid}.json`);
+  const sessionName = `AASVerifier-${process.pid}-${randomUUID().replaceAll("-", "")}`;
+  const { candidateTimeoutMs, wrapperTimeoutMs } = windowsObserverBudgets(options.timeoutMs);
   const wrapper = await runProcess(powershell, [
     "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
     "-File", script,
@@ -240,18 +243,35 @@ async function windowsObserved(executable, args, options) {
     "-ArgumentsBase64", encodedArgs,
     "-TraceOutput", trace,
     "-ResultOutput", resultFile,
-  ], options);
+    "-SessionName", sessionName,
+    "-CandidateTimeoutMilliseconds", String(candidateTimeoutMs),
+  ], { ...options, timeoutMs: wrapperTimeoutMs });
   if (wrapper.code !== 0 || !fs.existsSync(trace) || !fs.existsSync(resultFile)) {
+    const cleanup = await runProcess("logman.exe", ["stop", sessionName, "-ets"], {
+      cwd: options.cwd,
+      env: options.env,
+      timeoutMs: 5_000,
+      maxOutputBytes: 64 * 1024,
+    });
+    fs.rmSync(path.join(options.evidenceDir, `${sessionName}.etl`), { force: true });
+    fs.rmSync(path.join(options.evidenceDir, `${sessionName}.csv`), { force: true });
+    const traceExists = fs.existsSync(trace);
+    const resultExists = fs.existsSync(resultFile);
     const diagnostic = JSON.stringify({
       wrapperCode: wrapper.code,
       signal: wrapper.signal,
       timedOut: wrapper.timedOut,
       outputLimitExceeded: wrapper.outputLimitExceeded,
-      traceExists: fs.existsSync(trace),
-      resultExists: fs.existsSync(resultFile),
+      traceExists,
+      resultExists,
+      cleanupCode: cleanup.code,
       stderr: wrapper.stderr.slice(0, 500),
       stdout: wrapper.stdout.slice(0, 500),
     });
+    fs.rmSync(trace, { force: true });
+    fs.rmSync(resultFile, { force: true });
+    fs.rmSync(`${resultFile}.stdout`, { force: true });
+    fs.rmSync(`${resultFile}.stderr`, { force: true });
     throw Object.assign(new Error(`ETW observer failed closed: ${diagnostic}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
   const raw = fs.readFileSync(trace, "utf8");
@@ -263,6 +283,18 @@ async function windowsObserved(executable, args, options) {
     observation: parseDelimitedObserver(raw, options.zones),
     backend: "windows-etw-kernel-process-tree",
     diagnostics: result.observerDiagnostics ?? null,
+  };
+}
+
+export function windowsObserverBudgets(timeoutMs = 30_000) {
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 15 * 60_000) {
+    throw Object.assign(new Error("Windows observer timeout must be an integer from 1 to 900000 milliseconds"), {
+      code: "AAS_OBSERVER_INVALID_TIMEOUT",
+    });
+  }
+  return {
+    candidateTimeoutMs: timeoutMs,
+    wrapperTimeoutMs: timeoutMs + 60_000,
   };
 }
 
@@ -279,6 +311,11 @@ export async function selfTestObserver(options) {
   const program = `const fs=require('node:fs'),net=require('node:net');const fd=fs.openSync(${JSON.stringify(sentinel)},'w',0o600);fs.writeSync(fd,'sentinel');fs.fsyncSync(fd);fs.closeSync(fd);const server=net.createServer(s=>s.end());server.listen(0,'127.0.0.1',()=>{const s=net.connect({host:'127.0.0.1',port:server.address().port},()=>s.end());s.on('close',()=>server.close(()=>setTimeout(()=>process.exit(0),500)));s.on('error',()=>process.exit(2));});setTimeout(()=>process.exit(1),3000);`;
   const observed = await runObserved(process.execPath, ["-e", program], { ...options, timeoutMs: 10_000 });
   fs.rmSync(sentinel, { force: true });
+  if (observed.result.code !== 0 || observed.result.timedOut) {
+    throw Object.assign(new Error("Observer sentinel process did not complete within its candidate budget"), {
+      code: "AAS_OBSERVER_SELF_TEST_FAILED",
+    });
+  }
   if (observed.observation.networkAttempts < 1 || observed.observation.writeAttempts < 1) {
     const diagnostic = JSON.stringify({
       backend: observed.backend,
@@ -288,6 +325,7 @@ export async function selfTestObserver(options) {
     });
     throw Object.assign(new Error(`Observer missed sentinel network/write attempts: ${diagnostic}`), { code: "AAS_OBSERVER_SELF_TEST_FAILED" });
   }
+  if (process.platform === "win32") await selfTestWindowsProcessTree(options);
   return {
     backend: observed.backend,
     contractVersion: "1.0.0",
@@ -296,4 +334,53 @@ export async function selfTestObserver(options) {
     observedWriteSentinels: observed.observation.writeAttempts,
     host: { platform: os.platform(), release: os.release(), architecture: os.arch() },
   };
+}
+
+async function selfTestWindowsProcessTree(options) {
+  const childCanary = path.join(options.evidenceDir, `child-${process.pid}.txt`);
+  const childProgram = `setTimeout(()=>require('node:fs').writeFileSync(${JSON.stringify(childCanary)},'child'),250);setInterval(()=>{},1000);`;
+  const rootProgram = `const{spawn}=require('node:child_process');const child=spawn(process.execPath,['-e',${JSON.stringify(childProgram)}],{stdio:['ignore','ignore','ignore'],windowsHide:true});process.stdout.write(String(child.pid));child.unref();`;
+  const observed = await runObserved(process.execPath, ["-e", rootProgram], { ...options, timeoutMs: 1_500 });
+  const childPid = Number.parseInt(observed.result.stdout.trim(), 10);
+  const sessionName = observed.diagnostics?.sessionName;
+  let childAlive = false;
+  if (Number.isSafeInteger(childPid) && childPid > 0) {
+    try {
+      process.kill(childPid, 0);
+      childAlive = true;
+    } catch {
+      childAlive = false;
+    }
+  }
+  const sessionProbe = sessionName
+    ? spawnSync("logman.exe", ["query", sessionName, "-ets"], { encoding: "utf8", windowsHide: true })
+    : { status: 0 };
+  const leftovers = fs.readdirSync(options.evidenceDir).filter((name) =>
+    /^(?:AASVerifier-|windows-etw-|windows-result-)/.test(name) || /\.(?:etl|csv|stdout|stderr)$/.test(name));
+  const childCanaryWritten = fs.existsSync(childCanary) && fs.readFileSync(childCanary, "utf8") === "child";
+  fs.rmSync(childCanary, { force: true });
+  const valid = observed.result.code === 124
+    && observed.result.timedOut === true
+    && observed.observation.childProcesses >= 1
+    && observed.observation.writeAttempts >= 1
+    && childCanaryWritten
+    && Number.isSafeInteger(childPid)
+    && !childAlive
+    && typeof sessionName === "string"
+    && sessionProbe.status !== 0
+    && leftovers.length === 0;
+  if (!valid) {
+    const diagnostic = JSON.stringify({
+      code: observed.result.code,
+      timedOut: observed.result.timedOut,
+      childProcesses: observed.observation.childProcesses,
+      childPid,
+      childAlive,
+      childCanaryWritten,
+      sessionName: sessionName ?? null,
+      sessionStillExists: sessionProbe.status === 0,
+      leftovers,
+    });
+    throw Object.assign(new Error(`Windows Job Object self-test failed: ${diagnostic}`), { code: "AAS_OBSERVER_SELF_TEST_FAILED" });
+  }
 }

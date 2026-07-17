@@ -8,8 +8,8 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-fc3d99a91c6164e51f7e19afcbd1fbe0a905d2f2de75fd802ce14c9c6f12419c",
-  "fileCount": 754,
+  "rootDigest": "sha256-8e003aca58fd458e509620616b4eff4fc9dfd58c61098ef98081b73e9d7de4f2",
+  "fileCount": 755,
   "files": [
     {
       "path": "README.md",
@@ -3698,8 +3698,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 15334,
-      "sha256": "22ee21e9cebd5a1c9a05a6a67776fb4e5dee6e275b6ac6637f1f06932a4e658b"
+      "bytes": 19404,
+      "sha256": "0458ae302eb50494e0c839fe0f4147b0cd18348565baae2934e97f41f88dc34f"
     },
     {
       "path": "verifier/lib/prng.mjs",
@@ -3733,8 +3733,13 @@
     },
     {
       "path": "verifier/observers/windows-etw.ps1",
-      "bytes": 6731,
-      "sha256": "d4fcd2d17c99ad0a8423b1a13bb251c9c9ae2ef7b89e15435a3cfae1cf294ee4"
+      "bytes": 7797,
+      "sha256": "6496ef998db6dbc55b8fe92680517dc2b4061c5205fb0f311605cc1b83b81bad"
+    },
+    {
+      "path": "verifier/observers/windows-job.cs",
+      "bytes": 16331,
+      "sha256": "574d06e2d546489a0a2e9c1377d3303fd2569405bdedd17197a333072250bba4"
     },
     {
       "path": "verifier/package-lock.json",
@@ -3768,8 +3773,8 @@
     },
     {
       "path": "verifier/tests/observer.test.mjs",
-      "bytes": 2517,
-      "sha256": "ed89dd8468dbe1cd8e3c5ba173648690d0c0a3d46d4111cade208b055f1e014b"
+      "bytes": 2980,
+      "sha256": "78aae6d28b2d045df91ad8adf30b269928e834a23c5794cffd9701b84c1f23c0"
     },
     {
       "path": "verifier/tests/transaction-evidence.test.mjs",

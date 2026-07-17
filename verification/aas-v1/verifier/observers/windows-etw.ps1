@@ -2,13 +2,17 @@ param(
   [Parameter(Mandatory = $true)][string]$Executable,
   [Parameter(Mandatory = $true)][string]$ArgumentsBase64,
   [Parameter(Mandatory = $true)][string]$TraceOutput,
-  [Parameter(Mandatory = $true)][string]$ResultOutput
+  [Parameter(Mandatory = $true)][string]$ResultOutput,
+  [Parameter(Mandatory = $true)][ValidatePattern('^AASVerifier-[A-Za-z0-9-]+$')][string]$SessionName,
+  [Parameter(Mandatory = $true)][ValidateRange(1, 900000)][int]$CandidateTimeoutMilliseconds
 )
 
 $ErrorActionPreference = "Stop"
-$session = "AASVerifier-$PID-$([Guid]::NewGuid().ToString('N'))"
-$etl = Join-Path ([IO.Path]::GetDirectoryName($TraceOutput)) "$session.etl"
-$csv = Join-Path ([IO.Path]::GetDirectoryName($TraceOutput)) "$session.csv"
+$jobSource = Join-Path $PSScriptRoot "windows-job.cs"
+if (!(Test-Path -LiteralPath $jobSource -PathType Leaf)) { throw "Windows Job Object helper is unavailable" }
+Add-Type -Path $jobSource
+$etl = Join-Path ([IO.Path]::GetDirectoryName($TraceOutput)) "$SessionName.etl"
+$csv = Join-Path ([IO.Path]::GetDirectoryName($TraceOutput)) "$SessionName.csv"
 $arguments = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($ArgumentsBase64)) | ConvertFrom-Json
 $providers = @(
   "Microsoft-Windows-Kernel-Process",
@@ -16,21 +20,36 @@ $providers = @(
   "Microsoft-Windows-Winsock-AFD",
   "Microsoft-Windows-DNS-Client"
 )
+$jobProcess = $null
 
 try {
-  & logman.exe create trace $session -o $etl -ets | Out-Null
+  & logman.exe create trace $SessionName -o $etl -ets | Out-Null
   foreach ($provider in $providers) {
-    & logman.exe update trace $session -p $provider 0xffffffffffffffff 0xff -ets | Out-Null
+    & logman.exe update trace $SessionName -p $provider 0xffffffffffffffff 0xff -ets | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "Unable to enable ETW provider $provider" }
   }
   $started = [DateTimeOffset]::UtcNow
-  $process = Start-Process -FilePath $Executable -ArgumentList @($arguments) -NoNewWindow -Wait -PassThru `
-    -RedirectStandardOutput "$ResultOutput.stdout" -RedirectStandardError "$ResultOutput.stderr"
+  $jobProcess = [AasVerifier.JobProcess]::Start(
+    $Executable,
+    [string[]]$arguments,
+    "$ResultOutput.stdout",
+    "$ResultOutput.stderr"
+  )
+  $waitResult = [AasVerifier.JobProcess]::Wait($jobProcess, $CandidateTimeoutMilliseconds)
+  $timedOut = $waitResult -eq [AasVerifier.JobProcess]::WaitTimeout
+  if ($timedOut) {
+    [AasVerifier.JobProcess]::Terminate($jobProcess, 124)
+    $waitResult = [AasVerifier.JobProcess]::Wait($jobProcess, 5000)
+  }
+  if ($waitResult -ne [AasVerifier.JobProcess]::WaitObject0) {
+    throw "Windows Job Object did not reach an empty process-tree state"
+  }
+  $rootExitCode = [AasVerifier.JobProcess]::ExitCode($jobProcess)
   $ended = [DateTimeOffset]::UtcNow
-  & logman.exe stop $session -ets | Out-Null
+  & logman.exe stop $SessionName -ets | Out-Null
   & tracerpt.exe $etl -of CSV -o $csv -y | Out-Null
   if ($LASTEXITCODE -ne 0 -or !(Test-Path -LiteralPath $csv -PathType Leaf)) { throw "ETW trace export failed" }
-  $rootPid = $process.Id
+  $rootPid = $jobProcess.ProcessId
   $lines = New-Object System.Collections.Generic.List[string]
   $childPids = New-Object System.Collections.Generic.HashSet[int]
   $childPids.Add($rootPid) | Out-Null
@@ -125,11 +144,11 @@ try {
   }
   [IO.File]::WriteAllLines($TraceOutput, $lines, (New-Object Text.UTF8Encoding($false)))
   $receipt = [ordered]@{
-    code = $process.ExitCode
+    code = $(if ($timedOut) { 124 } else { $rootExitCode })
     signal = $null
     stdout = [IO.File]::ReadAllText("$ResultOutput.stdout")
     stderr = [IO.File]::ReadAllText("$ResultOutput.stderr")
-    timedOut = $false
+    timedOut = $timedOut
     outputLimitExceeded = $false
     startedAt = $started.ToString("o")
     endedAt = $ended.ToString("o")
@@ -142,11 +161,15 @@ try {
       winsockDecodedPids = @($winsockDecodedPids)
       processStartRows = $processStartRows
       rootEventSamples = @($rootEventSamples)
+      sessionName = $SessionName
+      processTreeTimedOut = $timedOut
+      processTreeEmpty = $waitResult -eq [AasVerifier.JobProcess]::WaitObject0
     }
   }
   [IO.File]::WriteAllText($ResultOutput, ($receipt | ConvertTo-Json -Compress), (New-Object Text.UTF8Encoding($false)))
 }
 finally {
-  & logman.exe stop $session -ets 2>$null | Out-Null
+  & logman.exe stop $SessionName -ets 2>$null | Out-Null
+  [AasVerifier.JobProcess]::Close($jobProcess)
   Remove-Item -LiteralPath $etl,$csv,"$ResultOutput.stdout","$ResultOutput.stderr" -Force -ErrorAction SilentlyContinue
 }
