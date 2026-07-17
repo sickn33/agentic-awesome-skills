@@ -264,7 +264,41 @@ async function main() {
   restrictedProfile.policy.allowedRisk = ["none"];
   fs.writeFileSync(restrictedProfilePath, `${stable(restrictedProfile)}\n`, { mode: 0o600 });
   const restricted = parseCliSuccess(runNode(aasBin, ["stack", "recommend", "--profile", restrictedProfilePath], { cwd: projectRoot }), "POLICY_RECOMMEND");
-  assert.equal(restricted.exclusions.some((entry) => entry.reasonCodes.includes("AAS_ELIGIBILITY_RISK_DISALLOWED")), true);
+  const disallowedRiskIds = new Set(restricted.exclusions
+    .filter((entry) => entry.reasonCodes.includes("AAS_ELIGIBILITY_RISK_DISALLOWED"))
+    .map((entry) => entry.id));
+  assert.equal(disallowedRiskIds.size > 0, true);
+  assert.equal(restricted.recommended.some((entry) => disallowedRiskIds.has(entry.id)), false);
+  assert.equal(restricted.proposedStack.some((id) => disallowedRiskIds.has(id)), false);
+
+  const evidence = [{ type: "preview-functional-fixture", id: "proved-target-block" }];
+  const blockedSkill = {
+    id: "blocked-agent-skill",
+    name: "blocked-agent-skill",
+    description: "",
+    category: "test",
+    tags: [],
+    triggers: [],
+    searchTokens: ["agent", "boundaries"],
+    recommendationTokens: ["agent", "boundaries"],
+    metadata: {
+      capabilities: aas.judgment(["agent-boundaries"], evidence),
+      risk: aas.judgment("safe", evidence),
+      source: aas.judgment("fixture", evidence),
+      license: aas.judgment(null),
+      targets: { codex: aas.judgment("blocked", evidence), claude: aas.judgment("supported", evidence) },
+      setup: aas.judgment("none", evidence),
+      dependencies: aas.judgment([], evidence),
+      conflicts: aas.judgment([], evidence),
+      validation: aas.judgment(true, evidence),
+      tests: aas.judgment(null),
+      reviews: aas.judgment(true, evidence),
+    },
+    untrustedContentPath: null,
+  };
+  const incompatibility = aas.recommendStack(aas.syntheticCatalog([blockedSkill]), JSON.parse(fs.readFileSync(profilePath, "utf8")));
+  assert.deepEqual(incompatibility.proposedStack, []);
+  assert.deepEqual(incompatibility.exclusions, [{ id: blockedSkill.id, reasonCodes: ["AAS_ELIGIBILITY_TARGET_BLOCKED"] }]);
 
   const malformedProfilePath = path.join(workRoot, "malformed-profile.json");
   fs.writeFileSync(malformedProfilePath, `${stable({ ...restrictedProfile, repositoryPath: "/not-allowed" })}\n`, { mode: 0o600 });
@@ -288,11 +322,14 @@ async function main() {
   ], { cwd: projectRoot }), "PLAN");
   assert.equal(planned.status, "planned");
   const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+  const beforeDoctor = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   const doctor = parseCliSuccess(runNode(aasBin, [
     "stack", "doctor", "--plan", planPath, "--target-root", projectRoot, "--cache-root", cacheRoot,
   ], { cwd: projectRoot }), "DOCTOR");
   assert.equal(doctor.status, "healthy");
+  assert.deepEqual({ project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) }, beforeDoctor, "doctor changed persistent state");
 
+  const beforeWriteGuards = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   const applyError = parseCliError(runNode(aasBin, [
     "stack", "apply", "--plan", planPath, "--target-root", projectRoot, "--cache-root", cacheRoot,
     "--approve", plan.digest,
@@ -302,6 +339,7 @@ async function main() {
     "stack", "recover", "--plan", planPath, "--target-root", projectRoot, "--cache-root", cacheRoot,
     "--id", "preview", "--action", "cleanup",
   ], { cwd: projectRoot }), "AAS_STACK_RECOVERY_EXPERIMENTAL_DISABLED", "RECOVERY_GUARD");
+  assert.deepEqual({ project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) }, beforeWriteGuards, "default write guards changed persistent state");
   assert.equal(fs.existsSync(path.join(projectRoot, ".agents")), false);
   assert.equal(fs.existsSync(path.join(projectRoot, ".aas")), false);
 
@@ -325,7 +363,14 @@ async function main() {
   const get = await client.request(5, "tools/call", { name: "get_skill", arguments: { id: skillId } });
   assert.equal(get.result.structuredContent.skill.id, skillId);
   assert.equal(get.result.structuredContent.untrustedContent.authority, "untrusted");
-  const mcpRecommendation = await client.request(6, "tools/call", {
+  const resource = await client.request(6, "resources/read", { uri: `aas://skills/${skillId}` });
+  assert.equal(resource.result.contents[0].uri, `aas://skills/${skillId}`);
+  assert.equal(resource.result.contents[0].mimeType, "application/json");
+  const resourcePayload = JSON.parse(resource.result.contents[0].text);
+  assert.equal(resourcePayload.skill.id, skillId);
+  assert.equal(resourcePayload.untrustedContent.authority, "untrusted");
+  assert.equal(resourcePayload.untrustedContent.available, true);
+  const mcpRecommendation = await client.request(7, "tools/call", {
     name: "recommend_stack",
     arguments: {
       intent: "test-qa-automation",
@@ -338,9 +383,9 @@ async function main() {
     },
   });
   assert.equal(mcpRecommendation.result.structuredContent.ok, true);
-  const inspection = await client.request(7, "tools/call", { name: "inspect_stack", arguments: { manifest } });
+  const inspection = await client.request(8, "tools/call", { name: "inspect_stack", arguments: { manifest } });
   assert.equal(inspection.result.structuredContent.ok, true);
-  const diff = await client.request(8, "tools/call", {
+  const diff = await client.request(9, "tools/call", {
     name: "diff_stack",
     arguments: { stack: manifest, toCatalogDigest: manifest.catalog.integrity },
   });
