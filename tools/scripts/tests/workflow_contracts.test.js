@@ -76,6 +76,8 @@ const pagesWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "pages.yml"),
   "utf8",
 );
+assert.match(pagesWorkflow, /^on:\s*\n\s+workflow_dispatch:/m);
+assert.doesNotMatch(pagesWorkflow, /^\s+push:/m);
 for (const command of [
   "npm run validate:strict",
   "npm run validate:glossary",
