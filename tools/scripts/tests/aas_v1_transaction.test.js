@@ -316,6 +316,27 @@ test("layout tombstone cleanup resumes after its rename durability boundary", ()
   fs.rmSync(fx.sandbox, { recursive: true });
 });
 
+test("layout cleanup removes only exact marker-owned stages left before publication", () => {
+  const fx = fixture();
+  fs.writeFileSync(path.join(fx.root, "unmanaged.txt"), "mine\n");
+  fs.rmSync(fx.skillsDirectory, { recursive: true });
+  fs.rmSync(fx.transactionDirectory, { recursive: true });
+  const inspected = inspectLayout(fx.adapter, { host: "codex", scope: "project", identityDigest: TARGET_ID });
+  const markerToken = "e".repeat(48);
+  const markerName = `.aas-layout-recovery-${"f".repeat(32)}`;
+  for (const directory of inspected.missingDirectories) {
+    const stage = path.join(path.dirname(directory), `.aas-layout-stage-${markerToken}-${path.basename(directory)}`);
+    fs.mkdirSync(stage, { mode: 0o700 });
+    fs.writeFileSync(path.join(stage, markerName), `${markerToken}\n`, { mode: 0o600 });
+  }
+  cleanupMaterializedLayout(inspected, inspected.missingDirectories, { markerName, markerToken });
+  assert.equal(fs.readdirSync(fx.root).some((name) => name.includes(markerToken)), false);
+  assert.equal(fs.readFileSync(path.join(fx.root, "unmanaged.txt"), "utf8"), "mine\n");
+  assert.equal(fs.existsSync(fx.skillsDirectory), false);
+  assert.equal(fs.existsSync(fx.transactionDirectory), false);
+  fs.rmSync(fx.sandbox, { recursive: true });
+});
+
 test("alreadyApplied verifies final bytes and refuses a completed state with drift or recovery artifacts", () => {
   const fx = fixture();
   const plan = buildInstallPlan(fx);
