@@ -92,6 +92,9 @@ try {
   $winsockCreateRows = 0
   $winsockDecodedPids = New-Object System.Collections.Generic.List[int]
   $processStartRows = 0
+  $rootStopRows = 0
+  $rootExitObserved = $false
+  $postRootDescendantWriteRows = 0
   $rootEventSamples = New-Object System.Collections.Generic.List[string]
   foreach ($row in (Import-Csv -LiteralPath $csv)) {
     $totalRows++
@@ -108,6 +111,15 @@ try {
       if ($childPids.Contains($parentPid) -and $newPid -gt 0 -and !$childPids.Contains($newPid)) {
         $childPids.Add($newPid) | Out-Null
         $lines.Add("process|$newPid|parent=$parentPid")
+      }
+      continue
+    }
+    if ($providerName -eq 'Microsoft-Windows-Kernel-Process' -and $eventId -eq 2) {
+      $stoppedPid = Get-PayloadInteger $row 'ProcessID'
+      if ($stoppedPid -eq 0) { $stoppedPid = Get-PayloadInteger $row 'ProcessId' }
+      if ($stoppedPid -eq $rootPid) {
+        $rootStopRows++
+        $rootExitObserved = $true
       }
       continue
     }
@@ -139,6 +151,7 @@ try {
     }
     elseif ($providerName -eq 'Microsoft-Windows-Kernel-File' -and $eventId -in @(16,17,18,19)) {
       $writeRows++
+      if ($rootExitObserved -and $pidValue -ne $rootPid) { $postRootDescendantWriteRows++ }
       $lines.Add("write|$pidValue|provider=$providerName;event=$eventId")
     }
   }
@@ -160,6 +173,8 @@ try {
       winsockCreateRows = $winsockCreateRows
       winsockDecodedPids = @($winsockDecodedPids)
       processStartRows = $processStartRows
+      rootStopRows = $rootStopRows
+      postRootDescendantWriteRows = $postRootDescendantWriteRows
       rootEventSamples = @($rootEventSamples)
       sessionName = $SessionName
       processTreeTimedOut = $timedOut

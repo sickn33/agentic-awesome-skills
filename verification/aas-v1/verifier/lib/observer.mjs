@@ -337,10 +337,16 @@ export async function selfTestObserver(options) {
 }
 
 async function selfTestWindowsProcessTree(options) {
-  const childCanary = path.join(options.evidenceDir, `child-${process.pid}.txt`);
-  const childProgram = `setTimeout(()=>require('node:fs').writeFileSync(${JSON.stringify(childCanary)},'child'),250);setInterval(()=>{},1000);`;
-  const rootProgram = `const{spawn}=require('node:child_process');const child=spawn(process.execPath,['-e',${JSON.stringify(childProgram)}],{stdio:['ignore','ignore','ignore'],windowsHide:true});process.stdout.write(String(child.pid));child.unref();`;
-  const observed = await runObserved(process.execPath, ["-e", rootProgram], { ...options, timeoutMs: 1_500 });
+  const drivers = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "drivers");
+  const rootDriver = path.join(drivers, "windows-tree-root.cjs");
+  const childDriver = path.join(drivers, "windows-tree-child.cjs");
+  const readyCanary = path.join(options.evidenceDir, `child-ready-${process.pid}.txt`);
+  const rootAckCanary = path.join(options.evidenceDir, `root-ack-${process.pid}.txt`);
+  const childCanary = path.join(options.evidenceDir, `child-after-parent-${process.pid}.txt`);
+  const observed = await runObserved(process.execPath, [rootDriver, childDriver, readyCanary, rootAckCanary, childCanary], {
+    ...options,
+    timeoutMs: 1_500,
+  });
   const childPid = Number.parseInt(observed.result.stdout.trim(), 10);
   const sessionName = observed.diagnostics?.sessionName;
   let childAlive = false;
@@ -357,12 +363,18 @@ async function selfTestWindowsProcessTree(options) {
     : { status: 0 };
   const leftovers = fs.readdirSync(options.evidenceDir).filter((name) =>
     /^(?:AASVerifier-|windows-etw-|windows-result-)/.test(name) || /\.(?:etl|csv|stdout|stderr)$/.test(name));
+  const readyCanaryWritten = fs.existsSync(readyCanary) && fs.readFileSync(readyCanary, "utf8") === "ready";
+  const rootAckCanaryWritten = fs.existsSync(rootAckCanary) && fs.readFileSync(rootAckCanary, "utf8") === "ack";
   const childCanaryWritten = fs.existsSync(childCanary) && fs.readFileSync(childCanary, "utf8") === "child";
+  fs.rmSync(readyCanary, { force: true });
+  fs.rmSync(rootAckCanary, { force: true });
   fs.rmSync(childCanary, { force: true });
   const valid = observed.result.code === 124
     && observed.result.timedOut === true
     && observed.observation.childProcesses >= 1
-    && observed.observation.writeAttempts >= 1
+    && observed.diagnostics?.postRootDescendantWriteRows >= 1
+    && readyCanaryWritten
+    && rootAckCanaryWritten
     && childCanaryWritten
     && Number.isSafeInteger(childPid)
     && !childAlive
@@ -376,7 +388,12 @@ async function selfTestWindowsProcessTree(options) {
       childProcesses: observed.observation.childProcesses,
       childPid,
       childAlive,
+      readyCanaryWritten,
+      rootAckCanaryWritten,
       childCanaryWritten,
+      rootStopRows: observed.diagnostics?.rootStopRows ?? null,
+      postRootDescendantWriteRows: observed.diagnostics?.postRootDescendantWriteRows ?? null,
+      stderr: observed.result.stderr.slice(0, 500),
       sessionName: sessionName ?? null,
       sessionStillExists: sessionProbe.status === 0,
       leftovers,
