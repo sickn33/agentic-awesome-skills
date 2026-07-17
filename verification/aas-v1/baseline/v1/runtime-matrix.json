@@ -105,7 +105,7 @@
       "runnerImage": {"provider": "github-hosted-actions", "label": "macos-15-intel", "expectedFamily": "macOS 15 Intel", "weeklyBuildIsReceiptOnly": true},
       "architecture": "x64",
       "filesystem": {"expectedType": "apfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "diskutil info for the runner temporary volume plus an isolated mixed-case identity probe"},
-      "observer": {"contractVersion": "1.0.0", "backend": "macos-dtrace-process-tree", "backendRequirement": "DTrace syscall probes following candidate descendants for network and filesystem mutation classes", "selfTestRequired": true},
+      "observer": {"contractVersion": "1.0.0", "backend": "macos-fs_usage-process", "backendRequirement": "Privileged fs_usage filesys, network and exec event streams scoped to the gated candidate process, with descendant exec lineage recorded", "selfTestRequired": true},
       "status": "frozen"
     },
     {
@@ -116,7 +116,7 @@
       "runnerImage": {"provider": "github-hosted-actions", "label": "macos-15-intel", "expectedFamily": "macOS 15 Intel", "weeklyBuildIsReceiptOnly": true},
       "architecture": "x64",
       "filesystem": {"expectedType": "apfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "diskutil info for the runner temporary volume plus an isolated mixed-case identity probe"},
-      "observer": {"contractVersion": "1.0.0", "backend": "macos-dtrace-process-tree", "backendRequirement": "DTrace syscall probes following candidate descendants for network and filesystem mutation classes", "selfTestRequired": true},
+      "observer": {"contractVersion": "1.0.0", "backend": "macos-fs_usage-process", "backendRequirement": "Privileged fs_usage filesys, network and exec event streams scoped to the gated candidate process, with descendant exec lineage recorded", "selfTestRequired": true},
       "status": "frozen"
     },
     {

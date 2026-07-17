@@ -28,7 +28,7 @@ function receipt(job, index) {
     candidate: { commit: "1".repeat(40), package: "agentic-awesome-skills", version: "14.6.0", tarballBytes: 1, tarballSha256: d, tarballSha512: sri, packManifestSha256: d, installTreeSha256: d },
     verifier: { version: "1.0.0", commit: "2".repeat(40), rootDigest: d, contractDigest: d, owner: "aas-v1-independent-verifier" },
     environment: { platform: job.startsWith("linux") ? "linux" : job.startsWith("macos") ? "darwin" : "win32", osVersion: "test", kernelVersion: "test", architecture: "x64", nodeVersion: job.endsWith("22") ? "v22.23.1" : "v24.18.0", nodeExecutableSha256: d, runnerImageLabel: "test", runnerImageVersion: "test", filesystemType: job.startsWith("linux") ? "ext4" : job.startsWith("macos") ? "apfs" : "ntfs", filesystemCaseSensitivity: job.startsWith("linux") ? "sensitive" : "insensitive-preserving" },
-    observer: { contractVersion: "1.0.0", backend: job.startsWith("linux") ? "linux-strace-process-tree" : job.startsWith("macos") ? "macos-dtrace-process-tree" : "windows-etw-kernel-process-tree", selfTestDigest: d, networkSentinels: 1, writeSentinels: 1, overflow: false, ambiguousLineage: false },
+    observer: { contractVersion: "1.0.0", backend: job.startsWith("linux") ? "linux-strace-process-tree" : job.startsWith("macos") ? "macos-fs_usage-process" : "windows-etw-kernel-process-tree", selfTestDigest: d, networkSentinels: 1, writeSentinels: 1, overflow: false, ambiguousLineage: false },
     zones: Object.fromEntries(["home", "project", "cache", "tmp"].map((name) => [name, { beforeSha256: d, afterSha256: d, persistentWriteCount: 0 }])),
     suites, canonicalPayload: { sha256: d, excludedFields: ["timestamp", "correlationId", "localizedMessage", "diagnostics"], sampleCount: 60 }, failures: [] });
 }
@@ -49,4 +49,3 @@ test("aggregator catches receipt tampering and duplicates", () => {
   assert.ok(result.failures.some((entry) => entry.code === "AAS_VERIFIER_RECEIPT_DIGEST"));
   assert.ok(result.failures.some((entry) => entry.code === "AAS_VERIFIER_MATRIX_DUPLICATE_JOB"));
 });
-

@@ -24,7 +24,7 @@ test("delimited observers ignore malformed and unknown records", () => {
 
 test("macOS fs_usage parser separates network, writes, and child execs", () => {
   const result = parseMacFsUsage(
-    "12:00:00.100 write F=3 /tmp/canary node.1\n12:00:00.200 read F=4 /tmp/input node.1\n",
+    "12:00:00.100 WrData[A] F=3 /tmp/canary node.1\n12:00:00.200 read F=4 /tmp/input node.1\n",
     "12:00:00.300 connect 127.0.0.1:9 node.1\n",
     "12:00:00.400 exec node node.1\n12:00:00.500 exec child node.2\n",
   );

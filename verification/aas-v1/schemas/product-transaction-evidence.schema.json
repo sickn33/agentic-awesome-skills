@@ -14,7 +14,7 @@
       "type": "object",
       "required": ["backend", "eventDigest", "overflow", "ambiguousLineage"],
       "properties": {
-        "backend": { "enum": ["linux-strace-process-tree", "macos-dtrace-process-tree", "windows-etw-kernel-process-tree"] },
+        "backend": { "enum": ["linux-strace-process-tree", "macos-fs_usage-process", "windows-etw-kernel-process-tree"] },
         "eventDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
         "overflow": { "const": false },
         "ambiguousLineage": { "const": false }

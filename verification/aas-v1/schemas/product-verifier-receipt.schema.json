@@ -67,7 +67,7 @@
       "required": ["contractVersion", "backend", "selfTestDigest", "networkSentinels", "writeSentinels", "overflow", "ambiguousLineage"],
       "properties": {
         "contractVersion": { "const": "1.0.0" },
-        "backend": { "enum": ["linux-strace-process-tree", "macos-dtrace-process-tree", "windows-etw-kernel-process-tree"] },
+        "backend": { "enum": ["linux-strace-process-tree", "macos-fs_usage-process", "windows-etw-kernel-process-tree"] },
         "selfTestDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
         "networkSentinels": { "type": "integer", "minimum": 1 },
         "writeSentinels": { "type": "integer", "minimum": 1 },

@@ -39,13 +39,22 @@ try {
       foreach ($pattern in $patterns) {
         if ($property.Name -match $pattern) {
           $parsed = 0
-          if ([int]::TryParse([string]$property.Value, [ref]$parsed)) { return $parsed }
+          $raw = ([string]$property.Value).Trim()
+          if ([int]::TryParse($raw, [ref]$parsed)) { return $parsed }
+          if ($raw -match '^0[xX][0-9a-fA-F]+$') {
+            try { return [Convert]::ToInt32($raw.Substring(2), 16) } catch { }
+          }
         }
       }
     }
     return 0
   }
+  $totalRows = 0
+  $rootRows = 0
+  $networkRows = 0
+  $writeRows = 0
   foreach ($row in (Import-Csv -LiteralPath $csv)) {
+    $totalRows++
     $serialized = $row | ConvertTo-Json -Compress
     $eventName = (($row.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join " ")
     if ($eventName -match "(?i)(Process.*Start|Start.*Process)") {
@@ -59,8 +68,15 @@ try {
     }
     $pidValue = Get-IntegerField $row @("(?i)^Process.*Id$", "(?i)^PID$")
     if (!$childPids.Contains($pidValue)) { continue }
-    if ($eventName -match "(?i)(TCP|UDP|DNS|Connect|Socket|Network)") { $lines.Add("network|$pidValue|$serialized") }
-    elseif ($eventName -match "(?i)(File.*(?:Write|Delete|Rename)|Directory.*(?:Create|Delete)|SetInformation|Flush|CreateAlways|CreateNew|Overwrite|Supersede)") { $lines.Add("write|$pidValue|$serialized") }
+    $rootRows++
+    if ($eventName -match "(?i)(TCP|UDP|DNS|Connect|Socket|Network)") {
+      $networkRows++
+      $lines.Add("network|$pidValue|$serialized")
+    }
+    elseif ($eventName -match "(?i)(File.*(?:Write|Delete|Rename)|Directory.*(?:Create|Delete)|SetInformation|Flush|CreateAlways|CreateNew|Overwrite|Supersede)") {
+      $writeRows++
+      $lines.Add("write|$pidValue|$serialized")
+    }
   }
   [IO.File]::WriteAllLines($TraceOutput, $lines, (New-Object Text.UTF8Encoding($false)))
   $receipt = [ordered]@{
@@ -72,6 +88,12 @@ try {
     outputLimitExceeded = $false
     startedAt = $started.ToString("o")
     endedAt = $ended.ToString("o")
+    observerDiagnostics = [ordered]@{
+      totalRows = $totalRows
+      rootRows = $rootRows
+      networkRows = $networkRows
+      writeRows = $writeRows
+    }
   }
   [IO.File]::WriteAllText($ResultOutput, ($receipt | ConvertTo-Json -Compress), (New-Object Text.UTF8Encoding($false)))
 }

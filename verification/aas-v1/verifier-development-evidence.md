@@ -37,9 +37,19 @@ candidate freeze.
 ### Evidence boundaries
 
 - Local verifier unit/schema/structure checks are green.
-- The local desktop sandbox blocks the privileged macOS DTrace spawn with
-  `EPERM`; therefore it is not claimed as locally proven. The mandatory
-  six-runner harness workflow owns native strace/DTrace/ETW sentinel proof.
+- DTrace on the hosted macOS runner could neither execute the toolcache Node
+  binary directly nor observe the gated sentinel through a wrapper. The
+  verifier therefore uses the runner-native privileged `fs_usage` filesys,
+  network and exec streams, scoped to the gated candidate PID. The mandatory
+  six-runner harness workflow owns native strace/fs_usage/ETW sentinel proof;
+  no local desktop result is claimed as equivalent.
+- GitHub Advanced Security rejected the initial product-verifier trigger
+  because `pull_request_target` combined a privileged base context with an
+  untrusted candidate checkout and artifacts. The workflow now uses the
+  unprivileged `pull_request` event, resolves the candidate to the immutable
+  head SHA, and separately checks out verifier code from the immutable base
+  SHA. Manual dispatch likewise separates its explicit candidate SHA from the
+  workflow SHA. No product code executes in the verifier jobs.
 - Production transaction acceptance remains fail-closed until an external
   platform-native controller supplies schema-valid evidence for every observed
   lock, journal, backup, write, fsync, rename and commit boundary plus the six

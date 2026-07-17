@@ -1,7 +1,7 @@
 name: AAS v1 product verifier
 
 on:
-  pull_request_target:
+  pull_request:
     branches: [main]
     paths:
       - "tools/bin/aas.js"
@@ -32,17 +32,23 @@ jobs:
     timeout-minutes: 15
     outputs:
       commit: ${{ steps.identity.outputs.commit }}
+      verifier_commit: ${{ steps.identity.outputs.verifier_commit }}
     steps:
       - name: Resolve immutable candidate
         id: identity
         shell: bash
         env:
           PR_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
           INPUT_SHA: ${{ inputs.candidate_commit }}
+          WORKFLOW_SHA: ${{ github.sha }}
         run: |
           sha="${PR_SHA:-$INPUT_SHA}"
+          verifier_sha="${BASE_SHA:-$WORKFLOW_SHA}"
           [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || exit 64
+          [[ "$verifier_sha" =~ ^[0-9a-f]{40}$ ]] || exit 64
           echo "commit=$sha" >> "$GITHUB_OUTPUT"
+          echo "verifier_commit=$verifier_sha" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           ref: ${{ steps.identity.outputs.commit }}
@@ -115,7 +121,7 @@ jobs:
       - name: Checkout protected verifier revision
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
-          ref: ${{ github.workflow_sha }}
+          ref: ${{ needs.candidate-pack.outputs.verifier_commit }}
           path: trusted
           persist-credentials: false
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
@@ -144,7 +150,7 @@ jobs:
           node trusted/verification/aas-v1/verifier/bin/verify-product.mjs \
             --tarball "$tarball" \
             --candidate-commit "${{ needs.candidate-pack.outputs.commit }}" \
-            --verifier-commit "${{ github.workflow_sha }}" \
+            --verifier-commit "${{ needs.candidate-pack.outputs.verifier_commit }}" \
             --job-id "${{ matrix.id }}" \
             --transaction-evidence "$RUNNER_TEMP/aas-transaction-evidence.json" \
             --work-root "$RUNNER_TEMP/aas-v1-work" \
@@ -166,7 +172,7 @@ jobs:
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
-          ref: ${{ github.workflow_sha }}
+          ref: ${{ needs.candidate-pack.outputs.verifier_commit }}
           path: trusted
           persist-credentials: false
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4

@@ -102,7 +102,7 @@ export function parseMacFsUsage(filesystemText, networkText, execText, zones = {
   const events = [];
   for (const line of fsUsageLines(networkText)) events.push({ kind: "network", targetDigest: redactToken(line, zones) });
   for (const line of fsUsageLines(filesystemText)) {
-    if (/\b(?:write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
+    if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
       events.push({ kind: "write", targetDigest: redactToken(line, zones) });
     }
   }
@@ -133,7 +133,7 @@ async function macObserved(executable, args, options) {
     });
     return { mode, get pid() { return pid; }, promise };
   });
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  await new Promise((resolve) => setTimeout(resolve, 1_500));
   fs.writeFileSync(gate, "go\n", { mode: 0o600 });
   const result = await commandPromise;
   for (const observer of observers) {
@@ -150,6 +150,10 @@ async function macObserved(executable, args, options) {
     result,
     observation: parseMacFsUsage(byMode.filesys, byMode.network, byMode.exec, options.zones),
     backend: "macos-fs_usage-process",
+    diagnostics: Object.fromEntries(traces.map(([mode, raw]) => [mode, {
+      bytes: Buffer.byteLength(raw),
+      eventLines: fsUsageLines(raw).length,
+    }])),
   };
 }
 
@@ -177,7 +181,12 @@ async function windowsObserved(executable, args, options) {
   const result = JSON.parse(fs.readFileSync(resultFile, "utf8"));
   fs.rmSync(trace, { force: true });
   fs.rmSync(resultFile, { force: true });
-  return { result, observation: parseDelimitedObserver(raw, options.zones), backend: "windows-etw-kernel-process-tree" };
+  return {
+    result,
+    observation: parseDelimitedObserver(raw, options.zones),
+    backend: "windows-etw-kernel-process-tree",
+    diagnostics: result.observerDiagnostics ?? null,
+  };
 }
 
 export async function runObserved(executable, args, options) {
@@ -190,11 +199,17 @@ export async function runObserved(executable, args, options) {
 
 export async function selfTestObserver(options) {
   const sentinel = path.join(options.evidenceDir, `sentinel-${process.pid}.txt`);
-  const program = `const fs=require('node:fs'),net=require('node:net');fs.writeFileSync(${JSON.stringify(sentinel)},'sentinel');const s=net.connect({host:'127.0.0.1',port:9});s.on('error',()=>process.exit(0));setTimeout(()=>process.exit(1),1000);`;
+  const program = `const fs=require('node:fs'),net=require('node:net');fs.writeFileSync(${JSON.stringify(sentinel)},'sentinel');const s=net.connect({host:'127.0.0.1',port:9});s.on('error',()=>setTimeout(()=>process.exit(0),750));setTimeout(()=>process.exit(1),2000);`;
   const observed = await runObserved(process.execPath, ["-e", program], { ...options, timeoutMs: 10_000 });
   fs.rmSync(sentinel, { force: true });
   if (observed.observation.networkAttempts < 1 || observed.observation.writeAttempts < 1) {
-    throw Object.assign(new Error("Observer missed sentinel network/write attempts"), { code: "AAS_OBSERVER_SELF_TEST_FAILED" });
+    const diagnostic = JSON.stringify({
+      backend: observed.backend,
+      networkAttempts: observed.observation.networkAttempts,
+      writeAttempts: observed.observation.writeAttempts,
+      diagnostics: observed.diagnostics ?? null,
+    });
+    throw Object.assign(new Error(`Observer missed sentinel network/write attempts: ${diagnostic}`), { code: "AAS_OBSERVER_SELF_TEST_FAILED" });
   }
   return {
     backend: observed.backend,

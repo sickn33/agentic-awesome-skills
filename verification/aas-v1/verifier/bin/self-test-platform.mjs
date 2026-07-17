@@ -9,7 +9,7 @@ import { isolatedZones } from "../lib/runtime.mjs";
 const jobIndex = process.argv.indexOf("--job-id");
 const jobId = jobIndex >= 0 ? process.argv[jobIndex + 1] : "";
 const expected = jobId.startsWith("linux-") ? "linux-strace-process-tree"
-  : jobId.startsWith("macos-") ? "macos-dtrace-process-tree"
+  : jobId.startsWith("macos-") ? "macos-fs_usage-process"
     : jobId.startsWith("windows-") ? "windows-etw-kernel-process-tree" : null;
 if (!expected) throw new Error("--job-id must be a frozen runtime-matrix job");
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "aas-observer-self-test-"));
@@ -23,4 +23,3 @@ try {
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
 }
-
