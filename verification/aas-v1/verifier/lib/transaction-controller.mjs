@@ -157,11 +157,13 @@ export function faultFixtureProfile(className, backupSkillIds) {
 }
 
 export function raceFixtureProfile(className, contentionSkillIds) {
+  const requiresVisibleStaging = ["concurrency", "drift", "symlink-swap", "target-swap"].includes(className);
   return {
     // Keep the first apply active long enough for a separately spawned CLI to
-    // contend on the externally observed lock. A one-skill apply can complete
-    // between lock observation and process scheduling on fast Linux runners.
-    additionalSkills: className === "concurrency" ? contentionSkillIds : [],
+    // contend on the observed lock or for the external race driver to mutate
+    // the target after staging. A one-skill apply can publish between boundary
+    // observation and process scheduling on fast runners.
+    additionalSkills: requiresVisibleStaging ? contentionSkillIds : [],
   };
 }
 

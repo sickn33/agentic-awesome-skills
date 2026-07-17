@@ -174,5 +174,8 @@ test("write faults use a policy-safe corpus to expose the transient staging boun
 test("concurrency races keep the externally observed target lock contended", () => {
   const corpus = ["large-a", "large-b"];
   assert.deepEqual(raceFixtureProfile("concurrency", corpus), { additionalSkills: corpus });
-  assert.deepEqual(raceFixtureProfile("drift", corpus), { additionalSkills: [] });
+  assert.deepEqual(raceFixtureProfile("drift", corpus), { additionalSkills: corpus });
+  assert.deepEqual(raceFixtureProfile("symlink-swap", corpus), { additionalSkills: corpus });
+  assert.deepEqual(raceFixtureProfile("target-swap", corpus), { additionalSkills: corpus });
+  assert.deepEqual(raceFixtureProfile("corrupt-journal", corpus), { additionalSkills: [] });
 });
