@@ -7,6 +7,7 @@
     "data/bundles.json",
     "data/plugin-compatibility.json",
     "data/aliases.json",
+    "data/aas-v1/",
     "apps/web-app/public/sitemap.xml",
     "apps/web-app/public/skills.json.backup",
     ".agents/plugins/",
