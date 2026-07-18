@@ -21,6 +21,7 @@ const {
 
 const ROOT = path.resolve(__dirname, "../../..");
 const packageMetadata = require(path.join(ROOT, "package.json"));
+const expectedSkillCount = require(path.join(ROOT, "skills_index.json")).length;
 const TARBALL_URL = `${REGISTRY_ORIGIN}/${packageMetadata.name}/-/${packageMetadata.name}-${packageMetadata.version}.tgz`;
 
 let fixtureRoot;
@@ -149,7 +150,7 @@ test("the mocked npm registry promotes, verifies, resolves, and reuses the real 
   const resolved = await resolveCatalog(result.identity.catalogDigest);
   assert.ok(resolved);
   assert.equal(resolved.digest, result.identity.catalogDigest);
-  assert.equal(resolved.skills.length, 1965);
+  assert.equal(resolved.skills.length, expectedSkillCount);
 
   const beforeRepeat = JSON.stringify(status.identity);
   calls.length = 0;

@@ -12,6 +12,7 @@ const {
   syntheticCatalog,
   notApplicable,
 } = require("../../lib/aas-v1");
+const expectedSkillCount = require("../../../skills_index.json").length;
 
 function skill(id, { tokens, capabilities, risk = "safe", setup = "none", codex = "supported", claude = "supported" }) {
   const evidence = [{ type: "maintainer-review", id: `review:${id}` }];
@@ -205,8 +206,8 @@ test("search is bounded and stable", () => {
 
 test("bundled catalog exposes every canonical registry ID exactly once", () => {
   const catalog = loadBundledCatalog();
-  assert.equal(catalog.skills.length, 1965);
-  assert.equal(new Set(catalog.skills.map((entry) => entry.id)).size, 1965);
+  assert.equal(catalog.skills.length, expectedSkillCount);
+  assert.equal(new Set(catalog.skills.map((entry) => entry.id)).size, expectedSkillCount);
   assert.ok(catalog.skills.some((entry) => entry.id === "2d-games"));
   assert.ok(!catalog.skills.some((entry) => entry.id === "game-development/2d-games"));
 });
