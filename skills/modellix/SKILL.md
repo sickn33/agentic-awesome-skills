@@ -2,7 +2,7 @@
 name: modellix
 description: "Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download)."
 category: creative
-risk: safe
+risk: critical
 source: community
 source_repo: Modellix/modellix-skill
 source_type: official
@@ -18,7 +18,7 @@ license_source: "https://github.com/Modellix/modellix-skill/blob/main/LICENSE"
 
 ## Overview
 
-Modellix is a Model-as-a-Service platform for AI image and video generation. This skill teaches agents to use the official `modellix-cli` workflow (doctor → model run --wait → task download) with REST fallback when the CLI is unavailable.
+Modellix is a Model-as-a-Service platform for AI image and video generation. This skill teaches agents to use the official `modellix-cli` workflow (doctor → model run --wait → task download).
 
 Upstream package: https://github.com/Modellix/modellix-skill/tree/main/modellix-skill
 
@@ -60,11 +60,21 @@ modellix-cli model run \
 ## Best Practices
 
 - Prefer CLI `model run --wait` over hand-rolled polling
+- Before a paid submission, disclose the provider, model, prompt or source media that will leave the machine, expected cost, and output path; obtain explicit user approval
+- Prefer session-scoped API-key use; run `modellix-cli auth login` only when the user approves persistent local credential storage
 - Do not blindly retry paid submissions after unknown outcomes — check `task history`
+- Confirm the destination and overwrite policy before `task download`; never replace an existing file without explicit approval
 - Fetch request schemas from `model describe` `docs_url` or https://docs.modellix.ai/llms.txt
 
 ## Security & Safety Notes
 
 - Requires a Modellix API key; never print secrets in logs
-- Network egress to `api.modellix.ai` / Modellix CDN
-- Paid generation consumes account balance
+- Prompts and uploaded source media leave the machine for `api.modellix.ai` and Modellix CDN processing
+- Paid generation consumes account balance and must not be submitted or retried without the approval described above
+
+## Limitations
+
+- Requires a Modellix account, network access, a valid API key, and sufficient account balance.
+- Model availability, request schemas, pricing, quotas, moderation, and generation time are controlled by Modellix and may change.
+- Generated outputs require human review for quality, rights, privacy, and policy compliance before publication.
+- This skill documents the CLI workflow only; it does not define a REST fallback or guarantee that a completed remote task downloads successfully.
