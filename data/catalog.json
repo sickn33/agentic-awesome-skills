@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-16T14:29:29.000Z",
-  "total": 1967,
+  "total": 1968,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2911,6 +2911,36 @@
         "glassmorphism"
       ],
       "path": "skills/antigravity-design-expert/SKILL.md"
+    },
+    {
+      "id": "antigravity-maintainer-batch-release",
+      "canonical_id": "antigravity-maintainer-batch-release",
+      "name": "antigravity-maintainer-batch-release",
+      "description": "Run protected AAS maintainer sweeps, PR merge batches, canonical sync, Core preview checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "self",
+      "tags": [
+        "antigravity",
+        "maintainer",
+        "batch",
+        "release"
+      ],
+      "triggers": [
+        "antigravity",
+        "maintainer",
+        "batch",
+        "release",
+        "run",
+        "protected",
+        "aas",
+        "sweeps",
+        "pr",
+        "merge",
+        "batches",
+        "canonical"
+      ],
+      "path": "skills/antigravity-maintainer-batch-release/SKILL.md"
     },
     {
       "id": "antigravity-skill-orchestrator",
@@ -14944,7 +14974,7 @@
       "id": "create-pr",
       "canonical_id": "create-pr",
       "name": "create-pr",
-      "description": "Alias for sentry-skills:pr-writer. Use when users explicitly ask for \"create-pr\" or reference the legacy skill name. Redirects to the canonical PR writing workflow.",
+      "description": "Alias for pr-writer. Use when users explicitly ask for \"create-pr\" or reference the legacy skill name. Redirects to the canonical PR writing workflow.",
       "category": "workflow",
       "risk": "unknown",
       "source": "community",
@@ -14956,15 +14986,15 @@
         "create",
         "pr",
         "alias",
-        "sentry",
-        "skills",
         "writer",
         "users",
         "explicitly",
         "ask",
         "reference",
         "legacy",
-        "skill"
+        "skill",
+        "name",
+        "redirects"
       ],
       "path": "skills/create-pr/SKILL.md"
     },

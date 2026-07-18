@@ -1962,6 +1962,25 @@
       "runtime_files": []
     },
     {
+      "id": "antigravity-maintainer-batch-release",
+      "path": "skills/antigravity-maintainer-batch-release",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "antigravity-skill-orchestrator",
       "path": "skills/antigravity-skill-orchestrator",
       "targets": {
@@ -34360,18 +34379,24 @@
       "id": "tools-page-seo-optimizer",
       "path": "skills/tools-page-seo-optimizer",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "escaped_local_reference"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "escaped_local_reference"
+        ],
+        "claude": [
+          "escaped_local_reference"
+        ]
       },
       "runtime_files": []
     },
@@ -37800,14 +37825,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1967,
+    "total_skills": 1968,
     "supported": {
       "codex": 1893,
       "claude": 1915
     },
     "blocked": {
-      "codex": 74,
-      "claude": 52
+      "codex": 75,
+      "claude": 53
     },
     "manual_setup": 17
   }

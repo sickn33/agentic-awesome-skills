@@ -18,14 +18,14 @@ Create pull requests following Sentry's engineering practices.
 
 ## Prerequisites
 
-Before creating a PR, ensure all changes are committed. If there are uncommitted changes, run the `sentry-skills:commit` skill first to commit them properly.
+Before creating a PR, ensure all changes are committed. If there are uncommitted changes, run the available `commit` skill first to commit them properly.
 
 ```bash
 # Check for uncommitted changes
 git status --porcelain
 ```
 
-If the output shows any uncommitted changes (modified, added, or untracked files that should be included), invoke the `sentry-skills:commit` skill before proceeding.
+If the output shows any uncommitted changes (modified, added, or untracked files that should be included), invoke the available `commit` skill before proceeding. If the client requires qualified skill names, use the qualifier for the plugin that supplied this skill.
 
 ## Process
 

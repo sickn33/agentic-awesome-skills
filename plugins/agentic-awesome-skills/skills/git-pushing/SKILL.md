@@ -32,22 +32,22 @@ Do not use this skill for a maintainer merge batch, canonical synchronization, v
 
 ## Workflow
 
-Use the helper only after the safety gates pass. With no paths it stages all current changes, so use that form only when every dirty file belongs to the requested commit:
+Use the helper only after the safety gates pass. Resolve the installed directory that contains this `SKILL.md` and substitute its absolute path for `<skill-directory>` below; do not assume the current working directory is the catalog repository. With no paths the helper stages all current changes, so use that form only when every dirty file belongs to the requested commit:
 
 ```bash
-bash skills/git-pushing/scripts/smart_commit.sh
+bash "<skill-directory>/scripts/smart_commit.sh"
 ```
 
 With custom message:
 
 ```bash
-bash skills/git-pushing/scripts/smart_commit.sh "feat: add feature"
+bash "<skill-directory>/scripts/smart_commit.sh" "feat: add feature"
 ```
 
 To stage only named files, pass them after `--`:
 
 ```bash
-bash skills/git-pushing/scripts/smart_commit.sh "fix: scope change" -- path/to/file
+bash "<skill-directory>/scripts/smart_commit.sh" "fix: scope change" -- path/to/file
 ```
 
 The helper handles isolated staging, commit creation, and push; it does not replace validation, release tooling, or a rebase required by an advanced upstream branch.

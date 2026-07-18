@@ -2396,6 +2396,28 @@
     }
   },
   {
+    "id": "antigravity-maintainer-batch-release",
+    "path": "skills/antigravity-maintainer-batch-release",
+    "category": "uncategorized",
+    "name": "antigravity-maintainer-batch-release",
+    "description": "Run protected AAS maintainer sweeps, PR merge batches, canonical sync, Core preview checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-07-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "antigravity-skill-orchestrator",
     "path": "skills/antigravity-skill-orchestrator",
     "category": "meta",
@@ -12604,7 +12626,7 @@
     "path": "skills/create-pr",
     "category": "workflow",
     "name": "create-pr",
-    "description": "Alias for sentry-skills:pr-writer. Use when users explicitly ask for \"create-pr\" or reference the legacy skill name. Redirects to the canonical PR writing workflow.",
+    "description": "Alias for pr-writer. Use when users explicitly ask for \"create-pr\" or reference the legacy skill name. Redirects to the canonical PR writing workflow.",
     "risk": "unknown",
     "source": "community",
     "date_added": null,
@@ -43160,15 +43182,17 @@
     "date_added": "2026-06-19",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": []
+      "reasons": [
+        "escaped_local_reference"
+      ]
     },
     "source_type": "community",
     "tags": [

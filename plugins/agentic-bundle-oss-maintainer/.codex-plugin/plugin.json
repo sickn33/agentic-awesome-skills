@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "OSS Maintainer",
-    "shortDescription": "Maintainer & OSS · 8 curated skills",
-    "longDescription": "For shipping clean changes in public repositories. Covers Commit, Create PR, and 6 more skills.",
+    "shortDescription": "Maintainer & OSS · 10 curated skills",
+    "longDescription": "For shipping clean changes in public repositories. Covers Commit, Create Branch, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Maintainer & OSS",
     "capabilities": [

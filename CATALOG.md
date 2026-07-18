@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-16T14:29:29.000Z
 
-Total skills: 1967
+Total skills: 1968
 
 ## agent-behavior (5)
 
@@ -2009,7 +2009,7 @@ Total skills: 1967
 | --- | --- | --- | --- | --- | --- |
 | `android-cli` | Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line t... | critical | self | android, cli, adb, mobile, build, emulator | android, cli, adb, mobile, build, emulator, orchestrates, development, tasks, including, creation, deployment |
 
-## uncategorized (283)
+## uncategorized (284)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2027,6 +2027,7 @@ Total skills: 1967
 | `andrej-karpathy` | Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes... | safe | multica-ai/andrej-karpathy-skills | coding-guidelines, code-review, llm-coding, simplicity | coding-guidelines, code-review, llm-coding, simplicity, andrej, karpathy, behavioral, guidelines, reduce, common, llm, coding |
 | `anti-deception` | Use BEFORE responding when the user's request shows pressure to validate or agree ("tell them what they want", "make them happy", "convince them"), manufactu... | unknown | ejentum/ejentum-mcp | community, ai-tools, anti-deception, integrity, mcp | community, ai-tools, anti-deception, integrity, mcp, anti, deception, before, responding, user, request, shows |
 | `anti-sycophancy` | Eliminate sycophantic agreement patterns in AI responses. Load via /skill anti-sycophancy. | safe | mskadu/opencode-agent-skills | anti, sycophancy | anti, sycophancy, eliminate, sycophantic, agreement, ai, responses, load, via, skill |
+| `antigravity-maintainer-batch-release` | Run protected AAS maintainer sweeps, PR merge batches, canonical sync, Core preview checks, and scripted releases. Use for repository maintenance, main align... | critical | self | antigravity, maintainer, batch, release | antigravity, maintainer, batch, release, run, protected, aas, sweeps, pr, merge, batches, canonical |
 | `app-store-changelog` | Generate user-facing App Store release notes from git history since the last tag. | safe | Dimillian/Skills (MIT) | app, store, changelog | app, store, changelog, generate, user, facing, release, notes, git, history, since, last |
 | `apple-notes-search` | Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall,... | critical | connerkward/mcp-apple-notes | apple-notes, search, mcp, macos, semantic-search, knowledge | apple-notes, search, mcp, macos, semantic-search, knowledge, apple, notes, semantic, keyword, connection, discovery |
 | `atlas-ledger` | Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drif... | critical | wede-wx/atlas | atlas, ledger | atlas, ledger, companion, contract, auto, invoked, final, audit, caught, drift, after, post |
@@ -2406,7 +2407,7 @@ Total skills: 1967
 | `conductor-validator` | Validates Conductor project artifacts for completeness, consistency, and correctness. Use after setup, when diagnosing issues, or before implementation to ve... | safe | community | conductor, validator | conductor, validator, validates, artifacts, completeness, consistency, correctness, after, setup, diagnosing, issues, before |
 | `create-branch` | Create a git branch following Sentry naming conventions. Use when asked to "create a branch", "new branch", "start a branch", "make a branch", "switch to a n... | critical | community | create, branch | create, branch, git, following, sentry, naming, conventions, asked, new, start, switch, starting |
 | `create-issue-gate` | Use when starting a new implementation task and an issue must be created with strict acceptance criteria gating before execution. | safe | community | create, issue, gate | create, issue, gate, starting, new, task, must, created, strict, acceptance, criteria, gating |
-| `create-pr` | Alias for sentry-skills:pr-writer. Use when users explicitly ask for "create-pr" or reference the legacy skill name. Redirects to the canonical PR writing wo... | unknown | community | create, pr | create, pr, alias, sentry, skills, writer, users, explicitly, ask, reference, legacy, skill |
+| `create-pr` | Alias for pr-writer. Use when users explicitly ask for "create-pr" or reference the legacy skill name. Redirects to the canonical PR writing workflow. | unknown | community | create, pr | create, pr, alias, writer, users, explicitly, ask, reference, legacy, skill, name, redirects |
 | `crossframe` | Use when the user explicitly invokes CrossFrame or 跨尺度结构诊断 for Chinese-canonical structural diagnosis of complex relationships, organizations, institutions, ... | safe | xi-kari/crossframe-skill | crossframe, chinese, structural-diagnosis, reasoning, governance | crossframe, chinese, structural-diagnosis, reasoning, governance, user, explicitly, invokes, canonical, structural, diagnosis, complex |
 | `crossframe-public` | Use when CrossFrame Suite routes explicit Chinese analysis of public issues, platform governance, policy, institutional responsibility, appeals, or complianc... | safe | xi-kari/crossframe-skill | crossframe, chinese, public-policy, governance, evidence | crossframe, chinese, public-policy, governance, evidence, public, suite, routes, explicit, analysis, issues, platform |
 | `crossframe-review` | Use when explicit CrossFrame output needs review for reasoning fidelity, evidence boundaries, source anchors, concept drift, article collapse, or repair steps. | safe | xi-kari/crossframe-skill | crossframe, chinese, review, quality-gate, evidence | crossframe, chinese, review, quality-gate, evidence, explicit, output, reasoning, fidelity, boundaries, source, anchors |
