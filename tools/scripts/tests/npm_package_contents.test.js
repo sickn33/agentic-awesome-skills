@@ -1,5 +1,6 @@
 const assert = require("assert");
 const { spawnSync } = require("child_process");
+const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const packageJson = require(path.resolve(__dirname, "..", "..", "..", "package.json"));
@@ -67,4 +68,23 @@ assert.strictEqual(
   packageJson.dependencies?.ajv,
   "^8.20.0",
   "published package must declare ajv as a runtime dependency for v1 schema validation",
+);
+
+const coreGuide = fs.readFileSync(path.join(repoRoot, "docs", "users", "aas-core.md"), "utf8");
+const readme = fs.readFileSync(path.join(repoRoot, "README.md"), "utf8");
+assert.ok(
+  readme.includes("https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md"),
+  "published README must link to the canonical AAS Core guide without relying on an unpackaged relative path",
+);
+assert.ok(
+  !readme.includes("](docs/users/aas-core.md)"),
+  "published README must not link to an AAS Core guide path excluded from the npm package",
+);
+assert.ok(
+  coreGuide.includes("--package=agentic-awesome-skills@latest"),
+  "AAS Core onboarding must resolve the current published release without a hardcoded version",
+);
+assert.ok(
+  !/^\s*--runtime-version\b/m.test(coreGuide),
+  "AAS Core onboarding command must derive the runtime version from the manifest catalog identity",
 );

@@ -15,7 +15,7 @@ For Codex and Claude, the primary path is agent-first composition through AAS Co
 
 The canonical project page is the GitHub repository at <https://github.com/sickn33/agentic-awesome-skills>; the hosted catalog is a companion discovery surface, and Workbench is a browser-local review surface for Core stack and plan artifacts. Neither is a hosted control plane.
 
-**Start here:** [Understand AAS Core](#aas-core-agent-first-preview) · [Core guide](docs/users/aas-core.md) · [Review a stack or plan](https://sickn33.github.io/agentic-awesome-skills/workbench) · [Direct installs](#installation) · [Choose your tool](#choose-your-tool) · [Browse 1,965+ Skills](#browse-1965-skills) · [Contribute](#contributing)
+**Start here:** [Understand AAS Core](#aas-core-agent-first-preview) · [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md) · [Review a stack or plan](https://sickn33.github.io/agentic-awesome-skills/workbench) · [Direct installs](#installation) · [Choose your tool](#choose-your-tool) · [Browse 1,965+ Skills](#browse-1965-skills) · [Contribute](#contributing)
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2043%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 [![Follow @AASkills_ on X](https://img.shields.io/badge/Follow-%40AASkills__-black?style=for-the-badge&logo=x)](https://x.com/AASkills_)
@@ -55,7 +55,7 @@ AAS Core gives the repository one product model:
 - **Review in Workbench.** The hosted Workbench imports and reviews stack/plan JSON in browser memory; it does not access your filesystem or install anything.
 - **Retain every useful distribution path.** Direct installs, plugins, bundles, workflows, and the full catalog remain available as payload and compatibility surfaces.
 
-Read the [AAS Core guide](docs/users/aas-core.md) for the exact trust boundaries, current preview status, Codex/Claude setup model, and CLI lifecycle.
+Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md) for the exact trust boundaries, current preview status, Codex/Claude setup model, and CLI lifecycle.
 
 ## Why This Repo
 
@@ -91,7 +91,7 @@ Read the [AAS Core guide](docs/users/aas-core.md) for the exact trust boundaries
 
 ## Installation
 
-For Codex and Claude, start with the [AAS Core guide](docs/users/aas-core.md): configure the local MCP through the explicit preview flow, ask the agent for a recommendation, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP is read-only; no skill or project write happens during search, recommendation, inspection, validation, or planning.
+For Codex and Claude, start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md): configure the local MCP through the explicit preview flow, ask the agent for a recommendation, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP is read-only; no skill or project write happens during search, recommendation, inspection, validation, or planning.
 
 Use direct installation when your host does not yet have a native AAS Core adapter, when you already know the exact skill IDs, or when you deliberately prefer manual selection:
 
@@ -320,7 +320,7 @@ Use the root repo as a landing page, then jump into the deeper surface that matc
 Keep the root README short; use the dedicated docs for recovery and platform-specific guidance.
 
 - If you are confused after installation, start with the [Usage Guide](docs/users/usage.md).
-- For Core setup, trust boundaries, stack manifests, and preview status, use the [AAS Core guide](docs/users/aas-core.md).
+- For Core setup, trust boundaries, stack manifests, and preview status, use the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md).
 - If you integrate agentic-awesome-skills into a host, read the discovery contract first: [Stable Skills Manifest v1](docs/users/discovery-manifest.md).
 - For Windows truncation or context crash loops, use [docs/users/windows-truncation-recovery.md](docs/users/windows-truncation-recovery.md).
 - For Linux/macOS overload or selective activation, use [docs/users/agent-overload-recovery.md](docs/users/agent-overload-recovery.md).
@@ -330,7 +330,7 @@ Keep the root README short; use the dedicated docs for recovery and platform-spe
 
 ## Stable Skills Manifest v1
 
-This is the stable **direct-host discovery manifest** for integrations that load individual `SKILL.md` files. It is not `aas-stack.json`, the verified AAS Core catalog, or the Core recommendation contract. Core users should start with the [AAS Core guide](docs/users/aas-core.md); custom host integrations can continue using the manifest below.
+This is the stable **direct-host discovery manifest** for integrations that load individual `SKILL.md` files. It is not `aas-stack.json`, the verified AAS Core catalog, or the Core recommendation contract. Core users should start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md); custom host integrations can continue using the manifest below.
 
 Host integrations should use:
 

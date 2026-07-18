@@ -211,13 +211,25 @@ test("production CLI resolves and re-verifies a content-addressed runtime cache"
   const planned = spawnSync(process.execPath, [
     path.join(ROOT, "tools/bin/aas.js"), "stack", "plan",
     "--manifest", manifestPath, "--target", "codex:project", "--target-root", targetRoot,
-    "--cache-root", cacheRoot, "--runtime-version", "14.6.0", "--runtime-integrity", integrity,
+    "--cache-root", cacheRoot, "--runtime-integrity", integrity,
     "--out", planPath,
   ], { cwd: targetRoot, encoding: "utf8" });
   assert.equal(planned.status, 0, planned.stderr);
   const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+  assert.equal(plan.payload.runtime.version, manifest.catalog.version);
   assert.equal(plan.payload.runtime.closureDigest, promoted.runtimeIdentity.closureDigest);
   assert.equal(fs.existsSync(path.join(targetRoot, ".aas")), false);
+
+  const mismatchedPlanPath = path.join(item.root, "mismatched-plan.json");
+  const mismatched = spawnSync(process.execPath, [
+    path.join(ROOT, "tools/bin/aas.js"), "stack", "plan",
+    "--manifest", manifestPath, "--target", "codex:project", "--target-root", targetRoot,
+    "--cache-root", cacheRoot, "--runtime-version", "99.0.0", "--runtime-integrity", integrity,
+    "--out", mismatchedPlanPath,
+  ], { cwd: targetRoot, encoding: "utf8" });
+  assert.equal(mismatched.status, 3, mismatched.stderr);
+  assert.equal(JSON.parse(mismatched.stderr).code, "AAS_PLAN_RUNTIME_CATALOG_MISMATCH");
+  assert.equal(fs.existsSync(mismatchedPlanPath), false);
 
   fs.writeFileSync(path.join(promoted.targetPath, "package", "skills", "ai-agents-architect", "SKILL.md"), "tampered\n");
   const rejected = spawnSync(process.execPath, [
