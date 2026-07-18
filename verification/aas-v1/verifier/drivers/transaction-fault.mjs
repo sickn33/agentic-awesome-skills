@@ -178,6 +178,15 @@ const laterBoundaries = observed
   : [];
 const recoveryLockPresent = fs.existsSync(path.join(input.targetRoot, ".aas-transaction.lock"));
 const wal = walEvidence(input.targetRoot);
+let value = null;
+for (const line of (outcome.code === 0 ? Buffer.concat(stdout) : Buffer.concat(stderr)).toString("utf8").split("\n").reverse()) {
+  if (!line.trim()) continue;
+  try {
+    const parsed = JSON.parse(line);
+    value = { status: parsed?.status ?? null, code: parsed?.code ?? null, category: parsed?.category ?? null };
+    break;
+  } catch {}
+}
 process.stdout.write(`${JSON.stringify({
   schemaVersion: 1,
   observed,
@@ -186,6 +195,7 @@ process.stdout.write(`${JSON.stringify({
   laterBoundaries,
   recoveryLockPresent,
   wal,
+  value,
   stdoutDigest: digest(Buffer.concat(stdout).toString("utf8")),
   stderrDigest: digest(Buffer.concat(stderr).toString("utf8")),
 })}\n`);

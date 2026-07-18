@@ -8,7 +8,7 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-9d48466f195f5156a4a95c6e25e067afe840734cd08a0980bef1ddc36882a187",
+  "rootDigest": "sha256-efab3b87770cef2f4bda104002b22ce8733d9bd8daf39d4b1ff81ca5bb4045bc",
   "fileCount": 764,
   "files": [
     {
@@ -3678,8 +3678,8 @@
     },
     {
       "path": "verifier/drivers/transaction-fault.mjs",
-      "bytes": 8781,
-      "sha256": "593c351bc63ee324d6ba3f00b7773d5be97c6f0a57ff36c9ea946377a8e020b8"
+      "bytes": 9151,
+      "sha256": "f7ea5ab2e24ef47c34a134862516a40f33c7910da0f2ce5e83b9f8d5eec47ef8"
     },
     {
       "path": "verifier/drivers/transaction-race.mjs",
@@ -3723,8 +3723,8 @@
     },
     {
       "path": "verifier/lib/observer.mjs",
-      "bytes": 27250,
-      "sha256": "03b7ac87b6b08737ba3422ab2a65c08c0b92189c42af3788939e53f08d540c19"
+      "bytes": 27608,
+      "sha256": "0e177d4d8cbd781691e1d35c987176181bce9c8f6010630db834850e22e78b76"
     },
     {
       "path": "verifier/lib/prng.mjs",
@@ -3758,8 +3758,8 @@
     },
     {
       "path": "verifier/lib/transaction-controller.mjs",
-      "bytes": 38454,
-      "sha256": "38988f7de7051fdbfb0b0d30ac288d2940fdc8e00063fa4153c6579d33561a23"
+      "bytes": 38780,
+      "sha256": "61afc801bde261ec40d9031479dc001fb50a5c039f6e7fe7960c4e42e21560fb"
     },
     {
       "path": "verifier/lib/transaction-evidence.mjs",
@@ -3823,8 +3823,8 @@
     },
     {
       "path": "verifier/tests/transaction-evidence.test.mjs",
-      "bytes": 9946,
-      "sha256": "d914259b0dcfbb85bbd2111f01039349277468f8ce086371f4f888bf199796d5"
+      "bytes": 10483,
+      "sha256": "896c342ba089414dee86ccbddeb49aa99e5703d196d2e58dc045aceda7a558bb"
     },
     {
       "path": "verifier/tests/tuning-gold-equivalence-audit.test.mjs",

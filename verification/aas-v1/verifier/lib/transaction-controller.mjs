@@ -176,6 +176,12 @@ export function classifyConcurrencyOutcomes(values) {
   return null;
 }
 
+export function corruptPrefixIsFailClosed(status, findings) {
+  return ["degraded", "recoveryRequired"].includes(status)
+    && Array.isArray(findings)
+    && findings.some((code) => /CORRUPT|SCHEMA|DIGEST/.test(code));
+}
+
 function finalState(targetRoot, skillId, expectedContentDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
@@ -496,6 +502,9 @@ async function faultCase(context, className) {
     observed: Boolean(driverValue?.observed),
     laterBoundaryCount: driverValue?.laterBoundaries?.length ?? null,
     recoveryLockPresent: driverValue?.recoveryLockPresent ?? null,
+    productStatus: driverValue?.value?.status ?? null,
+    productCode: driverValue?.value?.code ?? null,
+    productCategory: driverValue?.value?.category ?? null,
     stderrDigest: sha256(observed.result.stderr || ""),
   });
   const nativeLineage = nativeObservationLineage(process.platform, observed);
@@ -642,12 +651,12 @@ async function raceCase(context, className) {
       const prefixDiagnosis = await doctor(prefixFixture);
       const prefixAfterDoctor = logicalDigest(prefixFixture.targetRoot, prefixFixture.skillId);
       const prefixUnmanagedAfter = unmanagedDigest(prefixFixture.targetRoot);
-      assert(prefixDiagnosis.value.status === "degraded"
-        && prefixDiagnosis.value.findings.some((finding) => /CORRUPT|SCHEMA|DIGEST/.test(finding.code))
+      const prefixFindingCodes = prefixDiagnosis.value.findings.map((finding) => finding.code);
+      assert(corruptPrefixIsFailClosed(prefixDiagnosis.value.status, prefixFindingCodes)
         && prefixBeforeDoctor === prefixAfterDoctor && prefixUnmanagedBefore === prefixUnmanagedAfter,
       "AAS_TRANSACTION_CONTROLLER_CORRUPT_PREFIX_NOT_FAIL_CLOSED", {
         status: prefixDiagnosis.value.status,
-        findings: prefixDiagnosis.value.findings.map((finding) => finding.code),
+        findings: prefixFindingCodes,
       });
       outcome = killed;
       observation = {
@@ -661,7 +670,7 @@ async function raceCase(context, className) {
           corruptPrefix: {
             killed: prefixKilled.observation.eventDigest,
             diagnosisStatus: prefixDiagnosis.value.status,
-            findings: prefixDiagnosis.value.findings.map((finding) => finding.code),
+            findings: prefixFindingCodes,
             beforeDigest: prefixBeforeDoctor,
             afterDigest: prefixAfterDoctor,
             unmanagedBeforeDigest: prefixUnmanagedBefore,

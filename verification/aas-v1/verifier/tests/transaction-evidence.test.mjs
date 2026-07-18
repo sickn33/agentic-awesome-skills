@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { classifyConcurrencyOutcomes, faultFixtureProfile, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { classifyConcurrencyOutcomes, corruptPrefixIsFailClosed, faultFixtureProfile, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -193,4 +193,11 @@ test("concurrency accepts only lock rejection or post-commit idempotence", () =>
   assert.equal(classifyConcurrencyOutcomes([applied, idempotent]), "alreadyApplied");
   assert.equal(classifyConcurrencyOutcomes([applied, { result: { code: 0 }, value: { status: "applied" } }]), null);
   assert.equal(classifyConcurrencyOutcomes([applied, { result: { code: 1 }, value: { status: "alreadyApplied" } }]), null);
+});
+
+test("corrupt journal prefixes fail closed under both actionable doctor statuses", () => {
+  assert.equal(corruptPrefixIsFailClosed("degraded", ["AAS_TRANSACTION_JOURNAL_CORRUPT"]), true);
+  assert.equal(corruptPrefixIsFailClosed("recoveryRequired", ["AAS_TRANSACTION_JOURNAL_CORRUPT"]), true);
+  assert.equal(corruptPrefixIsFailClosed("healthy", ["AAS_TRANSACTION_JOURNAL_CORRUPT"]), false);
+  assert.equal(corruptPrefixIsFailClosed("recoveryRequired", ["AAS_TRANSACTION_STALE_OR_ACTIVE_LOCK"]), false);
 });

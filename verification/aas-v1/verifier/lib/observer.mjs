@@ -186,8 +186,11 @@ async function macObserved(executable, args, options) {
   fs.writeFileSync(launcher, [
     `process.title = ${JSON.stringify(observedName)};`,
     "const fs = require('node:fs');",
-    `const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600);`,
-    "fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd);",
+    "const waitArray = new Int32Array(new SharedArrayBuffer(4));",
+    // Give fs_usage time to attach its process-name filter after Node updates
+    // the copied executable's title. The candidate begins only after this
+    // bounded native canary heartbeat has completed.
+    `for (let attempt = 0; attempt < 20; attempt += 1) { const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600); fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd); Atomics.wait(waitArray, 0, 0, 100); }`,
     `const args = JSON.parse(Buffer.from(${JSON.stringify(encodedArgs)}, 'base64').toString('utf8'));`,
     "if (args[0] === '-e') { process.argv = [process.execPath, ...args.slice(2)]; eval(args[1]); }",
     "else { process.argv = [process.execPath, ...args]; require('node:module').runMain(); }",
