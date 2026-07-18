@@ -53,9 +53,10 @@ test("macOS observer lifetime covers readiness, candidate, drain, and stop margi
     readinessMaxAttempts: 4,
     readinessProcessTimeoutMs: 10_000,
     readinessDelayMs: 500,
+    candidateHandshakeTimeoutMs: 8_000,
     drainMs: 1_000,
     traceMaxOutputBytes: 64 * 1024 * 1024,
-    observerTimeoutMs: 59_500,
+    observerTimeoutMs: 67_500,
   });
   assert.throws(() => macObserverBudgets(0), (error) => error.code === "AAS_OBSERVER_INVALID_TIMEOUT");
 });

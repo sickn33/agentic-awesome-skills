@@ -231,6 +231,7 @@ async function macObserved(executable, args, options) {
   const observedExecutable = path.join(options.evidenceDir, observedName);
   const readinessCanary = path.join(options.evidenceDir, `aas-ready-${sequence}`);
   const candidateCanary = path.join(options.evidenceDir, `aas-start-${sequence}`);
+  const candidateRelease = path.join(options.evidenceDir, `aas-release-${sequence}`);
   const readinessToken = path.basename(readinessCanary);
   const candidateToken = path.basename(candidateCanary);
   const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
@@ -244,7 +245,7 @@ async function macObserved(executable, args, options) {
     // Give fs_usage time to attach its process-name filter after Node updates
     // the copied executable's title. The candidate begins only after this
     // bounded native canary heartbeat has completed.
-    `for (let attempt = 0; attempt < 20; attempt += 1) { const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600); fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd); Atomics.wait(waitArray, 0, 0, 100); }`,
+    `let candidateReleased = false; for (let attempt = 0; attempt < 100; attempt += 1) { const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600); fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd); if (fs.existsSync(${JSON.stringify(candidateRelease)})) { candidateReleased = true; break; } Atomics.wait(waitArray, 0, 0, 100); } if (!candidateReleased) throw Object.assign(new Error('observer did not release candidate'), { code: 'AAS_OBSERVER_UNAVAILABLE' });`,
     `const args = JSON.parse(Buffer.from(${JSON.stringify(encodedArgs)}, 'base64').toString('utf8'));`,
     "if (args[0] === '-e') { process.argv = [process.execPath, ...args.slice(2)]; eval(args[1]); }",
     "else { process.argv = [process.execPath, ...args]; require('node:module').runMain(); }",
@@ -255,6 +256,9 @@ async function macObserved(executable, args, options) {
   let observerPromise = null;
   let observerStopStarted = false;
   let observerCleanupFailed = false;
+  let candidateChild = null;
+  let candidateOutcome = null;
+  let candidatePromise = null;
   let liveObserverOutput = "";
   let captureLiveOutput = true;
   const captureObserverOutput = (callback) => (chunk) => {
@@ -339,7 +343,6 @@ async function macObserved(executable, args, options) {
       assertObserverActive("readiness-after-probe");
       if (liveObserverOutput.includes(readinessToken)) {
         readinessObservedLive = true;
-        captureLiveOutput = false;
         break;
       }
     }
@@ -347,13 +350,39 @@ async function macObserved(executable, args, options) {
       throw Object.assign(new Error("fs_usage did not confirm readiness before the candidate deadline"), { code: "AAS_OBSERVER_UNAVAILABLE" });
     }
     assertObserverActive("candidate-start");
-    const result = await runProcess(observedExecutable, [launcher], {
+    candidatePromise = runProcess(observedExecutable, [launcher], {
       ...options,
+      // The native handshake precedes candidate execution, so it receives a
+      // separate bounded allowance instead of consuming the candidate budget.
+      timeoutMs: options.timeoutMs + budgets.candidateHandshakeTimeoutMs,
       // fs_usage filters by executable name rather than ancestry. Make a
       // transaction driver launch the byte-identical observed Node copy so
       // the candidate child remains inside the native process filter.
       stdin: rewriteMacObservedNodeInput(options.stdin, process.execPath, observedExecutable),
-    });
+      onSpawn(child) {
+        candidateChild = child;
+        child.once("close", () => { candidateChild = null; });
+      },
+    }).then(
+      (candidateResult) => (candidateOutcome = { result: candidateResult }),
+      (error) => (candidateOutcome = { error }),
+    );
+    const candidateDeadline = Date.now() + budgets.candidateHandshakeTimeoutMs;
+    while (!liveObserverOutput.includes(candidateToken) && !candidateOutcome && Date.now() < candidateDeadline) {
+      assertObserverActive("candidate-canary");
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    if (!liveObserverOutput.includes(candidateToken)) {
+      await candidatePromise;
+      throw Object.assign(new Error("fs_usage did not confirm the candidate start canary before release"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    }
+    fs.writeFileSync(candidateRelease, "release", { mode: 0o600 });
+    captureLiveOutput = false;
+    const candidateCompletion = await candidatePromise;
+    if (candidateCompletion.error) {
+      throw Object.assign(new Error("candidate process failed to start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    }
+    const result = candidateCompletion.result;
     await new Promise((resolve) => setTimeout(resolve, budgets.drainMs));
     assertObserverActive("candidate-drain");
     await stopObserver();
@@ -382,10 +411,13 @@ async function macObserved(executable, args, options) {
     };
   } finally {
     captureLiveOutput = false;
+    if (candidateChild) candidateChild.kill("SIGKILL");
+    if (candidatePromise) await candidatePromise;
     await stopObserver();
     if (observerPromise) await observerPromise.catch(() => null);
     fs.rmSync(readinessCanary, { force: true });
     fs.rmSync(candidateCanary, { force: true });
+    fs.rmSync(candidateRelease, { force: true });
     fs.rmSync(launcher, { force: true });
     fs.rmSync(observedExecutable, { force: true });
   }
@@ -405,17 +437,20 @@ export function macObserverBudgets(candidateTimeoutMs = 30_000) {
   const readinessMaxAttempts = 4;
   const readinessProcessTimeoutMs = 10_000;
   const readinessDelayMs = 500;
+  const candidateHandshakeTimeoutMs = 8_000;
   const drainMs = 1_000;
   return {
     startupMs,
     readinessMaxAttempts,
     readinessProcessTimeoutMs,
     readinessDelayMs,
+    candidateHandshakeTimeoutMs,
     drainMs,
     traceMaxOutputBytes: 64 * 1024 * 1024,
     observerTimeoutMs: startupMs
       + readinessMaxAttempts * (readinessProcessTimeoutMs + readinessDelayMs)
       + candidateTimeoutMs
+      + candidateHandshakeTimeoutMs
       + drainMs
       + 5_000,
   };
