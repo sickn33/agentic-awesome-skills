@@ -180,10 +180,14 @@ def apply_metadata(content: str, metadata: dict) -> str:
     star_badge_count = metadata["star_badge_count"]
     star_milestone = metadata["star_milestone"]
     star_celebration = metadata["star_celebration"]
-    release_boundary = (
-        f"The published {version} package predates AAS Core. "
+    release_status = (
+        f"The published {version} package predates AAS Core. Core is available from `main` as an "
+        "**Agent-First Preview** for local search, inspection, recommendation, manifest validation, "
+        "planning, and diagnosis. Wait for a release that explicitly includes Core before using the "
+        "npm bootstrap. "
         if version == "14.6.0"
-        else "This release includes AAS Core. "
+        else "This release includes AAS Core under the **Agent-First Preview** claim for local search, "
+        "inspection, recommendation, manifest validation, planning, and diagnosis. "
     )
     sync_comment = (
         f"<!-- registry-sync: version={version}; skills={total_skills}; "
@@ -191,10 +195,8 @@ def apply_metadata(content: str, metadata: dict) -> str:
     )
 
     content = re.sub(
-        r"^# 🌌 Agentic Awesome Skills: .*?$",
-        (
-            f"# 🌌 Agentic Awesome Skills: AAS Core + {total_skills_label} Skills for AI Coding Agents"
-        ),
+        r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills)$",
+        "# AAS Core — Agentic Awesome Skills",
         content,
         count=1,
         flags=re.MULTILINE,
@@ -219,13 +221,8 @@ def apply_metadata(content: str, metadata: dict) -> str:
     content = re.sub(
         CURRENT_RELEASE_LINE_RE,
         (
-            f"**Current release: V{version}.** {release_boundary}Core is currently documented from "
-            "`main` under the **Agent-First Preview** claim: "
-            "local search, recommendation, inspection, manifest validation, planning, and diagnosis "
-            "are the supported preview path. Wait for a release that explicitly includes Core before "
-            "using the npm bootstrap. Full-catalog "
-            "recommendation quality and transactional apply/recovery safety are not yet certified; "
-            "apply and recovery remain explicitly experimental."
+            f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
+            "and outside the supported preview path."
         ),
         content,
         count=1,

@@ -1,4 +1,4 @@
-# Getting Started with Agentic Awesome Skills (V14.6.0)
+# Getting Started with AAS Core
 
 **New here? Start with AAS Core and let your agent compose a small, reviewable skill stack for the project.**
 
@@ -28,7 +28,7 @@ AI Agents (like **Claude Code**, **Gemini**, **Cursor**) are smart, but they lac
 
 ---
 
-## Alternative: Direct Skills and Starter Packs
+## Alternative Path: Direct Skill Distribution and Starter Packs
 
 Don't panic about the size of the repository. You don't need everything at once.
 We have curated **Starter Packs** to get you running immediately.
