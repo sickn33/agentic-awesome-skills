@@ -11,11 +11,11 @@
 
 ## How Many Tiers?
 
-**2 tiers:** Can provide a simple, clear choice
+**2 tiers:** Simple, clear choice
 - Works for: Clear SMB vs. Enterprise split
-- Risk to evaluate: May not represent meaningful segment differences
+- Risk: May leave money on table
 
-**3 tiers:** Common good-better-best pattern, not a universal default
+**3 tiers:** Industry standard
 - Good tier = Entry point
 - Better tier = Recommended (anchor to best)
 - Best tier = High-value customers
@@ -35,7 +35,7 @@
 - Target: Small teams, try before you buy
 
 **Better tier (Recommended):**
-- Purpose: Serve the segment whose needs fit between entry and premium; verify where customers actually land
+- Purpose: Where most customers land
 - Includes: Full features, reasonable limits
 - Price: Your "anchor" price
 - Target: Growing teams, serious users
@@ -43,7 +43,7 @@
 **Best tier (Premium):**
 - Purpose: Capture high-value customers
 - Includes: Everything, advanced features, higher limits
-- Price: Supported by segment evidence, delivered value, alternatives, and unit economics rather than a fixed multiplier
+- Price: Premium (often 2-3x "Better")
 - Target: Larger teams, power users, enterprises
 
 ---
@@ -71,8 +71,6 @@
 ---
 
 ## Example Tier Structure
-
-The following numbers are illustrative placeholders, not recommended prices or limits. Replace them with segment research and economic constraints.
 
 ```
 ┌────────────────┬─────────────────┬─────────────────┬─────────────────┐
@@ -113,7 +111,7 @@ Different customers have different:
 
 **Step 1: Define personas**
 
-| Persona | Size | Needs | WTP hypothesis | Illustrative price |
+| Persona | Size | Needs | WTP | Example |
 |---------|------|-------|-----|---------|
 | Freelancer | 1 person | Basic features | Low | $19/mo |
 | Small Team | 2-10 | Collaboration | Medium | $49/mo |
@@ -133,17 +131,17 @@ Different customers have different:
 | Custom contract | — | — | — | ✓ |
 
 **Step 3: Price to value for each persona**
-- Estimate willingness to pay per segment and validate stated responses against behavior
-- Test prices against adoption, retention, alternatives, cost to serve, and unit economics
+- Research willingness to pay per segment
+- Set prices that capture value without blocking adoption
 - Consider segment-specific landing pages
 
 ---
 
 ## Freemium vs. Free Trial
 
-### When to Consider Freemium
+### When to Use Freemium
 
-**Conditions that can support a freemium hypothesis:**
+**Freemium works when:**
 - Product has viral/network effects
 - Free users provide value (content, data, referrals)
 - Large market where % conversion drives volume
@@ -156,9 +154,9 @@ Different customers have different:
 - Support costs for non-paying users
 - Harder to raise prices later
 
-### When to Consider a Free Trial
+### When to Use Free Trial
 
-**Conditions that can support a free-trial hypothesis:**
+**Free trial works when:**
 - Product needs time to demonstrate value
 - Onboarding/setup investment required
 - B2B with buying committees
@@ -166,14 +164,16 @@ Different customers have different:
 - Product is "sticky" once configured
 
 **Trial best practices:**
-- Choose trial length from the time-to-value and buying process, then test it by segment
-- Decide full versus limited access based on what users must experience to evaluate value
+- 7-14 days for simple products
+- 14-30 days for complex products
+- Full access (not feature-limited)
 - Clear countdown and reminders
 - Credit card optional vs. required trade-off
 
 **Credit card upfront:**
-- May change trial volume, lead mix, conversion, support burden, and fraud exposure
-- Measure the full funnel and cohort quality rather than assuming a universal conversion lift
+- Higher trial-to-paid conversion (40-50% vs. 15-25%)
+- Lower trial volume
+- Better qualified leads
 
 ### Hybrid Approaches
 
@@ -194,7 +194,7 @@ Different customers have different:
 ### When to Add Custom Pricing
 
 Add "Contact Sales" when:
-- Deal economics justify sales involvement
+- Deal sizes exceed $10k+ ARR
 - Customers need custom contracts
 - Implementation/onboarding required
 - Security/compliance requirements
@@ -202,7 +202,7 @@ Add "Contact Sales" when:
 
 ### Enterprise Tier Elements
 
-**Common enterprise requirements to validate with target buyers:**
+**Table stakes:**
 - SSO/SAML
 - Audit logs
 - Admin controls

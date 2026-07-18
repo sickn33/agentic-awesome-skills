@@ -2,7 +2,7 @@
 Example: Gemini Agent Implementation with Streaming
 
 This example shows how to implement a Gemini-powered agent
-that demonstrates bounded response segmentation for synthesis.
+that properly buffers responses to prevent audio jumping.
 """
 
 import asyncio
@@ -32,7 +32,7 @@ class GeminiAgent:
     Key Features:
     - Maintains conversation history
     - Streams responses from Gemini API
-    - Collects a bounded segment before yielding to synthesis
+    - Buffers entire response before yielding (prevents audio jumping)
     - Handles interrupts gracefully
     """
     
@@ -50,8 +50,8 @@ class GeminiAgent:
         """
         Generate streaming response from Gemini
         
-        This scaffold emits one short simulated segment. A provider-backed
-        implementation should emit tested sentence/size-bounded segments.
+        IMPORTANT: This buffers the entire LLM response before yielding
+        to prevent audio jumping/cutting off.
         
         Args:
             user_input: The user's message
@@ -66,12 +66,12 @@ class GeminiAgent:
             Message(role="user", content=user_input)
         )
         
-        logger.info("agent response started")
+        logger.info(f"🤖 [AGENT] Generating response for: '{user_input}'")
         
         # Build conversation context for Gemini
         contents = self._build_gemini_contents()
         
-        # Stream response from Gemini into a bounded demonstration segment
+        # Stream response from Gemini and buffer it
         full_response = ""
         
         try:
@@ -92,8 +92,8 @@ class GeminiAgent:
             logger.error(f"❌ [AGENT] Error generating response: {e}")
             full_response = "I apologize, but I encountered an error. Could you please try again?"
         
-        # The simulation is intentionally short. Do not use whole-response
-        # buffering for unbounded production output.
+        # CRITICAL: Only yield after buffering the ENTIRE response
+        # This prevents multiple TTS calls that cause audio jumping
         if full_response.strip():
             # Add to conversation history
             self.conversation_history.append(
@@ -147,22 +147,16 @@ class GeminiAgent:
         """
         Simulate Gemini streaming response
         
-        In a current Google Gen AI SDK implementation, require the model ID in
-        configuration and verify it against the provider's model-lifecycle page:
+        In a real implementation, this would be:
         
         async def _create_gemini_stream(self, contents):
-            from google import genai
-            client = genai.Client(api_key=self.config["geminiApiKey"])
-            try:
-                response = await client.aio.models.generate_content_stream(
-                    model=self.config["geminiModel"],
-                    contents=contents,
-                )
-                async for chunk in response:
-                    if chunk.text:
-                        yield chunk.text
-            finally:
-                await client.aio.aclose()
+            response = await genai.GenerativeModel('gemini-pro').generate_content_async(
+                contents,
+                stream=True
+            )
+            async for chunk in response:
+                if chunk.text:
+                    yield chunk.text
         """
         # Simulate response
         response = f"I understand you said: {user_input}. How can I assist you further?"
@@ -187,7 +181,7 @@ class GeminiAgent:
         if self.conversation_history and self.conversation_history[-1].role == "assistant":
             # Update the last bot message with the partial message
             self.conversation_history[-1].content = partial_message
-            logger.info("assistant history truncated", extra={"chars": len(partial_message)})
+            logger.info(f"📝 [AGENT] Updated history with partial message: '{partial_message}'")
     
     def cancel_current_task(self):
         """Cancel the current generation task (for interrupts)"""

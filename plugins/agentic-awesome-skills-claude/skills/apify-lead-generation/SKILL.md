@@ -2,9 +2,7 @@
 name: apify-lead-generation
 description: "Scrape leads from multiple platforms using Apify Actors."
 risk: unknown
-source: https://github.com/apify/agent-skills
-source_repo: apify/agent-skills
-source_type: official
+source: community
 ---
 
 # Lead Generation
@@ -21,6 +19,7 @@ Scrape leads from multiple platforms using Apify Actors.
 
 - `.env` file with `APIFY_TOKEN`
 - Node.js 20.6+ (for native `--env-file` support)
+- `mcpc` CLI tool: `npm install -g @apify/mcpc`
 
 ## Workflow
 
@@ -29,7 +28,7 @@ Copy this checklist and track progress:
 ```
 Task Progress:
 - [ ] Step 1: Determine lead source (select Actor)
-- [ ] Step 2: Fetch Actor schema via Apify MCP or Console
+- [ ] Step 2: Fetch Actor schema via mcpc
 - [ ] Step 3: Ask user preferences (format, filename)
 - [ ] Step 4: Run the lead finder script
 - [ ] Step 5: Summarize results
@@ -61,7 +60,11 @@ Select the appropriate Actor based on user needs:
 
 ### Step 2: Fetch Actor Schema
 
-Fetch the Actor's input schema and details through the Apify MCP server configured with `APIFY_TOKEN` in its environment. Do not parse `.env` with `grep | xargs`, export unrelated values, or place the token in command-line arguments. Alternatively, inspect the Actor input schema in Apify Console.
+Fetch the Actor's input schema and details dynamically using mcpc:
+
+```bash
+export $(grep APIFY_TOKEN .env | xargs) && mcpc --json mcp.apify.com --header "Authorization: Bearer $APIFY_TOKEN" tools-call fetch-actor-details actor:="ACTOR_ID" | jq -r ".content"
+```
 
 Replace `ACTOR_ID` with the selected Actor (e.g., `compass/crawler-google-places`).
 
@@ -117,6 +120,7 @@ After completion, report:
 ## Error Handling
 
 `APIFY_TOKEN not found` - Ask user to create `.env` with `APIFY_TOKEN=your_token`
+`mcpc not found` - Ask user to install `npm install -g @apify/mcpc`
 `Actor not found` - Check Actor ID spelling
 `Run FAILED` - Ask user to check Apify console link in error output
 `Timeout` - Reduce input size or increase `--timeout`

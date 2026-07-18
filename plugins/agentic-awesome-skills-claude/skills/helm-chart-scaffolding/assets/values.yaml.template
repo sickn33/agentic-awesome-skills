@@ -153,9 +153,7 @@ postgresql:
   auth:
     database: myapp
     username: myapp
-    # Supply credentials through an existing Secret or an environment-specific
-    # secret-management integration. Do not place a default password here.
-    existingSecret: ""
+    password: changeme
   primary:
     persistence:
       enabled: true

@@ -91,8 +91,8 @@ for user in users { dict[user.id] = user }
 
 // ✅
 let dict = Dictionary(uniqueKeysWithValues: users.map { ($0.id, $0) })
-// With duplicate IDs, preserve the same key and choose a policy explicitly:
-let latestById = Dictionary(users.map { ($0.id, $0) }, uniquingKeysWith: { _, latest in latest })
+// or with possible duplicates:
+let dict = Dictionary(grouping: users, by: \.department)
 ```
 
 ```swift
@@ -132,9 +132,9 @@ struct Point { var x, y: Double }
 ```
 
 ```swift
-// Value copy is cheap until mutation because Array uses copy-on-write; profile before changing ownership.
+// ❌ Large struct copied repeatedly (performance hit)
 struct HugeData { var buffer: [UInt8] /* thousands of elements */ }
-func process(_ data: HugeData) { ... }
+func process(_ data: HugeData) { ... } // copies entire buffer
 
 // ✅ — use class or pass inout for mutation
 func process(_ data: inout HugeData) { ... }
@@ -211,8 +211,7 @@ fetchUser { user in
 // ✅ (Swift 5.5+)
 let user = try await fetchUser()
 let posts = try await fetchPosts(for: user)
-guard let firstPost = posts.first else { return }
-let comments = try await fetchComments(for: firstPost)
+let comments = try await fetchComments(for: posts[0])
 display(comments)
 ```
 
@@ -268,14 +267,14 @@ extension Renderable {
 ```
 
 ```swift
-// ✅ Associated type is appropriate when the element type belongs to each conformer
+// ❌ Associated type when generic parameter suffices
 protocol Container {
     associatedtype Element
     func get() -> Element
 }
 
-// Use a generic parameter separately when the type belongs only to one function:
-func process<Item: Equatable>(_ item: Item) { ... }
+// ✅ — use `some` or generic parameter for simple cases
+func process(_ item: some Equatable) { ... }
 ```
 
 ---

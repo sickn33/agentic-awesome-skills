@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 ## Overview
 
-This skill is an implementation and review guide for real-time voice pipelines. The examples are scaffolds and simulations, not production-ready integrations. Production use requires project-specific authentication, provider-contract verification, consent, privacy, safety, load, and failure testing.
+This skill guides you through building production-ready voice AI engines with real-time conversation capabilities. Voice AI engines enable natural, bidirectional conversations between users and AI agents through streaming audio processing, speech-to-text transcription, LLM-powered responses, and text-to-speech synthesis.
 
 The core architecture uses an async queue-based worker pipeline where each component runs independently and communicates via `asyncio.Queue` objects, enabling concurrent processing, interrupt handling, and real-time streaming at every stage.
 
@@ -113,7 +113,11 @@ class Transcription:
     is_interrupt: bool    # Set by TranscriptionsWorker
 ```
 
-**Provider examples**: Deepgram, AssemblyAI, Azure Speech, and Google Cloud Speech. Verify current streaming contracts, regions, models, quotas, data use, retention, and pricing against dated primary documentation before selecting one.
+**Supported Providers**:
+- **Deepgram** - Fast, accurate, streaming
+- **AssemblyAI** - High accuracy, good for accents
+- **Azure Speech** - Enterprise-grade
+- **Google Cloud Speech** - Multi-language support
 
 **Critical Implementation Details**:
 - Use WebSocket for bidirectional streaming
@@ -143,12 +147,15 @@ class BaseAgent:
 - **Better interrupts**: Can stop mid-response
 - **Sentence-by-sentence**: More natural conversation flow
 
-**Provider examples**: OpenAI, Google Gemini, and Anthropic Claude. Require an explicitly configured current model ID; do not copy retired model names from old examples.
+**Supported Providers**:
+- **OpenAI** (GPT-4, GPT-3.5) - High quality, fast
+- **Google Gemini** - Multimodal, cost-effective
+- **Anthropic Claude** - Long context, nuanced responses
 
 **Critical Implementation Details**:
 - Maintain conversation history in `Transcript` object
 - Stream responses using `AsyncGenerator`
-- Buffer only until a stable synthesis boundary, such as a complete sentence or provider-supported streaming segment. Buffering an entire response increases latency and contradicts real-time interruption; tiny fragments can create choppy audio. Make this policy configurable and test it with the selected TTS provider.
+- **IMPORTANT**: Buffer entire LLM response before yielding to synthesizer (prevents audio jumping)
 - Handle interrupts by canceling current generation task
 - Update conversation history with partial messages on interrupt
 
@@ -179,7 +186,12 @@ class SynthesisResult:
         is_last_chunk: bool
 ```
 
-**Provider examples**: ElevenLabs, Azure TTS, Google Cloud TTS, Amazon Polly, and PlayHT. Compare current voice rights, consent requirements, streaming formats, regions, retention, quotas, and pricing before use.
+**Supported Providers**:
+- **ElevenLabs** - Most natural voices, streaming
+- **Azure TTS** - Enterprise-grade, many languages
+- **Google Cloud TTS** - Cost-effective, good quality
+- **Amazon Polly** - AWS integration
+- **Play.ht** - Voice cloning
 
 **Critical Implementation Details**:
 - Stream audio chunks as they're generated
@@ -378,19 +390,6 @@ Voice AI engines typically use WebSocket for bidirectional audio streaming:
 ```python
 @app.websocket("/conversation")
 async def websocket_endpoint(websocket: WebSocket):
-    origin = websocket.headers.get("origin")
-    if origin not in settings.allowed_websocket_origins:
-        await websocket.close(code=1008)
-        return
-
-    # Bind the connection to an authenticated application session before accept.
-    # Implement this with the project's existing session/token verifier; do not
-    # place bearer tokens in query strings where intermediaries may log them.
-    principal = await authenticate_websocket_session(websocket)
-    if principal is None or not principal.may_use_voice:
-        await websocket.close(code=1008)
-        return
-
     await websocket.accept()
     
     # Create voice components
@@ -420,9 +419,6 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         # Receive audio from client
         async for message in websocket.iter_bytes():
-            if len(message) > settings.max_audio_frame_bytes:
-                await websocket.close(code=1009)
-                break
             conversation.receive_audio(message)
     except WebSocketDisconnect:
         logger.info("Client disconnected")
@@ -438,22 +434,18 @@ async def websocket_endpoint(websocket: WebSocket):
 
 **Cause**: Sending text to synthesizer in small chunks causes multiple TTS calls.
 
-**Solution**: Buffer to a stable, bounded synthesis segment and preserve cancellation:
+**Solution**: Buffer the entire LLM response before sending to synthesizer:
 
 ```python
 # ❌ Bad: Yields sentence-by-sentence
 async for sentence in llm_stream:
     yield GeneratedResponse(message=BaseMessage(text=sentence))
 
-# ✅ Better: emit complete bounded segments and keep the upstream stream cancellable
-segment = ""
+# ✅ Good: Buffer entire response
+full_response = ""
 async for chunk in llm_stream:
-    segment += chunk
-    if sentence_boundary(segment) or len(segment) >= MAX_SEGMENT_CHARS:
-        yield GeneratedResponse(message=BaseMessage(text=segment))
-        segment = ""
-if segment:
-    yield GeneratedResponse(message=BaseMessage(text=segment))
+    full_response += chunk
+yield GeneratedResponse(message=BaseMessage(text=full_response))
 ```
 
 ### 2. Echo/Feedback Loop
@@ -512,15 +504,6 @@ finally:
 
 ## Production Considerations
 
-### 0. Consent, Privacy, and Abuse Boundaries
-
-- Obtain clear consent before recording, transcribing, storing, or cloning a voice; requirements vary by jurisdiction and use case.
-- State whether a user is speaking with an AI and provide a human escalation path where appropriate.
-- Minimize audio and transcript collection; define access, encryption, regional processing, retention, deletion, and incident procedures.
-- Redact logs and do not log raw audio, transcripts, credentials, or sensitive prompts by default.
-- Authorize every tool or backend action separately from the conversation itself. Treat transcripts and provider output as untrusted input.
-- Add rate, duration, concurrency, spend, and abuse limits per authenticated tenant or user.
-
 ### 1. Error Handling
 
 ```python
@@ -558,10 +541,10 @@ async def terminate(self):
 
 ```python
 # Log key events
-logger.info("transcription received", extra={"chars": len(transcription.message)})
-logger.info("agent response started")
-logger.info("synthesis started", extra={"chars": len(text)})
-logger.info("conversation interrupted")
+logger.info(f"🎤 [TRANSCRIBER] Received: '{transcription.message}'")
+logger.info(f"🤖 [AGENT] Generating response...")
+logger.info(f"🔊 [SYNTHESIZER] Synthesizing {len(text)} characters")
+logger.info(f"⚠️ [INTERRUPT] User interrupted bot")
 
 # Track metrics
 metrics.increment("transcriptions.count")
@@ -575,10 +558,7 @@ metrics.gauge("active_conversations", count)
 # Implement rate limiting for API calls
 from aiolimiter import AsyncLimiter
 
-rate_limiter = AsyncLimiter(
-    max_rate=settings.provider_max_rate,
-    time_period=settings.provider_rate_period_seconds,
-)
+rate_limiter = AsyncLimiter(max_rate=10, time_period=1)  # 10 calls/second
 
 async def call_api(self, data):
     async with rate_limiter:
@@ -610,13 +590,13 @@ Instead of returning complete results:
 ```python
 # ❌ Bad: Wait for entire response
 async def generate_response(prompt):
-    response = await provider_client.generate_text(prompt)
+    response = await openai.complete(prompt)  # 5 seconds
     return response
 
 # ✅ Good: Stream chunks as they arrive
 async def generate_response(prompt):
-    async for chunk in provider_client.stream_text(prompt):
-        yield chunk
+    async for chunk in openai.complete(prompt, stream=True):
+        yield chunk  # Yield after 0.1s, 0.2s, etc.
 ```
 
 ### 3. Conversation State Management
@@ -697,12 +677,12 @@ async def test_interrupt():
 When implementing a voice AI engine:
 
 1. **Start with Base Workers**: Implement the base worker pattern first
-2. **Add Transcriber**: Choose a provider only after current contract, privacy, consent, region, retention, and quota review
+2. **Add Transcriber**: Choose a provider and implement streaming transcription
 3. **Add Agent**: Implement LLM integration with streaming responses
 4. **Add Synthesizer**: Implement TTS with audio streaming
 5. **Connect Pipeline**: Wire all workers together with queues
 6. **Add Interrupts**: Implement the interrupt system
-7. **Add WebSocket**: Add authenticated, origin-checked, size- and rate-limited client communication
+7. **Add WebSocket**: Create WebSocket endpoint for client communication
 8. **Test Components**: Unit test each worker in isolation
 9. **Test Integration**: Test the full pipeline end-to-end
 10. **Add Error Handling**: Implement robust error handling and logging
@@ -735,13 +715,13 @@ When implementing a voice AI engine:
 Building a voice AI engine requires:
 - ✅ Async worker pipeline for concurrent processing
 - ✅ Queue-based communication between components
-- ✅ Streaming or bounded segmentation where the selected provider contract supports cancellation and backpressure
+- ✅ Streaming at every stage (transcription, LLM, synthesis)
 - ✅ Interrupt system for natural conversations
 - ✅ Rate limiting for real-time audio playback
 - ✅ Multi-provider support for flexibility
 - ✅ Proper error handling and graceful shutdown
 
-**The key insight**: Every stage needs an explicit latency, buffering, cancellation, and backpressure policy validated with the selected provider contracts.
+**The key insight**: Everything must stream and everything must be interruptible for natural, real-time conversations.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -43,6 +43,12 @@ public/
 ├── og-image.png                   # Social sharing image (1200x630)
 └── site.webmanifest               # PWA manifest
 src/
+├── assets/
+│   └── fonts/
+│       ├── Segoe UI.ttf
+│       ├── Segoe UI Bold.ttf
+│       ├── Segoe UI Italic.ttf
+│       └── Segoe UI Bold Italic.ttf
 ├── components/
 │   ├── ui/
 │   │   ├── Button.tsx
@@ -245,6 +251,39 @@ export default {
 @tailwind components;
 @tailwind utilities;
 
+/* Font faces */
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('../assets/fonts/Segoe UI.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('../assets/fonts/Segoe UI Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('../assets/fonts/Segoe UI Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('../assets/fonts/Segoe UI Bold Italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* CSS Custom Properties */
 :root {
   /* Brand colors */
@@ -360,8 +399,6 @@ body {
   }
 }
 ```
-
-Use Segoe UI only when it is available as an operating-system font; do not copy or redistribute Microsoft font binaries. The Tailwind stack `['Segoe UI', 'system-ui', 'sans-serif']` falls back to the platform UI font elsewhere.
 
 ### src/main.tsx
 

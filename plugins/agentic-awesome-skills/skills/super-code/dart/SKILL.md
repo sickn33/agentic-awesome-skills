@@ -86,13 +86,14 @@ final result = items
 ```
 
 ```dart
-// ✅ Idiomatic standard-library grouping loop
+// ❌ Manual map construction
 final map = <String, List<Item>>{};
 for (final item in items) {
   map.putIfAbsent(item.category, () => []).add(item);
 }
 
-// ✅ Optional convenience helper when package:collection is already approved
+// ✅ (using collection-if/for in a different way — but groupBy isn't built-in)
+// The loop above is actually idiomatic Dart. Use package:collection for groupBy:
 import 'package:collection/collection.dart';
 final map = groupBy(items, (Item i) => i.category);
 ```

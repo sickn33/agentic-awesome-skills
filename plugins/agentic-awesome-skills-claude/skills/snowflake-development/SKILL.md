@@ -52,7 +52,7 @@ END;
 
 - VARIANT, OBJECT, ARRAY for JSON/Avro/Parquet/ORC.
 - Access nested fields: `src:customer.name::STRING`. Always cast: `src:price::NUMBER(10,2)`.
-- VARIANT distinguishes JSON null from SQL NULL. Test JSON null with `IS_NULL_VALUE`; if JSON null fields should be removed while loading, configure the file format with `STRIP_NULL_VALUES = TRUE`. Use the separate SQL function `STRIP_NULL_VALUE(expression)` only when converting a VARIANT JSON null to SQL NULL.
+- VARIANT null vs SQL NULL: JSON `null` is stored as `"null"`. Use `STRIP_NULL_VALUE = TRUE` on load.
 - Flatten arrays: `SELECT f.value:name::STRING FROM my_table, LATERAL FLATTEN(input => src:items) f;`
 
 ### MERGE for Upserts
@@ -87,10 +87,10 @@ CREATE OR REPLACE DYNAMIC TABLE cleaned_events
 
 Key rules:
 - Set `TARGET_LAG` progressively: tighter at top, looser at bottom.
-- Verify the current [Dynamic Tables query-support matrix](https://docs.snowflake.com/en/user-guide/dynamic-tables-supported-queries) for the account and query shape. An incremental Dynamic Table can use some upstream full-refresh results when Snowflake can derive or preserve a suitable unique key; do not assume every such chain is supported.
+- Incremental DTs **cannot** depend on Full refresh DTs.
 - `SELECT *` breaks on schema changes — use explicit column lists.
 - Change tracking must stay enabled on base tables.
-- Views can participate in Dynamic Table queries, but supported constructs and refresh behavior depend on the view definition and refresh mode. Check the current matrix rather than applying a blanket prohibition.
+- Views cannot sit between two Dynamic Tables.
 
 ### Streams and Tasks
 

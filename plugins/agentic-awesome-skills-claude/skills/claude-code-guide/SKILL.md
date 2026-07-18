@@ -14,7 +14,7 @@ To provide a comprehensive reference for configuring and using Claude Code (the 
 
 ## Configuration (`CLAUDE.md`)
 
-When starting a new project, create a `CLAUDE.md` file in the root directory for persistent project instructions. It supplements the current conversation; it is not a general settings file or a substitute for permissions, hooks, or path-scoped rules.
+When starting a new project, create a `CLAUDE.md` file in the root directory to guide the agent.
 
 ### Template (General)
 
@@ -43,15 +43,20 @@ When starting a new project, create a `CLAUDE.md` file in the root directory for
 
 ## Advanced Features
 
-### Effort and task guidance
+### Thinking Keywords
 
-Use Claude Code's current `/effort` control when the selected model supports configurable effort. Describe the desired outcome, constraints, and verification steps explicitly; prompt phrases do not independently switch the model into a hidden reasoning mode.
+Use these keywords in your prompts to trigger deeper reasoning from the agent:
+
+- "Think step-by-step"
+- "Analyze the root cause"
+- "Plan before executing"
+- "Verify your assumptions"
 
 ### Debugging
 
 If the agent is stuck or behaving unexpectedly:
 
-1. **Clear Context**: Use `/clear` or start a new session when stale conversation context is causing confusion. A request to "forget previous instructions" does not remove earlier context.
+1. **Clear Context**: Start a new session or ask the agent to "forget previous instructions" if confused.
 2. **Explicit Instructions**: Be extremely specific about paths, filenames, and desired outcomes.
 3. **Logs**: Ask the agent to "check the logs" or "run the command with verbose output".
 

@@ -1,21 +1,103 @@
-# System Design and Deployment Review
+# System Design Workflows
 
-## Review sequence
+## Overview
 
-1. Confirm scope, owners, users, sensitive data, dependencies, and success criteria.
-2. Draw current and proposed boundaries and flows; mark trust and failure boundaries.
-3. Test the design against peak load, dependency failure, partial rollout, stale data, privilege abuse, and recovery scenarios.
-4. Record assumptions, evidence, alternatives, unresolved decisions, and validation work.
+This reference guide provides comprehensive information for senior architect.
 
-## Mutation gate
+## Patterns and Practices
 
-Before a write, migration, or deployment, require all of the following:
+### Pattern 1: Best Practice Implementation
 
-- exact repository, account, environment, cluster context, and namespace;
-- authorization and explicit approval for the exact change;
-- reviewed diff or dry-run plan with unrelated resources excluded;
-- backup or reversible migration, rollback commands, owner, and abort signals;
-- relevant tests and security checks with recorded results;
-- post-change health checks and an evidence record.
+**Description:**
+Detailed explanation of the pattern.
 
-If any item is missing, stop at a review plan. Access to a repository, credential, or cluster is not approval to mutate it.
+**When to Use:**
+- Scenario 1
+- Scenario 2
+- Scenario 3
+
+**Implementation:**
+```typescript
+// Example code implementation
+export class Example {
+  // Implementation details
+}
+```
+
+**Benefits:**
+- Benefit 1
+- Benefit 2
+- Benefit 3
+
+**Trade-offs:**
+- Consider 1
+- Consider 2
+- Consider 3
+
+### Pattern 2: Advanced Technique
+
+**Description:**
+Another important pattern for senior architect.
+
+**Implementation:**
+```typescript
+// Advanced example
+async function advancedExample() {
+  // Code here
+}
+```
+
+## Guidelines
+
+### Code Organization
+- Clear structure
+- Logical separation
+- Consistent naming
+- Proper documentation
+
+### Performance Considerations
+- Optimization strategies
+- Bottleneck identification
+- Monitoring approaches
+- Scaling techniques
+
+### Security Best Practices
+- Input validation
+- Authentication
+- Authorization
+- Data protection
+
+## Common Patterns
+
+### Pattern A
+Implementation details and examples.
+
+### Pattern B
+Implementation details and examples.
+
+### Pattern C
+Implementation details and examples.
+
+## Anti-Patterns to Avoid
+
+### Anti-Pattern 1
+What not to do and why.
+
+### Anti-Pattern 2
+What not to do and why.
+
+## Tools and Resources
+
+### Recommended Tools
+- Tool 1: Purpose
+- Tool 2: Purpose
+- Tool 3: Purpose
+
+### Further Reading
+- Resource 1
+- Resource 2
+- Resource 3
+
+## Conclusion
+
+Key takeaways for using this reference guide effectively.

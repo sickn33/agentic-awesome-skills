@@ -264,24 +264,11 @@ export class UserRepository {
   }
 
   async update(id: string, updates: UpdateUserDTO): Promise<UserEntity | null> {
-    const allowedColumns = new Map<string, string>([
-      ['name', 'name'],
-      ['email', 'email'],
-    ]);
-    const fields = Object.entries(updates).map(([field, value]) => {
-      const column = allowedColumns.get(field);
-      if (!column) {
-        throw new Error(`Unsupported update field: ${field}`);
-      }
-      return { column, value };
-    });
-
-    if (fields.length === 0) {
-      return this.findById(id);
-    }
+    const fields = Object.keys(updates);
+    const values = Object.values(updates);
 
     const setClause = fields
-      .map(({ column }, idx) => `${column} = $${idx + 2}`)
+      .map((field, idx) => `${field} = $${idx + 2}`)
       .join(', ');
 
     const query = `
@@ -291,10 +278,7 @@ export class UserRepository {
       RETURNING *
     `;
 
-    const { rows } = await this.db.query(query, [
-      id,
-      ...fields.map(({ value }) => value),
-    ]);
+    const { rows } = await this.db.query(query, [id, ...values]);
     return rows[0] || null;
   }
 
@@ -387,20 +371,7 @@ import { UnauthorizedError } from '../utils/errors';
 interface JWTPayload {
   userId: string;
   email: string;
-  roles?: string[];
 }
-
-const jwtIssuer = process.env.JWT_ISSUER;
-const jwtAudience = process.env.JWT_AUDIENCE;
-if (!jwtIssuer || !jwtAudience) {
-  throw new Error('JWT_ISSUER and JWT_AUDIENCE must be configured');
-}
-
-const jwtVerificationOptions: jwt.VerifyOptions = {
-  algorithms: ['HS256'],
-  issuer: jwtIssuer,
-  audience: jwtAudience,
-};
 
 declare global {
   namespace Express {
@@ -424,23 +395,13 @@ export const authenticate = async (
 
     const payload = jwt.verify(
       token,
-      process.env.JWT_SECRET!,
-      jwtVerificationOptions
-    );
+      process.env.JWT_SECRET!
+    ) as JWTPayload;
 
-    if (
-      typeof payload === 'string' ||
-      typeof payload.userId !== 'string' ||
-      typeof payload.email !== 'string' ||
-      (payload.roles !== undefined && !Array.isArray(payload.roles))
-    ) {
-      throw new UnauthorizedError('Invalid token payload');
-    }
-
-    req.user = payload as JWTPayload;
-    return next();
+    req.user = payload;
+    next();
   } catch (error) {
-    return next(new UnauthorizedError('Invalid token'));
+    next(new UnauthorizedError('Invalid token'));
   }
 };
 
@@ -459,7 +420,7 @@ export const authorize = (...roles: string[]) => {
       return next(new UnauthorizedError('Insufficient permissions'));
     }
 
-    return next();
+    next();
   };
 };
 ```
@@ -524,11 +485,11 @@ const redis = new Redis({
 
 export const apiLimiter = rateLimit({
   store: new RedisStore({
-    sendCommand: (...args: string[]) => redis.call(...args),
+    client: redis,
     prefix: 'rl:',
   }),
   windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Limit each IP to 100 requests per windowMs
+  max: 100, // Limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later',
   standardHeaders: true,
   legacyHeaders: false,
@@ -536,11 +497,11 @@ export const apiLimiter = rateLimit({
 
 export const authLimiter = rateLimit({
   store: new RedisStore({
-    sendCommand: (...args: string[]) => redis.call(...args),
+    client: redis,
     prefix: 'rl:auth:',
   }),
   windowMs: 15 * 60 * 1000,
-  limit: 5, // Stricter limit for auth endpoints
+  max: 5, // Stricter limit for auth endpoints
   skipSuccessfulRequests: true,
 });
 ```
@@ -839,21 +800,6 @@ import bcrypt from 'bcrypt';
 import { UserRepository } from '../repositories/user.repository';
 import { UnauthorizedError } from '../utils/errors';
 
-const jwtIssuer = process.env.JWT_ISSUER;
-const accessTokenAudience = process.env.JWT_AUDIENCE;
-const refreshTokenAudience = process.env.REFRESH_TOKEN_AUDIENCE;
-if (!jwtIssuer || !accessTokenAudience || !refreshTokenAudience) {
-  throw new Error(
-    'JWT_ISSUER, JWT_AUDIENCE, and REFRESH_TOKEN_AUDIENCE must be configured'
-  );
-}
-
-const refreshTokenVerificationOptions: jwt.VerifyOptions = {
-  algorithms: ['HS256'],
-  issuer: jwtIssuer,
-  audience: refreshTokenAudience,
-};
-
 export class AuthService {
   constructor(private userRepository: UserRepository) {}
 
@@ -894,8 +840,7 @@ export class AuthService {
     try {
       const payload = jwt.verify(
         refreshToken,
-        process.env.REFRESH_TOKEN_SECRET!,
-        refreshTokenVerificationOptions
+        process.env.REFRESH_TOKEN_SECRET!
       ) as { userId: string };
 
       const user = await this.userRepository.findById(payload.userId);
@@ -917,18 +862,12 @@ export class AuthService {
 
   private generateToken(payload: any): string {
     return jwt.sign(payload, process.env.JWT_SECRET!, {
-      algorithm: 'HS256',
-      issuer: jwtIssuer,
-      audience: accessTokenAudience,
       expiresIn: '15m'
     });
   }
 
   private generateRefreshToken(payload: any): string {
     return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
-      algorithm: 'HS256',
-      issuer: jwtIssuer,
-      audience: refreshTokenAudience,
       expiresIn: '7d'
     });
   }

@@ -142,14 +142,10 @@ Do we have data?
 
 ```typescript
 // CORRECT - Error always surfaced to user
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-
 @Component({...})
 export class CreateItemComponent {
   private store = inject(ItemStore);
   private toast = inject(ToastService);
-  private router = inject(Router);
 
   async create(data: CreateItemDto) {
     try {
@@ -179,11 +175,13 @@ async create(data: CreateItemDto) {
 @Component({
   selector: "app-error-state",
   standalone: true,
+  imports: [NgOptimizedImage],
   template: `
     <div class="error-state">
+      <img ngSrc="/assets/error-icon.svg" width="64" height="64" alt="" />
       <h3>{{ title() }}</h3>
       <p>{{ message() }}</p>
-      @if (showRetry()) {
+      @if (retry.observed) {
         <button (click)="retry.emit()" class="btn-primary">Try Again</button>
       }
     </div>
@@ -192,7 +190,6 @@ async create(data: CreateItemDto) {
 export class ErrorStateComponent {
   title = input("Something went wrong");
   message = input("An unexpected error occurred");
-  showRetry = input(false);
   retry = output<void>();
 }
 ```

@@ -207,10 +207,10 @@ const total = `Total: $${(price * 1.2).toFixed(2)}`;
 
 // Tagged template literals
 function highlight(strings, ...values) {
-  return strings.map((str, i) => {
-    if (i >= values.length) return str;
-    return `${str}<mark>${String(values[i])}</mark>`;
-  }).join('');
+  return strings.reduce((result, str, i) => {
+    const value = values[i] || '';
+    return result + str + `<mark>${value}</mark>`;
+  }, '');
 }
 
 const name = 'John';
@@ -335,9 +335,6 @@ Promise.any(promises)
 // Async function always returns a Promise
 async function fetchUser(id) {
   const response = await fetch(`/api/users/${id}`);
-  if (!response.ok) {
-    throw new Error(`User request failed with status ${response.status}`);
-  }
   const user = await response.json();
   return user;
 }
@@ -390,24 +387,23 @@ async function processUsers(userIds) {
 const config = await fetch('/config.json').then(r => r.json());
 
 // Retry logic
-async function fetchWithRetry(url, { retries = 3, timeoutMs = 5000 } = {}) {
-  for (let attempt = 0; attempt < retries; attempt++) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
+async function fetchWithRetry(url, retries = 3) {
+  for (let i = 0; i < retries; i++) {
     try {
-      const response = await fetch(url, { signal: controller.signal });
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-      return response;
+      return await fetch(url);
     } catch (error) {
-      if (attempt === retries - 1) throw error;
-      await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
-    } finally {
-      clearTimeout(timeoutId);
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
     }
   }
+}
+
+// Timeout wrapper
+async function withTimeout(promise, ms) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Timeout')), ms)
+  );
+  return Promise.race([promise, timeout]);
 }
 ```
 
@@ -791,9 +787,6 @@ async function* fetchPages(url) {
   let page = 1;
   while (true) {
     const response = await fetch(`${url}?page=${page}`);
-    if (!response.ok) {
-      throw new Error(`Page request failed with status ${response.status}`);
-    }
     const data = await response.json();
     if (data.length === 0) break;
     yield data;
@@ -815,18 +808,16 @@ const city = user?.address?.city;
 const zipCode = user?.address?.zipCode;  // undefined
 
 // Function call
-const service = { method: () => 'ready' };
-const optionalResult = service.method?.();
+const result = obj.method?.();
 
 // Array access
-const items = ['first'];
-const firstItem = items?.[0];
+const first = arr?.[0];
 
 // Nullish coalescing
-const nullValue = null ?? 'default';           // 'default'
-const undefinedValue = undefined ?? 'default'; // 'default'
-const zeroValue = 0 ?? 'default';               // 0 (not 'default')
-const emptyValue = '' ?? 'default';             // '' (not 'default')
+const value = null ?? 'default';      // 'default'
+const value = undefined ?? 'default'; // 'default'
+const value = 0 ?? 'default';         // 0 (not 'default')
+const value = '' ?? 'default';        // '' (not 'default')
 
 // Logical assignment
 let a = null;
@@ -835,9 +826,9 @@ a ??= 'default';  // a = 'default'
 let b = 5;
 b ??= 10;  // b = 5 (unchanged)
 
-const counter = { count: 0 };
-counter.count ||= 1;  // counter.count = 1
-counter.count &&= 2;  // counter.count = 2
+let obj = { count: 0 };
+obj.count ||= 1;  // obj.count = 1
+obj.count &&= 2;  // obj.count = 2
 ```
 
 ## Performance Optimization

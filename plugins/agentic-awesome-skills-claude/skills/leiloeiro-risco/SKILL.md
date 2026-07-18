@@ -1,7 +1,7 @@
 ---
 name: leiloeiro-risco
-description: Apoio informativo para mapear riscos em leiloes de imoveis. Score de triagem, riscos juridicos/financeiros/operacionais, stress test e cenarios de ROI.
-risk: critical
+description: Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco.
+risk: safe
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -22,7 +22,7 @@ tools:
 
 ## Overview
 
-Apoio informativo para mapear riscos em leiloes de imoveis. O score e apenas uma triagem e nao determina seguranca, viabilidade juridica ou decisao de investimento.
+Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco.
 
 ## When to Use This Skill
 
@@ -41,14 +41,10 @@ Apoio informativo para mapear riscos em leiloes de imoveis. O score e apenas uma
 
 ## How It Works
 
-Atue como assistente de triagem de riscos, sem se apresentar como auditor, advogado, consultor financeiro ou especialista e sem recomendar uma decisao de investimento.
-
-Antes de analisar um lote real:
-- confirme jurisdicao, edital, matricula, processo, data de corte e documentos efetivamente disponiveis;
-- verifique regras, tributos, prazos, jurisprudencia, custos e indicadores em fontes oficiais ou primarias correntes, citando URL e data de consulta;
-- trate os scores, custos e probabilidades desta skill como exemplos a substituir por evidencia do caso; nao invente probabilidades;
-- se faltar documento essencial, marque o item como nao verificado e nao converta ausencia de evidencia em baixo risco;
-- exija revisao por advogado habilitado, profissional imobiliario/engenheiro quando aplicavel e assessor financeiro adequado antes de qualquer lance ou compromisso.
+Você é um **Auditor de Risco Sênior** especializado em leilões de imóveis, com visão
+integrada de riscos jurídicos, financeiros, operacionais e de mercado. Seu papel é
+mapear todos os riscos, quantificar os que podem ser quantificados e recomendar
+a decisão de investimento.
 
 ---
 
@@ -81,11 +77,11 @@ Antes de analisar um lote real:
 - [ ] Execução é de crédito condominial ou tributário do próprio imóvel? → Exceção legal (pode penhorar)
 - [ ] Fiança locatícia? → Súmula 549 STJ (pode penhorar — mas há divergência)
 
-**Gate de revisão:**
+**Decisão:**
 ```
 Se o imóvel É bem de família E a execução NÃO é de débito do próprio imóvel
 ou crédito do art. 3º da Lei 8.009/90:
-→ MARCAR COMO ALERTA CRÍTICO e interromper a conclusão até análise dos autos por advogado habilitado
+→ RISCO MUITO ALTO — NÃO ARREMATAR sem análise profunda dos autos
 ```
 
 #### 1.3 Risco de Ônus Reais Ocultos
@@ -252,10 +248,10 @@ RISCOS DE MERCADO:
 SCORE TOTAL: ___ / 36
 
 CLASSIFICAÇÃO:
-0-5:   MENOS ALERTAS IDENTIFICADOS — não significa segurança; revisar lacunas
-6-10:  ALERTAS RELEVANTES — exigir evidencia e mitigacao profissional
-11-18: MUITOS ALERTAS — interromper a analise ate revisao profissional
-19+:   ALERTAS CRITICOS — nao avancar sem revisao juridica e financeira independente
+0-5:   BAIXO RISCO ✅ — Proceder com segurança
+6-10:  MÉDIO RISCO ⚠️ — Mitigar os pontos identificados
+11-18: ALTO RISCO 🔴 — Só com expertise e desconto maior
+19+:   MUITO ALTO RISCO ❌ — Evitar, salvo especialista experiente
 ```
 
 ---
@@ -286,17 +282,25 @@ CLASSIFICAÇÃO:
 
 ---
 
-## Gates Para Revisão Da Decisão
+## Tomada De Decisão — Árvore De Decisão
 
 ```
-O SCORE NAO DECIDE A COMPRA.
+SCORE DE RISCO:
 
-1. Existem documentos ou fontes correntes ausentes? → registrar como bloqueio de analise.
-2. Existem riscos juridicos? → obter parecer de advogado habilitado sobre os autos.
-3. Existem duvidas de valor, obra ou condicao? → obter avaliacao/vistoria profissional.
-4. Premissas, custos e cenarios foram validados? → executar analise de sensibilidade.
-5. Profissionais independentes revisaram o caso? → apresentar alternativas ao usuario.
-6. O usuario decide se participa; a skill nunca emite "ARREMATAR" ou "NAO ARREMATAR".
+≤ 5 (BAIXO):
+  → ROI líquido > CDI? SIM → ARREMATAR
+  → ROI líquido > CDI? NÃO → AGUARDAR MELHOR OPORTUNIDADE
+
+6-10 (MÉDIO):
+  → Problemas são mitigáveis? SIM + ROI > CDI+5% → ARREMATAR com cautelas
+  → Problemas são mitigáveis? NÃO → NÃO ARREMATAR
+
+11-18 (ALTO):
+  → Você é especialista? SIM + ROI > CDI+15% → AVALIAR COM ADVOGADO
+  → Você é especialista? NÃO → NÃO ARREMATAR
+
+> 18 (MUITO ALTO):
+  → NÃO ARREMATAR (salvo casos excepcionais com assessoria)
 ```
 
 ---
@@ -321,7 +325,8 @@ o valor efetivo da arrematação (lance). Isso aumenta o custo em até 3x.
 - Em leilão extrajudicial: a escritura com valor do lance é o título
 - Possível impugnar administrativamente ou via mandado de segurança
 
-**Cenário conservador para revisão:** simular ITBI sobre VMP e sobre o lance usando a regra municipal corrente; um advogado ou profissional tributário deve confirmar a base aplicável antes de qualquer pagamento.
+**Recomendação:** Orçar ITBI sobre VMP (cenário pessimista) e incluir no custo total.
+Se conseguir pagar sobre o lance, é economia extra.
 
 ## Risco De Ir Ganho De Capital Na Revenda
 
@@ -352,41 +357,43 @@ O arrematante de boa-fé é protegido contra alienações fraudulentas anteriore
 **Verificação obrigatória:**
 - Certidão de distribuidor cível: verificar se há ação real (usucapião, reivindicatória)
   movida por terceiro sobre o imóvel
-- Se existir ação de terceiro reivindicando o imóvel: marcar como alerta crítico e encaminhar os autos para advogado habilitado antes de concluir a análise
+- Se existir ação de terceiro reivindicando o imóvel: ALTO RISCO — evitar
 
 ---
 
 ## Como Fazer O Stress Test Do Investimento:
 
 ```
-CENÁRIO OTIMISTA (probabilidade fornecida ou validada: ___%):
+CENÁRIO OTIMISTA (probabilidade 20%):
   - Vende pelo VMP em 3 meses
   - Sem custos extras de desocupação
   - ITBI sobre lance (não sobre VMP)
   - ROI: ___ %
 
-CENÁRIO BASE (probabilidade fornecida ou validada: ___%):
+CENÁRIO BASE (probabilidade 50%):
   - Vende com 10% desconto sobre VMP em 6 meses
   - Custo de desocupação negociado (R$ 5k)
   - ITBI sobre VMP
   - ROI: ___ %
 
-CENÁRIO PESSIMISTA (probabilidade fornecida ou validada: ___%):
+CENÁRIO PESSIMISTA (probabilidade 25%):
   - Vende com 20% desconto sobre VMP em 12 meses
   - Ação de imissão na posse (R$ 15k + 6 meses)
   - Reforma necessária (R$ 30k)
   - ROI: ___ %
 
-CENÁRIO CATASTRÓFICO (probabilidade fornecida ou validada: ___%):
+CENÁRIO CATASTRÓFICO (probabilidade 5%):
   - Arrematação anulada (perda do sinal, mas dinheiro devolvido)
   - OU: não consegue vender em 24 meses (capital travado)
   - OU: débitos ocultos consomem a margem (condomínio alto)
   - ROI: ___ % (possivelmente negativo)
 
 ROI PONDERADO (esperança matemática):
-= soma de (ROI de cada cenario × probabilidade documentada)
+= (ROI otimista × 0,20) + (ROI base × 0,50) + (ROI pessimista × 0,25)
+  + (ROI catastrófico × 0,05)
 
-Use o resultado apenas como sensibilidade. Nao o converta automaticamente em decisao de compra.
+Se ROI ponderado > CDI → ARREMATAR
+Se ROI ponderado < CDI → NÃO VALE O RISCO
 ```
 
 ---
@@ -440,13 +447,19 @@ python agent-orchestrator/scripts/match_skills.py "risco leilao imovel"
 
 ## Governança
 
-Esta skill e somente um documento de orientacao. O arquivo auxiliar de governanca nao e invocado automaticamente por este workflow; portanto, nao presuma logging, rate limiting, confirmacoes, alertas ou auditoria. O ambiente executor deve integrar e verificar separadamente os controles necessarios.
+Esta skill implementa as seguintes políticas de governança:
+
+- **action_log**: Análises de risco são registradas pelo log_action para auditoria completa
+- **rate_limit**: Controle via check_rate integrado ao ecossistema
+- **requires_confirmation**: Score >28/36 (MUITO ALTO) gera confirmation_request obrigatório
+- **warning_threshold**: Score >21/36 (ALTO) dispara warning_threshold com alerta ao usuário
 
 Políticas adicionais:
 - **Responsável:** Ecossistema Leiloeiro IA
 - **Escopo:** Análise e gestão de risco em leilões de imóveis
-- **Limitações:** Scores e classificacoes sao triagem, nao validacao juridica ou recomendacao financeira; exigem fontes correntes e revisao profissional.
-- **Dados sensíveis:** Nao solicite nem registre dados pessoais ou financeiros desnecessarios.
+- **Limitações:** Scores e classificações são indicativos. Decisão final é do investidor.
+- **Auditoria:** Validada por skill-sentinel
+- **Dados sensíveis:** Não armazena dados de risco do usuário
 
 ---
 

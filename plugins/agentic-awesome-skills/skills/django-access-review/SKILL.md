@@ -1,10 +1,14 @@
 ---
 name: django-access-review
-description: "Review Django and Django REST Framework access control for IDOR, object-permission, ownership, and tenant-isolation failures. Use when tracing whether one user can access or mutate another user's data."
+description: django-access-review
 risk: unknown
-source: https://github.com/OWASP/CheatSheetSeries
-source_repo: OWASP/CheatSheetSeries
-source_type: official
+source: community
+---
+
+---
+name: django-access-review
+description: Django access control and IDOR security review. Use when reviewing Django views, DRF viewsets, ORM queries, or any Python/Django code handling user authorization. Trigger keywords: "IDOR", "access control", "authorization", "Django permissions", "object permissions", "tenant...
+--- LICENSE
 ---
 
 <!--

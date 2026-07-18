@@ -41,17 +41,13 @@ shell startup files, print secrets, or invent a key.
 ## Setup
 
 ```bash
-git clone https://github.com/datacurve-ai/deep-swe
-cd deep-swe
-git checkout <reviewed-deep-swe-commit-sha>
-uv tool install 'datacurve-pier==<reviewed-version>'
+git clone https://github.com/datacurve-ai/deep-swe && cd deep-swe
+uv tool install datacurve-pier            # PyPI (preferred)
+# or: uv tool install git+https://github.com/datacurve-ai/pier
 # pier bundles mini-swe-agent as the --agent driver
 ```
 
-Before setup, obtain approval for network access, installation, and filesystem
-changes. Record the selected DeepSWE commit, Pier version, agent version, model
-slug, provider, environment image, and command in the run manifest. Run all
-`pier` commands from inside `deep-swe/`, using relative `-p tasks/...`.
+Run all `pier` commands from inside `deep-swe/`, using relative `-p tasks/...`.
 
 ## OpenRouter wiring (the part the docs don't spell out)
 
@@ -59,13 +55,13 @@ mini-swe-agent has a native OpenRouter model class. Both routes below use `OPENR
 
 **Route A — native OpenRouter class (preferred, hits openrouter.ai/api/v1 directly):**
 ```bash
-pier run -p tasks --agent mini-swe-agent \
+pier run -p deep-swe/tasks --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter
 ```
 
 **Route B — LiteLLM provider prefix (fallback; same key):**
 ```bash
-pier run -p tasks --agent mini-swe-agent \
+pier run -p deep-swe/tasks --agent mini-swe-agent \
   --model openrouter/minimax/minimax-m3
 ```
 
@@ -76,14 +72,13 @@ Notes:
 
 ## Smoke test FIRST (1 task — do this before any full run)
 
-After the user approves the provider/model and a maximum spend, validate
-end-to-end wiring on one task before considering a broader run:
+Always validate end-to-end wiring on a single task before spending tokens on the corpus:
 
 ```bash
-pier run -p tasks/<task-id> --agent mini-swe-agent \
+pier run -p deep-swe/tasks/<task-id> --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter
 # list available task ids:
-ls tasks
+ls deep-swe/tasks
 ```
 
 Pass criteria: run completes, model returns actions (not auth/format errors), a score/trajectory is emitted. If it 401s → key wrong. If "provider not provided"/"model not mapped" → fix slug or switch route.
@@ -91,7 +86,7 @@ Pass criteria: run completes, model returns actions (not auth/format errors), a 
 ## Subset run (deterministic sample)
 
 ```bash
-pier run -p tasks --agent mini-swe-agent \
+pier run -p deep-swe/tasks --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter \
   --n-tasks 10 --sample-seed 0
 ```
@@ -99,7 +94,7 @@ pier run -p tasks --agent mini-swe-agent \
 ## Full 113-task corpus (costs tokens + time — confirm with user first)
 
 ```bash
-pier run -p tasks --agent mini-swe-agent \
+pier run -p deep-swe/tasks --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter
 # add `--env modal` to run in parallel Modal sandboxes (needs Modal configured)
 ```
@@ -108,8 +103,7 @@ pier run -p tasks --agent mini-swe-agent \
 
 - Trials land in `jobs/<run>/<trial_id>/`. Inspect with `pier view jobs/<run>`, `pier analyze jobs/<run>`, or `pier critique run jobs/<run>`.
 - Report: the exact command used, pass/fail, score, and any blockers.
-- Do not submit or publish results unless the user explicitly requests it and
-  the current official submission route has been verified.
+- Submit results for the official leaderboard to: **<email-address>**
 
 ## Failure modes
 
@@ -123,8 +117,4 @@ pier run -p tasks --agent mini-swe-agent \
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.
-- Moving repository heads, unpinned packages, model aliases, and changed task
-  images invalidate reproducibility; stop if the recorded versions cannot be resolved.
-- For installs, API spend, commands, remote access, scheduling, browser automation,
-  file-changing workflows, or result publication, get explicit user approval and
-  confirm the target environment and cost ceiling first.
+- For commands, remote access, scheduling, browser automation, or file-changing workflows, get explicit user approval and confirm the target environment first.

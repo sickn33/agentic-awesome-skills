@@ -20,8 +20,7 @@ Master major dependency version upgrades, compatibility analysis, staged upgrade
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, derive them from the target dependency's
-  pinned release notes and migration guide; this bundle has no separate playbook.
+- If detailed examples are required, open `resources/implementation-playbook.md`.
 
 ## Use this skill when
 
@@ -311,39 +310,27 @@ updates:
 
 ## Rollback Plan
 
-```bash
-# rollback.sh (illustrative; review paths and obtain explicit approval first)
+```javascript
+// rollback.sh
 #!/bin/bash
-set -euo pipefail
 
-# Refuse to hide unrelated work or overwrite an existing branch.
-test -z "$(git status --porcelain)" || {
-  echo "Working tree is not clean; create an explicit backup before continuing."
-  exit 1
-}
-rollback_ref="$(git rev-parse HEAD)"
-upgrade_branch="upgrade/package-major"
-package_spec="package@X.Y.Z"  # replace with the exact reviewed target
-git show-ref --verify --quiet "refs/heads/$upgrade_branch" && exit 1
-
-# Bind explicit approval to both the starting commit and exact package version.
-approval="$rollback_ref:$package_spec"
-test "${APPROVE_UPGRADE:-}" = "$approval" || {
-  echo "Set APPROVE_UPGRADE=$approval only after reviewing the plan."
-  exit 1
-}
-git checkout -b "$upgrade_branch"
+# Save current state
+git stash
+git checkout -b upgrade-branch
 
 # Attempt upgrade
-npm install "$package_spec"
+npm install package@latest
 
 # Run tests
 if npm run test; then
-  echo "Upgrade checks passed; inspect the diff before separately approving a commit."
+  echo "Upgrade successful"
+  git add package.json package-lock.json
+  git commit -m "chore: upgrade package"
 else
-  echo "Upgrade failed; no branch or files are deleted automatically."
-  echo "After inspecting the failure, explicitly approve restoration to $rollback_ref."
-  exit 1
+  echo "Upgrade failed, rolling back"
+  git checkout main
+  git branch -D upgrade-branch
+  npm install  # Restore from package-lock.json
 fi
 ```
 
@@ -380,9 +367,13 @@ npm install package@latest --workspace=packages/app
 
 ## Resources
 
-This bundle is self-contained. For version-specific behavior, use the target
-dependency's pinned changelog, migration guide, compatibility matrix, and
-security advisories rather than assuming local reference files are present.
+- **references/semver.md**: Semantic versioning guide
+- **references/compatibility-matrix.md**: Common compatibility issues
+- **references/staged-upgrades.md**: Incremental upgrade strategies
+- **references/testing-strategy.md**: Comprehensive testing approaches
+- **assets/upgrade-checklist.md**: Step-by-step checklist
+- **assets/compatibility-matrix.csv**: Version compatibility table
+- **scripts/audit-dependencies.sh**: Dependency audit script
 
 ## Best Practices
 

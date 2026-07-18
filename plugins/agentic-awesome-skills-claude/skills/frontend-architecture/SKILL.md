@@ -32,7 +32,7 @@ without asking anyone. The structure makes the answers obvious.
 
 1. **Feature modules own their world.** Each feature is a self-contained `modules/{feature}/` folder with its own pages, components, hooks, state, types, and a single public barrel.
 2. **Pages/screens are directories, not files.** A route is a folder that co-locates its component, its styles, and the components/hooks used only by it.
-3. **State is split by origin and runtime.** Client-side server state lives in a query/cache layer; Server Components may read data directly on the server. UI/client state lives in a client store. Do not mirror the same server response into client state.
+3. **State is split by origin.** Server data lives in a query/cache layer. UI/client state lives in a store. They never overlap — regardless of which libraries you pick.
 4. **Imports cross boundaries only through barrels.** Reaching into another module's internals is forbidden; you import from `@/modules/{feature}` and nothing deeper.
 5. **Code is promoted, not pre-placed.** It starts as local as possible and moves outward only when a second consumer appears.
 
@@ -135,20 +135,19 @@ The page README is short and high-signal: route path, expected params, required 
 
 ---
 
-## 4. State: split by origin and runtime
+## 4. State: split by origin (non-negotiable, library-agnostic)
 
 Two kinds of state, two homes. Mixing them is the most common architectural failure this skill exists to prevent. **The split is mandatory; the libraries are your choice.**
 
 | State kind            | Examples                                                                          | Lives in                                                                                |
 | --------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| **Server state used by Client Components** | fetched entities, lists, aggregates — anything the server owns | a **query/cache layer** (e.g. TanStack Query, RTK Query, SWR, Apollo) |
-| **Server data used only by Server Components** | data read during server rendering | direct server-side access through a service, `fetch`, ORM, or database client, subject to framework cache/revalidation rules |
+| **Server state**      | fetched entities, lists, aggregates — anything the API owns                       | a **query/cache layer** (e.g. TanStack Query, RTK Query, SWR, Apollo)                   |
 | **UI / client state** | open dialogs, table filters/sort, wizard step, draft being typed, preview toggles | a **client store** (e.g. Zustand, Redux Toolkit, MobX, Jotai, Valtio, or React Context) |
 
 ### 4.1 Hard rules (independent of library)
 
-- **Never mirror server responses into the client store.** Client Components read remote data from their query/cache layer; Zustand/Redux/MobX remains for UI state.
-- **Choose data access by runtime.** Client Components use typed data hooks rather than calling the network client during render. Next.js Server Components may call a server-only service, `fetch`, ORM, or database client directly; keep credentials and server-only modules out of the client bundle.
+- **Never mirror server responses into the client store.** No copying fetched entities into Zustand/Redux/MobX. The query/cache layer is the single source of truth for server data.
+- **Never fetch inside components.** Components read server data from a data hook and UI state from a store selector. They don't call the network client directly.
 - **Never drive continuous values through re-render state.** Scroll progress, pointer position, drag offset — use refs / animation values, not render state (it re-renders the tree every frame).
 - **One store boundary per module.** Whatever library you use, give each module one cohesive store unit (a Zustand hook, a Redux slice, a MobX class, a Jotai atom group) accessed via the module barrel. Components subscribe to the smallest slice they need to avoid needless re-renders.
 
@@ -245,9 +244,9 @@ export const filterAtom = atom("");
 
 > Whichever you choose, keep the rules in §4.1 constant. The skill cares that server and UI state are separated and that each module owns one store unit — not which library draws the box.
 
-### 4.3 Client-side server-state layer
+### 4.3 Data layer (server state)
 
-For Client Components, network access goes through **one typed client** in `shared/api-client/`. Modules wrap it in query/mutation hooks and a **key factory** so caches and invalidation stay consistent. Server Components can instead call server-only module services directly; do not force server-rendered data through a client cache unless hydration or client-side revalidation is actually required.
+All network access goes through **one typed client** in `shared/api-client/`. Modules wrap it in query/mutation hooks and a **key factory** so caches and invalidation stay consistent.
 
 ```ts
 // modules/invoice/hooks/invoiceKeys.ts — hierarchical key factory (TanStack Query style)
@@ -260,7 +259,7 @@ export const invoiceKeys = {
 } as const;
 ```
 
-Invalidating `lists()` refreshes every filtered page; `detail(id)` targets one entity. (RTK Query/SWR/Apollo express the same idea with tags/keys.) Client Components call `useInvoiceList()` / `useCreateInvoice()` instead of issuing ad hoc requests during render.
+Invalidating `lists()` refreshes every filtered page; `detail(id)` targets one entity. (RTK Query/SWR/Apollo express the same idea with tags/keys.) Components never write raw `fetch()` — they call `useInvoiceList()` / `useCreateInvoice()`.
 
 ---
 
@@ -324,7 +323,6 @@ The module/page/state model is constant. Only the thin routing layer on top chan
 
 - `src/app/` holds route segments and route groups (`(marketing)`, `(app)`, `(public)`) for layout/auth boundaries. Route files are thin: import a page component from a module barrel and render it.
 - Default to **Server Components**; mark interactive leaves `"use client"`. Providers (query client, store, theme) live in a `"use client"` boundary.
-- Server Components may read data directly with server-only services, `fetch`, an ORM, or a database client. Pass serializable results to Client Components when needed; add a client query cache only for client-side ownership, mutation, polling, or revalidation.
 
 ```tsx
 // app/(app)/invoices/page.tsx — thin route file
@@ -366,8 +364,8 @@ If you target both web and Expo, push framework-free code (types, validators, fo
 - [ ] New feature → new `modules/{feature}/` with `index.ts` + `README.md`, not files scattered into `shared/`.
 - [ ] New route → a **page/screen directory** (`{page}.tsx` + `{page}.styles.ts` + `index.ts` + `README.md`), not a loose file.
 - [ ] Cross-module imports go through the barrel (`@/modules/{feature}`) — no deep internal paths.
-- [ ] Client-side server state is in the query/cache layer; UI state is in the module store; Server Components use server-only data access without mirroring results into a client store.
-- [ ] Client Components use typed data hooks; direct server data access is confined to Server Components or server-only services.
+- [ ] Server data is in the query/cache layer; UI state is in the module store; **neither leaks into the other** (whatever libraries are chosen).
+- [ ] No `fetch()` in components — only typed data hooks built on the shared client.
 - [ ] No inline styles — co-located `{name}.styles.ts` (Tailwind/CSS Modules/Tamagui/StyleSheet/styled-components).
 - [ ] Components/hooks/utils placed at the narrowest scope; promoted only when a 2nd consumer appears.
 - [ ] One store unit per module, accessed via the barrel, with selectors and a `reset`.
@@ -399,7 +397,7 @@ The same ladder applies to **hooks**, **utils**, and **constants**: local → mo
 
 **Adding a feature:** create `modules/{feature}/` with the full subfolder set (`pages/ components/ hooks/ stores/ services/ utils/ constants/ types/`), a curated `index.ts`, and a `README.md`. Build the first screen as a page directory.
 
-**Deciding where code goes:** ask "who consumes this?" → narrowest scope wins (§9). Ask "where and by which runtime is this data consumed?" → Server Component = server-only access, Client Component remote data = query layer, UI state = store (§4).
+**Deciding where code goes:** ask "who consumes this?" → narrowest scope wins (§9). Ask "where did this data come from?" → server = query layer, UI = store (§4).
 
 **Reviewing structure:** run the checklist in §8. The most valuable catches are state-origin leaks (server data in the client store) and deep cross-module imports (bypassing the barrel) — both erode the architecture fastest.
 

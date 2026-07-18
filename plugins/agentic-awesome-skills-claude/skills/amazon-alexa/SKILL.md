@@ -126,20 +126,6 @@ No arquivo `models/pt-BR.json`:
         {"name": "AMAZON.CancelIntent"},
         {"name": "AMAZON.FallbackIntent"},
         {
-          "name": "EnableMemoryIntent",
-          "samples": [
-            "confirmo ativar memoria por trinta dias",
-            "ativar memoria por trinta dias"
-          ]
-        },
-        {
-          "name": "DisableMemoryIntent",
-          "samples": [
-            "desativar memoria",
-            "apagar meu historico"
-          ]
-        },
-        {
           "name": "ChatIntent",
           "slots": [{"name": "query", "type": "AMAZON.SearchQuery"}],
           "samples": [
@@ -205,22 +191,14 @@ No arquivo `models/pt-BR.json`:
 import os
 import time
 import anthropic
+import boto3
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name, is_request_type
 from ask_sdk_model import Response
 from ask_sdk_dynamodb_persistence_adapter import DynamoDbPersistenceAdapter
 
-CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-20250514")
-AURI_SYSTEM_PROMPT = "Responda de forma concisa, util e apropriada para voz."
-MAX_HISTORY = 10
-MAX_RESPONSE_CHARS = 6000
-HISTORY_RETENTION_SECONDS = 30 * 24 * 3600
-
-persistence_adapter = DynamoDbPersistenceAdapter(
-    table_name=os.environ["DYNAMODB_TABLE"]
-)
-sb = SkillBuilder(persistence_adapter=persistence_adapter)
+## ============================================================
 
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_handler(handler_input: HandlerInput) -> Response:
@@ -229,32 +207,6 @@ def launch_handler(handler_input: HandlerInput) -> Response:
     greeting = f"Oi{', ' + name if name else ''}! Eu sou a Auri. Como posso ajudar?"
     return (handler_input.response_builder
             .speak(greeting).ask("Em que posso ajudar?").response)
-
-
-@sb.request_handler(can_handle_func=is_intent_name("EnableMemoryIntent"))
-def enable_memory_handler(handler_input: HandlerInput) -> Response:
-    attrs = handler_input.attributes_manager.persistent_attributes
-    attrs["history_consent"] = True
-    attrs["history"] = []
-    attrs["history_expires_at"] = int(time.time()) + HISTORY_RETENTION_SECONDS
-    handler_input.attributes_manager.persistent_attributes = attrs
-    handler_input.attributes_manager.save_persistent_attributes()
-    return (handler_input.response_builder
-            .speak("Memoria ativada. As proximas conversas serao guardadas por ate trinta dias. Voce pode pedir para apagar o historico a qualquer momento.")
-            .ask("Como posso ajudar?").response)
-
-
-@sb.request_handler(can_handle_func=is_intent_name("DisableMemoryIntent"))
-def disable_memory_handler(handler_input: HandlerInput) -> Response:
-    attrs = handler_input.attributes_manager.persistent_attributes
-    attrs["history_consent"] = False
-    attrs.pop("history", None)
-    attrs.pop("history_expires_at", None)
-    handler_input.attributes_manager.persistent_attributes = attrs
-    handler_input.attributes_manager.save_persistent_attributes()
-    return (handler_input.response_builder
-            .speak("Memoria desativada e historico apagado.")
-            .ask("Como posso ajudar?").response)
 
 
 @sb.request_handler(can_handle_func=is_intent_name("ChatIntent"))
@@ -267,16 +219,9 @@ def chat_handler(handler_input: HandlerInput) -> Response:
             return (handler_input.response_builder
                     .speak("Pode repetir? Nao entendi bem.").ask("Pode repetir?").response)
 
-        # Historico e opt-in sao persistidos somente com consentimento explicito.
+        # Carregar historico
         attrs = handler_input.attributes_manager.persistent_attributes
-        consented = attrs.get("history_consent", False)
-        expires_at = attrs.get("history_expires_at", 0)
-        if consented and expires_at <= int(time.time()):
-            attrs.pop("history", None)
-            attrs.pop("history_expires_at", None)
-            handler_input.attributes_manager.persistent_attributes = attrs
-            handler_input.attributes_manager.save_persistent_attributes()
-        history = attrs.get("history", []) if consented and expires_at > int(time.time()) else []
+        history = attrs.get("history", [])
 
         # Montar mensagens para Claude
         messages = history[-MAX_HISTORY:]
@@ -296,23 +241,12 @@ def chat_handler(handler_input: HandlerInput) -> Response:
         if len(reply) > MAX_RESPONSE_CHARS:
             reply = reply[:MAX_RESPONSE_CHARS] + "... Quer que eu continue?"
 
-        if consented:
-            history.append({"role": "user", "content": query})
-            history.append({"role": "assistant", "content": reply})
-            attrs["history"] = history[-(MAX_HISTORY * 2):]
-            attrs["history_expires_at"] = int(time.time()) + HISTORY_RETENTION_SECONDS
-            handler_input.attributes_manager.persistent_attributes = attrs
-            handler_input.attributes_manager.save_persistent_attributes()
-
-        return (handler_input.response_builder
-                .speak(reply).ask("Mais alguma coisa?").response)
-    except Exception:
-        return (handler_input.response_builder
-                .speak("Nao consegui responder agora. Tente novamente.")
-                .ask("Quer tentar outra pergunta?").response)
-```
-
-O histórico fica desativado por padrão. O usuário precisa dizer a frase explícita do `EnableMemoryIntent`, que informa a retenção, e pode revogar o consentimento com `DisableMemoryIntent`, que apaga imediatamente o histórico. Configure também a limpeza automática do DynamoDB para a mesma janela de 30 dias e mantenha a verificação no handler para não reutilizar dados expirados. Não registre transcrições, prompts ou respostas em logs operacionais.
+        # Salvar historico
+        history.append({"role": "user", "content": query})
+        history.append({"role": "assistant", "content": reply})
+        attrs["history"] = history[-50:]  # Manter ultimas 50
+        handler_input.attributes_manager.persistent_attributes = attrs
+        handler_input.attributes_manager.save_persist
 
 ### 4.2 Variaveis De Ambiente Lambda
 
@@ -373,9 +307,9 @@ aws dynamodb create-table \
 ```python
 import time
 
-## Adicionar Ttl De 30 Dias Ao Salvar
+## Adicionar Ttl De 180 Dias Ao Salvar
 
-attrs["ttl"] = int(time.time()) + (30 * 24 * 3600)
+attrs["ttl"] = int(time.time()) + (180 * 24 * 3600)
 ```
 
 ---

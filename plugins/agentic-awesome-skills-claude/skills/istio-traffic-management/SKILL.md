@@ -20,10 +20,7 @@ Comprehensive guide to Istio traffic management for production service mesh depl
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- Treat the templates below as examples to adapt and validate, not manifests to apply unchanged.
-- Before any cluster mutation, confirm the cluster context, namespace, Istio version, affected hosts, traffic window, observability signals, rollback owner, and authorization to change that environment.
-- Inspect and validate proposed manifests first. Show the exact diff and expected impact, then obtain explicit approval immediately before applying a production change.
-- Capture the current resources before mutation. Define abort thresholds and a tested rollback or restore command; after the change, verify routing, error rate, latency, and workload health, and restore the captured configuration if thresholds are breached.
+- If detailed examples are required, open `resources/implementation-playbook.md`.
 
 ## Use this skill when
 
@@ -313,20 +310,14 @@ spec:
 - **Set timeouts** - Always configure reasonable timeouts
 - **Enable retries** - But with backoff and limits
 - **Monitor** - Use Kiali and Jaeger for visibility
-- **Preflight mutations** - Confirm context, namespace, versions, current resources, and configuration analysis before applying
-- **Require production approval** - Present the exact diff, blast radius, monitoring window, abort thresholds, and rollback plan immediately before a production mutation
-- **Preserve rollback state** - Export the resources being changed and verify that the previous configuration can be restored
 
 ### Don'ts
 - **Don't over-retry** - Can cause cascading failures
 - **Don't ignore outlier detection** - Enable circuit breakers
 - **Don't mirror to production** - Mirror to test environments
 - **Don't skip canary** - Test with small traffic percentage first
-- **Don't leave experiments enabled** - Time-box traffic mirroring, fault injection, and elevated logging, then restore the prior configuration
 
 ## Debugging Commands
-
-The following commands are read-only except for `proxy-config log`, which changes runtime logging. Confirm the target context and workload before running any command. Obtain explicit approval before changing a production proxy log level, record the prior level, time-box the change, and restore it when diagnostics finish.
 
 ```bash
 # Check VirtualService configuration
@@ -338,7 +329,7 @@ istioctl proxy-config routes deploy/my-app -o json
 # Check endpoint discovery
 istioctl proxy-config endpoints deploy/my-app
 
-# Debug traffic only after approval; capture and restore the prior level
+# Debug traffic
 istioctl proxy-config log deploy/my-app --level debug
 ```
 
@@ -352,4 +343,3 @@ istioctl proxy-config log deploy/my-app --level debug
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
-- Do not apply production routing, mirroring, fault injection, or logging changes without an explicit approval tied to the exact target and proposed diff.

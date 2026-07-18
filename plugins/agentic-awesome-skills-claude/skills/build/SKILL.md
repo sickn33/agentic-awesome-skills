@@ -1,9 +1,14 @@
 ---
 name: build
-description: Feature development pipeline for researching, planning, tracking, and implementing major features through named, verified phases.
+description: build
 risk: unknown
 source: community
-argument-hint: "[subcommand] [name]"
+---
+
+---
+name: build
+description: Feature development pipeline - research, plan, track, and implement major features.
+argument-hint: [subcommand] [name]
 metadata:
   author: Shpigford
   version: "1.0"
@@ -34,8 +39,6 @@ Parse the first word of $ARGUMENTS to determine the subcommand:
 - (empty or unrecognized) → Show usage help
 
 If the feature name is not provided in arguments, you MUST use AskUserQuestion to prompt for it.
-
-Before any filesystem access, require the feature name to match `^[a-z0-9]+(?:-[a-z0-9]+)*$`. Reject names containing `/`, `\`, `.`, absolute paths, URL-encoded separators, or control characters. Resolve `docs/{name}` from the repository root and verify that its normalized relative path is exactly `docs/{name}` before reading, creating, or updating files. If validation fails, stop and request a valid kebab-case identifier; never normalize an unsafe name into a different destination.
 
 ---
 

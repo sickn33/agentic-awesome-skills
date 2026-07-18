@@ -30,30 +30,25 @@ Use this skill when:
 # macOS / Linux
 brew install oven-sh/bun/bun
 
-# Alternative: download for inspection only. Do not execute the mutable
-# "latest" installer unless its digest/signature has been verified against a
-# pinned Bun release through an independent trusted channel.
+# Alternative: download the official installer, inspect it, then execute it
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -fsSLo "$tmpdir/bun-install.sh" https://bun.sh/install
 cat "$tmpdir/bun-install.sh"  # review the full installer before executing
-# Stop here unless verification and explicit execution approval are complete.
+bash "$tmpdir/bun-install.sh"
 
 # Windows
-# Prefer a trusted package manager. If downloading install.ps1, save it for
-# complete inspection and pinned-release digest/signature verification; do not
-# execute a partially inspected mutable script.
+powershell -NoProfile -Command "Invoke-WebRequest https://bun.sh/install.ps1 -OutFile $env:TEMP\\bun-install.ps1; Get-Content $env:TEMP\\bun-install.ps1 -TotalCount 120; powershell -ExecutionPolicy Bypass -File $env:TEMP\\bun-install.ps1"
 
 # Homebrew
 brew tap oven-sh/bun
 brew install bun
 
-# npm (if needed): pin the exact version reviewed for this environment
-BUN_VERSION="1.x.y"  # replace with the approved release, never "latest"
-npm install -g "bun@$BUN_VERSION"
+# npm (if needed)
+npm install -g bun
 
-# Upgrade only after reviewing and approving the exact target release; prefer
-# the same trusted package manager used for installation.
+# Upgrade
+bun upgrade
 ```
 
 ### 1.2 Why Bun?
@@ -331,18 +326,8 @@ const server = Bun.serve({
   port: 3000,
 
   fetch(req, server) {
-    const origin = req.headers.get("origin");
-    const token = req.headers.get("authorization")?.replace(/^Bearer /, "");
-
-    if (origin !== "https://app.example.com" || !token) {
-      return new Response("Forbidden", { status: 403 });
-    }
-
-    // authenticateToken must fail closed and return a bounded principal ID.
-    const principalId = authenticateToken(token);
-    if (!principalId) return new Response("Unauthorized", { status: 401 });
-
-    if (server.upgrade(req, { data: { principalId, messages: 0 } })) {
+    // Upgrade to WebSocket
+    if (server.upgrade(req)) {
       return; // Upgraded
     }
     return new Response("Upgrade failed", { status: 500 });
@@ -355,17 +340,8 @@ const server = Bun.serve({
     },
 
     message(ws, message) {
-      if (++ws.data.messages > 100 || Buffer.byteLength(message) > 16_384) {
-        ws.close(1008, "Policy limit exceeded");
-        return;
-      }
-      // Validate the message schema before dispatch; do not log raw content.
-      const parsed = parseAllowedMessage(message);
-      if (!parsed) {
-        ws.close(1007, "Invalid message");
-        return;
-      }
-      ws.send(JSON.stringify(handleAllowedMessage(ws.data.principalId, parsed)));
+      console.log(`Received: ${message}`);
+      ws.send(`Echo: ${message}`);
     },
 
     close(ws) {
@@ -619,16 +595,8 @@ console.log(__filename);
 # 1. Install Bun
 brew install oven-sh/bun/bun
 
-# 2. Back up the current install and lockfile before changing package managers.
-# Bind approval to the exact project path; otherwise fail closed.
-test "${APPROVE_BUN_MIGRATION_FOR:-}" = "$PWD" || {
-  echo "Set APPROVE_BUN_MIGRATION_FOR to this exact project path after review."
-  exit 1
-}
-backup_dir="../node-to-bun-backup-$(date +%Y%m%d%H%M%S)"
-mkdir -p "$backup_dir"
-[ ! -f package-lock.json ] || cp package-lock.json "$backup_dir/"
-[ ! -d node_modules ] || mv node_modules "$backup_dir/"  # reversible
+# 2. Replace package manager
+rm -rf node_modules package-lock.json
 bun install
 
 # 3. Update scripts in package.json

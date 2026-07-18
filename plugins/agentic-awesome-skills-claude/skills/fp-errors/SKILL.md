@@ -422,11 +422,7 @@ import { pipe } from 'fp-ts/function'
 // Wrap any async operation
 const fetchUser = (id: string): TE.TaskEither<Error, User> =>
   TE.tryCatch(
-    async () => {
-      const response = await fetch(`/api/users/${id}`)
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
-      return response.json()
-    },
+    () => fetch(`/api/users/${id}`).then(r => r.json()),
     (e) => (e instanceof Error ? e : new Error(String(e)))
   )
 
@@ -591,11 +587,7 @@ import * as TE from 'fp-ts/TaskEither'
 // Wrap external async functions
 const fetchJson = <T>(url: string): TE.TaskEither<Error, T> =>
   TE.tryCatch(
-    async () => {
-      const response = await fetch(url)
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
-      return response.json() as Promise<T>
-    },
+    () => fetch(url).then(r => r.json()),
     (e) => new Error(`Fetch failed: ${e}`)
   )
 

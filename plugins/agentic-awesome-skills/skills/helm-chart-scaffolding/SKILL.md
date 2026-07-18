@@ -32,15 +32,6 @@ Use this skill when you need to:
 - Provide actionable steps and verification.
 - If detailed examples are required, open `resources/implementation-playbook.md`.
 
-### Safe validation and live changes
-
-- Treat rendering and linting as local preflight. Use client-side dry runs and hide Secret manifests from output and logs.
-- Before any cluster read or change, identify and record the exact kube context, namespace, release, chart revision, and values files. Stop if any target is ambiguous.
-- Render and lint locally, then review a redacted diff against the named live release. Do not expose Secret values in the diff or transcript.
-- Obtain immediate, explicit approval for the exact live action, context, namespace, release, chart revision, values, reviewed diff, and rollback plan. Approval to scaffold or validate a chart is not approval to install or upgrade it.
-- Record the current release revision and backup any required application data before mutation. Define health checks, abort thresholds, and the rollback command in advance; verify health after the change and roll back on a breached threshold.
-- Never run install, upgrade, rollback, uninstall, hook, or test commands against a cluster without that exact approval.
-
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed patterns and examples.

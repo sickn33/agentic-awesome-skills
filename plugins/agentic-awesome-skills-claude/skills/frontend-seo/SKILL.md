@@ -453,8 +453,6 @@ export function rssItems(posts: BlogPost[]): RssItem[] {
 import { rssItems } from "@/services/seo";
 import { SITE_NAME, SITE_URL, SITE_DESCRIPTION } from "@/constants/seo";
 
-const cdata = (value: string) => value.replaceAll("]]>", "]]]]><![CDATA[>");
-
 export function GET(): Response {
   const items = rssItems(loadPublishedPostsNewestFirst());
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -464,8 +462,8 @@ export function GET(): Response {
   ${items
     .map(
       (i) => `<item>
-    <title><![CDATA[${cdata(i.title)}]]></title><link>${i.link}</link>
-    <description><![CDATA[${cdata(i.description)}]]></description>
+    <title><![CDATA[${i.title}]]></title><link>${i.link}</link>
+    <description><![CDATA[${i.description}]]></description>
     <pubDate>${i.pubDate}</pubDate><guid>${i.guid}</guid>
   </item>`,
     )
@@ -477,8 +475,7 @@ export function GET(): Response {
 }
 ```
 
-CDATA-wrap titles/descriptions and split embedded `]]>` terminators so free text
-cannot close the section early.
+CDATA-wrap titles/descriptions so apostrophes and markup never break the feed.
 
 ---
 
@@ -615,18 +612,16 @@ export default async function Page({ params }) {
     { name: "Blog", url: canonicalUrl("/blog") },
     { name: post.title, url },
   ]);
-  const serializeJsonLd = (value: unknown) =>
-    JSON.stringify(value).replace(/</g, "\\u003c");
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(postLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(postLd) }}
         suppressHydrationWarning
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(crumbLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbLd) }}
         suppressHydrationWarning
       />
       {/* …page content */}

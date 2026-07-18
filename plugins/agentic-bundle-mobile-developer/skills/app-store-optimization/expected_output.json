@@ -119,9 +119,9 @@
     "google_play_store": {
       "title_options": [
         {
-          "title": "TaskFlow - AI Task Manager",
-          "length": 26,
-          "keywords_included": ["task manager", "ai"],
+          "title": "TaskFlow - AI Task Manager & Team Productivity",
+          "length": 48,
+          "keywords_included": ["task manager", "ai", "team", "productivity"],
           "strategy": "keyword_rich"
         }
       ],

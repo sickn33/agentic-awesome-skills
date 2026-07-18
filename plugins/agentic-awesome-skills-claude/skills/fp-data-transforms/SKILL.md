@@ -240,7 +240,7 @@ const found = pipe(
 ); // Option<User>
 
 // Partition into two groups
-const { left: inactive, right: active } = pipe(
+const [inactive, active] = pipe(
   users,
   A.partition(user => user.isActive)
 );

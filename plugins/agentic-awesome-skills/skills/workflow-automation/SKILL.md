@@ -242,7 +242,7 @@ Central coordinator dispatches work to specialized workers
     ▼           ▼           ▼
 ┌───────┐  ┌───────┐  ┌───────┐
 │Worker1│  │Worker2│  │Worker3│
-│Create │  │Modify │  │Review │
+│Create │  │Modify │  │Delete │
 └───────┘  └───────┘  └───────┘
 """
 
@@ -250,11 +250,7 @@ Central coordinator dispatches work to specialized workers
 """
 export async function orchestratorWorkflow(task: ComplexTask) {
   // Orchestrator decides what work needs to be done
-  const candidate = await analyzeTask(task);
-  const plan = validatePlan(candidate, {
-    allowedTypes: ['create', 'modify'],
-    maxSubtasks: 20,
-  }); // schema validation fails closed
+  const plan = await analyzeTask(task);
 
   // Dispatch to specialized worker workflows
   const results = await Promise.all(
@@ -264,8 +260,8 @@ export async function orchestratorWorkflow(task: ComplexTask) {
           return executeChild(createWorkerWorkflow, { args: [subtask] });
         case 'modify':
           return executeChild(modifyWorkerWorkflow, { args: [subtask] });
-        default:
-          throw new Error(`Unapproved subtask type: ${subtask.type}`);
+        case 'delete':
+          return executeChild(deleteWorkerWorkflow, { args: [subtask] });
       }
     })
   );
@@ -282,22 +278,13 @@ export const aiOrchestrator = inngest.createFunction(
   { event: "task/complex" },
   async ({ event, step }) => {
     // AI decides what needs to be done
-    const candidate = await step.run("create-plan", async () => {
+    const plan = await step.run("create-plan", async () => {
       return await llm.chat({
         messages: [
           { role: "system", content: "Break this task into subtasks..." },
           { role: "user", content: event.data.task }
         ]
       });
-    });
-
-    // Parse structured output, enforce an allowlist and bounds, and reject
-    // unknown fields. validatePlan also constrains IDs used in step names and
-    // validates arguments for each allowed type. Destructive actions require a
-    // separate human-approved workflow and are never accepted from model output.
-    const plan = validatePlan(candidate, {
-      allowedTypes: ["create", "modify"],
-      maxSubtasks: 20,
     });
 
     // Execute each subtask as a durable step
@@ -533,26 +520,20 @@ Customer charged twice. Email sent three times. Database record
 created multiple times. Workflow retries cause duplicate side effects.
 
 Why this breaks:
-Durable engines may replay deterministic workflow code to reconstruct state,
-but recorded successful activities/steps are not normally re-executed during
-that replay. Failed or timed-out activities can be retried, and ambiguity at an
-external-service boundary can still duplicate a side effect. External services
-therefore need stable idempotency keys.
+Durable execution replays workflows from the beginning on restart.
+If step 3 crashes and the workflow resumes, steps 1 and 2 run again.
+Without idempotency keys, external services don't know these are retries.
 
 Recommended fix:
 
 # ALWAYS use idempotency keys for external calls:
 
 ### Stripe example:
-await stripe.paymentIntents.create(
-  {
-    amount: 1000,
-    currency: 'usd',
-  },
-  {
-    idempotencyKey: `order-${orderId}-payment`,
-  }
-);
+await stripe.paymentIntents.create({
+  amount: 1000,
+  currency: 'usd',
+  idempotency_key: `order-${orderId}-payment`  # Critical!
+});
 
 ### Email example:
 await step.run("send-confirmation", async () => {

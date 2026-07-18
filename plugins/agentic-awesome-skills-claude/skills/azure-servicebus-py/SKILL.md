@@ -225,25 +225,9 @@ dlq_receiver = client.get_queue_receiver(
 async with dlq_receiver:
     messages = await dlq_receiver.receive_messages(max_message_count=10)
     for msg in messages:
-        # Inspect metadata first; do not print sensitive message bodies.
-        print(
-            f"Dead-lettered sequence={msg.sequence_number} "
-            f"reason={msg.dead_letter_reason}"
-        )
-
-        remediation_succeeded = False
-        operator_approved_removal = False
-        # Reprocess or archive the message here. Set both flags only after the
-        # destination and exact sequence number have been reviewed.
-
-        if remediation_succeeded and operator_approved_removal:
-            await dlq_receiver.complete_message(msg)
-        else:
-            # Preserve the message for a later, explicitly approved attempt.
-            await dlq_receiver.abandon_message(msg)
+        print(f"Dead-lettered: {msg.dead_letter_reason}")
+        await dlq_receiver.complete_message(msg)
 ```
-
-Completing a DLQ message permanently removes it. Bind any remediation to the exact namespace, entity, sequence number, destination, and operator approval; confirm the archive or requeue succeeded before settlement.
 
 ## Sync Client (for simple scripts)
 
@@ -274,9 +258,13 @@ with ServiceBusClient(
 6. **Use message batches** for high-throughput scenarios
 7. **Set `max_wait_time`** to avoid infinite blocking
 
-## Bundle Contents
+## Reference Files
 
-This bundle contains this guide only. It does not include provisioning scripts or additional reference files; implement and review environment-specific queue, topic, subscription, and DLQ operations in the consuming project.
+| File | Contents |
+|------|----------|
+| references/patterns.md | Competing consumers, sessions, retry patterns, request-response, transactions |
+| references/dead-letter.md | DLQ handling, poison messages, reprocessing strategies |
+| scripts/setup_servicebus.py | CLI for queue/topic/subscription management and DLQ monitoring |
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

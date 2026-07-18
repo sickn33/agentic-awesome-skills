@@ -1,123 +1,488 @@
 ---
 name: pci-compliance
-description: "Scope and evidence PCI DSS v4.0.1 work without claiming certification or inventing payment-security controls."
-risk: critical
-source: https://www.pcisecuritystandards.org/document_library/?class=pcidss&doc=pci_dss
-source_type: official
+description: "Master PCI DSS (Payment Card Industry Data Security Standard) compliance for secure payment processing and handling of cardholder data."
+risk: unknown
+source: community
 date_added: "2026-02-27"
 ---
 
-# PCI DSS Compliance Evidence Workflow
+# PCI Compliance
 
-Use this skill to structure PCI DSS v4.0.1 scoping, gap analysis, remediation evidence, and assessment preparation. The current standard and supporting documents must be retrieved from the PCI Security Standards Council (PCI SSC) Document Library before relying on requirement numbers or effective dates.
+Master PCI DSS (Payment Card Industry Data Security Standard) compliance for secure payment processing and handling of cardholder data.
 
-## When to Use
+## Do not use this skill when
 
-- A system stores, processes, or transmits cardholder data or sensitive authentication data.
-- A component can affect the security of the cardholder data environment (CDE).
-- A team needs to reduce scope, prepare evidence, or coordinate with an acquiring bank, payment brand, Qualified Security Assessor (QSA), or Internal Security Assessor (ISA).
+- The task is unrelated to pci compliance
+- You need a different domain or tool outside this scope
 
-## Do Not Use
+## Instructions
 
-- Do not use this skill to declare an organization compliant, select a Self-Assessment Questionnaire (SAQ), or determine a merchant/service-provider validation level without the acquiring bank or payment brand.
-- Do not design a custom card-data vault or tokenization service from snippets. Use a validated payment provider or a separately reviewed, purpose-built system.
-- Do not collect production card data, sensitive authentication data, credentials, keys, or assessment evidence in chat.
+- Clarify goals, constraints, and required inputs.
+- Apply relevant best practices and validate outcomes.
+- Provide actionable steps and verification.
+- If detailed examples are required, open `resources/implementation-playbook.md`.
 
-## Safety Boundaries
+## Use this skill when
 
-- Never retain card verification codes, PINs, PIN blocks, or full track data after authorization. Confirm the exact PCI DSS data-retention rules in the current official standard.
-- Prefer hosted payment fields, redirects, or provider tokens that keep account data out of the application environment. Tokenization can reduce scope only after the full data flow and provider responsibilities are verified.
-- Treat PAN, logs, traces, backups, queues, analytics, crash reports, screenshots, and support tools as possible account-data locations.
-- Do not paste real PANs into examples or tests. Use payment-provider test environments and documented test values.
-- Do not weaken TLS, authentication, monitoring, segmentation, or key management to make an integration work.
-- Escalate legal interpretations, compensating controls, customized approaches, and disputed scope to a QSA/ISA or the responsible compliance authority.
+- Building payment processing systems
+- Handling credit card information
+- Implementing secure payment flows
+- Conducting PCI compliance audits
+- Reducing PCI compliance scope
+- Implementing tokenization and encryption
+- Preparing for PCI DSS assessments
 
-## Workflow
+## PCI DSS Requirements (12 Core Requirements)
 
-### 1. Freeze authoritative inputs
+### Build and Maintain Secure Network
+1. Install and maintain firewall configuration
+2. Don't use vendor-supplied defaults for passwords
 
-Record:
+### Protect Cardholder Data
+3. Protect stored cardholder data
+4. Encrypt transmission of cardholder data across public networks
 
-- the PCI DSS version and publication date from PCI SSC;
-- the assessment period and target validation date;
-- the entities, brands, acquirer, assessor, and service providers involved;
-- the applicable official SAQ, ROC, AOC, or other reporting instructions as confirmed by the responsible authority.
+### Maintain Vulnerability Management
+5. Protect systems against malware
+6. Develop and maintain secure systems and applications
 
-Link every requirement interpretation to the exact official document and version. Do not rely on memory, old requirement summaries, or transaction-volume tables copied from third-party sites.
+### Implement Strong Access Control
+7. Restrict access to cardholder data by business need-to-know
+8. Identify and authenticate access to system components
+9. Restrict physical access to cardholder data
 
-### 2. Map account-data flows
+### Monitor and Test Networks
+10. Track and monitor all access to network resources and cardholder data
+11. Regularly test security systems and processes
 
-Create a reviewed diagram and inventory covering:
+### Maintain Information Security Policy
+12. Maintain a policy that addresses information security
 
-- collection points and payment channels;
-- applications, APIs, networks, endpoints, people, and facilities;
-- storage, processing, transmission, logging, backup, and deletion paths;
-- encryption and key-management boundaries;
-- third-party service providers and shared responsibilities;
-- systems connected to, or able to affect, the CDE.
+## Compliance Levels
 
-For every component, record the owner, environment, data handled, trust boundary, segmentation control, and evidence source. Unknown paths remain in scope until disproved with evidence.
+**Level 1**: > 6 million transactions/year (annual ROC required)
+**Level 2**: 1-6 million transactions/year (annual SAQ)
+**Level 3**: 20,000-1 million e-commerce transactions/year
+**Level 4**: < 20,000 e-commerce or < 1 million total transactions
 
-### 3. Confirm scope and responsibilities
+## Data Minimization (Never Store)
 
-Review the map with security, engineering, operations, legal/compliance, and the assessor or acquirer when required. Verify segmentation with technical testing; a diagram or firewall rule alone is not proof.
+```python
+# NEVER STORE THESE
+PROHIBITED_DATA = {
+    'full_track_data': 'Magnetic stripe data',
+    'cvv': 'Card verification code/value',
+    'pin': 'PIN or PIN block'
+}
 
-Maintain a responsibility matrix for each applicable requirement:
+# CAN STORE (if encrypted)
+ALLOWED_DATA = {
+    'pan': 'Primary Account Number (card number)',
+    'cardholder_name': 'Name on card',
+    'expiration_date': 'Card expiration',
+    'service_code': 'Service code'
+}
 
-| Requirement | Responsible party | Control owner | Evidence | Period | Status |
-|---|---|---|---|---|---|
-| Exact PCI DSS reference | Organization/provider/shared | Named role | Immutable evidence location | Required window | pass/gap/blocked |
+class PaymentData:
+    """Safe payment data handling."""
 
-Provider attestations do not automatically cover the organization's configuration or integration duties.
+    def __init__(self):
+        self.prohibited_fields = ['cvv', 'cvv2', 'cvc', 'pin']
 
-### 4. Evaluate controls against the official standard
+    def sanitize_log(self, data):
+        """Remove sensitive data from logs."""
+        sanitized = data.copy()
 
-For each applicable requirement:
+        # Mask PAN
+        if 'card_number' in sanitized:
+            card = sanitized['card_number']
+            sanitized['card_number'] = f"{card[:6]}{'*' * (len(card) - 10)}{card[-4:]}"
 
-1. quote only the minimum identifier needed to locate it;
-2. document why it applies or the evidence-backed reason it does not;
-3. identify the implemented control and owner;
-4. collect dated configuration, procedure, sample, and operating evidence;
-5. test both design and operation across the required period;
-6. record gaps, risk, remediation owner, deadline, and retest result.
+        # Remove prohibited data
+        for field in self.prohibited_fields:
+            sanitized.pop(field, None)
 
-Do not turn example code or policy text into evidence. Evidence must come from the actual in-scope environment and be handled under the organization's access and retention rules.
+        return sanitized
 
-### 5. Remediate safely
+    def validate_no_prohibited_storage(self, data):
+        """Ensure no prohibited data is being stored."""
+        for field in self.prohibited_fields:
+            if field in data:
+                raise SecurityError(f"Attempting to store prohibited field: {field}")
+```
 
-Prioritize exposure of prohibited or unnecessary account data, authentication and access failures, missing monitoring, exploitable vulnerabilities, weak segmentation, and unmanaged cryptographic keys. Each remediation needs:
+## Tokenization
 
-- an approved change and rollback plan;
-- non-production testing with synthetic data;
-- production verification by an authorized operator;
-- before/after evidence bound to the changed system and date;
-- assessor review when the control interpretation affects compliance scope.
+### Using Payment Processor Tokens
+```python
+import stripe
 
-Do not mark a gap closed until the control is operating and the evidence meets the applicable testing procedure.
+class TokenizedPayment:
+    """Handle payments using tokens (no card data on server)."""
 
-### 6. Produce an honest assessment packet
+    @staticmethod
+    def create_payment_method_token(card_details):
+        """Create token from card details (client-side only)."""
+        # THIS SHOULD ONLY BE DONE CLIENT-SIDE WITH STRIPE.JS
+        # NEVER send card details to your server
 
-The packet should include the authoritative-document manifest, scope and data-flow diagrams, inventories, responsibility matrix, requirement ledger, evidence index, gap register, remediation/retest records, provider attestations, and unresolved decisions.
+        """
+        // Frontend JavaScript
+        const stripe = Stripe('pk_...');
 
-Use precise states such as `verified`, `gap`, `not-applicable-with-evidence`, or `blocked-needs-authority`. Label preparatory work as readiness or gap analysis—not certification.
+        const {token, error} = await stripe.createToken({
+            card: {
+                number: '4242424242424242',
+                exp_month: 12,
+                exp_year: 2024,
+                cvc: '123'
+            }
+        });
 
-## Completion Checks
+        // Send token.id to server (NOT card details)
+        """
+        pass
 
-- Official PCI SSC documents and versions are recorded.
-- Scope includes all systems that store, process, transmit, or can affect account data.
-- Third-party and shared responsibilities are explicit.
-- Every applicable requirement has current, access-controlled evidence or a tracked gap.
-- No sensitive authentication data or production secrets were collected in the work product.
-- Changes were tested and retested without weakening controls.
-- Compliance claims are made only by the authorized assessing or accepting party.
+    @staticmethod
+    def charge_with_token(token_id, amount):
+        """Charge using token (server-side)."""
+        import os
 
-## References
+        # Your server only sees the token, never the card number
+        stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 
-- PCI SSC Document Library: https://www.pcisecuritystandards.org/document_library/?class=pcidss&doc=pci_dss
-- PCI DSS overview: https://www.pcisecuritystandards.org/standards/pci-dss/
+        charge = stripe.Charge.create(
+            amount=amount,
+            currency="usd",
+            source=token_id,  # Token instead of card details
+            description="Payment"
+        )
+
+        return charge
+
+    @staticmethod
+    def store_payment_method(customer_id, payment_method_token):
+        """Store payment method as token for future use."""
+        stripe.Customer.modify(
+            customer_id,
+            source=payment_method_token
+        )
+
+        # Store only customer_id and payment_method_id in your database
+        # NEVER store actual card details
+        return {
+            'customer_id': customer_id,
+            'has_payment_method': True
+            # DO NOT store: card number, CVV, etc.
+        }
+```
+
+### Custom Tokenization (Advanced)
+```python
+import secrets
+from cryptography.fernet import Fernet
+
+class TokenVault:
+    """Secure token vault for card data (if you must store it)."""
+
+    def __init__(self, encryption_key):
+        self.cipher = Fernet(encryption_key)
+        self.vault = {}  # In production: use encrypted database
+
+    def tokenize(self, card_data):
+        """Convert card data to token."""
+        # Generate secure random token
+        token = secrets.token_urlsafe(32)
+
+        # Encrypt card data
+        encrypted = self.cipher.encrypt(json.dumps(card_data).encode())
+
+        # Store token -> encrypted data mapping
+        self.vault[token] = encrypted
+
+        return token
+
+    def detokenize(self, token):
+        """Retrieve card data from token."""
+        encrypted = self.vault.get(token)
+        if not encrypted:
+            raise ValueError("Token not found")
+
+        # Decrypt
+        decrypted = self.cipher.decrypt(encrypted)
+        return json.loads(decrypted.decode())
+
+    def delete_token(self, token):
+        """Remove token from vault."""
+        self.vault.pop(token, None)
+```
+
+## Encryption
+
+### Data at Rest
+```python
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import os
+
+class EncryptedStorage:
+    """Encrypt data at rest using AES-256-GCM."""
+
+    def __init__(self, encryption_key):
+        """Initialize with 256-bit key."""
+        self.key = encryption_key  # Must be 32 bytes
+
+    def encrypt(self, plaintext):
+        """Encrypt data."""
+        # Generate random nonce
+        nonce = os.urandom(12)
+
+        # Encrypt
+        aesgcm = AESGCM(self.key)
+        ciphertext = aesgcm.encrypt(nonce, plaintext.encode(), None)
+
+        # Return nonce + ciphertext
+        return nonce + ciphertext
+
+    def decrypt(self, encrypted_data):
+        """Decrypt data."""
+        # Extract nonce and ciphertext
+        nonce = encrypted_data[:12]
+        ciphertext = encrypted_data[12:]
+
+        # Decrypt
+        aesgcm = AESGCM(self.key)
+        plaintext = aesgcm.decrypt(nonce, ciphertext, None)
+
+        return plaintext.decode()
+
+# Usage
+storage = EncryptedStorage(os.urandom(32))
+encrypted_pan = storage.encrypt("4242424242424242")
+# Store encrypted_pan in database
+```
+
+### Data in Transit
+```python
+# Always use TLS 1.2 or higher
+# Flask/Django example
+app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS only
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Strict'
+
+# Enforce HTTPS
+from flask_talisman import Talisman
+Talisman(app, force_https=True)
+```
+
+## Access Control
+
+```python
+from functools import wraps
+from flask import session
+
+def require_pci_access(f):
+    """Decorator to restrict access to cardholder data."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = session.get('user')
+
+        # Check if user has PCI access role
+        if not user or 'pci_access' not in user.get('roles', []):
+            return {'error': 'Unauthorized access to cardholder data'}, 403
+
+        # Log access attempt
+        audit_log(
+            user=user['id'],
+            action='access_cardholder_data',
+            resource=f.__name__
+        )
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+@app.route('/api/payment-methods')
+@require_pci_access
+def get_payment_methods():
+    """Retrieve payment methods (restricted access)."""
+    # Only accessible to users with pci_access role
+    pass
+```
+
+## Audit Logging
+
+```python
+import logging
+from datetime import datetime
+
+class PCIAuditLogger:
+    """PCI-compliant audit logging."""
+
+    def __init__(self):
+        self.logger = logging.getLogger('pci_audit')
+        # Configure to write to secure, append-only log
+
+    def log_access(self, user_id, resource, action, result):
+        """Log access to cardholder data."""
+        entry = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'user_id': user_id,
+            'resource': resource,
+            'action': action,
+            'result': result,
+            'ip_address': request.remote_addr
+        }
+
+        self.logger.info(json.dumps(entry))
+
+    def log_authentication(self, user_id, success, method):
+        """Log authentication attempt."""
+        entry = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'user_id': user_id,
+            'event': 'authentication',
+            'success': success,
+            'method': method,
+            'ip_address': request.remote_addr
+        }
+
+        self.logger.info(json.dumps(entry))
+
+# Usage
+audit = PCIAuditLogger()
+audit.log_access(user_id=123, resource='payment_methods', action='read', result='success')
+```
+
+## Security Best Practices
+
+### Input Validation
+```python
+import re
+
+def validate_card_number(card_number):
+    """Validate card number format (Luhn algorithm)."""
+    # Remove spaces and dashes
+    card_number = re.sub(r'[\s-]', '', card_number)
+
+    # Check if all digits
+    if not card_number.isdigit():
+        return False
+
+    # Luhn algorithm
+    def luhn_checksum(card_num):
+        def digits_of(n):
+            return [int(d) for d in str(n)]
+
+        digits = digits_of(card_num)
+        odd_digits = digits[-1::-2]
+        even_digits = digits[-2::-2]
+        checksum = sum(odd_digits)
+        for d in even_digits:
+            checksum += sum(digits_of(d * 2))
+        return checksum % 10
+
+    return luhn_checksum(card_number) == 0
+
+def sanitize_input(user_input):
+    """Sanitize user input to prevent injection."""
+    # Remove special characters
+    # Validate against expected format
+    # Escape for database queries
+    pass
+```
+
+## PCI DSS SAQ (Self-Assessment Questionnaire)
+
+### SAQ A (Least Requirements)
+- E-commerce using hosted payment page
+- No card data on your systems
+- ~20 questions
+
+### SAQ A-EP
+- E-commerce with embedded payment form
+- Uses JavaScript to handle card data
+- ~180 questions
+
+### SAQ D (Most Requirements)
+- Store, process, or transmit card data
+- Full PCI DSS requirements
+- ~300 questions
+
+## Compliance Checklist
+
+```python
+PCI_COMPLIANCE_CHECKLIST = {
+    'network_security': [
+        'Firewall configured and maintained',
+        'No vendor default passwords',
+        'Network segmentation implemented'
+    ],
+    'data_protection': [
+        'No storage of CVV, track data, or PIN',
+        'PAN encrypted when stored',
+        'PAN masked when displayed',
+        'Encryption keys properly managed'
+    ],
+    'vulnerability_management': [
+        'Anti-virus installed and updated',
+        'Secure development practices',
+        'Regular security patches',
+        'Vulnerability scanning performed'
+    ],
+    'access_control': [
+        'Access restricted by role',
+        'Unique IDs for all users',
+        'Multi-factor authentication',
+        'Physical security measures'
+    ],
+    'monitoring': [
+        'Audit logs enabled',
+        'Log review process',
+        'File integrity monitoring',
+        'Regular security testing'
+    ],
+    'policy': [
+        'Security policy documented',
+        'Risk assessment performed',
+        'Security awareness training',
+        'Incident response plan'
+    ]
+}
+```
+
+## Resources
+
+- **references/data-minimization.md**: Never store prohibited data
+- **references/tokenization.md**: Tokenization strategies
+- **references/encryption.md**: Encryption requirements
+- **references/access-control.md**: Role-based access
+- **references/audit-logging.md**: Comprehensive logging
+- **assets/pci-compliance-checklist.md**: Complete checklist
+- **assets/encrypted-storage.py**: Encryption utilities
+- **scripts/audit-payment-system.sh**: Compliance audit script
+
+## Common Violations
+
+1. **Storing CVV**: Never store card verification codes
+2. **Unencrypted PAN**: Card numbers must be encrypted at rest
+3. **Weak Encryption**: Use AES-256 or equivalent
+4. **No Access Controls**: Restrict who can access cardholder data
+5. **Missing Audit Logs**: Must log all access to payment data
+6. **Insecure Transmission**: Always use TLS 1.2+
+7. **Default Passwords**: Change all default credentials
+8. **No Security Testing**: Regular penetration testing required
+
+## Reducing PCI Scope
+
+1. **Use Hosted Payments**: Stripe Checkout, PayPal, etc.
+2. **Tokenization**: Replace card data with tokens
+3. **Network Segmentation**: Isolate cardholder data environment
+4. **Outsource**: Use PCI-compliant payment processors
+5. **No Storage**: Never store full card details
+
+By minimizing systems that touch card data, you reduce compliance burden significantly.
 
 ## Limitations
-
-- PCI DSS applicability, validation level, reporting method, and acceptance depend on payment-brand, acquirer, jurisdictional, contractual, and assessor decisions.
-- This skill supports evidence preparation; it is not legal advice, a formal assessment, or proof of compliance.
-- Verify all requirement text, dates, and guidance against current official PCI SSC sources before acting.
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

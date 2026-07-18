@@ -69,56 +69,16 @@ ArmClient
 
 ## Core Workflow
 
-The examples below create billable resources. Resolve the exact subscription, resource group, region, names, SKU, expected monthly cost, networking policy, and rollback owner before applying them. Keep provisioning in plan-only mode unless the operator approves that exact plan and rollback:
-
-```csharp
-var targetSubscriptionId = Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID")
-    ?? throw new InvalidOperationException("AZURE_SUBSCRIPTION_ID is required");
-var targetResourceGroup = Environment.GetEnvironmentVariable("AZURE_RESOURCE_GROUP")
-    ?? throw new InvalidOperationException("AZURE_RESOURCE_GROUP is required");
-var targetServerName = Environment.GetEnvironmentVariable("AZURE_SQL_SERVER_NAME")
-    ?? throw new InvalidOperationException("AZURE_SQL_SERVER_NAME is required");
-var targetDatabaseName = Environment.GetEnvironmentVariable("AZURE_SQL_DATABASE_NAME")
-    ?? throw new InvalidOperationException("AZURE_SQL_DATABASE_NAME is required");
-var approvedMonthlyCost = Environment.GetEnvironmentVariable("AZURE_APPROVED_MONTHLY_COST")
-    ?? throw new InvalidOperationException("Review and set AZURE_APPROVED_MONTHLY_COST");
-var rollbackPlan = Environment.GetEnvironmentVariable("AZURE_ROLLBACK_PLAN")
-    ?? throw new InvalidOperationException("Test and set AZURE_ROLLBACK_PLAN");
-var approvedClientIp = Environment.GetEnvironmentVariable("APPROVED_CLIENT_IP");
-var publicNetworkApproved = !string.IsNullOrWhiteSpace(approvedClientIp);
-var applyChanges = string.Equals(
-    Environment.GetEnvironmentVariable("AZURE_APPLY"), "true",
-    StringComparison.OrdinalIgnoreCase);
-var approvedPlan = Environment.GetEnvironmentVariable("AZURE_APPROVED_PLAN");
-
-// Generate this only after reviewing the target, SKU/cost estimate, networking
-// plan, and tested rollback (delete or restore the named resources).
-var networkPlan = publicNetworkApproved ? $"public-ip={approvedClientIp}" : "private";
-var expectedPlan =
-    $"subscription={targetSubscriptionId};rg={targetResourceGroup};region=eastus;" +
-    $"server={targetServerName};db={targetDatabaseName};sku=S0;" +
-    $"max-monthly={approvedMonthlyCost};network={networkPlan};rollback={rollbackPlan}";
-
-if (!applyChanges || approvedPlan != expectedPlan)
-{
-    Console.WriteLine($"PLAN ONLY: {expectedPlan}");
-    return;
-}
-
-if (subscriptionId != targetSubscriptionId)
-    throw new InvalidOperationException("Resolved subscription does not match the approved target");
-
-var resourceGroup = await subscription.GetResourceGroupAsync(targetResourceGroup);
-```
-
-Do not place a real approval token in source control. Record the cost estimate and rollback procedure with the reviewed plan, then supply the exact token at deployment time.
-
 ### 1. Create SQL Server
 
 ```csharp
 using System;
 using Azure.ResourceManager.Sql;
 using Azure.ResourceManager.Sql.Models;
+
+// Get resource group
+var resourceGroup = await subscription
+    .GetResourceGroupAsync("my-resource-group");
 
 // Define server
 var serverData = new SqlServerData(AzureLocation.EastUS)
@@ -127,16 +87,14 @@ var serverData = new SqlServerData(AzureLocation.EastUS)
     AdministratorLoginPassword = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD") ?? throw new InvalidOperationException("SQL_ADMIN_PASSWORD is required"),
     Version = "12.0",
     MinimalTlsVersion = SqlMinimalTlsVersion.Tls1_2,
-    PublicNetworkAccess = publicNetworkApproved
-        ? ServerNetworkAccessFlag.Enabled
-        : ServerNetworkAccessFlag.Disabled
+    PublicNetworkAccess = ServerNetworkAccessFlag.Enabled
 };
 
 // Create server (long-running operation)
 var serverCollection = resourceGroup.Value.GetSqlServers();
 var operation = await serverCollection.CreateOrUpdateAsync(
     WaitUntil.Completed,
-    targetServerName,
+    "my-sql-server",
     serverData);
 
 SqlServerResource server = operation.Value;
@@ -156,7 +114,7 @@ var databaseData = new SqlDatabaseData(AzureLocation.EastUS)
 var databaseCollection = server.GetSqlDatabases();
 var dbOperation = await databaseCollection.CreateOrUpdateAsync(
     WaitUntil.Completed,
-    targetDatabaseName,
+    "my-database",
     databaseData);
 
 SqlDatabaseResource database = dbOperation.Value;
@@ -205,21 +163,29 @@ await databaseCollection.CreateOrUpdateAsync(
 ### 5. Configure Firewall Rules
 
 ```csharp
-// Prefer a private endpoint. If public access is an approved exception, enable
-// it in the reviewed plan and restrict the rule to the smallest known range.
-if (serverData.PublicNetworkAccess != ServerNetworkAccessFlag.Enabled)
-    throw new InvalidOperationException("Public network access is not approved by the current plan");
-
-var clientRule = new SqlFirewallRuleData
+// Allow Azure services
+var azureServicesRule = new SqlFirewallRuleData
 {
-    StartIPAddress = approvedClientIp!,
-    EndIPAddress = approvedClientIp!
+    StartIPAddress = "0.0.0.0",
+    EndIPAddress = "0.0.0.0"
 };
 
 var firewallCollection = server.GetSqlFirewallRules();
 await firewallCollection.CreateOrUpdateAsync(
     WaitUntil.Completed,
-    "AllowApprovedClientIP",
+    "AllowAzureServices",
+    azureServicesRule);
+
+// Allow specific IP range
+var clientRule = new SqlFirewallRuleData
+{
+    StartIPAddress = "203.0.113.0",
+    EndIPAddress = "203.0.113.255"
+};
+
+await firewallCollection.CreateOrUpdateAsync(
+    WaitUntil.Completed,
+    "AllowClientIPs",
     clientRule);
 ```
 
@@ -312,8 +278,7 @@ var connectionString = $"Server=tcp:{serverFqdn},1433;" +
 5. **Use `CreateOrUpdateAsync`** for idempotent operations
 6. **Navigate hierarchy** via `Get*` methods (e.g., `server.GetSqlDatabases()`)
 7. **Use elastic pools** for cost optimization when managing multiple databases
-8. **Prefer private endpoints**; enable public access only as an approved, narrowly scoped exception
-9. **Review target, cost, apply token, and rollback** before every management-plane mutation
+8. **Configure firewall rules** before attempting connections
 
 ## Error Handling
 
@@ -339,9 +304,13 @@ catch (RequestFailedException ex)
 }
 ```
 
-## Bundle Contents
+## Reference Files
 
-This bundle contains this guide only. It does not include separate server, database, or elastic-pool reference files; verify environment-specific behavior against the installed SDK version and Azure's official documentation.
+| File | When to Read |
+|------|--------------|
+| references/server-management.md | Server CRUD, admin credentials, Azure AD auth, networking |
+| references/database-operations.md | Database CRUD, scaling, backup, restore, copy |
+| references/elastic-pools.md | Pool management, adding/removing databases, scaling |
 
 ## Related SDKs
 

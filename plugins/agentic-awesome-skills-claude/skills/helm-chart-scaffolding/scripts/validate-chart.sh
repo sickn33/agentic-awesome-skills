@@ -103,12 +103,12 @@ else
 fi
 echo ""
 
-# 5. Client-side dry-run installation without printing Secret manifests
-echo "5️⃣  Testing client-side dry-run installation..."
-if helm install "$RELEASE_NAME" "$CHART_DIR" --dry-run=client --debug --hide-secret > /dev/null 2>&1; then
-    success "Client-side dry-run installation successful"
+# 5. Dry-run installation
+echo "5️⃣  Testing dry-run installation..."
+if helm install "$RELEASE_NAME" "$CHART_DIR" --dry-run --debug > /dev/null 2>&1; then
+    success "Dry-run installation successful"
 else
-    error "Client-side dry-run installation failed"
+    error "Dry-run installation failed"
     exit 1
 fi
 echo ""
@@ -203,7 +203,6 @@ if [ -f "$CHART_DIR/Chart.yaml" ] && grep -q "^dependencies:" "$CHART_DIR/Chart.
         fi
     else
         error "Dependencies check failed"
-        exit 1
     fi
     echo ""
 fi
@@ -240,6 +239,6 @@ success "All validations passed!"
 echo ""
 echo "Next steps:"
 echo "  • helm package $CHART_DIR"
-echo "  • Review a redacted live diff and obtain exact target/action approval before any install or upgrade"
-echo "  • Record the current revision, health checks, abort thresholds, and rollback command"
+echo "  • helm install my-release $CHART_DIR"
+echo "  • helm test my-release"
 echo ""

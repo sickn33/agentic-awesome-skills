@@ -65,7 +65,7 @@ This comprehensive skill provides complete ASO capabilities for successfully lau
   - Keywords: 100 characters (comma-separated, no spaces)
   - What's New: 4,000 characters
 - **Google Play Store**:
-  - Title: 30 characters
+  - Title: 50 characters (formerly 30, increased in 2021)
   - Short Description: 80 characters
   - Full Description: 4,000 characters
   - No separate keyword field (keywords extracted from title and description)

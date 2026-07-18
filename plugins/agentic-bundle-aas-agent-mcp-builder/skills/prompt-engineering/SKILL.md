@@ -30,16 +30,16 @@ Output: {"issue": "feature_request", "error_code": null, "priority": "low"}
 Now process: "Can't upload files larger than 10MB, getting timeout"
 ```
 
-### 2. Structured Problem Solving
+### 2. Chain-of-Thought Prompting
 
-For complex tasks, ask the model to decompose the problem and return a concise rationale, assumptions, intermediate results that can be checked, and a final answer. Do not request hidden thought processes or claim a universal accuracy gain; evaluate the prompt on representative tasks and score only observable outputs.
+Request step-by-step reasoning before the final answer. Add "Let's think step by step" (zero-shot) or include example reasoning traces (few-shot). Use for complex problems requiring multi-step logic, mathematical reasoning, or when you need to verify the model's thought process. Improves accuracy on analytical tasks by 30-50%.
 
 **Example:**
 
 ```markdown
 Analyze this bug report and determine root cause.
 
-Return a concise, checkable analysis:
+Think step by step:
 
 1. What is the expected behavior?
 2. What is the actual behavior?
@@ -151,7 +151,7 @@ Start with simple prompts, add complexity only when needed:
 Build prompts that gracefully handle failures:
 
 - Include fallback instructions
-- Ask the model to identify uncertainty and the evidence or missing information that would resolve it; use numeric confidence only when a validated calibration method exists
+- Request confidence scores
 - Ask for alternative interpretations when uncertain
 - Specify how to indicate missing information
 
