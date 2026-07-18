@@ -100,7 +100,7 @@
     "path": "skills/game-development/2d-games",
     "category": "game-development",
     "name": "2d-games",
-    "description": "2D game development principles. Sprites, tilemaps, physics, camera.",
+    "description": "2D game development principles. Sprites, atlases, tilemaps, physics, cameras, and genre patterns (platformer, top-down). Use for canvas/Phaser/Kaplay/Pixi 2D games or guest viewports inside hybrid web apps.",
     "risk": "none",
     "source": "community",
     "date_added": "2026-02-27",
@@ -16918,6 +16918,28 @@
     }
   },
   {
+    "id": "engine-selection",
+    "path": "skills/game-development/engine-selection",
+    "category": "game-development",
+    "name": "engine-selection",
+    "description": "Selects game engines and frameworks by platform, genre, and architecture (full canvas shell vs hybrid DOM shell + guest viewport). Covers Phaser, PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js, Godot, Unity, Ink, Twine. Use when choosing a stack or comparing runtimes before implementation.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-07-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
+  },
+  {
     "id": "enhance-prompt",
     "path": "skills/enhance-prompt",
     "category": "web-development",
@@ -19977,7 +19999,7 @@
     "path": "skills/game-development",
     "category": "game-development",
     "name": "game-development",
-    "description": "Game development orchestrator. Routes to platform-specific skills based on project needs.",
+    "description": "Game development orchestrator. Routes by platform, dimension, and engine fit (web 2D/3D, hybrid DOM+canvas, narrative tools). Use when starting or structuring a game project, choosing frameworks, or picking among Phaser, PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js, Godot, Unity, or Ink/Twine.",
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",
@@ -28577,6 +28599,39 @@
       "ai-testing",
       "vibe-coding",
       "claude-code"
+    ]
+  },
+  {
+    "id": "modellix",
+    "path": "skills/modellix",
+    "category": "creative",
+    "name": "modellix",
+    "description": "Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download).",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Modellix/modellix-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/Modellix/modellix-skill/blob/main/LICENSE",
+    "tags": [
+      "image-generation",
+      "video-generation",
+      "modellix",
+      "cli",
+      "api"
     ]
   },
   {
@@ -45926,7 +45981,7 @@
     "path": "skills/game-development/web-games",
     "category": "game-development",
     "name": "web-games",
-    "description": "Web browser game development principles. Framework selection, WebGPU, optimization, PWA.",
+    "description": "Web browser game development. Framework selection (Phaser, PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js), hybrid DOM+canvas, WebGPU, optimization, PWA, audio unlock. Use when building HTML5/WebGL/WebGPU games or choosing a browser runtime.",
     "risk": "unknown",
     "source": "community",
     "date_added": "2026-02-27",

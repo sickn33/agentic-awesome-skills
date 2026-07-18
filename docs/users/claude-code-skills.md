@@ -17,7 +17,7 @@ Configure AAS Core for Claude Code, describe the task and constraints, review th
 - It lets Claude search the verified local catalog without loading the full library into context.
 - It produces deterministic recommendations with inspectable factors and evidence.
 - It keeps MCP discovery read-only and CLI changes approval-gated.
-- It includes 1,965+ skills instead of a narrow single-domain starter pack.
+- It includes 1,967+ skills instead of a narrow single-domain starter pack.
 - It supports the standard `.claude/skills/` path and the Claude Code plugin marketplace flow.
 - It also ships generated bundle plugins so teams can install focused packs like `Essentials` or `Security Developer` from the marketplace metadata.
 - It includes onboarding docs, bundles, and workflows so new users do not need to guess where to begin.

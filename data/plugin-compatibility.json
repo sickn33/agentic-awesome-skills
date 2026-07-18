@@ -16268,6 +16268,25 @@
       "runtime_files": []
     },
     {
+      "id": "game-development/engine-selection",
+      "path": "skills/game-development/engine-selection",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "game-development/game-art",
       "path": "skills/game-development/game-art",
       "targets": {
@@ -22893,6 +22912,25 @@
         "claude": [
           "explicit_target_restriction"
         ]
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "modellix",
+      "path": "skills/modellix",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
       },
       "runtime_files": []
     },
@@ -37762,10 +37800,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1965,
+    "total_skills": 1967,
     "supported": {
-      "codex": 1891,
-      "claude": 1913
+      "codex": 1893,
+      "claude": 1915
     },
     "blocked": {
       "codex": 74,

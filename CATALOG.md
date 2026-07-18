@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-16T14:29:29.000Z
 
-Total skills: 1965
+Total skills: 1967
 
 ## agent-behavior (5)
 
@@ -797,11 +797,12 @@ Total skills: 1965
 | --- | --- | --- | --- | --- | --- |
 | `vscode-extension-guide-en` | Guide for VS Code extension development from scaffolding to Marketplace publication | safe | lewiswigmore/agent-skills | vscode, extension, ide, typescript, marketplace | vscode, extension, ide, typescript, marketplace, en, vs, code, development, scaffolding, publication |
 
-## creative (1)
+## creative (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | safe | vipin-si/article-illustrations | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
+| `modellix` | Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download). | critical | Modellix/modellix-skill | image-generation, video-generation, modellix, cli, api | image-generation, video-generation, modellix, cli, api, integrate, unified, async, ai, image, video, generation |
 
 ## data (24)
 
@@ -1329,13 +1330,14 @@ Total skills: 1965
 | --- | --- | --- | --- | --- | --- |
 | `vibe-code-cleanup` | Safe production cleanup and hardening for vibe-coded fullstack apps (Next.js, React, Node.js, etc.). Removes dead imports, unused files, and broken reference... | safe | self | cleanup, refactor, nextjs, production, vibe-code, fullstack, nodejs | cleanup, refactor, nextjs, production, vibe-code, fullstack, nodejs, vibe, code, safe, hardening, coded |
 
-## game-development (17)
+## game-development (18)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
-| `game-development` | Game development orchestrator. Routes to platform-specific skills based on project needs. | unknown | community | game | game, development, orchestrator, routes, platform, specific, skills |
-| `game-development/2d-games` | 2D game development principles. Sprites, tilemaps, physics, camera. | none | community | game, development/2d, games | game, development/2d, games, 2d, development, principles, sprites, tilemaps, physics, camera |
+| `game-development` | Game development orchestrator. Routes by platform, dimension, and engine fit (web 2D/3D, hybrid DOM+canvas, narrative tools). Use when starting or structurin... | unknown | community | game | game, development, orchestrator, routes, platform, dimension, engine, fit, web, 2d, 3d, hybrid |
+| `game-development/2d-games` | 2D game development principles. Sprites, atlases, tilemaps, physics, cameras, and genre patterns (platformer, top-down). Use for canvas/Phaser/Kaplay/Pixi 2D... | none | community | game, development/2d, games | game, development/2d, games, 2d, development, principles, sprites, atlases, tilemaps, physics, cameras, genre |
 | `game-development/3d-games` | 3D game development principles. Rendering, shaders, physics, cameras. | unknown | community | game, development/3d, games | game, development/3d, games, 3d, development, principles, rendering, shaders, physics, cameras |
+| `game-development/engine-selection` | Selects game engines and frameworks by platform, genre, and architecture (full canvas shell vs hybrid DOM shell + guest viewport). Covers Phaser, PixiJS, Kap... | safe | self | game, development/engine, selection | game, development/engine, selection, engine, selects, engines, frameworks, platform, genre, architecture, full, canvas |
 | `game-development/game-art` | Game art principles. Visual style selection, asset pipeline, animation workflow. | unknown | community | game, development/game, art | game, development/game, art, principles, visual, style, selection, asset, pipeline, animation |
 | `game-development/game-audio` | Game audio principles. Sound design, music integration, adaptive audio systems. | unknown | community | game, development/game, audio | game, development/game, audio, principles, sound, music, integration, adaptive |
 | `game-development/game-design` | Game design principles. GDD structure, balancing, player psychology, progression. | unknown | community | game, development/game | game, development/game, principles, gdd, structure, balancing, player, psychology, progression |
@@ -1343,7 +1345,7 @@ Total skills: 1965
 | `game-development/multiplayer` | Multiplayer game development principles. Architecture, networking, synchronization. | unknown | community | game, development/multiplayer | game, development/multiplayer, multiplayer, development, principles, architecture, networking, synchronization |
 | `game-development/pc-games` | PC and console game development principles. Engine selection, platform features, optimization strategies. | safe | community | game, development/pc, games | game, development/pc, games, pc, console, development, principles, engine, selection, platform, features, optimization |
 | `game-development/vr-ar` | VR/AR development principles. Comfort, interaction, performance requirements. | unknown | community | game, development/vr, ar | game, development/vr, ar, vr, development, principles, comfort, interaction, performance, requirements |
-| `game-development/web-games` | Web browser game development principles. Framework selection, WebGPU, optimization, PWA. | unknown | community | game, development/web, games | game, development/web, games, web, browser, development, principles, framework, selection, webgpu, optimization, pwa |
+| `game-development/web-games` | Web browser game development. Framework selection (Phaser, PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js), hybrid DOM+canvas, WebGPU, optimization, PWA,... | unknown | community | game, development/web, games | game, development/web, games, web, browser, development, framework, selection, phaser, pixijs, kaplay, canvas |
 | `godot-4-migration` | Specialized guide for migrating Godot 3.x projects to Godot 4 (GDScript 2.0), covering syntax changes, Tweens, and exports. | safe | community | godot, 4, migration | godot, 4, migration, specialized, migrating, gdscript, covering, syntax, changes, tweens, exports |
 | `godot-gdscript-patterns` | Master Godot 4 GDScript patterns including signals, scenes, state machines, and optimization. Use when building Godot games, implementing game systems, or le... | safe | community | godot, gdscript | godot, gdscript, including, signals, scenes, state, machines, optimization, building, games, implementing, game |
 | `minecraft-bukkit-pro` | Master Minecraft server plugin development with Bukkit, Spigot, and Paper APIs. | safe | community | minecraft, bukkit | minecraft, bukkit, pro, server, plugin, development, spigot, paper, apis |

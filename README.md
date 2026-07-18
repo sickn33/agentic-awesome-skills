@@ -1,4 +1,4 @@
-<!-- registry-sync: version=14.6.0; skills=1965; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
+<!-- registry-sync: version=14.6.0; skills=1967; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
@@ -61,7 +61,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - **Approval before writes**: the durable artifacts are an approved stack and immutable plan, not an opaque one-shot install.
 - **Installable, not just inspirational**: use the compatible legacy installer or plugin distributions when direct delivery is the right path.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
-- **Broad coverage with real utility**: 1,965+ skills across development, testing, security, infrastructure, product, and marketing.
+- **Broad coverage with real utility**: 1,967+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Inspect before installing**: the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
 - **Focused delivery remains available**: specialized plugins package proven sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
@@ -75,7 +75,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - [Choose Your Tool](#choose-your-tool)
 - [Quick FAQ](#quick-faq)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 1,965+ Skills](#browse-1965-skills)
+- [Browse 1,967+ Skills](#browse-1967-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Support the Project](#support-the-project)
@@ -279,7 +279,7 @@ Remove `--dry-run` only after reviewing the install, update, and removal plan. U
 
 The hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) imports and reviews AAS Core stack manifests and immutable plans in browser memory. It does not access the filesystem, generate an approved plan, or install skills.
 
-## Browse 1,965+ Skills
+## Browse 1,967+ Skills
 
 Use the root repo as a landing page, then jump into the deeper surface that matches your intent.
 

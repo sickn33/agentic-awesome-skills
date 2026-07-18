@@ -1,9 +1,9 @@
 ---
 title: Jetski/Cortex + Gemini Integration Guide
-description: "Use agentic-awesome-skills with Jetski/Cortex without hitting context-window overflow with 1,965+ skills."
+description: "Use agentic-awesome-skills with Jetski/Cortex without hitting context-window overflow with 1,967+ skills."
 ---
 
-# Jetski/Cortex + Gemini: safe integration with 1,965+ skills
+# Jetski/Cortex + Gemini: safe integration with 1,967+ skills
 
 > **Custom-host integration:** This guide documents a low-level, direct-manifest lazy loader for Jetski/Cortex and similar hosts. For Codex or Claude Code, the recommended path is [AAS Core](../users/aas-core.md), which provides verified local catalog discovery and deterministic recommendations through a bounded, read-only MCP server.
 
@@ -25,7 +25,7 @@ Never do:
 - concatenate all `SKILL.md` content into a single system prompt;
 - re-inject the entire library for **every** request.
 
-With 1,965+ skills, this approach fills the context window before user messages are even added, causing truncation.
+With 1,967+ skills, this approach fills the context window before user messages are even added, causing truncation.
 
 ---
 

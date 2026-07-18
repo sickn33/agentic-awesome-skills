@@ -27,7 +27,7 @@ If you came in through a **Claude Code** or **Codex** plugin instead of AAS Core
 
 When you ran `npx agentic-awesome-skills` or cloned the repository, you:
 
-✅ **Downloaded 1,965+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
+✅ **Downloaded 1,967+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
 ✅ **Made them available** to your AI assistant
 ❌ **Did NOT enable them all automatically** (they're just sitting there, waiting)
 
@@ -219,7 +219,7 @@ Let's actually use a skill right now. Follow these steps:
 
 ## Direct-install Step 5: Pick Skills Manually
 
-Don't try to use all 1,965+ skills at once. Here's a sensible approach:
+Don't try to use all 1,967+ skills at once. Here's a sensible approach:
 
 If you want a tool-specific starting point before choosing skills, use:
 
@@ -350,7 +350,7 @@ Usually no, but if your AI doesn't recognize a skill:
 
 ### "Can I load all skills into the model at once?"
 
-No. Even though you have 1,965+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
+No. Even though you have 1,967+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
 
 The intended pattern is:
 

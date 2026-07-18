@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-16T14:29:29.000Z",
-  "total": 1965,
+  "total": 1967,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -24385,7 +24385,7 @@
       "id": "game-development",
       "canonical_id": "game-development",
       "name": "game-development",
-      "description": "Game development orchestrator. Routes to platform-specific skills based on project needs.",
+      "description": "Game development orchestrator. Routes by platform, dimension, and engine fit (web 2D/3D, hybrid DOM+canvas, narrative tools). Use when starting or structuring a game project, choosing frameworks, or picking among Phaser, PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js, Godot, Unity, or Ink/Twine.",
       "category": "game-development",
       "risk": "unknown",
       "source": "community",
@@ -24398,8 +24398,13 @@
         "orchestrator",
         "routes",
         "platform",
-        "specific",
-        "skills"
+        "dimension",
+        "engine",
+        "fit",
+        "web",
+        "2d",
+        "3d",
+        "hybrid"
       ],
       "path": "skills/game-development/SKILL.md"
     },
@@ -24407,7 +24412,7 @@
       "id": "game-development/2d-games",
       "canonical_id": "2d-games",
       "name": "2d-games",
-      "description": "2D game development principles. Sprites, tilemaps, physics, camera.",
+      "description": "2D game development principles. Sprites, atlases, tilemaps, physics, cameras, and genre patterns (platformer, top-down). Use for canvas/Phaser/Kaplay/Pixi 2D games or guest viewports inside hybrid web apps.",
       "category": "game-development",
       "risk": "none",
       "source": "community",
@@ -24424,9 +24429,11 @@
         "development",
         "principles",
         "sprites",
+        "atlases",
         "tilemaps",
         "physics",
-        "camera"
+        "cameras",
+        "genre"
       ],
       "path": "skills/game-development/2d-games/SKILL.md"
     },
@@ -24456,6 +24463,35 @@
         "cameras"
       ],
       "path": "skills/game-development/3d-games/SKILL.md"
+    },
+    {
+      "id": "game-development/engine-selection",
+      "canonical_id": "engine-selection",
+      "name": "engine-selection",
+      "description": "Selects game engines and frameworks by platform, genre, and architecture (full canvas shell vs hybrid DOM shell + guest viewport). Covers Phaser, PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js, Godot, Unity, Ink, Twine. Use when choosing a stack or comparing runtimes before implementation.",
+      "category": "game-development",
+      "risk": "safe",
+      "source": "self",
+      "tags": [
+        "game",
+        "development/engine",
+        "selection"
+      ],
+      "triggers": [
+        "game",
+        "development/engine",
+        "selection",
+        "engine",
+        "selects",
+        "engines",
+        "frameworks",
+        "platform",
+        "genre",
+        "architecture",
+        "full",
+        "canvas"
+      ],
+      "path": "skills/game-development/engine-selection/SKILL.md"
     },
     {
       "id": "game-development/game-art",
@@ -24647,7 +24683,7 @@
       "id": "game-development/web-games",
       "canonical_id": "web-games",
       "name": "web-games",
-      "description": "Web browser game development principles. Framework selection, WebGPU, optimization, PWA.",
+      "description": "Web browser game development. Framework selection (Phaser, PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js), hybrid DOM+canvas, WebGPU, optimization, PWA, audio unlock. Use when building HTML5/WebGL/WebGPU games or choosing a browser runtime.",
       "category": "game-development",
       "risk": "unknown",
       "source": "community",
@@ -24663,12 +24699,12 @@
         "web",
         "browser",
         "development",
-        "principles",
         "framework",
         "selection",
-        "webgpu",
-        "optimization",
-        "pwa"
+        "phaser",
+        "pixijs",
+        "kaplay",
+        "canvas"
       ],
       "path": "skills/game-development/web-games/SKILL.md"
     },
@@ -34463,6 +34499,41 @@
         "live"
       ],
       "path": "skills/mock-hunter/SKILL.md"
+    },
+    {
+      "id": "modellix",
+      "canonical_id": "modellix",
+      "name": "modellix",
+      "description": "Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download).",
+      "category": "creative",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "Modellix/modellix-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/Modellix/modellix-skill/blob/main/LICENSE",
+      "tags": [
+        "image-generation",
+        "video-generation",
+        "modellix",
+        "cli",
+        "api"
+      ],
+      "triggers": [
+        "image-generation",
+        "video-generation",
+        "modellix",
+        "cli",
+        "api",
+        "integrate",
+        "unified",
+        "async",
+        "ai",
+        "image",
+        "video",
+        "generation"
+      ],
+      "path": "skills/modellix/SKILL.md"
     },
     {
       "id": "modern-javascript-patterns",

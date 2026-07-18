@@ -1,6 +1,10 @@
 ---
 name: web-games
-description: "Web browser game development principles. Framework selection, WebGPU, optimization, PWA."
+description: >-
+  Web browser game development. Framework selection (Phaser, PixiJS, Kaplay,
+  Canvas/WebGL, Three.js, Babylon.js), hybrid DOM+canvas, WebGPU, optimization,
+  PWA, audio unlock. Use when building HTML5/WebGL/WebGPU games or choosing a
+  browser runtime.
 risk: unknown
 source: community
 date_added: "2026-02-27"
@@ -8,7 +12,7 @@ date_added: "2026-02-27"
 
 # Web Browser Game Development
 
-> Framework selection and browser-specific principles.
+> Framework selection and browser-specific principles. For stack choice details see `game-development/engine-selection`.
 
 ---
 
@@ -20,25 +24,43 @@ date_added: "2026-02-27"
 What type of game?
 │
 ├── 2D Game
-│   ├── Full game engine features? → Phaser
-│   └── Raw rendering power? → PixiJS
+│   ├── Full game engine features? → Phaser 4
+│   ├── Fast prototype / jam?      → Kaplay
+│   ├── Raw rendering power?       → PixiJS 8
+│   └── Tiny / no dependency?      → Raw Canvas / WebGL
 │
 ├── 3D Game
 │   ├── Full engine (physics, XR)? → Babylon.js
-│   └── Rendering focused? → Three.js
+│   └── Rendering focused?         → Three.js
 │
-└── Hybrid / Canvas
-    └── Custom → Raw Canvas/WebGL
+├── Hybrid (DOM UI + canvas moments)
+│   └── Custom shell + guest viewport
+│       (Canvas/Kaplay/Phaser/Pixi inside a region/modal)
+│
+└── Narrative-first
+    └── Ink (inkjs) or Twine export + DOM host
 ```
 
-### Comparison (2025)
+### Comparison
 
 | Framework | Type | Best For |
 |-----------|------|----------|
-| **Phaser 4** | 2D | Full game features |
-| **PixiJS 8** | 2D | Rendering, UI |
-| **Three.js** | 3D | Visualizations, lightweight |
-| **Babylon.js 7** | 3D | Full engine, XR |
+| **Raw Canvas / WebGL** | 2D / low-level | Small scope, full control |
+| **Kaplay** | 2D toolkit | Rapid prototypes |
+| **Phaser 4** | 2D engine | Full game features |
+| **PixiJS 8** | 2D renderer | Rendering, custom systems |
+| **Three.js** | 3D renderer | Visualizations, lightweight 3D |
+| **Babylon.js** | 3D engine | Full engine, XR |
+
+### Hybrid shell + guest
+
+Use when chrome is HTML (menus, inventories, text, dashboards) but bursts of play need a canvas:
+
+1. Mount guest in a container; pass context in.
+2. Run a **local** game loop in the guest.
+3. Return results (score, pass/fail); **destroy** guest (RAF, listeners, GL context as needed).
+
+Do not let the guest own global app routing unless the product *is* a full-screen game.
 
 ---
 
@@ -56,8 +78,8 @@ What type of game?
 
 ### Decision
 
-- **New projects**: Use WebGPU with WebGL fallback
-- **Legacy support**: Start with WebGL
+- **New GPU-heavy projects**: Use WebGPU with WebGL fallback
+- **Broad legacy / simple 2D**: Start with WebGL or Canvas 2D
 - **Feature detection**: Check `navigator.gpu`
 
 ---
@@ -69,7 +91,7 @@ What type of game?
 | Constraint | Strategy |
 |------------|----------|
 | No local file access | Asset bundling, CDN |
-| Tab throttling | Pause when hidden |
+| Tab throttling | Pause when hidden (`visibilitychange`) |
 | Mobile data limits | Compress assets |
 | Audio autoplay | Require user interaction |
 
@@ -85,15 +107,11 @@ What type of game?
 
 ## 4. Asset Strategy
 
-### Compression Formats
-
 | Type | Format |
 |------|--------|
-| Textures | KTX2 + Basis Universal |
+| Textures | KTX2 + Basis Universal (or WebP/PNG for simple 2D) |
 | Audio | WebM/Opus (fallback: MP3) |
 | 3D Models | glTF + Draco/Meshopt |
-
-### Loading Strategy
 
 | Phase | Load |
 |-------|------|
@@ -105,35 +123,16 @@ What type of game?
 
 ## 5. PWA for Games
 
-### Benefits
-
-- Offline play
-- Install to home screen
-- Full screen mode
-- Push notifications
-
-### Requirements
-
-- Service worker for caching
-- Web app manifest
-- HTTPS
+**Benefits:** offline play, install, fullscreen, optional push.
+**Requirements:** service worker, web app manifest, HTTPS.
 
 ---
 
 ## 6. Audio Handling
 
-### Browser Requirements
-
-- Audio context requires user interaction
-- Create AudioContext on first click/tap
-- Resume context if suspended
-
-### Best Practices
-
-- Use Web Audio API
-- Pool audio sources
-- Preload common sounds
-- Compress with WebM/Opus
+- Create/resume `AudioContext` on first click/tap
+- Prefer Web Audio API; pool sources; preload common SFX
+- Compress with WebM/Opus when possible
 
 ---
 
@@ -146,15 +145,18 @@ What type of game?
 | Block on audio load | Lazy load audio |
 | Skip compression | Compress everything |
 | Assume fast connection | Handle slow networks |
+| Leave canvas engines running off-screen | Tear down guests |
 
 ---
 
 > **Remember:** Browser is the most accessible platform. Respect its constraints.
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+
+Use when building HTML5/WebGL/WebGPU games, choosing a browser runtime, or wiring hybrid DOM+canvas guests.
 
 ## Limitations
+
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

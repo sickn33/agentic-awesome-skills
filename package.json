@@ -1,7 +1,7 @@
 {
   "name": "agentic-awesome-skills",
   "version": "14.6.0",
-  "description": "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, backed by 1,965+ agentic skills.",
+  "description": "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, backed by 1,967+ agentic skills.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
