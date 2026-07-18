@@ -303,8 +303,8 @@ export function Workbench(): React.ReactElement {
   const [plan, setPlan] = useState<ImportState<PlanReview>>({ ...EMPTY_IMPORT_STATE });
 
   usePageMeta(useMemo(() => ({
-    title: 'Stack Review Workbench | Agentic Awesome Skills',
-    description: 'Review an AAS stack manifest and immutable plan locally in your browser. Imports stay in memory and cannot install or apply changes.',
+    title: 'AAS Core Stack Review | Agentic Awesome Skills',
+    description: 'Review an AAS Core stack manifest and immutable preview plan locally in your browser. Imports stay in memory and cannot install or apply changes.',
     canonicalPath: '/workbench',
   }), []));
 
@@ -313,8 +313,8 @@ export function Workbench(): React.ReactElement {
       <header className="workbench-header">
         <div>
           <div>
-            <h1>Review what your agent chose.</h1>
-            <p>Import an <code>aas-stack.json</code> and immutable plan to inspect identities, targets, operations, overrides, and unknowns before approving anything in the CLI.</p>
+            <h1>Review what AAS Core recommended.</h1>
+            <p>Import the <code>aas-stack.json</code> and immutable preview plan produced through the local MCP or CLI to inspect identities, targets, operations, overrides, and unknowns.</p>
           </div>
           <dl>
             <div><dt>Privacy</dt><dd>In-memory only</dd></div>

@@ -5,17 +5,23 @@ import { digestJson } from "./canonical.mjs";
 import { snapshotTree } from "./fs-evidence.mjs";
 import { runProcess } from "./process.mjs";
 
-function npmExecutable() {
-  return process.platform === "win32" ? "npm.cmd" : "npm";
+export function npmInvocation(args, platform = process.platform, nodeExecutable = process.execPath) {
+  if (platform !== "win32") return { executable: "npm", args };
+  if (!path.win32.isAbsolute(nodeExecutable) || path.win32.basename(nodeExecutable).toLowerCase() !== "node.exe") {
+    throw Object.assign(new Error("Windows Node executable is not trusted"), { code: "AAS_VERIFIER_UNSAFE_NODE_EXECUTABLE" });
+  }
+  const npmCli = path.win32.join(path.win32.dirname(nodeExecutable), "node_modules", "npm", "bin", "npm-cli.js");
+  return { executable: nodeExecutable, args: [npmCli, ...args] };
 }
 
 export async function installCandidate(tarball, root) {
   fs.mkdirSync(root, { recursive: true, mode: 0o700 });
   fs.writeFileSync(path.join(root, "package.json"), `${JSON.stringify({ private: true }, null, 2)}\n`, { mode: 0o600 });
   const npmCache = path.join(root, ".npm-cache");
-  const result = await runProcess(npmExecutable(), [
+  const invocation = npmInvocation([
     "install", "--ignore-scripts", "--no-audit", "--no-fund", "--no-package-lock", "--save=false", path.resolve(tarball),
-  ], {
+  ]);
+  const result = await runProcess(invocation.executable, invocation.args, {
     cwd: root,
     env: { ...process.env, npm_config_cache: npmCache, npm_config_ignore_scripts: "true" },
     timeoutMs: 180_000,

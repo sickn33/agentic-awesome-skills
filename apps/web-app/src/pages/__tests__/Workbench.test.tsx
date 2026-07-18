@@ -78,6 +78,8 @@ describe('Workbench review UI', () => {
   it('reviews a valid stack without offering install, apply, or share actions', () => {
     renderWithRouter(<Workbench />, { route: '/workbench', path: '/workbench', useProvider: false });
 
+    expect(screen.getByRole('heading', { level: 1, name: 'Review what AAS Core recommended.' })).toBeInTheDocument();
+
     paste('Paste JSON', stackFixture());
     fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));
 

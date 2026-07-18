@@ -402,7 +402,10 @@ class McpServer {
     const { name, arguments: args = {} } = request.params;
     if (!TOOL_NAMES.includes(name)) return this.rpcError(request.id, -32602, "Unknown tool");
     try {
-      assertExactKeys(request.params, ["name", "arguments"]);
+      assertExactKeys(request.params, ["name", "arguments", "_meta"]);
+      if (request.params._meta !== undefined && !isPlainObject(request.params._meta)) {
+        inputError("AAS_MCP_META_INVALID");
+      }
       let payload;
       if (name === "search_skills") {
         assertExactKeys(args, ["query", "target", "limit"]);

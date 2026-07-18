@@ -12,6 +12,7 @@ const {
 } = require("../adapters");
 const { scanJson } = require("../mcp/strict-json");
 const { createSkillTargetAdapter, ADAPTER_VERSION } = require("../target-adapter");
+const { fsyncDirectorySync } = require("../durability");
 const { inspectLayout, resolveDestination } = require("../transaction/safety");
 const { validateInstance } = require("../schema-validator");
 
@@ -132,8 +133,7 @@ function writeNewJson(filePath, value, { previewWindowsOutput = false } = {}) {
     linked = true;
     fs.unlinkSync(temporary);
     try {
-      const parentDescriptor = fs.openSync(parent, fs.constants.O_RDONLY);
-      try { fs.fsyncSync(parentDescriptor); } finally { fs.closeSync(parentDescriptor); }
+      fsyncDirectorySync(parent);
       return { outputDurability: "directorySynced", certificationStatus: "certifiable" };
     } catch (error) {
       if (!previewWindowsOutput) throw error;
@@ -146,6 +146,14 @@ function writeNewJson(filePath, value, { previewWindowsOutput = false } = {}) {
     if (error.code === "EEXIST") throw cliError("AAS_CLI_OUTPUT_EXISTS", "conflict", {});
     throw error;
   }
+}
+
+function windowsOutputDurabilityDetails(written, platform = process.platform) {
+  if (platform !== "win32") return {};
+  return {
+    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview" } : {}),
+    ...written,
+  };
 }
 
 function targetKey(target) {
@@ -262,7 +270,7 @@ async function stackInit(options) {
     status: "initialized",
     path: path.resolve(output),
     manifestDigest: validation.manifestDigest,
-    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview", ...written } : {}),
+    ...windowsOutputDurabilityDetails(written),
   };
 }
 
@@ -325,7 +333,7 @@ async function stackPlan(options, dependencies = {}) {
     planDigest: plan.digest,
     operationCount: plan.payload.operations.length,
     out: path.resolve(options.out),
-    ...(written.certificationStatus === "notCertified" ? { releaseProfile: "preview", ...written } : {}),
+    ...windowsOutputDurabilityDetails(written),
   };
 }
 
@@ -610,5 +618,6 @@ module.exports = {
   parseOptions,
   readJsonFile,
   stackPlan,
+  windowsOutputDurabilityDetails,
   writeNewJson,
 };

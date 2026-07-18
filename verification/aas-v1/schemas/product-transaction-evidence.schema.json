@@ -3,19 +3,41 @@
   "$id": "https://aas.example/schemas/v1/product-transaction-evidence.schema.json",
   "title": "AAS v1 external production transaction evidence",
   "type": "object",
-  "required": ["schemaVersion", "status", "productionBinary", "testMode", "mocked", "observer", "faultBoundaryClasses", "raceClasses", "executions", "killExecutions", "swapExecutions", "recoveryExecutions", "partialStates", "unmanagedMutations", "hardPolicyViolations", "boundaryEvidence"],
+  "required": ["schemaVersion", "status", "productionBinary", "testMode", "mocked", "candidate", "controller", "observer", "faultBoundaryClasses", "raceClasses", "executions", "killExecutions", "swapExecutions", "recoveryExecutions", "partialStates", "unmanagedMutations", "hardPolicyViolations", "boundaryEvidence"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "status": { "const": "passed" },
     "productionBinary": { "const": true },
     "testMode": { "const": false },
     "mocked": { "const": false },
+    "candidate": {
+      "type": "object",
+      "required": ["package", "version", "tarballSha512", "installedTreeSha256", "aasEntrypointSha256"],
+      "properties": {
+        "package": { "const": "agentic-awesome-skills" },
+        "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$" },
+        "tarballSha512": { "type": "string", "pattern": "^sha512-[A-Za-z0-9+/]+={0,2}$" },
+        "installedTreeSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "aasEntrypointSha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "controller": {
+      "type": "object",
+      "required": ["version", "digest"],
+      "properties": {
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
     "observer": {
       "type": "object",
-      "required": ["backend", "eventDigest", "overflow", "ambiguousLineage"],
+      "required": ["backend", "eventDigest", "eventCount", "overflow", "ambiguousLineage"],
       "properties": {
         "backend": { "enum": ["linux-strace-process-tree", "macos-fs_usage-process", "windows-etw-kernel-process-tree"] },
         "eventDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+        "eventCount": { "type": "integer", "minimum": 13 },
         "overflow": { "const": false },
         "ambiguousLineage": { "const": false }
       },
@@ -40,13 +62,25 @@
       "type": "array", "minItems": 13,
       "items": {
         "type": "object",
-        "required": ["class", "observedOperation", "injectionAction", "beforeDigest", "afterDigest", "finalState", "noPartialState"],
+        "required": ["executionId", "class", "kind", "observedOperation", "injectionAction", "planDigest", "commandDigest", "observerEventDigest", "beforeDigest", "afterDigest", "unmanagedBeforeDigest", "unmanagedAfterDigest", "exitCode", "exitSignal", "recoveryAction", "recoveryStatus", "recoveryPlanDigest", "finalState", "noPartialState"],
         "properties": {
+          "executionId": { "type": "string", "pattern": "^(faultBoundary|race)-[a-z-]+$" },
           "class": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["faultBoundary", "race"] },
           "observedOperation": { "type": "string", "minLength": 1 },
           "injectionAction": { "enum": ["kill", "concurrent", "drift", "symlink-swap", "target-swap", "corrupt-journal", "recovery-race"] },
+          "planDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+          "commandDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+          "observerEventDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
           "beforeDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
           "afterDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+          "unmanagedBeforeDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+          "unmanagedAfterDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+          "exitCode": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+          "exitSignal": { "type": ["string", "null"], "maxLength": 32 },
+          "recoveryAction": { "enum": ["none", "rollback", "cleanup", "fail-closed"] },
+          "recoveryStatus": { "type": "string", "minLength": 1, "maxLength": 64 },
+          "recoveryPlanDigest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
           "finalState": { "enum": ["previous", "new"] },
           "noPartialState": { "const": true }
         },

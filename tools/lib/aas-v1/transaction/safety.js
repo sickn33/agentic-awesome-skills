@@ -186,7 +186,26 @@ function cleanupMaterializedLayout(inspected, directories, options) {
   const { markerName, markerToken } = ownershipMarker(options);
   for (const directory of [...directories].reverse()) {
     if (!isContained(inspected.root, directory)) continue;
-    const tombstone = path.join(path.dirname(directory), `.aas-layout-remove-${markerToken}-${path.basename(directory)}`);
+    const parent = path.dirname(directory);
+    const stage = path.join(parent, `.aas-layout-stage-${markerToken}-${path.basename(directory)}`);
+    const tombstone = path.join(parent, `.aas-layout-remove-${markerToken}-${path.basename(directory)}`);
+    // A hard kill may land after the marker-bound staging directory is made
+    // durable but before its rename publishes the final layout directory.
+    // Remove only the exact token-owned, marker-only stage derived from the
+    // allowlisted layout; anything else remains for fail-closed inspection.
+    if (fs.existsSync(stage)) {
+      const stageStat = fs.lstatSync(stage);
+      if (!stageStat.isSymbolicLink() && stageStat.isDirectory() && stageStat.dev === inspected.device) {
+        try {
+          assertOwned(stageStat);
+          if (markerOwned(stage, markerName, markerToken)
+            && !fs.readdirSync(stage).some((name) => name !== markerName)) {
+            fs.rmSync(stage, { recursive: true });
+            fsyncDirectory(parent);
+          }
+        } catch {}
+      }
+    }
     // A prior cleanup may have published the exact token-bound tombstone and
     // then failed its parent fsync. Reconcile that state before inspecting the
     // original path so cleanup is retryable at every durability boundary.
@@ -197,7 +216,7 @@ function cleanupMaterializedLayout(inspected, directories, options) {
       if (!markerOwned(tombstone, markerName, markerToken)) continue;
       if (fs.readdirSync(tombstone).some((name) => name !== markerName)) continue;
       fs.rmSync(tombstone, { recursive: true });
-      fsyncDirectory(path.dirname(tombstone));
+      fsyncDirectory(parent);
       continue;
     }
     if (!fs.existsSync(directory)) continue;
@@ -212,10 +231,33 @@ function cleanupMaterializedLayout(inspected, directories, options) {
         logicalId: path.relative(inspected.root, directory).split(path.sep).join("/"),
       });
     }
-    fsyncDirectory(path.dirname(directory));
+    fsyncDirectory(parent);
     fs.rmSync(tombstone, { recursive: true });
-    fsyncDirectory(path.dirname(tombstone));
+    fsyncDirectory(parent);
   }
+}
+
+function remainingMaterializedLayoutPaths(inspected, directories, options) {
+  const { markerToken } = ownershipMarker(options);
+  const remaining = [];
+  for (const directory of directories) {
+    if (!isContained(inspected.root, directory)) continue;
+    const parent = path.dirname(directory);
+    const candidates = [
+      directory,
+      path.join(parent, `.aas-layout-stage-${markerToken}-${path.basename(directory)}`),
+      path.join(parent, `.aas-layout-remove-${markerToken}-${path.basename(directory)}`),
+    ];
+    for (const candidate of candidates) {
+      try {
+        fs.lstatSync(candidate);
+        remaining.push(path.relative(inspected.root, candidate).split(path.sep).join("/"));
+      } catch (error) {
+        if (!["ENOENT", "ENOTDIR"].includes(error?.code)) throw error;
+      }
+    }
+  }
+  return [...new Set(remaining)].sort();
 }
 
 function clearMaterializedMarkers(inspected, directories, options) {
@@ -257,6 +299,7 @@ module.exports = {
   assertOwned,
   assertRegularDirectory,
   cleanupMaterializedLayout,
+  remainingMaterializedLayoutPaths,
   clearMaterializedMarkers,
   inspectLayout,
   isContained,

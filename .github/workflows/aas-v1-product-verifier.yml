@@ -63,6 +63,7 @@ jobs:
         working-directory: candidate
         shell: bash
         run: |
+          npm ci --ignore-scripts --no-audit --no-fund
           mkdir -p "$RUNNER_TEMP/aas-candidate"
           npm pack --ignore-scripts --json --pack-destination "$RUNNER_TEMP/aas-candidate" > "$RUNNER_TEMP/aas-pack.json"
           test "$(find "$RUNNER_TEMP/aas-candidate" -maxdepth 1 -name '*.tgz' -type f | wc -l | tr -d ' ')" = 1
@@ -139,6 +140,18 @@ jobs:
       - name: Verify protected freeze before candidate execution
         working-directory: trusted/verification/aas-v1/verifier
         run: npm run freeze:check
+      - name: Generate external transaction evidence
+        shell: bash
+        env:
+          AAS_VERIFIER_RUNNER_LABEL: ${{ matrix.os }}
+          AAS_VERIFIER_FILESYSTEM_TYPE: ${{ matrix.fs_type }}
+          AAS_VERIFIER_FILESYSTEM_CASE: ${{ matrix.fs_case }}
+        run: |
+          tarball="$(find "$RUNNER_TEMP/candidate" -maxdepth 1 -name '*.tgz' -type f -print -quit)"
+          node trusted/verification/aas-v1/verifier/bin/generate-transaction-evidence.mjs \
+            --tarball "$tarball" \
+            --work-root "$RUNNER_TEMP/aas-v1-transaction-work" \
+            --out "$RUNNER_TEMP/aas-transaction-evidence.json"
       - name: Run black-box verifier
         shell: bash
         env:

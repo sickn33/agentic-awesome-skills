@@ -33,12 +33,13 @@ describe('SEO helpers', () => {
     expect(DEFAULT_TOP_SKILL_COUNT).toBe(180);
   });
 
-  it('builds homepage metadata with the canonical catalog message', () => {
+  it('builds homepage metadata with the canonical AAS Core preview message', () => {
     const meta = buildHomeMeta(10);
 
-    expect(meta.title).toContain('Agentic Awesome Skills GitHub');
-    expect(meta.title).toContain('10+ AI coding skills');
-    expect(meta.description).toContain('GitHub library of 10+ installable agentic skills');
+    expect(meta.title).toContain('AAS Core Preview');
+    expect(meta.title).toContain('10+ skills');
+    expect(meta.description).toContain('discover, recommend, validate, and plan');
+    expect(meta.description).toContain('10+ cataloged skills');
     expect(meta.canonicalPath).toBe('/');
     expect(meta.ogTitle).toBe(meta.title);
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
@@ -96,7 +97,7 @@ describe('SEO helpers', () => {
     const meta = buildTopicLandingMeta(topic!);
 
     expect(meta.title).toContain('GitHub AI Skills Repository');
-    expect(meta.description).toContain('GitHub repository');
+    expect(meta.description).toContain('GitHub source for AAS Core preview');
     expect(meta.canonicalPath).toBe('/topics/github-ai-skills-repository');
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
     expect(typeof meta.jsonLd).toBe('function');

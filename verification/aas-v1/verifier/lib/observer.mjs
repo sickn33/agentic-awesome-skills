@@ -10,7 +10,7 @@ import { runProcess } from "./process.mjs";
 const NETWORK_CALL = /\b(?:socket|socketpair|connect|bind|listen|accept|accept4|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo|GetAddrInfoW)\s*\(/;
 const MUTATION_CALL = /\b(?:creat|mkdir|mkdirat|rmdir|unlink|unlinkat|rename|renameat|renameat2|link|linkat|symlink|symlinkat|truncate|ftruncate|chmod|fchmod|fchmodat|chown|fchown|fchownat|utime|utimes|futimes|futimens|fsync|fdatasync)\s*\(/;
 const OPEN_WRITE = /\b(?:open|openat|openat2)\s*\([^\n]*\b(?:O_WRONLY|O_RDWR|O_CREAT|O_TRUNC|O_APPEND)\b/;
-const FD_WRITE = /\b(?:write|writev|pwrite|pwritev)\s*\((\d+)(?:<[^>]*>)?,/;
+const FD_WRITE = /\b(?:write|writev|pwrite|pwritev)\s*\((\d+)(?:<([^>]*)>)?,/;
 const PROCESS_CALL = /\b(?:execve|execveat|posix_spawn)\s*\(/;
 
 function resolveCommandPath(command) {
@@ -42,7 +42,13 @@ export function parseLinuxStrace(text, zones = {}) {
     else if (MUTATION_CALL.test(line) || OPEN_WRITE.test(line)) kind = "write";
     else {
       const fdWrite = line.match(FD_WRITE);
-      if (fdWrite && !["1", "2"].includes(fdWrite[1])) kind = "write";
+      const nonPersistentKernelTarget = fdWrite?.[2]
+        && /^(?:pipe:\[|socket:\[|anon_inode:|\/dev\/null$)/.test(fdWrite[2]);
+      // strace exposes libuv's pipe/eventfd bookkeeping as write(2), unlike
+      // the macOS and Windows filesystem observers. Those kernel IPC targets
+      // cannot persist project/cache state; unknown or regular-file targets
+      // remain fail-closed and count as writes.
+      if (fdWrite && !["1", "2"].includes(fdWrite[1]) && !nonPersistentKernelTarget) kind = "write";
       else if (PROCESS_CALL.test(line)) {
         if (!rootExecSeen) rootExecSeen = true;
         else kind = "process";
@@ -104,11 +110,44 @@ function fsUsageLines(text) {
   return text.split(/\r?\n/).map((line) => line.trim()).filter((line) => /^\d{2}:\d{2}:\d{2}\.\d+/.test(line));
 }
 
+function fsUsageTimestamp(line) {
+  const match = line.match(/^(\d{2}):(\d{2}):(\d{2})\.(\d+)/);
+  if (!match) return null;
+  const fraction = Number(`0.${match[4]}`);
+  return ((Number(match[1]) * 60 + Number(match[2])) * 60 + Number(match[3])) * 1000 + fraction * 1000;
+}
+
+function macFsUsageCall(line) {
+  return line.match(/^\d{2}:\d{2}:\d{2}\.\d+\s+(\S+)/)?.[1] ?? "";
+}
+
+export function isMacPersistentWriteLine(line, zones = {}) {
+  const call = macFsUsageCall(line);
+  const normalizedCall = call.replace(/\[.*$/u, "").toLowerCase();
+  const descriptor = line.match(/\bF=(?:0x)?([0-9a-f]+)\b/iu)?.[1]?.toLowerCase() ?? null;
+  const namesObservedPath = Object.values(zones).some((root) => typeof root === "string" && root.length > 0 && line.includes(root));
+  // fs_usage reports writes to the candidate's inherited stdout/stderr pipes
+  // as `write F=1|2`. Those are process streams, which the frozen contract
+  // explicitly excludes from persistent filesystem writes. Physical WrData
+  // events remain mutations even when their displayed descriptor is 1 or 2,
+  // so reopening a stream descriptor onto a file is still observed.
+  if (["write", "writev"].includes(normalizedCall)
+    && ["1", "2"].includes(descriptor) && !namesObservedPath) return false;
+  return /^(?:wrdata|wrmeta|write|writev|write_nocancel|writev_nocancel|pwrite|pwritev|rename|unlink|mkdir|rmdir|truncate|ftruncate|chmod|chown|fsync|fdatasync|setattr|setxattr)$/u.test(normalizedCall);
+}
+
+const FS_USAGE_DAY_MS = 24 * 60 * 60 * 1000;
+const FS_USAGE_MAX_INTERVAL_MS = 15 * 60 * 1000;
+
+function forwardClockDelta(timestamp, boundary) {
+  return (timestamp - boundary + FS_USAGE_DAY_MS) % FS_USAGE_DAY_MS;
+}
+
 export function parseMacFsUsage(filesystemText, networkText, execText, zones = {}) {
   const events = [];
   for (const line of fsUsageLines(networkText)) events.push({ kind: "network", targetDigest: redactToken(line, zones) });
   for (const line of fsUsageLines(filesystemText)) {
-    if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
+    if (isMacPersistentWriteLine(line, zones)) {
       events.push({ kind: "write", targetDigest: redactToken(line, zones) });
     }
   }
@@ -119,18 +158,19 @@ export function parseMacFsUsage(filesystemText, networkText, execText, zones = {
 
 export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "", candidateToken = "") {
   const classified = [];
-  let readinessIndex = -1;
-  let candidateIndex = -1;
+  const readinessTimestamps = [];
+  const candidateTimestamps = [];
   const lines = fsUsageLines(text);
-  for (const [index, line] of lines.entries()) {
+  for (const line of lines) {
+    const timestamp = fsUsageTimestamp(line);
     if (/\b(?:socket|connect|bind|listen|accept|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo)\b/i.test(line)) {
-      classified.push({ index, kind: "network", line });
-    } else if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
-      if (readinessToken && line.includes(readinessToken)) readinessIndex = index;
-      else if (candidateToken && line.includes(candidateToken)) candidateIndex = index;
-      else classified.push({ index, kind: "write", line });
+      classified.push({ timestamp, kind: "network", line });
+    } else if (isMacPersistentWriteLine(line, zones)) {
+      if (readinessToken && line.includes(readinessToken)) readinessTimestamps.push(timestamp);
+      else if (candidateToken && line.includes(candidateToken)) candidateTimestamps.push(timestamp);
+      else classified.push({ timestamp, kind: "write", line });
     } else if (/\b(?:execve|posix_spawn|exec|spawn)\b/i.test(line)) {
-      classified.push({ index, kind: "process", line });
+      classified.push({ timestamp, kind: "process", line });
     }
   }
   const diagnostic = () => JSON.stringify({
@@ -139,20 +179,45 @@ export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "", c
     candidateTokenAnywhere: candidateToken ? text.includes(candidateToken) : null,
     callNames: [...new Set(lines.map((line) => line.match(/^\d{2}:\d{2}:\d{2}\.\d+\s+(\S+)/)?.[1]).filter(Boolean))].slice(0, 24),
   });
-  if (readinessToken && readinessIndex < 0) {
+  if (readinessToken && !readinessTimestamps.length) {
     throw Object.assign(new Error(`fs_usage missed the observer readiness canary: ${diagnostic()}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
-  if (candidateToken && candidateIndex < 0) {
+  if (candidateToken && !candidateTimestamps.length) {
     throw Object.assign(new Error(`fs_usage missed the candidate start canary: ${diagnostic()}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
-  if (candidateToken && candidateIndex <= readinessIndex) {
+  const readinessTimestamp = readinessTimestamps.length ? Math.max(...readinessTimestamps) : null;
+  const candidateTimestamp = candidateTimestamps
+    .map((timestamp) => ({ timestamp, delta: forwardClockDelta(timestamp, readinessTimestamp) }))
+    .filter(({ delta }) => delta > 0 && delta <= FS_USAGE_MAX_INTERVAL_MS)
+    .sort((left, right) => left.delta - right.delta)
+    .at(-1)?.timestamp ?? null;
+  if (candidateToken && candidateTimestamp === null) {
     throw Object.assign(new Error("fs_usage canary ordering is ambiguous"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
   }
-  const boundary = candidateToken ? candidateIndex : -1;
+  const boundary = candidateToken ? candidateTimestamp : -Infinity;
   const events = classified
-    .filter((entry) => entry.index > boundary)
+    // fs_usage may flush filesystem and network buffers out of line order.
+    // Native timestamps, not output position, bind calls to the candidate
+    // interval established by the final start-canary heartbeat.
+    .filter((entry) => {
+      if (!candidateToken) return true;
+      if (entry.timestamp === null) return false;
+      const delta = forwardClockDelta(entry.timestamp, boundary);
+      return delta > 0 && delta <= FS_USAGE_MAX_INTERVAL_MS;
+    })
     .map(({ kind, line }) => ({ kind, targetDigest: redactToken(line, zones) }));
   return summarizeEvents(events);
+}
+
+export function rewriteMacObservedNodeInput(stdin, originalExecutable, observedExecutable) {
+  if (typeof stdin !== "string" || !stdin.length) return stdin;
+  try {
+    const value = JSON.parse(stdin);
+    if (!value || typeof value !== "object" || Array.isArray(value) || value.executable !== originalExecutable) return stdin;
+    return JSON.stringify({ ...value, executable: observedExecutable });
+  } catch {
+    return stdin;
+  }
 }
 
 async function macObserved(executable, args, options) {
@@ -166,6 +231,7 @@ async function macObserved(executable, args, options) {
   const observedExecutable = path.join(options.evidenceDir, observedName);
   const readinessCanary = path.join(options.evidenceDir, `aas-ready-${sequence}`);
   const candidateCanary = path.join(options.evidenceDir, `aas-start-${sequence}`);
+  const candidateRelease = path.join(options.evidenceDir, `aas-release-${sequence}`);
   const readinessToken = path.basename(readinessCanary);
   const candidateToken = path.basename(candidateCanary);
   const launcher = path.join(options.evidenceDir, `observer-${process.pid}.command`);
@@ -175,8 +241,11 @@ async function macObserved(executable, args, options) {
   fs.writeFileSync(launcher, [
     `process.title = ${JSON.stringify(observedName)};`,
     "const fs = require('node:fs');",
-    `const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600);`,
-    "fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd);",
+    "const waitArray = new Int32Array(new SharedArrayBuffer(4));",
+    // Give fs_usage time to attach its process-name filter after Node updates
+    // the copied executable's title. The candidate begins only after this
+    // bounded native canary heartbeat has completed.
+    `let candidateReleased = false; for (let attempt = 0; attempt < 100; attempt += 1) { const fd = fs.openSync(${JSON.stringify(candidateCanary)}, 'w', 0o600); fs.writeSync(fd, 'start'); fs.fsyncSync(fd); fs.closeSync(fd); if (fs.existsSync(${JSON.stringify(candidateRelease)})) { candidateReleased = true; break; } Atomics.wait(waitArray, 0, 0, 100); } if (!candidateReleased) throw Object.assign(new Error('observer did not release candidate'), { code: 'AAS_OBSERVER_UNAVAILABLE' });`,
     `const args = JSON.parse(Buffer.from(${JSON.stringify(encodedArgs)}, 'base64').toString('utf8'));`,
     "if (args[0] === '-e') { process.argv = [process.execPath, ...args.slice(2)]; eval(args[1]); }",
     "else { process.argv = [process.execPath, ...args]; require('node:module').runMain(); }",
@@ -187,6 +256,9 @@ async function macObserved(executable, args, options) {
   let observerPromise = null;
   let observerStopStarted = false;
   let observerCleanupFailed = false;
+  let candidateChild = null;
+  let candidateOutcome = null;
+  let candidatePromise = null;
   let liveObserverOutput = "";
   let captureLiveOutput = true;
   const captureObserverOutput = (callback) => (chunk) => {
@@ -238,7 +310,7 @@ async function macObserved(executable, args, options) {
       ...options,
       detached: true,
       timeoutMs: budgets.observerTimeoutMs,
-      maxOutputBytes: 8 * 1024 * 1024,
+      maxOutputBytes: budgets.traceMaxOutputBytes,
       onSpawn(child) { observerPid = child.pid; },
       onStdoutData: captureObserverOutput(options.onStdoutData),
       onStderrData: captureObserverOutput(options.onStderrData),
@@ -271,7 +343,6 @@ async function macObserved(executable, args, options) {
       assertObserverActive("readiness-after-probe");
       if (liveObserverOutput.includes(readinessToken)) {
         readinessObservedLive = true;
-        captureLiveOutput = false;
         break;
       }
     }
@@ -279,7 +350,39 @@ async function macObserved(executable, args, options) {
       throw Object.assign(new Error("fs_usage did not confirm readiness before the candidate deadline"), { code: "AAS_OBSERVER_UNAVAILABLE" });
     }
     assertObserverActive("candidate-start");
-    const result = await runProcess(observedExecutable, [launcher], options);
+    candidatePromise = runProcess(observedExecutable, [launcher], {
+      ...options,
+      // The native handshake precedes candidate execution, so it receives a
+      // separate bounded allowance instead of consuming the candidate budget.
+      timeoutMs: options.timeoutMs + budgets.candidateHandshakeTimeoutMs,
+      // fs_usage filters by executable name rather than ancestry. Make a
+      // transaction driver launch the byte-identical observed Node copy so
+      // the candidate child remains inside the native process filter.
+      stdin: rewriteMacObservedNodeInput(options.stdin, process.execPath, observedExecutable),
+      onSpawn(child) {
+        candidateChild = child;
+        child.once("close", () => { candidateChild = null; });
+      },
+    }).then(
+      (candidateResult) => (candidateOutcome = { result: candidateResult }),
+      (error) => (candidateOutcome = { error }),
+    );
+    const candidateDeadline = Date.now() + budgets.candidateHandshakeTimeoutMs;
+    while (!liveObserverOutput.includes(candidateToken) && !candidateOutcome && Date.now() < candidateDeadline) {
+      assertObserverActive("candidate-canary");
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    if (!liveObserverOutput.includes(candidateToken)) {
+      await candidatePromise;
+      throw Object.assign(new Error("fs_usage did not confirm the candidate start canary before release"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    }
+    fs.writeFileSync(candidateRelease, "release", { mode: 0o600 });
+    captureLiveOutput = false;
+    const candidateCompletion = await candidatePromise;
+    if (candidateCompletion.error) {
+      throw Object.assign(new Error("candidate process failed to start"), { code: "AAS_OBSERVER_UNAVAILABLE" });
+    }
+    const result = candidateCompletion.result;
     await new Promise((resolve) => setTimeout(resolve, budgets.drainMs));
     assertObserverActive("candidate-drain");
     await stopObserver();
@@ -308,10 +411,13 @@ async function macObserved(executable, args, options) {
     };
   } finally {
     captureLiveOutput = false;
+    if (candidateChild) candidateChild.kill("SIGKILL");
+    if (candidatePromise) await candidatePromise;
     await stopObserver();
     if (observerPromise) await observerPromise.catch(() => null);
     fs.rmSync(readinessCanary, { force: true });
     fs.rmSync(candidateCanary, { force: true });
+    fs.rmSync(candidateRelease, { force: true });
     fs.rmSync(launcher, { force: true });
     fs.rmSync(observedExecutable, { force: true });
   }
@@ -324,19 +430,27 @@ export function macObserverBudgets(candidateTimeoutMs = 30_000) {
     });
   }
   const startupMs = 1_500;
-  const readinessMaxAttempts = 2;
+  // fs_usage can delay live output for more than two four-second canary
+  // processes on loaded hosted macOS runners. Keep probing with independently
+  // visible writes before the candidate starts; this widens observation
+  // readiness only and does not relax any candidate evidence requirement.
+  const readinessMaxAttempts = 4;
   const readinessProcessTimeoutMs = 10_000;
-  const readinessDelayMs = 250;
+  const readinessDelayMs = 500;
+  const candidateHandshakeTimeoutMs = 8_000;
   const drainMs = 1_000;
   return {
     startupMs,
     readinessMaxAttempts,
     readinessProcessTimeoutMs,
     readinessDelayMs,
+    candidateHandshakeTimeoutMs,
     drainMs,
+    traceMaxOutputBytes: 64 * 1024 * 1024,
     observerTimeoutMs: startupMs
       + readinessMaxAttempts * (readinessProcessTimeoutMs + readinessDelayMs)
       + candidateTimeoutMs
+      + candidateHandshakeTimeoutMs
       + drainMs
       + 5_000,
   };

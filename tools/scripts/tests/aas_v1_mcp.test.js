@@ -39,6 +39,16 @@ async function initializedServer() {
 
 test("strict JSON-lines parser rejects invalid UTF-8, duplicate keys, excess depth, batches, and oversized input", () => {
   assert.deepEqual(parseStrictJsonLine(Buffer.from('{"jsonrpc":"2.0"}')), { jsonrpc: "2.0" });
+  assert.doesNotThrow(() => parseStrictJsonLine(Buffer.from(JSON.stringify({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "tools/call",
+    params: {
+      name: "search_skills",
+      arguments: { query: "android ui", target: "codex", limit: 5 },
+      _meta: { "x-codex-turn-metadata": { workspaces: { remotes: "x".repeat(6 * 1024) } } },
+    },
+  }))));
   assert.throws(
     () => parseStrictJsonLine(Buffer.from('{"key":1,"key":2}')),
     { code: "AAS_MCP_JSON_DUPLICATE_KEY" },
@@ -106,7 +116,11 @@ test("search, get, resource read, recommendation, inspection, and unavailable ve
     jsonrpc: "2.0",
     id: 10,
     method: "tools/call",
-    params: { name: "search_skills", arguments: { query: "android ui", limit: 3 } },
+    params: {
+      name: "search_skills",
+      arguments: { query: "android ui", limit: 3 },
+      _meta: { progressToken: "codex-search-1" },
+    },
   });
   assert.equal(search.result.isError, false);
   assert.equal(search.result.structuredContent.ok, true);
@@ -280,7 +294,7 @@ test("production MCP modules have no network, process-spawn, or filesystem-write
   assert.match(source, /fs\.(?:readFileSync|readSync)\(/);
 });
 
-test("stdio counts the newline in the 4096-byte boundary and bounds its pending request queue", async () => {
+test("stdio counts the newline in the byte boundary and bounds its pending request queue", async () => {
   async function exercise(bytes, server) {
     const input = new PassThrough();
     const output = new PassThrough();
@@ -292,11 +306,12 @@ test("stdio counts the newline in the 4096-byte boundary and bounds its pending 
     return Buffer.concat(chunks).toString("utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
   }
 
-  const fixtureRoot = path.join(ROOT, "verification", "aas-v1", "baseline", "v1", "hostile", "fixtures", "input", "request-byte-limit");
   const acceptingServer = { handle: async (request) => ({ jsonrpc: "2.0", id: request.id ?? null, result: {} }) };
-  const boundary = await exercise(fs.readFileSync(path.join(fixtureRoot, "boundary-control.json")), acceptingServer);
+  const base = JSON.stringify({ jsonrpc: "2.0", id: 1, method: "ping", pad: "" });
+  const framed = (length) => Buffer.from(`${base.slice(0, -2)}${"x".repeat(length - Buffer.byteLength(base) - 1)}\"}\n`);
+  const boundary = await exercise(framed(MAX_LINE_BYTES), acceptingServer);
   assert.equal(boundary[0].result !== undefined, true);
-  const exploit = await exercise(fs.readFileSync(path.join(fixtureRoot, "exploit.json")), acceptingServer);
+  const exploit = await exercise(framed(MAX_LINE_BYTES + 1), acceptingServer);
   assert.equal(exploit[0].error.data.code, "AAS_MCP_LINE_TOO_LARGE");
 
   let release;

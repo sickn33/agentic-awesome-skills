@@ -19,17 +19,17 @@ const FAQ_ITEMS = [
   {
     question: 'What is Agentic Awesome Skills?',
     answer: (countLabel) =>
-      `Agentic Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
+      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview control plane for discovering, recommending, validating, and planning exact skill stacks. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
   },
   {
-    question: 'How do I install Agentic Awesome Skills?',
+    question: 'How do I use AAS Core preview?',
     answer:
-      'Install the library with npx agentic-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+      'Configure the local stdio MCP with the AAS CLI, let the agent search, inspect, and recommend skills, then validate the proposed aas-stack.json and preview its immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
   },
   {
     question: 'Is Agentic Awesome Skills a GitHub repository?',
     answer:
-      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
+      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for AAS Core, its CLI and local MCP, the skill catalog, plugins, and documentation. The hosted site is a companion catalog and local artifact-review surface.',
   },
   {
     question: 'What are AAS specialized plugins?',
@@ -333,9 +333,9 @@ function buildHomeFallback({ landingPages, siteBaseUrl }) {
 
   return [
     '<main data-prerender-fallback="true">',
-    '<h1>Installable AI agent skills for Codex, Claude Code, Cursor, Gemini, and Antigravity</h1>',
-    '<p><strong>Find the right skill. Ship the better agent.</strong></p>',
-    '<p>Browse a GitHub-backed catalog of reusable SKILL.md playbooks, specialized plugins, bundles, and workflows.</p>',
+    '<h1>AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients</h1>',
+    '<p><strong>Discover. Recommend. Validate. Preview.</strong></p>',
+    '<p>Turn intent into an explainable aas-stack.json and immutable plan preview without target writes, backed by the AAS skill catalog.</p>',
     `<nav aria-label="Catalog hubs"><ul>${buildStaticLinkList(links)}</ul></nav>`,
     '</main>',
   ].join('');
@@ -396,14 +396,14 @@ function setRootFallback(html, fallbackHtml) {
 function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
   const formattedCount = visibleCount.toLocaleString('en-US');
-  const title = `Agentic Awesome Skills GitHub | ${formattedCount}+ AI coding skills`;
-  const description = `Explore the GitHub library of ${formattedCount}+ installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.`;
+  const title = `AAS Core Preview | Agent-first stacks backed by ${formattedCount}+ skills`;
+  const description = `Use AAS Core preview to discover, recommend, validate, and plan explainable skill stacks for Codex, Claude Code, and compatible clients, backed by ${formattedCount}+ cataloged skills.`;
   const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
   const sourceCodeEntity = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: `Installable GitHub library of ${formattedCount}+ agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.`,
+    description: `AAS Core preview is a local agent-first control plane for recommending, validating, and planning exact skill stacks backed by ${formattedCount}+ agentic skills.`,
     url: REPOSITORY_URL,
     sameAs: [...new Set([
       canonicalUrl,
@@ -423,6 +423,10 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
       'Antigravity CLI skills',
       'GitHub AI skills repository',
       'AI agent skills GitHub',
+      'AAS Core',
+      'skill recommendation',
+      'agent stack',
+      'Model Context Protocol',
       'specialized plugins',
       'SKILL.md',
     ],
@@ -596,8 +600,8 @@ function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
 }
 
 function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
-  const title = 'Stack Review Workbench | Agentic Awesome Skills';
-  const description = 'Review an AAS stack manifest and immutable plan locally in your browser. Imports stay in memory and cannot install or apply changes.';
+  const title = 'AAS Core Stack Review | Agentic Awesome Skills';
+  const description = 'Review an AAS Core stack manifest and immutable preview plan locally in your browser. Imports stay in memory and cannot install or apply changes.';
   const catalogBaseUrl = canonicalUrl.replace(/\/workbench\/?$/, '');
   const catalogRootUrl = `${catalogBaseUrl}/`;
   const sourceCodeEntity = {
@@ -627,7 +631,7 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         name: 'Agentic Awesome Skills Workbench',
-        headline: 'Review what your agent chose',
+        headline: 'Review what AAS Core recommended',
         description,
         url: canonicalUrl,
         mainEntityOfPage: canonicalUrl,
@@ -684,7 +688,7 @@ function buildTopicLandingMeta({ page, featuredSkills = [], imageUrl, canonicalU
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: 'Installable GitHub library of agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.',
+    description: 'AAS Core preview is a local agent-first control plane backed by an evidence-rich catalog of agentic skills.',
     url: REPOSITORY_URL,
     sameAs: [...new Set([
       canonicalUrl,

@@ -273,8 +273,8 @@ async function main() {
   ], { cwd: projectRoot }), "INIT");
   assert.equal(initialized.status, "initialized");
   if (process.platform === "win32") {
-    assert.equal(initialized.certificationStatus, "notCertified");
-    assert.equal(initialized.outputDurability, "fileSyncedDirectoryUnverified");
+    assert.equal(initialized.certificationStatus, "certifiable");
+    assert.equal(initialized.outputDurability, "directorySynced");
   }
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   assert.deepEqual(manifest.skills, []);
@@ -369,8 +369,8 @@ async function main() {
   ], { cwd: projectRoot }), "PLAN");
   assert.equal(planned.status, "planned");
   if (process.platform === "win32") {
-    assert.equal(planned.certificationStatus, "notCertified");
-    assert.equal(planned.outputDurability, "fileSyncedDirectoryUnverified");
+    assert.equal(planned.certificationStatus, "certifiable");
+    assert.equal(planned.outputDurability, "directorySynced");
   }
   const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
   const beforeDoctor = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };

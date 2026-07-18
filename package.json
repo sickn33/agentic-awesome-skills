@@ -1,7 +1,7 @@
 {
   "name": "agentic-awesome-skills",
   "version": "14.6.0",
-  "description": "1,965+ agentic skills for Claude Code, Gemini CLI, Cursor, Antigravity & more. Installer CLI.",
+  "description": "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, backed by 1,965+ agentic skills.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
@@ -120,6 +120,10 @@
     "tools/lib"
   ],
   "keywords": [
+    "aas-core",
+    "mcp",
+    "skill-recommendation",
+    "agent-stack",
     "claude-code",
     "cursor",
     "gemini-cli",

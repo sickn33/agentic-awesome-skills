@@ -5,7 +5,9 @@
 
 Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用的 `SKILL.md` 剧本。与其收集随机提示词，你可以获得一个可搜索、可安装的技能库，涵盖规划、编码、调试、测试、安全审查、基础设施工作、产品工作流和成长任务，支持主流 AI 编码助手。
 
-**从这里开始：** [为仓库加星](https://github.com/sickn33/agentic-awesome-skills/stargazers) · [1 分钟安装](#installation) · [选择你的工具](#choose-your-tool) · [按工具查看最佳技能](#best-skills-by-tool) · [捆绑包](users/bundles.md) · [工作流](users/workflows.md)
+> **推荐入口 — AAS Core：** 对于 Codex 和 Claude Code，请先使用本地、只读的 AAS MCP 搜索目录并获得确定性的最小技能栈建议，然后检查 `aas-stack.json` 和 CLI 预览计划。当前有文档支持的预览路径在检查计划后停止。[了解 AAS Core](users/aas-core.md)。
+
+**从这里开始：** [AAS Core](users/aas-core.md) · [为仓库加星](https://github.com/sickn33/agentic-awesome-skills/stargazers) · [1 分钟安装](#installation) · [选择你的工具](#choose-your-tool) · [按工具查看最佳技能](#best-skills-by-tool) · [捆绑包](users/bundles.md) · [工作流](users/workflows.md)
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2035%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)

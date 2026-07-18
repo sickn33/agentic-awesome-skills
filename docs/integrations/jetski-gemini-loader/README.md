@@ -1,5 +1,7 @@
 # Jetski + Gemini Lazy Skill Loader (Example)
 
+> **Custom-host example:** This is a low-level, direct-manifest integration for Jetski/Cortex-style hosts. Codex and Claude Code users should start with [AAS Core](../../users/aas-core.md), which exposes verified local catalog discovery and deterministic recommendations through a bounded, read-only MCP server.
+
 This example shows one way to integrate **agentic-awesome-skills** with a Jetski/Cortex‑style agent using **lazy loading** based on `@skill-id` mentions, instead of concatenating every `SKILL.md` into the prompt.
 
 > This is **not** a production‑ready library – it is a minimal reference you can adapt to your own host/agent implementation.
