@@ -1,9 +1,9 @@
-<!-- registry-sync: version=15.0.0-rc.1; skills=1968; stars=43524; updated_at=2026-07-18T12:33:32+00:00 -->
+<!-- registry-sync: version=15.0.0-rc.2; skills=1968; stars=43526; updated_at=2026-07-18T13:09:25+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
 
-**Current release: V15.0.0-rc.1.** This release includes AAS Core under the **Agent-First Preview** claim for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
+**Current release: V15.0.0-rc.2.** This release includes AAS Core under the **Agent-First Preview** claim for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 Codex or Claude inspects your project using its own capabilities; AAS does not scan it. The agent sends the local, read-only AAS MCP an explicit project profile. AAS Core evaluates that profile and your policy against a verified local catalog, returns an explainable recommendation, and lets the agent propose `aas-stack.json`. The `aas` CLI validates that desired state and creates an immutable per-target plan before any skill changes are made.
 
