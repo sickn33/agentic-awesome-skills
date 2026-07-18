@@ -1,6 +1,6 @@
 "use strict";
 
-const MAX_LINE_BYTES = 4096;
+const MAX_LINE_BYTES = 256 * 1024;
 const MAX_JSON_DEPTH = 16;
 
 class StrictJsonError extends Error {
