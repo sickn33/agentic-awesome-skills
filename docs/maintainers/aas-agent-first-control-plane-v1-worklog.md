@@ -1,5 +1,9 @@
 # AAS Agent-First Control Plane v1 Worklog
 
+## 2026-07-18 — Baseline workflow retired
+
+- The standalone `aas-v1-baseline` pull-request workflow and required status check were retired by maintainer decision. The frozen verifier assets remain in the repository, but routine PR and canonical-sync merges no longer execute or wait for that verifier. The protected `pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview` gates remain required.
+
 ## 2026-07-17 — Goal activation and clean baseline
 
 - Active objective is defined by the approved design and goal documents.

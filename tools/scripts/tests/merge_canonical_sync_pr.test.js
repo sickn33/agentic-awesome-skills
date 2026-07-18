@@ -72,11 +72,6 @@ const canonicalRun = {
   }],
 };
 assert.strictEqual(canonicalMerge.selectCanonicalPullRequestRun([canonicalRun], options, "b".repeat(40)), canonicalRun);
-const baselineRun = { ...canonicalRun, id: 125, path: ".github/workflows/aas-v1-baseline-check.yml", check_suite_id: 778 };
-assert.strictEqual(
-  canonicalMerge.selectCanonicalPullRequestRun([baselineRun], options, "b".repeat(40), ".github/workflows/aas-v1-baseline-check.yml"),
-  baselineRun,
-);
 assert.strictEqual(canonicalMerge.selectCanonicalPullRequestRun([
   { ...canonicalRun, actor: { login: "attacker" } },
 ], options, "b".repeat(40)), null);
@@ -136,10 +131,6 @@ assert.throws(
   });
   assert.strictEqual(calls, 2);
 
-  await canonicalMerge.waitForChecks({ ...options, pollSeconds: 1, maxAttempts: 1 }, 778, {
-    loadCheckRuns: () => [run("aas-v1-baseline", "success", 30, 15368, 778)],
-    wait: async () => {},
-  }, ["aas-v1-baseline"]);
   console.log("Canonical sync merge tests passed.");
 })().catch((error) => {
   console.error(error);
