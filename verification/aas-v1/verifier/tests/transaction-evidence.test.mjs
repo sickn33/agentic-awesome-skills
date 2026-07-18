@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { classifyConcurrencyOutcomes, corruptPrefixIsFailClosed, faultFixtureProfile, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { classifyConcurrencyOutcomes, corruptPrefixIsFailClosed, faultFixtureProfile, faultObservationSkillId, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -174,6 +174,12 @@ test("write faults use a policy-safe corpus to expose the transient staging boun
     desired: true,
     additionalSkills: [],
   });
+});
+
+test("rename faults observe the first deterministic staged publication", () => {
+  const corpus = ["frontend-dev-guidelines", "agent-tool-builder", "tailwind-design-system"];
+  assert.equal(faultObservationSkillId("rename", "react-best-practices", corpus), "agent-tool-builder");
+  assert.equal(faultObservationSkillId("write", "react-best-practices", corpus), "react-best-practices");
 });
 
 test("concurrency races keep the externally observed target lock contended", () => {

@@ -165,6 +165,15 @@ export function faultFixtureProfile(className, backupSkillIds) {
   };
 }
 
+export function faultObservationSkillId(className, primarySkillId, additionalSkillIds = []) {
+  if (className !== "rename") return primarySkillId;
+  // Observe the first deterministic publication in the staged corpus. This
+  // leaves the remaining verified skill renames between the observed boundary
+  // and the state-last commit, giving an external macOS observer enough time
+  // to terminate the process without weakening the later-boundary assertion.
+  return [primarySkillId, ...additionalSkillIds].sort()[0];
+}
+
 export function raceFixtureProfile(className, contentionSkillIds) {
   const requiresVisibleStaging = ["concurrency", "drift", "symlink-swap", "target-swap"].includes(className);
   return {
@@ -484,6 +493,7 @@ async function faultCase(context, className) {
   const profile = faultFixtureProfile(className, context.backupSkillIds);
   const replace = profile.installed;
   const fixture = await createFixture(context, `fault-${className}`, profile);
+  const observedSkillId = faultObservationSkillId(className, fixture.skillId, profile.additionalSkills);
   const args = applyArgs(fixture);
   const observed = await runObserved(process.execPath, [DRIVER], {
     cwd: fixture.caseRoot,
@@ -494,7 +504,7 @@ async function faultCase(context, className) {
       cwd: fixture.caseRoot,
       env: fixture.env,
       targetRoot: fixture.targetRoot,
-      skillId: fixture.skillId,
+      skillId: observedSkillId,
       className,
       timeoutMs: 120_000,
     }),
