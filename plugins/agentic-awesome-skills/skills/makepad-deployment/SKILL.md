@@ -37,13 +37,20 @@ Use `makepad-packaging-action` to package Makepad apps in CI. It wraps
 `cargo-packager` (desktop) and `cargo-makepad` (mobile), and can upload artifacts
 to GitHub Releases.
 
+Before using a third-party action, inspect its source and select a reviewed full
+40-character commit SHA. Confirm the repository, release target, permissions,
+artifact set, and whether upload or GitHub Release creation is authorized. A
+build approval is not an upload or release approval.
+
 ```yaml
 jobs:
   package:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: Project-Robius-China/makepad-packaging-action@v1
+      - uses: actions/checkout@<APPROVED_FULL_COMMIT_SHA>
+      - uses: Project-Robius-China/makepad-packaging-action@<APPROVED_FULL_COMMIT_SHA>
         with:
           args: --target x86_64-unknown-linux-gnu --release
 ```
@@ -52,9 +59,9 @@ Notes:
 - Desktop packages must run on matching OS runners (Linux/Windows/macOS).
 - iOS builds require macOS runners.
 - Android builds can run on any OS runner.
-
-Full inputs/env/outputs and release workflows live in
-`references/makepad-packaging-action.md`.
+- Keep `contents: read` for build-only jobs. Grant `contents: write` only in a
+  separately approved release job, and review action inputs against the source
+  at the pinned SHA.
 
 ## Desktop Packaging
 
@@ -62,13 +69,18 @@ Desktop packaging uses `cargo-packager` with `robius-packaging-commands` for res
 
 ### Install Tools
 
-```bash
-# Install cargo-packager
-cargo install cargo-packager --locked
+Installing global Cargo tools changes the user environment and may compile
+third-party code. Confirm the target machine, requested versions, and approval
+before installation. Prefer an isolated CI image or tool cache when available.
 
-# Install robius-packaging-commands (v0.2.1)
-cargo install --version 0.2.1 --locked \
+```bash
+# Install the reviewed cargo-packager release
+cargo install cargo-packager --version 0.11.8 --locked
+
+# Install robius-packaging-commands v0.2.1 at its reviewed commit
+cargo install --locked \
     --git https://github.com/project-robius/robius-packaging-commands.git \
+    --rev 475203484dcd99e41419eb47719d2d17e1cea059 \
     robius-packaging-commands
 ```
 
@@ -87,6 +99,7 @@ long_description = """
 Your detailed description here.
 Keep each line under 80 characters.
 """
+# This path belongs to the application project, not to this skill bundle.
 icons = ["./assets/icon.png"]
 out_dir = "./dist"
 
@@ -145,6 +158,12 @@ Output: `.exe` installer in `./dist/`
 
 ### macOS
 
+Unsigned local packaging and signed distribution are different operations.
+Before using a signing identity or notarization credential, confirm the app
+identifier, artifact hash, credential source, signing identity, destination,
+and authorization to sign. Never print or persist signing secrets in the
+repository.
+
 ```bash
 # Build package
 cargo packager --release
@@ -193,9 +212,13 @@ Mobile platforms use `cargo-makepad` for building and packaging.
 
 ### Install cargo-makepad
 
+Select a reviewed commit from the official Makepad repository and record the
+full SHA. Do not install from a moving branch or tag. Confirm before replacing
+an existing global binary.
+
 ```bash
 cargo install --force --git https://github.com/makepad/makepad.git \
-    --branch dev cargo-makepad
+    --rev <APPROVED_FULL_COMMIT_SHA> cargo-makepad
 ```
 
 ### Android
@@ -238,6 +261,8 @@ Output: `.app` in `./target/makepad-apple-app/aarch64-apple-ios-sim/release/`
 **iOS Device (requires provisioning):**
 
 First, create an empty app in Xcode with matching org/app names to generate provisioning profile.
+Before signing or installing on a device, confirm the bundle identifier, device,
+profile, certificate fingerprint, and authorization to use those credentials.
 
 ```bash
 cargo makepad apple ios \
@@ -252,6 +277,11 @@ cargo makepad apple ios \
 Output: `.app` in `./target/makepad-apple-app/aarch64-apple-ios/release/`
 
 **Create IPA for distribution:**
+
+Creating an IPA is local packaging only. Uploading it to TestFlight, an app
+store, or another distribution service requires separate explicit approval for
+the account, application, artifact hash, and destination.
+
 ```bash
 cd ./target/makepad-apple-app/aarch64-apple-ios/release
 mkdir Payload
@@ -297,7 +327,7 @@ version = "1.0.0"
 edition = "2024"
 
 [dependencies]
-makepad-widgets = { git = "https://github.com/makepad/makepad", branch = "dev" }
+makepad-widgets = { git = "https://github.com/makepad/makepad", rev = "<APPROVED_FULL_COMMIT_SHA>" }
 
 [profile.release]
 opt-level = 3
@@ -365,10 +395,10 @@ appdata_paths = ["$LOCALAPPDATA/$PRODUCTNAME"]
 
 | Task | Command |
 |------|---------|
-| Install desktop packager | `cargo install cargo-packager --locked` |
-| Install resource helper | `cargo install --version 0.2.1 --locked --git https://github.com/project-robius/robius-packaging-commands.git robius-packaging-commands` |
-| Install mobile packager | `cargo install --force --git https://github.com/makepad/makepad.git --branch dev cargo-makepad` |
-| GitHub Actions packaging | `uses: Project-Robius-China/makepad-packaging-action@v1` |
+| Install desktop packager | `cargo install cargo-packager --version 0.11.8 --locked` |
+| Install resource helper | `cargo install --locked --git https://github.com/project-robius/robius-packaging-commands.git --rev 475203484dcd99e41419eb47719d2d17e1cea059 robius-packaging-commands` |
+| Install mobile packager | `cargo install --force --git https://github.com/makepad/makepad.git --rev <APPROVED_FULL_COMMIT_SHA> cargo-makepad` |
+| GitHub Actions packaging | Pin each action as `owner/repo@<APPROVED_FULL_COMMIT_SHA>` |
 | Package for Linux | `cargo packager --release` |
 | Package for Windows | `cargo packager --release --formats nsis` |
 | Package for macOS | `cargo packager --release` |
@@ -403,12 +433,6 @@ For iOS device deployment:
 cargo makepad android install-toolchain --full-ndk
 ```
 
-## Reference Files
-
-- `references/platform-troubleshooting.md` - Platform-specific deployment issues
-- `references/makepad-packaging-action.md` - GitHub Actions packaging reference
-- `community/dora-studio-package-workflow.md` - Dora Studio CI packaging example
-
 ## External References
 
 - [cargo-packager docs](https://docs.crabnebula.dev/packager/)
@@ -418,5 +442,9 @@ cargo makepad android install-toolchain --full-ndk
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
+- Global installation, signing, upload, and release creation require separate,
+  explicit approval for their exact target and credentials.
+- Treat placeholders such as `<APPROVED_FULL_COMMIT_SHA>` as mandatory inputs;
+  never replace them with a moving branch or tag.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

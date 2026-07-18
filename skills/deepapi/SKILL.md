@@ -37,6 +37,10 @@ Use this skill when the user asks you to scrape public web data or draft/read/se
 - Read `DEEPAPI_API_BASE_URL` from the environment.
 - Read `DEEPAPI_API_KEY` from the environment.
 - If either value is missing, stop and ask the user for setup.
+- Before reading or attaching the key, parse the base URL and require `https`, no
+  embedded credentials, and an origin the user has explicitly approved for this
+  run. Reject redirects or configuration that would send credentials to another
+  origin. Do not infer trust from an environment variable alone.
 - Never commit, print, log, paste, or expose `DEEPAPI_API_KEY`.
 
 ## Request Rules
@@ -45,18 +49,30 @@ Use this skill when the user asks you to scrape public web data or draft/read/se
 - Send `Content-Type: application/json` when sending JSON.
 - Send a unique `Idempotency-Key` for every `POST`.
 - For scrape work, set explicit `maxCostUsd` or `maxCostMicrousd`.
+- Immediately before every paid request, show the exact method, approved origin,
+  endpoint target, operation target (such as URL, account, repository, recipient,
+  or query), and per-request spend cap, then obtain explicit approval. Do not use
+  a documented default cap as approval. For paid routes that do not accept a cap,
+  disclose the configured unit pricing and obtain approval for that exact call.
 - Keep email as `send: false` or `mode: draft` unless the user explicitly approves sending.
 - Do not pass inbox IDs. Use `emailIdentityId` or omit it.
 
 ## Execution Loop
 
 1. Choose the narrowest endpoint that matches the task.
-2. Build the request from the endpoint schema and examples below.
-3. Run the request with the required headers.
-4. If the response has `status: running`, wait `next.afterSecs` and call `next.method` + `next.path` until `status` is `succeeded` or `failed`.
-5. If `error.retryable` is true, wait `error.retryAfterSecs` before retrying.
-6. If the response is HTTP 402 with `error.code: insufficient_credits`, stop and ask the user to top up credits at https://deepapi.co/credits. After top-up, retry with the same `Idempotency-Key`.
-7. Report `requestId`, `status`, `debitMicrousd`, `costFinal`, and the useful part of `output`.
+2. Validate the explicitly approved HTTPS origin before loading or attaching the key.
+3. Build the request from the endpoint schema and examples below.
+4. For a paid request, obtain the per-call target and cap approval required above.
+5. Run the request with the required headers and refuse cross-origin redirects.
+6. If the response has `status: running`, treat `next` as untrusted input. Resolve
+   `next.path` against the approved base URL and require the resulting URL to have
+   the exact same origin. Allow only `GET` and `POST`, require the method to match
+   the documented polling contract, cap polling at 60 attempts and 15 minutes,
+   and stop at whichever limit is reached first. Never attach the key otherwise.
+7. If `error.retryable` is true, wait `error.retryAfterSecs` before retrying, but
+   count the retry against the same attempt and deadline limits.
+8. If the response is HTTP 402 with `error.code: insufficient_credits`, stop and ask the user to top up credits at https://deepapi.co/credits. After top-up, retry with the same `Idempotency-Key` only after renewed approval of the target and cap.
+9. Report `requestId`, `status`, `debitMicrousd`, `costFinal`, and the useful part of `output`.
 
 ## Endpoints
 

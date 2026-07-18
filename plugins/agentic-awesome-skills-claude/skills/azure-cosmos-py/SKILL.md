@@ -46,9 +46,13 @@ client = CosmosClient(url=endpoint, credential=credential)
 
 ## Core Workflow
 
+Before any create or throughput update, confirm the intended Azure account/endpoint, database and container names, throughput mode and RU/s, expected cost impact, and authorization to modify those resources. Immediately before a replace, upsert, or delete, re-display the exact account, database, container, item ID, and partition-key value; require explicit approval for that operation and target. Do not infer destructive approval from an earlier setup confirmation.
+
 ### Setup Database and Container
 
 ```python
+from azure.cosmos import PartitionKey
+
 # Get or create database
 database = client.create_database_if_not_exists(id="mydb")
 
@@ -91,6 +95,9 @@ print(f"Name: {item['name']}")
 
 ### Update Item (Replace)
 
+After reading the current item, show the proposed field-level diff and obtain the
+target-bound replace approval described above before calling `replace_item`.
+
 ```python
 item = container.read_item(item="item-001", partition_key="electronics")
 item["price"] = 899.99
@@ -100,6 +107,9 @@ updated = container.replace_item(item=item["id"], body=item)
 ```
 
 ### Upsert Item
+
+Resolve whether the target ID already exists. If it exists, treat the upsert as a
+replace and obtain immediate approval for the displayed diff and exact partition.
 
 ```python
 # Create if not exists, replace if exists
@@ -114,6 +124,10 @@ result = container.upsert_item(body=item)
 ```
 
 ### Delete Item
+
+Read and display the exact item ID and partition-key value first. Require a fresh,
+explicit delete approval, confirm any retention or recovery requirement, and only
+then call `delete_item`.
 
 ```python
 container.delete_item(
@@ -190,7 +204,7 @@ container = database.create_container_if_not_exists(
     partition_key=PartitionKey(path="/customer_id")
 )
 
-# Hierarchical partition key (preview)
+# Hierarchical partition key
 container = database.create_container_if_not_exists(
     id="events",
     partition_key=PartitionKey(path=["/tenant_id", "/user_id"])
@@ -270,14 +284,6 @@ except CosmosHttpResponseError as e:
 5. **Use async client** for high-throughput scenarios
 6. **Design partition key** for even data distribution
 7. **Use `read_item`** instead of query for single document retrieval
-
-## Reference Files
-
-| File | Contents |
-|------|----------|
-| references/partitioning.md | Partition key strategies, hierarchical keys, hot partition detection and mitigation |
-| references/query-patterns.md | Query optimization, aggregations, pagination, transactions, change feed |
-| scripts/setup_cosmos_container.py | CLI tool for creating containers with partitioning, throughput, and indexing |
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
