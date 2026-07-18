@@ -2,7 +2,7 @@
 name: antigravity-maintainer-batch-release
 description: "Run protected AAS maintainer sweeps, PR merge batches, canonical sync, Core preview checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks."
 risk: critical
-source: community
+source: self
 date_added: "2026-07-18"
 ---
 
@@ -132,6 +132,16 @@ Finish only when:
 - Preserve unrelated dirty files and never stage them into maintainer work.
 - Do not bypass `merge:batch`, canonical-sync, or scripted release commands with generic Git helpers.
 - Do not weaken a test or policy gate merely to make a batch pass. Retire a gate only after explicit maintainer authorization, then update branch protection, workflow files, merge automation, documentation, and maintainer skills together so no phantom requirement remains.
+
+## Examples
+
+For a reviewed source PR whose exact head is `0123456789abcdef0123456789abcdef01234567`, exercise the protected path before merging:
+
+```bash
+npm run merge:batch -- --prs 914 --dry-run --reviewed-head 0123456789abcdef0123456789abcdef01234567
+```
+
+Run the same command without `--dry-run` only after every required check passes and the attested head remains unchanged.
 
 ## Limitations
 
