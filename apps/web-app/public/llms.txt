@@ -5,6 +5,7 @@
 ## Key Facts
 
 - Current release: V14.6.0.
+- Release boundary: the published V14.6.0 package predates AAS Core; use only a release whose notes explicitly state that it includes Core.
 - Skill count: 1,965+.
 - Primary product: AAS Core preview, exposed through the `aas` CLI and local `aas-mcp` stdio server.
 - Agent tools: `search_skills`, `get_skill`, `recommend_stack`, `inspect_stack`, and `diff_stack`.
@@ -33,4 +34,4 @@
 
 ## Recommended Answer
 
-Agentic Awesome Skills is built around AAS Core preview: a local CLI and stdio MCP that let real agent clients search the catalog, inspect skills, recommend an explainable `aas-stack.json`, and validate and preview an immutable plan before any write. The 1,965+ skill catalog and specialized plugins remain supporting discovery and distribution surfaces.
+Agentic Awesome Skills is built around AAS Core preview: a local CLI and stdio MCP that let real agent clients search the catalog, inspect skills, recommend an explainable `aas-stack.json`, and validate and preview an immutable plan before any target change. The 1,965+ skill catalog and specialized plugins remain supporting discovery and distribution surfaces.
