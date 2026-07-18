@@ -1,29 +1,32 @@
 # AI Agent Skills
 
-If you are researching **AI agent skills** on GitHub, the biggest decision is usually not "which single skill is best?" but "do I want a broad installable library or a smaller curated collection?"
+If you are researching **AI agent skills** on GitHub, the useful first decision is whether you want deterministic project-level composition or manual selection from a catalog.
 
-Agentic Awesome Skills is built for the first path: broad coverage, multiple supported tools, installation help, onboarding docs, bundles, workflows, and a catalog that supports both beginner and advanced users.
+Agentic Awesome Skills is built around **AAS Core**: Codex or Claude inspects the project, sends an explicit profile to the local AAS MCP, and receives an explainable recommendation from the verified catalog. The agent proposes `aas-stack.json`; the CLI validates it and produces an immutable preview plan before any target change.
 
-## What to look for in an AI agent skills library
+The catalog, plugins, bundles, workflows, and direct installer remain supporting content and distribution surfaces. AAS does not scan the repository, call a remote model, or write project files through MCP.
 
-- **Installability**: can you put the skills where your tool expects them without manual copying?
-- **Supported tools**: does the repo work with Claude Code, Cursor, Codex CLI, Gemini CLI, and related environments?
-- **Breadth vs curation**: do you want many options or a smaller shortlist of high-signal entries?
-- **Onboarding quality**: are there docs, bundles, workflows, and examples, or only raw files?
-- **Trust model**: does the repo identify official sources, security posture, and community review expectations?
+## What to look for in an AI agent skill system
+
+- **Explicit input boundary**: is project analysis performed by the coding agent and passed as a reviewable profile?
+- **Deterministic recommendation**: can the same profile, policy, runtime, and catalog identity reproduce the same result?
+- **Explainability**: do recommendations include evidence, exclusions, uncovered goals, and unknowns?
+- **Durable desired state**: can the approved selection be recorded independently of the agent conversation?
+- **Preview before change**: can the system validate the manifest and produce an exact plan without changing the target?
+- **Source and compatibility evidence**: are provenance, risk, host support, and distribution boundaries explicit?
 
 ## When Agentic Awesome Skills is a good fit
 
-- You want one library that spans planning, coding, debugging, testing, security, infra, product, and marketing.
-- You care about installation paths and practical onboarding, not only catalog size.
-- You want bundles and workflows to reduce choice overload.
-- You need compatibility across more than one AI coding assistant.
+- You use Codex or Claude and want a small, policy-controlled stack for a real project.
+- You want local search and recommendation without repository scanning or remote-model calls by AAS.
+- You need a reviewable `aas-stack.json` and CLI validation and planning before target changes.
+- You also value a broad catalog and multiple distribution options around the Core workflow.
 
 ## When a smaller curated repo may be better
 
-- You only want a narrow shortlist of highly curated or vendor-focused skills.
-- You prefer reviewing fewer files even if coverage is lower.
-- You are evaluating alternatives for a single tool and want a quick comparison first.
+- You only want a fixed, vendor-maintained shortlist and do not need project-aware composition.
+- You prefer selecting and invoking individual skills manually.
+- Your host does not yet have an AAS Core adapter and direct distribution is sufficient.
 
 ## Start with a tool-specific guide
 
@@ -32,7 +35,7 @@ Agentic Awesome Skills is built for the first path: broad coverage, multiple sup
 - [`codex-cli-skills.md`](codex-cli-skills.md)
 - [`gemini-cli-skills.md`](gemini-cli-skills.md)
 
-## Compare broad vs curated libraries
+## Compare catalogs and distribution models
 
 - [`agentic-awesome-skills-vs-awesome-claude-skills.md`](agentic-awesome-skills-vs-awesome-claude-skills.md)
 - [`best-claude-code-skills-github.md`](best-claude-code-skills-github.md)
@@ -40,6 +43,6 @@ Agentic Awesome Skills is built for the first path: broad coverage, multiple sup
 
 ## Quick recommendation
 
-- Choose **Agentic Awesome Skills** if you want a large, installable, multi-tool library with onboarding help.
-- Choose a smaller curated repo if you want fewer choices and more editorial filtering.
-- If you are unsure, install this repo first, start with [`bundles.md`](bundles.md), and then compare alternatives once you know your preferred workflow.
+- Choose **AAS Core** if you want local, deterministic, explainable skill-stack composition from an explicit project profile to a preview plan.
+- Choose direct distribution if you already know the exact skills you want or your host does not support the Core path.
+- Choose a smaller curated repository if a fixed editorial shortlist matters more than project-specific recommendation and durable desired state.
