@@ -172,7 +172,7 @@ Empty states are onboarding opportunities, not dead ends.
 - Profile completeness
 
 **Best practices:**
-- Show only progress earned by completed actions; never initialize a percentage above the user's actual state
+- Show early progress (start at 20%, not 0%)
 - Quick early wins (first items easy to complete)
 - Clear benefit of completing
 - Don't block features behind completion
@@ -335,7 +335,7 @@ For each issue:
 ### Flow Simplification Experiments
 
 **Reduce Friction**
-- Test the timing or method of email verification only when equivalent identity assurance is preserved; do not remove required ownership verification
+- Add or remove email verification during onboarding
 - Test empty states vs. pre-populated dummy data
 - Provide pre-filled templates to accelerate setup
 - Add OAuth options for faster account linking

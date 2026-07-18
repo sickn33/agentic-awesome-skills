@@ -1,6 +1,6 @@
 ---
 name: code-refactoring-tech-debt
-description: "Identify and prioritize evidence-backed technical debt in a defined repository scope, quantify impact only from observed or project-supplied data, and create actionable remediation plans."
+description: "You are a technical debt expert specializing in identifying, quantifying, and prioritizing technical debt in software projects. Analyze the codebase to uncover debt, assess its impact, and create acti"
 risk: unknown
 source: community
 date_added: "2026-02-27"
@@ -21,18 +21,16 @@ You are a technical debt expert specializing in identifying, quantifying, and pr
 - You need a different domain or tool outside this scope
 
 ## Context
-The user needs an evidence-backed technical debt analysis to understand what's slowing down development, increasing bugs, and creating maintenance challenges. Focus on practical, measurable improvements within the agreed scope.
+The user needs a comprehensive technical debt analysis to understand what's slowing down development, increasing bugs, and creating maintenance challenges. Focus on practical, measurable improvements with clear ROI.
 
 ## Requirements
 $ARGUMENTS
-
-Define the inspected repository scope and evidence sources before analysis, and report any excluded paths or unavailable measurements. Do not claim complete coverage beyond what was actually inspected. Treat numeric thresholds as configurable heuristics, not universal defect criteria. Use observed project data or project-supplied rates for cost and ROI; when inputs are unavailable, mark the estimate unknown or clearly label illustrative assumptions.
 
 ## Instructions
 
 ### 1. Technical Debt Inventory
 
-Within the agreed scope, scan for relevant types of technical debt:
+Conduct a thorough scan for all types of technical debt:
 
 **Code Debt**
 - **Duplicated Code**
@@ -103,7 +101,7 @@ Within the agreed scope, scan for relevant types of technical debt:
 
 ### 2. Impact Assessment
 
-Estimate the cost of each debt item from observed or project-supplied inputs. The numbers below are illustrative only:
+Calculate the real cost of each debt item:
 
 **Development Velocity Impact**
 ```
@@ -137,7 +135,7 @@ Annual Cost: $48,600
 
 ### 3. Debt Metrics Dashboard
 
-Create measurable KPIs from observed data, marking unavailable values explicitly. The values below are illustrative only:
+Create measurable KPIs:
 
 **Code Quality Metrics**
 ```yaml
@@ -180,7 +178,7 @@ debt_trends = {
 
 ### 4. Prioritized Remediation Plan
 
-Create an actionable roadmap based on supported ROI estimates. If required inputs are unavailable, prioritize by documented risk and effort and mark ROI as unknown:
+Create an actionable roadmap based on ROI:
 
 **Quick Wins (High Value, Low Effort)**
 Week 1-2:

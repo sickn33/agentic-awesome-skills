@@ -2,12 +2,8 @@
 name: postgres-best-practices
 description: "Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations."
 risk: safe
-source: https://github.com/supabase/agent-skills/tree/main/skills/supabase-postgres-best-practices
-source_repo: supabase/agent-skills
-source_type: official
+source: community
 date_added: "2026-02-27"
-license: MIT
-license_source: https://github.com/supabase/agent-skills/blob/main/LICENSE
 ---
 
 # Supabase Postgres Best Practices
@@ -42,7 +38,7 @@ Read individual rule files for detailed explanations and SQL examples:
 
 ```
 rules/query-missing-indexes.md
-rules/query-partial-indexes.md
+rules/schema-partial-indexes.md
 rules/_sections.md
 ```
 

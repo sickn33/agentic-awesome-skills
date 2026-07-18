@@ -288,14 +288,19 @@ from langgraph.graph import StateGraph
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.checkpoint.postgres import PostgresSaver
 
-# Saver factories are context managers; keep the connection open while invoking.
-with SqliteSaver.from_conn_string("agent_state.db") as memory:
-    app = graph.compile(checkpointer=memory)
-    config = {"configurable": {"thread_id": "user-123-session-1"}}
-    result = app.invoke({"messages": [("user", "Hello")]}, config)
+# SQLite for development
+memory = SqliteSaver.from_conn_string(":memory:")
+# Or persistent file
+memory = SqliteSaver.from_conn_string("agent_state.db")
 
-# For PostgreSQL, use PostgresSaver.from_conn_string(DATABASE_URL) as a context
-# manager and call memory.setup() once when initializing the database schema.
+# PostgreSQL for production
+# memory = PostgresSaver.from_conn_string(DATABASE_URL)
+
+# Compile with checkpointer
+app = graph.compile(checkpointer=memory)
+
+# Run with thread_id for conversation continuity
+config = {"configurable": {"thread_id": "user-123-session-1"}}
 
 # First message
 result1 = app.invoke(
@@ -387,8 +392,8 @@ Run multiple branches in parallel
 
 **When to use**: Parallel research, batch processing
 
-from langgraph.graph import StateGraph, START, END
-from langgraph.types import Send
+from langgraph.graph import StateGraph, START, END, Send
+from langgraph.constants import Send
 
 class ParallelState(TypedDict):
     topics: list[str]

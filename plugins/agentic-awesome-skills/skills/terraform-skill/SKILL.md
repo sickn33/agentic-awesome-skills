@@ -298,8 +298,6 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 }
 
 resource "aws_subnet" "public" {
-  count = var.add_secondary_cidr ? 1 : 0
-
   vpc_id     = local.vpc_id  # Uses local, not direct reference
   cidr_block = "10.1.0.0/24"
 }
@@ -309,6 +307,8 @@ resource "aws_subnet" "public" {
 - Prevents deletion errors when destroying infrastructure
 - Ensures correct dependency order without explicit `depends_on`
 - Particularly useful for VPC configurations with secondary CIDR blocks
+
+**For detailed examples, see:** Code Patterns: Locals for Dependency Management
 
 ## Module Development
 
@@ -494,10 +494,22 @@ variable "backup_days" {
 
 Both are fully supported by this skill. For licensing, governance, and feature comparison, see Quick Reference: Terraform vs OpenTofu.
 
+## Detailed Guides
+
+This skill uses **progressive disclosure** - essential information is in this main file, detailed guides are available when needed:
+
+📚 **Reference Files:**
+- **Testing Frameworks** - In-depth guide to static analysis, native tests, and Terratest
+- **Module Patterns** - Module structure, variable/output best practices, ✅ DO vs ❌ DON'T patterns
+- **CI/CD Workflows** - GitHub Actions, GitLab CI templates, cost optimization, automated cleanup
+- **Security & Compliance** - Trivy/Checkov integration, secrets management, compliance testing
+- **Quick Reference** - Command cheat sheets, decision flowcharts, troubleshooting guide
+
+**How to use:** When you need detailed information on a topic, reference the appropriate guide. Claude will load it on demand to provide comprehensive guidance.
+
 ## License
 
-The upstream source declares the **Apache License 2.0**. Confirm applicable
-license and attribution requirements at the source before redistributing it.
+This skill is licensed under the **Apache License 2.0**. See the LICENSE file for full terms.
 
 **Copyright © 2026 Anton Babenko**
 

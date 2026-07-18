@@ -26,8 +26,6 @@ spec:
 
 ---
 # Template 2: LoadBalancer Service (External Access)
-# Applying this resource requires explicit approval for the exact context,
-# namespace, ingress ranges, annotations, expected exposure, and cost.
 apiVersion: v1
 kind: Service
 metadata:
@@ -61,8 +59,6 @@ spec:
 
 ---
 # Template 3: NodePort Service (Direct Node Access)
-# Applying this resource requires explicit approval for the exact context,
-# namespace, port, allowed source networks, and expected exposure.
 apiVersion: v1
 kind: Service
 metadata:

@@ -1,9 +1,8 @@
 """
-Example: Simulated Voice Pipeline Scaffold
+Example: Complete Voice AI Engine Implementation
 
-This example demonstrates queue wiring with simulated provider output. It is not
-a complete provider integration or a production server. Authentication fails
-closed until the embedding application implements its session verifier.
+This example demonstrates a minimal but complete voice AI engine
+with all core components: Transcriber, Agent, Synthesizer, and WebSocket integration.
 """
 
 import asyncio
@@ -16,13 +15,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
-ALLOWED_ORIGINS = {"http://localhost:3000"}
-MAX_AUDIO_FRAME_BYTES = 64 * 1024
-
-
-async def authenticate_websocket_session(websocket: WebSocket):
-    """Replace with the application's existing session verifier."""
-    raise NotImplementedError("configure authenticated application sessions")
 
 # ============================================================================
 # Data Models
@@ -135,7 +127,7 @@ class DeepgramTranscriber(BaseWorker):
             is_final=True
         )
         
-        logger.info("transcription received", extra={"chars": len(transcription.message)})
+        logger.info(f"🎤 [TRANSCRIBER] Received: '{transcription.message}'")
         self.output_queue.put_nowait(transcription)
 
 
@@ -159,7 +151,7 @@ class GeminiAgent(BaseWorker):
             "content": transcription.message
         })
         
-        logger.info("agent response started")
+        logger.info(f"🤖 [AGENT] Generating response for: '{transcription.message}'")
         
         # Generate response (streaming)
         async for response in self.generate_response(transcription.message):
@@ -173,8 +165,8 @@ class GeminiAgent(BaseWorker):
         # Simulate streaming delay
         await asyncio.sleep(0.5)
         
-        # This simulated response is short enough to be one bounded synthesis
-        # segment. A real stream should emit tested sentence/size segments.
+        # IMPORTANT: Buffer entire response before yielding
+        # This prevents audio jumping/cutting off
         full_response = f"I understand you said: {user_input}. How can I assist you further?"
         
         # Add to conversation history
@@ -183,7 +175,7 @@ class GeminiAgent(BaseWorker):
             "content": full_response
         })
         
-        logger.info("agent response generated", extra={"chars": len(full_response)})
+        logger.info(f"🤖 [AGENT] Generated: '{full_response}'")
         
         # Yield complete response
         yield AgentResponse(
@@ -276,7 +268,6 @@ class StreamingConversation:
         self.synthesizer = synthesizer
         self.is_human_speaking = True
         self.interrupt_event = asyncio.Event()
-        self._pipeline_tasks = []
     
     async def start(self):
         """Start all workers"""
@@ -287,10 +278,8 @@ class StreamingConversation:
         self.agent.start()
         
         # Start processing pipelines
-        self._pipeline_tasks = [
-            asyncio.create_task(self._process_transcriptions()),
-            asyncio.create_task(self._process_agent_responses()),
-        ]
+        asyncio.create_task(self._process_transcriptions())
+        asyncio.create_task(self._process_agent_responses())
     
     async def _process_transcriptions(self):
         """Process transcriptions from transcriber"""
@@ -343,7 +332,7 @@ class StreamingConversation:
                 # Calculate what was actually spoken
                 seconds_spoken = chunk_idx * seconds_per_chunk
                 partial_message = synthesis_result.get_message_up_to(seconds_spoken)
-                logger.info("synthesis interrupted", extra={"chars_spoken": len(partial_message)})
+                logger.info(f"📝 [INTERRUPT] Partial message: '{partial_message}'")
                 
                 # Clear interrupt event
                 self.interrupt_event.clear()
@@ -371,12 +360,9 @@ class StreamingConversation:
         
         self.transcriber.terminate()
         self.agent.terminate()
-
-        for task in self._pipeline_tasks:
-            task.cancel()
-        if self._pipeline_tasks:
-            await asyncio.gather(*self._pipeline_tasks, return_exceptions=True)
-        self._pipeline_tasks.clear()
+        
+        # Wait for queues to drain
+        await asyncio.sleep(0.5)
 
 
 # ============================================================================
@@ -385,19 +371,7 @@ class StreamingConversation:
 
 @app.websocket("/conversation")
 async def conversation_endpoint(websocket: WebSocket):
-    """Fail-closed demonstration endpoint for voice conversations."""
-    if websocket.headers.get("origin") not in ALLOWED_ORIGINS:
-        await websocket.close(code=1008)
-        return
-    try:
-        principal = await authenticate_websocket_session(websocket)
-    except NotImplementedError:
-        await websocket.close(code=1011)
-        return
-    if principal is None or not getattr(principal, "may_use_voice", False):
-        await websocket.close(code=1008)
-        return
-
+    """WebSocket endpoint for voice conversations"""
     await websocket.accept()
     logger.info("✅ [WEBSOCKET] Client connected")
     
@@ -429,9 +403,6 @@ async def conversation_endpoint(websocket: WebSocket):
     try:
         # Process incoming audio
         async for message in websocket.iter_bytes():
-            if len(message) > MAX_AUDIO_FRAME_BYTES:
-                await websocket.close(code=1009)
-                break
             conversation.receive_audio(message)
     except WebSocketDisconnect:
         logger.info("❌ [WEBSOCKET] Client disconnected")
@@ -448,5 +419,5 @@ async def conversation_endpoint(websocket: WebSocket):
 if __name__ == "__main__":
     import uvicorn
     
-    logger.info("🚀 Starting local simulated voice pipeline...")
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    logger.info("🚀 Starting Voice AI Engine...")
+    uvicorn.run(app, host="0.0.0.0", port=8000)

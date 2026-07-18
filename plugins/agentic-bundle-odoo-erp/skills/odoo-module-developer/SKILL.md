@@ -9,7 +9,7 @@ source: "self"
 
 ## Overview
 
-This skill guides Odoo custom module work: scaffolding modules, defining models, setting up security, and following Odoo coding conventions for Community and Enterprise editions. Select and verify the target Odoo major version before generating code; the example below targets Odoo 17.
+This skill transforms your AI into an expert Odoo custom module developer. It guides you through scaffolding new modules, defining models, setting up security, and following Odoo's coding conventions for both Community and Enterprise editions.
 
 ## When to Use This Skill
 
@@ -84,39 +84,6 @@ class HospitalPatient(models.Model):
     ], default='draft', tracking=True)
 ```
 
-**Required imports:**
-
-```python
-# hospital_management/__init__.py
-from . import models
-
-# hospital_management/models/__init__.py
-from . import hospital_patient
-```
-
-**`security/ir.model.access.csv`:**
-
-```csv
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hospital_patient_user,hospital.patient user,model_hospital_patient,base.group_user,1,1,1,0
-```
-
-**`views/hospital_patient_views.xml`:**
-
-```xml
-<odoo>
-  <record id="view_hospital_patient_list" model="ir.ui.view">
-    <field name="name">hospital.patient.list</field>
-    <field name="model">hospital.patient</field>
-    <field name="arch" type="xml">
-      <tree><field name="name"/><field name="birth_date"/><field name="doctor_id"/><field name="state"/></tree>
-    </field>
-  </record>
-</odoo>
-```
-
-Before installation, add automated tests for model constraints and access behavior, then test with a disposable database on the selected Odoo version. Review the ACL against the real roles; the sample ACL is illustrative, not a production authorization policy.
-
 ## Best Practices
 
 - ✅ **Do:** Always prefix your model `_name` with a namespace (e.g., `hospital.patient`).
@@ -130,6 +97,6 @@ Before installation, add automated tests for model constraints and access behavi
 ## Limitations
 
 - Does not cover **OWL JavaScript components** or frontend widget development — use `@odoo-xml-views-builder` for view XML.
-- Odoo APIs and XML syntax vary by major release. This example is verified for Odoo 17; consult the official documentation for the selected version. Odoo 13 already uses `__manifest__.py`.
+- **Odoo 13 and below** have a different module structure (no `__manifest__.py` auto-loading) — this skill targets v14+.
 - Does not cover **multi-company** or **multi-website** configuration; those require additional model fields (`company_id`, `website_id`).
-- The example does not include automated test files; tests and a disposable-database install check are required before deployment.
+- Does not generate automated test files — use `@odoo-automated-tests` for that.

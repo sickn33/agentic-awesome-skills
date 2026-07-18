@@ -137,11 +137,7 @@ export class UserStore {
     this._error.set(null);
 
     try {
-      const response = await fetch(`/api/users/${id}`);
-      if (!response.ok) {
-        throw new Error(`Failed to load user: ${response.status}`);
-      }
-      const user = await response.json();
+      const user = await fetch(`/api/users/${id}`).then((r) => r.json());
       this._user.set(user);
     } catch (e) {
       this._error.set("Failed to load user");
@@ -172,7 +168,7 @@ import {
   withComputed,
   patchState,
 } from "@ngrx/signals";
-import { computed, inject } from "@angular/core";
+import { inject } from "@angular/core";
 import { ProductService } from "./product.service";
 
 interface ProductState {
@@ -483,10 +479,9 @@ export class TodoStore extends ComponentStore<TodoState> {
 
 ```typescript
 // services/api.service.ts
-import { computed, Injectable, signal, inject } from "@angular/core";
+import { Injectable, signal, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { firstValueFrom } from "rxjs";
 
 interface ApiState<T> {
   data: T | null;

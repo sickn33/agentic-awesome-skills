@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 You are a configuration management expert specializing in validating, testing, and ensuring the correctness of application configurations. Create comprehensive validation schemas, implement configuration testing strategies, and ensure configurations are secure, consistent, and error-free across all environments.
 
-## When to Use
+## Use this skill when
 
 - Working on configuration validation tasks or workflows
 - Needing guidance, best practices, or checklists for configuration validation
@@ -187,7 +187,6 @@ export const schemas = {
 
 ```python
 from typing import Dict, List, Any
-from urllib.parse import urlparse
 
 class EnvironmentValidator:
     def __init__(self):
@@ -223,31 +222,12 @@ class EnvironmentValidator:
         if rules['require_https']:
             urls = self._extract_urls(config)
             for url_path, url in urls:
-                parsed = urlparse(url)
-                local_host = parsed.hostname in {'localhost', '127.0.0.1', '::1'}
-                if parsed.scheme != 'https' and not local_host:
+                if url.startswith('http://') and 'localhost' not in url:
                     violations.append({
                         'rule': 'require_https',
                         'message': f'HTTPS required for {url_path}',
                         'severity': 'high'
                     })
-
-        password = config.get('database', {}).get('password', '')
-        if len(password) < rules['min_password_length']:
-            violations.append({
-                'rule': 'minimum_password_length',
-                'message': f"Password must be at least {rules['min_password_length']} characters",
-                'severity': 'critical'
-            })
-
-        if rules.get('require_encryption'):
-            ssl_enabled = config.get('database', {}).get('ssl', {}).get('enabled') is True
-            if not ssl_enabled:
-                violations.append({
-                    'rule': 'database_encryption_required',
-                    'message': 'Production database transport encryption must be enabled',
-                    'severity': 'critical'
-                })
 
         return violations
 ```
@@ -398,22 +378,72 @@ class ConfigMigrator:
 
 ### 7. Secure Configuration
 
-Do not invent application-level cryptography or derive long-lived encryption keys
-from configuration strings. Store only secret references in configuration and let
-an approved managed secret service or KMS enforce encryption, rotation, access
-control, and audit logging. Validation should fail when production contains a
-literal secret where a provider reference is required.
-
 ```typescript
-type SecretReference = {
-  provider: 'aws-secrets-manager' | 'azure-key-vault' | 'gcp-secret-manager';
-  resource: string;
-  version?: string;
-};
+import * as crypto from 'crypto';
 
-export function requireSecretReference(value: unknown): asserts value is SecretReference {
-  if (!value || typeof value !== 'object' || !('provider' in value) || !('resource' in value)) {
-    throw new Error('Production secrets must be managed-provider references');
+interface EncryptedValue {
+  encrypted: true;
+  value: string;
+  algorithm: string;
+  iv: string;
+  authTag?: string;
+}
+
+export class SecureConfigManager {
+  private encryptionKey: Buffer;
+
+  constructor(masterKey: string) {
+    this.encryptionKey = crypto.pbkdf2Sync(masterKey, 'config-salt', 100000, 32, 'sha256');
+  }
+
+  encrypt(value: any): EncryptedValue {
+    const algorithm = 'aes-256-gcm';
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(algorithm, this.encryptionKey, iv);
+
+    let encrypted = cipher.update(JSON.stringify(value), 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+
+    return {
+      encrypted: true,
+      value: encrypted,
+      algorithm,
+      iv: iv.toString('hex'),
+      authTag: cipher.getAuthTag().toString('hex')
+    };
+  }
+
+  decrypt(encryptedValue: EncryptedValue): any {
+    const decipher = crypto.createDecipheriv(
+      encryptedValue.algorithm,
+      this.encryptionKey,
+      Buffer.from(encryptedValue.iv, 'hex')
+    );
+
+    if (encryptedValue.authTag) {
+      decipher.setAuthTag(Buffer.from(encryptedValue.authTag, 'hex'));
+    }
+
+    let decrypted = decipher.update(encryptedValue.value, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    return JSON.parse(decrypted);
+  }
+
+  async processConfig(config: any): Promise<any> {
+    const processed = {};
+
+    for (const [key, value] of Object.entries(config)) {
+      if (this.isEncryptedValue(value)) {
+        processed[key] = this.decrypt(value as EncryptedValue);
+      } else if (typeof value === 'object' && value !== null) {
+        processed[key] = await this.processConfig(value);
+      } else {
+        processed[key] = value;
+      }
+    }
+
+    return processed;
   }
 }
 ```

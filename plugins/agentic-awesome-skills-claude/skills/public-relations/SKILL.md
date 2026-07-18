@@ -1,6 +1,6 @@
 ---
 name: public-relations
-description: Use when the user wants help with public relations, earned media, press coverage, journalist outreach, press releases, or media strategy (not pull requests).
+description: When the user wants help with public relations, earned media, press coverage, journalist outreach, or media strategy (not pull requests). Also use when the user mentions 'PR,' 'public relations,' 'press,' 'press release,' 'press coverage,' 'media outreach,' 'pitch a journalist,' 'get...
 risk: unknown
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/public-relations
 source_repo: coreyhaines31/marketingskills
@@ -13,7 +13,7 @@ license_source: https://github.com/coreyhaines31/marketingskills/blob/main/LICEN
 # Public Relations & Earned Media
 ## When to Use
 
-Use this skill for public relations, earned media, press coverage, press releases, journalist outreach, media lists, pitching, or media strategy. Do not use it for pull requests.
+Use this skill when you need when the user wants help with public relations, earned media, press coverage, journalist outreach, or media strategy (not pull requests). Also use when the user mentions 'PR,' 'public relations,' 'press,' 'press release,' 'press coverage,' 'media outreach,' 'pitch a journalist,' 'get...
 
 
 You are an expert in earned media for software products. Your goal is to help the user get covered by journalists, podcasts, and newsletters — efficiently, with respect for the people on the other end of the pitch.
@@ -56,14 +56,14 @@ Four modes. Most teams over-index on one. Run at least three.
 |------|------------|--------|-------------------|
 | **Reactive (newsjacking)** | Inject your POV into trending news | Low–medium | Hours to days |
 | **Proactive (pitching)** | Build a media list, pitch original stories | High | 2–8 weeks |
-| **Inbound (press requests)** | Respond to relevant journalist request feeds or direct source requests | Low | Days to weeks |
+| **Inbound (press requests)** | Respond to journalist queries on HARO/Qwoted/Featured | Low | Days to weeks |
 | **Owned (press page + media kit)** | Make it easy for journalists to find you | One-time setup | N/A |
 
 **For the reactive newsjacking workflow** — see [references/newsjacking.md](references/newsjacking.md)
 
 **For proactive journalist pitching** — see [references/journalist-pitching.md](references/journalist-pitching.md)
 
-**For inbound press-request channels** — see [references/press-platforms.md](references/press-platforms.md). Verify that any named service is currently operating before recommending it.
+**For inbound press-request platforms (HARO, Qwoted, etc.)** — see [references/press-platforms.md](references/press-platforms.md)
 
 **For where to pitch (media outlets, podcasts, newsletters)** — see [references/media-outlets.md](references/media-outlets.md). For startup/SaaS/AI directories, use the separate `directory-submissions` skill — different intent, different list.
 
@@ -100,7 +100,6 @@ Before sending any pitch, the answer to all of these should be yes:
 - [ ] Is the pitch under 150 words?
 - [ ] Did you avoid the words "revolutionary," "game-changing," "disruptive," and "synergy"?
 - [ ] Is the ask clear? (Interview? Embargo? Exclusive? Quote?)
-- [ ] Has the user approved the recipients and final message before any external outreach is sent?
 
 If any answer is no, don't send.
 
@@ -134,7 +133,7 @@ Go to [journalist-pitching.md](references/journalist-pitching.md), use the disco
 ### "What's worth pitching this week?"
 Combine: recent product milestones + active news cycles + any data you've collected. Score each potential story by the quality bar above.
 
-### "Respond to this journalist source request"
+### "Respond to this HARO query"
 Go to [press-platforms.md](references/press-platforms.md), use the response template, keep it under 200 words.
 
 ### "Build my press page"
@@ -145,4 +144,3 @@ Use the checklist above. Most companies do this in an afternoon and forget about
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
-- Draft and research without sending; obtain explicit user approval before contacting journalists, outlets, or platform users.

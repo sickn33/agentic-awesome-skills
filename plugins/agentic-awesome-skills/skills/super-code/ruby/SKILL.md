@@ -177,8 +177,8 @@ value = hash.fetch(key, default)
 # ❌ Inline rescue hiding errors
 result = dangerous_operation rescue nil
 
-# ✅ — avoid swallowing unrelated StandardError during parsing
-result = Integer(input, exception: false)
+# ✅ — inline rescue only for truly trivial fallbacks
+result = Integer(input) rescue nil  # acceptable for parsing
 ```
 
 ---

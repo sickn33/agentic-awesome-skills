@@ -109,14 +109,6 @@ export default function MyComponent({ content }: Props) {
 
 ## Exposing Native Actions to the Webview
 
-### Security Boundary
-
-- Treat DOM component content as untrusted at the native bridge, even when TypeScript types are present.
-- Bundle trusted local content by default. For remote pages or embeds, allowlist exact origins and enforce navigation and content-security policies appropriate to the app.
-- Validate the schema, type, length, and range of every argument again in native code. Do not pass credentials, raw privileged capabilities, or authorization decisions into the webview.
-- Authorize sensitive actions in the native layer and require explicit user confirmation for destructive, financial, or otherwise consequential operations.
-- Reject unexpected origins and messages, and test the boundary on iOS, Android, and web before release.
-
 Pass async functions as props to expose native functionality to the DOM component:
 
 ```tsx

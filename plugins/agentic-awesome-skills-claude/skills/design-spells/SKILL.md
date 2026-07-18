@@ -1,4 +1,4 @@
----
+--- 
 name: design-spells
 description: Curated micro-interactions and design details that add "magic" and personality to websites and apps.
 risk: safe
@@ -25,16 +25,15 @@ Trigger this skill when:
 ## Execution Workflow
 
 1. **Identify Opportunity**: Target the "boring" or "standard" parts of the interface (e.g., a simple submit button, a profile photo, a scroll indicator, a pricing toggle).
-2. **Research Spells**: If browsing is available, use Design Spells as inspiration and record the source page; otherwise work from approved project references.
-3. **Adapt Pattern**: Reimplement the idea for the project's brand rather than copying proprietary code or assets.
-4. **Validate**: Test keyboard and touch operation, `prefers-reduced-motion`, layout stability, and representative low-powered devices before shipping.
+2. **Research Spells**: Browse Design Spells for highly creative patterns (e.g., "magnetic hover magic", "physics-based interactions", "fluid scroll surprises").
+3. **Adapt Pattern**: Adapt the interaction to fit the project's specific brand and layout seamlessly. Use it to enhance the core narrative of the app.
+4. **Implement flawlessly**: Use CSS, Anime.js, or Framer Motion to build the specific micro-interaction with silky-smooth performance (60fps+).
 
 ## Strict Rules
 
-- **Project Fit First**: Use decorative motion only when the user and product requirements call for it.
+- **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. DO NOT build in the common style and ways. Look for every opportunity to inject "magic" into standard components.
 - **Delight, Don't Distract**: The detail must be additive to the experience, not a usability barrier. It should feel expensive and highly crafted.
 - **Quality Execution**: A broken or janky "spell" is worse than none. Ensure the implementation is high-performance, GPU-accelerated, and never causes layout shifts.
-- **Accessibility**: Preserve semantics, focus behavior, contrast, and a reduced-motion or no-motion path.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

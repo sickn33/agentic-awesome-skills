@@ -40,8 +40,6 @@ spec:
 
 Exposes the service on each Node's IP at a static port (30000-32767 range).
 
-Creating a NodePort changes external reachability. Require explicit approval for the exact context, namespace, ports, and allowed source networks before applying it.
-
 ```yaml
 apiVersion: v1
 kind: Service
@@ -72,8 +70,6 @@ spec:
 ### 3. LoadBalancer
 
 Exposes the service using a cloud provider's load balancer.
-
-Creating a LoadBalancer can expose traffic publicly and incur cost. Require explicit approval for the exact context, namespace, ingress ranges, annotations, and expected cost before applying it.
 
 ```yaml
 apiVersion: v1
@@ -487,8 +483,6 @@ spec:
 
 ### Pattern 2: Public API with Load Balancer
 
-This is an external-exposure example. Do not apply it until the target context and namespace, source ranges, certificate, policy result, and diff have been reviewed and explicitly approved.
-
 ```yaml
 apiVersion: v1
 kind: Service
@@ -557,32 +551,26 @@ spec:
   type: ExternalName
   externalName: prod-db.cxyz.us-west-2.rds.amazonaws.com
 ---
-# Or with an EndpointSlice for an IP-based external service
+# Or with Endpoints for IP-based external service
 apiVersion: v1
 kind: Service
 metadata:
   name: external-api
 spec:
   ports:
-  - name: https
-    port: 443
+  - port: 443
     targetPort: 443
     protocol: TCP
 ---
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
+apiVersion: v1
+kind: Endpoints
 metadata:
-  name: external-api-1
-  labels:
-    kubernetes.io/service-name: external-api
-addressType: IPv4
-ports:
-- name: https
-  protocol: TCP
-  port: 443
-endpoints:
+  name: external-api
+subsets:
 - addresses:
-  - 203.0.113.100
+  - ip: 203.0.113.100
+  ports:
+  - port: 443
 ```
 
 ### Pattern 5: Multi-Port Service with Metrics
@@ -685,29 +673,23 @@ spec:
 
 ### Service not accessible
 
-Run these read-only checks only against a context and namespace that the user has named. Substitute the approved values before execution.
-
 ```bash
 # Check service exists
-kubectl --context <approved-context> --namespace <approved-namespace> \
-  get service <service-name>
+kubectl get service <service-name>
 
-# Check EndpointSlices (should show backend addresses)
-kubectl --context <approved-context> --namespace <approved-namespace> \
-  get endpointslices -l kubernetes.io/service-name=<service-name>
+# Check endpoints (should show pod IPs)
+kubectl get endpoints <service-name>
 
 # Describe service
-kubectl --context <approved-context> --namespace <approved-namespace> \
-  describe service <service-name>
+kubectl describe service <service-name>
 
 # Check if pods match selector
-kubectl --context <approved-context> --namespace <approved-namespace> \
-  get pods -l app=<app-name>
+kubectl get pods -l app=<app-name>
 ```
 
 **Common issues:**
 - Selector doesn't match pod labels
-- No ready pods or external backends (EndpointSlices have no ready addresses)
+- No pods running (endpoints empty)
 - Ports misconfigured
 - Network policy blocking traffic
 
@@ -715,34 +697,28 @@ kubectl --context <approved-context> --namespace <approved-namespace> \
 
 ```bash
 # Test DNS from pod
-kubectl --context <approved-context> --namespace <approved-namespace> \
-  run debug --rm -it --image=busybox -- nslookup <service-name>
+kubectl run debug --rm -it --image=busybox -- nslookup <service-name>
 
 # Check CoreDNS
-kubectl --context <approved-context> --namespace kube-system \
-  get pods -l k8s-app=kube-dns
-kubectl --context <approved-context> --namespace kube-system \
-  logs -l k8s-app=kube-dns
+kubectl get pods -n kube-system -l k8s-app=kube-dns
+kubectl logs -n kube-system -l k8s-app=kube-dns
 ```
 
 ### Load balancer issues
 
 ```bash
 # Check load balancer status
-kubectl --context <approved-context> --namespace <approved-namespace> \
-  describe service <service-name>
+kubectl describe service <service-name>
 
 # Check events
-kubectl --context <approved-context> --namespace <approved-namespace> \
-  get events --sort-by='.lastTimestamp'
+kubectl get events --sort-by='.lastTimestamp'
 
 # Verify cloud provider configuration
-kubectl --context <approved-context> describe node
+kubectl describe node
 ```
 
 ## Related Resources
 
-- [Kubernetes Service API Reference](https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/)
-- [Kubernetes EndpointSlice API Reference](https://kubernetes.io/docs/reference/kubernetes-api/service-resources/endpoint-slice-v1/)
+- [Kubernetes Service API Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#service-v1-core)
 - [Service Networking](https://kubernetes.io/docs/concepts/services-networking/service/)
 - [DNS for Services and Pods](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)

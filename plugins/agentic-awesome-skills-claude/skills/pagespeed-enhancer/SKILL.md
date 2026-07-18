@@ -111,7 +111,7 @@ Security headers are often unflagged by Lighthouse score but are critical. Check
 | Content Security Policy | `Content-Security-Policy` | `netlify.toml` `[[headers]]` / `vercel.json` `"headers"` | 🔴 High |
 | Cross-Origin-Opener-Policy | `COOP` header | Same as above | 🔴 High |
 | Clickjacking protection | `X-Frame-Options` or CSP `frame-ancestors` | Same as above | 🔴 High |
-| HSTS configuration | Start with a short `max-age`; add `includeSubDomains` or `preload` only after ownership and HTTPS readiness are verified | Same as above | 🔴 High |
+| HSTS configuration | `Strict-Transport-Security` with `includeSubDomains` + `preload` | Same as above | 🟡 Medium |
 | Trusted Types (DOM XSS) | CSP `require-trusted-types-for 'script'` | Same as above | 🟡 Medium |
 | X-Content-Type-Options | `nosniff` header | Same as above | 🟡 Medium |
 | Referrer-Policy | `strict-origin-when-cross-origin` | Same as above | 🟡 Medium |
@@ -152,7 +152,7 @@ After completing all four batch scans, output a consolidated **Risk vs Impact Ma
 | Add CSP header                   | Security    | 🟡 Medium  | 3h     | P2       |
 | Code-split main JS bundle        | High (TBT -20ms)     | 🟡 Medium | 1 day | P2       |
 | Fix forced reflows               | Medium (TBT -15ms)   | 🔴 High   | 2 days | P3       |
-| Evaluate HSTS preload eligibility | Security   | 🔴 High    | Varies | P3       |
+| Add HSTS preload                 | Security    | 🟡 Medium  | 30min  | P2       |
 ```
 
 **Risk Level Definitions:**
@@ -174,7 +174,7 @@ Apply fixes in risk order. For each fix, provide:
 4. **Expected metric improvement** — estimated delta
 5. **How to verify** — what to check after deploying
 
-### Fix Batch 1 — Low-Risk Candidates (review before deployment)
+### Fix Batch 1 — Quick Wins (Low Risk, deploy immediately)
 
 Examples from common audits:
 
@@ -241,9 +241,7 @@ Image.open('input.jpg').save('output.webp', 'WebP', quality=80)
 <img src="hero.webp" alt="..." width="800" height="400">
 ```
 
-**F1.6 — Stage security headers (netlify.toml)**
-
-Start CSP in report-only mode, derive allowed origins from observed traffic, and remove `unsafe-inline` by using nonces or hashes before enforcement. Start HSTS with a short `max-age`; add `includeSubDomains` and submit for preload only after every subdomain is HTTPS-ready, controlled by the same owner, and rollback has been tested.
+**F1.6 — Add security headers (netlify.toml)**
 ```toml
 [[headers]]
   for = "/*"
@@ -251,13 +249,13 @@ Start CSP in report-only mode, derive allowed origins from observed traffic, and
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Strict-Transport-Security = "max-age=300"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
     Cross-Origin-Opener-Policy = "same-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.rss2json.com"
 ```
 
-**F1.7 — Stage security headers (vercel.json)**
+**F1.7 — Add security headers (vercel.json)**
 ```json
 {
   "headers": [
@@ -267,10 +265,10 @@ Start CSP in report-only mode, derive allowed origins from observed traffic, and
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Strict-Transport-Security", "value": "max-age=300" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Content-Security-Policy-Report-Only", "value": "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.rss2json.com" }
       ]
     }
   ]
@@ -572,3 +570,10 @@ After each fix batch, log what changed and whether it caused build failures:
 If **Build Pass?** is **No**, run `npm run build` to see the exact error, revert the failed fix immediately, and re-test before applying the next batch.
 
 ---
+
+## References
+
+See `references/` for deep-dives:
+- `references/performance-deep-dive.md` — LCP, CLS, TBT root cause trees
+- `references/security-headers.md` — Complete CSP/HSTS/COOP reference
+- `references/image-optimization.md` — WebP/AVIF conversion pipelines

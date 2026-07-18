@@ -1,12 +1,16 @@
 ---
 name: expo-ui-jetpack-compose
-description: "Use Expo SDK 55 Jetpack Compose views and modifiers through @expo/ui/jetpack-compose, including Host sizing and Android-native UI integration."
+description: expo-ui-jetpack-compose
 risk: unknown
 source: community
 ---
 
+---
+name: expo-ui-jetpack-compose
+description: `@expo/ui/jetpack-compose` package lets you use Jetpack Compose Views and modifiers in your app.
+---
+
 > The instructions in this skill apply to SDK 55 only. For other SDK versions, refer to the Expo UI Jetpack Compose docs for that version for the most accurate information.
-> Expo UI Jetpack Compose is alpha in SDK 55, may change without notice, and is unavailable in Expo Go. Use a development build.
 
 ## When to Use
 - You need to build Android-native UI in Expo using `@expo/ui/jetpack-compose`.
@@ -36,7 +40,7 @@ import { fillMaxWidth, paddingAll } from "@expo/ui/jetpack-compose/modifiers";
 <Host matchContents>
   <Column verticalArrangement={{ spacedBy: 8 }} modifiers={[fillMaxWidth(), paddingAll(16)]}>
     <Text style={{ typography: "titleLarge" }}>Hello</Text>
-    <Button onClick={() => alert("Pressed!")}>Press me</Button>
+    <Button onPress={() => alert("Pressed!")}>Press me</Button>
   </Column>
 </Host>;
 ```

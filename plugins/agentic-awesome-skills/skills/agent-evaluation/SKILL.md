@@ -117,24 +117,15 @@ class StatisticalEvaluator {
     }
 
     private analyzeResults(results: TestResult[]): StatisticalAnalysis {
-        if (results.length === 0) {
-            throw new Error("At least one test result is required");
-        }
-
         const passes = results.filter(r => r.passed);
         const passRate = passes.length / results.length;
 
-        // Wilson interval remains meaningful at pass rates of 0 and 1.
+        // Calculate confidence interval for pass rate
         const z = 1.96;  // 95% confidence
-        const n = results.length;
-        const denominator = 1 + (z * z) / n;
-        const center = (passRate + (z * z) / (2 * n)) / denominator;
-        const margin = (z / denominator) * Math.sqrt(
-            (passRate * (1 - passRate)) / n + (z * z) / (4 * n * n)
-        );
+        const se = Math.sqrt((passRate * (1 - passRate)) / results.length);
         const confidence95: [number, number] = [
-            Math.max(0, center - margin),
-            Math.min(1, center + margin)
+            Math.max(0, passRate - z * se),
+            Math.min(1, passRate + z * se)
         ];
 
         const scores = results.map(r => r.score);
@@ -165,7 +156,7 @@ class StatisticalEvaluator {
                     [...behaviorSets[i]].filter(x => behaviorSets[j].has(x))
                 );
                 const union = new Set([...behaviorSets[i], ...behaviorSets[j]]);
-                consistencySum += union.size === 0 ? 1 : intersection.size / union.size;
+                consistencySum += intersection.size / union.size;
                 comparisons++;
             }
         }

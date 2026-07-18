@@ -25,13 +25,14 @@ Master workflow orchestration architecture with Temporal, covering fundamental d
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
+- If detailed examples are required, open `resources/implementation-playbook.md`.
 
 ## When to Use Workflow Orchestration
 
 ### Ideal Use Cases (Source: docs.temporal.io)
 
 - **Multi-step processes** spanning machines/services/databases
-- **Distributed business processes** requiring durable coordination and explicit compensation; sagas do not provide atomic all-or-nothing transactions
+- **Distributed transactions** requiring all-or-nothing semantics
 - **Long-running workflows** (hours to years) with automatic state persistence
 - **Failure recovery** that must resume from last successful step
 - **Business processes**: bookings, orders, campaigns, approvals
@@ -78,7 +79,7 @@ Master workflow orchestration architecture with Temporal, covering fundamental d
 - Can be non-deterministic (API calls, DB writes)
 - Include built-in timeouts and retry logic
 - **Must be idempotent** (calling N times = calling once)
-- Usually bounded and brief; long-running activities are supported when their timeout, cancellation, retry, and heartbeat behavior is designed explicitly
+- Short-lived (seconds to minutes typically)
 
 **Example activity tasks:**
 
@@ -98,7 +99,7 @@ Is it orchestration/decision logic? → Workflow
 
 ### 1. Saga Pattern with Compensation
 
-**Purpose**: Coordinate a distributed process with compensating actions after partial completion. Compensation is application-defined recovery, not an atomic rollback and may itself fail.
+**Purpose**: Implement distributed transactions with rollback capability
 
 **Pattern** (Source: temporal.io/blog/compensating-actions-part-of-a-complete-breakfast-with-sagas):
 
@@ -219,7 +220,7 @@ For each step:
 
 **Solutions**:
 
-1. **SDK-specific versioning API**: Use the versioning mechanism documented for the selected Temporal SDK and server version; API names differ by language (for example, `workflow.get_version()` is not universal)
+1. **Versioning API**: Use `workflow.get_version()` for safe changes
 2. **New Workflow Type**: Create new workflow, route new executions to it
 3. **Backward Compatibility**: Ensure old events replay correctly
 
@@ -227,7 +228,7 @@ For each step:
 
 ### Retry Policies
 
-**Default Behavior**: Retry behavior depends on the selected SDK, namespace/server settings, activity timeouts, and any explicit Retry Policy. Inspect the effective configuration rather than assuming unbounded retries.
+**Default Behavior**: Temporal retries activities forever
 
 **Configure Retry**:
 
@@ -280,7 +281,7 @@ For each step:
 ### Activity Design
 
 1. **Idempotent operations** - Safe to retry
-2. **Bounded execution** - Prefer brief activities; for long-running work, configure timeouts, cancellation, retries, and heartbeats deliberately
+2. **Short-lived** - Seconds to minutes, not hours
 3. **Timeout configuration** - Always set timeouts
 4. **Heartbeat for long tasks** - Report progress
 5. **Error handling** - Distinguish retryable vs non-retryable

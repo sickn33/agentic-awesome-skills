@@ -1,19 +1,17 @@
 ---
 name: top-web-vulnerabilities
-description: "Use a structured, non-exhaustive reference of common web application vulnerability patterns to support authorized assessment, impact analysis, and remediation planning."
-risk: offensive
+description: "Provide a comprehensive, structured reference for the 100 most critical web application vulnerabilities organized by category. This skill enables systematic vulnerability identification, impact assessment, and remediation guidance across the full spectrum of web security threats."
+risk: unknown
 source: community
 author: zebbern
 date_added: "2026-02-27"
 ---
 
-> AUTHORIZED USE ONLY: Use active testing techniques only with written permission, within the approved scope and rules of engagement, or in a controlled educational environment.
-
-# Web Vulnerability Patterns Reference
+# Top 100 Web Vulnerabilities Reference
 
 ## Purpose
 
-Provide a structured, non-exhaustive reference of common web application vulnerability patterns organized by category. Use it to support authorized identification, impact assessment, and remediation; it is not a ranked list, a complete test plan, or a substitute for current OWASP guidance, threat modeling, or technology-specific review.
+Provide a comprehensive, structured reference for the 100 most critical web application vulnerabilities organized by category. This skill enables systematic vulnerability identification, impact assessment, and remediation guidance across the full spectrum of web security threats. Content organized into 15 major vulnerability categories aligned with industry standards and real-world attack patterns.
 
 ## Prerequisites
 
@@ -25,23 +23,12 @@ Provide a structured, non-exhaustive reference of common web application vulnera
 
 ## Outputs and Deliverables
 
-- Selected vulnerability patterns with definitions, root causes, impacts, and mitigations
+- Complete vulnerability catalog with definitions, root causes, impacts, and mitigations
 - Category-based vulnerability groupings for systematic assessment
 - Quick reference for security testing and remediation
 - Foundation for vulnerability assessment checklists and security policies
 
 ---
-
-## Mandatory Assessment Gate
-
-Passive reading and remediation planning are allowed without touching a target. Before any active request, payload, credential test, privilege test, out-of-band callback, fault injection, or availability test:
-
-1. Obtain written authorization and record the exact in-scope hosts, APIs, accounts, data, permitted techniques, excluded systems, approved source IPs, nonproduction or production status, test window, rate/concurrency ceiling, monitoring contact, and emergency stop contact.
-2. Prefer an isolated lab, staging environment, or dedicated test tenant. Production testing requires explicit approval for the specific action and expected impact.
-3. Present the individual action, target, payload class, expected evidence, possible impact, request limit, rollback or cleanup plan, and stop conditions; obtain explicit operator approval for that action. Approval for scanning does not authorize exploitation, credential attacks, privilege escalation, out-of-band callbacks, or denial-of-service behavior.
-4. Stop on scope uncertainty, unexpected sensitive data, service degradation, account lockout, defensive alerts, third-party interaction, or an owner request. Preserve evidence and notify the named contact.
-
-Never evade a WAF, rate limit, monitoring control, or network restriction through source rotation, encoding, fragmentation, alternate infrastructure, or similar techniques unless the exact method is explicitly permitted by the rules of engagement. Use the least-impactful verification that establishes the finding.
 
 ## Core Workflow
 
@@ -241,7 +228,7 @@ Assess authorization enforcement:
 - Definition: Direct URL manipulation to access restricted resources
 - Root Cause: Weak access controls, predictable URLs
 - Impact: Unauthorized file/directory access
-- Mitigation: Enforce server-side authorization on every object and action; do not rely on hidden or unpredictable resource paths
+- Mitigation: Server-side access controls, unpredictable resource paths
 
 **Missing Function-Level Access Control (44)**
 - Definition: Unprotected administrative or privileged functions
@@ -492,22 +479,20 @@ Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: geolocation=(), microphone=()
 ```
 
-### OWASP Top 10:2025 Mapping
+### OWASP Top 10 Mapping
 
-This is an approximate cross-reference, not a claim that the numbered patterns fully cover each OWASP category.
-
-| OWASP 2025 | Related Vulnerabilities |
+| OWASP 2021 | Related Vulnerabilities |
 |------------|------------------------|
 | A01: Broken Access Control | 40-44, 23, 74 |
-| A02: Security Misconfiguration | 26-36 |
-| A03: Software Supply Chain Failures | 34, 98-100 |
-| A04: Cryptographic Failures | 24-25, 53-55 |
-| A05: Injection | 1-13, 37-39 |
-| A06: Insecure Design | 74, 92-97 |
+| A02: Cryptographic Failures | 24-25, 53-55 |
+| A03: Injection | 1-13, 37-39 |
+| A04: Insecure Design | 74, 92-97 |
+| A05: Security Misconfiguration | 26-36 |
+| A06: Vulnerable Components | 34, 98-100 |
 | A07: Auth Failures | 14-23, 85-86 |
-| A08: Software or Data Integrity Failures | 45-47 |
-| A09: Security Logging and Alerting Failures | 73 |
-| A10: Mishandling of Exceptional Conditions | Relevant error-handling and fail-open cases require separate review |
+| A08: Data Integrity | 45-47 |
+| A09: Logging Failures | 73 |
+| A10: SSRF | 66, 87-88 |
 
 ---
 
@@ -519,7 +504,6 @@ This is an approximate cross-reference, not a claim that the numbered patterns f
 - Some vulnerabilities overlap across categories (e.g., IDOR appears in multiple contexts)
 - Effectiveness of mitigations depends on proper implementation
 - Automated scanners cannot detect all vulnerability types (especially business logic)
-- The historical numbering has gaps and overlaps; it is retained only for cross-reference and does not establish completeness or priority
 
 ---
 
@@ -532,23 +516,21 @@ This is an approximate cross-reference, not a claim that the numbered patterns f
 | False positives in scanning | Manual verification, contextual analysis |
 | Business logic flaws missed | Manual testing, threat modeling, abuse case analysis |
 | Encrypted traffic analysis | Proxy configuration, certificate installation |
-| WAF blocking tests | Stop, verify ROE and monitoring coordination, then resume only with explicit approval; do not evade the control by default |
+| WAF blocking tests | Rate adjustment, IP rotation, payload encoding |
 | Session handling issues | Cookie management, authentication state tracking |
 | API discovery | Swagger/OpenAPI enumeration, traffic analysis |
 
 ### Vulnerability Verification Techniques
 
-Use these techniques only after the per-action gate above. Keep requests within the approved rate/window, use controlled accounts and callback infrastructure, avoid unrelated data, and stop at the minimum evidence needed. Availability-impacting tests require a nonproduction target unless production impact is explicitly authorized.
-
 | Vulnerability Type | Verification Approach |
 |-------------------|----------------------|
-| Injection | Benign proof payloads; encoded variants only when the ROE explicitly permits them |
+| Injection | Payload testing with encoded variants |
 | XSS | Alert boxes, cookie access, DOM inspection |
 | CSRF | Cross-origin form submission testing |
 | SSRF | Out-of-band DNS/HTTP callbacks |
 | XXE | External entity with controlled server |
 | Access Control | Horizontal/vertical privilege testing |
-| Authentication | Dedicated test credentials, bounded session analysis |
+| Authentication | Credential rotation, session analysis |
 
 ---
 

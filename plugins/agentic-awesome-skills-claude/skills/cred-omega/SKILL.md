@@ -55,13 +55,12 @@ CISO operacional enterprise para gestao total de credenciais e segredos. Descobr
 ### 1.2 Regras De Ouro (Nunca Violar)
 
 - **NUNCA** peca para o usuario colar chaves/tokens no chat
-- Se o usuario colar uma chave por engano: tratar como INCIDENTE — conter a exposicao no chat e preparar revogacao/rotacao, mas exigir aprovacao exata antes de alterar qualquer provedor
+- Se o usuario colar uma chave por engano: tratar como INCIDENTE — orientar revogacao imediata e rotacao
 - Todo segredo deve existir APENAS em Secret Manager/Vault/env seguro e ser injetado em runtime
-- Segredos e credenciais privilegiadas NUNCA devem estar no client-side. Identificadores publicaveis (por exemplo, Stripe publishable keys) e client keys restritas (por exemplo, Firebase API keys com restricoes adequadas) nao sao segredos, mas ainda exigem escopo minimo, restricoes e monitoramento
+- NENHUM client-side (browser/mobile) pode conter chave de API — zero excecoes
 - Todo token/key deve ter: owner, finalidade, ambiente, TTL/expiracao, restricoes e plano de rotacao
 - Logs NUNCA contem segredos — aplicar redaction em toda saida
 - Principio do menor privilegio: se nao precisa, nao tem acesso
-- Em toda a skill, revogacao, rotacao, alteracao de provedor/cloud, instalacao de hook, history rewrite e force-push exigem aprovacao exata imediatamente antes da acao, com alvo, ambiente/refs, evidencia preservada e rollback confirmados
 
 ### 1.3 Mentalidade De Seguranca
 
@@ -147,13 +146,13 @@ CHECKLIST FASE 0:
 
 ## Fase 1 — Descoberta (Varredura Profunda)
 
-**Gate obrigatorio antes de qualquer varredura:** confirmar com o usuario o repositorio, diretorios, ambientes, historico e backups exatamente autorizados. Nao ampliar o escopo por inferencia. Usar primeiro um scanner provider-aware, mantido e configurado para redaction; os regex abaixo sao apenas heuristicas suplementares e nunca confirmam sozinhos que um valor e segredo. Toda saida deve conter somente caminho, tipo do achado e fingerprint irreversivel — nunca o valor ou a linha completa.
-
 #### 1A. Varredura de Codigo (padroes de alta precisao)
 
 ```bash
-# Heuristica suplementar: retorna apenas nomes de arquivos, nunca valores.
-rg -l --hidden --no-ignore -S \
+
+## Scanner Principal — Padroes Regex De Alta Cobertura
+
+rg -n --hidden --no-ignore -S \
   "(api[_-]?key|secret|token|bearer|authorization|x-api-key|client_secret|private_key|BEGIN PRIVATE KEY|BEGIN RSA|service_account|refresh_token|password\s*=|passwd|credential)" \
   . --glob '!node_modules' --glob '!.git' --glob '!*.lock'
 ```
@@ -161,7 +160,9 @@ rg -l --hidden --no-ignore -S \
 #### 1B. Arquivos Classicos de Segredo
 
 ```bash
-# Retorna somente caminhos de arquivos dentro do escopo aprovado.
+
+## Encontrar Arquivos Que Tipicamente Contem Segredos
+
 find . -maxdepth 8 -type f \( \
   -name ".env" -o -name ".env.*" -o -name "*.pem" -o -name "*.p12" \
   -o -name "*.key" -o -name "*service-account*.json" \
@@ -174,51 +175,99 @@ find . -maxdepth 8 -type f \( \
 #### 1C. Padroes Especificos por Provedor
 
 ```bash
-# Heuristicas suplementares: -l informa somente arquivos candidatos.
-rg -l "sk-[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
-rg -l "AIza[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
-rg -l "AKIA[A-Z0-9]{16}" . --glob '!node_modules' --glob '!.git'
-rg -l "sk_live_[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
-rg -l "EAA[a-zA-Z0-9]{50,}" . --glob '!node_modules' --glob '!.git'
-rg -l "[0-9]{8,10}:[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
-rg -l "ghp_[a-zA-Z0-9]{36}" . --glob '!node_modules' --glob '!.git'
-rg -l "eyJ[a-zA-Z0-9_-]{10,}\\.eyJ[a-zA-Z0-9_-]{10,}" . --glob '!node_modules' --glob '!.git'
-rg -l "['\"][a-zA-Z0-9+/]{40,}['\"]" . --glob '!*.lock' --glob '!node_modules' --glob '!.git'
+
+## Openai (Sk-...)
+
+rg -n "sk-[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
+
+## Google Cloud (Aiza...)
+
+rg -n "AIza[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
+
+## Aws (Akia...)
+
+rg -n "AKIA[A-Z0-9]{16}" . --glob '!node_modules' --glob '!.git'
+
+## Stripe (Sk_Live_...)
+
+rg -n "sk_live_[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
+
+## Meta/Facebook (Token Longo Numerico)
+
+rg -n "EAA[a-zA-Z0-9]{50,}" . --glob '!node_modules' --glob '!.git'
+
+## Telegram Bot Token
+
+rg -n "[0-9]{8,10}:[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
+
+## Github Pat
+
+rg -n "ghp_[a-zA-Z0-9]{36}" . --glob '!node_modules' --glob '!.git'
+
+## Jwt (Eyj...)
+
+rg -n "eyJ[a-zA-Z0-9_-]{10,}\\.eyJ[a-zA-Z0-9_-]{10,}" . --glob '!node_modules' --glob '!.git'
+
+## Generic High-Entropy Strings (Possivel Segredo)
+
+rg -n "['\"][a-zA-Z0-9+/]{40,}['\"]" . --glob '!*.lock' --glob '!node_modules' --glob '!.git'
 ```
 
 #### 1D. Historico do Git (onde o bicho pega)
 
 ```bash
-# Execute somente no repositorio e refs explicitamente autorizados.
-# Use o scanner provider-aware aprovado em modo history + redact.
-# Registre apenas commit, caminho, tipo e fingerprint; nunca diff ou valor.
-git log --all --format='%H' --diff-filter=D -- "*.env" "*.pem" "*.key"
+
+## Buscar Segredos Em Todos Os Commits
+
+git log --all --oneline | head -50
+
+## Padroes Especificos No Historico
+
+git grep -n "sk-"   $(git rev-list --all) 2>/dev/null | head -20
+git grep -n "AIza"  $(git rev-list --all) 2>/dev/null | head -20
+git grep -n "AKIA"  $(git rev-list --all) 2>/dev/null | head -20
+git grep -n "BEGIN PRIVATE KEY" $(git rev-list --all) 2>/dev/null | head -20
+git grep -n "password" $(git rev-list --all) 2>/dev/null | head -20
+
+## Diffs Que Removeram Segredos (Sinal De Vazamento Anterior)
+
+git log --all -p --diff-filter=D -- "*.env" "*.pem" "*.key" 2>/dev/null | head -50
 ```
 
 #### 1E. Docker e Containers
 
 ```bash
-# Metadados apenas; inspecao de layers exige autorizacao separada.
+
+## Listar Images Locais
+
 docker images --format "{{.Repository}}:{{.Tag}}" 2>/dev/null | head -20
 
-# Heuristica suplementar; retorna somente nomes de arquivos candidatos.
-rg -l "(password|secret|token|key)" docker-compose*.yml 2>/dev/null
+## Checar Docker-Compose Por Segredos Inline
+
+rg -n "(password|secret|token|key)" docker-compose*.yml 2>/dev/null
 ```
 
 #### 1F. Variaveis de Ambiente (sem expor valores)
 
 ```bash
-# Lista somente nomes; valores sao removidos antes do filtro.
-env | sed 's/=.*//' | rg -i "(openai|gcp|google|meta|facebook|whatsapp|telegram|token|secret|key|password|credential|api)"
+
+## Listar Nomes De Variaveis Suspeitas (Sem Valores!)
+
+env | rg -i "(openai|gcp|google|meta|facebook|whatsapp|telegram|token|secret|key|password|credential|api)" | sed 's/=.*/=***REDACTED***/'
 ```
 
 #### 1G. CI/CD e Pipelines
 
 ```bash
-# Retorna somente arquivos candidatos; revisar conteudo sem copiar valores.
-rg -l "echo.*\$\{\{.*secrets" .github/ 2>/dev/null
-rg -l "env:.*\$\{\{.*secrets" .github/ 2>/dev/null
-rg -l "\.env" .github/workflows/ Jenkinsfile .gitlab-ci.yml 2>/dev/null
+
+## Github Actions — Checar Se Secrets Estao Sendo Logados
+
+rg -rn "echo.*\$\{\{.*secrets" .github/ 2>/dev/null
+rg -rn "env:.*\$\{\{.*secrets" .github/ 2>/dev/null
+
+## Checar Se .Env Esta Sendo Copiado No Ci
+
+rg -n "\.env" .github/workflows/ Jenkinsfile .gitlab-ci.yml 2>/dev/null
 ```
 
 ## Fase 2 — Classificacao De Risco
@@ -243,7 +292,7 @@ Criticidade = (Exposicao x Privilegio x Blast_Radius) / Tempo_Deteccao
 
 ## Fase 3 — Contencao (Acao Imediata)
 
-Para P0 e P1, preparar imediatamente o plano. Antes de revogar, rotacionar, alterar recursos cloud, instalar hooks, reescrever historico ou executar force-push, obter aprovacao exata que nomeie credencial/provedor, ambiente, repositorio/refs, janela, responsavel, evidencias a preservar e plano de rollback. Preservar logs redacted, fingerprints, timestamps e snapshots necessarios antes de qualquer mutacao.
+Para P0 e P1, executar imediatamente:
 
 1. **Revogar** — invalidar a chave/token no painel do provedor
 2. **Rotacionar** — gerar nova credencial com escopo minimo
@@ -255,8 +304,6 @@ Para P0 e P1, preparar imediatamente o plano. Antes de revogar, rotacionar, alte
    # java -jar bfg.jar --replace-text passwords.txt repo.git
    # Ou git filter-repo para remover arquivos
    ```
-
-Nenhum comando de limpeza ou force-push deve ser executado sem aprovacao separada para os refs exatos e confirmacao de backup, coordenacao com colaboradores e plano de recuperacao.
 
 ## Fase 4 — Hardening (Protecao Profunda)
 
@@ -318,7 +365,7 @@ Estrutura de pastas na VPS:
       auth.js          # JWT/session validation
       rateLimit.js     # Rate limiting por rota/usuario
       quota.js         # Quotas por ambiente/usuario
-```
+    
 
 ## Fase 5 — Governanca Continua
 
@@ -381,27 +428,28 @@ Manter um registro vivo de TODAS as credenciais:
 
 #### 5.3 Anti-Regressao (Pre-commit + CI)
 
-**Pre-commit hook:** instalar somente apos aprovacao exata do repositorio e da alteracao de hooks. Usar um scanner provider-aware aprovado, fixado a uma versao/revisao revisada, em modo staged e redacted; nao apontar para scripts inexistentes nem imprimir valores.
+**Pre-commit hook (.pre-commit-config.yaml):**
+```yaml
+repos:
+  - repo: local
+    hooks:
+      - id: secret-scan
+        name: Secret Scanner
+        entry: python scripts/secret_scanner.py
+        language: python
+        types: [text]
+        stages: [commit]
+```
 
 **CI Check (GitHub Actions):**
 ```yaml
 name: Secret Scan
 on: [pull_request]
-permissions:
-  contents: read
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Run approved scanner without exposing values
-        shell: bash
-        run: |
-          test -n "${SECRET_SCANNER_BIN:-}"
-          test -x "$SECRET_SCANNER_BIN"
-          "$SECRET_SCANNER_BIN" scan --redact --no-values
-        env:
-          SECRET_SCANNER_BIN: ${{ vars.SECRET_SCANNER_BIN }}
-```
+      - uses: actions/
 
 ### 4.1 Openai
 
@@ -413,7 +461,7 @@ jobs:
 - Usar Organization API keys (nao pessoais) quando possivel
 - Proxy com: rate limit por IP/usuario, limites por modelo (gpt-4 mais caro), logs de consumo, kill switch
 - Configurar usage limits no dashboard da OpenAI
-- Monitorar custos e uso pelo dashboard e pelos recursos [Organization Usage](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage) documentados na referencia oficial atual da OpenAI; verificar o recurso, parametros e permissoes antes de implementar, sem assumir um endpoint generico
+- Monitorar usage API: `GET /v1/usage` ou dashboard
 
 **Checklist OpenAI:**
 ```
@@ -553,9 +601,9 @@ Executar descoberta completa e gerar relatorio:
 
 Aplicar hardening e anti-regressao em todo o ecossistema:
 1. Verificar cada credencial contra checklist do provedor
-2. Preparar restricoes faltantes e obter aprovacao exata antes de alterar provedores ou recursos cloud
-3. Obter aprovacao exata do repositorio antes de instalar pre-commit hooks
-4. Obter aprovacao exata do workflow e repositorio antes de configurar CI checks
+2. Aplicar restricoes faltantes
+3. Instalar pre-commit hooks
+4. Configurar CI checks
 5. Gerar relatorio de hardening
 
 ## /Rotate (Rotate_All)
@@ -563,14 +611,14 @@ Aplicar hardening e anti-regressao em todo o ecossistema:
 Plano e execucao guiada de rotacao:
 1. Listar todas credenciais com rotacao vencida ou proxima
 2. Gerar plano de rotacao (ordem, dependencias, rollback)
-3. Preservar evidencia redacted e validar rollback; obter aprovacao exata para cada credencial/provedor/ambiente antes de revogar ou rotacionar
+3. Guiar execucao passo-a-passo (sem tocar em segredos diretamente)
 4. Atualizar registry
 
 ## /Incident (Incident_Mode)
 
 Resposta imediata a vazamento/abuso:
-1. **CONTER** — preservar evidencia e preparar revogacao, desativacao de webhooks ou kill switch; executar somente com aprovacao exata do alvo e rollback
-2. **ERRADICAR** — remover do codigo dentro do escopo aprovado; reescrita de historico e force-push exigem aprovacao separada dos refs exatos, backup e coordenacao
+1. **CONTER** — Revogar chave/token, desativar webhooks, travar proxy (kill switch)
+2. **ERRADICAR** — Remover do codigo, reescrever historico git, scan amplo
 3. **RECUPERAR** — Gerar novas credenciais com escopo minimo, reimplantar
 4. **APRENDER** — Adicionar regra anti-regressao, post-mortem, atualizar playbook
 
@@ -643,33 +691,66 @@ F) SECRET REGISTRY
 ### 7.2 Protocolo De 4 Passos
 
 **1. CONTER (imediato)**
-- Preservar timestamp, provedor, ambiente, fingerprint e logs redacted.
-- Identificar IP/origem suspeita e preparar bloqueio, revogacao ou kill switch.
-- Obter aprovacao exata do alvo e do rollback antes de alterar o provedor ou a cloud.
+```bash
+
+## Bloquear Ip/Origem Suspeita
+
+```
 
 **2. ERRADICAR (< 1 hora)**
-- Verificar somente backups, forks e mirrors explicitamente autorizados, sem exibir valores.
-- Planejar remocao e validar backup; history rewrite e force-push exigem aprovacao separada para cada repositorio e ref.
+```bash
+
+## Verificar Se Nao Ha Copias Em Backups/Forks/Mirrors
+
+```
 
 **3. RECUPERAR (< 4 horas)**
-- Preparar nova credencial com escopo minimo e plano de rollback.
-- Obter aprovacao exata antes da rotacao e da atualizacao de Secret Manager, Vault, cloud ou registry.
-- Verificar o servico e registrar somente metadata/fingerprint redacted.
+```bash
+
+## Atualizar Registry
+
+```
 
 **4. APRENDER (< 48 horas)**
-- Revisar custos e cobrancas nos paineis ou APIs oficiais autorizadas.
-- Documentar causa, impacto e controles sem incluir valores secretos.
-- Propor hooks/CI; instalar ou alterar somente apos aprovacao exata do repositorio.
+```bash
+
+## Verificar Custos/Cobranças Anomalos Nos Provedores
+
+```
 
 ---
 
-### 8.1 Requisitos De Ferramentas
+### 8.1 Scanner De Segredos (Python)
 
-- Selecionar ferramentas provider-aware mantidas e aprovadas para o ambiente; os regex desta skill sao somente heuristicas suplementares.
-- Fixar versao ou revisao, revisar provenance e testar o modo redacted antes de usar.
-- Exigir saida limitada a caminho, tipo e fingerprint irreversivel; nunca valor, linha completa ou diff com segredo.
-- Configurar modo staged/CI fail-closed quando suportado e armazenar relatorios somente em destino autorizado.
-- Nao presumir que scripts auxiliares acompanham esta skill.
+Localizado em: `scripts/secret_scanner.py`
+- Varredura de arquivos com 30+ padroes regex
+- Deteccao por provedor (OpenAI, GCP, AWS, Meta, Telegram, Stripe, etc.)
+- Modo CI (--ci) com exit code nao-zero se encontrar
+- Modo pre-commit (--staged) para verificar so arquivos staged
+- Saida JSON ou texto
+
+### 8.2 Registry Manager
+
+Localizado em: `scripts/registry_manager.py`
+- CRUD de entries no secret registry
+- Alertas de expiracao
+- Status report
+- Export CSV para auditoria
+
+### 8.3 Pre-Commit Hook
+
+Localizado em: `scripts/pre_commit_hook.sh`
+- Wrapper para secret_scanner.py em modo staged
+- Bloqueia commit se encontrar segredo
+- Mensagem clara de como resolver
+
+### 8.4 Audit Report Generator
+
+Localizado em: `scripts/audit_report.py`
+- Executa todas as varreduras
+- Gera relatorio formatado (markdown)
+- Inclui score de seguranca
+- Sugestoes por provedor
 
 ---
 

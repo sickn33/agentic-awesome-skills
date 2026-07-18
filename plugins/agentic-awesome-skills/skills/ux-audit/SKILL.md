@@ -18,20 +18,14 @@ Use this skill when you need audit screens for UX issues using Nielsen's heurist
 
 ## When NOT to use
 
-- For accessibility-only issues, use a dedicated accessibility audit workflow.
-- For design-system token compliance, use the project's design-system review workflow.
-- For copy or microcopy quality, use a dedicated content review.
-- For brand-new screens that do not exist yet, complete the design flow before auditing.
+- For accessibility-only issues → use `/ss-a11y`
+- For design system token/golden-rule compliance → use `/ss-review`
+- For copy/microcopy quality → use `/ss-copy`
+- For brand new screens that don't exist yet — design first with `/ss-page` or `/ss-flow`
 
 Target: **$ARGUMENTS**
 
 ## Audit Framework
-
-Treat numeric sizes, timing targets, component names, icon libraries, spacing
-grids, and color conventions below as prompts to compare against the target
-product's documented design system and accessibility requirements. They are not
-universal defaults; record a finding only when project evidence or an applicable
-standard supports it.
 
 ### Nielsen's 10 Usability Heuristics
 
@@ -44,7 +38,7 @@ standard supports it.
 
 #### 2. Match Between System and Real World
 - [ ] Labels use user's language, not technical jargon
-- [ ] Icons are recognizable and consistent with the project's approved icon system
+- [ ] Icons are universally recognizable (Lucide standard set)
 - [ ] Number formats match user expectations (comma separators, currency symbols)
 - [ ] Date formats are locale-appropriate
 
@@ -58,9 +52,9 @@ standard supports it.
 #### 4. Consistency and Standards
 - [ ] Same action = same appearance everywhere
 - [ ] Color meanings are consistent (green=success, red=error, brand=active)
-- [ ] Text hierarchy follows the documented type and color system
-- [ ] Repeated components follow documented shadow, radius, and padding tokens
-- [ ] Spacing follows the project's documented spacing scale
+- [ ] Text hierarchy follows the 5-level grayscale system
+- [ ] All cards use the same shadow, radius, padding
+- [ ] Spacing follows the 6px grid system
 
 #### 5. Error Prevention
 - [ ] Destructive buttons are visually distinct (destructive variant)
@@ -108,7 +102,7 @@ standard supports it.
 - [ ] Swipe gestures have visible affordances (carousel indicators)
 
 #### Performance Perception
-- [ ] Loading feedback appears within the product's measured responsiveness target
+- [ ] Skeleton screens appear within 300ms
 - [ ] Optimistic updates for user actions
 - [ ] Above-the-fold content loads first
 - [ ] No layout shift after content loads
@@ -116,7 +110,7 @@ standard supports it.
 #### Safe Areas
 - [ ] Content not hidden behind notch/Dynamic Island
 - [ ] Bottom content not behind home indicator
-- [ ] Bottom navigation respects platform safe-area insets
+- [ ] BottomNav has `pb-safe` padding
 
 ### Dark Pattern Prevention
 - [ ] No forced bottom sheets on entry

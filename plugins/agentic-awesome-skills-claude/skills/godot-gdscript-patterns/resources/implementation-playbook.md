@@ -355,8 +355,8 @@ extends Node
 @export var initial_size: int = 10
 @export var can_grow: bool = true
 
-var _available: Array[CanvasItem] = []
-var _in_use: Array[CanvasItem] = []
+var _available: Array[Node] = []
+var _in_use: Array[Node] = []
 
 func _ready() -> void:
     _initialize_pool()
@@ -365,14 +365,8 @@ func _initialize_pool() -> void:
     for i in initial_size:
         _create_instance()
 
-func _create_instance() -> CanvasItem:
-    var node := pooled_scene.instantiate()
-    if not node is CanvasItem:
-        node.queue_free()
-        push_error("Pooled scene root must inherit CanvasItem")
-        return null
-
-    var instance := node as CanvasItem
+func _create_instance() -> Node:
+    var instance := pooled_scene.instantiate()
     instance.process_mode = Node.PROCESS_MODE_DISABLED
     instance.visible = false
     add_child(instance)
@@ -384,14 +378,12 @@ func _create_instance() -> CanvasItem:
 
     return instance
 
-func get_instance() -> CanvasItem:
-    var instance: CanvasItem
+func get_instance() -> Node:
+    var instance: Node
 
     if _available.is_empty():
         if can_grow:
             instance = _create_instance()
-            if instance == null:
-                return null
             _available.erase(instance)
         else:
             push_warning("Pool exhausted and cannot grow")
@@ -408,7 +400,7 @@ func get_instance() -> CanvasItem:
 
     return instance
 
-func _return_to_pool(instance: CanvasItem) -> void:
+func _return_to_pool(instance: Node) -> void:
     if not instance in _in_use:
         return
 
@@ -714,13 +706,13 @@ func load_game() -> Dictionary:
     var json := file.get_as_text()
     file.close()
 
-    var parsed: Variant = JSON.parse_string(json)
-    if not parsed is Dictionary:
-        save_error.emit("Save data must be a JSON object")
+    var parsed := JSON.parse_string(json)
+    if parsed == null:
+        save_error.emit("Could not parse save data")
         return {}
 
     load_completed.emit()
-    return parsed as Dictionary
+    return parsed
 
 func delete_save() -> void:
     if FileAccess.file_exists(SAVE_PATH):
