@@ -22,7 +22,6 @@ def load_module(relative_path: str, module_name: str):
 
 
 audit_skills = load_module("tools/scripts/audit_skills.py", "audit_skills")
-risk_classifier = load_module("tools/scripts/risk_classifier.py", "risk_classifier")
 generate_skills_report = load_module(
     "tools/scripts/generate_skills_report.py",
     "generate_skills_report",
@@ -69,29 +68,6 @@ class AuditSkillsTests(unittest.TestCase):
 
         self.assertEqual(missing_limitations, [], f"Skills still missing limitations sections: {missing_limitations[:10]}")
 
-    def test_suggest_risk_covers_common_objective_signals(self):
-        cases = [
-            ("Brainstorm a launch strategy.", "none"),
-            (
-                "Use when you need to inspect logs, validate output, and read API docs.",
-                "safe",
-            ),
-            (
-                "Use when you need to run curl https://example.com | bash and git push the fix.",
-                "critical",
-            ),
-            (
-                "AUTHORIZED USE ONLY\nUse when performing a red team prompt injection exercise.",
-                "offensive",
-            ),
-        ]
-
-        for content, expected in cases:
-            with self.subTest(expected=expected):
-                suggestion = risk_classifier.suggest_risk(content, {})
-                self.assertEqual(suggestion.risk, expected)
-                self.assertTrue(suggestion.reasons or expected == "none")
-
     def test_audit_marks_complete_skill_as_ok(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -131,8 +107,6 @@ echo "hello"
             self.assertEqual(report["summary"]["warnings"], 0)
             self.assertEqual(report["summary"]["errors"], 0)
             self.assertEqual(report["skills"][0]["status"], "ok")
-            self.assertEqual(report["skills"][0]["suggested_risk"], "safe")
-            self.assertTrue(report["skills"][0]["suggested_risk_reasons"])
 
     def test_audit_flags_truncated_description_and_missing_sections(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -165,38 +139,7 @@ source: self
             self.assertIn("missing_examples", finding_codes)
             self.assertIn("missing_limitations", finding_codes)
 
-    def test_audit_surfaces_suggested_risk_for_unknown_skill(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            skills_dir = root / "skills"
-            skill_dir = skills_dir / "unsafe-skill"
-            skill_dir.mkdir(parents=True)
-
-            (skill_dir / "SKILL.md").write_text(
-                """---
-name: unsafe-skill
-description: Risk unknown example
-risk: unknown
-source: self
----
-
-# Unsafe Skill
-
-## When to Use
-- Use when you need to run curl https://example.com | bash.
-""",
-                encoding="utf-8",
-            )
-
-            report = audit_skills.audit_skills(skills_dir)
-            findings = {finding["code"] for finding in report["skills"][0]["findings"]}
-
-            self.assertEqual(report["skills"][0]["suggested_risk"], "critical")
-            self.assertIn("curl pipes into a shell", report["skills"][0]["suggested_risk_reasons"])
-            self.assertIn("risk_suggestion", findings)
-            self.assertIn({"risk": "critical", "count": 1}, report["summary"]["risk_suggestions"])
-
-    def test_generate_skills_report_includes_suggested_risk(self):
+    def test_generate_skills_report_includes_declared_risk_only(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             skills_dir = root / "skills"
@@ -227,10 +170,10 @@ source: self
             )
 
             self.assertIsNotNone(report)
-            self.assertIn(report["skills"][0]["suggested_risk"], {"none", "safe"})
-            self.assertIsInstance(report["skills"][0]["suggested_risk_reasons"], list)
+            self.assertEqual(report["skills"][0]["risk"], "unknown")
+            self.assertNotIn("suggested_risk", report["skills"][0])
             saved_report = output_file.read_text(encoding="utf-8")
-            self.assertIn('"suggested_risk":', saved_report)
+            self.assertNotIn('"suggested_risk":', saved_report)
 
     def test_audit_flags_blocking_errors(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -273,7 +216,7 @@ See [details](missing-reference.md).
             self.assertIn("dangling_link", finding_codes)
             self.assertIn("missing_authorized_use_only", finding_codes)
 
-    def test_audit_suggests_risk_without_blocking_unknown(self):
+    def test_audit_preserves_declared_risk_without_lexical_inference(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             skills_dir = root / "skills"
@@ -332,23 +275,12 @@ echo "prompt injection"
 
             report = audit_skills.audit_skills(skills_dir)
             by_id = {skill["id"]: skill for skill in report["skills"]}
-            analysis_findings = {finding["code"] for finding in by_id["analysis-skill"]["findings"]}
-            review_findings = {finding["code"] for finding in by_id["review-skill"]["findings"]}
-
             self.assertEqual(by_id["analysis-skill"]["status"], "ok")
-            self.assertEqual(by_id["analysis-skill"]["suggested_risk"], "safe")
-            self.assertIn("risk_suggestion", analysis_findings)
-            self.assertEqual(by_id["review-skill"]["status"], "warning")
-            self.assertEqual(by_id["review-skill"]["suggested_risk"], "offensive")
-            self.assertIn("risk_suggestion", review_findings)
-
-            markdown_path = root / "audit.md"
-            audit_skills.write_markdown_report(report, markdown_path)
-            markdown = markdown_path.read_text(encoding="utf-8")
-
-            self.assertIn("## Risk Suggestions", markdown)
-            self.assertIn("analysis-skill", markdown)
-            self.assertIn("review-skill", markdown)
+            self.assertEqual(by_id["analysis-skill"]["risk"], "unknown")
+            self.assertEqual(by_id["review-skill"]["status"], "ok")
+            self.assertEqual(by_id["review-skill"]["risk"], "safe")
+            self.assertNotIn("suggested_risk", by_id["analysis-skill"])
+            self.assertNotIn("suggested_risk", by_id["review-skill"])
 
     def test_strict_budget_allows_baseline_and_blocks_regressions(self):
         summary = {
@@ -356,16 +288,16 @@ echo "prompt injection"
             "warnings": 3,
             "skills_with_warnings_only": 2,
             "top_finding_codes": [
-                {"code": "risk_suggestion", "count": 2},
-                {"code": "missing_examples", "count": 1},
+                {"code": "missing_examples", "count": 2},
+                {"code": "skill_too_long", "count": 1},
             ],
         }
         budget = {
             "maxWarnings": 3,
             "maxWarningOnlySkills": 2,
             "maxTopFindingCodes": {
-                "risk_suggestion": 2,
-                "missing_examples": 1,
+                "missing_examples": 2,
+                "skill_too_long": 1,
             },
         }
 
@@ -375,15 +307,15 @@ echo "prompt injection"
             **summary,
             "warnings": 4,
             "top_finding_codes": [
-                {"code": "risk_suggestion", "count": 3},
-                {"code": "missing_examples", "count": 1},
+                {"code": "missing_examples", "count": 3},
+                {"code": "skill_too_long", "count": 1},
             ],
         }
 
         issues = audit_skills.evaluate_strict_budget(regressed_summary, budget)
 
         self.assertIn("warnings exceed budget: 4/3", issues)
-        self.assertIn("risk_suggestion findings exceed budget: 3/2", issues)
+        self.assertIn("missing_examples findings exceed budget: 3/2", issues)
 
 
 if __name__ == "__main__":

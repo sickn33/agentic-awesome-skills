@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import tempfile
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -18,7 +17,6 @@ from check_readme_credits import (
     parse_frontmatter,
 )
 from git_change_records import ChangeRecord, list_tree, materialize_tree, read_change_records, read_path
-from score_skills import score_skill
 from security_scanner import scan_skill_file
 
 
@@ -149,13 +147,6 @@ def evaluate_snapshot(snapshot_root: Path, skill_id: str) -> dict[str, object]:
     skills_root = snapshot_root / "skills"
     skill_root = skills_root / skill_id
     audit = build_skill_report(skill_root, skills_root, snapshot_root=snapshot_root)
-    evaluator_errors: list[str] = []
-    try:
-        score = score_skill(skill_root, skill_id=skill_id)
-        score_payload = score.to_dict() if score is not None else None
-    except (OSError, UnicodeError, TypeError, ValueError):
-        score_payload = {"error": "unreadable_skill_content"}
-        evaluator_errors.append("score_evaluator_failed")
     try:
         security = scan_skill_file(skill_root)
         security_payload = security.to_dict() if security is not None else None
@@ -177,9 +168,7 @@ def evaluate_snapshot(snapshot_root: Path, skill_id: str) -> dict[str, object]:
             ],
         }
     audit_findings = _findings_by_severity_and_code(audit["findings"])
-    if evaluator_errors:
-        audit_findings.setdefault("error", {})["evaluator_failure"] = sorted(evaluator_errors)
-    audit_error_count = audit["error_count"] + len(evaluator_errors)
+    audit_error_count = audit["error_count"]
     metadata = _metadata(skill_root / "SKILL.md")
     source_repo = normalize_repo_slug(metadata.get("source_repo"))
     raw_source_type = metadata.get("source_type")
@@ -194,12 +183,9 @@ def evaluate_snapshot(snapshot_root: Path, skill_id: str) -> dict[str, object]:
             },
             "findings": audit_findings,
         },
-        "score": score_payload,
         "security": security_payload,
         "risk": {
             "declared": _safe_metadata_value(metadata.get("risk")),
-            "suggested": audit.get("suggested_risk"),
-            "suggested_reasons": audit.get("suggested_risk_reasons", []),
         },
         "provenance": {
             "source": _safe_metadata_value(metadata.get("source")),
@@ -248,17 +234,6 @@ def _worsened_codes(
     return worsened
 
 
-def _risk_gap(snapshot: dict[str, object] | None) -> int:
-    if not snapshot:
-        return 0
-    risk = snapshot["risk"]
-    declared = str(risk.get("declared") or "unknown").lower()
-    suggested = str(risk.get("suggested") or "unknown").lower()
-    if suggested in {"unknown", "none"}:
-        return 0
-    return max(0, RISK_RANK.get(suggested, -1) - RISK_RANK.get(declared, -1))
-
-
 def regression_reasons(
     skill_id: str,
     change_type: str,
@@ -276,45 +251,10 @@ def regression_reasons(
     ):
         reasons.append(f"{skill_id}:security_{severity}_regression:{code}:+{increase}")
 
-    before_score = before.get("score") if before else None
-    after_score = after.get("score")
-    if (
-        before_score
-        and after_score
-        and "scores" in before_score
-        and "scores" in after_score
-        and after_score["scores"]["total"] < before_score["scores"]["total"]
-    ):
-        reasons.append(
-            f"{skill_id}:score_decreased:{before_score['scores']['total']}->{after_score['scores']['total']}"
-        )
-    if before_score and after_score and "scores" in before_score and "scores" in after_score:
-        before_components = before_score["scores"]
-        after_components = after_score["scores"]
-        for component in sorted(set(before_components) | set(after_components)):
-            if component == "total":
-                continue
-            before_value = before_components.get(component)
-            after_value = after_components.get(component)
-            if (
-                isinstance(before_value, (int, float))
-                and not isinstance(before_value, bool)
-                and isinstance(after_value, (int, float))
-                and not isinstance(after_value, bool)
-                and math.isfinite(before_value)
-                and math.isfinite(after_value)
-                and after_value < before_value
-            ):
-                reasons.append(
-                    f"{skill_id}:score_component_decreased:{component}:{before_value}->{after_value}"
-                )
-
     before_declared = str(before["risk"].get("declared") or "unknown").lower() if before else "unknown"
     after_declared = str(after["risk"].get("declared") or "unknown").lower()
     if before and RISK_RANK.get(after_declared, -1) < RISK_RANK.get(before_declared, -1):
         reasons.append(f"{skill_id}:risk_downgrade:{before_declared}->{after_declared}")
-    if _risk_gap(after) > _risk_gap(before):
-        reasons.append(f"{skill_id}:risk_mismatch_worsened")
     return reasons
 
 

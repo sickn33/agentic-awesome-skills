@@ -332,20 +332,20 @@ export function SkillDetail(): React.ReactElement {
         <div className="skill-detail__install-and-context">
           <div className="mb-4 border border-slate-300 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Exact install input
+              Canonical skill ID
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              Add only this canonical skill to the Workbench, inspect its recorded evidence, then generate a release-pinned dry run.
+              Use this exact ID when asking your agent for an AAS Core recommendation or when reviewing a proposed stack. Workbench reviews completed stack and plan artifacts; it does not compose or install them.
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <code className="inline-block border border-slate-800 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-50">
                 {skill.id}
               </code>
               <Link
-                to={`/workbench?selected=${encodeURIComponent(skill.id)}&host=codex`}
+                to="/workbench"
                 className="inline-flex items-center border border-teal-700 px-3 py-2 text-sm font-semibold text-teal-800 transition-colors hover:bg-teal-50 dark:border-teal-400 dark:text-teal-200 dark:hover:bg-teal-950/40"
               >
-                Compose exact install
+                Review Core artifacts
               </Link>
             </div>
           </div>

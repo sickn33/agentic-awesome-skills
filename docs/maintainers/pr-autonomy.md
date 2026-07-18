@@ -41,11 +41,10 @@ Every new or relocated skill and every canonical skill-content change requires m
 
 ## Fork Review States
 
-The Skill Review workflow separates three outcomes:
+The Skill Review workflow separates two outcomes:
 
 - `review`: a semantic review actually ran using trusted base scripts;
-- `manual-review-required`: repository secrets were unavailable to a fork, so a maintainer must review and attest to the exact head SHA;
-- `missing-review-credentials`: an internal branch expected semantic-review credentials but none were configured, so the check fails closed.
+- `manual-review-required`: Tessl credentials or quota were unavailable, so a maintainer must review and attest to the exact head SHA.
 
 A successful `manual-review-required` check means only that the requirement was recorded. It is not a successful semantic review.
 

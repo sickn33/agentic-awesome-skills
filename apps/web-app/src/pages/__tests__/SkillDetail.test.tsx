@@ -268,7 +268,7 @@ describe('SkillDetail', () => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Use @click-test');
     });
 
-    it('should send the exact skill to the Workbench', async () => {
+    it('should link to Core artifact review without promising composition', async () => {
       const mockSkill = createMockSkill({ id: 'click-install', name: 'click-install' });
 
       (useSkills as Mock).mockReturnValue({
@@ -289,12 +289,12 @@ describe('SkillDetail', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByRole('link', { name: /Compose exact install/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Review Core artifacts/i })).toBeInTheDocument();
       });
 
-      expect(screen.getByRole('link', { name: /Compose exact install/i })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: /Review Core artifacts/i })).toHaveAttribute(
         'href',
-        '/workbench?selected=click-install&host=codex',
+        '/workbench',
       );
     });
   });

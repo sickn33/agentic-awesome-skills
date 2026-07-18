@@ -6,7 +6,14 @@ const { spawnSync } = require("child_process");
 
 const projectRoot = path.resolve(__dirname, "..", "..", "..");
 const helper = path.join(projectRoot, "skills", "git-pushing", "scripts", "smart_commit.sh");
+const skillInstructions = fs.readFileSync(
+  path.join(projectRoot, "skills", "git-pushing", "SKILL.md"),
+  "utf8",
+);
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "git-pushing-helper-"));
+
+assert.doesNotMatch(skillInstructions, /bash skills\/git-pushing\//);
+assert.match(skillInstructions, /<skill-directory>\/scripts\/smart_commit\.sh/);
 
 function run(command, args, cwd, expectedStatus = 0, extraEnv = {}) {
   const result = spawnSync(command, args, {

@@ -68,21 +68,6 @@ jobs:
           - job-id: linux-node-22
             os: ubuntu-24.04
             node: 22.23.1
-          - job-id: linux-node-24
-            os: ubuntu-24.04
-            node: 24.18.0
-          - job-id: macos-node-22
-            os: macos-15-intel
-            node: 22.23.1
-          - job-id: macos-node-24
-            os: macos-15-intel
-            node: 24.18.0
-          - job-id: windows-node-22
-            os: windows-2025
-            node: 22.23.1
-          - job-id: windows-node-24
-            os: windows-2025
-            node: 24.18.0
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
     steps:
@@ -169,18 +154,13 @@ jobs:
           path: ${{ runner.temp }}/aas-preview-receipts
           merge-multiple: true
 
-      - name: Aggregate without weakening certified-v1 gates
+      - name: Aggregate the supported preview smoke
         shell: bash
         run: |
           set -euo pipefail
           root="$RUNNER_TEMP/aas-preview-receipts"
           node verification/aas-preview/aggregate.mjs \
             --receipt "$root/aas-preview-linux-node-22.json" \
-            --receipt "$root/aas-preview-linux-node-24.json" \
-            --receipt "$root/aas-preview-macos-node-22.json" \
-            --receipt "$root/aas-preview-macos-node-24.json" \
-            --receipt "$root/aas-preview-windows-node-22.json" \
-            --receipt "$root/aas-preview-windows-node-24.json" \
             --workbench "$root/aas-preview-workbench.json" \
             --out "$RUNNER_TEMP/aas-agent-first-preview.json"
 

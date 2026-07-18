@@ -2253,8 +2253,16 @@
           "summary": "High-quality conventional commits."
         },
         {
+          "id": "create-branch",
+          "summary": "Create a safe topic branch before committing."
+        },
+        {
           "id": "create-pr",
           "summary": "PR creation with review-ready context."
+        },
+        {
+          "id": "pr-writer",
+          "summary": "Write and open structured pull requests."
         },
         {
           "id": "requesting-code-review",

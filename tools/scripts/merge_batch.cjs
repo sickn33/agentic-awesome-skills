@@ -10,11 +10,8 @@ const { parseRawDiff } = require("../lib/git-raw-diff");
 const {
   classifyChangeRecords,
   classifyPathPolicy,
-  hasQualityChecklist,
 } = require("../lib/workflow-contract");
 
-const REOPEN_COMMENT =
-  "Maintainer workflow refresh: closing and reopening to retrigger pull_request checks against the updated PR body.";
 const DEFAULT_POLL_SECONDS = 20;
 const BASE_BRANCH_MODIFIED_PATTERNS = [
   /base branch was modified/i,
@@ -36,7 +33,6 @@ const SKILL_REVIEW_REQUIRED = [
   "Skill Review & Optimize / review",
 ];
 const MANUAL_REVIEW_REQUIRED = ["manual-review-required", "Skill Review / manual-review-required"];
-const MISSING_REVIEW_CREDENTIALS = ["missing-review-credentials", "Skill Review / missing-review-credentials"];
 const DISALLOWED_COAUTHOR_TRAILER_PATTERNS = [
   /<noreply@anthropic\.com>/i,
   /:\s*claude\b/i,
@@ -53,8 +49,6 @@ const APPROVAL_WORKFLOW_PATHS = new Set([
   ".github/workflows/dependency-review.yml",
   ".github/workflows/skill-review.yml",
 ]);
-const CI_WORKFLOW_PATH = ".github/workflows/ci.yml";
-const SKILL_REVIEW_WORKFLOW_PATH = ".github/workflows/skill-review.yml";
 
 function parseArgs(argv) {
   const args = {
@@ -195,14 +189,14 @@ function isSkillContentRecord(record) {
     .some((filePath) => ["canonical_skill", "skill_support"].includes(classifyPathPolicy(filePath).kind));
 }
 
-function assertFiniteSnapshotScores(snapshot, label) {
+function assertValidSnapshot(snapshot, label) {
   if (!snapshot || typeof snapshot !== "object") {
     throw new Error(`${label} snapshot is missing.`);
   }
-  const scores = snapshot?.score?.scores;
-  for (const component of ["metadata", "documentation", "security", "total"]) {
-    if (typeof scores?.[component] !== "number" || !Number.isFinite(scores[component])) {
-      throw new Error(`${label} score component ${component} is missing or non-finite.`);
+  const counts = snapshot?.audit?.counts;
+  for (const severity of ["error", "warning", "info"]) {
+    if (!Number.isInteger(counts?.[severity]) || counts[severity] < 0) {
+      throw new Error(`${label} audit count ${severity} is missing or invalid.`);
     }
   }
 }
@@ -241,12 +235,12 @@ function validateChangedSkillEvidence(report, expected) {
     }
     const type = String(change.change_type || "");
     if (type === "modified" || type === "renamed") {
-      assertFiniteSnapshotScores(change.before, `change ${index} before`);
-      assertFiniteSnapshotScores(change.after, `change ${index} after`);
+      assertValidSnapshot(change.before, `change ${index} before`);
+      assertValidSnapshot(change.after, `change ${index} after`);
     } else if (type === "added" || type === "copied") {
-      assertFiniteSnapshotScores(change.after, `change ${index} after`);
+      assertValidSnapshot(change.after, `change ${index} after`);
     } else if (type === "deleted") {
-      assertFiniteSnapshotScores(change.before, `change ${index} before`);
+      assertValidSnapshot(change.before, `change ${index} before`);
       if (change.after !== null) {
         throw new Error(`Changed-skill evidence deletion ${index} must not contain an after snapshot.`);
       }
@@ -560,27 +554,6 @@ function extractSummaryBlock(body) {
   return prefix;
 }
 
-function extractTemplateSections(templateContent) {
-  const text = String(templateContent || "").replace(/\r\n/g, "\n").trim();
-  const sectionMatch = text.match(/^\s*##\s+/m);
-  if (!sectionMatch) {
-    return text;
-  }
-
-  return text.slice(sectionMatch.index).trim();
-}
-
-function normalizePrBody(body, templateContent) {
-  const summary = extractSummaryBlock(body);
-  const templateSections = extractTemplateSections(templateContent);
-
-  if (!summary) {
-    return templateSections;
-  }
-
-  return `${summary}\n\n${templateSections}`.trim();
-}
-
 function stripDisallowedCoauthorTrailers(body) {
   return String(body || "")
     .replace(/\r\n/g, "\n")
@@ -603,10 +576,6 @@ function buildSquashMergeSubject(prDetails) {
 function buildSquashMergeBody(prDetails) {
   const summary = extractSummaryBlock(prDetails.body);
   return stripDisallowedCoauthorTrailers(summary);
-}
-
-function loadPullRequestTemplate(projectRoot) {
-  return fs.readFileSync(path.join(projectRoot, ".github", "PULL_REQUEST_TEMPLATE.md"), "utf8");
 }
 
 function loadPullRequestDetails(projectRoot, repoSlug, prNumber) {
@@ -765,10 +734,6 @@ function assertEffectiveMainProtection(projectRoot, repoSlug, dependencies = {})
   validateEffectiveMainProtection(state?.protection, state?.rulesets);
 }
 
-function needsBodyRefresh(prDetails) {
-  return !hasQualityChecklist(prDetails.body);
-}
-
 function getRequiredCheckAliases(prDetails, options = {}) {
   const aliases = REQUIRED_CHECKS.map(([, value]) => value);
   if (prDetails.hasSkillChanges) {
@@ -777,7 +742,6 @@ function getRequiredCheckAliases(prDetails, options = {}) {
       aliases: SKILL_REVIEW_REQUIRED,
       appId: GITHUB_ACTIONS_APP_ID,
       acceptedConclusions: ["success"],
-      blockingAliases: MISSING_REVIEW_CREDENTIALS,
       alternatives: options.allowManualReview
         ? [{
             aliases: MANUAL_REVIEW_REQUIRED,
@@ -976,36 +940,6 @@ function listActionRequiredRuns(projectRoot, repoSlug, headSha) {
     seen.add(id);
     return true;
   });
-}
-
-function listPullRequestWorkflowRuns(projectRoot, repoSlug, headSha) {
-  const payload = runGhApiJson(projectRoot, [
-    `repos/${repoSlug}/actions/runs?head_sha=${headSha}&event=pull_request&per_page=100`,
-  ]);
-
-  const runs = Array.isArray(payload?.workflow_runs) ? payload.workflow_runs : [];
-  const seen = new Set();
-  return runs.filter((run) => {
-    const id = Number(run?.id);
-    if (!Number.isInteger(id) || seen.has(id)) {
-      return false;
-    }
-    seen.add(id);
-    return true;
-  });
-}
-
-function requiredWorkflowPaths(hasSkillChanges) {
-  return new Set([
-    CI_WORKFLOW_PATH,
-    ...(hasSkillChanges ? [SKILL_REVIEW_WORKFLOW_PATH] : []),
-  ]);
-}
-
-function selectFreshRequiredWorkflowRuns(runs, baselineRunIds, hasSkillChanges) {
-  const baseline = new Set([...baselineRunIds].map(Number));
-  const requiredPaths = requiredWorkflowPaths(hasSkillChanges);
-  return runs.filter((run) => !baseline.has(Number(run?.id)) && requiredPaths.has(run?.path));
 }
 
 function listWorkflowDefinitions(projectRoot, repoSlug) {
@@ -1251,124 +1185,6 @@ async function waitForRequiredChecks(
   throw new Error(`Timed out waiting for required checks on ${headSha}.`);
 }
 
-async function waitForFreshRequiredChecks(
-  projectRoot,
-  repoSlug,
-  prDetails,
-  requiredAliases,
-  pollSeconds,
-  options = {},
-) {
-  const dependencies = options.dependencies || {};
-  const getRuns = dependencies.listPullRequestWorkflowRuns || listPullRequestWorkflowRuns;
-  const getActionRequired = dependencies.listActionRequiredRuns || listActionRequiredRuns;
-  const getWorkflows = dependencies.listWorkflowDefinitions || listWorkflowDefinitions;
-  const getChecks = dependencies.listCheckRuns || listCheckRuns;
-  const getCurrentDetails = dependencies.loadPullRequestDetails || loadPullRequestDetails;
-  const approveRun = dependencies.approveWorkflowRun || approveWorkflowRun;
-  const sleep = dependencies.sleep || ((milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)));
-  const maxAttempts = options.maxAttempts || 180;
-  const baselineRunIds = new Set((options.baselineRunIds || []).map(Number));
-  const approvedRunIds = new Set((options.approvedRunIds || []).map(Number));
-  const tuple = options.tuple || pullRequestTuple(prDetails);
-  const prNumber = Number(prDetails.number);
-  const headSha = tuple.headOid;
-  const hasSkillChanges = Boolean(options.hasSkillChanges);
-  const neededPaths = requiredWorkflowPaths(hasSkillChanges);
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    const workflows = getWorkflows(projectRoot, repoSlug);
-    const freshRuns = selectFreshRequiredWorkflowRuns(
-      getRuns(projectRoot, repoSlug, headSha),
-      baselineRunIds,
-      hasSkillChanges,
-    );
-    const validatedRuns = validateActionRequiredRuns(
-      freshRuns,
-      workflows,
-      prNumber,
-      headSha,
-      APPROVAL_WORKFLOW_PATHS,
-      {
-        headRefName: prDetails.headRefName,
-        headRepository: prDetails.headRepository?.nameWithOwner,
-        baseRepository: repoSlug,
-      },
-    );
-    const actionRequiredIds = new Set(
-      getActionRequired(projectRoot, repoSlug, headSha).map((run) => Number(run.id)),
-    );
-    const approvable = validatedRuns.filter((run) => (
-      actionRequiredIds.has(Number(run.id)) && !approvedRunIds.has(Number(run.id))
-    ));
-    if (approvable.length) {
-      assertUnchangedTuple(
-        getCurrentDetails(projectRoot, repoSlug, prNumber),
-        tuple,
-        "before fresh workflow approvals",
-        prNumber,
-      );
-      for (const run of approvable) {
-        approveRun(projectRoot, repoSlug, run);
-        approvedRunIds.add(Number(run.id));
-      }
-      assertUnchangedTuple(
-        getCurrentDetails(projectRoot, repoSlug, prNumber),
-        tuple,
-        "after fresh workflow approvals",
-        prNumber,
-      );
-      console.log(`[merge-batch] PR #${prNumber}: approved ${approvable.length} fresh fork run(s).`);
-    }
-
-    const pathsSeen = new Set(validatedRuns.map((run) => run.path));
-    const missingWorkflowPaths = [...neededPaths].filter((workflowPath) => !pathsSeen.has(workflowPath));
-    const suiteIds = new Set(
-      validatedRuns
-        .map((run) => Number(run?.check_suite_id))
-        .filter((id) => Number.isInteger(id) && id > 0),
-    );
-    const freshChecks = getChecks(projectRoot, repoSlug, headSha)
-      .filter((run) => suiteIds.has(Number(run?.check_suite?.id)));
-    const summaries = summarizeRequiredCheckRuns(freshChecks, requiredAliases);
-    const pending = summaries.filter((summary) => summary.state === "pending" || summary.state === "missing");
-    const failed = summaries.filter((summary) => summary.state === "failed");
-
-    console.log(
-      `[merge-batch] Fresh checks for ${headSha}: ${formatCheckSummary(summaries)}` +
-      (missingWorkflowPaths.length ? `; waiting for ${missingWorkflowPaths.join(", ")}` : ""),
-    );
-
-    if (!missingWorkflowPaths.length && failed.length) {
-      throw new Error(
-        `Fresh required checks failed for ${headSha}: ` +
-        failed.map((item) => `${item.label} (${item.conclusion || "failed"})`).join(", "),
-      );
-    }
-    if (!missingWorkflowPaths.length && !pending.length) {
-      return summaries;
-    }
-    await sleep(pollSeconds * 1000);
-  }
-
-  throw new Error(`Timed out waiting for fresh required checks on ${headSha}.`);
-}
-
-function patchPrBody(projectRoot, repoSlug, prNumber, body) {
-  const payload = JSON.stringify({ body });
-  runCommand(
-    "gh",
-    ["api", `repos/${repoSlug}/pulls/${prNumber}`, "-X", "PATCH", "--input", "-"],
-    projectRoot,
-    { input: payload },
-  );
-}
-
-function closeAndReopenPr(projectRoot, prNumber) {
-  runCommand("gh", ["pr", "close", String(prNumber), "--comment", REOPEN_COMMENT], projectRoot);
-  runCommand("gh", ["pr", "reopen", String(prNumber)], projectRoot);
-}
-
 function mergePullRequestImmediately(projectRoot, repoSlug, prDetails, dependencies = {}) {
   const execute = dependencies.runCommand || runCommand;
   const headOid = assertFullSha(prDetails?.headRefOid, `PR #${prDetails?.number} head SHA`);
@@ -1412,8 +1228,7 @@ function gitPullMain(projectRoot) {
 }
 
 async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
-  const template = loadPullRequestTemplate(projectRoot);
-  let prDetails = loadPullRequestDetails(projectRoot, repoSlug, prNumber);
+  const prDetails = loadPullRequestDetails(projectRoot, repoSlug, prNumber);
 
   console.log(`[merge-batch] PR #${prNumber}: ${prDetails.title}`);
 
@@ -1421,26 +1236,11 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
     throw new Error(`PR #${prNumber} is in conflict state; resolve conflicts on the PR branch before merging.`);
   }
 
-  let bodyRefreshed = false;
-  let baselineRunIds = [];
-  if (needsBodyRefresh(prDetails)) {
-    baselineRunIds = listPullRequestWorkflowRuns(projectRoot, repoSlug, prDetails.headRefOid)
-      .map((run) => Number(run.id));
-    const normalizedBody = normalizePrBody(prDetails.body, template);
-    if (!options.dryRun) {
-      patchPrBody(projectRoot, repoSlug, prNumber, normalizedBody);
-      closeAndReopenPr(projectRoot, prNumber);
-    }
-    bodyRefreshed = true;
-    console.log(`[merge-batch] PR #${prNumber}: refreshed PR body and retriggered checks.`);
-    prDetails = loadPullRequestDetails(projectRoot, repoSlug, prNumber);
-  }
-
   const approval = approveActionRequiredRuns(projectRoot, repoSlug, prDetails, {
     dryRun: options.dryRun,
     evaluatorOid: options.evaluatorOid,
     reviewedHeads: options.reviewedHeads,
-    excludedRunIds: baselineRunIds,
+    excludedRunIds: [],
     dependencies: options.approvalDependencies,
   });
   const headSha = prDetails.headRefOid;
@@ -1460,30 +1260,13 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
       new Set(options.reviewedHeads || []).has(headSha),
   });
   if (!options.dryRun) {
-    if (bodyRefreshed) {
-      await waitForFreshRequiredChecks(
-        projectRoot,
-        repoSlug,
-        prDetails,
-        requiredCheckAliases,
-        options.pollSeconds,
-        {
-          baselineRunIds,
-          approvedRunIds: approvedRuns.map((run) => run.id),
-          tuple: approval.tuple,
-          hasSkillChanges: prDetails.hasSkillChanges,
-        },
-      );
-    } else {
-      await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds);
-    }
+    await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds);
   }
 
   if (options.dryRun) {
     console.log(`[merge-batch] PR #${prNumber}: dry run complete, skipping merge and post-merge sync.`);
     return {
       prNumber,
-      bodyRefreshed,
       merged: false,
       approvedRuns: [],
       followUp: { changed: false },
@@ -1513,7 +1296,6 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
 
   return {
     prNumber,
-    bodyRefreshed,
     merged,
     approvedRuns: approvedRuns.map((run) => run.id),
     followUp,
@@ -1578,11 +1360,9 @@ module.exports = {
   buildSquashMergeBody,
   buildSquashMergeSubject,
   checkRunMatchesAliases,
-  closeAndReopenPr,
   ensureOnMainAndClean,
   ensureTrustedMain,
   extractSummaryBlock,
-  extractTemplateSections,
   formatCheckSummary,
   fetchPullRequestObjects,
   getRequiredCheckAliases,
@@ -1590,16 +1370,13 @@ module.exports = {
   gitPullMain,
   isRetryableMergeError,
   listActionRequiredRuns,
-  listPullRequestWorkflowRuns,
   listCheckRuns,
   listWorkflowDefinitions,
   loadEffectiveMainProtection,
   loadPullRequestDetails,
-  loadPullRequestTemplate,
   mergePullRequest,
   mergePullRequestImmediately,
   mergeableIsConflict,
-  normalizePrBody,
   parseArgs,
   parsePrList,
   parseRawDiff,
@@ -1612,7 +1389,6 @@ module.exports = {
   runCommand,
   runCommandBuffer,
   runBatch,
-  selectFreshRequiredWorkflowRuns,
   selectLatestCheckRuns,
   stripDisallowedCoauthorTrailers,
   summarizeRequiredCheckRuns,
@@ -1620,6 +1396,5 @@ module.exports = {
   validateChangedSkillEvidence,
   validateEffectiveMainProtection,
   waitForRequiredChecks,
-  waitForFreshRequiredChecks,
   resolveBlobSizes,
 };

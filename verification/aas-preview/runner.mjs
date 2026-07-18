@@ -258,8 +258,8 @@ async function main() {
     integrity: runtimeIntegrity,
     provenance: { registryOrigin: "https://registry.npmjs.org", signaturesPresent: false, attestationsPresent: false },
   };
-  // Windows directory-flush capability belongs to the certified-v1 durability
-  // gate. The preview runner materializes only its isolated test cache, then
+  // Windows directory-flush capability is outside the supported preview.
+  // The preview runner materializes only its isolated test cache, then
   // requires the production core to verify every byte before lifecycle use.
   const promoted = process.platform === "win32"
     ? await provisionVerifiedPreviewRuntime(aas, { cacheRoot, release, parsed: parsedArchive })

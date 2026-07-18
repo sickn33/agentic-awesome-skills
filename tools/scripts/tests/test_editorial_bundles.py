@@ -82,6 +82,17 @@ class EditorialBundlesTests(unittest.TestCase):
             get_bundle_skills.get_bundle_skills(["indie-game-dev"]),
         )
 
+    def test_oss_maintainer_bundle_contains_local_workflow_dependencies(self):
+        skill_ids = {
+            skill["id"]
+            for skill in next(
+                bundle for bundle in self.manifest_bundles if bundle["id"] == "oss-maintainer"
+            )["skills"]
+        }
+        self.assertTrue(
+            {"commit", "create-branch", "create-pr", "pr-writer"}.issubset(skill_ids)
+        )
+
     def test_generated_bundle_plugin_contains_expected_skills(self):
         essentials_plugin = REPO_ROOT / "plugins" / "agentic-bundle-essentials" / "skills"
         expected_ids = {

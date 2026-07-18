@@ -26,7 +26,6 @@ def safe_user_path(path_value, base_dir="."):
     return resolved_path
 import yaml
 from _project_paths import find_repo_root
-from risk_classifier import suggest_risk
 
 def get_project_root():
     """Get the project root directory."""
@@ -66,8 +65,6 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
                 if metadata is None:
                     continue
 
-                suggested_risk = suggest_risk(content, metadata)
-                
                 date_added = metadata.get('date_added', None)
                 if date_added is not None:
                     date_added = date_added.isoformat() if hasattr(date_added, 'isoformat') else str(date_added)
@@ -79,8 +76,6 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
                     'date_added': date_added,
                     'source': metadata.get('source', 'unknown'),
                     'risk': metadata.get('risk', 'unknown'),
-                    'suggested_risk': suggested_risk.risk,
-                    'suggested_risk_reasons': list(suggested_risk.reasons),
                     'category': metadata.get('category', metadata.get('id', '').split('-')[0] if '-' in metadata.get('id', '') else 'other'),
                 }
                 
@@ -101,11 +96,6 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
         'total_skills': len(skills_data),
         'skills_with_dates': sum(1 for s in skills_data if s['date_added']),
         'skills_without_dates': sum(1 for s in skills_data if not s['date_added']),
-        'skills_with_suggested_risk': sum(1 for s in skills_data if s['suggested_risk'] != 'unknown'),
-        'suggested_risk_counts': {
-            risk: sum(1 for skill in skills_data if skill['suggested_risk'] == risk)
-            for risk in sorted({skill['suggested_risk'] for skill in skills_data if skill['suggested_risk'] != 'unknown'})
-        },
         'coverage_percentage': round(
             sum(1 for s in skills_data if s['date_added']) / len(skills_data) * 100 if skills_data else 0, 
             1

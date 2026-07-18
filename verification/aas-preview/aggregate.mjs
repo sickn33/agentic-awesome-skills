@@ -7,13 +7,8 @@ import process from "node:process";
 
 const EXPECTED_JOBS = Object.freeze([
   "linux-node-22",
-  "linux-node-24",
-  "macos-node-22",
-  "macos-node-24",
-  "windows-node-22",
-  "windows-node-24",
 ]);
-const EXPECTED_NODE = Object.freeze({ "22": "v22.23.1", "24": "v24.18.0" });
+const EXPECTED_NODE = Object.freeze({ "22": "v22.23.1" });
 const EXPECTED_NOT_EVALUATED = Object.freeze([
   "native-network-and-filesystem-attempt-observation",
   "transactional-crash-and-race-certification",

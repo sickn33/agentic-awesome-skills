@@ -131,14 +131,7 @@ Before ANY commit that adds/modifies skills, run the chain:
     ```bash
     npm run audit:maintainer
     ```
-    When you are reducing legacy `risk: unknown` debt, use this sequence instead of hand-editing large batches:
-    ```bash
-    npm run audit:skills
-    npm run sync:risk-labels -- --dry-run
-    npm run sync:risk-labels
-    npm run sync:repo-state
-    ```
-    `sync:risk-labels` is intentionally conservative. It should handle only the obvious subset; the ambiguous tail still needs maintainer review.
+    Risk labels are declared metadata. Validate the declared value and review ambiguous `risk: unknown` cases semantically; do not infer or rewrite risk from isolated words.
 
 6.  **COMMIT GENERATED FILES**:
     ```bash
@@ -156,45 +149,9 @@ Before ANY commit that adds/modifies skills, run the chain:
 
 **Before merging:**
 
-### Mandatory local reviewer gate for changed skills
+### Skill-content review gate
 
-<!-- local-skill-reviewer-policy:v1 -->
-
-For every canonical `SKILL.md` change or change to one of its tracked bundle files, the maintainer must complete this local gate before the official merge gate:
-
-1. Stage only the exact changed skill and bundle blobs intended for review. The local reviewer reads the Git index; an unstaged correction is not reviewed, and unrelated paths must not be staged with it.
-2. Use a private result directory outside the repository and run:
-
-   ```bash
-   npm run review:skills:local -- review <skill-id> --merge-gate --result-dir <private-temp-dir>
-   ```
-
-3. Inspect `triage.reviewStatus`, `triage.priority`, and `triage.reasonCodes`. For P0/P1, uncertain, or locally namespaced `manual-review-required` results, choose exactly one semantic preparation route.
-
-   Single-skill semantic route (alternative to batch preparation):
-
-   ```bash
-   npm run review:skills:semantic:packet -- <skill-id> --result-dir <private-temp-dir>
-   ```
-
-   Obtain the Codex judgment for that packet, then import and verify it:
-
-   ```bash
-   npm run review:skills:semantic:import -- <skill-id> --input <codex-judgment.json> --result-dir <private-temp-dir>
-   npm run review:skills:semantic:verify -- <skill-id> --result-dir <private-temp-dir>
-   ```
-
-   Batch semantic route (alternative to the single-skill packet command):
-
-   ```bash
-   npm run review:skills:semantic:prepare -- --result-dir <private-temp-dir>
-   ```
-
-   For each escalated skill in that batch, obtain its Codex judgment, then run the same `semantic:import` and `semantic:verify` commands above. Never run `semantic:packet` and `semantic:prepare` for the same skill in the same result directory.
-
-4. After any correction, stage the exact intended blobs again and rerun the local reviewer, `npm run validate`, `npm run validate:references`, `npm run security:docs`, and the relevant tests.
-
-The local status is identified by `source: local-skill-reviewer`. It is triage and review support only: it does not replace Tessl, is not the CI status with the same name, and does not satisfy the exact-head attestation. A truthful Tessl `review` or the normal maintainer attestation bound to the full head SHA remains the official merge gate.
+For every canonical `SKILL.md` or tracked bundle-file change, run validation, reference validation, documentation security, changed-skill evidence, and relevant tests. Review semantics, provenance, declared risk, limitations, and bundled files directly. The separate `skill-review` workflow or an exact-head maintainer attestation remains authoritative; local heuristic scores and inferred risk labels are not merge gates.
 
 1.  **CI is green** — Validation, warning-budget enforcement, README source-credit checks, reference checks, tests, and generated artifact steps passed (see [`.github/workflows/ci.yml`](workflows/ci.yml)). If the PR changes any `SKILL.md`, the separate [`skill-review` workflow](workflows/skill-review.yml) must also be green.
 2.  **Generated drift understood** — On pull requests, generator drift is informational only. Do not block a good PR solely because canonical artifacts would be regenerated. Also do not accept PRs that directly edit `CATALOG.md`, `skills_index.json`, or `data/*.json`; those files are `main`-owned.
@@ -213,7 +170,7 @@ This happens regularly on community PRs from forks. The common symptoms are:
 
 - `gh pr checks` shows `no checks reported` even though Actions runs exist.
 - `gh run list` shows `action_required` with `jobs: []` for `Skills Registry CI` or `Skill Review`.
-- `pr-policy` fails with `PR body must include the Quality Bar Checklist from the template.` even after you corrected the PR body and hit rerun.
+- the PR body does not include the optional Quality Bar Checklist.
 
 Use this playbook:
 
@@ -225,19 +182,10 @@ Use this playbook:
     ```bash
     npm run merge:batch -- --prs <PR_NUMBER> --reviewed-head <40-character-head-sha>
     ```
-2.  **Normalize the PR body** so it includes the repository template's `## Quality Bar Checklist ✅` section. If `gh pr edit` works, use it. If `gh pr edit` fails with the GraphQL `projectCards` / Projects Classic deprecation error, patch the PR body through the REST API instead:
-    ```bash
-    gh api repos/<OWNER>/<REPO>/pulls/<PR_NUMBER> -X PATCH --input <(jq -n --rawfile body /tmp/pr_body.md '{body:$body}')
-    ```
-3.  **Do not trust a plain rerun** to pick up the updated PR body. In practice, `gh run rerun <RUN_ID>` may re-use the original `pull_request` event payload, so `pr-policy` can keep reading the stale body and fail again.
-4.  **If the rerun still sees stale metadata, close and reopen the PR** to force a fresh `pull_request` event:
-    ```bash
-    gh pr close <PR_NUMBER> --comment "Maintainer workflow refresh: closing and reopening to retrigger pull_request checks against the updated PR body."
-    gh pr reopen <PR_NUMBER>
-    ```
-5.  **Let `merge:batch` wait for and approve newly created fork runs** after reopen. GitHub Actions materializes those runs asynchronously, so an empty first lookup is not evidence that approval is unnecessary. Do not approve them directly by run ID; the command binds every approval to the current PR, exact head SHA, allowlisted workflow, locally recomputed diff, and the workflow/check-suite generation created after the reopen.
-6.  **Wait for the new checks only.** You may see older failed `pr-policy` runs in the rollup alongside newer green runs. Freshness is determined by workflow-run and check-suite IDs captured after the reopen, not by head SHA or completion time alone. Merge only after that fresh run set is fully green: `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`, and a truthful skill-review outcome when `SKILL.md` changed. `review` means Tessl semantic review actually ran or reused a successful result for the identical skill-content fingerprint. `manual-review-required` means Tessl did not run because repository secrets or Tessl credits were unavailable and requires the exact-SHA maintainer attestation above. Never describe `manual-review-required` as a Tessl review, and never rerun Tessl merely because the PR head or base moved when the changed skill content is identical. `source-validation` enforces the frozen warning budget and README source-credit coverage for changed skills, so missing `## When to Use` sections, missing README repo credits, or other new warning drift must be fixed before merge.
-7.  **If `gh pr merge` says `Base branch was modified`**, refresh the PR state and retry. This is normal when you are merging a batch and `main` moved between attempts.
+2.  **Treat the checklist as guidance, not evidence.** A missing checklist emits a notice; objective path, blob, validation, reference, provenance, security, test, and exact-head review gates determine mergeability.
+3.  **Let `merge:batch` approve action-required fork runs.** GitHub Actions materializes those runs asynchronously, so an empty first lookup is not evidence that approval is unnecessary. Do not approve them directly by run ID; the command binds every approval to the current PR, exact head SHA, allowlisted workflow, locally recomputed diff, and immutable PR tuple.
+4.  **Wait for the required checks.** Merge only after `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`, and a truthful skill-review outcome when `SKILL.md` changed. `review` means Tessl semantic review actually ran or reused a successful result for the identical skill-content fingerprint. `manual-review-required` means Tessl did not run because repository secrets or Tessl credits were unavailable and requires the exact-SHA maintainer attestation above. Never describe `manual-review-required` as a Tessl review, and never rerun Tessl merely because the PR head or base moved when the changed skill content is identical.
+5.  **If the merge endpoint says `Base branch was modified`**, refresh the PR state and retry. This is normal when you are merging a batch and `main` moved between attempts.
 
 **If a PR was closed after local integration (reopen and merge):**
 
@@ -283,7 +231,7 @@ We used this flow for PRs [#220](https://github.com/sickn33/agentic-awesome-skil
 **Maintainer shortcut for batched PRs:**
 
 - Use `npm run merge:batch -- --prs 450,449,446,451` to automate the ordered maintainer flow for multiple PRs. See [docs/maintainers/merge-batch.md](../docs/maintainers/merge-batch.md) for the short usage guide.
-- Pages is release-only: ordinary pushes to `main` never deploy it. Dispatch `.github/workflows/pages.yml` explicitly only at an approved publication gate. Canonical-sync merges still use `--skip-pages` and carry `[skip pages]` as a durable audit marker; the four routine app-bound checks and CodeQL remain enforced. The frozen verifier harness is separate and runs only for verifier-governance changes, not as a routine merge prerequisite.
+- Pages is release-only: ordinary pushes to `main` never deploy it. Dispatch `.github/workflows/pages.yml` explicitly only at an approved publication gate. Canonical-sync merges still use `--skip-pages` and carry `[skip pages]` as a durable audit marker; the four routine app-bound checks and CodeQL remain enforced. The supported Core preview uses the targeted packed smoke workflow; retired certified-v1 verifier harnesses are not part of the repository workflow.
 - The script keeps the GitHub-only squash merge rule, handles fork-run approvals and stale PR metadata refresh, waits only on fresh required checks, retries `Base branch was modified`, and runs the mandatory post-merge `sync:contributors` follow-up on `main`. The fork content allowlist applies only to external PRs; same-repository maintainer PRs may change repository-wide source while remaining subject to protected checks, trusted changed-skill evidence, exact-head review, and immutable PR identity.
 - It is intentionally not a conflict resolver. If a PR is conflicting, stop and follow the manual conflict playbook.
 

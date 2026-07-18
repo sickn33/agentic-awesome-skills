@@ -169,7 +169,10 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
         target = root / "skills/copied/SKILL.md"
         target.parent.mkdir(parents=True)
         target.write_text(source.read_text(encoding="utf-8").replace("name: example", "name: copied"), encoding="utf-8")
-        source.write_text(source.read_text(encoding="utf-8").replace("## Examples", "## Removed Examples"), encoding="utf-8")
+        source.write_text(
+            source.read_text(encoding="utf-8").replace("## Examples\n```bash\necho hello\n```\n", ""),
+            encoding="utf-8",
+        )
         git(root, "add", ".")
         git(root, "commit", "-m", "copy plus source regression")
 
@@ -178,7 +181,7 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
         by_id = {change["new_skill_id"]: change for change in report["changes"]}
         self.assertIn("copied", by_id)
         self.assertIn("example", by_id)
-        self.assertTrue(any("example:score_decreased" in reason for reason in report["reasons"]))
+        self.assertTrue(any("example:audit_warning_regression:missing_examples" in reason for reason in report["reasons"]))
 
     def test_security_severity_downgrade_is_not_a_regression(self):
         root, _ = init_repo()
@@ -346,7 +349,6 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
         self.assertTrue(first["blocking"])
         self.assertEqual(first["changes"][0]["change_type"], "modified")
         self.assertTrue(any("missing_examples" in reason for reason in first["reasons"]))
-        self.assertTrue(any("score_decreased" in reason for reason in first["reasons"]))
         self.assertEqual(changed_skill_evidence.stable_json(first), changed_skill_evidence.stable_json(second))
         self.assertNotIn("generated_at", first)
 
@@ -430,43 +432,23 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
         self.assertIn("external:provenance_identity_changed:source_type", report["reasons"])
         self.assertIn("external:provenance_identity_changed:source_repo", report["reasons"])
 
-    def test_score_component_regression_blocks_even_if_total_does_not_decrease(self):
+    def test_declared_risk_downgrade_blocks(self):
         before = {
             "audit": {"findings": {}},
             "security": {"flags": []},
-            "risk": {"declared": "safe", "suggested": "safe"},
-            "score": {
-                "scores": {
-                    "metadata": 90.0,
-                    "documentation": 80.0,
-                    "security": 90.0,
-                    "total": 86.0,
-                }
-            },
+            "risk": {"declared": "safe"},
         }
         after = {
             "audit": {"findings": {}},
             "security": {"flags": []},
-            "risk": {"declared": "safe", "suggested": "safe"},
-            "score": {
-                "scores": {
-                    "metadata": 100.0,
-                    "documentation": 70.0,
-                    "security": 90.0,
-                    "total": 86.0,
-                }
-            },
+            "risk": {"declared": "none"},
         }
 
         reasons = changed_skill_evidence.regression_reasons(
             "example", "modified", before, after
         )
 
-        self.assertIn(
-            "example:score_component_decreased:documentation:80.0->70.0",
-            reasons,
-        )
-        self.assertFalse(any(reason.startswith("example:score_decreased:") for reason in reasons))
+        self.assertEqual(reasons, ["example:risk_downgrade:safe->none"])
 
     def test_explicit_repo_argument_uses_requested_git_repository(self):
         root, base = init_repo()

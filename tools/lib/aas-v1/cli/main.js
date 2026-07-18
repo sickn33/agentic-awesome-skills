@@ -517,7 +517,11 @@ async function execute(argv, dependencies = {}) {
   if (root !== "stack") throw cliError("AAS_CLI_COMMAND_UNKNOWN", "invalidInput", { command: root });
   if (command === "init") return stackInit(options);
   if (command === "recommend") return core.recommendStack(await catalogFor(options), readJsonFile(requireOption(options, "profile")));
-  if (command === "validate") return core.stack.validateManifest(readJsonFile(requireOption(options, "manifest")));
+  if (command === "validate") {
+    const validation = core.stack.validateManifest(readJsonFile(requireOption(options, "manifest")));
+    if (!validation.ok) throw cliError(validation.code, validation.category, validation.details);
+    return validation;
+  }
   if (command === "plan") return stackPlan(options, dependencies);
   if (["apply", "doctor", "recover"].includes(command)) {
     const plan = readJsonFile(requireOption(options, "plan"));

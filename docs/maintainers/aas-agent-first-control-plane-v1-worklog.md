@@ -2,7 +2,8 @@
 
 ## 2026-07-18 — Baseline workflow retired
 
-- The standalone `aas-v1-baseline` pull-request workflow and required status check were retired by maintainer decision. The frozen verifier assets remain in the repository, but routine PR and canonical-sync merges no longer execute or wait for that verifier. The protected `pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview` gates remain required.
+- The standalone `aas-v1-baseline` pull-request workflow and required status check were retired by maintainer decision. The obsolete verifier corpus, harness, tuning runner, and paused apply/optimize workflows were subsequently removed. The protected `pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview` gates remain required.
+- Entries below this point are a historical construction log. References to frozen verifier assets, matrices, paths, or pending certification gates describe the state at that date and are not current repository policy.
 
 ## 2026-07-17 — Goal activation and clean baseline
 

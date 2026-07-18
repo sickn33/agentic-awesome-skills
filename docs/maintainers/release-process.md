@@ -47,7 +47,7 @@ Use this as a diagnostic signal. It is useful for spotting legacy quality debt, 
 - Confirm `README.md` reflects the current version and generated counts.
 - Confirm Credits & Sources, contributors, and support links are still correct.
 - If PR or CI workflow behavior changed during the cycle, confirm maintainer and contributor docs mention the active checks (for example the `skill-review` workflow for `SKILL.md` pull requests).
-- If maintainers used `npm run sync:risk-labels` or a comparable cleanup flow during the cycle, make sure the maintainer docs still describe the current audit -> sync -> repo-state loop.
+- If maintainers changed declared risk labels during the cycle, confirm that each change has semantic review evidence rather than lexical inference.
 
 5. Prepare the protected release PR:
 

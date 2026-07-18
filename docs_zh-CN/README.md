@@ -1,11 +1,13 @@
-<!-- registry-sync: version=14.0.0; skills=1936; stars=41640; updated_at=2026-06-25T06:37:39+00:00 -->
-# 🌌 Agentic Awesome Skills: 1,936+ 代理技能，适用于 Claude Code、Gemini CLI、Cursor、Copilot 及更多工具
+<!-- registry-sync: version=14.6.0; skills=1967; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
+# AAS Core — Agentic Awesome Skills
 
-> **可安装的 GitHub 技能库，包含 1,936+ 个代理技能，适用于 Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity 和其他 AI 编码助手。**
+> **面向编码代理的本地、确定性技能栈编排：从显式项目配置文件到任何目标变更前可审查的计划。**
 
-Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用的 `SKILL.md` 剧本。与其收集随机提示词，你可以获得一个可搜索、可安装的技能库，涵盖规划、编码、调试、测试、安全审查、基础设施工作、产品工作流和成长任务，支持主流 AI 编码助手。
+Codex 或 Claude 使用自身能力检查项目；AAS 不会扫描项目。代理向本地、只读的 AAS MCP 发送显式配置文件，AAS Core 根据经过验证的本地目录和策略返回可解释的建议。代理提出 `aas-stack.json`，随后 `aas` CLI 在任何技能变更前验证该清单并生成不可变的预览计划。
 
-> **推荐入口 — AAS Core：** 对于 Codex 和 Claude Code，请先使用本地、只读的 AAS MCP 搜索目录并获得确定性的最小技能栈建议，然后检查 `aas-stack.json` 和 CLI 预览计划。当前有文档支持的预览路径在检查计划后停止。[了解 AAS Core](users/aas-core.md)。
+> **发布边界：** 已发布的 14.6.0 npm 包早于 AAS Core。只有当某个版本的发布说明明确声明包含 Core 时，才可将其用于 Core 引导。当前支持的预览路径在检查计划后停止；`apply` 和 `recover` 仍是实验功能。[了解 AAS Core](users/aas-core.md)。
+
+1,967+ 个 `SKILL.md`、专用插件、捆绑包、工作流和直接安装器仍然重要；它们是 AAS Core 周围的内容、策展、分发和兼容层，而不是并列的主要产品。
 
 **从这里开始：** [AAS Core](users/aas-core.md) · [为仓库加星](https://github.com/sickn33/agentic-awesome-skills/stargazers) · [1 分钟安装](#installation) · [选择你的工具](#choose-your-tool) · [按工具查看最佳技能](#best-skills-by-tool) · [捆绑包](users/bundles.md) · [工作流](users/workflows.md)
 
@@ -22,13 +24,13 @@ Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
-**当前版本：V14.0.0。** 值得 42k+ GitHub 星标信赖，该仓库结合了官方和社区的技能集合，提供捆绑包、工作流、安装路径和文档，帮助你从首次安装快速过渡到日常使用。
+**当前已发布版本：V14.6.0。** 此版本仍是直接技能分发版本，不包含 AAS Core。GitHub 仓库是 Core、目录、插件和文档的规范来源；托管网站仅用于目录浏览和浏览器内审查，并非托管控制平面。
 
 ## 为什么开发者为这个仓库加星
 
 - **可安装，而不仅是启发式**：使用 `npx agentic-awesome-skills` 将技能放置在你的工具期望的位置。
 - **为主要代理工作流构建**：Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity、Kiro、OpenCode、Copilot 等。
-- **广泛的覆盖范围和实用价值**：1,936+ 个技能，涵盖开发、测试、安全、基础设施、产品和营销。
+- **广泛的覆盖范围和实用价值**：1,967+ 个技能，涵盖开发、测试、安全、基础设施、产品和营销。
 - **更快的入门**：捆绑包和工作流减少了从"发现这个仓库"到"使用第一个技能"的时间。
 - **无论你需要广度还是精选都有用**：浏览完整目录、从顶级捆绑包开始，或在安装前比较替代方案。
 
@@ -48,7 +50,7 @@ Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用
 - [🧭 Antigravity 工作流](#antigravity-工作流)
 - [⚖️ 替代方案与比较](#替代方案与比较)
 - [📦 功能与类别](#功能与类别)
-- [📚 浏览 1,936+ 技能](#浏览-1936-技能)
+- [📚 浏览 1,967+ 技能](#浏览-1967-技能)
 - [🤝 贡献](#贡献)
 - [💬 社区](#社区)
 - [☕ 支持项目](#支持项目)
@@ -65,7 +67,7 @@ Agentic Awesome Skills 是一个 GitHub 仓库和安装器 CLI，提供可复用
 
 ### 1. 🐣 背景：这是什么？
 
-**Agentic Awesome Skills**（版本 14.0.0）是一个大型可安装技能库，适用于 AI 编码助手。它包括入门文档、捆绑包、工作流、生成的目录和 CLI 安装器，让你无需手动拼接数十个仓库就能从发现过渡到实际使用。
+**Agentic Awesome Skills** 是 AAS Core 的规范仓库。Core 是本地、确定性的产品层；目录、捆绑包、工作流、插件和 CLI 安装器在其周围提供证据、策展、分发和兼容能力。
 
 AI 代理很聪明，但仍需要**特定于任务的操作指令**。技能是专注的 markdown 剧本，教代理如何重复执行工作流并提供更好的上下文，无论是部署、API 设计、测试、产品策略、SEO 还是文档。
 
@@ -244,7 +246,7 @@ Codex 插件通过仓库本地插件入口指向相同的精选 `skills/` 树，
 
 ## 按工具查看最佳技能
 
-如果你想要比"浏览所有 1,936+ 技能"更快的答案，请从工具特定指南开始：
+如果你想要比"浏览所有 1,967+ 技能"更快的答案，请从工具特定指南开始：
 
 - **[Claude Code 技能](users/claude-code-skills.md)**：安装路径、入门技能、提示词示例和插件市场流程。
 - **[Cursor 技能](users/cursor-skills.md)**：`.cursor/skills/` 的最佳入门技能、UI 重型工作和配对编程流程。
@@ -409,7 +411,7 @@ Use @security-auditor to review this API endpoint for auth and validation risks.
 
 计数随着新技能的添加而变化。有关当前完整注册表，请参阅 [CATALOG.md](../CATALOG.md)。
 
-## 浏览 1,936+ 技能
+## 浏览 1,967+ 技能
 
 - 在 [`../apps/web-app`](../apps/web-app) 中打开交互式浏览器。
 - 在 [`../CATALOG.md`](../CATALOG.md) 中阅读完整目录。

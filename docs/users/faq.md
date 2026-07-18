@@ -137,7 +137,7 @@ _Always check the Risk label and review the code._
 
 ### How do I start with AAS Core?
 
-Use the pinned `aas` binary to preview and approve local MCP configuration for Codex or Claude, restart the host if needed, then ask the agent to recommend and explain a stack without applying it. The full commands and trust boundaries are in [AAS Core](aas-core.md).
+Use the pinned `aas` binary from a release whose notes explicitly state that it includes AAS Core to preview and approve local MCP configuration for Codex or Claude. The published 14.6.0 package predates Core and is not a valid bootstrap. Restart the host if needed, then ask the agent to recommend and explain a stack without applying it. The command template and trust boundaries are in [AAS Core](aas-core.md).
 
 The package publishes separate `agentic-awesome-skills`, `aas`, and `aas-mcp` binaries. Use the explicit `aas` binary for Core lifecycle commands; the legacy `agentic-awesome-skills` entrypoint remains the direct installer.
 
@@ -160,7 +160,7 @@ If you get a 404 from npm, use: `npx github:sickn33/agentic-awesome-skills`
 git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
 
-The installer CLI is the recommended path for most users because it performs a lighter shallow clone of the current library. Manual `git clone` is still the right option when you want the full repository history or plan to contribute from the same checkout.
+For direct skill distribution, the installer CLI performs a lighter shallow clone of the current library. Manual `git clone` remains appropriate when you want the full repository history or plan to contribute from the same checkout. For Codex or Claude users who want project-specific recommendation, start with AAS Core instead of treating a full-library install as the primary product path.
 
 **Tool-specific paths:**
 

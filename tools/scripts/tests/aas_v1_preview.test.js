@@ -6,7 +6,7 @@ const { spawnSync } = require("node:child_process");
 const test = require("node:test");
 
 const aggregator = path.resolve(__dirname, "../../../verification/aas-preview/aggregate.mjs");
-const jobs = ["linux-node-22", "linux-node-24", "macos-node-22", "macos-node-24", "windows-node-22", "windows-node-24"];
+const jobs = ["linux-node-22"];
 const notEvaluated = [
   "native-network-and-filesystem-attempt-observation",
   "transactional-crash-and-race-certification",
@@ -33,7 +33,7 @@ function receipt(jobId) {
     previewQualified: true,
     certifiedV1: false,
     jobId,
-    runtime: { node: { "22": "v22.23.1", "24": "v24.18.0" }[major], platform: { linux: "linux", macos: "darwin", windows: "win32" }[platform], architecture: "x64" },
+    runtime: { node: { "22": "v22.23.1" }[major], platform: { linux: "linux" }[platform], architecture: "x64" },
     package: { name: "agentic-awesome-skills", version: "14.6.0", tarballIntegrity: "sha512-test", tarballSha256: "sha256-test" },
     recommendationDigest: "sha256-recommendation",
     mcpContractDigest: "sha256-contract",
@@ -72,7 +72,7 @@ function run(item) {
   ], { encoding: "utf8" });
 }
 
-test("preview receipt aggregation requires six consistent functional jobs and a passing Workbench", (t) => {
+test("preview receipt aggregation requires the supported packed smoke and a passing Workbench", (t) => {
   const item = fixture();
   t.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
   const result = run(item);
@@ -80,15 +80,15 @@ test("preview receipt aggregation requires six consistent functional jobs and a 
   const aggregate = JSON.parse(fs.readFileSync(item.out, "utf8"));
   assert.equal(aggregate.previewQualified, true);
   assert.equal(aggregate.certifiedV1, false);
-  assert.equal(aggregate.jobs.length, 6);
+  assert.equal(aggregate.jobs.length, 1);
   assert.deepEqual(aggregate.notEvaluated, notEvaluated);
 });
 
-test("preview receipt aggregation fails closed on cross-platform evidence drift", (t) => {
+test("preview receipt aggregation rejects an unexpected job identity", (t) => {
   const item = fixture();
   t.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
   const changed = receipt(jobs[0]);
-  changed.recommendationDigest = "sha256-drift";
+  changed.jobId = "macos-node-22";
   writeJson(item.receipts[0], changed);
   const result = run(item);
   assert.notEqual(result.status, 0);

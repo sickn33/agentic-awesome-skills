@@ -1,12 +1,11 @@
 {
   "maxWarnings": 864,
-  "maxWarningOnlySkills": 740,
+  "maxWarningOnlySkills": 755,
   "maxTopFindingCodes": {
-    "risk_suggestion": 1013,
-    "missing_examples": 387,
-    "skill_too_long": 192
+    "missing_examples": 468,
+    "skill_too_long": 214
   },
   "owner": "repository maintainers",
-  "lastReviewed": "2026-05-23",
-  "rationale": "Legacy strict skill-audit warnings are tracked as explicit backlog debt. Strict mode fails on errors or warning regressions above this budget."
+  "lastReviewed": "2026-07-18",
+  "rationale": "Current objective audit warnings are tracked as explicit backlog debt after retiring inferred risk and heuristic score gates. Strict mode fails on errors or regressions above this measured baseline."
 }

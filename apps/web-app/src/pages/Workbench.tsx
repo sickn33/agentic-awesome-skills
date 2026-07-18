@@ -314,7 +314,7 @@ export function Workbench(): React.ReactElement {
         <div>
           <div>
             <h1>Review what AAS Core recommended.</h1>
-            <p>Import the <code>aas-stack.json</code> and immutable preview plan produced through the local MCP or CLI to inspect identities, targets, operations, overrides, and unknowns.</p>
+            <p>Import the <code>aas-stack.json</code> proposed by your agent after an MCP recommendation and the immutable preview plan produced by the <code>aas</code> CLI to inspect identities, targets, operations, overrides, and unknowns.</p>
           </div>
           <dl>
             <div><dt>Privacy</dt><dd>In-memory only</dd></div>

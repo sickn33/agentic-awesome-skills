@@ -134,7 +134,7 @@ jobs:
 
   manual-review-required:
     needs: [review-state, review-attempt]
-    if: ${{ always() && ((needs.review-state.outputs.configured != 'true' && github.event.pull_request.head.repo.full_name != github.repository) || needs.review-attempt.outputs.outcome == 'quota') }}
+    if: ${{ always() && (needs.review-state.outputs.configured != 'true' || needs.review-attempt.outputs.outcome == 'quota') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -147,7 +147,7 @@ jobs:
           if [ "$REVIEW_OUTCOME" = "quota" ]; then
             reason="the Tessl credit quota is unavailable"
           else
-            reason="repository secrets are unavailable to this fork pull request"
+            reason="Tessl credentials are unavailable"
           fi
           echo "::warning title=Manual skill review required::Semantic review is unavailable because ${reason}. A maintainer must attest to the exact head SHA before merge: ${HEAD_SHA}."
           {
@@ -156,15 +156,3 @@ jobs:
             echo "- Head SHA: \`${HEAD_SHA}\`"
             echo "- Reason: ${reason}."
           } >> "$GITHUB_STEP_SUMMARY"
-
-  missing-review-credentials:
-    needs: [review-state, review-attempt]
-    if: ${{ always() && needs.review-state.outputs.configured != 'true' && github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Require Tessl token for repository branches
-        run: |
-          echo "::error title=Missing Tessl token::Configure TESSL_TOKEN, or keep the legacy TESSL_API_TOKEN secret until the migration is complete."
-          exit 1

@@ -21,7 +21,7 @@ Resolve conflicts **on the PR branch** so the PR becomes mergeable, then use "Sq
 - `README.md` is mixed ownership: contributor prose edits are allowed, but workflow-managed metadata is canonicalized on `main`.
 - If derived files appear in a PR refresh or merge conflict, prefer **`main`'s side** and remove them from the PR branch instead of hand-maintaining them there.
 - Do not block a PR only because shared generated files would be regenerated differently after other merges. `main` auto-syncs the final state after merge.
-- If a skill PR leaves `risk: unknown`, that is not automatically a blocker. Maintainers can review the suggested classification with `npm run audit:skills`, optionally run `npm run sync:risk-labels` locally after merge, and still keep the contributor PR source-only.
+- If a skill PR leaves `risk: unknown`, that is not automatically a blocker. Review the actual behavior semantically; do not infer risk from isolated words or rewrite it automatically.
 
 ### Steps (maintainer resolves conflicts on the contributor’s branch)
 

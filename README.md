@@ -1,4 +1,4 @@
-<!-- registry-sync: version=14.6.0; skills=1967; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
+<!-- registry-sync: version=14.6.0; skills=1968; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
@@ -21,7 +21,7 @@ Project
   -> human review (optionally in Workbench)
 ```
 
-The 1,965+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
+The 1,967+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
 
 This is an independent community project. It is not affiliated with, sponsored by, endorsed by, or authorized by Google. Google, Antigravity, Gemini, and related product names are referenced only to describe compatibility and install targets. The GitHub repository is canonical; the hosted catalog and browser-local Workbench are companion discovery and review surfaces, not a hosted control plane.
 
@@ -61,7 +61,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - **Approval before writes**: the durable artifacts are an approved stack and immutable plan, not an opaque one-shot install.
 - **Installable, not just inspirational**: use the compatible legacy installer or plugin distributions when direct delivery is the right path.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
-- **Broad coverage with real utility**: 1,967+ skills across development, testing, security, infrastructure, product, and marketing.
+- **Broad coverage with real utility**: 1,968+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Inspect before installing**: the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
 - **Focused delivery remains available**: specialized plugins package proven sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
@@ -75,7 +75,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - [Choose Your Tool](#choose-your-tool)
 - [Quick FAQ](#quick-faq)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 1,967+ Skills](#browse-1967-skills)
+- [Browse 1,968+ Skills](#browse-1968-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Support the Project](#support-the-project)
@@ -88,7 +88,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 
 ## Installation
 
-For Codex and Claude, start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md): configure the local MCP through the explicit preview flow, ask the agent for a recommendation, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP is read-only; no skill or project write happens during search, recommendation, inspection, validation, or planning.
+For Codex and Claude, start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md): configure the local MCP through the explicit preview flow, ask the agent for a recommendation, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP and validation are read-only. Planning writes only the requested plan artifact; it does not materialize skill payloads or AAS managed state in the target.
 
 Use direct installation when your host does not yet have a native AAS Core adapter, when you already know the exact skill IDs, or when you deliberately prefer manual selection:
 
@@ -199,7 +199,7 @@ Use the Codex and Claude guides for the AAS Core MCP preview path. For other hos
 
 ### What is Agentic Awesome Skills?
 
-**Agentic Awesome Skills** is the repository behind AAS Core, a local agent-first control plane for composing explainable skill stacks. A deterministic core connects the read-only AAS MCP, the stack CLI, and Workbench to a catalog of 1,965+ reusable `SKILL.md` playbooks. Direct installers, specialized plugins, bundles, and workflows remain supported distribution and discovery surfaces.
+**Agentic Awesome Skills** is the repository behind AAS Core, a local agent-first control plane for composing explainable skill stacks. A deterministic core connects the read-only AAS MCP, the stack CLI, and Workbench to a catalog of 1,967+ reusable `SKILL.md` playbooks. Direct installers, specialized plugins, bundles, and workflows remain supported distribution and discovery surfaces.
 
 ### Is AAS Core fully certified?
 
@@ -207,7 +207,9 @@ Not yet. The current **Agent-First Preview** supports local MCP search, recommen
 
 ### How do I install it?
 
-Run `npx agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the installer to place skills in the directory your assistant already watches.
+For AAS Core, follow the [preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md) and use only a package release whose notes explicitly state that it includes Core. The published 14.6.0 package predates Core, so it is not a valid Core bootstrap.
+
+For direct skill distribution, run `npx agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the legacy installer to place skills in the directory your assistant already watches.
 
 For Autohand Code, use the installer with a custom path:
 
@@ -279,7 +281,7 @@ Remove `--dry-run` only after reviewing the install, update, and removal plan. U
 
 The hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) imports and reviews AAS Core stack manifests and immutable plans in browser memory. It does not access the filesystem, generate an approved plan, or install skills.
 
-## Browse 1,967+ Skills
+## Browse 1,968+ Skills
 
 Use the root repo as a landing page, then jump into the deeper surface that matches your intent.
 

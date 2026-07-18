@@ -117,6 +117,26 @@ test("CLI exits stably on missing approval and never prints a stack trace", asyn
   assert.doesNotMatch(stderr, /\bat\s+\S+\.js:/);
 });
 
+test("CLI reports an invalid stack manifest as invalid input", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const manifestPath = path.join(item.root, "invalid-stack.json");
+  fs.writeFileSync(manifestPath, "{}\n");
+  let stdout = "";
+  let stderr = "";
+  const code = await main(["stack", "validate", "--manifest", manifestPath], {
+    stdout: { write: (value) => { stdout += value; } },
+    stderr: { write: (value) => { stderr += value; } },
+  });
+  assert.equal(code, 2);
+  assert.equal(stdout, "");
+  const error = JSON.parse(stderr);
+  assert.equal(error.status, "error");
+  assert.equal(error.code, "AAS_STACK_MANIFEST_INVALID");
+  assert.equal(error.category, "invalidInput");
+  assert.ok(error.details.issues.length > 0);
+});
+
 test("CLI success is emitted through the versioned result envelope", async () => {
   let stdout = "";
   const code = await main(["help"], {

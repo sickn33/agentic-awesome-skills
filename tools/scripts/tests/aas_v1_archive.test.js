@@ -6,8 +6,7 @@ const path = require("node:path");
 const test = require("node:test");
 const { parsePackageArchive, safeArchivePath } = require("../../lib/aas-v1/cache");
 
-const ROOT = path.resolve(__dirname, "../../..");
-const HOSTILE_ROOT = path.join(ROOT, "verification", "aas-v1", "baseline", "v1", "hostile");
+const HOSTILE_ROOT = path.join(__dirname, "fixtures", "aas-v1-archive");
 const manifest = JSON.parse(fs.readFileSync(path.join(HOSTILE_ROOT, "manifest.json"), "utf8"));
 const limits = {
   maxEntries: manifest.fixtureContract.archive.maxEntries,

@@ -1,27 +1,28 @@
 # Agentic Awesome Skills vs Awesome Claude Skills
 
-If you are comparing **Agentic Awesome Skills** with **Awesome Claude Skills**, the decision usually comes down to breadth vs curation.
+If you are comparing **Agentic Awesome Skills** with **Awesome Claude Skills**, first decide whether you need deterministic project-level composition or an editorial discovery list. Catalog breadth and curation are secondary dimensions.
 
 For clarity: the repository many people still refer to as `awesome-claude-skills` now lives at [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills).
 
 ## TL;DR
 
-- Choose **Agentic Awesome Skills** if you want a large installable library, broad tool coverage, and strong onboarding.
+- Choose **Agentic Awesome Skills** if you want AAS Core to turn an explicit project profile into an explainable, reviewable skill stack, with broad catalog and distribution support around it.
 - Choose **VoltAgent Awesome Agent Skills** if you want a curated list with a strong official-team angle and a tighter scope.
 
 ## At-a-glance comparison
 
 | Criteria | Agentic Awesome Skills | VoltAgent Awesome Agent Skills |
 | --- | --- | --- |
-| Best for | Breadth, installation, multi-tool daily use | Curated discovery and official/community highlights |
-| Catalog shape | Large installable library with bundles, workflows, docs, and generated catalog | Curated awesome-list style collection |
+| Best for | Local deterministic composition, durable desired state, and plan preview | Curated discovery and official/community highlights |
+| Product shape | AAS Core with local MCP, CLI, stack/plan artifacts, Workbench review, and supporting catalog/distribution | Curated awesome-list style collection |
 | Supported tools | Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, more | Claude Code, Codex, Antigravity, Gemini CLI, Cursor, Copilot, OpenCode, Windsurf, more |
 | Onboarding | Installation docs, bundles, workflows, getting-started guides | Curated README and categorized references |
-| Good fit when | You want one repo to install and work from | You want a smaller list to browse and evaluate |
+| Good fit when | You want an agent to recommend a project stack under explicit policy | You want a smaller list to browse and evaluate manually |
 
 ## Why choose Agentic Awesome Skills
 
-- You want a single GitHub repository that acts as both a skill source and an installable working library.
+- You want Codex or Claude to send an explicit profile to a local, read-only MCP and receive a deterministic recommendation.
+- You want the approved selection recorded as `aas-stack.json` and validated before an immutable plan is produced.
 - You care about onboarding assets like [`bundles.md`](bundles.md), [`workflows.md`](workflows.md), and tool-specific guides.
 - You need coverage across many domains, not just a curated shortlist.
 
@@ -33,11 +34,11 @@ For clarity: the repository many people still refer to as `awesome-claude-skills
 
 ## Honest tradeoffs
 
-- Antigravity can feel bigger and noisier at first because it optimizes for breadth.
+- The AAS catalog is larger and its evidence remains uneven; Core reports unknowns rather than treating breadth as certified quality.
 - VoltAgent can be easier to skim quickly because it optimizes for curation.
-- If you want both, a sensible workflow is to browse curated lists first and install a broader library once you know your use cases.
+- If you want both, use curated lists for editorial discovery and AAS Core when you need a reproducible, policy-controlled project stack.
 
 ## Suggested next step
 
-- If you want to install and start using skills today, go back to [`README.md`](../../README.md) and follow the installation guide.
+- If you want project-specific composition, start with the [AAS Core guide](aas-core.md). If you already know exact skill IDs, use the direct distribution options in [`README.md`](../../README.md).
 - If you are still evaluating tool-specific options, continue with [`best-claude-code-skills-github.md`](best-claude-code-skills-github.md) or [`best-cursor-skills-github.md`](best-cursor-skills-github.md).

@@ -3,6 +3,8 @@
 Status: approved source packet for the active Codex goal
 Design source: `docs/maintainers/aas-agent-first-control-plane-v1-design.md`
 
+> **Historical goal packet:** This file preserves the original certified-v1 finish line, including apply/recovery and independent verification work. It is not the current public preview contract or a claim that those gates shipped. The supported public preview stops after plan review; see [`aas-agent-first-control-plane-preview-profile.md`](aas-agent-first-control-plane-preview-profile.md).
+
 ## Fit
 
 Use a durable goal. The work crosses catalog schema, deterministic recommendation, CLI lifecycle, local MCP, transactional filesystem behavior, host adapters, Workbench review, cross-platform packaging, benchmark construction, security abuse testing, and protected release verification. It needs repeated implementation/verification loops and has an independent observable finish line.

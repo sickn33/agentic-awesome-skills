@@ -6,21 +6,21 @@ This document keeps the repository's GitHub-facing discovery copy aligned with t
 
 Preferred positioning:
 
-> Installable GitHub library of 1,967+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and other AI coding assistants.
+> AAS Core is the local, deterministic engine that turns an explicit project profile into an explainable skill-stack recommendation and immutable preview plan, backed by 1,967+ cataloged skills.
 
 Key framing:
 
-- installable skill library;
-- GitHub-first discovery;
-- broad multi-tool compatibility;
-- bundles, workflows, and onboarding docs;
-- useful for both breadth and curated evaluation.
+- AAS Core as the primary product;
+- local MCP and CLI as the agent-facing and operator-facing interfaces;
+- `aas-stack.json` and the immutable plan as durable artifacts;
+- GitHub as the canonical source, with the hosted catalog and Workbench as discovery and review surfaces;
+- catalog, plugins, bundles, workflows, and direct installers as supporting content and distribution.
 
 ## GitHub About settings
 
 Preferred description:
 
-> Installable GitHub library of 1,967+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and more. Includes installer CLI, bundles, workflows, and official/community skill collections.
+> Local, deterministic AAS Core for explainable coding-agent skill stacks, backed by 1,967+ cataloged skills. Includes a read-only MCP, stack CLI, Workbench review, plugins, bundles, workflows, and direct distribution.
 
 Preferred homepage:
 
@@ -28,8 +28,9 @@ Preferred homepage:
 
 Preferred social preview:
 
-- use a clean preview image that says `1,967+ Agentic Skills`;
-- mention Claude Code, Cursor, Codex CLI, and Gemini CLI;
+- lead with `AAS Core` and the profile → stack → plan flow;
+- present `1,967+ Agentic Skills` as supporting catalog evidence, not a second product;
+- mention Codex and Claude as the current Core agent path, with broader host compatibility as distribution support;
 - avoid dense text and tiny logos that disappear in social cards.
 
 Preferred topics:
@@ -75,11 +76,12 @@ Suggested release template:
 ```md
 ## [VERSION] - YYYY-MM-DD - "User-facing title"
 
-> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants.
+> AAS Core and supporting catalog update for local, explainable coding-agent skill stacks.
 
 Start here:
 
-- Install: `npx agentic-awesome-skills`
+- AAS Core guide: `docs/users/aas-core.md`
+- Direct skill distribution: `npx agentic-awesome-skills`
 - Choose your tool: `README.md#choose-your-tool`
 - Specialized plugins: `README.md#recommended-specialized-plugins`
 - Bundles: `docs/users/bundles.md`
@@ -113,9 +115,9 @@ Start here:
 
 Suggested pinned discussion topics:
 
-- `Start here: best skills by tool`
-- `Best bundles for new users`
-- `How to choose between Antigravity and other skill libraries`
+- `Start here: compose a project stack with AAS Core`
+- `Choose between Core recommendation and direct distribution`
+- `How the catalog, plugins, bundles, and workflows support Core`
 
 Discussion posts should:
 

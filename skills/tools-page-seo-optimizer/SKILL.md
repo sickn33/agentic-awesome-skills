@@ -593,12 +593,12 @@ seo:full()  { seo:quick; }
 
 ## Related Skills
 
-- [schema-markup-generator](/skills/schema-markup-generator/SKILL.md) — JSON-LD structured data (HowTo, FAQPage, WebApplication) for tool pages
-- [social-metadata-hardening](/skills/social-metadata-hardening/SKILL.md) — OG tags and social sharing previews for tool pages
-- [indexing-issue-auditor](/skills/indexing-issue-auditor/SKILL.md) — full crawl audit and redirect mapping after slug changes
-- [pagespeed-enhancer](/skills/pagespeed-enhancer/SKILL.md) — Lighthouse / Core Web Vitals audit for tool pages
-- [wordpress-centric-high-seo-optimized-blogwriting-skill](/skills/wordpress-centric-high-seo-optimized-blogwriting-skill/SKILL.md) — blog post writing with SEO structure
-- [vibecode-production-qa-validator](/skills/vibecode-production-qa-validator/SKILL.md) — end-to-end production QA including deployment verification
+- [schema-markup-generator](../schema-markup-generator/SKILL.md) — JSON-LD structured data (HowTo, FAQPage, WebApplication) for tool pages
+- [social-metadata-hardening](../social-metadata-hardening/SKILL.md) — OG tags and social sharing previews for tool pages
+- [indexing-issue-auditor](../indexing-issue-auditor/SKILL.md) — full crawl audit and redirect mapping after slug changes
+- [pagespeed-enhancer](../pagespeed-enhancer/SKILL.md) — Lighthouse / Core Web Vitals audit for tool pages
+- [wordpress-centric-high-seo-optimized-blogwriting-skill](../wordpress-centric-high-seo-optimized-blogwriting-skill/SKILL.md) — blog post writing with SEO structure
+- [vibecode-production-qa-validator](../vibecode-production-qa-validator/SKILL.md) — end-to-end production QA including deployment verification
 
 ---
 

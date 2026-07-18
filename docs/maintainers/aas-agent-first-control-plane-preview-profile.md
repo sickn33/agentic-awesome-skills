@@ -7,10 +7,10 @@ Certified design: `docs/maintainers/aas-agent-first-control-plane-v1-design.md`
 ## Purpose
 
 This profile validates whether Codex, Claude Code, and comparable agents can
-use AAS to compose useful local skill stacks before AAS claims the stronger
-certified-v1 guarantees. It is additive: it does not change the frozen v1
-design, benchmark, hostile corpus, verifier, or completion criteria. A passing
-preview does not complete the active v1 goal.
+use AAS to compose useful local skill stacks without implying the retired
+certified-v1 benchmark or transaction-verifier guarantees. The certified-v1
+design and goal documents are retained as historical architecture records;
+their verifier corpus and routine workflow were removed on 2026-07-18.
 
 The permitted preview claim is:
 
@@ -33,7 +33,7 @@ Preview output must not use `implementationVerified`, `releaseReady`,
 - Deterministic recommendation with structured factors, two visible lanes
   (`recommended` and `discoveryCandidates`), explicit unknowns, stable
   tie-breaking, and fail-closed policy decisions.
-- Functional Node 22/24 coverage on Linux, macOS, and Windows from one exact
+- Essential packed-product coverage on Linux and Node 22 from one exact
   content-addressed tarball.
 - Workbench schema/import/render tests and a local production build. A live
   Pages deployment remains outside the preview until separately approved.
@@ -52,29 +52,14 @@ are not preview-supported safety claims. They are disabled by default:
 - absence of the opt-in fails before runtime resolution or target writes with
   a structured policy error.
 
-Internal transaction tests are development evidence only. Certification still
-requires the frozen production-binary crash, boundary, race, rollback, and
-recovery verifier.
+Internal transaction tests are development evidence only. Apply and recovery
+remain experimental and outside the supported preview claim.
 
 ## Preview functional gate
 
-Every matrix job must install the exact candidate tarball with lifecycle
-scripts disabled and run without checkout-only runtime dependencies. No job may
-be skipped or allowed to fail.
-
-On Windows, the preview verifier may materialize its own isolated runtime-cache
-fixture and must then have the production core verify the complete identity and
-every cached byte before `plan`, `doctor`, or MCP use. This proves the read-only
-functional lifecycle without claiming that Windows cache-promotion durability
-is certified. Native directory-flush and interrupted-promotion evidence remains
-part of the certified-v1 transaction gate.
-
-Windows preview creation of the regenerable manifest and immutable plan uses
-the explicit `--preview-windows-output` opt-in. The CLI fsyncs the file and
-returns `outputDurability: "fileSyncedDirectoryUnverified"` together with
-`certificationStatus: "notCertified"`; without that flag it remains fail-closed.
-This opt-in never applies to skill installation, host configuration, apply, or
-recovery.
+The preview job must install the exact candidate tarball with lifecycle scripts
+disabled and run without checkout-only runtime dependencies. It is an essential
+end-to-end smoke test, not an OS/runtime certification matrix.
 
 Required functional suites are:
 
@@ -131,8 +116,8 @@ suite make `previewQualified` false.
 - Real Codex or Claude configuration writes, public Pages deployment, npm
   publication, GitHub release, or announcement.
 
-These remain mandatory before AAS can call the recommendation system or
-transactional lifecycle certified v1.
+These are explicitly outside the current product claim. The repository does
+not maintain a blocking certified-v1 release gate.
 
 ## Product-learning gate
 
@@ -151,7 +136,6 @@ decision and privacy review.
 
 ## Relationship to certified v1
 
-The certified verifier may remain red or unevaluated while the preview gate is
-green. That state must be reported as `previewQualified: true` and
-`certifiedV1: false`, never as a skipped certified pass. The frozen v1 design
-and goal remain the only completion criteria for certification and release.
+The preview receipt must report `previewQualified: true` and
+`certifiedV1: false`. The historical certified-v1 design is not a current
+release gate and must not be inferred from a green preview.

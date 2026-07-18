@@ -130,20 +130,13 @@ assert.match(skillReviewWorkflow, /^permissions:\n  contents: read$/m);
 assert.match(skillReviewWorkflow, /^  review-attempt:$/m);
 assert.match(skillReviewWorkflow, /^  review:$/m);
 assert.match(skillReviewWorkflow, /^  manual-review-required:$/m);
-assert.match(skillReviewWorkflow, /^  missing-review-credentials:$/m);
+assert.doesNotMatch(skillReviewWorkflow, /^  missing-review-credentials:$/m);
 assert.match(
   skillReviewWorkflow,
   /needs\.review-attempt\.outputs\.outcome == 'quota'/,
   "quota exhaustion must route to exact-head manual review",
 );
-assert.match(
-  skillReviewWorkflow,
-  /github\.event\.pull_request\.head\.repo\.full_name != github\.repository/,
-);
-assert.match(
-  skillReviewWorkflow,
-  /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/,
-);
+assert.match(skillReviewWorkflow, /needs\.review-state\.outputs\.configured != 'true'/);
 assert.match(skillReviewWorkflow, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
 assert.match(skillReviewWorkflow, /review_changed_skills\.cjs --plan/);
 assert.match(skillReviewWorkflow, /actions\/cache\/restore@[0-9a-f]{40}/);

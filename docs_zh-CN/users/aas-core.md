@@ -2,6 +2,8 @@
 
 **AAS Core** 是 Agentic Awesome Skills 推荐的本地、代理优先控制层。它让 Codex 或 Claude Code 根据经过验证的本地目录搜索和检查技能、生成确定性的最小技能栈建议，并在任何变更发生前提供可审查的 `aas-stack.json` 和 CLI 计划。
 
+> **发布边界：** 已发布的 14.6.0 npm 包早于 AAS Core，不能用于 Core 引导。请等待某个版本的发布说明明确声明包含 AAS Core，并只使用该精确版本。当前不存在受支持的 npm Core 引导版本。
+
 ## 工作流程
 
 1. 使用官方 AAS CLI 为 Codex 或 Claude Code 配置本地 stdio MCP。
