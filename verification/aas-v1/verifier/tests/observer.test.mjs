@@ -80,6 +80,20 @@ test("combined macOS fs_usage parser enforces canary ordering and classifies can
     "12:00:00.040 posix_spawn child node.1",
   ].join("\n"), {}, "aas-ready-1", "aas-start-1");
   assert.deepEqual([result.networkAttempts, result.writeAttempts, result.childProcesses], [1, 1, 1]);
+  const bufferedOutOfOrder = parseMacCombinedFsUsage([
+    "12:00:02.030 connect 127.0.0.1:9 node.1",
+    "12:00:02.020 WrData[A] F=3 /tmp/candidate-output node.1",
+    "12:00:00.005 WrData[A] F=3 /tmp/aas-ready-1 aasobs.1",
+    "12:00:02.010 WrData[A] F=3 /tmp/aas-start-1 aasobs.1",
+  ].join("\n"), {}, "aas-ready-1", "aas-start-1");
+  assert.deepEqual([bufferedOutOfOrder.networkAttempts, bufferedOutOfOrder.writeAttempts], [1, 1]);
+  const midnightWrap = parseMacCombinedFsUsage([
+    "00:00:00.250 connect 127.0.0.1:9 node.1",
+    "23:59:59.900 WrData[A] F=3 /tmp/aas-ready-1 aasobs.1",
+    "00:00:00.100 WrData[A] F=3 /tmp/aas-start-1 aasobs.1",
+    "00:00:00.200 WrData[A] F=3 /tmp/candidate-output node.1",
+  ].join("\n"), {}, "aas-ready-1", "aas-start-1");
+  assert.deepEqual([midnightWrap.networkAttempts, midnightWrap.writeAttempts], [1, 1]);
   assert.throws(() => parseMacCombinedFsUsage("12:00:00.010 WrData[A] F=3 /tmp/aas-start-1 aasobs.1\n", {}, "aas-ready-1", "aas-start-1"), /readiness canary/);
   assert.throws(() => parseMacCombinedFsUsage("12:00:00.010 WrData[A] F=3 /tmp/aas-ready-1 aasobs.1\n", {}, "aas-ready-1", "aas-start-1"), /candidate start canary/);
 });

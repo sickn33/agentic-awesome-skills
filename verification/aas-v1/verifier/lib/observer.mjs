@@ -110,6 +110,20 @@ function fsUsageLines(text) {
   return text.split(/\r?\n/).map((line) => line.trim()).filter((line) => /^\d{2}:\d{2}:\d{2}\.\d+/.test(line));
 }
 
+function fsUsageTimestamp(line) {
+  const match = line.match(/^(\d{2}):(\d{2}):(\d{2})\.(\d+)/);
+  if (!match) return null;
+  const fraction = Number(`0.${match[4]}`);
+  return ((Number(match[1]) * 60 + Number(match[2])) * 60 + Number(match[3])) * 1000 + fraction * 1000;
+}
+
+const FS_USAGE_DAY_MS = 24 * 60 * 60 * 1000;
+const FS_USAGE_MAX_INTERVAL_MS = 15 * 60 * 1000;
+
+function forwardClockDelta(timestamp, boundary) {
+  return (timestamp - boundary + FS_USAGE_DAY_MS) % FS_USAGE_DAY_MS;
+}
+
 export function parseMacFsUsage(filesystemText, networkText, execText, zones = {}) {
   const events = [];
   for (const line of fsUsageLines(networkText)) events.push({ kind: "network", targetDigest: redactToken(line, zones) });
@@ -125,18 +139,19 @@ export function parseMacFsUsage(filesystemText, networkText, execText, zones = {
 
 export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "", candidateToken = "") {
   const classified = [];
-  let readinessIndex = -1;
-  let candidateIndex = -1;
+  const readinessTimestamps = [];
+  const candidateTimestamps = [];
   const lines = fsUsageLines(text);
-  for (const [index, line] of lines.entries()) {
+  for (const line of lines) {
+    const timestamp = fsUsageTimestamp(line);
     if (/\b(?:socket|connect|bind|listen|accept|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo)\b/i.test(line)) {
-      classified.push({ index, kind: "network", line });
+      classified.push({ timestamp, kind: "network", line });
     } else if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
-      if (readinessToken && line.includes(readinessToken)) readinessIndex = index;
-      else if (candidateToken && line.includes(candidateToken)) candidateIndex = index;
-      else classified.push({ index, kind: "write", line });
+      if (readinessToken && line.includes(readinessToken)) readinessTimestamps.push(timestamp);
+      else if (candidateToken && line.includes(candidateToken)) candidateTimestamps.push(timestamp);
+      else classified.push({ timestamp, kind: "write", line });
     } else if (/\b(?:execve|posix_spawn|exec|spawn)\b/i.test(line)) {
-      classified.push({ index, kind: "process", line });
+      classified.push({ timestamp, kind: "process", line });
     }
   }
   const diagnostic = () => JSON.stringify({
@@ -145,18 +160,32 @@ export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "", c
     candidateTokenAnywhere: candidateToken ? text.includes(candidateToken) : null,
     callNames: [...new Set(lines.map((line) => line.match(/^\d{2}:\d{2}:\d{2}\.\d+\s+(\S+)/)?.[1]).filter(Boolean))].slice(0, 24),
   });
-  if (readinessToken && readinessIndex < 0) {
+  if (readinessToken && !readinessTimestamps.length) {
     throw Object.assign(new Error(`fs_usage missed the observer readiness canary: ${diagnostic()}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
-  if (candidateToken && candidateIndex < 0) {
+  if (candidateToken && !candidateTimestamps.length) {
     throw Object.assign(new Error(`fs_usage missed the candidate start canary: ${diagnostic()}`), { code: "AAS_OBSERVER_UNAVAILABLE" });
   }
-  if (candidateToken && candidateIndex <= readinessIndex) {
+  const readinessTimestamp = readinessTimestamps.length ? Math.max(...readinessTimestamps) : null;
+  const candidateTimestamp = candidateTimestamps
+    .map((timestamp) => ({ timestamp, delta: forwardClockDelta(timestamp, readinessTimestamp) }))
+    .filter(({ delta }) => delta > 0 && delta <= FS_USAGE_MAX_INTERVAL_MS)
+    .sort((left, right) => left.delta - right.delta)
+    .at(-1)?.timestamp ?? null;
+  if (candidateToken && candidateTimestamp === null) {
     throw Object.assign(new Error("fs_usage canary ordering is ambiguous"), { code: "AAS_OBSERVER_AMBIGUOUS_LINEAGE" });
   }
-  const boundary = candidateToken ? candidateIndex : -1;
+  const boundary = candidateToken ? candidateTimestamp : -Infinity;
   const events = classified
-    .filter((entry) => entry.index > boundary)
+    // fs_usage may flush filesystem and network buffers out of line order.
+    // Native timestamps, not output position, bind calls to the candidate
+    // interval established by the final start-canary heartbeat.
+    .filter((entry) => {
+      if (!candidateToken) return true;
+      if (entry.timestamp === null) return false;
+      const delta = forwardClockDelta(entry.timestamp, boundary);
+      return delta > 0 && delta <= FS_USAGE_MAX_INTERVAL_MS;
+    })
     .map(({ kind, line }) => ({ kind, targetDigest: redactToken(line, zones) }));
   return summarizeEvents(events);
 }
