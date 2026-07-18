@@ -10,12 +10,13 @@ const core = require("../../lib/aas-v1");
 const { execute, main, windowsOutputDurabilityDetails } = require("../../lib/aas-v1/cli/main");
 
 const ROOT = path.resolve(__dirname, "../../..");
+const PACKAGE_VERSION = require(path.join(ROOT, "package.json")).version;
 
 function fixture() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "aas-cli-"));
   const runtime = {
     package: "agentic-awesome-skills",
-    version: "14.6.0",
+    version: PACKAGE_VERSION,
     integrity: "sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg==",
     closureDigest: `sha256-${"1".repeat(64)}`,
   };
@@ -189,7 +190,7 @@ test("production CLI resolves and re-verifies a content-addressed runtime cache"
   const integrity = item.runtime.integrity;
   const packageJson = {
     name: "agentic-awesome-skills",
-    version: "14.6.0",
+    version: item.runtime.version,
     bin: { "aas-mcp": "tools/bin/aas-mcp.js" },
     bundledDependencies: ["ajv", "sanitize-filename", "yaml"],
   };
@@ -210,7 +211,7 @@ test("production CLI resolves and re-verifies a content-addressed runtime cache"
     cacheRoot,
     release: {
       package: "agentic-awesome-skills",
-      version: "14.6.0",
+      version: item.runtime.version,
       integrity,
       provenance: { registryOrigin: "https://registry.npmjs.org", signaturesPresent: false, attestationsPresent: false },
     },
