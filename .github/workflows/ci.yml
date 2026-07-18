@@ -190,7 +190,7 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: Refresh ephemeral derived sources for tests
-        run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog
+        run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-review-queue && npm run build:aas-v1-catalog
 
       - name: Run tests
         run: npm run test
