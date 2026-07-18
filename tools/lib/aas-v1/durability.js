@@ -5,6 +5,7 @@ const fsp = require("node:fs/promises");
 const { spawnSync } = require("node:child_process");
 
 const WINDOWS_DIRECTORY_FLUSH_PATH_ENV = "AAS_WINDOWS_DIRECTORY_FLUSH_PATH";
+const WINDOWS_DIRECTORY_FLUSH_TIMEOUT_MS = 60_000;
 const WINDOWS_DIRECTORY_FLUSH = [
   "$ErrorActionPreference='Stop'",
   "$source='using System; using System.Runtime.InteropServices; public static class AasDirectoryFlush { [DllImport(\"kernel32.dll\", CharSet=CharSet.Unicode, SetLastError=true)] public static extern IntPtr CreateFileW(string n, uint a, uint s, IntPtr p, uint c, uint f, IntPtr t); [DllImport(\"kernel32.dll\", SetLastError=true)] public static extern bool FlushFileBuffers(IntPtr h); [DllImport(\"kernel32.dll\", SetLastError=true)] public static extern bool CloseHandle(IntPtr h); }'",
@@ -73,7 +74,10 @@ function flushWindowsDirectory(directoryPath, cause) {
     encoding: "utf8",
     env: windowsFlushEnvironment(directoryPath),
     windowsHide: true,
-    timeout: 15000,
+    // Hosted Windows runners can take more than 15 seconds to cold-start
+    // PowerShell while ETW is active. Keep the helper bounded and fail-closed,
+    // but allow the capability probe to finish under verified CI load.
+    timeout: WINDOWS_DIRECTORY_FLUSH_TIMEOUT_MS,
     maxBuffer: 64 * 1024,
   });
   if (result.status !== 0 || result.error) {

@@ -56,6 +56,7 @@ test("Windows directory-flush failures expose only a structured native phase and
     const [, helperArguments, helperOptions] = loaded.invocations[0];
     assert.ok(!helperArguments.includes(directoryPath));
     assert.equal(helperOptions.env.AAS_WINDOWS_DIRECTORY_FLUSH_PATH, directoryPath);
+    assert.equal(helperOptions.timeout, 60_000);
   } finally {
     loaded.restore();
   }
