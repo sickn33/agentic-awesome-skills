@@ -151,6 +151,16 @@ export function nativeObservationLineage(platform, observed) {
   return { childObserved, verified };
 }
 
+export function nativeMutationEvidenceSatisfied(platform, className, writeAttempts, lockValidated) {
+  if (Number.isSafeInteger(writeAttempts) && writeAttempts > 0) return true;
+  // The lock is the first durable boundary and can be created and killed
+  // between two fs_usage samples. The driver has independently parsed the
+  // complete token-bound lock record from disk; no later boundary or WAL is
+  // accepted for this narrow case. Every later fault still requires a native
+  // persistent-write event.
+  return platform === "darwin" && className === "lock" && lockValidated === true;
+}
+
 export function faultFixtureProfile(className, backupSkillIds) {
   const replace = className === "backup";
   const requiresBoundaryWindow = className === "write" || className === "rename" || replace;
@@ -506,6 +516,8 @@ async function faultCase(context, className) {
       targetRoot: fixture.targetRoot,
       skillId: observedSkillId,
       className,
+      expectedPlanDigest: fixture.plan.digest,
+      expectedTargetIdentityDigest: fixture.plan.payload.target.identityDigest,
       timeoutMs: 120_000,
     }),
     timeoutMs: 130_000,
@@ -535,7 +547,8 @@ async function faultCase(context, className) {
   // child-process event from their process-tree observers.
   const childLineageObserved = nativeLineage.childObserved;
   assert(driverValue?.observed && driverValue.recoveryLockPresent === true && driverValue.laterBoundaries.length === 0
-      && observed.observation.writeAttempts > 0 && childLineageObserved && lineageVerified && walBoundaryValid,
+      && nativeMutationEvidenceSatisfied(process.platform, className, observed.observation.writeAttempts, driverValue?.observed?.lockValidated)
+      && childLineageObserved && lineageVerified && walBoundaryValid,
     "AAS_TRANSACTION_CONTROLLER_NATIVE_OBSERVATION_MISSING", {
       className,
       writeAttempts: observed.observation.writeAttempts,

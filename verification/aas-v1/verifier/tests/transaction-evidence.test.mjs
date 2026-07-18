@@ -5,7 +5,8 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { classifyConcurrencyOutcomes, corruptPrefixIsFailClosed, faultFixtureProfile, faultObservationSkillId, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { classifyConcurrencyOutcomes, corruptPrefixIsFailClosed, faultFixtureProfile, faultObservationSkillId, nativeMutationEvidenceSatisfied, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { expectedRecoveryId, isTransientTraversalError, validateObservedLockRecord } from "../lib/transaction-fault-contract.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -150,6 +151,51 @@ test("native lineage accepts macOS executable binding without invented child eve
     observation: { childProcesses: 1 },
     diagnostics: { processTreeEmpty: true },
   }).verified, true);
+});
+
+test("only the externally validated lock boundary may omit a sampled native write", () => {
+  assert.equal(nativeMutationEvidenceSatisfied("darwin", "lock", 0, true), true);
+  assert.equal(nativeMutationEvidenceSatisfied("darwin", "lock", 0, false), false);
+  assert.equal(nativeMutationEvidenceSatisfied("linux", "lock", 0, true), false);
+  assert.equal(nativeMutationEvidenceSatisfied("win32", "lock", 0, true), false);
+  assert.equal(nativeMutationEvidenceSatisfied("darwin", "journal", 0, true), false);
+  assert.equal(nativeMutationEvidenceSatisfied("linux", "journal", 1, false), true);
+  assert.equal(nativeMutationEvidenceSatisfied("win32", "write", 10, true), true);
+});
+
+test("lock observation is bound to the exact child, plan, target, and journal", () => {
+  const expected = {
+    pid: 321,
+    planDigest: `sha256-${"b".repeat(64)}`,
+    targetIdentityDigest: `sha256-${"c".repeat(64)}`,
+  };
+  const recoveryId = expectedRecoveryId(expected.planDigest, expected.targetIdentityDigest);
+  const record = {
+    schemaVersion: 1,
+    kind: "apply",
+    pid: expected.pid,
+    token: "e".repeat(48),
+    planDigest: expected.planDigest,
+    targetIdentityDigest: expected.targetIdentityDigest,
+    recoveryId,
+    journalName: `.aas-transaction-${recoveryId}.wal`,
+    plannedDirectories: [],
+  };
+  assert.equal(validateObservedLockRecord(record, expected), true);
+  assert.equal(validateObservedLockRecord({ ...record, pid: 322 }, expected), false);
+  assert.equal(validateObservedLockRecord({ ...record, planDigest: digest }, expected), false);
+  assert.equal(validateObservedLockRecord({ ...record, targetIdentityDigest: digest }, expected), false);
+  assert.equal(validateObservedLockRecord({ ...record, journalName: ".aas-transaction-other.wal" }, expected), false);
+  assert.equal(validateObservedLockRecord({ ...record, recoveryId: `recovery-${"d".repeat(48)}` }, expected), false);
+  assert.equal(validateObservedLockRecord({ ...record, plannedDirectories: ["unrelated-but-safe"] }, expected), false);
+});
+
+test("transaction traversal ignores disappearance only", () => {
+  assert.equal(isTransientTraversalError({ code: "ENOENT" }), true);
+  assert.equal(isTransientTraversalError({ code: "ENOTDIR" }), true);
+  assert.equal(isTransientTraversalError({ code: "EACCES" }), false);
+  assert.equal(isTransientTraversalError({ code: "EIO" }), false);
+  assert.equal(isTransientTraversalError({ code: "EPERM" }), false);
 });
 
 test("write faults use a policy-safe corpus to expose the transient staging boundary", () => {

@@ -8,8 +8,8 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-694a4b44bddf6a355ccc2a4b13910d775adf11bb8c4b85bbe98913141bc0b084",
-  "fileCount": 764,
+  "rootDigest": "sha256-148dc0768914c31973b1f43fd385046d2ba7323981f92a6cf15f952918b282ee",
+  "fileCount": 765,
   "files": [
     {
       "path": "README.md",
@@ -3678,8 +3678,8 @@
     },
     {
       "path": "verifier/drivers/transaction-fault.mjs",
-      "bytes": 9151,
-      "sha256": "f7ea5ab2e24ef47c34a134862516a40f33c7910da0f2ce5e83b9f8d5eec47ef8"
+      "bytes": 9868,
+      "sha256": "29ec888fb88a24eeebba2dafcb96af4facf38e64dc34164e992f6abc428e5ae3"
     },
     {
       "path": "verifier/drivers/transaction-race.mjs",
@@ -3758,13 +3758,18 @@
     },
     {
       "path": "verifier/lib/transaction-controller.mjs",
-      "bytes": 39925,
-      "sha256": "2eb3b2bd8711677eedfefaca7f3289faaa1c9ce4dacc2743552890719c46da92"
+      "bytes": 40750,
+      "sha256": "f564e8c4fd293211c61550d7dfd59d7842c5d4bceb1edd5495fa6a9db82d2f73"
     },
     {
       "path": "verifier/lib/transaction-evidence.mjs",
       "bytes": 11460,
       "sha256": "2fff15ff8ae040c602848653502b341a7014fe1ab7571c2bfe667e3f114c7c00"
+    },
+    {
+      "path": "verifier/lib/transaction-fault-contract.mjs",
+      "bytes": 1566,
+      "sha256": "14eda6faf43e6eca95e79820a62376b5705eda77eac09a899c6a04dbe17504e5"
     },
     {
       "path": "verifier/observers/windows-etw.ps1",
@@ -3823,8 +3828,8 @@
     },
     {
       "path": "verifier/tests/transaction-evidence.test.mjs",
-      "bytes": 10899,
-      "sha256": "cfe5bb814b7e2d0db2d825adfa95d86891454ebe5774ed3ccbbd7f749ee8094e"
+      "bytes": 13504,
+      "sha256": "9135aa99b4b6198b45aeb1b7770a8fd0ace4b9d576496774b0c77eacd655927d"
     },
     {
       "path": "verifier/tests/tuning-gold-equivalence-audit.test.mjs",

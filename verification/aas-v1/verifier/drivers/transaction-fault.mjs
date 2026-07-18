@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawn, spawnSync } from "node:child_process";
 import crypto from "node:crypto";
+import { isTransientTraversalError, validateObservedLockRecord } from "../lib/transaction-fault-contract.mjs";
 
 function digest(value) {
   return `sha256-${crypto.createHash("sha256").update(JSON.stringify(value)).digest("hex")}`;
@@ -12,11 +13,20 @@ function digest(value) {
 function listMatching(root, matcher) {
   const found = [];
   const visit = (directory) => {
-    if (!fs.existsSync(directory)) return;
-    for (const name of fs.readdirSync(directory)) {
+    let names;
+    try {
+      names = fs.readdirSync(directory);
+    } catch (error) {
+      if (isTransientTraversalError(error)) return;
+      throw error;
+    }
+    for (const name of names) {
       const absolute = path.join(directory, name);
       let stat;
-      try { stat = fs.lstatSync(absolute); } catch { continue; }
+      try { stat = fs.lstatSync(absolute); } catch (error) {
+        if (isTransientTraversalError(error)) continue;
+        throw error;
+      }
       const relative = path.relative(root, absolute).split(path.sep).join("/");
       if (matcher(relative, stat)) found.push(relative);
       if (stat.isDirectory() && !stat.isSymbolicLink()) visit(absolute);
@@ -26,7 +36,7 @@ function listMatching(root, matcher) {
   return found.sort();
 }
 
-function predicate(className, targetRoot, skillId) {
+function predicate(className, targetRoot, skillId, expected) {
   const matchers = {
     lock: (relative) => relative === ".aas-transaction.lock",
     journal: (relative) => /^\.aas-transaction-recovery-[a-f0-9]+\.wal$/.test(relative),
@@ -38,12 +48,13 @@ function predicate(className, targetRoot, skillId) {
   };
   if (!matchers[className]) throw new Error(`Unknown fault class: ${className}`);
   const lockPath = path.join(targetRoot, ".aas-transaction.lock");
-  if (!fs.existsSync(lockPath)) return null;
   try {
+    const stat = fs.lstatSync(lockPath);
+    if (stat.isSymbolicLink() || !stat.isFile() || stat.nlink !== 1) return null;
     const text = fs.readFileSync(lockPath, "utf8");
     const record = JSON.parse(text);
-    if (!text.endsWith("\n") || record.kind !== "apply" || !Number.isSafeInteger(record.pid)
-      || !/^[a-f0-9]{48}$/.test(record.token || "") || !/^sha256-[a-f0-9]{64}$/.test(record.planDigest || "")) return null;
+    if (!text.endsWith("\n") || !validateObservedLockRecord(record, expected)) return null;
+    expected.lockDigest = digest(record);
   } catch { return null; }
   const matches = listMatching(targetRoot, matchers[className]);
   if (!matches.length) return null;
@@ -64,7 +75,13 @@ function predicate(className, targetRoot, skillId) {
       if (!text.endsWith("\n") || !records.some((record) => record.event === "committed")) return null;
     }
   } catch { return null; }
-  return { class: className, pathsDigest: digest(matches), count: matches.length };
+  return {
+    class: className,
+    pathsDigest: digest(matches),
+    count: matches.length,
+    lockValidated: true,
+    lockDigest: expected.lockDigest,
+  };
 }
 
 function walEvidence(targetRoot) {
@@ -130,6 +147,13 @@ const child = spawn(input.executable, input.args, {
   windowsHide: true,
   stdio: ["ignore", "pipe", "pipe"],
 });
+const expectedLock = {
+  pid: child.pid,
+  planDigest: input.expectedPlanDigest,
+  targetIdentityDigest: input.expectedTargetIdentityDigest,
+  plannedDirectories: [],
+  lockDigest: null,
+};
 const stdout = [];
 const stderr = [];
 child.stdout.on("data", (chunk) => stdout.push(chunk));
@@ -143,7 +167,7 @@ let observed = null;
 let terminationStarted = false;
 const observeAndTerminate = () => {
   if (observed || terminationStarted) return;
-  const value = predicate(input.className, input.targetRoot, input.skillId);
+  const value = predicate(input.className, input.targetRoot, input.skillId, expectedLock);
   if (!value) return;
   observed = value;
   terminationStarted = true;
@@ -159,7 +183,14 @@ const watchDirectory = (directory) => {
 };
 const visitDirectories = (directory) => {
   watchDirectory(directory);
-  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+  let entries;
+  try {
+    entries = fs.readdirSync(directory, { withFileTypes: true });
+  } catch (error) {
+    if (isTransientTraversalError(error)) return;
+    throw error;
+  }
+  for (const entry of entries) {
     if (entry.isDirectory() && !entry.isSymbolicLink()) visitDirectories(path.join(directory, entry.name));
   }
 };

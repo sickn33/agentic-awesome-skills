@@ -29,6 +29,7 @@ const {
   cleanupMaterializedLayout,
   inspectLayout,
   materializeLayout,
+  remainingMaterializedLayoutPaths,
 } = require("../../lib/aas-v1/transaction/safety");
 
 const DIGEST = (letter) => `sha256-${letter.repeat(64)}`;
@@ -272,6 +273,60 @@ test("cleanup recovery closes a WAL created before layout materialization", () =
   fs.rmSync(fx.sandbox, { recursive: true });
 });
 
+test("cleanup recovery stays fail-closed when a marker-owned stage is not empty", () => {
+  const fx = fixture();
+  fs.rmSync(fx.transactionDirectory, { recursive: true });
+  const plan = buildInstallPlan(fx);
+  const inspected = inspectLayout(fx.adapter, plan.payload.target);
+  const applyLock = acquireLock(inspected, plan);
+  const recoveryId = recoveryIdFor(plan.digest, TARGET_ID);
+  const markerName = `.aas-layout-${recoveryId}`;
+  const bootstrapBody = {
+    directories: inspected.missingDirectories
+      .map((directory) => path.relative(inspected.root, directory).split(path.sep).join("/")),
+    markerName,
+    markerToken: applyLock.token,
+    planDigest: plan.digest,
+    recoveryId,
+    schemaVersion: 1,
+    targetIdentityDigest: TARGET_ID,
+  };
+  fs.writeFileSync(path.join(fx.root, `.aas-bootstrap-${recoveryId}.json`), `${canonicalJson({
+    ...bootstrapBody,
+    recordDigest: sha256(canonicalJson(bootstrapBody)),
+  })}\n`);
+  createJournal(fx.root, recoveryId, plan.digest, TARGET_ID);
+  const missing = inspected.missingDirectories[0];
+  const stage = path.join(path.dirname(missing), `.aas-layout-stage-${applyLock.token}-${path.basename(missing)}`);
+  fs.mkdirSync(stage, { mode: 0o700 });
+  fs.writeFileSync(path.join(stage, markerName), `${applyLock.token}\n`, { mode: 0o600 });
+  fs.writeFileSync(path.join(stage, "unexpected.txt"), "unmanaged\n", { mode: 0o600 });
+  fs.closeSync(applyLock.descriptor);
+  fs.writeFileSync(applyLock.path, `${canonicalJson({ ...applyLock.record, pid: 2147483647 })}\n`);
+
+  const cleanup = buildRecoveryPlan({ plan, adapter: fx.adapter, recoveryId, action: "cleanup" });
+  assert.throws(() => recover({
+    recoveryPlan: cleanup,
+    plan,
+    adapter: fx.adapter,
+    approvalDigest: cleanup.digest,
+  }), { code: "AAS_TRANSACTION_LAYOUT_CLEANUP_INCOMPLETE" });
+  assert.equal(fs.existsSync(stage), true);
+  assert.equal(fs.readFileSync(path.join(stage, "unexpected.txt"), "utf8"), "unmanaged\n");
+  assert.equal(fs.existsSync(path.join(fx.root, `.aas-bootstrap-${recoveryId}.json`)), true);
+  assert.equal(doctor({ target: plan.payload.target, adapter: fx.adapter }).status, "recoveryRequired");
+  fs.unlinkSync(path.join(stage, "unexpected.txt"));
+  assert.equal(recover({
+    recoveryPlan: cleanup,
+    plan,
+    adapter: fx.adapter,
+    approvalDigest: cleanup.digest,
+  }).status, "cleaned");
+  assert.equal(fs.existsSync(stage), false);
+  assert.equal(doctor({ target: plan.payload.target, adapter: fx.adapter }).status, "healthy");
+  fs.rmSync(fx.sandbox, { recursive: true });
+});
+
 test("layout publication failure is tracked before fsync and leaves no partial artifact", () => {
   const fx = fixture();
   fs.rmSync(fx.skillsDirectory, { recursive: true });
@@ -329,11 +384,40 @@ test("layout cleanup removes only exact marker-owned stages left before publicat
     fs.mkdirSync(stage, { mode: 0o700 });
     fs.writeFileSync(path.join(stage, markerName), `${markerToken}\n`, { mode: 0o600 });
   }
+  assert.ok(remainingMaterializedLayoutPaths(inspected, inspected.missingDirectories, { markerName, markerToken }).length > 0);
   cleanupMaterializedLayout(inspected, inspected.missingDirectories, { markerName, markerToken });
+  assert.deepEqual(remainingMaterializedLayoutPaths(inspected, inspected.missingDirectories, { markerName, markerToken }), []);
   assert.equal(fs.readdirSync(fx.root).some((name) => name.includes(markerToken)), false);
   assert.equal(fs.readFileSync(path.join(fx.root, "unmanaged.txt"), "utf8"), "mine\n");
   assert.equal(fs.existsSync(fx.skillsDirectory), false);
   assert.equal(fs.existsSync(fx.transactionDirectory), false);
+  fs.rmSync(fx.sandbox, { recursive: true });
+});
+
+test("layout cleanup postcondition detects a dangling symlink artifact", (t) => {
+  const fx = fixture();
+  fs.rmSync(fx.transactionDirectory, { recursive: true });
+  const inspected = inspectLayout(fx.adapter, { host: "codex", scope: "project", identityDigest: TARGET_ID });
+  const markerToken = "9".repeat(48);
+  const markerName = `.aas-layout-recovery-${"8".repeat(32)}`;
+  const directory = inspected.missingDirectories[0];
+  const stage = path.join(path.dirname(directory), `.aas-layout-stage-${markerToken}-${path.basename(directory)}`);
+  fs.mkdirSync(path.dirname(stage), { recursive: true });
+  try {
+    fs.symlinkSync(path.join(fx.root, "missing-target"), stage, "dir");
+  } catch (error) {
+    if (["EPERM", "EACCES", "ENOSYS"].includes(error.code)) {
+      fs.rmSync(fx.sandbox, { recursive: true });
+      t.skip(`symlink unavailable: ${error.code}`);
+      return;
+    }
+    throw error;
+  }
+  assert.deepEqual(remainingMaterializedLayoutPaths(inspected, [directory], { markerName, markerToken }), [
+    path.relative(inspected.root, stage).split(path.sep).join("/"),
+  ]);
+  fs.unlinkSync(stage);
+  assert.deepEqual(remainingMaterializedLayoutPaths(inspected, [directory], { markerName, markerToken }), []);
   fs.rmSync(fx.sandbox, { recursive: true });
 });
 

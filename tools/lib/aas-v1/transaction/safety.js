@@ -237,6 +237,29 @@ function cleanupMaterializedLayout(inspected, directories, options) {
   }
 }
 
+function remainingMaterializedLayoutPaths(inspected, directories, options) {
+  const { markerToken } = ownershipMarker(options);
+  const remaining = [];
+  for (const directory of directories) {
+    if (!isContained(inspected.root, directory)) continue;
+    const parent = path.dirname(directory);
+    const candidates = [
+      directory,
+      path.join(parent, `.aas-layout-stage-${markerToken}-${path.basename(directory)}`),
+      path.join(parent, `.aas-layout-remove-${markerToken}-${path.basename(directory)}`),
+    ];
+    for (const candidate of candidates) {
+      try {
+        fs.lstatSync(candidate);
+        remaining.push(path.relative(inspected.root, candidate).split(path.sep).join("/"));
+      } catch (error) {
+        if (!["ENOENT", "ENOTDIR"].includes(error?.code)) throw error;
+      }
+    }
+  }
+  return [...new Set(remaining)].sort();
+}
+
 function clearMaterializedMarkers(inspected, directories, options) {
   const { markerName, markerToken } = ownershipMarker(options);
   for (const directory of [...directories].reverse()) {
@@ -276,6 +299,7 @@ module.exports = {
   assertOwned,
   assertRegularDirectory,
   cleanupMaterializedLayout,
+  remainingMaterializedLayoutPaths,
   clearMaterializedMarkers,
   inspectLayout,
   isContained,

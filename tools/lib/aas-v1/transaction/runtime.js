@@ -26,6 +26,7 @@ const {
 const {
   clearMaterializedMarkers,
   cleanupMaterializedLayout,
+  remainingMaterializedLayoutPaths,
   inspectLayout,
   materializeLayout,
   resolveDestination,
@@ -1352,6 +1353,13 @@ function recover({ recoveryPlan, plan, adapter, approvalDigest, onBoundary }) {
         clearMaterializedMarkers(strictLayout, createdDirectories, { markerName: bootstrap.markerName, markerToken: bootstrap.markerToken });
       } else {
         cleanupMaterializedLayout(strictLayout, createdDirectories, { markerName: bootstrap.markerName, markerToken: bootstrap.markerToken });
+        const remaining = remainingMaterializedLayoutPaths(strictLayout, createdDirectories, {
+          markerName: bootstrap.markerName,
+          markerToken: bootstrap.markerToken,
+        });
+        if (remaining.length) {
+          throw transactionError("AAS_TRANSACTION_LAYOUT_CLEANUP_INCOMPLETE", "recovery", { logicalIds: remaining });
+        }
       }
       removeBootstrapRecord(bootstrap, strictLayout);
     }
