@@ -72,7 +72,7 @@
     "test": "node tools/scripts/tests/run-test-suite.js",
     "test:aas-v1": "node --test tools/scripts/tests/aas_v1_*.test.js",
     "build:aas-v1-review-queue": "node tools/scripts/build-aas-v1-review-queue.js --write",
-    "build:aas-v1-catalog": "node tools/scripts/build-aas-v1-offline-catalog.js",
+    "build:aas-v1-catalog": "node tools/scripts/build-aas-v1-metadata-overrides.js --write && node tools/scripts/build-aas-v1-offline-catalog.js",
     "check:aas-v1-catalog": "node tools/scripts/build-aas-v1-review-queue.js && node tools/scripts/import-aas-v1-metadata-reviews.js --check && node tools/scripts/build-aas-v1-metadata-overrides.js --check && node tools/scripts/build-aas-v1-offline-catalog.js --check",
     "test:local": "node tools/scripts/tests/run-test-suite.js --local",
     "test:network": "node tools/scripts/tests/run-test-suite.js --network",
