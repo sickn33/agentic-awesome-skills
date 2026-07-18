@@ -1,3 +1,5 @@
 {
+  "name": "aas-apify-market-research-scripts",
+  "private": true,
   "type": "module"
 }
