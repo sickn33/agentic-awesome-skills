@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { macObserverBudgets, parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage, rewriteMacObservedNodeInput, windowsObserverBudgets } from "../lib/observer.mjs";
+import { isMacPersistentWriteLine, macObserverBudgets, parseDelimitedObserver, parseLinuxStrace, parseMacCombinedFsUsage, parseMacFsUsage, rewriteMacObservedNodeInput, windowsObserverBudgets } from "../lib/observer.mjs";
 import { runProcess } from "../lib/process.mjs";
 
 test("process runner distinguishes observer cleanup kills from timeouts", async () => {
@@ -69,6 +69,27 @@ test("macOS fs_usage parser separates network, writes, and child execs", () => {
   assert.equal(result.networkAttempts, 1);
   assert.equal(result.writeAttempts, 1);
   assert.equal(result.childProcesses, 1);
+});
+
+test("macOS fs_usage excludes only inherited process-stream writes", () => {
+  assert.equal(isMacPersistentWriteLine("12:00:00.100 write F=1 B=0x20 aasobs.1"), false);
+  assert.equal(isMacPersistentWriteLine("12:00:00.110 writev F=2 B=0x20 aasobs.1"), false);
+  assert.equal(isMacPersistentWriteLine("12:00:00.120 write F=3 B=0x20 aasobs.1"), true);
+  assert.equal(isMacPersistentWriteLine("12:00:00.130 WrData[A] F=1 /tmp/reopened-output aasobs.1"), true);
+  assert.equal(isMacPersistentWriteLine("12:00:00.140 WrMeta[A] F=2 /tmp/reopened-error aasobs.1"), true);
+  assert.equal(isMacPersistentWriteLine("12:00:00.150 rename F=1 /tmp/renamed aasobs.1"), true);
+  assert.equal(isMacPersistentWriteLine("12:00:00.160 fsync F=2 aasobs.1"), true);
+  assert.equal(isMacPersistentWriteLine("12:00:00.170 write F=10 B=0x20 aasobs.1"), true);
+  assert.equal(isMacPersistentWriteLine("12:00:00.180 write_nocancel F=1 B=0x20 aasobs.1"), true);
+  assert.equal(isMacPersistentWriteLine("12:00:00.190 write F=1 /tmp/project/rebound.log aasobs.1", { project: "/tmp/project" }), true);
+  const result = parseMacCombinedFsUsage([
+    "12:00:00.005 WrData[A] F=3 /tmp/aas-ready-1 aasobs.1",
+    "12:00:00.010 WrData[A] F=3 /tmp/aas-start-1 aasobs.1",
+    "12:00:00.020 write F=1 B=0x20 aasobs.1",
+    "12:00:00.030 write F=2 B=0x20 aasobs.1",
+    "12:00:00.040 WrData[A] F=1 /tmp/reopened-output aasobs.1",
+  ].join("\n"), {}, "aas-ready-1", "aas-start-1");
+  assert.equal(result.writeAttempts, 1);
 });
 
 test("combined macOS fs_usage parser enforces canary ordering and classifies candidate calls", () => {

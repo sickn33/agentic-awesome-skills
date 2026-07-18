@@ -117,6 +117,25 @@ function fsUsageTimestamp(line) {
   return ((Number(match[1]) * 60 + Number(match[2])) * 60 + Number(match[3])) * 1000 + fraction * 1000;
 }
 
+function macFsUsageCall(line) {
+  return line.match(/^\d{2}:\d{2}:\d{2}\.\d+\s+(\S+)/)?.[1] ?? "";
+}
+
+export function isMacPersistentWriteLine(line, zones = {}) {
+  const call = macFsUsageCall(line);
+  const normalizedCall = call.replace(/\[.*$/u, "").toLowerCase();
+  const descriptor = line.match(/\bF=(?:0x)?([0-9a-f]+)\b/iu)?.[1]?.toLowerCase() ?? null;
+  const namesObservedPath = Object.values(zones).some((root) => typeof root === "string" && root.length > 0 && line.includes(root));
+  // fs_usage reports writes to the candidate's inherited stdout/stderr pipes
+  // as `write F=1|2`. Those are process streams, which the frozen contract
+  // explicitly excludes from persistent filesystem writes. Physical WrData
+  // events remain mutations even when their displayed descriptor is 1 or 2,
+  // so reopening a stream descriptor onto a file is still observed.
+  if (["write", "writev"].includes(normalizedCall)
+    && ["1", "2"].includes(descriptor) && !namesObservedPath) return false;
+  return /^(?:wrdata|wrmeta|write|writev|write_nocancel|writev_nocancel|pwrite|pwritev|rename|unlink|mkdir|rmdir|truncate|ftruncate|chmod|chown|fsync|fdatasync|setattr|setxattr)$/u.test(normalizedCall);
+}
+
 const FS_USAGE_DAY_MS = 24 * 60 * 60 * 1000;
 const FS_USAGE_MAX_INTERVAL_MS = 15 * 60 * 1000;
 
@@ -128,7 +147,7 @@ export function parseMacFsUsage(filesystemText, networkText, execText, zones = {
   const events = [];
   for (const line of fsUsageLines(networkText)) events.push({ kind: "network", targetDigest: redactToken(line, zones) });
   for (const line of fsUsageLines(filesystemText)) {
-    if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
+    if (isMacPersistentWriteLine(line, zones)) {
       events.push({ kind: "write", targetDigest: redactToken(line, zones) });
     }
   }
@@ -146,7 +165,7 @@ export function parseMacCombinedFsUsage(text, zones = {}, readinessToken = "", c
     const timestamp = fsUsageTimestamp(line);
     if (/\b(?:socket|connect|bind|listen|accept|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo)\b/i.test(line)) {
       classified.push({ timestamp, kind: "network", line });
-    } else if (/\b(?:WrData|WrMeta|write|pwrite|rename|unlink|mkdir|rmdir|truncate|chmod|chown|fsync|fdatasync|setattr|setxattr)\b/i.test(line)) {
+    } else if (isMacPersistentWriteLine(line, zones)) {
       if (readinessToken && line.includes(readinessToken)) readinessTimestamps.push(timestamp);
       else if (candidateToken && line.includes(candidateToken)) candidateTimestamps.push(timestamp);
       else classified.push({ timestamp, kind: "write", line });
