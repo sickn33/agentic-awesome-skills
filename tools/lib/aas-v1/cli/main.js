@@ -283,7 +283,10 @@ async function stackPlan(options, dependencies = {}) {
     throw cliError("AAS_PLAN_CATALOG_MISMATCH", "integrity", {});
   }
   const targetBase = selectTarget(manifest, requireOption(options, "target"));
-  const runtime = await verifiedRuntimeFor(options, null, dependencies);
+  if (options["runtime-version"] !== undefined && options["runtime-version"] !== manifest.catalog.version) {
+    throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
+  }
+  const runtime = await verifiedRuntimeFor({ ...options, "runtime-version": manifest.catalog.version }, null, dependencies);
   if (runtime.identity.package !== manifest.catalog.package || runtime.identity.version !== manifest.catalog.version) {
     throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
   }
@@ -349,7 +352,7 @@ function help() {
       "stack init --goal <goal> [--catalog-digest <sha256> --cache-root <absolute>] [--preview-windows-output]",
       "stack recommend --profile <json> [--catalog-digest <sha256> --cache-root <absolute>]",
       "stack validate --manifest <aas-stack.json>",
-      "stack plan --manifest <file> --target <host:scope> --target-root <dir> --cache-root <absolute> --runtime-version <semver> --runtime-integrity <npm-sri> --out <file> [--preview-windows-output]",
+      "stack plan --manifest <file> --target <host:scope> --target-root <dir> --cache-root <absolute> --runtime-integrity <npm-sri> --out <file> [--preview-windows-output]",
       "stack apply --experimental-apply --plan <file> --target-root <dir> --cache-root <absolute> --approve <plan-digest> (EXPERIMENTAL; NOT CERTIFIED)",
       "stack doctor --plan <file> --target-root <dir> --cache-root <absolute>",
       "stack recover --experimental-recovery --plan <file> --target-root <dir> --cache-root <absolute> --id <id> --action rollback|cleanup [--approve <digest>] (EXPERIMENTAL; NOT CERTIFIED)",
