@@ -11,7 +11,7 @@ Inspect this repository and use the AAS MCP tools to recommend a small skill sta
 Explain evidence, exclusions, and unknowns; propose an aas-stack.json; do not apply it.
 ```
 
-The agent should use `search_skills`, `get_skill`, and `recommend_stack`, then check the proposal with `inspect_stack`. Review the resulting `aas-stack.json`, validate it with `aas stack validate`, and use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
+The agent should use `search_skills`, `get_skill`, and `recommend_stack`, then check the complete proposal with `inspect_stack` and correct every reported issue before presenting it. Review the resulting `aas-stack.json`, validate it with `aas stack validate`, and use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
 
 The recommendation is deterministic and local. AAS MCP does not inspect the repository itself, install skills, update catalogs, or change configuration. See [AAS Core](aas-core.md) for setup, the exact tool boundary, CLI commands, and preview limitations.
 

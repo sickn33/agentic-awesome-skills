@@ -101,6 +101,20 @@ test("MCP lists exactly five read-only tools and one skill resource template", a
     "diff_stack",
   ]);
   assert.equal(tools.result._meta.catalog.digest.startsWith("sha256-"), true);
+  const recommendDefinition = tools.result.tools.find((entry) => entry.name === "recommend_stack");
+  assert.equal(recommendDefinition.inputSchema.properties.profile.additionalProperties, false);
+  assert.equal(recommendDefinition.inputSchema.properties.profile.properties.projectType.type, "string");
+  assert.deepEqual(recommendDefinition.inputSchema.properties.targets.items.required, ["host", "scope"]);
+  assert.equal(recommendDefinition.inputSchema.properties.policy.properties.requireKnownSource.type, "boolean");
+  const inspectDefinition = tools.result.tools.find((entry) => entry.name === "inspect_stack");
+  assert.deepEqual(inspectDefinition.inputSchema.properties.manifest.required, [
+    "schemaVersion", "name", "catalog", "targets", "intent", "policy", "skills",
+  ]);
+  assert.equal(inspectDefinition.inputSchema.properties.manifest.properties.schemaVersion.const, 1);
+  assert.equal(inspectDefinition.inputSchema.properties.manifest.properties.catalog.properties.integrity.pattern, "^sha256-[a-f0-9]{64}$");
+  assert.equal(inspectDefinition.inputSchema.properties.manifest.properties.catalog.properties.package.pattern, "^(?:@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$");
+  assert.equal(inspectDefinition.inputSchema.properties.manifest.properties.intent.properties.goals.items.pattern, "^[a-z0-9][a-z0-9._-]*(?:/[a-z0-9][a-z0-9._-]*)*$");
+  assert.equal(inspectDefinition.inputSchema.properties.manifest.properties.skills.items.properties.id.pattern, "^[a-z0-9][a-z0-9._-]*(?:/[a-z0-9][a-z0-9._-]*)*$");
 
   const templates = await server.handle({ jsonrpc: "2.0", id: 3, method: "resources/templates/list", params: {} });
   assert.deepEqual(templates.result.resourceTemplates.map((entry) => entry.uriTemplate), ["aas://skills/{id}"]);
@@ -167,7 +181,7 @@ test("search, get, resource read, recommendation, inspection, and unavailable ve
         targets: [{ host: "codex", scope: "project" }],
         criticalGoals: ["tooling"],
         nonCriticalGoals: [],
-        profile: { languages: ["javascript"] },
+        profile: { projectType: "local MCP server", languages: ["javascript"] },
         policy: { allowedRisk: ["none", "safe"], requireKnownSource: true, allowManualSetup: false },
         maxSkills: 3,
       },
@@ -179,6 +193,28 @@ test("search, get, resource read, recommendation, inspection, and unavailable ve
   assert.equal(Object.hasOwn(recommendation.result.structuredContent, "canonicalJson"), false);
   assert.ok(recommendation.result.structuredContent.recommended.length <= 25);
   assert.ok(recommendation.result.structuredContent.exclusions.length <= 25);
+
+  const validManifest = {
+    schemaVersion: 1,
+    name: "mcp-test-stack",
+    catalog: {
+      package: recommendation.result.structuredContent.catalog.package,
+      version: recommendation.result.structuredContent.catalog.version,
+      integrity: recommendation.result.structuredContent.catalog.digest,
+    },
+    targets: [{ host: "codex", scope: "project" }],
+    intent: { goals: ["tooling"] },
+    policy: { allowedRisk: ["none", "safe"], requireKnownSource: true, allowManualSetup: false },
+    skills: recommendation.result.structuredContent.proposedStack.map((id) => ({ id })),
+  };
+  const validInspection = await server.handle({
+    jsonrpc: "2.0",
+    id: 132,
+    method: "tools/call",
+    params: { name: "inspect_stack", arguments: { manifest: validManifest } },
+  });
+  assert.equal(validInspection.result.isError, false);
+  assert.equal(validInspection.result.structuredContent.ok, true);
 
   const pathologicalSearch = await server.handle({
     jsonrpc: "2.0",

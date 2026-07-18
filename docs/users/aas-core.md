@@ -52,7 +52,8 @@ Once the host discovers the AAS MCP tools, give it the outcome and constraints r
 ```text
 Inspect this repository and use the AAS MCP tools to recommend a small skill stack
 for implementing and testing this project. Explain exclusions and unknowns, then
-propose an aas-stack.json. Do not install or apply anything.
+propose an aas-stack.json and validate it with inspect_stack before presenting it.
+Do not install or apply anything.
 ```
 
 The local MCP exposes exactly these read-only tools:

@@ -54,6 +54,12 @@ function privateModeUnsafe(stat) {
   return process.platform !== "win32" && (stat.mode & 0o077) !== 0;
 }
 
+function ownershipUnsafe(stat) {
+  return process.platform !== "win32"
+    && typeof process.getuid === "function"
+    && stat.uid !== process.getuid();
+}
+
 function publicRuntimeIdentity(identity) {
   return Object.freeze({
     package: identity.package,
@@ -187,23 +193,37 @@ function runtimeRecords(entries, version) {
   return { records, assets, closureDigest: sha256(canonicalJson({ digestVersion: DIGEST_VERSION, assets })) };
 }
 
-async function ensureRealDirectory(directoryPath, created) {
+async function ensureRealDirectory(directoryPath, created, cacheRoot) {
+  const boundary = path.resolve(cacheRoot);
+  const resolved = path.resolve(directoryPath);
+  if (resolved !== boundary && !resolved.startsWith(`${boundary}${path.sep}`)) {
+    throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache path escaped the configured cache root");
+  }
   try {
-    const stat = await fsp.lstat(directoryPath);
-    if (!stat.isDirectory() || stat.isSymbolicLink() || privateModeUnsafe(stat)) {
+    const stat = await fsp.lstat(resolved);
+    if (!stat.isDirectory() || stat.isSymbolicLink() || privateModeUnsafe(stat) || ownershipUnsafe(stat)) {
       throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache path is not a private real directory");
     }
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
-    const parent = path.dirname(directoryPath);
-    if (parent !== directoryPath) await ensureRealDirectory(parent, created);
+    const parent = path.dirname(resolved);
+    if (resolved === boundary) {
+      const parentStat = await fsp.lstat(parent);
+      if (!parentStat.isDirectory() || parentStat.isSymbolicLink()
+        || ownershipUnsafe(parentStat)
+        || (process.platform !== "win32" && (parentStat.mode & 0o022) !== 0)) {
+        throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache parent is not a real directory");
+      }
+    } else {
+      await ensureRealDirectory(parent, created, boundary);
+    }
     try {
-      await fsp.mkdir(directoryPath, { mode: 0o700 });
-      created.push(directoryPath);
+      await fsp.mkdir(resolved, { mode: 0o700 });
+      created.push(resolved);
     } catch (mkdirError) {
       if (mkdirError.code !== "EEXIST") throw mkdirError;
-      const stat = await fsp.lstat(directoryPath);
-      if (!stat.isDirectory() || stat.isSymbolicLink() || privateModeUnsafe(stat)) {
+      const stat = await fsp.lstat(resolved);
+      if (!stat.isDirectory() || stat.isSymbolicLink() || privateModeUnsafe(stat) || ownershipUnsafe(stat)) {
         throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache path is not a private real directory");
       }
     }
@@ -299,7 +319,7 @@ async function promoteRuntime({ cacheRoot, release, parsed }) {
   let stagePath;
   let promoted = false;
   try {
-    await ensureRealDirectory(versionDirectory, created);
+    await ensureRealDirectory(versionDirectory, created, cacheRoot);
     stagePath = path.join(versionDirectory, `.stage-${process.pid}-${crypto.randomBytes(12).toString("hex")}`);
     await fsp.mkdir(stagePath, { mode: 0o700 });
     const directories = new Set([stagePath]);

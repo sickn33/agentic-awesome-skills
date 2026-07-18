@@ -94,6 +94,59 @@ test("runtime promotion is content addressed, verifies every cached byte, and is
   assert.equal((await core.cache.runtimeStatus({ cacheRoot, packageVersion: "14.6.0", integrity: fixture.integrity })).status, "invalid");
 });
 
+test("runtime promotion creates a private cache root under a normal user configuration directory", async (t) => {
+  const root = await temp(t);
+  const configDirectory = path.join(root, "user-config");
+  await fsp.mkdir(configDirectory, { mode: 0o755 });
+  await fsp.chmod(configDirectory, 0o755);
+  const cacheRoot = path.join(configDirectory, "aas-cache");
+  const fixture = releaseFixture();
+  const installed = await core.cache.installRuntimeFromRegistry({
+    cacheRoot,
+    version: "14.6.0",
+    expectedIntegrity: fixture.integrity,
+    fetcher: fixture.fetcher,
+  });
+  assert.equal(installed.status, "promoted");
+  if (process.platform !== "win32") assert.equal((await fsp.stat(cacheRoot)).mode & 0o777, 0o700);
+});
+
+test("runtime promotion rejects an existing non-private cache root", async (t) => {
+  if (process.platform === "win32") return;
+  const root = await temp(t);
+  const cacheRoot = path.join(root, "cache");
+  await fsp.mkdir(cacheRoot, { mode: 0o755 });
+  await fsp.chmod(cacheRoot, 0o755);
+  const fixture = releaseFixture();
+  await assert.rejects(
+    core.cache.installRuntimeFromRegistry({
+      cacheRoot,
+      version: "14.6.0",
+      expectedIntegrity: fixture.integrity,
+      fetcher: fixture.fetcher,
+    }),
+    (error) => error.code === "AAS_RUNTIME_DIRECTORY_UNSAFE",
+  );
+});
+
+test("runtime promotion rejects a missing cache root under a group or world writable parent", async (t) => {
+  if (process.platform === "win32") return;
+  const root = await temp(t);
+  const sharedParent = path.join(root, "shared-config");
+  await fsp.mkdir(sharedParent, { mode: 0o777 });
+  await fsp.chmod(sharedParent, 0o777);
+  const fixture = releaseFixture();
+  await assert.rejects(
+    core.cache.installRuntimeFromRegistry({
+      cacheRoot: path.join(sharedParent, "aas-cache"),
+      version: "14.6.0",
+      expectedIntegrity: fixture.integrity,
+      fetcher: fixture.fetcher,
+    }),
+    (error) => error.code === "AAS_RUNTIME_DIRECTORY_UNSAFE",
+  );
+});
+
 test("the packed runtime launches MCP from an isolated verified dependency closure", async (t) => {
   const root = await temp(t);
   const repoRoot = path.resolve(__dirname, "../../..");
