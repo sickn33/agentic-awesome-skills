@@ -5,7 +5,7 @@ description: >-
   (full canvas shell vs hybrid DOM shell + guest viewport). Covers Phaser,
   PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js, Godot, Unity, Ink, Twine.
   Use when choosing a stack or comparing runtimes before implementation.
-risk: none
+risk: safe
 source: self
 date_added: "2026-07-17"
 ---
@@ -101,7 +101,7 @@ Editor-first web shells (**Construct**, **GDevelop**) fit visual prototyping; we
 |-------|-----|
 | Choose Unity/Godot for a form-heavy browser tool | Prefer DOM/hybrid |
 | Force Ink to run real-time concurrent simulations | Use narrative tools for branches; custom/sim code for clocks & entities |
-| Drop Phaser into a page as “the whole app” when UI is HTML | Hybrid guest viewport |
+| Use Phaser as “the whole app” when the surrounding UI is HTML | Prefer a hybrid guest viewport |
 | Optimize for WebGPU on day one | Ship WebGL; add WebGPU + fallback when needed |
 
 ## When to Use
