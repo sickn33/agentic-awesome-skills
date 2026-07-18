@@ -149,7 +149,10 @@ const TOOL_DEFINITIONS = Object.freeze([
           type: "object",
           additionalProperties: false,
           properties: {
-            goals: GOAL_ARRAY_SCHEMA,
+            goals: {
+              ...GOAL_ARRAY_SCHEMA,
+              description: "Natural project goals such as build, test, security, release, deploy, accessibility, or performance. AAS expands versioned aliases into auditable capabilities.",
+            },
             projectType: { type: "string", maxLength: 2048 },
             languages: STRING_ARRAY_SCHEMA,
             frameworks: STRING_ARRAY_SCHEMA,
@@ -165,9 +168,21 @@ const TOOL_DEFINITIONS = Object.freeze([
           },
         },
         targets: TARGETS_SCHEMA,
-        criticalGoals: GOAL_ARRAY_SCHEMA,
-        nonCriticalGoals: { ...STRING_ARRAY_SCHEMA, items: { type: "string", minLength: 1, maxLength: 128 } },
-        minimumNonCriticalGoalCoverage: { type: "number", minimum: 0.8, maximum: 1 },
+        criticalGoals: {
+          ...GOAL_ARRAY_SCHEMA,
+          description: "Critical capability IDs or supported natural goal aliases. Natural aliases expand deterministically into multiple versioned capabilities.",
+        },
+        nonCriticalGoals: {
+          ...STRING_ARRAY_SCHEMA,
+          description: "Non-critical capability IDs or supported natural goal aliases.",
+          items: { type: "string", minLength: 1, maxLength: 128 },
+        },
+        minimumNonCriticalGoalCoverage: {
+          type: "number",
+          minimum: 0.8,
+          maximum: 1,
+          description: "Required non-critical goal coverage as a ratio from 0.8 to 1.0, never a percentage.",
+        },
         policy: POLICY_SCHEMA,
         maxSkills: { type: "integer", minimum: 1, maximum: 12 },
       },
@@ -362,7 +377,7 @@ function validateRequest(request) {
 function inferIntent(goals) {
   const text = goals.join(" ").toLowerCase();
   if (/\b(?:test|testing|qa|quality|e2e|accessibility|performance)\b/.test(text)) return "test-qa-automation";
-  if (/\b(?:deploy|deployment|devops|ci|cd|infrastructure|sre)\b/.test(text)) return "deployment-devops";
+  if (/\b(?:build|deploy|deployment|devops|ci|cd|infrastructure|release|sre)\b/.test(text)) return "deployment-devops";
   if (/\b(?:security|hardening|threat|vulnerability)\b/.test(text)) return "security-review-hardening";
   if (/\b(?:api|backend|database|integration)\b/.test(text)) return "api-backend-delivery";
   if (/\b(?:agent|mcp|tooling|evaluation|memory)\b/.test(text)) return "agent-mcp-development";

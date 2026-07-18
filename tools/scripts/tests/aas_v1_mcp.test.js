@@ -104,6 +104,8 @@ test("MCP lists exactly five read-only tools and one skill resource template", a
   const recommendDefinition = tools.result.tools.find((entry) => entry.name === "recommend_stack");
   assert.equal(recommendDefinition.inputSchema.properties.profile.additionalProperties, false);
   assert.equal(recommendDefinition.inputSchema.properties.profile.properties.projectType.type, "string");
+  assert.match(recommendDefinition.inputSchema.properties.profile.properties.goals.description, /Natural project goals/);
+  assert.match(recommendDefinition.inputSchema.properties.minimumNonCriticalGoalCoverage.description, /0\.8 to 1\.0/);
   assert.deepEqual(recommendDefinition.inputSchema.properties.targets.items.required, ["host", "scope"]);
   assert.equal(recommendDefinition.inputSchema.properties.policy.properties.requireKnownSource.type, "boolean");
   const inspectDefinition = tools.result.tools.find((entry) => entry.name === "inspect_stack");

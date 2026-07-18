@@ -54,6 +54,11 @@ function normalizeStringArray(value, field, maximum = 32) {
   return sortedUnique(value.map((item) => normalizeToken(item)));
 }
 
+function normalizeGoalArray(value, field) {
+  const goals = normalizeStringArray(value, field);
+  return sortedUnique(goals.flatMap((goal) => ontology.goalAliases?.[goal] || [goal]));
+}
+
 function normalizeProfile(profile = {}) {
   if (!profile || typeof profile !== "object" || Array.isArray(profile)) {
     const error = new Error("profile must be an object");
@@ -141,8 +146,11 @@ function normalizeRecommendationInput(input) {
     error.code = "AAS_INPUT_INTENT_UNSUPPORTED";
     throw error;
   }
-  const criticalGoals = normalizeStringArray(input.criticalGoals, "criticalGoals");
-  const nonCriticalGoals = normalizeStringArray(input.nonCriticalGoals, "nonCriticalGoals");
+  const rawCriticalGoals = normalizeStringArray(input.criticalGoals, "criticalGoals");
+  const rawNonCriticalGoals = normalizeStringArray(input.nonCriticalGoals, "nonCriticalGoals");
+  const criticalGoals = normalizeGoalArray(input.criticalGoals, "criticalGoals");
+  const nonCriticalGoals = normalizeGoalArray(input.nonCriticalGoals, "nonCriticalGoals")
+    .filter((goal) => !criticalGoals.includes(goal));
   if (criticalGoals.length === 0) {
     const error = new Error("at least one critical goal is required");
     error.code = "AAS_INPUT_CRITICAL_GOALS_REQUIRED";
@@ -162,6 +170,8 @@ function normalizeRecommendationInput(input) {
   normalized.queryTokens = sortedUnique([
     ...ontology.intentAliases[intent],
     ...tokenize(intent),
+    ...tokenize(rawCriticalGoals),
+    ...tokenize(rawNonCriticalGoals),
     ...tokenize(criticalGoals),
     ...tokenize(nonCriticalGoals),
     ...tokenize(profile.projectType),
@@ -181,5 +191,6 @@ module.exports = {
   sortedUnique,
   normalizeProfile,
   normalizePolicy,
+  normalizeGoalArray,
   normalizeRecommendationInput,
 };

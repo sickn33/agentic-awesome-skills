@@ -19,6 +19,69 @@
     "ui": "user-interface",
     "ux": "user-experience"
   },
+  "goalAliases": {
+    "accessibility": [
+      "accessibility-audit",
+      "wcag-regression"
+    ],
+    "build": [
+      "pipeline-design",
+      "reproducible-ci"
+    ],
+    "deploy": [
+      "deployment-gates",
+      "post-release-verification",
+      "rollback-validation"
+    ],
+    "deployment": [
+      "deployment-gates",
+      "post-release-verification",
+      "rollback-validation"
+    ],
+    "hardening": [
+      "dependency-risk-review",
+      "security-requirements",
+      "trust-boundary-review"
+    ],
+    "performance": [
+      "latency-thresholds",
+      "repeatable-performance-run",
+      "result-review"
+    ],
+    "quality-assurance": [
+      "accessibility-audit",
+      "coverage-reporting",
+      "critical-browser-journeys",
+      "cross-browser-execution",
+      "failure-diagnostics",
+      "unit-test-runner"
+    ],
+    "release": [
+      "post-release-verification",
+      "release-procedure"
+    ],
+    "security": [
+      "dependency-risk-review",
+      "security-requirements",
+      "trust-boundary-review"
+    ],
+    "test": [
+      "accessibility-audit",
+      "coverage-reporting",
+      "critical-browser-journeys",
+      "cross-browser-execution",
+      "failure-diagnostics",
+      "unit-test-runner"
+    ],
+    "testing": [
+      "accessibility-audit",
+      "coverage-reporting",
+      "critical-browser-journeys",
+      "cross-browser-execution",
+      "failure-diagnostics",
+      "unit-test-runner"
+    ]
+  },
   "intentAliases": {
     "agent-mcp-development": ["agent", "model-context-protocol", "tooling", "evaluation", "memory"],
     "api-backend-delivery": ["api", "api-backend", "authentication", "database", "integration"],

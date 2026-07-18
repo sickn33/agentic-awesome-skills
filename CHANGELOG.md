@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Expanded natural AAS Core goals such as `build`, `test`, `security`, and `release` into versioned capability lanes before deterministic ranking, so real project profiles produce reviewable multi-skill stacks instead of empty or single-skill recommendations.
+- Clarified the MCP recommendation contract for natural goals and the `0.8`–`1.0` non-critical coverage ratio, and added a bundled VibePalette regression proving a five-to-eight-skill project stack remains available without weakening policy gates.
+
 ## [15.0.0] - 2026-07-18 - "AAS Core: Local Composition and Reviewable Plans"
 
 > AAS Core becomes the primary product: a local, deterministic engine shared by the `aas` CLI and read-only `aas-mcp`, taking coding agents from an explicit project profile to an explainable recommendation, `aas-stack.json`, validation, and immutable plan preview before any target change.

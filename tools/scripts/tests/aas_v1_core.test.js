@@ -91,6 +91,56 @@ test("recommendation is invariant to catalog order", () => {
   assert.equal(validateInstance("recommendation-output.schema.json", first), first);
 });
 
+test("natural project goals expand into a multi-lane stack deterministically", () => {
+  const entries = [
+    skill("build-lane", { tokens: ["build", "ci"], capabilities: ["pipeline-design", "reproducible-ci"] }),
+    skill("unit-lane", { tokens: ["test", "unit", "coverage"], capabilities: ["coverage-reporting", "unit-test-runner"] }),
+    skill("browser-lane", {
+      tokens: ["test", "browser", "e2e"],
+      capabilities: ["critical-browser-journeys", "cross-browser-execution", "failure-diagnostics"],
+    }),
+    skill("accessibility-lane", { tokens: ["test", "accessibility"], capabilities: ["accessibility-audit"] }),
+    skill("security-lane", {
+      tokens: ["security", "hardening"],
+      capabilities: ["dependency-risk-review", "security-requirements", "trust-boundary-review"],
+    }),
+    skill("release-lane", { tokens: ["release"], capabilities: ["post-release-verification", "release-procedure"] }),
+  ];
+  const naturalInput = {
+    ...input,
+    intent: "web-application-delivery",
+    profile: {
+      projectType: "Manifest V3 browser extension",
+      languages: ["JavaScript"],
+      frameworks: ["Vitest", "JSDOM"],
+    },
+    criticalGoals: ["build", "test", "security", "release"],
+    nonCriticalGoals: [],
+    maxSkills: 8,
+  };
+  const first = recommendStack(syntheticCatalog(entries), naturalInput);
+  const second = recommendStack(syntheticCatalog([...entries].reverse()), naturalInput);
+  assert.equal(canonicalJson(first), canonicalJson(second));
+  assert.equal(first.status, "complete");
+  assert.deepEqual(first.proposedStack.slice().sort(), entries.map((entry) => entry.id).sort());
+  assert.equal(first.proposedStack.length, 6);
+  assert.deepEqual(first.normalizedInput.criticalGoals, [
+    "accessibility-audit",
+    "coverage-reporting",
+    "critical-browser-journeys",
+    "cross-browser-execution",
+    "dependency-risk-review",
+    "failure-diagnostics",
+    "pipeline-design",
+    "post-release-verification",
+    "release-procedure",
+    "reproducible-ci",
+    "security-requirements",
+    "trust-boundary-review",
+    "unit-test-runner",
+  ]);
+});
+
 test("recommendation is invariant to non-semantic skill ID permutations", () => {
   const makeEntries = (prefix) => [
     skill(`${prefix}-unit`, { tokens: ["unit", "testing", "typescript"], capabilities: ["unit-testing"] }),
@@ -210,4 +260,37 @@ test("bundled catalog exposes every canonical registry ID exactly once", () => {
   assert.equal(new Set(catalog.skills.map((entry) => entry.id)).size, expectedSkillCount);
   assert.ok(catalog.skills.some((entry) => entry.id === "2d-games"));
   assert.ok(!catalog.skills.some((entry) => entry.id === "game-development/2d-games"));
+});
+
+test("bundled catalog composes a useful VibePalette stack from natural goals", () => {
+  const result = recommendStack(loadBundledCatalog(), {
+    intent: "web-application-delivery",
+    targets: [{ host: "codex", scope: "project" }],
+    profile: {
+      projectType: "Manifest V3 browser extension for Chrome and Edge",
+      languages: ["JavaScript", "HTML", "CSS"],
+      frameworks: ["Vitest", "JSDOM"],
+      context: "Privacy-first extension with popup UI, browser smoke tests, deterministic zip packaging and GitHub release",
+      constraints: ["vanilla-js", "minimal-permissions", "offline-first"],
+      request: "Build, test, harden, package and release the extension",
+    },
+    criticalGoals: ["build", "test", "security", "release"],
+    nonCriticalGoals: [],
+    minimumNonCriticalGoalCoverage: 0.8,
+    policy: { allowedRisk: ["none", "safe", "unknown"], requireKnownSource: false, allowManualSetup: true },
+    maxSkills: 8,
+  });
+  assert.equal(result.status, "partial");
+  assert.ok(result.proposedStack.length >= 5 && result.proposedStack.length <= 8);
+  for (const goal of [
+    "accessibility-audit",
+    "unit-test-runner",
+    "critical-browser-journeys",
+    "security-requirements",
+    "post-release-verification",
+  ]) {
+    assert.ok(result.coveredGoals.includes(goal), `expected VibePalette stack to cover ${goal}`);
+  }
+  assert.ok(result.discoveryCandidates.some((candidate) => candidate.id === "browser-extension-builder"));
+  assert.equal(validateInstance("recommendation-output.schema.json", result), result);
 });
