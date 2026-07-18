@@ -2,7 +2,7 @@
   {
     "slug": "antigravity-cli-skills",
     "title": "Antigravity CLI Skill Stacks | AAS Core Preview",
-    "description": "Use the AAS Core preview catalog to discover and compose explainable Antigravity CLI skill stacks for coding, review, testing, and workflow automation.",
+    "description": "Use the AAS Core preview catalog to discover skills and compose explainable Antigravity CLI stacks for coding, review, testing, and workflow automation.",
     "eyebrow": "Antigravity CLI",
     "h1": "Antigravity CLI skills for agentic coding workflows",
     "summary": "Use AAS Core as the agent-first selection layer over reusable SKILL.md playbooks for Antigravity CLI and adjacent coding-agent runtimes.",
@@ -63,7 +63,7 @@
         "href": "https://github.com/sickn33/agentic-awesome-skills"
       },
       {
-        "label": "Read installation docs",
+        "label": "Read AAS Core usage",
         "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/usage.md"
       },
       {
@@ -136,8 +136,8 @@
         "href": "https://github.com/sickn33/agentic-awesome-skills"
       },
       {
-        "label": "Install from npm",
-        "href": "https://www.npmjs.com/package/agentic-awesome-skills"
+        "label": "Read the AAS Core guide",
+        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md"
       },
       {
         "label": "Browse all skills",

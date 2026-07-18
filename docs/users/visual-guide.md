@@ -1,26 +1,32 @@
-# Visual Quick Start Guide
+# Visual Guide: AAS Core and Skill Distribution
 
-**Learn by seeing!** This guide uses diagrams and visual examples to help you understand skills.
+This guide shows the primary AAS Core workflow and the supporting catalog and distribution surfaces.
 
 ---
 
 ## The Big Picture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    YOU (Developer)                          │
-│                          ↓                                  │
-│              "Help me build a payment system"               │
-│                          ↓                                  │
-├─────────────────────────────────────────────────────────────┤
-│                  AI ASSISTANT                               │
-│                          ↓                                  │
-│              Loads @stripe-integration skill                │
-│                          ↓                                  │
-│         Becomes an expert in Stripe payments                │
-│                          ↓                                  │
-│    Provides specialized help with code examples             │
-└─────────────────────────────────────────────────────────────┘
+PROJECT
+   │ inspected by Codex or Claude, not by AAS
+   ▼
+EXPLICIT PROJECT PROFILE
+   │
+   ▼
+AAS MCP ── search · inspect · recommend
+   │
+   ▼
+AAS CORE + LOCAL VERIFIED CATALOG
+   │ evidence · exclusions · coverage · unknowns
+   ▼
+AGENT PROPOSES aas-stack.json
+   │
+   ├────────► WORKBENCH (optional browser-local review)
+   ▼
+CLI VALIDATE ──► CLI PLAN ──► HUMAN REVIEW
+
+Supported preview path: stop after plan review.
+Apply and recovery remain experimental.
 ```
 
 ---
@@ -66,7 +72,7 @@ agentic-awesome-skills/
 
 ---
 
-## How Skills Work (Flow Diagram)
+## Alternative: Direct Skill Distribution
 
 ```
 ┌──────────────┐
@@ -90,7 +96,7 @@ agentic-awesome-skills/
        │
        ↓
 ┌──────────────┐
-│ 5. RESULT    │  You get specialized help!
+│ 5. RESULT    │  The agent follows the selected instructions
 └──────────────┘
 ```
 

@@ -56,7 +56,7 @@ function StackReview({ stack }: { stack: StackManifestReview }): React.ReactElem
     <article className="workbench-review" aria-labelledby="stack-review-title">
       <header className="workbench-review__heading">
         <div>
-          <p>Validated stack manifest</p>
+          <p>Structurally valid stack manifest</p>
           <h2 id="stack-review-title">{stack.name}</h2>
         </div>
         <span>Schema v{stack.schemaVersion}</span>
@@ -112,7 +112,7 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
     <article className="workbench-review" aria-labelledby="plan-review-title">
       <header className="workbench-review__heading">
         <div>
-          <p>Validated immutable plan</p>
+          <p>Structurally valid plan · digest verified</p>
           <h2 id="plan-review-title">Single-target change review</h2>
         </div>
         <span>Schema v{plan.schemaVersion}</span>
