@@ -11,13 +11,14 @@ const ROOT = path.resolve(__dirname, "../../..");
 test("offline catalog assets are deterministic, complete, and content-addressed", () => {
   const first = buildArtifacts();
   const second = buildArtifacts();
-  assert.equal(first.manifest.skillCount, 1965);
+  const canonicalSkillCount = JSON.parse(fs.readFileSync(path.join(ROOT, "skills_index.json"), "utf8")).length;
+  assert.equal(first.manifest.skillCount, canonicalSkillCount);
   assert.equal(first.catalogDigest, second.catalogDigest);
   for (const [relativePath, bytes] of first.generated) {
     assert.equal(fs.readFileSync(path.join(ROOT, ...relativePath.split("/"))).equals(bytes), true, relativePath);
   }
   const index = JSON.parse(first.generated.get("data/aas-v1/skill-content-index.v1.json"));
-  assert.equal(Object.keys(index.entries).length, 1965);
+  assert.equal(Object.keys(index.entries).length, canonicalSkillCount);
   assert.ok(index.entries.android_ui_verification);
   assert.ok(index.entries["2d-games"]);
 });
