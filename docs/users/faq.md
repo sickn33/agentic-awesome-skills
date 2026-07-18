@@ -6,6 +6,22 @@
 
 ## General Questions
 
+### What is AAS Core?
+
+AAS Core is the deterministic, versioned control plane that turns this repository's catalog into an approved project stack. Codex or Claude can inspect a repository, send an explicit profile to the local read-only AAS MCP, explain the resulting recommendation, and propose an `aas-stack.json`. The `aas` CLI then validates the manifest and previews an immutable plan.
+
+The durable product is the approved stack. Skills, bundles, workflows, plugins, the catalog, MCP, CLI, and Workbench are content, packaging, or interfaces around that stack. Start with [AAS Core](aas-core.md).
+
+### Is AAS Core fully certified?
+
+No. The current public claim is **AAS Agent-First Preview**: it helps Codex and Claude compose a local, explainable, reproducible skill stack. Full-catalog recommendation quality and transactional apply/recovery safety are not yet certified.
+
+`stack apply` and `stack recover` are experimental, disabled by default, and are not supported preview safety claims. The recommended public flow stops after reviewing `stack validate` and `stack plan` output.
+
+### Does AAS upload my repository or use another model?
+
+No. The agent may inspect the project using its normal local capabilities, but AAS MCP does not scan the repository. It receives an explicit allowlisted profile and runs deterministic recommendation against a bundled or verified local catalog. MCP is local stdio, read-only, offline-capable, and contains no model credentials or telemetry.
+
 ### What are "skills" exactly?
 
 Skills are specialized instruction files that teach AI assistants how to handle specific tasks. Think of them as expert knowledge modules that your AI can load on-demand.
@@ -13,9 +29,9 @@ Skills are specialized instruction files that teach AI assistants how to handle 
 
 ### Do I need to install every skill?
 
-**No!** When you clone the repository, all skills are available, but your AI only loads them when you explicitly invoke them with `@skill-name`.
-It's like having a library - all books are there, but you only read the ones you need.
-**Pro Tip:** Use [Starter Packs](bundles.md) to focus on the skills that match your role first.
+**No.** With AAS Core, ask the agent to recommend a small stack that matches your project, target, goals, and risk policy. On a broad direct install, all skills may be present locally while the host loads only the skills it invokes.
+
+Use [Starter Packs](bundles.md) as human-curated presets when you want a fixed starting point.
 
 If you want a narrower install surface for **Claude Code** or **Codex**, use the new plugin distributions documented in [plugins.md](plugins.md) instead of the full library install.
 
@@ -31,12 +47,13 @@ Start from:
 - [bundles.md](bundles.md)
 - [workflows.md](workflows.md)
 
-### What is the difference between skills and MCP tools?
+### What is the difference between skills, AAS MCP, and the CLI?
 
 - **Skills** are reusable `SKILL.md` playbooks that guide an AI assistant through a workflow.
-- **MCP tools** are integrations or callable capabilities that let the assistant interact with external systems.
+- **AAS MCP** is the local, read-only discovery and composition interface to AAS Core. It searches and inspects the verified catalog, recommends a stack, and checks or compares manifests.
+- **The `aas` CLI** manages explicit lifecycle operations such as catalog status/update, MCP configuration, stack validation, planning, and diagnostics.
 
-Use skills when you want better process, structure, and execution quality. Use MCP tools when you need access to APIs, services, databases, or other systems. Use both when you want reliable workflows plus external capabilities.
+Other MCP servers may grant access to APIs, services, databases, or hosted systems. AAS MCP has a narrower boundary: it does not install, apply, update catalogs, scan repositories, or modify configuration through tool calls.
 
 For the longer explanation, read [skills-vs-mcp-tools.md](skills-vs-mcp-tools.md).
 
@@ -117,6 +134,12 @@ _Always check the Risk label and review the code._
 ---
 
 ## Installation & Setup
+
+### How do I start with AAS Core?
+
+Use the pinned `aas` binary to preview and approve local MCP configuration for Codex or Claude, restart the host if needed, then ask the agent to recommend and explain a stack without applying it. The full commands and trust boundaries are in [AAS Core](aas-core.md).
+
+The package publishes separate `agentic-awesome-skills`, `aas`, and `aas-mcp` binaries. Use the explicit `aas` binary for Core lifecycle commands; the legacy `agentic-awesome-skills` entrypoint remains the direct installer.
 
 ### Where should I install the skills?
 
@@ -355,9 +378,13 @@ Examples:
 
 ### How do I know which skill to use?
 
+With AAS Core, describe the project outcome and constraints, then ask the agent to call `recommend_stack`. Review its coverage, evidence, exclusions, discovery candidates, and unknowns before accepting the proposed IDs.
+
+For manual discovery:
+
 1. **Browse the catalog**: Check the [Skill Catalog](../../CATALOG.md).
-2. **Search**: `ls skills/ | grep "keyword"`
-3. **Ask your AI**: "What skills do you have for testing?"
+2. **Search**: `ls skills/ | grep "keyword"`.
+3. **Use a preset**: Start from [Bundles](bundles.md).
 
 ---
 

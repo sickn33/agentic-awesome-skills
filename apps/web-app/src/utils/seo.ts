@@ -39,17 +39,17 @@ const FAQ_ITEMS = [
   {
     question: 'What is Agentic Awesome Skills?',
     answer: (countLabel: string) =>
-      `Agentic Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
+      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview control plane for discovering, recommending, validating, and planning exact skill stacks. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
   },
   {
-    question: 'How do I install Agentic Awesome Skills?',
+    question: 'How do I use AAS Core preview?',
     answer:
-      'Install the library with npx agentic-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+      'Configure the local stdio MCP with the AAS CLI, let the agent search, inspect, and recommend skills, then validate the proposed aas-stack.json and preview its immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
   },
   {
     question: 'Is Agentic Awesome Skills a GitHub repository?',
     answer:
-      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
+      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for AAS Core, its CLI and local MCP, the skill catalog, plugins, and documentation. The hosted site is a companion catalog and local artifact-review surface.',
   },
   {
     question: 'What are AAS specialized plugins?',
@@ -174,7 +174,7 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: `Installable GitHub library of ${visibleCountLabel}, specialized plugins, bundles, and workflows for AI coding assistants.`,
+    description: `AAS Core preview is a local agent-first control plane for recommending, validating, and planning exact skill stacks backed by ${visibleCountLabel}.`,
     url: REPOSITORY_URL,
     sameAs: [
       canonicalUrl,
@@ -194,6 +194,10 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
       'Antigravity CLI skills',
       'GitHub AI skills repository',
       'AI agent skills GitHub',
+      'AAS Core',
+      'skill recommendation',
+      'agent stack',
+      'Model Context Protocol',
       'specialized plugins',
       'SKILL.md',
     ],
@@ -375,11 +379,11 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
   const visibleCountLabel = visibleCount > 0 ? getCatalogCountLabel(visibleCount) : '';
   const title = visibleCount > 0
-    ? `Agentic Awesome Skills GitHub | ${visibleCountLabel} AI coding skills`
-    : 'Agentic Awesome Skills GitHub | AI coding skills';
+    ? `AAS Core Preview | Agent-first stacks backed by ${visibleCountLabel} skills`
+    : 'AAS Core Preview | Agent-first skill stacks';
   const description = visibleCount > 0
-    ? `Explore the GitHub library of ${visibleCountLabel} installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.`
-    : 'Explore the GitHub library of installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.';
+    ? `Use AAS Core preview to discover, recommend, validate, and plan explainable skill stacks for Codex, Claude Code, and compatible clients, backed by ${visibleCountLabel} cataloged skills.`
+    : 'Use AAS Core preview to discover, recommend, validate, and plan explainable skill stacks for Codex, Claude Code, and compatible clients.';
   return {
     title,
     description,
@@ -400,7 +404,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
         about: buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
         mainEntity: {
           '@type': 'ItemList',
-          name: 'Agentic Awesome Skills catalog',
+          name: 'AAS Core skill catalog',
         },
       },
       buildOrganizationSchema(),

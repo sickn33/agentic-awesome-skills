@@ -634,6 +634,7 @@ describe('seo assets verification helpers', () => {
   it('requires llms.txt discovery signals', () => {
     const llms = `
       # Agentic Awesome Skills
+      AAS Core preview
       Current release: V1.2.3.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
@@ -647,6 +648,7 @@ describe('seo assets verification helpers', () => {
   it('rejects stale llms.txt release labels', () => {
     const llms = `
       # Agentic Awesome Skills
+      AAS Core preview
       Current release: V1.2.2.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
@@ -675,12 +677,12 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
-          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
+          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
+          <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta name="twitter:description" content="Use AAS Core preview with the supporting catalog." />
           <script type="application/ld+json">
             [
               {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
@@ -701,12 +703,12 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
-          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
+          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
+          <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta name="twitter:description" content="Use AAS Core preview with the supporting catalog." />
           <script type="application/ld+json">
             [
               {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
@@ -727,12 +729,12 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
-          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
+          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
+          <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta name="twitter:description" content="Use AAS Core preview with the supporting catalog." />
         </head>
       </html>
     `;
@@ -863,7 +865,7 @@ describe('seo assets verification helpers', () => {
     fs.mkdirSync(path.dirname(routeFile), { recursive: true });
     fs.writeFileSync(
       routeFile,
-      '<html><head><title>Stack Review Workbench | Agentic Awesome Skills</title><meta name="description" content="Review an AAS stack and plan. Imports stay in memory and cannot install or apply changes." /></head></html>',
+      '<html><head><title>AAS Core Stack Review | Agentic Awesome Skills</title><meta name="description" content="Review an AAS Core stack and plan. Imports stay in memory and cannot install or apply changes." /></head></html>',
     );
 
     const xml = `

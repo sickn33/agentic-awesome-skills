@@ -10,11 +10,11 @@ import type { CategoryStats, SyncMessage } from '../types';
 import { buildHomeMeta, getHomeFaqItems } from '../utils/seo';
 
 const conceptCards = [
-  { title: 'Specialized plugins', body: 'Focused distributions for a domain or job.' },
-  { title: 'Skills', body: 'Reusable SKILL.md playbooks for repeatable execution.' },
-  { title: 'MCP tools', body: 'External capabilities the assistant can call.' },
-  { title: 'Bundles', body: 'Curated starting sets for a role or team.' },
-  { title: 'Workflows', body: 'Ordered playbooks for a concrete outcome.' },
+  { title: 'AAS Core preview', body: 'The local control plane that turns intent into an explainable skill stack and immutable plan preview.' },
+  { title: 'Local MCP', body: 'The agent-facing tools for search, inspection, recommendation, and stack comparison.' },
+  { title: 'Catalog', body: 'The evidence-backed source AAS Core uses to select exact skills.' },
+  { title: 'Workbench', body: 'A browser-local review surface for stack manifests and immutable plans.' },
+  { title: 'Plugins', body: 'Focused distributions for users who prefer a packaged domain surface.' },
 ] as const;
 
 const integrationGuides = [
@@ -122,15 +122,15 @@ export function Home(): React.ReactElement {
         </nav>
         <Link to="/workbench" className="catalog-rail__workbench">
           <Icon name="fileCode" size={17} />
-          Saved & exact installs
+          AAS Core Workbench
         </Link>
       </aside>
 
       <div className="catalog-content">
         <section className="catalog-hero">
-          <h1>Installable AI agent skills for Codex, Claude Code, Cursor, Gemini, and Antigravity</h1>
-          <p><strong>Find the right skill. Ship the better agent.</strong></p>
-          <p>Search {catalogCountLabel} installable skills, plugins, and workflows — curated for real agent work.</p>
+          <h1>AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients</h1>
+          <p><strong>Discover. Recommend. Validate. Preview.</strong></p>
+          <p>Turn intent into an explainable <code>aas-stack.json</code> and immutable plan preview without target writes, backed by {catalogCountLabel} cataloged skills.</p>
 
           <label className="catalog-search">
             <span className="sr-only">Search skills</span>
@@ -180,7 +180,7 @@ export function Home(): React.ReactElement {
                 </select>
               </label>
             </div>
-            <Link to="/workbench">Compose an exact install <Icon name="arrowRight" size={16} /></Link>
+            <Link to="/workbench">Review an AAS Core stack <Icon name="arrowRight" size={16} /></Link>
           </div>
         </section>
 
@@ -236,8 +236,8 @@ export function Home(): React.ReactElement {
 
         <section className="catalog-support" aria-label="Catalog guides">
           <div className="catalog-support__intro">
-            <h2>Understand the system behind the catalog</h2>
-            <p>Skills, tools, bundles, plugins, and workflows solve different parts of the same job.</p>
+            <h2>How AAS Core uses the catalog</h2>
+            <p>The local MCP and CLI choose from catalog evidence; the Workbench reviews what the agent proposed.</p>
           </div>
           <div className="catalog-support__concepts">
             {conceptCards.map((card) => (
