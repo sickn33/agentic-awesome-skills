@@ -65,6 +65,11 @@ assert.match(
   /check:warning-budget/,
   "sync:repo-state should enforce the frozen validation warning budget",
 );
+assert.match(
+  packageJson.scripts.chain,
+  /build:aas-v1-catalog/,
+  "chain should refresh the offline AAS v1 catalog after skill index generation",
+);
 assert.strictEqual(
   packageJson.scripts["app:install"],
   "cd apps/web-app && npm ci",
@@ -75,6 +80,7 @@ for (const filePath of [
   "apps/web-app/public/sitemap.xml",
   "apps/web-app/public/skills.json.backup",
   "data/plugin-compatibility.json",
+  "data/aas-v1/",
   ".agents/plugins/",
   ".claude-plugin/plugin.json",
   ".claude-plugin/marketplace.json",
