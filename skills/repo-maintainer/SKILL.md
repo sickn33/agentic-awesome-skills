@@ -31,6 +31,8 @@ Before mutation:
 
 If the repository names a mandatory maintainer skill or guarded command, delegate to it instead of inventing a parallel branch, merge, sync, or release path. In `agentic-awesome-skills`, use `antigravity-maintainer-batch-release` and `npm run merge:batch`; `main` is pull-request-only.
 
+The routine protected checks for `agentic-awesome-skills` are `pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview`. Do not expect, approve, or wait for the retired `aas-v1-baseline` workflow during source or canonical-sync merges. The frozen verifier remains a separately approved acceptance surface, not a routine pull-request gate.
+
 For the AAS agent-first control plane, also preserve the independent acceptance boundary:
 
 - keep product, verifier, and benchmark-gold changes in separate protected pull requests;
@@ -90,7 +92,7 @@ Treat audit-tool output as evidence to verify, not automatic permission to upgra
 
 #### Code-quality signals
 
-- dead code, stale TODO/FIXME items, debug logging, commented-out code, and missing tests;
+- dead code, stale implementation markers, debug logging, commented-out code, and missing tests;
 - unsafe defaults, suppressed errors, credential exposure, and environment-specific paths.
 
 For FAF projects only, also inspect declared `.faf`, `.faf-dna`, sync, score, and MCP contracts with the project's installed FAF commands.

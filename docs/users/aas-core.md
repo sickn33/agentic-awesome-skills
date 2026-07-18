@@ -30,7 +30,7 @@ The agent may inspect your project using its normal local capabilities, but AAS 
 The package publishes separate `aas` and `aas-mcp` binaries. For a pinned Core release without relying on npm's default-bin selection, invoke `aas` explicitly:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@<core-version> -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@latest -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
@@ -105,10 +105,11 @@ aas stack plan \
   --target codex:project \
   --target-root /absolute/path/to/project \
   --cache-root /absolute/path/to/aas-cache \
-  --runtime-version 14.6.0 \
   --runtime-integrity '<npm-sri>' \
   --out /absolute/path/to/plan.json
 ```
+
+`stack plan` derives the exact runtime version from the catalog identity in `aas-stack.json`; the verified runtime integrity remains explicit. The CLI rejects a legacy `--runtime-version` override when it disagrees with the manifest, so the documented command does not need a version edit for each release.
 
 `stack validate` is read-only. `stack plan` writes only the requested plan artifact and does not materialize skills or AAS managed state in the target. The immutable plan binds the manifest, runtime, catalog, target identity, current managed state, and exact logical operations.
 

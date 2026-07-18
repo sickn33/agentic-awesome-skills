@@ -6,7 +6,6 @@ const REQUIRED_CHECKS = ["pr-policy", "pr-evidence", "source-validation", "artif
 const GITHUB_ACTIONS_APP_ID = 15368;
 const BOT_BRANCH = "automation/canonical-repo-state";
 const CI_WORKFLOW_PATH = ".github/workflows/ci.yml";
-const BASELINE_WORKFLOW_PATH = ".github/workflows/aas-v1-baseline-check.yml";
 
 function parseArgs(argv) {
   const options = { pollSeconds: 10, maxAttempts: 180, skipPages: false };
@@ -203,8 +202,6 @@ async function main() {
   validatePullRequest(initialPr, options, initialBaseSha);
   const pullRequestRun = await ensurePullRequestChecksStarted(options, initialBaseSha);
   await waitForChecks(options, pullRequestRun.check_suite_id);
-  const baselineRun = await ensurePullRequestChecksStarted(options, initialBaseSha, {}, BASELINE_WORKFLOW_PATH);
-  await waitForChecks(options, baselineRun.check_suite_id, {}, ["aas-v1-baseline"]);
   const pr = JSON.parse(runGh(["api", `repos/${options.repo}/pulls/${options.pr}`]));
   const finalBranch = JSON.parse(runGh(["api", `repos/${options.repo}/branches/main`]));
   validateProtectedMain(finalBranch);
