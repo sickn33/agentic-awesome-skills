@@ -11,6 +11,8 @@ function readText(relativePath) {
 const packageJson = JSON.parse(readText("package.json"));
 const generatedFiles = JSON.parse(readText("tools/config/generated-files.json"));
 const ciWorkflow = readText(".github/workflows/ci.yml");
+const previewWorkflow = readText(".github/workflows/aas-agent-first-preview.yml");
+const productVerifierWorkflow = readText(".github/workflows/aas-v1-product-verifier.yml");
 const canonicalMergeScript = readText("tools/scripts/merge_canonical_sync_pr.cjs");
 const publishWorkflow = readText(".github/workflows/publish-npm.yml");
 const releaseWorkflowScript = readText("tools/scripts/release_workflow.js");
@@ -164,6 +166,21 @@ assert.match(
   pagesWorkflow,
   /- name: Checkout[\s\S]*?uses: actions\/checkout@[a-f0-9]{40}[\s\S]*?with:[\s\S]*?fetch-depth: 0[\s\S]*?persist-credentials: false/,
   "Pages should use an unshallowed, credential-free checkout because canonical provenance validation reads git history",
+);
+assert.match(
+  ciWorkflow,
+  /artifact-preview:[\s\S]*?actions\/checkout@[a-f0-9]{40}[\s\S]*?fetch-depth: 0[\s\S]*?persist-credentials: false/,
+  "artifact-preview should retain history because canonical provenance generation reads git history",
+);
+assert.match(
+  previewWorkflow,
+  /Verify deterministic catalog and preview contracts[\s\S]*?npm run build:aas-v1-catalog[\s\S]*?npm run check:aas-v1-catalog/,
+  "the preview candidate should regenerate source-derived Core catalog artifacts before checking them",
+);
+assert.match(
+  productVerifierWorkflow,
+  /path: candidate[\s\S]*?fetch-depth: 0[\s\S]*?npm run build:aas-v1-catalog[\s\S]*?npm pack/,
+  "the product verifier should package source-derived Core catalog artifacts from a full-history checkout",
 );
 assert.match(
   ciWorkflow,

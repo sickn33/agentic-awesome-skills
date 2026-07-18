@@ -54,6 +54,7 @@ jobs:
           ref: ${{ steps.identity.outputs.commit }}
           path: candidate
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 24.18.0
@@ -64,6 +65,7 @@ jobs:
         shell: bash
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
+          npm run build:aas-v1-catalog
           mkdir -p "$RUNNER_TEMP/aas-candidate"
           npm pack --ignore-scripts --json --pack-destination "$RUNNER_TEMP/aas-candidate" > "$RUNNER_TEMP/aas-pack.json"
           test "$(find "$RUNNER_TEMP/aas-candidate" -maxdepth 1 -name '*.tgz' -type f | wc -l | tr -d ' ')" = 1
