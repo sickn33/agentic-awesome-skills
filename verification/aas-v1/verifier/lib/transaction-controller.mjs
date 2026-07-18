@@ -25,11 +25,19 @@ function sleep(milliseconds) {
 
 function readOneJson(result, expectedCode = 0) {
   let structuredErrorCode = null;
+  let structuredErrorDetails = null;
   try {
-    structuredErrorCode = parseJsonLines(result.stderr || "")[0]?.code || null;
+    const structuredError = parseJsonLines(result.stderr || "")[0];
+    structuredErrorCode = structuredError?.code || null;
+    const details = structuredError?.details;
+    if (details && typeof details === "object" && !Array.isArray(details)) {
+      structuredErrorDetails = Object.fromEntries(Object.entries(details)
+        .filter(([key, value]) => ["platform", "capability", "helperPhase", "win32Error", "spawnCode", "helperExitCode"].includes(key)
+          && (typeof value === "string" || Number.isSafeInteger(value))));
+    }
   } catch {}
   assert(result.code === expectedCode, "AAS_TRANSACTION_CONTROLLER_CLI_EXIT", {
-    expectedCode, actualCode: result.code, structuredErrorCode, stderrDigest: sha256(result.stderr || ""),
+    expectedCode, actualCode: result.code, structuredErrorCode, structuredErrorDetails, stderrDigest: sha256(result.stderr || ""),
   });
   const values = parseJsonLines(result.stdout || "");
   assert(values.length === 1, "AAS_TRANSACTION_CONTROLLER_CLI_OUTPUT");
