@@ -179,6 +179,38 @@ class SyncRepoMetadataTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             update_readme.core_release_metadata({"version": "invalid", "aasCore": {"includedFromMajor": 15}})
 
+    def test_prerelease_metadata_sync_is_idempotent_and_can_promote_to_stable(self):
+        prerelease = {
+            "version": "15.0.0-rc.1",
+            "core_included": True,
+            "core_included_from_major": 15,
+            "total_skills": 1968,
+            "total_skills_label": "1,968+",
+            "star_badge_count": "44%2C000%2B",
+            "star_milestone": "44,000+",
+            "star_celebration": "44k",
+            "stars": 43524,
+            "updated_at": "2026-07-18T00:00:00+00:00",
+        }
+        readme = "**Current release: V15.0.0-rc.1.** stale\n"
+        once = update_readme.apply_metadata(readme, prerelease)
+        twice = update_readme.apply_metadata(once, prerelease)
+        self.assertEqual(once, twice)
+        self.assertIn("V15.0.0-rc.1.**", twice)
+        self.assertNotIn("rc.1.0-rc.1", twice)
+
+        llms = "- Current release: V15.0.0-rc.1.0-rc.1.\n"
+        synced = sync_repo_metadata.sync_llms_text(llms, prerelease)
+        self.assertEqual(synced, "- Current release: V15.0.0-rc.1.\n")
+        self.assertEqual(sync_repo_metadata.sync_llms_text(synced, prerelease), synced)
+
+        stable = {**prerelease, "version": "15.0.0"}
+        self.assertIn("V15.0.0.**", update_readme.apply_metadata(twice, stable))
+        self.assertEqual(
+            sync_repo_metadata.sync_llms_text(synced, stable),
+            "- Current release: V15.0.0.\n",
+        )
+
     def test_sync_github_about_builds_expected_commands(self):
         calls = []
 

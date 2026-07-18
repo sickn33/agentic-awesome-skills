@@ -10,6 +10,7 @@ from pathlib import Path
 from plugin_compatibility import compatibility_by_skill_id, load_plugin_compatibility
 from sync_editorial_bundles import load_editorial_bundles, render_bundles_doc
 from update_readme import (
+    VERSION_TOKEN_PATTERN,
     configure_utf8_output,
     core_release_boundary,
     core_release_status,
@@ -51,7 +52,10 @@ README_TITLE_RE = re.compile(
     r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills)$",
     re.MULTILINE,
 )
-README_RELEASE_RE = re.compile(r"^\*\*Current release: V[\d.]+\.\*\* .*?$", re.MULTILINE)
+README_RELEASE_RE = re.compile(
+    rf"^\*\*Current release: V{VERSION_TOKEN_PATTERN}\.\*\* .*?$",
+    re.MULTILINE,
+)
 README_BROAD_COVERAGE_RE = re.compile(
     r"^- \*\*Broad coverage with real utility\*\*: \d[\d,]*\+ skills across development, testing, security, infrastructure, product, and marketing\.$",
     re.MULTILINE,
@@ -224,7 +228,7 @@ def sync_llms_text(content: str, metadata: dict) -> str:
     return sync_regex_text(
         content,
         [
-            (r"Current release: V[\d.]+\.", f"Current release: V{metadata['version']}."),
+            (r"(?m)^- Current release: V[^\n]+$", f"- Current release: V{metadata['version']}."),
             (r"Release boundary: .*", core_release_boundary(metadata)),
             (r"\d[\d,]*\+ agentic SKILL\.md playbooks", f"{skill_label} agentic SKILL.md playbooks"),
             (r"Skill count: \d[\d,]*\+\.", f"Skill count: {skill_label}."),

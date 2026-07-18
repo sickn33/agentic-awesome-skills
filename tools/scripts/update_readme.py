@@ -15,7 +15,11 @@ SYNC_COMMENT_FIELDS_RE = re.compile(
     r"<!-- registry-sync: version=(?P<version>[^;]+); skills=(?P<skills>\d+); "
     r"stars=(?P<stars>\d+); updated_at=(?P<updated_at>[^ ]+) -->"
 )
-CURRENT_RELEASE_LINE_RE = re.compile(r"^\*\*Current release: V[\d.]+\.\*\* .*?$", re.MULTILINE)
+VERSION_TOKEN_PATTERN = r"[0-9A-Za-z][0-9A-Za-z.+-]*"
+CURRENT_RELEASE_LINE_RE = re.compile(
+    rf"^\*\*Current release: V{VERSION_TOKEN_PATTERN}\.\*\* .*?$",
+    re.MULTILINE,
+)
 
 
 def release_major(version: str) -> int:
