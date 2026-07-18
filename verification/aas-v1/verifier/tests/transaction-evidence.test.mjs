@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadReceiptValidator } from "../lib/receipt.mjs";
-import { faultFixtureProfile, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
+import { classifyConcurrencyOutcomes, faultFixtureProfile, nativeObservationLineage, portableTreeDigest, raceFixtureProfile, selectBackupSkillIds, walBoundaryIsValid } from "../lib/transaction-controller.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const validate = loadReceiptValidator(path.resolve(here, "..", "..", "schemas", "product-transaction-evidence.schema.json"));
@@ -183,4 +183,14 @@ test("concurrency races keep the externally observed target lock contended", () 
   assert.deepEqual(raceFixtureProfile("symlink-swap", corpus), { additionalSkills: corpus });
   assert.deepEqual(raceFixtureProfile("target-swap", corpus), { additionalSkills: corpus });
   assert.deepEqual(raceFixtureProfile("corrupt-journal", corpus), { additionalSkills: [] });
+});
+
+test("concurrency accepts only lock rejection or post-commit idempotence", () => {
+  const applied = { result: { code: 0 }, value: { status: "applied" } };
+  const locked = { result: { code: 4 }, value: { status: "error", code: "AAS_TRANSACTION_LOCKED" } };
+  const idempotent = { result: { code: 0 }, value: { status: "alreadyApplied" } };
+  assert.equal(classifyConcurrencyOutcomes([applied, locked]), "locked");
+  assert.equal(classifyConcurrencyOutcomes([applied, idempotent]), "alreadyApplied");
+  assert.equal(classifyConcurrencyOutcomes([applied, { result: { code: 0 }, value: { status: "applied" } }]), null);
+  assert.equal(classifyConcurrencyOutcomes([applied, { result: { code: 1 }, value: { status: "alreadyApplied" } }]), null);
 });

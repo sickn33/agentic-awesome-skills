@@ -168,6 +168,14 @@ export function raceFixtureProfile(className, contentionSkillIds) {
   };
 }
 
+export function classifyConcurrencyOutcomes(values) {
+  if (!Array.isArray(values) || values.filter(({ value }) => value?.status === "applied").length !== 1) return null;
+  const follower = values[1];
+  if (follower?.value?.code === "AAS_TRANSACTION_LOCKED" && follower.result?.code !== 0) return "locked";
+  if (follower?.value?.status === "alreadyApplied" && follower.result?.code === 0) return "alreadyApplied";
+  return null;
+}
+
 function finalState(targetRoot, skillId, expectedContentDigest, plan) {
   const destination = path.join(targetRoot, ".agents", "skills", skillId);
   const state = path.join(targetRoot, ".aas", "managed-state.codex.json");
@@ -546,13 +554,17 @@ async function raceCase(context, className) {
     const secondResult = await run(process.execPath, [fixture.aas, ...args], { cwd: fixture.caseRoot, env: fixture.env, timeoutMs: 120_000 });
     const results = [await first.completed, secondResult];
     const values = results.map((result) => ({ result, value: parseJsonLines(result.code === 0 ? result.stdout : result.stderr)[0] }));
-    assert(values.some(({ value }) => value?.status === "applied"), "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NO_WINNER");
-    assert(values[1].value?.code === "AAS_TRANSACTION_LOCKED", "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NOT_SERIALIZED", {
+    const serializationOutcome = classifyConcurrencyOutcomes(values);
+    assert(serializationOutcome, "AAS_TRANSACTION_CONTROLLER_CONCURRENCY_NOT_SERIALIZED", {
       code: values[1].value?.code,
       status: values[1].value?.status,
     });
-    outcome = secondResult;
-    observation = { eventDigest: digestJson({ liveLockDigest, outcomes: values.map(({ value }) => ({ status: value?.status || null, code: value?.code || null })) }) };
+    outcome = values.find(({ value }) => value?.status === "applied").result;
+    observation = { eventDigest: digestJson({
+      liveLockDigest,
+      serializationOutcome,
+      outcomes: values.map(({ result, value }) => ({ exitCode: result.code, status: value?.status || null, code: value?.code || null })),
+    }) };
     expectedFinal = "new";
   } else if (["drift", "symlink-swap", "target-swap"].includes(className)) {
     const observed = await runObserved(process.execPath, [RACE_DRIVER], {
