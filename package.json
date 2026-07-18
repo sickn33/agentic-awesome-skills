@@ -25,7 +25,7 @@
     "sync:github-about": "node tools/scripts/run-python.js tools/scripts/sync_repo_metadata.py --apply-github-about",
     "sync:contributors": "node tools/scripts/run-python.js tools/scripts/sync_contributors.py",
     "sync:web-assets": "npm run app:setup && cd apps/web-app && npm run generate:sitemap",
-    "chain": "npm run validate && npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata",
+    "chain": "npm run validate && npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run build:aas-v1-catalog",
     "sync:all": "npm run chain",
     "sync:release-state": "npm run chain && npm run catalog && npm run sync:web-assets && npm run audit:consistency && npm run check:warning-budget",
     "sync:repo-state": "npm run chain && npm run catalog && npm run sync:web-assets && npm run sync:contributors && npm run audit:consistency && npm run check:warning-budget",
