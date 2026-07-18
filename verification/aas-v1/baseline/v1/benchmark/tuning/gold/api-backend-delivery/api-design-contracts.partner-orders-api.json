@@ -31,24 +31,39 @@
           "openapi-spec-generator"
         ]
       ]
+    },
+    {
+      "solutionId": "interface-design-documenter",
+      "allowedSkillIds": [
+        "api-and-interface-design",
+        "api-documenter"
+      ],
+      "requiredGroups": [
+        [
+          "api-and-interface-design"
+        ],
+        [
+          "api-documenter"
+        ]
+      ]
     }
   ],
   "ambiguous": false,
   "reviews": [
     {
-      "reviewer": "codex-independent-alpha",
+      "reviewer": "gold-equivalence-independent-adjudicator",
       "decision": "approved",
-      "reviewedDigest": "sha256-8ad5add3c6889ed5372e4358a23ab6bf80ae83d57bbb42f49b1fba818a851813"
+      "reviewedDigest": "sha256-1494fd21d58cad7d549a0ea132c423c7902e304fd71aa6b8123eb8be2787b0da"
     },
     {
-      "reviewer": "codex-independent-beta",
+      "reviewer": "gold-equivalence-independent-alpha",
       "decision": "approved",
-      "reviewedDigest": "sha256-8ad5add3c6889ed5372e4358a23ab6bf80ae83d57bbb42f49b1fba818a851813"
+      "reviewedDigest": "sha256-1494fd21d58cad7d549a0ea132c423c7902e304fd71aa6b8123eb8be2787b0da"
     }
   ],
   "provenance": {
-    "source": "independent-synthetic-tuning-gold-authoring",
-    "version": "1.0.0",
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
     "reviewedAt": "2026-07-17"
   }
 }

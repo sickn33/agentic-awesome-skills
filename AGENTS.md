@@ -40,3 +40,43 @@ For every repository maintenance sweep, PR merge batch, maintainer-side PR repai
 Treat `main` as pull-request-only. Perform maintainer edits on a topic branch or in a clean temporary clone, merge accepted source PRs with `npm run merge:batch`, and let the protected canonical-sync PR own generated state and contributor-credit drift. Never retry a rejected direct push to `main` and never use a generic push helper for releases.
 
 Use the skill's end-to-end sequence: complete triage, repair mergeable source PRs, run checks in parallel, merge source PRs in conflict-aware order, perform one canonical synchronization after the source batch, use the scripted protected-release flow when requested, and verify final `main`, tag, GitHub Release, npm package, CI, and live public surfaces. For changed `SKILL.md` files, distinguish a real Tessl `review` from `manual-review-required`; the latter means Tessl did not run and requires a maintainer review attested to the exact full head SHA. If the skill is unavailable or unreadable, stop before making repository changes and report that blocker explicitly.
+
+#### Mandatory Local Reviewer Gate for Skill Content
+
+<!-- local-skill-reviewer-policy:v1 -->
+
+For every canonical `SKILL.md` change or change to one of its tracked bundle files, the maintainer must complete this local gate before the official merge gate:
+
+1. Stage only the exact changed skill and bundle blobs intended for review. The local reviewer reads the Git index; an unstaged correction is not reviewed, and unrelated paths must not be staged with it.
+2. Use a private result directory outside the repository and run:
+
+   ```bash
+   npm run review:skills:local -- review <skill-id> --merge-gate --result-dir <private-temp-dir>
+   ```
+
+3. Inspect `triage.reviewStatus`, `triage.priority`, and `triage.reasonCodes`. For P0/P1, uncertain, or locally namespaced `manual-review-required` results, choose exactly one semantic preparation route.
+
+   Single-skill semantic route (alternative to batch preparation):
+
+   ```bash
+   npm run review:skills:semantic:packet -- <skill-id> --result-dir <private-temp-dir>
+   ```
+
+   Obtain the Codex judgment for that packet, then import and verify it:
+
+   ```bash
+   npm run review:skills:semantic:import -- <skill-id> --input <codex-judgment.json> --result-dir <private-temp-dir>
+   npm run review:skills:semantic:verify -- <skill-id> --result-dir <private-temp-dir>
+   ```
+
+   Batch semantic route (alternative to the single-skill packet command):
+
+   ```bash
+   npm run review:skills:semantic:prepare -- --result-dir <private-temp-dir>
+   ```
+
+   For each escalated skill in that batch, obtain its Codex judgment, then run the same `semantic:import` and `semantic:verify` commands above. Never run `semantic:packet` and `semantic:prepare` for the same skill in the same result directory.
+
+4. After any correction, stage the exact intended blobs again and rerun the local reviewer, `npm run validate`, `npm run validate:references`, `npm run security:docs`, and the relevant tests.
+
+The local status is identified by `source: local-skill-reviewer`. It is triage and review support only: it does not replace Tessl, is not the CI status with the same name, and does not satisfy the exact-head attestation. A truthful Tessl `review` or the normal maintainer attestation bound to the full head SHA remains the official merge gate.

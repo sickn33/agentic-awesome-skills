@@ -3,7 +3,12 @@ function ratio(numerator, denominator, emptyValue = 0) {
   return numerator / denominator;
 }
 
-export function evaluateCase(result, goldCase) {
+function solutionSatisfiesRequiredGroups(includedSkillIds, solution) {
+  const included = new Set(includedSkillIds);
+  return (solution.requiredGroups || []).every((group) => group.some((skillId) => included.has(skillId)));
+}
+
+export function evaluateCase(result, goldCase, acceptedSolutions = []) {
   const criticalTotal = goldCase.criticalGoals.length;
   const nonCriticalTotal = goldCase.nonCriticalGoals.length;
   if (criticalTotal === 0) {
@@ -34,13 +39,20 @@ export function evaluateCase(result, goldCase) {
     && result.timedOut !== true
     && result.missing !== true;
 
+  const independentlyAcceptedStack = acceptedSolutions.length > 0
+    && acceptedSolutions.some((solution) => (
+      includedSkillIds.every((skillId) => (solution.allowedSkillIds || []).includes(skillId))
+      && solutionSatisfiesRequiredGroups(includedSkillIds, solution)
+    ));
+
   const verified = terminal
     && result.schemaValid === true
     && hardPolicyViolations === 0
     && criticalGoalCoverage === 1
     && nonCriticalGoalCoverage >= minimumNonCriticalGoalCoverage
     && (!goldCase.requiresSkill || includedSkillIds.length >= 1)
-    && everyDiscoveryPromotionHasVisibleOverride;
+    && everyDiscoveryPromotionHasVisibleOverride
+    && independentlyAcceptedStack;
 
   return {
     verified,
@@ -49,6 +61,7 @@ export function evaluateCase(result, goldCase) {
     criticalGoalCoverage,
     nonCriticalGoalCoverage,
     everyDiscoveryPromotionHasVisibleOverride,
+    independentlyAcceptedStack,
     includedSkillIds,
   };
 }
@@ -101,6 +114,12 @@ export function aggregateIntent(caseReports, frozenDenominator = 30) {
     (total, report) => total + Number(report.inclusionCount || 0),
     0,
   );
+  const perStackPrecisions = caseReports
+    .filter((report) => Number(report.inclusionCount || 0) > 0)
+    .map((report) => {
+      if (typeof report.inclusionPrecision === "number") return report.inclusionPrecision;
+      return Number(report.acceptedInclusionCount || 0) / Number(report.inclusionCount);
+    });
   const nonEmptyStackCount = caseReports.filter((report) => Number(report.inclusionCount || 0) > 0).length;
   const emptyStackCount = caseReports.filter((report) => Number(report.inclusionCount || 0) === 0).length
     + Math.max(0, frozenDenominator - caseReports.length);
@@ -110,7 +129,9 @@ export function aggregateIntent(caseReports, frozenDenominator = 30) {
     observedResultCount: caseReports.length,
     verifiedCount,
     verifiedCoverage: verifiedCount / frozenDenominator,
-    inclusionPrecision: totalInclusions === 0 ? null : acceptedInclusions / totalInclusions,
+    inclusionPrecision: perStackPrecisions.length === 0
+      ? null
+      : perStackPrecisions.reduce((sum, value) => sum + value, 0) / perStackPrecisions.length,
     acceptedInclusions,
     totalInclusions,
     nonEmptyStackCount,

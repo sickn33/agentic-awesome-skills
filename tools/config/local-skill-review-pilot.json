@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas-local-skill-review-pilot-manifest",
+  "manifestVersion": 1,
+  "frozenBeforeRealResults": true,
+  "sampleSize": 24,
+  "skills": [
+    { "id": "cc-skill-continuous-learning", "strata": ["under-50-lines", "risk-none", "community"], "bundleHash": "e203902e7ed3748c767bc133134c30afd914c011bd16d6107caa7d0ab824e66d" },
+    { "id": "create-pr", "strata": ["under-50-lines", "alias-style", "risk-unknown"], "bundleHash": "03f0f6dc90455ae09abbc7e137fd1bb0945db5bb544ac1c7978189d6e0690db0" },
+    { "id": "short", "strata": ["under-50-lines", "instruction-only", "risk-safe"], "bundleHash": "15c91a3d5e4999ad4c02051908aeb6b0e3a134b8a2a90a75caa48d4dd0de9216" },
+    { "id": "documentation-templates", "strata": ["median-length", "community"], "bundleHash": "4fce13c2899889e9fabddf915ce6801d775280ee8084022f57d703e7abad72f6" },
+    { "id": "libreoffice/writer", "strata": ["median-length", "nested", "personal", "risk-safe"], "bundleHash": "c8ad008664357c817ae5e6ed01345c8694836225fd91558ab916b2edc73c3b3d" },
+    { "id": "bash-linux", "strata": ["median-length", "code-heavy", "risk-unknown"], "bundleHash": "6a23bed50c2985f34c51f8ed7ea0971d412e70651a495c22639df0401b9dab4f" },
+    { "id": "source-driven-development", "strata": ["median-length", "imported"], "bundleHash": "b6529f5821a8e20b00de4d551d7222cd7cb218b0bd519c60f07d24a40b91b9eb" },
+    { "id": "llm-structured-output", "strata": ["median-length", "code-heavy"], "bundleHash": "91a183e380c7303b1fd94d45dd44e4c1d33edc659fe793d56f4d8537ccf9fac0" },
+    { "id": "docx-official", "strata": ["median-length", "document-workflow"], "bundleHash": "52777c2e896ee7635612fb33e36e1a10d73d6a68d79cd27c85a474ea1527885e" },
+    { "id": "react-component-performance", "strata": ["bundle-references", "frontend"], "bundleHash": "8155698d0eb23ab1c53e8ef430239a838d3a312fca69ce01164baa904b1631b3" },
+    { "id": "gemini-deep-research", "strata": ["bundle-scripts", "research"], "bundleHash": "f9f7320a47760c59554702fba598c2115358ab91c1475a994fa06e9462b38cb3" },
+    { "id": "docs-guard", "strata": ["bundle-references", "verification"], "bundleHash": "698c9ce2601edef2a18756e75ebd7c6ddf068f343b556eff2d770c58ed776cd7" },
+    { "id": "hig-platforms", "strata": ["large-bundle", "progressive-disclosure"], "bundleHash": "b8d3f15b1ffc1af54fd19b727514849cf45cdf5b5e36e7767a9f48079316aa03" },
+    { "id": "seo-plan", "strata": ["bundle-assets", "marketing"], "bundleHash": "86d11ef196b871d1bf78a9e57770caa1d4322012349a433ac448dc20245f767b" },
+    { "id": "mobile-design", "strata": ["bundle-scripts", "design"], "bundleHash": "187f0d05593cf9d1657ec6b9fcf32fa2965d2204602cb6c23eae3dcbdc505730" },
+    { "id": "energy-procurement", "strata": ["bundle-references", "domain-specific"], "bundleHash": "7fbe4e041a190487ad899f6a3001074c60ff9061d955cb3117e11c1ecde3adbc" },
+    { "id": "agent-evaluation", "strata": ["over-500-lines", "risk-safe"], "bundleHash": "38a99be4462580dce4d5e7d4ae2350c95ec0cb7e58008f4d678e62287ad89589" },
+    { "id": "browser-automation", "strata": ["over-500-lines", "risk-unknown"], "bundleHash": "291c8904e70f99cfadea5c69b69fc74d65c28f49c9a3b15403d1706940dc7e22" },
+    { "id": "advogado-especialista", "strata": ["over-500-lines", "non-english", "domain-specific"], "bundleHash": "6099a89b01a0d579290afae08c9e5bfcb27654892d1b71764d85f301e1a859c0" },
+    { "id": "aws-serverless", "strata": ["over-500-lines", "cloud"], "bundleHash": "ec4cf644b3a73b84f8b1b0dcf48716bb6e3b78afc854fbd1941f200bc011b799" },
+    { "id": "computer-use-agents", "strata": ["over-500-lines", "largest", "security-sensitive"], "bundleHash": "2d0058e96716d944a2ad9aa90f04628a3c09bdf89c183f032da29283c0309fdd" },
+    { "id": "api-security-best-practices", "strata": ["security-sensitive", "risk-unknown"], "bundleHash": "2ad92a719f5810eed30cc48dbe27dde51883b251fce85dcc8610af829f5d943c" },
+    { "id": "ethical-hacking-methodology", "strata": ["security-sensitive", "risk-offensive"], "bundleHash": "8e4524e1d46d60f5d14b5f4157eae56ef876aa95c59ce24a32e24047e27db932" },
+    { "id": "red-team-tactics", "strata": ["median-length", "security-sensitive", "risk-offensive"], "bundleHash": "7f978b1fb39abbb3a8f31c5d25a3285da5b0cc9086d9e3a879f84d3d3add003f" }
+  ]
+}

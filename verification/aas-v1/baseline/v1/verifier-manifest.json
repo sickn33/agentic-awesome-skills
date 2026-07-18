@@ -1,0 +1,43 @@
+{
+  "$schema": "../../schemas/product-verifier-manifest.schema.json",
+  "schemaVersion": 1,
+  "verifierVersion": "1.0.0",
+  "status": "frozen",
+  "owner": "aas-v1-independent-verifier",
+  "candidatePackage": "agentic-awesome-skills",
+  "candidateEntrypoints": {
+    "aas": "tools/bin/aas.js",
+    "aas-mcp": "tools/bin/aas-mcp.js",
+    "agentic-awesome-skills": "tools/bin/install.js"
+  },
+  "publicContract": {
+    "protocolVersion": "2025-06-18",
+    "coreVersion": "1.0.0",
+    "metadataSchemaVersion": "1.0.0",
+    "scorerVersion": "1.0.0",
+    "tools": ["search_skills", "get_skill", "recommend_stack", "inspect_stack", "diff_stack"],
+    "resourceTemplates": ["aas://skills/{id}"],
+    "commands": [
+      "catalog status", "catalog update", "mcp configure", "mcp backups cleanup", "stack init", "stack recommend", "stack validate", "stack plan", "stack apply", "stack doctor", "stack recover"
+    ],
+    "catalogDigestPattern": "^sha256-[a-f0-9]{64}$"
+  },
+  "requiredSuites": ["package", "entrypoints", "mcp", "property", "fuzz", "hostile", "legacy", "transaction", "adapters"],
+  "matrixAllocation": {
+    "algorithm": "global execution index modulo six in runtime-matrix job order",
+    "allJobsRunCanonicalSample": true,
+    "canonicalSampleExecutions": 60
+  },
+  "faultBoundaryClasses": ["lock", "journal", "backup", "write", "fsync", "rename", "commit"],
+  "raceClasses": ["concurrency", "drift", "symlink-swap", "target-swap", "corrupt-journal", "recovery-race"],
+  "candidateIsolation": {
+    "requiresProcessSeparation": true,
+    "requiresSeparateOsIdentity": false,
+    "testHooksAllowed": false,
+    "deniedRoots": ["verifier", "benchmark", "gold", "evidence"],
+    "candidateInput": "tarball plus normalized public profiles only",
+    "failurePolicy": "fail-closed"
+  },
+  "receiptCanonicalization": "RFC-8785-JCS-compatible canonical JSON with explicit receiptDigest omission",
+  "protectedWorkflow": ".github/workflows/aas-v1-product-verifier.yml"
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:result-envelope:v1",
+  "title": "AAS structured result envelope v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["schemaVersion", "ok", "status", "protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "reasonCodes", "unknown", "details"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "ok": { "const": true },
+        "status": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "protocolVersion": { "type": "string", "minLength": 1 },
+        "coreVersion": { "type": "string", "minLength": 1 },
+        "metadataSchemaVersion": { "type": "string", "minLength": 1 },
+        "scorerVersion": { "type": "string", "minLength": 1 },
+        "reasonCodes": { "$ref": "#/$defs/codes" },
+        "unknown": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "details": { "type": "object" },
+        "message": { "type": "string" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "ok", "status", "protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "code", "category", "details"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "ok": { "const": false },
+        "status": { "const": "error" },
+        "protocolVersion": { "type": "string", "minLength": 1 },
+        "coreVersion": { "type": "string", "minLength": 1 },
+        "metadataSchemaVersion": { "type": "string", "minLength": 1 },
+        "scorerVersion": { "type": "string", "minLength": 1 },
+        "code": { "$ref": "#/$defs/code" },
+        "category": { "enum": ["invalidInput", "incompatibleVersion", "integrity", "drift", "policy", "approval", "conflict", "recovery", "filesystem", "execution", "internal"] },
+        "details": { "type": "object" },
+        "remediation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["action", "args"],
+            "properties": {
+              "action": { "type": "string", "pattern": "^[a-z][a-z0-9.-]+$" },
+              "args": { "type": "object" },
+              "text": { "type": "string" }
+            }
+          }
+        },
+        "correlationId": { "type": "string", "maxLength": 128 },
+        "message": { "type": "string" }
+      }
+    }
+  ],
+  "$defs": {
+    "code": { "type": "string", "pattern": "^AAS_[A-Z0-9_]+$" },
+    "codes": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/code" } }
+  }
+}

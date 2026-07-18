@@ -1007,7 +1007,12 @@ function main() {
 }
 
 if (require.main === module) {
-  main();
+  const argv = process.argv.slice(2);
+  if (["catalog", "stack", "mcp"].includes(argv[0])) {
+    require("../lib/aas-v1/cli/main").main(argv).then((code) => { process.exitCode = code; });
+  } else {
+    main();
+  }
 }
 
 module.exports = {

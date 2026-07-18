@@ -64,6 +64,17 @@ validate("hostile-corpus-manifest.schema.json", [path.join(baselineRoot, "hostil
 validate("legacy-command-corpus.schema.json", [path.join(baselineRoot, "legacy", "14.6.0", "manifest.json")]);
 validate("metric-definition.schema.json", [path.join(baselineRoot, "metrics.json")]);
 validate("runtime-matrix.schema.json", [path.join(baselineRoot, "runtime-matrix.json")]);
+validate("tuning-gold-equivalence-review.schema.json", [
+  path.join(baselineRoot, "reviews", "reviewer-tuning-equivalence-alpha.json"),
+  path.join(baselineRoot, "reviews", "reviewer-tuning-equivalence-beta.json"),
+  path.join(baselineRoot, "reviews", "reviewer-tuning-equivalence-adjudicator.json"),
+  path.join(baselineRoot, "reviews", "reviewer-tuning-equivalence-ci-tiebreak.json"),
+]);
+validate("tuning-gold-equivalence-audit.schema.json", [
+  path.join(baselineRoot, "reviews", "tuning-gold-equivalence-audit.json"),
+]);
+validate("product-verifier-manifest.schema.json", [path.join(baselineRoot, "verifier-manifest.json")]);
+validate("host-adapter-fixtures.schema.json", [path.join(baselineRoot, "host-adapters", "manifest.json")]);
 
 const abstentionRoot = path.join(benchmarkRoot, "abstention");
 const abstentionSchemas = path.join(abstentionRoot, "schemas");
@@ -96,4 +107,6 @@ console.log(JSON.stringify({
   tuningGold: 60,
   abstentionCases: 30,
   abstentionLabels: 30,
+  tuningEquivalenceReviews: 4,
+  tuningEquivalenceAudits: 1,
 }, null, 2));

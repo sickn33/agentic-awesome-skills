@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas-codex-tessl-level-guide",
+  "guideVersion": "codex-tessl-levels-v2",
+  "basis": "Public Tessl anchors plus generic error corrections derived only from the development and validation cohorts.",
+  "inputContract": {
+    "source": "Frozen Git-index bundle snapshot",
+    "allowedBundleDirectories": ["references", "scripts", "assets"],
+    "rules": [
+      "Judge only the supplied frozen bundle. Never inspect or infer from the live repository.",
+      "Read the exact frontmatter description and complete SKILL.md body.",
+      "List bundled files, resolve every mentioned path against that list, and read supplemental content only when needed for progressive disclosure.",
+      "A file that exists outside the supplied bundle is missing for this review."
+    ]
+  },
+  "procedure": [
+    "For each dimension, quote the smallest decisive evidence span.",
+    "Compare the evidence independently with levels 1, 2, and 3 from the installed Tessl rubric.",
+    "State why the closest lower and higher anchors do not fit.",
+    "Apply the dimension-specific tie-breaker below without borrowing requirements from another dimension.",
+    "Return exactly eight integer levels. Compute validation and total score outside the model."
+  ],
+  "globalRules": [
+    "Score only explicit text and actual bundle structure; do not infer missing capabilities.",
+    "Use level 2 as the real middle anchor, not as a default that blocks a clearly satisfied extreme.",
+    "Do not use line count, monolithic layout, code volume, or the mere presence of references as a proxy for any level.",
+    "Use-when syntax affects completeness only. It neither raises trigger quality automatically nor is required for a high score in other dimensions.",
+    "Instruction-only skills can be fully actionable without code.",
+    "Actionability and progressive disclosure are orthogonal."
+  ],
+  "dimensions": {
+    "specificity": {
+      "level1": "No concrete capability is identifiable, or a capability otherwise at level 2 directly addresses the reader with explicit first- or second-person pronouns in the what-clause.",
+      "level2": "A clear domain with one operation, closely equivalent operations, generic categories, or variants of one mechanism.",
+      "level3": "The capability clause contains multiple semantically distinct operations, outputs, implementation elements, or behavioral constraints. Concrete nominal inventories count; multiple verbs are not required.",
+      "tieBreaker": "Do not count scenarios that appear only in the activation clause. An imperative without an explicit first- or second-person pronoun is not a voice violation. Apply any voice penalty only inside the capability clause, never to ordinary user wording inside a trigger clause."
+    },
+    "trigger_term_quality": {
+      "level1": "No term resembles a real request; the text is only marketing, abstraction, internal jargon, or overly generic language.",
+      "level2": "At least one plausible natural trigger exists, but coverage is narrow, dominated by brand or class names, omits the natural name of the central task, or is too broad for the stated scope.",
+      "level3": "The main request families are covered with language the target user would naturally use, including task, symptom, output, artifact, or practitioner-standard technical terms.",
+      "tieBreaker": "Judge coverage relative to scope breadth, not keyword count or the presence of a Use-when clause."
+    },
+    "completeness": {
+      "level1": "Neither what the skill does nor when to use it is usable.",
+      "level2": "Only one of what or when is clear, or the activation condition is merely implied.",
+      "level3": "Capability and activation condition are both explicit and separately identifiable.",
+      "tieBreaker": "Use when, Use for, and equivalent explicit activation wording are valid. A purpose complement alone is not a trigger. If either what or when is clear, do not use level 1."
+    },
+    "distinctiveness_conflict_risk": {
+      "level1": "No recognizable target task, object, artifact, or system; the description could match many unrelated skills.",
+      "level2": "A niche is identifiable but a common adjacent skill could plausibly match the same request because the scope is broad, generalist, transverse, or catch-all.",
+      "level3": "The request is low-collision because it combines restrictive axes such as system or product, subtask, artifact, lifecycle state, role, or constraint, or because the task-object pair is intrinsically specialist.",
+      "tieBreaker": "An explicit exclusion boundary is not required. Ask whether a common adjacent skill would plausibly activate on the same request; choose 2 only when meaningful overlap remains."
+    },
+    "conciseness": {
+      "level1": "Low-value material dominates: basic explanations, equivalent repetitions, weakly differentiated catalogs, or duplicated variants obscure the operational core.",
+      "level2": "The operational core is the majority, but non-trivial boilerplate, unnecessary explanation, repetition, or avoidable inline variants could be removed.",
+      "level3": "Every section adds materially distinct operational information and assumes agent competence; only isolated marginal redundancy exists.",
+      "tieBreaker": "Identify removable spans. Isolated removal keeps 3; meaningful tightening with a dominant useful core is 2; use 1 only when substantial pruning is required to expose the core. Length alone never decides."
+    },
+    "actionability": {
+      "level1": "The central method must be invented: the body offers objectives, tool names, generic best practices, or promises instead of usable directives, syntax, patterns, or outputs.",
+      "level2": "There is a concrete start, but a material convention, worked output, necessary syntax, key step, or promised central file is missing.",
+      "level3": "A first correct execution is determined by complete code or commands, or by concrete instruction-only rules, templates, and examples that require no important convention to be invented.",
+      "tieBreaker": "Apply the first-attempt test. If the task can be completed correctly without inventing a material detail, choose 3; if it can start but has a real gap, choose 2; if the method itself is absent, choose 1."
+    },
+    "workflow_clarity": {
+      "level1": "No usable single action, decision path, or sequence emerges.",
+      "level2": "A path, checklist, catalog, or sequence is recognizable, but ordering, checkpoints, terminal conditions, or recovery are missing or implicit.",
+      "level3": "A simple single action is unambiguous, or a complex process is ordered end to end with validation and recovery proportional to its risk.",
+      "tieBreaker": "Classify the task first as simple single action, reference catalog, or complex workflow. Only the simple case can receive 3 without an explicit loop. Complex destructive or batch work requires validate, fix or stop, and retry or terminal criteria."
+    },
+    "progressive_disclosure": {
+      "level1": "Navigation fails: an unreadable wall, two or more reference hops to reach the operative material, or nearly all promised value is unreachable.",
+      "level2": "The body is navigable but contains several separable blocks inline, mixes real and missing references, or has promised paths that are absent or ambiguous while useful material remains accessible.",
+      "level3": "A simple cohesive skill is self-contained and well organized with no real need to split, or a broader overview routes clearly in one hop to real, well-signaled bundled material.",
+      "tieBreaker": "Resolve paths against the actual supplied bundle. Reference depth counts reader hops, not nested skill IDs or technical asset directories. A direct alias can be well disclosed. A missing auxiliary path normally caps at 2; use 1 only when it hides most of the promised value."
+    }
+  },
+  "scoreContract": {
+    "descriptionWeights": [0.2, 0.3, 0.35, 0.15],
+    "contentWeights": [0.3, 0.3, 0.25, 0.15],
+    "componentWeights": {"validation": 0.2, "description": 0.4, "content": 0.4},
+    "integerRule": "floor"
+  }
+}

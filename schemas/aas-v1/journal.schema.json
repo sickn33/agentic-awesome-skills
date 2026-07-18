@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:transaction-journal-record:v1",
+  "title": "AAS crash-safe transaction journal record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "recoveryId", "sequence", "event", "planDigest", "targetIdentityDigest", "details", "previousRecordDigest", "recordDigest"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "recoveryId": { "type": "string", "pattern": "^recovery-[a-f0-9]{32,64}$" },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "event": { "enum": ["started", "layoutDirectoryCreated", "mutationIntent", "mutationDone", "mutationObserved", "staged", "backupMoved", "destinationPromoted", "destinationRemoved", "managedStateCommitted", "committed", "recoveryStarted", "rollbackStarted", "rollbackCompleted", "cleanupCompleted", "failed"] },
+    "planDigest": { "$ref": "#/$defs/digest" },
+    "targetIdentityDigest": { "$ref": "#/$defs/digest" },
+    "details": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+    },
+    "previousRecordDigest": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] },
+    "recordDigest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": { "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" } }
+}

@@ -50,6 +50,15 @@
     "score:skills": "node tools/scripts/run-python.js tools/scripts/score_skills.py",
     "score:skills:json": "node tools/scripts/run-python.js tools/scripts/score_skills.py --json",
     "score:skills:report": "node tools/scripts/run-python.js tools/scripts/score_skills.py --output data/scores.json",
+    "review:skills:local": "node tools/local-skill-reviewer/cli.js",
+    "review:skills:local:scan": "node tools/local-skill-reviewer/cli.js scan",
+    "review:skills:triage": "node tools/local-skill-reviewer/cli.js scan",
+    "review:skills:semantic:prepare": "node tools/local-skill-reviewer/cli.js semantic-prepare",
+    "review:skills:semantic:packet": "node tools/local-skill-reviewer/cli.js semantic-packet",
+    "review:skills:semantic:import": "node tools/local-skill-reviewer/cli.js semantic-import",
+    "review:skills:semantic:verify": "node tools/local-skill-reviewer/cli.js semantic-verify",
+    "review:skills:local:test": "node tools/scripts/tests/local_skill_reviewer.test.js && node tools/scripts/tests/production_triage.test.js",
+    "review:skills:local:fixtures": "node tools/local-skill-reviewer/cli.js fixtures",
     "drift:check": "node tools/scripts/run-python.js tools/scripts/detect_drift.py",
     "drift:update": "node tools/scripts/run-python.js tools/scripts/detect_drift.py --update-baseline",
     "registry:report": "node tools/scripts/run-python.js tools/scripts/generate_registry_report.py",
@@ -61,6 +70,9 @@
     "release:prepare": "node tools/scripts/release_workflow.js prepare",
     "release:publish": "node tools/scripts/release_workflow.js publish",
     "test": "node tools/scripts/tests/run-test-suite.js",
+    "test:aas-v1": "node --test tools/scripts/tests/aas_v1_*.test.js",
+    "build:aas-v1-catalog": "node tools/scripts/build-aas-v1-offline-catalog.js",
+    "check:aas-v1-catalog": "node tools/scripts/build-aas-v1-review-queue.js && node tools/scripts/import-aas-v1-metadata-reviews.js --check && node tools/scripts/build-aas-v1-metadata-overrides.js --check && node tools/scripts/build-aas-v1-offline-catalog.js --check",
     "test:local": "node tools/scripts/tests/run-test-suite.js --local",
     "test:network": "node tools/scripts/tests/run-test-suite.js --network",
     "sync:microsoft": "node tools/scripts/run-python.js tools/scripts/sync_microsoft_skills.py",
@@ -76,17 +88,34 @@
     "app:preview": "cd apps/web-app && npm run preview"
   },
   "dependencies": {
+    "ajv": "^8.20.0",
     "sanitize-filename": "^1.6.4",
     "yaml": "^2.9.0"
   },
+  "bundledDependencies": [
+    "ajv",
+    "sanitize-filename",
+    "yaml"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sickn33/agentic-awesome-skills.git"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "bin": {
-    "agentic-awesome-skills": "tools/bin/install.js"
+    "agentic-awesome-skills": "tools/bin/install.js",
+    "aas": "tools/bin/aas.js",
+    "aas-mcp": "tools/bin/aas-mcp.js"
   },
   "files": [
+    "data/catalog.json",
+    "data/plugin-compatibility.json",
+    "data/aas-v1",
+    "schemas/aas-v1",
+    "skills",
+    "skills_index.json",
     "tools/bin",
     "tools/lib"
   ],

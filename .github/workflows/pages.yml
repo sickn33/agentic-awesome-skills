@@ -1,12 +1,10 @@
-# Build and deploy the web app to GitHub Pages.
+# Build and deploy the web app to GitHub Pages only after an explicit release dispatch.
 # Enable in repo: Settings → Pages → Source: GitHub Actions.
 # Site URL: https://<owner>.github.io/<repo>/
 
 name: Deploy Web App to GitHub Pages
 
 on:
-  push:
-    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:

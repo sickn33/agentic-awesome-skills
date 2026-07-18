@@ -69,7 +69,7 @@
     "redaction": "Receipts store operation class, target zone and SHA-256 of normalized target identity; raw paths, endpoints, configuration values and file contents are forbidden.",
     "selfTest": {
       "required": true,
-      "procedure": "Before candidate execution, an observer-owned child performs one temporary-file write attempt and one refused loopback connection attempt. The job must observe exactly both sentinel events and then discard their isolated fixture.",
+      "procedure": "Before candidate execution, an observer-owned child performs an explicit open-write-fsync-close sequence and a successful connection to an ephemeral loopback listener. The job must observe both sentinel classes and then discard their isolated fixture.",
       "failurePolicy": "Unavailable observer, missing sentinel, ambiguous PID lineage, dropped events or observer overflow fails the job; fallback and skip are forbidden."
     },
     "filesystemCorroboration": "Canonical metadata snapshots of project and AAS cache are captured before and after candidate execution. Equal snapshots corroborate no mutation but never replace attempt observation."
@@ -105,7 +105,7 @@
       "runnerImage": {"provider": "github-hosted-actions", "label": "macos-15-intel", "expectedFamily": "macOS 15 Intel", "weeklyBuildIsReceiptOnly": true},
       "architecture": "x64",
       "filesystem": {"expectedType": "apfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "diskutil info for the runner temporary volume plus an isolated mixed-case identity probe"},
-      "observer": {"contractVersion": "1.0.0", "backend": "macos-dtrace-process-tree", "backendRequirement": "DTrace syscall probes following candidate descendants for network and filesystem mutation classes", "selfTestRequired": true},
+      "observer": {"contractVersion": "1.0.0", "backend": "macos-fs_usage-process", "backendRequirement": "Privileged unfiltered fs_usage stream scoped to a unique content-identical Node executable name, with ordered observer-readiness and candidate-start canaries plus child-launch detection", "selfTestRequired": true},
       "status": "frozen"
     },
     {
@@ -116,7 +116,7 @@
       "runnerImage": {"provider": "github-hosted-actions", "label": "macos-15-intel", "expectedFamily": "macOS 15 Intel", "weeklyBuildIsReceiptOnly": true},
       "architecture": "x64",
       "filesystem": {"expectedType": "apfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "diskutil info for the runner temporary volume plus an isolated mixed-case identity probe"},
-      "observer": {"contractVersion": "1.0.0", "backend": "macos-dtrace-process-tree", "backendRequirement": "DTrace syscall probes following candidate descendants for network and filesystem mutation classes", "selfTestRequired": true},
+      "observer": {"contractVersion": "1.0.0", "backend": "macos-fs_usage-process", "backendRequirement": "Privileged unfiltered fs_usage stream scoped to a unique content-identical Node executable name, with ordered observer-readiness and candidate-start canaries plus child-launch detection", "selfTestRequired": true},
       "status": "frozen"
     },
     {
@@ -127,7 +127,7 @@
       "runnerImage": {"provider": "github-hosted-actions", "label": "windows-2025", "expectedFamily": "Windows Server 2025", "weeklyBuildIsReceiptOnly": true},
       "architecture": "x64",
       "filesystem": {"expectedType": "ntfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "PowerShell Get-Volume for the runner temporary drive plus fsutil and an isolated mixed-case identity probe"},
-      "observer": {"contractVersion": "1.0.0", "backend": "windows-etw-kernel-process-tree", "backendRequirement": "ETW kernel process, file I/O and TCP/IP providers plus the Microsoft-Windows-DNS-Client provider, correlated by process lineage", "selfTestRequired": true},
+      "observer": {"contractVersion": "1.0.0", "backend": "windows-etw-kernel-process-tree", "backendRequirement": "ETW kernel process and file I/O providers plus Microsoft-Windows-Winsock-AFD and DNS providers, correlated by process lineage and user-mode PID payload", "selfTestRequired": true},
       "status": "frozen"
     },
     {
@@ -138,7 +138,7 @@
       "runnerImage": {"provider": "github-hosted-actions", "label": "windows-2025", "expectedFamily": "Windows Server 2025", "weeklyBuildIsReceiptOnly": true},
       "architecture": "x64",
       "filesystem": {"expectedType": "ntfs", "expectedCaseSensitivity": "insensitive-preserving", "probe": "PowerShell Get-Volume for the runner temporary drive plus fsutil and an isolated mixed-case identity probe"},
-      "observer": {"contractVersion": "1.0.0", "backend": "windows-etw-kernel-process-tree", "backendRequirement": "ETW kernel process, file I/O and TCP/IP providers plus the Microsoft-Windows-DNS-Client provider, correlated by process lineage", "selfTestRequired": true},
+      "observer": {"contractVersion": "1.0.0", "backend": "windows-etw-kernel-process-tree", "backendRequirement": "ETW kernel process and file I/O providers plus Microsoft-Windows-Winsock-AFD and DNS providers, correlated by process lineage and user-mode PID payload", "selfTestRequired": true},
       "status": "frozen"
     }
   ],

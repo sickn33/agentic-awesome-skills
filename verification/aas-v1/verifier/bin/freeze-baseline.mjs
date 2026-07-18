@@ -56,7 +56,7 @@ const files = walk(verificationRoot)
 const rootDigest = sha256(Buffer.from(JSON.stringify(files)));
 const candidate = {
   schemaVersion: 1,
-  baselineVersion: "1.0.0",
+  baselineVersion: "1.0.1",
   status: "frozen",
   digestAlgorithm: "sha256",
   excludedPaths: ["baseline/v1/freeze-manifest.json", ...excludedPrefixes],

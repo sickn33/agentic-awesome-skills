@@ -1,0 +1,702 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-07-17",
+  "repository": "/private/tmp/aas-agent-first-product",
+  "sourceDigests": {
+    "data/catalog.json": "sha256-22c433bd94d98781c124b60d1b41f5e592e5d4c0f4cbe432e2ab43f3501cf916",
+    "data/plugin-compatibility.json": "sha256-075cfc2de4311e9186c490a5690234dfd0e08e058e113695f444575e2e313ef3"
+  },
+  "scope": {
+    "intents": [
+      "api-backend-delivery",
+      "deployment-devops"
+    ],
+    "catalogSkillCount": 1965,
+    "candidateCount": 40,
+    "readTuningInputs": true,
+    "readTuningGold": false,
+    "readHeldOut": false
+  },
+  "selectionRule": {
+    "name": "public-lexical-cluster-semantic-admission-v1",
+    "catalogSurfaces": [
+      "id",
+      "name",
+      "description",
+      "category",
+      "tags"
+    ],
+    "normalization": "Unicode lowercase, punctuation-to-space, collapse whitespace; exact phrase and token matching only.",
+    "clusters": {
+      "api-contract": ["api", "rest", "graphql", "contract", "openapi", "swagger", "documentation", "versioning"],
+      "api-auth": ["api", "authentication", "authorization", "oauth", "jwt", "rbac", "security"],
+      "api-async": ["event", "event-driven", "saga", "cqrs", "async", "webhook", "queue", "workflow"],
+      "api-data": ["database", "schema", "postgres", "postgresql", "sql", "migration", "query"],
+      "api-observability": ["observability", "telemetry", "tracing", "performance", "profiling", "slo"],
+      "deploy-ci": ["ci", "ci-cd", "pipeline", "github-actions", "quality-gate"],
+      "deploy-container": ["container", "docker", "kubernetes", "helm", "orchestration"],
+      "deploy-iac": ["terraform", "infrastructure", "infrastructure-as-code", "module", "state"],
+      "deploy-release": ["deploy", "deployment", "release", "rollback", "canary", "launch"],
+      "deploy-sre": ["sre", "observability", "slo", "dashboard", "alert", "incident"]
+    },
+    "poolAdmission": "A catalog record enters a cluster when id/name/category/tags contain at least one cluster term, or description contains at least two distinct cluster terms.",
+    "semanticAdmission": "After reading canonical SKILL.md, retain a candidate only when at least one canonical intent capability is an explicit workflow, output, decision rule, or checklist item. Mere keyword mentions, tool lists, examples unrelated to the workflow, offensive-testing-only skills, and vendor action wrappers are excluded.",
+    "ranking": "Within each cluster: number of explicitly supported canonical capabilities descending, then number of distinct matched terms descending, then skill id ascending. The audit set is balanced across all ten clusters; this is not an ID whitelist.",
+    "benchmarkIndependence": "Only public tuning case input vocabulary supplied capability names. No tuning gold skill IDs, accepted solutions, held-out cases, or held-out gold were read or used."
+  },
+  "canonicalCapabilities": {
+    "api-backend-delivery": [
+      "stable-api-contract", "openapi-definition", "versioning-policy", "machine-readable-documentation",
+      "authentication-baseline", "authorization-policy", "token-validation", "secure-api-boundary",
+      "durable-event-processing", "failure-compensation", "async-boundary-design", "idempotent-retries",
+      "data-model-design", "reversible-migrations", "query-discipline", "migration-safety",
+      "structured-telemetry", "distributed-tracing", "latency-profiling", "service-level-objectives"
+    ],
+    "deployment-devops": [
+      "reproducible-ci", "deployment-gates", "pipeline-design", "safe-automation",
+      "container-build", "runtime-hardening", "orchestrated-deployment", "health-checks",
+      "reusable-infrastructure", "plan-review", "state-safety", "environment-separation",
+      "release-procedure", "rollback-validation", "progressive-delivery", "post-release-verification",
+      "service-level-objectives", "operational-dashboards", "alert-quality", "incident-diagnostics"
+    ]
+  },
+  "evidencePolicy": {
+    "capabilities": "Every asserted capability is supported by the cited SKILL.md line. Capabilities not explicitly supported remain absent.",
+    "risk": "risk is copied verbatim from data/catalog.json; unknown remains unknown and critical remains critical.",
+    "compatibility": "For all 40 IDs, data/plugin-compatibility.json currently declares codex=supported, claude=supported, setup.type=none. This is static catalog evidence, not live-host proof.",
+    "dependenciesAndConflicts": "No selected SKILL.md contains a structured hard skill dependency or conflict declaration. Advisory Related Skills and references are not promoted to dependencies. Empty arrays therefore mean no declared hard relationship found, not proof that no interaction exists."
+  },
+  "candidates": [
+    {
+      "skillId": "api-and-interface-design",
+      "intent": "api-backend-delivery",
+      "cluster": "api-contract",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["api", "contract"]},
+      "skillDigest": "sha256-e8f5bbbfb32c50e61499eda125c6af8ad38e084cf6b47adebd0a0a263e924ab1",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["stable-api-contract", "versioning-policy", "idempotent-retries"],
+      "evidence": [
+        {"path": "skills/api-and-interface-design/SKILL.md", "line": 17, "supports": ["stable-api-contract"], "excerpt": "Design stable, well-documented interfaces that are hard to misuse."},
+        {"path": "skills/api-and-interface-design/SKILL.md", "line": 37, "supports": ["versioning-policy"], "excerpt": "Plan for deprecation at design time."},
+        {"path": "skills/api-and-interface-design/SKILL.md", "line": 63, "supports": ["idempotent-retries"], "excerpt": "Idempotent delete succeeds even if already deleted."}
+      ],
+      "gaps": ["Does not explicitly require an OpenAPI artifact.", "No token-validation workflow."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "api-design-principles",
+      "intent": "api-backend-delivery",
+      "cluster": "api-contract",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["api", "rest", "graphql"]},
+      "skillDigest": "sha256-9e3a261c94e6b67e386a0c58532a4aedd924683bb8d6bde6bf90c5337a91195d",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["stable-api-contract", "versioning-policy"],
+      "evidence": [
+        {"path": "skills/api-design-principles/SKILL.md", "line": 18, "supports": ["stable-api-contract"], "excerpt": "Reviewing API specifications before implementation."},
+        {"path": "skills/api-design-principles/SKILL.md", "line": 33, "supports": ["versioning-policy"], "excerpt": "Specify errors, versioning, pagination, and auth strategy."}
+      ],
+      "gaps": ["OpenAPI and machine-readable documentation are not explicit required outputs."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "api-patterns",
+      "intent": "api-backend-delivery",
+      "cluster": "api-contract",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["api", "rest", "graphql", "versioning"]},
+      "skillDigest": "sha256-405871d481ec172092ecc473a4b0f2799e532a97fc003aa7a6b3bd090fe27342",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["versioning-policy", "machine-readable-documentation"],
+      "evidence": [
+        {"path": "skills/api-patterns/SKILL.md", "line": 29, "supports": ["versioning-policy"], "excerpt": "versioning.md: URI/Header/Query versioning; API evolution planning."},
+        {"path": "skills/api-patterns/SKILL.md", "line": 32, "supports": ["machine-readable-documentation"], "excerpt": "documentation.md: OpenAPI/Swagger best practices."}
+      ],
+      "gaps": ["The root SKILL.md is a router; detailed evidence resides in referenced resources.", "No explicit contract validation step in the root file."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "api-documenter",
+      "intent": "api-backend-delivery",
+      "cluster": "api-contract",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["api", "documentation", "openapi"]},
+      "skillDigest": "sha256-6c08bd68f45cf03280b2a34f6d3bd94e92dba06c0ff4eb6b7b61a4813e0358b9",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["openapi-definition", "versioning-policy", "machine-readable-documentation"],
+      "evidence": [
+        {"path": "skills/api-documenter/SKILL.md", "line": 38, "supports": ["openapi-definition", "machine-readable-documentation"], "excerpt": "OpenAPI 3.1+ specification authoring with advanced features."},
+        {"path": "skills/api-documenter/SKILL.md", "line": 44, "supports": ["versioning-policy"], "excerpt": "API lifecycle documentation from design to deprecation."}
+      ],
+      "gaps": ["Documentation-centric; does not by itself establish runtime authentication or migration safety."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "openapi-spec-generation",
+      "intent": "api-backend-delivery",
+      "cluster": "api-contract",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["openapi", "api", "contract"]},
+      "skillDigest": "sha256-9e38d12b362f01e0f72c86ccda38902ea87ed41eaf6f1ab1f063a67ddd221643",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["stable-api-contract", "openapi-definition", "machine-readable-documentation"],
+      "evidence": [
+        {"path": "skills/openapi-spec-generation/SKILL.md", "line": 11, "supports": ["openapi-definition", "machine-readable-documentation"], "excerpt": "Creating, maintaining, and validating OpenAPI 3.1 specifications."},
+        {"path": "skills/openapi-spec-generation/SKILL.md", "line": 17, "supports": ["stable-api-contract"], "excerpt": "Designing API contracts (design-first approach)."}
+      ],
+      "gaps": ["No general API versioning policy beyond the OpenAPI document version."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "openapi-spec-generator",
+      "intent": "api-backend-delivery",
+      "cluster": "api-contract",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["openapi", "swagger", "api"]},
+      "skillDigest": "sha256-789fd78cd7a5296cebf2a448f7e2b6da77cf031f6a65fe9d8486e9bc0c7fe7e5",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["openapi-definition", "machine-readable-documentation"],
+      "evidence": [
+        {"path": "skills/openapi-spec-generator/SKILL.md", "line": 19, "supports": ["openapi-definition", "machine-readable-documentation"], "excerpt": "Generate complete, valid OpenAPI 3.x or Swagger 2.0 specifications."}
+      ],
+      "gaps": ["Does not establish a broader contract evolution policy.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "api-security-best-practices",
+      "intent": "api-backend-delivery",
+      "cluster": "api-auth",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["api", "authentication", "authorization", "security"]},
+      "skillDigest": "sha256-86ce97e83b08f1bd598c0f20f3efb99ddde94fb69d502ffdefcfc01b4f2c02aa",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["authentication-baseline", "authorization-policy", "token-validation", "secure-api-boundary"],
+      "evidence": [
+        {"path": "skills/api-security-best-practices/SKILL.md", "line": 31, "supports": ["authentication-baseline"], "excerpt": "Choose authentication method: JWT, OAuth 2.0, API keys."},
+        {"path": "skills/api-security-best-practices/SKILL.md", "line": 33, "supports": ["authorization-policy"], "excerpt": "Set up role-based access control (RBAC)."},
+        {"path": "skills/api-security-best-practices/SKILL.md", "line": 181, "supports": ["token-validation"], "excerpt": "Verify JWT Tokens (Middleware)."},
+        {"path": "skills/api-security-best-practices/SKILL.md", "line": 43, "supports": ["secure-api-boundary"], "excerpt": "Implement request schema validation."}
+      ],
+      "gaps": ["Examples require framework-specific review before use.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "auth-implementation-patterns",
+      "intent": "api-backend-delivery",
+      "cluster": "api-auth",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["authentication", "authorization", "oauth", "jwt", "rbac"]},
+      "skillDigest": "sha256-ac7abc9e3e8928323153ecc00619359cbdb56272831ed399c4b552b193132c96",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["authentication-baseline", "authorization-policy", "token-validation", "secure-api-boundary"],
+      "evidence": [
+        {"path": "skills/auth-implementation-patterns/SKILL.md", "line": 30, "supports": ["authentication-baseline", "token-validation"], "excerpt": "Choose auth strategy (session, JWT, OIDC) and token lifecycle."},
+        {"path": "skills/auth-implementation-patterns/SKILL.md", "line": 31, "supports": ["authorization-policy", "secure-api-boundary"], "excerpt": "Design authorization model and policy enforcement points."}
+      ],
+      "gaps": ["No framework-specific live validation.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "api-integration",
+      "intent": "api-backend-delivery",
+      "cluster": "api-async",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["api", "event-driven", "webhook", "saga"]},
+      "skillDigest": "sha256-f4db04ba0fe50c69cd1cadf101a4eb24adfd9023b57536dc11fcc77f7cbe28e5",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["failure-compensation", "async-boundary-design", "idempotent-retries"],
+      "evidence": [
+        {"path": "skills/api-integration/SKILL.md", "line": 73, "supports": ["idempotent-retries"], "excerpt": "Use idempotency keys and retry with exponential backoff."},
+        {"path": "skills/api-integration/SKILL.md", "line": 101, "supports": ["failure-compensation", "async-boundary-design"], "excerpt": "Saga Pattern (Distributed Transaction)."}
+      ],
+      "gaps": ["Does not explicitly require durable storage for event processing.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "saga-orchestration",
+      "intent": "api-backend-delivery",
+      "cluster": "api-async",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["saga", "workflow"]},
+      "skillDigest": "sha256-41cb5389c48cf7a66154a8bb568f7959b059105bd77365e613dce88ac267ca53",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["failure-compensation", "idempotent-retries"],
+      "evidence": [
+        {"path": "skills/saga-orchestration/SKILL.md", "line": 28, "supports": ["failure-compensation"], "excerpt": "Implementing compensating transactions."},
+        {"path": "skills/saga-orchestration/SKILL.md", "line": 487, "supports": ["idempotent-retries"], "excerpt": "Make steps idempotent - Safe to retry."}
+      ],
+      "gaps": ["Durable persistence technology is not prescribed.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "event-sourcing-architect",
+      "intent": "api-backend-delivery",
+      "cluster": "api-async",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["event", "cqrs", "saga"]},
+      "skillDigest": "sha256-3453481653a78b029855d67e4f5b16436f4bb75c4a1211c77660fa4c64bbf7f4",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["durable-event-processing", "failure-compensation", "async-boundary-design", "idempotent-retries"],
+      "evidence": [
+        {"path": "skills/event-sourcing-architect/SKILL.md", "line": 3, "supports": ["durable-event-processing", "failure-compensation", "async-boundary-design"], "excerpt": "Event sourcing, CQRS, event stores, saga orchestration, and eventual consistency."},
+        {"path": "skills/event-sourcing-architect/SKILL.md", "line": 60, "supports": ["idempotent-retries"], "excerpt": "Implement idempotent event handlers."}
+      ],
+      "gaps": ["Broad architecture guidance; a concrete broker or workflow runtime remains project-specific.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "database-design",
+      "intent": "api-backend-delivery",
+      "cluster": "api-data",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["database", "schema", "query"]},
+      "skillDigest": "sha256-ad1918b9daa821388c6b9838bd739126f52cc9236ac7a7a1b14bcab055d38160",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["data-model-design", "query-discipline"],
+      "evidence": [
+        {"path": "skills/database-design/SKILL.md", "line": 3, "supports": ["data-model-design", "query-discipline"], "excerpt": "Schema design, indexing strategy, ORM selection, serverless databases."}
+      ],
+      "gaps": ["Migration reversibility is not part of the root capability statement."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "database-migration",
+      "intent": "api-backend-delivery",
+      "cluster": "api-data",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["database", "schema", "migration"]},
+      "skillDigest": "sha256-9a81bd5ff60b4e7a92c9a10f5997019af6d2aa8181c173b003e4b77f718a8198",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["reversible-migrations", "migration-safety"],
+      "evidence": [
+        {"path": "skills/database-migration/SKILL.md", "line": 3, "supports": ["reversible-migrations", "migration-safety"], "excerpt": "Rollback strategies and zero-downtime deployments."},
+        {"path": "skills/database-migration/SKILL.md", "line": 434, "supports": ["reversible-migrations"], "excerpt": "Not testing rollback procedures is an anti-pattern."}
+      ],
+      "gaps": ["Does not replace database-specific execution validation.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "database-migrations-sql-migrations",
+      "intent": "api-backend-delivery",
+      "cluster": "api-data",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["database", "sql", "migration"]},
+      "skillDigest": "sha256-f8658625b0fc4287e2f5e873448a1ac5ade2e2df8fa3837b90184c9c91e8d042",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["reversible-migrations", "migration-safety"],
+      "evidence": [
+        {"path": "skills/database-migrations-sql-migrations/SKILL.md", "line": 3, "supports": ["reversible-migrations", "migration-safety"], "excerpt": "Zero-downtime strategies, data integrity, and rollback plans."}
+      ],
+      "gaps": ["No general relational data-model design workflow.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "postgresql",
+      "intent": "api-backend-delivery",
+      "cluster": "api-data",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["postgresql", "schema", "query"]},
+      "skillDigest": "sha256-4908afc41b07fa0d9764f8c8f3b9439bd1c9841d8fce4ffbdb76599d3eb5d157",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["data-model-design", "query-discipline"],
+      "evidence": [
+        {"path": "skills/postgresql/SKILL.md", "line": 3, "supports": ["data-model-design", "query-discipline"], "excerpt": "Schema design, data types, indexing, constraints, performance patterns."}
+      ],
+      "gaps": ["PostgreSQL-specific.", "Rollback guidance exists but is not a full reversible migration workflow.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "sql-optimization-patterns",
+      "intent": "api-backend-delivery",
+      "cluster": "api-data",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["sql", "query"]},
+      "skillDigest": "sha256-6b52f067a0e6ecd032c5b2567362bf96f7a1eeabf6f6dda3f9a742604ccd4444",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["query-discipline"],
+      "evidence": [
+        {"path": "skills/sql-optimization-patterns/SKILL.md", "line": 3, "supports": ["query-discipline"], "excerpt": "Systematic optimization, proper indexing, and query plan analysis."}
+      ],
+      "gaps": ["Does not cover schema migration reversibility or full data-model design."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "distributed-tracing",
+      "intent": "api-backend-delivery",
+      "cluster": "api-observability",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["tracing", "observability"]},
+      "skillDigest": "sha256-51595c2d16e4cff44dabfa33f65b935b695c499a188a1e6a540f82ea8d684bcf",
+      "risk": {"value": "critical", "source": "data/catalog.json"},
+      "capabilities": ["distributed-tracing"],
+      "evidence": [
+        {"path": "skills/distributed-tracing/SKILL.md", "line": 3, "supports": ["distributed-tracing"], "excerpt": "Implement distributed tracing with Jaeger and Tempo for request flow visibility."}
+      ],
+      "gaps": ["Catalog risk is critical, so safe-only policy must exclude it.", "Does not establish the full structured telemetry baseline."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "observability-and-instrumentation",
+      "intent": "api-backend-delivery",
+      "cluster": "api-observability",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["observability", "instrumentation", "telemetry"]},
+      "skillDigest": "sha256-fc60780d33bc4c6a5bac8dca553ca8b60825a59dcaa6907a3f56ef030ace3bf9",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["structured-telemetry", "distributed-tracing", "service-level-objectives"],
+      "evidence": [
+        {"path": "skills/observability-and-instrumentation/SKILL.md", "line": 61, "supports": ["structured-telemetry"], "excerpt": "Every log line is a JSON object with a stable event name and machine-readable fields."},
+        {"path": "skills/observability-and-instrumentation/SKILL.md", "line": 126, "endLine": 128, "supports": ["distributed-tracing"], "excerpt": "Distributed tracing: Use OpenTelemetry, the vendor-neutral standard."},
+        {"path": "skills/observability-and-instrumentation/SKILL.md", "line": 161, "supports": ["service-level-objectives"], "excerpt": "Threshold and duration justified by the SLO or historical data."}
+      ],
+      "gaps": ["Explicitly delegates measured performance profiling to another skill.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "slo-implementation",
+      "intent": "api-backend-delivery",
+      "cluster": "api-observability",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["slo"]},
+      "skillDigest": "sha256-bf994ee1b0d9b38796aab724c92a6ae6b0e962190e11a6ddb0ffe6130580d639",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["service-level-objectives"],
+      "evidence": [
+        {"path": "skills/slo-implementation/SKILL.md", "line": 27, "supports": ["service-level-objectives"], "excerpt": "Implement measurable reliability targets using SLIs, SLOs, and error budgets."}
+      ],
+      "gaps": ["Does not itself establish distributed tracing or general structured telemetry.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "performance-profiling",
+      "intent": "api-backend-delivery",
+      "cluster": "api-observability",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["performance", "profiling"]},
+      "skillDigest": "sha256-0da78d260358a60f03ae275e1e790b7a148743cc7733bf2814f3f146c58b5730",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["latency-profiling"],
+      "evidence": [
+        {"path": "skills/performance-profiling/SKILL.md", "line": 11, "supports": ["latency-profiling"], "excerpt": "Measure, analyze, optimize - in that order."},
+        {"path": "skills/performance-profiling/SKILL.md", "line": 48, "supports": ["latency-profiling"], "excerpt": "BASELINE: measure current state; IDENTIFY: find the bottleneck."}
+      ],
+      "gaps": ["General profiling guidance; service-specific latency objectives are not defined.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "ci-cd-and-automation",
+      "intent": "deployment-devops",
+      "cluster": "deploy-ci",
+      "selectionProvenance": {"matchedFields": ["id", "description", "tags"], "matchedTerms": ["ci-cd", "pipeline", "quality-gate"]},
+      "skillDigest": "sha256-4a35748482494580c2f6891d9d6ee2865766c4d5663efa336e6a4495386746cb",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["deployment-gates", "pipeline-design", "safe-automation", "progressive-delivery"],
+      "evidence": [
+        {"path": "skills/ci-cd-and-automation/SKILL.md", "line": 17, "supports": ["deployment-gates", "pipeline-design"], "excerpt": "Automate quality gates so no change reaches production without passing checks."},
+        {"path": "skills/ci-cd-and-automation/SKILL.md", "line": 144, "supports": ["safe-automation"], "excerpt": "Use GitHub Secrets for credentials rather than hardcoding values."},
+        {"path": "skills/ci-cd-and-automation/SKILL.md", "line": 223, "supports": ["progressive-delivery"], "excerpt": "Canary new features: 1%, then 10%, then 100%."}
+      ],
+      "gaps": ["Does not require action SHA pinning, so reproducible-ci is not asserted.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "deployment-pipeline-design",
+      "intent": "deployment-devops",
+      "cluster": "deploy-ci",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["deployment", "pipeline", "ci-cd"]},
+      "skillDigest": "sha256-186729ad20953894a21cc253ac3934d90f74bbbd6ab691831429af8f63882166",
+      "risk": {"value": "critical", "source": "data/catalog.json"},
+      "capabilities": ["deployment-gates", "pipeline-design", "health-checks", "progressive-delivery", "post-release-verification"],
+      "evidence": [
+        {"path": "skills/deployment-pipeline-design/SKILL.md", "line": 3, "supports": ["deployment-gates", "pipeline-design"], "excerpt": "Multi-stage CI/CD pipelines with approval gates and deployment strategies."},
+        {"path": "skills/deployment-pipeline-design/SKILL.md", "line": 35, "supports": ["progressive-delivery"], "excerpt": "Implement progressive delivery."},
+        {"path": "skills/deployment-pipeline-design/SKILL.md", "line": 56, "supports": ["health-checks"], "excerpt": "Verification - Health checks, monitoring."},
+        {"path": "skills/deployment-pipeline-design/SKILL.md", "line": 351, "supports": ["post-release-verification"], "excerpt": "Post-deployment verification."}
+      ],
+      "gaps": ["Catalog risk is critical, so safe-only policy must exclude it.", "No pinned-action requirement."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "github-actions-advanced",
+      "intent": "deployment-devops",
+      "cluster": "deploy-ci",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["github-actions", "ci-cd", "pipeline"]},
+      "skillDigest": "sha256-e4a4bca3a3d729dc8cf0a2b5f92a1438539d29fcfbd9659539408e67d5d5b901",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["reproducible-ci", "deployment-gates", "pipeline-design", "safe-automation", "environment-separation"],
+      "evidence": [
+        {"path": "skills/github-actions-advanced/SKILL.md", "line": 653, "supports": ["reproducible-ci"], "excerpt": "Pin Third-Party Actions to Full Commit SHA."},
+        {"path": "skills/github-actions-advanced/SKILL.md", "line": 411, "supports": ["deployment-gates"], "excerpt": "Required reviewers - manual approval gate before run."},
+        {"path": "skills/github-actions-advanced/SKILL.md", "line": 69, "supports": ["safe-automation"], "excerpt": "Always declare permissions - principle of least privilege."},
+        {"path": "skills/github-actions-advanced/SKILL.md", "line": 414, "supports": ["environment-separation"], "excerpt": "Environment-specific secrets override repo-level secrets per environment."}
+      ],
+      "gaps": ["GitHub Actions-specific.", "Does not provide container runtime hardening."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "github-actions-templates",
+      "intent": "deployment-devops",
+      "cluster": "deploy-ci",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["github-actions", "pipeline", "deployment"]},
+      "skillDigest": "sha256-a7510a5deb322ede2d670c879b8ca962c9391f4c2375484c565cc79113ad6049",
+      "risk": {"value": "critical", "source": "data/catalog.json"},
+      "capabilities": ["deployment-gates", "pipeline-design", "post-release-verification"],
+      "evidence": [
+        {"path": "skills/github-actions-templates/SKILL.md", "line": 222, "supports": ["deployment-gates"], "excerpt": "Implement approval gates for production."},
+        {"path": "skills/github-actions-templates/SKILL.md", "line": 340, "supports": ["pipeline-design"], "excerpt": "Deployment workflow template."},
+        {"path": "skills/github-actions-templates/SKILL.md", "line": 172, "supports": ["post-release-verification"], "excerpt": "Verify deployment."}
+      ],
+      "gaps": ["Catalog risk is critical, so safe-only policy must exclude it.", "Templates do not establish reproducibility without separately pinning dependencies and actions."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "container-security-hardening",
+      "intent": "deployment-devops",
+      "cluster": "deploy-container",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["container", "runtime", "kubernetes"]},
+      "skillDigest": "sha256-5255249ea9e7ace3457de3857e7c7cf7bec968051595b36ceea0ea02444feccb",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["container-build", "runtime-hardening", "orchestrated-deployment", "safe-automation"],
+      "evidence": [
+        {"path": "skills/container-security-hardening/SKILL.md", "line": 4, "endLine": 7, "supports": ["container-build", "runtime-hardening"], "excerpt": "Secure base images, non-root users, CVE scanning, SBOM/signing, seccomp/AppArmor."},
+        {"path": "skills/container-security-hardening/SKILL.md", "line": 69, "supports": ["safe-automation", "orchestrated-deployment"], "excerpt": "Minimal base, no secrets, non-root, read-only FS."}
+      ],
+      "gaps": ["Does not provide the broader Kubernetes service rollout workflow."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "docker-expert",
+      "intent": "deployment-devops",
+      "cluster": "deploy-container",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["docker", "container", "orchestration"]},
+      "skillDigest": "sha256-cd2817407c2faebdd0a88196e5ddfabf53860649b71b3f7e0398196efaf86776",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["container-build", "runtime-hardening", "orchestrated-deployment", "health-checks", "environment-separation"],
+      "evidence": [
+        {"path": "skills/docker-expert/SKILL.md", "line": 3, "supports": ["container-build", "orchestrated-deployment"], "excerpt": "Container optimization, security hardening, multi-stage builds, orchestration patterns."},
+        {"path": "skills/docker-expert/SKILL.md", "line": 112, "supports": ["runtime-hardening"], "excerpt": "Non-root user configuration with specific UID/GID."},
+        {"path": "skills/docker-expert/SKILL.md", "line": 134, "supports": ["health-checks"], "excerpt": "Service dependency management: Health checks, startup ordering."},
+        {"path": "skills/docker-expert/SKILL.md", "line": 136, "supports": ["environment-separation"], "excerpt": "Dev/staging/prod configurations."}
+      ],
+      "gaps": ["Does not by itself define a release approval gate.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "helm-chart-scaffolding",
+      "intent": "deployment-devops",
+      "cluster": "deploy-container",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["helm", "kubernetes", "deployment"]},
+      "skillDigest": "sha256-dbd7904131eef531e690f95ddb13d8f625ee1fa7bb12b76d0221342e75439f31",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["orchestrated-deployment", "environment-separation"],
+      "evidence": [
+        {"path": "skills/helm-chart-scaffolding/SKILL.md", "line": 17, "supports": ["orchestrated-deployment"], "excerpt": "Package Kubernetes applications for distribution."},
+        {"path": "skills/helm-chart-scaffolding/SKILL.md", "line": 18, "supports": ["environment-separation"], "excerpt": "Manage multi-environment deployments with Helm."}
+      ],
+      "gaps": ["Root file does not explicitly require readiness/liveness probes or runtime hardening.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "kubernetes-architect",
+      "intent": "deployment-devops",
+      "cluster": "deploy-container",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["kubernetes", "orchestration", "progressive"]},
+      "skillDigest": "sha256-122d2a64642bd0ce5a7fe56017d892496cd08b64f99871d4e2546d4ba8fd0bb9",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["container-build", "runtime-hardening", "orchestrated-deployment", "progressive-delivery", "rollback-validation"],
+      "evidence": [
+        {"path": "skills/kubernetes-architect/SKILL.md", "line": 13, "supports": ["orchestrated-deployment", "progressive-delivery"], "excerpt": "Implementing GitOps workflows and progressive delivery."},
+        {"path": "skills/kubernetes-architect/SKILL.md", "line": 79, "supports": ["container-build", "runtime-hardening"], "excerpt": "Multi-stage builds, distroless images, security scanning."},
+        {"path": "skills/kubernetes-architect/SKILL.md", "line": 28, "supports": ["rollback-validation"], "excerpt": "Validate with staging and define rollback and upgrade plans."}
+      ],
+      "gaps": ["No explicit post-release live revision check.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "kubernetes-deployment",
+      "intent": "deployment-devops",
+      "cluster": "deploy-container",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["kubernetes", "deployment", "orchestration"]},
+      "skillDigest": "sha256-f0eeb740a2c5cd9a709e45516ff55860203586d668c3bd3c996d34081c98a6e4",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["container-build", "orchestrated-deployment", "deployment-gates", "post-release-verification"],
+      "evidence": [
+        {"path": "skills/kubernetes-deployment/SKILL.md", "line": 3, "supports": ["orchestrated-deployment"], "excerpt": "Kubernetes deployment workflow for container orchestration and Helm charts."},
+        {"path": "skills/kubernetes-deployment/SKILL.md", "line": 34, "supports": ["container-build"], "excerpt": "Create Dockerfile."},
+        {"path": "skills/kubernetes-deployment/SKILL.md", "line": 153, "supports": ["deployment-gates"], "excerpt": "Quality Gates."},
+        {"path": "skills/kubernetes-deployment/SKILL.md", "line": 145, "supports": ["post-release-verification"], "excerpt": "Verify deployment."}
+      ],
+      "gaps": ["Runtime hardening controls are not explicit enough in the root file to assert runtime-hardening."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "terraform-aws-modules",
+      "intent": "deployment-devops",
+      "cluster": "deploy-iac",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["terraform", "module", "state"]},
+      "skillDigest": "sha256-a53eac06b4e71bb552d9c9dbebc1af4fb7684d7fc4f95c79348f5df2f56a8d9d",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["reusable-infrastructure", "plan-review", "state-safety", "environment-separation"],
+      "evidence": [
+        {"path": "skills/terraform-aws-modules/SKILL.md", "line": 3, "supports": ["reusable-infrastructure", "state-safety"], "excerpt": "Reusable modules, state management, and HCL best practices."},
+        {"path": "skills/terraform-aws-modules/SKILL.md", "line": 70, "supports": ["plan-review"], "excerpt": "Use terraform plan output in PR reviews."},
+        {"path": "skills/terraform-aws-modules/SKILL.md", "line": 14, "supports": ["environment-separation"], "excerpt": "Designing remote state and workspace strategies."}
+      ],
+      "gaps": ["AWS-specific.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "terraform-infrastructure",
+      "intent": "deployment-devops",
+      "cluster": "deploy-iac",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["terraform", "infrastructure", "module", "state"]},
+      "skillDigest": "sha256-457d530e81474ff50f730636f0ceb342630410953838fd31616023a0e61c269d",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["reusable-infrastructure", "state-safety", "environment-separation", "deployment-gates"],
+      "evidence": [
+        {"path": "skills/terraform-infrastructure/SKILL.md", "line": 14, "supports": ["reusable-infrastructure", "state-safety", "environment-separation"], "excerpt": "Module creation, state management, and multi-environment deployments."},
+        {"path": "skills/terraform-infrastructure/SKILL.md", "line": 150, "supports": ["deployment-gates"], "excerpt": "Quality Gates."}
+      ],
+      "gaps": ["The root file does not explicitly require a human review of terraform plan, so plan-review is not asserted."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "terraform-module-library",
+      "intent": "deployment-devops",
+      "cluster": "deploy-iac",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["terraform", "module", "infrastructure"]},
+      "skillDigest": "sha256-54e3ae6d4ef73ff7594c0d30e8c6157742df21641d92ce28feb7653863b5a446",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["reusable-infrastructure"],
+      "evidence": [
+        {"path": "skills/terraform-module-library/SKILL.md", "line": 27, "supports": ["reusable-infrastructure"], "excerpt": "Create reusable, well-tested Terraform modules."}
+      ],
+      "gaps": ["Does not explicitly establish state safety, environment separation, or plan review in the audited root evidence.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "terraform-specialist",
+      "intent": "deployment-devops",
+      "cluster": "deploy-iac",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["terraform", "infrastructure", "state", "module"]},
+      "skillDigest": "sha256-622bebadc27b73eb7a5026974eb46055929cf4764ecbdab3a2004a2065f455ca",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["reusable-infrastructure", "state-safety", "environment-separation", "deployment-gates", "reproducible-ci"],
+      "evidence": [
+        {"path": "skills/terraform-specialist/SKILL.md", "line": 3, "supports": ["state-safety"], "excerpt": "Advanced IaC automation, state management, and enterprise infrastructure patterns."},
+        {"path": "skills/terraform-specialist/SKILL.md", "line": 13, "supports": ["environment-separation"], "excerpt": "Managing state backends, workspaces, or multi-cloud stacks."},
+        {"path": "skills/terraform-specialist/SKILL.md", "line": 91, "supports": ["deployment-gates"], "excerpt": "Quality gates: pre-commit hooks, continuous validation, compliance checking."},
+        {"path": "skills/terraform-specialist/SKILL.md", "line": 125, "supports": ["reproducible-ci"], "excerpt": "Version constraints for reproducible deployments."},
+        {"path": "skills/terraform-specialist/SKILL.md", "line": 155, "supports": ["reusable-infrastructure"], "excerpt": "Design a reusable Terraform module."}
+      ],
+      "gaps": ["No explicit human plan-review requirement in the root evidence.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "deployment-procedures",
+      "intent": "deployment-devops",
+      "cluster": "deploy-release",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["deployment", "rollback"]},
+      "skillDigest": "sha256-46b862fc9e5614002257c776c711412f7d5048d2adbfd703abe7a13aaed476db",
+      "risk": {"value": "critical", "source": "data/catalog.json"},
+      "capabilities": ["release-procedure", "rollback-validation", "progressive-delivery", "post-release-verification", "health-checks"],
+      "evidence": [
+        {"path": "skills/deployment-procedures/SKILL.md", "line": 3, "supports": ["release-procedure", "rollback-validation"], "excerpt": "Safe deployment workflows, rollback strategies, and verification."},
+        {"path": "skills/deployment-procedures/SKILL.md", "line": 98, "supports": ["health-checks"], "excerpt": "Health check, logs, key flows."},
+        {"path": "skills/deployment-procedures/SKILL.md", "line": 116, "supports": ["post-release-verification"], "excerpt": "Post-Deployment Verification."},
+        {"path": "skills/deployment-procedures/SKILL.md", "line": 173, "supports": ["progressive-delivery"], "excerpt": "Blue-Green: switch traffic between environments."}
+      ],
+      "gaps": ["Catalog risk is critical, so safe-only policy must exclude it."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "pre-release-review",
+      "intent": "deployment-devops",
+      "cluster": "deploy-release",
+      "selectionProvenance": {"matchedFields": ["id", "description", "tags"], "matchedTerms": ["release", "deployment", "rollback"]},
+      "skillDigest": "sha256-135ef93385198f91a40687831e76055f9b9efa81dfa61147e2eb52067b97056f",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["deployment-gates", "safe-automation"],
+      "evidence": [
+        {"path": "skills/pre-release-review/SKILL.md", "line": 3, "supports": ["deployment-gates"], "excerpt": "Read-only pre-release review for deploy readiness, rollout order, rollback risk, and launch blockers."},
+        {"path": "skills/pre-release-review/SKILL.md", "line": 32, "endLine": 34, "supports": ["safe-automation"], "excerpt": "Do not modify or execute migrations, trigger CI/CD, deploy, publish tags, or rotate secrets."}
+      ],
+      "gaps": ["Review-only: it does not execute a release procedure or post-release verification."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "pre-ship-gate",
+      "intent": "deployment-devops",
+      "cluster": "deploy-release",
+      "selectionProvenance": {"matchedFields": ["id", "description", "tags"], "matchedTerms": ["deploy", "deployment", "quality-gate"]},
+      "skillDigest": "sha256-9ad874fca7c06b2981f52fd6ab708888506a49e4592078eb73adb3974df10071",
+      "risk": {"value": "safe", "source": "data/catalog.json"},
+      "capabilities": ["deployment-gates", "health-checks", "progressive-delivery", "post-release-verification"],
+      "evidence": [
+        {"path": "skills/pre-ship-gate/SKILL.md", "line": 21, "supports": ["deployment-gates"], "excerpt": "Gate run right before and right after a production deploy."},
+        {"path": "skills/pre-ship-gate/SKILL.md", "line": 49, "supports": ["post-release-verification"], "excerpt": "Phase 3: Verify live before saying shipped."},
+        {"path": "skills/pre-ship-gate/SKILL.md", "line": 54, "supports": ["health-checks"], "excerpt": "Hit health/status endpoint and confirm expected version, not just HTTP 200."},
+        {"path": "skills/pre-ship-gate/SKILL.md", "line": 42, "supports": ["progressive-delivery"], "excerpt": "Detect a staged rollout or canary waiting on promotion."}
+      ],
+      "gaps": ["Does not execute the deploy or define the entire release procedure."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "shipping-and-launch",
+      "intent": "deployment-devops",
+      "cluster": "deploy-release",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["deployment", "launch", "rollback"]},
+      "skillDigest": "sha256-c89dd75cdf4213c3ac6caeaf19d1a92960dd0fefc652a591f3f13f2c1cb19404",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["release-procedure", "rollback-validation", "progressive-delivery", "post-release-verification", "health-checks"],
+      "evidence": [
+        {"path": "skills/shipping-and-launch/SKILL.md", "line": 17, "supports": ["release-procedure", "rollback-validation"], "excerpt": "Every launch should be reversible, observable, and incremental."},
+        {"path": "skills/shipping-and-launch/SKILL.md", "line": 134, "supports": ["progressive-delivery"], "excerpt": "CANARY rollout for 5% of users."},
+        {"path": "skills/shipping-and-launch/SKILL.md", "line": 237, "endLine": 242, "supports": ["post-release-verification", "health-checks"], "excerpt": "Check health endpoint, error dashboard, latency dashboard, and rollback mechanism."}
+      ],
+      "gaps": ["Risk remains catalog-unknown.", "Does not establish reproducible CI inputs."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "grafana-dashboards",
+      "intent": "deployment-devops",
+      "cluster": "deploy-sre",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["dashboard", "observability"]},
+      "skillDigest": "sha256-0c5de629ba9c5a9be0f22bcb7ef3818babdb5c6540abc86f9a6a86511ff78ce6",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["operational-dashboards", "service-level-objectives"],
+      "evidence": [
+        {"path": "skills/grafana-dashboards/SKILL.md", "line": 27, "supports": ["operational-dashboards"], "excerpt": "Design effective Grafana dashboards for applications and infrastructure."},
+        {"path": "skills/grafana-dashboards/SKILL.md", "line": 33, "supports": ["service-level-objectives"], "excerpt": "Implement SLO dashboards."}
+      ],
+      "gaps": ["Grafana-specific.", "Alert examples do not by themselves establish alert-quality.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "incident-responder",
+      "intent": "deployment-devops",
+      "cluster": "deploy-sre",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["sre", "incident", "observability"]},
+      "skillDigest": "sha256-f65d143254144bcfeedce6c87c261a28d188bfe97bb0f18a97dd62621e7a6ca4",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["incident-diagnostics", "service-level-objectives"],
+      "evidence": [
+        {"path": "skills/incident-responder/SKILL.md", "line": 26, "supports": ["incident-diagnostics"], "excerpt": "Incident response specialist with SRE expertise."},
+        {"path": "skills/incident-responder/SKILL.md", "line": 61, "supports": ["service-level-objectives"], "excerpt": "SLI/SLO violation analysis and burn rate assessment."}
+      ],
+      "gaps": ["Reactive incident workflow; operational dashboard construction is secondary.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    },
+    {
+      "skillId": "observability-engineer",
+      "intent": "deployment-devops",
+      "cluster": "deploy-sre",
+      "selectionProvenance": {"matchedFields": ["id", "description", "category"], "matchedTerms": ["observability", "slo", "incident", "alert"]},
+      "skillDigest": "sha256-c682926e888b0814f9c6bd7404b5c0054146014a3ad2e33b5a45aaba46f83527",
+      "risk": {"value": "unknown", "source": "data/catalog.json"},
+      "capabilities": ["service-level-objectives", "operational-dashboards", "alert-quality", "incident-diagnostics"],
+      "evidence": [
+        {"path": "skills/observability-engineer/SKILL.md", "line": 26, "supports": ["operational-dashboards", "service-level-objectives"], "excerpt": "Build dashboards and alerts aligned to SLOs."},
+        {"path": "skills/observability-engineer/SKILL.md", "line": 27, "supports": ["alert-quality"], "excerpt": "Validate signal quality and reduce alert noise."},
+        {"path": "skills/observability-engineer/SKILL.md", "line": 76, "supports": ["incident-diagnostics"], "excerpt": "Runbook automation and incident response playbooks."}
+      ],
+      "gaps": ["Broad design guidance; live signal access is explicitly required for validation.", "Risk remains catalog-unknown."],
+      "dependencies": [], "conflicts": [], "relationshipStatus": "unknown-no-hard-declaration"
+    }
+  ],
+  "auditSummary": {
+    "byIntent": {"api-backend-delivery": 20, "deployment-devops": 20},
+    "byDeclaredRisk": {"safe": 10, "unknown": 26, "critical": 4},
+    "importantUnknowns": [
+      "Most capability-strong candidates remain risk=unknown and must not be silently promoted under safe-only policy.",
+      "Static plugin compatibility is not live host proof.",
+      "No hard dependency/conflict metadata can be inferred safely from advisory cross-references.",
+      "Some root SKILL.md files route to resources; this audit did not upgrade capabilities that were only implied by a resource name."
+    ],
+    "notableCoverage": {
+      "api-backend-delivery": ["contracts/OpenAPI", "auth/authz", "async compensation/idempotency", "data/migrations", "telemetry/tracing/SLO/profiling"],
+      "deployment-devops": ["CI gates/reproducibility", "containers/Kubernetes", "Terraform IaC", "release/rollback/live verification", "SLO/dashboard/alert/incident"]
+    }
+  }
+}

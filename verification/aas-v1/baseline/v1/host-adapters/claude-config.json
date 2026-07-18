@@ -1,0 +1,10 @@
+{
+  "unknownFixtureKey": "preserve-me",
+  "fixtureSecret": "AAS_SECRET_CANARY_DO_NOT_EMIT_8f37ec75",
+  "mcpServers": {
+    "existing": {
+      "command": "existing-server",
+      "args": ["--unchanged"]
+    }
+  }
+}

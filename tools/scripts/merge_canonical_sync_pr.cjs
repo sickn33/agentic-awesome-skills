@@ -6,11 +6,16 @@ const REQUIRED_CHECKS = ["pr-policy", "pr-evidence", "source-validation", "artif
 const GITHUB_ACTIONS_APP_ID = 15368;
 const BOT_BRANCH = "automation/canonical-repo-state";
 const CI_WORKFLOW_PATH = ".github/workflows/ci.yml";
+const BASELINE_WORKFLOW_PATH = ".github/workflows/aas-v1-baseline-check.yml";
 
 function parseArgs(argv) {
-  const options = { pollSeconds: 10, maxAttempts: 180 };
+  const options = { pollSeconds: 10, maxAttempts: 180, skipPages: false };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
+    if (argument === "--skip-pages") {
+      options.skipPages = true;
+      continue;
+    }
     if (["--repo", "--pr", "--head", "--poll-seconds", "--max-attempts"].includes(argument)) {
       const value = argv[index + 1];
       if (!value || value.startsWith("--")) throw new Error(`${argument} requires a value.`);
@@ -29,6 +34,10 @@ function parseArgs(argv) {
   return options;
 }
 
+function verificationWorkflows(options = {}) {
+  return options.skipPages ? ["ci.yml", "codeql.yml"] : ["ci.yml", "pages.yml", "codeql.yml"];
+}
+
 function runGh(args, options = {}) {
   const result = spawnSync("gh", args, {
     encoding: "utf8",
@@ -40,13 +49,13 @@ function runGh(args, options = {}) {
   return result.stdout.trim();
 }
 
-function latestRequiredChecks(checkRuns, expectedCheckSuiteId) {
+function latestRequiredChecks(checkRuns, expectedCheckSuiteId, requiredChecks = REQUIRED_CHECKS) {
   const result = new Map();
   for (const run of checkRuns || []) {
     if (
       Number(run?.app?.id) !== GITHUB_ACTIONS_APP_ID ||
       Number(run?.check_suite?.id) !== Number(expectedCheckSuiteId) ||
-      !REQUIRED_CHECKS.includes(String(run?.name || ""))
+      !requiredChecks.includes(String(run?.name || ""))
     ) {
       continue;
     }
@@ -60,9 +69,9 @@ function latestRequiredChecks(checkRuns, expectedCheckSuiteId) {
   return result;
 }
 
-function summarizeChecks(checkRuns, expectedCheckSuiteId) {
-  const latest = latestRequiredChecks(checkRuns, expectedCheckSuiteId);
-  return REQUIRED_CHECKS.map((name) => {
+function summarizeChecks(checkRuns, expectedCheckSuiteId, requiredChecks = REQUIRED_CHECKS) {
+  const latest = latestRequiredChecks(checkRuns, expectedCheckSuiteId, requiredChecks);
+  return requiredChecks.map((name) => {
     const run = latest.get(name);
     if (!run) return { name, state: "pending", conclusion: "missing" };
     if (String(run.status).toLowerCase() !== "completed") return { name, state: "pending", conclusion: "in_progress" };
@@ -94,9 +103,9 @@ function validateProtectedMain(branch) {
   return true;
 }
 
-function selectCanonicalPullRequestRun(runs, options, expectedBaseSha) {
+function selectCanonicalPullRequestRun(runs, options, expectedBaseSha, workflowPath = CI_WORKFLOW_PATH) {
   const matches = (runs || []).filter((run) => (
-    run?.path === CI_WORKFLOW_PATH &&
+    run?.path === workflowPath &&
     run?.event === "pull_request" &&
     run?.head_branch === BOT_BRANCH &&
     run?.head_sha === options.head &&
@@ -124,7 +133,7 @@ function wait(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-async function waitForChecks(options, expectedCheckSuiteId, dependencies = {}) {
+async function waitForChecks(options, expectedCheckSuiteId, dependencies = {}, requiredChecks = REQUIRED_CHECKS) {
   if (!Number.isInteger(Number(expectedCheckSuiteId)) || Number(expectedCheckSuiteId) <= 0) {
     throw new Error("Canonical-sync PR CI did not expose a valid check-suite ID.");
   }
@@ -138,7 +147,7 @@ async function waitForChecks(options, expectedCheckSuiteId, dependencies = {}) {
   const pause = dependencies.wait || wait;
 
   for (let attempt = 1; attempt <= options.maxAttempts; attempt += 1) {
-    const summaries = summarizeChecks(load(), expectedCheckSuiteId);
+    const summaries = summarizeChecks(load(), expectedCheckSuiteId, requiredChecks);
     process.stdout.write(`[canonical-sync] ${summaries.map((item) => `${item.name}:${item.conclusion}`).join(" ")}\n`);
     const failed = summaries.filter((item) => item.state === "failed");
     if (failed.length) throw new Error(`Canonical-sync required checks failed: ${failed.map((item) => item.name).join(", ")}`);
@@ -148,7 +157,7 @@ async function waitForChecks(options, expectedCheckSuiteId, dependencies = {}) {
   throw new Error("Timed out waiting for canonical-sync required checks.");
 }
 
-async function ensurePullRequestChecksStarted(options, expectedBaseSha, dependencies = {}) {
+async function ensurePullRequestChecksStarted(options, expectedBaseSha, dependencies = {}, workflowPath = CI_WORKFLOW_PATH) {
   const load = dependencies.loadWorkflowRuns || (() => {
     const payload = JSON.parse(runGh([
       "api",
@@ -165,7 +174,7 @@ async function ensurePullRequestChecksStarted(options, expectedBaseSha, dependen
   const pause = dependencies.wait || wait;
 
   for (let attempt = 1; attempt <= options.maxAttempts; attempt += 1) {
-    const run = selectCanonicalPullRequestRun(load(), options, expectedBaseSha);
+    const run = selectCanonicalPullRequestRun(load(), options, expectedBaseSha, workflowPath);
     if (!run) {
       await pause(options.pollSeconds * 1000);
       continue;
@@ -194,6 +203,8 @@ async function main() {
   validatePullRequest(initialPr, options, initialBaseSha);
   const pullRequestRun = await ensurePullRequestChecksStarted(options, initialBaseSha);
   await waitForChecks(options, pullRequestRun.check_suite_id);
+  const baselineRun = await ensurePullRequestChecksStarted(options, initialBaseSha, {}, BASELINE_WORKFLOW_PATH);
+  await waitForChecks(options, baselineRun.check_suite_id, {}, ["aas-v1-baseline"]);
   const pr = JSON.parse(runGh(["api", `repos/${options.repo}/pulls/${options.pr}`]));
   const finalBranch = JSON.parse(runGh(["api", `repos/${options.repo}/branches/main`]));
   validateProtectedMain(finalBranch);
@@ -204,7 +215,9 @@ async function main() {
   const payload = JSON.stringify({
     merge_method: "squash",
     sha: options.head,
-    commit_title: "chore: synchronize canonical repository state",
+    commit_title: options.skipPages
+      ? "[skip pages] chore: synchronize canonical repository state"
+      : "chore: synchronize canonical repository state",
     commit_message: "Generated artifacts reproduced and merged through protected required checks.",
   });
   const merged = JSON.parse(runGh(
@@ -213,7 +226,7 @@ async function main() {
   ));
   if (merged?.merged !== true) throw new Error(`Canonical-sync merge failed: ${merged?.message || "merged=false"}`);
 
-  for (const workflow of ["ci.yml", "pages.yml", "codeql.yml"]) {
+  for (const workflow of verificationWorkflows(options)) {
     runGh([
       "api",
       `repos/${options.repo}/actions/workflows/${workflow}/dispatches`,
@@ -223,7 +236,8 @@ async function main() {
       "ref=main",
     ]);
   }
-  process.stdout.write(`[canonical-sync] merged PR #${options.pr} at ${options.head} and dispatched main verification.\n`);
+  const pages = options.skipPages ? " without Pages publication" : " including Pages verification";
+  process.stdout.write(`[canonical-sync] merged PR #${options.pr} at ${options.head} and dispatched main verification${pages}.\n`);
 }
 
 if (require.main === module) {
@@ -241,5 +255,6 @@ module.exports = {
   summarizeChecks,
   validateProtectedMain,
   validatePullRequest,
+  verificationWorkflows,
   waitForChecks,
 };
