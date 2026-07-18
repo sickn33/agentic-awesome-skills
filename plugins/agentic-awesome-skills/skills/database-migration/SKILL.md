@@ -20,7 +20,9 @@ Master database schema and data migrations across ORMs (Sequelize, TypeORM, Pris
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
+- Before proposing execution, bind the plan to the exact engine and version, environment,
+  database/schema, table set, data volume, maintenance constraints, recovery objective,
+  and authorized operator.
 
 ## Use this skill when
 
@@ -33,6 +35,13 @@ Master database schema and data migrations across ORMs (Sequelize, TypeORM, Pris
 - Data model refactoring
 
 ## ORM Migrations
+
+The `down()` blocks below are definitions, not authorization to execute a rollback.
+Immediately before any rollback that drops a table, removes a column, or can lose
+data, bind the exact environment/database/schema and migration ID, inspect the
+generated SQL and affected objects, verify the target-bound recovery point, and
+obtain explicit approval for that destructive operation. Do not inherit approval
+from migration planning or from a previous `up()` execution.
 
 ### Sequelize Migrations
 ```javascript
@@ -56,6 +65,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
+    // Destructive example: execute only after the immediate rollback gate above.
     await queryInterface.dropTable('users');
   }
 };
@@ -98,6 +108,7 @@ export class CreateUsers1701234567 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    // Destructive example: execute only after the immediate rollback gate above.
     await queryRunner.dropTable('users');
   }
 }
@@ -134,133 +145,45 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
+    // Destructive example: execute only after the immediate rollback gate above.
     await queryInterface.removeColumn('users', 'status');
   }
 };
 ```
 
-### Renaming Columns (Zero Downtime)
-```javascript
-// Step 1: Add new column
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('users', 'full_name', {
-      type: Sequelize.STRING
-    });
+### Expand-and-Contract Workflow
 
-    // Copy data from old column
-    await queryInterface.sequelize.query(
-      'UPDATE users SET full_name = name'
-    );
-  },
+Use this sequence for column renames, type changes, and non-trivial data
+transformations. Do not combine the phases into one migration.
 
-  down: async (queryInterface) => {
-    await queryInterface.removeColumn('users', 'full_name');
-  }
-};
+1. **Bind the target and recovery objective.** Record the engine/version,
+   environment, database/schema, affected tables, expected row count, lock and
+   replication constraints, authorized operator, recovery point objective, and
+   recovery time objective. Verify a restorable backup or engine-native recovery
+   mechanism before changing production.
+2. **Expand.** Add nullable or otherwise backward-compatible schema. Assess the
+   engine-specific lock/rewrite behavior first; use online DDL only when the
+   selected engine and version support it.
+3. **Dual-write.** Deploy application code that writes both old and new shapes.
+   Make retries safe at the application boundary and monitor write divergence.
+4. **Backfill in bounded batches.** Use stable key ranges or checkpoints, limit
+   transaction size, rate-limit against production load, and persist progress.
+   Each batch must be restartable without corrupting already migrated rows.
+5. **Verify.** Compare counts, null rates, checksums or domain invariants, sample
+   transformed values, replication lag, errors, and application metrics. Stop on
+   divergence; do not advance merely because the backfill command completed.
+6. **Cut over.** After explicit approval for the bound target, switch reads to the
+   new shape while retaining dual-write and the old schema for the observation
+   window. Define the rollback trigger and owner before cutover.
+7. **Contract.** Only after the observation window and a second approval, stop
+   old writes and remove obsolete columns, constraints, or code in a separate
+   migration. Destructive cleanup is not part of the initial rollout.
 
-// Step 2: Update application to use new column
-
-// Step 3: Remove old column
-module.exports = {
-  up: async (queryInterface) => {
-    await queryInterface.removeColumn('users', 'name');
-  },
-
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('users', 'name', {
-      type: Sequelize.STRING
-    });
-  }
-};
-```
-
-### Changing Column Types
-```javascript
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // For large tables, use multi-step approach
-
-    // 1. Add new column
-    await queryInterface.addColumn('users', 'age_new', {
-      type: Sequelize.INTEGER
-    });
-
-    // 2. Copy and transform data
-    await queryInterface.sequelize.query(`
-      UPDATE users
-      SET age_new = CAST(age AS INTEGER)
-      WHERE age IS NOT NULL
-    `);
-
-    // 3. Drop old column
-    await queryInterface.removeColumn('users', 'age');
-
-    // 4. Rename new column
-    await queryInterface.renameColumn('users', 'age_new', 'age');
-  },
-
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.changeColumn('users', 'age', {
-      type: Sequelize.STRING
-    });
-  }
-};
-```
-
-## Data Transformations
-
-### Complex Data Migration
-```javascript
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // Get all records
-    const [users] = await queryInterface.sequelize.query(
-      'SELECT id, address_string FROM users'
-    );
-
-    // Transform each record
-    for (const user of users) {
-      const addressParts = user.address_string.split(',');
-
-      await queryInterface.sequelize.query(
-        `UPDATE users
-         SET street = :street,
-             city = :city,
-             state = :state
-         WHERE id = :id`,
-        {
-          replacements: {
-            id: user.id,
-            street: addressParts[0]?.trim(),
-            city: addressParts[1]?.trim(),
-            state: addressParts[2]?.trim()
-          }
-        }
-      );
-    }
-
-    // Drop old column
-    await queryInterface.removeColumn('users', 'address_string');
-  },
-
-  down: async (queryInterface, Sequelize) => {
-    // Reconstruct original column
-    await queryInterface.addColumn('users', 'address_string', {
-      type: Sequelize.STRING
-    });
-
-    await queryInterface.sequelize.query(`
-      UPDATE users
-      SET address_string = CONCAT(street, ', ', city, ', ', state)
-    `);
-
-    await queryInterface.removeColumn('users', 'street');
-    await queryInterface.removeColumn('users', 'city');
-    await queryInterface.removeColumn('users', 'state');
-  }
-};
-```
+For recovery, prefer stopping the rollout and reverting application reads/writes
+to the still-present old shape. If data restore is required, use the verified,
+engine-native recovery procedure for the recorded target and recovery point.
+Never reconstruct a production table with `CREATE TABLE ... AS`: that can lose
+indexes, constraints, triggers, ownership, privileges, and engine-specific state.
 
 ## Rollback Strategies
 
@@ -291,86 +214,24 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
+    // Destructive example: execute only after the immediate rollback gate above.
     await queryInterface.removeColumn('users', 'verified');
   }
 };
 ```
 
-### Checkpoint-Based Rollback
-```javascript
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // Create backup table
-    await queryInterface.sequelize.query(
-      'CREATE TABLE users_backup AS SELECT * FROM users'
-    );
+### Rollback and Recovery Boundaries
 
-    try {
-      // Perform migration
-      await queryInterface.addColumn('users', 'new_field', {
-        type: Sequelize.STRING
-      });
-
-      // Verify migration
-      const [result] = await queryInterface.sequelize.query(
-        "SELECT COUNT(*) as count FROM users WHERE new_field IS NULL"
-      );
-
-      if (result[0].count > 0) {
-        throw new Error('Migration verification failed');
-      }
-
-      // Drop backup
-      await queryInterface.dropTable('users_backup');
-    } catch (error) {
-      // Restore from backup
-      await queryInterface.sequelize.query('DROP TABLE users');
-      await queryInterface.sequelize.query(
-        'CREATE TABLE users AS SELECT * FROM users_backup'
-      );
-      await queryInterface.dropTable('users_backup');
-      throw error;
-    }
-  }
-};
-```
-
-## Zero-Downtime Migrations
-
-### Blue-Green Deployment Strategy
-```javascript
-// Phase 1: Make changes backward compatible
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // Add new column (both old and new code can work)
-    await queryInterface.addColumn('users', 'email_new', {
-      type: Sequelize.STRING
-    });
-  }
-};
-
-// Phase 2: Deploy code that writes to both columns
-
-// Phase 3: Backfill data
-module.exports = {
-  up: async (queryInterface) => {
-    await queryInterface.sequelize.query(`
-      UPDATE users
-      SET email_new = email
-      WHERE email_new IS NULL
-    `);
-  }
-};
-
-// Phase 4: Deploy code that reads from new column
-
-// Phase 5: Remove old column
-module.exports = {
-  up: async (queryInterface) => {
-    await queryInterface.removeColumn('users', 'email');
-  }
-};
-```
+- A `down()` migration is appropriate only when the engine and operation can
+  reverse the change without losing writes or transformed data.
+- For destructive, lossy, or long-running operations, use a forward fix or the
+  target-bound recovery plan instead of pretending a generic `down()` is safe.
+- Transactional DDL support, lock behavior, and rollback semantics vary by
+  engine, version, storage engine, and operation. Verify them for the exact
+  target before relying on a transaction.
+- A migration need not be globally rerunnable. Require idempotency only where
+  the selected migration framework and operation support it; otherwise rely on
+  the framework's migration ledger plus explicit, restartable batch checkpoints.
 
 ## Cross-Database Migrations
 
@@ -408,26 +269,16 @@ module.exports = {
 };
 ```
 
-## Resources
-
-- **references/orm-switching.md**: ORM migration guides
-- **references/schema-migration.md**: Schema transformation patterns
-- **references/data-transformation.md**: Data migration scripts
-- **references/rollback-strategies.md**: Rollback procedures
-- **assets/schema-migration-template.sql**: SQL migration templates
-- **assets/data-migration-script.py**: Data migration utilities
-- **scripts/test-migration.sh**: Migration testing script
-
 ## Best Practices
 
-1. **Always Provide Rollback**: Every up() needs a down()
+1. **Define Recovery**: Choose rollback, forward fix, or restore based on the exact engine and operation
 2. **Test Migrations**: Test on staging first
-3. **Use Transactions**: Atomic migrations when possible
-4. **Backup First**: Always backup before migration
+3. **Use Transactions Carefully**: Rely on transactional DDL only when verified for the target
+4. **Verify Recovery**: Confirm the backup or engine-native recovery path and its recovery point
 5. **Small Changes**: Break into small, incremental steps
 6. **Monitor**: Watch for errors during deployment
 7. **Document**: Explain why and how
-8. **Idempotent**: Migrations should be rerunnable
+8. **Make Restarts Explicit**: Use framework state and batch checkpoints appropriate to the operation
 
 ## Common Pitfalls
 

@@ -31,9 +31,14 @@ AZURE_SPEECH_ENDPOINT=https://<region>.stt.speech.microsoft.com
 
 ```bash
 pip install requests
+
+# Optional: required only for the async example
+pip install aiohttp
 ```
 
 ## Quick Start
+
+Before uploading audio, confirm the speaker's consent or another valid authorization, classify the audio for sensitive or regulated content, and verify that sending it to the selected Azure Speech resource and region is permitted.
 
 ```python
 import os
@@ -54,7 +59,7 @@ def transcribe_audio(audio_file_path: str, language: str = "en-US") -> dict:
     
     params = {
         "language": language,
-        "format": "detailed"  # or "simple"
+        "format": "simple"
     }
     
     with open(audio_file_path, "rb") as audio_file:
@@ -313,7 +318,7 @@ async def transcribe_async(audio_file_path: str, language: str = "en-US") -> dic
         "Accept": "application/json"
     }
     
-    params = {"language": language, "format": "detailed"}
+    params = {"language": language, "format": "simple"}
     
     async with aiohttp.ClientSession() as session:
         with open(audio_file_path, "rb") as f:
@@ -364,12 +369,6 @@ Use the Speech SDK or Batch Transcription API instead when you need:
 - Speech translation
 - Custom speech models
 - Batch transcription of many files
-
-## Reference Files
-
-| File | Contents |
-|------|----------|
-| references/pronunciation-assessment.md | Pronunciation assessment parameters and scoring |
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

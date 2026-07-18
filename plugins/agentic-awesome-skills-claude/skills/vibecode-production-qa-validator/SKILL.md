@@ -24,29 +24,42 @@ Run phases in order. Fix failures before moving to next.
 
 ```bash
 export PROD_URL="https://yourdomain.com"
+export QA_TARGET_ENV="staging" # staging or production
+export QA_REMOTE_CONSENT=""     # set to YES only after confirming the target and authorization
 export QA_AUTH_HEADER=""       # optional: "Bearer eyJ..."
 export PAGESPEED_API_KEY=""    # optional: for auto PageSpeed API
 ```
+
+Before any remote check, confirm that you own or are authorized to test the exact host. Production checks can create load and should use a maintenance window or an explicitly approved test plan.
 
 ---
 
 ## Consolidated Runner
 
 ```bash
-qa:all() { qa:code && qa:build && qa:routes / /about /contact /privacy /terms /faq /sitemap.xml /robots.txt /api/health && qa:seo && qa:api /api/health /api/tools && qa:git && qa:smoke; }
-qa:full() { qa:all && qa:auth && qa:auth:cookies && qa:lazyload && qa:heavyload && qa:vulns && qa:cleanup && qa:ux:cards && qa:ux:boundaries && qa:ux:animation && qa:database && qa:secure; }
+qa:local-bin() { [ -x "node_modules/.bin/$1" ] || { echo "  ✗ Missing local binary: $1 (install declared dependencies first)" >&2; return 1; }; }
+qa:target() {
+  [ "$QA_REMOTE_CONSENT" = "YES" ] || { echo "  ✗ Set QA_REMOTE_CONSENT=YES after confirming authorization" >&2; return 1; }
+  case "$QA_TARGET_ENV" in staging|production) ;; *) echo "  ✗ QA_TARGET_ENV must be staging or production" >&2; return 1;; esac
+  case "$PROD_URL" in https://*/*|https://*) ;; *) echo "  ✗ PROD_URL must be an HTTPS origin" >&2; return 1;; esac
+  printf '%s' "$PROD_URL" | grep -Eq '^https://[A-Za-z0-9.-]+(:[0-9]+)?$' || { echo "  ✗ PROD_URL must contain only an HTTPS origin (no credentials, path, query, or fragment)" >&2; return 1; }
+  [ "$PROD_URL" != "https://yourdomain.com" ] || { echo "  ✗ Replace the placeholder PROD_URL" >&2; return 1; }
+  echo "  ✓ Authorized target: $QA_TARGET_ENV $PROD_URL"
+}
+qa:all() { qa:target && qa:code && qa:build && qa:routes / /about /contact /privacy /terms /faq /sitemap.xml /robots.txt /api/health && qa:robots && qa:sitemap && qa:seo && qa:seo:ogimage && qa:api /api/health /api/tools && qa:git && qa:smoke; }
+qa:full() { qa:all && qa:auth && qa:auth:cookies && qa:lazyload && qa:heavyload && qa:vulns && qa:cleanup && qa:ux:cards && qa:ux:boundaries && qa:ux:animation && qa:database && qa:db:migrations && qa:secure; }
 ```
 
 ---
 
 ### Phase 1: Code Integrity
 
-- [ ] `npx tsc --noEmit`
-- [ ] `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0`
+- [ ] Local `tsc --noEmit`
+- [ ] Local `eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0`
 - [ ] `npm test -- --runInBand --passWithNoTests`
 
 ```bash
-qa:code() { npx tsc --noEmit && npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0 && npm test -- --runInBand --passWithNoTests; }
+qa:code() { qa:local-bin tsc && qa:local-bin eslint && ./node_modules/.bin/tsc --noEmit && ./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0 && npm test -- --runInBand --passWithNoTests; }
 ```
 
 ---
@@ -54,7 +67,7 @@ qa:code() { npx tsc --noEmit && npx eslint . --ext .js,.jsx,.ts,.tsx --max-warni
 ### Phase 2: Build Verification
 
 - [ ] `npm run build` succeeds
-- [ ] SEO pages show `○`/`●` not `λ`
+- [ ] Build output uses current Next.js route markers (`○` static, `ƒ` dynamic) as expected
 - [ ] Build log has no errors
 
 ```bash
@@ -64,9 +77,7 @@ qa:build() { local log; log="$(mktemp "${TMPDIR:-/tmp}/qa-build.XXXXXX.log")" ||
 | Symbol | Meaning |
 |--------|---------|
 | `○` | Static |
-| `●` | SSG |
-| `λ` | Dynamic/serverless |
-| `⊕` | Partial prerender |
+| `ƒ` | Dynamic (server-rendered on demand) |
 
 ---
 
@@ -84,18 +95,24 @@ qa:auth() {
   for ep in /api/auth/login /api/auth/session /api/auth/logout; do
     curl -so /dev/null -w "%{http_code}" "$PROD_URL$ep" | grep -q "200\|401" || { echo "  ✗ $ep unreachable"; ((F++)); }
   done
-  curl -so /dev/null -w "%{http_code}" "$PROD_URL/api/protected" | grep -q "401\|403" || echo "  ⚠ Protected route not denying unauthenticated"
+  curl -so /dev/null -w "%{http_code}" "$PROD_URL/api/protected" | grep -Eq "401|403" || { echo "  ✗ Protected route not denying unauthenticated"; ((F++)); }
   return $F
 }
 qa:auth:cookies() {
+  local F=0 found=0 c headers
   for ep in /api/auth/session /api/auth/login; do
-    curl -sI "$PROD_URL$ep" | grep -i "^set-cookie:" | while IFS= read -r c; do
-      echo "  $ep: $(echo "$c" | cut -d= -f1)"
-      echo "$c" | grep -qi "HttpOnly" || echo "    ✗ Missing HttpOnly"
-      echo "$c" | grep -qi "Secure" || echo "    ✗ Missing Secure"
-      echo "$c" | grep -qi "SameSite" || echo "    ⚠ Missing SameSite"
-    done
+    headers=$(curl -fsSI "$PROD_URL$ep") || { echo "  ✗ $ep headers unavailable"; ((F++)); continue; }
+    while IFS= read -r c; do
+      echo "$c" | grep -qi "^set-cookie:" || continue
+      found=1
+      echo "  $ep: Set-Cookie"
+      echo "$c" | grep -qi "HttpOnly" || { echo "    ✗ Missing HttpOnly"; ((F++)); }
+      echo "$c" | grep -qi "Secure" || { echo "    ✗ Missing Secure"; ((F++)); }
+      echo "$c" | grep -qi "SameSite" || { echo "    ✗ Missing SameSite"; ((F++)); }
+    done <<< "$headers"
   done
+  [ "$found" -eq 1 ] || { echo "  ✗ No session cookie observed"; ((F++)); }
+  return "$F"
 }
 ```
 
@@ -110,8 +127,8 @@ qa:auth:cookies() {
 
 ```bash
 qa:routes() { local F=0; for p; do local C=$(curl -so /dev/null -w "%{http_code}" "$PROD_URL$p"); echo "$C $p"; [ "$C" = "200" ] || ((F++)); done; return $F; }
-qa:robots() { curl -s "$PROD_URL/robots.txt" | grep -qi "Disallow: /$" && echo "  ✗ Blocks all crawlers" || echo "  ✓ OK"; }
-qa:sitemap() { curl -s "$PROD_URL/sitemap.xml" | python3 -c "import sys,xml.etree.ElementTree as ET; ET.parse(sys.stdin); print('✓ Valid XML')"; }
+qa:robots() { local body; body=$(curl -fsS "$PROD_URL/robots.txt") || return 1; if echo "$body" | grep -qi "Disallow: /$"; then echo "  ✗ Blocks all crawlers"; return 1; else echo "  ✓ OK"; fi; }
+qa:sitemap() { curl -fsS "$PROD_URL/sitemap.xml" | python3 -c "import sys,xml.etree.ElementTree as ET; ET.parse(sys.stdin); print('✓ Valid XML')"; }
 ```
 
 ---
@@ -134,14 +151,22 @@ qa:seo() {
   local H=$(curl -s "$PROD_URL"); local F=0
   for t in "og:title" "og:description" "og:image" "twitter:card" "canonical" "description"; do echo "$H" | grep -qi "$t" || { echo "  ✗ $t"; ((F++)); }; done
   echo "$H" | grep -qi "<title>" || { echo "  ✗ <title>"; ((F++)); }
-  local T=$(echo "$H" | grep -oP '<title>\K[^<]+'); local L=${#T}; [ $L -ge 30 -a $L -le 60 ] || echo "  ⚠ Title ${L}chars (target 30-60)"
-  curl -so /dev/null -w "%{http_code}" "$PROD_URL/favicon.ico" | grep -q 200 || echo "  ⚠ No favicon.ico"
+  local T=$(echo "$H" | grep -oP '<title>\K[^<]+'); local L=${#T}; [ $L -ge 30 -a $L -le 60 ] || { echo "  ✗ Title ${L}chars (require 30-60)"; ((F++)); }
+  curl -fsSo /dev/null "$PROD_URL/favicon.ico" || { echo "  ✗ No favicon.ico"; ((F++)); }
   return $F
 }
 qa:seo:ogimage() {
-  local I=$(curl -s "$PROD_URL" | grep -oP 'og:image" content="\K[^"]+'); [[ "$I" =~ ^http ]] || I="$PROD_URL$I"
-  curl -so /dev/null -w "%{http_code}" "$I" | grep -q 200 || { echo "  ✗ og:image returns non-200"; return 1; }
-  command -v identify &>/dev/null && curl -s "$I" | identify -format "%wx%h" - 2>/dev/null | grep -qP "12\d{2}x6\d{2}" && echo "  ✓ ≥ 1200x630" || echo "  ⚠ Install imagemagick to check dimensions"
+  local I dimensions width height
+  I=$(curl -fsS "$PROD_URL" | grep -oP 'og:image" content="\K[^"]+' | head -1) || return 1
+  [[ "$I" =~ ^https?:// ]] || I="$PROD_URL$I"
+  curl -fsSo /dev/null "$I" || { echo "  ✗ og:image is unavailable"; return 1; }
+  command -v identify >/dev/null 2>&1 || { echo "  ✗ ImageMagick identify is required for the declared dimension check"; return 1; }
+  dimensions=$(curl -fsS "$I" | identify -format "%w %h" - 2>/dev/null) || return 1
+  read -r width height <<EOF
+$dimensions
+EOF
+  [ "$width" -ge 1200 ] && [ "$height" -ge 630 ] || { echo "  ✗ og:image is ${width}x${height}; require at least 1200x630"; return 1; }
+  echo "  ✓ og:image is ${width}x${height}"
 }
 ```
 
@@ -156,12 +181,15 @@ qa:seo:ogimage() {
 
 ```bash
 qa:api() {
+  local F=0
   for p; do
     local R=$(curl -so /dev/null -w "%{http_code} %{content_type}" "$PROD_URL$p")
     echo "  $p → $R"
+    echo "$R" | grep -Eq '^2[0-9]{2} .*json' || ((F++))
   done
   local E=$(curl -s "$PROD_URL/api/nonexistent")
-  echo "$E" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'error' in d; print('✓ Consistent errors')" 2>/dev/null || echo "  ⚠ Inconsistent error shape"
+  echo "$E" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'error' in d and 'message' in d; print('✓ Consistent errors')" 2>/dev/null || { echo "  ✗ Inconsistent error shape"; ((F++)); }
+  return "$F"
 }
 ```
 
@@ -175,10 +203,14 @@ qa:api() {
 
 ```bash
 qa:git() {
-  local S=$(git diff HEAD 2>/dev/null | grep -i "password\|secret\|api_key\|localhost:3000" | grep "^+")
-  [ -n "$S" ] && { echo "  ✗ Secrets in diff!"; echo "$S"; return 1; } || echo "  ✓ No secrets"
+  local S="" f F=0
+  while IFS= read -r f; do
+    [ -f "$f" ] && git diff HEAD -- "$f" 2>/dev/null | grep '^+' | grep -IqiE 'password|secret|api_key' && S="${S}${S:+ }$f"
+  done < <(git diff --name-only HEAD)
+  [ -n "$S" ] && { echo "  ✗ Potential secret patterns in changed files (values redacted): $S"; ((F++)); } || echo "  ✓ No secret patterns"
   local A=$(git status --short 2>/dev/null | grep -E "\.next|node_modules" | head -3)
-  [ -n "$A" ] && echo "  ⚠ Build artifacts:" && echo "$A" || echo "  ✓ No artifacts"
+  [ -n "$A" ] && { echo "  ✗ Build artifacts:"; echo "$A"; ((F++)); } || echo "  ✓ No artifacts"
+  return "$F"
 }
 ```
 
@@ -193,8 +225,10 @@ qa:git() {
 
 ```bash
 qa:smoke() {
-  curl -sI "$PROD_URL" | head -1 | grep -q "200" && echo "  ✓ Homepage" || echo "  ✗ Homepage"
-  curl -sI "$PROD_URL/sitemap.xml" | head -1 | grep -q "200" && echo "  ✓ Sitemap" || echo "  ✗ Sitemap"
+  local F=0
+  curl -fsSI "$PROD_URL" >/dev/null && echo "  ✓ Homepage" || { echo "  ✗ Homepage"; ((F++)); }
+  curl -fsSI "$PROD_URL/sitemap.xml" >/dev/null && echo "  ✓ Sitemap" || { echo "  ✗ Sitemap"; ((F++)); }
+  return "$F"
 }
 ```
 
@@ -214,13 +248,16 @@ qa:smoke() {
 qa:lazyload() {
   local N=$(grep -r "loading=" app/ --include="*.tsx" 2>/dev/null | grep -c "lazy" || true)
   echo "  Lazy images: $N"
-  grep -rn "next/dynamic\|dynamic((" app/ --include="*.tsx" 2>/dev/null | head -5 | grep . || echo "  ⚠ No dynamic imports"
+  [ "$N" -gt 0 ] || { echo "  ✗ No lazy-loaded images found"; return 1; }
+  grep -rEq "next/dynamic|dynamic\(\(" app/ --include="*.tsx" 2>/dev/null || { echo "  ✗ No dynamic imports"; return 1; }
+  echo "  ✓ Dynamic import found (matching source content redacted)"
 }
 qa:heavyload() {
   ls -lhS .next/static/chunks/*.js 2>/dev/null | head -5
   local W=$(curl -so /dev/null -w "%{size_download}" "$PROD_URL" 2>/dev/null || echo 0)
   echo "  HTML weight: ~$((W/1024))KB"
-  echo "  ⚠ Run 'npx lighthouse $PROD_URL --view' for full weight analysis"
+  [ "$W" -gt 0 ] && [ "$W" -lt 1048576 ] || { echo "  ✗ HTML fetch failed or exceeds 1MB"; return 1; }
+  echo "  - Run the declared local Lighthouse binary for full weight analysis"
 }
 # PageSpeed: open "https://pagespeed.web.dev/?url=$PROD_URL"
 ```
@@ -237,16 +274,26 @@ qa:heavyload() {
 
 ```bash
 qa:vulns() {
-  npm audit 2>/dev/null | grep -E "critical|high" | grep . && echo "  ✗ Vulnerabilities!" || echo "  ✓ No critical/high vulns"
+  local audit F=0
+  audit=$(npm audit --json 2>/dev/null) || true
+  echo "$audit" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert "metadata" in d' 2>/dev/null || { echo "  ✗ npm audit did not return a valid report"; return 1; }
+  echo "$audit" | grep -Eq '"(critical|high)"[[:space:]]*:[[:space:]]*[1-9]' && { echo "  ✗ Critical/high vulnerabilities detected"; ((F++)); } || echo "  ✓ No critical/high vulns"
   npm outdated 2>/dev/null | head -5 | grep . || echo "  ✓ All up to date"
-  local D=$(grep -rn "eval(\|new Function(\|document.write(" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | head -5) # security-allowlist: defensive source scan
-  [ -n "$D" ] && echo "  ⚠ Dangerous patterns:" && echo "$D" || echo "  ✓ No dangerous patterns"
+  local D=$(git grep -IlE "eval\(|new Function\(|document\.write\(" -- app src 2>/dev/null | head -5) # security-allowlist: defensive source scan
+  [ -n "$D" ] && { echo "  ✗ Dangerous patterns detected in:"; echo "$D"; ((F++)); } || echo "  ✓ No dangerous patterns"
+  return "$F"
 }
 qa:cleanup() {
-  local D=$(git diff --cached 2>/dev/null | grep "^+" | grep -i "console\.log\|debugger" | head -5)
-  [ -n "$D" ] && echo "  ✗ Debug artifacts:" && echo "$D" || echo "  ✓ No debug artifacts"
-  local T=$(git diff --cached 2>/dev/null | grep "^+" | grep -i "TODO\|FIXME\|HACK" | head -5)
-  [ -n "$T" ] && echo "  ⚠ TODOs remain:" && echo "$T"
+  local F=0
+  if git diff --cached --unified=0 --no-color 2>/dev/null | grep '^+' | grep -Eqi 'console\.log|debugger'; then
+    echo "  ✗ Debug artifacts detected in staged additions (content redacted)"
+    ((F++))
+  else
+    echo "  ✓ No debug artifacts"
+  fi
+  local T=$(git grep -IlE "TODO|FIXME|HACK" -- app src 2>/dev/null | head -5)
+  [ -n "$T" ] && { echo "  ✗ TODO/FIXME/HACK markers remain in:"; echo "$T"; ((F++)); } || echo "  ✓ No TODO/FIXME/HACK markers"
+  return "$F"
 }
 ```
 
@@ -268,21 +315,27 @@ qa:cleanup() {
 
 ```bash
 qa:ux:cards() {
+  local F=0
   local E=$(grep -rn "text-overflow\|line-clamp\|truncate" app/ --include="*.css" --include="*.tsx" 2>/dev/null | head -3)
-  [ -n "$E" ] && echo "  ✓ Text overflow handling" || echo "  ⚠ No text overflow handling"
+  [ -n "$E" ] && echo "  ✓ Text overflow handling" || { echo "  ✗ No text overflow handling"; ((F++)); }
   local A=$(grep -rn "aspect-\|object-fit" app/ --include="*.css" --include="*.tsx" 2>/dev/null | head -3)
-  [ -n "$A" ] && echo "  ✓ aspect-ratio/object-fit used" || echo "  ⚠ No aspect-ratio set"
+  [ -n "$A" ] && echo "  ✓ aspect-ratio/object-fit used" || { echo "  ✗ No aspect-ratio set"; ((F++)); }
+  return "$F"
 }
 qa:ux:boundaries() {
+  local F=0
   for f in app/error.tsx app/global-error.tsx app/not-found.tsx app/loading.tsx; do
-    [ -f "$f" ] && echo "  ✓ $f" || echo "  ⚠ Missing $f"
+    [ -f "$f" ] && echo "  ✓ $f" || { echo "  ✗ Missing $f"; ((F++)); }
   done
+  return "$F"
 }
 qa:ux:animation() {
-  local A=$(grep -rn "animation.*width\|transition.*height\|@keyframes.*top\|@keyframes.*margin" app/ --include="*.css" --include="*.tsx" 2>/dev/null | head -5)
-  [ -n "$A" ] && echo "  ⚠ Layout-triggering animations:" && echo "$A" || echo "  ✓ No layout-triggering animations"
+  local F=0
+  local A=$(grep -rIl "animation.*width\|transition.*height\|@keyframes.*top\|@keyframes.*margin" app/ --include="*.css" --include="*.tsx" 2>/dev/null | head -5)
+  [ -n "$A" ] && { echo "  ✗ Layout-triggering animations in:"; echo "$A"; ((F++)); } || echo "  ✓ No layout-triggering animations"
   local P=$(grep -r "@media.*prefers-reduced-motion" app/ --include="*.css" --include="*.tsx" 2>/dev/null | head -3)
-  [ -n "$P" ] && echo "  ✓ prefers-reduced-motion found in CSS" || echo "  ⚠ No prefers-reduced-motion in CSS"
+  [ -n "$P" ] && echo "  ✓ prefers-reduced-motion found in CSS" || { echo "  ✗ No prefers-reduced-motion in CSS"; ((F++)); }
+  return "$F"
 }
 ```
 
@@ -300,16 +353,23 @@ qa:ux:animation() {
 
 ```bash
 qa:database() {
+  local F=0
   local H=$(grep -rn "postgres://\|mysql://\|mongodb://" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v ".env" | head -5)
-  [ -n "$H" ] && { echo "  ✗ Hardcoded DB URL:"; echo "$H"; } || echo "  ✓ No hardcoded DB URLs"
-  local R=$(grep -rn "\$queryRaw\|\.raw(" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | head -5)
-  [ -n "$R" ] && echo "  ⚠ Raw SQL:" && echo "$R" || echo "  ✓ No raw SQL"
-  local N=$(grep -rn "\.findMany\|\.findUnique" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "include:" | head -5)
-  [ -n "$N" ] && echo "  ⚠ Possible N+1:" && echo "$N" || echo "  ✓ No N+1 patterns"
+  [ -n "$H" ] && { echo "  ✗ Hardcoded DB URL found (value redacted)"; ((F++)); } || echo "  ✓ No hardcoded DB URLs"
+  local R=$(grep -rIl "\$queryRaw\|\.raw(" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | head -5)
+  [ -n "$R" ] && { echo "  ✗ Raw SQL requires manual safety review in:"; echo "$R"; ((F++)); } || echo "  ✓ No raw SQL"
+  local N=$(grep -rn "\.findMany\|\.findUnique" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "include:" | cut -d: -f1 | sort -u | head -5)
+  [ -n "$N" ] && { echo "  ✗ Possible N+1 requires manual review in:"; echo "$N"; ((F++)); } || echo "  ✓ No possible N+1 patterns"
+  return "$F"
 }
 qa:db:migrations() {
-  [ -d "prisma/migrations" ] && echo "  ✓ Prisma: $(ls prisma/migrations 2>/dev/null | wc -l) migrations" || echo "  - No prisma migrations dir"
-  local M=$(ls db/migrations/*.sql 2>/dev/null | head -5); [ -n "$M" ] && echo "  ✓ SQL migrations:" && echo "$M" || echo "  - No SQL migration files"
+  local P M
+  P=$(find prisma/migrations -mindepth 1 -maxdepth 1 -type d -print -quit 2>/dev/null)
+  M=$(find db/migrations -maxdepth 1 -type f -name '*.sql' -print -quit 2>/dev/null)
+  [ -n "$P" ] && { echo "  ✓ Prisma migrations present"; return 0; }
+  [ -n "$M" ] && { echo "  ✓ SQL migrations present"; return 0; }
+  echo "  ✗ No Prisma or SQL migrations found"
+  return 1
 }
 ```
 
@@ -326,13 +386,17 @@ qa:db:migrations() {
 
 ```bash
 qa:secure() {
-  local S=$(git grep -n "api_key\|API_KEY\|secret_key\|PRIVATE_KEY" -- ':!*.env*' ':!*test*' 2>/dev/null | head -5)
-  [ -n "$S" ] && echo "  ✗ Secrets in source:" && echo "$S" || echo "  ✓ No hardcoded secrets"
-  local D=$(grep -rn "dangerouslySetInnerHTML" app/ src/ --include="*.tsx" 2>/dev/null | head -5)
-  [ -n "$D" ] && echo "  ⚠ XSS risk — use DOMPurify:" && echo "$D" || echo "  ✓ No dangerouslySetInnerHTML"
-  local T=$(grep -rn "localStorage\|sessionStorage" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -i "token\|jwt\|secret" | head -5)
-  [ -n "$T" ] && echo "  ⚠ Tokens in storage — use httpOnly cookies:" && echo "$T" || echo "  ✓ No tokens in storage"
-  curl -s "$PROD_URL/api/nonexistent" 2>/dev/null | grep -qi "stack\|Error:" && echo "  ✗ Stack trace leak" || echo "  ✓ No stack leak"
+  local F=0
+  local S=$(git grep -IlE "api_key|API_KEY|secret_key|PRIVATE_KEY" -- ':!*.env*' ':!*test*' 2>/dev/null | head -5)
+  [ -n "$S" ] && { echo "  ✗ Potential secrets in source (values redacted):"; echo "$S"; ((F++)); } || echo "  ✓ No hardcoded secrets"
+  local D=$(grep -rIl "dangerouslySetInnerHTML" app/ src/ --include="*.tsx" 2>/dev/null | head -5)
+  [ -n "$D" ] && { echo "  ✗ XSS risk — review sanitization in:"; echo "$D"; ((F++)); } || echo "  ✓ No dangerouslySetInnerHTML"
+  local T=$(grep -rn "localStorage\|sessionStorage" app/ src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -i "token\|jwt\|secret" | cut -d: -f1 | sort -u | head -5)
+  [ -n "$T" ] && { echo "  ✗ Browser storage usage requires token/secret review in:"; echo "$T"; ((F++)); } || echo "  ✓ No browser storage usage"
+  local E
+  E=$(curl -fsS "$PROD_URL/api/nonexistent" 2>/dev/null) || { echo "  ✗ Could not inspect API error response"; return 1; }
+  if echo "$E" | grep -qi "stack\|Error:"; then echo "  ✗ Stack trace leak"; ((F++)); else echo "  ✓ No stack leak"; fi
+  return "$F"
 }
 ```
 
@@ -340,11 +404,16 @@ qa:secure() {
 
 ## Pre-Commit Hook
 
+Installing or replacing a Git hook mutates repository-local configuration. Inspect any existing hook and obtain explicit repository-owner approval before running this opt-in installation. The hook uses only declared local binaries and fails if they are absent.
+
 ```bash
+test "$QA_INSTALL_HOOK_APPROVED" = "YES" || { echo "Set QA_INSTALL_HOOK_APPROVED=YES after approval" >&2; exit 1; }
+test ! -e .git/hooks/pre-commit || { echo "Existing pre-commit hook found; merge it manually" >&2; exit 1; }
+test -x node_modules/.bin/tsc && test -x node_modules/.bin/eslint || { echo "Install declared dependencies first" >&2; exit 1; }
 cat > .git/hooks/pre-commit << 'EOF'
 #!/bin/sh
-npx tsc --noEmit || exit 1
-npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0 || exit 1
+./node_modules/.bin/tsc --noEmit || exit 1
+./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0 || exit 1
 EOF
 chmod +x .git/hooks/pre-commit
 ```
@@ -360,11 +429,11 @@ jobs:
   qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
       - run: npm ci
-      - run: npx tsc --noEmit
-      - run: npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0
+      - run: ./node_modules/.bin/tsc --noEmit
+      - run: ./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0
       - run: npm test -- --runInBand --passWithNoTests
       - run: npm run build
 ```
@@ -409,8 +478,9 @@ jobs:
 
 ## Security Notes
 
-- All `qa:*` functions are read-only (tsc, lint, test, build, curl, grep)
-- `PROD_URL` and `QA_AUTH_HEADER` only for environments you own
+- QA checks do not intentionally change the remote target, but local build, test, audit, and package scripts may write caches, build outputs, logs, or other project files.
+- Use `PROD_URL` and `QA_AUTH_HEADER` only for an exact staging or production target you own or are authorized to test; set `QA_REMOTE_CONSENT=YES` only after confirming scope and impact.
+- Hook installation is excluded from `qa:full` and requires separate explicit approval.
 - Basic secret scanning in `git diff` — for prod, use `trufflehog`/`git-secrets`
 - Auth tests with real credentials against prod is destructive — use staging
 
