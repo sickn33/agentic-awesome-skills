@@ -10,7 +10,7 @@
 
 AAS Core is the deterministic, versioned control plane that turns this repository's catalog into an approved project stack. Codex or Claude can inspect a repository, send an explicit profile to the local read-only AAS MCP, explain the resulting recommendation, and propose an `aas-stack.json`. The `aas` CLI then validates the manifest and previews an immutable plan.
 
-The durable product is the approved stack. Skills, bundles, workflows, plugins, the catalog, MCP, CLI, and Workbench are content, packaging, or interfaces around that stack. Start with [AAS Core](aas-core.md).
+AAS Core is the product; the approved `aas-stack.json` and immutable plan are its durable artifacts. Skills and the catalog provide content and evidence, MCP and CLI are interfaces, Workbench is a review surface, and plugins, bundles, workflows, and installers provide curation or distribution around Core. Start with [AAS Core](aas-core.md).
 
 ### Is AAS Core fully certified?
 
@@ -277,7 +277,7 @@ npx agentic-awesome-skills@14.3.0 --path .agents/skills --release 14.3.0 --skill
 
 Remove `--dry-run` only after reviewing the plan.
 
-If you prefer to assemble and review the set visually, use the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench). It filters recorded risk, provenance, host compatibility, and setup evidence before generating the same release-pinned commands.
+To review a Core stack manifest or immutable plan visually, use the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench). It imports the JSON in browser memory and checks the supported artifact structure; it does not assemble a stack, generate install commands, access the filesystem, or install skills.
 
 The filter rules are:
 
