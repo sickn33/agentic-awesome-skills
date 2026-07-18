@@ -1,9 +1,9 @@
-<!-- registry-sync: version=14.6.0; skills=1968; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
+<!-- registry-sync: version=15.0.0-rc.1; skills=1968; stars=43524; updated_at=2026-07-18T12:33:32+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
 
-**Current release: V14.6.0.** The published 14.6.0 package predates AAS Core. Core is available from `main` as an **Agent-First Preview** for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Wait for a release that explicitly includes Core before using the npm bootstrap. Apply and recovery remain experimental and outside the supported preview path.
+**Current release: V15.0.0-rc.1.** This release includes AAS Core under the **Agent-First Preview** claim for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 Codex or Claude inspects your project using its own capabilities; AAS does not scan it. The agent sends the local, read-only AAS MCP an explicit project profile. AAS Core evaluates that profile and your policy against a verified local catalog, returns an explainable recommendation, and lets the agent propose `aas-stack.json`. The `aas` CLI validates that desired state and creates an immutable per-target plan before any skill changes are made.
 
@@ -25,7 +25,7 @@ The 1,967+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
 
 This is an independent community project. It is not affiliated with, sponsored by, endorsed by, or authorized by Google. Google, Antigravity, Gemini, and related product names are referenced only to describe compatibility and install targets. The GitHub repository is canonical; the hosted catalog and browser-local Workbench are companion discovery and review surfaces, not a hosted control plane.
 
-[![GitHub stars](https://img.shields.io/badge/⭐%2043%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
+[![GitHub stars](https://img.shields.io/badge/⭐%2044%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 [![Follow @AASkills_ on X](https://img.shields.io/badge/Follow-%40AASkills__-black?style=for-the-badge&logo=x)](https://x.com/AASkills_)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Anthropic-purple)](https://claude.ai)

@@ -1,6 +1,6 @@
 {
   "name": "agentic-bundle-aas-agent-mcp-builder",
-  "version": "14.6.0",
+  "version": "15.0.0-rc.1",
   "description": "Editorial \"AAS Agent & MCP Builder\" bundle for Claude Code from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
