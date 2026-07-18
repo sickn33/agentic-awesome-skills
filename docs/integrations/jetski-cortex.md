@@ -5,6 +5,8 @@ description: "Use agentic-awesome-skills with Jetski/Cortex without hitting cont
 
 # Jetski/Cortex + Gemini: safe integration with 1,965+ skills
 
+> **Custom-host integration:** This guide documents a low-level, direct-manifest lazy loader for Jetski/Cortex and similar hosts. For Codex or Claude Code, the recommended path is [AAS Core](../users/aas-core.md), which provides verified local catalog discovery and deterministic recommendations through a bounded, read-only MCP server.
+
 This guide shows how to integrate the `agentic-awesome-skills` repository with an agent based on **Jetski/Cortex + Gemini** (or similar frameworks) **without exceeding the model context window**.
 
 The common error seen in Jetski/Cortex is:

@@ -21,7 +21,7 @@ describe('Workbench route isolation', () => {
 
     render(<App />);
 
-    await screen.findByRole('heading', { level: 1, name: 'Review what your agent chose.' });
+    await screen.findByRole('heading', { level: 1, name: 'Review what AAS Core recommended.' });
     const stack = {
       schemaVersion: 1,
       name: 'isolated-stack',

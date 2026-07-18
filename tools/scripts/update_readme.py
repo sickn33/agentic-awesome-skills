@@ -180,6 +180,11 @@ def apply_metadata(content: str, metadata: dict) -> str:
     star_badge_count = metadata["star_badge_count"]
     star_milestone = metadata["star_milestone"]
     star_celebration = metadata["star_celebration"]
+    release_boundary = (
+        f"The published {version} package predates AAS Core. "
+        if version == "14.6.0"
+        else "This release includes AAS Core. "
+    )
     sync_comment = (
         f"<!-- registry-sync: version={version}; skills={total_skills}; "
         f"stars={metadata['stars']}; updated_at={metadata['updated_at']} -->"
@@ -188,8 +193,7 @@ def apply_metadata(content: str, metadata: dict) -> str:
     content = re.sub(
         r"^# 🌌 Agentic Awesome Skills: .*?$",
         (
-            f"# 🌌 Agentic Awesome Skills: {total_skills_label} "
-            "Agentic Skills for Claude Code, Gemini CLI, Cursor, Autohand Code, Copilot & More"
+            f"# 🌌 Agentic Awesome Skills: AAS Core + {total_skills_label} Skills for AI Coding Agents"
         ),
         content,
         count=1,
@@ -215,9 +219,13 @@ def apply_metadata(content: str, metadata: dict) -> str:
     content = re.sub(
         CURRENT_RELEASE_LINE_RE,
         (
-            f"**Current release: V{version}.** Trusted by {star_celebration}+ GitHub stargazers, "
-            "this repository combines official and community skill collections with bundles, "
-            "workflows, installation paths, and docs that help you go from first install to daily use quickly."
+            f"**Current release: V{version}.** {release_boundary}Core is currently documented from "
+            "`main` under the **Agent-First Preview** claim: "
+            "local search, recommendation, inspection, manifest validation, planning, and diagnosis "
+            "are the supported preview path. Wait for a release that explicitly includes Core before "
+            "using the npm bootstrap. Full-catalog "
+            "recommendation quality and transactional apply/recovery safety are not yet certified; "
+            "apply and recovery remain explicitly experimental."
         ),
         content,
         count=1,

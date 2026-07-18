@@ -39,19 +39,19 @@ describe('TopicLanding', () => {
       'href',
       '/skill/antigravity-agent-manager',
     );
-    expect(screen.getByRole('link', { name: /GitHub repository for installable AI agent skills/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /GitHub source for AAS Core and its skill catalog/i })).toHaveAttribute(
       'href',
       '/topics/github-ai-skills-repository',
     );
     expect(screen.getAllByText(/Antigravity CLI skills/i).length).toBeGreaterThan(0);
 
     await waitFor(() => {
-      expect(document.title).toContain('Antigravity CLI Skills');
+      expect(document.title).toContain('Antigravity CLI Skill Stacks');
     });
 
     expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
       'content',
-      expect.stringContaining('Install Antigravity CLI skills'),
+      expect.stringContaining('AAS Core preview catalog'),
     );
   });
 

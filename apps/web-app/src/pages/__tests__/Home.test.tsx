@@ -85,19 +85,19 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(document.title).toContain('Agentic Awesome Skills');
+        expect(document.title).toContain('AAS Core Preview');
       });
 
       expect(screen.getByRole('heading', {
         level: 1,
-        name: /Installable AI agent skills for Codex, Claude Code, Cursor, Gemini, and Antigravity/i,
+        name: /AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients/i,
       })).toBeInTheDocument();
-      expect(screen.getByText(/Find the right skill\. Ship the better agent\./i)).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Compose an exact install/i })).toHaveAttribute('href', '/workbench');
+      expect(screen.getByText(/Discover\. Recommend\. Validate\. Preview\./i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Review an AAS Core stack/i })).toHaveAttribute('href', '/workbench');
       expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(
         'content',
-        expect.stringContaining('Agentic Awesome Skills'),
+        expect.stringContaining('AAS Core Preview'),
       );
     });
 
@@ -112,7 +112,7 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(screen.getByRole('link', { name: /Compose an exact install/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Review an AAS Core stack/i })).toBeInTheDocument();
       });
 
       expect(screen.getByText(/Inspect evidence, select exact IDs/i)).toBeInTheDocument();
