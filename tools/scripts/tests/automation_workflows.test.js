@@ -81,6 +81,7 @@ for (const filePath of [
   "apps/web-app/public/skills.json.backup",
   "data/plugin-compatibility.json",
   "data/aas-v1/",
+  "tools/lib/aas-v1/review-queue.v1.json",
   ".agents/plugins/",
   ".claude-plugin/plugin.json",
   ".claude-plugin/marketplace.json",
