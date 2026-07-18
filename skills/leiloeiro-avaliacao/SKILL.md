@@ -1,7 +1,7 @@
 ---
 name: leiloeiro-avaliacao
-description: Avaliacao pericial de imoveis em leilao. Valor de mercado, liquidacao forcada, ABNT NBR 14653, metodos comparativo/renda/custo, CUB e margem de seguranca.
-risk: safe
+description: Apoio informativo para estimativas preliminares de imoveis em leilao. Valor de mercado, liquidacao forcada, ABNT NBR 14653, metodos comparativo/renda/custo, CUB e margem de seguranca.
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -18,11 +18,11 @@ tools:
 - codex-cli
 ---
 
-# SKILL DE AVALIAÇÃO DE IMÓVEL — PERITO AVALIADOR
+# SKILL DE APOIO À AVALIAÇÃO DE IMÓVEL
 
 ## Overview
 
-Avaliacao pericial de imoveis em leilao. Valor de mercado, liquidacao forcada, ABNT NBR 14653, metodos comparativo/renda/custo, CUB e margem de seguranca.
+Apoio informativo para estimativas preliminares de imoveis em leilao. Nao produz laudo pericial, nao possui CREA/CAU e nao substitui engenheiro ou arquiteto habilitado.
 
 ## When to Use This Skill
 
@@ -41,8 +41,13 @@ Avaliacao pericial de imoveis em leilao. Valor de mercado, liquidacao forcada, A
 
 ## How It Works
 
-Você é um **Engenheiro/Arquiteto Avaliador Sênior** credenciado, com domínio na ABNT NBR 14653
-e experiência em laudos periciais judiciais e extrajudiciais para leilões.
+Atue como assistente de pesquisa e calculo preliminar, sem se apresentar como engenheiro, arquiteto, perito ou profissional credenciado.
+
+Antes de usar valores, indices ou regras em um caso real:
+- obtenha fontes oficiais ou primarias correntes para CUB, normas aplicaveis, custos, tributos, financiamento e dados de mercado; registre URL, localidade e data de consulta;
+- trate tabelas e percentuais datados desta skill apenas como exemplos historicos, nunca como valores correntes;
+- se os dados atuais, a vistoria ou documentos essenciais estiverem ausentes, devolva lacunas e cenarios, nao um valor conclusivo;
+- exija revisao e assinatura de engenheiro ou arquiteto habilitado para qualquer laudo, lance ou decisao financeira.
 
 ---
 
@@ -287,7 +292,7 @@ Valor de Mercado Estimado (VMP):        R$ _______________
 (-) Custo de desocupação (se necessário): R$ _____________
 (-) Obras/regularização estimada:       R$ _______________
 (-) Margem de segurança (10-20%):       R$ _______________
-= LANCE MÁXIMO RECOMENDADO:             R$ _______________
+= LIMITE PRELIMINAR DEFINIDO PELO USUÁRIO: R$ _______________
 
 DESÁGIO MÍNIMO ACEITÁVEL: ____% do VMP
 ```
@@ -360,7 +365,9 @@ Quando precisar estimar o VMP de um imóvel sem laudo disponível:
    - Confirmar se bairro corresponde ao padrão das amostras
 ```
 
-## Cub Referência 2025 (Sinduscon/Sp — Atualizar Mensalmente)
+## Exemplo Histórico De Cub (Sinduscon/Sp, Janeiro De 2025)
+
+Nao use esta tabela como dado corrente. Substitua-a pela serie oficial do estado e mes da analise, com fonte e data de consulta.
 
 | Padrão | CUB R$/m² (ref. Jan/2025) |
 |--------|--------------------------|
@@ -382,28 +389,28 @@ Quando precisar estimar o VMP de um imóvel sem laudo disponível:
 - Margem de erro aceitável na avaliação: ±15%
 - Liquidez: ALTA — muitos compradores nessa faixa
 - Fator de liquidação: 0,20 (VLF = 80% VMP)
-- Deságio ideal em leilão: ≥30%
+- Limiar ilustrativo de deságio para testar: ≥30%
 
 ## Imóveis Médios (R$ 300K - R$ 800K)
 
 - Margem de erro aceitável: ±10%
 - Liquidez: MÉDIA-ALTA
 - Fator de liquidação: 0,25
-- Deságio ideal em leilão: ≥35%
+- Limiar ilustrativo de deságio para testar: ≥35%
 
 ## Imóveis De Alto Padrão (R$ 800K - R$ 2M)
 
 - Margem de erro aceitável: ±10%
 - Liquidez: MÉDIA — prazo maior de venda
 - Fator de liquidação: 0,30
-- Deságio ideal em leilão: ≥40%
+- Limiar ilustrativo de deságio para testar: ≥40%
 
 ## Imóveis De Luxo (> R$ 2M)
 
 - Margem de erro aceitável: ±15% (menos amostras)
 - Liquidez: BAIXA — mercado restrito
 - Fator de liquidação: 0,35 a 0,45
-- Deságio ideal em leilão: ≥45%
+- Limiar ilustrativo de deságio para testar: ≥45%
 - Investidor precisa ter capital para segurar por 12-24 meses
 
 ---
@@ -458,19 +465,13 @@ python agent-orchestrator/scripts/match_skills.py "avaliar imovel leilao"
 
 ## Governança
 
-Esta skill implementa as seguintes políticas de governança:
-
-- **action_log**: Avaliações realizadas são registradas pelo log_action do ecossistema
-- **rate_limit**: Controle via check_rate integrado — sem chamadas API externas diretas
-- **requires_confirmation**: Avaliações com margem negativa geram confirmation_request obrigatório
-- **warning_threshold**: Deságio <15% ou avaliação defasada disparam warning_threshold automático
+Esta skill e somente um documento de orientacao. O arquivo auxiliar de governanca nao e invocado automaticamente por este workflow; portanto, nao presuma logging, rate limiting, confirmacoes, alertas ou auditoria. O ambiente executor deve integrar e verificar separadamente os controles necessarios.
 
 Políticas adicionais:
 - **Responsável:** Ecossistema Leiloeiro IA
 - **Escopo:** Avaliação pericial de imóveis para leilão
-- **Limitações:** Estimativas indicativas. Não substitui laudo pericial de engenheiro/arquiteto.
-- **Auditoria:** Validada por skill-sentinel
-- **Dados sensíveis:** Não armazena dados de avaliações
+- **Limitações:** Estimativas indicativas. Nao substitui laudo nem revisao de engenheiro/arquiteto habilitado, vistoria e fontes correntes.
+- **Dados sensíveis:** Nao solicite nem registre dados pessoais desnecessarios.
 
 ---
 

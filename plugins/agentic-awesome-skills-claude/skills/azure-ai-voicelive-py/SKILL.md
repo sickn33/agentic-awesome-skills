@@ -163,6 +163,12 @@ async for event in conn:
 ## Event Handling
 
 ```python
+import json
+
+ALLOWED_TOOL_HANDLERS = {
+    "get_weather": get_weather,
+}
+
 async for event in conn:
     match event.type:
         # Session events
@@ -195,7 +201,26 @@ async for event in conn:
         
         # Function calls
         case "response.function_call_arguments.done":
-            result = handle_function(event.name, event.arguments)
+            handler = ALLOWED_TOOL_HANDLERS.get(event.name)
+            try:
+                arguments = json.loads(event.arguments)
+            except (TypeError, json.JSONDecodeError):
+                arguments = None
+
+            # Fail closed: the model cannot select an arbitrary local function.
+            if handler is None:
+                result = {"error": "tool_not_allowed"}
+            elif (
+                not isinstance(arguments, dict)
+                or set(arguments) != {"location"}
+                or not isinstance(arguments["location"], str)
+                or not arguments["location"].strip()
+                or len(arguments["location"]) > 200
+            ):
+                result = {"error": "invalid_tool_arguments"}
+            else:
+                result = await handler(location=arguments["location"].strip())
+
             await conn.conversation.item.create(item={
                 "type": "function_call_output",
                 "call_id": event.call_id,
@@ -207,6 +232,8 @@ async for event in conn:
         case "error":
             print(f"Error: {event.error.message}")
 ```
+
+Keep the allowlist explicit and validate each tool's arguments before dispatch. Tools that write data, spend money, contact people, or alter external state also require an application-level authorization check and explicit user confirmation; do not rely on the model's function call as approval.
 
 ## Common Patterns
 
@@ -304,11 +331,9 @@ except ConnectionError as e:
     print(f"Connection error: {e}")
 ```
 
-## References
+## Bundle Contents
 
-- **Detailed API Reference**: See references/api-reference.md
-- **Complete Examples**: See references/examples.md
-- **All Models & Types**: See references/models.md
+This bundle contains this guide only. It does not include additional API, example, or model reference files; verify environment-specific behavior against the installed SDK version and Azure's official documentation.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

@@ -2,7 +2,9 @@
 name: app-builder
 description: "Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordinates agents."
 risk: unknown
-source: community
+source: https://github.com/vudovn/antigravity-kit
+source_repo: vudovn/antigravity-kit
+source_type: community
 date_added: "2026-02-27"
 ---
 
@@ -43,6 +45,7 @@ Quick-start scaffolding for new projects. **Read the matching template only!**
 | [chrome-extension](templates/chrome-extension/TEMPLATE.md) | Chrome MV3 | Browser extension |
 | [cli-tool](templates/cli-tool/TEMPLATE.md) | Node.js + Commander | CLI app |
 | [monorepo-turborepo](templates/monorepo-turborepo/TEMPLATE.md) | Turborepo + pnpm | Monorepo |
+| [astro-static](templates/astro-static/TEMPLATE.md) | Astro + MDX | Blog / Docs |
 
 ---
 

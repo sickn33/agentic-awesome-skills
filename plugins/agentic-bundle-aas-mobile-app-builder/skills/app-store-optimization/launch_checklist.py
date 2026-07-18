@@ -291,7 +291,7 @@ class LaunchChecklistGenerator:
             {
                 'category': 'Metadata (Google)',
                 'items': [
-                    {'task': 'App title (50 chars max)', 'status': 'pending'},
+                    {'task': 'App title (30 chars max)', 'status': 'pending'},
                     {'task': 'Short description (80 chars max)', 'status': 'pending'},
                     {'task': 'Full description (4000 chars max)', 'status': 'pending'},
                     {'task': 'Category selection', 'status': 'pending'},
@@ -483,8 +483,8 @@ class LaunchChecklistGenerator:
 
         # Check metadata character limits
         title = app_data.get('title', '')
-        if len(title) > 50:
-            validation_results['errors'].append(f"Title exceeds 50 characters ({len(title)})")
+        if len(title) > 30:
+            validation_results['errors'].append(f"Title exceeds 30 characters ({len(title)})")
 
         short_desc = app_data.get('short_description', '')
         if len(short_desc) > 80:

@@ -20,7 +20,8 @@ Master major dependency version upgrades, compatibility analysis, staged upgrade
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
+- If detailed examples are required, derive them from the target dependency's
+  pinned release notes and migration guide; this bundle has no separate playbook.
 
 ## Use this skill when
 
@@ -310,27 +311,39 @@ updates:
 
 ## Rollback Plan
 
-```javascript
-// rollback.sh
+```bash
+# rollback.sh (illustrative; review paths and obtain explicit approval first)
 #!/bin/bash
+set -euo pipefail
 
-# Save current state
-git stash
-git checkout -b upgrade-branch
+# Refuse to hide unrelated work or overwrite an existing branch.
+test -z "$(git status --porcelain)" || {
+  echo "Working tree is not clean; create an explicit backup before continuing."
+  exit 1
+}
+rollback_ref="$(git rev-parse HEAD)"
+upgrade_branch="upgrade/package-major"
+package_spec="package@X.Y.Z"  # replace with the exact reviewed target
+git show-ref --verify --quiet "refs/heads/$upgrade_branch" && exit 1
+
+# Bind explicit approval to both the starting commit and exact package version.
+approval="$rollback_ref:$package_spec"
+test "${APPROVE_UPGRADE:-}" = "$approval" || {
+  echo "Set APPROVE_UPGRADE=$approval only after reviewing the plan."
+  exit 1
+}
+git checkout -b "$upgrade_branch"
 
 # Attempt upgrade
-npm install package@latest
+npm install "$package_spec"
 
 # Run tests
 if npm run test; then
-  echo "Upgrade successful"
-  git add package.json package-lock.json
-  git commit -m "chore: upgrade package"
+  echo "Upgrade checks passed; inspect the diff before separately approving a commit."
 else
-  echo "Upgrade failed, rolling back"
-  git checkout main
-  git branch -D upgrade-branch
-  npm install  # Restore from package-lock.json
+  echo "Upgrade failed; no branch or files are deleted automatically."
+  echo "After inspecting the failure, explicitly approve restoration to $rollback_ref."
+  exit 1
 fi
 ```
 
@@ -367,13 +380,9 @@ npm install package@latest --workspace=packages/app
 
 ## Resources
 
-- **references/semver.md**: Semantic versioning guide
-- **references/compatibility-matrix.md**: Common compatibility issues
-- **references/staged-upgrades.md**: Incremental upgrade strategies
-- **references/testing-strategy.md**: Comprehensive testing approaches
-- **assets/upgrade-checklist.md**: Step-by-step checklist
-- **assets/compatibility-matrix.csv**: Version compatibility table
-- **scripts/audit-dependencies.sh**: Dependency audit script
+This bundle is self-contained. For version-specific behavior, use the target
+dependency's pinned changelog, migration guide, compatibility matrix, and
+security advisories rather than assuming local reference files are present.
 
 ## Best Practices
 

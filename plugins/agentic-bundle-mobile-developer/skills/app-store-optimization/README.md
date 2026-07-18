@@ -37,7 +37,7 @@ This skill provides end-to-end ASO capabilities across seven key areas:
   - Description (4000 chars)
   - Keywords field (100 chars)
 - **Google Play Store**:
-  - Title (50 chars)
+  - Title (30 chars)
   - Short Description (80 chars)
   - Full Description (4000 chars)
 - Character limit validation

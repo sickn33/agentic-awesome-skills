@@ -20,9 +20,18 @@ Lightweight Google Calendar integration with standalone OAuth authentication. No
 - The task requires OAuth-backed calendar automation without standing up an MCP server.
 - You need quick operational access to calendars, schedules, attendees, or event details in a Workspace environment.
 
+## Client Requirement
+
+This bundle does not include `scripts/auth.py` or `scripts/gcal.py`. Treat the
+commands below as an interface contract for a separately supplied, reviewed
+client; do not run them unless those files exist locally and their OAuth scopes,
+credential storage, and mutation behavior have been inspected. Fail closed if
+the client cannot show the exact calendar, event, attendees, and notification
+policy before a write.
+
 ## First-Time Setup
 
-Authenticate with Google (opens browser):
+A conforming client can authenticate with Google (typically opening a browser):
 ```bash
 python scripts/auth.py login
 ```
@@ -39,7 +48,9 @@ python scripts/auth.py logout
 
 ## Commands
 
-All operations via `scripts/gcal.py`. Auto-authenticates on first use if not logged in.
+The interface examples below assume a separately supplied `scripts/gcal.py`.
+Do not assume that it auto-authenticates or implements confirmation gates; verify
+both behaviors before use.
 
 ### List Calendars
 ```bash
@@ -68,6 +79,11 @@ python scripts/gcal.py get-event EVENT_ID --calendar "work@example.com"
 ```
 
 ### Create Event
+
+Before creation, display the target calendar, title, start/end with timezone,
+attendees, and whether invitations will be sent. Require explicit confirmation
+of that exact preview; cancellation or missing confirmation performs no write.
+
 ```bash
 # Basic event
 python scripts/gcal.py create-event "Team Meeting" "2024-01-15T10:00:00Z" "2024-01-15T11:00:00Z"
@@ -86,6 +102,10 @@ python scripts/gcal.py create-event "Meeting" "2024-01-15T10:00:00Z" "2024-01-15
 ```
 
 ### Update Event
+
+Fetch the current event, show a field-level diff plus notification policy, and
+require explicit confirmation for the exact calendar and event ID before write.
+
 ```bash
 # Update event title
 python scripts/gcal.py update-event EVENT_ID --summary "New Title"
@@ -102,6 +122,11 @@ python scripts/gcal.py update-event EVENT_ID --attendees user1@example.com user3
 ```
 
 ### Delete Event
+
+Show the event summary, calendar, time, attendees, and notification policy, then
+require explicit confirmation. Never infer deletion approval from the request
+to inspect or find an event.
+
 ```bash
 python scripts/gcal.py delete-event EVENT_ID
 python scripts/gcal.py delete-event EVENT_ID --calendar "work@example.com"
@@ -126,6 +151,10 @@ python scripts/gcal.py find-free-time \
 ```
 
 ### Respond to Event Invitation
+
+Show the organizer, event, selected response, and organizer-notification choice,
+then require explicit confirmation before sending the response.
+
 ```bash
 # Accept an invitation
 python scripts/gcal.py respond-to-event EVENT_ID accepted
@@ -153,14 +182,16 @@ All times use ISO 8601 format with timezone:
 
 ## Token Management
 
-Tokens stored securely using the system keyring:
+A conforming client should store tokens in the system keyring:
 - **macOS**: Keychain
 - **Windows**: Windows Credential Locker
 - **Linux**: Secret Service API (GNOME Keyring, KDE Wallet, etc.)
 
-Service name: `google-calendar-skill-oauth`
+Expected service name: `google-calendar-skill-oauth`. Verify this in the actual
+client rather than assuming the storage contract is implemented.
 
-Tokens are automatically refreshed when expired using Google's cloud function.
+Token refresh behavior depends on the separately supplied client. Verify its
+implementation and OAuth scopes; do not assume a cloud function is present.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

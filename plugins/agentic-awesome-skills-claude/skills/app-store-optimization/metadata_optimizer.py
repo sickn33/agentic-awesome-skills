@@ -21,7 +21,7 @@ class MetadataOptimizer:
             'whats_new': 4000
         },
         'google': {
-            'title': 50,
+            'title': 30,
             'short_description': 80,
             'full_description': 4000
         }

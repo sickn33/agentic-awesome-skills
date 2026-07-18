@@ -142,7 +142,7 @@ class LocalizationHelper:
         if platform == 'apple':
             limits = {'title': 30, 'subtitle': 30, 'description': 4000, 'keywords': 100}
         else:
-            limits = {'title': 50, 'short_description': 80, 'description': 4000}
+            limits = {'title': 30, 'short_description': 80, 'description': 4000}
 
         localized_metadata = {}
         warnings = []
@@ -260,7 +260,7 @@ class LocalizationHelper:
         if platform == 'apple':
             limits = {'title': 30, 'subtitle': 30, 'description': 4000, 'keywords': 100}
         else:
-            limits = {'title': 50, 'short_description': 80, 'description': 4000}
+            limits = {'title': 30, 'short_description': 80, 'description': 4000}
 
         validation_results = {
             'is_valid': True,

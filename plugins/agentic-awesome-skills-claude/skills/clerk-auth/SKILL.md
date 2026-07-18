@@ -516,9 +516,9 @@ export async function POST(req: Request) {
     return new Response('Missing svix headers', { status: 400 });
   }
 
-  // Get body
-  const payload = await req.json();
-  const body = JSON.stringify(payload);
+  // Verify the exact bytes Clerk signed. Parsing and re-serializing JSON can
+  // change the byte representation and invalidate signature verification.
+  const body = await req.text();
 
   // Verify webhook
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -535,43 +535,102 @@ export async function POST(req: Request) {
     return new Response('Verification failed', { status: 400 });
   }
 
-  // Handle events
+  // Handle events. Persist svix-id under a unique constraint so retries are
+  // acknowledged without applying the same event twice.
   const eventType = evt.type;
-
-  if (eventType === 'user.created') {
-    const { id, email_addresses, first_name, last_name, image_url } = evt.data;
-
-    await prisma.user.create({
-      data: {
-        clerkId: id,
-        email: email_addresses[0]?.email_address,
-        firstName: first_name,
-        lastName: last_name,
-        imageUrl: image_url,
-      },
-    });
+  if (!['user.created', 'user.updated', 'user.deleted'].includes(eventType)) {
+    return new Response('Webhook ignored', { status: 200 });
   }
 
-  if (eventType === 'user.updated') {
-    const { id, email_addresses, first_name, last_name, image_url } = evt.data;
+  const sourceVersion =
+    'updated_at' in evt.data && typeof evt.data.updated_at === 'number'
+      ? evt.data.updated_at
+      : 'timestamp' in evt && typeof evt.timestamp === 'number'
+        ? evt.timestamp
+        : null;
 
-    await prisma.user.update({
-      where: { clerkId: id },
-      data: {
-        email: email_addresses[0]?.email_address,
-        firstName: first_name,
-        lastName: last_name,
-        imageUrl: image_url,
-      },
-    });
+  if (sourceVersion === null) {
+    // Do not guess order from delivery time. Reconcile against Clerk first.
+    return new Response('Source event version required', { status: 503 });
   }
+  const eventVersion = BigInt(Math.trunc(sourceVersion));
 
-  if (eventType === 'user.deleted') {
-    const { id } = evt.data;
+  try {
+    if (eventType === 'user.created' || eventType === 'user.updated') {
+      const { id, email_addresses, first_name, last_name, image_url } = evt.data;
+      const email = email_addresses[0]?.email_address;
+      if (!id || !email) {
+        return new Response('User id and primary email required', { status: 400 });
+      }
 
-    await prisma.user.delete({
-      where: { clerkId: id! },
-    });
+      await prisma.$transaction(async (tx) => {
+        await tx.clerkWebhookEvent.create({ data: { svixId: svix_id } });
+        const state = await tx.clerkUserSyncState.findUnique({
+          where: { clerkId: id },
+        });
+
+        if (state && eventVersion <= state.eventVersion) return;
+
+        await tx.user.upsert({
+          where: { clerkId: id },
+          create: {
+            clerkId: id,
+            email,
+            firstName: first_name,
+            lastName: last_name,
+            imageUrl: image_url,
+          },
+          update: {
+            email,
+            firstName: first_name,
+            lastName: last_name,
+            imageUrl: image_url,
+          },
+        });
+        await tx.clerkUserSyncState.upsert({
+          where: { clerkId: id },
+          create: { clerkId: id, eventVersion, deleted: false },
+          update: { eventVersion, deleted: false },
+        });
+      }, { isolationLevel: 'Serializable' });
+    }
+
+    if (eventType === 'user.deleted') {
+      const { id } = evt.data;
+      if (!id) {
+        return new Response('User id required', { status: 400 });
+      }
+
+      await prisma.$transaction(async (tx) => {
+        await tx.clerkWebhookEvent.create({ data: { svixId: svix_id } });
+        const state = await tx.clerkUserSyncState.findUnique({
+          where: { clerkId: id },
+        });
+
+        if (state && eventVersion <= state.eventVersion) return;
+
+        await tx.user.deleteMany({ where: { clerkId: id } });
+        await tx.clerkUserSyncState.upsert({
+          where: { clerkId: id },
+          create: { clerkId: id, eventVersion, deleted: true },
+          update: { eventVersion, deleted: true },
+        });
+      }, { isolationLevel: 'Serializable' });
+    }
+  } catch (error) {
+    const duplicateDelivery =
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      error.code === 'P2002' &&
+      'meta' in error &&
+      JSON.stringify(error.meta).includes('svixId');
+
+    if (duplicateDelivery) {
+      return new Response('Webhook already processed', { status: 200 });
+    }
+    console.error('Webhook persistence failed');
+    return new Response('Temporary webhook failure', { status: 503 });
   }
 
   return new Response('Webhook processed', { status: 200 });
@@ -593,11 +652,24 @@ model User {
   @@index([clerkId])
 }
 
+model ClerkWebhookEvent {
+  svixId      String   @id
+  processedAt DateTime @default(now())
+}
+
+model ClerkUserSyncState {
+  clerkId      String @id
+  eventVersion BigInt
+  deleted      Boolean
+}
+
+Retry serializable transaction conflicts with a small bounded backoff. Delivery order is not authoritative: retain the per-user version/tombstone, and reconcile ambiguous events against Clerk's Backend API before applying them.
+
 ### Anti_patterns
 
 - Pattern: Not verifying webhook signature | Why: Anyone can hit your endpoint with fake data | Fix: Always verify with svix
 - Pattern: Blocking middleware for webhook routes | Why: Webhooks come from Clerk, not authenticated users | Fix: Add /api/webhooks(.*)' to public routes
-- Pattern: Not handling race conditions | Why: user.created might arrive after user.updated | Fix: Use upsert instead of create, handle missing records
+- Pattern: Not handling replay or ordering | Why: deliveries can repeat or arrive out of order | Fix: deduplicate `svix-id`, apply monotonic versions transactionally, and retain deletion tombstones
 
 ### References
 
