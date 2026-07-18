@@ -21,11 +21,9 @@ The recommendation is deterministic and local. AAS MCP does not inspect the repo
 
 ## Alternative workflow: direct skill installation
 
-Great question! Here's what just happened and what to do next:
-
 If you came in through a **Claude Code** or **Codex** plugin instead of AAS Core or a full library install, invoke individual skills in prompts. Plugins ship a fixed plugin-safe subset; AAS Core instead composes a project stack from the verified catalog and records it in `aas-stack.json`. See [plugins.md](plugins.md) for the distribution model.
 
-### What You Just Did
+### What direct distribution provides
 
 When you ran `npx agentic-awesome-skills` or cloned the repository, you:
 
@@ -33,7 +31,7 @@ When you ran `npx agentic-awesome-skills` or cloned the repository, you:
 ✅ **Made them available** to your AI assistant
 ❌ **Did NOT enable them all automatically** (they're just sitting there, waiting)
 
-Think of it like installing a toolbox. You have all the tools now, but you need to **pick which ones to use** for each job.
+Direct distribution makes skill files available to the host. It does not select a project-specific stack, record desired state, or produce a preview plan; those are AAS Core responsibilities.
 
 ---
 
@@ -47,11 +45,7 @@ Think of it like installing a toolbox. You have all the tools now, but you need 
 
 Bundles are **curated groups** of skills organized by role. They help you decide which skills to start using, and they can also be exposed as focused marketplace plugins for Claude Code and Codex.
 
-**Analogy:**
-
-- You installed a toolbox with 1,965+ tools (✅ done)
-- Bundles are like **labeled organizer trays** saying: "If you're a carpenter, start with these 10 tools"
-- You can either **pick skills from the tray** or install that tray as a focused marketplace bundle plugin
+Bundles provide editorial shortlists. You can either select individual skills from a bundle or install its focused marketplace plugin where supported.
 
 ### What Bundles Are NOT
 
@@ -89,8 +83,6 @@ If you want only one bundle active at a time in Antigravity, use the activation 
 ---
 
 ## Direct-install Step 2: Invoke a Skill
-
-This is the part that should have been explained better! Here's how to use skills:
 
 ### The Simple Answer
 

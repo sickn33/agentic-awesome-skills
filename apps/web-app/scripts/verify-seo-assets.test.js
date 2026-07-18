@@ -19,6 +19,7 @@ import {
   assertRobots,
   assertSitemap,
   assertSocialCard,
+  assertSocialCardProvenance,
   extractSitemapLocations,
 } from './verify-seo-assets.js';
 
@@ -636,6 +637,7 @@ describe('seo assets verification helpers', () => {
       # Agentic Awesome Skills
       AAS Core preview
       Current release: V1.2.3.
+      The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
       https://sickn33.github.io/agentic-awesome-skills/workbench
@@ -650,6 +652,7 @@ describe('seo assets verification helpers', () => {
       # Agentic Awesome Skills
       AAS Core preview
       Current release: V1.2.2.
+      The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
       https://sickn33.github.io/agentic-awesome-skills/workbench
@@ -762,6 +765,24 @@ describe('seo assets verification helpers', () => {
     png.writeUInt32BE(630, 20);
 
     expect(() => assertSocialCard(png)).not.toThrow();
+  });
+
+  it('binds an ImageGen social card to its provenance record', () => {
+    const png = Buffer.alloc(24);
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(png, 0);
+    png.write('IHDR', 12, 'ascii');
+    png.writeUInt32BE(1200, 16);
+    png.writeUInt32BE(630, 20);
+    const provenance = JSON.stringify({
+      schemaVersion: 1,
+      generator: 'OpenAI ImageGen',
+      dimensions: { width: 1200, height: 630 },
+      sha256: '763d6b5763eb64e1310fc3d6b27291a4c7b3fa6d03e9cb3f71d79ddba25f58fc',
+      visibleCopy: ['AAS Core', 'profile → stack → plan'],
+    });
+
+    expect(() => assertSocialCardProvenance(png, provenance)).not.toThrow();
+    expect(() => assertSocialCardProvenance(png, provenance.replace('763d6b', '000000'))).toThrow('SHA-256');
   });
 
   it('rejects stale social card count labels', () => {

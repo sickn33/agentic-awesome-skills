@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -788,6 +789,19 @@ export function assertSocialCard(cardData, { expectedSkillCountLabel = '1,678+' 
   assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, 'Social card');
 }
 
+export function assertSocialCardProvenance(cardData, provenanceText) {
+  const provenance = JSON.parse(String(provenanceText ?? ''));
+  const { width, height } = readPngDimensions(cardData);
+  const digest = crypto.createHash('sha256').update(cardData).digest('hex');
+
+  assert(provenance.schemaVersion === 1, 'Social card provenance must use schema version 1.');
+  assert(provenance.generator === 'OpenAI ImageGen', 'Social card provenance must identify OpenAI ImageGen.');
+  assert(provenance.dimensions?.width === width && provenance.dimensions?.height === height, 'Social card provenance dimensions must match the PNG.');
+  assert(provenance.sha256 === digest, 'Social card provenance SHA-256 must match the PNG.');
+  assert(Array.isArray(provenance.visibleCopy) && provenance.visibleCopy.includes('AAS Core'), 'Social card provenance must preserve AAS Core as the primary visible product.');
+  assert(provenance.visibleCopy.includes('profile → stack → plan'), 'Social card provenance must preserve the Core workflow.');
+}
+
 export function assertPluginsDiscoveryMeta(htmlText) {
   const title = extractTitle(htmlText);
   const description = extractMetaContent(htmlText, 'name', 'description') || '';
@@ -924,6 +938,7 @@ export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expec
     'https://github.com/sickn33/agentic-awesome-skills',
     'https://sickn33.github.io/agentic-awesome-skills/workbench',
     'Canonical source of truth',
+    'predates AAS Core',
   ];
 
   for (const snippet of requiredSnippets) {
@@ -999,7 +1014,10 @@ export function runVerification({
   const sourceIndexHtml = readFile(sourceIndexPath);
   assertStaticIndexShell(sourceIndexHtml, { expectedSkillCountLabel, requireHostedUrl });
   assertWebmasterVerificationMeta(sourceIndexHtml);
-  assertSocialCard(readBinaryFile(socialImagePath), { expectedSkillCountLabel });
+  const socialCard = readBinaryFile(socialImagePath);
+  assertSocialCard(socialCard, { expectedSkillCountLabel });
+  const socialCardProvenancePath = path.join(path.dirname(socialImagePath), 'social-card.provenance.json');
+  assertSocialCardProvenance(socialCard, readFile(socialCardProvenancePath));
   assertRobots(readFile(robotsPath), {
     expectedSitemapUrl: new URL('sitemap.xml', sitemapReport.rootUrl).href,
   });

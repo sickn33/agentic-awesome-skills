@@ -608,7 +608,7 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: 'Canonical repository of installable agent skills and machine-readable registry evidence.',
+    description: 'Canonical source for AAS Core, its local MCP and CLI, and the supporting skills catalog and registry evidence.',
     url: REPOSITORY_URL,
     sameAs: [canonicalUrl, catalogRootUrl, 'https://www.npmjs.com/package/agentic-awesome-skills'],
     mainEntityOfPage: canonicalUrl,
