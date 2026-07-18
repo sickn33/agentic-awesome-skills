@@ -10,7 +10,7 @@ import { runProcess } from "./process.mjs";
 const NETWORK_CALL = /\b(?:socket|socketpair|connect|bind|listen|accept|accept4|sendto|sendmsg|recvfrom|recvmsg|getaddrinfo|GetAddrInfoW)\s*\(/;
 const MUTATION_CALL = /\b(?:creat|mkdir|mkdirat|rmdir|unlink|unlinkat|rename|renameat|renameat2|link|linkat|symlink|symlinkat|truncate|ftruncate|chmod|fchmod|fchmodat|chown|fchown|fchownat|utime|utimes|futimes|futimens|fsync|fdatasync)\s*\(/;
 const OPEN_WRITE = /\b(?:open|openat|openat2)\s*\([^\n]*\b(?:O_WRONLY|O_RDWR|O_CREAT|O_TRUNC|O_APPEND)\b/;
-const FD_WRITE = /\b(?:write|writev|pwrite|pwritev)\s*\((\d+)(?:<[^>]*>)?,/;
+const FD_WRITE = /\b(?:write|writev|pwrite|pwritev)\s*\((\d+)(?:<([^>]*)>)?,/;
 const PROCESS_CALL = /\b(?:execve|execveat|posix_spawn)\s*\(/;
 
 function resolveCommandPath(command) {
@@ -42,7 +42,13 @@ export function parseLinuxStrace(text, zones = {}) {
     else if (MUTATION_CALL.test(line) || OPEN_WRITE.test(line)) kind = "write";
     else {
       const fdWrite = line.match(FD_WRITE);
-      if (fdWrite && !["1", "2"].includes(fdWrite[1])) kind = "write";
+      const nonPersistentKernelTarget = fdWrite?.[2]
+        && /^(?:pipe:\[|socket:\[|anon_inode:|\/dev\/null$)/.test(fdWrite[2]);
+      // strace exposes libuv's pipe/eventfd bookkeeping as write(2), unlike
+      // the macOS and Windows filesystem observers. Those kernel IPC targets
+      // cannot persist project/cache state; unknown or regular-file targets
+      // remain fail-closed and count as writes.
+      if (fdWrite && !["1", "2"].includes(fdWrite[1]) && !nonPersistentKernelTarget) kind = "write";
       else if (PROCESS_CALL.test(line)) {
         if (!rootExecSeen) rootExecSeen = true;
         else kind = "process";

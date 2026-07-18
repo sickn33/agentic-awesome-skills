@@ -21,6 +21,9 @@ test("strace parser counts failed network attempts and non-stream writes", () =>
     'connect(7<TCP:[1]>, {sa_family=AF_INET}, 16) = -1 ECONNREFUSED',
     'openat(AT_FDCWD, "/tmp/x", O_WRONLY|O_CREAT, 0600) = 8',
     'write(8</tmp/x>, "x", 1) = 1',
+    'write(5<pipe:[123]>, "x", 1) = 1',
+    'write(6<anon_inode:[eventfd]>, "x", 1) = 1',
+    'write(7</dev/null>, "x", 1) = 1',
     'write(1</dev/pts/1>, "ok", 2) = 2',
     'execve("/bin/true", ["true"], 0x0) = 0',
   ].join("\n"), { tmp: "/tmp" });
