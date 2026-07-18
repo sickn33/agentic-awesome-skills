@@ -6,12 +6,14 @@ const path = require("node:path");
 const packageMetadata = require("../../package.json");
 const { canonicalJson, sha256 } = require("../lib/aas-v1/canonical-json");
 const versions = require("../lib/aas-v1/versions");
+const { buildDocument: buildMetadataOverrides } = require("./build-aas-v1-metadata-overrides");
 
 const ROOT = path.resolve(__dirname, "../..");
 const OUTPUT_ROOT = path.join(ROOT, "data", "aas-v1");
 const CONTENT_RELATIVE = "data/aas-v1/skill-content.v1.ndjson";
 const INDEX_RELATIVE = "data/aas-v1/skill-content-index.v1.json";
 const MANIFEST_RELATIVE = "data/aas-v1/catalog-manifest.v1.json";
+const METADATA_OVERRIDES_RELATIVE = "tools/lib/aas-v1/metadata-overrides.v1.json";
 const STATIC_ASSETS = [
   "data/catalog.json",
   "data/plugin-compatibility.json",
@@ -78,6 +80,10 @@ function buildArtifacts() {
 
 function main() {
   const check = process.argv.includes("--check");
+  if (!check) {
+    const metadataBytes = Buffer.from(`${canonicalJson(buildMetadataOverrides())}\n`);
+    fs.writeFileSync(path.join(ROOT, ...METADATA_OVERRIDES_RELATIVE.split("/")), metadataBytes, { mode: 0o644 });
+  }
   const { generated, manifest } = buildArtifacts();
   const stale = [];
   for (const [relativePath, bytes] of generated) {

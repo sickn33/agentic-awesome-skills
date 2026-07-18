@@ -86,15 +86,9 @@ test("committed review sources reproduce the ledger and bind every selection rul
 });
 
 test("catalog gate verifies the review ledger before building metadata and offline assets", () => {
-  const scripts = require(path.join(ROOT, "package.json")).scripts;
-  const command = scripts["check:aas-v1-catalog"];
+  const command = require(path.join(ROOT, "package.json")).scripts["check:aas-v1-catalog"];
   const importIndex = command.indexOf("import-aas-v1-metadata-reviews.js --check");
   const overrideIndex = command.indexOf("build-aas-v1-metadata-overrides.js --check");
   assert.ok(importIndex >= 0 && overrideIndex > importIndex);
   assert.doesNotMatch(command, /run-aas-v1-tuning|verification\/aas-v1|held-?out|gold/i);
-
-  const buildCommand = scripts["build:aas-v1-catalog"];
-  const buildOverrideIndex = buildCommand.indexOf("build-aas-v1-metadata-overrides.js --write");
-  const buildOfflineIndex = buildCommand.indexOf("build-aas-v1-offline-catalog.js");
-  assert.ok(buildOverrideIndex >= 0 && buildOfflineIndex > buildOverrideIndex);
 });

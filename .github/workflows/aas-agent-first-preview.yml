@@ -41,7 +41,6 @@ jobs:
 
       - name: Verify deterministic catalog and preview contracts
         run: |
-          npm run build:aas-v1-catalog
           npm run check:aas-v1-catalog
           npm run test:aas-v1
           node --check verification/aas-preview/runner.mjs

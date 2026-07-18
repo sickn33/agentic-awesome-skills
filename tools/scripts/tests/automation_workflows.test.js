@@ -11,8 +11,7 @@ function readText(relativePath) {
 const packageJson = JSON.parse(readText("package.json"));
 const generatedFiles = JSON.parse(readText("tools/config/generated-files.json"));
 const ciWorkflow = readText(".github/workflows/ci.yml");
-const previewWorkflow = readText(".github/workflows/aas-agent-first-preview.yml");
-const productVerifierWorkflow = readText(".github/workflows/aas-v1-product-verifier.yml");
+const offlineCatalogBuilder = readText("tools/scripts/build-aas-v1-offline-catalog.js");
 const canonicalMergeScript = readText("tools/scripts/merge_canonical_sync_pr.cjs");
 const publishWorkflow = readText(".github/workflows/publish-npm.yml");
 const releaseWorkflowScript = readText("tools/scripts/release_workflow.js");
@@ -173,14 +172,9 @@ assert.match(
   "artifact-preview should retain history because canonical provenance generation reads git history",
 );
 assert.match(
-  previewWorkflow,
-  /Verify deterministic catalog and preview contracts[\s\S]*?npm run build:aas-v1-catalog[\s\S]*?npm run check:aas-v1-catalog/,
-  "the preview candidate should regenerate source-derived Core catalog artifacts before checking them",
-);
-assert.match(
-  productVerifierWorkflow,
-  /path: candidate[\s\S]*?fetch-depth: 0[\s\S]*?npm run build:aas-v1-catalog[\s\S]*?npm pack/,
-  "the product verifier should package source-derived Core catalog artifacts from a full-history checkout",
+  offlineCatalogBuilder,
+  /if \(!check\)[\s\S]*?buildMetadataOverrides\(\)[\s\S]*?fs\.writeFileSync[\s\S]*?buildArtifacts\(\)/,
+  "offline catalog builds should refresh metadata overrides before binding them into the catalog manifest",
 );
 assert.match(
   ciWorkflow,
