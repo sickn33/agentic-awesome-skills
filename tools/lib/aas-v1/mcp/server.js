@@ -138,7 +138,7 @@ const TOOL_DEFINITIONS = Object.freeze([
   },
   {
     name: "recommend_stack",
-    description: "Run the deterministic local AAS recommendation core from an explicit project profile. Use the returned catalog identity, goals, policy, targets, and proposedStack to build a manifest, then call inspect_stack before presenting it.",
+    description: "Run the deterministic local AAS recommendation core from an explicit project profile. A versioned rule may promote a recognized primary project domain, such as a browser extension, into auditable critical capabilities. Use the returned normalized goals, catalog identity, policy, targets, and proposedStack to build a manifest, then call inspect_stack before presenting it.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -153,7 +153,11 @@ const TOOL_DEFINITIONS = Object.freeze([
               ...GOAL_ARRAY_SCHEMA,
               description: "Natural project goals such as build, test, security, release, deploy, accessibility, or performance. AAS expands versioned aliases into auditable capabilities.",
             },
-            projectType: { type: "string", maxLength: 2048 },
+            projectType: {
+              type: "string",
+              maxLength: 2048,
+              description: "Primary project domain. Recognized domains are deterministically expanded into critical capabilities and exposed in normalizedInput.criticalGoals.",
+            },
             languages: STRING_ARRAY_SCHEMA,
             frameworks: STRING_ARRAY_SCHEMA,
             context: { type: "string", maxLength: 2048 },

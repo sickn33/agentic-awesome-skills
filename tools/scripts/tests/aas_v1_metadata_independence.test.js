@@ -70,7 +70,7 @@ test("committed review sources reproduce the ledger and bind every selection rul
   const rebuilt = buildLedger(parsed.pairs);
   const stored = JSON.parse(fs.readFileSync(path.join(ROOT, "tools/lib/aas-v1/metadata-reviews.v1.json"), "utf8"));
   assert.equal(canonicalJson(rebuilt), canonicalJson(stored));
-  assert.equal(rebuilt.scope.reviewedSkillCount, 121);
+  assert.equal(rebuilt.scope.reviewedSkillCount, 122);
   for (const audit of rebuilt.sourceAudits) {
     assert.equal(sha256(fs.readFileSync(path.join(ROOT, "tools/metadata-sources/aas-v1", audit.semanticPath))), audit.semanticDigest);
     assert.equal(sha256(fs.readFileSync(path.join(ROOT, "tools/metadata-sources/aas-v1", audit.fieldPath))), audit.fieldDigest);

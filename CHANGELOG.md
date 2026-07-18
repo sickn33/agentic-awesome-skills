@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Make AAS Core recommendations domain-first for browser-extension projects: project profile evidence now promotes Manifest V3 architecture, permissions, and cross-context messaging to critical goals, backed by a reviewed Chrome-extension specialist rather than generic QA-only coverage.
 - Expanded natural AAS Core goals such as `build`, `test`, `security`, and `release` into versioned capability lanes before deterministic ranking, so real project profiles produce reviewable multi-skill stacks instead of empty or single-skill recommendations.
 - Clarified the MCP recommendation contract for natural goals and the `0.8`–`1.0` non-critical coverage ratio, and added a bundled VibePalette regression proving a five-to-eight-skill project stack remains available without weakening policy gates.
 

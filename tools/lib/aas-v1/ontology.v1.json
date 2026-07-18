@@ -28,6 +28,18 @@
       "pipeline-design",
       "reproducible-ci"
     ],
+    "browser-extension-development": [
+      "browser-extension-architecture",
+      "browser-extension-permissions",
+      "extension-context-messaging",
+      "manifest-v3-development"
+    ],
+    "chrome-extension-development": [
+      "browser-extension-architecture",
+      "browser-extension-permissions",
+      "extension-context-messaging",
+      "manifest-v3-development"
+    ],
     "deploy": [
       "deployment-gates",
       "post-release-verification",
@@ -82,6 +94,28 @@
       "unit-test-runner"
     ]
   },
+  "profileGoalRules": [
+    {
+      "id": "browser-extension-domain-v1",
+      "allTokens": ["browser", "extension"],
+      "criticalGoals": [
+        "browser-extension-architecture",
+        "browser-extension-permissions",
+        "extension-context-messaging",
+        "manifest-v3-development"
+      ]
+    },
+    {
+      "id": "chrome-extension-domain-v1",
+      "allTokens": ["chrome", "extension"],
+      "criticalGoals": [
+        "browser-extension-architecture",
+        "browser-extension-permissions",
+        "extension-context-messaging",
+        "manifest-v3-development"
+      ]
+    }
+  ],
   "intentAliases": {
     "agent-mcp-development": ["agent", "model-context-protocol", "tooling", "evaluation", "memory"],
     "api-backend-delivery": ["api", "api-backend", "authentication", "database", "integration"],
@@ -128,10 +162,12 @@
     ],
     "web-application-delivery": [
       "accessible-component-guidance", "api-integration-boundary", "browser-critical-paths",
+      "browser-extension-architecture", "browser-extension-permissions",
       "cross-browser-regression", "deterministic-test-isolation", "feature-boundaries",
+      "extension-context-messaging",
       "frontend-auth-boundary", "frontend-bottleneck-analysis", "keyboard-and-screen-reader-validation",
       "lighthouse-regression", "maintainable-component-architecture", "maintainable-e2e-patterns",
-      "migration-guidance", "regression-evidence", "repeatable-performance-budget",
+      "manifest-v3-development", "migration-guidance", "regression-evidence", "repeatable-performance-budget",
       "secure-session-handling", "shared-ui-conventions", "typed-data-contracts", "wcag-audit",
       "web-vitals-budget"
     ]

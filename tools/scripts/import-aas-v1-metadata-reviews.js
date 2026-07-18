@@ -12,6 +12,7 @@ const OUTPUT_PATH = path.join(ROOT, "tools/lib/aas-v1/metadata-reviews.v1.json")
 const SOURCES_ROOT = path.join(ROOT, "tools/metadata-sources/aas-v1");
 const DEFAULT_SOURCE_PAIRS = Object.freeze([
   { audit: "api-deploy.semantic.json", fields: "api-deploy.fields.json" },
+  { audit: "browser-extension.semantic.json", fields: "browser-extension.fields.json" },
   { audit: "security-agent.semantic.json", fields: "security-agent.fields.json" },
   { audit: "web-test.semantic.json", fields: "web-test.fields.json" },
 ]);

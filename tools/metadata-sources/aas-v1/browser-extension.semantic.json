@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "auditId": "aas-v1-browser-extension-public-semantic-audit-2026-07-18",
+  "createdAt": "2026-07-18",
+  "scope": {
+    "intents": ["web-application-delivery"],
+    "catalogPath": "data/catalog.json",
+    "catalogSkillCount": 1968,
+    "finalCandidateCount": 1,
+    "selectionPoolCount": 2
+  },
+  "guardrails": {
+    "benchmarkGoldRead": false,
+    "heldOutCasesRead": false,
+    "heldOutGoldRead": false,
+    "tuningCaseInputsRead": false,
+    "selectionIndependentOfBenchmarkGoldIds": true,
+    "repoFilesModified": false
+  },
+  "selectionMethod": {
+    "ruleVersion": "aas-v1-public-browser-extension-lexical-audit-v1",
+    "sources": [
+      "tools/lib/aas-v1/ontology.v1.json browser-extension capability vocabulary",
+      "public catalog id/name/category/tags/triggers/description"
+    ],
+    "queryFamilies": {
+      "browserExtension": ["browser extension", "chrome extension", "manifest v3", "mv3", "content script", "service worker"]
+    },
+    "normalization": "lowercase; non [a-z0-9.+#/-] to spaces; collapse whitespace",
+    "fieldWeights": {"id/name": 8, "category": 6, "tags/triggers": 4, "description": 3},
+    "poolRule": "Rank all catalog skills matching the public browser-extension query family by descending integer score and stable skill ID tie-break; inspect the full matching pool.",
+    "semanticReviewRule": "Retain only skills whose canonical content explicitly supports the versioned browser-extension capabilities; do not infer capabilities from unreviewed prose.",
+    "notAWhitelist": "Eligibility is derived from public metadata evidence and policy, never from a hard-coded skill ID."
+  },
+  "canonicalCapabilityVocabulary": [
+    "browser-extension-architecture",
+    "browser-extension-permissions",
+    "extension-context-messaging",
+    "manifest-v3-development"
+  ],
+  "candidates": [
+    {
+      "id": "chrome-extension-developer",
+      "intents": ["web-application-delivery"],
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-browser-extension-lexical-audit-v1",
+        "qualifyingFamilies": {
+          "browserExtension": {
+            "score": 23,
+            "matches": [
+              {"term": "chrome extension", "field": "id/name", "weight": 8},
+              {"term": "chrome", "field": "tags/triggers", "weight": 4},
+              {"term": "extension", "field": "tags/triggers", "weight": 4},
+              {"term": "manifest v3", "field": "description", "weight": 3},
+              {"term": "content script", "field": "description", "weight": 3}
+            ],
+            "rank": 1
+          }
+        }
+      },
+      "contentEvidence": {
+        "path": "skills/chrome-extension-developer/SKILL.md",
+        "sha256": "sha256-d1df50546811ff10f0276be3381f161c1df788f24fd21d0c740d1d0cbfc65ca5",
+        "summary": "Defines Manifest V3 architecture, service workers, content scripts, message passing, extension APIs, storage, and least-privilege permissions.",
+        "reviewScope": "Full-file semantic and safety review; no behavioral execution."
+      },
+      "supportedCanonicalCapabilities": [
+        "browser-extension-architecture",
+        "browser-extension-permissions",
+        "extension-context-messaging",
+        "manifest-v3-development"
+      ],
+      "evidence": [
+        {
+          "path": "skills/chrome-extension-developer/SKILL.md",
+          "lineStart": 9,
+          "lineEnd": 32,
+          "supports": [
+            "browser-extension-architecture",
+            "browser-extension-permissions",
+            "extension-context-messaging",
+            "manifest-v3-development"
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": {
+    "reviewedSpecialists": 1,
+    "discoveryOnlySpecialists": 1,
+    "interpretation": "Chrome Extension Developer has complete evidence for domain recommendation. Browser Extension Builder remains searchable/discoverable because its risk evidence is incomplete."
+  }
+}

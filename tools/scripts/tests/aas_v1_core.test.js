@@ -93,6 +93,15 @@ test("recommendation is invariant to catalog order", () => {
 
 test("natural project goals expand into a multi-lane stack deterministically", () => {
   const entries = [
+    skill("extension-lane", {
+      tokens: ["chrome", "extension", "manifest-v3"],
+      capabilities: [
+        "browser-extension-architecture",
+        "browser-extension-permissions",
+        "extension-context-messaging",
+        "manifest-v3-development",
+      ],
+    }),
     skill("build-lane", { tokens: ["build", "ci"], capabilities: ["pipeline-design", "reproducible-ci"] }),
     skill("unit-lane", { tokens: ["test", "unit", "coverage"], capabilities: ["coverage-reporting", "unit-test-runner"] }),
     skill("browser-lane", {
@@ -123,13 +132,17 @@ test("natural project goals expand into a multi-lane stack deterministically", (
   assert.equal(canonicalJson(first), canonicalJson(second));
   assert.equal(first.status, "complete");
   assert.deepEqual(first.proposedStack.slice().sort(), entries.map((entry) => entry.id).sort());
-  assert.equal(first.proposedStack.length, 6);
+  assert.equal(first.proposedStack[0], "extension-lane");
+  assert.equal(first.proposedStack.length, 7);
   assert.deepEqual(first.normalizedInput.criticalGoals, [
     "accessibility-audit",
+    "browser-extension-architecture",
+    "browser-extension-permissions",
     "coverage-reporting",
     "critical-browser-journeys",
     "cross-browser-execution",
     "dependency-risk-review",
+    "extension-context-messaging",
     "failure-diagnostics",
     "pipeline-design",
     "post-release-verification",
@@ -138,7 +151,8 @@ test("natural project goals expand into a multi-lane stack deterministically", (
     "security-requirements",
     "trust-boundary-review",
     "unit-test-runner",
-  ]);
+    "manifest-v3-development",
+  ].sort());
 });
 
 test("recommendation is invariant to non-semantic skill ID permutations", () => {
@@ -262,7 +276,7 @@ test("bundled catalog exposes every canonical registry ID exactly once", () => {
   assert.ok(!catalog.skills.some((entry) => entry.id === "game-development/2d-games"));
 });
 
-test("bundled catalog composes a useful VibePalette stack from natural goals", () => {
+test("bundled catalog composes a domain-first VibePalette browser-extension stack", () => {
   const result = recommendStack(loadBundledCatalog(), {
     intent: "web-application-delivery",
     targets: [{ host: "codex", scope: "project" }],
@@ -282,7 +296,13 @@ test("bundled catalog composes a useful VibePalette stack from natural goals", (
   });
   assert.equal(result.status, "partial");
   assert.ok(result.proposedStack.length >= 5 && result.proposedStack.length <= 8);
+  assert.equal(result.proposedStack[0], "chrome-extension-developer");
+  assert.ok(result.proposedStack.includes("chrome-extension-developer"));
   for (const goal of [
+    "browser-extension-architecture",
+    "browser-extension-permissions",
+    "extension-context-messaging",
+    "manifest-v3-development",
     "accessibility-audit",
     "unit-test-runner",
     "critical-browser-journeys",

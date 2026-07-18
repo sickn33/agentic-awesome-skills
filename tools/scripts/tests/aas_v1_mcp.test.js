@@ -104,6 +104,7 @@ test("MCP lists exactly five read-only tools and one skill resource template", a
   const recommendDefinition = tools.result.tools.find((entry) => entry.name === "recommend_stack");
   assert.equal(recommendDefinition.inputSchema.properties.profile.additionalProperties, false);
   assert.equal(recommendDefinition.inputSchema.properties.profile.properties.projectType.type, "string");
+  assert.match(recommendDefinition.inputSchema.properties.profile.properties.projectType.description, /critical capabilities/);
   assert.match(recommendDefinition.inputSchema.properties.profile.properties.goals.description, /Natural project goals/);
   assert.match(recommendDefinition.inputSchema.properties.minimumNonCriticalGoalCoverage.description, /0\.8 to 1\.0/);
   assert.deepEqual(recommendDefinition.inputSchema.properties.targets.items.required, ["host", "scope"]);
@@ -195,6 +196,30 @@ test("search, get, resource read, recommendation, inspection, and unavailable ve
   assert.equal(Object.hasOwn(recommendation.result.structuredContent, "canonicalJson"), false);
   assert.ok(recommendation.result.structuredContent.recommended.length <= 25);
   assert.ok(recommendation.result.structuredContent.exclusions.length <= 25);
+
+  const extensionRecommendation = await server.handle({
+    jsonrpc: "2.0",
+    id: 133,
+    method: "tools/call",
+    params: {
+      name: "recommend_stack",
+      arguments: {
+        intent: "web-application-delivery",
+        targets: [{ host: "codex", scope: "project" }],
+        criticalGoals: ["build", "test", "security", "release"],
+        nonCriticalGoals: [],
+        profile: {
+          projectType: "Manifest V3 browser extension for Chrome and Edge",
+          languages: ["javascript", "html", "css"],
+          frameworks: ["vitest", "jsdom"],
+        },
+        policy: { allowedRisk: ["none", "safe", "unknown"], requireKnownSource: false, allowManualSetup: true },
+        maxSkills: 8,
+      },
+    },
+  });
+  assert.equal(extensionRecommendation.result.structuredContent.proposedStack[0], "chrome-extension-developer");
+  assert.ok(extensionRecommendation.result.structuredContent.coveredGoals.includes("manifest-v3-development"));
 
   const validManifest = {
     schemaVersion: 1,
