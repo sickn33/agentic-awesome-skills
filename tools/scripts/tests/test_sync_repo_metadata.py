@@ -123,11 +123,15 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
             self.assertGreaterEqual(updated_files, 12)
             readme = (root / "README.md").read_text(encoding="utf-8")
-            self.assertIn("1,304+ agentic skills", readme)
+            self.assertIn("# AAS Core — Agentic Awesome Skills", readme)
+            self.assertIn("1,304+ skills across development", readme)
             self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("[Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("1,304+ reusable `SKILL.md` playbooks", readme)
-            self.assertIn("V8.4.0", (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"))
+            self.assertEqual(
+                "# Getting Started with AAS Core\n",
+                (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"),
+            )
             self.assertIn("1,304+ files", (root / "docs" / "users" / "gemini-cli-skills.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ specialized areas", (root / "docs" / "users" / "kiro-integration.md").read_text(encoding="utf-8"))
             self.assertIn("Total Bundles: 2", (root / "docs" / "users" / "bundles.md").read_text(encoding="utf-8"))

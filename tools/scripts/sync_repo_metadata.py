@@ -37,7 +37,11 @@ RECOMMENDED_TOPICS = [
     "mcp",
 ]
 README_TAGLINE_RE = re.compile(
-    r"^> \*\*(?:AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of \d[\d,]*\+ agentic skills\.|Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, (?:Autohand Code, )?Gemini CLI, Antigravity, and other AI coding assistants\.)\*\*$",
+    r"^> \*\*(?:Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change\.|AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of \d[\d,]*\+ agentic skills\.|Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, (?:Autohand Code, )?Gemini CLI, Antigravity, and other AI coding assistants\.)\*\*$",
+    re.MULTILINE,
+)
+README_TITLE_RE = re.compile(
+    r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills)$",
     re.MULTILINE,
 )
 README_RELEASE_RE = re.compile(r"^\*\*Current release: V[\d.]+\.\*\* .*?$", re.MULTILINE)
@@ -57,7 +61,7 @@ README_TOC_BROWSE_RE = re.compile(
     re.MULTILINE,
 )
 GETTING_STARTED_TITLE_RE = re.compile(
-    r"^# Getting Started with Agentic Awesome Skills \(V[\d.]+\)$", re.MULTILINE
+    r"^# Getting Started with (?:Agentic Awesome Skills \(V[\d.]+\)|AAS Core)$", re.MULTILINE
 )
 BUNDLES_FOOTER_RE = re.compile(
     r"^_Last updated: .*? \| Total Skills: \d[\d,]*\+ \| Total Bundles: \d+_$",
@@ -133,28 +137,32 @@ def count_documented_bundles(content: str) -> int:
 
 def sync_readme_copy(content: str, metadata: dict) -> str:
     version = metadata["version"]
-    release_boundary = (
-        f"The published {version} package predates AAS Core. "
+    release_status = (
+        f"The published {version} package predates AAS Core. Core is available from `main` as an "
+        "**Agent-First Preview** for local search, inspection, recommendation, manifest validation, "
+        "planning, and diagnosis. Wait for a release that explicitly includes Core before using the "
+        "npm bootstrap. "
         if version == "14.6.0"
-        else "This release includes AAS Core. "
+        else "This release includes AAS Core under the **Agent-First Preview** claim for local search, "
+        "inspection, recommendation, manifest validation, planning, and diagnosis. "
     )
     replacements = [
         (
+            README_TITLE_RE,
+            "# AAS Core — Agentic Awesome Skills",
+        ),
+        (
             README_TAGLINE_RE,
             (
-                "> **AAS Core is the local, agent-first control plane for composing explainable, "
-                f"reproducible skill stacks from a catalog of {metadata['total_skills_label']} agentic skills.**"
+                "> **Local, deterministic skill-stack composition for coding agents—from an explicit "
+                "project profile to a reviewable plan before any target change.**"
             ),
         ),
         (
             README_RELEASE_RE,
             (
-                f"**Current release: V{version}.** {release_boundary}Core is currently documented from `main` "
-                "under the **Agent-First Preview** claim: local search, recommendation, inspection, "
-                "manifest validation, planning, and diagnosis are the supported preview path. Wait for "
-                "a release that explicitly includes Core before using the npm bootstrap. Full-catalog "
-                "recommendation quality and transactional apply/recovery safety are not yet certified; "
-                "apply and recovery remain explicitly experimental."
+                f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
+                "and outside the supported preview path."
             ),
         ),
         (
@@ -194,7 +202,7 @@ def sync_getting_started(content: str, metadata: dict) -> str:
     content, _ = replace_if_present(
         content,
         GETTING_STARTED_TITLE_RE,
-        f"# Getting Started with Agentic Awesome Skills (V{metadata['version']})",
+        "# Getting Started with AAS Core",
     )
     return content
 

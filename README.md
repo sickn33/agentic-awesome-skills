@@ -1,21 +1,29 @@
 <!-- registry-sync: version=14.6.0; skills=1965; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
-[![Agentic Awesome Skills social preview](apps/web-app/public/social-card.png)](https://github.com/sickn33/agentic-awesome-skills)
+# AAS Core — Agentic Awesome Skills
 
-# 🌌 Agentic Awesome Skills: AAS Core + 1,965+ Skills for AI Coding Agents
+> **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
 
-> **AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of 1,965+ agentic skills.**
+**Current release: V14.6.0.** The published 14.6.0 package predates AAS Core. Core is available from `main` as an **Agent-First Preview** for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Wait for a release that explicitly includes Core before using the npm bootstrap. Apply and recovery remain experimental and outside the supported preview path.
 
-Agentic Awesome Skills is built around **AAS Core**: one deterministic local core shared by an MCP server, a CLI lifecycle, and the Workbench review surface. Codex or Claude can ask the read-only local MCP to search the catalog, inspect evidence, and recommend a stack; the agent proposes `aas-stack.json`; you validate the manifest and preview an immutable plan before deciding whether any write should happen.
+Codex or Claude inspects your project using its own capabilities; AAS does not scan it. The agent sends the local, read-only AAS MCP an explicit project profile. AAS Core evaluates that profile and your policy against a verified local catalog, returns an explainable recommendation, and lets the agent propose `aas-stack.json`. The `aas` CLI validates that desired state and creates an immutable per-target plan before any skill changes are made.
 
-The 1,965+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and legacy installer remain important. They are the content, packaging, and compatibility surfaces that AAS Core reasons over and delivers—not competing product directions.
+**[Read the AAS Core preview guide →](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)**
 
-This is an independent community project. It is not affiliated with, sponsored by, endorsed by, or authorized by Google. Google, Antigravity, Gemini, and related product names are referenced only to describe compatibility and install targets.
+```text
+Project
+  -> inspected by Codex or Claude (not by AAS)
+  -> explicit, allowlisted project profile
+  -> AAS MCP (local stdio, read-only)
+  -> deterministic AAS Core + verified local catalog
+  -> recommendation with evidence, exclusions, coverage, and unknowns
+  -> agent proposes aas-stack.json
+  -> AAS CLI validate + immutable plan preview
+  -> human review (optionally in Workbench)
+```
 
-For Codex and Claude, the primary path is agent-first composition through AAS Core. Direct skill installs, focused plugins, bundles, and manual catalog browsing remain supported paths for other hosts and for users who already know exactly what they want.
+The 1,965+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
 
-The canonical project page is the GitHub repository at <https://github.com/sickn33/agentic-awesome-skills>; the hosted catalog is a companion discovery surface, and Workbench is a browser-local review surface for Core stack and plan artifacts. Neither is a hosted control plane.
-
-**Start here:** [Understand AAS Core](#aas-core-agent-first-preview) · [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md) · [Review a stack or plan](https://sickn33.github.io/agentic-awesome-skills/workbench) · [Direct installs](#installation) · [Choose your tool](#choose-your-tool) · [Browse 1,965+ Skills](#browse-1965-skills) · [Contribute](#contributing)
+This is an independent community project. It is not affiliated with, sponsored by, endorsed by, or authorized by Google. Google, Antigravity, Gemini, and related product names are referenced only to describe compatibility and install targets. The GitHub repository is canonical; the hosted catalog and browser-local Workbench are companion discovery and review surfaces, not a hosted control plane.
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2043%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 [![Follow @AASkills_ on X](https://img.shields.io/badge/Follow-%40AASkills__-black?style=for-the-badge&logo=x)](https://x.com/AASkills_)
@@ -26,26 +34,15 @@ The canonical project page is the GitHub repository at <https://github.com/sickn
 [![Autohand Code](https://img.shields.io/badge/Autohand%20Code-CLI-blue)](https://github.com/autohandai/code-cli)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Google-blue)](https://github.com/google-gemini/gemini-cli)
 [![Latest Release](https://img.shields.io/github/v/release/sickn33/agentic-awesome-skills?display_name=tag&style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/releases/latest)
-[![Install with NPX](https://img.shields.io/badge/Install-npx%20agentic--awesome--skills-black?style=for-the-badge&logo=npm)](#installation)
+[![Direct skill distribution](https://img.shields.io/badge/Direct%20skills-npx%20agentic--awesome--skills-black?style=for-the-badge&logo=npm)](#installation)
 [![Kiro](https://img.shields.io/badge/Kiro-AWS-orange?style=for-the-badge)](https://kiro.dev)
 [![Copilot](https://img.shields.io/badge/Copilot-GitHub-lightblue?style=for-the-badge)](https://github.com/features/copilot)
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
-**Current release: V14.6.0.** The published 14.6.0 package predates AAS Core. Core is currently documented from `main` under the **Agent-First Preview** claim: local search, recommendation, inspection, manifest validation, planning, and diagnosis are the supported preview path. Wait for a release that explicitly includes Core before using the npm bootstrap. Full-catalog recommendation quality and transactional apply/recovery safety are not yet certified; apply and recovery remain explicitly experimental.
-
 ## AAS Core: Agent-First Preview
 
 > **The agent composes. You control. AAS keeps the stack reproducible.**
-
-```text
-Codex or Claude
-  -> AAS MCP (local stdio, read-only)
-  -> deterministic AAS Core + verified catalog
-  -> proposed aas-stack.json
-  -> AAS CLI validate + immutable plan preview
-  -> human decision
-```
 
 AAS Core gives the repository one product model:
 
@@ -61,7 +58,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 
 - **Agent-first, locally controlled**: let Codex or Claude compose from structured catalog evidence without uploading your repository to AAS.
 - **Deterministic and inspectable**: the same normalized profile, catalog, schema, and scorer produce the same canonical recommendation.
-- **Approval before writes**: the durable product is an approved stack plus an immutable plan, not an opaque one-shot install.
+- **Approval before writes**: the durable artifacts are an approved stack and immutable plan, not an opaque one-shot install.
 - **Installable, not just inspirational**: use the compatible legacy installer or plugin distributions when direct delivery is the right path.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
 - **Broad coverage with real utility**: 1,965+ skills across development, testing, security, infrastructure, product, and marketing.
