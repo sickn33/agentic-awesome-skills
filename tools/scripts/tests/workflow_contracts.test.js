@@ -133,9 +133,10 @@ assert.match(skillReviewWorkflow, /^  manual-review-required:$/m);
 assert.doesNotMatch(skillReviewWorkflow, /^  missing-review-credentials:$/m);
 assert.match(
   skillReviewWorkflow,
-  /needs\.review-attempt\.outputs\.outcome == 'quota'/,
-  "quota exhaustion must route to exact-head manual review",
+  /needs\.review-attempt\.outputs\.outcome != 'reviewed'/,
+  "every non-passing Tessl outcome must route to exact-head manual review",
 );
+assert.match(skillReviewWorkflow, /result=manual/);
 assert.match(skillReviewWorkflow, /needs\.review-state\.outputs\.configured != 'true'/);
 assert.match(skillReviewWorkflow, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
 assert.match(skillReviewWorkflow, /review_changed_skills\.cjs --plan/);

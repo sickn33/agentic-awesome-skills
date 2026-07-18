@@ -44,7 +44,7 @@ Every new or relocated skill and every canonical skill-content change requires m
 The Skill Review workflow separates two outcomes:
 
 - `review`: a semantic review actually ran using trusted base scripts;
-- `manual-review-required`: Tessl credentials or quota were unavailable, so a maintainer must review and attest to the exact head SHA.
+- `manual-review-required`: Tessl credentials or quota were unavailable, or Tessl did not produce a passing semantic result, so a maintainer must review and attest to the exact head SHA.
 
 A successful `manual-review-required` check means only that the requirement was recorded. It is not a successful semantic review.
 

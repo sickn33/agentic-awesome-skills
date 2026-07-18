@@ -44,8 +44,8 @@ Before changing anything:
    - Inspect semantics, safety, provenance, declared risk, limitations, and all tracked bundle files directly. Treat inferred risk labels and heuristic quality scores as non-authoritative; do not change a skill merely to satisfy a lexical signal.
    - Inspect the `skill-review` workflow on the exact current head SHA.
    - `review` means Tessl semantic review actually ran or a valid identical-content result was reused.
-   - `manual-review-required` means Tessl did not run because fork secrets or Tessl credits were unavailable. Perform the manual semantic review and attest with `--reviewed-head <full-40-character-sha>`.
-   - Missing credentials or quota produce `manual-review-required`; complete the semantic review and bind the attestation to the exact head instead of waiting on an external service.
+   - `manual-review-required` means Tessl credentials or credits were unavailable, or Tessl did not produce a passing result. Perform the maintainer semantic review and attest with `--reviewed-head <full-40-character-sha>`.
+   - Any non-passing Tessl outcome produces `manual-review-required`; complete the semantic review and bind the judgment to the exact head instead of treating a heuristic score as merge authority.
    - Never report `manual-review-required` as “Tessl passed.”
 
 3. Run checks in parallel where independent.

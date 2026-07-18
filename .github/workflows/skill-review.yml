@@ -79,7 +79,8 @@ jobs:
             echo "result=quota" >> "$GITHUB_OUTPUT"
             echo "::warning title=Tessl quota unavailable::A maintainer must review and attest to this exact head SHA before merge."
           else
-            exit "$status"
+            echo "result=manual" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Tessl review needs maintainer judgment::Tessl did not produce a passing semantic result. A maintainer must review and attest to this exact head SHA before merge."
           fi
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -107,6 +108,8 @@ jobs:
             echo "outcome=reviewed" >> "$GITHUB_OUTPUT"
           elif [ "$TESSL_RESULT" = "quota" ]; then
             echo "outcome=quota" >> "$GITHUB_OUTPUT"
+          elif [ "$TESSL_RESULT" = "manual" ]; then
+            echo "outcome=manual" >> "$GITHUB_OUTPUT"
           else
             echo "::error title=Unresolved review state::The Tessl review did not produce a trustworthy outcome."
             exit 1
@@ -134,7 +137,7 @@ jobs:
 
   manual-review-required:
     needs: [review-state, review-attempt]
-    if: ${{ always() && (needs.review-state.outputs.configured != 'true' || needs.review-attempt.outputs.outcome == 'quota') }}
+    if: ${{ always() && (needs.review-state.outputs.configured != 'true' || (needs.review-attempt.result == 'success' && needs.review-attempt.outputs.outcome != 'reviewed')) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -146,6 +149,8 @@ jobs:
         run: |
           if [ "$REVIEW_OUTCOME" = "quota" ]; then
             reason="the Tessl credit quota is unavailable"
+          elif [ "$REVIEW_OUTCOME" = "manual" ]; then
+            reason="Tessl did not produce a passing semantic result"
           else
             reason="Tessl credentials are unavailable"
           fi
