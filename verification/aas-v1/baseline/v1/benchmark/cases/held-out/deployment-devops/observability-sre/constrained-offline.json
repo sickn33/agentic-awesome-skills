@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.constrained-offline",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Remote observatory control system",
+    "stack": {
+      "languages": [
+        "Rust",
+        "Python"
+      ],
+      "runtime": "isolated services and devices",
+      "delivery": "local operations center"
+    },
+    "team": {
+      "engineers": 5,
+      "operationsModel": "site reliability rotation",
+      "experience": "offline systems"
+    },
+    "environment": {
+      "maturity": "isolated production",
+      "topology": "self-hosted cluster",
+      "connectivity": "air-gapped"
+    },
+    "constraints": [
+      "no hosted control plane",
+      "no runtime downloads",
+      "removable-media release transfer",
+      "locally reproducible operation"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "operate complete observability without external telemetry services"
+  },
+  "criticalGoals": [
+    "collect and query signals locally",
+    "continue monitoring through disconnected operation"
+  ],
+  "nonCriticalGoals": [
+    "use structured telemetry",
+    "bound high-cardinality data",
+    "link releases to signals",
+    "avoid noisy alerts",
+    "document first-response checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on observability-sre delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.observability-sre.constrained-offline"
+}

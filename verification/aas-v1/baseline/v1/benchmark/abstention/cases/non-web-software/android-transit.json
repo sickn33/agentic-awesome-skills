@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.non-web-software.android-transit", "intent": "native-android-development",
+  "profile": { "request": "Build a native Android transit companion", "platform": "Android", "interface": "Jetpack Compose", "features": ["saved routes", "offline timetables", "local notifications"], "constraints": ["adaptive layouts", "battery discipline", "no embedded web application"] },
+  "criticalGoals": ["design an idiomatic native Android architecture", "support reliable offline timetable access"],
+  "nonCriticalGoals": ["model Compose state", "schedule notifications", "manage background refresh", "support adaptive screens", "limit battery use"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD native-Android scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:f43fd94963eeb04b7b12da4b7616989a4fbb101a0a3b566c9d4fb4ddc6c55a9c"
+}

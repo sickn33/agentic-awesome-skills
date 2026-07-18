@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.personal-planning.japan-itinerary",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PERSONAL_PLANNING"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7908f5a58477cadf0b4056e20512c0516d11b02f96f12647488d2ed39718c315"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7908f5a58477cadf0b4056e20512c0516d11b02f96f12647488d2ed39718c315"
+    }
+  ]
+}

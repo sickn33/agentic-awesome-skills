@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.production-greenfield",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "application": "New subscription-commerce platform",
+    "stack": [
+      "Next.js",
+      "TypeScript",
+      "payment sandbox"
+    ],
+    "release": "multiple times daily",
+    "criticalJourneys": [
+      "sign-up",
+      "checkout",
+      "plan change",
+      "cancellation"
+    ],
+    "quality": {
+      "browsers": 3,
+      "parallelCI": true,
+      "flakyTestBudget": "below one percent"
+    }
+  },
+  "criticalGoals": [
+    "build a production end-to-end strategy for revenue journeys",
+    "control flakiness and deterministic test data"
+  ],
+  "nonCriticalGoals": [
+    "test multiple browsers",
+    "parallelize CI",
+    "cover component behavior",
+    "capture useful failures",
+    "define quarantine policy"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario informed by production commerce test programs",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-testing-quality.production-greenfield"
+}

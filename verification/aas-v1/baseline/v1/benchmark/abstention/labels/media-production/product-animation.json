@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.media-production.product-animation",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_MEDIA_PRODUCTION"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2697adbd161896f70ccab5db2866fe0aa40aac82f077ff8338ed42aa4714091b"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2697adbd161896f70ccab5db2866fe0aa40aac82f077ff8338ed42aa4714091b"
+    }
+  ]
+}

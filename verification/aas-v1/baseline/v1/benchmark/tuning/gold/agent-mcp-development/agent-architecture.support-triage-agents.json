@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.agent-architecture.support-triage-agents",
+  "acceptedSolutions": [
+    {
+      "solutionId": "agent-architecture-orchestration",
+      "allowedSkillIds": [
+        "ai-agents-architect",
+        "agent-orchestrator"
+      ],
+      "requiredGroups": [
+        [
+          "ai-agents-architect"
+        ],
+        [
+          "agent-orchestrator"
+        ]
+      ]
+    },
+    {
+      "solutionId": "manager-and-tools",
+      "allowedSkillIds": [
+        "agent-manager-skill",
+        "agent-tool-builder"
+      ],
+      "requiredGroups": [
+        [
+          "agent-manager-skill"
+        ],
+        [
+          "agent-tool-builder"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-c1d10ec3d607ee58ed74a0f1b30241187095f7bf2d1b3fe18ba7865f6ce66bee"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-c1d10ec3d607ee58ed74a0f1b30241187095f7bf2d1b3fe18ba7865f6ce66bee"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

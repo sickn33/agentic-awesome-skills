@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.ui-accessibility.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "wcag-and-assistive-technology-program",
+      "allowedSkillIds": [
+        "accessibility-compliance-accessibility-audit",
+        "screen-reader-testing",
+        "accesslint-diff"
+      ],
+      "requiredGroups": [
+        [
+          "accessibility-compliance-accessibility-audit"
+        ],
+        [
+          "screen-reader-testing"
+        ],
+        [
+          "accesslint-diff"
+        ]
+      ]
+    },
+    {
+      "solutionId": "accesslint-regression-program",
+      "allowedSkillIds": [
+        "accesslint-audit",
+        "screen-reader-testing",
+        "accesslint-diff"
+      ],
+      "requiredGroups": [
+        [
+          "accesslint-audit"
+        ],
+        [
+          "screen-reader-testing"
+        ],
+        [
+          "accesslint-diff"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7aba31d780bf1e161342cd4181ebac53e6537408c401784890afe482e9f476d3"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-7aba31d780bf1e161342cd4181ebac53e6537408c401784890afe482e9f476d3"
+    }
+  ]
+}

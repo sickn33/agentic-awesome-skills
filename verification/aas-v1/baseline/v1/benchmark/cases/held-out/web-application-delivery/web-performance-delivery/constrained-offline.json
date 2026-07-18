@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-performance-delivery.constrained-offline",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "application": "Offline rail-maintenance kiosk",
+    "hardware": {
+      "cpu": "dual-core",
+      "memory": "four gigabytes",
+      "storage": "slow flash"
+    },
+    "assets": "bundled with quarterly image",
+    "workload": [
+      "large local diagrams",
+      "search index",
+      "inspection forms"
+    ],
+    "constraints": [
+      "no CDN",
+      "no remote telemetry",
+      "cold start under five seconds"
+    ]
+  },
+  "criticalGoals": [
+    "optimize cold start and interaction on constrained hardware",
+    "verify performance entirely offline"
+  ],
+  "nonCriticalGoals": [
+    "reduce local asset cost",
+    "bound memory use",
+    "optimize search loading",
+    "create reproducible lab budgets",
+    "avoid runtime network assumptions"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on constrained disconnected kiosk performance",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-performance-delivery.constrained-offline"
+}

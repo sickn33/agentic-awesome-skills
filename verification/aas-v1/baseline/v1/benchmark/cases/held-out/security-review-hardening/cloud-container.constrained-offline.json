@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.constrained-offline",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "constrained-offline",
+    "projectSummary": "Air-gapped edge appliance built from mirrored OCI images and deployed without a registry connection",
+    "stack": {
+      "languages": [
+        "go"
+      ],
+      "frameworks": [],
+      "deployment": [
+        "offline-linux",
+        "oci-images"
+      ]
+    },
+    "constraints": [
+      "no network",
+      "local image mirror only",
+      "offline vulnerability snapshot available"
+    ],
+    "authorization": {
+      "scope": "defensive offline container review of the organization-owned appliance",
+      "mode": "read-only-offline",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "harden offline image and runtime",
+    "validate base-image and component risk from local evidence"
+  ],
+  "nonCriticalGoals": [
+    "define signed image import controls",
+    "document evidence freshness limits"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.cloud-container.constrained-offline"
+}

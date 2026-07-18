@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-e2e-methodology",
+      "allowedSkillIds": [
+        "e2e-testing-patterns",
+        "testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "e2e-testing-patterns"
+        ],
+        [
+          "testing-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "offline-local-webapp-methodology",
+      "allowedSkillIds": [
+        "webapp-testing",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "webapp-testing"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ecd568150cf6cabc93e71d7ae115bd50e03b0ae374591b99b0c7ab1a2606f02a"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ecd568150cf6cabc93e71d7ae115bd50e03b0ae374591b99b0c7ab1a2606f02a"
+    }
+  ]
+}

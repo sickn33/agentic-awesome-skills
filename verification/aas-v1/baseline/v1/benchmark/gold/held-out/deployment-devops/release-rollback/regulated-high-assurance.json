@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "dual-gate",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "pre-ship-gate"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "pre-ship-gate"
+        ]
+      ]
+    },
+    {
+      "solutionId": "controlled-shipping",
+      "allowedSkillIds": [
+        "shipping-and-launch",
+        "pre-ship-gate"
+      ],
+      "requiredGroups": [
+        [
+          "shipping-and-launch"
+        ],
+        [
+          "pre-ship-gate"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-87a2ea1e0b41a1d6405219ed73e02e512541d22ff37dbdf6167271cac697993d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-87a2ea1e0b41a1d6405219ed73e02e512541d22ff37dbdf6167271cac697993d"
+    }
+  ]
+}

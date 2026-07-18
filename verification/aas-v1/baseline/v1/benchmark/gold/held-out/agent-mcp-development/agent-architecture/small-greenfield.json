@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.agent-architecture.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "bounded-single-agent",
+      "allowedSkillIds": [
+        "ai-agents-architect",
+        "autonomous-agents",
+        "agent-tool-builder",
+        "context-manager"
+      ],
+      "requiredGroups": [
+        [
+          "ai-agents-architect",
+          "autonomous-agents"
+        ],
+        [
+          "agent-tool-builder"
+        ],
+        [
+          "context-manager",
+          "autonomous-agents"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-e291c27216a76b6cf91234795bda1a36dc189e0354f4cf0d095c4c62e98c6345"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-e291c27216a76b6cf91234795bda1a36dc189e0354f4cf0d095c4c62e98c6345"
+    }
+  ]
+}

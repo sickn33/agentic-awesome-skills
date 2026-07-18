@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+  "acceptedSolutions": [
+    {
+      "solutionId": "reviewed-actions-canary",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "github-actions-advanced"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "github-actions-advanced"
+        ]
+      ]
+    },
+    {
+      "solutionId": "reviewed-kubernetes-canary",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "kubernetes-deployment"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "kubernetes-deployment"
+        ]
+      ]
+    },
+    {
+      "solutionId": "kubernetes-architecture-canary",
+      "allowedSkillIds": [
+        "kubernetes-architect"
+      ],
+      "requiredGroups": [
+        [
+          "kubernetes-architect"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "gold-equivalence-independent-adjudicator",
+      "decision": "approved",
+      "reviewedDigest": "sha256-4b99c753b82666c9b20cd18a54d0b1c584e320b8c6529baafb33c5f66323c662"
+    },
+    {
+      "reviewer": "gold-equivalence-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-4b99c753b82666c9b20cd18a54d0b1c584e320b8c6529baafb33c5f66323c662"
+    }
+  ],
+  "provenance": {
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
+    "reviewedAt": "2026-07-17"
+  }
+}

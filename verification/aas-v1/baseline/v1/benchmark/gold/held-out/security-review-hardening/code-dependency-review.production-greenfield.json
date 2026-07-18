@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "dependencies-and-actions",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies",
+        "gha-security-review"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ],
+        [
+          "gha-security-review"
+        ]
+      ]
+    },
+    {
+      "solutionId": "dependencies-actions-advisories",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies",
+        "gha-security-review",
+        "cyber-audit"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ],
+        [
+          "gha-security-review"
+        ],
+        [
+          "cyber-audit"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fc3924d9a751468604817a05666d6f4486b2fd128b8212c81d4e89daa868b37a"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fc3924d9a751468604817a05666d6f4486b2fd128b8212c81d4e89daa868b37a"
+    }
+  ]
+}

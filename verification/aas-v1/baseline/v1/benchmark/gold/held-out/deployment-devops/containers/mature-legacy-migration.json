@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.containers.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "docker-migration",
+      "allowedSkillIds": [
+        "docker-expert"
+      ],
+      "requiredGroups": [
+        [
+          "docker-expert"
+        ]
+      ]
+    },
+    {
+      "solutionId": "platform-migration",
+      "allowedSkillIds": [
+        "kubernetes-deployment"
+      ],
+      "requiredGroups": [
+        [
+          "kubernetes-deployment"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-37aaa4decfc4ee4c631dc64119559be711ce72e49f547b0cc76d7e2073247d4f"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-37aaa4decfc4ee4c631dc64119559be711ce72e49f547b0cc76d7e2073247d4f"
+    }
+  ]
+}

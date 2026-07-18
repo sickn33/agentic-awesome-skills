@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.persistence-data.tenant-ledger",
+  "acceptedSolutions": [
+    {
+      "solutionId": "database-design-migration",
+      "allowedSkillIds": [
+        "database-design",
+        "database-migration"
+      ],
+      "requiredGroups": [
+        [
+          "database-design"
+        ],
+        [
+          "database-migration"
+        ]
+      ]
+    },
+    {
+      "solutionId": "postgres-practices-sql-migrations",
+      "allowedSkillIds": [
+        "postgres-best-practices",
+        "database-migrations-sql-migrations"
+      ],
+      "requiredGroups": [
+        [
+          "postgres-best-practices"
+        ],
+        [
+          "database-migrations-sql-migrations"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a0c10f5ca4214806bdc52668119e8b1f54a6dbb8ff80b5303ee7b94817aa5a86"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a0c10f5ca4214806bdc52668119e8b1f54a6dbb8ff80b5303ee7b94817aa5a86"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

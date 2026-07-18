@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.application-data-auth.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-grants-and-data-validation",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "frontend-data-contracts"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "frontend-data-contracts"
+        ]
+      ]
+    },
+    {
+      "solutionId": "offline-grants-and-secure-frontend",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "frontend-security-coder"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "frontend-security-coder"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-01f058330ffc8fc46d076e823b9de3b076d673b21cfc8b6d67b9865b2c8292e0"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-01f058330ffc8fc46d076e823b9de3b076d673b21cfc8b6d67b9865b2c8292e0"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.security-operations.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "production-agent-governance",
+      "allowedSkillIds": [
+        "protect-mcp-governance",
+        "threat-modeling-expert",
+        "security-requirement-extraction",
+        "skill-scanner",
+        "security-and-hardening"
+      ],
+      "requiredGroups": [
+        [
+          "protect-mcp-governance"
+        ],
+        [
+          "threat-modeling-expert",
+          "security-requirement-extraction"
+        ],
+        [
+          "skill-scanner"
+        ],
+        [
+          "security-and-hardening"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-79f37dde898d1ff4056d09d27c1408e2bf704eb0b42d1783fb86e41d111fdada"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-79f37dde898d1ff4056d09d27c1408e2bf704eb0b42d1783fb86e41d111fdada"
+    }
+  ]
+}

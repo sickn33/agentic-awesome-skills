@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.monorepo-polyglot",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Logistics coordination platform",
+    "stack": {
+      "languages": [
+        "Java",
+        "Go",
+        "Python"
+      ],
+      "runtime": "multiple services and workers",
+      "delivery": "independent releases from one monorepo"
+    },
+    "team": {
+      "engineers": 28,
+      "operationsModel": "shared platform team",
+      "experience": "mixed specialist teams"
+    },
+    "environment": {
+      "maturity": "scaling",
+      "topology": "polyglot monorepo with multiple services",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "independent service ownership",
+      "selective builds and deployments",
+      "shared governance"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "coordinate compatible releases without forcing a single release train"
+  },
+  "criticalGoals": [
+    "respect dependency order between services",
+    "roll back a failed component without corrupting shared state"
+  ],
+  "nonCriticalGoals": [
+    "capture release evidence",
+    "define rollback triggers",
+    "retain the prior artifact",
+    "verify configuration readiness",
+    "record the live revision"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on release-rollback delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.release-rollback.monorepo-polyglot"
+}

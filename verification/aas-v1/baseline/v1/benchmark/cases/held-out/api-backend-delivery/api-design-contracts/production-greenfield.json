@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.api-design-contracts.production-greenfield",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "production-greenfield",
+    "teamSize": 14,
+    "languages": [
+      "go"
+    ],
+    "frameworks": [
+      "chi"
+    ],
+    "apiStyles": [
+      "rest"
+    ],
+    "consumers": [
+      "partners",
+      "internal-services"
+    ],
+    "constraints": [
+      "public-contract",
+      "backward-compatibility",
+      "high-throughput"
+    ]
+  },
+  "criticalGoals": [
+    "define a production API contract with compatibility guarantees",
+    "standardize errors, pagination, and idempotency"
+  ],
+  "nonCriticalGoals": [
+    "generate reviewable OpenAPI documentation",
+    "plan API evolution and deprecation"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.api-design-contracts.production-greenfield"
+}

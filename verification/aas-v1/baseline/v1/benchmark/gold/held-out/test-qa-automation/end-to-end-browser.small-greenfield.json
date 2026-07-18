@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "e2e-workflow-small-web",
+      "allowedSkillIds": [
+        "e2e-testing",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "e2e-testing"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "cypress-small-web",
+      "allowedSkillIds": [
+        "cypress-skill",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "cypress-skill"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-104c9ee2ae24f3d28bc98e1ebaf3bd1c069f7496ea0f7c62f643f8a0dc9f9d9c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-104c9ee2ae24f3d28bc98e1ebaf3bd1c069f7496ea0f7c62f643f8a0dc9f9d9c"
+    }
+  ]
+}

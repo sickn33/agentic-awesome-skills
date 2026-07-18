@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.constrained-offline",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Laboratory instrument software",
+    "stack": {
+      "languages": [
+        "Rust",
+        "Python"
+      ],
+      "runtime": "isolated workstation fleet",
+      "delivery": "signed offline update bundles"
+    },
+    "team": {
+      "engineers": 5,
+      "operationsModel": "site reliability rotation",
+      "experience": "offline systems"
+    },
+    "environment": {
+      "maturity": "isolated production",
+      "topology": "self-hosted cluster",
+      "connectivity": "air-gapped"
+    },
+    "constraints": [
+      "no hosted control plane",
+      "no runtime downloads",
+      "removable-media release transfer",
+      "locally reproducible operation"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "update isolated installations with local verification and reversible activation"
+  },
+  "criticalGoals": [
+    "reject corrupted or unapproved bundles",
+    "restore the prior installation without network access"
+  ],
+  "nonCriticalGoals": [
+    "capture release evidence",
+    "define rollback triggers",
+    "retain the prior artifact",
+    "verify configuration readiness",
+    "record the live revision"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on release-rollback delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.release-rollback.constrained-offline"
+}

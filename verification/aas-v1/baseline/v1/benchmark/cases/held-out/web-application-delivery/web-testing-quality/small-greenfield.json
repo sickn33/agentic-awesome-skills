@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.small-greenfield",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "application": "Vite React booking widget",
+    "team": 2,
+    "existingTests": "none",
+    "riskFlows": [
+      "date selection",
+      "availability request",
+      "confirmation"
+    ],
+    "constraints": [
+      "fast local feedback",
+      "open-source tooling",
+      "small maintainable suite"
+    ]
+  },
+  "criticalGoals": [
+    "establish component and end-to-end coverage for booking",
+    "make tests reliable enough for every change"
+  ],
+  "nonCriticalGoals": [
+    "mock network failures",
+    "cover validation",
+    "avoid brittle selectors",
+    "keep execution fast",
+    "document local commands"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on greenfield Vite testing setup",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-testing-quality.small-greenfield"
+}

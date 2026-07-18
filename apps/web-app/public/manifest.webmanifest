@@ -1,12 +1,12 @@
 {
-  "name": "Agentic Awesome Skills",
-  "short_name": "Agentic Skills",
+  "name": "AAS Core Preview",
+  "short_name": "AAS Core",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "description": "A discoverable catalog of installable AI skills for agents and assistants.",
+  "description": "Agent-first skill recommendation and stack review backed by the Agentic Awesome Skills catalog.",
   "icons": [
     {
       "src": "vite.svg",

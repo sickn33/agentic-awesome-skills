@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.evaluation-testing.small-greenfield",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "greenfield",
+    "teamSize": 2,
+    "agentShape": "single-tool-using-assistant",
+    "evaluationMaturity": "none",
+    "constraints": [
+      "small-budget",
+      "critical-actions-deterministic",
+      "weekly-release"
+    ]
+  },
+  "criticalGoals": [
+    "define behavioral tests for tool selection and refusal",
+    "measure reliability across repeated runs"
+  ],
+  "nonCriticalGoals": [
+    "separate held-out cases from tuning",
+    "track regressions by capability"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.evaluation-testing.small-greenfield"
+}

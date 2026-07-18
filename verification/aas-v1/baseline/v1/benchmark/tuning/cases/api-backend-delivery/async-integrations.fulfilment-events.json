@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.async-integrations.fulfilment-events",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "order fulfilment event processor",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Node.js"
+    ],
+    "context": "multi-step external fulfilment workflow with retryable failures",
+    "constraints": [
+      "idempotency",
+      "observable compensation"
+    ]
+  },
+  "criticalGoals": [
+    "durable-event-processing",
+    "failure-compensation"
+  ],
+  "nonCriticalGoals": [
+    "async-boundary-design",
+    "idempotent-retries"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.api-backend-delivery.async-integrations.fulfilment-events"
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.production-greenfield",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Business-to-business order platform",
+    "stack": {
+      "languages": [
+        "Go",
+        "TypeScript"
+      ],
+      "runtime": "containerized services",
+      "delivery": "daily production releases"
+    },
+    "team": {
+      "engineers": 12,
+      "operationsModel": "platform-supported",
+      "experience": "experienced"
+    },
+    "environment": {
+      "maturity": "production greenfield",
+      "topology": "multi-environment service",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "zero-downtime production changes",
+      "defined service-level objectives"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": true,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "use staged rollout with automated verification and rollback decisions"
+  },
+  "criticalGoals": [
+    "limit blast radius during rollout",
+    "make rollback executable within the recovery objective"
+  ],
+  "nonCriticalGoals": [
+    "capture release evidence",
+    "define rollback triggers",
+    "retain the prior artifact",
+    "verify configuration readiness",
+    "record the live revision"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on release-rollback delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.release-rollback.production-greenfield"
+}

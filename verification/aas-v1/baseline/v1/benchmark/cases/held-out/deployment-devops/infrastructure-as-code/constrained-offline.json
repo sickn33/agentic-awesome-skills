@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.infrastructure-as-code.constrained-offline",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Materials research cluster",
+    "stack": {
+      "languages": [
+        "Python",
+        "C++"
+      ],
+      "runtime": "bare metal and local virtualization",
+      "delivery": "air-gapped site"
+    },
+    "team": {
+      "engineers": 5,
+      "operationsModel": "site reliability rotation",
+      "experience": "offline systems"
+    },
+    "environment": {
+      "maturity": "isolated production",
+      "topology": "self-hosted cluster",
+      "connectivity": "air-gapped"
+    },
+    "constraints": [
+      "no hosted control plane",
+      "no runtime downloads",
+      "removable-media release transfer",
+      "locally reproducible operation"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "manage local infrastructure declaratively without registry access"
+  },
+  "criticalGoals": [
+    "resolve all providers and modules offline",
+    "reproduce plans from a verified local mirror"
+  ],
+  "nonCriticalGoals": [
+    "lock provider and module versions",
+    "preview changes before apply",
+    "detect drift",
+    "retain state recovery evidence",
+    "record resource ownership"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on infrastructure-as-code delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.infrastructure-as-code.constrained-offline"
+}

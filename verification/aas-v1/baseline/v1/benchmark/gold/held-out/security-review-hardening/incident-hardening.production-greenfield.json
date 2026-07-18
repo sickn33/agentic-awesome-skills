@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.incident-hardening.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "actions-and-fix",
+      "allowedSkillIds": [
+        "agentic-actions-auditor",
+        "fix-review",
+        "pre-release-review"
+      ],
+      "requiredGroups": [
+        [
+          "agentic-actions-auditor"
+        ],
+        [
+          "fix-review"
+        ]
+      ]
+    },
+    {
+      "solutionId": "actions-and-release-gate",
+      "allowedSkillIds": [
+        "agentic-actions-auditor",
+        "pre-release-review",
+        "github-actions-advanced"
+      ],
+      "requiredGroups": [
+        [
+          "agentic-actions-auditor"
+        ],
+        [
+          "pre-release-review"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ed1d26d2aababf16e4a7454b41e05711d104c55bc35e26339166710a5da343e2"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ed1d26d2aababf16e4a7454b41e05711d104c55bc35e26339166710a5da343e2"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.regulated-high-assurance",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "domain": "Electronic health-record review portal",
+    "criticalFlows": [
+      "patient selection",
+      "record annotation",
+      "approval",
+      "audit export"
+    ],
+    "assurance": [
+      "traceable requirements",
+      "controlled synthetic data",
+      "retained test evidence",
+      "independent approval"
+    ],
+    "environment": "self-hosted CI",
+    "constraints": [
+      "no production health data",
+      "no external test cloud"
+    ]
+  },
+  "criticalGoals": [
+    "design deterministic browser tests for safety-critical flows",
+    "produce reviewable evidence without sensitive data"
+  ],
+  "nonCriticalGoals": [
+    "trace tests to requirements",
+    "control test data",
+    "record browser artifacts",
+    "define release blocking failures",
+    "support independent review"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario informed by high-assurance healthcare verification",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-testing-quality.regulated-high-assurance"
+}

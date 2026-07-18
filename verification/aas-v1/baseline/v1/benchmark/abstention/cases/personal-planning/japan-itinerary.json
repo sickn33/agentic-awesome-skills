@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.personal-planning.japan-itinerary", "intent": "travel-planning",
+  "profile": { "request": "Plan a fourteen-day first visit to Japan", "travelers": 2, "interests": ["architecture", "regional food", "short hikes"], "arrivalDeparture": "Tokyo", "pace": "no more than three hotel changes", "constraints": ["moderate budget", "rail travel", "one mobility-limited day"] },
+  "criticalGoals": ["create a feasible route", "balance interests with a sustainable pace"],
+  "nonCriticalGoals": ["limit transfers", "include weather alternatives", "estimate travel days", "allow recovery time", "surface booking dependencies"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD personal-travel scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:f721e32e3a52f25db5e3ad7922ee3dab18ca5d184f66556f2a251be807a86f7f"
+}

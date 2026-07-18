@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.constrained-offline",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "offline emergency-response documentation portal",
+    "languages": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "static site"
+    ],
+    "testingContext": "prepackaged pages need local accessibility inspection before field deployment",
+    "constraints": [
+      "fully offline",
+      "local Chromium",
+      "no remote scanner",
+      "limited hardware"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "offline-accessibility-scan",
+    "wcag22-findings",
+    "local-remediation-worklist"
+  ],
+  "nonCriticalGoals": [
+    "keyboard-review",
+    "compact-audit-report"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.accessibility-quality.constrained-offline"
+}

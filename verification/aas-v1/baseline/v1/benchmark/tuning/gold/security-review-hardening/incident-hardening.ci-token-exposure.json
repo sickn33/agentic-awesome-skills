@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.incident-hardening.ci-token-exposure",
+  "acceptedSolutions": [
+    {
+      "solutionId": "incident-response-and-fix-review",
+      "allowedSkillIds": [
+        "incident-responder",
+        "fix-review"
+      ],
+      "requiredGroups": [
+        [
+          "incident-responder"
+        ],
+        [
+          "fix-review"
+        ]
+      ]
+    },
+    {
+      "solutionId": "incident-fix-review",
+      "allowedSkillIds": [
+        "incident-response-incident-response",
+        "fix-review"
+      ],
+      "requiredGroups": [
+        [
+          "incident-response-incident-response"
+        ],
+        [
+          "fix-review"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0b1191a040f27b86e717f8926acc914e3a9a67e2b8d9f0109e7d59be38bc661c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0b1191a040f27b86e717f8926acc914e3a9a67e2b8d9f0109e7d59be38bc661c"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

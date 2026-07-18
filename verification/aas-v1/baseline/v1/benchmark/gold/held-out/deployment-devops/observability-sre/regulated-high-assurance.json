@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "privacy-aware-slo-assurance",
+      "allowedSkillIds": [
+        "observability-monitoring-slo-implement",
+        "privacy-by-design"
+      ],
+      "requiredGroups": [
+        [
+          "observability-monitoring-slo-implement"
+        ],
+        [
+          "privacy-by-design"
+        ]
+      ]
+    },
+    {
+      "solutionId": "privacy-aware-observability-engineering",
+      "allowedSkillIds": [
+        "observability-engineer",
+        "privacy-by-design"
+      ],
+      "requiredGroups": [
+        [
+          "observability-engineer"
+        ],
+        [
+          "privacy-by-design"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0d00d8e020ac9107509dce6112387ef9cf11a3b94005e1362c83aa0a0bab10fc"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0d00d8e020ac9107509dce6112387ef9cf11a3b94005e1362c83aa0a0bab10fc"
+    }
+  ]
+}

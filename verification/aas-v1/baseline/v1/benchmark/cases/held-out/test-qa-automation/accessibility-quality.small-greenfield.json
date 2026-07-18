@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.small-greenfield",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "small public information website",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React",
+      "Vite"
+    ],
+    "testingContext": "new site needs an actionable WCAG 2.2 test baseline before launch",
+    "constraints": [
+      "local browser",
+      "selector-grounded findings",
+      "developer-friendly fixes"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "wcag22-automated-scan",
+    "selector-grounded-findings",
+    "remediation-guidance"
+  ],
+  "nonCriticalGoals": [
+    "keyboard-review",
+    "ci-accessibility-gate"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.accessibility-quality.small-greenfield"
+}

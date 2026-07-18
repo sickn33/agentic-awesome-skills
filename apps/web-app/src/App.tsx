@@ -8,6 +8,7 @@ const Workbench = lazy(() => import('./pages/Workbench'));
 const Plugins = lazy(() => import('./pages/Plugins'));
 const TopicLanding = lazy(() => import('./pages/TopicLanding'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const CatalogRouteProvider = lazy(() => import('./context/CatalogRouteProvider'));
 
 function App(): React.ReactElement {
   const logoSrc = `${import.meta.env.BASE_URL}agentic-skills-logo.png`;
@@ -17,14 +18,14 @@ function App(): React.ReactElement {
       <div className="app-shell min-h-screen bg-[var(--surface-canvas)] text-[var(--text-primary)]">
         <header className="app-header">
           <div className="app-header__inner">
-            <Link to="/" className="brand-link" aria-label="Agentic Skills home">
+            <Link to="/" className="brand-link" aria-label="AAS Core home">
               <img
                 src={logoSrc}
-                alt="Agentic Skills logo"
+                alt="AAS Core logo"
                 className="brand-link__logo"
               />
               <span className="brand-link__name">
-                Agentic Skills
+                AAS Core
               </span>
             </Link>
 
@@ -34,7 +35,7 @@ function App(): React.ReactElement {
                 end
                 className={({ isActive }) => `app-nav__link ${isActive ? 'is-active' : ''}`}
               >
-                Explore
+                Core
               </NavLink>
               <NavLink
                 to="/workbench"
@@ -64,7 +65,7 @@ function App(): React.ReactElement {
               <details className="mobile-nav">
                 <summary aria-label="Open navigation">Menu</summary>
                 <nav aria-label="Mobile navigation">
-                  <Link to="/">Explore</Link>
+                  <Link to="/">Core</Link>
                   <Link to="/workbench">Workbench</Link>
                   <Link to="/plugins">Plugins</Link>
                   <a href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer">View on GitHub</a>
@@ -83,11 +84,13 @@ function App(): React.ReactElement {
             }
           >
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route element={<CatalogRouteProvider />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/topics/:slug" element={<TopicLanding />} />
+                <Route path="/skill/:id" element={<SkillDetail />} />
+              </Route>
               <Route path="/plugins" element={<Plugins />} />
               <Route path="/workbench" element={<Workbench />} />
-              <Route path="/topics/:slug" element={<TopicLanding />} />
-              <Route path="/skill/:id" element={<SkillDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

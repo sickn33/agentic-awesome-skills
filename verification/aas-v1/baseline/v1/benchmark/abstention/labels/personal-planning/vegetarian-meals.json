@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.personal-planning.vegetarian-meals",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PERSONAL_PLANNING"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-dff059f4e71444a063a202e113b99fb9a6fa4abf4ebafac5c83626a5873c6f1a"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-dff059f4e71444a063a202e113b99fb9a6fa4abf4ebafac5c83626a5873c6f1a"
+    }
+  ]
+}

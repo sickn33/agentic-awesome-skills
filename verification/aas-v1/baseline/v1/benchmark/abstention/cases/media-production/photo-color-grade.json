@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.media-production.photo-color-grade", "intent": "photo-color-grading",
+  "profile": { "request": "Plan a consistent color grade for a restaurant editorial", "images": 80, "lighting": ["window daylight", "warm practical lights", "kitchen fluorescents"], "deliverables": ["print magazine", "social crops"], "constraints": ["natural food color", "consistent skin tone", "avoid trendy heavy filters"] },
+  "criticalGoals": ["define a coherent editorial color treatment", "preserve credible food and skin color"],
+  "nonCriticalGoals": ["normalize mixed lighting", "set contrast behavior", "prepare print output", "prepare social output", "define image-selection checks"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD photography-postproduction scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:c45212bf2252d79b44176778784e7712d903161c2a7b19de6fc0c75362ee9116"
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.web-application-delivery.frontend-architecture.analytics-dashboard",
+  "acceptedSolutions": [
+    {
+      "solutionId": "feature-oriented-react",
+      "allowedSkillIds": [
+        "frontend-architecture",
+        "react-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "frontend-architecture"
+        ],
+        [
+          "react-patterns"
+        ]
+      ]
+    },
+    {
+      "solutionId": "guidelines-and-react-practices",
+      "allowedSkillIds": [
+        "frontend-dev-guidelines",
+        "react-best-practices"
+      ],
+      "requiredGroups": [
+        [
+          "frontend-dev-guidelines"
+        ],
+        [
+          "react-best-practices"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fedc449245b159f7aaf39f53ecf7d051f4b334f16684dc37150eed722c68e078"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-fedc449245b159f7aaf39f53ecf7d051f4b334f16684dc37150eed722c68e078"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

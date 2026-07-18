@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.api-design-contracts.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "auditable-secure-contract",
+      "allowedSkillIds": [
+        "api-and-interface-design",
+        "api-design-principles",
+        "api-security-best-practices",
+        "openapi-spec-generation",
+        "openapi-spec-generator"
+      ],
+      "requiredGroups": [
+        [
+          "api-and-interface-design",
+          "api-design-principles"
+        ],
+        [
+          "api-security-best-practices"
+        ],
+        [
+          "openapi-spec-generation",
+          "openapi-spec-generator"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-bb8153eaa1ada16a5b608551fbd77ff629668ac50643e9a433d253d750eeb527"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-bb8153eaa1ada16a5b608551fbd77ff629668ac50643e9a433d253d750eeb527"
+    }
+  ]
+}

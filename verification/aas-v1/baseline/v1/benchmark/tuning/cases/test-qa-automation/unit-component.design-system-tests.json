@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.unit-component.design-system-tests",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "shared web design system",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React",
+      "Vite"
+    ],
+    "context": "component library without a consistent unit test harness",
+    "constraints": [
+      "fast feedback",
+      "CI coverage"
+    ]
+  },
+  "criticalGoals": [
+    "unit-test-runner",
+    "component-test-patterns"
+  ],
+  "nonCriticalGoals": [
+    "deterministic-mocking",
+    "coverage-reporting"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.test-qa-automation.unit-component.design-system-tests"
+}

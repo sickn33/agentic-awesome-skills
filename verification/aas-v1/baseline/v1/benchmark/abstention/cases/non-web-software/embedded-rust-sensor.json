@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.non-web-software.embedded-rust-sensor", "intent": "embedded-firmware-development",
+  "profile": { "request": "Design firmware for a battery-powered environmental sensor", "target": "microcontroller with limited memory", "language": "Rust without a standard library", "interfaces": ["temperature sensor", "flash storage", "low-power radio"], "constraints": ["year-long battery target", "recover after brownout", "no networked web service"] },
+  "criticalGoals": ["architect safe embedded firmware", "meet power and recovery constraints"],
+  "nonCriticalGoals": ["schedule sensor reads", "bound memory", "persist samples safely", "handle radio retries", "test brownout recovery"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD embedded-firmware scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:3d8f51264ff80e3c6ec53d0d43e4931ab091e25c1fc0a2b8fdf10c48bfbdbb47"
+}

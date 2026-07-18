@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.memory-context-retrieval.support-case-memory",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "support case assistant",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "Agent runtime"
+    ],
+    "context": "case summaries and current policy need separate freshness rules",
+    "constraints": [
+      "no raw secrets",
+      "staleness detection"
+    ]
+  },
+  "criticalGoals": [
+    "memory-boundaries",
+    "context-retrieval"
+  ],
+  "nonCriticalGoals": [
+    "context-budget",
+    "stale-memory-controls"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.memory-context-retrieval.support-case-memory"
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.memory-context-retrieval.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "policy-bound-evidentiary-memory",
+      "allowedSkillIds": [
+        "agent-memory-systems",
+        "tree-ring-memory",
+        "rag-engineer",
+        "clarity-gate",
+        "security-and-hardening",
+        "context-manager"
+      ],
+      "requiredGroups": [
+        [
+          "agent-memory-systems",
+          "tree-ring-memory"
+        ],
+        [
+          "rag-engineer"
+        ],
+        [
+          "clarity-gate"
+        ],
+        [
+          "security-and-hardening",
+          "context-manager"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-07502c0b27b416f46f855f602c59113d85574711e305a99162eda1a1cdecf46b"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-07502c0b27b416f46f855f602c59113d85574711e305a99162eda1a1cdecf46b"
+    }
+  ]
+}

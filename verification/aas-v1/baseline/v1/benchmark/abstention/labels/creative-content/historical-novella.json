@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.creative-content.historical-novella",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_CREATIVE_CONTENT"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-918975d910417d0f8d1029d4407b37eee9836646aad66f666a2efafda311b321"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-918975d910417d0f8d1029d4407b37eee9836646aad66f666a2efafda311b321"
+    }
+  ]
+}

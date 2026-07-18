@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/legacy-command-corpus.schema.json",
+  "title": "AAS 14.6.0 legacy CLI differential corpus",
+  "type": "object",
+  "required": ["schemaVersion", "status", "baseline", "publicFlags", "targets", "cases", "allowedDifferences"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["structureOnly", "frozen"] },
+    "baseline": {
+      "type": "object",
+      "required": ["package", "version", "distIntegrity", "tarball", "sourceTag", "sourceCommit"]
+    },
+    "publicFlags": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+    "targets": { "type": "array", "minItems": 7, "maxItems": 7, "items": { "type": "string" }, "uniqueItems": true },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "args", "fixtureState", "expectedExitCode", "expectedSnapshot"],
+        "properties": {
+          "id": { "type": "string" },
+          "args": { "type": "array", "items": { "type": "string" } },
+          "fixtureState": { "type": "string" },
+          "expectedExitCode": { "type": "integer" },
+          "expectedSnapshot": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "allowedDifferences": { "type": "string" }
+  }
+}

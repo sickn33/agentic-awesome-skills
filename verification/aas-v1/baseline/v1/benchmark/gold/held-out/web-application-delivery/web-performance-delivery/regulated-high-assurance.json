@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-performance-delivery.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "auditable-local-performance-budget",
+      "allowedSkillIds": [
+        "web-performance-optimization",
+        "frontend-lighthouse"
+      ],
+      "requiredGroups": [
+        [
+          "web-performance-optimization"
+        ],
+        [
+          "frontend-lighthouse"
+        ]
+      ]
+    },
+    {
+      "solutionId": "auditable-performance-engineering-budget",
+      "allowedSkillIds": [
+        "performance-optimization",
+        "frontend-lighthouse"
+      ],
+      "requiredGroups": [
+        [
+          "performance-optimization"
+        ],
+        [
+          "frontend-lighthouse"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1e79622c38abd36a37e3036cdaa079b56539fca4782fe34cf1805f4ec6b180b9"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1e79622c38abd36a37e3036cdaa079b56539fca4782fe34cf1805f4ec6b180b9"
+    }
+  ]
+}

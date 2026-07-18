@@ -68,6 +68,36 @@ function scoreTopicForSkill(page: SeoLandingPage, skill: Skill): number {
   return score;
 }
 
+/**
+ * Selects a small, stable set of real catalog entries for a topic hub.
+ * Editorial IDs lead when present; scored matches fill any gaps deterministically.
+ */
+export function getCuratedSkillsForSeoLandingPage(
+  page: SeoLandingPage,
+  skills: ReadonlyArray<Skill>,
+  limit = 12,
+): Skill[] {
+  const maxItems = Math.max(0, limit);
+  if (maxItems === 0 || skills.length === 0) return [];
+
+  const byId = new Map(skills.map((skill) => [skill.id, skill]));
+  const editorial = (page.featuredSkillIds || [])
+    .map((id) => byId.get(id))
+    .filter((skill): skill is Skill => Boolean(skill));
+  const selectedIds = new Set(editorial.map((skill) => skill.id));
+  const scored = skills
+    .map((skill, index) => ({ skill, index, score: scoreTopicForSkill(page, skill) }))
+    .filter(({ skill, score }) => score > 0 && !selectedIds.has(skill.id))
+    .sort((a, b) => {
+      if (a.score !== b.score) return b.score - a.score;
+      const idCompare = a.skill.id.localeCompare(b.skill.id, undefined, { sensitivity: 'base' });
+      return idCompare || a.index - b.index;
+    })
+    .map(({ skill }) => skill);
+
+  return [...editorial, ...scored].slice(0, maxItems);
+}
+
 export function getRelatedSeoLandingPagesForSkill(skill: Skill, limit = 3): SeoLandingPage[] {
   const maxItems = Math.max(0, limit);
 

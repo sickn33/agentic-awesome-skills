@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.release-rollback.schema-compatible-release",
+  "acceptedSolutions": [
+    {
+      "solutionId": "reviewed-schema-migration",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "database-migration"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "database-migration"
+        ]
+      ]
+    },
+    {
+      "solutionId": "reviewed-observable-migration",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "database-migrations-migration-observability"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "database-migrations-migration-observability"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-415a693d173b77245c29ea759235bdea2cd43310884461fba7a825222b009495"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-415a693d173b77245c29ea759235bdea2cd43310884461fba7a825222b009495"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

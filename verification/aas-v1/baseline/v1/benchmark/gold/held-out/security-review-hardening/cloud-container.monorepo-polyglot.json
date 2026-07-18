@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "container-monorepo",
+      "allowedSkillIds": [
+        "container-security-hardening"
+      ],
+      "requiredGroups": [
+        [
+          "container-security-hardening"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ee2d2c8451b2ee67ddc4fed07ab22cefef9c96ac872964ea2283d3694cfb37e3"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ee2d2c8451b2ee67ddc4fed07ab22cefef9c96ac872964ea2283d3694cfb37e3"
+    }
+  ]
+}

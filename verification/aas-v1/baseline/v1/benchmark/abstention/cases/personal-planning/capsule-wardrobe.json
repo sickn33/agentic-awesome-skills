@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }, { "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.personal-planning.capsule-wardrobe", "intent": "wardrobe-planning",
+  "profile": { "request": "Plan a compact four-season work wardrobe", "climate": "mild wet winters and warm summers", "workSetting": "business casual university office", "preferences": ["navy", "olive", "natural fibers"], "constraints": ["thirty core pieces", "comfortable cycling commute", "limited dry cleaning"] },
+  "criticalGoals": ["define a coherent versatile wardrobe", "fit climate and commuting constraints"],
+  "nonCriticalGoals": ["maximize combinations", "identify seasonal layers", "limit care burden", "prioritize replacement gaps", "preserve personal color preferences"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD personal-wardrobe scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:40bdadeb4cae9624124564ce7a5389a8905d64e9a0ba7d391297909d9a07fd34"
+}

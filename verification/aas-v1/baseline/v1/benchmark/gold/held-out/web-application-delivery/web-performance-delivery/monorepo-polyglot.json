@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-performance-delivery.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "monorepo-lighthouse-governance",
+      "allowedSkillIds": [
+        "monorepo-architect",
+        "frontend-lighthouse",
+        "performance-engineer"
+      ],
+      "requiredGroups": [
+        [
+          "monorepo-architect"
+        ],
+        [
+          "frontend-lighthouse"
+        ],
+        [
+          "performance-engineer"
+        ]
+      ]
+    },
+    {
+      "solutionId": "monorepo-web-performance-governance",
+      "allowedSkillIds": [
+        "monorepo-management",
+        "frontend-lighthouse",
+        "web-performance-optimization"
+      ],
+      "requiredGroups": [
+        [
+          "monorepo-management"
+        ],
+        [
+          "frontend-lighthouse"
+        ],
+        [
+          "web-performance-optimization"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b0b59274fd3f626145b8f0d094664dfe44e090b90aeda6f02e5590dbe7654417"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-b0b59274fd3f626145b8f0d094664dfe44e090b90aeda6f02e5590dbe7654417"
+    }
+  ]
+}

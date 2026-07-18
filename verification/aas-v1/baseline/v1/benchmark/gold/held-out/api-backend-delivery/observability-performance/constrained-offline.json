@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.observability-performance.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "bounded-offline-diagnostics",
+      "allowedSkillIds": [
+        "observability-and-instrumentation",
+        "observability-engineer",
+        "performance-profiling",
+        "performance-optimizer"
+      ],
+      "requiredGroups": [
+        [
+          "observability-and-instrumentation",
+          "observability-engineer"
+        ],
+        [
+          "performance-profiling",
+          "performance-optimizer"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ead4dd8d83b26d3799cf41f72a435009b9e47a84cdef80716758cbbfdc2a1db0"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-ead4dd8d83b26d3799cf41f72a435009b9e47a84cdef80716758cbbfdc2a1db0"
+    }
+  ]
+}

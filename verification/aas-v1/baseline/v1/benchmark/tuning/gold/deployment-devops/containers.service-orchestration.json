@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.containers.service-orchestration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "kubernetes-deployment",
+      "allowedSkillIds": [
+        "kubernetes-deployment"
+      ],
+      "requiredGroups": [
+        [
+          "kubernetes-deployment"
+        ]
+      ]
+    },
+    {
+      "solutionId": "kubernetes-architecture",
+      "allowedSkillIds": [
+        "kubernetes-architect"
+      ],
+      "requiredGroups": [
+        [
+          "kubernetes-architect"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-52e4d5cb175fa14df52240b2e0191a878e5c0c57d89fea79ae06ee65f0b4b018"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-52e4d5cb175fa14df52240b2e0191a878e5c0c57d89fea79ae06ee65f0b4b018"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

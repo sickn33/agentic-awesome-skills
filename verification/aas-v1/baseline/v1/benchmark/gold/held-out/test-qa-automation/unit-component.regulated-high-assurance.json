@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.regulated-high-assurance",
+  "acceptedSolutions": [
+    {
+      "solutionId": "junit-audited",
+      "allowedSkillIds": [
+        "junit-5-skill",
+        "testing-qa"
+      ],
+      "requiredGroups": [
+        [
+          "junit-5-skill"
+        ],
+        [
+          "testing-qa"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-899129346abe58c392224eb65155f929d9f9777479303556fc659a2ef5b11256"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-899129346abe58c392224eb65155f929d9f9777479303556fc659a2ef5b11256"
+    }
+  ]
+}

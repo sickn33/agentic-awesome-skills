@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "selenium-offline-local",
+      "allowedSkillIds": [
+        "selenium-skill",
+        "e2e-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "selenium-skill"
+        ],
+        [
+          "e2e-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-03a4ec059eb6aff8c49c4ef5f87e389137191defb32a28c9e71a4ec4e9d736e7"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-03a4ec059eb6aff8c49c4ef5f87e389137191defb32a28c9e71a4ec4e9d736e7"
+    }
+  ]
+}

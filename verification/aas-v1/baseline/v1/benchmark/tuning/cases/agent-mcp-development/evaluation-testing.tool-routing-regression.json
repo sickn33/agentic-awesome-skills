@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.evaluation-testing.tool-routing-regression",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "agent tool-routing regression suite",
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "Agent runtime"
+    ],
+    "context": "routing changes must be compared on fixed scenarios",
+    "constraints": [
+      "deterministic fixtures",
+      "explicit failure accounting"
+    ]
+  },
+  "criticalGoals": [
+    "agent-evaluation-design",
+    "reproducible-cases"
+  ],
+  "nonCriticalGoals": [
+    "failure-metrics",
+    "regression-suite"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.evaluation-testing.tool-routing-regression"
+}

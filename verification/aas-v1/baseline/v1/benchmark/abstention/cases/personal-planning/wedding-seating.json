@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.personal-planning.wedding-seating", "intent": "event-seating-planning",
+  "profile": { "request": "Develop a seating approach for a wedding dinner", "guests": 92, "tables": "round tables of eight to ten", "groups": ["two families", "university friends", "colleagues"], "sensitivities": ["two separated couples", "three elderly guests", "four children"], "constraints": ["accessible route", "balanced tables"] },
+  "criticalGoals": ["produce a socially workable seating arrangement", "respect accessibility and known conflicts"],
+  "nonCriticalGoals": ["keep children near caregivers", "avoid isolated guests", "balance table sizes", "place elderly guests comfortably", "leave a change buffer"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD private-event scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:cd821960ef560f36d8dd23637c983d655115ae28ce9b6c2732a341c60058a7ca"
+}

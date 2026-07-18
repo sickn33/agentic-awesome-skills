@@ -95,7 +95,7 @@ function assert(condition, message) {
 function parseCliArgs(argv) {
   const defaultMinSkillUrls = parseCount(
     process.env.PRERENDER_VERIFY_MIN_SKILL_URLS || process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT,
-    40,
+    180,
   );
   const args = {
     sitemapPath: 'dist/sitemap.xml',
@@ -683,6 +683,14 @@ export function assertIndexSocialMeta(htmlText) {
   assertMetaContent(htmlText, 'name', 'twitter:image:alt');
 }
 
+export function assertWebmasterVerificationMeta(htmlText) {
+  const bingVerificationToken = extractMetaContent(htmlText, 'name', 'msvalidate.01');
+  assert(
+    bingVerificationToken === 'CAC904EB0D2DD1B22B5F2BC540CAD654',
+    'Index HTML must expose the current Bing Webmaster Tools verification token.',
+  );
+}
+
 function readSkillCountLabel(distDir) {
   try {
     const skills = JSON.parse(readFile(path.join(distDir, 'skills.json'), distDir));
@@ -716,8 +724,9 @@ export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '
     combined.includes(expectedSkillCountLabel),
     `Home SEO metadata must expose the current ${expectedSkillCountLabel} skill count.`,
   );
-  assert(combined.includes('GitHub library'), 'Home SEO metadata must mention the GitHub library.');
-  assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
+  assert(combined.includes('AAS Core'), 'Home SEO metadata must lead with AAS Core.');
+  assert(combined.includes('preview'), 'Home SEO metadata must state the preview boundary.');
+  assert(combined.includes('catalog'), 'Home SEO metadata must identify the supporting catalog.');
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
   assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Home SEO metadata');
   const jsonLdText = JSON.stringify(extractJsonLdEntries(htmlText));
@@ -743,8 +752,9 @@ export function assertStaticIndexShell(htmlText, { expectedSkillCountLabel = '1,
     combined.includes(expectedSkillCountLabel),
     `Source index shell must expose the current ${expectedSkillCountLabel} skill count.`,
   );
-  assert(combined.includes('GitHub library'), 'Source index shell must mention the GitHub library.');
-  assert(combined.includes('specialized plugins'), 'Source index shell must mention specialized plugins.');
+  assert(combined.includes('AAS Core'), 'Source index shell must lead with AAS Core.');
+  assert(combined.includes('preview'), 'Source index shell must state the preview boundary.');
+  assert(combined.includes('catalog'), 'Source index shell must identify the supporting catalog.');
   assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Source index shell');
   if (requireHostedUrl) {
     assertNoLocalhostUrl(combined, 'Source index shell');
@@ -861,8 +871,8 @@ export function assertPrerenderedWorkbenchRoutes(workbenchUrls, distDir = 'dist'
       `Missing prerendered page for workbench route: ${parsed.pathname}. Expected ${filePath}.`,
     );
     const html = readFile(filePath, distDir);
-    assert(extractTitle(html).includes('Skill Workbench'), 'Workbench prerender must expose its exact product title.');
-    assert(extractMetaContent(html, 'name', 'description')?.includes('exact host-aware set'), 'Workbench prerender must describe exact composition.');
+    assert(extractTitle(html).includes('AAS Core Stack Review'), 'Workbench prerender must expose its AAS Core review title.');
+    assert(extractMetaContent(html, 'name', 'description')?.includes('Imports stay in memory'), 'Workbench prerender must describe in-memory review.');
   }
 }
 
@@ -906,6 +916,7 @@ export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expec
   const text = String(llmsText ?? '');
   const requiredSnippets = [
     '# Agentic Awesome Skills',
+    'AAS Core preview',
     expectedSkillCountLabel,
     'specialized plugins',
     'Claude Code',
@@ -984,7 +995,10 @@ export function runVerification({
   );
   assertIndexSocialMeta(indexHtml);
   assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel, requireHostedUrl });
-  assertStaticIndexShell(readFile(sourceIndexPath), { expectedSkillCountLabel, requireHostedUrl });
+  assertWebmasterVerificationMeta(indexHtml);
+  const sourceIndexHtml = readFile(sourceIndexPath);
+  assertStaticIndexShell(sourceIndexHtml, { expectedSkillCountLabel, requireHostedUrl });
+  assertWebmasterVerificationMeta(sourceIndexHtml);
   assertSocialCard(readBinaryFile(socialImagePath), { expectedSkillCountLabel });
   assertRobots(readFile(robotsPath), {
     expectedSitemapUrl: new URL('sitemap.xml', sitemapReport.rootUrl).href,

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.small-greenfield",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Independent invoicing service",
+    "stack": {
+      "languages": [
+        "TypeScript"
+      ],
+      "runtime": "managed application service",
+      "delivery": "weekly releases"
+    },
+    "team": {
+      "engineers": 2,
+      "operationsModel": "developer-owned",
+      "experience": "mixed"
+    },
+    "environment": {
+      "maturity": "greenfield",
+      "topology": "single service",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "small operating budget",
+      "minimal platform overhead"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "define a lightweight release check and dependable rollback procedure"
+  },
+  "criticalGoals": [
+    "verify production behavior after deployment",
+    "restore the previous working version safely"
+  ],
+  "nonCriticalGoals": [
+    "capture release evidence",
+    "define rollback triggers",
+    "retain the prior artifact",
+    "verify configuration readiness",
+    "record the live revision"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on release-rollback delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.release-rollback.small-greenfield"
+}

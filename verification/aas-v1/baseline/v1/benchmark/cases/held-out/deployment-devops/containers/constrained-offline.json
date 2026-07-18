@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.containers.constrained-offline",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Geospatial analysis appliance",
+    "stack": {
+      "languages": [
+        "Python",
+        "Rust"
+      ],
+      "runtime": "offline OCI-compatible cluster",
+      "delivery": "local image registry"
+    },
+    "team": {
+      "engineers": 5,
+      "operationsModel": "site reliability rotation",
+      "experience": "offline systems"
+    },
+    "environment": {
+      "maturity": "isolated production",
+      "topology": "self-hosted cluster",
+      "connectivity": "air-gapped"
+    },
+    "constraints": [
+      "no hosted control plane",
+      "no runtime downloads",
+      "removable-media release transfer",
+      "locally reproducible operation"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "build and operate containers entirely within an isolated site"
+  },
+  "criticalGoals": [
+    "use only locally verified images",
+    "deploy without external registries or services"
+  ],
+  "nonCriticalGoals": [
+    "add health checks",
+    "pin immutable image identities",
+    "separate secrets from configuration",
+    "retain rollback artifacts",
+    "document operations"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on containers delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.containers.constrained-offline"
+}

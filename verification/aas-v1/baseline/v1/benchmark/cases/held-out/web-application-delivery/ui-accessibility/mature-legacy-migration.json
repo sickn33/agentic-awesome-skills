@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.ui-accessibility.mature-legacy-migration",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "system": "Municipal benefits portal",
+    "technology": [
+      "server-rendered templates",
+      "jQuery widgets",
+      "legacy CSS"
+    ],
+    "baseline": "known keyboard and form-label defects",
+    "migration": "route-by-route modernization over eighteen months",
+    "constraints": [
+      "no full rewrite",
+      "preserve existing URLs",
+      "fix highest-impact barriers first"
+    ]
+  },
+  "criticalGoals": [
+    "produce a selector-grounded legacy accessibility worklist",
+    "sequence remediation without requiring a rewrite"
+  ],
+  "nonCriticalGoals": [
+    "distinguish new and existing violations",
+    "prioritize critical user paths",
+    "verify fixes",
+    "retain a baseline",
+    "document WCAG mapping"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario informed by phased public-sector accessibility remediation",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.ui-accessibility.mature-legacy-migration"
+}

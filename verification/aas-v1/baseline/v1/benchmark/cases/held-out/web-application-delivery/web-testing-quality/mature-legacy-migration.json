@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.mature-legacy-migration",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "system": "Ten-year-old travel administration portal",
+    "existingSuite": {
+      "framework": "Selenium",
+      "cases": 900,
+      "durationMinutes": 150,
+      "flakyRate": "twelve percent"
+    },
+    "target": "Playwright",
+    "constraints": [
+      "keep release coverage during migration",
+      "migrate by journey",
+      "compare old and new outcomes"
+    ]
+  },
+  "criticalGoals": [
+    "migrate browser tests incrementally to Playwright",
+    "reduce flakiness without losing critical coverage"
+  ],
+  "nonCriticalGoals": [
+    "prioritize stable journeys",
+    "replace brittle waits",
+    "define parity checks",
+    "retire Selenium safely",
+    "improve failure diagnostics"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on staged Selenium-to-Playwright migrations",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-testing-quality.mature-legacy-migration"
+}

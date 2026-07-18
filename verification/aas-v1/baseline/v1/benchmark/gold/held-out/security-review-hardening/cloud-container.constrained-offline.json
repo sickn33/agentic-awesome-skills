@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-container",
+      "allowedSkillIds": [
+        "container-security-hardening"
+      ],
+      "requiredGroups": [
+        [
+          "container-security-hardening"
+        ]
+      ]
+    },
+    {
+      "solutionId": "offline-container-components",
+      "allowedSkillIds": [
+        "container-security-hardening",
+        "security-scanning-security-dependencies"
+      ],
+      "requiredGroups": [
+        [
+          "container-security-hardening"
+        ],
+        [
+          "security-scanning-security-dependencies"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1de2b84a8f2daf63a5178468052942956277e08227b4a46d6509369106f3b3bc"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1de2b84a8f2daf63a5178468052942956277e08227b4a46d6509369106f3b3bc"
+    }
+  ]
+}

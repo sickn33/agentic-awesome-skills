@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.incident-hardening.production-greenfield",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "production-greenfield",
+    "projectSummary": "New production service hardening its GitHub Actions pipeline after untrusted issue text reached an AI review job",
+    "stack": {
+      "languages": [
+        "typescript"
+      ],
+      "frameworks": [
+        "node"
+      ],
+      "deployment": [
+        "aws",
+        "github-actions"
+      ]
+    },
+    "constraints": [
+      "workflow disabled after containment",
+      "no attacker interaction",
+      "release credentials remain protected"
+    ],
+    "authorization": {
+      "scope": "defensive workflow review and remediation verification for owned automation",
+      "mode": "read-only",
+      "productionChanges": "formal-approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "identify untrusted-input paths in CI",
+    "verify privilege and secret isolation",
+    "gate workflow re-enablement"
+  ],
+  "nonCriticalGoals": [
+    "document recurrence checks",
+    "add launch-readiness evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.incident-hardening.production-greenfield"
+}

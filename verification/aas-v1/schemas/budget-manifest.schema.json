@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/budget-manifest.schema.json",
+  "title": "AAS v1 generative and fuzz budgets",
+  "type": "object",
+  "required": ["schemaVersion", "status", "prng", "propertyAndGenerative", "parserAndMcpFuzz", "hardGate"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["pendingIndependentSeeds", "frozen"] },
+    "prng": { "type": "object", "required": ["algorithm", "rootSeed", "derivation"] },
+    "propertyAndGenerative": { "$ref": "#/$defs/budget" },
+    "parserAndMcpFuzz": { "$ref": "#/$defs/budget" },
+    "hardGate": { "type": "object" }
+  },
+  "$defs": {
+    "budget": {
+      "type": "object",
+      "required": ["minimumExecutions", "strata"],
+      "properties": {
+        "minimumExecutions": { "type": "integer", "minimum": 1 },
+        "strata": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "executions"],
+            "properties": {
+              "id": { "type": "string" },
+              "executions": { "type": "integer", "minimum": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

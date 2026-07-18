@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.frontend-architecture.monorepo-polyglot",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "workspace": {
+      "applications": [
+        "React operations console",
+        "Node.js edge API",
+        "Python forecasting service"
+      ],
+      "packages": [
+        "design tokens",
+        "API types",
+        "telemetry"
+      ]
+    },
+    "build": {
+      "orchestrator": "Turborepo",
+      "packageManager": "pnpm",
+      "ci": "selective builds required"
+    },
+    "organization": {
+      "teams": 5,
+      "ownership": "domain-aligned"
+    },
+    "problems": [
+      "accidental cross-domain imports",
+      "duplicated frontend utilities",
+      "slow all-workspace validation"
+    ]
+  },
+  "criticalGoals": [
+    "define monorepo package and application boundaries",
+    "isolate frontend feature ownership"
+  ],
+  "nonCriticalGoals": [
+    "enforce dependency direction",
+    "share contracts safely",
+    "enable selective builds",
+    "reduce duplicate utilities",
+    "keep polyglot services decoupled"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on polyglot product monorepo operating models",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.frontend-architecture.monorepo-polyglot"
+}

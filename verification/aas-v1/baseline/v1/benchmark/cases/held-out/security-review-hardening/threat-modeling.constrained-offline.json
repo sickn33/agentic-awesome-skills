@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.constrained-offline",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "constrained-offline",
+    "projectSummary": "Air-gapped laboratory data-transfer utility reviewed from architecture metadata",
+    "stack": {
+      "languages": [
+        "rust"
+      ],
+      "frameworks": [],
+      "deployment": [
+        "offline-linux"
+      ]
+    },
+    "constraints": [
+      "no network",
+      "no external scanner",
+      "review must use locally available evidence"
+    ],
+    "authorization": {
+      "scope": "defensive threat analysis of the organization-owned offline utility",
+      "mode": "non-destructive-offline",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "model removable-media and trust-boundary threats",
+    "map offline-capable mitigations"
+  ],
+  "nonCriticalGoals": [
+    "derive local verification criteria",
+    "document residual physical-access risk"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.threat-modeling.constrained-offline"
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:catalog-manifest:v1",
+  "title": "AAS verified offline catalog manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "package", "packageVersion", "catalogDigest", "digestVersion", "metadataSchemaVersion", "skillCount", "assets"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "package": { "type": "string", "minLength": 1, "maxLength": 214 },
+    "packageVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "catalogDigest": { "$ref": "#/$defs/digest" },
+    "digestVersion": { "const": 1 },
+    "metadataSchemaVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "skillCount": { "type": "integer", "minimum": 0 },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "size", "sha256"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^(data/[a-z0-9._/-]+|tools/lib/aas-v1/[a-z0-9._/-]+)$"
+          },
+          "size": { "type": "integer", "minimum": 0 },
+          "sha256": { "$ref": "#/$defs/digest" }
+        }
+      }
+    }
+  },
+  "$defs": { "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" } }
+}

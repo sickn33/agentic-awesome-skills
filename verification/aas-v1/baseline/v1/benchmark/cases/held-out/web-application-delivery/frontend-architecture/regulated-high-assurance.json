@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.frontend-architecture.regulated-high-assurance",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "domain": "Clinical trial participant portal",
+    "stack": [
+      "React",
+      "TypeScript",
+      "standards-based REST API"
+    ],
+    "assurance": {
+      "changeTraceability": true,
+      "segregatedDuties": true,
+      "auditRetentionYears": 10
+    },
+    "data": {
+      "classification": "sensitive health data",
+      "clientPersistence": "minimize"
+    },
+    "constraints": [
+      "reviewable dependency graph",
+      "deterministic validation",
+      "explicit error states",
+      "no unapproved third-party runtime"
+    ]
+  },
+  "criticalGoals": [
+    "define auditable frontend module boundaries",
+    "keep sensitive data flow explicit and minimal"
+  ],
+  "nonCriticalGoals": [
+    "make state ownership reviewable",
+    "standardize failure handling",
+    "support change traceability",
+    "restrict cross-module coupling",
+    "document assurance decisions"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario informed by high-assurance healthcare web delivery controls",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.frontend-architecture.regulated-high-assurance"
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.evaluation-testing.code-review-agent-eval",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "code review agent evaluation",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Agent runtime"
+    ],
+    "context": "quality and abstention behavior need a repeatable benchmark",
+    "constraints": [
+      "held-out cases",
+      "no retry selection"
+    ]
+  },
+  "criticalGoals": [
+    "agent-evaluation-design",
+    "reproducible-cases"
+  ],
+  "nonCriticalGoals": [
+    "failure-metrics",
+    "regression-suite"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.evaluation-testing.code-review-agent-eval"
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "monitoring-transition",
+      "allowedSkillIds": [
+        "observability-monitoring-monitor-setup"
+      ],
+      "requiredGroups": [
+        [
+          "observability-monitoring-monitor-setup"
+        ]
+      ]
+    },
+    {
+      "solutionId": "instrumentation-transition",
+      "allowedSkillIds": [
+        "observability-and-instrumentation"
+      ],
+      "requiredGroups": [
+        [
+          "observability-and-instrumentation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-3a6e5db2dfcc4fa359b7b7d3f618549bd22a8e751fc49de31eff158f8fb16722"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-3a6e5db2dfcc4fa359b7b7d3f618549bd22a8e751fc49de31eff158f8fb16722"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.incident-hardening.session-anomaly",
+  "acceptedSolutions": [
+    {
+      "solutionId": "incident-response-and-fix-review",
+      "allowedSkillIds": [
+        "incident-responder",
+        "fix-review"
+      ],
+      "requiredGroups": [
+        [
+          "incident-responder"
+        ],
+        [
+          "fix-review"
+        ]
+      ]
+    },
+    {
+      "solutionId": "incident-fix-review",
+      "allowedSkillIds": [
+        "incident-response-incident-response",
+        "fix-review"
+      ],
+      "requiredGroups": [
+        [
+          "incident-response-incident-response"
+        ],
+        [
+          "fix-review"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-3d2b57a4112190baabd0478713c7e576dea942f24d87e0eb2c93162993a8a4ec"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-3d2b57a4112190baabd0478713c7e576dea942f24d87e0eb2c93162993a8a4ec"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

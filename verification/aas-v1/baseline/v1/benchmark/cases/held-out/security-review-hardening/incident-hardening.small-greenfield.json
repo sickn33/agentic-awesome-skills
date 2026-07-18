@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.incident-hardening.small-greenfield",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "small-greenfield",
+    "projectSummary": "Owned staging API recovering after a test credential appeared in a build log",
+    "stack": {
+      "languages": [
+        "typescript"
+      ],
+      "frameworks": [
+        "node"
+      ],
+      "deployment": [
+        "managed-container",
+        "github-actions"
+      ]
+    },
+    "constraints": [
+      "credential already revoked",
+      "post-incident hardening only",
+      "no production access"
+    ],
+    "authorization": {
+      "scope": "defensive exposure review and remediation verification for the owned project",
+      "mode": "read-only",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "find remaining credential exposure paths",
+    "verify the remediation closes the logging failure"
+  ],
+  "nonCriticalGoals": [
+    "add a pre-release regression gate",
+    "document prevention ownership"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.incident-hardening.small-greenfield"
+}

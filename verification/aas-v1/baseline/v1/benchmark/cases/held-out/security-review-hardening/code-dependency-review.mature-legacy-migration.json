@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.mature-legacy-migration",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "mature-legacy-migration",
+    "projectSummary": "Owned Java platform replacing unsupported libraries during a staged framework migration",
+    "stack": {
+      "languages": [
+        "java"
+      ],
+      "packageEcosystems": [
+        "maven"
+      ],
+      "deployment": [
+        "virtual-machines",
+        "containers"
+      ]
+    },
+    "constraints": [
+      "compatibility freeze for core modules",
+      "unsupported transitive dependencies",
+      "phased remediation only"
+    ],
+    "authorization": {
+      "scope": "defensive dependency review and migration planning for the owned platform",
+      "mode": "read-only",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "identify vulnerable legacy dependencies",
+    "separate direct and transitive remediation",
+    "avoid unsafe upgrade recommendations"
+  ],
+  "nonCriticalGoals": [
+    "sequence compatible upgrades",
+    "record temporary compensating controls"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.code-dependency-review.mature-legacy-migration"
+}

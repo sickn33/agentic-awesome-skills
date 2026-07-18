@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.memory-context-retrieval.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "domain-partitioned-memory",
+      "allowedSkillIds": [
+        "agent-memory-systems",
+        "context-manager",
+        "rag-engineer",
+        "rag-implementation",
+        "hybrid-search-implementation",
+        "filesystem-context"
+      ],
+      "requiredGroups": [
+        [
+          "agent-memory-systems",
+          "context-manager"
+        ],
+        [
+          "rag-engineer",
+          "rag-implementation"
+        ],
+        [
+          "hybrid-search-implementation",
+          "filesystem-context"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-98902b25156739f1828fa838272801fdd9c4394244eec9296d5f9767bbd44c1f"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-98902b25156739f1828fa838272801fdd9c4394244eec9296d5f9767bbd44c1f"
+    }
+  ]
+}

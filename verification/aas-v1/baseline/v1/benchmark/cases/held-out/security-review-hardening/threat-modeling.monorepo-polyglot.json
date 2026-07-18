@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.monorepo-polyglot",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "monorepo-polyglot",
+    "projectSummary": "Organization-owned commerce monorepo with web, API, worker and shared identity packages",
+    "stack": {
+      "languages": [
+        "typescript",
+        "python",
+        "go"
+      ],
+      "frameworks": [
+        "react",
+        "fastapi"
+      ],
+      "deployment": [
+        "kubernetes"
+      ]
+    },
+    "constraints": [
+      "multiple service owners",
+      "shared authentication boundary",
+      "no live attack simulation"
+    ],
+    "authorization": {
+      "scope": "defensive system-level modeling of owned repository components",
+      "mode": "non-destructive",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "map cross-service trust boundaries",
+    "identify confused-deputy and data-flow threats",
+    "assign mitigations to service owners"
+  ],
+  "nonCriticalGoals": [
+    "derive cross-language security requirements",
+    "document residual inter-service risk"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.threat-modeling.monorepo-polyglot"
+}

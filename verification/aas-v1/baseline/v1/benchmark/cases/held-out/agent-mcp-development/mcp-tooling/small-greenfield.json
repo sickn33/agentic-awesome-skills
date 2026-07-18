@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.mcp-tooling.small-greenfield",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "greenfield",
+    "teamSize": 2,
+    "languages": [
+      "typescript"
+    ],
+    "transport": "stdio",
+    "toolSurface": "three-read-only-project-tools",
+    "constraints": [
+      "local-only",
+      "small-schemas",
+      "no-persistence"
+    ]
+  },
+  "criticalGoals": [
+    "design clear MCP tools with bounded schemas",
+    "implement protocol-correct local stdio behavior"
+  ],
+  "nonCriticalGoals": [
+    "separate trusted metadata from untrusted content",
+    "add actionable errors and tool descriptions"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.mcp-tooling.small-greenfield"
+}

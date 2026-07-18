@@ -1,0 +1,620 @@
+{
+  "$schema": "../../../../schemas/legacy-command-corpus.schema.json",
+  "allowedDifferences": "allowed-differences.json",
+  "baseline": {
+    "distIntegrity": "sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg==",
+    "package": "agentic-awesome-skills",
+    "sourceCommit": "ab5f6c205a548d2f4bec411728c79b9c156fc696",
+    "sourceTag": "v14.6.0",
+    "tarball": "https://registry.npmjs.org/agentic-awesome-skills/-/agentic-awesome-skills-14.6.0.tgz",
+    "version": "14.6.0"
+  },
+  "cases": [
+    {
+      "args": [
+        "--help"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/help-long.json",
+      "expectedSnapshotSha256": "sha256-7216ddab3cc37856bb149cdd4b065085778c5234543d6ca1e8fbb4065f58e92a",
+      "fixtureState": "clean",
+      "id": "help-long"
+    },
+    {
+      "args": [
+        "-h"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/help-short.json",
+      "expectedSnapshotSha256": "sha256-d448ab52c6a00b1942304847de24794b5ac3c693b0f7c35063218b5d228dfbb0",
+      "fixtureState": "clean",
+      "id": "help-short"
+    },
+    {
+      "args": [
+        "--version"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/version.json",
+      "expectedSnapshotSha256": "sha256-6623a791dafc4930ea5a44c079013f48c5a1805a9a394dc531ba4f28aa287a7e",
+      "fixtureState": "clean",
+      "id": "version"
+    },
+    {
+      "args": [],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/default-install.json",
+      "expectedSnapshotSha256": "sha256-c6a2e257525309080edc36baf45db5933b3ccea3288ae337aa657f3dc5783cd0",
+      "fixtureState": "clean",
+      "id": "default-install"
+    },
+    {
+      "args": [
+        "install",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/literal-install.json",
+      "expectedSnapshotSha256": "sha256-81de2e6b1d8caedf2b0ac79ff7cc2e1b94454115aa502a4759227003bc290cd4",
+      "fixtureState": "clean",
+      "id": "literal-install"
+    },
+    {
+      "args": [
+        "--cursor",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/target-cursor.json",
+      "expectedSnapshotSha256": "sha256-b06f480978a83b15110a65ea824f9032123b4da0a364edaa34c1d5e6296c69b3",
+      "fixtureState": "clean",
+      "id": "target-cursor"
+    },
+    {
+      "args": [
+        "--claude",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/target-claude.json",
+      "expectedSnapshotSha256": "sha256-ae3dd0f9b1dc85f3c3e47fcbfb0cc79511e4819598400713e245d9e9803dc4a3",
+      "fixtureState": "clean",
+      "id": "target-claude"
+    },
+    {
+      "args": [
+        "--gemini",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/target-gemini.json",
+      "expectedSnapshotSha256": "sha256-a655dc504c67f42b1f26d8868ddc5ef2c03be81a58cb83a73f2f80910a48716c",
+      "fixtureState": "clean",
+      "id": "target-gemini"
+    },
+    {
+      "args": [
+        "--codex",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/target-codex.json",
+      "expectedSnapshotSha256": "sha256-b08c3a582893b772b90dd2a3f4b2153e07d88f4485d0873659d5c301a69a5cc9",
+      "fixtureState": "clean",
+      "id": "target-codex"
+    },
+    {
+      "args": [
+        "--kiro",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/target-kiro.json",
+      "expectedSnapshotSha256": "sha256-a3a9063c2c30ae7d4b3f94074d7b0d528207d1fc436de5851b050f53da89884d",
+      "fixtureState": "clean",
+      "id": "target-kiro"
+    },
+    {
+      "args": [
+        "--antigravity",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/target-antigravity.json",
+      "expectedSnapshotSha256": "sha256-5e707440ba35bcb09f6f60cd1d246f25d9ace92d38d4b603bb0bb35548a43c99",
+      "fixtureState": "clean",
+      "id": "target-antigravity"
+    },
+    {
+      "args": [
+        "--agy",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/target-agy.json",
+      "expectedSnapshotSha256": "sha256-e8ece70b482b614a833d43330f6c2784879269e0d39deb70e07b37d93ea8324c",
+      "fixtureState": "clean",
+      "id": "target-agy"
+    },
+    {
+      "args": [
+        "--codex",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/codex-home.json",
+      "expectedSnapshotSha256": "sha256-0e8c692779779ddd7d464e9e1abd7fd0f8007f41ae43fead9af0069f21fab484",
+      "fixtureState": "codex-home-override",
+      "id": "codex-home"
+    },
+    {
+      "args": [
+        "--path",
+        "fixture/relative-target",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/custom-relative-path.json",
+      "expectedSnapshotSha256": "sha256-4b7f08a15a48ac74e80e3bf94956daf4ee4a05e31ca12a8aa79bf5fb7dfb326c",
+      "fixtureState": "clean",
+      "id": "custom-relative-path"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/custom-absolute-path.json",
+      "expectedSnapshotSha256": "sha256-a06b1920a55be78fbb4d00ce296a5a6ee5bb38684242637408d1f2fa829ffbc7",
+      "fixtureState": "clean",
+      "id": "custom-absolute-path"
+    },
+    {
+      "args": [
+        "--claude",
+        "--codex",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/multi-target.json",
+      "expectedSnapshotSha256": "sha256-2e8202323953577365a45837c2aa709b96af5356a5c1a57be7556c6be32e9781",
+      "fixtureState": "clean",
+      "id": "multi-target"
+    },
+    {
+      "args": [
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/explicit-release.json",
+      "expectedSnapshotSha256": "sha256-b94cf13b3b4270bd25978cdc5dde642ee608109f2853a6422302b152e87106fa",
+      "fixtureState": "clean",
+      "id": "explicit-release"
+    },
+    {
+      "args": [
+        "--tag",
+        "v14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/explicit-tag.json",
+      "expectedSnapshotSha256": "sha256-997d70e047a5c24a4992d8d1459326900a57e86f0d67004ccddb2cf9fe298640",
+      "fixtureState": "clean",
+      "id": "explicit-tag"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--risk",
+        "safe,offensive-",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/risk-selector.json",
+      "expectedSnapshotSha256": "sha256-bdb2494586bd9b2b9fa0b6552fce9944b30eab4244643a1b258ba3b4b10d3eee",
+      "fixtureState": "clean",
+      "id": "risk-selector"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--category",
+        "development,backend",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/category-selector.json",
+      "expectedSnapshotSha256": "sha256-0daeeb19ddf7918bf2aa99771e8ed2489e155f5cd1e949fce31474d2b832bb9f",
+      "fixtureState": "clean",
+      "id": "category-selector"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--tags",
+        "debugging,typescript-legacy-",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/tags-selector.json",
+      "expectedSnapshotSha256": "sha256-be61656ff3335a2ca3b4632f18979a6f057c2a70221eae91aa1504bb1fff755f",
+      "fixtureState": "clean",
+      "id": "tags-selector"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--skills",
+        "frontend-design",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/exact-root-skill.json",
+      "expectedSnapshotSha256": "sha256-37fa7b5c7ff75ffdd6704505e655d1410be755c8bf25f1a733a698438d3f73fa",
+      "fixtureState": "clean",
+      "id": "exact-root-skill"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--skills",
+        "game-development/2d-games",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/exact-nested-skill.json",
+      "expectedSnapshotSha256": "sha256-956104efcee2ce922a7eb5f21a57b8441639c771bf5ec8d8a0f3a5e2a29594f7",
+      "fixtureState": "clean",
+      "id": "exact-nested-skill"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--skills",
+        "frontend-design,backend-dev-guidelines",
+        "--category",
+        "development,backend",
+        "--risk",
+        "safe,none",
+        "--tags",
+        "frontend,api",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/combined-selection.json",
+      "expectedSnapshotSha256": "sha256-e701a057893f6cdd4de6f61fdd2e90314ddbbf5500b759960cb1394911838b5d",
+      "fixtureState": "clean",
+      "id": "combined-selection"
+    },
+    {
+      "args": [
+        "--path",
+        "{{MISSING_TARGET}}",
+        "--skills",
+        "frontend-design",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/dry-run-missing-target.json",
+      "expectedSnapshotSha256": "sha256-0c0f7ee5048255d2ce5c97575d4ee3e91011126fd5151e3a8ea360f746d408be",
+      "fixtureState": "missing-target",
+      "id": "dry-run-missing-target"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--skills",
+        "frontend-design",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/dry-run-stale-managed.json",
+      "expectedSnapshotSha256": "sha256-b30a36c7b8fa877d661ccede5378e9cae4dd093968f559425ffea1e454674437",
+      "fixtureState": "stale-managed-with-unmanaged-sentinel",
+      "id": "dry-run-stale-managed"
+    },
+    {
+      "args": [
+        "--path",
+        "{{ABSOLUTE_TARGET}}",
+        "--skills",
+        "frontend-design",
+        "--release",
+        "14.6.0"
+      ],
+      "expectedExitCode": 0,
+      "expectedSnapshot": "snapshots/apply-update-managed.json",
+      "expectedSnapshotSha256": "sha256-e57b08cd31186ea8960e144263f1d50e1f210b5d39f0e73791b9b7a141ef8a41",
+      "fixtureState": "existing-managed-and-unmanaged",
+      "id": "apply-update-managed"
+    },
+    {
+      "args": [
+        "--path"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/missing-value-path.json",
+      "expectedSnapshotSha256": "sha256-513034309a2e8336d687d9c2b0bb8cb8e76e2614dbcf30375217afa4608648ac",
+      "fixtureState": "clean",
+      "id": "missing-value-path"
+    },
+    {
+      "args": [
+        "--release"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/missing-value-release.json",
+      "expectedSnapshotSha256": "sha256-37a2808602c692a546ef47db8fa590a411dabbdb41f1fbcbff73082bca210288",
+      "fixtureState": "clean",
+      "id": "missing-value-release"
+    },
+    {
+      "args": [
+        "--tag"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/missing-value-tag.json",
+      "expectedSnapshotSha256": "sha256-0075fcc7c7da07b4148485da0848fa603a91f150b0e02b5fd25a2636ea209a4b",
+      "fixtureState": "clean",
+      "id": "missing-value-tag"
+    },
+    {
+      "args": [
+        "--risk"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/missing-value-risk.json",
+      "expectedSnapshotSha256": "sha256-f7bd13345afff8ff80fb949afbbc90b649b0226008dbe703e9bdb5232913064e",
+      "fixtureState": "clean",
+      "id": "missing-value-risk"
+    },
+    {
+      "args": [
+        "--category"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/missing-value-category.json",
+      "expectedSnapshotSha256": "sha256-cb551d6dfd2472fbf76fd0976e0ba7222936c14163d8083316dceb47bfd89975",
+      "fixtureState": "clean",
+      "id": "missing-value-category"
+    },
+    {
+      "args": [
+        "--tags"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/missing-value-tags.json",
+      "expectedSnapshotSha256": "sha256-7c8ba60f6bcc29661b5a6a3926ccd9d916c1cf00773790ac39dbf9f1e78b7631",
+      "fixtureState": "clean",
+      "id": "missing-value-tags"
+    },
+    {
+      "args": [
+        "--skills"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/missing-value-skills.json",
+      "expectedSnapshotSha256": "sha256-d3cbc405f5b8b7889d762e574d0b38628b73d23acd314a9c03a51d293db90ef1",
+      "fixtureState": "clean",
+      "id": "missing-value-skills"
+    },
+    {
+      "args": [
+        "--unknown"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/unknown-flag.json",
+      "expectedSnapshotSha256": "sha256-42a9ddaf46c735e4861afb6876f4c68d76eee41eed7e72c5d6e677010d9c3c56",
+      "fixtureState": "clean",
+      "id": "unknown-flag"
+    },
+    {
+      "args": [
+        "status"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/unknown-command.json",
+      "expectedSnapshotSha256": "sha256-e538a1e8b334279a2dadc7110cab5f15546ff3f94378928017d0bbb1cb503328",
+      "fixtureState": "clean",
+      "id": "unknown-command"
+    },
+    {
+      "args": [
+        "--path",
+        "{{MISSING_TARGET}}",
+        "--skills",
+        "does-not-exist",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/unknown-skill.json",
+      "expectedSnapshotSha256": "sha256-4c913cb54038e0914f5b6363b81c2d601445045905fd37d493aad0d268f379bb",
+      "fixtureState": "clean",
+      "id": "unknown-skill"
+    },
+    {
+      "args": [
+        "--path",
+        "{{MISSING_TARGET}}",
+        "--skills",
+        "2d-games",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/ambiguous-skill.json",
+      "expectedSnapshotSha256": "sha256-a4845f0598a773e917135b930e54e39959ea2c02bc79107d6d2690d7bdf9d9b1",
+      "fixtureState": "ambiguous-skill-fixture",
+      "id": "ambiguous-skill"
+    },
+    {
+      "args": [
+        "--path",
+        "{{MISSING_TARGET}}",
+        "--skills",
+        "frontend-design,,backend-dev-guidelines",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/empty-exact-token.json",
+      "expectedSnapshotSha256": "sha256-07e37b76cd4f2532d3cfa80761cb68b56cea478566d5f1ff3bd330e4cca5fc36",
+      "fixtureState": "clean",
+      "id": "empty-exact-token"
+    },
+    {
+      "args": [
+        "--path",
+        "{{MISSING_TARGET}}",
+        "--risk",
+        "nonexistent",
+        "--release",
+        "14.6.0",
+        "--dry-run"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/no-filter-match.json",
+      "expectedSnapshotSha256": "sha256-80be970678e08dafd39d728bd9e4c3a8327387465de79d9bbda051e9d1f9d3b5",
+      "fixtureState": "clean",
+      "id": "no-filter-match"
+    },
+    {
+      "args": [
+        "--path",
+        "{{SYMLINK_TARGET}}",
+        "--skills",
+        "frontend-design",
+        "--release",
+        "14.6.0"
+      ],
+      "expectedExitCode": 1,
+      "expectedSnapshot": "snapshots/unsafe-symlink-target.json",
+      "expectedSnapshotSha256": "sha256-ca1aeee6ee74ec6b898bed22b255459828dea7d6a6fe18e3231a41db715d323c",
+      "fixtureState": "symlink-target",
+      "id": "unsafe-symlink-target"
+    }
+  ],
+  "corpusVersion": "1.0.0",
+  "fixtureRepository": {
+    "fakeGitTraceDigest": "sha256-b36ea8cfd26d642235ce061bb5dcc925bec4b5bf63137cc17edb702b62560384",
+    "sourceCommit": "ab5f6c205a548d2f4bec411728c79b9c156fc696",
+    "status": "frozen",
+    "treeDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8"
+  },
+  "invariants": {
+    "compareExitCode": true,
+    "compareFilesystemTreeAndBytes": true,
+    "compareNormalizedStderr": true,
+    "compareNormalizedStdout": true,
+    "legacyAliasCreatesStackState": false,
+    "retriesAllowed": false
+  },
+  "normalization": {
+    "ephemeralRoots": [
+      "<CASE_ROOT>",
+      "<BASELINE_RUNTIME>",
+      "<CORPUS_ROOT>"
+    ],
+    "excludedEvidencePath": "harness/",
+    "fileModes": "Intentionally omitted because the legacy contract compares portable path, type and normalized bytes across NTFS and POSIX filesystems",
+    "lineEndings": "CRLF and CR are normalized to LF for stdout and stderr",
+    "manifestTimestamp": "Only .antigravity-install-manifest.json updatedAt is replaced with <TIMESTAMP> before tree hashing",
+    "version": "1.0.0"
+  },
+  "observation": {
+    "network": {
+      "contractVersion": "1.0.0",
+      "implementationSha256": "sha256-e1de0485bf75256e361d762e29046dee329c4bd6918fddc57d3ffdaa891fa83b",
+      "selfTestDigest": "sha256-6f3c5ec70a65e743901078ce9123a203dc14db472240f66115a90b3b4560ae15",
+      "status": "passed"
+    }
+  },
+  "publicFlags": [
+    "--help",
+    "-h",
+    "--version",
+    "--path",
+    "--release",
+    "--tag",
+    "--risk",
+    "--category",
+    "--tags",
+    "--skills",
+    "--dry-run",
+    "--cursor",
+    "--claude",
+    "--gemini",
+    "--codex",
+    "--kiro",
+    "--antigravity",
+    "--agy"
+  ],
+  "schemaVersion": 1,
+  "snapshotIndex": "snapshot-index.json",
+  "status": "frozen",
+  "targets": [
+    "cursor",
+    "claude",
+    "gemini",
+    "codex",
+    "kiro",
+    "antigravity",
+    "agy"
+  ]
+}

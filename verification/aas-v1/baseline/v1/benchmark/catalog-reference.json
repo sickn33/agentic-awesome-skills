@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen",
+  "sourceCommit": "4101f32402448f4fdd96b3cf166a81b8cee8b557",
+  "catalogPackageVersion": "14.6.0",
+  "pathAtSourceCommit": "data/skills_index.json",
+  "sha256": "073d00a736d2b8dd252c719da760b7bb1d9fd232fa70bc9fe01bb48b1428a3f3",
+  "skillCount": 1965,
+  "sortedSkillIdsSha256": "6917535eda35b268f31c586dd59878b192a4453c7f01e6162b353f609c19b2c1",
+  "meaning": "This is the catalog snapshot against which Phase-0 gold skill IDs and independent reviews were authored. Product metadata enrichment may add structured evidence but must preserve these referenced IDs or invalidate the benchmark evidence."
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.load-performance.ticket-release-load",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "event ticketing API",
+    "languages": [
+      "Go"
+    ],
+    "frameworks": [
+      "HTTP API"
+    ],
+    "context": "burst traffic expected at scheduled release time",
+    "constraints": [
+      "bounded local generation",
+      "p95 threshold"
+    ]
+  },
+  "criticalGoals": [
+    "load-scenario-design",
+    "latency-thresholds"
+  ],
+  "nonCriticalGoals": [
+    "repeatable-performance-run",
+    "result-review"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.test-qa-automation.load-performance.ticket-release-load"
+}

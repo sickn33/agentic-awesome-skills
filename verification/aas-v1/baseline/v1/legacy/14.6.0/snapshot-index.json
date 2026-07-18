@@ -1,0 +1,296 @@
+{
+  "aggregateFakeGitTraceDigest": "sha256-b36ea8cfd26d642235ce061bb5dcc925bec4b5bf63137cc17edb702b62560384",
+  "caseCount": 41,
+  "fixtureTreeDigest": "sha256-80c220b08a221685c26a23e2cd7c1b06628bfec7a542fa91d8ee19a5d3e035f8",
+  "schemaVersion": 1,
+  "snapshots": [
+    {
+      "caseId": "help-long",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/help-long.json",
+      "sha256": "sha256-7216ddab3cc37856bb149cdd4b065085778c5234543d6ca1e8fbb4065f58e92a",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "help-short",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/help-short.json",
+      "sha256": "sha256-d448ab52c6a00b1942304847de24794b5ac3c693b0f7c35063218b5d228dfbb0",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "version",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/version.json",
+      "sha256": "sha256-6623a791dafc4930ea5a44c079013f48c5a1805a9a394dc531ba4f28aa287a7e",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "default-install",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/default-install.json",
+      "sha256": "sha256-c6a2e257525309080edc36baf45db5933b3ccea3288ae337aa657f3dc5783cd0",
+      "treeDigest": "sha256-06ccfd8737a72e3af50e242d88c59a5eda5e9210e97a451ced96403e0489ce23"
+    },
+    {
+      "caseId": "literal-install",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/literal-install.json",
+      "sha256": "sha256-81de2e6b1d8caedf2b0ac79ff7cc2e1b94454115aa502a4759227003bc290cd4",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "target-cursor",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/target-cursor.json",
+      "sha256": "sha256-b06f480978a83b15110a65ea824f9032123b4da0a364edaa34c1d5e6296c69b3",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "target-claude",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/target-claude.json",
+      "sha256": "sha256-ae3dd0f9b1dc85f3c3e47fcbfb0cc79511e4819598400713e245d9e9803dc4a3",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "target-gemini",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/target-gemini.json",
+      "sha256": "sha256-a655dc504c67f42b1f26d8868ddc5ef2c03be81a58cb83a73f2f80910a48716c",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "target-codex",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/target-codex.json",
+      "sha256": "sha256-b08c3a582893b772b90dd2a3f4b2153e07d88f4485d0873659d5c301a69a5cc9",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "target-kiro",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/target-kiro.json",
+      "sha256": "sha256-a3a9063c2c30ae7d4b3f94074d7b0d528207d1fc436de5851b050f53da89884d",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "target-antigravity",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/target-antigravity.json",
+      "sha256": "sha256-5e707440ba35bcb09f6f60cd1d246f25d9ace92d38d4b603bb0bb35548a43c99",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "target-agy",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/target-agy.json",
+      "sha256": "sha256-e8ece70b482b614a833d43330f6c2784879269e0d39deb70e07b37d93ea8324c",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "codex-home",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/codex-home.json",
+      "sha256": "sha256-0e8c692779779ddd7d464e9e1abd7fd0f8007f41ae43fead9af0069f21fab484",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "custom-relative-path",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/custom-relative-path.json",
+      "sha256": "sha256-4b7f08a15a48ac74e80e3bf94956daf4ee4a05e31ca12a8aa79bf5fb7dfb326c",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "custom-absolute-path",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/custom-absolute-path.json",
+      "sha256": "sha256-a06b1920a55be78fbb4d00ce296a5a6ee5bb38684242637408d1f2fa829ffbc7",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "multi-target",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/multi-target.json",
+      "sha256": "sha256-2e8202323953577365a45837c2aa709b96af5356a5c1a57be7556c6be32e9781",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "explicit-release",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/explicit-release.json",
+      "sha256": "sha256-b94cf13b3b4270bd25978cdc5dde642ee608109f2853a6422302b152e87106fa",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "explicit-tag",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/explicit-tag.json",
+      "sha256": "sha256-997d70e047a5c24a4992d8d1459326900a57e86f0d67004ccddb2cf9fe298640",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "risk-selector",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/risk-selector.json",
+      "sha256": "sha256-bdb2494586bd9b2b9fa0b6552fce9944b30eab4244643a1b258ba3b4b10d3eee",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "category-selector",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/category-selector.json",
+      "sha256": "sha256-0daeeb19ddf7918bf2aa99771e8ed2489e155f5cd1e949fce31474d2b832bb9f",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "tags-selector",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/tags-selector.json",
+      "sha256": "sha256-be61656ff3335a2ca3b4632f18979a6f057c2a70221eae91aa1504bb1fff755f",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "exact-root-skill",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/exact-root-skill.json",
+      "sha256": "sha256-37fa7b5c7ff75ffdd6704505e655d1410be755c8bf25f1a733a698438d3f73fa",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "exact-nested-skill",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/exact-nested-skill.json",
+      "sha256": "sha256-956104efcee2ce922a7eb5f21a57b8441639c771bf5ec8d8a0f3a5e2a29594f7",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "combined-selection",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/combined-selection.json",
+      "sha256": "sha256-e701a057893f6cdd4de6f61fdd2e90314ddbbf5500b759960cb1394911838b5d",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "dry-run-missing-target",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/dry-run-missing-target.json",
+      "sha256": "sha256-0c0f7ee5048255d2ce5c97575d4ee3e91011126fd5151e3a8ea360f746d408be",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "dry-run-stale-managed",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/dry-run-stale-managed.json",
+      "sha256": "sha256-b30a36c7b8fa877d661ccede5378e9cae4dd093968f559425ffea1e454674437",
+      "treeDigest": "sha256-b68c1be0bbbcb1d98c7b0c0feb14700b9abd12c202d6fb2bd80d626cd9f191ac"
+    },
+    {
+      "caseId": "apply-update-managed",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/apply-update-managed.json",
+      "sha256": "sha256-e57b08cd31186ea8960e144263f1d50e1f210b5d39f0e73791b9b7a141ef8a41",
+      "treeDigest": "sha256-7caeed86af504f1367e6c2907b2b5e6c6563f4178a93f26c21096f7b408f1c6d"
+    },
+    {
+      "caseId": "missing-value-path",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/missing-value-path.json",
+      "sha256": "sha256-513034309a2e8336d687d9c2b0bb8cb8e76e2614dbcf30375217afa4608648ac",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "missing-value-release",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/missing-value-release.json",
+      "sha256": "sha256-37a2808602c692a546ef47db8fa590a411dabbdb41f1fbcbff73082bca210288",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "missing-value-tag",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/missing-value-tag.json",
+      "sha256": "sha256-0075fcc7c7da07b4148485da0848fa603a91f150b0e02b5fd25a2636ea209a4b",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "missing-value-risk",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/missing-value-risk.json",
+      "sha256": "sha256-f7bd13345afff8ff80fb949afbbc90b649b0226008dbe703e9bdb5232913064e",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "missing-value-category",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/missing-value-category.json",
+      "sha256": "sha256-cb551d6dfd2472fbf76fd0976e0ba7222936c14163d8083316dceb47bfd89975",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "missing-value-tags",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/missing-value-tags.json",
+      "sha256": "sha256-7c8ba60f6bcc29661b5a6a3926ccd9d916c1cf00773790ac39dbf9f1e78b7631",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "missing-value-skills",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/missing-value-skills.json",
+      "sha256": "sha256-d3cbc405f5b8b7889d762e574d0b38628b73d23acd314a9c03a51d293db90ef1",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "unknown-flag",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/unknown-flag.json",
+      "sha256": "sha256-42a9ddaf46c735e4861afb6876f4c68d76eee41eed7e72c5d6e677010d9c3c56",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "unknown-command",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/unknown-command.json",
+      "sha256": "sha256-e538a1e8b334279a2dadc7110cab5f15546ff3f94378928017d0bbb1cb503328",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "unknown-skill",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/unknown-skill.json",
+      "sha256": "sha256-4c913cb54038e0914f5b6363b81c2d601445045905fd37d493aad0d268f379bb",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "ambiguous-skill",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/ambiguous-skill.json",
+      "sha256": "sha256-a4845f0598a773e917135b930e54e39959ea2c02bc79107d6d2690d7bdf9d9b1",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "empty-exact-token",
+      "fakeGitTraceDigest": "sha256-4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "path": "snapshots/empty-exact-token.json",
+      "sha256": "sha256-07e37b76cd4f2532d3cfa80761cb68b56cea478566d5f1ff3bd330e4cca5fc36",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "no-filter-match",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/no-filter-match.json",
+      "sha256": "sha256-80be970678e08dafd39d728bd9e4c3a8327387465de79d9bbda051e9d1f9d3b5",
+      "treeDigest": "sha256-990ac9c15e723887787292d9bec8f9a0706171ab24f186a46bacdb73e3280f50"
+    },
+    {
+      "caseId": "unsafe-symlink-target",
+      "fakeGitTraceDigest": "sha256-66b88ae90a728f6ac791bdc54dadc407b1fee945e3e6d30dcebd32c721a745d4",
+      "path": "snapshots/unsafe-symlink-target.json",
+      "sha256": "sha256-ca1aeee6ee74ec6b898bed22b255459828dea7d6a6fe18e3231a41db715d323c",
+      "treeDigest": "sha256-eca428efd07f9cc72a171bc05f2e482eb9fc9ea02be5c4914d60e3936e4ee5aa"
+    }
+  ],
+  "status": "frozen"
+}

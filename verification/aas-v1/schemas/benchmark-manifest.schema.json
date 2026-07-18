@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/benchmark-manifest.schema.json",
+  "title": "AAS v1 benchmark manifest",
+  "type": "object",
+  "required": ["schemaVersion", "benchmarkVersion", "status", "intents", "heldOut", "abstention", "labelsFrozen"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "benchmarkVersion": { "type": "string" },
+    "status": { "enum": ["structureOnly", "frozen"] },
+    "intents": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    },
+    "heldOut": {
+      "type": "object",
+      "required": ["index", "casesPerIntent", "diversification"],
+      "properties": {
+        "index": { "type": "string" },
+        "casesPerIntent": { "const": 30 },
+        "diversification": { "const": "five-sub-intents-by-six-archetypes" }
+      }
+    },
+    "abstention": { "type": "object" },
+    "labelsFrozen": { "type": "boolean" }
+  }
+}

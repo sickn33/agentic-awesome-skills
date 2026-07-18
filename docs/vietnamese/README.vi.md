@@ -2,6 +2,8 @@
 
 > **Thư viện GitHub có thể cài đặt gồm hơn 1,936 kỹ năng agentic cho Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity và các trợ lý lập trình AI khác.**
 
+> **Lối vào được khuyến nghị — AAS Core:** Với Codex và Claude Code, hãy dùng AAS MCP cục bộ, chỉ đọc để tìm kiếm catalog và nhận đề xuất stack tối thiểu theo quy tắc xác định. Xem lại `aas-stack.json` và kế hoạch CLI; luồng preview hiện được ghi nhận dừng sau bước xem kế hoạch. [Tìm hiểu AAS Core](AAS_CORE.vi.md).
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Anthropic-purple)](https://claude.ai)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Google-blue)](https://github.com/google-gemini/gemini-cli)

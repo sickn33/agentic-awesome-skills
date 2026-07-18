@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.frontend-architecture.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "angular-incremental-modernization",
+      "allowedSkillIds": [
+        "angular-migration",
+        "angular"
+      ],
+      "requiredGroups": [
+        [
+          "angular-migration"
+        ],
+        [
+          "angular"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-cc1edd9a7693586eda28f82d95653c02955bd36d7d4660c7f363aa68b323f814"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-cc1edd9a7693586eda28f82d95653c02955bd36d7d4660c7f363aa68b323f814"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.personal-planning.wedding-seating",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PERSONAL_PLANNING"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-07e62c7ef63a74eca5aa9fb589cfd1dd8449b932858454106dbc2c8a1e1a22d5"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-07e62c7ef63a74eca5aa9fb589cfd1dd8449b932858454106dbc2c8a1e1a22d5"
+    }
+  ]
+}

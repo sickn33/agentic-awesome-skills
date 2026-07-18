@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.async-integrations.monorepo-polyglot",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "mature",
+    "repositoryShape": "monorepo",
+    "languages": [
+      "go",
+      "python",
+      "java"
+    ],
+    "integrationShape": "events-and-workflows",
+    "constraints": [
+      "multiple-brokers",
+      "shared-event-contracts",
+      "cross-service-sagas",
+      "independent-deployments"
+    ]
+  },
+  "criticalGoals": [
+    "standardize event contracts across languages",
+    "coordinate long-running workflows without distributed transactions"
+  ],
+  "nonCriticalGoals": [
+    "define projection and replay ownership",
+    "limit duplicate and out-of-order effects"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.async-integrations.monorepo-polyglot"
+}

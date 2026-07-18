@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.production-greenfield",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "production event-ticketing platform",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Node.js",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "testingContext": "launch traffic requires staged load, spike and soak scenarios",
+    "constraints": [
+      "realistic arrival rates",
+      "service-level thresholds",
+      "CI smoke load",
+      "production-like staging"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "load-spike-soak-scenarios",
+    "service-level-thresholds",
+    "bottleneck-analysis"
+  ],
+  "nonCriticalGoals": [
+    "ci-smoke-load",
+    "trendable-results"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.load-performance.production-greenfield"
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.security-operations.small-greenfield",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "greenfield",
+    "teamSize": 2,
+    "agentShape": "local-coding-assistant",
+    "toolSurface": "repository-read-and-approved-write",
+    "constraints": [
+      "untrusted-repository-content",
+      "least-privilege",
+      "no-secret-exposure"
+    ]
+  },
+  "criticalGoals": [
+    "threat-model prompt injection and tool misuse",
+    "enforce least privilege and explicit approval for writes"
+  ],
+  "nonCriticalGoals": [
+    "scan adopted skills before use",
+    "redact sensitive diagnostics"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.security-operations.small-greenfield"
+}

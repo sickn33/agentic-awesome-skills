@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.constrained-offline",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "constrained-offline",
+    "projectSummary": "Air-gapped scientific workstation with vendored Rust and Python dependencies",
+    "stack": {
+      "languages": [
+        "rust",
+        "python"
+      ],
+      "packageEcosystems": [
+        "cargo",
+        "pypi"
+      ],
+      "deployment": [
+        "offline-linux"
+      ]
+    },
+    "constraints": [
+      "no network access",
+      "signed advisory snapshot available",
+      "no package execution"
+    ],
+    "authorization": {
+      "scope": "defensive offline dependency review of the owned workstation",
+      "mode": "read-only-offline",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "inventory vendored dependency risk",
+    "use only local verified advisory evidence"
+  ],
+  "nonCriticalGoals": [
+    "prepare an offline upgrade bundle plan",
+    "document stale-evidence limitations"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.code-dependency-review.constrained-offline"
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.mcp-tooling.build-metadata-mcp",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "build metadata inspection MCP server",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "MCP",
+      "stdio"
+    ],
+    "context": "read-only tools expose structured build summaries",
+    "constraints": [
+      "strict schemas",
+      "protocol-only stdout"
+    ]
+  },
+  "criticalGoals": [
+    "mcp-tool-contract",
+    "stdio-lifecycle"
+  ],
+  "nonCriticalGoals": [
+    "schema-validation",
+    "read-only-resource"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.agent-mcp-development.mcp-tooling.build-metadata-mcp"
+}

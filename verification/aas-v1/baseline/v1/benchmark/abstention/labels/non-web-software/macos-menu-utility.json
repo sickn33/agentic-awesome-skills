@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.non-web-software.macos-menu-utility",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_NON_WEB_SOFTWARE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-4451feb918434f52b3a6ca3e1b00b52f8afd242d9adb61d8ebb22be53f123ae1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-4451feb918434f52b3a6ca3e1b00b52f8afd242d9adb61d8ebb22be53f123ae1"
+    }
+  ]
+}

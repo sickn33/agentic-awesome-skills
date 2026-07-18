@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:stack-plan:v1",
+  "title": "AAS immutable single-target plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "digest", "payload"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "aas.stack-plan" },
+    "digest": { "$ref": "#/$defs/digest" },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "kind", "versions", "manifestDigest", "catalog", "runtime", "target", "installedState", "desiredSkills", "policy", "operations", "overrides", "stateCommit"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "aas.stack-plan.payload" },
+        "versions": { "$ref": "#/$defs/versions" },
+        "manifestDigest": { "$ref": "#/$defs/digest" },
+        "catalog": { "$ref": "#/$defs/catalog" },
+        "runtime": { "$ref": "#/$defs/runtime" },
+        "target": { "$ref": "#/$defs/target" },
+        "installedState": { "$ref": "#/$defs/installedState" },
+        "desiredSkills": { "$ref": "#/$defs/ids" },
+        "policy": { "$ref": "#/$defs/policy" },
+        "operations": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/operation" } },
+        "overrides": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/override" } },
+        "stateCommit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["previousDigest", "nextDigest", "position"],
+          "properties": {
+            "previousDigest": { "$ref": "#/$defs/digest" },
+            "nextDigest": { "$ref": "#/$defs/digest" },
+            "position": { "const": "final" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*$" },
+    "ids": { "type": "array", "maxItems": 128, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion"],
+      "properties": {
+        "protocolVersion": { "type": "string", "minLength": 1 },
+        "coreVersion": { "type": "string", "minLength": 1 },
+        "metadataSchemaVersion": { "type": "string", "minLength": 1 },
+        "scorerVersion": { "type": "string", "minLength": 1 }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version", "integrity"],
+      "properties": {
+        "package": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "integrity": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version", "integrity", "closureDigest"],
+      "properties": {
+        "package": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "integrity": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "closureDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["host", "scope", "adapterVersion", "identityDigest"],
+      "properties": {
+        "host": { "enum": ["codex", "claude"] },
+        "scope": { "enum": ["project", "user"] },
+        "adapterVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "identityDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "installedEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skillId", "treeDigest", "catalogIntegrity"],
+      "properties": {
+        "skillId": { "$ref": "#/$defs/id" },
+        "treeDigest": { "$ref": "#/$defs/digest" },
+        "catalogIntegrity": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "installedState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest", "entries"],
+      "properties": {
+        "digest": { "$ref": "#/$defs/digest" },
+        "entries": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/installedEntry" } }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedRisk", "requireKnownSource", "allowManualSetup"],
+      "properties": {
+        "allowedRisk": { "type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true, "items": { "enum": ["none", "safe", "unknown", "critical", "offensive"] } },
+        "requireKnownSource": { "type": "boolean" },
+        "allowManualSetup": { "type": "boolean" }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "skillId", "sourceTreeDigest", "expectedTreeDigest", "resultTreeDigest", "backupRequired"],
+      "properties": {
+        "kind": { "enum": ["install", "replaceManaged", "removeManaged"] },
+        "skillId": { "$ref": "#/$defs/id" },
+        "sourceTreeDigest": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] },
+        "expectedTreeDigest": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] },
+        "resultTreeDigest": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] },
+        "backupRequired": { "type": "boolean" }
+      }
+    },
+    "override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "skillId", "reasonCodes", "unknownFields"],
+      "properties": {
+        "kind": { "enum": ["discoveryCandidate", "managedDrift"] },
+        "skillId": { "$ref": "#/$defs/id" },
+        "reasonCodes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "unknownFields": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.regulated-high-assurance",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "regulated healthcare staff portal",
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "Playwright for Java",
+      "JUnit 5"
+    ],
+    "testingContext": "role-sensitive clinical workflows need auditable browser evidence",
+    "constraints": [
+      "local test data",
+      "no production records",
+      "traceable assertions",
+      "cross-browser CI"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "java-browser-automation",
+    "role-boundary-journeys",
+    "auditable-failure-evidence"
+  ],
+  "nonCriticalGoals": [
+    "parallel-execution",
+    "maintainable-page-objects"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.end-to-end-browser.regulated-high-assurance"
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.ui-accessibility.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-manual-wcag-validation",
+      "allowedSkillIds": [
+        "wcag-audit-patterns",
+        "screen-reader-testing"
+      ],
+      "requiredGroups": [
+        [
+          "wcag-audit-patterns"
+        ],
+        [
+          "screen-reader-testing"
+        ]
+      ]
+    },
+    {
+      "solutionId": "offline-local-audit-validation",
+      "allowedSkillIds": [
+        "accessibility-compliance-accessibility-audit",
+        "screen-reader-testing"
+      ],
+      "requiredGroups": [
+        [
+          "accessibility-compliance-accessibility-audit"
+        ],
+        [
+          "screen-reader-testing"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-18d425822d580c50d1dbee5976e208597328fa6adc559e1c320a9ab110e41fe7"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-18d425822d580c50d1dbee5976e208597328fa6adc559e1c320a9ab110e41fe7"
+    }
+  ]
+}

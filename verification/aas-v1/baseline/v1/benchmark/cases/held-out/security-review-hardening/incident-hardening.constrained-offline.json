@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.incident-hardening.constrained-offline",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "constrained-offline",
+    "projectSummary": "Air-gapped Linux build station hardening after an unapproved editor extension was removed",
+    "stack": {
+      "languages": [
+        "rust",
+        "python"
+      ],
+      "frameworks": [],
+      "deployment": [
+        "offline-linux"
+      ]
+    },
+    "constraints": [
+      "no network",
+      "extension quarantined",
+      "local package and MCP configuration evidence available"
+    ],
+    "authorization": {
+      "scope": "defensive local exposure review and remediation verification for the owned station",
+      "mode": "read-only-offline",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "inventory residual package and agent-tool exposure",
+    "verify removal without executing untrusted content"
+  ],
+  "nonCriticalGoals": [
+    "define offline import controls",
+    "document recurrence checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.incident-hardening.constrained-offline"
+}

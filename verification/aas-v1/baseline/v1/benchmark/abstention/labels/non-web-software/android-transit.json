@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.non-web-software.android-transit",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_NON_WEB_SOFTWARE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f62e72834f6f42e18feb8a3453a01a51fe1431eb66dbcb58f9800f15aab378f6"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-f62e72834f6f42e18feb8a3453a01a51fe1431eb66dbcb58f9800f15aab378f6"
+    }
+  ]
+}

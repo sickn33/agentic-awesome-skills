@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.regulated-high-assurance",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Medical telemetry service",
+    "stack": {
+      "languages": [
+        "Go",
+        "Java"
+      ],
+      "runtime": "segmented distributed services",
+      "delivery": "regulated production"
+    },
+    "team": {
+      "engineers": 18,
+      "operationsModel": "segregated platform and release roles",
+      "experience": "high assurance"
+    },
+    "environment": {
+      "maturity": "regulated production",
+      "topology": "multi-zone services with controlled environments",
+      "connectivity": "egress allowlisted"
+    },
+    "constraints": [
+      "auditable approvals",
+      "least-privilege automation",
+      "immutable evidence retention",
+      "tested rollback"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": true,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "provide reliable telemetry without exposing protected data"
+  },
+  "criticalGoals": [
+    "detect critical service degradation",
+    "prevent sensitive payloads from entering telemetry"
+  ],
+  "nonCriticalGoals": [
+    "use structured telemetry",
+    "bound high-cardinality data",
+    "link releases to signals",
+    "avoid noisy alerts",
+    "document first-response checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on observability-sre delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.observability-sre.regulated-high-assurance"
+}

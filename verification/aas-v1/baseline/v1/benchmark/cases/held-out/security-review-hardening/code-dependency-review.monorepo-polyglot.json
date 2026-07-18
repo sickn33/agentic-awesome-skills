@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.monorepo-polyglot",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "monorepo-polyglot",
+    "projectSummary": "Owned analytics monorepo combining JavaScript, Python and Go dependency graphs",
+    "stack": {
+      "languages": [
+        "typescript",
+        "python",
+        "go"
+      ],
+      "packageEcosystems": [
+        "npm",
+        "pypi",
+        "go-modules"
+      ],
+      "deployment": [
+        "kubernetes"
+      ]
+    },
+    "constraints": [
+      "multiple lockfiles",
+      "shared release train",
+      "no dependency installation during review"
+    ],
+    "authorization": {
+      "scope": "defensive supply-chain review of owned repository metadata",
+      "mode": "read-only",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "inventory vulnerabilities across ecosystems",
+    "identify cross-package supply-chain risk",
+    "preserve package-boundary ownership"
+  ],
+  "nonCriticalGoals": [
+    "rank upgrade work by exploitability",
+    "generate a unified remediation report"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.code-dependency-review.monorepo-polyglot"
+}

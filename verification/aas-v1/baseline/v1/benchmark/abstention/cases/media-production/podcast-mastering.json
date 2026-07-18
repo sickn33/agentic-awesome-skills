@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.media-production.podcast-mastering", "intent": "audio-mastering",
+  "profile": { "request": "Design a mastering workflow for an interview podcast", "recordings": "two remote voices with uneven rooms", "episodes": 12, "target": "consistent spoken-word loudness", "constraints": ["retain natural speech", "reduce noise conservatively", "deliver archival masters and compressed copies"] },
+  "criticalGoals": ["produce intelligible consistent dialogue", "define safe mastering and export stages"],
+  "nonCriticalGoals": ["balance speakers", "control sibilance", "set loudness targets", "preserve archival quality", "document quality checks"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD audio-production scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:69ee04ecb0b72334095cfe121865dd523d249325ef48e34f7b2579df5d72422e"
+}

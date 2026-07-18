@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.regulated-high-assurance",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "regulated-high-assurance",
+    "projectSummary": "Regulated transaction processor preparing an auditable software-composition review",
+    "stack": {
+      "languages": [
+        "csharp"
+      ],
+      "packageEcosystems": [
+        "nuget"
+      ],
+      "deployment": [
+        "private-cloud"
+      ]
+    },
+    "constraints": [
+      "traceable findings required",
+      "approved-source policy",
+      "no automatic remediation"
+    ],
+    "authorization": {
+      "scope": "defensive dependency compliance review of the regulated owned service",
+      "mode": "read-only",
+      "productionChanges": "formal-approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "identify vulnerable components",
+    "verify dependency provenance evidence",
+    "map findings to compliance controls"
+  ],
+  "nonCriticalGoals": [
+    "prioritize remediation",
+    "produce auditor-readable evidence"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.code-dependency-review.regulated-high-assurance"
+}

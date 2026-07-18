@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.small-greenfield",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "small-greenfield",
+    "projectSummary": "Owned Node API selecting its initial production dependencies",
+    "stack": {
+      "languages": [
+        "typescript"
+      ],
+      "packageEcosystems": [
+        "npm"
+      ],
+      "deployment": [
+        "managed-container"
+      ]
+    },
+    "constraints": [
+      "small dependency graph",
+      "no package execution during review",
+      "advisory data may be cached"
+    ],
+    "authorization": {
+      "scope": "defensive dependency and supply-chain review of the owned project",
+      "mode": "read-only",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "identify vulnerable direct dependencies",
+    "flag supply-chain provenance risks"
+  ],
+  "nonCriticalGoals": [
+    "recommend safe upgrade priorities",
+    "produce an auditable dependency finding list"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.code-dependency-review.small-greenfield"
+}

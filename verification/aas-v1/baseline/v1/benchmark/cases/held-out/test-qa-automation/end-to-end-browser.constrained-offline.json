@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.end-to-end-browser.constrained-offline",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "air-gapped industrial control dashboard",
+    "languages": [
+      "JavaScript"
+    ],
+    "frameworks": [
+      "Vue",
+      "Chromium"
+    ],
+    "testingContext": "operator workflows need browser regression tests inside an isolated network",
+    "constraints": [
+      "fully offline",
+      "preinstalled browser",
+      "no cloud grid",
+      "limited compute"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "offline-browser-tests",
+    "operator-journey-coverage",
+    "deterministic-local-execution"
+  ],
+  "nonCriticalGoals": [
+    "failure-screenshots",
+    "selector-maintainability"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.end-to-end-browser.constrained-offline"
+}

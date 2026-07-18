@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.memory-context-retrieval.production-greenfield",
+  "intent": "agent-mcp-development",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "production-greenfield",
+    "teamSize": 16,
+    "agentShape": "enterprise-knowledge-assistant",
+    "knowledgeScale": "millions-of-chunks",
+    "constraints": [
+      "tenant-isolation",
+      "freshness",
+      "hybrid-retrieval",
+      "citation-required"
+    ]
+  },
+  "criticalGoals": [
+    "design scalable tenant-isolated retrieval",
+    "ground answers in current attributable evidence"
+  ],
+  "nonCriticalGoals": [
+    "combine keyword and vector recall",
+    "evaluate retrieval quality and stale knowledge"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.agent-mcp-development.memory-context-retrieval.production-greenfield"
+}

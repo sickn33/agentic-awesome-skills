@@ -1,0 +1,193 @@
+name: AAS agent-first preview
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aas-agent-first-preview.yml"
+      - "apps/web-app/**"
+      - "data/aas-v1/**"
+      - "schemas/aas-v1/**"
+      - "tools/bin/**"
+      - "tools/lib/**"
+      - "tools/scripts/tests/aas_v1_*.test.js"
+      - "verification/aas-preview/**"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    name: preview candidate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out the exact candidate
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Use Node 22.23.1
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22.23.1
+          cache: npm
+
+      - name: Install without lifecycle scripts
+        run: npm ci --ignore-scripts
+
+      - name: Verify deterministic catalog and preview contracts
+        run: |
+          npm run check:aas-v1-catalog
+          npm run test:aas-v1
+          node --check verification/aas-preview/runner.mjs
+          node --check verification/aas-preview/aggregate.mjs
+          node --check verification/aas-preview/run-installed-candidate.mjs
+
+      - name: Pack the candidate without lifecycle scripts
+        run: npm pack --ignore-scripts
+
+      - name: Upload the exact candidate tarball
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aas-preview-candidate
+          path: agentic-awesome-skills-*.tgz
+          if-no-files-found: error
+          retention-days: 7
+
+  functional:
+    name: ${{ matrix.job-id }}
+    needs: candidate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - job-id: linux-node-22
+            os: ubuntu-24.04
+            node: 22.23.1
+          - job-id: linux-node-24
+            os: ubuntu-24.04
+            node: 24.18.0
+          - job-id: macos-node-22
+            os: macos-15-intel
+            node: 22.23.1
+          - job-id: macos-node-24
+            os: macos-15-intel
+            node: 24.18.0
+          - job-id: windows-node-22
+            os: windows-2025
+            node: 22.23.1
+          - job-id: windows-node-24
+            os: windows-2025
+            node: 24.18.0
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - name: Check out the functional verifier
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Use the exact matrix runtime
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Download the exact candidate
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: aas-preview-candidate
+          path: ${{ runner.temp }}/aas-preview-candidate
+
+      - name: Install and exercise the packed product
+        run: node verification/aas-preview/run-installed-candidate.mjs --artifact-root "${{ runner.temp }}/aas-preview-candidate" --install-root "${{ runner.temp }}/aas-preview-install" --work-root "${{ runner.temp }}/aas-preview-work" --job-id "${{ matrix.job-id }}" --out "${{ runner.temp }}/aas-preview-${{ matrix.job-id }}.json"
+
+      - name: Upload the functional receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aas-preview-${{ matrix.job-id }}
+          path: ${{ runner.temp }}/aas-preview-${{ matrix.job-id }}.json
+          if-no-files-found: error
+          retention-days: 7
+
+  workbench:
+    name: preview Workbench
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the exact candidate
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Use Node 22.23.1
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22.23.1
+          cache: npm
+          cache-dependency-path: apps/web-app/package-lock.json
+
+      - name: Test and build the local review UI
+        run: |
+          npm ci --ignore-scripts
+          npm run app:install
+          npm run app:test
+          npm run app:build
+          node verification/aas-preview/write-workbench-receipt.mjs "$RUNNER_TEMP/aas-preview-workbench.json"
+
+      - name: Upload the Workbench receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aas-preview-workbench
+          path: ${{ runner.temp }}/aas-preview-workbench.json
+          if-no-files-found: error
+          retention-days: 7
+
+  aggregate:
+    name: aas-agent-first-preview
+    needs: [functional, workbench]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the receipt aggregator
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Use Node 22.23.1
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22.23.1
+
+      - name: Download all preview receipts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: aas-preview-*
+          path: ${{ runner.temp }}/aas-preview-receipts
+          merge-multiple: true
+
+      - name: Aggregate without weakening certified-v1 gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/aas-preview-receipts"
+          node verification/aas-preview/aggregate.mjs \
+            --receipt "$root/aas-preview-linux-node-22.json" \
+            --receipt "$root/aas-preview-linux-node-24.json" \
+            --receipt "$root/aas-preview-macos-node-22.json" \
+            --receipt "$root/aas-preview-macos-node-24.json" \
+            --receipt "$root/aas-preview-windows-node-22.json" \
+            --receipt "$root/aas-preview-windows-node-24.json" \
+            --workbench "$root/aas-preview-workbench.json" \
+            --out "$RUNNER_TEMP/aas-agent-first-preview.json"
+
+      - name: Upload the aggregate preview receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aas-agent-first-preview-receipt
+          path: ${{ runner.temp }}/aas-agent-first-preview.json
+          if-no-files-found: error
+          retention-days: 30

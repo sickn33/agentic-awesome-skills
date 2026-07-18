@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.mature-legacy-migration",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "mature-legacy-migration",
+    "projectSummary": "Owned claims platform moving from a monolith to services while preserving legacy sessions",
+    "stack": {
+      "languages": [
+        "java",
+        "typescript"
+      ],
+      "frameworks": [
+        "spring",
+        "react"
+      ],
+      "deployment": [
+        "hybrid-cloud"
+      ]
+    },
+    "constraints": [
+      "brownfield interfaces",
+      "parallel cutover",
+      "legacy identity bridge cannot be replaced immediately"
+    ],
+    "authorization": {
+      "scope": "defensive migration threat analysis of owned systems",
+      "mode": "non-destructive",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "model migration and rollback threats",
+    "identify trust changes at legacy bridges",
+    "map compensating controls"
+  ],
+  "nonCriticalGoals": [
+    "derive phased security requirements",
+    "record accepted transitional risk"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.threat-modeling.mature-legacy-migration"
+}

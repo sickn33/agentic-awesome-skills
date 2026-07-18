@@ -5,6 +5,11 @@ const canonicalMerge = require("../merge_canonical_sync_pr.cjs");
 const HEAD = "a".repeat(40);
 const options = canonicalMerge.parseArgs(["--repo", "owner/repo", "--pr", "42", "--head", HEAD]);
 assert.strictEqual(options.pollSeconds, 10);
+assert.strictEqual(options.skipPages, false);
+const noPages = canonicalMerge.parseArgs(["--repo", "owner/repo", "--pr", "42", "--head", HEAD, "--skip-pages"]);
+assert.strictEqual(noPages.skipPages, true);
+assert.deepStrictEqual(canonicalMerge.verificationWorkflows(options), ["ci.yml", "pages.yml", "codeql.yml"]);
+assert.deepStrictEqual(canonicalMerge.verificationWorkflows(noPages), ["ci.yml", "codeql.yml"]);
 assert.throws(() => canonicalMerge.parseArgs(["--repo", "owner/repo", "--pr", "42", "--head", "short"]), /full SHA-1/);
 
 const CHECK_SUITE_ID = 777;
@@ -67,6 +72,11 @@ const canonicalRun = {
   }],
 };
 assert.strictEqual(canonicalMerge.selectCanonicalPullRequestRun([canonicalRun], options, "b".repeat(40)), canonicalRun);
+const baselineRun = { ...canonicalRun, id: 125, path: ".github/workflows/aas-v1-baseline-check.yml", check_suite_id: 778 };
+assert.strictEqual(
+  canonicalMerge.selectCanonicalPullRequestRun([baselineRun], options, "b".repeat(40), ".github/workflows/aas-v1-baseline-check.yml"),
+  baselineRun,
+);
 assert.strictEqual(canonicalMerge.selectCanonicalPullRequestRun([
   { ...canonicalRun, actor: { login: "attacker" } },
 ], options, "b".repeat(40)), null);
@@ -125,6 +135,11 @@ assert.throws(
     wait: async () => {},
   });
   assert.strictEqual(calls, 2);
+
+  await canonicalMerge.waitForChecks({ ...options, pollSeconds: 1, maxAttempts: 1 }, 778, {
+    loadCheckRuns: () => [run("aas-v1-baseline", "success", 30, 15368, 778)],
+    wait: async () => {},
+  }, ["aas-v1-baseline"]);
   console.log("Canonical sync merge tests passed.");
 })().catch((error) => {
   console.error(error);

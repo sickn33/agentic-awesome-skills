@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "container-and-cloud-audit",
+      "allowedSkillIds": [
+        "container-security-hardening",
+        "aws-security-audit",
+        "aws-iam-best-practices"
+      ],
+      "requiredGroups": [
+        [
+          "container-security-hardening"
+        ],
+        [
+          "aws-security-audit"
+        ]
+      ]
+    },
+    {
+      "solutionId": "container-identity",
+      "allowedSkillIds": [
+        "container-security-hardening",
+        "aws-iam-best-practices"
+      ],
+      "requiredGroups": [
+        [
+          "container-security-hardening"
+        ],
+        [
+          "aws-iam-best-practices"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-d27500b87313054e83cb106f61490811630b89a6dfe986085f86cdbd19750e24"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-d27500b87313054e83cb106f61490811630b89a6dfe986085f86cdbd19750e24"
+    }
+  ]
+}

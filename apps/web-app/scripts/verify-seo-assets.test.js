@@ -6,6 +6,7 @@ import {
   assertManifest,
   assertIndexDiscoveryMeta,
   assertStaticIndexShell,
+  assertWebmasterVerificationMeta,
   assertPluginsDiscoveryMeta,
   analyzeSitemap,
   assertPrerenderedPluginRoutes,
@@ -24,6 +25,16 @@ import {
 const FIXTURE_ROOT_URL = 'https://owner.github.io/repo/';
 const FIXTURE_SOCIAL_IMAGE_URL = 'https://owner.github.io/repo/social-card.png';
 const PACKAGE_URL = 'https://www.npmjs.com/package/agentic-awesome-skills';
+
+describe('Bing Webmaster Tools verification metadata', () => {
+  it('requires the current verification token', () => {
+    const html = '<meta name="msvalidate.01" content="CAC904EB0D2DD1B22B5F2BC540CAD654" />';
+
+    expect(() => assertWebmasterVerificationMeta(html)).not.toThrow();
+    expect(() => assertWebmasterVerificationMeta('<meta name="msvalidate.01" content="stale" />'))
+      .toThrow('current Bing Webmaster Tools verification token');
+  });
+});
 
 function buildRouteIdentityHtml({
   routeUrl,
@@ -623,6 +634,7 @@ describe('seo assets verification helpers', () => {
   it('requires llms.txt discovery signals', () => {
     const llms = `
       # Agentic Awesome Skills
+      AAS Core preview
       Current release: V1.2.3.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
@@ -636,6 +648,7 @@ describe('seo assets verification helpers', () => {
   it('rejects stale llms.txt release labels', () => {
     const llms = `
       # Agentic Awesome Skills
+      AAS Core preview
       Current release: V1.2.2.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
@@ -664,12 +677,12 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
-          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
+          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
+          <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta name="twitter:description" content="Use AAS Core preview with the supporting catalog." />
           <script type="application/ld+json">
             [
               {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
@@ -690,12 +703,12 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
-          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
+          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
+          <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta name="twitter:description" content="Use AAS Core preview with the supporting catalog." />
           <script type="application/ld+json">
             [
               {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
@@ -716,12 +729,12 @@ describe('seo assets verification helpers', () => {
     const html = `
       <html>
         <head>
-          <title>Agentic Awesome Skills GitHub | 1,678+ AI coding skills</title>
-          <meta name="description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta property="og:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta property="og:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
-          <meta name="twitter:title" content="Agentic Awesome Skills GitHub | 1,678+ AI coding skills" />
-          <meta name="twitter:description" content="Explore the GitHub library of 1,678+ installable agentic skills, specialized plugins, bundles, and workflows." />
+          <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
+          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
+          <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
+          <meta name="twitter:description" content="Use AAS Core preview with the supporting catalog." />
         </head>
       </html>
     `;
@@ -845,14 +858,14 @@ describe('seo assets verification helpers', () => {
     expect(() => assertPrerenderedPluginRoutes(report.pluginUrls, distDir, report.normalizedRootPath)).not.toThrow();
   });
 
-  it('validates the prerendered workbench route and its exact-composition promise', () => {
+  it('validates the prerendered workbench route and its in-memory review promise', () => {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'seo-assets-'));
     const distDir = path.join(tmpDir, 'dist');
     const routeFile = path.join(distDir, 'workbench', 'index.html');
     fs.mkdirSync(path.dirname(routeFile), { recursive: true });
     fs.writeFileSync(
       routeFile,
-      '<html><head><title>Skill Workbench | Compose an exact agent stack</title><meta name="description" content="Filter, inspect, and install an exact host-aware set of skills." /></head></html>',
+      '<html><head><title>AAS Core Stack Review | Agentic Awesome Skills</title><meta name="description" content="Review an AAS Core stack and plan. Imports stay in memory and cannot install or apply changes." /></head></html>',
     );
 
     const xml = `

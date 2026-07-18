@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.security-operations.local-mcp-security",
+  "acceptedSolutions": [
+    {
+      "solutionId": "agentic-actions-audit",
+      "allowedSkillIds": [
+        "agentic-actions-auditor",
+        "security-requirement-extraction"
+      ],
+      "requiredGroups": [
+        [
+          "agentic-actions-auditor"
+        ],
+        [
+          "security-requirement-extraction"
+        ]
+      ]
+    },
+    {
+      "solutionId": "mcp-threat-model",
+      "allowedSkillIds": [
+        "mcp-builder",
+        "threat-modeling-expert"
+      ],
+      "requiredGroups": [
+        [
+          "mcp-builder"
+        ],
+        [
+          "threat-modeling-expert"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-43ae46d7c95c6a8363b9a1cff2f87feac5c75aee9e1ea263facc01e5df94c690"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-43ae46d7c95c6a8363b9a1cff2f87feac5c75aee9e1ea263facc01e5df94c690"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

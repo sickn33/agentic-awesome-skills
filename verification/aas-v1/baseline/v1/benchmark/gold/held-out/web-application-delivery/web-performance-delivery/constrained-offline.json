@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-performance-delivery.constrained-offline",
+  "acceptedSolutions": [
+    {
+      "solutionId": "offline-web-performance-lab",
+      "allowedSkillIds": [
+        "web-performance-optimization",
+        "frontend-lighthouse"
+      ],
+      "requiredGroups": [
+        [
+          "web-performance-optimization"
+        ],
+        [
+          "frontend-lighthouse"
+        ]
+      ]
+    },
+    {
+      "solutionId": "offline-performance-profiling-lab",
+      "allowedSkillIds": [
+        "performance-optimization",
+        "frontend-lighthouse"
+      ],
+      "requiredGroups": [
+        [
+          "performance-optimization"
+        ],
+        [
+          "frontend-lighthouse"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6d3d4f4224d466032b76441992065a65b0f31fab52247be13695d4525cb2eff0"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6d3d4f4224d466032b76441992065a65b0f31fab52247be13695d4525cb2eff0"
+    }
+  ]
+}

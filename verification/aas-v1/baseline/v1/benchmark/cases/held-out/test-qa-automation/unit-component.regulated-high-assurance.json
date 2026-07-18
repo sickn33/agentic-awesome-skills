@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.regulated-high-assurance",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "regulated transaction-processing service",
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot"
+    ],
+    "testingContext": "new safety-critical modules require auditable unit tests and boundary cases",
+    "constraints": [
+      "deterministic tests",
+      "traceable assertions",
+      "no cloud test service",
+      "reviewed changes"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "junit5-unit-tests",
+    "parameterized-boundary-tests",
+    "auditable-test-quality"
+  ],
+  "nonCriticalGoals": [
+    "nested-test-organization",
+    "coverage-reporting"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.unit-component.regulated-high-assurance"
+}

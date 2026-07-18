@@ -1,0 +1,4178 @@
+{
+  "schemaVersion": 1,
+  "auditId": "aas-v1-security-agent-semantic-metadata-audit-2026-07-17",
+  "auditDate": "2026-07-17",
+  "repositoryRoot": "/private/tmp/aas-agent-first-product",
+  "scope": {
+    "intents": [
+      "security-review-hardening",
+      "agent-mcp-development"
+    ],
+    "catalogPath": "data/catalog.json",
+    "catalogSkillCount": 1965,
+    "catalogFileSha256": "22c433bd94d98781c124b60d1b41f5e592e5d4c0f4cbe432e2ab43f3501cf916",
+    "canonicalContentRoot": "skills/",
+    "tuningCaseInputsReadForPublicVocabularyOnly": true,
+    "tuningGoldRead": false,
+    "heldOutCasesRead": false,
+    "heldOutGoldRead": false,
+    "repositoryFilesModified": false
+  },
+  "selectionRules": {
+    "ruleVersion": "aas-v1-public-lexical-audit-1",
+    "population": "all catalog skills",
+    "normalization": "Unicode NFKC; lowercase; underscores/whitespace normalized to hyphens",
+    "fieldsAndWeights": {
+      "idSubstring": 6,
+      "nameSubstring": 4,
+      "tagSubstring": 3,
+      "categorySubstring": 2,
+      "descriptionSubstring": 1
+    },
+    "tieBreak": "skill id ascending",
+    "reviewPool": "top 150 positive-score candidates per intent",
+    "finalRule": "retain only candidates whose canonical SKILL.md explicitly supports at least one canonical capability, with line evidence; do not infer capabilities from prose not present",
+    "lexicons": {
+      "security-review-hardening": [
+        "security",
+        "secure",
+        "hardening",
+        "threat",
+        "threat-model",
+        "mitigation",
+        "trust-boundary",
+        "secret",
+        "credential",
+        "rotation",
+        "authentication",
+        "authorization",
+        "dependency",
+        "supply-chain",
+        "advisory",
+        "incident",
+        "runbook",
+        "container",
+        "kubernetes",
+        "cloud",
+        "permission",
+        "least-privilege",
+        "sbom",
+        "cve"
+      ],
+      "agent-mcp-development": [
+        "agent",
+        "agents",
+        "agentic",
+        "mcp",
+        "model-context-protocol",
+        "tool",
+        "tooling",
+        "orchestration",
+        "delegation",
+        "handoff",
+        "evaluation",
+        "benchmark",
+        "regression",
+        "memory",
+        "retrieval",
+        "context",
+        "prompt-injection",
+        "permission",
+        "multi-agent",
+        "routing",
+        "stdio"
+      ]
+    },
+    "prohibitedInputs": [
+      "tuning gold IDs",
+      "tuning gold files",
+      "held-out cases",
+      "held-out gold",
+      "existing metadata override candidate IDs"
+    ]
+  },
+  "caveats": [
+    "This is a semantic metadata audit, not a source-provenance, command-safety, setup, or executable-code audit.",
+    "Catalog risk and source fields are preserved exactly; unknown is never promoted to safe.",
+    "A semantically supported capability does not by itself make a skill eligible under AAS policy.",
+    "Critical-risk and unknown-risk skills are retained only as transparent discovery candidates.",
+    "No dependencies or conflicts are inferred from topical overlap; only explicit external prerequisites and side effects are recorded.",
+    "Capabilities are limited to the frozen canonical goal vocabulary for the two audited intents."
+  ],
+  "counts": {
+    "security-review-hardening": {
+      "candidates": 21,
+      "semanticallySupportedPolicyCheckStillRequired": 9,
+      "discoveryOnly": 12,
+      "riskUnknown": 11,
+      "riskCritical": 1
+    },
+    "agent-mcp-development": {
+      "candidates": 20,
+      "semanticallySupportedPolicyCheckStillRequired": 11,
+      "discoveryOnly": 9,
+      "riskUnknown": 7,
+      "riskCritical": 2
+    }
+  },
+  "candidates": [
+    {
+      "id": "mcp-tool-developer",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "developer-tools",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/mcp-tool-developer/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 2,
+        "lexicalScore": 41,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "tags"
+            ]
+          },
+          {
+            "term": "mcp",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "model-context-protocol",
+            "fields": [
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "tool",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "context",
+            "fields": [
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "mcp-tool-contract",
+        "stdio-lifecycle",
+        "schema-validation",
+        "read-only-resource",
+        "tool-permission-boundaries"
+      ],
+      "evidence": [
+        {
+          "path": "skills/mcp-tool-developer/SKILL.md",
+          "lineStart": 21,
+          "lineEnd": 21,
+          "excerpt": "This skill understands MCP specification primitives (tools, resources, prompts, sampling), transport options (stdio, SSE, Streamable HTTP), and the tool design patterns that make MCP servers reliable and composable.",
+          "supports": [
+            "mcp-tool-contract"
+          ]
+        },
+        {
+          "path": "skills/mcp-tool-developer/SKILL.md",
+          "lineStart": 41,
+          "lineEnd": 41,
+          "excerpt": "- **stdio** - For local CLI tools (Claude Code, Cursor)",
+          "supports": [
+            "stdio-lifecycle"
+          ]
+        },
+        {
+          "path": "skills/mcp-tool-developer/SKILL.md",
+          "lineStart": 103,
+          "lineEnd": 103,
+          "excerpt": "- Validate all inputs against the schema",
+          "supports": [
+            "schema-validation"
+          ]
+        },
+        {
+          "path": "skills/mcp-tool-developer/SKILL.md",
+          "lineStart": 37,
+          "lineEnd": 37,
+          "excerpt": "- **Resources** - Data the LLM can read (files, APIs, databases)",
+          "supports": [
+            "read-only-resource"
+          ]
+        },
+        {
+          "path": "skills/mcp-tool-developer/SKILL.md",
+          "lineStart": 119,
+          "lineEnd": 119,
+          "excerpt": "- Review tool permissions carefully - tools can access files, networks, and execute code",
+          "supports": [
+            "tool-permission-boundaries"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "9bd2b02ff5027c3853737cc4dca505f20caa62834ec594f8c049d83d25c63f68",
+        "lineCount": 133
+      }
+    },
+    {
+      "id": "delegating-to-agents",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "agent-orchestration",
+        "risk": "critical",
+        "source": "community",
+        "path": "skills/delegating-to-agents/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 3,
+        "lexicalScore": 39,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "orchestration",
+            "fields": [
+              "tags",
+              "category"
+            ]
+          },
+          {
+            "term": "delegation",
+            "fields": [
+              "tags"
+            ]
+          },
+          {
+            "term": "context",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-boundaries",
+        "delegation-policy",
+        "tool-permission-boundaries",
+        "auditable-operations"
+      ],
+      "evidence": [
+        {
+          "path": "skills/delegating-to-agents/SKILL.md",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "excerpt": "description: \"Delegate bounded work to other AI agents while preserving context, ownership, and progress checks.\"",
+          "supports": [
+            "agent-boundaries",
+            "delegation-policy"
+          ]
+        },
+        {
+          "path": "skills/delegating-to-agents/SKILL.md",
+          "lineStart": 64,
+          "lineEnd": 64,
+          "excerpt": "- For commands, remote access, scheduling, browser automation, or file-changing workflows, get explicit user approval and confirm the target environment first.",
+          "supports": [
+            "tool-permission-boundaries"
+          ]
+        },
+        {
+          "path": "skills/delegating-to-agents/SKILL.md",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "excerpt": "description: \"Delegate bounded work to other AI agents while preserving context, ownership, and progress checks.\"",
+          "supports": [
+            "auditable-operations"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-critical-policy-blocker",
+        "source-provenance-not-verified-by-this-audit",
+        "scope:catalog risk is critical; includes bypass-permission examples and is discovery-only under safe policy"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "dd23c465c91c35fe1185c1bd9cecfc4846c7fcfe522b082bb6b9503643df3fac",
+        "lineCount": 65
+      }
+    },
+    {
+      "id": "multi-agent-architect",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/multi-agent-architect/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 4,
+        "lexicalScore": 38,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "tool",
+            "fields": [
+              "tags"
+            ]
+          },
+          {
+            "term": "orchestration",
+            "fields": [
+              "tags"
+            ]
+          },
+          {
+            "term": "multi-agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-boundaries",
+        "tool-orchestration",
+        "delegation-policy",
+        "failure-handling",
+        "tool-permission-boundaries",
+        "prompt-injection-controls"
+      ],
+      "evidence": [
+        {
+          "path": "skills/multi-agent-architect/SKILL.md",
+          "lineStart": 23,
+          "lineEnd": 23,
+          "excerpt": "This skill turns Claude into a Senior AI Multi-Agent Architect specialized in LangGraph, LangChain, and DeepAgents. It provides structured workflows for creating and updating production-grade multi-agent systems — including supervisor agents, planners, researchers, coders, and memory-backed autonomous pipelines. Use it whenever you need to design, build, debug, or scale any multi-agent AI system.",
+          "supports": [
+            "agent-boundaries",
+            "tool-orchestration"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-architect/SKILL.md",
+          "lineStart": 37,
+          "lineEnd": 37,
+          "excerpt": "- Use when integrating DeepAgents with hierarchical planning and delegation",
+          "supports": [
+            "delegation-policy"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-architect/SKILL.md",
+          "lineStart": 305,
+          "lineEnd": 305,
+          "excerpt": "- ❌ Don't skip error handling — tool failures and empty LLM responses are common",
+          "supports": [
+            "failure-handling"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-architect/SKILL.md",
+          "lineStart": 327,
+          "lineEnd": 327,
+          "excerpt": "- Add a permission layer before allowing agents to execute shell commands or write to filesystems.",
+          "supports": [
+            "tool-permission-boundaries"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-architect/SKILL.md",
+          "lineStart": 326,
+          "lineEnd": 326,
+          "excerpt": "- Always validate and sanitize user inputs before injecting them into agent prompts — treat all user input as untrusted.",
+          "supports": [
+            "prompt-injection-controls"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "46c9287a5d9b81ab08ca39a5059f391e874e50d06cff7823ea6d70901c221ff8",
+        "lineCount": 362
+      }
+    },
+    {
+      "id": "agent-orchestration-multi-agent-optimize",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/agent-orchestration-multi-agent-optimize/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 6,
+        "lexicalScore": 36,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "orchestration",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          },
+          {
+            "term": "multi-agent",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "tool-orchestration",
+        "failure-metrics",
+        "regression-suite",
+        "context-budget"
+      ],
+      "evidence": [
+        {
+          "path": "skills/agent-orchestration-multi-agent-optimize/SKILL.md",
+          "lineStart": 15,
+          "lineEnd": 15,
+          "excerpt": "- Designing orchestration strategies for complex workflows",
+          "supports": [
+            "tool-orchestration"
+          ]
+        },
+        {
+          "path": "skills/agent-orchestration-multi-agent-optimize/SKILL.md",
+          "lineStart": 26,
+          "lineEnd": 26,
+          "excerpt": "1. Establish baseline metrics and target performance goals.",
+          "supports": [
+            "failure-metrics"
+          ]
+        },
+        {
+          "path": "skills/agent-orchestration-multi-agent-optimize/SKILL.md",
+          "lineStart": 33,
+          "lineEnd": 33,
+          "excerpt": "- Avoid deploying orchestration changes without regression testing.",
+          "supports": [
+            "regression-suite"
+          ]
+        },
+        {
+          "path": "skills/agent-orchestration-multi-agent-optimize/SKILL.md",
+          "lineStart": 109,
+          "lineEnd": 109,
+          "excerpt": "- Token budget management",
+          "supports": [
+            "context-budget"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "848a24a5949f23abe0fb80659bfbf9b5c84f238805cd638c0136fb8c54ed5049",
+        "lineCount": 248
+      }
+    },
+    {
+      "id": "ai-agents-architect",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-agents",
+        "risk": "unknown",
+        "source": "vibeship-spawner-skills (Apache 2.0)",
+        "path": "skills/ai-agents-architect/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 7,
+        "lexicalScore": 36,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "tool",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "orchestration",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "memory",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "multi-agent",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-boundaries",
+        "tool-orchestration",
+        "delegation-policy",
+        "failure-handling",
+        "agent-evaluation-design",
+        "memory-boundaries",
+        "context-retrieval"
+      ],
+      "evidence": [
+        {
+          "path": "skills/ai-agents-architect/SKILL.md",
+          "lineStart": 19,
+          "lineEnd": 19,
+          "excerpt": "degradation and clear failure modes. I balance autonomy with oversight,",
+          "supports": [
+            "agent-boundaries"
+          ]
+        },
+        {
+          "path": "skills/ai-agents-architect/SKILL.md",
+          "lineStart": 44,
+          "lineEnd": 44,
+          "excerpt": "- Tool and function calling",
+          "supports": [
+            "tool-orchestration"
+          ]
+        },
+        {
+          "path": "skills/ai-agents-architect/SKILL.md",
+          "lineStart": 107,
+          "lineEnd": 107,
+          "excerpt": "- Supervisor decomposes and delegates",
+          "supports": [
+            "delegation-policy"
+          ]
+        },
+        {
+          "path": "skills/ai-agents-architect/SKILL.md",
+          "lineStart": 120,
+          "lineEnd": 120,
+          "excerpt": "- Resume from last checkpoint on failure",
+          "supports": [
+            "failure-handling"
+          ]
+        },
+        {
+          "path": "skills/ai-agents-architect/SKILL.md",
+          "lineStart": 29,
+          "lineEnd": 29,
+          "excerpt": "- Agent evaluation and observability",
+          "supports": [
+            "agent-evaluation-design"
+          ]
+        },
+        {
+          "path": "skills/ai-agents-architect/SKILL.md",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "excerpt": "use, memory systems, planning strategies, and multi-agent orchestration.",
+          "supports": [
+            "memory-boundaries"
+          ]
+        },
+        {
+          "path": "skills/ai-agents-architect/SKILL.md",
+          "lineStart": 99,
+          "lineEnd": 99,
+          "excerpt": "- Use RAG for retrieval from long-term memory",
+          "supports": [
+            "context-retrieval"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "bbe6a0a8e93c0723760140a69d0fdf426d1fe84834d47e20e372711e7b6628f1",
+        "lineCount": 341
+      }
+    },
+    {
+      "id": "agent-evaluation",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-agents",
+        "risk": "safe",
+        "source": "vibeship-spawner-skills (Apache 2.0)",
+        "path": "skills/agent-evaluation/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 8,
+        "lexicalScore": 33,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "evaluation",
+            "fields": [
+              "id",
+              "name",
+              "tags"
+            ]
+          },
+          {
+            "term": "benchmark",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-evaluation-design",
+        "reproducible-cases",
+        "failure-metrics",
+        "regression-suite"
+      ],
+      "evidence": [
+        {
+          "path": "skills/agent-evaluation/SKILL.md",
+          "lineStart": 18,
+          "lineEnd": 18,
+          "excerpt": "- benchmark-design",
+          "supports": [
+            "agent-evaluation-design"
+          ]
+        },
+        {
+          "path": "skills/agent-evaluation/SKILL.md",
+          "lineStart": 88,
+          "lineEnd": 88,
+          "excerpt": "testSuite: TestCase[]",
+          "supports": [
+            "reproducible-cases"
+          ]
+        },
+        {
+          "path": "skills/agent-evaluation/SKILL.md",
+          "lineStart": 20,
+          "lineEnd": 20,
+          "excerpt": "- reliability-metrics",
+          "supports": [
+            "failure-metrics"
+          ]
+        },
+        {
+          "path": "skills/agent-evaluation/SKILL.md",
+          "lineStart": 21,
+          "lineEnd": 21,
+          "excerpt": "- regression-testing",
+          "supports": [
+            "regression-suite"
+          ]
+        }
+      ],
+      "gaps": [],
+      "dependencies": {
+        "skillIds": [],
+        "external": [
+          "testing/statistics/LLM fundamentals knowledge; recommended autonomous-agent skills"
+        ]
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "c7a2bca261edc021d0d3a264b3ab1cba7b567f9084f6ddea5af448077afc3843",
+        "lineCount": 1136
+      }
+    },
+    {
+      "id": "agent-memory-systems",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "memory",
+        "risk": "safe",
+        "source": "vibeship-spawner-skills (Apache 2.0)",
+        "path": "skills/agent-memory-systems/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 11,
+        "lexicalScore": 32,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "memory",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "context",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "memory-boundaries",
+        "context-retrieval",
+        "context-budget",
+        "stale-memory-controls"
+      ],
+      "evidence": [
+        {
+          "path": "skills/agent-memory-systems/SKILL.md",
+          "lineStart": 5,
+          "lineEnd": 5,
+          "excerpt": "memory: short-term (context window), long-term (vector stores), and the",
+          "supports": [
+            "memory-boundaries"
+          ]
+        },
+        {
+          "path": "skills/agent-memory-systems/SKILL.md",
+          "lineStart": 153,
+          "lineEnd": 153,
+          "excerpt": "## Memory Retrieval at Runtime",
+          "supports": [
+            "context-retrieval"
+          ]
+        },
+        {
+          "path": "skills/agent-memory-systems/SKILL.md",
+          "lineStart": 302,
+          "lineEnd": 302,
+          "excerpt": "General guidance: 256-512 tokens for most use cases",
+          "supports": [
+            "context-budget"
+          ]
+        },
+        {
+          "path": "skills/agent-memory-systems/SKILL.md",
+          "lineStart": 475,
+          "lineEnd": 475,
+          "excerpt": "Forgetting old, irrelevant memories",
+          "supports": [
+            "stale-memory-controls"
+          ]
+        }
+      ],
+      "gaps": [],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "2003324855b6937675d21ad41925d38538d3a1076b8f734149b5d27ecb2152c9",
+        "lineCount": 1089
+      }
+    },
+    {
+      "id": "multi-agent-patterns",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-agents",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/multi-agent-patterns/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 16,
+        "lexicalScore": 32,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "handoff",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "context",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "multi-agent",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-boundaries",
+        "tool-orchestration",
+        "delegation-policy",
+        "failure-handling",
+        "context-budget"
+      ],
+      "evidence": [
+        {
+          "path": "skills/multi-agent-patterns/SKILL.md",
+          "lineStart": 23,
+          "lineEnd": 23,
+          "excerpt": "Multi-agent systems address single-agent context limitations through distribution. Three dominant patterns exist: supervisor/orchestrator for centralized control, peer-to-peer/swarm for flexible handoffs, and hierarchical for layered abstraction. The critical design principle is context isolation—sub-agents exist primarily to partition context rather than to simulate organizational roles.",
+          "supports": [
+            "agent-boundaries"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-patterns/SKILL.md",
+          "lineStart": 32,
+          "lineEnd": 32,
+          "excerpt": "Single agents face inherent ceilings in reasoning capability, context management, and tool coordination. As tasks grow more complex, context windows fill with accumulated history, retrieved documents, and tool outputs. Performance degrades according to predictable patterns: the lost-in-middle effect, attention scarcity, and context poisoning.",
+          "supports": [
+            "tool-orchestration"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-patterns/SKILL.md",
+          "lineStart": 62,
+          "lineEnd": 62,
+          "excerpt": "The supervisor pattern places a central agent in control, delegating to specialists and synthesizing results. The supervisor maintains global state and trajectory, decomposes user objectives into subtasks, and routes to appropriate workers.",
+          "supports": [
+            "delegation-policy"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-patterns/SKILL.md",
+          "lineStart": 168,
+          "lineEnd": 168,
+          "excerpt": "### Failure Modes and Mitigations",
+          "supports": [
+            "failure-handling"
+          ]
+        },
+        {
+          "path": "skills/multi-agent-patterns/SKILL.md",
+          "lineStart": 36,
+          "lineEnd": 36,
+          "excerpt": "**The Token Economics Reality**",
+          "supports": [
+            "context-budget"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "8e1d659fe32c68fb4580697ee4110eb895e4a72a43bfde6d4db2cc29bd7d2733",
+        "lineCount": 262
+      }
+    },
+    {
+      "id": "agentic-actions-auditor",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/agentic-actions-auditor/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 24,
+        "lexicalScore": 28,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "agentic",
+            "fields": [
+              "id",
+              "name",
+              "tags"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-threat-review",
+        "tool-permission-boundaries",
+        "auditable-operations"
+      ],
+      "evidence": [
+        {
+          "path": "skills/agentic-actions-auditor/SKILL.md",
+          "lineStart": 22,
+          "lineEnd": 22,
+          "excerpt": "- Auditing a repository's GitHub Actions workflows for AI agent security",
+          "supports": [
+            "agent-threat-review",
+            "auditable-operations"
+          ]
+        },
+        {
+          "path": "skills/agentic-actions-auditor/SKILL.md",
+          "lineStart": 25,
+          "lineEnd": 25,
+          "excerpt": "- Evaluating agentic action configurations (sandbox settings, tool permissions, user allowlists)",
+          "supports": [
+            "tool-permission-boundaries"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit",
+        "scope:static GitHub Actions audit; it explicitly does not perform runtime prompt-injection testing"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "5c20a6b301fd88b98b4c68918bd9726878ffbf3cf9b3f91be52b0f60a1851c26",
+        "lineCount": 338
+      }
+    },
+    {
+      "id": "agent-tool-builder",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "unknown",
+        "source": "vibeship-spawner-skills (Apache 2.0)",
+        "path": "skills/agent-tool-builder/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 33,
+        "lexicalScore": 26,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "tool",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "tool-orchestration",
+        "failure-handling",
+        "mcp-tool-contract",
+        "schema-validation"
+      ],
+      "evidence": [
+        {
+          "path": "skills/agent-tool-builder/SKILL.md",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "excerpt": "tool design from schema to error handling.",
+          "supports": [
+            "tool-orchestration",
+            "failure-handling"
+          ]
+        },
+        {
+          "path": "skills/agent-tool-builder/SKILL.md",
+          "lineStart": 39,
+          "lineEnd": 39,
+          "excerpt": "- mcp-tools",
+          "supports": [
+            "mcp-tool-contract"
+          ]
+        },
+        {
+          "path": "skills/agent-tool-builder/SKILL.md",
+          "lineStart": 18,
+          "lineEnd": 18,
+          "excerpt": "This skill covers tool design from schema to error handling. JSON Schema",
+          "supports": [
+            "schema-validation"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "d32f031ee373cb91618e2cb489e486258b1efa098621f403771b42013f733b03",
+        "lineCount": 715
+      }
+    },
+    {
+      "id": "mcp-builder",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-agents",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/mcp-builder/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 46,
+        "lexicalScore": 21,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "category"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "category"
+            ]
+          },
+          {
+            "term": "mcp",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "model-context-protocol",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "tool",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "context",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "mcp-tool-contract",
+        "stdio-lifecycle",
+        "schema-validation"
+      ],
+      "evidence": [
+        {
+          "path": "skills/mcp-builder/SKILL.md",
+          "lineStart": 50,
+          "lineEnd": 50,
+          "excerpt": "- Tool, resource, and prompt definitions",
+          "supports": [
+            "mcp-tool-contract"
+          ]
+        },
+        {
+          "path": "skills/mcp-builder/SKILL.md",
+          "lineStart": 56,
+          "lineEnd": 56,
+          "excerpt": "- **Transport**: Streamable HTTP for remote servers, using stateless JSON (simpler to scale and maintain, as opposed to stateful sessions and streaming responses). stdio for local servers.",
+          "supports": [
+            "stdio-lifecycle"
+          ]
+        },
+        {
+          "path": "skills/mcp-builder/SKILL.md",
+          "lineStart": 100,
+          "lineEnd": 100,
+          "excerpt": "**Input Schema:**",
+          "supports": [
+            "schema-validation"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "e2d89c7a913b74c4ced2f122603f61ca7cfdd6185d8c82d80ab0fd257909f9af",
+        "lineCount": 247
+      }
+    },
+    {
+      "id": "mcp-builder-ms",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-agents",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/mcp-builder-ms/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 52,
+        "lexicalScore": 18,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "category"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "category"
+            ]
+          },
+          {
+            "term": "mcp",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "mcp-tool-contract",
+        "stdio-lifecycle",
+        "schema-validation"
+      ],
+      "evidence": [
+        {
+          "path": "skills/mcp-builder-ms/SKILL.md",
+          "lineStart": 90,
+          "lineEnd": 90,
+          "excerpt": "- Tool, resource, and prompt definitions",
+          "supports": [
+            "mcp-tool-contract"
+          ]
+        },
+        {
+          "path": "skills/mcp-builder-ms/SKILL.md",
+          "lineStart": 28,
+          "lineEnd": 28,
+          "excerpt": "| **Local** | stdio | Desktop apps, single-user, local dev | Azure MCP Server via NPM/Docker |",
+          "supports": [
+            "stdio-lifecycle"
+          ]
+        },
+        {
+          "path": "skills/mcp-builder-ms/SKILL.md",
+          "lineStart": 155,
+          "lineEnd": 155,
+          "excerpt": "**Input Schema:**",
+          "supports": [
+            "schema-validation"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "32fd41110dbde6aac8a614a0f20db8c9aa84b28fb7a0fecfda357623853d4c84",
+        "lineCount": 315
+      }
+    },
+    {
+      "id": "memory-systems",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "memory",
+        "risk": "safe",
+        "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/memory-systems",
+        "path": "skills/memory-systems/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 53,
+        "lexicalScore": 18,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "memory",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "memory-boundaries",
+        "context-retrieval",
+        "context-budget",
+        "stale-memory-controls"
+      ],
+      "evidence": [
+        {
+          "path": "skills/memory-systems/SKILL.md",
+          "lineStart": 29,
+          "lineEnd": 29,
+          "excerpt": "Memory exists on a spectrum from immediate context to permanent storage. At one extreme, working memory in the context window provides zero-latency access but vanishes when sessions end. At the other extreme, permanent storage persists indefinitely but requires retrieval to enter context.",
+          "supports": [
+            "memory-boundaries"
+          ]
+        },
+        {
+          "path": "skills/memory-systems/SKILL.md",
+          "lineStart": 123,
+          "lineEnd": 123,
+          "excerpt": "### Memory Retrieval Patterns",
+          "supports": [
+            "context-retrieval"
+          ]
+        },
+        {
+          "path": "skills/memory-systems/SKILL.md",
+          "lineStart": 65,
+          "lineEnd": 65,
+          "excerpt": "Zep demonstrated 90% reduction in retrieval latency compared to full-context baselines (2.58s vs 28.9s for GPT-5.2). This efficiency comes from retrieving only relevant subgraphs rather than entire context history.",
+          "supports": [
+            "context-budget"
+          ]
+        },
+        {
+          "path": "skills/memory-systems/SKILL.md",
+          "lineStart": 100,
+          "lineEnd": 100,
+          "excerpt": "This enables queries like \"What was the user's address on Date X?\" by retrieving facts valid during that date range. It prevents context clash when outdated information contradicts new data. It enables temporal reasoning about how entities changed over time.",
+          "supports": [
+            "stale-memory-controls"
+          ]
+        }
+      ],
+      "gaps": [],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "faf64d266d50c810ba99807249258949d9b67bbe79b16ac5763e34c351d98cf0",
+        "lineCount": 234
+      }
+    },
+    {
+      "id": "tree-ring-memory",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "development",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/tree-ring-memory/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 54,
+        "lexicalScore": 18,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "memory",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "memory-boundaries",
+        "context-retrieval",
+        "context-budget",
+        "stale-memory-controls",
+        "auditable-operations"
+      ],
+      "evidence": [
+        {
+          "path": "skills/tree-ring-memory/SKILL.md",
+          "lineStart": 23,
+          "lineEnd": 23,
+          "excerpt": "forget durable project memory without treating raw conversation transcripts as",
+          "supports": [
+            "memory-boundaries",
+            "context-budget"
+          ]
+        },
+        {
+          "path": "skills/tree-ring-memory/SKILL.md",
+          "lineStart": 27,
+          "lineEnd": 27,
+          "excerpt": "recall, evidence records, audit, deterministic consolidation, maintenance,",
+          "supports": [
+            "context-retrieval"
+          ]
+        },
+        {
+          "path": "skills/tree-ring-memory/SKILL.md",
+          "lineStart": 127,
+          "lineEnd": 127,
+          "excerpt": "Do not promote weak, stale, or unreviewed claims to durable truth.",
+          "supports": [
+            "stale-memory-controls"
+          ]
+        },
+        {
+          "path": "skills/tree-ring-memory/SKILL.md",
+          "lineStart": 27,
+          "lineEnd": 27,
+          "excerpt": "recall, evidence records, audit, deterministic consolidation, maintenance,",
+          "supports": [
+            "auditable-operations"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": [
+          "Tree Ring Memory CLI for operational use"
+        ]
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "0748f05ca636975086851c9ee0f850bb614ba5572e1736d1e416994d6cc9fee6",
+        "lineCount": 219
+      }
+    },
+    {
+      "id": "evaluation",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "safe",
+        "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/evaluation",
+        "path": "skills/evaluation/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 63,
+        "lexicalScore": 16,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "evaluation",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "context",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-evaluation-design",
+        "reproducible-cases",
+        "failure-metrics",
+        "regression-suite"
+      ],
+      "evidence": [
+        {
+          "path": "skills/evaluation/SKILL.md",
+          "lineStart": 16,
+          "lineEnd": 16,
+          "excerpt": "Evaluation of agent systems requires different approaches than traditional software or even standard language model applications. Agents make dynamic decisions, are non-deterministic between runs, and often lack single correct answers. Effective evaluation must account for these characteristics while providing actionable feedback. A robust evaluation framework enables continuous improvement, catches regressions, and validates that context engineering choices achieve intended effects.",
+          "supports": [
+            "agent-evaluation-design"
+          ]
+        },
+        {
+          "path": "skills/evaluation/SKILL.md",
+          "lineStart": 113,
+          "lineEnd": 113,
+          "excerpt": "Context engineering choices should be validated through systematic evaluation. Run agents with different context strategies on the same test set. Compare quality scores, token usage, and efficiency metrics.",
+          "supports": [
+            "reproducible-cases"
+          ]
+        },
+        {
+          "path": "skills/evaluation/SKILL.md",
+          "lineStart": 124,
+          "lineEnd": 124,
+          "excerpt": "Track evaluation metrics in production by sampling interactions and evaluating randomly. Set alerts for quality drops. Maintain dashboards for trend analysis.",
+          "supports": [
+            "failure-metrics"
+          ]
+        },
+        {
+          "path": "skills/evaluation/SKILL.md",
+          "lineStart": 16,
+          "lineEnd": 16,
+          "excerpt": "Evaluation of agent systems requires different approaches than traditional software or even standard language model applications. Agents make dynamic decisions, are non-deterministic between runs, and often lack single correct answers. Effective evaluation must account for these characteristics while providing actionable feedback. A robust evaluation framework enables continuous improvement, catches regressions, and validates that context engineering choices achieve intended effects.",
+          "supports": [
+            "regression-suite"
+          ]
+        }
+      ],
+      "gaps": [],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "9ef20a6b22940cda9e650cc2e31a83d474ab7933d4bc63892fdcff88a269b980",
+        "lineCount": 244
+      }
+    },
+    {
+      "id": "protect-mcp-governance",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "uncategorized",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/protect-mcp-governance/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 65,
+        "lexicalScore": 16,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "mcp",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "tool",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "tool-permission-boundaries",
+        "auditable-operations"
+      ],
+      "evidence": [
+        {
+          "path": "skills/protect-mcp-governance/SKILL.md",
+          "lineStart": 19,
+          "lineEnd": 19,
+          "excerpt": "- Use when you need to control which MCP tools an agent can call and under what conditions",
+          "supports": [
+            "tool-permission-boundaries"
+          ]
+        },
+        {
+          "path": "skills/protect-mcp-governance/SKILL.md",
+          "lineStart": 20,
+          "lineEnd": 20,
+          "excerpt": "- Use when you want a tamper-evident audit trail for agent tool executions",
+          "supports": [
+            "auditable-operations"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": [
+          "protect-mcp runtime for operational enforcement"
+        ]
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "2e595e690b2578b5887184dea51388a288542320929c705eed7e5cb5083c4bd8",
+        "lineCount": 292
+      }
+    },
+    {
+      "id": "autonomous-agent-patterns",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "critical",
+        "source": "community",
+        "path": "skills/autonomous-agent-patterns/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 72,
+        "lexicalScore": 15,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-boundaries",
+        "tool-orchestration",
+        "failure-handling",
+        "schema-validation",
+        "tool-permission-boundaries"
+      ],
+      "evidence": [
+        {
+          "path": "skills/autonomous-agent-patterns/SKILL.md",
+          "lineStart": 47,
+          "lineEnd": 47,
+          "excerpt": "def __init__(self, llm, tools, max_iterations=50):",
+          "supports": [
+            "agent-boundaries"
+          ]
+        },
+        {
+          "path": "skills/autonomous-agent-patterns/SKILL.md",
+          "lineStart": 118,
+          "lineEnd": 118,
+          "excerpt": "## 2. Tool Design Patterns",
+          "supports": [
+            "tool-orchestration"
+          ]
+        },
+        {
+          "path": "skills/autonomous-agent-patterns/SKILL.md",
+          "lineStart": 128,
+          "lineEnd": 128,
+          "excerpt": "\"\"\"JSON Schema for the tool\"\"\"",
+          "supports": [
+            "schema-validation"
+          ]
+        },
+        {
+          "path": "skills/autonomous-agent-patterns/SKILL.md",
+          "lineStart": 277,
+          "lineEnd": 277,
+          "excerpt": "### 3.1 Permission Levels",
+          "supports": [
+            "tool-permission-boundaries"
+          ]
+        },
+        {
+          "path": "skills/autonomous-agent-patterns/SKILL.md",
+          "lineStart": 329,
+          "lineEnd": 329,
+          "excerpt": "self.ui.show_error(f\"Tool '{tool_name}' is not allowed\")",
+          "supports": [
+            "failure-handling"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-critical-policy-blocker",
+        "source-provenance-not-verified-by-this-audit",
+        "scope:catalog risk is critical; discovery-only under safe policy"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "d76a71ccb405521aef98ab6fa11e4deab401993651e67b0a97335da141da0ba5",
+        "lineCount": 770
+      }
+    },
+    {
+      "id": "advanced-evaluation",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/advanced-evaluation/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 80,
+        "lexicalScore": 14,
+        "matchedTerms": [
+          {
+            "term": "evaluation",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "agent-evaluation-design",
+        "failure-metrics"
+      ],
+      "evidence": [
+        {
+          "path": "skills/advanced-evaluation/SKILL.md",
+          "lineStart": 11,
+          "lineEnd": 11,
+          "excerpt": "This skill covers production-grade techniques for evaluating LLM outputs using LLMs as judges. It synthesizes research from academic papers, industry practices, and practical implementation experience into actionable patterns for building reliable evaluation systems.",
+          "supports": [
+            "agent-evaluation-design"
+          ]
+        },
+        {
+          "path": "skills/advanced-evaluation/SKILL.md",
+          "lineStart": 58,
+          "lineEnd": 58,
+          "excerpt": "### Metric Selection Framework",
+          "supports": [
+            "failure-metrics"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit",
+        "scope:LLM-as-judge evaluation; not a complete deterministic agent regression harness"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "9874b2f2eb671e4aecba72117c1e3f724ef5145e583c14f1d2c0933774c8d096",
+        "lineCount": 461
+      }
+    },
+    {
+      "id": "context-window-management",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "memory",
+        "risk": "unknown",
+        "source": "vibeship-spawner-skills (Apache 2.0)",
+        "path": "skills/context-window-management/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 83,
+        "lexicalScore": 14,
+        "matchedTerms": [
+          {
+            "term": "memory",
+            "fields": [
+              "category"
+            ]
+          },
+          {
+            "term": "context",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          },
+          {
+            "term": "routing",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "context-retrieval",
+        "context-budget"
+      ],
+      "evidence": [
+        {
+          "path": "skills/context-window-management/SKILL.md",
+          "lineStart": 85,
+          "lineEnd": 85,
+          "excerpt": "const relevant = await retrieveRelevant(messages);",
+          "supports": [
+            "context-retrieval"
+          ]
+        },
+        {
+          "path": "skills/context-window-management/SKILL.md",
+          "lineStart": 190,
+          "lineEnd": 190,
+          "excerpt": "### Token Budget Allocation",
+          "supports": [
+            "context-budget"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "scope:context optimization only; no durable-memory lifecycle"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "1a78ee3085a4cb8efd9c0dad31cc853979a1b74de5a81bdbcb5d8121f933e35f",
+        "lineCount": 316
+      }
+    },
+    {
+      "id": "tool-design",
+      "intent": "agent-mcp-development",
+      "catalog": {
+        "category": "ai-ml",
+        "risk": "safe",
+        "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/tool-design",
+        "path": "skills/tool-design/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 104,
+        "lexicalScore": 13,
+        "matchedTerms": [
+          {
+            "term": "agent",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "agents",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "tool",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "tool-orchestration",
+        "failure-handling",
+        "context-budget"
+      ],
+      "evidence": [
+        {
+          "path": "skills/tool-design/SKILL.md",
+          "lineStart": 16,
+          "lineEnd": 16,
+          "excerpt": "Tools are the primary mechanism through which agents interact with the world. They define the contract between deterministic systems and non-deterministic agents. Unlike traditional software APIs designed for developers, tool APIs must be designed for language models that reason about intent, infer parameter values, and generate calls from natural language requests. Poor tool design creates failure modes that no amount of prompt engineering can fix. Effective tool design follows specific principles that account for how agents perceive and use tools.",
+          "supports": [
+            "tool-orchestration"
+          ]
+        },
+        {
+          "path": "skills/tool-design/SKILL.md",
+          "lineStart": 40,
+          "lineEnd": 40,
+          "excerpt": "This fundamental difference requires rethinking API design. The contract must be unambiguous, examples must illustrate expected patterns, and error messages must guide correction. Every ambiguity in tool definitions becomes a potential failure mode.",
+          "supports": [
+            "failure-handling"
+          ]
+        },
+        {
+          "path": "skills/tool-design/SKILL.md",
+          "lineStart": 60,
+          "lineEnd": 60,
+          "excerpt": "Agents have limited context and attention. Each tool in the collection competes for attention in the tool selection phase. Each tool adds description tokens that consume context budget. Overlapping functionality creates ambiguity about which tool to use.",
+          "supports": [
+            "context-budget"
+          ]
+        }
+      ],
+      "gaps": [],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "8c291bb71cf261a1e6f3dd1eda47467fe8acd655b3fee7be2483ea38e58ea829",
+        "lineCount": 324
+      }
+    },
+    {
+      "id": "container-security-hardening",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/container-security-hardening/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 1,
+        "lexicalScore": 48,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "secure",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "hardening",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "container",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "kubernetes",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "sbom",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "cve",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "container-hardening",
+        "workload-isolation",
+        "deployment-policy"
+      ],
+      "evidence": [
+        {
+          "path": "skills/container-security-hardening/SKILL.md",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "excerpt": "Harden Docker/container images and runtime deployments with secure base images,",
+          "supports": [
+            "container-hardening",
+            "deployment-policy"
+          ]
+        },
+        {
+          "path": "skills/container-security-hardening/SKILL.md",
+          "lineStart": 28,
+          "lineEnd": 28,
+          "excerpt": "- User asks about Kubernetes pod security, NetworkPolicy, or RBAC hardening",
+          "supports": [
+            "workload-isolation"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "5255249ea9e7ace3457de3857e7c7cf7bec968051595b36ceea0ea02444feccb",
+        "lineCount": 1002
+      }
+    },
+    {
+      "id": "security/aws-secrets-rotation",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/security/aws-secrets-rotation/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 2,
+        "lexicalScore": 40,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "tags",
+              "category"
+            ]
+          },
+          {
+            "term": "secret",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "credential",
+            "fields": [
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "rotation",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "secret-lifecycle",
+        "credential-boundaries",
+        "rotation-guidance"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security/aws-secrets-rotation/SKILL.md",
+          "lineStart": 13,
+          "lineEnd": 13,
+          "excerpt": "Automate rotation of secrets, credentials, and API keys using AWS Secrets Manager and Lambda.",
+          "supports": [
+            "secret-lifecycle",
+            "rotation-guidance"
+          ]
+        },
+        {
+          "path": "skills/security/aws-secrets-rotation/SKILL.md",
+          "lineStart": 18,
+          "lineEnd": 18,
+          "excerpt": "## Supported Secret Types",
+          "supports": [
+            "credential-boundaries"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit",
+        "scope:AWS Secrets Manager and Lambda only"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "ae982dffeca42be25ebd451d5aa5c79c24ad0a53d46ca0335d9c1c4737857f48",
+        "lineCount": 471
+      }
+    },
+    {
+      "id": "threat-mitigation-mapping",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/threat-mitigation-mapping/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 3,
+        "lexicalScore": 31,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "threat",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "mitigation",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "mitigation-mapping"
+      ],
+      "evidence": [
+        {
+          "path": "skills/threat-mitigation-mapping/SKILL.md",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "excerpt": "description: \"Map identified threats to appropriate security controls and mitigations. Use when prioritizing security investments, creating remediation plans, or validating control effectiveness.\"",
+          "supports": [
+            "mitigation-mapping"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "aa524fe3c3603b1fc611a5b7953003de010e4904032b9c8c78c2ad1e3bd4a9fb",
+        "lineCount": 42
+      }
+    },
+    {
+      "id": "incident-runbook-templates",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "devops",
+        "risk": "critical",
+        "source": "community",
+        "path": "skills/incident-runbook-templates/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 6,
+        "lexicalScore": 29,
+        "matchedTerms": [
+          {
+            "term": "mitigation",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "incident",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "runbook",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "incident-triage",
+        "hardening-runbook",
+        "safe-remediation"
+      ],
+      "evidence": [
+        {
+          "path": "skills/incident-runbook-templates/SKILL.md",
+          "lineStart": 50,
+          "lineEnd": 50,
+          "excerpt": "3. Initial Triage",
+          "supports": [
+            "incident-triage"
+          ]
+        },
+        {
+          "path": "skills/incident-runbook-templates/SKILL.md",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "excerpt": "description: \"Production-ready templates for incident response runbooks covering detection, triage, mitigation, resolution, and communication.\"",
+          "supports": [
+            "hardening-runbook"
+          ]
+        },
+        {
+          "path": "skills/incident-runbook-templates/SKILL.md",
+          "lineStart": 54,
+          "lineEnd": 54,
+          "excerpt": "7. Verification & Rollback",
+          "supports": [
+            "safe-remediation"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-critical-policy-blocker",
+        "source-provenance-not-verified-by-this-audit",
+        "scope:catalog risk is critical; discovery-only under safe policy"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "531c5e1a943bd16687d665d87b415c6fba4b5345c99d52f9ca266f7a59d5d828",
+        "lineCount": 404
+      }
+    },
+    {
+      "id": "security-and-hardening",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "unknown",
+        "source": "https://github.com/addyosmani/agent-skills/tree/main/skills/security-and-hardening",
+        "path": "skills/security-and-hardening/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 7,
+        "lexicalScore": 29,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category"
+            ]
+          },
+          {
+            "term": "hardening",
+            "fields": [
+              "id",
+              "name",
+              "tags"
+            ]
+          },
+          {
+            "term": "authentication",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "threat-enumeration",
+        "mitigation-mapping",
+        "trust-boundary-review",
+        "authentication-hardening",
+        "credential-boundaries",
+        "dependency-risk-review"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security-and-hardening/SKILL.md",
+          "lineStart": 32,
+          "lineEnd": 32,
+          "excerpt": "1. **Map the trust boundaries.** Where does untrusted data cross into your system? HTTP requests, form fields, file uploads, webhooks, third-party APIs, message queues, and **LLM output**. Every boundary is attack surface.",
+          "supports": [
+            "threat-enumeration",
+            "trust-boundary-review"
+          ]
+        },
+        {
+          "path": "skills/security-and-hardening/SKILL.md",
+          "lineStart": 36,
+          "lineEnd": 36,
+          "excerpt": "| Threat | Ask | Typical mitigation |",
+          "supports": [
+            "mitigation-mapping"
+          ]
+        },
+        {
+          "path": "skills/security-and-hardening/SKILL.md",
+          "lineStart": 43,
+          "lineEnd": 43,
+          "excerpt": "| **E**levation of privilege | Can a user gain rights they shouldn't? | Authorization checks, least privilege |",
+          "supports": [
+            "authentication-hardening"
+          ]
+        },
+        {
+          "path": "skills/security-and-hardening/SKILL.md",
+          "lineStart": 74,
+          "lineEnd": 74,
+          "excerpt": "- **Never commit secrets** to version control (API keys, passwords, tokens)",
+          "supports": [
+            "credential-boundaries"
+          ]
+        },
+        {
+          "path": "skills/security-and-hardening/SKILL.md",
+          "lineStart": 287,
+          "lineEnd": 287,
+          "excerpt": "│   │   ├── YES --> Fix immediately (update, patch, or replace the dependency)",
+          "supports": [
+            "dependency-risk-review"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "scope:web application hardening only"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "3ba7d0f45bb7ffd5550ca9738db602b1b5dcb23cba47aa6b3e21b9a6fbe123a5",
+        "lineCount": 475
+      }
+    },
+    {
+      "id": "threat-modeling-expert",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/threat-modeling-expert/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 8,
+        "lexicalScore": 29,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "secure",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "threat",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "threat-model",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "threat-enumeration",
+        "mitigation-mapping",
+        "security-requirements",
+        "trust-boundary-review"
+      ],
+      "evidence": [
+        {
+          "path": "skills/threat-modeling-expert/SKILL.md",
+          "lineStart": 41,
+          "lineEnd": 41,
+          "excerpt": "1. Define system scope and trust boundaries",
+          "supports": [
+            "threat-enumeration",
+            "trust-boundary-review"
+          ]
+        },
+        {
+          "path": "skills/threat-modeling-expert/SKILL.md",
+          "lineStart": 47,
+          "lineEnd": 47,
+          "excerpt": "7. Design mitigations",
+          "supports": [
+            "mitigation-mapping"
+          ]
+        },
+        {
+          "path": "skills/threat-modeling-expert/SKILL.md",
+          "lineStart": 61,
+          "lineEnd": 61,
+          "excerpt": "- Link threats to security requirements",
+          "supports": [
+            "security-requirements"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "e091531614639439ab664277be72870ba7159cc6efc4a744f74b478dff0a09d1",
+        "lineCount": 69
+      }
+    },
+    {
+      "id": "security-scanning-security-dependencies",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/security-scanning-security-dependencies/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 11,
+        "lexicalScore": 19,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "dependency",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "supply-chain",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "sbom",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "dependency-risk-review",
+        "advisory-triage",
+        "upgrade-prioritization",
+        "supply-chain-evidence"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security-scanning-security-dependencies/SKILL.md",
+          "lineStart": 27,
+          "lineEnd": 27,
+          "excerpt": "The user needs comprehensive dependency security analysis to identify vulnerable packages, outdated dependencies, and license compliance issues. Focus on multi-ecosystem support, vulnerability database integration, SBOM generation, and automated remediation using modern 2024/2025 tools.",
+          "supports": [
+            "dependency-risk-review",
+            "upgrade-prioritization"
+          ]
+        },
+        {
+          "path": "skills/security-scanning-security-dependencies/SKILL.md",
+          "lineStart": 27,
+          "lineEnd": 27,
+          "excerpt": "The user needs comprehensive dependency security analysis to identify vulnerable packages, outdated dependencies, and license compliance issues. Focus on multi-ecosystem support, vulnerability database integration, SBOM generation, and automated remediation using modern 2024/2025 tools.",
+          "supports": [
+            "advisory-triage"
+          ]
+        },
+        {
+          "path": "skills/security-scanning-security-dependencies/SKILL.md",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "excerpt": "description: \"You are a security expert specializing in dependency vulnerability analysis, SBOM generation, and supply chain security. Scan project dependencies across multiple ecosystems to identify vulnerabilities, assess risks, and provide automated remediation strategies.\"",
+          "supports": [
+            "supply-chain-evidence"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "eb8f129a63658067c9b34d1cb929dbe12cb2cffb222e1b459fe9ff422521c8eb",
+        "lineCount": 52
+      }
+    },
+    {
+      "id": "dependency-management-deps-audit",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/dependency-management-deps-audit/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 12,
+        "lexicalScore": 18,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "dependency",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "supply-chain",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "dependency-risk-review",
+        "advisory-triage",
+        "upgrade-prioritization"
+      ],
+      "evidence": [
+        {
+          "path": "skills/dependency-management-deps-audit/SKILL.md",
+          "lineStart": 34,
+          "lineEnd": 34,
+          "excerpt": "- Inventory direct and transitive dependencies.",
+          "supports": [
+            "dependency-risk-review"
+          ]
+        },
+        {
+          "path": "skills/dependency-management-deps-audit/SKILL.md",
+          "lineStart": 35,
+          "lineEnd": 35,
+          "excerpt": "- Run vulnerability and license scans.",
+          "supports": [
+            "advisory-triage"
+          ]
+        },
+        {
+          "path": "skills/dependency-management-deps-audit/SKILL.md",
+          "lineStart": 37,
+          "lineEnd": 37,
+          "excerpt": "- Propose upgrades with compatibility notes.",
+          "supports": [
+            "upgrade-prioritization"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "cf186c03c95cc163d6791d52f1305e20e08ff56ff09048e64a027b3b1e64d5b1",
+        "lineCount": 53
+      }
+    },
+    {
+      "id": "security-requirement-extraction",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/security-requirement-extraction/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 13,
+        "lexicalScore": 18,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "threat",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "threat-model",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "security-requirements"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security-requirement-extraction/SKILL.md",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "excerpt": "description: \"Derive security requirements from threat models and business context. Use when translating threats into actionable requirements, creating security user stories, or building security test cases.\"",
+          "supports": [
+            "security-requirements"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "bdcb50621b8b36f698969c5605fa5a815d65b8d1dc6471f4e63a870b48ebcc61",
+        "lineCount": 42
+      }
+    },
+    {
+      "id": "secrets-management",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/secrets-management/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 19,
+        "lexicalScore": 17,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "category"
+            ]
+          },
+          {
+            "term": "secure",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "secret",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "secret-lifecycle",
+        "credential-boundaries",
+        "rotation-guidance"
+      ],
+      "evidence": [
+        {
+          "path": "skills/secrets-management/SKILL.md",
+          "lineStart": 33,
+          "lineEnd": 33,
+          "excerpt": "1. Identify secret types, owners, and rotation requirements.",
+          "supports": [
+            "secret-lifecycle",
+            "credential-boundaries"
+          ]
+        },
+        {
+          "path": "skills/secrets-management/SKILL.md",
+          "lineStart": 36,
+          "lineEnd": 36,
+          "excerpt": "4. Validate rotation and audit logging.",
+          "supports": [
+            "rotation-guidance"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "37518ec421cf00ffa306ccc719bf320b1f5595b5ac76295593f35712476d6f90",
+        "lineCount": 373
+      }
+    },
+    {
+      "id": "security-auditor",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/security-auditor/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 35,
+        "lexicalScore": 16,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "container-hardening",
+        "dependency-risk-review",
+        "supply-chain-evidence",
+        "secret-lifecycle",
+        "authentication-hardening",
+        "threat-enumeration",
+        "mitigation-mapping",
+        "security-requirements"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security-auditor/SKILL.md",
+          "lineStart": 47,
+          "lineEnd": 47,
+          "excerpt": "- **Container security**: Image scanning, runtime security, Kubernetes security policies",
+          "supports": [
+            "container-hardening"
+          ]
+        },
+        {
+          "path": "skills/security-auditor/SKILL.md",
+          "lineStart": 48,
+          "lineEnd": 48,
+          "excerpt": "- **Supply chain security**: SLSA framework, software bill of materials (SBOM), dependency management",
+          "supports": [
+            "dependency-risk-review",
+            "supply-chain-evidence"
+          ]
+        },
+        {
+          "path": "skills/security-auditor/SKILL.md",
+          "lineStart": 49,
+          "lineEnd": 49,
+          "excerpt": "- **Secrets management**: HashiCorp Vault, cloud secret managers, secret rotation automation",
+          "supports": [
+            "secret-lifecycle"
+          ]
+        },
+        {
+          "path": "skills/security-auditor/SKILL.md",
+          "lineStart": 52,
+          "lineEnd": 52,
+          "excerpt": "- **Identity protocols**: OAuth 2.0/2.1, OpenID Connect, SAML 2.0, WebAuthn, FIDO2",
+          "supports": [
+            "authentication-hardening"
+          ]
+        },
+        {
+          "path": "skills/security-auditor/SKILL.md",
+          "lineStart": 65,
+          "lineEnd": 65,
+          "excerpt": "- **Threat modeling**: STRIDE, PASTA, attack trees, threat intelligence integration",
+          "supports": [
+            "threat-enumeration"
+          ]
+        },
+        {
+          "path": "skills/security-auditor/SKILL.md",
+          "lineStart": 14,
+          "lineEnd": 14,
+          "excerpt": "- Investigating vulnerabilities or designing mitigation plans",
+          "supports": [
+            "mitigation-mapping"
+          ]
+        },
+        {
+          "path": "skills/security-auditor/SKILL.md",
+          "lineStart": 62,
+          "lineEnd": 62,
+          "excerpt": "- **OWASP ASVS**: Application Security Verification Standard, security requirements",
+          "supports": [
+            "security-requirements"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit",
+        "scope:broad methodology; project-specific evidence still required"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "f57c553e805fed8babb2f1803186bcb1939875b9fdbaf15ba0bd58c15adb45d2",
+        "lineCount": 178
+      }
+    },
+    {
+      "id": "security-bluebook-builder",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/security-bluebook-builder/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 36,
+        "lexicalScore": 16,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "threat-enumeration",
+        "trust-boundary-review",
+        "security-requirements",
+        "hardening-runbook",
+        "authentication-hardening",
+        "credential-boundaries"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security-bluebook-builder/SKILL.md",
+          "lineStart": 42,
+          "lineEnd": 42,
+          "excerpt": "- Threat model (assumptions + out-of-scope)",
+          "supports": [
+            "threat-enumeration"
+          ]
+        },
+        {
+          "path": "skills/security-bluebook-builder/SKILL.md",
+          "lineStart": 44,
+          "lineEnd": 44,
+          "excerpt": "- Trust boundaries + controls",
+          "supports": [
+            "trust-boundary-review"
+          ]
+        },
+        {
+          "path": "skills/security-bluebook-builder/SKILL.md",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "excerpt": "description: \"Build a minimal but real security policy for sensitive apps. The output is a single, coherent Blue Book document using MUST/SHOULD/CAN language, with explicit assumptions, scope, and security gates.\"",
+          "supports": [
+            "security-requirements"
+          ]
+        },
+        {
+          "path": "skills/security-bluebook-builder/SKILL.md",
+          "lineStart": 49,
+          "lineEnd": 49,
+          "excerpt": "- Incident response mini-runbook",
+          "supports": [
+            "hardening-runbook"
+          ]
+        },
+        {
+          "path": "skills/security-bluebook-builder/SKILL.md",
+          "lineStart": 45,
+          "lineEnd": 45,
+          "excerpt": "- Auth/session policy",
+          "supports": [
+            "authentication-hardening"
+          ]
+        },
+        {
+          "path": "skills/security-bluebook-builder/SKILL.md",
+          "lineStart": 35,
+          "lineEnd": 35,
+          "excerpt": "- Do not include secrets, tokens, or internal credentials.",
+          "supports": [
+            "credential-boundaries"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "d4f053069cb503b3756fa6937003052d783c814fcccff25ae23dc1865b014085",
+        "lineCount": 59
+      }
+    },
+    {
+      "id": "security/aws-iam-best-practices",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/security/aws-iam-best-practices/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 38,
+        "lexicalScore": 16,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "tags",
+              "category"
+            ]
+          },
+          {
+            "term": "hardening",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "least-privilege",
+            "fields": [
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "cloud-permission-review"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security/aws-iam-best-practices/SKILL.md",
+          "lineStart": 16,
+          "lineEnd": 16,
+          "excerpt": "Use this skill when you need to review IAM policies, implement least privilege access, or harden IAM security.",
+          "supports": [
+            "cloud-permission-review"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit",
+        "scope:AWS IAM only"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "dd21f2fcfeaa0b28394807a04a79036004726ba2f79fc29fd9ba3d650120e9d8",
+        "lineCount": 403
+      }
+    },
+    {
+      "id": "security/aws-security-audit",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/security/aws-security-audit/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 39,
+        "lexicalScore": 16,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "cloud-permission-review"
+      ],
+      "evidence": [
+        {
+          "path": "skills/security/aws-security-audit/SKILL.md",
+          "lineStart": 21,
+          "lineEnd": 21,
+          "excerpt": "- Overly permissive IAM policies",
+          "supports": [
+            "cloud-permission-review"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit",
+        "scope:AWS posture audit only; remediation ordering does not prove safe or transactional execution"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "f26a9648c27a2c796983e716ec4b7d78c1ac6584190cbf451b8e614a06cb606d",
+        "lineCount": 375
+      }
+    },
+    {
+      "id": "gha-security-review",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/gha-security-review/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 42,
+        "lexicalScore": 15,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "category"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "dependency-risk-review",
+        "credential-boundaries"
+      ],
+      "evidence": [
+        {
+          "path": "skills/gha-security-review/SKILL.md",
+          "lineStart": 84,
+          "lineEnd": 84,
+          "excerpt": "| Third-party actions (especially unpinned) | `references/supply-chain.md` |",
+          "supports": [
+            "dependency-risk-review"
+          ]
+        },
+        {
+          "path": "skills/gha-security-review/SKILL.md",
+          "lineStart": 132,
+          "lineEnd": 132,
+          "excerpt": "Are workflow permissions minimal? Are secrets properly scoped?",
+          "supports": [
+            "credential-boundaries"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit",
+        "scope:GitHub Actions token/workflow permissions are not generalized to cloud IAM"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "13dcdd011a1e6cbb2414187ec7c54baaf9196f345ff8cec3698f1131f11ec727",
+        "lineCount": 199
+      }
+    },
+    {
+      "id": "k8s-security-policies",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "devops",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/k8s-security-policies/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 43,
+        "lexicalScore": 15,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          },
+          {
+            "term": "kubernetes",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "cloud-permission-review",
+        "workload-isolation",
+        "deployment-policy"
+      ],
+      "evidence": [
+        {
+          "path": "skills/k8s-security-policies/SKILL.md",
+          "lineStart": 27,
+          "lineEnd": 27,
+          "excerpt": "Implement defense-in-depth security for Kubernetes clusters using network policies, pod security standards, and RBAC.",
+          "supports": [
+            "workload-isolation",
+            "deployment-policy"
+          ]
+        },
+        {
+          "path": "skills/k8s-security-policies/SKILL.md",
+          "lineStart": 33,
+          "lineEnd": 33,
+          "excerpt": "- Set up RBAC for least-privilege access",
+          "supports": [
+            "cloud-permission-review"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit",
+        "scope:cloud-permission-review is Kubernetes RBAC only"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "db47d1214878a5e5bbb636c94b7926c28057737e3af0dcda60822f96d0a9614d",
+        "lineCount": 355
+      }
+    },
+    {
+      "id": "incident-responder",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "reliability",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/incident-responder/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 57,
+        "lexicalScore": 14,
+        "matchedTerms": [
+          {
+            "term": "incident",
+            "fields": [
+              "id",
+              "name",
+              "tags",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "incident-triage",
+        "hardening-runbook",
+        "safe-remediation",
+        "recurrence-prevention"
+      ],
+      "evidence": [
+        {
+          "path": "skills/incident-responder/SKILL.md",
+          "lineStart": 39,
+          "lineEnd": 39,
+          "excerpt": "### 2. Establish Incident Command",
+          "supports": [
+            "incident-triage"
+          ]
+        },
+        {
+          "path": "skills/incident-responder/SKILL.md",
+          "lineStart": 127,
+          "lineEnd": 127,
+          "excerpt": "- **Automation opportunities**: Runbook automation, self-healing systems",
+          "supports": [
+            "hardening-runbook"
+          ]
+        },
+        {
+          "path": "skills/incident-responder/SKILL.md",
+          "lineStart": 98,
+          "lineEnd": 98,
+          "excerpt": "2. **Risk assessment**: Potential side effects, rollback capability",
+          "supports": [
+            "safe-remediation"
+          ]
+        },
+        {
+          "path": "skills/incident-responder/SKILL.md",
+          "lineStart": 122,
+          "lineEnd": 122,
+          "excerpt": "- **Action items**: Prevention measures, detection improvements, response enhancements",
+          "supports": [
+            "recurrence-prevention"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit",
+        "scope:general SRE incidents; security incident specifics are not comprehensive"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "f65d143254144bcfeedce6c87c261a28d188bfe97bb0f18a97dd62621e7a6ca4",
+        "lineCount": 215
+      }
+    },
+    {
+      "id": "supply-chain-risk-auditor",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "uncategorized",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/supply-chain-risk-auditor/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 64,
+        "lexicalScore": 13,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "dependency",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "supply-chain",
+            "fields": [
+              "id",
+              "name",
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "dependency-risk-review",
+        "supply-chain-evidence"
+      ],
+      "evidence": [
+        {
+          "path": "skills/supply-chain-risk-auditor/SKILL.md",
+          "lineStart": 20,
+          "lineEnd": 20,
+          "excerpt": "- Evaluating supply chain attack surface of a project",
+          "supports": [
+            "dependency-risk-review"
+          ]
+        },
+        {
+          "path": "skills/supply-chain-risk-auditor/SKILL.md",
+          "lineStart": 60,
+          "lineEnd": 60,
+          "excerpt": "* For any criteria that require actions such as counting open GitHub issues, use the `gh` tool to query the exact data. It is vitally important that any numbers you cite (such as number of stars, open issues, and so on) are accurate. You may round numbers of issues and stars using ~ notation, e.g. \"~4000 stars\".",
+          "supports": [
+            "supply-chain-evidence"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit",
+        "manual-setup-or-local-writes-required"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": [
+          "gh CLI",
+          "GitHub network/API access"
+        ]
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [
+        "creates .supply-chain-risk-auditor/results.md"
+      ],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "799e965b7e6d91dfc147907ef59900aeaa1a3712c1b21c8459504584c7eaa2d7",
+        "lineCount": 74
+      }
+    },
+    {
+      "id": "auth-implementation-patterns",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/auth-implementation-patterns/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 76,
+        "lexicalScore": 5,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "category"
+            ]
+          },
+          {
+            "term": "secure",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "authentication",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "authorization",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "secret-lifecycle",
+        "authentication-hardening",
+        "credential-boundaries",
+        "rotation-guidance"
+      ],
+      "evidence": [
+        {
+          "path": "skills/auth-implementation-patterns/SKILL.md",
+          "lineStart": 31,
+          "lineEnd": 31,
+          "excerpt": "- Design authorization model and policy enforcement points.",
+          "supports": [
+            "authentication-hardening"
+          ]
+        },
+        {
+          "path": "skills/auth-implementation-patterns/SKILL.md",
+          "lineStart": 32,
+          "lineEnd": 32,
+          "excerpt": "- Plan secrets storage, rotation, logging, and audit requirements.",
+          "supports": [
+            "secret-lifecycle",
+            "credential-boundaries",
+            "rotation-guidance"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "ac7abc9e3e8928323153ecc00619359cbdb56272831ed399c4b552b193132c96",
+        "lineCount": 48
+      }
+    },
+    {
+      "id": "stride-analysis-patterns",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "security",
+        "risk": "safe",
+        "source": "community",
+        "path": "skills/stride-analysis-patterns/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 79,
+        "lexicalScore": 5,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "category",
+              "description"
+            ]
+          },
+          {
+            "term": "threat",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "threat-model",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "threat-enumeration"
+      ],
+      "evidence": [
+        {
+          "path": "skills/stride-analysis-patterns/SKILL.md",
+          "lineStart": 11,
+          "lineEnd": 11,
+          "excerpt": "Systematic threat identification using the STRIDE methodology.",
+          "supports": [
+            "threat-enumeration"
+          ]
+        }
+      ],
+      "gaps": [
+        "source-provenance-not-verified-by-this-audit"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "semantically-supported-policy-check-still-required",
+      "contentEvidence": {
+        "sha256": "0cd0d8f0ab8775503fb1e9fe66005802c78b6f7717a7dd7a67be25b504a6cffd",
+        "lineCount": 42
+      }
+    },
+    {
+      "id": "skill-scanner",
+      "intent": "security-review-hardening",
+      "catalog": {
+        "category": "meta",
+        "risk": "unknown",
+        "source": "community",
+        "path": "skills/skill-scanner/SKILL.md"
+      },
+      "selectionProvenance": {
+        "ruleVersion": "aas-v1-public-lexical-audit-1",
+        "fullCatalogPopulation": 1965,
+        "lexicalRank": 95,
+        "lexicalScore": 4,
+        "matchedTerms": [
+          {
+            "term": "security",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "secret",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "supply-chain",
+            "fields": [
+              "description"
+            ]
+          },
+          {
+            "term": "permission",
+            "fields": [
+              "description"
+            ]
+          }
+        ],
+        "semanticReview": "manual-read-of-canonical-SKILL.md-with-explicit-line-evidence",
+        "benchmarkGoldIdsUsed": false,
+        "heldOutRead": false
+      },
+      "canonicalCapabilities": [
+        "dependency-risk-review",
+        "supply-chain-evidence"
+      ],
+      "evidence": [
+        {
+          "path": "skills/skill-scanner/SKILL.md",
+          "lineStart": 124,
+          "lineEnd": 124,
+          "excerpt": "### Phase 7: Supply Chain Assessment",
+          "supports": [
+            "dependency-risk-review"
+          ]
+        },
+        {
+          "path": "skills/skill-scanner/SKILL.md",
+          "lineStart": 176,
+          "lineEnd": 176,
+          "excerpt": "- **Evidence**: [code snippet]",
+          "supports": [
+            "supply-chain-evidence"
+          ]
+        }
+      ],
+      "gaps": [
+        "catalog-risk-unknown",
+        "source-provenance-not-verified-by-this-audit",
+        "scope:agent skill supply-chain review, not general application dependencies"
+      ],
+      "dependencies": {
+        "skillIds": [],
+        "external": []
+      },
+      "conflicts": {
+        "skillIds": [],
+        "note": "No explicit inter-skill conflict is declared in the canonical SKILL.md; overlap must be resolved by stack composition."
+      },
+      "sideEffects": [],
+      "recommendationDisposition": "discovery-only-until-policy-evidence-is-complete",
+      "contentEvidence": {
+        "sha256": "9b6ecdd8f13ffcff6dd95dfaeea9b8d21cf87500eab7dc5d61b48d1f1cedcacc",
+        "lineCount": 207
+      }
+    }
+  ]
+}

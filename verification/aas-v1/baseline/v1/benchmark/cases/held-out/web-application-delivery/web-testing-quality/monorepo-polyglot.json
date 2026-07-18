@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.web-testing-quality.monorepo-polyglot",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "workspace": {
+      "frontend": "React packages and two applications",
+      "services": [
+        "Node.js gateway",
+        "Python pricing"
+      ]
+    },
+    "testing": {
+      "frontendUnit": "Vitest",
+      "serviceSuites": "language-native",
+      "browser": "not standardized"
+    },
+    "ci": "affected-project execution",
+    "problem": [
+      "unclear ownership",
+      "duplicate fixtures",
+      "cross-service failures found late"
+    ]
+  },
+  "criticalGoals": [
+    "define layered tests across frontend and service boundaries",
+    "add reliable browser coverage for cross-service journeys"
+  ],
+  "nonCriticalGoals": [
+    "reuse stable fixtures",
+    "preserve language-native unit tests",
+    "run affected suites",
+    "assign failure ownership",
+    "avoid duplicated end-to-end cases"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on polyglot monorepo quality programs",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.web-testing-quality.monorepo-polyglot"
+}

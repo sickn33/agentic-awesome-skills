@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"recommend_stack","arguments":{"profile":{"goals":["test"],"request":"Select local testing skills under the declared AAS policy"}}}}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+  "acceptedSolutions": [
+    {
+      "solutionId": "openapi-newman-ci",
+      "allowedSkillIds": [
+        "postman-openapi-converter",
+        "newman-cicd-integration"
+      ],
+      "requiredGroups": [
+        [
+          "postman-openapi-converter"
+        ],
+        [
+          "newman-cicd-integration"
+        ]
+      ]
+    },
+    {
+      "solutionId": "openapi-postman-local",
+      "allowedSkillIds": [
+        "postman-openapi-converter",
+        "postman-newman-automation"
+      ],
+      "requiredGroups": [
+        [
+          "postman-openapi-converter"
+        ],
+        [
+          "postman-newman-automation"
+        ]
+      ]
+    },
+    {
+      "solutionId": "pytest-api-mock-contract",
+      "allowedSkillIds": [
+        "api-testing-observability-api-mock",
+        "python-testing-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "api-testing-observability-api-mock"
+        ],
+        [
+          "python-testing-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "gold-equivalence-independent-adjudicator",
+      "decision": "approved",
+      "reviewedDigest": "sha256-89ee39d9f9364e2a8871d0e56dded988f4562e79e9a7b5c2d7830356144da289"
+    },
+    {
+      "reviewer": "gold-equivalence-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-89ee39d9f9364e2a8871d0e56dded988f4562e79e9a7b5c2d7830356144da289"
+    }
+  ],
+  "provenance": {
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
+    "reviewedAt": "2026-07-17"
+  }
+}

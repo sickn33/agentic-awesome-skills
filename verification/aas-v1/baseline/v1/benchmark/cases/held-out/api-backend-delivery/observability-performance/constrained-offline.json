@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.observability-performance.constrained-offline",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "greenfield",
+    "deployment": "air-gapped-edge",
+    "languages": [
+      "rust"
+    ],
+    "topology": "single-node-services",
+    "constraints": [
+      "bounded-storage",
+      "low-cpu",
+      "no-remote-collector",
+      "export-diagnostics-on-demand"
+    ]
+  },
+  "criticalGoals": [
+    "capture useful local health evidence within strict resource limits",
+    "diagnose latency without a remote observability service"
+  ],
+  "nonCriticalGoals": [
+    "bound log and metric retention",
+    "support offline trace export for incident review"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.observability-performance.constrained-offline"
+}

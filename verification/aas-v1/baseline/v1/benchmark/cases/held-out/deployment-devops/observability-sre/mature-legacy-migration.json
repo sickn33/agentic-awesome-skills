@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.mature-legacy-migration",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Subscription billing platform",
+    "stack": {
+      "languages": [
+        "Java",
+        "Bash"
+      ],
+      "runtime": "virtual machines plus new services",
+      "delivery": "hybrid observability estate"
+    },
+    "team": {
+      "engineers": 9,
+      "operationsModel": "operations handoff",
+      "experience": "legacy domain experts"
+    },
+    "environment": {
+      "maturity": "mature legacy migration",
+      "topology": "virtual machines moving incrementally to managed infrastructure",
+      "connectivity": "restricted outbound"
+    },
+    "constraints": [
+      "no big-bang cutover",
+      "preserve current recovery path",
+      "limited maintenance windows"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": true
+    },
+    "desiredOutcome": "bridge legacy monitoring and modern telemetry during migration"
+  },
+  "criticalGoals": [
+    "maintain visibility across both estates",
+    "prove parity before retiring legacy monitors"
+  ],
+  "nonCriticalGoals": [
+    "use structured telemetry",
+    "bound high-cardinality data",
+    "link releases to signals",
+    "avoid noisy alerts",
+    "document first-response checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on observability-sre delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.observability-sre.mature-legacy-migration"
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.creative-content.bilingual-poetry-edit",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_CREATIVE_CONTENT"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-25bd2f811229eddc704f9289f348d3457e76def30b75f2fd293a81fe034268d9"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-25bd2f811229eddc704f9289f348d3457e76def30b75f2fd293a81fe034268d9"
+    }
+  ]
+}

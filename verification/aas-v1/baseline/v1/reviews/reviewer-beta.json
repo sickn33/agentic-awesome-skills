@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "aas-v1-baseline-reviewer-beta",
+  "reviewedAt": "2026-07-17",
+  "reviewer": {
+    "identity": "codex-independent-beta",
+    "role": "independent-baseline-reviewer",
+    "implementedScorer": false,
+    "authoredReviewedArtifacts": false,
+    "reliedOnReviewerAlpha": false
+  },
+  "overall": {
+    "decision": "approved",
+    "reasonCodes": [
+      "AAS_REVIEW_HELD_OUT_APPROVED",
+      "AAS_REVIEW_TUNING_APPROVED",
+      "AAS_REVIEW_ABSTENTION_APPROVED"
+    ],
+    "scope": "baseline-corpus-only"
+  },
+  "methodReasonCodes": [
+    "AAS_REVIEW_GRID_AND_PAIRING_VERIFIED",
+    "AAS_REVIEW_GOALS_AND_REQUIRES_SKILL_VERIFIED",
+    "AAS_REVIEW_GOLD_EQUIVALENTS_VERIFIED",
+    "AAS_REVIEW_CATALOG_AND_POLICY_VERIFIED",
+    "AAS_REVIEW_NO_ARTIFICIAL_LABEL_LEAK",
+    "AAS_REVIEW_NO_RAW_CODE_SECRET_OR_ABSOLUTE_PATH",
+    "AAS_REVIEW_TASK_FAMILIES_UNIQUE",
+    "AAS_REVIEW_TUNING_HELDOUT_SEPARATED",
+    "AAS_REVIEW_ABSTENTION_OOD_VERIFIED"
+  ],
+  "warnings": [
+    {
+      "code": "AAS_REVIEW_METADATA_EVIDENCE_CONTRACT_PENDING",
+      "details": {
+        "uniqueHeldOutGoldSkillIds": 170,
+        "legacyCatalogHasV1JudgmentEvidenceRefs": false
+      },
+      "constraint": "Baseline approval does not make legacy metadata evidence-backed. Unknown remains unknown; candidates stay in discovery until v1 structured evidence exists."
+    }
+  ],
+  "digestContract": {
+    "pairPayload": {
+      "heldOut": "recursively key-sorted JSON.stringify({case, gold}) with gold.reviews replaced by []",
+      "tuning": "recursively key-sorted JSON.stringify({case, gold}) with gold.reviews replaced by []",
+      "abstention": "recursively key-sorted JSON.stringify({case, label}) with label.reviews replaced by []"
+    },
+    "pairDigest": "sha256- prefix followed by lowercase SHA-256 hex of the UTF-8 pair payload",
+    "pairManifest": "JSON.stringify of all [caseId,pairDigest] tuples sorted by caseId ascending using JavaScript code-unit order",
+    "pairManifestRootDigest": "sha256- prefix followed by lowercase SHA-256 hex of the UTF-8 pair manifest",
+    "globalManifest": "the same tuple form and ordering across all three splits"
+  },
+  "pairCount": 270,
+  "pairManifestRootDigest": "sha256-91a89667c3d178b2a2dfe65236cdbea70a2152bf93efd74cfb05f06041620939",
+  "splits": {
+    "heldOut": {
+      "decision": "approved",
+      "reasonCode": "AAS_REVIEW_PAIR_APPROVED",
+      "pairCount": 180,
+      "pairManifestRootDigest": "sha256-b68254bf102ff041b6b32dac2aad244e726ca42118d17885c146965b299a3e16"
+    },
+    "tuning": {
+      "decision": "approved",
+      "reasonCode": "AAS_REVIEW_TUNING_PAIR_APPROVED",
+      "pairCount": 60,
+      "pairManifestRootDigest": "sha256-6a77ed03d82ba9dc22b4e7df01147f174161543c4cb863cefb77fbdd92544ff8"
+    },
+    "abstention": {
+      "decision": "approved",
+      "reasonCode": "AAS_REVIEW_ABSTENTION_PAIR_APPROVED",
+      "pairCount": 30,
+      "pairManifestRootDigest": "sha256-b38198df8e156459f3a43d55adb0057513cc9dbe71c078a2de6484810fc2c060"
+    }
+  }
+}

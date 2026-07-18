@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.threat-modeling.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "stride-migration",
+      "allowedSkillIds": [
+        "stride-analysis-patterns",
+        "threat-mitigation-mapping",
+        "security-requirement-extraction"
+      ],
+      "requiredGroups": [
+        [
+          "stride-analysis-patterns"
+        ],
+        [
+          "threat-mitigation-mapping"
+        ],
+        [
+          "security-requirement-extraction"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-5681130b1357372e39e9d080ff149023773196b3871561d089254d5479d0777c"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-5681130b1357372e39e9d080ff149023773196b3871561d089254d5479d0777c"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.small-greenfield",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "customer-facing single-page application",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React",
+      "Vite"
+    ],
+    "testingContext": "new project with no unit or component test harness",
+    "constraints": [
+      "fast local feedback",
+      "open-source local runner",
+      "CI execution"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "unit-test-runner",
+    "react-component-tests",
+    "deterministic-mocking"
+  ],
+  "nonCriticalGoals": [
+    "coverage-reporting",
+    "test-quality-review"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.unit-component.small-greenfield"
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.api-backend-delivery.api-design-contracts.research-catalog-api",
+  "acceptedSolutions": [
+    {
+      "solutionId": "api-principles-openapi",
+      "allowedSkillIds": [
+        "api-design-principles",
+        "openapi-spec-generation"
+      ],
+      "requiredGroups": [
+        [
+          "api-design-principles"
+        ],
+        [
+          "openapi-spec-generation"
+        ]
+      ]
+    },
+    {
+      "solutionId": "interface-design-generator",
+      "allowedSkillIds": [
+        "api-and-interface-design",
+        "openapi-spec-generator"
+      ],
+      "requiredGroups": [
+        [
+          "api-and-interface-design"
+        ],
+        [
+          "openapi-spec-generator"
+        ]
+      ]
+    },
+    {
+      "solutionId": "interface-design-documenter",
+      "allowedSkillIds": [
+        "api-and-interface-design",
+        "api-documenter"
+      ],
+      "requiredGroups": [
+        [
+          "api-and-interface-design"
+        ],
+        [
+          "api-documenter"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "gold-equivalence-independent-adjudicator",
+      "decision": "approved",
+      "reviewedDigest": "sha256-122f4173c22fea61413f168fdd29bd9cc418dfe710f6201fa2ba38d5d47d6ece"
+    },
+    {
+      "reviewer": "gold-equivalence-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-122f4173c22fea61413f168fdd29bd9cc418dfe710f6201fa2ba38d5d47d6ece"
+    }
+  ],
+  "provenance": {
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
+    "reviewedAt": "2026-07-17"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.persistence-data.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "observable-reversible-data-migration",
+      "allowedSkillIds": [
+        "database-migration",
+        "database-migrations-sql-migrations",
+        "database-migrations-migration-observability",
+        "postgres-best-practices",
+        "sql-optimization-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "database-migration",
+          "database-migrations-sql-migrations"
+        ],
+        [
+          "database-migrations-migration-observability"
+        ],
+        [
+          "postgres-best-practices",
+          "sql-optimization-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-373447ef716c13cb812810ce665e85aef53548a710d66ed9df5883676080d882"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-373447ef716c13cb812810ce665e85aef53548a710d66ed9df5883676080d882"
+    }
+  ]
+}

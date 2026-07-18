@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.professional-advice.clinical-nutrition",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_PROFESSIONAL_ADVICE"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a8b67ddba45e5018ce14f56a291cf77acf78068c4f3a8704e02686afe52061cd"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a8b67ddba45e5018ce14f56a291cf77acf78068c4f3a8704e02686afe52061cd"
+    }
+  ]
+}

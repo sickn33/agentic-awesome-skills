@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.accessibility-quality.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "accesslint-wcag-baseline",
+      "allowedSkillIds": [
+        "accesslint-scan",
+        "wcag-audit-patterns"
+      ],
+      "requiredGroups": [
+        [
+          "accesslint-scan"
+        ],
+        [
+          "wcag-audit-patterns"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0c24c845860eeddb67e881ac69cb5646423ca16d41d7c9babf8f25d0e8490be3"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0c24c845860eeddb67e881ac69cb5646423ca16d41d7c9babf8f25d0e8490be3"
+    }
+  ]
+}

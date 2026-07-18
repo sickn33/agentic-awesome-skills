@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.monorepo-polyglot",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "monorepo-polyglot",
+    "projectSummary": "Owned logistics monorepo producing Node, Python and Go images for one Kubernetes platform",
+    "stack": {
+      "languages": [
+        "typescript",
+        "python",
+        "go"
+      ],
+      "frameworks": [
+        "node",
+        "fastapi"
+      ],
+      "deployment": [
+        "kubernetes",
+        "oci-images"
+      ]
+    },
+    "constraints": [
+      "shared base images",
+      "multiple service owners",
+      "consistent admission policy required"
+    ],
+    "authorization": {
+      "scope": "defensive container posture review of owned repository workloads",
+      "mode": "read-only",
+      "productionChanges": "not-authorized"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "harden all image families",
+    "control shared base-image risk",
+    "standardize pod security boundaries"
+  ],
+  "nonCriticalGoals": [
+    "assign findings to service owners",
+    "reduce duplicated hardening policy"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.cloud-container.monorepo-polyglot"
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "k6-production-review",
+      "allowedSkillIds": [
+        "k6-load-testing",
+        "performance-testing-review-multi-agent-review"
+      ],
+      "requiredGroups": [
+        [
+          "k6-load-testing"
+        ],
+        [
+          "performance-testing-review-multi-agent-review"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-d1251c3f5eff65d9264a57e1124cba573bf59e920b11a8853d706836aaac5d65"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-d1251c3f5eff65d9264a57e1124cba573bf59e920b11a8853d706836aaac5d65"
+    }
+  ]
+}

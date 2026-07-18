@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.cloud-container.mature-legacy-migration",
+  "intent": "security-review-hardening",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "archetype": "mature-legacy-migration",
+    "projectSummary": "Owned Java monolith being containerized while legacy virtual-machine deployment remains active",
+    "stack": {
+      "languages": [
+        "java"
+      ],
+      "frameworks": [
+        "spring"
+      ],
+      "deployment": [
+        "virtual-machines",
+        "kubernetes",
+        "oci-images"
+      ]
+    },
+    "constraints": [
+      "dual runtime",
+      "legacy filesystem assumptions",
+      "gradual privilege reduction"
+    ],
+    "authorization": {
+      "scope": "defensive container migration hardening of the owned application",
+      "mode": "non-destructive",
+      "productionChanges": "approval-required"
+    },
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    }
+  },
+  "criticalGoals": [
+    "remove unsafe container privileges",
+    "preserve migration compatibility",
+    "define hardened cutover gates"
+  ],
+  "nonCriticalGoals": [
+    "minimize base-image footprint",
+    "plan rollback checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "aas-v1-independent-synthetic-profile",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.security-review-hardening.cloud-container.mature-legacy-migration"
+}

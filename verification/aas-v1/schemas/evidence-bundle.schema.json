@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aas.example/schemas/v1/evidence-bundle.schema.json",
+  "title": "AAS v1 independent evidence bundle",
+  "type": "object",
+  "required": ["schemaVersion", "state", "candidate", "baseline", "verifier", "matrix", "proofs", "approvals", "files"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "state": { "enum": ["implementationVerified", "releaseReady", "released"] },
+    "candidate": { "type": "object", "required": ["commit", "tarballSha512", "npmPackManifest"] },
+    "baseline": { "type": "object", "required": ["freezeCommit", "freezeDigest"] },
+    "verifier": { "type": "object", "required": ["version", "gitCommit", "digest", "owner"] },
+    "matrix": { "type": "object", "required": ["manifestDigest", "completedJobs", "skippedJobs", "allowedFailureJobs"] },
+    "proofs": {
+      "type": "object",
+      "required": ["benchmark", "policy", "fuzz", "hostileCorpus", "mcpObservation", "archiveUpdate", "faultInjection", "legacyDifferential", "adapters", "workbench"]
+    },
+    "approvals": { "type": "object", "required": ["benchmark", "security", "release"] },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "bytes", "mediaType"]
+      }
+    }
+  }
+}

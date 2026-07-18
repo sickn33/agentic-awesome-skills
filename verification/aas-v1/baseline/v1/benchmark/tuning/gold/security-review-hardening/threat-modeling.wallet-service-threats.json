@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.security-review-hardening.threat-modeling.wallet-service-threats",
+  "acceptedSolutions": [
+    {
+      "solutionId": "stride-and-mitigations",
+      "allowedSkillIds": [
+        "stride-analysis-patterns",
+        "threat-mitigation-mapping"
+      ],
+      "requiredGroups": [
+        [
+          "stride-analysis-patterns"
+        ],
+        [
+          "threat-mitigation-mapping"
+        ]
+      ]
+    },
+    {
+      "solutionId": "expert-model-and-requirements",
+      "allowedSkillIds": [
+        "threat-modeling-expert",
+        "security-requirement-extraction"
+      ],
+      "requiredGroups": [
+        [
+          "threat-modeling-expert"
+        ],
+        [
+          "security-requirement-extraction"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-430126d86408d769e2fb9ee8159a1c93d6d8719b862cb0e355ea0f0725d49c39"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-430126d86408d769e2fb9ee8159a1c93d6d8719b862cb0e355ea0f0725d49c39"
+    }
+  ],
+  "provenance": {
+    "source": "independent-synthetic-tuning-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  }
+}

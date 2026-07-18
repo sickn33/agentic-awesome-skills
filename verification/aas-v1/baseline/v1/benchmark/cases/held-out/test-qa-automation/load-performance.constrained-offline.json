@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.constrained-offline",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "offline edge telemetry gateway",
+    "languages": [
+      "Go",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "MQTT",
+      "HTTP"
+    ],
+    "testingContext": "limited hardware needs bounded local stress and endurance tests",
+    "constraints": [
+      "fully offline",
+      "low CPU and memory",
+      "no hosted load generator",
+      "bounded test traffic"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "offline-load-generation",
+    "resource-bounded-scenarios",
+    "local-threshold-validation"
+  ],
+  "nonCriticalGoals": [
+    "endurance-test",
+    "compact-result-summary"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.load-performance.constrained-offline"
+}

@@ -1,0 +1,13 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1,
+  "caseId": "abstention.creative-content.historical-novella",
+  "intent": "creative-writing",
+  "profile": { "request": "Develop a chapter-by-chapter outline for a historical novella", "setting": "A Mediterranean port city in the 1880s", "audience": "adult literary fiction readers", "length": "about thirty-five thousand words", "constraints": ["dual timeline", "restrained tone", "fictional protagonists"] },
+  "criticalGoals": ["create a coherent narrative arc", "develop historically plausible character conflicts"],
+  "nonCriticalGoals": ["balance both timelines", "suggest chapter pacing", "identify recurring motifs", "avoid anachronistic voice", "provide a concise synopsis"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD creative-writing scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:136ffbf95118af69f66f86d583b84135e54382c265b43c1826c25a7c6bb15a78"
+}

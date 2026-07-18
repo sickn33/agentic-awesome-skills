@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "labelVersion": "1.0.0",
+  "caseId": "abstention.media-production.photo-color-grade",
+  "expectedStatus": "insufficientCoverage",
+  "expectedProposedStack": [],
+  "reasonCodes": [
+    "AAS_COVERAGE_OOD_MEDIA_PRODUCTION"
+  ],
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8c737ba74b5d85dcb7c4dd347def74efc92357913ffacebf48db3876df419c59"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8c737ba74b5d85dcb7c4dd347def74efc92357913ffacebf48db3876df419c59"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "codex", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.personal-planning.apartment-declutter", "intent": "home-organization",
+  "profile": { "request": "Plan a weekend decluttering sequence for a small apartment", "rooms": ["bedroom", "living room", "kitchen", "entry"], "residents": 2, "problemAreas": ["paperwork", "seasonal clothes", "duplicate kitchenware"], "constraints": ["no storage rental", "six hours per day", "donation pickup on Monday"] },
+  "criticalGoals": ["create a realistic two-day work sequence", "make keep-donate-discard decisions manageable"],
+  "nonCriticalGoals": ["prioritize high-impact zones", "prepare donation flow", "protect important papers", "avoid buying organizers first", "define maintenance habits"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD home-organization scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:53985391ce885bb3a03722ec7e70a5ddc2eb246a5b7dc1f82cd212b7dd8982fe"
+}

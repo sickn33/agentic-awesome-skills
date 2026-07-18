@@ -2,6 +2,7 @@
 
 ## Users
 
+- [`users/aas-core.md`](users/aas-core.md) — canonical AAS Core preview guide
 - [`users/getting-started.md`](users/getting-started.md)
 - [`users/usage.md`](users/usage.md)
 - [`users/faq.md`](users/faq.md)

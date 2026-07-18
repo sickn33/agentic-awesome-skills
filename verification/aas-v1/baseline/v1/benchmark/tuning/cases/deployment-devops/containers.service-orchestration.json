@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.containers.service-orchestration",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "three-service application",
+    "languages": [
+      "Go",
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Kubernetes"
+    ],
+    "context": "containerized services moving to an orchestrated environment",
+    "constraints": [
+      "readiness probes",
+      "resource boundaries"
+    ]
+  },
+  "criticalGoals": [
+    "container-build",
+    "runtime-hardening"
+  ],
+  "nonCriticalGoals": [
+    "orchestrated-deployment",
+    "health-checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.deployment-devops.containers.service-orchestration"
+}

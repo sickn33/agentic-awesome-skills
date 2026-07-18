@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.memory-context-retrieval.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "small-local-agent-memory",
+      "allowedSkillIds": [
+        "agent-memory-systems",
+        "context-manager",
+        "filesystem-context",
+        "rag-implementation",
+        "embedding-strategies"
+      ],
+      "requiredGroups": [
+        [
+          "agent-memory-systems",
+          "context-manager"
+        ],
+        [
+          "filesystem-context",
+          "rag-implementation"
+        ],
+        [
+          "embedding-strategies",
+          "rag-implementation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2550a28100187f488fb3fc64594e8d2a720d159bf625c2fc0c252f4d6c33fb6d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-2550a28100187f488fb3fc64594e8d2a720d159bf625c2fc0c252f4d6c33fb6d"
+    }
+  ]
+}

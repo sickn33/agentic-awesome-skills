@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "k6-legacy-regression",
+      "allowedSkillIds": [
+        "k6-load-testing",
+        "performance-testing-review-multi-agent-review"
+      ],
+      "requiredGroups": [
+        [
+          "k6-load-testing"
+        ],
+        [
+          "performance-testing-review-multi-agent-review"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6f5ec05a90aff5c5fefe971fae76963b8c6eb9182a08b951d16f46d6878c114e"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-6f5ec05a90aff5c5fefe971fae76963b8c6eb9182a08b951d16f46d6878c114e"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.incident-hardening.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "fix-and-release-review",
+      "allowedSkillIds": [
+        "fix-review",
+        "pre-release-review",
+        "github-actions-advanced"
+      ],
+      "requiredGroups": [
+        [
+          "fix-review"
+        ],
+        [
+          "pre-release-review"
+        ]
+      ]
+    },
+    {
+      "solutionId": "fix-and-workflow-hardening",
+      "allowedSkillIds": [
+        "fix-review",
+        "github-actions-advanced"
+      ],
+      "requiredGroups": [
+        [
+          "fix-review"
+        ],
+        [
+          "github-actions-advanced"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0c31154147b3e0b01238ca0032aee1be25ab1aa3cbd19286e29b474eb613e36b"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-0c31154147b3e0b01238ca0032aee1be25ab1aa3cbd19286e29b474eb613e36b"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.security-review-hardening.code-dependency-review.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "dependency-specialist",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ]
+      ]
+    },
+    {
+      "solutionId": "dependency-and-advisory-review",
+      "allowedSkillIds": [
+        "security-scanning-security-dependencies",
+        "cyber-audit"
+      ],
+      "requiredGroups": [
+        [
+          "security-scanning-security-dependencies"
+        ],
+        [
+          "cyber-audit"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "aas-v1-independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-77ea06e22fd8ca2458afe8fd8444f6d57bf2802bf7e79ae5da1b36efa8274ae5"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-77ea06e22fd8ca2458afe8fd8444f6d57bf2802bf7e79ae5da1b36efa8274ae5"
+    }
+  ]
+}

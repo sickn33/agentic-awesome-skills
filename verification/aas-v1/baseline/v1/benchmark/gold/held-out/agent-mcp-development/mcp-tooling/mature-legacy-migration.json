@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.mcp-tooling.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "legacy-api-mcp-facade",
+      "allowedSkillIds": [
+        "mcp-builder",
+        "mcp-builder-ms",
+        "mcp-tool-developer",
+        "api-and-interface-design",
+        "deprecation-and-migration"
+      ],
+      "requiredGroups": [
+        [
+          "mcp-builder",
+          "mcp-builder-ms",
+          "mcp-tool-developer"
+        ],
+        [
+          "api-and-interface-design"
+        ],
+        [
+          "deprecation-and-migration"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-24ffc9a7fec392e33eee4a3b619a8f73b9c64a8a364f1e2b145ba2ae8ddea479"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-24ffc9a7fec392e33eee4a3b619a8f73b9c64a8a364f1e2b145ba2ae8ddea479"
+    }
+  ]
+}

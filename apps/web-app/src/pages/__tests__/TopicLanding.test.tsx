@@ -1,7 +1,27 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { TopicLanding } from '../TopicLanding';
 import { renderWithRouter } from '../../utils/testUtils';
+import { createMockSkill } from '../../factories/skill';
+
+vi.mock('../../context/SkillContext', () => ({
+  useSkills: () => ({
+    skills: [
+      createMockSkill({
+        id: 'antigravity-agent-manager',
+        name: 'Antigravity Agent Manager',
+        description: 'Configure and orchestrate Antigravity agents.',
+        category: 'agent-orchestration',
+      }),
+      createMockSkill({
+        id: 'antigravity-workflows',
+        name: 'Antigravity Workflows',
+        description: 'Run guided Antigravity workflows.',
+        category: 'workflow',
+      }),
+    ],
+  }),
+}));
 
 describe('TopicLanding', () => {
   it('renders an SEO topic page and sets metadata', async () => {
@@ -14,19 +34,24 @@ describe('TopicLanding', () => {
     expect(screen.getByRole('heading', { level: 1, name: /Antigravity CLI skills/i })).toBeInTheDocument();
     expect(screen.getByText(/Search intent covered/i)).toBeInTheDocument();
     expect(screen.getByText(/Related topic guides/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /GitHub repository for installable AI agent skills/i })).toHaveAttribute(
+    expect(screen.getByRole('heading', { name: /Recommended skills for this workflow/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /@Antigravity Agent Manager/i })).toHaveAttribute(
+      'href',
+      '/skill/antigravity-agent-manager',
+    );
+    expect(screen.getByRole('link', { name: /GitHub source for AAS Core and its skill catalog/i })).toHaveAttribute(
       'href',
       '/topics/github-ai-skills-repository',
     );
     expect(screen.getAllByText(/Antigravity CLI skills/i).length).toBeGreaterThan(0);
 
     await waitFor(() => {
-      expect(document.title).toContain('Antigravity CLI Skills');
+      expect(document.title).toContain('Antigravity CLI Skill Stacks');
     });
 
     expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
       'content',
-      expect.stringContaining('Install Antigravity CLI skills'),
+      expect.stringContaining('AAS Core preview catalog'),
     );
   });
 

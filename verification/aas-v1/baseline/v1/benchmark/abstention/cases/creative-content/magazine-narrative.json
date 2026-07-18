@@ -1,0 +1,13 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1,
+  "caseId": "abstention.creative-content.magazine-narrative",
+  "intent": "narrative-journalism-editing",
+  "profile": { "request": "Restructure a long-form magazine feature about declining rural cinemas", "draftLength": "six thousand words", "materials": ["interviews", "archival context", "observational scenes"], "editorialIssue": "chronology obscures the central argument", "constraints": ["preserve attributed facts", "separate scene from analysis"] },
+  "criticalGoals": ["create a clear narrative structure", "retain factual attribution and uncertainty"],
+  "nonCriticalGoals": ["strengthen the opening", "pace historical context", "position interview voices", "remove repetition", "propose a closing image"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD narrative-editing scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:3aed13f7af126aa79162d29362d7b9d6819c9e1eb3b051b89d451fc1d2958eb8"
+}

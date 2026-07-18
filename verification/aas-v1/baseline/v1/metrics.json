@@ -1,0 +1,38 @@
+{
+  "$schema": "../../schemas/metric-definition.schema.json",
+  "schemaVersion": 1,
+  "metricVersion": "1.0.0",
+  "heldOutCasesPerIntent": 30,
+  "thresholds": {
+    "verifiedCoverage": 0.8,
+    "inclusionPrecision": 0.9,
+    "criticalGoalCoverage": 1,
+    "minimumNonCriticalGoalCoverage": 0.8,
+    "outOfCoverageAbstention": 1,
+    "hardPolicyViolations": 0,
+    "canonicalReproducibility": 1
+  },
+  "formulas": {
+    "criticalGoalCoverage": "coveredCriticalGoals / totalCriticalGoals",
+    "nonCriticalGoalCoverage": "totalNonCriticalGoals == 0 ? 1 : coveredNonCriticalGoals / totalNonCriticalGoals",
+    "verifiedCase": "terminal && schemaValid && hardPolicyViolations == 0 && criticalGoalCoverage == 1 && nonCriticalGoalCoverage >= max(0.8, caseMinimum) && (!requiresSkill || includedSkillCount >= 1) && everyDiscoveryPromotionHasVisibleOverride",
+    "verifiedCoveragePerIntent": "verifiedCaseCount / 30",
+    "caseInclusionPrecision": "max(coherentGoldSolutionIntersectionCount / includedSkillCount)",
+    "inclusionPrecisionPerIntent": "mean(caseInclusionPrecision for every nonEmptyStack)",
+    "macroAverage": "unweightedMean(of exactly six perIntent values)",
+    "correctAbstention": "ok == true && status == insufficientCoverage && proposedStackIsEmpty",
+    "abstentionRate": "correctAbstentionCount / frozenAbstentionCaseCount"
+  },
+  "denominatorRules": {
+    "verifiedCoverage": "Every frozen in-scope case remains in the denominator. Crash, timeout, malformed, missing, empty, and partial-invalid results fail.",
+    "inclusionPrecision": "Empty stacks have null precision and are counted explicitly; they fail verified coverage. Precision reports nonEmptyStackCount and emptyStackCount.",
+    "abstention": "Only the separately frozen abstention set is used. Cases cannot be relabeled after results are observed.",
+    "macro": "Per-intent gates and the unweighted six-intent macro gate must all pass. Micro-only aggregation is forbidden."
+  },
+  "canonicalComparisonExcludedFields": [
+    "timestamp",
+    "correlationId",
+    "localizedMessage",
+    "diagnostics"
+  ]
+}

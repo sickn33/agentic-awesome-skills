@@ -19,17 +19,17 @@ const FAQ_ITEMS = [
   {
     question: 'What is Agentic Awesome Skills?',
     answer: (countLabel) =>
-      `Agentic Awesome Skills is an installable GitHub library of ${countLabel} reusable SKILL.md playbooks for AI coding assistants. It supports Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and related hosts through direct skill installs, specialized plugins, bundles, workflows, and a searchable catalog.`,
+      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview control plane for discovering, recommending, validating, and planning exact skill stacks. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
   },
   {
-    question: 'How do I install Agentic Awesome Skills?',
+    question: 'How do I use AAS Core preview?',
     answer:
-      'Install the library with npx agentic-awesome-skills. Use tool-specific flags such as --codex, --cursor, --gemini, --claude, or --antigravity when you want the installer to target a specific skills directory already used by your assistant runtime.',
+      'Configure the local stdio MCP with the AAS CLI, let the agent search, inspect, and recommend skills, then validate the proposed aas-stack.json and preview its immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
   },
   {
     question: 'Is Agentic Awesome Skills a GitHub repository?',
     answer:
-      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for the skill library, installer, specialized plugins, bundles, workflows, and documentation. The hosted catalog is the searchable browsing surface for that repository.',
+      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for AAS Core, its CLI and local MCP, the skill catalog, plugins, and documentation. The hosted site is a companion catalog and local artifact-review surface.',
   },
   {
     question: 'What are AAS specialized plugins?',
@@ -281,6 +281,28 @@ function getRelatedLandingPagesForSkill(landingPages, skill, limit = 3) {
   return selected.slice(0, maxItems);
 }
 
+function getCuratedSkillsForLandingPage(page, skills, limit = 12) {
+  const maxItems = Math.max(0, limit);
+  if (maxItems === 0 || !Array.isArray(skills)) return [];
+
+  const byId = new Map(skills.map((skill) => [skill.id, skill]));
+  const editorial = (Array.isArray(page.featuredSkillIds) ? page.featuredSkillIds : [])
+    .map((id) => byId.get(id))
+    .filter(Boolean);
+  const selectedIds = new Set(editorial.map((skill) => skill.id));
+  const scored = skills
+    .map((skill, index) => ({ skill, index, score: scoreLandingPageForSkill(page, skill) }))
+    .filter(({ skill, score }) => score > 0 && !selectedIds.has(skill.id))
+    .sort((a, b) => {
+      if (a.score !== b.score) return b.score - a.score;
+      const idCompare = safeText(a.skill.id).localeCompare(safeText(b.skill.id), undefined, { sensitivity: 'base' });
+      return idCompare || a.index - b.index;
+    })
+    .map(({ skill }) => skill);
+
+  return [...editorial, ...scored].slice(0, maxItems);
+}
+
 function buildStaticLinkList(links) {
   return links
     .map((link) => `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`)
@@ -299,7 +321,32 @@ function buildPrerenderFallback({ heading, description, links }) {
   ].join('');
 }
 
-function buildTopicFallback({ page, landingPages, siteBaseUrl }) {
+function buildHomeFallback({ landingPages, siteBaseUrl }) {
+  const links = [
+    { href: routeToUrl('/workbench', siteBaseUrl), label: 'Review an AAS stack and plan' },
+    { href: routeToUrl('/plugins', siteBaseUrl), label: 'Compare specialized plugin packs' },
+    ...landingPages.filter((page) => page.slug).map((page) => ({
+      href: routeToUrl(`/topics/${encodeURIComponent(page.slug)}`, siteBaseUrl),
+      label: page.h1,
+    })),
+  ];
+
+  return [
+    '<main data-prerender-fallback="true">',
+    '<h1>AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients</h1>',
+    '<p><strong>Discover. Recommend. Validate. Preview.</strong></p>',
+    '<p>Turn intent into an explainable aas-stack.json and immutable plan preview without target writes, backed by the AAS skill catalog.</p>',
+    `<nav aria-label="Catalog hubs"><ul>${buildStaticLinkList(links)}</ul></nav>`,
+    '</main>',
+  ].join('');
+}
+
+function buildTopicFallback({ page, landingPages, skills, siteBaseUrl }) {
+  const curatedSkills = getCuratedSkillsForLandingPage(page, skills);
+  const skillLinks = curatedSkills.map((skill) => ({
+    href: routeToUrl(`/skill/${encodeURIComponent(skill.id)}`, siteBaseUrl),
+    label: `@${safeText(skill.name) || safeText(skill.id)}`,
+  }));
   const relatedLinks = landingPages
     .filter((landing) => landing.slug && landing.slug !== page.slug)
     .slice(0, 3)
@@ -308,11 +355,19 @@ function buildTopicFallback({ page, landingPages, siteBaseUrl }) {
       label: landing.h1,
     }));
 
-  return buildPrerenderFallback({
-    heading: page.h1,
-    description: page.summary,
-    links: relatedLinks,
-  });
+  const sections = (Array.isArray(page.sections) ? page.sections : [])
+    .map((section) => `<section><h2>${escapeHtml(section.heading)}</h2><p>${escapeHtml(section.body)}</p></section>`)
+    .join('');
+
+  return [
+    '<main data-prerender-fallback="true">',
+    `<h1>${escapeHtml(page.h1)}</h1>`,
+    `<p>${escapeHtml(page.summary)}</p>`,
+    sections,
+    skillLinks.length > 0 ? `<nav aria-label="Recommended skills"><h2>Recommended skills</h2><ul>${buildStaticLinkList(skillLinks)}</ul></nav>` : '',
+    `<nav aria-label="Related topic guides"><h2>Related topic guides</h2><ul>${buildStaticLinkList(relatedLinks)}</ul></nav>`,
+    '</main>',
+  ].join('');
 }
 
 function buildSkillFallback({ skill, landingPages, siteBaseUrl }) {
@@ -341,14 +396,14 @@ function setRootFallback(html, fallbackHtml) {
 function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
   const formattedCount = visibleCount.toLocaleString('en-US');
-  const title = `Agentic Awesome Skills GitHub | ${formattedCount}+ AI coding skills`;
-  const description = `Explore the GitHub library of ${formattedCount}+ installable agentic skills, specialized plugins, bundles, and workflows for Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, and other AI coding assistants.`;
+  const title = `AAS Core Preview | Agent-first stacks backed by ${formattedCount}+ skills`;
+  const description = `Use AAS Core preview to discover, recommend, validate, and plan explainable skill stacks for Codex, Claude Code, and compatible clients, backed by ${formattedCount}+ cataloged skills.`;
   const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
   const sourceCodeEntity = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: `Installable GitHub library of ${formattedCount}+ agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.`,
+    description: `AAS Core preview is a local agent-first control plane for recommending, validating, and planning exact skill stacks backed by ${formattedCount}+ agentic skills.`,
     url: REPOSITORY_URL,
     sameAs: [...new Set([
       canonicalUrl,
@@ -368,6 +423,10 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
       'Antigravity CLI skills',
       'GitHub AI skills repository',
       'AI agent skills GitHub',
+      'AAS Core',
+      'skill recommendation',
+      'agent stack',
+      'Model Context Protocol',
       'specialized plugins',
       'SKILL.md',
     ],
@@ -541,8 +600,8 @@ function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
 }
 
 function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
-  const title = 'Skill Workbench | Agentic Awesome Skills';
-  const description = 'Filter canonical skill evidence, compose an exact host-aware set, and preview a version-pinned install without filesystem writes.';
+  const title = 'AAS Core Stack Review | Agentic Awesome Skills';
+  const description = 'Review an AAS Core stack manifest and immutable preview plan locally in your browser. Imports stay in memory and cannot install or apply changes.';
   const catalogBaseUrl = canonicalUrl.replace(/\/workbench\/?$/, '');
   const catalogRootUrl = `${catalogBaseUrl}/`;
   const sourceCodeEntity = {
@@ -572,7 +631,7 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         name: 'Agentic Awesome Skills Workbench',
-        headline: 'Build a precise, inspectable skill set',
+        headline: 'Review what AAS Core recommended',
         description,
         url: canonicalUrl,
         mainEntityOfPage: canonicalUrl,
@@ -622,14 +681,14 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
   };
 }
 
-function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
+function buildTopicLandingMeta({ page, featuredSkills = [], imageUrl, canonicalUrl }) {
   const catalogBaseUrl = canonicalUrl.replace(/\/topics\/[^/]+\/?$/, '');
   const keywords = Array.isArray(page.keywords) ? page.keywords.join(', ') : '';
   const sourceCodeEntity = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: 'Installable GitHub library of agentic skills, specialized plugins, bundles, and workflows for AI coding assistants.',
+    description: 'AAS Core preview is a local agent-first control plane backed by an evidence-rich catalog of agentic skills.',
     url: REPOSITORY_URL,
     sameAs: [...new Set([
       canonicalUrl,
@@ -679,15 +738,22 @@ function buildTopicLandingMeta({ page, imageUrl, canonicalUrl }) {
         keywords,
         mainEntity: {
           '@type': 'ItemList',
-          name: `${page.eyebrow} topics`,
-          itemListElement: Array.isArray(page.sections)
-            ? page.sections.map((section, index) => ({
+          name: `${page.eyebrow} recommended skills`,
+          numberOfItems: featuredSkills.length || (Array.isArray(page.sections) ? page.sections.length : 0),
+          itemListElement: featuredSkills.length > 0
+            ? featuredSkills.map((skill, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              name: safeText(skill.name) || safeText(skill.id),
+              description: safeText(skill.description),
+              url: routeToUrl(`/skill/${encodeURIComponent(skill.id)}`, catalogBaseUrl),
+            }))
+            : (Array.isArray(page.sections) ? page.sections.map((section, index) => ({
               '@type': 'ListItem',
               position: index + 1,
               name: section.heading,
               description: section.body,
-            }))
-            : [],
+            })) : []),
         },
       },
       {
@@ -812,7 +878,7 @@ function main() {
   const skills = readCatalog();
   const landingPages = readSeoLandingPages();
   const siteBaseUrl = getSiteBaseUrl();
-  const topCount = parseCount(process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT, 40);
+  const topCount = parseCount(process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT, 180);
   const topSkillPaths = selectTopSkillEntries(skills, topCount);
   const skillMap = new Map(skills.map((skill) => [skill.id, skill]));
   const topSkillSet = new Set(topSkillPaths.map((routePath) => routePath.replace(/^\/skill\//, '')));
@@ -824,7 +890,7 @@ function main() {
     imageUrl: socialImage,
     canonicalUrl: homeCanonical,
   });
-  writePrerenderedRoute('/', template, homeMeta);
+  writePrerenderedRoute('/', template, homeMeta, buildHomeFallback({ landingPages, siteBaseUrl }));
 
   const pluginsCanonical = routeToUrl('/plugins', siteBaseUrl);
   const pluginsMeta = buildPluginsMeta({
@@ -850,6 +916,7 @@ function main() {
     const canonicalUrl = routeToUrl(routePath, siteBaseUrl);
     const landingMeta = buildTopicLandingMeta({
       page,
+      featuredSkills: getCuratedSkillsForLandingPage(page, skills),
       imageUrl: socialImage,
       canonicalUrl,
     });
@@ -857,7 +924,7 @@ function main() {
       routePath,
       template,
       landingMeta,
-      buildTopicFallback({ page, landingPages, siteBaseUrl }),
+      buildTopicFallback({ page, landingPages, skills, siteBaseUrl }),
     );
   }
 

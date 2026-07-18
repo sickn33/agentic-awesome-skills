@@ -1,0 +1,11 @@
+{
+  "targets": [{ "host": "claude", "scope": "project" }],
+  "policy": { "allowedRisk": ["none", "safe"], "requireKnownSource": false, "allowManualSetup": false },
+  "schemaVersion": 1, "caseId": "abstention.non-web-software.ios-field-notes", "intent": "native-ios-development",
+  "profile": { "request": "Architect a native iPhone field-notes application", "platform": "current iOS", "interface": "SwiftUI", "features": ["offline notes", "camera attachments", "device synchronization"], "constraints": ["native accessibility", "background upload", "no browser interface"] },
+  "criticalGoals": ["design a native iOS application architecture", "implement reliable device-local persistence and synchronization"],
+  "nonCriticalGoals": ["model SwiftUI state", "handle background work", "integrate camera capture", "support VoiceOver", "define sync conflicts"],
+  "minimumNonCriticalGoalCoverage": 0.8, "requiresSkill": false,
+  "provenance": { "source": "AAS v1 independently authored synthetic OOD native-iOS scenario", "version": "1.0.0", "reviewedAt": "2026-07-17" },
+  "taskFamilyFingerprint": "sha256:db89d915ca8d9a8fbe36d8678a6df610f6d41d925492b8b9ed21a3f2b7528522"
+}

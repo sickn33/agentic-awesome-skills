@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "verified-staged-release",
+      "allowedSkillIds": [
+        "pre-ship-gate",
+        "shipping-and-launch"
+      ],
+      "requiredGroups": [
+        [
+          "pre-ship-gate"
+        ],
+        [
+          "shipping-and-launch"
+        ]
+      ]
+    },
+    {
+      "solutionId": "shipping-strategy",
+      "allowedSkillIds": [
+        "shipping-and-launch"
+      ],
+      "requiredGroups": [
+        [
+          "shipping-and-launch"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a9f93e89ce98654c7cf031c69cf5a6e269560b8bc76165522b3cfcda163dcec1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a9f93e89ce98654c7cf031c69cf5a6e269560b8bc76165522b3cfcda163dcec1"
+    }
+  ]
+}

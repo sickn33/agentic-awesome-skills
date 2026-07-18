@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.load-performance.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "k6-polyglot-review",
+      "allowedSkillIds": [
+        "k6-load-testing",
+        "performance-testing-review-multi-agent-review",
+        "testing-qa"
+      ],
+      "requiredGroups": [
+        [
+          "k6-load-testing"
+        ],
+        [
+          "performance-testing-review-multi-agent-review"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-gold-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a2ddde7c2df794c6d62c6489ee9b4f786d240e5bc22deaa640695652c3de6630"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a2ddde7c2df794c6d62c6489ee9b4f786d240e5bc22deaa640695652c3de6630"
+    }
+  ]
+}

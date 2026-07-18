@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.auth-authorization.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "first-party-auth-baseline",
+      "allowedSkillIds": [
+        "auth-implementation-patterns",
+        "api-security-best-practices",
+        "backend-security-coder",
+        "security-and-hardening"
+      ],
+      "requiredGroups": [
+        [
+          "auth-implementation-patterns"
+        ],
+        [
+          "api-security-best-practices",
+          "backend-security-coder",
+          "security-and-hardening"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1d1f80f80f8dc59310684d029fd498b7bf3abe6ff548a4f948e006872e916b1a"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1d1f80f80f8dc59310684d029fd498b7bf3abe6ff548a4f948e006872e916b1a"
+    }
+  ]
+}

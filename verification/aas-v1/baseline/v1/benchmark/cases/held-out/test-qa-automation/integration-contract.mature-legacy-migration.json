@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.integration-contract.mature-legacy-migration",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "legacy enterprise integration gateway",
+    "languages": [
+      "Java",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "SOAP",
+      "REST",
+      "Postman"
+    ],
+    "testingContext": "manual regression collections must become deterministic automated integration checks",
+    "constraints": [
+      "preserve legacy endpoints",
+      "incremental automation",
+      "self-hosted CI"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "automated-api-collections",
+    "headless-regression-run",
+    "legacy-endpoint-coverage"
+  ],
+  "nonCriticalGoals": [
+    "environment-parameterization",
+    "ci-reporting"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.integration-contract.mature-legacy-migration"
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.agent-mcp-development.security-operations.ci-agent-security",
+  "acceptedSolutions": [
+    {
+      "solutionId": "agentic-actions-audit",
+      "allowedSkillIds": [
+        "agentic-actions-auditor",
+        "security-requirement-extraction"
+      ],
+      "requiredGroups": [
+        [
+          "agentic-actions-auditor"
+        ],
+        [
+          "security-requirement-extraction"
+        ]
+      ]
+    },
+    {
+      "solutionId": "mcp-threat-model",
+      "allowedSkillIds": [
+        "mcp-builder",
+        "threat-modeling-expert"
+      ],
+      "requiredGroups": [
+        [
+          "mcp-builder"
+        ],
+        [
+          "threat-modeling-expert"
+        ]
+      ]
+    },
+    {
+      "solutionId": "multi-agent-threat-boundary-review",
+      "allowedSkillIds": [
+        "multi-agent-architect",
+        "threat-modeling-expert"
+      ],
+      "requiredGroups": [
+        [
+          "multi-agent-architect"
+        ],
+        [
+          "threat-modeling-expert"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "reviews": [
+    {
+      "reviewer": "gold-equivalence-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8166b509f33719884800caa30a35b93c19a7532ba42b79caec8fb8ac9885cd74"
+    },
+    {
+      "reviewer": "gold-equivalence-independent-ci-tiebreak",
+      "decision": "approved",
+      "reviewedDigest": "sha256-8166b509f33719884800caa30a35b93c19a7532ba42b79caec8fb8ac9885cd74"
+    }
+  ],
+  "provenance": {
+    "source": "independent-tuning-gold-equivalence-audit",
+    "version": "1.0.1",
+    "reviewedAt": "2026-07-17"
+  }
+}

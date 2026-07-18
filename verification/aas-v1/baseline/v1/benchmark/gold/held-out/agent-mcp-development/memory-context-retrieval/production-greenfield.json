@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.memory-context-retrieval.production-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "tenant-isolated-hybrid-rag",
+      "allowedSkillIds": [
+        "agent-memory-systems",
+        "rag-engineer",
+        "rag-implementation",
+        "hybrid-search-implementation",
+        "embedding-strategies",
+        "vector-database-engineer"
+      ],
+      "requiredGroups": [
+        [
+          "agent-memory-systems"
+        ],
+        [
+          "rag-engineer",
+          "rag-implementation"
+        ],
+        [
+          "hybrid-search-implementation"
+        ],
+        [
+          "embedding-strategies",
+          "vector-database-engineer"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-196ce707a3a61c4cee8e3fc08beb42e5da686db9b0bc607c315dbb7a7a0b7b6d"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-196ce707a3a61c4cee8e3fc08beb42e5da686db9b0bc607c315dbb7a7a0b7b6d"
+    }
+  ]
+}

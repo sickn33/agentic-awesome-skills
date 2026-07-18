@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.monorepo-polyglot",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "polyglot product monorepo",
+    "languages": [
+      "TypeScript",
+      "Java",
+      "Python"
+    ],
+    "frameworks": [
+      "React",
+      "Spring Boot",
+      "FastAPI"
+    ],
+    "testingContext": "independent packages need native unit suites under one CI policy",
+    "constraints": [
+      "language-native runners",
+      "shared quality gate",
+      "parallel CI"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "typescript-unit-tests",
+    "java-unit-tests",
+    "python-unit-tests",
+    "cross-package-quality-policy"
+  ],
+  "nonCriticalGoals": [
+    "parallel-test-execution",
+    "test-quality-review"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.unit-component.monorepo-polyglot"
+}

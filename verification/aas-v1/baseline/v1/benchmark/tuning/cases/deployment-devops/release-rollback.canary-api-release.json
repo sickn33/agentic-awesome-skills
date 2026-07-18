@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "caseId": "tuning.deployment-devops.release-rollback.canary-api-release",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "customer API deployment",
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Kubernetes"
+    ],
+    "context": "new canary release process with objective promotion checks",
+    "constraints": [
+      "automatic halt",
+      "documented rollback"
+    ]
+  },
+  "criticalGoals": [
+    "release-procedure",
+    "rollback-validation"
+  ],
+  "nonCriticalGoals": [
+    "progressive-delivery",
+    "post-release-verification"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-tuning-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tuning.v1.deployment-devops.release-rollback.canary-api-release"
+}

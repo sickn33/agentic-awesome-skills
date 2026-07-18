@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.release-rollback.mature-legacy-migration",
+  "acceptedSolutions": [
+    {
+      "solutionId": "migration-aware-release",
+      "allowedSkillIds": [
+        "shipping-and-launch",
+        "database-migration"
+      ],
+      "requiredGroups": [
+        [
+          "shipping-and-launch"
+        ],
+        [
+          "database-migration"
+        ]
+      ]
+    },
+    {
+      "solutionId": "pre-release-migration-review",
+      "allowedSkillIds": [
+        "pre-release-review",
+        "database-migration"
+      ],
+      "requiredGroups": [
+        [
+          "pre-release-review"
+        ],
+        [
+          "database-migration"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-87096d94ddfe77123e272cb5508d5956574aeff9f190197c60f4c73ae6184de4"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-87096d94ddfe77123e272cb5508d5956574aeff9f190197c60f4c73ae6184de4"
+    }
+  ]
+}

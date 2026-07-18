@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.frontend-architecture.monorepo-polyglot",
+  "acceptedSolutions": [
+    {
+      "solutionId": "domain-monorepo-boundaries",
+      "allowedSkillIds": [
+        "monorepo-architect",
+        "frontend-architecture"
+      ],
+      "requiredGroups": [
+        [
+          "monorepo-architect"
+        ],
+        [
+          "frontend-architecture"
+        ]
+      ]
+    },
+    {
+      "solutionId": "managed-monorepo-boundaries",
+      "allowedSkillIds": [
+        "monorepo-management",
+        "frontend-architecture"
+      ],
+      "requiredGroups": [
+        [
+          "monorepo-management"
+        ],
+        [
+          "frontend-architecture"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": true,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1e81a71bb2396dc2d0e6bb0831c5518f36d8962d18f43ebe4e636f3fe63609c1"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-1e81a71bb2396dc2d0e6bb0831c5518f36d8962d18f43ebe4e636f3fe63609c1"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen",
+  "minimumApprovals": 2,
+  "requireNonScorerReviewer": true,
+  "reviewers": [
+    {
+      "identity": "codex-independent-alpha",
+      "kind": "independent-agent-review",
+      "report": "baseline/v1/reviews/reviewer-alpha.json",
+      "reportSha256": "8e0e90789cf0de116bb58ca1971911dcd0f0135d5eb97bead8911e1cea0080aa",
+      "scorerImplementer": false,
+      "reviewedPairs": 270
+    },
+    {
+      "identity": "codex-independent-beta",
+      "kind": "independent-agent-review",
+      "report": "baseline/v1/reviews/reviewer-beta.json",
+      "reportSha256": "bdb4f00deaf8d9e7fb7c259130555249e619fd4f18a33bcbb55fee30e3d92b7f",
+      "scorerImplementer": false,
+      "reviewedPairs": 270
+    }
+  ],
+  "reviewAmendments": [
+    {
+      "auditId": "aas-v1-tuning-gold-equivalence-1.0.1",
+      "kind": "independent-tuning-gold-equivalence-audit",
+      "audit": "baseline/v1/reviews/tuning-gold-equivalence-audit.json",
+      "auditSha256": "d280cf0021d3d3be527ece98e355bf93724d96a1bd6d718bb8cf48703478121e",
+      "claimsReviewed": 19,
+      "changedPairs": 7,
+      "minimumIndependentReviewsPerChangedPair": 2,
+      "reports": [
+        {
+          "identity": "gold-equivalence-independent-alpha",
+          "report": "baseline/v1/reviews/reviewer-tuning-equivalence-alpha.json",
+          "reportSha256": "ec48b476a76a0332114e65db25badd92737ac6547c5a397d9456b2be4fb11689",
+          "scorerImplementer": false,
+          "reviewedClaims": 9
+        },
+        {
+          "identity": "gold-equivalence-independent-beta",
+          "report": "baseline/v1/reviews/reviewer-tuning-equivalence-beta.json",
+          "reportSha256": "01cbe88f9d55690b32e61cbd567c3560987654dbd4bee70daec926d740e060c3",
+          "scorerImplementer": false,
+          "reviewedClaims": 10
+        },
+        {
+          "identity": "gold-equivalence-independent-adjudicator",
+          "report": "baseline/v1/reviews/reviewer-tuning-equivalence-adjudicator.json",
+          "reportSha256": "ad8c87f03287989b7dbbacaebc42aa11e9f4564a0f08af2b6361e02d389bd160",
+          "scorerImplementer": false,
+          "reviewedClaims": 19
+        },
+        {
+          "identity": "gold-equivalence-independent-ci-tiebreak",
+          "report": "baseline/v1/reviews/reviewer-tuning-equivalence-ci-tiebreak.json",
+          "reportSha256": "dbc01ab488cd904370af0a27f9f14a92891edd0187549ace5c48d8cc88d9bebf",
+          "scorerImplementer": false,
+          "reviewedClaims": 1
+        }
+      ]
+    }
+  ],
+  "protectedPaths": [
+    "verification/aas-v1/**",
+    ".github/workflows/aas-v1-baseline-check.yml",
+    ".github/workflows/aas-v1-product-verifier.yml",
+    ".github/workflows/aas-v1-verifier-harness.yml",
+    ".github/CODEOWNERS"
+  ],
+  "repositorySettings": {
+    "repository": "sickn33/agentic-awesome-skills",
+    "branch": "main",
+    "soloMaintainer": true,
+    "requiredReviewCount": 0,
+    "requiredStatusContext": "aas-v1-baseline",
+    "enforceAdmins": true,
+    "allowForcePushes": false,
+    "allowDeletions": false,
+    "observedRequiredStatusContexts": [
+      "pr-policy",
+      "pr-evidence",
+      "source-validation",
+      "artifact-preview",
+      "aas-v1-baseline"
+    ],
+    "verifiedAt": "2026-07-17",
+    "settingsVerified": true
+  },
+  "verificationEnvironment": {
+    "model": "content-addressed-independent-reports-plus-protected-status",
+    "baselineFreezeManifest": "baseline/v1/freeze-manifest.json",
+    "productPullRequestsMayModifyBaseline": false,
+    "requiredReviewersVerified": true,
+    "limitation": "The repository has one GitHub collaborator. Independence is enforced by two content-addressed reviewer reports, a separately frozen baseline commit, and a required status check; it is not represented as two GitHub account approvals."
+  }
+}

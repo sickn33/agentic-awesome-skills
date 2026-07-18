@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.ui-accessibility.constrained-offline",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "application": "Offline government caseworker intranet",
+    "environment": {
+      "network": "air-gapped",
+      "browsers": "managed desktop builds",
+      "assistiveTech": "locally installed screen reader"
+    },
+    "interface": [
+      "dense tables",
+      "document intake",
+      "multi-page forms"
+    ],
+    "constraints": [
+      "no cloud scanners",
+      "no telemetry upload",
+      "all evidence remains local"
+    ]
+  },
+  "criticalGoals": [
+    "audit the offline application without remote services",
+    "validate core flows with local assistive technology"
+  ],
+  "nonCriticalGoals": [
+    "check dense-table semantics",
+    "check form errors",
+    "check focus management",
+    "produce local evidence",
+    "define repeatable manual checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on air-gapped public-sector accessibility testing",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.ui-accessibility.constrained-offline"
+}

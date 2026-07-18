@@ -1,6 +1,8 @@
-# Stable Skills Manifest v1
+# Stable Skills Manifest v1 for Custom Integrations
 
-This page documents the `skills_index.json` manifest contract used by stable integrations.
+This page documents the legacy-compatible `skills_index.json` contract used by custom host integrations and lazy loaders.
+
+For Codex and Claude Code, use [AAS Core](aas-core.md) instead of wiring a host directly to this repository manifest. Core uses a verified local catalog and exposes bounded, read-only MCP tools for search, inspection, and recommendation. The raw manifest remains useful for integrations that do not have an AAS Core host adapter.
 
 ## Manifest contract (v1)
 
@@ -34,7 +36,7 @@ Stable integrations must not load every skill instruction file up front.
 - Enforce a per-turn maximum so user prompts stay below context limits.
 - Validate each resolved path stays under your configured `SKILLS_ROOT`.
 
-This is the core prevention for context truncation and trajectory conversion errors in larger multi-skill hosts.
+This is the main prevention for context truncation and trajectory conversion errors in custom multi-skill hosts. It is not the AAS Core catalog or stack lifecycle contract.
 
 ## Why the `data/` mirror exists
 
@@ -57,6 +59,7 @@ This is the core prevention for context truncation and trajectory conversion err
 
 ## Related docs
 
+- [`docs/users/aas-core.md`](aas-core.md)
 - [`docs/integrations/jetski-cortex.md`](../integrations/jetski-cortex.md)
 - [`docs/integrations/jetski-gemini-loader/README.md`](../integrations/jetski-gemini-loader/README.md)
 - [`docs/users/windows-truncation-recovery.md`](windows-truncation-recovery.md)

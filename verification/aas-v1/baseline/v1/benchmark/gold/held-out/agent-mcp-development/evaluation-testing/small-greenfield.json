@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.agent-mcp-development.evaluation-testing.small-greenfield",
+  "acceptedSolutions": [
+    {
+      "solutionId": "behavioral-eval-baseline",
+      "allowedSkillIds": [
+        "agent-evaluation",
+        "evaluation",
+        "unit-testing-test-generate"
+      ],
+      "requiredGroups": [
+        [
+          "agent-evaluation",
+          "evaluation"
+        ],
+        [
+          "unit-testing-test-generate",
+          "agent-evaluation"
+        ]
+      ]
+    }
+  ],
+  "ambiguous": false,
+  "provenance": {
+    "source": "independent-synthetic-held-out-gold",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "reviews": [
+    {
+      "reviewer": "codex-independent-alpha",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a16f1256b176ac518393f802bdd96e74e943e14d63c4cf7159ae0a2f43753c74"
+    },
+    {
+      "reviewer": "codex-independent-beta",
+      "decision": "approved",
+      "reviewedDigest": "sha256-a16f1256b176ac518393f802bdd96e74e943e14d63c4cf7159ae0a2f43753c74"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.test-qa-automation.unit-component.constrained-offline",
+  "intent": "test-qa-automation",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectType": "air-gapped Linux administration toolkit",
+    "languages": [
+      "Bash"
+    ],
+    "frameworks": [],
+    "testingContext": "shell utilities need repeatable unit-level command and filesystem behavior tests",
+    "constraints": [
+      "fully offline",
+      "Linux-only",
+      "no hosted test service",
+      "minimal dependencies"
+    ],
+    "targetHosts": [
+      "codex",
+      "claude"
+    ]
+  },
+  "criticalGoals": [
+    "bash-unit-tests",
+    "command-stubbing",
+    "temporary-fixture-isolation"
+  ],
+  "nonCriticalGoals": [
+    "tap-compatible-output",
+    "test-quality-review"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-held-out-authoring",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.test-qa-automation.unit-component.constrained-offline"
+}

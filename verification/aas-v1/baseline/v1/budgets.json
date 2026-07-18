@@ -1,0 +1,98 @@
+{
+  "$schema": "../../schemas/budget-manifest.schema.json",
+  "schemaVersion": 1,
+  "budgetVersion": "1.0.0",
+  "status": "frozen",
+  "prng": {
+    "algorithm": "xoshiro256**",
+    "algorithmVersion": "1.0",
+    "rootSeed": "4c2bdaff5d0a23782d0c76e23db04f8106dc6f768f7b1d011fba8253f9e1b831",
+    "rootSeedEncoding": "lowercase-hex-encoded-256-bit-seed",
+    "derivation": {
+      "hash": "SHA-256",
+      "inputEncoding": "UTF-8",
+      "namespace": "AAS-V1-PRNG-ROOT",
+      "material": "AAS-V1-PRNG-ROOT\npackage=agentic-awesome-skills\nversion=14.6.0\ndistIntegrity=sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg==\nsourceTag=v14.6.0\nsourceCommit=ab5f6c205a548d2f4bec411728c79b9c156fc696\n",
+      "sourceInputs": [
+        {
+          "path": "legacy/14.6.0/manifest.json",
+          "jsonPointer": "/baseline/package",
+          "value": "agentic-awesome-skills"
+        },
+        {
+          "path": "legacy/14.6.0/manifest.json",
+          "jsonPointer": "/baseline/version",
+          "value": "14.6.0"
+        },
+        {
+          "path": "legacy/14.6.0/manifest.json",
+          "jsonPointer": "/baseline/distIntegrity",
+          "value": "sha512-VTOb3O9PSYKCDO99i3h0vOn7vHQlGtO/+jSErR80g6OGaDJoBzg3q2GE9Nu890en1/Z54hBEYiVQj/1Rl95xEg=="
+        },
+        {
+          "path": "legacy/14.6.0/manifest.json",
+          "jsonPointer": "/baseline/sourceTag",
+          "value": "v14.6.0"
+        },
+        {
+          "path": "legacy/14.6.0/manifest.json",
+          "jsonPointer": "/baseline/sourceCommit",
+          "value": "ab5f6c205a548d2f4bec411728c79b9c156fc696"
+        }
+      ],
+      "verification": "SHA-256 over the material field bytes MUST equal rootSeed; the final LF is significant. Changing a source input requires changing this frozen baseline and root seed."
+    },
+    "substreams": {
+      "namespaceFormat": "aas.v1/{suiteId}/{stratumId}/execution/{zeroBasedDecimalIndex}",
+      "namespaceComponents": "suiteId values are frozen below; stratumId is the exact budget stratum id; the execution index has no sign or leading zero unless it is zero.",
+      "derivation": "HMAC-SHA-256 with key equal to the 32 decoded rootSeed bytes and data equal to the UTF-8 namespace string",
+      "stateInitialization": "Interpret the 32 HMAC output bytes as four unsigned 64-bit big-endian xoshiro256** state words in byte order. If the state is all zero, append /retry/{positiveDecimalCounter} to the namespace and repeat HMAC derivation until nonzero.",
+      "integerSampling": "Use the published xoshiro256** next-uint64 transition. Bounded integers use rejection sampling; modulo reduction and implementation-specific random APIs are forbidden.",
+      "suiteIds": {
+        "propertyAndGenerative": "property-and-generative",
+        "parserAndMcpFuzz": "parser-and-mcp-fuzz"
+      },
+      "testVectors": [
+        {
+          "namespace": "aas.v1/property-and-generative/hard-policy-risk/execution/0",
+          "stateHex": "a55e0aec10896dc8ddc738790a61cdd317da336ae8cd26854cab3ac969475b7c",
+          "firstUint64Hex": "0276a36998970cfa"
+        },
+        {
+          "namespace": "aas.v1/parser-and-mcp-fuzz/mcp-framing-json/execution/0",
+          "stateHex": "7195a221c9737eea9e2f59a30faebbe945b2c4aad614e218b1ad98c0ce2b40e7",
+          "firstUint64Hex": "2960d4e0db83fae3"
+        }
+      ]
+    }
+  },
+  "propertyAndGenerative": {
+    "minimumExecutions": 100000,
+    "strata": [
+      { "id": "hard-policy-risk", "executions": 15000 },
+      { "id": "hard-policy-provenance", "executions": 15000 },
+      { "id": "hard-policy-compatibility", "executions": 15000 },
+      { "id": "unknown-eligibility", "executions": 15000 },
+      { "id": "dependency-conflict", "executions": 10000 },
+      { "id": "catalog-order-metamorphic", "executions": 10000 },
+      { "id": "consistent-id-permutation", "executions": 10000 },
+      { "id": "plan-policy-invariants", "executions": 10000 }
+    ]
+  },
+  "parserAndMcpFuzz": {
+    "minimumExecutions": 50000,
+    "strata": [
+      { "id": "mcp-framing-json", "executions": 10000 },
+      { "id": "schema-depth-size", "executions": 10000 },
+      { "id": "search-query-unicode", "executions": 7500 },
+      { "id": "resource-uri-get-skill", "executions": 7500 },
+      { "id": "manifest-plan-parsers", "executions": 7500 },
+      { "id": "timeout-result-limits", "executions": 7500 }
+    ]
+  },
+  "hardGate": {
+    "maximumHardPolicyViolations": 0,
+    "budgetReductionAllowed": false,
+    "retryUntilGreenAllowed": false
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.monorepo-polyglot",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    },
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Commerce fulfillment platform",
+    "stack": {
+      "languages": [
+        "Java",
+        "Go",
+        "Python"
+      ],
+      "runtime": "services and asynchronous workers",
+      "delivery": "shared platform"
+    },
+    "team": {
+      "engineers": 28,
+      "operationsModel": "shared platform team",
+      "experience": "mixed specialist teams"
+    },
+    "environment": {
+      "maturity": "scaling",
+      "topology": "polyglot monorepo with multiple services",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "independent service ownership",
+      "selective builds and deployments",
+      "shared governance"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "establish shared telemetry conventions across independently owned services"
+  },
+  "criticalGoals": [
+    "correlate requests across language boundaries",
+    "preserve per-service ownership of signals"
+  ],
+  "nonCriticalGoals": [
+    "use structured telemetry",
+    "bound high-cardinality data",
+    "link releases to signals",
+    "avoid noisy alerts",
+    "document first-response checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on observability-sre delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.observability-sre.monorepo-polyglot"
+}

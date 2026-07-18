@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "reviewVersion": "1.0.0",
+  "auditId": "aas-v1-tuning-gold-equivalence-1.0.1",
+  "reviewer": {
+    "identity": "gold-equivalence-independent-beta",
+    "kind": "independent-agent-review",
+    "scorerImplementer": false
+  },
+  "scope": {
+    "repositoryCommit": "09f2d8612d2e68a087377685e9c876bd737e1782",
+    "packageVersion": "14.6.0",
+    "diagnosticSha256": "ae33eb201792dbcd5b28e5a71de36594f6c0e38709b6c86848de4420328f7001",
+    "tuningOnly": true,
+    "assignedClaimCount": 10,
+    "heldOutContentsRead": false,
+    "abstentionLabelsRead": false,
+    "readOnlyReview": true
+  },
+  "skillEvidence": [
+    {
+      "skillId": "security-bluebook-builder",
+      "path": "skills/security-bluebook-builder/SKILL.md",
+      "sha256": "d4f053069cb503b3756fa6937003052d783c814fcccff25ae23dc1865b014085",
+      "lineRanges": ["2-5", "10-16", "31-50", "55-58"]
+    },
+    {
+      "skillId": "python-testing-patterns",
+      "path": "skills/python-testing-patterns/SKILL.md",
+      "sha256": "467fdbc399027e09da7df551c2088dad0e2fa7cba590be3059b40bfcbc63794a",
+      "lineRanges": ["2-5", "13-24", "31-40"]
+    },
+    {
+      "skillId": "api-testing-observability-api-mock",
+      "path": "skills/api-testing-observability-api-mock/SKILL.md",
+      "sha256": "65f57d1dc925210f083cc78874d4c839da4c73b5e0474b45922d20d9463fa527",
+      "lineRanges": ["2-5", "13-29", "39-49"]
+    },
+    {
+      "skillId": "unit-testing-test-generate",
+      "path": "skills/unit-testing-test-generate/SKILL.md",
+      "sha256": "3fdc338d79aa50a5e546c1ecfe983b583dd13827804dd8236b44d1de056748fe",
+      "lineRanges": ["2-5", "9-17", "154-210", "212-249", "251-320"]
+    }
+  ],
+  "decisions": [
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.ci-token-exposure",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "A policy document with a mini-runbook does not perform incident triage, preserve evidence or verify remediation."
+    },
+    {
+      "caseId": "tuning.security-review-hardening.incident-hardening.session-anomaly",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "Auth/session policy is topical but does not provide operational anomaly triage and containment-remediation verification."
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.internal-auth-hardening",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "The skill lacks secret-lifecycle execution, managed-credential migration and authentication implementation patterns."
+    },
+    {
+      "caseId": "tuning.security-review-hardening.secrets-auth.service-credential-boundaries",
+      "skillId": "security-bluebook-builder",
+      "decision": "REJECT_NOT_EQUIVALENT",
+      "coherentSolution": null,
+      "reason": "Trust-boundary policy does not replace a concrete secret lifecycle, rotation workflow and authentication implementation."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "skillId": "python-testing-patterns",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "pytest-api-mock-contract",
+        "allowedSkillIds": ["api-testing-observability-api-mock", "python-testing-patterns"],
+        "requiredGroups": [["api-testing-observability-api-mock"], ["python-testing-patterns"]]
+      },
+      "reason": "The Python-matched pair supplies pytest fixtures, API integration execution, CI, deterministic contract-aware mock fixtures and boundary scenarios."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.gateway-contract-tests",
+      "skillId": "api-testing-observability-api-mock",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "pytest-api-mock-contract",
+        "allowedSkillIds": ["api-testing-observability-api-mock", "python-testing-patterns"],
+        "requiredGroups": [["api-testing-observability-api-mock"], ["python-testing-patterns"]]
+      },
+      "reason": "The skill supplies contract-aware mock routes, deterministic fixtures, scenarios and boundary mocking while its Python companion supplies the runner and CI evidence."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+      "skillId": "python-testing-patterns",
+      "decision": "AMBIGUOUS_NEEDS_ADJUDICATION",
+      "coherentSolution": null,
+      "reason": "A pytest harness is plausible but the project and shared suite are TypeScript/OpenAPI; the case does not authorize a cross-language harness."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.integration-contract.partner-contract-tests",
+      "skillId": "api-testing-observability-api-mock",
+      "decision": "AMBIGUOUS_NEEDS_ADJUDICATION",
+      "coherentSolution": null,
+      "reason": "It covers partner mocks and fixtures but not a complete CI runner; whether a supplemental specialist belongs in an accepted solution requires adjudication."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.admin-ui-tests",
+      "skillId": "unit-testing-test-generate",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "jest-generated-component-suite",
+        "allowedSkillIds": ["jest-skill", "unit-testing-test-generate"],
+        "requiredGroups": [["jest-skill"], ["unit-testing-test-generate"]]
+      },
+      "reason": "It supplies TypeScript/Jest generation, React component patterns, mocks, coverage and CI output, while jest-skill supplies the runner."
+    },
+    {
+      "caseId": "tuning.test-qa-automation.unit-component.design-system-tests",
+      "skillId": "unit-testing-test-generate",
+      "decision": "ADD_TO_ALLOWED_EQUIVALENT",
+      "coherentSolution": {
+        "solutionId": "jest-generated-component-suite",
+        "allowedSkillIds": ["jest-skill", "unit-testing-test-generate"],
+        "requiredGroups": [["jest-skill"], ["unit-testing-test-generate"]]
+      },
+      "reason": "It covers the TypeScript/Jest, React component, mocking, coverage and CI pattern group; jest-skill remains the required runner group."
+    }
+  ],
+  "decisionCounts": {
+    "ADD_TO_ALLOWED_EQUIVALENT": 4,
+    "REJECT_NOT_EQUIVALENT": 4,
+    "AMBIGUOUS_NEEDS_ADJUDICATION": 2
+  },
+  "reviewedAt": "2026-07-17"
+}

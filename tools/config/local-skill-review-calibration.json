@@ -1,0 +1,22 @@
+{
+  "manifestVersion": 1,
+  "frozenBeforeTesslReviews": true,
+  "reviewType": "quality",
+  "reviewer": "default",
+  "tuning": [
+    { "id": "short", "bundleHash": "15c91a3d5e4999ad4c02051908aeb6b0e3a134b8a2a90a75caa48d4dd0de9216", "strata": ["under-50-lines", "instruction-only"] },
+    { "id": "create-pr", "bundleHash": "03f0f6dc90455ae09abbc7e137fd1bb0945db5bb544ac1c7978189d6e0690db0", "strata": ["under-50-lines", "alias-style"] },
+    { "id": "documentation-templates", "bundleHash": "4fce13c2899889e9fabddf915ce6801d775280ee8084022f57d703e7abad72f6", "strata": ["median-length", "no-bundle"] },
+    { "id": "docs-guard", "bundleHash": "698c9ce2601edef2a18756e75ebd7c6ddf068f343b556eff2d770c58ed776cd7", "strata": ["bundle-references", "verification"] },
+    { "id": "hig-platforms", "bundleHash": "b8d3f15b1ffc1af54fd19b727514849cf45cdf5b5e36e7767a9f48079316aa03", "strata": ["large-bundle", "progressive-disclosure"] },
+    { "id": "agent-evaluation", "bundleHash": "38a99be4462580dce4d5e7d4ae2350c95ec0cb7e58008f4d678e62287ad89589", "strata": ["over-500-lines", "risk-safe"] },
+    { "id": "advogado-especialista", "bundleHash": "6099a89b01a0d579290afae08c9e5bfcb27654892d1b71764d85f301e1a859c0", "strata": ["over-500-lines", "non-english"] },
+    { "id": "ethical-hacking-methodology", "bundleHash": "8e4524e1d46d60f5d14b5f4157eae56ef876aa95c59ce24a32e24047e27db932", "strata": ["security-sensitive", "risk-offensive"] }
+  ],
+  "holdout": [
+    { "id": "cc-skill-continuous-learning", "bundleHash": "e203902e7ed3748c767bc133134c30afd914c011bd16d6107caa7d0ab824e66d", "strata": ["under-50-lines", "risk-none"] },
+    { "id": "source-driven-development", "bundleHash": "b6529f5821a8e20b00de4d551d7222cd7cb218b0bd519c60f07d24a40b91b9eb", "strata": ["median-length", "imported"] },
+    { "id": "gemini-deep-research", "bundleHash": "f9f7320a47760c59554702fba598c2115358ab91c1475a994fa06e9462b38cb3", "strata": ["bundle-scripts", "research"] },
+    { "id": "browser-automation", "bundleHash": "291c8904e70f99cfadea5c69b69fc74d65c28f49c9a3b15403d1706940dc7e22", "strata": ["over-500-lines", "risk-unknown"] }
+  ]
+}

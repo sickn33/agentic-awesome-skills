@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.api-backend-delivery.api-design-contracts.small-greenfield",
+  "intent": "api-backend-delivery",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "projectStage": "greenfield",
+    "teamSize": 2,
+    "languages": [
+      "typescript"
+    ],
+    "frameworks": [
+      "fastify"
+    ],
+    "apiStyles": [
+      "rest"
+    ],
+    "consumers": [
+      "web",
+      "mobile"
+    ],
+    "constraints": [
+      "small-team",
+      "contract-first",
+      "avoid-premature-distribution"
+    ]
+  },
+  "criticalGoals": [
+    "design a stable resource-oriented API contract",
+    "define validation and error semantics"
+  ],
+  "nonCriticalGoals": [
+    "document versioning and pagination",
+    "produce an OpenAPI contract"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "independent-synthetic-held-out",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.api-backend-delivery.api-design-contracts.small-greenfield"
+}

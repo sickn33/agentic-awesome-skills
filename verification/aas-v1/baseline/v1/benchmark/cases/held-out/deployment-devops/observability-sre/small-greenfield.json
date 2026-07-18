@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.deployment-devops.observability-sre.small-greenfield",
+  "intent": "deployment-devops",
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "product": "Appointment reminder service",
+    "stack": {
+      "languages": [
+        "TypeScript"
+      ],
+      "runtime": "Node.js service",
+      "delivery": "single production environment"
+    },
+    "team": {
+      "engineers": 2,
+      "operationsModel": "developer-owned",
+      "experience": "mixed"
+    },
+    "environment": {
+      "maturity": "greenfield",
+      "topology": "single service",
+      "connectivity": "internet-connected"
+    },
+    "constraints": [
+      "small operating budget",
+      "minimal platform overhead"
+    ],
+    "policy": {
+      "allowedRisk": [
+        "none",
+        "safe"
+      ],
+      "requireKnownSource": false,
+      "allowManualSetup": false
+    },
+    "desiredOutcome": "add proportionate logs, metrics, traces, and actionable alerts"
+  },
+  "criticalGoals": [
+    "make request failures diagnosable",
+    "detect loss of core service availability"
+  ],
+  "nonCriticalGoals": [
+    "use structured telemetry",
+    "bound high-cardinality data",
+    "link releases to signals",
+    "avoid noisy alerts",
+    "document first-response checks"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on observability-sre delivery practice",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.deployment-devops.observability-sre.small-greenfield"
+}

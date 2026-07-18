@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "caseId": "heldout.web-application-delivery.application-data-auth.constrained-offline",
+  "intent": "web-application-delivery",
+  "targets": [
+    {
+      "host": "claude",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "application": "Disconnected field-inspection web app",
+    "deployment": "rugged tablets synchronized at a depot",
+    "identity": "locally provisioned inspectors with expiring offline grants",
+    "data": [
+      "inspection assignments",
+      "signed findings"
+    ],
+    "constraints": [
+      "no identity-provider connection in the field",
+      "encrypted local storage",
+      "conflict-safe synchronization",
+      "deny access after grant expiry"
+    ]
+  },
+  "criticalGoals": [
+    "define safe offline authorization behavior",
+    "validate synchronized data at the trust boundary"
+  ],
+  "nonCriticalGoals": [
+    "handle grant expiry",
+    "minimize local sensitive data",
+    "resolve sync authorization failures",
+    "separate wire and domain data",
+    "make reconnect states explicit"
+  ],
+  "minimumNonCriticalGoalCoverage": 0.8,
+  "requiresSkill": true,
+  "policy": {
+    "allowedRisk": [
+      "none",
+      "safe"
+    ],
+    "requireKnownSource": false,
+    "allowManualSetup": false
+  },
+  "provenance": {
+    "source": "AAS benchmark editorial scenario based on disconnected field-work authorization constraints",
+    "version": "1.0.0",
+    "reviewedAt": "2026-07-17"
+  },
+  "taskFamilyFingerprint": "tf.web-application-delivery.application-data-auth.constrained-offline"
+}
