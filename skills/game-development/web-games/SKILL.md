@@ -123,7 +123,7 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 
 ## 5. PWA for Games
 
-**Benefits:** offline play, install, fullscreen, optional push.  
+**Benefits:** offline play, install, fullscreen, optional push.
 **Requirements:** service worker, web app manifest, HTTPS.
 
 ---

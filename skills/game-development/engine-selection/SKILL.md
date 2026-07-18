@@ -5,8 +5,8 @@ description: >-
   (full canvas shell vs hybrid DOM shell + guest viewport). Covers Phaser,
   PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js, Godot, Unity, Ink, Twine.
   Use when choosing a stack or comparing runtimes before implementation.
-risk: unknown
-source: community
+risk: none
+source: self
 date_added: "2026-07-17"
 ---
 
