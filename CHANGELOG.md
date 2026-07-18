@@ -35,9 +35,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expanded the legacy Pages bridge to every one of the 1,965 current catalog skills plus seven structural routes, while keeping crawler discovery limited to the curated 187-route sitemap and making migration-readiness checks enforce the same exact catalog coverage.
 - Corrected public Workbench copy that implied browser-side install-command generation; Workbench reviews user-supplied Core stack and plan artifacts without filesystem access or installation.
 
-## [15.0.0-rc.1] - 2026-07-18 - "AAS Core Release Candidate"
+## [15.0.0-rc.2] - 2026-07-18 - "AAS Core Release Candidate"
 
-> First public release candidate of AAS Core, published on npm's `next` channel for real-client validation before the stable 15.0.0 release.
+> Supersedes the unpublished `15.0.0-rc.1` candidate after hardening prerelease metadata synchronization. This candidate is published on npm's `next` channel for real-client validation before the stable 15.0.0 release.
+
+### Fixed
+
+- Made prerelease metadata synchronization idempotent across the README and crawler-facing release metadata, including repeated RC syncs and the later RC-to-stable transition.
+- Reprepared the protected release candidate from the exact post-fix `main` lineage so the release tag, generated state, and published package share one verified source identity.
+
+### Validation
+
+- Stable `15.0.0` remains gated on a fresh Codex client discovering and invoking the packaged AAS MCP, followed by packaged CLI validation and read-only plan preview.
+
+## [15.0.0-rc.1] - 2026-07-18 - "AAS Core Release Candidate (Unpublished)"
+
+> Prepared as the first AAS Core release candidate but not tagged or published; superseded by `15.0.0-rc.2` after prerelease metadata synchronization was hardened.
 
 ### Added
 
