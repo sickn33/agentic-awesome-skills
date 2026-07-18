@@ -27,12 +27,15 @@ sync_repo_metadata = load_module(
     "tools/scripts/sync_repo_metadata.py",
     "sync_repo_metadata_test",
 )
+update_readme = sys.modules["update_readme"]
 
 
 class SyncRepoMetadataTests(unittest.TestCase):
     def test_sync_curated_docs_updates_counts_and_versions(self):
         metadata = {
             "version": "8.4.0",
+            "core_included": True,
+            "core_included_from_major": 8,
             "total_skills": 1304,
             "total_skills_label": "1,304+",
         }
@@ -69,6 +72,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
             (root / "apps" / "web-app" / "public" / "llms.txt").write_text(
                 "> Installable GitHub library of 1,273+ agentic SKILL.md playbooks.\n"
                 "- Current release: V8.3.0.\n"
+                "- Release boundary: the published V8.3.0 package predates AAS Core.\n"
                 "- Skill count: 1,273+.\n"
                 "AAS Core preview is backed by the 1,273+ skill catalog.\n",
                 encoding="utf-8",
@@ -140,6 +144,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
             self.assertIn("backed by 1,304+ skills", web_index)
             llms_text = (root / "apps" / "web-app" / "public" / "llms.txt").read_text(encoding="utf-8")
             self.assertIn("Current release: V8.4.0.", llms_text)
+            self.assertIn("V8.4.0 includes AAS Core", llms_text)
             self.assertIn("Skill count: 1,304+.", llms_text)
             self.assertIn("1,304+ skill catalog", llms_text)
             jetski_cortex = (root / "docs" / "integrations" / "jetski-cortex.md").read_text(encoding="utf-8")
@@ -155,6 +160,24 @@ class SyncRepoMetadataTests(unittest.TestCase):
         self.assertIn("AAS Core preview", description)
         self.assertIn("1,304+ agentic skills", description)
         self.assertIn("local MCP", description)
+
+    def test_core_release_capability_is_major_based_and_fail_closed(self):
+        self.assertEqual(
+            update_readme.core_release_metadata({"version": "14.99.0", "aasCore": {"includedFromMajor": 15}}),
+            (False, 15),
+        )
+        self.assertEqual(
+            update_readme.core_release_metadata({"version": "15.0.0-rc.1", "aasCore": {"includedFromMajor": 15}}),
+            (True, 15),
+        )
+        self.assertEqual(
+            update_readme.core_release_metadata({"version": "16.0.0", "aasCore": {"includedFromMajor": 15}}),
+            (True, 15),
+        )
+        with self.assertRaises(ValueError):
+            update_readme.core_release_metadata({"version": "15.0.0"})
+        with self.assertRaises(ValueError):
+            update_readme.core_release_metadata({"version": "invalid", "aasCore": {"includedFromMajor": 15}})
 
     def test_sync_github_about_builds_expected_commands(self):
         calls = []

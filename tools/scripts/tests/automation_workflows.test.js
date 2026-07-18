@@ -321,6 +321,31 @@ assert.match(
 assert.match(publishWorkflow, /run: npm ci/, "npm publish workflow should install dependencies");
 assert.match(
   publishWorkflow,
+  /node-version: "22\.23\.1"/,
+  "npm publish workflow should use the supported Node 22 runtime",
+);
+assert.match(
+  publishWorkflow,
+  /npm publish --tag next/,
+  "npm prereleases should publish to the next dist-tag",
+);
+assert.match(
+  publishWorkflow,
+  /else[\s\S]*npm publish --tag latest/,
+  "stable npm releases should publish explicitly to latest",
+);
+assert.doesNotMatch(
+  publishWorkflow,
+  /^\s*npm publish\s*$/mu,
+  "npm releases should never publish without an explicit dist-tag",
+);
+assert.match(
+  publishWorkflow,
+  /semver\.test/,
+  "npm releases should fail closed on an invalid package version",
+);
+assert.match(
+  publishWorkflow,
   /pip install -r tools\/requirements\.txt/,
   "npm publish workflow should install Python dependencies from tools/requirements.txt",
 );

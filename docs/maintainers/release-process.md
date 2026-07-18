@@ -65,22 +65,29 @@ This command:
 - creates and pushes `release/vX.Y.Z`
 - opens a release PR containing the scripted canonical release state
 
+Prerelease versions use the same protected flow, for example `15.0.0-rc.1`. They must have their own exact changelog section.
+
 6. Merge the release PR through required checks, update local `main`, then publish the GitHub release:
 
 ```bash
 npm run release:publish -- X.Y.Z
 ```
 
-This command proves local `main` equals protected `origin/main` and the exact squash commit of the merged `release/vX.Y.Z` PR, checks that no canonical-sync PR or release-state drift remains, creates or reuses the matching local/remote tag safely, and creates the GitHub release object from the matching `CHANGELOG.md` section. It never pushes `main` directly and can be retried after a partial tag/release failure.
+This command proves local `main` equals protected `origin/main` and the exact squash commit of the merged `release/vX.Y.Z` PR, checks that no canonical-sync PR or release-state drift remains, creates or reuses the matching local/remote tag safely, and creates the GitHub release object from the matching `CHANGELOG.md` section. SemVer prereleases are marked as GitHub prereleases. It never pushes `main` directly and can be retried after a partial tag/release failure.
 
 7. Publish to npm if needed:
 
 ```bash
-npm publish
+npm publish --tag latest
 ```
 
-Normally this still happens via the existing GitHub release workflow after the GitHub release is published.
-That workflow now reruns `sync:release-state`, installs Python dependencies from `tools/requirements.txt`, refreshes tracked web assets, fails on canonical drift via `git diff --exit-code`, executes tests and docs security checks, runs the web-app coverage gate, enforces `npm audit --audit-level=high`, builds the web app, and dry-runs the npm package before `npm publish`.
+Normally this still happens via the existing GitHub release workflow after the GitHub release is published. The workflow publishes stable versions explicitly to npm's `latest` dist-tag and prerelease versions explicitly to `next`; it fails closed on an invalid version. Verify both tags after a prerelease so `latest` remains on the last stable release.
+
+```bash
+npm view agentic-awesome-skills dist-tags --json
+```
+
+The workflow reruns `sync:release-state`, installs Python dependencies from `tools/requirements.txt`, refreshes tracked web assets, fails on canonical drift via `git diff --exit-code`, executes tests and docs security checks, runs the web-app coverage gate, enforces `npm audit --audit-level=high`, builds the web app, and dry-runs the npm package before publishing.
 
 ## Canonical Sync Bot
 

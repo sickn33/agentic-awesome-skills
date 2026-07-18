@@ -2,7 +2,7 @@
 
 **AAS Core** là lớp điều khiển cục bộ, ưu tiên agent được khuyến nghị cho Agentic Awesome Skills. Core cho phép Codex hoặc Claude Code tìm kiếm và kiểm tra catalog cục bộ đã xác minh, tạo đề xuất stack tối thiểu theo quy tắc xác định, rồi trình bày `aas-stack.json` và kế hoạch CLI để người dùng xem trước khi có bất kỳ thay đổi nào.
 
-> **Ranh giới phát hành:** Gói npm 14.6.0 đã phát hành trước AAS Core và không thể dùng để bootstrap Core. Hãy chờ một phiên bản có release notes tuyên bố rõ rằng nó bao gồm AAS Core, rồi chỉ dùng đúng phiên bản đó. Hiện chưa có phiên bản npm nào hỗ trợ bootstrap Core.
+> **Ranh giới phát hành:** Gói npm 14.6.0 đã phát hành trước AAS Core và không thể dùng để bootstrap Core. Các gói hỗ trợ Core bắt đầu từ dòng 15.x; chỉ dùng một phiên bản chính xác có release notes tuyên bố rõ rằng nó bao gồm AAS Core.
 
 ## Luồng sử dụng
 

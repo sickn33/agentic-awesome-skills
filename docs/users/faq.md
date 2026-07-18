@@ -137,7 +137,7 @@ _Always check the Risk label and review the code._
 
 ### How do I start with AAS Core?
 
-Use the pinned `aas` binary from a release whose notes explicitly state that it includes AAS Core to preview and approve local MCP configuration for Codex or Claude. The published 14.6.0 package predates Core and is not a valid bootstrap. Restart the host if needed, then ask the agent to recommend and explain a stack without applying it. The command template and trust boundaries are in [AAS Core](aas-core.md).
+Use the pinned `aas` binary from a release whose notes explicitly state that it includes AAS Core to preview and approve local MCP configuration for Codex or Claude. Release 14.6.0 predates Core; Core-capable packages begin with the 15.x line. Restart the host if needed, then ask the agent to recommend and explain a stack without applying it. The command template and trust boundaries are in [AAS Core](aas-core.md).
 
 The package publishes separate `agentic-awesome-skills`, `aas`, and `aas-mcp` binaries. Use the explicit `aas` binary for Core lifecycle commands; the legacy `agentic-awesome-skills` entrypoint remains the direct installer.
 

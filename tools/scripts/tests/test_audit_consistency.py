@@ -56,6 +56,7 @@ class AuditConsistencyTests(unittest.TestCase):
                 {
                     "name": "agentic-awesome-skills",
                     "version": "8.4.0",
+                    "aasCore": {"includedFromMajor": 8, "status": "agent-first-preview"},
                     "description": f"AAS Core preview: local skill discovery, recommendation, stack validation, and planning, backed by {count_label} agentic skills.",
                 }
             ),

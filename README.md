@@ -207,7 +207,7 @@ Not yet. The current **Agent-First Preview** supports local MCP search, recommen
 
 ### How do I install it?
 
-For AAS Core, follow the [preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md) and use only a package release whose notes explicitly state that it includes Core. The published 14.6.0 package predates Core, so it is not a valid Core bootstrap.
+For AAS Core, follow the [preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md) and use only a package release whose notes explicitly state that it includes Core. Release 14.6.0 predates Core; Core-capable releases begin with the 15.x line.
 
 For direct skill distribution, run `npx agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the legacy installer to place skills in the directory your assistant already watches.
 

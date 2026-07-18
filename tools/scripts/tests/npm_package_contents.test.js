@@ -72,6 +72,11 @@ assert.strictEqual(
 
 const coreGuide = fs.readFileSync(path.join(repoRoot, "docs", "users", "aas-core.md"), "utf8");
 const readme = fs.readFileSync(path.join(repoRoot, "README.md"), "utf8");
+assert.strictEqual(
+  packageJson.aasCore?.includedFromMajor,
+  15,
+  "published package must declare the first Core-capable major",
+);
 assert.ok(
   readme.includes("https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md"),
   "published README must link to the canonical AAS Core guide without relying on an unpackaged relative path",

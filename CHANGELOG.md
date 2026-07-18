@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **Agentic Awesome Skills** collection are documented in this file.
+All notable changes to **AAS Core** and its surrounding catalog, distribution, compatibility, and community surfaces are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -34,6 +34,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the current Bing Webmaster verification identity and updated the legacy Pages redirect generator contract to cover the expanded 187-route sitemap.
 - Expanded the legacy Pages bridge to every one of the 1,965 current catalog skills plus seven structural routes, while keeping crawler discovery limited to the curated 187-route sitemap and making migration-readiness checks enforce the same exact catalog coverage.
 - Corrected public Workbench copy that implied browser-side install-command generation; Workbench reviews user-supplied Core stack and plan artifacts without filesystem access or installation.
+
+## [15.0.0-rc.1] - 2026-07-18 - "AAS Core Release Candidate"
+
+> First public release candidate of AAS Core, published on npm's `next` channel for real-client validation before the stable 15.0.0 release.
+
+### Added
+
+- Added the local, deterministic AAS Core shared by the `aas` CLI and local stdio MCP, with catalog search, skill inspection, explainable stack recommendation, manifest validation, immutable plan preview, and read-only diagnosis.
+- Added the versioned `aas-stack.json` and plan contracts, integrity-bound offline catalog runtime, Codex and Claude MCP configuration flow, and browser-local Workbench artifact review.
+
+### Changed
+
+- Repositioned the repository around AAS Core while preserving the catalog, plugins, bundles, workflows, direct installers, compatibility documentation, contributor guidance, governance, community, credits, and historical release notes.
+- Raised the supported Node.js runtime to 22 or newer and made prereleases publish explicitly to npm's `next` channel while stable releases publish to `latest`.
+- Kept target mutation outside the supported preview claim: `stack apply` and `stack recover` remain experimental and opt-in.
+
+### Fixed
+
+- Removed obsolete heuristic reviewer, lexical risk classifier, score gates, certified-v1 evaluation corpus, and paused optimization machinery that produced false positives or unnecessary merge friction. Objective validation, reference, security, provenance, protected canonical synchronization, and Tessl-or-exact-head semantic review remain.
+- Made AAS Core release capability explicit in package metadata so future documentation and release synchronization no longer depend on hardcoded version strings.
+
+### Validation
+
+- This candidate is intentionally published before the stable release so a fresh Codex client can discover and invoke the packaged AAS MCP and the packaged CLI can validate and preview the proposed stack end to end.
+
+### Credits
+
+- **[@alen-hh](https://github.com/alen-hh)** for `modellix` (PR #867).
+- **[@Siphon880gh](https://github.com/Siphon880gh)** for `game-development/engine-selection` and related game-development updates (PR #879).
+- **[@kimtth](https://github.com/kimtth)** for the OOXML reference-deck analysis added to `pptx-deck-creation` (PR #871).
 
 ## [14.6.0] - 2026-07-16 - "Diagnostics, Review Efficiency, and Protected Maintenance"
 

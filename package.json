@@ -1,6 +1,10 @@
 {
   "name": "agentic-awesome-skills",
   "version": "14.6.0",
+  "aasCore": {
+    "includedFromMajor": 15,
+    "status": "agent-first-preview"
+  },
   "description": "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, backed by 1,968+ agentic skills.",
   "license": "MIT",
   "scripts": {

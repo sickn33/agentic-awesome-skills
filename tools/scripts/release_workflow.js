@@ -171,6 +171,14 @@ function readPackageVersion(projectRoot) {
   return packageJson.version;
 }
 
+function isPrereleaseVersion(version) {
+  const match = String(version).match(
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/u,
+  );
+  if (!match) throw new Error(`Invalid semantic version: ${version}`);
+  return Boolean(match[4]);
+}
+
 function ensureChangelogSection(projectRoot, version) {
   const changelogPath = path.join(projectRoot, "CHANGELOG.md");
   const changelogContent = fs.readFileSync(changelogPath, "utf8");
@@ -367,7 +375,9 @@ function publishRelease(projectRoot, version) {
     console.log(`[release] ${tagName} is already published.`);
     return;
   }
-  runCommand("gh", ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath], projectRoot);
+  const releaseArgs = ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath];
+  if (isPrereleaseVersion(version)) releaseArgs.push("--prerelease");
+  runCommand("gh", releaseArgs, projectRoot);
 
   console.log(`[release] Published ${tagName}.`);
 }
@@ -408,6 +418,7 @@ if (require.main === module) {
 module.exports = {
   localTagTarget,
   remoteTagTarget,
+  isPrereleaseVersion,
   selectMergedReleaseCandidate,
   validateReleaseSuccessors,
 };

@@ -9,7 +9,14 @@ from pathlib import Path
 
 from plugin_compatibility import compatibility_by_skill_id, load_plugin_compatibility
 from sync_editorial_bundles import load_editorial_bundles, render_bundles_doc
-from update_readme import configure_utf8_output, find_repo_root, load_metadata, update_readme
+from update_readme import (
+    configure_utf8_output,
+    core_release_boundary,
+    core_release_status,
+    find_repo_root,
+    load_metadata,
+    update_readme,
+)
 
 
 ABOUT_DESCRIPTION_RE = re.compile(r'"description"\s*:\s*"([^"]*)"')
@@ -137,15 +144,7 @@ def count_documented_bundles(content: str) -> int:
 
 def sync_readme_copy(content: str, metadata: dict) -> str:
     version = metadata["version"]
-    release_status = (
-        f"The published {version} package predates AAS Core. Core is available from `main` as an "
-        "**Agent-First Preview** for local search, inspection, recommendation, manifest validation, "
-        "planning, and diagnosis. Wait for a release that explicitly includes Core before using the "
-        "npm bootstrap. "
-        if version == "14.6.0"
-        else "This release includes AAS Core under the **Agent-First Preview** claim for local search, "
-        "inspection, recommendation, manifest validation, planning, and diagnosis. "
-    )
+    release_status = core_release_status(metadata)
     replacements = [
         (
             README_TITLE_RE,
@@ -226,6 +225,7 @@ def sync_llms_text(content: str, metadata: dict) -> str:
         content,
         [
             (r"Current release: V[\d.]+\.", f"Current release: V{metadata['version']}."),
+            (r"Release boundary: .*", core_release_boundary(metadata)),
             (r"\d[\d,]*\+ agentic SKILL\.md playbooks", f"{skill_label} agentic SKILL.md playbooks"),
             (r"Skill count: \d[\d,]*\+\.", f"Skill count: {skill_label}."),
             (r"\d[\d,]*\+ reusable SKILL\.md playbooks", f"{skill_label} reusable SKILL.md playbooks"),

@@ -191,11 +191,20 @@ function parseCliArgs(argv) {
   return args;
 }
 
-function getPackageReleaseLabel() {
+function getPackageReleaseMetadata() {
   const raw = readFile(path.join(REPO_ROOT_DIR, 'package.json'), REPO_ROOT_DIR);
   const pkg = JSON.parse(raw);
   assert(typeof pkg.version === 'string' && pkg.version.trim(), 'Root package.json must define version.');
-  return `V${pkg.version.trim()}`;
+  assert(
+    Number.isInteger(pkg.aasCore?.includedFromMajor) && pkg.aasCore.includedFromMajor > 0,
+    'Root package.json must define aasCore.includedFromMajor.',
+  );
+  const major = Number.parseInt(pkg.version.split('.')[0], 10);
+  assert(Number.isInteger(major), 'Root package.json version must begin with a major number.');
+  return {
+    label: `V${pkg.version.trim()}`,
+    coreIncluded: major >= pkg.aasCore.includedFromMajor,
+  };
 }
 
 function extractMetaContent(htmlText, selectorType, selectorValue) {
@@ -926,7 +935,10 @@ export function assertRobots(robotsText, { expectedSitemapUrl = '' } = {}) {
   assert(allowsAiSearchCrawlers, 'robots.txt must explicitly expose AI search crawler directives.');
 }
 
-export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expectedReleaseLabel = '' } = {}) {
+export function assertLlms(
+  llmsText,
+  { expectedSkillCountLabel = '1,678+', expectedReleaseLabel = '', expectedCoreIncluded = false } = {},
+) {
   const text = String(llmsText ?? '');
   const requiredSnippets = [
     '# Agentic Awesome Skills',
@@ -938,7 +950,7 @@ export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expec
     'https://github.com/sickn33/agentic-awesome-skills',
     'https://sickn33.github.io/agentic-awesome-skills/workbench',
     'Canonical source of truth',
-    'predates AAS Core',
+    expectedCoreIncluded ? 'includes AAS Core' : 'predates AAS Core',
   ];
 
   for (const snippet of requiredSnippets) {
@@ -993,7 +1005,7 @@ export function runVerification({
   socialImagePath = safeUserPath(socialImagePath);
   distDir = safeUserPath(distDir);
 
-  const expectedReleaseLabel = getPackageReleaseLabel();
+  const releaseMetadata = getPackageReleaseMetadata();
   const sitemapText = readFile(sitemapPath);
   const sitemapReport = analyzeSitemap(sitemapText, { minSkillUrls, requireHostedUrl });
   const indexHtml = readFile(indexPath);
@@ -1021,7 +1033,11 @@ export function runVerification({
   assertRobots(readFile(robotsPath), {
     expectedSitemapUrl: new URL('sitemap.xml', sitemapReport.rootUrl).href,
   });
-  assertLlms(readFile(llmsPath), { expectedSkillCountLabel, expectedReleaseLabel });
+  assertLlms(readFile(llmsPath), {
+    expectedSkillCountLabel,
+    expectedReleaseLabel: releaseMetadata.label,
+    expectedCoreIncluded: releaseMetadata.coreIncluded,
+  });
   assertManifest(readFile(manifestPath));
   if (requireHostedUrl) {
     assertNoLocalhostUrl(sitemapText, 'Sitemap');

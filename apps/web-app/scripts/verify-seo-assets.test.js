@@ -662,6 +662,28 @@ describe('seo assets verification helpers', () => {
     expect(() => assertLlms(llms, { expectedReleaseLabel: 'V1.2.3' })).toThrow('current release');
   });
 
+  it('requires Core-capable release language when the package includes Core', () => {
+    const llms = `
+      # Agentic Awesome Skills
+      AAS Core preview
+      Current release: V15.0.0.
+      This release includes AAS Core.
+      1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
+      https://github.com/sickn33/agentic-awesome-skills
+      https://sickn33.github.io/agentic-awesome-skills/workbench
+      Canonical source of truth: the GitHub repository is the primary project URL.
+    `;
+
+    expect(() => assertLlms(llms, {
+      expectedReleaseLabel: 'V15.0.0',
+      expectedCoreIncluded: true,
+    })).not.toThrow();
+    expect(() => assertLlms(llms, {
+      expectedReleaseLabel: 'V15.0.0',
+      expectedCoreIncluded: false,
+    })).toThrow('predates AAS Core');
+  });
+
   it('requires social image tags in rendered index html', () => {
     const html = `
       <html>

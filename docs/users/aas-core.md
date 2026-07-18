@@ -25,7 +25,7 @@ The agent may inspect your project using its normal local capabilities, but AAS 
 
 ## Configure the local MCP
 
-> **Release boundary:** AAS Core landed on `main` after the published 14.6.0 package. Do not use 14.6.0 for this bootstrap. Wait for a release whose notes explicitly state that it includes AAS Core. In the command template below, replace `X.Y.Z` only with that exact release; until one exists, there is no supported npm bootstrap for Core.
+> **Release boundary:** AAS Core landed after release 14.6.0, which is not a valid Core bootstrap. Core-capable packages begin with the 15.x line. In the command template below, replace `X.Y.Z` only with an exact release whose notes explicitly state that it includes AAS Core; do not resolve an unreviewed moving tag.
 
 The package publishes separate `aas` and `aas-mcp` binaries. For a pinned Core release without relying on npm's default-bin selection, invoke `aas` explicitly:
 

@@ -6,6 +6,11 @@ const { spawnSync } = require("child_process");
 
 const release = require("../release_workflow.js");
 
+assert.strictEqual(release.isPrereleaseVersion("15.0.0-rc.1"), true);
+assert.strictEqual(release.isPrereleaseVersion("15.0.0"), false);
+assert.strictEqual(release.isPrereleaseVersion("15.0.0+build.1"), false);
+assert.throws(() => release.isPrereleaseVersion("15.0"), /Invalid semantic version/);
+
 function git(cwd, ...args) {
   const result = spawnSync("git", args, { cwd, encoding: "utf8" });
   if (result.status !== 0) throw new Error(result.stderr || `git ${args.join(" ")} failed`);
