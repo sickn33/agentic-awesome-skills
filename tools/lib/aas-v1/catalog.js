@@ -43,10 +43,14 @@ function loadOfflineIdentity(root) {
     return { path: asset.path, size: bytes.length, sha256: sha256(bytes) };
   }).sort((left, right) => compareStrings(left.path, right.path));
   const digest = sha256(canonicalJson({ digestVersion: 1, assets }));
-  if (digest !== manifest.catalogDigest || manifest.skillCount !== 1965) throw new Error("Offline catalog identity mismatch");
   const indexAsset = manifest.assets.find((asset) => asset.path === CONTENT_INDEX);
   if (!indexAsset) throw new Error("Offline catalog content index is missing");
   const contentIndex = JSON.parse(readVerifiedAsset(root, indexAsset));
+  const indexedSkillCount = Object.keys(contentIndex?.entries || {}).length;
+  if (digest !== manifest.catalogDigest || !Number.isSafeInteger(manifest.skillCount)
+    || manifest.skillCount <= 0 || manifest.skillCount !== indexedSkillCount) {
+    throw new Error("Offline catalog identity mismatch");
+  }
   return { digest, manifest, contentIndex };
 }
 

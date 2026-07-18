@@ -25,7 +25,7 @@ The agent may inspect your project using its normal local capabilities, but AAS 
 
 ## Configure the local MCP
 
-> **Release boundary:** AAS Core landed on `main` after the published 14.6.0 package. Do not use 14.6.0 for this bootstrap. Wait for a release that explicitly includes AAS Core, then substitute that exact version below.
+> **Release boundary:** AAS Core landed on `main` after the published 14.6.0 package. Do not use 14.6.0 for this bootstrap. Wait for a release that explicitly includes AAS Core. The command below resolves the current published release, and the generated configuration binds that resolved package version and integrity exactly.
 
 The package publishes separate `aas` and `aas-mcp` binaries. For a pinned Core release without relying on npm's default-bin selection, invoke `aas` explicitly:
 

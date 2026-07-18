@@ -68,13 +68,13 @@ class AuditConsistencyTests(unittest.TestCase):
         (root / "apps" / "web-app" / "public" / "skills.json").write_text(manifest, encoding="utf-8")
         (root / "README.md").write_text(
             f"""<!-- registry-sync: version=8.4.0; skills={total_skills}; stars=26132; updated_at=2026-03-21T00:00:00+00:00 -->
-# 🌌 Agentic Awesome Skills: AAS Core + {count_label} Skills for AI Coding Agents
+# AAS Core — Agentic Awesome Skills
 
-> **AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of {count_label} agentic skills.**
+> **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2026%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 
-**Current release: V8.4.0.** This release includes AAS Core. Core is currently documented from `main` under the **Agent-First Preview** claim: local search, recommendation, inspection, manifest validation, planning, and diagnosis are the supported preview path. Wait for a release that explicitly includes Core before using the npm bootstrap. Full-catalog recommendation quality and transactional apply/recovery safety are not yet certified; apply and recovery remain explicitly experimental.
+**Current release: V8.4.0.** This release includes AAS Core under the **Agent-First Preview** claim for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 - **Broad coverage with real utility**: {count_label} skills across development, testing, security, infrastructure, product, and marketing.
 
@@ -83,7 +83,7 @@ class AuditConsistencyTests(unittest.TestCase):
             encoding="utf-8",
         )
         (root / "docs" / "users" / "getting-started.md").write_text(
-            "# Getting Started with Agentic Awesome Skills (V8.4.0)\n",
+            "# Getting Started with AAS Core\n",
             encoding="utf-8",
         )
         (root / "docs" / "users" / "claude-code-skills.md").write_text(
