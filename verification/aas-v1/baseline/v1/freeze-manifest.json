@@ -8,13 +8,13 @@
     "verifier/node_modules/",
     "baseline/v1/legacy/14.6.0/_work/"
   ],
-  "rootDigest": "sha256-daca3ee63c2f27c156e4a20ca7cfe110da09073740bbfe31d7371bd7a41ce39c",
+  "rootDigest": "sha256-ae8defc2d7ae3e4e48c9f0083822f6eedcf281e5a9659e70dd7baa2317b66c39",
   "fileCount": 765,
   "files": [
     {
       "path": "README.md",
-      "bytes": 4643,
-      "sha256": "2e22eeadd14f0ab6c8f1fecd9df5d9119af53175cb36b200f431d4fae5f6267a"
+      "bytes": 5153,
+      "sha256": "7a75d4d0148a0425f7a9420930e92d6dcdedc1c418980882d3da8cd8b1ab65db"
     },
     {
       "path": "baseline/v1/benchmark/abstention/cases/creative-content/bilingual-poetry-edit.json",
@@ -3513,8 +3513,8 @@
     },
     {
       "path": "ownership.v1.json",
-      "bytes": 3804,
-      "sha256": "7e314540c67a1612f55bcbf257c03512d795875332348fd4c67cfffc51c62220"
+      "bytes": 4433,
+      "sha256": "48cf2a3ad1cd702f146a225aba7670214f9a79e0ad9af83980043f64ec2f80ed"
     },
     {
       "path": "schemas/benchmark-case.schema.json",
@@ -3608,8 +3608,8 @@
     },
     {
       "path": "verifier/bin/check-baseline.mjs",
-      "bytes": 14454,
-      "sha256": "a0ca18471de80826593690d57aa0f7363a0201cccf1db986ca4475043970b2bc"
+      "bytes": 15521,
+      "sha256": "d6ce2f29f8ebaee3a3b4f53d7a395c9e14a58dc1fe77984db08705ac272597cd"
     },
     {
       "path": "verifier/bin/freeze-baseline.mjs",

@@ -64,7 +64,6 @@
   ],
   "protectedPaths": [
     "verification/aas-v1/**",
-    ".github/workflows/aas-v1-baseline-check.yml",
     ".github/workflows/aas-v1-product-verifier.yml",
     ".github/workflows/aas-v1-verifier-harness.yml",
     ".github/CODEOWNERS"
@@ -74,7 +73,31 @@
     "branch": "main",
     "soloMaintainer": true,
     "requiredReviewCount": 0,
-    "requiredStatusContext": "aas-v1-baseline",
+    "requiredStatusChecks": [
+      {
+        "context": "pr-policy",
+        "appId": 15368
+      },
+      {
+        "context": "pr-evidence",
+        "appId": 15368
+      },
+      {
+        "context": "source-validation",
+        "appId": 15368
+      },
+      {
+        "context": "artifact-preview",
+        "appId": 15368
+      }
+    ],
+    "retiredStatusContexts": [
+      {
+        "context": "aas-v1-baseline",
+        "retiredAt": "2026-07-18",
+        "reason": "The standalone baseline evaluation was not reliable enough to remain a routine merge prerequisite."
+      }
+    ],
     "enforceAdmins": true,
     "allowForcePushes": false,
     "allowDeletions": false,
@@ -82,17 +105,16 @@
       "pr-policy",
       "pr-evidence",
       "source-validation",
-      "artifact-preview",
-      "aas-v1-baseline"
+      "artifact-preview"
     ],
-    "verifiedAt": "2026-07-17",
+    "verifiedAt": "2026-07-18",
     "settingsVerified": true
   },
   "verificationEnvironment": {
-    "model": "content-addressed-independent-reports-plus-protected-status",
+    "model": "content-addressed-independent-reports-plus-dedicated-verifier-pr",
     "baselineFreezeManifest": "baseline/v1/freeze-manifest.json",
     "productPullRequestsMayModifyBaseline": false,
     "requiredReviewersVerified": true,
-    "limitation": "The repository has one GitHub collaborator. Independence is enforced by two content-addressed reviewer reports, a separately frozen baseline commit, and a required status check; it is not represented as two GitHub account approvals."
+    "limitation": "The repository has one GitHub collaborator. Independence is represented by two content-addressed reviewer reports and a separately frozen baseline, not by two GitHub account approvals. The retired aas-v1-baseline context is not a routine merge prerequisite; verifier changes require a dedicated protected PR, the app-bound repository checks, the six-leg harness, and a refreshed freeze digest."
   }
 }

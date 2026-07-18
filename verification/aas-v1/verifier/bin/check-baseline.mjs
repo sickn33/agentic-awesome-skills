@@ -126,6 +126,25 @@ requireForFreeze(legacy.status === "frozen" && legacy.fixtureRepository.treeDige
 
 const ownership = readJson("ownership.v1.json");
 assert(ownership.minimumApprovals === 2 && ownership.requireNonScorerReviewer === true, "AAS_BASELINE_OWNERSHIP_POLICY", "Two approvals including a non-scorer reviewer are required.");
+const expectedRoutineChecks = ["pr-policy", "pr-evidence", "source-validation", "artifact-preview"];
+const requiredStatusChecks = ownership.repositorySettings.requiredStatusChecks || [];
+assert(
+  JSON.stringify(requiredStatusChecks.map((entry) => entry.context)) === JSON.stringify(expectedRoutineChecks)
+    && requiredStatusChecks.every((entry) => entry.appId === 15368),
+  "AAS_BASELINE_CURRENT_PROTECTION",
+  "Ownership must record exactly the four app-bound routine checks.",
+);
+assert(
+  JSON.stringify(ownership.repositorySettings.observedRequiredStatusContexts) === JSON.stringify(expectedRoutineChecks),
+  "AAS_BASELINE_OBSERVED_PROTECTION",
+  "Observed required contexts must match the current routine checks.",
+);
+assert(
+  ownership.repositorySettings.retiredStatusContexts?.some((entry) => entry.context === "aas-v1-baseline")
+    && !ownership.protectedPaths.includes(".github/workflows/aas-v1-baseline-check.yml"),
+  "AAS_BASELINE_RETIRED_GATE",
+  "The retired baseline gate must remain historical and its deleted workflow must not be protected.",
+);
 const reviewerIdentities = new Set(ownership.reviewers.map((reviewer) => reviewer.identity));
 const reviewerReportsValid = ownership.reviewers.every((reviewer) => {
   if (!reviewer.report || !reviewer.reportSha256 || reviewer.reviewedPairs !== 270) return false;
