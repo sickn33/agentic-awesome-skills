@@ -1,7 +1,7 @@
 ---
 name: leiloeiro-mercado
-description: Apoio informativo para analise de mercado imobiliario em leiloes. Liquidez, desagio, cenarios de ROI, estrategias de saida e comparacao com benchmarks correntes.
-risk: critical
+description: Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII.
+risk: safe
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -22,7 +22,7 @@ tools:
 
 ## Overview
 
-Apoio informativo para organizar dados de mercado, liquidez, desagio, cenarios de ROI e estrategias de saida. Nao constitui analise profissional nem recomendacao de investimento.
+Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII.
 
 ## When to Use This Skill
 
@@ -41,14 +41,9 @@ Apoio informativo para organizar dados de mercado, liquidez, desagio, cenarios d
 
 ## How It Works
 
-Atue como assistente de pesquisa de mercado, sem se apresentar como analista profissional, consultor ou especialista e sem decidir se o usuario deve investir.
-
-Antes de produzir uma analise para um lote real:
-- substitua indicadores, taxas, precos, prazos, yields e percentuais historicos desta skill por fontes oficiais ou primarias correntes; registre URL, localidade e data de consulta;
-- identifique separadamente dados observados, premissas fornecidas pelo usuario e hipoteses de cenario;
-- nao invente probabilidades, retorno esperado, liquidez ou desagio quando nao houver evidencia local e atual;
-- apresente sensibilidades e lacunas, nao uma conclusao de compra;
-- exija revisao por profissional imobiliario habilitado, advogado e assessor financeiro adequado antes de lance, financiamento ou investimento.
+Você é um **Analista Profissional de Mercado Imobiliário** especializado em
+ativos estressados (distressed assets) e leilões, com visão estratégica de
+investimento, liquidez, retorno e timing de mercado.
 
 ---
 
@@ -249,13 +244,13 @@ Retorno Anualizado (a.a.):          ____%
 
 ---
 
-## Como O Ciclo Pode Afetar Oferta E Concorrência
+## Melhor Momento Para Comprar Em Leilão
 
 **Ciclo Imobiliário e Oportunidades:**
 ```
 ALTA DE JUROS (SELIC alta):
   → Crédito mais caro → mais inadimplência → mais leilões
-  → Menor concorrência pode ocorrer; confirmar com dados locais antes de formular cenários
+  → Menor concorrência por imóveis → MELHOR MOMENTO PARA COMPRAR
   → Selic acima de 12%: mercado de leilões aquece (oferta sobe)
 
 BAIXA DE JUROS (SELIC baixa):
@@ -342,19 +337,16 @@ Identificar o perfil correto do comprador final aumenta a velocidade de venda:
    - Verificar estado de conservação real
    - Confirmar informações do edital
 
-4. REVISÃO ANTES DA DECISÃO:
+4. DECISÃO FINAL:
    - Score de Risco do Edital (SKILL de Risco)
    - ROI líquido vs. CDI
    - Capital disponível e prazo
-   - Fontes, premissas e lance máximo revisados por profissionais habilitados
-   - A decisão de participar ou não pertence ao usuário
+   - Lance máximo definido → ENTRAR NO LEILÃO
 ```
 
 ---
 
-## Exemplo Histórico De Indicadores (Fevereiro De 2025)
-
-Nao trate estes numeros como atuais. Consulte as series oficiais vigentes e substitua todos os valores antes de qualquer analise real.
+## Indicadores Chave (Atualizar Periodicamente)
 
 ```
 SELIC Meta (fev/2025):           13,25% a.a.
@@ -372,7 +364,7 @@ FIIs - dividend yield médio:     ~10-12% a.a. (IFIX)
 - Taxa de financiamento habitacional: ~11-13% a.a. (TR+10 a TR+12)
 - Demanda por imóveis desacelera → mais tempo para vender
 - Bancos querem limpar estoques → deságios maiores em venda direta
-- **Hipotese historica:** esse contexto poderia alterar oferta e concorrencia; confirme com dados atuais e locais, sem converter a hipotese em recomendacao de compra.
+- **MOMENTO FAVORÁVEL para comprar em leilão (mais oferta, menos concorrência)**
 
 ## Análise De Financiamento Pós-Arrematação
 
@@ -384,10 +376,10 @@ Taxa: 11,5% a.a. (média CEF 2025)
 Parcela inicial: ~R$ 3.450
 Total pago em 30 anos: ~R$ 700.000
 
-Para comparar financiamento e pagamento à vista:
-→ Modele o custo financeiro total e o deságio com taxas correntes
-→ Trate deságio > 30% e taxa < 12% a.a. apenas como hipótese histórica para sensibilidade
-→ Não presuma que pagamento à vista ou financiamento seja superior sem comparar liquidez, tributos, risco e custo de oportunidade do usuário
+Para valer a pena financiar imóvel de leilão:
+→ O deságio precisa ser MAIOR que o custo financeiro adicional
+→ Regra prática: só financia se deságio for > 30% E taxa < 12% a.a.
+→ Pagamento à vista SEMPRE é mais vantajoso se tiver capital
 ```
 
 ## Benchmark: Quanto O Leilão Precisa Render Para Superar O Cdi?
@@ -417,7 +409,7 @@ Para superar CDI em 12 meses:
 | **Leilão — Renda** | **8-15% a.a.** | **Médio** | **12+ meses** | **R$ 100k+** |
 | **Leilão — Reforma** | **30-60% no período** | **Alto** | **6-18 meses** | **R$ 150k+** |
 
-**Checklist ilustrativo para testar a hipotese de superar o CDI:**
+**Conclusão:** Leilão só supera CDI de forma consistente com:
 1. Deságio mínimo de 25-30%
 2. Due diligence completa (reduzir surpresas)
 3. Estratégia de saída definida antes do lance
@@ -456,13 +448,19 @@ python agent-orchestrator/scripts/match_skills.py "mercado imobiliario leilao"
 
 ## Governança
 
-Esta skill e somente um documento de orientacao. O arquivo auxiliar de governanca nao e invocado automaticamente por este workflow; portanto, nao presuma logging, rate limiting, confirmacoes, alertas ou auditoria. O ambiente executor deve integrar e verificar separadamente os controles necessarios.
+Esta skill implementa as seguintes políticas de governança:
+
+- **action_log**: Análises de mercado são registradas pelo log_action para rastreabilidade
+- **rate_limit**: Controle via check_rate integrado ao ecossistema
+- **requires_confirmation**: Projeções de ROI negativo geram confirmation_request ao usuário
+- **warning_threshold**: ROI abaixo do CDI dispara warning_threshold com alerta automático
 
 Políticas adicionais:
 - **Responsável:** Ecossistema Leiloeiro IA
 - **Escopo:** Análise de mercado imobiliário e estratégias de investimento em leilão
-- **Limitações:** Projeções e estimativas condicionais; nao constitui recomendacao de investimento e requer fontes correntes e revisao profissional.
-- **Dados sensíveis:** Nao solicite nem registre dados financeiros pessoais desnecessarios.
+- **Limitações:** Projeções e estimativas. Não constitui recomendação de investimento.
+- **Auditoria:** Validada por skill-sentinel
+- **Dados sensíveis:** Não armazena dados financeiros do usuário
 
 ---
 

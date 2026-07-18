@@ -11,7 +11,7 @@
  */
 
 import { parseArgs } from 'node:util';
-import { readFileSync, writeFileSync, statSync } from 'node:fs';
+import { writeFileSync, statSync } from 'node:fs';
 
 // User-Agent for tracking skill usage in Apify analytics
 const USER_AGENT = 'apify-agent-skills/apify-market-research-1.0.0';
@@ -96,7 +96,7 @@ Examples:
 async function startActor(token, actorId, inputJson) {
     // Convert "author/actor" format to "author~actor" for API compatibility
     const apiActorId = actorId.replace('/', '~');
-    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs`;
+    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs?token=${encodeURIComponent(token)}`;
 
     let data;
     try {
@@ -110,7 +110,6 @@ async function startActor(token, actorId, inputJson) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/start_actor`,
         },
         body: JSON.stringify(data),
@@ -136,14 +135,12 @@ async function startActor(token, actorId, inputJson) {
 
 // Poll run status until complete or timeout
 async function pollUntilComplete(token, runId, timeout, interval) {
-    const url = `https://api.apify.com/v2/actor-runs/${runId}`;
+    const url = `https://api.apify.com/v2/actor-runs/${runId}?token=${encodeURIComponent(token)}`;
     const startTime = Date.now();
     let lastStatus = null;
 
     while (true) {
-        const response = await fetch(url, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(url);
         if (!response.ok) {
             const text = await response.text();
             console.error(`Error: Failed to get run status: ${text}`);
@@ -175,11 +172,10 @@ async function pollUntilComplete(token, runId, timeout, interval) {
 
 // Download dataset items
 async function downloadResults(token, datasetId, outputPath, format) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json`;
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
 
     const response = await fetch(url, {
         headers: {
-            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/download_${format}`,
         },
     });
@@ -235,11 +231,10 @@ async function downloadResults(token, datasetId, outputPath, format) {
 
 // Display top 5 results in chat format
 async function displayQuickAnswer(token, datasetId) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json`;
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
 
     const response = await fetch(url, {
         headers: {
-            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/quick_answer`,
         },
     });
@@ -297,7 +292,7 @@ function reportSummary(outputPath, format) {
 
     let count;
     try {
-        const content = readFileSync(outputPath, 'utf-8');
+        const content = require('fs').readFileSync(outputPath, 'utf-8');
         if (format === 'json') {
             const data = JSON.parse(content);
             count = Array.isArray(data) ? data.length : 1;

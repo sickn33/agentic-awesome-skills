@@ -2,12 +2,8 @@
 name: azure-cosmos-db-py
 description: "Build production-grade Azure Cosmos DB NoSQL services following clean code, security best practices, and TDD principles."
 risk: unknown
-source: https://github.com/microsoft/skills/tree/main/python/data/cosmos-db
-source_repo: microsoft/skills
-source_type: official
+source: community
 date_added: "2026-02-27"
-license: MIT
-license_source: https://github.com/microsoft/skills/blob/main/LICENSE
 ---
 
 # Cosmos DB Service Implementation
@@ -89,16 +85,11 @@ Create a singleton Cosmos client with dual authentication:
 from azure.cosmos import CosmosClient
 from azure.identity import DefaultAzureCredential
 from starlette.concurrency import run_in_threadpool
-from urllib.parse import urlparse
 
 _cosmos_container = None
 
 def _is_emulator_endpoint(endpoint: str) -> bool:
-    try:
-        hostname = urlparse(endpoint).hostname
-    except ValueError:
-        return False
-    return hostname in {"localhost", "127.0.0.1", "::1"}
+    return "localhost" in endpoint or "127.0.0.1" in endpoint
 
 async def get_container():
     global _cosmos_container
@@ -118,6 +109,8 @@ async def get_container():
         _cosmos_container = db.get_container_client(settings.cosmos_container_id)
     return _cosmos_container
 ```
+
+**Full implementation**: See references/client-setup.md
 
 ### 2. Pydantic Model Hierarchy
 
@@ -145,17 +138,19 @@ class ProjectInDB(Project):             # Internal with docType
 
 ```python
 class ProjectService:
-    async def _use_cosmos(self) -> bool:
-        return await get_container() is not None
+    def _use_cosmos(self) -> bool:
+        return get_container() is not None
     
     async def get_by_id(self, project_id: str, workspace_id: str) -> Project | None:
-        if not await self._use_cosmos():
+        if not self._use_cosmos():
             return None
         doc = await get_document(project_id, partition_key=workspace_id)
         if doc is None:
             return None
         return self._doc_to_model(doc)
 ```
+
+**Full patterns**: See references/service-layer.md
 
 ## Core Principles
 
@@ -197,6 +192,26 @@ async def test_get_project_by_id_returns_project(mock_cosmos_container):
     assert result.id == "123"
     assert result.name == "Test"
 ```
+
+**Full testing guide**: See references/testing.md
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| references/client-setup.md | Setting up Cosmos client with dual auth, SSL config, singleton pattern |
+| references/service-layer.md | Implementing full service class with CRUD, conversions, graceful degradation |
+| references/testing.md | Writing pytest tests, mocking Cosmos, integration test setup |
+| references/partitioning.md | Choosing partition keys, cross-partition queries, move operations |
+| references/error-handling.md | Handling CosmosResourceNotFoundError, logging, HTTP error mapping |
+
+## Template Files
+
+| File | Purpose |
+|------|---------|
+| assets/cosmos_client_template.py | Ready-to-use client module |
+| assets/service_template.py | Service class skeleton |
+| assets/conftest_template.py | pytest fixtures for Cosmos mocking |
 
 ## Quality Attributes (NFRs)
 

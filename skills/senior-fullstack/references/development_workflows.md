@@ -1,20 +1,103 @@
-# Full-Stack Change and Deployment Gate
+# Development Workflows
 
-## Change review
+## Overview
 
-1. Define acceptance criteria and affected UI, API, data, job, and integration surfaces.
-2. Preview the exact diff and generated or migrated artifacts.
-3. Review permissions, input handling, secrets, privacy, compatibility, failure states, and rollback.
-4. Run the project's configured formatting, type, test, security, build, and migration checks; record skipped checks as unknown.
+This reference guide provides comprehensive information for senior fullstack.
 
-## Before mutation or deployment
+## Patterns and Practices
 
-Require:
+### Pattern 1: Best Practice Implementation
 
-- exact repository, account, environment, cluster context, and namespace;
-- explicit authorization and approval for the exact change;
-- a reviewed dry run, diff, migration plan, or infrastructure plan;
-- preservation of unrelated work plus backup or reversible migration steps;
-- rollback commands, owner, abort signals, and post-change checks.
+**Description:**
+Detailed explanation of the pattern.
 
-If any item is missing, stop after producing a plan. Repository or credential access does not authorize file writes, migrations, package changes, infrastructure changes, or deployment.
+**When to Use:**
+- Scenario 1
+- Scenario 2
+- Scenario 3
+
+**Implementation:**
+```typescript
+// Example code implementation
+export class Example {
+  // Implementation details
+}
+```
+
+**Benefits:**
+- Benefit 1
+- Benefit 2
+- Benefit 3
+
+**Trade-offs:**
+- Consider 1
+- Consider 2
+- Consider 3
+
+### Pattern 2: Advanced Technique
+
+**Description:**
+Another important pattern for senior fullstack.
+
+**Implementation:**
+```typescript
+// Advanced example
+async function advancedExample() {
+  // Code here
+}
+```
+
+## Guidelines
+
+### Code Organization
+- Clear structure
+- Logical separation
+- Consistent naming
+- Proper documentation
+
+### Performance Considerations
+- Optimization strategies
+- Bottleneck identification
+- Monitoring approaches
+- Scaling techniques
+
+### Security Best Practices
+- Input validation
+- Authentication
+- Authorization
+- Data protection
+
+## Common Patterns
+
+### Pattern A
+Implementation details and examples.
+
+### Pattern B
+Implementation details and examples.
+
+### Pattern C
+Implementation details and examples.
+
+## Anti-Patterns to Avoid
+
+### Anti-Pattern 1
+What not to do and why.
+
+### Anti-Pattern 2
+What not to do and why.
+
+## Tools and Resources
+
+### Recommended Tools
+- Tool 1: Purpose
+- Tool 2: Purpose
+- Tool 3: Purpose
+
+### Further Reading
+- Resource 1
+- Resource 2
+- Resource 3
+
+## Conclusion
+
+Key takeaways for using this reference guide effectively.

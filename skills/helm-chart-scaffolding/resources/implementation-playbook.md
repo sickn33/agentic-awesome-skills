@@ -239,13 +239,6 @@ Create a default fully qualified app name.
 {{- end }}
 
 {{/*
-Chart name and version for the helm.sh/chart label.
-*/}}
-{{- define "my-app.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Common labels
 */}}
 {{- define "my-app.labels" -}}
@@ -291,9 +284,7 @@ postgresql:
   auth:
     database: myapp
     username: myapp
-    # Provision this Secret outside the chart or through an approved
-    # secret-management workflow. Never commit a default password.
-    existingSecret: myapp-postgresql-credentials
+    password: changeme
   primary:
     persistence:
       enabled: true
@@ -307,8 +298,8 @@ postgresql:
 # Lint the chart
 helm lint my-app/
 
-# Client-side dry run; hide rendered Secret manifests from output
-helm install my-app ./my-app --dry-run=client --debug --hide-secret
+# Dry-run installation
+helm install my-app ./my-app --dry-run --debug
 
 # Template rendering
 helm template my-app ./my-app
@@ -361,7 +352,6 @@ aws s3 sync . s3://my-helm-charts/ --exclude "*" --include "*.tgz" --include "in
 ```bash
 helm repo add my-repo https://charts.example.com
 helm repo update
-# Example only. Complete the live-change gate below before running it.
 helm install my-app my-repo/my-app
 ```
 
@@ -414,20 +404,8 @@ postgresql:
 
 **Install with environment:**
 ```bash
-# Do not run this until the live-change gate below is complete.
-helm upgrade --install my-app ./my-app -f values-prod.yaml --namespace production
+helm install my-app ./my-app -f values-prod.yaml --namespace production
 ```
-
-### Live-change gate
-
-Validation does not authorize a cluster change. Before an install or upgrade:
-
-1. Record the exact kube context, namespace, release name, chart revision, and values files. Stop if any target is ambiguous.
-2. Run local `helm lint` and `helm template`; use `helm install --dry-run=client --hide-secret` when install semantics must be checked.
-3. Produce and review a redacted diff against the named release, for example with `helm diff upgrade <release> <chart> --kube-context <context> --namespace <namespace> -f <values-file> --suppress-secrets`. Never print Secret values into the diff or logs.
-4. Record the current Helm revision, required data backups, health checks, abort thresholds, and the exact `helm rollback <release> <revision> --namespace <namespace>` recovery command.
-5. Obtain immediate explicit approval naming the live action, context, namespace, release, chart revision, values files, reviewed diff, and rollback plan. General approval to build or validate the chart is insufficient.
-6. Only after approval, perform the exact approved action. Verify the defined health checks and roll back if an abort threshold is breached.
 
 ### 10. Implement Hooks and Tests
 
@@ -548,12 +526,9 @@ helm dependency list
 
 **Installation failures:**
 ```bash
-# Local diagnostics only; does not authorize a live install
-helm install my-app ./my-app --dry-run=client --debug --hide-secret
+helm install my-app ./my-app --dry-run --debug
 kubectl get events --sort-by='.lastTimestamp'
 ```
-
-The `kubectl` diagnostic reads the current cluster. Confirm the exact context and namespace before running it, and do not run it as part of local-only validation.
 
 ## Reference Files
 

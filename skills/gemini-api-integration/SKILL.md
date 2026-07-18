@@ -1,6 +1,6 @@
 ---
 name: gemini-api-integration
-description: "Use when integrating the current Google Gemini API with the Google GenAI SDKs, including model discovery, multimodal input, streaming, function calling, and production safeguards."
+description: "Use when integrating Google Gemini API into projects. Covers model selection, multimodal inputs, streaming, function calling, and production best practices."
 risk: safe
 source: community
 date_added: "2026-03-04"
@@ -10,118 +10,186 @@ date_added: "2026-03-04"
 
 ## Overview
 
-Integrate Gemini through Google's current GenAI SDKs. Verify the SDK and model lifecycle in the official Gemini API documentation before implementation because model aliases, availability, quotas, and request fields change over time.
+This skill guides AI agents through integrating Google Gemini API into applications — from basic text generation to advanced multimodal, function calling, and streaming use cases. It covers the full Gemini SDK lifecycle with production-grade patterns.
 
-## When to Use
+## When to Use This Skill
 
-- Set up Gemini in Node.js/TypeScript or Python.
-- Add text, multimodal, streaming, chat, or function-calling behavior.
-- Select an available model for a latency, cost, modality, and quality requirement.
-- Diagnose authentication, quota, safety, or request failures.
+- Use when setting up Gemini API for the first time in a Node.js, Python, or browser project
+- Use when implementing multimodal inputs (text + image/audio/video)
+- Use when adding streaming responses to improve perceived latency
+- Use when implementing function calling / tool use with Gemini
+- Use when optimizing model selection (Flash vs Pro vs Ultra) for cost and performance
+- Use when debugging Gemini API errors, rate limits, or quota issues
 
-## 1. Verify the Current Surface
+## Step-by-Step Guide
 
-Before writing code:
+### 1. Installation & Setup
 
-1. Check the official [Gemini API libraries](https://ai.google.dev/gemini-api/docs/libraries), [models](https://ai.google.dev/gemini-api/docs/models), and [deprecations](https://ai.google.dev/gemini-api/docs/deprecations) pages.
-2. Select a model that is available to the user's API key and supports the required modality and methods.
-3. Put that exact ID in `GEMINI_MODEL`; do not silently substitute a retired or preview model.
-4. Record the SDK version and model ID in tests or deployment metadata.
-
-Do not use the legacy `@google/generative-ai` or `google-generativeai` packages for new work.
-
-## 2. Install and Configure
-
+**Node.js / TypeScript:**
 ```bash
-npm install @google/genai
-```
-
-```bash
-python -m pip install google-genai
-```
-
-Provide `GEMINI_API_KEY` and `GEMINI_MODEL` through the deployment's secret/configuration system. Never place keys in source, shell history, logs, URLs, or client-side bundles. Browser use requires a trusted server-side proxy unless the user has explicitly designed an ephemeral-token flow supported by Google.
-
-## 3. Basic Generation
-
-**Node.js:**
-
-```javascript
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const response = await ai.models.generateContent({
-  model: process.env.GEMINI_MODEL,
-  contents: "Explain async/await in JavaScript.",
-});
-console.log(response.text);
+npm install @google/generative-ai
 ```
 
 **Python:**
+```bash
+pip install google-generativeai
+```
 
+Set your API key securely:
+```bash
+read -rsp "Gemini API key: " GEMINI_API_KEY
+echo
+export GEMINI_API_KEY
+```
+
+### 2. Basic Text Generation
+
+**Node.js:**
+```javascript
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+const result = await model.generateContent("Explain async/await in JavaScript");
+console.log(result.response.text());
+```
+
+**Python:**
 ```python
+import google.generativeai as genai
 import os
-from google import genai
 
-client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-response = client.models.generate_content(
-    model=os.environ["GEMINI_MODEL"],
-    contents="Explain async/await in JavaScript.",
-)
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+response = model.generate_content("Explain async/await in JavaScript")
 print(response.text)
 ```
 
-Fail clearly when either environment variable is missing. Add a small live integration test in a non-production project; do not rely only on mocked request shapes.
-
-## 4. Streaming and Multimodal Input
+### 3. Streaming Responses
 
 ```javascript
-const stream = await ai.models.generateContentStream({
-  model: process.env.GEMINI_MODEL,
-  contents: "Draft a concise release note.",
-});
+const result = await model.generateContentStream("Write a detailed blog post about AI");
 
-for await (const chunk of stream) {
-  if (chunk.text) process.stdout.write(chunk.text);
+for await (const chunk of result.stream) {
+  process.stdout.write(chunk.text());
 }
 ```
 
-For images or other files, follow the current SDK's `inlineData` or Files API example for that modality. Validate MIME type and size, cap uploads, and avoid logging raw user files. Use inline data only within the documented request limit; use the Files API when the current documentation requires it.
+### 4. Multimodal Input (Text + Image)
 
-## 5. Function Calling
+```javascript
+import fs from "fs";
 
-Treat a model function call as an untrusted proposal, not authorization:
+const imageData = fs.readFileSync("screenshot.png");
+const imagePart = {
+  inlineData: {
+    data: imageData.toString("base64"),
+    mimeType: "image/png",
+  },
+};
 
-1. Declare a narrow JSON schema with required fields and constrained values.
-2. Send the prompt and tool declaration through the current SDK request shape.
-3. Parse the returned function call and validate every argument server-side.
-4. Enforce authentication, authorization, rate limits, and user confirmation for consequential actions.
-5. Execute only an allowlisted local handler. Never evaluate model-generated code or shell text.
-6. Return the structured function result to the same conversation using the current SDK's function-response format.
-7. Request the final natural-language response and test both success and denial paths.
+const result = await model.generateContent(["Describe this image:", imagePart]);
+console.log(result.response.text());
+```
 
-Use the official [function-calling guide](https://ai.google.dev/gemini-api/docs/function-calling) for the installed SDK version; do not copy request fields from the legacy SDK.
+### 5. Function Calling / Tool Use
 
-## 6. Production Checks
+```javascript
+const tools = [{
+  functionDeclarations: [{
+    name: "get_weather",
+    description: "Get current weather for a city",
+    parameters: {
+      type: "OBJECT",
+      properties: {
+        city: { type: "STRING", description: "City name" },
+      },
+      required: ["city"],
+    },
+  }],
+}];
 
-- Set explicit timeouts, cancellation, request-size limits, and bounded retries with jitter.
-- Retry only transient failures such as rate limits or service unavailability; honor server retry hints.
-- Do not retry invalid requests, authentication failures, or blocked content indefinitely.
-- Log request IDs, latency, model ID, token usage, and error class without prompts, keys, or sensitive payloads.
-- Evaluate safety behavior and tool-call authorization with adversarial tests.
-- Pin the SDK version, monitor deprecations, and retest before changing model aliases.
-- Obtain approval before changing production quotas, credentials, billing, safety settings, or deployed model IDs.
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro", tools });
+const result = await model.generateContent("What's the weather in Mumbai?");
+
+const call = result.response.functionCalls()?.[0];
+if (call) {
+  // Execute the actual function
+  const weatherData = await getWeather(call.args.city);
+  // Send result back to model
+}
+```
+
+### 6. Multi-turn Chat
+
+```javascript
+const chat = model.startChat({
+  history: [
+    { role: "user", parts: [{ text: "You are a helpful coding assistant." }] },
+    { role: "model", parts: [{ text: "Sure! I'm ready to help with code." }] },
+  ],
+});
+
+const response = await chat.sendMessage("How do I reverse a string in Python?");
+console.log(response.response.text());
+```
+
+### 7. Model Selection Guide
+
+| Model | Best For | Speed | Cost |
+|-------|----------|-------|------|
+| `gemini-1.5-flash` | High-throughput, cost-sensitive tasks | Fast | Low |
+| `gemini-1.5-pro` | Complex reasoning, long context | Medium | Medium |
+| `gemini-2.0-flash` | Latest fast model, multimodal | Very Fast | Low |
+| `gemini-2.0-pro` | Most capable, advanced tasks | Slow | High |
+
+## Best Practices
+
+- ✅ **Do:** Use `gemini-1.5-flash` for most tasks — it's fast and cost-effective
+- ✅ **Do:** Always stream responses for user-facing chat UIs to reduce perceived latency
+- ✅ **Do:** Store API keys in environment variables, never hard-code them
+- ✅ **Do:** Implement exponential backoff for rate limit (429) errors
+- ✅ **Do:** Use `systemInstruction` to set persistent model behavior
+- ❌ **Don't:** Use `gemini-pro` for simple tasks — Flash is cheaper and faster
+- ❌ **Don't:** Send large base64 images inline for files > 20MB — use File API instead
+- ❌ **Don't:** Ignore safety ratings in responses for production apps
+
+## Error Handling
+
+```javascript
+try {
+  const result = await model.generateContent(prompt);
+  return result.response.text();
+} catch (error) {
+  if (error.status === 429) {
+    // Rate limited — wait and retry with exponential backoff
+    await new Promise(r => setTimeout(r, 2 ** retryCount * 1000));
+  } else if (error.status === 400) {
+    // Invalid request — check prompt or parameters
+    console.error("Invalid request:", error.message);
+  } else {
+    throw error;
+  }
+}
+```
 
 ## Troubleshooting
 
-- **Authentication failure:** verify the secret source, project, key restrictions, and server environment without printing the key.
-- **Model not found:** list models available to the credential and compare the live lifecycle documentation; do not guess a replacement.
-- **Quota exhausted:** inspect the relevant project quota and billing state, then queue or back off. Do not create extra credentials to bypass limits.
-- **Blocked response:** inspect structured safety feedback and application policy. Do not weaken safeguards automatically.
-- **Request rejected:** compare the installed SDK version and current method schema, especially when migrating legacy examples.
+**Problem:** `API_KEY_INVALID` error
+**Solution:** Ensure `GEMINI_API_KEY` environment variable is set and the key is active in Google AI Studio.
+
+**Problem:** Response blocked by safety filters
+**Solution:** Check `result.response.promptFeedback.blockReason` and adjust your prompt or safety settings.
+
+**Problem:** Slow response times
+**Solution:** Switch to `gemini-1.5-flash` and enable streaming. Consider caching repeated prompts.
+
+**Problem:** `RESOURCE_EXHAUSTED` (quota exceeded)
+**Solution:** Check your quota in Google Cloud Console. Implement request queuing and exponential backoff.
 
 ## Limitations
-
-- Availability and pricing depend on region, project, account, and model lifecycle.
-- This skill does not authorize external tool execution, production changes, quota purchases, or handling of regulated data.
-- Validate current official documentation and run environment-specific tests before deployment.
+- Use this skill only when the task clearly matches the scope described above.
+- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
