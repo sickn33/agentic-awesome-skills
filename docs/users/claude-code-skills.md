@@ -63,7 +63,7 @@ test -d .claude/skills || test -d ~/.claude/skills
 With AAS Core configured:
 
 ```text
-Inspect this security-review project, search and read the complete AAS catalog, choose the exact skills you judge most useful, and use compose_stack to propose aas-stack.json. Preview the plan without applying it.
+Inspect this security-review project, search and read the complete AAS catalog, and choose the exact skill IDs you judge most useful. Use compose_stack with a project profile, show me the schema 2 aas-stack.json, inspect it, and preview the plan without applying it.
 ```
 
 After installing or activating a chosen skill, direct invocation still works:

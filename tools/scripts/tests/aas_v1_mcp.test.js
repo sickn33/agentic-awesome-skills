@@ -100,6 +100,14 @@ test("MCP exposes the five agent-owned selection tools and one skill resource te
     "inspect_stack",
     "diff_stack",
   ]);
+  for (const definition of tools.result.tools) {
+    assert.deepEqual(definition.annotations, {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    });
+  }
   assert.equal(tools.result._meta.catalog.digest.startsWith("sha256-"), true);
   assert.equal(tools.result._meta.catalogSchemaVersion, "2.0.0");
   assert.equal(Object.hasOwn(tools.result._meta, "metadataSchemaVersion"), false);
@@ -110,6 +118,8 @@ test("MCP exposes the five agent-owned selection tools and one skill resource te
   assert.equal(searchDefinition.inputSchema.properties.cursor.minimum, 0);
   assert.equal(searchDefinition.inputSchema.properties.limit.maximum, 50);
   assert.equal(Object.hasOwn(searchDefinition.inputSchema.properties, "target"), false);
+  assert.match(searchDefinition.description, /stable catalog order/);
+  assert.match(searchDefinition.description, /without relevance scores, ranking, recommendations/);
 
   const composeDefinition = tools.result.tools.find((entry) => entry.name === "compose_stack");
   assert.deepEqual(composeDefinition.inputSchema.required, ["profile", "skillIds"]);
@@ -157,6 +167,10 @@ test("empty search paginates every catalog ID and every result is selectable", a
     assert.equal(response.result.isError, false);
     assert.equal(response.result.structuredContent.ok, true);
     assert.equal(response.result.structuredContent.totalMatches, expected.length);
+    for (const result of response.result.structuredContent.results) {
+      assert.equal(Object.hasOwn(result, "score"), false);
+      assert.equal(Object.hasOwn(result, "rank"), false);
+    }
     ids.push(...response.result.structuredContent.results.map((skill) => skill.id));
     cursor = response.result.structuredContent.nextCursor;
   } while (cursor !== null);
@@ -185,6 +199,8 @@ test("search, get, resource read, explicit composition, inspection, and unavaila
     params: { name: "search_skills", arguments: { query: "android ui", limit: 3 }, _meta: { progressToken: "codex-search-1" } },
   });
   assert.equal(search.result.isError, false);
+  assert.equal(search.result.structuredContent.results.every((result) => !Object.hasOwn(result, "score")), true);
+  assert.equal(search.result.structuredContent.results.every((result) => !Object.hasOwn(result, "rank")), true);
   const skillIds = search.result.structuredContent.results.slice(0, 2).map((skill) => skill.id);
   assert.equal(skillIds.length, 2);
 

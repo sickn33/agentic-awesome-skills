@@ -63,6 +63,31 @@ test("empty-query pagination enumerates the complete canonical catalog exactly o
   assert.equal(catalog.skills.length, canonicalSkillIds.length);
 });
 
+test("search retrieval preserves catalog order without scores or relevance ranking", () => {
+  const catalog = {
+    skills: [
+      { id: "z-first", name: "Z first", category: "test", searchTokens: ["alpha"], description: "", tags: [], triggers: [] },
+      { id: "a-many", name: "A many", category: "test", searchTokens: ["alpha", "beta"], description: "", tags: [], triggers: [] },
+      { id: "m-second", name: "M second", category: "test", searchTokens: ["beta"], description: "", tags: [], triggers: [] },
+      { id: "unrelated", name: "Unrelated", category: "test", searchTokens: ["gamma"], description: "", tags: [], triggers: [] },
+    ],
+  };
+
+  const firstPage = core.searchSkills(catalog, { query: "alpha beta", cursor: 0, limit: 2 });
+  const secondPage = core.searchSkills(catalog, { query: "alpha beta", cursor: firstPage.nextCursor, limit: 2 });
+  assert.deepEqual(firstPage.results.map((entry) => entry.id), ["z-first", "a-many"]);
+  assert.deepEqual(secondPage.results.map((entry) => entry.id), ["m-second"]);
+  assert.equal(firstPage.totalMatches, 3);
+  assert.equal(secondPage.nextCursor, null);
+  for (const result of [...firstPage.results, ...secondPage.results]) {
+    assert.equal(Object.hasOwn(result, "score"), false);
+    assert.equal(Object.hasOwn(result, "rank"), false);
+  }
+
+  const exact = core.searchSkills(catalog, { query: "a-many", limit: 50 });
+  assert.deepEqual(exact.results.map((entry) => entry.id), ["a-many"]);
+});
+
 test("every canonical skill is directly gettable, exactly searchable, and agent-composable", () => {
   const catalog = core.loadBundledCatalog();
 
@@ -71,7 +96,10 @@ test("every canonical skill is directly gettable, exactly searchable, and agent-
     assert.equal(skill.id, id);
 
     const search = core.searchSkills(catalog, { query: id, limit: 1 });
+    assert.equal(search.totalMatches, 1);
     assert.equal(search.results[0]?.id, id, `exact search did not return ${id} first`);
+    assert.equal(Object.hasOwn(search.results[0], "score"), false);
+    assert.equal(Object.hasOwn(search.results[0], "rank"), false);
 
     const composed = core.composeStack(catalog, selection([id]));
     assert.equal(composed.ok, true);
@@ -114,6 +142,8 @@ test("Core exposes descriptive catalog data and agent selections without policy 
     "proposedStack",
     "discoveryCandidates",
     "exclusions",
+    "score",
+    "rank",
   ]);
 
   assert.equal(core.recommendStack, undefined);

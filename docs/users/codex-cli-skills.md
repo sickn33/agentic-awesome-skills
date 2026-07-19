@@ -21,7 +21,7 @@ Configure AAS Core for Codex, then describe the real task instead of manually se
 ## Why use this repo for Codex CLI
 
 - It gives Codex native, complete local catalog discovery through MCP.
-- It keeps the agent's exact selection, stack intent, validation, and planning inspectable.
+- It keeps the agent's exact selection, project profile, validation, and planning inspectable.
 - It separates read-only agent tools from approval-gated CLI mutations.
 - It is strong for local repo work where you want to move from planning to implementation to verification without changing libraries.
 - It includes both general-purpose engineering skills and deeper specialist tracks.
@@ -62,7 +62,7 @@ test -d .codex/skills || test -d ~/.codex/skills
 With AAS Core configured:
 
 ```text
-Use AAS to recommend the smallest skill stack for designing and testing this parser change. Show me the proposed aas-stack.json and preview the plan; do not apply it.
+Inspect this parser project, search and read the complete AAS catalog, and choose the exact skill IDs you judge most useful for designing and testing the change. Use compose_stack with a project profile, show me the schema 2 aas-stack.json, inspect it, and preview the plan; do not apply it.
 ```
 
 After installing or activating a chosen skill, direct invocation still works:

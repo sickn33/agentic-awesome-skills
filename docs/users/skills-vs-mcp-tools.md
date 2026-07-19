@@ -3,9 +3,9 @@
 The short version is:
 
 - **Skills** are reusable `SKILL.md` playbooks that tell an AI assistant how to execute a workflow.
-- **AAS MCP** is the local, read-only interface through which an agent searches the verified AAS catalog, inspects evidence, and composes a proposed stack.
+- **AAS MCP** is the local, read-only interface through which an agent retrieves the verified AAS catalog without ranking, inspects evidence, and records its exact selected IDs in a proposed stack.
 - **Other MCP tools** connect an assistant to external systems such as APIs, databases, browsers, or hosted services.
-- **The `aas` CLI** validates durable stack intent and previews exact lifecycle operations under human control.
+- **The `aas` CLI** validates the durable project profile and agent-selected stack, then previews exact lifecycle operations under human control.
 
 These surfaces are complementary. AAS Core connects them around the approved `aas-stack.json` manifest.
 

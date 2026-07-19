@@ -8,8 +8,8 @@ After configuring the local AAS MCP, ask your agent to inspect the repository an
 
 ```text
 Inspect this repository, search and read the complete AAS catalog, and choose the
-exact skills you judge most useful. Use compose_stack to propose aas-stack.json;
-do not apply it.
+exact skill IDs you judge most useful. Use compose_stack with a project profile,
+show me the schema 2 aas-stack.json, inspect it, and do not apply it.
 ```
 
 The agent should use `search_skills` and `get_skill` across the complete catalog, choose the exact IDs itself, call `compose_stack`, then check the proposal with `inspect_stack` before presenting it. Review the resulting `aas-stack.json`, validate it with `aas stack validate`, and use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
@@ -22,7 +22,7 @@ Selection belongs to the coding agent. AAS MCP does not inspect the repository i
 
 ## Alternative workflow: direct skill installation
 
-If you came in through a **Claude Code** or **Codex** plugin instead of AAS Core or a full library install, invoke individual skills in prompts. Plugins ship a fixed plugin-safe subset; AAS Core instead composes a project stack from the verified catalog and records it in `aas-stack.json`. See [plugins.md](plugins.md) for the distribution model.
+If you came in through a **Claude Code** or **Codex** plugin instead of AAS Core or a full library install, invoke individual skills in prompts. Plugins ship a fixed plugin-safe subset; AAS Core instead validates and records the exact stack the agent selected from the verified catalog in `aas-stack.json`. See [plugins.md](plugins.md) for the distribution model.
 
 ### What direct distribution provides
 

@@ -10,9 +10,9 @@ import type { CategoryStats, SyncMessage } from '../types';
 import { buildHomeMeta, getHomeFaqItems } from '../utils/seo';
 
 const conceptCards = [
-  { title: 'AAS Core preview', body: 'The local control plane that turns intent into an explainable skill stack and immutable plan preview.' },
-  { title: 'Local MCP', body: 'The agent-facing tools for search, inspection, recommendation, and stack comparison.' },
-  { title: 'Catalog', body: 'The evidence-backed source AAS Core uses to select exact skills.' },
+  { title: 'AAS Core preview', body: 'The local boundary that validates an agent-selected skill stack and immutable plan preview.' },
+  { title: 'Local MCP', body: 'The agent-facing tools for neutral catalog retrieval, inspection, composition, and stack comparison.' },
+  { title: 'Catalog', body: 'The complete evidence-backed source the coding agent searches before selecting exact skills.' },
   { title: 'Workbench', body: 'A browser-local review surface for stack manifests and immutable plans.' },
   { title: 'Plugins', body: 'Focused distributions for users who prefer a packaged domain surface.' },
 ] as const;
@@ -129,8 +129,8 @@ export function Home(): React.ReactElement {
       <div className="catalog-content">
         <section className="catalog-hero">
           <h1>AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients</h1>
-          <p><strong>Discover. Recommend. Validate. Preview.</strong></p>
-          <p>Turn intent into an explainable <code>aas-stack.json</code> and immutable plan preview without target writes, backed by {catalogCountLabel} cataloged skills.</p>
+          <p><strong>Search. Choose. Validate. Preview.</strong></p>
+          <p>Let your coding agent choose exact IDs, preserve its project profile in <code>aas-stack.json</code>, and preview an immutable plan without target writes, backed by {catalogCountLabel} cataloged skills.</p>
 
           <label className="catalog-search">
             <span className="sr-only">Search skills</span>

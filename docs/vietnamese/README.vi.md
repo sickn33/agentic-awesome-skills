@@ -2,7 +2,7 @@
 
 > **Ghép stack kỹ năng cục bộ, xác định cho coding agent: từ hồ sơ dự án tường minh đến kế hoạch có thể xem lại trước mọi thay đổi trên target.**
 
-Codex hoặc Claude tự kiểm tra dự án; AAS không quét repository. Agent gửi một hồ sơ tường minh tới AAS MCP cục bộ, chỉ đọc. AAS Core đánh giá hồ sơ và policy dựa trên catalog cục bộ đã xác minh, rồi agent đề xuất `aas-stack.json`; CLI xác thực manifest và tạo kế hoạch preview bất biến trước khi thay đổi kỹ năng.
+Codex hoặc Claude tự kiểm tra dự án; AAS không quét repository. Agent tìm kiếm catalog cục bộ đầy đủ theo thứ tự ổn định, tự đánh giá kết quả không có điểm số hay xếp hạng, rồi gửi `profile` cùng chính xác các ID đã chọn tới `compose_stack`. AAS Core ghi nhận lựa chọn trong `aas-stack.json` schema 2; CLI xác thực manifest và tạo kế hoạch preview bất biến trước khi thay đổi kỹ năng.
 
 > **Ranh giới phát hành:** Gói npm 14.6.0 đã phát hành trước AAS Core và không thể dùng để bootstrap Core. Các gói hỗ trợ Core bắt đầu từ dòng 15.x; chỉ dùng một phiên bản chính xác có release notes tuyên bố rõ rằng nó bao gồm Core. Luồng preview được hỗ trợ dừng sau khi xem kế hoạch; `apply` và `recover` vẫn mang tính thử nghiệm. [Tìm hiểu AAS Core](AAS_CORE.vi.md).
 
@@ -15,7 +15,7 @@ Codex hoặc Claude tự kiểm tra dự án; AAS không quét repository. Agent
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-DeepMind-red)](https://github.com/sickn33/agentic-awesome-skills)
 
-Catalog gồm **1,967+ kỹ năng `SKILL.md`**, plugin chuyên biệt, bundle, workflow và installer trực tiếp vẫn rất quan trọng. Chúng là lớp nội dung, tuyển chọn, phân phối và tương thích xung quanh AAS Core, không phải sản phẩm chính cạnh tranh với Core:
+Catalog gồm **1,968+ kỹ năng `SKILL.md`**, plugin chuyên biệt, bundle, workflow và installer trực tiếp vẫn rất quan trọng. Chúng là lớp nội dung, tuyển chọn, phân phối và tương thích xung quanh AAS Core, không phải sản phẩm chính cạnh tranh với Core:
 
 - 🟣 **Claude Code** (Anthropic CLI)
 - 🔵 **Gemini CLI** (Google DeepMind)

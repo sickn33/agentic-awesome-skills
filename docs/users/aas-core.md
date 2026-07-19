@@ -48,19 +48,19 @@ Give the agent the desired outcome and constraints, and leave selection judgment
 ```text
 Inspect this repository. Search and read the complete local AAS catalog, then
 choose the exact skills you judge most useful for this project. Use compose_stack
-to validate and pin those IDs in aas-stack.json, then use inspect_stack before
-presenting it. Do not install or apply anything.
+with a project profile to validate and pin those IDs in a schema 2 aas-stack.json,
+then use inspect_stack before presenting it. Do not install or apply anything.
 ```
 
 The local MCP exposes these read-only tools:
 
-- `search_skills` — search every skill in the verified local catalog;
+- `search_skills` — retrieve deterministic, paginated matches from every skill in the verified local catalog without scores or ranking;
 - `get_skill` — inspect one skill and optionally read its full content;
 - `compose_stack` — validate the agent-selected IDs and produce the pinned stack shape;
 - `inspect_stack` — validate and explain a proposed manifest;
 - `diff_stack` — compare manifests using verified local catalogs.
 
-Metadata returned by search or inspection is informational context. Core does not use risk, source, setup, compatibility, review, or evidence metadata to rank, exclude, or disable a skill.
+Search results use a stable catalog order and contain no relevance score, recommendation, or preferred ordering. Codex or Claude evaluates the returned candidates semantically and chooses exact IDs. Metadata returned by search or inspection is informational context; Core does not use risk, source, setup, compatibility, review, or evidence metadata to rank, exclude, or disable a skill.
 
 MCP calls do not install or remove skills, update catalogs, edit host configuration, or apply a stack. Full skill text is returned only when requested and remains marked as untrusted content.
 
@@ -70,7 +70,7 @@ MCP calls do not install or remove skills, update catalogs, edit host configurat
 
 ```json
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "name": "project-stack",
   "catalog": {
     "package": "agentic-awesome-skills",
@@ -78,14 +78,20 @@ MCP calls do not install or remove skills, update catalogs, edit host configurat
     "integrity": "sha256-..."
   },
   "targets": [{ "host": "codex", "scope": "project" }],
-  "intent": { "goals": ["build", "test"] },
+  "profile": {
+    "goals": ["build", "test"],
+    "projectType": "web application",
+    "languages": ["typescript"],
+    "frameworks": ["react"],
+    "constraints": ["preview only"]
+  },
   "skills": [
     { "id": "example-skill" }
   ]
 }
 ```
 
-The manifest pins catalog identity, targets, goals, and exact skill IDs. It intentionally has no selection policy: Core validates identity and structure but does not overrule the agent's choice because metadata is missing, incomplete, or cautionary.
+The manifest pins catalog identity, targets, the project profile, and exact agent-selected skill IDs. It intentionally has no selection policy: Core validates identity and structure but does not overrule the agent's choice because metadata is missing, incomplete, or cautionary.
 
 ## Validate and preview the plan
 

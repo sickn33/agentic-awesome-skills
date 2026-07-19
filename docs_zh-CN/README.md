@@ -3,11 +3,11 @@
 
 > **面向编码代理的本地、确定性技能栈编排：从显式项目配置文件到任何目标变更前可审查的计划。**
 
-Codex 或 Claude 使用自身能力检查项目；AAS 不会扫描项目。代理向本地、只读的 AAS MCP 发送显式配置文件，AAS Core 根据经过验证的本地目录和策略返回可解释的建议。代理提出 `aas-stack.json`，随后 `aas` CLI 在任何技能变更前验证该清单并生成不可变的预览计划。
+Codex 或 Claude 使用自身能力检查项目；AAS 不会扫描项目。代理通过本地、只读的 AAS MCP 搜索完整目录，自行评估无分数、无排名的稳定分页结果，再把 `profile` 和精确的已选技能 ID 交给 `compose_stack`。AAS Core 将选择记录为 schema 2 的 `aas-stack.json`，随后 `aas` CLI 在任何技能变更前验证该清单并生成不可变的预览计划。
 
 > **发布边界：** 14.6.0 npm 包早于 AAS Core。支持 Core 的包从 15.x 系列开始，并且必须使用发布说明明确声明包含 Core 的精确版本。当前支持的预览路径在检查计划后停止；`apply` 和 `recover` 仍是实验功能。[了解 AAS Core](users/aas-core.md)。
 
-1,967+ 个 `SKILL.md`、专用插件、捆绑包、工作流和直接安装器仍然重要；它们是 AAS Core 周围的内容、策展、分发和兼容层，而不是并列的主要产品。
+1,968+ 个 `SKILL.md`、专用插件、捆绑包、工作流和直接安装器仍然重要；它们是 AAS Core 周围的内容、策展、分发和兼容层，而不是并列的主要产品。
 
 **从这里开始：** [AAS Core](users/aas-core.md) · [为仓库加星](https://github.com/sickn33/agentic-awesome-skills/stargazers) · [1 分钟安装](#installation) · [选择你的工具](#choose-your-tool) · [按工具查看最佳技能](#best-skills-by-tool) · [捆绑包](users/bundles.md) · [工作流](users/workflows.md)
 

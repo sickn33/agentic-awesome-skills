@@ -6,7 +6,7 @@ This document keeps the repository's GitHub-facing discovery copy aligned with t
 
 Preferred positioning:
 
-> AAS Core is the local, deterministic engine that turns an explicit project profile into an explainable skill-stack recommendation and immutable preview plan, backed by 1,967+ cataloged skills.
+> AAS Core is the local, deterministic boundary that exposes the complete catalog, validates exact skill IDs selected by the coding agent from an explicit project profile, and produces an immutable preview plan, backed by 1,968+ cataloged skills.
 
 Key framing:
 
@@ -116,7 +116,7 @@ Start here:
 Suggested pinned discussion topics:
 
 - `Start here: compose a project stack with AAS Core`
-- `Choose between Core recommendation and direct distribution`
+- `Choose between an agent-selected Core stack and direct distribution`
 - `How the catalog, plugins, bundles, and workflows support Core`
 
 Discussion posts should:

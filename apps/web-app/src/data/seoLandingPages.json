@@ -2,10 +2,10 @@
   {
     "slug": "antigravity-cli-skills",
     "title": "Antigravity CLI Skill Stacks | AAS Core Preview",
-    "description": "Use the AAS Core preview catalog to discover skills and compose explainable Antigravity CLI stacks for coding, review, testing, and workflow automation.",
+    "description": "Use the AAS Core preview catalog for neutral skill retrieval and to validate explainable, agent-selected Antigravity CLI stacks for coding, review, testing, and workflow automation.",
     "eyebrow": "Antigravity CLI",
     "h1": "Antigravity CLI skills for agentic coding workflows",
-    "summary": "Use AAS Core as the agent-first selection layer over reusable SKILL.md playbooks for Antigravity CLI and adjacent coding-agent runtimes.",
+    "summary": "Use AAS Core as the agent-first catalog and validation layer for exact skill IDs selected by Antigravity CLI and adjacent coding-agent runtimes.",
     "primaryIntent": "Find installable skills and workflow playbooks for Antigravity CLI.",
     "keywords": [
       "Antigravity CLI skills",
@@ -45,12 +45,12 @@
     ],
     "sections": [
       {
-        "heading": "What AAS Core should recommend first",
+        "heading": "What the coding agent should evaluate first",
         "body": "Start with a focused, explainable stack for coding, review, testing, documentation, and release work instead of activating the entire catalog."
       },
       {
         "heading": "Why this repository fits Antigravity",
-        "body": "AAS Core selects portable skill instructions from the shared catalog while specialized plugins, bundles, and workflows remain optional distribution and discovery surfaces."
+        "body": "The coding agent selects portable skill instructions from the shared catalog; AAS Core validates those exact IDs while specialized plugins, bundles, and workflows remain optional distribution and discovery surfaces."
       },
       {
         "heading": "When the full library is too broad",
@@ -75,7 +75,7 @@
   {
     "slug": "github-ai-skills-repository",
     "title": "AAS Core Preview | GitHub AI Skills Repository",
-    "description": "Explore the GitHub source for AAS Core preview: local MCP and CLI skill recommendation, stack validation, planning, and the supporting AI agent skill catalog.",
+    "description": "Explore the GitHub source for AAS Core preview: neutral local MCP retrieval, agent-owned skill selection, stack validation, planning, and the supporting AI agent skill catalog.",
     "eyebrow": "GitHub repository",
     "h1": "The GitHub source for AAS Core and its skill catalog",
     "summary": "Agentic Awesome Skills is the canonical source for AAS Core, its local MCP and CLI, reusable SKILL.md playbooks, plugin packs, and workflow documentation.",
@@ -123,7 +123,7 @@
       },
       {
         "heading": "Searchable catalog",
-        "body": "The hosted catalog is a companion browsing layer over the evidence AAS Core uses for discovery and recommendation."
+        "body": "The hosted catalog is a companion browsing layer over the evidence coding agents inspect before selecting exact skill IDs."
       },
       {
         "heading": "Reusable across agents",
@@ -151,7 +151,7 @@
     "description": "Compare Antigravity-compatible plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, and agent workflows.",
     "eyebrow": "Plugin packs",
     "h1": "Antigravity plugins for focused agent workflows",
-    "summary": "Specialized plugins are secondary packaged distributions for users who prefer a fixed domain surface instead of an AAS Core recommendation.",
+    "summary": "Specialized plugins are secondary packaged distributions for users who prefer a fixed domain surface instead of an agent-selected AAS Core stack.",
     "primaryIntent": "Find Antigravity plugin packs and focused AI workflow distributions.",
     "keywords": [
       "Antigravity plugins",
@@ -204,7 +204,7 @@
       },
       {
         "heading": "Lower activation cost",
-        "body": "A plugin gives the assistant a fixed instruction set; AAS Core remains the agent-first path when the stack should be recommended from intent and catalog evidence."
+        "body": "A plugin gives the assistant a fixed instruction set; AAS Core remains the agent-first path when the coding agent should inspect catalog evidence and choose exact IDs from a project profile."
       },
       {
         "heading": "Still backed by the full repo",
@@ -232,7 +232,7 @@
     "description": "Use AAS Core preview to find and compose explainable skills para Antigravity from the Agentic Awesome Skills catalog.",
     "eyebrow": "International search",
     "h1": "Skills para Antigravity and AI coding agents",
-    "summary": "A practical entry point for using AAS Core to recommend skill stacks for Antigravity and related AI coding assistants.",
+    "summary": "A practical entry point for using AAS Core to preserve skill stacks selected by Antigravity and related AI coding assistants.",
     "primaryIntent": "Serve international searches for skills para Antigravity.",
     "keywords": [
       "skills para Antigravity",
@@ -282,7 +282,7 @@
       },
       {
         "heading": "Start with AAS Core",
-        "body": "Let AAS Core recommend an exact stack from catalog evidence, then use the hosted site to review skills, plugins, and the resulting artifacts."
+        "body": "Let the coding agent inspect catalog evidence and select an exact stack, then use AAS Core and the hosted site to validate and review the resulting artifacts."
       }
     ],
     "links": [

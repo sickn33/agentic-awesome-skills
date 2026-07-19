@@ -47,7 +47,7 @@ This is an independent community project. It is not affiliated with, sponsored b
 AAS Core gives the repository one product model:
 
 - **Let the agent choose.** The local MCP exposes `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`; Core does not rank, recommend, exclude, or hide skills.
-- **Keep the chosen stack in `aas-stack.json`.** The manifest pins catalog identity, targets, goals, and exact skill IDs without storing repository source or model reasoning.
+- **Keep the chosen stack in `aas-stack.json`.** The schema 2 manifest pins catalog identity, targets, the project profile, and exact agent-selected skill IDs without storing repository source or model reasoning.
 - **Validate and preview through the CLI.** `aas stack validate` checks the proposal, while `aas stack plan` produces an immutable, per-target plan without applying it.
 - **Review in Workbench.** The hosted Workbench imports and reviews stack/plan JSON in browser memory; it does not access your filesystem or install anything.
 - **Retain every useful distribution path.** Direct installs, plugins, bundles, workflows, and the full catalog remain available as payload and compatibility surfaces.

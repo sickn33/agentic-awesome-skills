@@ -39,12 +39,12 @@ const FAQ_ITEMS = [
   {
     question: 'What is Agentic Awesome Skills?',
     answer: (countLabel: string) =>
-      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview control plane for discovering, recommending, validating, and planning exact skill stacks. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
+      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
   },
   {
     question: 'How do I use AAS Core preview?',
     answer:
-      'Configure the local stdio MCP with the AAS CLI, let the agent search, inspect, and recommend skills, then validate the proposed aas-stack.json and preview its immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
+      'Configure the local stdio MCP with the AAS CLI, let the agent search and inspect the complete catalog, choose exact skill IDs itself, then validate the schema 2 aas-stack.json with its project profile and preview the immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
   },
   {
     question: 'Is Agentic Awesome Skills a GitHub repository?',
@@ -174,7 +174,7 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: `AAS Core preview is a local agent-first control plane for recommending, validating, and planning exact skill stacks backed by ${visibleCountLabel}.`,
+    description: `AAS Core preview is a local agent-first boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning backed by ${visibleCountLabel}.`,
     url: REPOSITORY_URL,
     sameAs: [
       canonicalUrl,
@@ -195,7 +195,7 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
       'GitHub AI skills repository',
       'AI agent skills GitHub',
       'AAS Core',
-      'skill recommendation',
+      'agent-selected skill stack',
       'agent stack',
       'Model Context Protocol',
       'specialized plugins',
@@ -382,8 +382,8 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
     ? `AAS Core Preview | Agent-first stacks backed by ${visibleCountLabel} skills`
     : 'AAS Core Preview | Agent-first skill stacks';
   const description = visibleCount > 0
-    ? `Use AAS Core preview to discover, recommend, validate, and plan explainable skill stacks for Codex, Claude Code, and compatible clients, backed by ${visibleCountLabel} cataloged skills.`
-    : 'Use AAS Core preview to discover, recommend, validate, and plan explainable skill stacks for Codex, Claude Code, and compatible clients.';
+    ? `Use AAS Core preview for neutral catalog retrieval, exact agent-owned selection, validation, and planning for Codex, Claude Code, and compatible clients, backed by ${visibleCountLabel} cataloged skills.`
+    : 'Use AAS Core preview for neutral catalog retrieval, exact agent-owned selection, validation, and planning for Codex, Claude Code, and compatible clients.';
   return {
     title,
     description,
@@ -473,7 +473,7 @@ export function buildTopicLandingMeta(page: SeoLandingPage, featuredSkills: Read
         keywords,
         mainEntity: {
           '@type': 'ItemList',
-          name: `${page.eyebrow} recommended skills`,
+          name: `${page.eyebrow} featured skills`,
           numberOfItems: featuredSkills.length || page.sections.length,
           itemListElement: (featuredSkills.length > 0 ? featuredSkills : page.sections).map((entry, index) => ({
             '@type': 'ListItem',

@@ -97,10 +97,18 @@ const STACK_MANIFEST_SCHEMA = Object.freeze({
   },
 });
 
+const READ_ONLY_TOOL_ANNOTATIONS = Object.freeze({
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+});
+
 const TOOL_DEFINITIONS = Object.freeze([
   {
     name: "search_skills",
-    description: "Search the verified local AAS catalog without modifying local state.",
+    description: "Retrieve matching skills from the verified local AAS catalog in stable catalog order, without relevance scores, ranking, recommendations, or local-state changes.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -114,6 +122,7 @@ const TOOL_DEFINITIONS = Object.freeze([
   {
     name: "get_skill",
     description: "Get the descriptive catalog record and, only when requested, explicitly untrusted full text for any local skill.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -127,6 +136,7 @@ const TOOL_DEFINITIONS = Object.freeze([
   {
     name: "compose_stack",
     description: "Build a Core manifest from exact skill IDs already chosen by Codex or Claude. Core verifies catalog membership and preserves the selection without ranking, substitution, policy, or metadata filtering.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -159,6 +169,7 @@ const TOOL_DEFINITIONS = Object.freeze([
   {
     name: "inspect_stack",
     description: "Validate an agent-selected in-memory AAS stack, its pinned catalog identity, and every selected skill ID without writing it.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -169,6 +180,7 @@ const TOOL_DEFINITIONS = Object.freeze([
   {
     name: "diff_stack",
     description: "Diff a stack only against locally cached, integrity-verified catalogs.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       additionalProperties: false,

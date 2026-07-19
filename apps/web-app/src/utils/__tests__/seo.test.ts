@@ -38,7 +38,7 @@ describe('SEO helpers', () => {
 
     expect(meta.title).toContain('AAS Core Preview');
     expect(meta.title).toContain('10+ skills');
-    expect(meta.description).toContain('discover, recommend, validate, and plan');
+    expect(meta.description).toContain('neutral catalog retrieval, exact agent-owned selection, validation, and planning');
     expect(meta.description).toContain('10+ cataloged skills');
     expect(meta.canonicalPath).toBe('/');
     expect(meta.ogTitle).toBe(meta.title);

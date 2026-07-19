@@ -1,7 +1,7 @@
 "use strict";
 
 const { canonicalJson } = require("./canonical-json");
-const { compareStrings, sortedUnique, tokenize } = require("./normalize");
+const { sortedUnique, tokenize } = require("./normalize");
 
 const FORBIDDEN_QUERY_SYNTAX = /[\u0000-\u001f\u007f\\^$*?()[\]{}|]/u;
 
@@ -32,22 +32,24 @@ function searchSkills(catalog, input = {}) {
   }
   const queryTokens = sortedUnique(tokenize(query));
   const normalizedQuery = query.trim().toLowerCase();
-  const matches = catalog.skills.map((skill) => {
+  const exactMatch = normalizedQuery
+    ? catalog.skills.find((skill) => skill.id === normalizedQuery)
+    : null;
+  const candidates = exactMatch ? [exactMatch] : catalog.skills;
+  const matches = candidates.map((skill) => {
     const document = new Set(skill.searchTokens || []);
     const matchedTokens = queryTokens.filter((token) => document.has(token));
-    const exactId = normalizedQuery && skill.id === normalizedQuery ? 1 : 0;
-    const prefixId = normalizedQuery && skill.id.startsWith(normalizedQuery) ? 1 : 0;
-    const score = normalizedQuery ? exactId * 100000 + prefixId * 25000 + matchedTokens.length * 1000 : 1;
-    return { skill, score, matchedTokens };
-  }).filter((entry) => entry.score > 0)
-    .sort((left, right) => right.score - left.score || compareStrings(left.skill.id, right.skill.id));
+    const matchesQuery = !normalizedQuery
+      || skill.id.startsWith(normalizedQuery)
+      || matchedTokens.length > 0;
+    return { skill, matchedTokens, matchesQuery };
+  }).filter((entry) => entry.matchesQuery);
   const results = matches.slice(cursor, cursor + limit)
-    .map(({ skill, score, matchedTokens }) => {
+    .map(({ skill, matchedTokens }) => {
       const result = {
         id: skill.id,
         name: skill.name,
         category: skill.category,
-        score,
         matchedTokens,
         description: skill.description,
         tags: skill.tags,
