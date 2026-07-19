@@ -47,10 +47,27 @@ Give the agent the desired outcome and constraints, and leave selection judgment
 
 ```text
 Inspect this repository. Search and read the complete local AAS catalog, then
-choose the exact skills you judge most useful for this project. Use compose_stack
-with a project profile to validate and pin those IDs in a schema 2 aas-stack.json,
-then use inspect_stack before presenting it. Do not install or apply anything.
+enumerate the project's primary capability areas. For each capability, run a
+focused search, paginate or refine until you find plausible candidates, and use
+get_skill to compare multiple candidates when available. Select at least one
+non-redundant valid skill for every covered capability. Explicitly report as a
+catalog gap any capability for which the catalog has no valid match. At minimum,
+evaluate architecture/runtime, languages/frameworks, domain behavior,
+data/storage, external integrations, testing/quality, security/privacy,
+user experience/accessibility when user-facing, deployment/operations, and
+maintenance workflow; mark dimensions not applicable instead of silently
+omitting them. Do not stop at the first few matches, optimize for the smallest
+stack, or impose an arbitrary skill-count cap.
+Only then use compose_stack with a project profile to validate and pin the exact
+IDs in a schema 2 aas-stack.json, and use inspect_stack before presenting it. Do
+not install or apply anything.
 ```
+
+This capability-coverage contract is delivered to supported clients in the MCP
+`initialize` instructions and reinforced by the tool descriptions. It is an
+agent obligation, not a Core ranking or eligibility policy: Core still accepts
+and preserves any structurally valid set of catalog IDs and never chooses for the
+agent.
 
 The local MCP exposes these read-only tools:
 

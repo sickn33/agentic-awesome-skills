@@ -78,10 +78,26 @@ for (const relativePath of publicFiles) {
 }
 
 const coreGuide = fs.readFileSync(path.join(repoRoot, "docs/users/aas-core.md"), "utf8");
+const usageGuide = fs.readFileSync(path.join(repoRoot, "docs/users/usage.md"), "utf8");
 assert.match(coreGuide, /"schemaVersion"\s*:\s*2/);
 assert.match(coreGuide, /"profile"\s*:\s*\{/);
 assert.match(coreGuide, /"skills"\s*:\s*\[\s*\{\s*"id"\s*:/);
 assert.match(coreGuide, /stable catalog order and contain no relevance score/i);
 assert.match(coreGuide, /Codex or Claude evaluates the returned candidates semantically/i);
+for (const guide of [coreGuide, usageGuide]) {
+  assert.match(guide, /primary capability/i);
+  assert.match(guide, /paginate or refine/i);
+  assert.match(guide, /compare multiple/i);
+  assert.match(guide, /non-redundant/i);
+  assert.match(guide, /catalog\s+gaps?/i);
+  assert.match(guide, /smallest\s+stack/i);
+  assert.match(guide, /arbitrary skill-count cap/i);
+  assert.match(guide, /architecture\/runtime/i);
+  assert.match(guide, /testing\/quality/i);
+  assert.match(guide, /security\/privacy/i);
+  assert.match(guide, /deployment\/operations/i);
+  assert.match(guide, /maintenance workflow/i);
+  assert.match(guide, /not applicable/i);
+}
 
 console.log(`AAS Core public documentation contract passed (${publicFiles.length} files scanned).`);

@@ -9,7 +9,9 @@
 - Skill count: 1,968+.
 - Primary product: AAS Core preview, exposed through the `aas` CLI and local `aas-mcp` stdio server.
 - Agent tools: `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`.
-- Lifecycle: the client searches and reads the complete catalog, chooses exact IDs, uses `compose_stack` to pin `aas-stack.json`, then runs CLI validation and immutable plan preview without target writes.
+- Lifecycle: the client enumerates primary project capabilities, searches and compares candidates for each, covers every capability or reports a catalog gap, chooses exact IDs without an arbitrary count cap, uses `compose_stack` to pin `aas-stack.json`, then runs CLI validation and immutable plan preview without target writes.
+- Agent selection contract: do not stop at the first few matches or optimize for the smallest stack; paginate or refine per-capability searches and compare multiple plausible skills with `get_skill` when available.
+- Coverage dimensions: explicitly evaluate architecture/runtime, languages/frameworks, domain behavior, data/storage, integrations, testing/quality, security/privacy, UX/accessibility, deployment/operations, and maintenance workflow; mark dimensions not applicable instead of silently omitting them.
 - Selection boundary: Core never ranks, recommends, excludes, or disables skills; catalog metadata is informational only.
 - Preview boundary: planning may write an explicitly requested plan artifact but does not write target state; apply and recovery are not part of the supported preview path.
 - Supported real clients include Codex CLI and Claude Code; the catalog also serves Cursor, Gemini CLI, Antigravity, and other compatible hosts.

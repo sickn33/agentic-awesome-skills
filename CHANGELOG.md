@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Added an MCP session-level capability coverage contract for Codex and Claude: agents must enumerate primary project capabilities, search and compare candidates for each, cover every capability or report a catalog gap, and avoid arbitrary count caps or smallest-stack optimization before `compose_stack`.
 - Moved semantic skill selection fully to Codex and Claude: agents inspect the project, search and read the complete local catalog, and choose exact skill IDs using their own judgment; AAS Core no longer ranks or recommends skills.
 - Replaced the recommendation workflow with `compose_stack`, which validates and pins the agent-owned selection in `aas-stack.json` for inspection, CLI validation, and immutable plan preview.
 - Removed Core selection policy and metadata eligibility gates. Every canonical skill is searchable, readable, selectable, and usable; risk, source, setup, compatibility, review, and evidence metadata are informational only.

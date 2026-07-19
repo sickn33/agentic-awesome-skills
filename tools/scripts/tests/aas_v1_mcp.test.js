@@ -7,6 +7,7 @@ const path = require("node:path");
 const { PassThrough } = require("node:stream");
 const test = require("node:test");
 const {
+  AGENT_SELECTION_CONTRACT,
   MAX_JSON_DEPTH,
   MAX_LINE_BYTES,
   McpServer,
@@ -120,6 +121,11 @@ test("MCP exposes the five agent-owned selection tools and one skill resource te
   assert.equal(Object.hasOwn(searchDefinition.inputSchema.properties, "target"), false);
   assert.match(searchDefinition.description, /stable catalog order/);
   assert.match(searchDefinition.description, /without relevance scores, ranking, recommendations/);
+  assert.match(searchDefinition.description, /one project capability at a time/i);
+  assert.match(searchDefinition.description, /paginate or refine/i);
+
+  const getDefinition = tools.result.tools.find((entry) => entry.name === "get_skill");
+  assert.match(getDefinition.description, /compare multiple plausible candidates/i);
 
   const composeDefinition = tools.result.tools.find((entry) => entry.name === "compose_stack");
   assert.deepEqual(composeDefinition.inputSchema.required, ["profile", "skillIds"]);
@@ -130,6 +136,8 @@ test("MCP exposes the five agent-owned selection tools and one skill resource te
   assert.deepEqual(composeDefinition.inputSchema.properties.targets.items.required, ["host", "scope"]);
   assert.equal(Object.hasOwn(composeDefinition.inputSchema.properties, "policy"), false);
   assert.equal(Object.hasOwn(composeDefinition.inputSchema.properties, "metadata"), false);
+  assert.match(composeDefinition.description, /covered every capability/i);
+  assert.match(composeDefinition.description, /arbitrary count cap or smallest-stack optimization/i);
 
   const inspectDefinition = tools.result.tools.find((entry) => entry.name === "inspect_stack");
   assert.deepEqual(inspectDefinition.inputSchema.properties.manifest.required, [
@@ -147,6 +155,39 @@ test("MCP exposes the five agent-owned selection tools and one skill resource te
   assert.deepEqual(resources.result.resources, []);
   const prompts = await server.handle({ jsonrpc: "2.0", id: 5, method: "prompts/list", params: {} });
   assert.equal(prompts.error.code, -32601);
+});
+
+test("MCP initialization imposes the agent-owned capability coverage contract", async () => {
+  const server = new McpServer({ root: ROOT });
+  const response = await server.handle({
+    jsonrpc: "2.0",
+    id: "coverage-contract",
+    method: "initialize",
+    params: { protocolVersion: core.protocolVersion, capabilities: {}, clientInfo: { name: "test", version: "1" } },
+  });
+
+  assert.equal(response.result.instructions.includes(AGENT_SELECTION_CONTRACT), true);
+  assert.match(response.result.instructions, /enumerate its primary capability areas/i);
+  for (const dimension of [
+    "architecture and runtime",
+    "languages and frameworks",
+    "domain behavior",
+    "data and storage",
+    "external integrations",
+    "testing and quality",
+    "security and privacy",
+    "user experience and accessibility",
+    "deployment and operations",
+    "maintenance workflow",
+  ]) assert.match(response.result.instructions, new RegExp(dimension, "i"));
+  assert.match(response.result.instructions, /mark a dimension not applicable/i);
+  assert.match(response.result.instructions, /at least one focused search per capability area/i);
+  assert.match(response.result.instructions, /compare multiple plausible candidates per capability/i);
+  assert.match(response.result.instructions, /at least one non-redundant skill for every primary capability/i);
+  assert.match(response.result.instructions, /do not stop at the first few matches/i);
+  assert.match(response.result.instructions, /do not.*optimize for the smallest stack/i);
+  assert.match(response.result.instructions, /no valid catalog match/i);
+  assert.match(response.result.instructions, /does not judge semantic coverage or choose IDs/i);
 });
 
 test("empty search paginates every catalog ID and every result is selectable", async () => {
