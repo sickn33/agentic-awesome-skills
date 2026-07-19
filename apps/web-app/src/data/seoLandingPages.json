@@ -2,7 +2,7 @@
   {
     "slug": "antigravity-cli-skills",
     "title": "Antigravity CLI Skill Stacks | AAS Core Preview",
-    "description": "Use the AAS Core preview catalog for neutral skill retrieval and to validate explainable, agent-selected Antigravity CLI stacks for coding, review, testing, and workflow automation.",
+    "description": "Use the AAS Core preview skills catalog for neutral skill retrieval and to validate explainable, agent-selected Antigravity CLI stacks for coding, review, testing, and workflow automation.",
     "eyebrow": "Antigravity CLI",
     "h1": "Antigravity CLI skills for agentic coding workflows",
     "summary": "Use AAS Core as the agent-first catalog and validation layer for exact skill IDs selected by Antigravity CLI and adjacent coding-agent runtimes.",
