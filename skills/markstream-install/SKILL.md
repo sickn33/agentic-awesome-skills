@@ -169,13 +169,13 @@ Setting `final=true` tells the parser that the document is complete; disabling p
 
 ## Common Pitfalls
 
-- **Problem:** Styles appear missing or are overwritten.  
+- **Problem:** Styles appear missing or are overwritten.
   **Solution:** Load resets first, then the matching Markstream stylesheet explicitly.
-- **Problem:** A completed response still looks incomplete.  
+- **Problem:** A completed response still looks incomplete.
   **Solution:** Set `final=true` when the stream finishes, not only `smoothStreaming=false`.
-- **Problem:** Next.js evaluates browser-only code on the server.  
+- **Problem:** Next.js evaluates browser-only code on the server.
   **Solution:** Select the root, `/next`, or `/server` entry according to the render boundary.
-- **Problem:** Lightweight highlighting does not activate after installing `stream-markdown`.  
+- **Problem:** Lightweight highlighting does not activate after installing `stream-markdown`.
   **Solution:** On Vue, Vue 2, or React, configure `MarkdownCodeBlockNode` as the `code_block` override.
 
 ## Additional Resources
