@@ -64,6 +64,18 @@ const contract = {
   releaseManagedFiles: ["CHANGELOG.md", "package.json", "package-lock.json", "README.md"],
 };
 
+const repositoryRoot = path.resolve(__dirname, "..", "..", "..");
+const agentInstructions = fs.readFileSync(path.join(repositoryRoot, "AGENTS.md"), "utf8");
+const maintenanceGuide = fs.readFileSync(path.join(repositoryRoot, ".github", "MAINTENANCE.md"), "utf8");
+for (const instructions of [agentInstructions, maintenanceGuide]) {
+  assert.match(instructions, /current[- ]base/i);
+  assert.match(instructions, /must exist on the current task base/i);
+  assert.match(instructions, /do not|never import/i);
+  assert.match(instructions, /another branch, worktree, stash, installed copy, or historical commit/i);
+}
+assert.doesNotMatch(agentInstructions, /review:skills:local|local-skill-reviewer-policy/);
+assert.doesNotMatch(maintenanceGuide, /review:skills:local|local-skill-reviewer-policy/);
+
 const publishWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "publish-npm.yml"),
   "utf8",

@@ -13,6 +13,12 @@ It covers the **Quality Bar**, **Documentation Consistency**, and **Release Work
 
 **AGENTS MUST READ AND FOLLOW THIS SECTION BEFORE MARKING ANY TASK AS COMPLETE.**
 
+### Current-base instruction guard
+
+After establishing the clean task base, re-read `AGENTS.md`, this guide, the repository-canonical maintainer skill, and `package.json` from that exact base. Do not rely on repository instructions inherited from a different checkout.
+
+Every command, script, reviewer, or gate described as mandatory must exist on the current task base. If it does not, never import or run the retired implementation from another branch, worktree, stash, installed copy, or historical commit. Compare with `origin/main`, inspect the removal history, and use the current-base contract; stop and report only if the conflict cannot be resolved from repository history.
+
 There are 5 things that usually fail/get forgotten. **DO NOT FORGET THEM:**
 
 ### 1. 📤 ALWAYS PUSH (Non-Negotiable)
