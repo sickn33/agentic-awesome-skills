@@ -9,10 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.1.0] - 2026-07-19 - "Agent-Owned Selection and Audit Evidence"
+
+> AAS Core now leaves semantic skill selection to the coding agent, validates the exact chosen stack, and emits durable evidence that can be reviewed without exposing project content.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
 ### Added
 
 - Added the canonical `aas-selection-evidence.json` sidecar, with a server-owned MCP process trace, agent-declared ten-dimension capability ledger, path-safe project fingerprint, catalog and manifest binding, and structural-only inspection through `export_selection_evidence` and `inspect_selection_evidence`.
 - Added an audit-enabled CLI artifact-directory path that validates and publishes `aas-stack.json` and `aas-selection-evidence.json` together with a single durable directory rename, while preserving the existing manifest-only command.
+- Added the official `markstream-install` skill for integrating streaming Markdown renderers across Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications (PR #940).
 
 ### Changed
 
@@ -28,6 +41,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Preserved bounded, path-safe schema diagnostics across Core and MCP errors so invalid profiles identify the logical field, validation keyword, and applicable limit without echoing input values, unknown property names, schema internals, or filesystem paths.
 - Corrected current public Core examples to use manifest schema 2 with `profile` and exact agent-selected IDs, with a regression test spanning English, Chinese, Vietnamese, integration, and hosted-app copy.
 - Marked all five local MCP tools explicitly read-only, non-destructive, idempotent, and closed-world so isolated non-interactive Codex clients can invoke the catalog workflow without treating the calls as approval-gated mutations.
+- Restored and protected CLI topic-page SEO metadata so generated titles, descriptions, and catalog routes retain their topic-specific contract.
+
+### Validation
+
+- Passed the protected repository CI and all CodeQL analyzers on the final pre-release `main` commit, including the packed Core preview and dynamic catalog enumeration regressions.
+
+### Credits
+
+- **[@Simon-He95](https://github.com/Simon-He95)** and **[Simon-He95/markstream-vue](https://github.com/Simon-He95/markstream-vue)** for the official `markstream-install` skill (PR #940).
 
 ## [15.0.0] - 2026-07-18 - "AAS Core: Local Composition and Reviewable Plans"
 
