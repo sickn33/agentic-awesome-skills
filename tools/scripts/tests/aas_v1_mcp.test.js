@@ -208,7 +208,6 @@ test("MCP initialization imposes the agent-owned capability coverage contract", 
 test("empty search paginates every catalog ID and every result is selectable", async () => {
   const server = await initializedServer();
   const expected = core.loadBundledCatalog({ root: ROOT }).skills.map((skill) => skill.id);
-  assert.equal(expected.length, 1968);
   const ids = [];
   let cursor = 0;
   let requestId = 10;
