@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:selection-evidence:v1",
+  "title": "AAS agent-owned selection evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "digest", "payload"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "aas.selection-evidence" },
+    "digest": { "$ref": "#/$defs/digest" },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "kind", "project", "catalog", "manifestDigest", "dimensions", "capabilities", "selectedSkillIds", "processTrace"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "aas.selection-evidence.payload" },
+        "project": { "$ref": "#/$defs/project" },
+        "catalog": { "$ref": "#/$defs/catalog" },
+        "manifestDigest": { "$ref": "#/$defs/digest" },
+        "dimensions": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": { "$ref": "#/$defs/dimension" }
+        },
+        "capabilities": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/capability" }
+        },
+        "selectedSkillIds": { "$ref": "#/$defs/skillIds" },
+        "processTrace": { "$ref": "#/$defs/processTrace" },
+        "client": { "$ref": "#/$defs/client" }
+      }
+    },
+    "runtimeObservations": { "$ref": "#/$defs/runtimeObservations" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z0-9][a-z0-9._-]*(?:/[a-z0-9][a-z0-9._-]*)*$" },
+    "skillIds": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "fingerprint", "files"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "fingerprint": { "$ref": "#/$defs/digest" },
+        "commit": { "type": "string", "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$" },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "size", "sha256"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1, "maxLength": 512 },
+              "size": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+              "sha256": { "$ref": "#/$defs/digest" }
+            }
+          }
+        }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version", "integrity"],
+      "properties": {
+        "package": { "type": "string", "minLength": 1, "maxLength": 214, "pattern": "^(?:@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]*$" },
+        "integrity": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "capabilityIds"],
+      "properties": {
+        "id": { "type": "string", "enum": ["architecture-runtime", "languages-frameworks", "domain-behavior", "data-storage", "external-integrations", "testing-quality", "security-privacy", "user-experience-accessibility", "deployment-operations", "maintenance-workflow"] },
+        "status": { "type": "string", "enum": ["applicable", "not-applicable"] },
+        "capabilityIds": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/capabilityId" }
+        }
+      }
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "dimensionId", "status", "evidence", "selectedSkillIds"],
+      "properties": {
+        "id": { "$ref": "#/$defs/capabilityId" },
+        "dimensionId": { "type": "string", "enum": ["architecture-runtime", "languages-frameworks", "domain-behavior", "data-storage", "external-integrations", "testing-quality", "security-privacy", "user-experience-accessibility", "deployment-operations", "maintenance-workflow"] },
+        "status": { "type": "string", "enum": ["covered", "catalog-gap", "not-applicable"] },
+        "evidence": { "type": "array", "maxItems": 4096, "items": { "$ref": "#/$defs/evidenceRef" } },
+        "selectedSkillIds": { "$ref": "#/$defs/skillIds" }
+      }
+    },
+    "traceInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inputValid": { "type": "boolean" },
+        "query": { "type": "string", "maxLength": 256 },
+        "cursor": { "type": "integer", "minimum": 0 },
+        "limit": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "id": { "$ref": "#/$defs/id" },
+        "includeContent": { "type": "boolean" },
+        "skillIds": { "$ref": "#/$defs/skillIds" },
+        "manifestDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "traceOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "status": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "code": { "type": "string", "pattern": "^AAS_[A-Z0-9_]{1,96}$" },
+        "category": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$" },
+        "returnedSkillIds": { "$ref": "#/$defs/skillIds" },
+        "nextCursor": { "type": ["integer", "null"], "minimum": 0 },
+        "totalMatches": { "type": "integer", "minimum": 0 },
+        "openedSkillId": { "$ref": "#/$defs/id" },
+        "manifestDigest": { "$ref": "#/$defs/digest" },
+        "selectedSkillIds": { "$ref": "#/$defs/skillIds" }
+      }
+    },
+    "traceCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "tool", "attempt", "input", "output", "canonicalInputBytes", "canonicalOutputBytes"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "tool": { "type": "string", "enum": ["search_skills", "get_skill", "compose_stack", "inspect_stack"] },
+        "attempt": { "type": "integer", "minimum": 1 },
+        "retryOf": { "type": "integer", "minimum": 0 },
+        "input": { "$ref": "#/$defs/traceInput" },
+        "output": { "$ref": "#/$defs/traceOutput" },
+        "canonicalInputBytes": { "type": "integer", "minimum": 0 },
+        "canonicalOutputBytes": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "processTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "calls"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "calls": { "type": "array", "maxItems": 512, "items": { "$ref": "#/$defs/traceCall" } }
+      }
+    },
+    "client": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "model": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "runtimeObservations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "digestScope", "calls"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "digestScope": { "const": "excluded-from-evidence-digest" },
+        "calls": {
+          "type": "array",
+          "maxItems": 512,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sequence", "durationMicros"],
+            "properties": {
+              "sequence": { "type": "integer", "minimum": 0 },
+              "durationMicros": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "capabilityId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z0-9][a-z0-9-]{0,127}$" }
+  }
+}

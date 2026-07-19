@@ -14,13 +14,16 @@ least one non-redundant valid skill per capability, explicitly report catalog
 gaps, and evaluate architecture/runtime, languages/frameworks, domain behavior,
 data/storage, integrations, testing/quality, security/privacy, UX/accessibility,
 deployment/operations, and maintenance workflow. Mark dimensions not applicable
-instead of silently omitting them. Do not stop at the first few matches, optimize
-for the smallest stack, or impose an arbitrary skill-count cap. Only then use
-compose_stack with a project profile, show me the schema 2 aas-stack.json,
-inspect it, and do not apply it.
+instead of silently omitting them. Do not stop at the first few matches or
+optimize for the smallest stack. Core has no semantic policy favoring a small
+stack; each manifest has a technical maximum of 128 selected skills. Only then
+use compose_stack with a project profile, inspect the schema 2 manifest returned
+in memory, and do not apply it.
 ```
 
-The agent must use `search_skills` and `get_skill` across the complete catalog, build a capability-to-skill coverage map, continue searching while a primary capability remains uncovered, choose the exact IDs itself, call `compose_stack`, then check the proposal with `inspect_stack` before presenting it. Review the resulting `aas-stack.json`, validate it with `aas stack validate`, and use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
+The agent must use `search_skills` and `get_skill` across the complete catalog, build a capability-to-skill coverage map, continue searching while a primary capability remains uncovered, choose the exact IDs itself, call `compose_stack`, then check the in-memory proposal with `inspect_stack` before presenting it. All 1,968 current catalog skills remain individually searchable, readable, and selectable. A client or the CLI can persist the reviewed `aas-stack.json`; an audit-enabled flow can then call `export_selection_evidence`, validate it with `inspect_selection_evidence`, and atomically publish the manifest and separate `aas-selection-evidence.json` sidecar in an `artifact-dir`. Use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
+
+Selection evidence contains the raw `search_skills` queries observed during the MCP session. Do not place secrets, credentials, private source text, or personal data in catalog queries.
 
 Selection belongs to the coding agent. AAS MCP does not inspect the repository itself, rank or exclude skills, install skills, update catalogs, or change configuration. See [AAS Core](aas-core.md) for setup, the exact tool boundary, CLI commands, and preview limitations.
 

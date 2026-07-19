@@ -5,7 +5,7 @@
 
 **Current release: V15.0.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
-Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares candidates for each capability across the complete local AAS catalog, and chooses exact non-redundant skills with no arbitrary count cap. The agent must continue until every primary capability is covered or explicitly reported as a catalog gap. AAS Core does not rank or recommend skills. It validates the agent-owned selection with `compose_stack`, pins it in `aas-stack.json`, and lets the `aas` CLI create an immutable per-target plan before any skill changes are made.
+Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares candidates across the complete local AAS catalog, and chooses the exact skills. Core imposes no semantic policy that favors a small stack; the manifest format has an explicit technical maximum of 128 skills. All 1,968 skills in the current catalog remain individually searchable, readable, and selectable. AAS Core does not rank or recommend skills. Its read-only `compose_stack` tool validates and returns the agent-owned manifest in memory; a client or the `aas` CLI persists the reviewed stack and its optional selection-evidence sidecar.
 
 **[Read the AAS Core preview guide →](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)**
 
@@ -15,8 +15,8 @@ Project
   -> agent searches and reads the complete local catalog
   -> AAS MCP (local stdio, read-only)
   -> Codex or Claude chooses exact skill IDs
-  -> compose_stack validates and pins the selection
-  -> agent proposes aas-stack.json
+  -> compose_stack validates the selection in memory (read-only)
+  -> client or AAS CLI persists aas-stack.json and optional evidence
   -> AAS CLI validate + immutable plan preview
   -> human review (optionally in Workbench)
 ```
@@ -46,9 +46,9 @@ This is an independent community project. It is not affiliated with, sponsored b
 
 AAS Core gives the repository one product model:
 
-- **Let the agent choose.** The local MCP exposes `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`; Core does not rank, recommend, exclude, or hide skills.
+- **Let the agent choose.** The local MCP preserves `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`, and adds read-only `export_selection_evidence` and `inspect_selection_evidence`; Core does not rank, recommend, exclude, or hide skills.
 - **Require capability coverage.** MCP session instructions require the agent to evaluate the full project surface—from architecture, domain behavior, data and integrations through testing, security, UX, deployment, and maintenance—then search each applicable capability, compare multiple candidates, cover it with a non-redundant skill or report a catalog gap, and avoid stopping at a minimal shortlist.
-- **Keep the chosen stack in `aas-stack.json`.** The schema 2 manifest pins catalog identity, targets, the project profile, and exact agent-selected skill IDs without storing repository source or model reasoning.
+- **Keep the chosen stack and evidence reviewable.** A client or the CLI can persist `aas-stack.json` and the separate `aas-selection-evidence.json` sidecar in an `artifact-dir`; the manifest preserves exact agent-selected IDs, while evidence records factual process trace and the agent-declared capability ledger.
 - **Validate and preview through the CLI.** `aas stack validate` checks the proposal, while `aas stack plan` produces an immutable, per-target plan without applying it.
 - **Review in Workbench.** The hosted Workbench imports and reviews stack/plan JSON in browser memory; it does not access your filesystem or install anything.
 - **Retain every useful distribution path.** Direct installs, plugins, bundles, workflows, and the full catalog remain available as payload and compatibility surfaces.
