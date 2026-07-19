@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const core = require("..");
 const { validateManifest } = require("../stack");
+const { sanitizeValidationDetails } = require("../schema-validator");
 
 const TOOL_NAMES = Object.freeze([
   "search_skills",
@@ -226,14 +227,14 @@ function versionFields(catalog) {
   };
 }
 
-function structuredError(catalog, code, category = "invalidInput") {
+function structuredError(catalog, code, category = "invalidInput", details = {}) {
   return {
     ok: false,
     status: "error",
     ...versionFields(catalog),
     code,
     category,
-    details: {},
+    details: sanitizeValidationDetails(details),
   };
 }
 
@@ -486,7 +487,11 @@ class McpServer {
       return this.rpcResult(request.id, toolResult(payload, payload.ok === false));
     } catch (error) {
       const code = typeof error?.code === "string" ? error.code : "AAS_MCP_TOOL_FAILED";
-      return this.rpcResult(request.id, toolResult(structuredError(this.catalog, code), true));
+      const category = typeof error?.category === "string" ? error.category : "invalidInput";
+      return this.rpcResult(
+        request.id,
+        toolResult(structuredError(this.catalog, code, category, error?.details), true),
+      );
     }
   }
 

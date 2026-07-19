@@ -319,6 +319,81 @@ test("search, get, resource read, explicit composition, inspection, and unavaila
   assert.equal(diff.result.structuredContent.code, "AAS_MCP_VERIFIED_CATALOG_NOT_AVAILABLE");
 });
 
+test("MCP propagates structured path-safe profile validation diagnostics", async () => {
+  const server = await initializedServer();
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const selectedId = catalog.skills[0].id;
+  const response = await server.handle({
+    jsonrpc: "2.0",
+    id: 150,
+    method: "tools/call",
+    params: {
+      name: "compose_stack",
+      arguments: {
+        profile: {
+          goals: ["test"],
+          languages: [],
+          frameworks: ["x".repeat(129)],
+          constraints: [],
+        },
+        skillIds: [selectedId],
+      },
+    },
+  });
+
+  assert.equal(response.result.isError, true);
+  assert.equal(response.result.structuredContent.code, "AAS_STACK_MANIFEST_INVALID");
+  assert.deepEqual(response.result.structuredContent.details.issues, [{
+    field: "profile.frameworks[]",
+    keyword: "maxLength",
+    code: "AAS_STACK_STRING_INVALID",
+    limit: 128,
+  }]);
+  assert.deepEqual(
+    JSON.parse(response.result.content[0].text).details,
+    response.result.structuredContent.details,
+  );
+
+  const sensitiveKey = "/private/project/TOKEN_CANARY";
+  const forbidden = await server.handle({
+    jsonrpc: "2.0",
+    id: 151,
+    method: "tools/call",
+    params: {
+      name: "compose_stack",
+      arguments: {
+        profile: { goals: ["test"], [sensitiveKey]: "SECRET_VALUE_CANARY" },
+        skillIds: [selectedId],
+      },
+    },
+  });
+  assert.equal(forbidden.result.isError, true);
+  assert.equal(forbidden.result.structuredContent.code, "AAS_SELECTION_INPUT_INVALID");
+  assert.deepEqual(forbidden.result.structuredContent.details.issues, [{
+    field: "profile",
+    keyword: "additionalProperties",
+    limit: false,
+  }]);
+  assert.doesNotMatch(JSON.stringify(forbidden), /private|TOKEN_CANARY|SECRET_VALUE_CANARY|schemaPath|instancePath/);
+
+  const malformed = await server.handle({
+    jsonrpc: "2.0",
+    id: 152,
+    method: "tools/call",
+    params: {
+      name: "compose_stack",
+      arguments: { profile: "SECRET_PROFILE_CANARY", skillIds: [selectedId] },
+    },
+  });
+  assert.equal(malformed.result.isError, true);
+  assert.deepEqual(malformed.result.structuredContent.details.issues, [{
+    field: "profile",
+    keyword: "type",
+    limit: "object",
+  }]);
+  assert.doesNotMatch(JSON.stringify(malformed), /SECRET_PROFILE_CANARY|schemaPath|instancePath/);
+});
+
 test("composition rejects unknown, duplicate, missing, and mismatched selections without trusting skill prose", async () => {
   const server = await initializedServer();
   const catalog = core.loadBundledCatalog({ root: ROOT });

@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Preserved bounded, path-safe schema diagnostics across Core and MCP errors so invalid profiles identify the logical field, validation keyword, and applicable limit without echoing input values, unknown property names, schema internals, or filesystem paths.
 - Corrected current public Core examples to use manifest schema 2 with `profile` and exact agent-selected IDs, with a regression test spanning English, Chinese, Vietnamese, integration, and hosted-app copy.
 - Marked all five local MCP tools explicitly read-only, non-destructive, idempotent, and closed-world so isolated non-interactive Codex clients can invoke the catalog workflow without treating the calls as approval-gated mutations.
 
