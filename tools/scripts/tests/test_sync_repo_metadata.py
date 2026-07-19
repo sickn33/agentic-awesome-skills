@@ -157,7 +157,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
                 "total_skills_label": "1,304+",
             }
         )
-        self.assertIn("AAS Core preview", description)
+        self.assertIn("AAS Core is the local, agent-first control plane", description)
         self.assertIn("1,304+ agentic skills", description)
         self.assertIn("local MCP", description)
 
