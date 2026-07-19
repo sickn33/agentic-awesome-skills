@@ -43,6 +43,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/markstream-install/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/antigravity-maintainer-batch-release/</loc>
     <lastmod>2026-07-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -1112,12 +1118,6 @@
   </url>
   <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/gemini-omni-flash-api/</loc>
-    <lastmod>2026-07-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/git-workflow-and-versioning/</loc>
     <lastmod>2026-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

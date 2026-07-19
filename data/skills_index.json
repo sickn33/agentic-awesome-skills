@@ -27651,6 +27651,41 @@
     }
   },
   {
+    "id": "markstream-install",
+    "path": "skills/markstream-install",
+    "category": "frontend",
+    "name": "markstream-install",
+    "description": "Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications.",
+    "risk": "safe",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-install",
+    "date_added": "2026-07-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "markdown",
+      "streaming",
+      "vue",
+      "react",
+      "svelte",
+      "angular",
+      "ai-chat"
+    ]
+  },
+  {
     "id": "mason",
     "path": "skills/agent-squad/mason",
     "category": "agent-squad",

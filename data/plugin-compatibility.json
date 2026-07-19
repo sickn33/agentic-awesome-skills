@@ -22277,6 +22277,25 @@
       "runtime_files": []
     },
     {
+      "id": "markstream-install",
+      "path": "skills/markstream-install",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "matematico-tao",
       "path": "skills/matematico-tao",
       "targets": {
@@ -37825,10 +37844,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1968,
+    "total_skills": 1969,
     "supported": {
-      "codex": 1893,
-      "claude": 1915
+      "codex": 1894,
+      "claude": 1916
     },
     "blocked": {
       "codex": 75,

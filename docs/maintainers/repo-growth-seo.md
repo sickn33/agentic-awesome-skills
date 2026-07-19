@@ -29,7 +29,7 @@ Preferred homepage:
 Preferred social preview:
 
 - lead with `AAS Core` and the profile → stack → plan flow;
-- present `1,968+ Agentic Skills` as supporting catalog evidence, not a second product;
+- present `1,969+ Agentic Skills` as supporting catalog evidence, not a second product;
 - mention Codex and Claude as the current Core agent path, with broader host compatibility as distribution support;
 - avoid dense text and tiny logos that disappear in social cards.
 

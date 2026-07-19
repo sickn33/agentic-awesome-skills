@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-18T14:28:18.000Z
 
-Total skills: 1968
+Total skills: 1969
 
 ## agent-behavior (5)
 
@@ -1299,7 +1299,7 @@ Total skills: 1968
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | unknown | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | unknown | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (20)
+## frontend (21)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1313,6 +1313,7 @@ Total skills: 1968
 | `gpt-taste` | Use when generating elite GSAP-heavy frontend pages with strict AIDA structure, wide hero typography, and gapless bento grids. | safe | Leonxlnx/taste-skill | frontend, design, gsap, motion | frontend, design, gsap, motion, gpt, taste, generating, elite, heavy, pages, strict, aida |
 | `high-end-visual-design` | Use when designing expensive agency-grade interfaces with premium fonts, spatial rhythm, soft depth, and fluid microinteractions. | safe | Leonxlnx/taste-skill | frontend, visual-design, motion, ui | frontend, visual-design, motion, ui, high, visual, designing, expensive, agency, grade, interfaces, premium |
 | `industrial-brutalist-ui` | Use when creating raw industrial or tactical telemetry UIs with rigid grids, stark typography, CRT effects, and high-density data. | safe | Leonxlnx/taste-skill | frontend, design, brutalism, ui | frontend, design, brutalism, ui, industrial, brutalist, creating, raw, tactical, telemetry, uis, rigid |
+| `markstream-install` | Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications. | safe | Simon-He95/markstream-vue | markdown, streaming, vue, react, svelte, angular, ai-chat | markdown, streaming, vue, react, svelte, angular, ai-chat, markstream, install, configure, renderers, nuxt |
 | `minimalist-ui` | Use when creating clean editorial interfaces with warm monochrome palettes, crisp borders, restrained motion, and flat bento layouts. | safe | Leonxlnx/taste-skill | frontend, design, minimalism, ui | frontend, design, minimalism, ui, minimalist, creating, clean, editorial, interfaces, warm, monochrome, palettes |
 | `nextjs-best-practices` | Next.js App Router principles. Server Components, data fetching, routing patterns. | unknown | community | nextjs, best, practices | nextjs, best, practices, next, js, app, router, principles, server, components, data, fetching |
 | `premium-3d-website` | Guidelines for building premium 3D websites, focusing on custom WebGL shaders, post-processing, physics-based interactions, smooth animations, preloaders, an... | safe | self | threejs, webgl, shaders, post-processing, creative-coding, premium-design | threejs, webgl, shaders, post-processing, creative-coding, premium-design, premium, 3d, website, guidelines, building, websites |

@@ -5,7 +5,7 @@
     "includedFromMajor": 15,
     "status": "agent-first-preview"
   },
-  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 1,968+ agentic skills.",
+  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 1,969+ agentic skills.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
