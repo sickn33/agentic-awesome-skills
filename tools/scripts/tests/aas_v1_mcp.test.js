@@ -90,7 +90,7 @@ test("initialize fails closed on a protocol version other than 2025-06-18", asyn
   assert.equal(bypass.error.code, -32002);
 });
 
-test("MCP exposes the five agent-owned selection tools and one skill resource template", async () => {
+test("MCP preserves the five stack tools and adds two read-only evidence tools", async () => {
   const server = await initializedServer();
   const tools = await server.handle({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
   assert.deepEqual(tools.result.tools.map((entry) => entry.name), TOOL_NAMES);
@@ -100,6 +100,8 @@ test("MCP exposes the five agent-owned selection tools and one skill resource te
     "compose_stack",
     "inspect_stack",
     "diff_stack",
+    "export_selection_evidence",
+    "inspect_selection_evidence",
   ]);
   for (const definition of tools.result.tools) {
     assert.deepEqual(definition.annotations, {
@@ -137,7 +139,19 @@ test("MCP exposes the five agent-owned selection tools and one skill resource te
   assert.equal(Object.hasOwn(composeDefinition.inputSchema.properties, "policy"), false);
   assert.equal(Object.hasOwn(composeDefinition.inputSchema.properties, "metadata"), false);
   assert.match(composeDefinition.description, /covered every capability/i);
-  assert.match(composeDefinition.description, /arbitrary count cap or smallest-stack optimization/i);
+  assert.match(composeDefinition.description, /maximum of 128 skills per manifest is a technical payload limit/i);
+
+  const exportEvidenceDefinition = tools.result.tools.find((entry) => entry.name === "export_selection_evidence");
+  assert.deepEqual(exportEvidenceDefinition.inputSchema.required, [
+    "manifestDigest", "project", "dimensions", "capabilities",
+  ]);
+  assert.equal(Object.hasOwn(exportEvidenceDefinition.inputSchema.properties, "trace"), false);
+  assert.equal(Object.hasOwn(exportEvidenceDefinition.inputSchema.properties, "selectedSkillIds"), false);
+  assert.match(exportEvidenceDefinition.description, /actual search, get, compose, and inspect trace/i);
+
+  const inspectEvidenceDefinition = tools.result.tools.find((entry) => entry.name === "inspect_selection_evidence");
+  assert.deepEqual(inspectEvidenceDefinition.inputSchema.required, ["evidence", "manifest"]);
+  assert.match(inspectEvidenceDefinition.description, /without.*judging/i);
 
   const inspectDefinition = tools.result.tools.find((entry) => entry.name === "inspect_stack");
   assert.deepEqual(inspectDefinition.inputSchema.properties.manifest.required, [
@@ -186,6 +200,7 @@ test("MCP initialization imposes the agent-owned capability coverage contract", 
   assert.match(response.result.instructions, /at least one non-redundant skill for every primary capability/i);
   assert.match(response.result.instructions, /do not stop at the first few matches/i);
   assert.match(response.result.instructions, /do not.*optimize for the smallest stack/i);
+  assert.match(response.result.instructions, /manifest maximum of 128 skills is a technical payload limit/i);
   assert.match(response.result.instructions, /no valid catalog match/i);
   assert.match(response.result.instructions, /does not judge semantic coverage or choose IDs/i);
 });
@@ -358,6 +373,121 @@ test("search, get, resource read, explicit composition, inspection, and unavaila
   });
   assert.equal(diff.result.isError, true);
   assert.equal(diff.result.structuredContent.code, "AAS_MCP_VERIFIED_CATALOG_NOT_AVAILABLE");
+});
+
+test("MCP exports server-owned selection trace and structurally inspects its canonical sidecar", async () => {
+  const server = await initializedServer();
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const skillIds = catalog.skills.slice(0, 2).map((skill) => skill.id);
+  const packageBytes = fs.readFileSync(path.join(ROOT, "package.json"));
+  const projectDescriptor = {
+    schemaVersion: 1,
+    files: [{ path: "package.json", size: packageBytes.length, sha256: core.sha256(packageBytes) }],
+  };
+  const project = {
+    ...projectDescriptor,
+    fingerprint: core.sha256(core.canonicalJson(projectDescriptor)),
+  };
+  const dimensions = core.evidence.DIMENSION_IDS.map((id) => ({
+    id,
+    status: ["architecture-runtime", "domain-behavior"].includes(id) ? "applicable" : "not-applicable",
+    capabilityIds: id === "architecture-runtime" ? ["project-architecture"]
+      : id === "domain-behavior" ? ["unmatched-domain-need"] : [],
+  }));
+  const evidenceRef = project.files[0];
+  const capabilities = [
+    {
+      id: "project-architecture",
+      dimensionId: "architecture-runtime",
+      status: "covered",
+      evidence: [{ path: evidenceRef.path, sha256: evidenceRef.sha256 }],
+      selectedSkillIds: skillIds,
+    },
+    {
+      id: "unmatched-domain-need",
+      dimensionId: "domain-behavior",
+      status: "catalog-gap",
+      evidence: [{ path: evidenceRef.path, sha256: evidenceRef.sha256 }],
+      selectedSkillIds: [],
+    },
+  ];
+
+  await server.handle({
+    jsonrpc: "2.0", id: 200, method: "tools/call",
+    params: { name: "search_skills", arguments: { query: skillIds[0], cursor: 0, limit: 5 } },
+  });
+  await server.handle({
+    jsonrpc: "2.0", id: 201, method: "tools/call",
+    params: { name: "get_skill", arguments: { id: skillIds[0], includeContent: true } },
+  });
+  for (const id of [202, 203]) {
+    const failed = await server.handle({
+      jsonrpc: "2.0", id, method: "tools/call",
+      params: { name: "search_skills", arguments: { query: "^(a+)+$" } },
+    });
+    assert.equal(failed.result.structuredContent.code, "AAS_INPUT_QUERY_INVALID");
+  }
+  const composed = await server.handle({
+    jsonrpc: "2.0", id: 204, method: "tools/call",
+    params: {
+      name: "compose_stack",
+      arguments: {
+        profile: { goals: ["audit selection"], languages: [], frameworks: [], constraints: [] },
+        skillIds,
+      },
+    },
+  });
+  const manifest = composed.result.structuredContent.manifest;
+  const manifestDigest = composed.result.structuredContent.manifestDigest;
+  const inspected = await server.handle({
+    jsonrpc: "2.0", id: 205, method: "tools/call",
+    params: { name: "inspect_stack", arguments: { manifest } },
+  });
+  assert.equal(inspected.result.structuredContent.status, "valid");
+
+  const injected = await server.handle({
+    jsonrpc: "2.0", id: 206, method: "tools/call",
+    params: {
+      name: "export_selection_evidence",
+      arguments: { manifestDigest, project, dimensions, capabilities, trace: { calls: [] } },
+    },
+  });
+  assert.equal(injected.result.isError, true);
+  assert.equal(injected.result.structuredContent.code, "AAS_MCP_ARGUMENT_UNKNOWN");
+
+  const exported = await server.handle({
+    jsonrpc: "2.0", id: 207, method: "tools/call",
+    params: {
+      name: "export_selection_evidence",
+      arguments: { manifestDigest, project, dimensions, capabilities },
+    },
+  });
+  assert.equal(exported.result.isError, false);
+  const evidence = exported.result.structuredContent.evidence;
+  assert.equal(evidence.digest, core.sha256(core.canonicalJson(evidence.payload)));
+  assert.deepEqual(evidence.payload.selectedSkillIds, skillIds);
+  assert.deepEqual(evidence.payload.client, { name: "test", version: "1" });
+  assert.deepEqual(evidence.payload.processTrace.calls.map((call) => call.tool), [
+    "search_skills", "get_skill", "search_skills", "search_skills", "compose_stack", "inspect_stack",
+  ]);
+  assert.equal(evidence.payload.processTrace.calls[3].attempt, 2);
+  assert.equal(evidence.payload.processTrace.calls[3].retryOf, 3);
+  assert.deepEqual(
+    evidence.payload.processTrace.calls.find((call) => call.tool === "compose_stack").input.skillIds,
+    skillIds,
+  );
+  assert.equal(evidence.runtimeObservations.digestScope, "excluded-from-evidence-digest");
+
+  const timingChanged = JSON.parse(JSON.stringify(evidence));
+  timingChanged.runtimeObservations.calls[0].durationMicros += 999;
+  assert.equal(timingChanged.digest, evidence.digest);
+  const evidenceInspection = await server.handle({
+    jsonrpc: "2.0", id: 208, method: "tools/call",
+    params: { name: "inspect_selection_evidence", arguments: { evidence: timingChanged, manifest } },
+  });
+  assert.equal(evidenceInspection.result.isError, false);
+  assert.equal(evidenceInspection.result.structuredContent.status, "valid");
+  assert.deepEqual(evidenceInspection.result.structuredContent.selectedSkillIds, skillIds);
 });
 
 test("MCP propagates structured path-safe profile validation diagnostics", async () => {

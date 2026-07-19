@@ -8,6 +8,7 @@ const versions = require("./versions");
 const stack = require("./stack");
 const cache = require("./cache");
 const transaction = require("./transaction");
+const evidence = require("./evidence");
 
 module.exports = {
   ...versions,
@@ -23,4 +24,7 @@ module.exports = {
   stack,
   cache,
   transaction,
+  evidence,
+  createSelectionEvidence: evidence.createSelectionEvidence,
+  validateSelectionEvidence: evidence.validateSelectionEvidence,
 };

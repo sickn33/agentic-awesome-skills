@@ -233,6 +233,9 @@ async function main() {
   const cacheRoot = path.join(workRoot, "cache");
   fs.mkdirSync(projectRoot, { recursive: true, mode: 0o700 });
   fs.mkdirSync(cacheRoot, { recursive: true, mode: 0o700 });
+  const projectEvidencePath = path.join(projectRoot, "README.md");
+  const projectEvidenceBytes = Buffer.from("# AAS packed preview project\n", "utf8");
+  fs.writeFileSync(projectEvidencePath, projectEvidenceBytes, { flag: "wx", mode: 0o600 });
 
   const metadata = JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8"));
   assert.equal(metadata.name, "agentic-awesome-skills");
@@ -369,7 +372,15 @@ async function main() {
   client.notify("notifications/initialized");
   const tools = await client.request(2, "tools/list");
   const toolNames = tools.result.tools.map((tool) => tool.name);
-  assert.deepEqual(toolNames, ["search_skills", "get_skill", "compose_stack", "inspect_stack", "diff_stack"]);
+  assert.deepEqual(toolNames, [
+    "search_skills",
+    "get_skill",
+    "compose_stack",
+    "inspect_stack",
+    "diff_stack",
+    "export_selection_evidence",
+    "inspect_selection_evidence",
+  ]);
   const templates = await client.request(3, "resources/templates/list");
   assert.deepEqual(templates.result.resourceTemplates.map((item) => item.uriTemplate), ["aas://skills/{id}"]);
   const search = await client.request(4, "tools/call", { name: "search_skills", arguments: { query: "android ui", limit: 3 } });
@@ -394,7 +405,46 @@ async function main() {
   assert.deepEqual(mcpComposition.result.structuredContent.manifest, manifest);
   const inspection = await client.request(8, "tools/call", { name: "inspect_stack", arguments: { manifest } });
   assert.equal(inspection.result.structuredContent.ok, true);
-  const diff = await client.request(9, "tools/call", {
+  const projectFiles = [{
+    path: "README.md",
+    size: projectEvidenceBytes.length,
+    sha256: sha256(projectEvidenceBytes),
+  }];
+  const project = {
+    schemaVersion: 1,
+    files: projectFiles,
+    fingerprint: aas.sha256(aas.canonicalJson({ schemaVersion: 1, files: projectFiles })),
+  };
+  const dimensions = aas.evidence.DIMENSION_IDS.map((id) => ({
+    id,
+    status: id === "architecture-runtime" ? "applicable" : "not-applicable",
+    capabilityIds: id === "architecture-runtime" ? ["agent-selection-lifecycle"] : [],
+  }));
+  const capabilities = [{
+    id: "agent-selection-lifecycle",
+    dimensionId: "architecture-runtime",
+    status: "covered",
+    evidence: [{ path: "README.md", sha256: projectFiles[0].sha256 }],
+    selectedSkillIds: selection.skillIds,
+  }];
+  const exported = await client.request(9, "tools/call", {
+    name: "export_selection_evidence",
+    arguments: {
+      manifestDigest: composed.manifestDigest,
+      project,
+      dimensions,
+      capabilities,
+    },
+  });
+  assert.equal(exported.result.structuredContent.ok, true);
+  assert.deepEqual(exported.result.structuredContent.evidence.payload.selectedSkillIds, selection.skillIds);
+  const evidenceInspection = await client.request(10, "tools/call", {
+    name: "inspect_selection_evidence",
+    arguments: { evidence: exported.result.structuredContent.evidence, manifest },
+  });
+  assert.equal(evidenceInspection.result.structuredContent.ok, true);
+  assert.equal(evidenceInspection.result.structuredContent.status, "valid");
+  const diff = await client.request(11, "tools/call", {
     name: "diff_stack",
     arguments: { stack: manifest, toCatalogDigest: manifest.catalog.integrity },
   });

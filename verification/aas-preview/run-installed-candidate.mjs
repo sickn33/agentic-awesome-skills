@@ -34,7 +34,7 @@ function run(command, args, options = {}) {
     cwd: options.cwd,
     env: options.env || process.env,
     encoding: "utf8",
-    timeout: options.timeout || 180_000,
+    timeout: options.timeout || 300_000,
     maxBuffer: 16 * 1024 * 1024,
     windowsHide: true,
   });

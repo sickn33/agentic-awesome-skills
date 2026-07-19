@@ -4,7 +4,7 @@ AAS Core lets Codex and Claude search and read the complete local AAS catalog, p
 
 > **The agent inspects and chooses. AAS records and validates. You control.**
 
-The durable artifact is [`aas-stack.json`](#the-stack-manifest). It records the exact skill IDs chosen by the coding agent; it is not the output of a Core ranking system. The local MCP is a catalog access and composition boundary, the `aas` CLI validates and plans, and Workbench is a browser-local review surface.
+The primary durable artifact is [`aas-stack.json`](#the-stack-manifest). It records the exact skill IDs chosen by the coding agent; it is not the output of a Core ranking system. An audit-enabled flow can also persist a separate canonical `aas-selection-evidence.json` sidecar. The local MCP is a read-only catalog, composition, and evidence boundary; a client or the `aas` CLI performs persistence, the CLI validates and plans, and Workbench is a browser-local review surface.
 
 ## How it works
 
@@ -13,13 +13,14 @@ your project
   -> Codex or Claude inspects the repository
   -> agent searches and reads the complete local AAS catalog
   -> agent chooses the exact skill IDs
-  -> compose_stack validates and pins the selection
-  -> you review aas-stack.json
+  -> compose_stack validates and returns the manifest in memory
+  -> client or CLI persists aas-stack.json and optional evidence sidecar
+  -> you review the artifacts
   -> aas stack validate
   -> aas stack plan (preview; no skill changes)
 ```
 
-AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. Every catalog skill remains searchable, readable, selectable, and usable; missing or incomplete metadata never makes a skill ineligible.
+AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. All 1,968 skills in the current catalog remain individually searchable, readable, selectable, and usable; missing or incomplete metadata never makes a skill ineligible. Core has no semantic policy that favors a small stack, while every stack manifest has an explicit technical maximum of 128 skills.
 
 ## Configure the local MCP
 
@@ -56,11 +57,12 @@ evaluate architecture/runtime, languages/frameworks, domain behavior,
 data/storage, external integrations, testing/quality, security/privacy,
 user experience/accessibility when user-facing, deployment/operations, and
 maintenance workflow; mark dimensions not applicable instead of silently
-omitting them. Do not stop at the first few matches, optimize for the smallest
-stack, or impose an arbitrary skill-count cap.
-Only then use compose_stack with a project profile to validate and pin the exact
-IDs in a schema 2 aas-stack.json, and use inspect_stack before presenting it. Do
-not install or apply anything.
+omitting them. Do not stop at the first few matches or optimize for the smallest
+stack. Core imposes no semantic small-stack policy; the manifest format has a
+technical maximum of 128 selected skills.
+Only then use compose_stack with a project profile to validate the exact IDs and
+return a schema 2 manifest in memory, and use inspect_stack before presenting
+it. Do not install or apply anything.
 ```
 
 This capability-coverage contract is delivered to supported clients in the MCP
@@ -73,13 +75,15 @@ The local MCP exposes these read-only tools:
 
 - `search_skills` — retrieve deterministic, paginated matches from every skill in the verified local catalog without scores or ranking;
 - `get_skill` — inspect one skill and optionally read its full content;
-- `compose_stack` — validate the agent-selected IDs and produce the pinned stack shape;
+- `compose_stack` — validate the agent-selected IDs and return the stack manifest in memory without writing it;
 - `inspect_stack` — validate and explain a proposed manifest;
 - `diff_stack` — compare manifests using verified local catalogs.
+- `export_selection_evidence` — combine the server-recorded session trace with an agent-declared capability ledger and an already composed and inspected manifest;
+- `inspect_selection_evidence` — validate the sidecar's structure, digests, catalog identity, manifest binding, and factual cross-references without judging skill suitability.
 
 Search results use a stable catalog order and contain no relevance score, recommendation, or preferred ordering. Codex or Claude evaluates the returned candidates semantically and chooses exact IDs. Metadata returned by search or inspection is informational context; Core does not use risk, source, setup, compatibility, review, or evidence metadata to rank, exclude, or disable a skill.
 
-MCP calls do not install or remove skills, update catalogs, edit host configuration, or apply a stack. Full skill text is returned only when requested and remains marked as untrusted content.
+MCP calls do not install or remove skills, update catalogs, edit host configuration, persist a stack, or apply it. Full skill text is returned only when requested and remains marked as untrusted content.
 
 ## The stack manifest
 
@@ -110,6 +114,30 @@ MCP calls do not install or remove skills, update catalogs, edit host configurat
 
 The manifest pins catalog identity, targets, the project profile, and exact agent-selected skill IDs. It intentionally has no selection policy: Core validates identity and structure but does not overrule the agent's choice because metadata is missing, incomplete, or cautionary.
 
+`compose_stack` produces this manifest only in MCP process memory. Persist it through the client or the CLI. Audit-enabled CLI flows publish `aas-stack.json` together with `aas-selection-evidence.json` in the requested `artifact-dir`, keeping the sidecar separate from the desired-state manifest.
+
+## Selection evidence sidecar
+
+`aas-selection-evidence.json` makes the selection process auditable without moving semantic judgment into Core. It binds a path-safe project fingerprint, catalog identity, manifest digest, the agent-declared ten-dimension capability ledger, capability-to-skill mappings, and the actual `search_skills`, `get_skill`, `compose_stack`, and `inspect_stack` facts recorded by that MCP server session. `export_selection_evidence` takes the ledger but obtains the trace from server-owned session state; the caller cannot supply a replacement historical trace. `inspect_selection_evidence` performs structural and factual validation only.
+
+The trace records effective search query/cursor/limit values and returned IDs, opened skill IDs, exact compose IDs, inspect outcomes, safe error codes, deterministic retry attempts, and canonical input/output byte counts. Monotonic call durations are recorded separately outside the evidence digest. Client name and version come from MCP initialization when valid and available; model identity is omitted unless a trusted protocol surface supplies it.
+
+The sidecar does not prove that a capability is correctly interpreted, that a selected skill is best, or that semantic coverage is sufficient. Repository evidence references are relative and contain no file contents or absolute paths. Search queries are recorded verbatim as factual trace data, so do not put secrets, credentials, private source text, or personal data in `search_skills` queries. Runtime observations that are not deterministic are not part of the canonical evidence digest.
+
+The digest makes later edits detectable but is not a signature or cross-session identity attestation. The non-falsification guarantee is narrower: callers cannot inject or replace historical tool calls through `export_selection_evidence`; a standalone inspector can verify structure and digests, not who produced the file.
+
+To publish the manifest and exported sidecar without exposing a one-file intermediate state, use a new artifact directory:
+
+```bash
+aas stack create \
+  --selection /absolute/path/to/agent-selection.json \
+  --evidence /absolute/path/to/exported-evidence.json \
+  --artifact-dir /absolute/path/to/new-audit-artifact \
+  --require-evidence
+```
+
+The destination must not already exist. The CLI validates both artifacts, writes private staged files named `aas-stack.json` and `aas-selection-evidence.json`, synchronizes them, and publishes the complete directory with one rename. The original `stack create --selection ... --out ...` manifest-only path remains supported.
+
 ## Validate and preview the plan
 
 Use absolute paths in automation and review the JSON result from each command:
@@ -135,7 +163,8 @@ Stop after reviewing the plan unless you are deliberately participating in contr
 - MCP is local stdio, process-per-session, read-only, offline-capable, and contains no model credentials or telemetry.
 - Codex or Claude owns semantic selection. Different agents or project observations may reasonably produce different stacks.
 - Catalog integrity and manifest validation are deterministic; skill suitability is an agent judgment, not a Core score.
-- Every canonical skill can be searched, read, selected, and used. Metadata remains visible but informational.
+- Core does not impose a semantic skill-count target. The technical manifest maximum is 128 skills, and every one of the current catalog's 1,968 skills remains individually searchable, readable, selectable, and usable. Metadata remains visible but informational.
+- Evidence exports include raw `search_skills` queries; keep secrets and sensitive project content out of those queries.
 - Catalog updates and runtime changes are explicit. There is no resident daemon or implicit auto-update.
 - Skill prose is untrusted content and does not gain instruction authority by being returned through MCP.
 
