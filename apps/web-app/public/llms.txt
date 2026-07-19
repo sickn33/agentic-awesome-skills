@@ -4,8 +4,8 @@
 
 ## Key Facts
 
-- Current release: V15.0.0.
-- Release boundary: V15.0.0 includes AAS Core under the Agent-First Preview; pin this exact version when configuring the local MCP.
+- Current release: V15.1.0.
+- Release boundary: V15.1.0 includes AAS Core under the Agent-First Preview; pin this exact version when configuring the local MCP.
 - Skill count: 1,969+.
 - Primary product: AAS Core preview, exposed through the `aas` CLI and local `aas-mcp` stdio server.
 - Agent tools: `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, `diff_stack`, `export_selection_evidence`, and `inspect_selection_evidence`.

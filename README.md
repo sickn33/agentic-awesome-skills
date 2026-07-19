@@ -1,9 +1,9 @@
-<!-- registry-sync: version=15.0.0; skills=1969; stars=43529; updated_at=2026-07-18T14:28:18+00:00 -->
+<!-- registry-sync: version=15.1.0; skills=1969; stars=43586; updated_at=2026-07-19T19:39:12+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **A complete local skill catalog for coding agents—from project inspection and agent-owned selection to a reproducible, reviewable plan.**
 
-**Current release: V15.0.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
+**Current release: V15.1.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares candidates across the complete local AAS catalog, and chooses the exact skills. Core imposes no semantic policy that favors a small stack; the manifest format has an explicit technical maximum of 128 skills. All 1,968 skills in the current catalog remain individually searchable, readable, and selectable. AAS Core does not rank or recommend skills. Its read-only `compose_stack` tool validates and returns the agent-owned manifest in memory; a client or the `aas` CLI persists the reviewed stack and its optional selection-evidence sidecar.
 
