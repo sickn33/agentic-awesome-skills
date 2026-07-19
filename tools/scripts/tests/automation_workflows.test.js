@@ -82,8 +82,6 @@ for (const filePath of [
   "apps/web-app/public/skills.json.backup",
   "data/plugin-compatibility.json",
   "data/aas-v1/",
-  "tools/lib/aas-v1/metadata-overrides.v1.json",
-  "tools/lib/aas-v1/review-queue.v1.json",
   ".agents/plugins/",
   ".claude-plugin/plugin.json",
   ".claude-plugin/marketplace.json",
@@ -92,6 +90,17 @@ for (const filePath of [
   assert.ok(
     generatedFiles.derivedFiles.includes(filePath),
     `generated-files derivedFiles should include ${filePath}`,
+  );
+}
+
+for (const retiredCoreAsset of [
+  "tools/lib/aas-v1/metadata-overrides.v1.json",
+  "tools/lib/aas-v1/metadata-reviews.v1.json",
+  "tools/lib/aas-v1/review-queue.v1.json",
+]) {
+  assert.ok(
+    !generatedFiles.derivedFiles.includes(retiredCoreAsset),
+    `generated-files should not retain retired Core policy asset ${retiredCoreAsset}`,
   );
 }
 
@@ -172,10 +181,15 @@ assert.match(
   /artifact-preview:[\s\S]*?actions\/checkout@[a-f0-9]{40}[\s\S]*?fetch-depth: 0[\s\S]*?persist-credentials: false/,
   "artifact-preview should retain history because canonical provenance generation reads git history",
 );
+assert.doesNotMatch(
+  offlineCatalogBuilder,
+  /buildMetadataOverrides|metadata-overrides|review-queue/,
+  "offline catalog builds should not bind retired Core policy or review assets",
+);
 assert.match(
   offlineCatalogBuilder,
-  /if \(!check\)[\s\S]*?buildMetadataOverrides\(\)[\s\S]*?fs\.writeFileSync[\s\S]*?buildArtifacts\(\)/,
-  "offline catalog builds should refresh metadata overrides before binding them into the catalog manifest",
+  /catalogSchemaVersion:\s*versions\.catalogSchemaVersion/,
+  "offline catalog manifests should bind the explicit catalog schema version",
 );
 assert.match(
   ciWorkflow,

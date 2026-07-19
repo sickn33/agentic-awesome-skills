@@ -17,9 +17,6 @@ const CATALOG_ASSET_PATHS = Object.freeze([
   "data/aas-v1/skill-content-index.v1.json",
   "data/aas-v1/skill-content.v1.ndjson",
   "data/catalog.json",
-  "data/plugin-compatibility.json",
-  "tools/lib/aas-v1/metadata-reviews.v1.json",
-  "tools/lib/aas-v1/metadata-overrides.v1.json",
   "tools/lib/aas-v1/ontology.v1.json",
 ]);
 

@@ -57,7 +57,7 @@ class AuditConsistencyTests(unittest.TestCase):
                     "name": "agentic-awesome-skills",
                     "version": "8.4.0",
                     "aasCore": {"includedFromMajor": 8, "status": "agent-first-preview"},
-                    "description": f"AAS Core preview: local skill discovery, recommendation, stack validation, and planning, backed by {count_label} agentic skills.",
+                    "description": f"AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by {count_label} agentic skills.",
                 }
             ),
             encoding="utf-8",
@@ -71,11 +71,11 @@ class AuditConsistencyTests(unittest.TestCase):
             f"""<!-- registry-sync: version=8.4.0; skills={total_skills}; stars=26132; updated_at=2026-03-21T00:00:00+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
-> **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
+> **A complete local skill catalog for coding agents—from project inspection and agent-owned selection to a reproducible, reviewable plan.**
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2026%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 
-**Current release: V8.4.0.** This release includes AAS Core under the **Agent-First Preview** claim for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
+**Current release: V8.4.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 - **Broad coverage with real utility**: {count_label} skills across development, testing, security, infrastructure, product, and marketing.
 

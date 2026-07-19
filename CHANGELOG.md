@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Make AAS Core recommendations domain-first for browser-extension projects: project profile evidence now promotes Manifest V3 architecture, permissions, and cross-context messaging to critical goals, backed by a reviewed Chrome-extension specialist rather than generic QA-only coverage.
-- Expanded natural AAS Core goals such as `build`, `test`, `security`, and `release` into versioned capability lanes before deterministic ranking, so real project profiles produce reviewable multi-skill stacks instead of empty or single-skill recommendations.
-- Clarified the MCP recommendation contract for natural goals and the `0.8`–`1.0` non-critical coverage ratio, and added a bundled VibePalette regression proving a five-to-eight-skill project stack remains available without weakening policy gates.
+- Moved semantic skill selection fully to Codex and Claude: agents inspect the project, search and read the complete local catalog, and choose exact skill IDs using their own judgment; AAS Core no longer ranks or recommends skills.
+- Replaced the recommendation workflow with `compose_stack`, which validates and pins the agent-owned selection in `aas-stack.json` for inspection, CLI validation, and immutable plan preview.
+- Removed Core selection policy and metadata eligibility gates. Every canonical skill is searchable, readable, selectable, and usable; risk, source, setup, compatibility, review, and evidence metadata are informational only.
+- Updated the public product narrative, host guides, Workbench-facing copy sources, package metadata, and maintainer workflow to describe the agent-owned selection boundary. Released entries below remain historical descriptions of their releases.
 
 ## [15.0.0] - 2026-07-18 - "AAS Core: Local Composition and Reviewable Plans"
 

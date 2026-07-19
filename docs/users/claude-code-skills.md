@@ -1,21 +1,21 @@
 # AAS Core with Claude Code
 
-For Claude Code, the recommended AAS path is **AAS Core**: a local, agent-first control plane for catalog search, deterministic stack recommendation, manifest inspection, and preview-first planning.
+For Claude Code, the recommended AAS path is **AAS Core**: a local, agent-first control plane for complete catalog search, Claude-owned skill selection, manifest inspection, and preview-first planning.
 
-The local AAS MCP is read-only. It can help Claude search and inspect the catalog or propose a minimal `aas-stack.json`, while validation, planning, and any approved changes stay in the AAS CLI lifecycle.
+The local AAS MCP is read-only. It lets Claude search and read every catalog skill, then validate and pin Claude's chosen IDs in `aas-stack.json`; planning and any approved changes stay in the AAS CLI lifecycle.
 
 Start with the [AAS Core guide](aas-core.md). The Claude plugin marketplace and direct skill installation remain supported delivery paths after you know which skills you want.
 
-> **Preview status:** Search, recommendation, manifest validation, and planning are the documented preview path. Stop after plan review; apply and recovery are not certified preview safety claims.
+> **Preview status:** Complete catalog search, agent-owned selection, manifest validation, and planning are the documented path. Stop after plan review; apply and recovery remain experimental.
 
 ## How to use Agentic Awesome Skills with Claude Code
 
-Configure AAS Core for Claude Code, describe the task and constraints, review the recommended stack, then preview the CLI plan. Core does not install or mutate through MCP. The current documented preview path stops after plan review.
+Configure AAS Core for Claude Code, describe the task and constraints, let Claude choose exact IDs from the complete catalog, then review the composed stack and preview the CLI plan. Core does not install or mutate through MCP.
 
 ## Why use this repo for Claude Code
 
 - It lets Claude search the verified local catalog without loading the full library into context.
-- It produces deterministic recommendations with inspectable factors and evidence.
+- It preserves Claude's exact selection without using metadata as an eligibility gate.
 - It keeps MCP discovery read-only and CLI changes approval-gated.
 - It includes 1,968+ skills instead of a narrow single-domain starter pack.
 - It supports the standard `.claude/skills/` path and the Claude Code plugin marketplace flow.
@@ -63,7 +63,7 @@ test -d .claude/skills || test -d ~/.claude/skills
 With AAS Core configured:
 
 ```text
-Use AAS to recommend a minimal skill stack for this security review. Propose the aas-stack.json and preview the plan without applying it.
+Inspect this security-review project, search and read the complete AAS catalog, choose the exact skills you judge most useful, and use compose_stack to propose aas-stack.json. Preview the plan without applying it.
 ```
 
 After installing or activating a chosen skill, direct invocation still works:

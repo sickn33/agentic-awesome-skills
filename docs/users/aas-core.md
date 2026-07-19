@@ -1,33 +1,29 @@
-# AAS Core: Agent-First Skill Stacks
+# AAS Core: Agent-Owned Skill Stacks
 
-> **Preview status:** AAS Agent-First Preview helps Codex and Claude compose a local, explainable, reproducible skill stack. Full-catalog recommendation quality and transactional apply/recovery safety are not yet certified.
+AAS Core lets Codex and Claude search and read the complete local AAS catalog, preserve their exact skill selection as reproducible desired state, and preview a validated plan before any target change.
 
-AAS Core is the primary way to turn the repository's skill catalog into a controlled project stack:
+> **The agent inspects and chooses. AAS records and validates. You control.**
 
-> **The agent composes. You control. AAS keeps the stack reproducible.**
-
-The durable artifact is [`aas-stack.json`](#the-stack-manifest), not a prompt, an opaque model decision, or a copy of the entire catalog. The same deterministic, versioned core powers the local MCP server and the `aas` CLI. The hosted Workbench is a review surface; it is not a browser-side installer or hosted control plane.
+The durable artifact is [`aas-stack.json`](#the-stack-manifest). It records the exact skill IDs chosen by the coding agent; it is not the output of a Core ranking system. The local MCP is a catalog access and composition boundary, the `aas` CLI validates and plans, and Workbench is a browser-local review surface.
 
 ## How it works
 
 ```text
 your project
   -> Codex or Claude inspects the repository
-  -> local AAS MCP (stdio, read-only)
-  -> deterministic AAS Core + bundled or verified local catalog
-  -> agent explains a recommendation and proposes aas-stack.json
-  -> you review the exact skills, target, policy, and catalog identity
+  -> agent searches and reads the complete local AAS catalog
+  -> agent chooses the exact skill IDs
+  -> compose_stack validates and pins the selection
+  -> you review aas-stack.json
   -> aas stack validate
   -> aas stack plan (preview; no skill changes)
 ```
 
-The agent may inspect your project using its normal local capabilities, but AAS MCP does not scan the repository. It receives an explicit, allowlisted profile from the agent and returns structured catalog evidence.
+AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. Every catalog skill remains searchable, readable, selectable, and usable; missing or incomplete metadata never makes a skill ineligible.
 
 ## Configure the local MCP
 
-> **Release boundary:** AAS Core landed after release 14.6.0, which is not a valid Core bootstrap. Core-capable packages begin with the 15.x line. In the command template below, replace `X.Y.Z` only with an exact release whose notes explicitly state that it includes AAS Core; do not resolve an unreviewed moving tag.
-
-The package publishes separate `aas` and `aas-mcp` binaries. For a pinned Core release without relying on npm's default-bin selection, invoke `aas` explicitly:
+> **Release boundary:** AAS Core landed after release 14.6.0. Use an exact Core-capable release rather than an unreviewed moving tag.
 
 ```bash
 npm exec --yes --ignore-scripts --package=agentic-awesome-skills@X.Y.Z -- aas mcp configure \
@@ -45,30 +41,32 @@ Use `--host claude` with the appropriate absolute Claude MCP configuration path 
 
 Configuration is explicit and integrity-bound. AAS installs or reuses an exact content-addressed runtime, verifies it, and changes only its managed MCP configuration section. Restart the host if it does not reload MCP configuration automatically.
 
-## Ask the agent to compose the stack
+## Ask the agent to choose the stack
 
-Once the host discovers the AAS MCP tools, give it the outcome and constraints rather than manually choosing from almost 2,000 skills:
+Give the agent the desired outcome and constraints, and leave selection judgment with the agent:
 
 ```text
-Inspect this repository and use the AAS MCP tools to recommend a small skill stack
-for implementing and testing this project. Explain exclusions and unknowns, then
-propose an aas-stack.json and validate it with inspect_stack before presenting it.
-Do not install or apply anything.
+Inspect this repository. Search and read the complete local AAS catalog, then
+choose the exact skills you judge most useful for this project. Use compose_stack
+to validate and pin those IDs in aas-stack.json, then use inspect_stack before
+presenting it. Do not install or apply anything.
 ```
 
-The local MCP exposes exactly these read-only tools:
+The local MCP exposes these read-only tools:
 
-- `search_skills` — search the verified local catalog;
-- `get_skill` — inspect one skill and its recorded evidence;
-- `recommend_stack` — produce a deterministic recommendation from an explicit profile and policy;
+- `search_skills` — search every skill in the verified local catalog;
+- `get_skill` — inspect one skill and optionally read its full content;
+- `compose_stack` — validate the agent-selected IDs and produce the pinned stack shape;
 - `inspect_stack` — validate and explain a proposed manifest;
 - `diff_stack` — compare manifests using verified local catalogs.
 
-It also exposes the `aas://skills/{id}` resource template. MCP calls do not install or remove skills, update catalogs, edit host configuration, or apply a stack. Full skill text is returned only when requested and remains marked as untrusted content.
+Metadata returned by search or inspection is informational context. Core does not use risk, source, setup, compatibility, review, or evidence metadata to rank, exclude, or disable a skill.
+
+MCP calls do not install or remove skills, update catalogs, edit host configuration, or apply a stack. Full skill text is returned only when requested and remains marked as untrusted content.
 
 ## The stack manifest
 
-`aas-stack.json` records approved desired state:
+`aas-stack.json` records agent-chosen desired state:
 
 ```json
 {
@@ -81,18 +79,13 @@ It also exposes the `aas://skills/{id}` resource template. MCP calls do not inst
   },
   "targets": [{ "host": "codex", "scope": "project" }],
   "intent": { "goals": ["build", "test"] },
-  "policy": {
-    "allowedRisk": ["none", "safe"],
-    "requireKnownSource": true,
-    "allowManualSetup": false
-  },
   "skills": [
     { "id": "example-skill" }
   ]
 }
 ```
 
-The manifest pins the catalog identity, target, intent, policy, and exact skill IDs. Repository observations, ranking factors, exclusions, unknowns, and natural-language explanations stay in recommendation or plan output instead of becoming hidden state.
+The manifest pins catalog identity, targets, goals, and exact skill IDs. It intentionally has no selection policy: Core validates identity and structure but does not overrule the agent's choice because metadata is missing, incomplete, or cautionary.
 
 ## Validate and preview the plan
 
@@ -110,32 +103,22 @@ aas stack plan \
   --out /absolute/path/to/plan.json
 ```
 
-`stack plan` derives the exact runtime version from the catalog identity in `aas-stack.json`; the verified runtime integrity remains explicit. The CLI rejects a legacy `--runtime-version` override when it disagrees with the manifest, so the documented command does not need a version edit for each release.
-
 `stack validate` is read-only. `stack plan` writes only the requested plan artifact and does not materialize skills or AAS managed state in the target. The immutable plan binds the manifest, runtime, catalog, target identity, current managed state, and exact logical operations.
 
-Stop after reviewing the plan unless you are deliberately participating in controlled preview development. `stack apply` and `stack recover` are disabled by default, require additional experimental flags and exact digest approval, and are **not supported or certified preview safety claims**.
+Stop after reviewing the plan unless you are deliberately participating in controlled preview development. `stack apply` and `stack recover` remain experimental and require explicit opt-in.
 
 ## Privacy, trust, and limits
 
 - MCP is local stdio, process-per-session, read-only, offline-capable, and contains no model credentials or telemetry.
-- Recommendation is deterministic and evidence-based; AAS does not call another model, use embeddings, or perform remote ranking.
-- Missing evidence is reported as `unknown`. AAS may leave goals uncovered instead of presenting a weak match as certainty.
+- Codex or Claude owns semantic selection. Different agents or project observations may reasonably produce different stacks.
+- Catalog integrity and manifest validation are deterministic; skill suitability is an agent judgment, not a Core score.
+- Every canonical skill can be searched, read, selected, and used. Metadata remains visible but informational.
 - Catalog updates and runtime changes are explicit. There is no resident daemon or implicit auto-update.
-- The MCP boundary does not grant skill prose instruction authority and cannot guarantee how an external model interprets untrusted content.
-- Preview qualification does not certify full-catalog recommendation quality, transactional crash/race safety, apply, or recovery.
+- Skill prose is untrusted content and does not gain instruction authority by being returned through MCP.
 
 ## Other ways to use the catalog
 
-AAS Core is the recommended path when Codex or Claude can use the local MCP. Existing distribution paths remain available:
-
-- direct skill installs for hosts that load `SKILL.md` files;
-- specialized plugins for a fixed, domain-focused distribution;
-- bundles as human-curated presets;
-- workflows as ordered execution playbooks;
-- the legacy `agentic-awesome-skills` installer for compatible direct installs.
-
-These surfaces provide catalog content and packaging. AAS Core adds project-aware composition, explicit policy, a durable stack manifest, and a reviewable plan.
+Direct installs, specialized plugins, bundles, workflows, and the legacy installer remain available. These surfaces distribute or curate catalog content; AAS Core adds complete local access, durable agent-owned selection, manifest validation, and a reviewable plan.
 
 ## Next reads
 

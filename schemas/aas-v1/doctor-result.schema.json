@@ -4,15 +4,14 @@
   "title": "AAS stack doctor result v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "ok", "status", "protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion", "target", "findings", "recoveries"],
+  "required": ["schemaVersion", "ok", "status", "protocolVersion", "coreVersion", "catalogSchemaVersion", "target", "findings", "recoveries"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "ok": { "const": true },
     "status": { "enum": ["healthy", "degraded", "recoveryRequired"] },
     "protocolVersion": { "type": "string", "minLength": 1 },
     "coreVersion": { "type": "string", "minLength": 1 },
-    "metadataSchemaVersion": { "type": "string", "minLength": 1 },
-    "scorerVersion": { "type": "string", "minLength": 1 },
+    "catalogSchemaVersion": { "type": "string", "minLength": 1 },
     "target": {
       "type": "object",
       "additionalProperties": false,

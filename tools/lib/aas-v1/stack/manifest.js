@@ -8,7 +8,6 @@ const ID_PATTERN = /^[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9][a-z0-9._-]*)*$/;
 const PACKAGE_PATTERN = /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/;
 const SUPPORTED_HOSTS = new Set(["codex", "claude"]);
 const SUPPORTED_SCOPES = new Set(["project", "user"]);
-const SUPPORTED_RISKS = new Set(["none", "safe", "unknown", "critical", "offensive"]);
 
 function isPlainObject(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
@@ -57,7 +56,7 @@ function validateUniqueStringArray(value, path, issues, options = {}) {
 
 function invalidResult(issues) {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     ok: false,
     status: "invalid",
     ...versions,
@@ -73,12 +72,12 @@ function validateManifest(manifest) {
 
   rejectUnknownKeys(
     manifest,
-    new Set(["schemaVersion", "name", "catalog", "targets", "intent", "policy", "skills"]),
+    new Set(["schemaVersion", "name", "catalog", "targets", "profile", "skills"]),
     "$",
     issues,
   );
 
-  if (manifest.schemaVersion !== 1) issues.push(issue("$.schemaVersion", "AAS_STACK_SCHEMA_VERSION_UNSUPPORTED"));
+  if (manifest.schemaVersion !== 2) issues.push(issue("$.schemaVersion", "AAS_STACK_SCHEMA_VERSION_UNSUPPORTED"));
   validateString(manifest.name, "$.name", issues, { maximum: 128, pattern: /^[A-Za-z0-9][A-Za-z0-9._ -]*$/ });
 
   if (!isPlainObject(manifest.catalog)) {
@@ -109,33 +108,19 @@ function validateManifest(manifest) {
     });
   }
 
-  if (!isPlainObject(manifest.intent)) {
-    issues.push(issue("$.intent", "AAS_STACK_OBJECT_REQUIRED"));
+  if (!isPlainObject(manifest.profile)) {
+    issues.push(issue("$.profile", "AAS_STACK_OBJECT_REQUIRED"));
   } else {
-    rejectUnknownKeys(manifest.intent, new Set(["goals"]), "$.intent", issues);
-    validateUniqueStringArray(manifest.intent.goals, "$.intent.goals", issues, {
+    rejectUnknownKeys(manifest.profile, new Set(["goals", "projectType", "languages", "frameworks", "constraints"]), "$.profile", issues);
+    validateUniqueStringArray(manifest.profile.goals, "$.profile.goals", issues, {
       minimum: 1,
       maximum: 32,
-      pattern: ID_PATTERN,
     });
-  }
-
-  if (!isPlainObject(manifest.policy)) {
-    issues.push(issue("$.policy", "AAS_STACK_OBJECT_REQUIRED"));
-  } else {
-    rejectUnknownKeys(
-      manifest.policy,
-      new Set(["allowedRisk", "requireKnownSource", "allowManualSetup"]),
-      "$.policy",
-      issues,
-    );
-    validateUniqueStringArray(manifest.policy.allowedRisk, "$.policy.allowedRisk", issues, {
-      minimum: 1,
-      maximum: 5,
-      allowed: SUPPORTED_RISKS,
-    });
-    for (const key of ["requireKnownSource", "allowManualSetup"]) {
-      if (typeof manifest.policy[key] !== "boolean") issues.push(issue(`$.policy.${key}`, "AAS_STACK_BOOLEAN_REQUIRED"));
+    if (manifest.profile.projectType !== undefined) {
+      validateString(manifest.profile.projectType, "$.profile.projectType", issues, { maximum: 256 });
+    }
+    for (const key of ["languages", "frameworks", "constraints"]) {
+      validateUniqueStringArray(manifest.profile[key], `$.profile.${key}`, issues, { maximum: 32 });
     }
   }
 

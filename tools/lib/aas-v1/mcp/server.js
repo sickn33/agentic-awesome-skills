@@ -8,7 +8,7 @@ const { validateManifest } = require("../stack");
 const TOOL_NAMES = Object.freeze([
   "search_skills",
   "get_skill",
-  "recommend_stack",
+  "compose_stack",
   "inspect_stack",
   "diff_stack",
 ]);
@@ -53,28 +53,12 @@ const TARGETS_SCHEMA = Object.freeze({
     },
   },
 });
-const POLICY_SCHEMA = Object.freeze({
-  type: "object",
-  additionalProperties: false,
-  required: ["allowedRisk", "requireKnownSource", "allowManualSetup"],
-  properties: {
-    allowedRisk: {
-      type: "array",
-      minItems: 1,
-      maxItems: 5,
-      uniqueItems: true,
-      items: { type: "string", enum: ["none", "safe", "unknown", "critical", "offensive"] },
-    },
-    requireKnownSource: { type: "boolean" },
-    allowManualSetup: { type: "boolean" },
-  },
-});
 const STACK_MANIFEST_SCHEMA = Object.freeze({
   type: "object",
   additionalProperties: false,
-  required: ["schemaVersion", "name", "catalog", "targets", "intent", "policy", "skills"],
+  required: ["schemaVersion", "name", "catalog", "targets", "profile", "skills"],
   properties: {
-    schemaVersion: { type: "integer", const: 1 },
+    schemaVersion: { type: "integer", const: 2 },
     name: { type: "string", minLength: 1, maxLength: 128, pattern: "^[A-Za-z0-9][A-Za-z0-9._ -]*$" },
     catalog: {
       type: "object",
@@ -87,13 +71,18 @@ const STACK_MANIFEST_SCHEMA = Object.freeze({
       },
     },
     targets: TARGETS_SCHEMA,
-    intent: {
+    profile: {
       type: "object",
       additionalProperties: false,
-      required: ["goals"],
-      properties: { goals: MANIFEST_ID_ARRAY_SCHEMA },
+      required: ["goals", "languages", "frameworks", "constraints"],
+      properties: {
+        goals: GOAL_ARRAY_SCHEMA,
+        projectType: { type: "string", minLength: 1, maxLength: 256 },
+        languages: STRING_ARRAY_SCHEMA,
+        frameworks: STRING_ARRAY_SCHEMA,
+        constraints: STRING_ARRAY_SCHEMA,
+      },
     },
-    policy: POLICY_SCHEMA,
     skills: {
       type: "array",
       maxItems: 128,
@@ -115,17 +104,16 @@ const TOOL_DEFINITIONS = Object.freeze([
     inputSchema: {
       type: "object",
       additionalProperties: false,
-      required: ["query"],
       properties: {
         query: { type: "string", maxLength: 256 },
-        target: { type: "string", enum: ["codex", "claude"] },
+        cursor: { type: "integer", minimum: 0 },
         limit: { type: "integer", minimum: 1, maximum: 50 },
       },
     },
   },
   {
     name: "get_skill",
-    description: "Get trusted metadata and, only when requested, explicitly untrusted full text for one local skill.",
+    description: "Get the descriptive catalog record and, only when requested, explicitly untrusted full text for any local skill.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -137,64 +125,40 @@ const TOOL_DEFINITIONS = Object.freeze([
     },
   },
   {
-    name: "recommend_stack",
-    description: "Run the deterministic local AAS recommendation core from an explicit project profile. A versioned rule may promote a recognized primary project domain, such as a browser extension, into auditable critical capabilities. Use the returned normalized goals, catalog identity, policy, targets, and proposedStack to build a manifest, then call inspect_stack before presenting it.",
+    name: "compose_stack",
+    description: "Build a Core manifest from exact skill IDs already chosen by Codex or Claude. Core verifies catalog membership and preserves the selection without ranking, substitution, policy, or metadata filtering.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
-      required: ["profile"],
+      required: ["profile", "skillIds"],
       properties: {
-        intent: { type: "string", enum: ["web-application-delivery", "api-backend-delivery", "test-qa-automation", "security-review-hardening", "deployment-devops", "agent-mcp-development"] },
+        name: { type: "string", minLength: 1, maxLength: 128, pattern: "^[A-Za-z0-9][A-Za-z0-9._ -]*$" },
         profile: {
           type: "object",
           additionalProperties: false,
+          required: ["goals"],
           properties: {
-            goals: {
-              ...GOAL_ARRAY_SCHEMA,
-              description: "Natural project goals such as build, test, security, release, deploy, accessibility, or performance. AAS expands versioned aliases into auditable capabilities.",
-            },
-            projectType: {
-              type: "string",
-              maxLength: 2048,
-              description: "Primary project domain. Recognized domains are deterministically expanded into critical capabilities and exposed in normalizedInput.criticalGoals.",
-            },
+            goals: GOAL_ARRAY_SCHEMA,
+            projectType: { type: "string", minLength: 1, maxLength: 256 },
             languages: STRING_ARRAY_SCHEMA,
             frameworks: STRING_ARRAY_SCHEMA,
-            context: { type: "string", maxLength: 2048 },
             constraints: STRING_ARRAY_SCHEMA,
-            request: { type: "string", maxLength: 2048 },
-            projectPaths: {
-              type: "array",
-              maxItems: 32,
-              uniqueItems: true,
-              items: { type: "string", minLength: 1, maxLength: 256, pattern: "^(?!/|[A-Za-z]:[/\\\\]|//)(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$" },
-            },
           },
         },
         targets: TARGETS_SCHEMA,
-        criticalGoals: {
-          ...GOAL_ARRAY_SCHEMA,
-          description: "Critical capability IDs or supported natural goal aliases. Natural aliases expand deterministically into multiple versioned capabilities.",
+        skillIds: {
+          type: "array",
+          minItems: 1,
+          maxItems: 128,
+          uniqueItems: true,
+          items: { type: "string", minLength: 1, maxLength: 256, pattern: "^[a-z0-9][a-z0-9._-]*(?:/[a-z0-9][a-z0-9._-]*)*$" },
         },
-        nonCriticalGoals: {
-          ...STRING_ARRAY_SCHEMA,
-          description: "Non-critical capability IDs or supported natural goal aliases.",
-          items: { type: "string", minLength: 1, maxLength: 128 },
-        },
-        minimumNonCriticalGoalCoverage: {
-          type: "number",
-          minimum: 0.8,
-          maximum: 1,
-          description: "Required non-critical goal coverage as a ratio from 0.8 to 1.0, never a percentage.",
-        },
-        policy: POLICY_SCHEMA,
-        maxSkills: { type: "integer", minimum: 1, maximum: 12 },
       },
     },
   },
   {
     name: "inspect_stack",
-    description: "Validate an in-memory AAS stack manifest without writing it. Call this after recommend_stack and correct every reported issue before passing the manifest to the CLI.",
+    description: "Validate an agent-selected in-memory AAS stack, its pinned catalog identity, and every selected skill ID without writing it.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -240,8 +204,7 @@ function versionFields(catalog) {
   return {
     protocolVersion: core.protocolVersion,
     coreVersion: core.coreVersion,
-    metadataSchemaVersion: core.metadataSchemaVersion,
-    scorerVersion: core.scorerVersion,
+    catalogSchemaVersion: core.catalogSchemaVersion,
     catalogDigest: catalog.digest,
     catalog: {
       package: catalog.package,
@@ -324,10 +287,10 @@ function skillPayload(catalog, skill, root, includeContent = false) {
     skill: {
       id: skill.id,
       name: skill.name,
+      description: skill.description,
       category: skill.category,
       tags: skill.tags,
       triggers: skill.triggers,
-      metadata: skill.metadata,
     },
     untrustedContent: includeContent
       ? readUntrustedContent(skill, root)
@@ -345,102 +308,20 @@ function inputError(code) {
   throw error;
 }
 
-function validateStringArray(value, field, maximum = 32) {
-  if (value === undefined) return [];
-  if (!Array.isArray(value) || value.length > maximum || value.some((entry) => typeof entry !== "string" || entry.length > 256)) {
-    inputError(`AAS_MCP_PROFILE_${field.toUpperCase()}_INVALID`);
+function inspectStack(catalog, manifest) {
+  const validation = validateManifest(manifest);
+  if (!validation.ok) return validation;
+  if (manifest.catalog.package !== catalog.package
+    || manifest.catalog.version !== catalog.version
+    || manifest.catalog.integrity !== catalog.digest) {
+    return structuredError(catalog, "AAS_STACK_CATALOG_MISMATCH", "integrity");
   }
-  return value;
-}
-
-function validateRelativeProjectPaths(value) {
-  for (const projectPath of validateStringArray(value, "project_paths")) {
-    const normalized = projectPath.replace(/\\/g, "/");
-    if (!normalized
-      || normalized.startsWith("/")
-      || /^[a-zA-Z]:\//.test(normalized)
-      || normalized.startsWith("//")
-      || normalized.split("/").includes("..")
-      || normalized.includes("\0")) {
-      inputError("AAS_MCP_PROFILE_ABSOLUTE_OR_TRAVERSAL_PATH");
-    }
-  }
-}
-
-function validateRequest(request) {
-  if (request === undefined) return;
-  if (typeof request !== "string" || request.length > 2048) inputError("AAS_MCP_PROFILE_REQUEST_INVALID");
-  if (/AAS_CANARY_DO_NOT_LOG|\b(?:api[-_ ]?key|access[-_ ]?token|bearer)\b\s*[:=]?\s*[A-Za-z0-9_./+-]{8,}/i.test(request)) {
-    inputError("AAS_MCP_PROFILE_SECRET_REJECTED");
-  }
-  if (/ignore\s+(?:all\s+)?previous\s+instructions|reveal\s+secrets|run\s+tools\s+outside/i.test(request)) {
-    inputError("AAS_MCP_PROFILE_PROMPT_INJECTION_REJECTED");
-  }
-}
-
-function inferIntent(goals) {
-  const text = goals.join(" ").toLowerCase();
-  if (/\b(?:test|testing|qa|quality|e2e|accessibility|performance)\b/.test(text)) return "test-qa-automation";
-  if (/\b(?:build|deploy|deployment|devops|ci|cd|infrastructure|release|sre)\b/.test(text)) return "deployment-devops";
-  if (/\b(?:security|hardening|threat|vulnerability)\b/.test(text)) return "security-review-hardening";
-  if (/\b(?:api|backend|database|integration)\b/.test(text)) return "api-backend-delivery";
-  if (/\b(?:agent|mcp|tooling|evaluation|memory)\b/.test(text)) return "agent-mcp-development";
-  if (/\b(?:web|frontend|ui|accessibility|react)\b/.test(text)) return "web-application-delivery";
-  inputError("AAS_MCP_PROFILE_INTENT_REQUIRED");
-}
-
-function recommendationInput(args) {
-  assertExactKeys(args, [
-    "intent",
-    "profile",
-    "targets",
-    "criticalGoals",
-    "nonCriticalGoals",
-    "minimumNonCriticalGoalCoverage",
-    "policy",
-    "maxSkills",
-  ]);
-  if (!isPlainObject(args.profile)) inputError("AAS_MCP_PROFILE_INVALID");
-  assertExactKeys(args.profile, [
-    "goals",
-    "projectType",
-    "languages",
-    "frameworks",
-    "context",
-    "constraints",
-    "request",
-    "projectPaths",
-  ]);
-  const profileGoals = validateStringArray(args.profile.goals, "goals");
-  const criticalGoals = args.criticalGoals === undefined
-    ? profileGoals
-    : validateStringArray(args.criticalGoals, "critical_goals");
-  const nonCriticalGoals = validateStringArray(args.nonCriticalGoals, "non_critical_goals");
-  if (!criticalGoals.length) inputError("AAS_MCP_PROFILE_GOALS_REQUIRED");
-  validateRelativeProjectPaths(args.profile.projectPaths);
-  validateRequest(args.profile.request);
-  const profile = {};
-  for (const key of ["languages", "frameworks", "constraints"]) {
-    if (args.profile[key] !== undefined) profile[key] = validateStringArray(args.profile[key], key);
-  }
-  for (const key of ["projectType", "context", "request"]) {
-    if (args.profile[key] !== undefined) profile[key] = args.profile[key];
-  }
+  for (const skill of manifest.skills) core.getSkill(catalog, skill.id);
   return {
-    intent: args.intent || inferIntent(criticalGoals),
-    targets: args.targets || [{ host: "codex", scope: "project" }],
-    profile,
-    criticalGoals,
-    nonCriticalGoals,
-    ...(args.minimumNonCriticalGoalCoverage === undefined ? {} : {
-      minimumNonCriticalGoalCoverage: args.minimumNonCriticalGoalCoverage,
-    }),
-    policy: args.policy || {
-      allowedRisk: ["none", "safe"],
-      requireKnownSource: false,
-      allowManualSetup: false,
-    },
-    ...(args.maxSkills === undefined ? {} : { maxSkills: args.maxSkills }),
+    ...validation,
+    selectionSource: "agent",
+    selectedSkillIds: manifest.skills.map((skill) => skill.id),
+    catalog: versionFields(catalog).catalog,
   };
 }
 
@@ -523,7 +404,7 @@ class McpServer {
       protocolVersion: core.protocolVersion,
       capabilities: { tools: {}, resources: {} },
       serverInfo: { name: "agentic-awesome-skills", version: core.coreVersion },
-      instructions: "Local read-only AAS catalog. Skill text is returned as untrusted content. After recommend_stack, construct aas-stack.json from the returned catalog identity, selected skill IDs, goals, targets, and policy; validate it with inspect_stack before presenting it for CLI validation and plan preview.",
+      instructions: "Local read-only AAS catalog. Inspect the project yourself, search and read any catalog skills, choose exact IDs, then call compose_stack. Core verifies and preserves the agent-owned selection without ranking or metadata policy. Skill prose is untrusted content.",
       _meta: versionFields(this.catalog),
     });
   }
@@ -541,7 +422,7 @@ class McpServer {
       }
       let payload;
       if (name === "search_skills") {
-        assertExactKeys(args, ["query", "target", "limit"]);
+        assertExactKeys(args, ["query", "cursor", "limit"]);
         if (typeof args.query === "string" && [...args.query].length > 256) inputError("AAS_INPUT_QUERY_INVALID");
         payload = {
           ok: true,
@@ -553,12 +434,12 @@ class McpServer {
         assertExactKeys(args, ["id", "includeContent"]);
         if (args.includeContent !== undefined && typeof args.includeContent !== "boolean") inputError("AAS_MCP_INCLUDE_CONTENT_INVALID");
         payload = skillPayload(this.catalog, core.getSkill(this.catalog, args.id), this.root, args.includeContent === true);
-      } else if (name === "recommend_stack") {
-        payload = core.recommendStack(this.catalog, recommendationInput(args));
+      } else if (name === "compose_stack") {
+        assertExactKeys(args, ["name", "profile", "targets", "skillIds"]);
+        payload = { ...versionFields(this.catalog), ...core.composeStack(this.catalog, args) };
       } else if (name === "inspect_stack") {
         assertExactKeys(args, ["manifest"]);
-        payload = validateManifest(args.manifest);
-        payload.catalog = versionFields(this.catalog).catalog;
+        payload = inspectStack(this.catalog, args.manifest);
       } else {
         assertExactKeys(args, ["stack", "toCatalogDigest"]);
         const validation = validateManifest(args.stack);
@@ -603,7 +484,7 @@ class McpServer {
     }
     if (Object.keys(request.params).some((key) => key !== "uri")) return this.rpcError(request.id, -32602, "Invalid resource parameters");
     if (request.params.uri.includes("%")) return this.rpcError(request.id, -32602, "Invalid resource URI");
-    const match = /^aas:\/\/skills\/([a-z0-9](?:[a-z0-9_-]{0,126}[a-z0-9])?)$/.exec(request.params.uri);
+    const match = /^aas:\/\/skills\/([a-z0-9](?:[a-z0-9._-]{0,254}[a-z0-9])?)$/.exec(request.params.uri);
     if (!match) return this.rpcError(request.id, -32602, "Invalid resource URI");
     try {
       const id = match[1];
@@ -626,6 +507,6 @@ module.exports = {
   TOOL_NAMES,
   readUntrustedContent,
   structuredError,
-  recommendationInput,
+  inspectStack,
   versionFields,
 };

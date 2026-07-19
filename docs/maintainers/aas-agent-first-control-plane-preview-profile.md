@@ -1,141 +1,63 @@
-# AAS Agent-First Control Plane Preview Profile
+# AAS Agent-Owned Selection Profile
 
-Status: approved intermediate release profile
-Date: 2026-07-17
-Certified design: `docs/maintainers/aas-agent-first-control-plane-v1-design.md`
+Status: active product profile
+Updated: 2026-07-19
 
 ## Purpose
 
-This profile validates whether Codex, Claude Code, and comparable agents can
-use AAS to compose useful local skill stacks without implying the retired
-certified-v1 benchmark or transaction-verifier guarantees. The certified-v1
-design and goal documents are retained as historical architecture records;
-their verifier corpus and routine workflow were removed on 2026-07-18.
+This profile defines the supported boundary for AAS Core after semantic skill selection moved to the coding agent.
 
-The permitted preview claim is:
+> Codex or Claude inspects the project, searches and reads the complete local catalog, and chooses exact skill IDs. AAS Core validates, pins, compares, and plans that agent-owned selection; it does not recommend skills.
 
-> AAS Agent-First Preview helps Codex and Claude compose a local, explainable,
-> reproducible skill stack. Full-catalog recommendation quality and
-> transactional apply/recovery safety are not yet certified.
+The earlier deterministic recommendation design and goal documents are retained as historical architecture records. They are not current product policy or release gates.
 
-Preview output must not use `implementationVerified`, `releaseReady`,
-`released`, `certified`, or an equivalent unqualified claim.
+## Supported surfaces
 
-## Included preview surfaces
+- A complete, integrity-verified local catalog in which every canonical skill is searchable, readable, selectable, and usable.
+- Local stdio MCP tools `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`, plus `aas://skills/{id}`.
+- Minimal, schema-validated `aas-stack.json` with pinned catalog identity, targets, goals, and exact agent-selected skill IDs.
+- CLI manifest validation, immutable plan preview, and read-only diagnosis.
+- Workbench import and review of the agent-owned stack and immutable plan.
 
-- Minimal, schema-validated `aas-stack.json` with pinned catalog identity,
-  targets, approved intent and policy, and exact skill IDs.
-- CLI `stack init`, `stack recommend`, `stack validate`, `stack plan`, and
-  `stack doctor` from the packed npm candidate.
-- The local stdio MCP with exactly `search_skills`, `get_skill`,
-  `recommend_stack`, `inspect_stack`, `diff_stack`, and
-  `aas://skills/{id}`.
-- Deterministic recommendation with structured factors, two visible lanes
-  (`recommended` and `discoveryCandidates`), explicit unknowns, stable
-  tie-breaking, and fail-closed policy decisions.
-- Essential packed-product coverage on Linux and Node 22 from one exact
-  content-addressed tarball.
-- Workbench schema/import/render tests and a local production build. A live
-  Pages deployment remains outside the preview until separately approved.
+## Selection contract
+
+1. The coding agent owns semantic selection. It may inspect the project with its normal local capabilities, search broadly, read full skill content when useful, compare alternatives, and choose exact IDs.
+2. AAS Core does not rank, recommend, promote, demote, exclude, or abstain on skills.
+3. Catalog metadata is informational only. Missing, incomplete, cautionary, or manually reviewed metadata must never make a canonical skill unsearchable, unselectable, or unusable.
+4. `compose_stack` validates catalog identity, target shape, goals, exact IDs, and structural limits, then returns the pinned stack shape. It does not substitute a different selection.
+5. `aas-stack.json` has no Core selection policy. User constraints can guide the agent's reasoning, but they are not an MCP eligibility filter or manifest gate.
+
+## Functional gate
+
+The packed-product smoke path must prove:
+
+1. **Catalog completeness** — packaged catalog count and IDs equal the canonical registry; exact-ID search, `get_skill`, and content reads work for every canonical skill.
+2. **MCP contract** — the five supported read-only tools and resource template work over real stdio framing without repository scanning or state writes.
+3. **Agent-owned composition** — `compose_stack` preserves the exact ordered ID selection supplied by the agent and returns a structurally valid manifest without a policy field.
+4. **No metadata gating** — skills with unknown, critical, manual, blocked, incomplete, or absent informational metadata remain searchable, selectable, composable, and plannable.
+5. **Stack lifecycle** — compose, inspect, validate, plan, and doctor succeed in isolated roots without materializing target skills or managed state.
+6. **Workbench** — bounded text-only import/review tests and production build pass without ambient filesystem access.
 
 ## Experimental writes
 
-`stack apply` and `stack recover` are present for controlled development but
-are not preview-supported safety claims. They are disabled by default:
+`stack apply` and `stack recover` remain experimental opt-ins. The supported public path stops after manifest validation and immutable plan review. Planning may write only the explicitly requested plan artifact.
 
-- apply requires the additional `--experimental-apply` flag and the existing
-  exact plan-digest approval;
-- recovery requires `--experimental-recovery` and retains its existing
-  recovery-plan approval;
-- successful experimental writes return `releaseProfile: "preview"` and
-  `certificationStatus: "experimental"`;
-- absence of the opt-in fails before runtime resolution or target writes with
-  a structured policy error.
+## Trust and privacy boundaries
 
-Internal transaction tests are development evidence only. Apply and recovery
-remain experimental and outside the supported preview claim.
-
-## Preview functional gate
-
-The preview job must install the exact candidate tarball with lifecycle scripts
-disabled and run without checkout-only runtime dependencies. It is an essential
-end-to-end smoke test, not an OS/runtime certification matrix.
-
-Required functional suites are:
-
-1. **Package and entrypoints** — allowlisted package contents; `aas`,
-   `aas-mcp`, and the legacy alias exist; legacy invocation creates no stack
-   state implicitly.
-2. **Stack lifecycle** — `init -> recommend -> validate -> plan -> doctor`
-   succeeds in isolated roots and does not materialize target skills or AAS
-   managed state.
-3. **Determinism and explanation** — repeated identical inputs produce the
-   same canonical recommendation payload and expose factor, coverage, evidence,
-   exclusion, and unknown fields.
-4. **Policy** — proved incompatibility or forbidden risk is excluded;
-   incomplete evidence remains visible; malformed or over-limit input fails
-   closed.
-5. **MCP contract** — the five tools and one resource template work over real
-   stdio framing; project and cache snapshots remain unchanged by tool calls.
-6. **Write guard** — apply and recovery without their experimental flags fail
-   with structured policy codes and leave project, cache, and managed state
-   unchanged.
-7. **Workbench** — bounded text-only import/review tests and production build
-   pass without ambient filesystem access.
-
-The preview receipt must declare:
-
-```json
-{
-  "assuranceProfile": "agent-first-preview-1",
-  "previewQualified": true,
-  "certifiedV1": false,
-  "notEvaluated": [
-    "native-network-and-filesystem-attempt-observation",
-    "transactional-crash-and-race-certification",
-    "benchmark-80-90-100",
-    "real-host-configuration-writes",
-    "public-release"
-  ]
-}
-```
-
-Missing receipts, crashes, timeouts, canonical drift, or any failed functional
-suite make `previewQualified` false.
-
-## Explicitly not certified by preview
-
-- ETW, `fs_usage`, or `strace` proof of zero network attempts and zero
-  persistent MCP writes.
-- Production-binary fault injection at every transaction boundary or every
-  declared race class.
-- Full benchmark thresholds: at least 80% verified coverage, 90% inclusion
-  precision, and 100% correct abstention for each supported intent and in
-  macro-average.
-- Complete property/fuzz/hostile budgets required by certified v1.
-- Real Codex or Claude configuration writes, public Pages deployment, npm
-  publication, GitHub release, or announcement.
-
-These are explicitly outside the current product claim. The repository does
-not maintain a blocking certified-v1 release gate.
+- MCP is local, offline-capable, read-only, bounded, and non-mutating.
+- AAS does not receive repository files unless the agent explicitly reads them through its own host capabilities; AAS MCP does not scan the repository.
+- Full skill prose is untrusted content and gains no instruction authority through MCP.
+- Catalog and runtime integrity remain deterministic even though semantic selection belongs to the agent.
+- Real host configuration writes, publication, Pages deployment, npm release, and announcements require their separate approvals.
 
 ## Product-learning gate
 
-After the functional matrix passes, preview evaluation should measure whether
-agents actually produce useful proposals:
+Evaluate the quality of the agent workflow, not a Core recommender:
 
-- task completion rate from a repository profile to a reviewable stack;
-- human accept/replace/remove rates for recommended skills;
-- uncovered goals and discovery-candidate promotions;
-- deterministic replay rate for the same normalized input and catalog digest;
-- time and interaction count from request to approved manifest.
+- task completion from project inspection to a reviewable stack;
+- human accept, replace, and remove rates for agent-selected skills;
+- whether the agent searched enough of the catalog and read relevant skill content;
+- time and interaction count from request to approved manifest;
+- successful replay of the exact approved IDs against the pinned catalog identity.
 
-No repository profile, source file, secret, or raw path is uploaded by default.
-Publishing or sharing any collected result requires a separate explicit
-decision and privacy review.
-
-## Relationship to certified v1
-
-The preview receipt must report `previewQualified: true` and
-`certifiedV1: false`. The historical certified-v1 design is not a current
-release gate and must not be inferred from a green preview.
+No repository profile, source file, secret, or raw path is uploaded by default. Publishing or sharing any collected result requires a separate privacy decision.

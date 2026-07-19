@@ -21,14 +21,19 @@ describe('Workbench route isolation', () => {
 
     render(<App />);
 
-    await screen.findByRole('heading', { level: 1, name: 'Review what AAS Core recommended.' });
+    await screen.findByRole('heading', { level: 1, name: 'Review what your agent selected.' });
     const stack = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       name: 'isolated-stack',
       catalog: { package: 'agentic-awesome-skills', version: '15.0.0', integrity: `sha256-${'a'.repeat(64)}` },
       targets: [{ host: 'codex', scope: 'project' }],
-      intent: { goals: ['build'] },
-      policy: { allowedRisk: ['safe'], requireKnownSource: true, allowManualSetup: false },
+      profile: {
+        goals: ['build'],
+        projectType: 'React web application',
+        languages: ['typescript'],
+        frameworks: ['react'],
+        constraints: [],
+      },
       skills: [{ id: 'react-best-practices' }],
     };
     fireEvent.change(screen.getAllByLabelText('Paste JSON')[0], { target: { value: JSON.stringify(stack) } });

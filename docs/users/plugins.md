@@ -2,7 +2,7 @@
 
 Release `9.0.0` adds first-class plugin distributions for both **Claude Code** and **Codex**.
 
-This page explains how plugins fit beneath **AAS Core**, the recommended orchestration layer for Codex and Claude Code. Plugins and direct installs deliver skill payloads; Core helps an agent discover, recommend, inspect, validate, and plan a minimal stack before delivery.
+This page explains how plugins fit beneath **AAS Core**, the orchestration layer for Codex and Claude Code. Plugins and direct installs deliver skill payloads; Core exposes the complete catalog and validates, records, and plans the exact stack chosen by the agent.
 
 ## What a plugin is in this repo
 
@@ -139,7 +139,7 @@ Bundle-specific Codex plugins are generated alongside the root plugin so you can
 Choose **AAS Core first** if:
 
 - you want Codex or Claude Code to search and inspect the local catalog
-- you want a deterministic recommendation instead of manually browsing thousands of skills
+- you want Codex or Claude to search the complete catalog and preserve its exact selection
 - you want a reviewable `aas-stack.json` and preview plan before any change
 - you want read-only MCP discovery separated from approval-gated CLI operations
 

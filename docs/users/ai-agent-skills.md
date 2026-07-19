@@ -1,24 +1,24 @@
 # AI Agent Skills
 
-If you are researching **AI agent skills** on GitHub, the useful first decision is whether you want deterministic project-level composition or manual selection from a catalog.
+If you are researching **AI agent skills** on GitHub, the useful first decision is whether you want agent-owned project selection with reproducible state or manual catalog browsing.
 
-Agentic Awesome Skills is built around **AAS Core**: Codex or Claude inspects the project, sends an explicit profile to the local AAS MCP, and receives an explainable recommendation from the verified catalog. The agent proposes `aas-stack.json`; the CLI validates it and produces an immutable preview plan before any target change.
+Agentic Awesome Skills is built around **AAS Core**: Codex or Claude inspects the project, searches and reads the complete local catalog, chooses exact skill IDs, and uses `compose_stack` to pin them in `aas-stack.json`. The CLI validates that agent-owned state and produces an immutable preview plan before any target change.
 
 The catalog, plugins, bundles, workflows, and direct installer remain supporting content and distribution surfaces. AAS does not scan the repository, call a remote model, or write project files through MCP.
 
 ## What to look for in an AI agent skill system
 
 - **Explicit input boundary**: is project analysis performed by the coding agent and passed as a reviewable profile?
-- **Deterministic recommendation**: can the same profile, policy, runtime, and catalog identity reproduce the same result?
-- **Explainability**: do recommendations include evidence, exclusions, uncovered goals, and unknowns?
+- **Agent-owned selection**: can the coding agent search and read every skill before choosing exact IDs?
+- **Reproducibility**: can the chosen IDs be pinned to a catalog identity and replayed without a metadata eligibility gate?
 - **Durable desired state**: can the approved selection be recorded independently of the agent conversation?
 - **Preview before change**: can the system validate the manifest and produce an exact plan without changing the target?
 - **Source and compatibility evidence**: are provenance, risk, host support, and distribution boundaries explicit?
 
 ## When Agentic Awesome Skills is a good fit
 
-- You use Codex or Claude and want a small, policy-controlled stack for a real project.
-- You want local search and recommendation without repository scanning or remote-model calls by AAS.
+- You use Codex or Claude and want the agent to choose a focused stack for a real project.
+- You want complete local search and inspection without repository scanning or remote-model calls by AAS.
 - You need a reviewable `aas-stack.json` and CLI validation and planning before target changes.
 - You also value a broad catalog and multiple distribution options around the Core workflow.
 
@@ -43,6 +43,6 @@ The catalog, plugins, bundles, workflows, and direct installer remain supporting
 
 ## Quick recommendation
 
-- Choose **AAS Core** if you want local, deterministic, explainable skill-stack composition from an explicit project profile to a preview plan.
+- Choose **AAS Core** if you want complete local catalog access, agent-owned selection, reproducible stack composition, and a preview plan.
 - Choose direct distribution if you already know the exact skills you want or your host does not support the Core path.
-- Choose a smaller curated repository if a fixed editorial shortlist matters more than project-specific recommendation and durable desired state.
+- Choose a smaller curated repository if a fixed editorial shortlist matters more than complete catalog access and durable desired state.

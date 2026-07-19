@@ -1,6 +1,6 @@
 # Agentic Awesome Skills vs Awesome Claude Skills
 
-If you are comparing **Agentic Awesome Skills** with **Awesome Claude Skills**, first decide whether you need deterministic project-level composition or an editorial discovery list. Catalog breadth and curation are secondary dimensions.
+If you are comparing **Agentic Awesome Skills** with **Awesome Claude Skills**, first decide whether you need complete catalog access with agent-owned reproducible selection or an editorial discovery list.
 
 For clarity: the repository many people still refer to as `awesome-claude-skills` now lives at [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills).
 
@@ -13,15 +13,15 @@ For clarity: the repository many people still refer to as `awesome-claude-skills
 
 | Criteria | Agentic Awesome Skills | VoltAgent Awesome Agent Skills |
 | --- | --- | --- |
-| Best for | Local deterministic composition, durable desired state, and plan preview | Curated discovery and official/community highlights |
+| Best for | Complete local catalog access, agent-owned selection, durable desired state, and plan preview | Curated discovery and official/community highlights |
 | Product shape | AAS Core with local MCP, CLI, stack/plan artifacts, Workbench review, and supporting catalog/distribution | Curated awesome-list style collection |
 | Supported tools | Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, more | Claude Code, Codex, Antigravity, Gemini CLI, Cursor, Copilot, OpenCode, Windsurf, more |
 | Onboarding | Installation docs, bundles, workflows, getting-started guides | Curated README and categorized references |
-| Good fit when | You want an agent to recommend a project stack under explicit policy | You want a smaller list to browse and evaluate manually |
+| Good fit when | You want an agent to inspect a project and choose exact IDs from the full catalog | You want a smaller list to browse and evaluate manually |
 
 ## Why choose Agentic Awesome Skills
 
-- You want Codex or Claude to send an explicit profile to a local, read-only MCP and receive a deterministic recommendation.
+- You want Codex or Claude to search and read a complete catalog through a local, read-only MCP and own the selection.
 - You want the approved selection recorded as `aas-stack.json` and validated before an immutable plan is produced.
 - You care about onboarding assets like [`bundles.md`](bundles.md), [`workflows.md`](workflows.md), and tool-specific guides.
 - You need coverage across many domains, not just a curated shortlist.
@@ -36,7 +36,7 @@ For clarity: the repository many people still refer to as `awesome-claude-skills
 
 - The AAS catalog is larger and its evidence remains uneven; Core reports unknowns rather than treating breadth as certified quality.
 - VoltAgent can be easier to skim quickly because it optimizes for curation.
-- If you want both, use curated lists for editorial discovery and AAS Core when you need a reproducible, policy-controlled project stack.
+- If you want both, use curated lists for editorial discovery and AAS Core when you need a reproducible agent-selected project stack.
 
 ## Suggested next step
 

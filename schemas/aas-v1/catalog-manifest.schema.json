@@ -4,14 +4,14 @@
   "title": "AAS verified offline catalog manifest v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "package", "packageVersion", "catalogDigest", "digestVersion", "metadataSchemaVersion", "skillCount", "assets"],
+  "required": ["schemaVersion", "package", "packageVersion", "catalogDigest", "digestVersion", "catalogSchemaVersion", "skillCount", "assets"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "package": { "type": "string", "minLength": 1, "maxLength": 214 },
     "packageVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
     "catalogDigest": { "$ref": "#/$defs/digest" },
     "digestVersion": { "const": 1 },
-    "metadataSchemaVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "catalogSchemaVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
     "skillCount": { "type": "integer", "minimum": 0 },
     "assets": {
       "type": "array",

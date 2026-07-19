@@ -2,7 +2,7 @@
 
 This page documents the legacy-compatible `skills_index.json` contract used by custom host integrations and lazy loaders.
 
-For Codex and Claude Code, use [AAS Core](aas-core.md) instead of wiring a host directly to this repository manifest. Core uses a verified local catalog and exposes bounded, read-only MCP tools for search, inspection, and recommendation. The raw manifest remains useful for integrations that do not have an AAS Core host adapter.
+For Codex and Claude Code, use [AAS Core](aas-core.md) instead of wiring a host directly to this repository manifest. Core exposes every skill in a verified local catalog through bounded, read-only MCP tools for search, inspection, and agent-owned composition. The raw manifest remains useful for integrations that do not have an AAS Core host adapter.
 
 ## Manifest contract (v1)
 

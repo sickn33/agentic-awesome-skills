@@ -95,11 +95,12 @@ For AAS CLI, MCP, stack, catalog-cache, or Workbench changes:
 
 1. Use the current scripts declared in `package.json`; do not resurrect retired evaluator, benchmark, tuning-gold, transaction-fault, race, or frozen-matrix gates as routine prerequisites.
 2. Run the focused Core tests with `npm run test:aas-v1`, the catalog integrity check with `npm run check:aas-v1-catalog`, and the relevant Workbench tests/build when its contracts or copy change.
-3. Keep MCP local, offline, read-only, bounded, and non-mutating. The coding agent inspects the project and sends an explicit profile; MCP searches, inspects, recommends, and compares without scanning the repository or writing to it.
-4. Keep the supported public path at manifest validation and immutable plan preview. Planning may write only the requested plan artifact; it must not materialize skill payloads or AAS managed state in the target.
-5. Treat apply and recovery as experimental opt-ins outside the supported preview claim. Do not add apply/recovery, benchmark, fuzz, crash/race, or synthetic verifier work unless the user explicitly places it in scope.
-6. When the task asks for end-to-end client proof, use a real supported client that discovers and invokes the local AAS MCP tools; direct stdio probes and automated tests do not substitute for that evidence.
-7. Do not tag, publish npm, deploy Pages, or write real user MCP configuration without the separately required publication approval.
+3. Keep MCP local, offline, read-only, bounded, and non-mutating. The coding agent inspects the project, searches and reads the complete catalog, and chooses the exact skill IDs. MCP searches, reads, validates agent-owned composition, and compares without scanning the repository or writing to it. Core must not rank, recommend, exclude, or disable skills; metadata is informational only.
+4. Keep `aas-stack.json` free of Core selection policy. It pins catalog identity, targets, goals, and the exact IDs selected by the agent. `compose_stack` validates and records that selection; missing or cautionary metadata must never make a canonical skill unselectable or unusable.
+5. Keep the supported public path at manifest validation and immutable plan preview. Planning may write only the requested plan artifact; it must not materialize skill payloads or AAS managed state in the target.
+6. Treat apply and recovery as experimental opt-ins outside the supported preview claim. Do not add apply/recovery, benchmark, fuzz, crash/race, or synthetic verifier work unless the user explicitly places it in scope.
+7. When the task asks for end-to-end client proof, use a real supported client that discovers and invokes the local AAS MCP tools; direct stdio probes and automated tests do not substitute for that evidence.
+8. Do not tag, publish npm, deploy Pages, or write real user MCP configuration without the separately required publication approval.
 
 ## Protected Release
 

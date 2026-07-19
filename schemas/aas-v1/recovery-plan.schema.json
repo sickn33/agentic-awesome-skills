@@ -72,12 +72,11 @@
     "versions": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["protocolVersion", "coreVersion", "metadataSchemaVersion", "scorerVersion"],
+      "required": ["protocolVersion", "coreVersion", "catalogSchemaVersion"],
       "properties": {
         "protocolVersion": { "type": "string", "minLength": 1 },
         "coreVersion": { "type": "string", "minLength": 1 },
-        "metadataSchemaVersion": { "type": "string", "minLength": 1 },
-        "scorerVersion": { "type": "string", "minLength": 1 }
+        "catalogSchemaVersion": { "type": "string", "minLength": 1 }
       }
     }
   }

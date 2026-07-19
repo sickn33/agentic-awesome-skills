@@ -13,30 +13,34 @@ const D5 = `sha256-${'5'.repeat(64)}`;
 
 function stackFixture(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     name: 'reviewed-web-stack',
     catalog: { package: 'agentic-awesome-skills', version: '15.0.0', integrity: D1 },
     targets: [{ host: 'codex', scope: 'project' }],
-    intent: { goals: ['build', 'test'] },
-    policy: { allowedRisk: ['none', 'safe'], requireKnownSource: true, allowManualSetup: false },
+    profile: {
+      goals: ['build', 'test'],
+      projectType: 'React web application',
+      languages: ['typescript'],
+      frameworks: ['react'],
+      constraints: ['offline-capable'],
+    },
     skills: [{ id: 'react-best-practices' }, { id: 'playwright-skill' }],
     ...overrides,
   };
 }
 
-function planFixture(unknownField = 'metadata.source'): Record<string, unknown> {
+function planFixture(reasonCode = 'AAS_MANAGED_DRIFT_APPROVED'): Record<string, unknown> {
   const plan = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     kind: 'aas.stack-plan',
     digest: D5,
     payload: {
-      schemaVersion: 1,
+      schemaVersion: 2,
       kind: 'aas.stack-plan.payload',
       versions: {
         protocolVersion: '2025-06-18',
         coreVersion: '1.0.0',
-        metadataSchemaVersion: '1.0.0',
-        scorerVersion: '1.0.0',
+        catalogSchemaVersion: '2.0.0',
       },
       manifestDigest: D2,
       catalog: { package: 'agentic-awesome-skills', version: '15.0.0', integrity: D1 },
@@ -44,7 +48,13 @@ function planFixture(unknownField = 'metadata.source'): Record<string, unknown> 
       target: { host: 'codex', scope: 'project', adapterVersion: '1.0.0', identityDigest: D4 },
       installedState: { digest: D2, entries: [] },
       desiredSkills: ['react-best-practices'],
-      policy: { allowedRisk: ['none', 'safe'], requireKnownSource: true, allowManualSetup: false },
+      profile: {
+        goals: ['build', 'test'],
+        projectType: 'React web application',
+        languages: ['typescript'],
+        frameworks: ['react'],
+        constraints: ['offline-capable'],
+      },
       operations: [{
         kind: 'install',
         skillId: 'react-best-practices',
@@ -54,10 +64,9 @@ function planFixture(unknownField = 'metadata.source'): Record<string, unknown> 
         backupRequired: false,
       }],
       overrides: [{
-        kind: 'discoveryCandidate',
+        kind: 'managedDrift',
         skillId: 'react-best-practices',
-        reasonCodes: ['AAS_DISCOVERY_PROMOTED'],
-        unknownFields: [unknownField],
+        reasonCodes: [reasonCode],
       }],
       stateCommit: { previousDigest: D2, nextDigest: D4, position: 'final' },
     },
@@ -78,7 +87,7 @@ describe('Workbench review UI', () => {
   it('reviews a valid stack without offering install, apply, or share actions', () => {
     renderWithRouter(<Workbench />, { route: '/workbench', path: '/workbench', useProvider: false });
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Review what AAS Core recommended.' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Review what your agent selected.' })).toBeInTheDocument();
 
     paste('Paste JSON', stackFixture());
     fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));
@@ -91,7 +100,7 @@ describe('Workbench review UI', () => {
     expect(window.location.search).toBe('');
   });
 
-  it('reviews plan bindings, operations, overrides, and unknown fields', async () => {
+  it('reviews plan bindings, the saved profile, operations, and managed drift overrides', async () => {
     renderWithRouter(<Workbench />, { route: '/workbench', path: '/workbench', useProvider: false });
 
     paste('Paste JSON', planFixture(), 1);
@@ -100,9 +109,9 @@ describe('Workbench review UI', () => {
     expect(await screen.findByRole('heading', { level: 2, name: 'Single-target change review' })).toBeInTheDocument();
     expect(screen.getByText('install')).toBeInTheDocument();
     expect(screen.getAllByText('react-best-practices')).toHaveLength(2);
-    expect(screen.getAllByText('AAS_DISCOVERY_PROMOTED', { exact: false })).toHaveLength(2);
-    expect(screen.getAllByText('metadata.source', { exact: false })).toHaveLength(2);
-    expect(screen.getByText('1 overrides · 1 unknown fields')).toBeInTheDocument();
+    expect(screen.getAllByText('AAS_MANAGED_DRIFT_APPROVED', { exact: false })).toHaveLength(2);
+    expect(screen.getByText('1 overrides')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: 'Bound project profile' })).toBeInTheDocument();
   });
 
   it('fails closed on schema drift and clears the previous review', () => {
@@ -129,6 +138,22 @@ describe('Workbench review UI', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('digest does not match');
     expect(screen.queryByRole('heading', { level: 2, name: 'Single-target change review' })).not.toBeInTheDocument();
+  });
+
+  it('rejects the retired discovery candidate override', async () => {
+    const plan = planFixture();
+    const payload = plan.payload as { overrides: Array<Record<string, unknown>> };
+    payload.overrides[0] = {
+      kind: 'discoveryCandidate',
+      skillId: 'react-best-practices',
+      reasonCodes: ['AAS_DISCOVERY_PROMOTED'],
+    };
+    renderWithRouter(<Workbench />, { route: '/workbench', path: '/workbench', useProvider: false });
+
+    paste('Paste JSON', plan, 1);
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted plan' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('kind must equal "managedDrift"');
   });
 
   it('renders hostile schema-valid strings as text and never creates executable elements', async () => {

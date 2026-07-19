@@ -34,12 +34,12 @@ It exposes exactly:
 
 - `search_skills`;
 - `get_skill`;
-- `recommend_stack`;
+- `compose_stack`;
 - `inspect_stack`;
 - `diff_stack`;
 - the `aas://skills/{id}` resource template.
 
-The agent inspects the project using its normal local capabilities and sends AAS an explicit, allowlisted profile. AAS MCP does not scan the repository itself. It returns structured factors, evidence, coverage, exclusions, discovery candidates, and unknowns from a bundled or verified local catalog.
+The agent inspects the project using its normal local capabilities, searches and reads the complete catalog, and chooses the exact skills. AAS MCP does not scan the repository itself, and Core does not rank or exclude candidates. Catalog metadata is informational only.
 
 AAS MCP is local stdio, process-per-session, read-only, offline-capable, and contains no model credentials or telemetry. Its tool calls do not install or remove skills, apply a stack, update catalogs, or edit host configuration.
 
@@ -61,18 +61,18 @@ The `aas` CLI is the explicit operational interface for:
 
 - catalog status and updates;
 - MCP configuration;
-- stack initialization and deterministic recommendation from an explicit profile;
+- validation and composition of an agent-selected stack;
 - manifest validation;
 - plan creation and read-only diagnostics.
 
-The durable artifact is `aas-stack.json`, which pins catalog identity, targets, intent, policy, and exact skill IDs. The agent may propose it; the user reviews it. `stack validate` checks it, and `stack plan` creates an immutable preview bound to the observed managed state and exact operations.
+The durable artifact is `aas-stack.json`, which pins catalog identity, targets, the project profile, and exact skill IDs. The agent proposes it; the user reviews it. It has no Core selection policy. `stack validate` checks it, and `stack plan` creates an immutable preview bound to the observed managed state and exact operations.
 
 `stack apply` and `stack recover` exist only for controlled preview development. They are experimental, disabled by default, and are not supported or certified preview safety claims.
 
 ## The easiest mental model
 
 - **Skills provide the operating guidance.**
-- **AAS MCP helps the agent select and explain the right guidance.**
+- **AAS MCP gives the agent complete catalog access and records the selection the agent makes.**
 - **`aas-stack.json` records what the user approved.**
 - **The CLI validates and previews the lifecycle.**
 - **Other MCP servers provide access to outside systems.**
@@ -83,7 +83,7 @@ Start with **AAS Core** when:
 
 - you use Codex or Claude with local MCP support;
 - you want the agent to compose a small stack from project evidence;
-- you need explicit risk/source/setup policy and a reproducible manifest;
+- you need complete catalog access and a reproducible manifest of the agent's exact selection;
 - you want a reviewable plan before any skill changes.
 
 Start with a **direct skill or specialized plugin** when:
@@ -96,7 +96,7 @@ Add **other MCP tools** when the work needs live access to APIs, services, datab
 
 ## Preview limits
 
-AAS Agent-First Preview helps Codex and Claude compose a local, explainable, reproducible skill stack. It does not claim certified full-catalog recommendation quality or transactional apply/recovery safety. Missing evidence is reported as `unknown`, and AAS may leave a goal uncovered rather than present a weak recommendation as certainty.
+AAS Core helps Codex and Claude search and read the complete local catalog, choose exact skill IDs, and preserve them in a reproducible stack. Metadata may be reported as unknown, but it is informational and never blocks selection or use. Apply and recovery remain experimental.
 
 ## Good next reads
 

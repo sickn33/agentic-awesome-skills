@@ -45,7 +45,7 @@ RECOMMENDED_TOPICS = [
     "mcp",
 ]
 README_TAGLINE_RE = re.compile(
-    r"^> \*\*(?:Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change\.|AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of \d[\d,]*\+ agentic skills\.|Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, (?:Autohand Code, )?Gemini CLI, Antigravity, and other AI coding assistants\.)\*\*$",
+    r"^> \*\*(?:A complete local skill catalog for coding agents—from project inspection and agent-owned selection to a reproducible, reviewable plan\.|Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change\.|AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of \d[\d,]*\+ agentic skills\.|Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, (?:Autohand Code, )?Gemini CLI, Antigravity, and other AI coding assistants\.)\*\*$",
     re.MULTILINE,
 )
 README_TITLE_RE = re.compile(
@@ -82,8 +82,8 @@ BUNDLES_FOOTER_RE = re.compile(
 
 def build_about_description(metadata: dict) -> str:
     return (
-        "AAS Core preview is the local, agent-first control plane for discovering, recommending, "
-        f"validating, and planning exact skill stacks, backed by {metadata['total_skills_label']} agentic skills. "
+        "AAS Core is the local, agent-first control plane for complete catalog discovery, agent-owned selection, "
+        f"stack validation, and planning, backed by {metadata['total_skills_label']} agentic skills. "
         "Includes CLI, local MCP, catalog, plugins, and Workbench."
     )
 
@@ -157,8 +157,8 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
         (
             README_TAGLINE_RE,
             (
-                "> **Local, deterministic skill-stack composition for coding agents—from an explicit "
-                "project profile to a reviewable plan before any target change.**"
+                "> **A complete local skill catalog for coding agents—from project inspection and agent-owned "
+                "selection to a reproducible, reviewable plan.**"
             ),
         ),
         (
@@ -394,7 +394,7 @@ def update_package_description(base_dir: str, metadata: dict, dry_run: bool) -> 
         content = file.read()
 
     new_description = (
-        "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, "
+        "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, "
         f"backed by {metadata['total_skills_label']} agentic skills."
     )
     updated_content = ABOUT_DESCRIPTION_RE.sub(

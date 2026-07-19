@@ -1,7 +1,7 @@
 "use strict";
 
-const { loadBundledCatalog, syntheticCatalog, judgment, notApplicable } = require("./catalog");
-const { recommendStack, eligibility } = require("./recommend");
+const { loadBundledCatalog, syntheticCatalog } = require("./catalog");
+const { composeStack } = require("./selection");
 const { canonicalJson, canonicalize, sha256 } = require("./canonical-json");
 const { searchSkills, getSkill, diffCatalogs } = require("./search");
 const versions = require("./versions");
@@ -13,10 +13,7 @@ module.exports = {
   ...versions,
   loadBundledCatalog,
   syntheticCatalog,
-  judgment,
-  notApplicable,
-  recommendStack,
-  eligibility,
+  composeStack,
   canonicalJson,
   canonicalize,
   sha256,

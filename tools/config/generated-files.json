@@ -8,8 +8,6 @@
     "data/plugin-compatibility.json",
     "data/aliases.json",
     "data/aas-v1/",
-    "tools/lib/aas-v1/metadata-overrides.v1.json",
-    "tools/lib/aas-v1/review-queue.v1.json",
     "apps/web-app/public/sitemap.xml",
     "apps/web-app/public/skills.json.backup",
     ".agents/plugins/",

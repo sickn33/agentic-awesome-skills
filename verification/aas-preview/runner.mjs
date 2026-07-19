@@ -265,10 +265,10 @@ async function main() {
     ? await provisionVerifiedPreviewRuntime(aas, { cacheRoot, release, parsed: parsedArchive })
     : await aas.cache.promoteRuntime({ cacheRoot, release, parsed: parsedArchive });
 
-  const manifestPath = path.join(workRoot, "aas-stack.json");
+  const initializedManifestPath = path.join(workRoot, "aas-stack.initialized.json");
   const previewOutputArgs = process.platform === "win32" ? ["--preview-windows-output"] : [];
   const initialized = parseCliSuccess(runNode(aasBin, [
-    "stack", "init", "--out", manifestPath, "--name", "preview-smoke", "--goal", "agent-boundaries",
+    "stack", "init", "--out", initializedManifestPath, "--name", "preview-smoke", "--goal", "agent-boundaries",
     ...previewOutputArgs,
   ], { cwd: projectRoot }), "INIT");
   assert.equal(initialized.status, "initialized");
@@ -276,86 +276,50 @@ async function main() {
     assert.equal(initialized.certificationStatus, "certifiable");
     assert.equal(initialized.outputDurability, "directorySynced");
   }
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  assert.deepEqual(manifest.skills, []);
+  const initializedManifest = JSON.parse(fs.readFileSync(initializedManifestPath, "utf8"));
+  assert.equal(initializedManifest.schemaVersion, 2);
+  assert.deepEqual(initializedManifest.skills, []);
 
-  const profilePath = path.join(workRoot, "profile.json");
-  fs.writeFileSync(profilePath, `${stable({
-    intent: "agent-mcp-development",
+  const selectionPath = path.join(workRoot, "selection.json");
+  const selection = {
+    name: "preview-smoke",
     targets: [{ host: "codex", scope: "project" }],
-    profile: { languages: ["javascript"] },
-    criticalGoals: ["agent-boundaries"],
-    nonCriticalGoals: [],
-    policy: { allowedRisk: ["none", "safe"], requireKnownSource: false, allowManualSetup: false },
-  })}\n`, { mode: 0o600 });
-  const recommendationOne = runNode(aasBin, ["stack", "recommend", "--profile", profilePath], { cwd: projectRoot });
-  const recommendationTwo = runNode(aasBin, ["stack", "recommend", "--profile", profilePath], { cwd: projectRoot });
-  const recommendation = parseCliSuccess(recommendationOne, "RECOMMEND");
-  parseCliSuccess(recommendationTwo, "RECOMMEND_REPLAY");
-  assert.equal(recommendationOne.stdout, recommendationTwo.stdout, "recommendation replay drifted");
-  assert.ok(Array.isArray(recommendation.recommended));
-  assert.ok(Array.isArray(recommendation.discoveryCandidates));
-  assert.equal(recommendation.discoveryCandidates.length > 0, true);
-  for (const field of ["unknown", "exclusions", "measures"]) {
-    assert.equal(Object.hasOwn(recommendation, field), true, `recommendation is missing ${field}`);
-  }
-  for (const field of ["goalCoverage", "metadataCompleteness", "evidenceStrength"]) {
-    assert.equal(Object.hasOwn(recommendation.measures, field), true, `recommendation measures are missing ${field}`);
-  }
-  assert.notEqual(recommendation.status, "insufficientCoverage");
-  assert.equal(recommendation.proposedStack.includes("ai-agents-architect"), true);
-
-  const restrictedProfilePath = path.join(workRoot, "restricted-profile.json");
-  const restrictedProfile = JSON.parse(fs.readFileSync(profilePath, "utf8"));
-  restrictedProfile.policy.allowedRisk = ["none"];
-  fs.writeFileSync(restrictedProfilePath, `${stable(restrictedProfile)}\n`, { mode: 0o600 });
-  const restricted = parseCliSuccess(runNode(aasBin, ["stack", "recommend", "--profile", restrictedProfilePath], { cwd: projectRoot }), "POLICY_RECOMMEND");
-  const disallowedRiskIds = new Set(restricted.exclusions
-    .filter((entry) => entry.reasonCodes.includes("AAS_ELIGIBILITY_RISK_DISALLOWED"))
-    .map((entry) => entry.id));
-  assert.equal(disallowedRiskIds.size > 0, true);
-  assert.equal(restricted.recommended.some((entry) => disallowedRiskIds.has(entry.id)), false);
-  assert.equal(restricted.proposedStack.some((id) => disallowedRiskIds.has(id)), false);
-
-  const evidence = [{ type: "preview-functional-fixture", id: "proved-target-block" }];
-  const blockedSkill = {
-    id: "blocked-agent-skill",
-    name: "blocked-agent-skill",
-    description: "",
-    category: "test",
-    tags: [],
-    triggers: [],
-    searchTokens: ["agent", "boundaries"],
-    recommendationTokens: ["agent", "boundaries"],
-    metadata: {
-      capabilities: aas.judgment(["agent-boundaries"], evidence),
-      risk: aas.judgment("safe", evidence),
-      source: aas.judgment("fixture", evidence),
-      license: aas.judgment(null),
-      targets: { codex: aas.judgment("blocked", evidence), claude: aas.judgment("supported", evidence) },
-      setup: aas.judgment("none", evidence),
-      dependencies: aas.judgment([], evidence),
-      conflicts: aas.judgment([], evidence),
-      validation: aas.judgment(true, evidence),
-      tests: aas.judgment(null),
-      reviews: aas.judgment(true, evidence),
+    profile: {
+      goals: ["agent-boundaries"],
+      languages: ["javascript"],
+      frameworks: [],
+      constraints: [],
     },
-    untrustedContentPath: null,
+    skillIds: ["ai-agents-architect"],
   };
-  const incompatibility = aas.recommendStack(aas.syntheticCatalog([blockedSkill]), JSON.parse(fs.readFileSync(profilePath, "utf8")));
-  assert.deepEqual(incompatibility.proposedStack, []);
-  assert.deepEqual(incompatibility.exclusions, [{ id: blockedSkill.id, reasonCodes: ["AAS_ELIGIBILITY_TARGET_BLOCKED"] }]);
+  fs.writeFileSync(selectionPath, `${stable(selection)}\n`, { mode: 0o600 });
+  const manifestPath = path.join(workRoot, "aas-stack.json");
+  const replayManifestPath = path.join(workRoot, "aas-stack.replay.json");
+  const composed = parseCliSuccess(runNode(aasBin, [
+    "stack", "create", "--selection", selectionPath, "--out", manifestPath,
+    ...previewOutputArgs,
+  ], { cwd: projectRoot }), "CREATE");
+  const replayed = parseCliSuccess(runNode(aasBin, [
+    "stack", "create", "--selection", selectionPath, "--out", replayManifestPath,
+    ...previewOutputArgs,
+  ], { cwd: projectRoot }), "CREATE_REPLAY");
+  assert.equal(composed.status, "created");
+  assert.equal(composed.selectionSource, "agent");
+  assert.deepEqual(composed.selectedSkillIds, selection.skillIds);
+  assert.equal(replayed.manifestDigest, composed.manifestDigest);
+  assert.equal(fs.readFileSync(manifestPath, "utf8"), fs.readFileSync(replayManifestPath, "utf8"), "agent selection replay drifted");
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  assert.equal(manifest.schemaVersion, 2);
+  assert.deepEqual(manifest.skills, [{ id: "ai-agents-architect" }]);
+  assert.deepEqual(manifest.profile, selection.profile);
 
-  const malformedProfilePath = path.join(workRoot, "malformed-profile.json");
-  fs.writeFileSync(malformedProfilePath, `${stable({ ...restrictedProfile, repositoryPath: "/not-allowed" })}\n`, { mode: 0o600 });
+  const malformedSelectionPath = path.join(workRoot, "malformed-selection.json");
+  fs.writeFileSync(malformedSelectionPath, `${stable({ ...selection, policy: { allowedRisk: ["safe"] } })}\n`, { mode: 0o600 });
   parseCliFailure(
-    runNode(aasBin, ["stack", "recommend", "--profile", malformedProfilePath], { cwd: projectRoot }),
-    { exitCode: 2, code: "AAS_INPUT_SCHEMA_INVALID", category: "invalidInput" },
+    runNode(aasBin, ["stack", "create", "--selection", malformedSelectionPath, "--out", path.join(workRoot, "malformed.json")], { cwd: projectRoot }),
+    { exitCode: 2, code: "AAS_SELECTION_INPUT_INVALID", category: "invalidInput" },
     "MALFORMED_INPUT_GUARD",
   );
-
-  manifest.skills = [{ id: "ai-agents-architect" }];
-  fs.writeFileSync(manifestPath, `${stable(manifest)}\n`, { mode: 0o600 });
   const validated = parseCliSuccess(runNode(aasBin, ["stack", "validate", "--manifest", manifestPath], { cwd: projectRoot }), "VALIDATE");
   assert.equal(validated.status, "valid");
 
@@ -405,7 +369,7 @@ async function main() {
   client.notify("notifications/initialized");
   const tools = await client.request(2, "tools/list");
   const toolNames = tools.result.tools.map((tool) => tool.name);
-  assert.deepEqual(toolNames, ["search_skills", "get_skill", "recommend_stack", "inspect_stack", "diff_stack"]);
+  assert.deepEqual(toolNames, ["search_skills", "get_skill", "compose_stack", "inspect_stack", "diff_stack"]);
   const templates = await client.request(3, "resources/templates/list");
   assert.deepEqual(templates.result.resourceTemplates.map((item) => item.uriTemplate), ["aas://skills/{id}"]);
   const search = await client.request(4, "tools/call", { name: "search_skills", arguments: { query: "android ui", limit: 3 } });
@@ -421,19 +385,13 @@ async function main() {
   assert.equal(resourcePayload.skill.id, skillId);
   assert.equal(resourcePayload.untrustedContent.authority, "untrusted");
   assert.equal(resourcePayload.untrustedContent.available, true);
-  const mcpRecommendation = await client.request(7, "tools/call", {
-    name: "recommend_stack",
-    arguments: {
-      intent: "test-qa-automation",
-      targets: [{ host: "codex", scope: "project" }],
-      profile: { languages: ["javascript"] },
-      criticalGoals: ["unit-testing"],
-      nonCriticalGoals: [],
-      policy: { allowedRisk: ["none", "safe"], requireKnownSource: false, allowManualSetup: false },
-      maxSkills: 5,
-    },
+  const mcpComposition = await client.request(7, "tools/call", {
+    name: "compose_stack",
+    arguments: selection,
   });
-  assert.equal(mcpRecommendation.result.structuredContent.ok, true);
+  assert.equal(mcpComposition.result.structuredContent.ok, true);
+  assert.equal(mcpComposition.result.structuredContent.selectionSource, "agent");
+  assert.deepEqual(mcpComposition.result.structuredContent.manifest, manifest);
   const inspection = await client.request(8, "tools/call", { name: "inspect_stack", arguments: { manifest } });
   assert.equal(inspection.result.structuredContent.ok, true);
   const diff = await client.request(9, "tools/call", {
@@ -453,9 +411,9 @@ async function main() {
     jobId: args["job-id"],
     runtime: { node: process.version, platform: process.platform, architecture: process.arch },
     package: { name: metadata.name, version: metadata.version, tarballIntegrity: runtimeIntegrity, tarballSha256: sha256(tarballBytes) },
-    recommendationDigest: sha256(recommendationOne.stdout),
+    selectionDigest: sha256(fs.readFileSync(selectionPath)),
     mcpContractDigest: sha256(stable({ toolNames, templates: ["aas://skills/{id}"] })),
-    lifecycle: { initialized: true, recommended: true, validated: true, planned: true, doctorReadOnly: true },
+    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true },
     writeGuards: { applyDisabledByDefault: true, recoveryDisabledByDefault: true, targetStateCreated: false },
     mcp: { localStdio: true, readOnlySnapshot: true, nativeAttemptObservation: "notEvaluated" },
     runtimeCache: { integrity: promoted.runtimeIdentity.integrity, closureDigest: promoted.runtimeIdentity.closureDigest },

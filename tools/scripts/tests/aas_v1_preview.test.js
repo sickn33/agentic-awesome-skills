@@ -35,9 +35,9 @@ function receipt(jobId) {
     jobId,
     runtime: { node: { "22": "v22.23.1" }[major], platform: { linux: "linux" }[platform], architecture: "x64" },
     package: { name: "agentic-awesome-skills", version: "14.6.0", tarballIntegrity: "sha512-test", tarballSha256: "sha256-test" },
-    recommendationDigest: "sha256-recommendation",
+    selectionDigest: "sha256-selection",
     mcpContractDigest: "sha256-contract",
-    lifecycle: { initialized: true, recommended: true, validated: true, planned: true, doctorReadOnly: true },
+    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true },
     writeGuards: { applyDisabledByDefault: true, recoveryDisabledByDefault: true, targetStateCreated: false },
     mcp: { localStdio: true, readOnlySnapshot: true, nativeAttemptObservation: "notEvaluated" },
     runtimeCache: { integrity: "sha512-test", closureDigest: "sha256-closure" },
@@ -81,6 +81,7 @@ test("preview receipt aggregation requires the supported packed smoke and a pass
   assert.equal(aggregate.previewQualified, true);
   assert.equal(aggregate.certifiedV1, false);
   assert.equal(aggregate.jobs.length, 1);
+  assert.equal(aggregate.selectionDigest, "sha256-selection");
   assert.deepEqual(aggregate.notEvaluated, notEvaluated);
 });
 

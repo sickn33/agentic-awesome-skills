@@ -72,12 +72,11 @@ function buildInstallPlan(fx, skillId = "alpha", overrides = {}) {
   const nextDigest = digestManagedEntries([{ skillId, treeDigest: sourceDigest, catalogIntegrity: CATALOG.integrity }]);
   return buildPlanEnvelope({
     manifest: {
-      schemaVersion: 1,
+      schemaVersion: 2,
       name: "transaction-test",
       catalog: CATALOG,
       targets: [{ host: "codex", scope: "project" }],
-      intent: { goals: ["test"] },
-      policy: { allowedRisk: ["safe"], requireKnownSource: true, allowManualSetup: false },
+      profile: { goals: ["test"], languages: [], frameworks: [], constraints: [] },
       skills: [{ id: skillId }],
     },
     handshake: versions,
@@ -103,12 +102,11 @@ function buildReplacePlan(fx, { allowDrift }) {
   const adapter = { ...fx.adapter, resolveSourceTree() { return source; } };
   const plan = buildPlanEnvelope({
     manifest: {
-      schemaVersion: 1,
+      schemaVersion: 2,
       name: "transaction-test",
       catalog: CATALOG,
       targets: [{ host: "codex", scope: "project" }],
-      intent: { goals: ["test"] },
-      policy: { allowedRisk: ["safe"], requireKnownSource: true, allowManualSetup: false },
+      profile: { goals: ["test"], languages: [], frameworks: [], constraints: [] },
       skills: [{ id: "alpha" }],
     },
     handshake: versions,
@@ -120,7 +118,7 @@ function buildReplacePlan(fx, { allowDrift }) {
       entries: state.entries.map(({ skillId, treeDigest: digest, catalogIntegrity }) => ({ skillId, treeDigest: digest, catalogIntegrity })),
     },
     operations: [{ kind: "replaceManaged", skillId: "alpha", sourceTreeDigest: resultDigest, expectedTreeDigest: currentDigest, resultTreeDigest: resultDigest, backupRequired: true }],
-    overrides: allowDrift ? [{ kind: "managedDrift", skillId: "alpha", reasonCodes: ["approved-local-backup"], unknownFields: [] }] : [],
+    overrides: allowDrift ? [{ kind: "managedDrift", skillId: "alpha", reasonCodes: ["approved-local-backup"] }] : [],
     stateCommit: { previousDigest: state.stateDigest, nextDigest, position: "final" },
   });
   return { adapter, plan, resultDigest };

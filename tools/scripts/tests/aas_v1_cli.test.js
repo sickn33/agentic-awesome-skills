@@ -44,16 +44,32 @@ test("Windows output reports certified durability without marking the preview fa
   );
 });
 
-test("CLI stack lifecycle creates a minimal manifest, immutable plan, applies it, and diagnoses it", async (context) => {
+test("CLI stack lifecycle persists an explicit agent selection, plans it, applies it, and diagnoses it", async (context) => {
   const item = fixture();
   context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
   const manifestPath = path.join(item.root, "aas-stack.json");
-  const initialized = await execute(["stack", "init", "--out", manifestPath, "--name", "cli-test", "--goal", "build"]);
-  assert.equal(initialized.status, "initialized");
+  const selectionPath = path.join(item.root, "selection.json");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson({
+    name: "cli-test",
+    targets: [{ host: "codex", scope: "project" }],
+    profile: {
+      goals: ["build"],
+      projectType: "agent application",
+      languages: ["javascript"],
+      frameworks: [],
+      constraints: ["local-only"],
+    },
+    skillIds: ["ai-agents-architect"],
+  })}\n`);
+  const created = await execute(["stack", "create", "--selection", selectionPath, "--out", manifestPath]);
+  assert.equal(created.status, "created");
+  assert.equal(created.selectionSource, "agent");
+  assert.deepEqual(created.selectedSkillIds, ["ai-agents-architect"]);
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  assert.deepEqual(manifest.skills, []);
-  manifest.skills = [{ id: "ai-agents-architect" }];
-  fs.writeFileSync(manifestPath, `${core.canonicalJson(manifest)}\n`);
+  assert.equal(manifest.schemaVersion, 2);
+  assert.deepEqual(manifest.skills, [{ id: "ai-agents-architect" }]);
+  assert.deepEqual(manifest.profile.goals, ["build"]);
+  assert.equal(Object.hasOwn(manifest, "policy"), false);
   const planPath = path.join(item.root, "plan.json");
   const planned = await execute([
     "stack", "plan", "--manifest", manifestPath, "--target", "codex:project",
@@ -164,21 +180,32 @@ test("CLI rejects unknown flags and extra positional arguments fail-closed", asy
   );
 });
 
-test("CLI recommendation reads only the explicit profile file", async (context) => {
+test("CLI stack create reads the agent's explicit selection and persists it atomically", async (context) => {
   const item = fixture();
   context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
-  const profile = {
-    intent: "test-qa-automation",
+  const selection = {
+    name: "qa-stack",
     targets: [{ host: "codex", scope: "project" }],
-    profile: { languages: ["javascript"] },
-    criticalGoals: ["unit-testing"],
-    nonCriticalGoals: [],
-    policy: { allowedRisk: ["none", "safe"], requireKnownSource: true, allowManualSetup: false },
+    profile: {
+      goals: ["unit-testing"],
+      languages: ["javascript"],
+      frameworks: [],
+      constraints: [],
+    },
+    skillIds: ["playwright-skill"],
   };
-  const profilePath = path.join(item.root, "profile.json");
-  fs.writeFileSync(profilePath, `${core.canonicalJson(profile)}\n`);
-  const result = await execute(["stack", "recommend", "--profile", profilePath]);
-  assert.equal(result.ok, true);
+  const selectionPath = path.join(item.root, "selection.json");
+  const manifestPath = path.join(item.root, "selected-stack.json");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson(selection)}\n`);
+  const result = await execute(["stack", "create", "--selection", selectionPath, "--out", manifestPath]);
+  assert.equal(result.status, "created");
+  assert.deepEqual(result.selectedSkillIds, selection.skillIds);
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  assert.deepEqual(manifest.skills, [{ id: "playwright-skill" }]);
+  await assert.rejects(
+    execute(["stack", "create", "--selection", selectionPath, "--out", manifestPath]),
+    { code: "AAS_CLI_OUTPUT_EXISTS" },
+  );
 });
 
 test("production CLI resolves and re-verifies a content-addressed runtime cache", async (context) => {

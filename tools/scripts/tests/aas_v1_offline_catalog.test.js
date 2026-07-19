@@ -5,6 +5,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const test = require("node:test");
 const { buildArtifacts } = require("../build-aas-v1-offline-catalog");
+const { CATALOG_ASSET_PATHS } = require("../../lib/aas-v1/cache");
+const versions = require("../../lib/aas-v1/versions");
 
 const ROOT = path.resolve(__dirname, "../../..");
 
@@ -13,6 +15,12 @@ test("offline catalog assets are deterministic, complete, and content-addressed"
   const second = buildArtifacts();
   const canonicalSkillCount = JSON.parse(fs.readFileSync(path.join(ROOT, "skills_index.json"), "utf8")).length;
   assert.equal(first.manifest.skillCount, canonicalSkillCount);
+  assert.equal(first.manifest.catalogSchemaVersion, versions.catalogSchemaVersion);
+  assert.deepEqual(
+    first.manifest.assets.map((asset) => asset.path).sort(),
+    [...CATALOG_ASSET_PATHS].sort(),
+  );
+  assert.equal(first.manifest.assets.some((asset) => /metadata|review-queue|plugin-compatibility/.test(asset.path)), false);
   assert.equal(first.catalogDigest, second.catalogDigest);
   for (const [relativePath, bytes] of first.generated) {
     assert.equal(fs.readFileSync(path.join(ROOT, ...relativePath.split("/"))).equals(bytes), true, relativePath);

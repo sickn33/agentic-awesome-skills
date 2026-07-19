@@ -10,22 +10,22 @@ This guide shows the primary AAS Core workflow and the supporting catalog and di
 PROJECT
    │ inspected by Codex or Claude, not by AAS
    ▼
-EXPLICIT PROJECT PROFILE
+AGENT SEARCHES + READS COMPLETE LOCAL CATALOG
    │
    ▼
-AAS MCP ── search · inspect · recommend
+CODEX OR CLAUDE CHOOSES EXACT SKILL IDS
    │
    ▼
-AAS CORE + LOCAL VERIFIED CATALOG
-   │ evidence · exclusions · coverage · unknowns
+compose_stack ── validates · pins · never recommends
+   │
    ▼
-AGENT PROPOSES aas-stack.json
+AGENT PROPOSES aas-stack.json (no selection policy)
    │
    ├────────► WORKBENCH (optional browser-local review)
    ▼
 CLI VALIDATE ──► CLI PLAN ──► HUMAN REVIEW
 
-Supported preview path: stop after plan review.
+Supported path: stop after plan review.
 Apply and recovery remain experimental.
 ```
 

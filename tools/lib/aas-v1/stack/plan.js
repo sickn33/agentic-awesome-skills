@@ -8,11 +8,10 @@ const { validateInstance } = require("../schema-validator");
 const VERSION_KEYS = Object.freeze([
   "protocolVersion",
   "coreVersion",
-  "metadataSchemaVersion",
-  "scorerVersion",
+  "catalogSchemaVersion",
 ]);
 const OPERATION_KINDS = new Set(["install", "replaceManaged", "removeManaged"]);
-const OVERRIDE_KINDS = new Set(["discoveryCandidate", "managedDrift"]);
+const OVERRIDE_KINDS = new Set(["managedDrift"]);
 const OPERATION_ORDER = Object.freeze({ removeManaged: 0, replaceManaged: 1, install: 2 });
 
 function compareStrings(left, right) {
@@ -188,25 +187,19 @@ function normalizeOperations(operations, manifest) {
   ));
 }
 
-function normalizeOverrides(overrides, operationIds, desiredSkillIds) {
+function normalizeOverrides(overrides, operationIds) {
   if (!Array.isArray(overrides) || overrides.length > 128) {
     throw planError("AAS_PLAN_OVERRIDES_INVALID", "invalidInput", {});
   }
   const seen = new Set();
   const normalized = overrides.map((override, index) => {
     assertPlainObject(override, `overrides[${index}]`);
-    assertExactKeys(override, new Set(["kind", "skillId", "reasonCodes", "unknownFields"]), `overrides[${index}]`);
-    const skillAllowed = override.kind === "discoveryCandidate"
-      ? desiredSkillIds.has(override.skillId)
-      : operationIds.has(override.skillId);
-    if (!OVERRIDE_KINDS.has(override.kind) || typeof override.skillId !== "string" || !skillAllowed) {
+    assertExactKeys(override, new Set(["kind", "skillId", "reasonCodes"]), `overrides[${index}]`);
+    if (!OVERRIDE_KINDS.has(override.kind) || typeof override.skillId !== "string" || !operationIds.has(override.skillId)) {
       throw planError("AAS_PLAN_OVERRIDE_INVALID", "invalidInput", { index });
     }
     if (!Array.isArray(override.reasonCodes) || override.reasonCodes.length < 1 || override.reasonCodes.some((value) => typeof value !== "string")) {
       throw planError("AAS_PLAN_OVERRIDE_REASON_REQUIRED", "invalidInput", { index });
-    }
-    if (!Array.isArray(override.unknownFields) || override.unknownFields.some((value) => typeof value !== "string")) {
-      throw planError("AAS_PLAN_OVERRIDE_UNKNOWN_FIELDS_INVALID", "invalidInput", { index });
     }
     const key = `${override.kind}:${override.skillId}`;
     if (seen.has(key)) throw planError("AAS_PLAN_OVERRIDE_DUPLICATE", "invalidInput", { index });
@@ -215,7 +208,6 @@ function normalizeOverrides(overrides, operationIds, desiredSkillIds) {
       kind: override.kind,
       skillId: override.skillId,
       reasonCodes: [...new Set(override.reasonCodes)].sort(),
-      unknownFields: [...new Set(override.unknownFields)].sort(),
     };
   });
   return normalized.sort((left, right) => compareStrings(`${left.kind}:${left.skillId}`, `${right.kind}:${right.skillId}`));
@@ -263,8 +255,7 @@ function buildPlanEnvelope(input) {
   const installedState = normalizeInstalledState(input.installedState);
   const operations = normalizeOperations(input.operations, input.manifest);
   const operationIds = new Set(operations.map((operation) => operation.skillId));
-  const desiredSkillIds = new Set(input.manifest.skills.map((skill) => skill.id));
-  const overrides = normalizeOverrides(input.overrides ?? [], operationIds, desiredSkillIds);
+  const overrides = normalizeOverrides(input.overrides ?? [], operationIds);
   const stateCommit = normalizeStateCommit(input.stateCommit, installedState.digest);
   if (runtime.package !== catalog.package || runtime.version !== catalog.version) {
     throw planError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
@@ -274,7 +265,7 @@ function buildPlanEnvelope(input) {
   }
 
   const payload = canonicalize({
-    schemaVersion: 1,
+    schemaVersion: 2,
     kind: "aas.stack-plan.payload",
     versions: boundVersions,
     manifestDigest: validation.manifestDigest,
@@ -283,14 +274,14 @@ function buildPlanEnvelope(input) {
     target,
     installedState,
     desiredSkills: input.manifest.skills.map((skill) => skill.id).sort(),
-    policy: input.manifest.policy,
+    profile: input.manifest.profile,
     operations,
     overrides,
     stateCommit,
   });
   const payloadJson = canonicalJson(payload);
   return validateInstance("plan.schema.json", {
-    schemaVersion: 1,
+    schemaVersion: 2,
     kind: "aas.stack-plan",
     digest: sha256(payloadJson),
     payload,
@@ -301,16 +292,16 @@ function validatePlanEnvelope(plan) {
   validateInstance("plan.schema.json", plan, "AAS_TRANSACTION_PLAN_SCHEMA_INVALID");
   assertPlainObject(plan, "plan");
   assertExactKeys(plan, new Set(["schemaVersion", "kind", "digest", "payload"]), "plan");
-  if (plan.schemaVersion !== 1 || plan.kind !== "aas.stack-plan") {
+  if (plan.schemaVersion !== 2 || plan.kind !== "aas.stack-plan") {
     throw planError("AAS_TRANSACTION_PLAN_INVALID", "integrity", {});
   }
   assertDigest(plan.digest, "plan.digest");
   assertPlainObject(plan.payload, "plan.payload");
   assertExactKeys(plan.payload, new Set([
     "schemaVersion", "kind", "versions", "manifestDigest", "catalog", "runtime", "target",
-    "installedState", "desiredSkills", "policy", "operations", "overrides", "stateCommit",
+    "installedState", "desiredSkills", "profile", "operations", "overrides", "stateCommit",
   ]), "plan.payload");
-  if (plan.payload.schemaVersion !== 1 || plan.payload.kind !== "aas.stack-plan.payload"
+  if (plan.payload.schemaVersion !== 2 || plan.payload.kind !== "aas.stack-plan.payload"
     || plan.digest !== sha256(canonicalJson(plan.payload))) {
     throw planError("AAS_TRANSACTION_PLAN_INVALID", "integrity", {});
   }
@@ -320,12 +311,11 @@ function validatePlanEnvelope(plan) {
     throw planError("AAS_PLAN_DESIRED_SKILLS_INVALID", "invalidInput", {});
   }
   const syntheticManifest = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     name: "validated-plan",
     catalog: plan.payload.catalog,
     targets: [{ host: plan.payload.target?.host, scope: plan.payload.target?.scope }],
-    intent: { goals: ["validate"] },
-    policy: plan.payload.policy,
+    profile: plan.payload.profile,
     skills: plan.payload.desiredSkills.map((id) => ({ id })),
   };
   const rebuilt = buildPlanEnvelope({

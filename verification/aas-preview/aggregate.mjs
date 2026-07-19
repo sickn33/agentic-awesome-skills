@@ -65,7 +65,8 @@ function validateReceipt(receipt) {
   assert.equal(receipt.certifiedV1, false);
   assert.deepEqual(receipt.notEvaluated, EXPECTED_NOT_EVALUATED);
   assert.equal(receipt.lifecycle.initialized, true);
-  assert.equal(receipt.lifecycle.recommended, true);
+  assert.equal(receipt.lifecycle.selected, true);
+  assert.equal(receipt.lifecycle.composed, true);
   assert.equal(receipt.lifecycle.validated, true);
   assert.equal(receipt.lifecycle.planned, true);
   assert.equal(receipt.lifecycle.doctorReadOnly, true);
@@ -87,7 +88,7 @@ function main() {
   for (const receipt of receipts) validateReceipt(receipt);
   assert.deepEqual(receipts.map((receipt) => receipt.jobId).sort(), [...EXPECTED_JOBS]);
 
-  const sharedFields = ["package", "recommendationDigest", "mcpContractDigest", "runtimeCache", "notEvaluated"];
+  const sharedFields = ["package", "selectionDigest", "mcpContractDigest", "runtimeCache", "notEvaluated"];
   for (const field of sharedFields) {
     const expected = stable(receipts[0][field]);
     for (const receipt of receipts.slice(1)) assert.equal(stable(receipt[field]), expected, `${field} drifted across jobs`);
@@ -115,7 +116,7 @@ function main() {
       architecture: receipt.runtime.architecture,
       receiptDigest: sha256(stable(receipt)),
     })).sort((left, right) => (left.jobId < right.jobId ? -1 : left.jobId > right.jobId ? 1 : 0)),
-    recommendationDigest: receipts[0].recommendationDigest,
+    selectionDigest: receipts[0].selectionDigest,
     mcpContractDigest: receipts[0].mcpContractDigest,
     workbench,
     notEvaluated: EXPECTED_NOT_EVALUATED,

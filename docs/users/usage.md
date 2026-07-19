@@ -1,19 +1,20 @@
 # Usage Guide: Compose and Use an AAS Skill Stack
 
-> **Recommended path:** let Codex or Claude use AAS Core to compose a small, policy-controlled stack. Direct installs and manual skill invocation remain supported alternatives.
+> **Recommended path:** let Codex or Claude inspect the project, search and read the complete AAS catalog, and choose the exact skills. AAS Core records and validates that agent-owned selection.
 
 ## Primary workflow: agent-first composition
 
-After configuring the local AAS MCP, ask your agent to inspect the repository and recommend a stack for the outcome you want:
+After configuring the local AAS MCP, ask your agent to inspect the repository and choose a stack for the outcome you want:
 
 ```text
-Inspect this repository and use the AAS MCP tools to recommend a small skill stack.
-Explain evidence, exclusions, and unknowns; propose an aas-stack.json; do not apply it.
+Inspect this repository, search and read the complete AAS catalog, and choose the
+exact skills you judge most useful. Use compose_stack to propose aas-stack.json;
+do not apply it.
 ```
 
-The agent should use `search_skills`, `get_skill`, and `recommend_stack`, then check the complete proposal with `inspect_stack` and correct every reported issue before presenting it. Review the resulting `aas-stack.json`, validate it with `aas stack validate`, and use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
+The agent should use `search_skills` and `get_skill` across the complete catalog, choose the exact IDs itself, call `compose_stack`, then check the proposal with `inspect_stack` before presenting it. Review the resulting `aas-stack.json`, validate it with `aas stack validate`, and use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
 
-The recommendation is deterministic and local. AAS MCP does not inspect the repository itself, install skills, update catalogs, or change configuration. See [AAS Core](aas-core.md) for setup, the exact tool boundary, CLI commands, and preview limitations.
+Selection belongs to the coding agent. AAS MCP does not inspect the repository itself, rank or exclude skills, install skills, update catalogs, or change configuration. See [AAS Core](aas-core.md) for setup, the exact tool boundary, CLI commands, and preview limitations.
 
 `stack apply` and `stack recover` are experimental, disabled by default, and are not supported or certified preview safety claims.
 
@@ -404,7 +405,7 @@ Use @skill-creator to help me build a custom skill for [your task]
 For the Core-first path:
 
 1. Configure the local MCP with the [AAS Core guide](aas-core.md).
-2. Ask the agent to recommend and explain a small stack.
+2. Ask the agent to search the complete catalog, choose exact IDs, and explain its selection.
 3. Review `aas-stack.json`, validate it, and preview the plan.
 
 For direct/manual use:

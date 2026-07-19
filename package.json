@@ -5,7 +5,7 @@
     "includedFromMajor": 15,
     "status": "agent-first-preview"
   },
-  "description": "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, backed by 1,968+ agentic skills.",
+  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 1,968+ agentic skills.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
@@ -28,7 +28,7 @@
     "sync:github-about": "node tools/scripts/run-python.js tools/scripts/sync_repo_metadata.py --apply-github-about",
     "sync:contributors": "node tools/scripts/run-python.js tools/scripts/sync_contributors.py",
     "sync:web-assets": "npm run app:setup && cd apps/web-app && npm run generate:sitemap",
-    "chain": "npm run validate && npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-review-queue && npm run build:aas-v1-catalog",
+    "chain": "npm run validate && npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog",
     "sync:all": "npm run chain",
     "sync:release-state": "npm run chain && npm run sync:web-assets && npm run audit:consistency && npm run check:warning-budget",
     "sync:repo-state": "npm run chain && npm run sync:web-assets && npm run sync:contributors && npm run audit:consistency && npm run check:warning-budget",
@@ -61,9 +61,8 @@
     "release:publish": "node tools/scripts/release_workflow.js publish",
     "test": "node tools/scripts/tests/run-test-suite.js",
     "test:aas-v1": "node --test tools/scripts/tests/aas_v1_*.test.js",
-    "build:aas-v1-review-queue": "node tools/scripts/build-aas-v1-review-queue.js --write",
     "build:aas-v1-catalog": "node tools/scripts/build-aas-v1-offline-catalog.js",
-    "check:aas-v1-catalog": "node tools/scripts/build-aas-v1-review-queue.js && node tools/scripts/import-aas-v1-metadata-reviews.js --check && node tools/scripts/build-aas-v1-metadata-overrides.js --check && node tools/scripts/build-aas-v1-offline-catalog.js --check",
+    "check:aas-v1-catalog": "node tools/scripts/build-aas-v1-offline-catalog.js --check",
     "test:local": "node tools/scripts/tests/run-test-suite.js --local",
     "test:network": "node tools/scripts/tests/run-test-suite.js --network",
     "sync:microsoft": "node tools/scripts/run-python.js tools/scripts/sync_microsoft_skills.py",
@@ -113,7 +112,7 @@
   "keywords": [
     "aas-core",
     "mcp",
-    "skill-recommendation",
+    "agent-skill-selection",
     "agent-stack",
     "claude-code",
     "cursor",
