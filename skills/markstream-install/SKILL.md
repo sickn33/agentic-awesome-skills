@@ -11,7 +11,7 @@ author: Simon-He95
 tags: [markdown, streaming, vue, react, svelte, angular, ai-chat]
 tools: [claude, cursor, gemini, codex]
 license: MIT
-license_source: https://github.com/Simon-He95/markstream-vue/blob/main/LICENSE
+license_source: https://github.com/Simon-He95/markstream-vue/blob/main/license
 ---
 
 # Markstream Install
